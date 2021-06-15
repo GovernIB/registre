@@ -1,6 +1,7 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.Cola;
+import es.caib.regweb3.model.IRegistro;
 import es.caib.regweb3.model.RegistroEntrada;
 import es.caib.regweb3.model.UsuarioEntidad;
 import es.caib.regweb3.persistence.utils.Paginacion;
@@ -90,6 +91,14 @@ public interface ColaLocal extends BaseEjb<Cola, Long> {
     boolean enviarAColaDistribucion(RegistroEntrada re, UsuarioEntidad usuarioEntidad) throws Exception, I18NException, I18NValidationException;
 
     /**
+     * añade a la cola de cusodia un nuevo anexo Justificante
+     * @param registro
+     * @param usuarioEntidad
+     * @return
+     */
+    boolean enviarAColaCustodia(IRegistro registro, Long tipoRegistro, UsuarioEntidad usuarioEntidad);
+
+    /**
      * Vuelve a activar los elementos en la cola poniendo el contador a 0 para que se puedan volver a enviar
      * @param idEntidad
      * @throws Exception
@@ -126,7 +135,7 @@ public interface ColaLocal extends BaseEjb<Cola, Long> {
      * MArca como procesado un elemento de la Cola
      * @param elemento
      */
-    void procesarElemento(Cola elemento,RegistroEntrada registroEntrada) throws Exception;
+    void procesarElemento(Cola elemento) throws Exception;
 
     /**
      * Método que elimina los elementos que fueron procesados hace x meses

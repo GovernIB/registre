@@ -1,8 +1,8 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.Cola;
+import es.caib.regweb3.model.IRegistro;
 import es.caib.regweb3.model.RegistroEntrada;
-import es.caib.regweb3.model.Trazabilidad;
 import es.caib.regweb3.model.UsuarioEntidad;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
@@ -36,8 +36,6 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
     @PersistenceContext(unitName="regweb3")
     private EntityManager em;
 
-    @EJB private IntegracionLocal integracionEjb;
-    @EJB private PluginLocal pluginEjb;
     @EJB private RegistroEntradaLocal registroEntradaEjb;
 
 
@@ -87,7 +85,7 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
     @Override
     public Cola findByDescripcion(String descripcionObjeto,Long idEntidad) throws Exception{
 
-        Query q = em.createQuery( "select cola from Cola as cola where cola.descripcionObjeto=:descripcionObjeto and cola.usuarioEntidad.entidad.id=:idEntidad");
+        Query q = em.createQuery( "select cola.id from Cola as cola where cola.descripcionObjeto=:descripcionObjeto and cola.usuarioEntidad.entidad.id=:idEntidad");
         q.setParameter("descripcionObjeto", descripcionObjeto);
         q.setParameter("idEntidad", idEntidad);
 
@@ -244,28 +242,14 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
     }
 
     @Override
-    public void procesarElemento(Cola elemento, RegistroEntrada registroEntrada) throws Exception{
+    public void procesarElemento(Cola elemento) throws Exception{
 
-        Query q = em.createQuery("update Cola set estado=:procesado where id = :idCola");
+        Query q = em.createQuery("update from Cola set estado = :procesado, fechaProcesado = :fechaProcesado where id = :idCola");
+
         q.setParameter("procesado", RegwebConstantes.COLA_ESTADO_PROCESADO);
+        q.setParameter("fechaProcesado", new Date());
         q.setParameter("idCola", elemento.getId());
         q.executeUpdate();
-
-        // Creamos la Trazabilidad
-        Trazabilidad trazabilidad = new Trazabilidad();
-        trazabilidad.setOficioRemision(null);
-        trazabilidad.setFecha(new Date());
-        trazabilidad.setTipo(RegwebConstantes.TRAZABILIDAD_DISTRIBUCION);
-        trazabilidad.setRegistroEntradaOrigen(registroEntrada);
-        trazabilidad.setRegistroSalida(null);
-        trazabilidad.setRegistroEntradaDestino(null);
-        em.persist(trazabilidad);
-
-        //Actualizamos el Estado a DISTRIBUIDO
-        Query q1 = em.createQuery("update RegistroEntrada set estado=:idEstado where id = :idRegistro");
-        q1.setParameter("idEstado", RegwebConstantes.REGISTRO_DISTRIBUIDO);
-        q1.setParameter("idRegistro", registroEntrada.getId());
-        q1.executeUpdate();
     }
 
     @Override
@@ -276,6 +260,7 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
                 //Creamos un elemento nuevo de la cola de distribución
                 Cola cola = new Cola();
                 cola.setIdObjeto(re.getId());
+                cola.setTipoRegistro(RegwebConstantes.REGISTRO_ENTRADA);
                 cola.setDescripcionObjeto(re.getNumeroRegistroFormateado());
                 cola.setTipo(RegwebConstantes.COLA_DISTRIBUCION);
                 cola.setUsuarioEntidad(usuarioEntidad);
@@ -298,9 +283,34 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
         }
     }
 
+    @Override
+    public boolean enviarAColaCustodia(IRegistro registro, Long tipoRegistro, UsuarioEntidad usuarioEntidad)  {
+
+        try {
+
+            //Creamos un elemento nuevo de la cola de distribución
+            Cola cola = new Cola();
+            cola.setIdObjeto(registro.getId());
+            cola.setTipoRegistro(tipoRegistro);
+            cola.setDescripcionObjeto(registro.getNumeroRegistroFormateado());
+            cola.setTipo(RegwebConstantes.COLA_CUSTODIA);
+            cola.setUsuarioEntidad(usuarioEntidad);
+            cola.setDenominacionOficina(registro.getOficina().getDenominacion());
+            cola.setEstado(RegwebConstantes.COLA_ESTADO_PENDIENTE);
+
+            persist(cola);
+
+            return true;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
 
     @Override
-    public void reiniciarColabyEntidadTipo(Long idEntidad, Long tipo) throws Exception, I18NException {
+    public void reiniciarColabyEntidadTipo(Long idEntidad, Long tipo) throws Exception {
 
         //Obtenemos el numero máximo de reintentos de una propiedad global
         Integer maxReintentos = PropiedadGlobalUtil.getMaxReintentosCola(idEntidad);

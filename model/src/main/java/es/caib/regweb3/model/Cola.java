@@ -30,6 +30,8 @@ public class Cola implements Serializable{
     private Date fecha; // fecha entrada en cola
     private UsuarioEntidad usuarioEntidad;
     private Long estado;
+    private Long tipoRegistro;
+    private Date fechaProcesado;
 
     public static final int RESULTADOS_PAGINACION = 20;
 
@@ -142,6 +144,24 @@ public class Cola implements Serializable{
 
     public void setEstado(Long estado) {
         this.estado = estado;
+    }
+
+    @Column(name = "TIPOREGISTRO")
+    public Long getTipoRegistro() {
+        return tipoRegistro;
+    }
+
+    public void setTipoRegistro(Long tipoRegistro) {
+        this.tipoRegistro = tipoRegistro;
+    }
+
+    @Column(name = "FECHAPROCESADO")
+    public Date getFechaProcesado() {
+        return fechaProcesado;
+    }
+
+    public void setFechaProcesado(Date fechaProcesado) {
+        this.fechaProcesado = fechaProcesado;
     }
 
     @Transient

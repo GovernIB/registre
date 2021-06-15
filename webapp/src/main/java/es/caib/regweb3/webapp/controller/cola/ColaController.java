@@ -4,11 +4,15 @@ import es.caib.regweb3.model.Cola;
 import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.model.RegistroEntrada;
 import es.caib.regweb3.persistence.ejb.ColaLocal;
+import es.caib.regweb3.persistence.ejb.CustodiaLocal;
+import es.caib.regweb3.persistence.ejb.DistribucionLocal;
 import es.caib.regweb3.persistence.utils.Paginacion;
+import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.controller.BaseController;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import org.fundaciobit.genapp.common.i18n.I18NException;
+import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -31,6 +35,11 @@ public class ColaController extends BaseController {
     @EJB(mappedName = "regweb3/ColaEJB/local")
     private ColaLocal colaEjb;
 
+    @EJB(mappedName = "regweb3/DistribucionEJB/local")
+    private DistribucionLocal distribucionEjb;
+
+    @EJB(mappedName = "regweb3/CustodiaEJB/local")
+    private CustodiaLocal custodiaEjb;
 
 
     /**
@@ -102,53 +111,92 @@ public class ColaController extends BaseController {
     }
 
     /**
-     * Marcar como procesado un elemento de la {@link Cola}
+     * Custodia un Justificante de la Cola inmediatamente
+     * @param idCola
+     * @param request
+     * @return
+     * @throws Exception
+     * @throws I18NException
+     * @throws I18NValidationException
      */
-    @RequestMapping(value = "/{colaId}/procesar/{tipo}")
-    public String procesarCola(@PathVariable Long colaId, @PathVariable Long tipo, HttpServletRequest request) {
+    @RequestMapping(value = "/{idCola}/custodiarJustificante", method = RequestMethod.GET)
+    public String custodiarJustificante(@PathVariable Long idCola, HttpServletRequest request) throws Exception {
 
-        try {
+        Entidad entidadActiva = getEntidadActiva(request);
+        Cola elemento = colaEjb.findById(idCola);
 
-            // Marcamos el elemento como procesado
-            Cola cola = colaEjb.findById(colaId);
+        Boolean custodiado = custodiaEjb.custodiarJustificanteEnCola(elemento, entidadActiva.getId(), RegwebConstantes.INTEGRACION_CUSTODIA);
 
-            // Marcamos como distribuido el Registro
-            RegistroEntrada registroEntrada = registroEntradaEjb.findById(cola.getIdObjeto());
-            colaEjb.procesarElemento(cola,registroEntrada);
-
-            Mensaje.saveMessageInfo(request, getMessage("cola.procesar.ok"));
-
-        } catch (Exception e) {
-            Mensaje.saveMessageError(request, getMessage("cola.error.eliminar"));
-            e.printStackTrace();
+        if(custodiado){
+            Mensaje.saveMessageInfo(request, getMessage("anexo.custodiar.ok"));
+        }else{
+            Mensaje.saveMessageError(request, getMessage("anexo.custodiar.error"));
         }
 
-        return "redirect:/cola/list/"+tipo;
+        return "redirect:/cola/list/"+elemento.getTipo();
     }
 
     /**
-     * Eliminar una {@link Cola} y le cambia el estado al registro de entrada asociado
+     * Función que se encarga de distribuir un elemento de la cola de distribución de manera individual y
+     * sin esperar a la próxima ejecución del scheduler
+     * @param idCola
+     * @param request
+     * @return
+     * @throws Exception
+     * @throws I18NException
+     * @throws I18NValidationException
      */
-    @RequestMapping(value = "/{colaId}/delete/{tipo}/{estado}")
-    public String eliminarElementoCola(@PathVariable Long colaId, @PathVariable Long tipo, @PathVariable Long estado,  HttpServletRequest request) {
+    @RequestMapping(value = "/{idCola}/distribuirRegistro", method = RequestMethod.GET)
+    public String distribuirRegistro(@PathVariable Long idCola, HttpServletRequest request) throws Exception {
+
+        Entidad entidadActiva = getEntidadActiva(request);
+        Cola elemento = colaEjb.findById(idCola);
+
+        Boolean distribuido = distribucionEjb.distribuirRegistroEnCola(elemento, entidadActiva.getId(),RegwebConstantes.INTEGRACION_DISTRIBUCION);
+
+        if(distribuido){
+            Mensaje.saveMessageInfo(request, getMessage("registroEntrada.distribuir.ok"));
+        }else{
+            Mensaje.saveMessageError(request, getMessage("registroEntrada.distribuir.error.noEnviado"));
+        }
+
+        return "redirect:/cola/list/"+elemento.getTipo();
+    }
+
+    /**
+     * Marcar como procesado un elemento de la {@link Cola}
+     */
+    @RequestMapping(value = "/{colaId}/procesar")
+    public String procesarCola(@PathVariable Long colaId, HttpServletRequest request) {
 
         try {
 
-            Cola cola = colaEjb.findById(colaId);
-            colaEjb.remove(cola);
-            //Actualizamos el registro de entrada al estado indicado(valido o distribuido)
-            registroEntradaEjb.cambiarEstado(cola.getIdObjeto(), estado);
+            Cola elemento = colaEjb.findById(colaId);
 
-            Mensaje.saveMessageInfo(request, getMessage("regweb.eliminar.registro"));
+            if(elemento.getTipo().equals(RegwebConstantes.COLA_DISTRIBUCION)){
+
+                // Marcamos como distribuido el Registro
+                RegistroEntrada registroEntrada = registroEntradaEjb.findById(elemento.getIdObjeto());
+                registroEntradaEjb.marcarDistribuido(registroEntrada);
+
+            }else if(elemento.getTipo().equals(RegwebConstantes.COLA_CUSTODIA)){
+                // TODO decidir que hacer aquí
+            }
+
+            // Marcamos el elemento como procesado
+            colaEjb.procesarElemento(elemento);
+
+            Mensaje.saveMessageInfo(request, getMessage("cola.procesar.ok"));
+
+            return "redirect:/cola/list/"+elemento.getTipo();
 
         } catch (Exception e) {
             Mensaje.saveMessageError(request, getMessage("cola.error.eliminar"));
             e.printStackTrace();
         }
 
-        return "redirect:/cola/list/"+tipo;
+        return "redirect:/cola/list";
     }
-
 
     /**
      * Reiniciar un {@link Cola} y le pone el contador a 0.
@@ -171,12 +219,16 @@ public class ColaController extends BaseController {
     }
 
 
-
-
     @ModelAttribute("tiposCola")
     public
     Long[] tiposCola() {
-        return RegwebConstantes.COLA_TIPOS;
+
+        if(Configuracio.isCAIB()){
+            return RegwebConstantes.COLA_TIPOS_CAIB;
+        }else{
+            return RegwebConstantes.COLA_TIPOS;
+        }
+
     }
 
     @ModelAttribute("estados")

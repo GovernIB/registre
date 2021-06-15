@@ -110,17 +110,16 @@
                                             <col>
                                             <col>
                                             <col>
-                                            <col>
                                             <col width="160">
                                         </colgroup>
                                         <thead>
                                         <tr>
-                                            <th class="center"><spring:message code="cola.fecha"/></th>
+                                            <th class="center"><spring:message code="cola.fechaEntrada"/></th>
                                             <th class="center"><spring:message code="cola.descripcion"/></th>
                                             <th class="center"><spring:message code="regweb.estado"/></th>
                                             <th class="center"><spring:message code="oficina.oficina"/></th>
                                             <th class="center" ><spring:message code="cola.numeroreintentos"/></th>
-                                            <th class="center"><spring:message code="regweb.errores"/></th>
+                                            <th class="center"><spring:message code="cola.fechaProcesado"/></th>
                                             <th class="center"><spring:message code="regweb.acciones"/></th>
                                         </tr>
                                         </thead>
@@ -156,22 +155,31 @@
                                                     </c:if>
                                                     <c:if test="${cola.estado == 3}">
                                                         <span class="label label-info"><span class="fa fa-repeat"></span> ${cola.numeroReintentos}</span>
+                                                        <a class="btn btn-warning btn-sm" data-toggle="modal" role="button" href="#infoCola" onclick="infoCola('${cola.id}')" title="<spring:message code="regweb.info"/>"><span class="fa fa-info-circle"></span></a>
+
                                                     </c:if>
                                                 </td>
-                                                <td class="center">
-                                                    <a class="btn btn-warning btn-sm" data-toggle="modal" role="button" href="#infoCola" onclick="infoCola('${cola.id}')" title="<spring:message code="regweb.info"/>"><span class="fa fa-info-circle"></span></a>
-                                                </td>
+                                                <td class="center"><fmt:formatDate value="${cola.fechaProcesado}" pattern="dd/MM/yyyy HH:mm:ss"/></td>
+
                                                 <td class="center">
                                                     <c:if test="${cola.estado == RegwebConstantes.COLA_ESTADO_ERROR}">
                                                         <a class="btn btn-success btn-sm" onclick='confirm("<c:url value="/cola/${cola.id}/reiniciar/${tipo}"/>","<spring:message code="cola.reiniciar.elemento" htmlEscape="true"/>")' href="javascript:void(0);" title="<spring:message code="cola.reiniciar.elemento"/>"><span class="fa fa-repeat"></span></a>
                                                     </c:if>
+
+                                                    <%--Opciones pendiente procesar--%>
                                                     <c:if test="${cola.estado != RegwebConstantes.COLA_ESTADO_PROCESADO}">
-                                                        <%--<a class="btn btn-danger btn-sm" onclick='confirm("<c:url value="/cola/${cola.id}/delete/${tipo}/${RegwebConstantes.REGISTRO_VALIDO}"/>","<spring:message code="regweb.confirmar.eliminacion" htmlEscape="true"/>")' href="javascript:void(0);" title="<spring:message code="regweb.eliminar"/>"><span class="fa fa-eraser"></span></a>--%>
                                                         <c:if test="${cola.numeroReintentos > 0}">
-                                                            <a class="btn btn-info btn-sm" onclick='confirm("<c:url value="/cola/${cola.id}/procesar/${tipo}"/>","<spring:message code="regweb.confirmar.distribuido" htmlEscape="true"/>")' href="javascript:void(0);" title="<spring:message code="regweb.marcardistribuido"/>"><span class="fa fa-check"></span></a>
+                                                            <a class="btn btn-info btn-sm" onclick='confirm("<c:url value="/cola/${cola.id}/procesar"/>","<spring:message code="cola.confirmar.procesar" htmlEscape="true"/>")' href="javascript:void(0);" title="<spring:message code="cola.procesar"/>"><span class="fa fa-check"></span></a>
                                                         </c:if>
-                                                        <a class="btn btn-primary btn-sm" onclick='confirm("<c:url value="/distribucion/${cola.id}/distribuirelementocola/${tipo}"/>","<spring:message code="regweb.confirmar.distribuir" htmlEscape="true"/>")' href="javascript:void(0);" title="<spring:message code="regweb.distribuir"/>"><span class="fa fa-share-square-o"></span></a>
+                                                        <c:if test="${cola.tipo == RegwebConstantes.COLA_CUSTODIA}">
+                                                            <a class="btn btn-primary btn-sm" onclick='confirm("<c:url value="/cola/${cola.id}/custodiarJustificante"/>","<spring:message code="regweb.confirmar.custodiar" htmlEscape="true"/>")' href="javascript:void(0);" title="<spring:message code="anexo.custodiar"/>"><span class="fa fa-share-square-o"></span></a>
+                                                        </c:if>
+                                                        <c:if test="${cola.tipo == RegwebConstantes.COLA_DISTRIBUCION}">
+                                                            <a class="btn btn-primary btn-sm" onclick='confirm("<c:url value="/cola/${cola.id}/distribuirRegistro"/>","<spring:message code="regweb.confirmar.distribuir" htmlEscape="true"/>")' href="javascript:void(0);" title="<spring:message code="regweb.distribuir"/>"><span class="fa fa-share-square-o"></span></a>
+                                                        </c:if>
                                                     </c:if>
+
+                                                    <%--Botón detalle registro--%>
                                                     <a class="btn btn-info btn-sm" href="<c:url value="/adminEntidad/registroEntrada/${cola.idObjeto}/detalle"/>" target="_blank" title="<spring:message code="registroEntrada.detalle"/>"><span class="fa fa-eye"></span></a>
                                                 </td>
                                             </tr>
