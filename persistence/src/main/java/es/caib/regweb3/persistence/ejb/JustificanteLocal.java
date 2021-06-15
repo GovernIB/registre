@@ -20,5 +20,7 @@ import javax.ejb.Local;
 public interface JustificanteLocal {
 
     AnexoFull crearJustificante(UsuarioEntidad usuarioEntidad, IRegistro registro, Long tipoRegistro, String idioma) throws I18NException, I18NValidationException;
+
+    AnexoFull crearJustificanteWS(UsuarioEntidad usuarioEntidad, IRegistro registro, Long tipoRegistro, String idioma) throws I18NException, I18NValidationException;
 }
 

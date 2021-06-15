@@ -262,12 +262,7 @@
             <version>2.2.1</version>
         </dependency>
 
-        <!-- Jersey -->
-        <dependency>
-            <groupId>com.sun.jersey</groupId>
-            <artifactId>jersey-client</artifactId>
-            <version>1.19</version>
-        </dependency>
+        <!--Distribución GOIB-->
         <dependency>
             <groupId>es.caib.regweb3</groupId>
             <artifactId>plugin-distribucion-goib</artifactId>

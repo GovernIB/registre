@@ -22,6 +22,7 @@
     <timestamp>${maven.build.timestamp}</timestamp>
     <maven.build.timestamp.format>yyyy-MM-dd HH:mm</maven.build.timestamp.format>
     <documentcustody.api.version>4.0.1</documentcustody.api.version>
+    <documentcustody-filesystem.version>4.0.2</documentcustody-filesystem.version>
     <scanweb.api.version>4.0.0</scanweb.api.version>
     <itext.version>5.4.3</itext.version>
     <bouncycastle.version>1.51</bouncycastle.version>
@@ -180,16 +181,5 @@
       <url>file://${project.build.directory}/mvn-repo</url>
     </repository>
   </distributionManagement>
-
-  <!--   COM UTILITZAR: AFEGIR AQUEST CODI AL pom.xml    -->
-  <!--
-        <repositories>
-           <repository>
-             <id>github-governib-maven-repos</id>
-             <name>GitHub GovernIB Maven Repository</name>
-             <url>http://governib.github.io/maven/maven/</url>
-           </repository>
-        </repositories>
-  -->
 
 </project>
