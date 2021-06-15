@@ -64,6 +64,8 @@
             <artifactId>dir3caib-ws-api</artifactId>
             <version>${dir3caib-ws-api.version}</version>
         </dependency>
+
+        <!--Spring-->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>

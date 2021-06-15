@@ -184,7 +184,7 @@
     <dependency>
       <groupId>org.fundaciobit.pluginsib.documentcustody</groupId>
       <artifactId>pluginsib-documentcustody-api</artifactId>
-      <version>${documentcustody.api.version}</version>
+      <version>${documentcustody-filesystem.version}</version>
     </dependency>
 
 
