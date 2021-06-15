@@ -141,7 +141,22 @@ public class Regweb3Scheduler {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
 
+    /**
+     * Qué hace: Custodia los Justificantes que hay en la cola
+     * Cuándo lo hace: cada 30 minutos
+     */
+    @Scheduled(cron = "0 0/30 * * * *") // {0 0 * * * * Cada hora, cada día} -  {*/60 * * * * * cada 60 secs }
+    public void custodiarJustificantesEnCola(){
+
+        try {
+
+            schedulerEjb.custodiarJustificantesEnCola();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
