@@ -192,13 +192,13 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
         propiedadGlobalEjb.persist(new PropiedadGlobal(RegwebConstantes.REGWEB3_PROPERTY_BASE+"cola.parar.distribucion","false","Indica si queremos detener la cola de distribución", entidad.getId(), RegwebConstantes.TIPO_PROPIEDAD_DISTRIBUCION));
 
         // Creamos los Plugins
-        pluginEjb.persist(new Plugin("Custodia","Custodia de anexos","org.fundaciobit.plugins.documentcustody.filesystem.FileSystemDocumentCustodyPlugin",true,entidad.getId(),RegwebConstantes.PLUGIN_CUSTODIA,null,"es.caib.regweb3.plugins.documentcustody.filesystem.prefix=ANNEX_\n" +
+        pluginEjb.persist(new Plugin("Custodia","Custodia de anexos","org.fundaciobit.plugins.documentcustody.filesystem.FileSystemDocumentCustodyPlugin",true,entidad.getId(),RegwebConstantes.PLUGIN_CUSTODIA_ANEXOS,null,"es.caib.regweb3.plugins.documentcustody.filesystem.prefix=ANNEX_\n" +
                 "es.caib.regweb3.plugins.documentcustody.filesystem.basedir=C:/xxxx/Anexos/"));
 
         pluginEjb.persist(new Plugin("Custodia-Justificante","Custodia de justificantes","org.fundaciobit.plugins.documentcustody.filesystem.FileSystemDocumentCustodyPlugin",true,entidad.getId(),RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE,null,"es.caib.regweb3.plugins.documentcustody.filesystem.prefix=JUST_\n" +
                 "es.caib.regweb3.plugins.documentcustody.filesystem.basedir=C:/xxxx/Justificantes/"));
 
-        pluginEjb.persist(new Plugin("Justificante","Genera el justificante SIR de los registros","es.caib.regweb3.plugins.justificante.mock.JustificanteMockPlugin",true,entidad.getId(),RegwebConstantes.PLUGIN_JUSTIFICANTE,null,"" +
+        pluginEjb.persist(new Plugin("Justificante","Genera el justificante de los registros","es.caib.regweb3.plugins.justificante.mock.JustificanteMockPlugin",true,entidad.getId(),RegwebConstantes.PLUGIN_JUSTIFICANTE,null,"" +
                 "# Mensaje para la declaración en el justificante\n" +
                 "es.caib.regweb3.plugins.justificante.mock.declaracion.es=declara que las imágenes electrónicas adjuntas son imagen fiel e íntegra de los documentos en soporte físico origen, en el marco de la normativa vigente.\n" +
                 "es.caib.regweb3.plugins.justificante.mock.declaracion.ca=declara que les imatges electròniques adjuntes són imatge feel i íntegra dels documents en soport físic origen, en el marc de la normativa vigent.\n" +

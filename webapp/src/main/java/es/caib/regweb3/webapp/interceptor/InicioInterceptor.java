@@ -182,7 +182,7 @@ public class InicioInterceptor extends HandlerInterceptorAdapter {
 
                         }
                         // Plugin Custodia
-                        if (!pluginEjb.existPlugin(entidadActiva.getId(), RegwebConstantes.PLUGIN_CUSTODIA)) {
+                        if (!pluginEjb.existPlugin(entidadActiva.getId(), RegwebConstantes.PLUGIN_CUSTODIA_ANEXOS)) {
                             log.info("No existe el plugin de custodia");
                             Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.plugincustodia"));
                             entidadEjb.marcarEntidadMantenimiento(entidadActiva.getId(), true);
