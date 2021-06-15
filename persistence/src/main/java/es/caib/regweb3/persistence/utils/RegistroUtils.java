@@ -14,6 +14,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by Fundació BIT.
@@ -184,6 +185,18 @@ public class RegistroUtils{
         }
 
         return  formatNumRegistre;
+    }
+
+    /**
+     * Compone el nombre del fichero del Justificante
+     * @param idioma
+     * @param numeroRegistroFormateado
+     * @return
+     */
+    public static String getNombreFicheroJustificante(String idioma, String numeroRegistroFormateado){
+
+        String fileName = I18NLogicUtils.tradueix(new Locale(idioma), "justificante.fichero") + "_" + numeroRegistroFormateado + ".pdf";
+        return fileName.replaceAll("[\\\\/:*?\"<>|]", "_");
     }
 
     /**
