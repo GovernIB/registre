@@ -148,7 +148,7 @@
                                                     </c:if>
                                                     <c:if test="${cola.estado == 2}"> <%--PENDIENTE--%>
                                                         <c:if test="${cola.numeroReintentos == 0}">
-                                                            <span class="label label-success"><span class="fa fa-repeat"></span> ${cola.numeroReintentos}</span>
+                                                            <span class="label label-info"><span class="fa fa-repeat"></span> ${cola.numeroReintentos}</span>
                                                         </c:if>
                                                         <c:if test="${cola.numeroReintentos > 0}">
                                                             <p rel="popupAbajo" data-content="<spring:message code="cola.numeroreintentos.alcanzado"/>" data-toggle="popover"><span class="label label-warning"><span class="fa fa-warning"></span> ${cola.numeroReintentos}</span></p>
@@ -156,7 +156,7 @@
                                                         </c:if>
                                                     </c:if>
                                                     <c:if test="${cola.estado == 3}"> <%--PROCESADO--%>
-                                                        <span class="label label-info"><span class="fa fa-repeat"></span> ${cola.numeroReintentos}</span>
+                                                        <span class="label label-success"><span class="fa fa-repeat"></span> ${cola.numeroReintentos}</span>
                                                         <c:if test="${cola.numeroReintentos > 0}"><a class="btn btn-warning btn-sm" data-toggle="modal" role="button" href="#infoCola" onclick="infoCola('${cola.id}')" title="<spring:message code="regweb.info"/>"><span class="fa fa-info-circle"></span></a></c:if>
                                                     </c:if>
                                                 </td>
