@@ -117,7 +117,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
                 IDocumentCustodyPlugin custody;
                 if (anexo.isJustificante()) { // Si es justificante cargamos el plugin de custodia del justificante
 
-                    if(Configuracio.isCAIB() && !anexo.getCustodiado()){ // Si no está custodiado, está guardado en FileSystem
+                    if(PropiedadGlobalUtil.getCustodiaDiferida(idEntidad) && !anexo.getCustodiado()){ // Si no está custodiado, está guardado en FileSystem
                         custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA_FS_JUSTIFICANTE);
                     }else{
                         custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE);
@@ -220,7 +220,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
                 final boolean isJustificante = anexo.isJustificante();
                 if (isJustificante) { // Si es justificante cargamos el plugin de custodia del justificante
 
-                    if(Configuracio.isCAIB() && !anexo.getCustodiado()){ // Si no está custodiado, está guardado en FileSystem
+                    if(PropiedadGlobalUtil.getCustodiaDiferida(idEntidad) && !anexo.getCustodiado()){ // Si no está custodiado, está guardado en FileSystem
                         custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA_FS_JUSTIFICANTE);
                     }else{
                         custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE);
@@ -296,7 +296,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             // Obtenemos el Plugin de Custodia correspondiente
             if (anexo.isJustificante()) {
 
-                if(Configuracio.isCAIB() && !anexo.getCustodiado()){ // Si no está custodiado, está guardado en FileSystem
+                if(PropiedadGlobalUtil.getCustodiaDiferida(entidad.getId()) && !anexo.getCustodiado()){ // Si no está custodiado, está guardado en FileSystem
                     custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(entidad.getId(), RegwebConstantes.PLUGIN_CUSTODIA_FS_JUSTIFICANTE);
                 }else{
                     custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(entidad.getId(), RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE);
@@ -1352,7 +1352,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
             if (anexo.isJustificante()) {
 
-                if(Configuracio.isCAIB() && !anexo.getCustodiado()){ // Si no está custodiado, está guardado en FileSystem
+                if(PropiedadGlobalUtil.getCustodiaDiferida(idEntidad) && !anexo.getCustodiado()){ // Si no está custodiado, está guardado en FileSystem
                     custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA_FS_JUSTIFICANTE);
                 }else{
                     custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE);
@@ -1425,7 +1425,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             return null;
         }
         if (anexo.isJustificante()) {
-            if(Configuracio.isCAIB() && !anexo.getCustodiado()){ // Si no está custodiado, está guardado en FileSystem
+            if(PropiedadGlobalUtil.getCustodiaDiferida(idEntidad) && !anexo.getCustodiado()){ // Si no está custodiado, está guardado en FileSystem
                 custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA_FS_JUSTIFICANTE);
             }else{
                 custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE);
@@ -1456,7 +1456,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
         }
 
         if (anexo.isJustificante()) {
-            if(Configuracio.isCAIB() && !anexo.getCustodiado()){ // Si no está custodiado, está guardado en FileSystem
+            if(PropiedadGlobalUtil.getCustodiaDiferida(idEntidad) && !anexo.getCustodiado()){ // Si no está custodiado, está guardado en FileSystem
                 custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA_FS_JUSTIFICANTE);
             }else{
                 custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE);
@@ -1487,7 +1487,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             IDocumentCustodyPlugin custody;
             if (anexo.isJustificante()) {
 
-                if(Configuracio.isCAIB() && !anexo.getCustodiado()){ // Si no está custodiado, está guardado en FileSystem
+                if(PropiedadGlobalUtil.getCustodiaDiferida(idEntidad) && !anexo.getCustodiado()){ // Si no está custodiado, está guardado en FileSystem
                     custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA_FS_JUSTIFICANTE);
                 }else{
                     custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE);
@@ -1523,7 +1523,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             IDocumentCustodyPlugin custody = null;
 
             if (anexo.isJustificante()) {
-                if(Configuracio.isCAIB() && !anexo.getCustodiado()){ // Si no está custodiado, está guardado en FileSystem
+                if(PropiedadGlobalUtil.getCustodiaDiferida(idEntidad) && !anexo.getCustodiado()){ // Si no está custodiado, está guardado en FileSystem
                     custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA_FS_JUSTIFICANTE);
                 }else{
                     custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE);
@@ -1563,7 +1563,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             IDocumentCustodyPlugin custody = null;
 
             if (anexo.isJustificante()) {
-                if(Configuracio.isCAIB() && !anexo.getCustodiado()){ // Si no está custodiado, está guardado en FileSystem
+                if(PropiedadGlobalUtil.getCustodiaDiferida(idEntidad) && !anexo.getCustodiado()){ // Si no está custodiado, está guardado en FileSystem
                     custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA_FS_JUSTIFICANTE);
                 }else{
                     custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE);
