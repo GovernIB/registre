@@ -304,8 +304,14 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
 
                     // Distribuir / Generar justificante
                     if(justificante && distribuir){
-                        asientoRegistralEjb.crearJustificante(usuario, registroEntrada, REGISTRO_ENTRADA, RegwebConstantes.IDIOMA_CATALAN_CODIGO);
+
+                        if(PropiedadGlobalUtil.getCustodiaDiferida(entidadActiva.getId())){ // Si la Custodia en diferido está activa, generamos el  justificante
+                            asientoRegistralEjb.crearJustificante(usuario, registroEntrada, REGISTRO_ENTRADA, RegwebConstantes.IDIOMA_CATALAN_CODIGO);
+                        }
+
+                        // Distribuimos, si la Custodia en diferido no está activa, se generará el justificante antes de Distribuir
                         asientoRegistralEjb.distribuirRegistroEntrada(registroEntrada, usuarioAplicacion);
+
                     }else if(justificante){
                         asientoRegistralEjb.crearJustificante(usuario, registroEntrada, REGISTRO_ENTRADA, RegwebConstantes.IDIOMA_CATALAN_CODIGO);
                     }else if(distribuir){
