@@ -139,8 +139,6 @@ public class CustodiaBean implements CustodiaLocal {
 
         // Custodiamos el Justificante en Arxiu-Caib
         JustificanteArxiu justificanteArxiuCaib = arxiuCaibUtils.crearJustificanteArxiuCaib(registro, elemento.getTipoRegistro(), justificante.signatureCustodytoFirma());
-        log.info("Expediente creado en Arxiu: " + justificanteArxiuCaib.getExpediente().getIdentificador());
-        log.info("Documento creado en Arxiu: " + justificanteArxiuCaib.getDocumento().getIdentificador());
 
         try{
             // Eliminamos el Justificantre en FileSystem
