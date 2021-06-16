@@ -109,6 +109,7 @@
                                             <col>
                                             <col>
                                             <col>
+                                            <col width="80">
                                             <col>
                                             <col width="160">
                                         </colgroup>
