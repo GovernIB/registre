@@ -182,7 +182,12 @@
                                                     </c:if>
 
                                                     <%--Botón detalle registro--%>
-                                                    <a class="btn btn-info btn-sm" href="<c:url value="/adminEntidad/registroEntrada/${cola.idObjeto}/detalle"/>" target="_blank" title="<spring:message code="registroEntrada.detalle"/>"><span class="fa fa-eye"></span></a>
+                                                    <c:if test="${cola.tipoRegistro == RegwebConstantes.REGISTRO_ENTRADA}">
+                                                        <a class="btn btn-info btn-sm" href="<c:url value="/adminEntidad/registroEntrada/${cola.idObjeto}/detalle"/>" target="_blank" title="<spring:message code="registroEntrada.detalle"/>"><span class="fa fa-eye"></span></a>
+                                                    </c:if>
+                                                    <c:if test="${cola.tipoRegistro == RegwebConstantes.REGISTRO_SALIDA}">
+                                                        <a class="btn btn-danger btn-sm" href="<c:url value="/adminEntidad/registroSalida/${cola.idObjeto}/detalle"/>" target="_blank" title="<spring:message code="registroSalida.detalle"/>"><span class="fa fa-eye"></span></a>
+                                                    </c:if>
                                                 </td>
                                             </tr>
                                         </c:forEach>
