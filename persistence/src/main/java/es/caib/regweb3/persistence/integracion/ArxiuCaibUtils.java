@@ -1,6 +1,5 @@
 package es.caib.regweb3.persistence.integracion;
 
-import com.sun.jersey.api.client.ClientResponse;
 import es.caib.plugins.arxiu.api.*;
 import es.caib.regweb3.model.Anexo;
 import es.caib.regweb3.model.IRegistro;
@@ -8,7 +7,7 @@ import es.caib.regweb3.model.Interesado;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.persistence.ejb.PluginLocal;
 import es.caib.regweb3.persistence.ejb.RegistroDetalleLocal;
-import es.caib.regweb3.persistence.utils.ClientUtils;
+import es.caib.regweb3.utils.ClientUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 import org.apache.log4j.Logger;
@@ -17,9 +16,6 @@ import org.fundaciobit.plugins.validatesignature.api.ValidateSignatureConstants;
 import org.springframework.stereotype.Component;
 
 import javax.ejb.EJB;
-import java.io.BufferedInputStream;
-import java.io.ByteArrayOutputStream;
-import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -73,7 +69,7 @@ public class ArxiuCaibUtils {
      * @return
      * @throws Exception
      */
-    public JustificanteArxiu crearJustificante(IRegistro registro, Long tipoRegistro, Firma firma) throws Exception{
+    public JustificanteArxiu crearJustificanteArxiuCaib(IRegistro registro, Long tipoRegistro, Firma firma) throws Exception{
 
         ContingutArxiu expediente = null;
         ContingutArxiu documento = null;
@@ -101,8 +97,141 @@ public class ArxiuCaibUtils {
             }
 
             // Creamos el Documento del Justificante
-            documento = crearDocumentoJustificante(registro, getTipoRegistroEni(tipoRegistro), serieDocumental, firma, expediente.getIdentificador());
+            documento = crearDocumentoJustificante(registro, getTipoRegistroEni(tipoRegistro), serieDocumental, firma, expediente.getIdentificador(), DocumentEstat.DEFINITIU);
             log.info("Documento creado: " + documento.getIdentificador());
+
+            //Cerramos el expediente
+            if(getPropertyCerrarExpediente()){
+                getArxiuPlugin().expedientTancar(expediente.getIdentificador());
+            }
+
+        }catch (ArxiuException e){
+            log.info("Error creando el justificante en Arxiu");
+            e.printStackTrace();
+            throw e;
+        }
+
+        return new JustificanteArxiu(expediente, documento);
+    }
+
+    /**
+     * Crea el Justificante en un entorno GOIB FileSystem (expediente + documento)
+     * @param registro
+     * @param firma
+     * @return
+     * @throws Exception
+     */
+    public JustificanteArxiu crearJustificanteFileSystem(IRegistro registro, Long tipoRegistro, Firma firma) throws Exception{
+
+        ContingutArxiu expediente = null;
+        ContingutArxiu documento = null;
+
+        String serieDocumental = getPropertySerieDocumental();
+        String codigoProcedimiento = getPropertyCodigoProcedimiento();
+
+        try{
+
+            // Creamos el Expediente del Justificante
+            expediente = crearExpediente(registro, tipoRegistro, serieDocumental, codigoProcedimiento);
+            log.info("Expediente creado: " + expediente.getIdentificador());
+
+            // Creamos el Documento del Justificante
+            documento = crearDocumentoJustificante(registro, getTipoRegistroEni(tipoRegistro), serieDocumental, firma, expediente.getIdentificador(), DocumentEstat.ESBORRANY);
+            log.info("Documento creado: " + documento.getIdentificador());
+
+
+        }catch (ArxiuException e){
+            log.info("Error creando el justificante en Arxiu");
+            e.printStackTrace();
+            throw e;
+        }
+
+        return new JustificanteArxiu(expediente, documento);
+    }
+
+    /**
+     * Custodia un Justificante en Arxiu-Caib, que ya existía en FileSyetem
+     * @param expedientFS
+     * @param documentFS
+     * @return
+     * @throws Exception
+     */
+    public JustificanteArxiu custodiarJustificante(Anexo anexo, Expedient expedientFS, Document documentFS) throws Exception{
+
+        ContingutArxiu expediente = null;
+        ContingutArxiu documento = null;
+
+        try{
+
+            // Comprobamos que no se haya creado previamente el expediente
+            if(StringUtils.isEmpty(anexo.getRegistroDetalle().getExpedienteJustificante())){
+
+                // Creamos el Expediente nuevo de Arxiu-Caib
+                Expedient expedient = new Expedient();
+                expedient.setIdentificador(null);
+                expedient.setNom(expedientFS.getNom());
+
+                // Metadates
+                ExpedientMetadades metadadesExp = new ExpedientMetadades();
+                metadadesExp.setIdentificador(null);
+                metadadesExp.setDataObertura(expedientFS.getExpedientMetadades().getDataObertura());
+                metadadesExp.setClassificacio(getPropertyCodigoProcedimiento());
+                metadadesExp.setEstat(ExpedientEstat.OBERT);
+                metadadesExp.setOrgans(expedientFS.getExpedientMetadades().getOrgans());
+                metadadesExp.setInteressats(expedientFS.getExpedientMetadades().getInteressats());
+                metadadesExp.setSerieDocumental(getPropertySerieDocumental());
+
+                // Metadates adicionals
+                Map<String, Object> metaDadesAddicionals = new HashMap<String, Object>();
+                metaDadesAddicionals.put("eni:app_tramite_exp", RegwebConstantes.APLICACION_NOMBRE);
+                metadadesExp.setMetadadesAddicionals(metaDadesAddicionals);
+
+                expedient.setMetadades(metadadesExp);
+
+                // Creamos el Expediente en Arxiu-Caib
+                expediente = getArxiuPlugin().expedientCrear(expedient);
+
+                // Guardamos la referencia del expediente creado
+                anexo.getRegistroDetalle().setExpedienteJustificante(expediente.getIdentificador());
+                registroDetalleEjb.merge(anexo.getRegistroDetalle());
+
+            }else{
+
+                expediente = new Expedient();
+                expediente.setIdentificador(anexo.getRegistroDetalle().getExpedienteJustificante());
+                log.info("Expediente ya existia: " + expediente.getIdentificador());
+            }
+
+            // Creamos el Documento nuevo de Arxiu-Caib
+            Document document = new Document();
+            document.setIdentificador(null);
+            document.setEstat(DocumentEstat.DEFINITIU);
+
+            // Contenido y Firma
+            document.setContingut(null);
+            document.setNom("justificante.pdf"); //TODO cambiar por documentFS.getNom()
+            document.setFirmes(new ArrayList<Firma>());
+            document.getFirmes().add(documentFS.getFirmes().get(0));
+
+            // Metadatos
+            DocumentMetadades metadadesDoc = new DocumentMetadades();
+            metadadesDoc.setIdentificador(null);
+            metadadesDoc.setSerieDocumental(getPropertySerieDocumental());
+            metadadesDoc.setOrgans(documentFS.getDocumentMetadades().getOrgans());
+            metadadesDoc.setDataCaptura(documentFS.getDocumentMetadades().getDataCaptura());
+            metadadesDoc.setOrigen(ContingutOrigen.ADMINISTRACIO);
+            metadadesDoc.setEstatElaboracio(DocumentEstatElaboracio.ORIGINAL);
+            metadadesDoc.setTipusDocumental(DocumentTipus.ALTRES);
+            metadadesDoc.setExtensio(DocumentExtensio.PDF);
+            metadadesDoc.setFormat(DocumentFormat.PDF);
+
+            // Metadatos adicionales
+            metadadesDoc.setMetadadesAddicionals(new HashMap<String, Object>()); // Todo añadir document.getMetadades().getMetadadesAddicionals() cuando funcione
+
+            document.setMetadades(metadadesDoc);
+
+            // Creamos el Documento en Arxiu-Caib
+            documento = getArxiuPlugin().documentCrear(document, expediente.getIdentificador());
 
             //Cerramos el expediente
             if(getPropertyCerrarExpediente()){
@@ -159,10 +288,10 @@ public class ArxiuCaibUtils {
      * @return
      * @throws Exception
      */
-    private ContingutArxiu crearDocumentoJustificante(IRegistro registro, Integer tipoRegistro, String serieDocumental, Firma firma, String uuidExpedient) throws Exception{
+    private ContingutArxiu crearDocumentoJustificante(IRegistro registro, Integer tipoRegistro, String serieDocumental, Firma firma, String uuidExpedient, DocumentEstat estadoDocumento) throws Exception{
 
         //Generamos el Documento
-        Document documento = generarDocumentoJustificante(registro, tipoRegistro, serieDocumental, firma);
+        Document documento = generarDocumentoJustificante(registro, tipoRegistro, serieDocumental, firma, estadoDocumento);
 
         // Crear el Documento en Arxiu
         ContingutArxiu documentoCreado = getArxiuPlugin().documentCrear(documento, uuidExpedient);
@@ -258,37 +387,10 @@ public class ArxiuCaibUtils {
                     String password = getPropertyConCsvPassword();
 
                     if(StringUtils.isNotEmpty(url)){
-                        BufferedInputStream in = null;
-                        ByteArrayOutputStream fout = null;
 
-                        try {
-
-                            if (StringUtils.isNotEmpty(username) && StringUtils.isNotEmpty(password)) {
-                                ClientResponse cr = ClientUtils.commonCall(url, username, password);
-                                in = new BufferedInputStream(cr.getEntityInputStream());
-
-                            } else {
-                                in = new BufferedInputStream(new URL(url).openStream());
-                            }
-                            fout = new ByteArrayOutputStream();
-
-                            final byte buffer[] = new byte[1024];
-                            int count;
-                            while ((count = in.read(buffer, 0, 1024)) != -1) {
-                                fout.write(buffer, 0, count);
-                            }
-                            data = fout.toByteArray();
-
-                            documento.getContingut().setContingut(data);
-
-                        } finally {
-                            if (in != null) {
-                                in.close();
-                            }
-                            if (fout != null) {
-                                fout.close();
-                            }
-                        }
+                        // Descargamos el Justificante desde la url de validación
+                        data = ClientUtils.descargarArchivoUrl(url, username, password);
+                        documento.getContingut().setContingut(data);
                     }
 
                 }catch (Exception e){
@@ -306,28 +408,38 @@ public class ArxiuCaibUtils {
     }
 
     /**
+     * Obtiene un Expediente a partir de su uuid
+     * @param uuidExpedient
+     * @param version
+     * @return
+     * @throws Exception
+     */
+    public Expedient getExpediente(String uuidExpedient, String version) throws Exception{
+
+        Expedient expedient = null;
+
+        try{
+            expedient =  arxiuPlugin.expedientDetalls(uuidExpedient, version);
+
+        }catch (Exception e){
+            log.info("Error obteniendo el Expedient: " + uuidExpedient);
+            e.printStackTrace();
+        }
+
+        return expedient;
+    }
+
+    /**
      * Elimina el Expediente y sus documentos
      * @param idExpediente
      */
     public void eliminarExpediente(String idExpediente){
 
-        Expedient expedient = null;
+
         try {
-            /*expedient = getArxiuPlugin().expedientDetalls(idExpediente, null);
-
-            for(ContingutArxiu contingut:expedient.getContinguts()){
-
-                if(contingut.getTipus().equals(ContingutTipus.DOCUMENT)){
-                    // Modificamos su estado a borrador para poder eliminarlo
-                    Document documento = getArxiuPlugin().documentDetalls(contingut.getIdentificador(), null,false);
-                    documento.setEstat(DocumentEstat.ESBORRANY);
-                    getArxiuPlugin().documentModificar(documento);
-                    log.info("Eliminando el documento: " + contingut.getIdentificador());
-                    getArxiuPlugin().documentEsborrar(contingut.getIdentificador());
-                }
-            }*/
 
             getArxiuPlugin().expedientEsborrar(idExpediente);
+
         } catch (Exception e) {
             log.info("Error eliminando el expediente " + idExpediente);
             e.printStackTrace();
@@ -337,31 +449,22 @@ public class ArxiuCaibUtils {
 
     /**
      * Elimina el Justificante (Expediente + Documento)
-     * @param justificante
+     * @param uuidExpedient
+     * @param uuidDocument
      */
-    public void eliminarJustificante(JustificanteArxiu justificante){
+    public void eliminarJustificanteFS(String uuidExpedient, String uuidDocument) throws Exception{
 
-        try {
+
             log.info("Eliminamos el JustificanteArxiu (Expediente + Documento)");
 
             //Eliminamos el documento
-            if(justificante.getDocumento() != null){
-
-                log.info("Eliminamos el documento: " + justificante.getDocumento());
-                getArxiuPlugin().documentEsborrar(justificante.getDocumento().getIdentificador());
-            }
+            //log.info("Eliminamos el documento: " + uuidDocument);
+            //getArxiuPlugin().documentEsborrar(uuidDocument);
 
             //Eliminamos el expediente creado
-            if(justificante.getExpediente() != null){
+            log.info("Eliminamos el expediente: " + uuidExpedient);
+            getArxiuPlugin().expedientEsborrar(uuidExpedient);
 
-                log.info("Eliminamos el expediente: " + justificante.getExpediente());
-                getArxiuPlugin().expedientEsborrar(justificante.getExpediente().getIdentificador());
-            }
-
-        } catch (Exception e) {
-            log.info("Error eliminando el JustificanteArxiu (Expediente + Documento)");
-            e.printStackTrace();
-        }
     }
 
 
@@ -421,12 +524,12 @@ public class ArxiuCaibUtils {
      * @return
      * @throws Exception
      */
-    private Document generarDocumentoJustificante(IRegistro registro, Integer tipoRegistro, String serieDocumental, Firma firma) throws Exception {
+    private Document generarDocumentoJustificante(IRegistro registro, Integer tipoRegistro, String serieDocumental, Firma firma, DocumentEstat estadoDocumento) throws Exception {
 
         // Documento
         Document document = new Document();
         document.setIdentificador(null);
-        document.setEstat(DocumentEstat.DEFINITIU);
+        document.setEstat(estadoDocumento);
 
         // Metadatos
         DocumentMetadades metadades = new DocumentMetadades();
@@ -655,87 +758,6 @@ public class ArxiuCaibUtils {
     }
 
     /**
-     * Obtiene un {@link es.caib.plugins.arxiu.api.DocumentFormat} a partir de los parámetros
-     * @param extension
-     * @return
-     */
-    private DocumentFormat getDocumentFormat(DocumentExtensio extension){
-
-        switch (extension) {
-            case AVI: return DocumentFormat.AVI;
-
-            case CSS: return DocumentFormat.CSS;
-
-            case CSV: return DocumentFormat.CSV;
-
-            case DOCX: return DocumentFormat.SOXML;
-
-            case GML: return DocumentFormat.GML;
-
-            case GZ: return DocumentFormat.GZIP;
-
-            case HTM: return DocumentFormat.XHTML; // HTML o XHTML!!!
-
-            case HTML: return DocumentFormat.XHTML; // HTML o XHTML!!!
-
-            case JPEG: return DocumentFormat.JPEG;
-
-            case JPG: return DocumentFormat.JPEG;
-
-            case MHT: return DocumentFormat.MHTML;
-
-            case MHTML: return DocumentFormat.MHTML;
-
-            case MP3: return DocumentFormat.MP3;
-
-            case MP4: return DocumentFormat.MP4V; // MP4A o MP4V!!!
-
-            case MPEG: return DocumentFormat.MP4V; // MP4A o MP4V!!!
-
-            case ODG: return DocumentFormat.OASIS12;
-
-            case ODP: return DocumentFormat.OASIS12;
-
-            case ODS: return DocumentFormat.OASIS12;
-
-            case ODT: return DocumentFormat.OASIS12;
-
-            case OGA: return DocumentFormat.OGG;
-
-            case OGG: return DocumentFormat.OGG;
-
-            case PDF: return DocumentFormat.PDF; // PDF o PDFA!!!
-
-            case PNG: return DocumentFormat.PNG;
-
-            case PPTX: return DocumentFormat.SOXML;
-
-            case RTF: return DocumentFormat.RTF;
-
-            case SVG: return DocumentFormat.SVG;
-
-            case TIFF: return DocumentFormat.TIFF;
-
-            case TXT: return DocumentFormat.TXT;
-
-            case WEBM: return DocumentFormat.WEBM;
-
-            case XLSX: return DocumentFormat.SOXML;
-
-            case ZIP: return DocumentFormat.ZIP;
-
-            case CSIG: return DocumentFormat.CSIG;
-
-            case XSIG: return DocumentFormat.XSIG;
-
-            case XML: return DocumentFormat.XML;
-
-        }
-
-        return null;
-    }
-
-    /**
      * Obtiene un {@link es.caib.plugins.arxiu.api.FirmaPerfil} a partir de los parámetros
      * @param singProfile
      * @return
@@ -805,6 +827,52 @@ public class ArxiuCaibUtils {
 
         return null;
 
+    }
+
+    /**
+     * Obtiene un {@link es.caib.plugins.arxiu.api.DocumentFormat} a partir de los parámetros
+     * @param extension
+     * @return
+     */
+    private DocumentFormat getDocumentFormat(DocumentExtensio extension){
+
+        switch (extension) {
+            case AVI: return DocumentFormat.AVI;
+            case CSS: return DocumentFormat.CSS;
+            case CSV: return DocumentFormat.CSV;
+            case DOCX: return DocumentFormat.SOXML;
+            case GML: return DocumentFormat.GML;
+            case GZ: return DocumentFormat.GZIP;
+            case HTM: return DocumentFormat.XHTML; // HTML o XHTML!!!
+            case HTML: return DocumentFormat.XHTML; // HTML o XHTML!!!
+            case JPEG: return DocumentFormat.JPEG;
+            case JPG: return DocumentFormat.JPEG;
+            case MHT: return DocumentFormat.MHTML;
+            case MHTML: return DocumentFormat.MHTML;
+            case MP3: return DocumentFormat.MP3;
+            case MP4: return DocumentFormat.MP4V; // MP4A o MP4V!!!
+            case MPEG: return DocumentFormat.MP4V; // MP4A o MP4V!!!
+            case ODG: return DocumentFormat.OASIS12;
+            case ODP: return DocumentFormat.OASIS12;
+            case ODS: return DocumentFormat.OASIS12;
+            case ODT: return DocumentFormat.OASIS12;
+            case OGA: return DocumentFormat.OGG;
+            case OGG: return DocumentFormat.OGG;
+            case PDF: return DocumentFormat.PDF; // PDF o PDFA!!!
+            case PNG: return DocumentFormat.PNG;
+            case PPTX: return DocumentFormat.SOXML;
+            case RTF: return DocumentFormat.RTF;
+            case SVG: return DocumentFormat.SVG;
+            case TIFF: return DocumentFormat.TIFF;
+            case TXT: return DocumentFormat.TXT;
+            case WEBM: return DocumentFormat.WEBM;
+            case XLSX: return DocumentFormat.SOXML;
+            case ZIP: return DocumentFormat.ZIP;
+            case CSIG: return DocumentFormat.CSIG;
+            case XSIG: return DocumentFormat.XSIG;
+            case XML: return DocumentFormat.XML;
+        }
+        return null;
     }
 
     /**
