@@ -393,7 +393,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
                     asiento.setIdentificadorIntercambio(registroSalida.getRegistroDetalle().getIdentificadorIntercambio());
 
                     // Justificante
-                    if(justificante){
+                    if(tipoOperacion == null && justificante){
                         asientoRegistralEjb.crearJustificante(usuario, registroSalida, REGISTRO_SALIDA, "ca");
                     }
 
