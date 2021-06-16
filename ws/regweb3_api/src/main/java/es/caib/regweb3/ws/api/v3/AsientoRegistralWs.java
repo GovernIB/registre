@@ -23,9 +23,11 @@ import java.util.List;
  *         &lt;element name="aplicacionTelematica" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="codigoAsunto" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="codigoAsuntoDenominacion" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
+ *         &lt;element name="codigoEntidadRegistralProcesado" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="codigoError" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="codigoSia" type="{http://www.w3.org/2001/XMLSchema}long" minOccurs="0"/>
  *         &lt;element name="codigoUsuario" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
+ *         &lt;element name="decodificacionEntidadRegistralProcesado" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="descripcionError" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="entidadCodigo" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="entidadDenominacion" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
@@ -80,9 +82,11 @@ import java.util.List;
     "aplicacionTelematica",
     "codigoAsunto",
     "codigoAsuntoDenominacion",
+    "codigoEntidadRegistralProcesado",
     "codigoError",
     "codigoSia",
     "codigoUsuario",
+    "decodificacionEntidadRegistralProcesado",
     "descripcionError",
     "entidadCodigo",
     "entidadDenominacion",
@@ -131,9 +135,11 @@ public class AsientoRegistralWs {
     protected String aplicacionTelematica;
     protected String codigoAsunto;
     protected String codigoAsuntoDenominacion;
+    protected String codigoEntidadRegistralProcesado;
     protected String codigoError;
     protected Long codigoSia;
     protected String codigoUsuario;
+    protected String decodificacionEntidadRegistralProcesado;
     protected String descripcionError;
     protected String entidadCodigo;
     protected String entidadDenominacion;
@@ -310,6 +316,30 @@ public class AsientoRegistralWs {
     }
 
     /**
+     * Obtiene el valor de la propiedad codigoEntidadRegistralProcesado.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getCodigoEntidadRegistralProcesado() {
+        return codigoEntidadRegistralProcesado;
+    }
+
+    /**
+     * Define el valor de la propiedad codigoEntidadRegistralProcesado.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setCodigoEntidadRegistralProcesado(String value) {
+        this.codigoEntidadRegistralProcesado = value;
+    }
+
+    /**
      * Obtiene el valor de la propiedad codigoError.
      * 
      * @return
@@ -379,6 +409,30 @@ public class AsientoRegistralWs {
      */
     public void setCodigoUsuario(String value) {
         this.codigoUsuario = value;
+    }
+
+    /**
+     * Obtiene el valor de la propiedad decodificacionEntidadRegistralProcesado.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getDecodificacionEntidadRegistralProcesado() {
+        return decodificacionEntidadRegistralProcesado;
+    }
+
+    /**
+     * Define el valor de la propiedad decodificacionEntidadRegistralProcesado.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setDecodificacionEntidadRegistralProcesado(String value) {
+        this.decodificacionEntidadRegistralProcesado = value;
     }
 
     /**

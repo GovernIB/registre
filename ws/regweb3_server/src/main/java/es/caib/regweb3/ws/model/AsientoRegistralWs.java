@@ -66,6 +66,8 @@ public class AsientoRegistralWs implements Serializable {
     private String numeroRegistroDestino;// Numero de registro aceptado en destino.
     private Date fechaRegistroDestino;
     private String motivo; //Motivo rechazo o reenvio
+    private String codigoEntidadRegistralProcesado; // Codigo de la oficina que acepta o rechaza, reenvia
+    private String decodificacionEntidadRegistralProcesado; // Denominacion de la oficina que acepta o rechaza, reenvia
 
 
     public AsientoRegistralWs() {
@@ -449,5 +451,21 @@ public class AsientoRegistralWs implements Serializable {
 
     public void setMotivo(String motivo) {
         this.motivo = motivo;
+    }
+
+    public String getCodigoEntidadRegistralProcesado() {
+        return codigoEntidadRegistralProcesado;
+    }
+
+    public void setCodigoEntidadRegistralProcesado(String codigoEntidadRegistralProcesado) {
+        this.codigoEntidadRegistralProcesado = codigoEntidadRegistralProcesado;
+    }
+
+    public String getDecodificacionEntidadRegistralProcesado() {
+        return decodificacionEntidadRegistralProcesado;
+    }
+
+    public void setDecodificacionEntidadRegistralProcesado(String decodificacionEntidadRegistralProcesado) {
+        this.decodificacionEntidadRegistralProcesado = decodificacionEntidadRegistralProcesado;
     }
 }

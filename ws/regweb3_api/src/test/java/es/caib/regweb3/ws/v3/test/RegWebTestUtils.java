@@ -528,7 +528,7 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
             String formulario = CODIGO_SICRES_BY_TIPO_DOCUMENTO.get(TIPO_DOCUMENTO_FORMULARIO);
             anexoSinFirma.setTipoDocumento(formulario);
             anexoSinFirma.setOrigenCiudadanoAdmin(ANEXO_ORIGEN_CIUDADANO);
-            anexoSinFirma.setObservaciones("Observaciones de Marilen");
+            anexoSinFirma.setObservaciones("Observacionesde anexo");
 
             anexoSinFirma.setModoFirma(MODO_FIRMA_ANEXO_SINFIRMA); // == 0
             anexoSinFirma.setFechaCaptura(new Timestamp(new Date().getTime()));
@@ -671,14 +671,6 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
             System.out.println("");
             System.out.println("Nombre anexo: " + anexo.getTitulo());
             System.out.println("isJustificante: " + anexo.isJustificante());
-
-            if(anexo.getModoFirma().equals(0)){
-                System.out.println("fichero: " + anexo.getFicheroAnexado().length);
-
-            }else if(anexo.getModoFirma().equals(1)){
-                System.out.println("firma: " + anexo.getFirmaAnexada().length);
-
-            }
 
         }
     }

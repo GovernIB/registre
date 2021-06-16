@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<wsdl:definitions name="RegWebAsientoRegistralWsService" targetNamespace="http://impl.v3.ws.regweb3.caib.es/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://impl.v3.ws.regweb3.caib.es/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+<wsdl:definitions name="RegWebAsientoRegistralWsService" targetNamespace="http://impl.v3.ws.regweb3.caib.es/"
+                  xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://impl.v3.ws.regweb3.caib.es/"
+                  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
   <wsdl:types>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://impl.v3.ws.regweb3.caib.es/" attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="http://impl.v3.ws.regweb3.caib.es/">
   <xs:element name="anexoWs" type="tns:anexoWs"/>
@@ -142,9 +144,11 @@
       <xs:element minOccurs="0" name="aplicacionTelematica" type="xs:string"/>
       <xs:element minOccurs="0" name="codigoAsunto" type="xs:string"/>
       <xs:element minOccurs="0" name="codigoAsuntoDenominacion" type="xs:string"/>
+      <xs:element minOccurs="0" name="codigoEntidadRegistralProcesado" type="xs:string"/>
       <xs:element minOccurs="0" name="codigoError" type="xs:string"/>
       <xs:element minOccurs="0" name="codigoSia" type="xs:long"/>
       <xs:element minOccurs="0" name="codigoUsuario" type="xs:string"/>
+      <xs:element minOccurs="0" name="decodificacionEntidadRegistralProcesado" type="xs:string"/>
       <xs:element minOccurs="0" name="descripcionError" type="xs:string"/>
       <xs:element minOccurs="0" name="entidadCodigo" type="xs:string"/>
       <xs:element minOccurs="0" name="entidadDenominacion" type="xs:string"/>
