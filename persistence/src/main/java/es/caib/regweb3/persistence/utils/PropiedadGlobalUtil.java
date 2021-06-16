@@ -595,8 +595,20 @@ public class PropiedadGlobalUtil {
     }
 
     /**
+     * Devuelve el valor de la propiedad que indica si se generarán Comunicaciones a los usuarios de registro
+     * Propiedad: es.caib.regweb3.comunicaciones.generar
+     * @param idEntidad
+     * @return
+     */
+    public static Boolean getCustodiaDiferida(Long idEntidad) {
+        final String partialPropertyName = "custodia.diferida.justificantes";
+        return getBooleanByEntidad(idEntidad, partialPropertyName);
+
+    }
+
+    /**
      * Obtenemos el número de elementos de cada iteración en la Cola de Custodia
-     * Propiedad: es.caib.regweb3.cola.cutodia.elementos
+     * Propiedad: es.caib.regweb3.cola.custodia.elementos
      * @param idEntidad
      * @return
      */

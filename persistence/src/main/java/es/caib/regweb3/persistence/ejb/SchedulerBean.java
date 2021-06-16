@@ -270,12 +270,16 @@ public class SchedulerBean implements SchedulerLocal{
 
             for (Entidad entidad : entidades) {
 
-                custodiaEjb.custodiarJustificantesEnCola(entidad.getId());
+                if(PropiedadGlobalUtil.getCustodiaDiferida(entidad.getId())){
+
+                    custodiaEjb.custodiarJustificantesEnCola(entidad.getId());
+                }
             }
 
         }catch (Exception e){
             log.error("Error custodiando justificantes de la Cola ...", e);
         }
+
     }
 
     /**

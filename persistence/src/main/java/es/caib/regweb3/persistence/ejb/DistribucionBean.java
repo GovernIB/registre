@@ -130,7 +130,8 @@ public class DistribucionBean implements DistribucionLocal {
             AnexoFull justificante = justificanteEjb.crearJustificante(registroEntrada.getUsuario(), registroEntrada, RegwebConstantes.REGISTRO_ENTRADA, Configuracio.getDefaultLanguage());
             registroEntrada.getRegistroDetalle().getAnexosFull().add(justificante);
 
-        }else if (Configuracio.isCAIB() && !registroEntrada.getRegistroDetalle().getTieneJustificanteCustodiado()) { // Si tiene Justificante, pero no está custodiado custodiado, no distribuimos
+            // Si la custodia en diferido está activa, tiene Justificante, pero no está custodiado, no distribuimos!
+        }else if (PropiedadGlobalUtil.getCustodiaDiferida(registroEntrada.getUsuario().getEntidad().getId()) && !registroEntrada.getRegistroDetalle().getTieneJustificanteCustodiado()) {
             log.info("El registro: " + registroEntrada.getNumeroRegistroFormateado()+" no se distribuira en esta iteracion porque no tiene el Justificante custodiado");
             return false;
         }

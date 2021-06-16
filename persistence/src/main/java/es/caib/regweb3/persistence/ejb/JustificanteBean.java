@@ -10,9 +10,9 @@ import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.persistence.integracion.ArxiuCaibUtils;
 import es.caib.regweb3.persistence.integracion.JustificanteArxiu;
 import es.caib.regweb3.persistence.utils.I18NLogicUtils;
+import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.persistence.utils.RegistroUtils;
 import es.caib.regweb3.plugins.justificante.IJustificantePlugin;
-import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.RegwebUtils;
 import es.caib.regweb3.utils.TimeUtils;
@@ -95,7 +95,8 @@ public class JustificanteBean implements JustificanteLocal {
             throw new I18NException("aviso.justificante.existe");
         }
 
-        if(Configuracio.isCAIB()){ // si es CAIB generamos el justificante en Filesystem y enviamos a la Cola de custodia
+        // Si la custodia en diferido está activa generamos el justificante en Filesystem y enviamos a la Cola de custodia
+        if(PropiedadGlobalUtil.getCustodiaDiferida(usuarioEntidad.getEntidad().getId())){
             return crearJustificanteDocumentCustody(usuarioEntidad, registro, tipoRegistro, idioma, true);
             //return crearJustificanteApiArxiu(usuarioEntidad, registro, tipoRegistro, idioma, true);
         }else{
