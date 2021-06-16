@@ -138,17 +138,16 @@ public class AsientoRegistralConverter extends CommonConverter {
     * @param entidad
     * @param idioma
     * @param oficioRemisionEjb
-    * @param trazabilidadEjb
     * @return
     * @throws Exception
     */
-   public static AsientoRegistralWs transformarRegistro(IRegistro registro, Long tipoRegistro, Entidad entidad, String idioma, OficioRemisionLocal oficioRemisionEjb, TrazabilidadSirLocal trazabilidadEjb) throws Exception{
+   public static AsientoRegistralWs transformarRegistro(IRegistro registro, Long tipoRegistro, Entidad entidad, String idioma, OficioRemisionLocal oficioRemisionEjb) throws Exception{
 
 
       AsientoRegistralWs asientoRegistral = new AsientoRegistralWs(tipoRegistro);
 
       // Convertimos los campos comunes de AsientoRegistralWs
-      setAsientoRegistralComun(asientoRegistral, registro, entidad, idioma, oficioRemisionEjb, trazabilidadEjb);
+      setAsientoRegistralComun(asientoRegistral, registro, entidad, idioma, oficioRemisionEjb);
 
       if(REGISTRO_ENTRADA.equals(tipoRegistro)){
 
@@ -194,7 +193,6 @@ public class AsientoRegistralConverter extends CommonConverter {
     * @param registroSalidaConsultaEjb
     * @param permisoOrganismoUsuarioEjb
     * @param oficioRemisionEjb
-    * @param trazabilidadEjb
     * @param lopdEjb
     * @return
     * @throws Exception
@@ -202,7 +200,7 @@ public class AsientoRegistralConverter extends CommonConverter {
     */
    public static AsientoRegistralWs getAsientoRegistral(UsuarioEntidad usuario, String numeroRegistro, Long tipoRegistro, String idioma, Boolean conAnexos, Boolean comprobarPermisos,
                                                         RegistroEntradaConsultaLocal registroEntradaConsultaEjb, RegistroSalidaConsultaLocal registroSalidaConsultaEjb, PermisoOrganismoUsuarioLocal permisoOrganismoUsuarioEjb,
-                                                        OficioRemisionLocal oficioRemisionEjb, TrazabilidadSirLocal trazabilidadEjb, LopdLocal lopdEjb) throws Exception, I18NException {
+                                                        OficioRemisionLocal oficioRemisionEjb, LopdLocal lopdEjb) throws Exception, I18NException {
 
       AsientoRegistralWs asientoRegistral = new AsientoRegistralWs(tipoRegistro);
 
@@ -227,7 +225,7 @@ public class AsientoRegistralConverter extends CommonConverter {
          }
 
          // Convertimos los campos comunes de AsientoRegistralWs
-         setAsientoRegistralComun(asientoRegistral, registro, usuario.getEntidad(), idioma, oficioRemisionEjb, trazabilidadEjb);
+         setAsientoRegistralComun(asientoRegistral, registro, usuario.getEntidad(), idioma, oficioRemisionEjb);
 
          // Campos únicos de RegistroEntrada
          if(registro.getDestino() != null ){
@@ -265,7 +263,7 @@ public class AsientoRegistralConverter extends CommonConverter {
          }
 
          // Convertimos los campos comunes de AsientoRegistralWs
-         setAsientoRegistralComun(asientoRegistral, registro, usuario.getEntidad(), idioma, oficioRemisionEjb, trazabilidadEjb);
+         setAsientoRegistralComun(asientoRegistral, registro, usuario.getEntidad(), idioma, oficioRemisionEjb);
 
          // Campos únicos de RegistroSalida
          if (registro.getOrigen() != null) {
@@ -293,10 +291,9 @@ public class AsientoRegistralConverter extends CommonConverter {
     * @param entidad
     * @param idioma
     * @param oficioRemisionEjb
-    * @param trazabilidadEjb
     * @throws Exception
     */
-   private static void setAsientoRegistralComun(AsientoRegistralWs asientoRegistral, IRegistro registro, Entidad entidad, String idioma, OficioRemisionLocal oficioRemisionEjb, TrazabilidadSirLocal trazabilidadEjb) throws Exception{
+   private static void setAsientoRegistralComun(AsientoRegistralWs asientoRegistral, IRegistro registro, Entidad entidad, String idioma, OficioRemisionLocal oficioRemisionEjb) throws Exception{
 
       RegistroDetalle registroDetalle = registro.getRegistroDetalle();
 
