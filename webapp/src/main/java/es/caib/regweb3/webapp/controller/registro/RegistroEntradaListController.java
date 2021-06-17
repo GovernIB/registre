@@ -9,7 +9,6 @@ import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.persistence.utils.RegistroUtils;
 import es.caib.regweb3.persistence.utils.RespuestaDistribucion;
-import es.caib.regweb3.plugins.distribucion.IDistribucionPlugin;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 import es.caib.regweb3.webapp.form.AnularForm;
@@ -705,15 +704,8 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         RegistroEntrada registroEntrada;
         RespuestaDistribucion respuesta = new RespuestaDistribucion();
         JsonResponse response = new JsonResponse();
-        IDistribucionPlugin distribucionPlugin = (IDistribucionPlugin) pluginEjb.getPlugin(getEntidadActiva(request).getId(), RegwebConstantes.PLUGIN_DISTRIBUCION);
 
-        if(distribucionPlugin.configurarDistribucion().isEnvioCola()){ // Si va a la Cola, no hace falta cargar los anexos
-            registroEntrada = registroEntradaEjb.findById(idRegistro);
-        }else{
-            registroEntrada = registroEntradaEjb.getConAnexosFull(idRegistro);
-        }
-
-        log.info("Distribución de registro: " + registroEntrada.getNumeroRegistroFormateado());
+        registroEntrada = registroEntradaEjb.findById(idRegistro);
 
         // Comprobamos si el RegistroEntrada tiene el estado Válido
         if (!registroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO)) {
