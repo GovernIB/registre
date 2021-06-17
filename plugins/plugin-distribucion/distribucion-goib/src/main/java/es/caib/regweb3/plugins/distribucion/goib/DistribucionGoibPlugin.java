@@ -4,7 +4,6 @@ package es.caib.regweb3.plugins.distribucion.goib;
 import es.caib.distribucio.ws.v1.bustia.*;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.AnexoFull;
-import es.caib.regweb3.plugins.distribucion.ConfiguracionDistribucion;
 import es.caib.regweb3.plugins.distribucion.IDistribucionPlugin;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
@@ -145,18 +144,6 @@ public class DistribucionGoibPlugin extends AbstractPluginProperties implements 
             }
             throw new Exception(e);
         }
-
-    }
-
-    @Override
-    public ConfiguracionDistribucion configurarDistribucion() throws Exception {
-        //especifica que información se enviará en el segmento de anexo del registro de entrada.
-        /* 1 =  metadades + fitxer + firma. És a dir a dins el segment annexes de l'assentament s'enviaria tot el contingut de l'annexe.
-         *  2 =  custodiaId. A dins el segment annexes de l'assentament només s'enviaria l'Id del sistema que custodia l'arxiu.
-         *  3 = custodiaId + metadades. A dins el segment annexes de l'assentament s'enviaria l'Id del sistema que custodia l'arxiu i les metadades del document.
-         * */
-        /* EN ESTA IMPLEMENTACION NO SE EMPLEA */
-        return new ConfiguracionDistribucion(Boolean.parseBoolean(getPropertyEnvioCola()));
 
     }
 
