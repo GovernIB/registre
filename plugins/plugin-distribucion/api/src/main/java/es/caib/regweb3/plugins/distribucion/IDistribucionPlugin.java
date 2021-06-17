@@ -24,9 +24,4 @@ public interface IDistribucionPlugin extends IPlugin {
      */
     Boolean distribuir(RegistroEntrada registro, Locale locale) throws Exception;
 
-    /*
-      Método que devuelve la configuración de la distribución.
-     */
-    ConfiguracionDistribucion configurarDistribucion() throws Exception;
-
 }
