@@ -62,7 +62,11 @@ public class CustodiaBean implements CustodiaLocal {
 
         try {
 
-            log.info("Procedemos a custodiar el justificante: " + elemento.getIdObjeto());
+            log.info("Procedemos a custodiar el justificante de DocumentCustody en ArxiuCaib: " + elemento.getIdObjeto());
+
+            // Integración
+            peticion.append("idCola: ").append(elemento.getId()).append(System.getProperty("line.separator"));
+            peticion.append("numeroRegistro: ").append(elemento.getDescripcionObjeto()).append(System.getProperty("line.separator"));
 
             // Custodiamos el justificante en Arxiu-Caib
             Anexo anexo = custodiarAnexoDocumentCustody(elemento, idEntidad);
@@ -71,8 +75,6 @@ public class CustodiaBean implements CustodiaLocal {
             colaEjb.procesarElemento(elemento);
 
             // Integración
-            peticion.append("idCola: ").append(elemento.getId()).append(System.getProperty("line.separator"));
-            peticion.append("numeroRegistro: ").append(elemento.getDescripcionObjeto()).append(System.getProperty("line.separator"));
             peticion.append("idAnexo: ").append(anexo.getId()).append(System.getProperty("line.separator"));
             peticion.append("expediente creado: ").append(anexo.getExpedienteID()).append(System.getProperty("line.separator"));
             peticion.append("documento creado: ").append(anexo.getCustodiaID()).append(System.getProperty("line.separator"));
@@ -119,7 +121,6 @@ public class CustodiaBean implements CustodiaLocal {
      */
     private Anexo custodiarAnexoDocumentCustody(Cola elemento, Long idEntidad) throws Exception, I18NException {
 
-        log.info("Procedemos a custodiar el anexo de DocumentCustody en ArxiuCaib");
         IRegistro registro;
         String custodyIdFileSystem;
 
