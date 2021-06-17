@@ -442,6 +442,8 @@ public class AnexoController extends BaseController {
             if(justificante != null){
                 download(justificante.getContingut().getTipusMime(), response, justificante.getNom(),justificante.getContingut().getContingut());
             }else {
+                Mensaje.saveMessageError(request, getMessage("justificante.noExiste", anexo.getCustodiaID()));
+                response.sendRedirect("/regweb3/inici");
                 log.info("No se ha obtenido el  justificante");
             }
 
