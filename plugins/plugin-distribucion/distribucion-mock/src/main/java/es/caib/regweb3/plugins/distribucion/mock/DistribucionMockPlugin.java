@@ -1,7 +1,6 @@
 package es.caib.regweb3.plugins.distribucion.mock;
 
 import es.caib.regweb3.model.RegistroEntrada;
-import es.caib.regweb3.plugins.distribucion.ConfiguracionDistribucion;
 import es.caib.regweb3.plugins.distribucion.IDistribucionPlugin;
 import org.apache.log4j.Logger;
 import org.fundaciobit.pluginsib.core.utils.AbstractPluginProperties;
@@ -46,13 +45,6 @@ public class DistribucionMockPlugin extends AbstractPluginProperties implements 
     public Boolean distribuir(RegistroEntrada registro, Locale lang) throws Exception {
 
         return true;
-
-    }
-
-    @Override
-    public ConfiguracionDistribucion configurarDistribucion() throws Exception {
-
-       return new ConfiguracionDistribucion(false);
 
     }
 }

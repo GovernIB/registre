@@ -10,8 +10,6 @@ import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.log4j.Logger;
-import org.fundaciobit.genapp.common.i18n.I18NException;
-import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
 import javax.ejb.EJB;
@@ -220,7 +218,6 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
             q = em.createQuery(query.toString());
         }
 
-
         Paginacion paginacion;
 
         if (cola.getPageNumber() != null) { // Comprobamos si es una busqueda paginada o no
@@ -253,7 +250,7 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
     }
 
     @Override
-    public synchronized boolean enviarAColaDistribucion(RegistroEntrada re, UsuarioEntidad usuarioEntidad) throws Exception, I18NException, I18NValidationException {
+    public synchronized boolean enviarAColaDistribucion(RegistroEntrada re, UsuarioEntidad usuarioEntidad) throws Exception{
 
         try {
             if(findByDescripcion(re.getNumeroRegistroFormateado(),usuarioEntidad.getEntidad().getId())==null){
