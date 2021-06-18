@@ -66,6 +66,7 @@ public class CustodiaBean implements CustodiaLocal {
 
             // Integración
             peticion.append("idCola: ").append(elemento.getId()).append(System.getProperty("line.separator"));
+            peticion.append("idElemento: ").append(elemento.getIdObjeto()).append(System.getProperty("line.separator"));
             peticion.append("numeroRegistro: ").append(elemento.getDescripcionObjeto()).append(System.getProperty("line.separator"));
 
             // Custodiamos el justificante en Arxiu-Caib
