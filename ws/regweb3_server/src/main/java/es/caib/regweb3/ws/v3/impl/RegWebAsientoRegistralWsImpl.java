@@ -6,10 +6,7 @@ import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.model.utils.AnexoSimple;
 import es.caib.regweb3.persistence.ejb.*;
-import es.caib.regweb3.persistence.utils.JustificanteReferencia;
-import es.caib.regweb3.persistence.utils.Paginacion;
-import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
-import es.caib.regweb3.persistence.utils.RespuestaDistribucion;
+import es.caib.regweb3.persistence.utils.*;
 import es.caib.regweb3.persistence.validator.RegistroEntradaBeanValidator;
 import es.caib.regweb3.persistence.validator.RegistroEntradaValidator;
 import es.caib.regweb3.persistence.validator.RegistroSalidaBeanValidator;
@@ -303,14 +300,14 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
                     if(justificante && distribuir){
 
                         if(PropiedadGlobalUtil.getCustodiaDiferida(entidadActiva.getId())){ // Si la Custodia en diferido está activa, generamos el  justificante
-                            asientoRegistralEjb.crearJustificante(usuario, registroEntrada, REGISTRO_ENTRADA, RegwebConstantes.IDIOMA_CATALAN_CODIGO);
+                            asientoRegistralEjb.crearJustificante(usuario, registroEntrada, REGISTRO_ENTRADA, RegistroUtils.getIdiomaJustificante(registroEntrada));
                         }
 
                         // Distribuimos, si la Custodia en diferido no está activa, se generará el justificante antes de Distribuir
                         asientoRegistralEjb.distribuirRegistroEntrada(registroEntrada, usuarioAplicacion);
 
                     }else if(justificante){
-                        asientoRegistralEjb.crearJustificante(usuario, registroEntrada, REGISTRO_ENTRADA, RegwebConstantes.IDIOMA_CATALAN_CODIGO);
+                        asientoRegistralEjb.crearJustificante(usuario, registroEntrada, REGISTRO_ENTRADA, RegistroUtils.getIdiomaJustificante(registroEntrada));
                     }else if(distribuir){
                         asientoRegistralEjb.distribuirRegistroEntrada(registroEntrada, usuarioAplicacion);
                     }
@@ -391,7 +388,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
 
                     // Justificante
                     if(tipoOperacion == null && justificante){
-                        asientoRegistralEjb.crearJustificante(usuario, registroSalida, REGISTRO_SALIDA, "ca");
+                        asientoRegistralEjb.crearJustificante(usuario, registroSalida, REGISTRO_SALIDA, RegistroUtils.getIdiomaJustificante(registroSalida));
                     }
 
                     // Integracion OK
@@ -520,7 +517,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
                 if(registroEntrada.getEstado().equals(REGISTRO_VALIDO) || registroEntrada.getEstado().equals(REGISTRO_DISTRIBUYENDO)){
 
                     try{
-                        justificante = justificanteEjb.crearJustificanteWS(usuario,registroEntrada,RegwebConstantes.REGISTRO_ENTRADA, Configuracio.getDefaultLanguage());
+                        justificante = justificanteEjb.crearJustificanteWS(usuario,registroEntrada,RegwebConstantes.REGISTRO_ENTRADA, RegistroUtils.getIdiomaJustificante(registroEntrada));
                     }catch (I18NException e){
                         log.info("----------------Error generado justificante via WS------------------");
                         integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, null,System.currentTimeMillis() - tiempo, entidadActiva.getId(), numeroRegistroFormateado);
@@ -566,7 +563,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
                 if(registroSalida.getEstado().equals(REGISTRO_VALIDO)) {
 
                     try{
-                        justificante = justificanteEjb.crearJustificanteWS(usuario,registroSalida,RegwebConstantes.REGISTRO_SALIDA,Configuracio.getDefaultLanguage());
+                        justificante = justificanteEjb.crearJustificanteWS(usuario,registroSalida,RegwebConstantes.REGISTRO_SALIDA, RegistroUtils.getIdiomaJustificante(registroSalida));
                     }catch (I18NException e){
                         integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, null,System.currentTimeMillis() - tiempo, entidadActiva.getId(), numeroRegistroFormateado);
                         throw new I18NException("registro.justificante.error", numeroRegistroFormateado);

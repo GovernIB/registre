@@ -2,6 +2,7 @@ package es.caib.regweb3.persistence.utils;
 
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.PlantillaJson;
+import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.log4j.Logger;
 
@@ -234,8 +235,24 @@ public class RegistroUtils{
 
             }
         }
-
         return null;
+    }
+
+    /**
+     * Obtiene el idioma para generar el Justificante
+     * @param registro
+     * @return
+     * @throws Exception
+     */
+    public static String getIdiomaJustificante(IRegistro registro){
+
+        if(registro.getRegistroDetalle().getIdioma().equals(RegwebConstantes.IDIOMA_CASTELLANO_ID)){
+            return RegwebConstantes.IDIOMA_CASTELLANO_CODIGO;
+        }if(registro.getRegistroDetalle().getIdioma().equals(RegwebConstantes.IDIOMA_CASTELLANO_ID)){
+            return RegwebConstantes.IDIOMA_CATALAN_CODIGO;
+        } else{
+            return Configuracio.getDefaultLanguage();
+        }
     }
 
 }
