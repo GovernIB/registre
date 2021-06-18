@@ -144,4 +144,12 @@ public interface ColaLocal extends BaseEjb<Cola, Long> {
      * @throws Exception
      */
     void purgarElementosProcesados(Long idEntidad, Integer meses) throws Exception;
+
+    /**
+     * Obtiene los elementos de cualquier cola que estén en estado Error
+     * @param idEntidad
+     * @return
+     * @throws Exception
+     */
+    List<Cola> getElementosError( Long idEntidad) throws Exception;
 }
