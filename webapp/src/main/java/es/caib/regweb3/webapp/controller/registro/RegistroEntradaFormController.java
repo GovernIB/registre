@@ -8,7 +8,6 @@ import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.PlantillaJson;
 import es.caib.regweb3.persistence.ejb.CodigoAsuntoLocal;
 import es.caib.regweb3.persistence.ejb.InteresadoLocal;
-import es.caib.regweb3.persistence.ejb.LibroLocal;
 import es.caib.regweb3.persistence.ejb.PlantillaLocal;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.persistence.utils.RegistroUtils;
@@ -51,9 +50,6 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
 
     @EJB(mappedName = "regweb3/PlantillaEJB/local")
     private PlantillaLocal plantillaEjb;
-
-    @EJB(mappedName = "regweb3/LibroEJB/local")
-    private LibroLocal libroEjb;
 
     @EJB(mappedName = "regweb3/CodigoAsuntoEJB/local")
     private CodigoAsuntoLocal codigoAsuntoEjb;
