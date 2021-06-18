@@ -384,9 +384,7 @@ public class AnexoScanController extends AnexoController {
         if(documento.getOcr() != null) {
             metadatasScan.add(new Metadata(MetadataConstants.OCR, documento.getOcr()));
         }
-        if(documento.getPaperSize() != null) {
-            metadatasScan.add(new Metadata(MetadataConstants.PAPER_SIZE, documento.getPaperSize()));
-        }
+
         if(documento.getPixelType() != null) {
             metadatasScan.add(new Metadata(MetadataConstants.EEMGDE_PROFUNDIDAD_COLOR, documento.getPixelType()));
 
@@ -406,6 +404,7 @@ public class AnexoScanController extends AnexoController {
 
         anexoForm.setMetadatas(metadatasScan);
 
+        //TODO Metadades del funcionari
         anexoForm.getAnexo().setTitulo(documento.getTransactionName());
 
 
