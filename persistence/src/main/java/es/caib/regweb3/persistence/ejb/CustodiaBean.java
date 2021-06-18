@@ -100,7 +100,7 @@ public class CustodiaBean implements CustodiaLocal {
     public void custodiarJustificantesEnCola(Long idEntidad) throws Exception {
 
         // Obtiene un numero de elementos (configurable) pendientes de distribuir que estan en la cola
-        List<Cola> elementos = colaEjb.findByTipoEntidad(RegwebConstantes.COLA_CUSTODIA, idEntidad, PropiedadGlobalUtil.getElementosCola(idEntidad));
+        List<Cola> elementos = colaEjb.findByTipoEntidad(RegwebConstantes.COLA_CUSTODIA, idEntidad, PropiedadGlobalUtil.getElementosColaCustodia(idEntidad));
 
         log.info("");
         log.info("Hay " + elementos.size() + " elementos que se van a custodiar en esta iteracion");
