@@ -48,6 +48,9 @@ public class InicioController extends BaseController{
     @EJB(mappedName = "regweb3/IntegracionEJB/local")
     private IntegracionLocal integracionEjb;
 
+    @EJB(mappedName = "regweb3/ColaEJB/local")
+    private ColaLocal colaEjb;
+
 
     @RequestMapping(value = "/inici")
     public ModelAndView principal(HttpServletRequest request, Model model) throws Exception{
@@ -82,8 +85,6 @@ public class InicioController extends BaseController{
 
 
                 // Obtenemos los Organismos que tienen Registros de salida pendientes de tramitar por medio de un Oficio de Revisión,
-                //mav.addObject("organismosOficioRemisionSalida", oficioRemisionSalidaUtilsEjb.organismosSalidaPendientesRemision(oficinaActiva.getId(), librosRegistroSalida, getOrganismosOficioRemisionSalida(organismosOficinaActiva), entidadActiva.getId(), 10));
-                //mav.addObject("organismosOficioRemisionSalidaInternos", oficioRemisionSalidaUtilsEjb.organismosSalidaPendientesRemisionTipo(oficinaActiva.getId(), librosRegistroSalida, RegwebConstantes.EVENTO_OFICIO_INTERNO, RegwebConstantes.REGISTROS_PANTALLA_INICIO));
                 mav.addObject("organismosOficioRemisionSalidaExternos", oficioRemisionSalidaUtilsEjb.organismosSalidaPendientesRemisionTipo(oficinaActiva.getId(), RegwebConstantes.EVENTO_OFICIO_EXTERNO, RegwebConstantes.REGISTROS_PANTALLA_INICIO));
 
                 // Oficios de salida SIR
@@ -117,6 +118,9 @@ public class InicioController extends BaseController{
             mav.addObject("incidenciasFirma", integracionEjb.ultimasIntegracionesErrorTipo(entidadActiva.getId(), RegwebConstantes.INTEGRACION_FIRMA));
             mav.addObject("incidenciasWs", integracionEjb.ultimasIntegracionesErrorTipo(entidadActiva.getId(), RegwebConstantes.INTEGRACION_WS));
             model.addAttribute("integracion", new BasicForm());
+
+            // Elementos de la Cola en estadro Error
+            mav.addObject("erroresCola", colaEjb.getElementosError(entidadActiva.getId()));
 
             // Última sincronización de organismos
             mav.addObject("descargaUnidad", descargaEjb.ultimaDescarga(RegwebConstantes.UNIDAD, entidadActiva.getId()));

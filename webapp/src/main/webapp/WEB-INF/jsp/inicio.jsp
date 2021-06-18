@@ -72,6 +72,52 @@
                                     <form:hidden path="texto"/>
                                 </form:form>
 
+                                <%--ELEMENTOS COLA EN ESTADO ERROR--%>
+                                <c:if test="${not empty erroresCola}">
+                                    <div class="col-xs-6 filas">
+                                        <div class="panel panel-warning">
+                                            <div class="panel-heading">
+                                                <h3 class="panel-title"><i class="fa fa-book"></i> <strong><spring:message code="cola.elementosError"/></strong> </h3>
+                                            </div>
+
+                                            <div class="panel-body">
+                                                <div class="table-responsive-inici">
+
+                                                    <table class="table table-hover table-striped marg-bot0">
+                                                        <thead>
+                                                            <tr>
+                                                                <th><spring:message code="cola.fechaEntrada"/></th>
+                                                                <th><spring:message code="cola.tipo"/></th>
+                                                                <th><spring:message code="registroEntrada.numeroRegistro"/></th>
+                                                                <th><spring:message code="regweb.acciones"/></th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <c:forEach var="cola" items="${erroresCola}">
+                                                                <tr>
+                                                                    <td><fmt:formatDate value="${cola.fecha}" pattern="dd/MM/yyyy HH:mm:ss"/></td>
+                                                                    <td><span class="label label-danger"><spring:message code="cola.tipo.${cola.tipo}"/></span></td>
+                                                                    <td>
+                                                                        <c:if test="${cola.tipoRegistro == RegwebConstantes.REGISTRO_ENTRADA}">
+                                                                            <a href="<c:url value="/adminEntidad/registroEntrada/${cola.idObjeto}/detalle"/>" target="_blank" title="<spring:message code="registroEntrada.detalle"/>">${cola.descripcionObjeto}</a>
+                                                                        </c:if>
+                                                                        <c:if test="${cola.tipoRegistro == RegwebConstantes.REGISTRO_SALIDA}">
+                                                                            <a href="<c:url value="/adminEntidad/registroSalida/${cola.idObjeto}/detalle"/>" target="_blank" title="<spring:message code="registroSalida.detalle"/>"><${cola.descripcionObjeto}</a>
+                                                                        </c:if>
+                                                                    </td>
+                                                                    <td>
+                                                                        <a class="btn btn-danger btn-sm" href="<c:url value="/cola/list/${cola.tipo}"/>" target="_blank" title="<spring:message code="cola.cola"/>"><span class="fa fa-eye"></span></a>
+                                                                    </td>
+                                                                </tr>
+                                                            </c:forEach>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </c:if>
+
                                 <%--INCIDENCIAS INTEGRACIONES SIR--%>
                                 <c:if test="${not empty incidenciasSir}">
                                     <div class="col-xs-6 filas">

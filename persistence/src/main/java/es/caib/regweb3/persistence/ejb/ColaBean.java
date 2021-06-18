@@ -319,7 +319,6 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
         for(Cola pendiente: pendientesDistribuir){
             reiniciarElementoCola(pendiente.getId());
         }
-
     }
 
 
@@ -378,21 +377,6 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
         q.setParameter("numeroReintentos", 0);
         q.setParameter("idCola", idCola);
         q.executeUpdate();
-
-    }
-
-    public List<Cola> obtenerProcesados(Long idEntidad, Integer meses) throws Exception{
-        Date fechaPurgo = DateUtils.addMonths(new Date(), -meses);
-
-
-        Query q = em.createQuery( "select cola from Cola as cola where cola.estado=:procesado and cola.fecha<=:fechaPurgo and cola.usuarioEntidad.entidad.id =:idEntidad");
-
-        q.setParameter("fechaPurgo", fechaPurgo);
-        q.setParameter("procesado", RegwebConstantes.COLA_ESTADO_PROCESADO);
-        q.setParameter("idEntidad", idEntidad);
-        q.setHint("org.hibernate.readOnly", true);
-
-        return q.getResultList();
     }
 
     @Override
@@ -405,6 +389,40 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
             remove(elemento);
         }
 
+    }
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public List<Cola> getElementosError( Long idEntidad) throws Exception {
+
+        Query q = em.createQuery( "select cola from Cola as cola where cola.usuarioEntidad.entidad.id=:idEntidad " +
+                "and cola.estado = :error order by cola.id asc");
+
+        q.setParameter("idEntidad", idEntidad);
+        q.setParameter("error", RegwebConstantes.COLA_ESTADO_ERROR);
+
+        return q.getResultList();
+    }
+
+    /**
+     * Obtiene los elementos procesados de la Cola de una antiguedad determinada
+     * @param idEntidad
+     * @param meses
+     * @return
+     * @throws Exception
+     */
+    private List<Cola> obtenerProcesados(Long idEntidad, Integer meses) throws Exception{
+
+        Date fechaPurgo = DateUtils.addMonths(new Date(), -meses);
+
+        Query q = em.createQuery( "select cola from Cola as cola where cola.estado=:procesado and cola.fecha<=:fechaPurgo and cola.usuarioEntidad.entidad.id =:idEntidad");
+
+        q.setParameter("fechaPurgo", fechaPurgo);
+        q.setParameter("procesado", RegwebConstantes.COLA_ESTADO_PROCESADO);
+        q.setParameter("idEntidad", idEntidad);
+        q.setHint("org.hibernate.readOnly", true);
+
+        return q.getResultList();
     }
 
 }
