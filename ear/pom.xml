@@ -657,7 +657,7 @@
         <dependency>
           <groupId>org.fundaciobit.pluginsib.scanweb</groupId>
           <artifactId>pluginsib-scanweb-digitalib</artifactId>
-          <version>4.0.0</version>
+          <version>4.0.1</version>
         </dependency>
         <!-- incluimos la dependencia jersey porque si no da un error de json -->
        <dependency>
