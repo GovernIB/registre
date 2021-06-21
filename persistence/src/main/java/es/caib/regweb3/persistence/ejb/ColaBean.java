@@ -396,7 +396,7 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
     public List<Cola> getElementosError( Long idEntidad) throws Exception {
 
         Query q = em.createQuery( "select cola from Cola as cola where cola.usuarioEntidad.entidad.id=:idEntidad " +
-                "and cola.estado = :error order by cola.id asc");
+                "and cola.estado = :error order by cola.id desc");
 
         q.setParameter("idEntidad", idEntidad);
         q.setParameter("error", RegwebConstantes.COLA_ESTADO_ERROR);
