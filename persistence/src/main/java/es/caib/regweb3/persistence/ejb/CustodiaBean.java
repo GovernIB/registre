@@ -1,6 +1,7 @@
 package es.caib.regweb3.persistence.ejb;
 
 
+import es.caib.plugins.arxiu.api.Firma;
 import es.caib.regweb3.model.Anexo;
 import es.caib.regweb3.model.Cola;
 import es.caib.regweb3.model.IRegistro;
@@ -140,7 +141,8 @@ public class CustodiaBean implements CustodiaLocal {
         arxiuCaibUtils.cargarPlugin(idEntidad);
 
         // Custodiamos el Justificante en Arxiu-Caib
-        JustificanteArxiu justificanteArxiuCaib = arxiuCaibUtils.crearJustificanteArxiuCaib(registro, elemento.getTipoRegistro(), justificante.signatureCustodytoFirma());
+        Firma justificanteFirmado = justificante.signatureCustodytoFirma();
+        JustificanteArxiu justificanteArxiuCaib = arxiuCaibUtils.crearJustificanteArxiuCaib(registro, elemento.getTipoRegistro(), justificanteFirmado);
 
         try{
             // Eliminamos el Justificantre en FileSystem
@@ -151,16 +153,13 @@ public class CustodiaBean implements CustodiaLocal {
         }
 
         // Actualizamos el ExpedienteId, CustodyId y Csv al anexo que vamos a crear
-        justificante.getAnexo().setCustodiado(false);
+        justificante.getAnexo().setPerfilCustodia(RegwebConstantes.PERFIL_CUSTODIA_ARXIU);
         justificante.getAnexo().setExpedienteID(justificanteArxiuCaib.getExpediente().getIdentificador());
         justificante.getAnexo().setCustodiaID(justificanteArxiuCaib.getDocumento().getIdentificador());
-        if(justificanteArxiuCaib.getDocumento().getDocumentMetadades() != null){
-            justificante.getAnexo().setCsv(justificanteArxiuCaib.getDocumento().getDocumentMetadades().getCsv());
-            justificante.getAnexo().setCustodiado(true);
-        }
+        justificante.getAnexo().setCsv(justificanteArxiuCaib.getDocumento().getDocumentMetadades().getCsv());
+        justificante.getAnexo().setCustodiado(true);
 
         return anexoEjb.merge(justificante.getAnexo());
-
     }
 
     /**

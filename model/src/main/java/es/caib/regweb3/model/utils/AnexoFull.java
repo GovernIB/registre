@@ -359,8 +359,6 @@ public class AnexoFull{
     @Transient
     public Firma signatureCustodytoFirma(){
 
-        getAnexo().setPerfilCustodia(RegwebConstantes.PERFIL_CUSTODIA_ARXIU);
-
         if(getSignatureCustody() != null){
 
             // Creamos la Firma
@@ -377,7 +375,6 @@ public class AnexoFull{
         }
 
         return null;
-
     }
 
 
