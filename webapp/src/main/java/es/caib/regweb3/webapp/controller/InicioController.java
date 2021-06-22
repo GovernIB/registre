@@ -71,8 +71,6 @@ public class InicioController extends BaseController{
             /* OFICIOS PENDIENTES DE REMISIÓN */
             if(entidadActiva.getOficioRemision()){
 
-
-                //mav.addObject("organismosOficioRemisionEntradaInternos", oficioRemisionEntradaUtilsEjb.organismosEntradaPendientesRemisionInternos(oficinaActiva.getId(), librosRegistroEntrada, RegwebConstantes.REGISTROS_PANTALLA_INICIO));
                 mav.addObject("organismosOficioRemisionEntradaExternos", oficioRemisionEntradaUtilsEjb.organismosEntradaPendientesRemisionExternosTipo(oficinaActiva.getId(),  RegwebConstantes.EVENTO_OFICIO_EXTERNO, RegwebConstantes.REGISTROS_PANTALLA_INICIO));
 
                 // Oficios de entrada SIR
