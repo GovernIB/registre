@@ -452,7 +452,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
 
         Query q = em.createQuery("Select r.id, r.decodificacionEntidadRegistralOrigen, r.fechaRecepcion, r.resumen, r.documentacionFisica from RegistroSir as r " +
                 "where r.codigoEntidadRegistral = :oficinaSir and r.estado = :idEstado " +
-                "order by r.fechaRecepcion desc");
+                "order by r.fechaRecepcion");
 
         q.setMaxResults(total);
         q.setParameter("oficinaSir", oficinaSir);
