@@ -147,6 +147,12 @@ public class InicioInterceptor extends HandlerInterceptorAdapter {
 
                         entidadActiva =  loginInfo.getEntidadActiva();
 
+                        if(entidadActiva == null){
+                            Mensaje.saveMessageAviso(request, I18NUtils.tradueix("oficinaActiva.null"));
+                            response.sendRedirect("/regweb3/aviso");
+                            return false;
+                        }
+
                         //No permitir que se hagan registros si la entidad está en mantenimiento
                         if (entidadActiva.getMantenimiento() || tienePendientesDeProcesar) {
                             log.info("Tareas de Mantenimiento");
@@ -160,6 +166,12 @@ public class InicioInterceptor extends HandlerInterceptorAdapter {
                     case RegwebConstantes.RWE_ADMIN:
 
                         entidadActiva =  loginInfo.getEntidadActiva();
+
+                        if(entidadActiva == null){
+                            Mensaje.saveMessageAviso(request, I18NUtils.tradueix("entidad.acceso.denedado"));
+                            response.sendRedirect("/regweb3/aviso");
+                            return false;
+                        }
 
                         //Si no ha asignado todos los libros le redirige a la pagina de nuevo para procesarlos
                         if (tienePendientesDeProcesar) {
