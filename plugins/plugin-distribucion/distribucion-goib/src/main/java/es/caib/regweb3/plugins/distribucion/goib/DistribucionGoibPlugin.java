@@ -33,7 +33,6 @@ public class DistribucionGoibPlugin extends AbstractPluginProperties implements 
     private static final String PROPERTY_USUARIO = basePluginDistribucionGoib + "usuario";
     private static final String PROPERTY_PASSWORD = basePluginDistribucionGoib + "password";
     private static final String PROPERTY_ENDPOINT = basePluginDistribucionGoib + "endpoint";
-    private static final String PROPERTY_ENVIOCOLA = basePluginDistribucionGoib + "enviocola";
 
 
     private String getPropertyUsuario() throws Exception {
@@ -49,10 +48,6 @@ public class DistribucionGoibPlugin extends AbstractPluginProperties implements 
     private String getPropertyEndPoint() throws Exception {
 
         return getPropertyRequired(PROPERTY_ENDPOINT);
-    }
-
-    private  String getPropertyEnvioCola()  throws Exception{
-        return getPropertyRequired(PROPERTY_ENVIOCOLA);
     }
 
 
@@ -98,21 +93,15 @@ public class DistribucionGoibPlugin extends AbstractPluginProperties implements 
             }
 
             // Anexos
-            /*En el caso de DISTRIBUCIÓ no se tiene en cuenta la configuración de los Anexos.
-            Siempre se envia el identificador de custodia del Justificante +  el contenido completo de los anexos.*/
             for (AnexoFull anexoFull : registro.getRegistroDetalle().getAnexosFull()) {
 
-                // No distribuimos los Ficheros técnicos a Arxiu-Caib
-                if (!RegwebConstantes.TIPO_DOCUMENTO_FICHERO_TECNICO.equals(anexoFull.getAnexo().getTipoDocumento())) {
-
-                    RegistreAnnex registreAnnex;
-                    if (anexoFull.getAnexo().isJustificante()) { //Si es justificante, solo enviamos referencia Arxiu
-                        registreAnnex = transformarARegistreAnnexJustificante(anexoFull.getAnexo());
-                        registreAnotacio.setJustificant(registreAnnex);
-                    } else {
-                        registreAnnex = transformarARegistreAnnex(anexoFull); //Montamos contenido completo
-                        registreAnotacio.getAnnexos().add(registreAnnex);
-                    }
+                RegistreAnnex registreAnnex;
+                if (anexoFull.getAnexo().isJustificante()) { //Si es justificante, solo enviamos referencia Arxiu
+                    registreAnnex = transformarARegistreAnnexJustificante(anexoFull.getAnexo());
+                    registreAnotacio.setJustificant(registreAnnex);
+                } else {
+                    registreAnnex = transformarARegistreAnnex(anexoFull); //Contenido completo
+                    registreAnotacio.getAnnexos().add(registreAnnex);
                 }
             }
 
