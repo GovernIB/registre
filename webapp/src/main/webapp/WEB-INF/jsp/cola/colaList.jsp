@@ -103,94 +103,85 @@
                                 </div>
 
                                 <div class="table-responsive">
-                                    <table class="table table-bordered table-hover table-striped tablesorter">
-                                        <colgroup>
-                                            <col>
-                                            <col>
-                                            <col>
-                                            <col width="80">
-                                            <col>
-                                            <col>
-                                            <col width="160">
-                                        </colgroup>
+                                    <table class="table table-bordered table-hover table-striped">
                                         <thead>
-                                        <tr>
-                                            <th class="center"><spring:message code="cola.fechaEntrada"/></th>
-                                            <th class="center"><spring:message code="cola.descripcion"/></th>
-                                            <th class="center"><spring:message code="regweb.estado"/></th>
-                                            <th class="center"><spring:message code="oficina.oficina"/></th>
-                                            <th class="center" ><spring:message code="cola.numeroreintentos"/></th>
-                                            <th class="center"><spring:message code="cola.fechaProcesado"/></th>
-                                            <th class="center"><spring:message code="regweb.acciones"/></th>
-                                        </tr>
+                                            <tr>
+                                                <th class="center"><spring:message code="cola.fechaEntrada"/></th>
+                                                <th class="center"><spring:message code="cola.descripcion"/></th>
+                                                <th class="center"><spring:message code="regweb.estado"/></th>
+                                                <th class="center"><spring:message code="oficina.oficina"/></th>
+                                                <th class="center" ><spring:message code="cola.numeroreintentos"/></th>
+                                                <th class="center"><spring:message code="cola.fechaProcesado"/></th>
+                                                <th class="center"><spring:message code="regweb.acciones"/></th>
+                                            </tr>
                                         </thead>
 
                                         <tbody>
-                                        <c:forEach var="cola" items="${paginacion.listado}">
-                                            <tr>
-                                                <td class="center"><fmt:formatDate value="${cola.fecha}" pattern="dd/MM/yyyy HH:mm:ss"/></td>
-                                                <td class="center">${cola.descripcionObjeto}</td>
-                                                <td class="center">
-                                                    <c:if test="${cola.estado == RegwebConstantes.COLA_ESTADO_PROCESADO}">
-                                                        <span class="label label-success"><spring:message code="cola.estado.${cola.estado}"/></span>
-                                                    </c:if>
-                                                    <c:if test="${cola.estado == RegwebConstantes.COLA_ESTADO_PENDIENTE}">
-                                                        <span class="label label-warning"><spring:message code="cola.estado.${cola.estado}"/></span>
-                                                    </c:if>
-                                                    <c:if test="${cola.estado == RegwebConstantes.COLA_ESTADO_ERROR}">
-                                                        <span class="label label-danger"><spring:message code="cola.estado.${cola.estado}"/></span>
-                                                    </c:if>
-                                                </td>
-                                                <td class="center">${cola.denominacionOficina}</td>
-                                                <td class="center">
-                                                    <c:if test="${cola.estado == 1}"> <%--ERROR--%>
-                                                        <p rel="popupAbajo" data-content="<spring:message code="cola.maxreintentos.alcanzado"/>" data-toggle="popover"><span class="label label-danger"><span class="fa fa-warning"></span> ${cola.numeroReintentos}</span></p>
-                                                        <a class="btn btn-warning btn-sm" data-toggle="modal" role="button" href="#infoCola" onclick="infoCola('${cola.id}')" title="<spring:message code="regweb.info"/>"><span class="fa fa-info-circle"></span></a>
-                                                    </c:if>
-                                                    <c:if test="${cola.estado == 2}"> <%--PENDIENTE--%>
-                                                        <c:if test="${cola.numeroReintentos == 0}">
-                                                            <span class="label label-info"><span class="fa fa-repeat"></span> ${cola.numeroReintentos}</span>
+                                            <c:forEach var="cola" items="${paginacion.listado}">
+                                                <tr>
+                                                    <td class="center"><fmt:formatDate value="${cola.fecha}" pattern="dd/MM/yyyy HH:mm:ss"/></td>
+                                                    <td class="center">${cola.descripcionObjeto}</td>
+                                                    <td class="center">
+                                                        <c:if test="${cola.estado == RegwebConstantes.COLA_ESTADO_PROCESADO}">
+                                                            <span class="label label-success"><spring:message code="cola.estado.${cola.estado}"/></span>
                                                         </c:if>
-                                                        <c:if test="${cola.numeroReintentos > 0}">
-                                                            <p rel="popupAbajo" data-content="<spring:message code="cola.numeroreintentos.alcanzado"/>" data-toggle="popover"><span class="label label-warning"><span class="fa fa-warning"></span> ${cola.numeroReintentos}</span></p>
+                                                        <c:if test="${cola.estado == RegwebConstantes.COLA_ESTADO_PENDIENTE}">
+                                                            <span class="label label-warning"><spring:message code="cola.estado.${cola.estado}"/></span>
+                                                        </c:if>
+                                                        <c:if test="${cola.estado == RegwebConstantes.COLA_ESTADO_ERROR}">
+                                                            <span class="label label-danger"><spring:message code="cola.estado.${cola.estado}"/></span>
+                                                        </c:if>
+                                                    </td>
+                                                    <td class="center">${cola.denominacionOficina}</td>
+                                                    <td class="center">
+                                                        <c:if test="${cola.estado == 1}"> <%--ERROR--%>
+                                                            <p rel="popupAbajo" data-content="<spring:message code="cola.maxreintentos.alcanzado"/>" data-toggle="popover"><span class="label label-danger"><span class="fa fa-warning"></span> ${cola.numeroReintentos}</span></p>
                                                             <a class="btn btn-warning btn-sm" data-toggle="modal" role="button" href="#infoCola" onclick="infoCola('${cola.id}')" title="<spring:message code="regweb.info"/>"><span class="fa fa-info-circle"></span></a>
                                                         </c:if>
-                                                    </c:if>
-                                                    <c:if test="${cola.estado == 3}"> <%--PROCESADO--%>
-                                                        <span class="label label-success"><span class="fa fa-repeat"></span> ${cola.numeroReintentos}</span>
-                                                        <c:if test="${cola.numeroReintentos > 0}"><a class="btn btn-warning btn-sm" data-toggle="modal" role="button" href="#infoCola" onclick="infoCola('${cola.id}')" title="<spring:message code="regweb.info"/>"><span class="fa fa-info-circle"></span></a></c:if>
-                                                    </c:if>
-                                                </td>
-                                                <td class="center"><fmt:formatDate value="${cola.fechaProcesado}" pattern="dd/MM/yyyy HH:mm:ss"/></td>
-
-                                                <td class="center">
-                                                    <c:if test="${cola.estado == RegwebConstantes.COLA_ESTADO_ERROR}">
-                                                        <a class="btn btn-success btn-sm" onclick='confirm("<c:url value="/cola/${cola.id}/reiniciar/${tipo}"/>","<spring:message code="cola.reiniciar.elemento" htmlEscape="true"/>")' href="javascript:void(0);" title="<spring:message code="cola.reiniciar.elemento"/>"><span class="fa fa-repeat"></span></a>
-                                                    </c:if>
-
-                                                    <%--Opciones pendiente procesar--%>
-                                                    <c:if test="${cola.estado != RegwebConstantes.COLA_ESTADO_PROCESADO}">
-                                                        <c:if test="${cola.numeroReintentos > 0}">
-                                                            <a class="btn btn-info btn-sm" onclick='confirm("<c:url value="/cola/${cola.id}/procesar"/>","<spring:message code="cola.confirmar.procesar" htmlEscape="true"/>")' href="javascript:void(0);" title="<spring:message code="cola.procesar"/>"><span class="fa fa-check"></span></a>
+                                                        <c:if test="${cola.estado == 2}"> <%--PENDIENTE--%>
+                                                            <c:if test="${cola.numeroReintentos == 0}">
+                                                                <span class="label label-info"><span class="fa fa-repeat"></span> ${cola.numeroReintentos}</span>
+                                                            </c:if>
+                                                            <c:if test="${cola.numeroReintentos > 0}">
+                                                                <p rel="popupAbajo" data-content="<spring:message code="cola.numeroreintentos.alcanzado"/>" data-toggle="popover"><span class="label label-warning"><span class="fa fa-warning"></span> ${cola.numeroReintentos}</span></p>
+                                                                <a class="btn btn-warning btn-sm" data-toggle="modal" role="button" href="#infoCola" onclick="infoCola('${cola.id}')" title="<spring:message code="regweb.info"/>"><span class="fa fa-info-circle"></span></a>
+                                                            </c:if>
                                                         </c:if>
-                                                        <c:if test="${cola.tipo == RegwebConstantes.COLA_CUSTODIA}">
-                                                            <a class="btn btn-primary btn-sm" onclick='confirm("<c:url value="/cola/${cola.id}/custodiarJustificante"/>","<spring:message code="regweb.confirmar.custodiar" htmlEscape="true"/>")' href="javascript:void(0);" title="<spring:message code="anexo.custodiar"/>"><span class="fa fa-share-square-o"></span></a>
+                                                        <c:if test="${cola.estado == 3}"> <%--PROCESADO--%>
+                                                            <span class="label label-success"><span class="fa fa-repeat"></span> ${cola.numeroReintentos}</span>
+                                                            <c:if test="${cola.numeroReintentos > 0}"><a class="btn btn-warning btn-sm" data-toggle="modal" role="button" href="#infoCola" onclick="infoCola('${cola.id}')" title="<spring:message code="regweb.info"/>"><span class="fa fa-info-circle"></span></a></c:if>
                                                         </c:if>
-                                                        <c:if test="${cola.tipo == RegwebConstantes.COLA_DISTRIBUCION}">
-                                                            <a class="btn btn-primary btn-sm" onclick='confirm("<c:url value="/cola/${cola.id}/distribuirRegistro"/>","<spring:message code="regweb.confirmar.distribuir" htmlEscape="true"/>")' href="javascript:void(0);" title="<spring:message code="regweb.distribuir"/>"><span class="fa fa-share-square-o"></span></a>
-                                                        </c:if>
-                                                    </c:if>
+                                                    </td>
+                                                    <td class="center"><fmt:formatDate value="${cola.fechaProcesado}" pattern="dd/MM/yyyy HH:mm:ss"/></td>
 
-                                                    <%--Botón detalle registro--%>
-                                                    <c:if test="${cola.tipoRegistro == RegwebConstantes.REGISTRO_ENTRADA}">
-                                                        <a class="btn btn-info btn-sm" href="<c:url value="/adminEntidad/registroEntrada/${cola.idObjeto}/detalle"/>" target="_blank" title="<spring:message code="registroEntrada.detalle"/>"><span class="fa fa-eye"></span></a>
-                                                    </c:if>
-                                                    <c:if test="${cola.tipoRegistro == RegwebConstantes.REGISTRO_SALIDA}">
-                                                        <a class="btn btn-danger btn-sm" href="<c:url value="/adminEntidad/registroSalida/${cola.idObjeto}/detalle"/>" target="_blank" title="<spring:message code="registroSalida.detalle"/>"><span class="fa fa-eye"></span></a>
-                                                    </c:if>
-                                                </td>
-                                            </tr>
-                                        </c:forEach>
+                                                    <td class="center">
+                                                        <c:if test="${cola.estado == RegwebConstantes.COLA_ESTADO_ERROR}">
+                                                            <a class="btn btn-success btn-sm" onclick='confirm("<c:url value="/cola/${cola.id}/reiniciar/${tipo}"/>","<spring:message code="cola.reiniciar.elemento" htmlEscape="true"/>")' href="javascript:void(0);" title="<spring:message code="cola.reiniciar.elemento"/>"><span class="fa fa-repeat"></span></a>
+                                                        </c:if>
+
+                                                        <%--Opciones pendiente procesar--%>
+                                                        <c:if test="${cola.estado != RegwebConstantes.COLA_ESTADO_PROCESADO}">
+                                                            <c:if test="${cola.numeroReintentos > 0}">
+                                                                <a class="btn btn-info btn-sm" onclick='confirm("<c:url value="/cola/${cola.id}/procesar"/>","<spring:message code="cola.confirmar.procesar" htmlEscape="true"/>")' href="javascript:void(0);" title="<spring:message code="cola.procesar"/>"><span class="fa fa-check"></span></a>
+                                                            </c:if>
+                                                            <c:if test="${cola.tipo == RegwebConstantes.COLA_CUSTODIA}">
+                                                                <a class="btn btn-primary btn-sm" onclick='confirm("<c:url value="/cola/${cola.id}/custodiarJustificante"/>","<spring:message code="regweb.confirmar.custodiar" htmlEscape="true"/>")' href="javascript:void(0);" title="<spring:message code="anexo.custodiar"/>"><span class="fa fa-share-square-o"></span></a>
+                                                            </c:if>
+                                                            <c:if test="${cola.tipo == RegwebConstantes.COLA_DISTRIBUCION}">
+                                                                <a class="btn btn-primary btn-sm" onclick='confirm("<c:url value="/cola/${cola.id}/distribuirRegistro"/>","<spring:message code="regweb.confirmar.distribuir" htmlEscape="true"/>")' href="javascript:void(0);" title="<spring:message code="regweb.distribuir"/>"><span class="fa fa-share-square-o"></span></a>
+                                                            </c:if>
+                                                        </c:if>
+
+                                                        <%--Botón detalle registro--%>
+                                                        <c:if test="${cola.tipoRegistro == RegwebConstantes.REGISTRO_ENTRADA}">
+                                                            <a class="btn btn-info btn-sm" href="<c:url value="/adminEntidad/registroEntrada/${cola.idObjeto}/detalle"/>" target="_blank" title="<spring:message code="registroEntrada.detalle"/>"><span class="fa fa-eye"></span></a>
+                                                        </c:if>
+                                                        <c:if test="${cola.tipoRegistro == RegwebConstantes.REGISTRO_SALIDA}">
+                                                            <a class="btn btn-danger btn-sm" href="<c:url value="/adminEntidad/registroSalida/${cola.idObjeto}/detalle"/>" target="_blank" title="<spring:message code="registroSalida.detalle"/>"><span class="fa fa-eye"></span></a>
+                                                        </c:if>
+                                                    </td>
+                                                </tr>
+                                            </c:forEach>
                                         </tbody>
                                     </table>
                                     <!-- Paginacion -->
