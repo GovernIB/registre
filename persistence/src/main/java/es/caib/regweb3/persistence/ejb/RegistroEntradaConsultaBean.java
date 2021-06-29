@@ -346,7 +346,8 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
                 "and re.estado = :idEstado and re.evento = :distribuir");
 
         q2.setParameter("idOficinaActiva", idOficinaActiva);
-        q2.setParameter("idEstado", RegwebConstantes.REGISTRO_VALIDO);q2.setParameter("distribuir", RegwebConstantes.EVENTO_DISTRIBUIR);
+        q2.setParameter("idEstado", RegwebConstantes.REGISTRO_VALIDO);
+        q2.setParameter("distribuir", RegwebConstantes.EVENTO_DISTRIBUIR);
 
         Paginacion paginacion;
 
