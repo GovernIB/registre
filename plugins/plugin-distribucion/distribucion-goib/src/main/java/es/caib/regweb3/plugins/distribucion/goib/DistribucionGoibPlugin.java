@@ -95,13 +95,17 @@ public class DistribucionGoibPlugin extends AbstractPluginProperties implements 
             // Anexos
             for (AnexoFull anexoFull : registro.getRegistroDetalle().getAnexosFull()) {
 
-                RegistreAnnex registreAnnex;
-                if (anexoFull.getAnexo().isJustificante()) { //Si es justificante, solo enviamos referencia Arxiu
-                    registreAnnex = transformarARegistreAnnexJustificante(anexoFull.getAnexo());
-                    registreAnotacio.setJustificant(registreAnnex);
-                } else {
-                    registreAnnex = transformarARegistreAnnex(anexoFull); //Contenido completo
-                    registreAnotacio.getAnnexos().add(registreAnnex);
+                // No distribuimos los Ficheros técnicos a Arxiu-Caib
+                if (!RegwebConstantes.TIPO_DOCUMENTO_FICHERO_TECNICO.equals(anexoFull.getAnexo().getTipoDocumento())) {
+
+                    RegistreAnnex registreAnnex;
+                    if (anexoFull.getAnexo().isJustificante()) { //Si es justificante, solo enviamos referencia Arxiu
+                        registreAnnex = transformarARegistreAnnexJustificante(anexoFull.getAnexo());
+                        registreAnotacio.setJustificant(registreAnnex);
+                    } else {
+                        registreAnnex = transformarARegistreAnnex(anexoFull); //Contenido completo
+                        registreAnotacio.getAnnexos().add(registreAnnex);
+                    }
                 }
             }
 
