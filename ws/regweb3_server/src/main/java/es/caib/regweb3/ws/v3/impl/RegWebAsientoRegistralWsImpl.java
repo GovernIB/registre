@@ -36,7 +36,9 @@ import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 import static es.caib.regweb3.utils.RegwebConstantes.*;
 
@@ -1053,24 +1055,5 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
         rsbv.throwValidationExceptionIfErrors(registroSalida, true);
     }
 
-
-
-    /**
-     * Transforma un conjunto de organismos a un conjunto de strings con los códigos de los organismos
-     *
-     * @return
-     * @throws Exception
-     */
-   private Set<String> getOrganismosOficioRemisionSalida(Set<Organismo> organismos) throws Exception {
-
-        // Creamos un Set solo con los codigos
-        Set<String> organismosCodigo = new HashSet<String>();
-
-        for (Organismo organismo : organismos) {
-            organismosCodigo.add(organismo.getCodigo());
-
-        }
-        return organismosCodigo;
-    }
 
 }
