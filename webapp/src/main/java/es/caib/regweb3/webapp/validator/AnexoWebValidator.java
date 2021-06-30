@@ -37,13 +37,6 @@ public class AnexoWebValidator implements Validator {
     wvr = new WebValidationResult<Object>(errors, "anexo");
 
     final boolean isNou = true;
-    /*{
-      Boolean nou = (Boolean)errors.getFieldValue("nou");
-      boolean isNou =  nou != null && nou.booleanValue();
-    } */
-    
-    
-    
 
     validate(target, errors, wvr, isNou);
   }
@@ -51,18 +44,11 @@ public class AnexoWebValidator implements Validator {
 
   public void validate(Object target, Errors errors,
     WebValidationResult<Object> wvr, boolean isNou) {
-    
-    log.info("============= TARGET VALIDATOR ==== " + target);
-    log.info("============= TARGET VALIDATOR CLASS ==== " + target.getClass());
 
     if (target instanceof AnexoForm) {
       target = ((AnexoForm)target).getAnexo();
     }
-    
-    
-    log.info("============= POST TARGET VALIDATOR ==== " + target);
-    log.info("============= POST TARGET VALIDATOR CLASS ==== " + target.getClass());
-    
+
     validator.validate(wvr, target, isNou);
 
   } // Final de metode
