@@ -136,6 +136,12 @@ public class IntegracionBean extends BaseEjbJPA<Integracion, Long> implements In
             parametros.put("numRegFormat", "%" + integracion.getNumRegFormat() + "%");
         }
 
+        // Descripción
+        if (StringUtils.isNotEmpty(integracion.getDescripcion())) {
+            where.add(" (UPPER(integracion.descripcion) LIKE UPPER(:descripcion)) ");
+            parametros.put("descripcion", "%" + integracion.getDescripcion() + "%");
+        }
+
         // Añadimos los parámetros a la query
         if (parametros.size() != 0) {
             query.append("where ");
