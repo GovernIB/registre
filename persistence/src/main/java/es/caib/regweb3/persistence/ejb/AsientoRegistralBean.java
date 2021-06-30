@@ -145,7 +145,6 @@ public class AsientoRegistralBean implements AsientoRegistralLocal {
 
                             OficioRemision oficioRemision = sirEnvioEjb.enviarIntercambio(REGISTRO_SALIDA, registroSalida.getId(),
                                     registroSalida.getOficina(), registroSalida.getUsuario(), oficinasSIR.get(0).getCodigo());
-                            registroSalidaEjb.cambiarEstado(registroSalida.getId(), REGISTRO_OFICIO_SIR);
 
                             registroSalida.setEstado(REGISTRO_OFICIO_SIR);
                             registroSalida.getRegistroDetalle().setIdentificadorIntercambio(oficioRemision.getIdentificadorIntercambio());
