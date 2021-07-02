@@ -11,6 +11,13 @@
             $('#pageNumber').val(pageNumer);
             $(formulario).submit();
         }
+
+        //Gestionamos el Select de "Ir a Página"
+        $('#irPagina').change(
+            function() {
+                postPagination($(this).val());
+            });
+
     </script>
 
     <div class="col-xs-12">

@@ -175,7 +175,8 @@
                                             <spring:message code="regweb.resultados"/> <strong>${paginacion.totalResults}</strong> <spring:message code="registroSir.registroSir"/>
                                         </c:if>
 
-                                        <p class="pull-right"><spring:message code="regweb.pagina"/> <strong>${paginacion.currentIndex}</strong> de ${paginacion.totalPages}</p>
+                                        <%--Select de "Ir a página"--%>
+                                        <c:import url="../modulos/paginas.jsp"/>
                                     </div>
 
                                     <div class="table-responsive overVisible">
