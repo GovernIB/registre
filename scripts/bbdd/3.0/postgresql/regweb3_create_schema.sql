@@ -4,6 +4,7 @@ create table RWE_ANEXO
     CERTIFICADO          bytea,
     CSV                  varchar(255),
     CUSTODIAID           varchar(256),
+    CUSTODIADO           bool       not null,
     ESTADOFIRMA          int4,
     EXPEDIENTEID         varchar(256),
     FECHACAPTURA         timestamp    not null,
@@ -160,10 +161,12 @@ create table RWE_COLA
     ERROR               text,
     ESTADO              int8,
     FECHA               timestamp,
+    FECHAPROCESADO      timestamp,
     IDOBJETO            int8,
     NUMMAXREINTENTOS    int4,
     NUMREINTENTOS       int4,
     TIPO                int8,
+    TIPOREGISTRO        int8,
     USUARIOENTIDAD      int8 not null,
     primary key (ID)
 );
