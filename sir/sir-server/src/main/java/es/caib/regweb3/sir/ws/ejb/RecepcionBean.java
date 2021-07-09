@@ -64,7 +64,7 @@ public class RecepcionBean implements RecepcionLocal{
         MensajeControl mensajeError = null;
         Date inicio = new Date();
         StringBuilder peticion = new StringBuilder();
-        String descripcion = "Recepción FicheroIntercambio: ";
+        String descripcion = "Recepción Intercambio: ";
         long tiempo = System.currentTimeMillis();
 
         try {
@@ -114,7 +114,7 @@ public class RecepcionBean implements RecepcionLocal{
 
                 // Integración
                 if(entidad != null){
-                    descripcion = descripcion.concat(TipoAnotacion.getTipoAnotacion(ficheroIntercambio.getTipoAnotacion()).getName());
+                    descripcion = descripcion.concat("Error validación");
                     datosIntegracion(ficheroIntercambio, peticion);
                     webServicesMethodsEjb.addIntegracionError(RegwebConstantes.INTEGRACION_SIR, descripcion, peticion.toString(), e,descripcionError, System.currentTimeMillis() - tiempo, entidad.getId(), ficheroIntercambio.getIdentificadorIntercambio());
                 }
@@ -153,7 +153,7 @@ public class RecepcionBean implements RecepcionLocal{
 
             // Integración
             if(entidad != null){
-                descripcion = descripcion.concat(TipoAnotacion.getTipoAnotacion(ficheroIntercambio.getTipoAnotacion()).getName());
+                descripcion = descripcion.concat("Error no gestionado");
                 datosIntegracion(ficheroIntercambio, peticion);
                 webServicesMethodsEjb.addIntegracionError(RegwebConstantes.INTEGRACION_SIR, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - tiempo, entidad.getId(), ficheroIntercambio.getIdentificadorIntercambio());
             }
