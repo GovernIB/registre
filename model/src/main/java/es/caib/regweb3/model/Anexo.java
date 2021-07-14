@@ -87,6 +87,14 @@ public class Anexo implements Serializable {
     //Gestión anexos distribuidos
     private boolean purgado = false;
 
+    // Anexos confidenciales (Son anexos sin documento, solo la información necesaria paa generar Justificante)
+    @XmlTransient
+    private Boolean confidencial = false; // Indica si un Anexo es confidencial (sin fichero) o no
+    @XmlTransient
+    private String nombreFichero;
+    @XmlTransient
+    private int tamanoFichero;
+
 
     public Anexo() {
     }
@@ -209,6 +217,33 @@ public class Anexo implements Serializable {
 
     public void setScan(Boolean scan) {
         this.scan = scan;
+    }
+
+    @Column(name ="CONFIDENCIAL")
+    public Boolean getConfidencial() {
+        return confidencial;
+    }
+
+    public void setConfidencial(Boolean confidencial) {
+        this.confidencial = confidencial;
+    }
+
+    @Column(name ="NOMBRE_FICHERO", length=200)
+    public String getNombreFichero() {
+        return nombreFichero;
+    }
+
+    public void setNombreFichero(String nombreFichero) {
+        this.nombreFichero = nombreFichero;
+    }
+
+    @Column(name = "TAMANO_FICHERO")
+    public int getTamanoFichero() {
+        return tamanoFichero;
+    }
+
+    public void setTamanoFichero(int tamanoFichero) {
+        this.tamanoFichero = tamanoFichero;
     }
 
     @ManyToOne()
@@ -439,6 +474,19 @@ public class Anexo implements Serializable {
         }
 
         return tituloCorto;
+    }
+
+    @Transient
+    public long getConfidencialSize() {
+
+        long size = getTamanoFichero();
+
+        if (size < 1024) {
+            return 1;
+        } else {
+            return size / 1024;
+        }
+
     }
 
     @Override
