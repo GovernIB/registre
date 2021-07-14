@@ -337,7 +337,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
                 anexo.setJustificante(false);
             }
 
-            // Revisar si tipusdocumental està carregat
+            /*// Revisar si tipusdocumental està carregat
             Long id = anexo.getTipoDocumental().getId();
             TipoDocumental td = tipoDocumentalEjb.findById(id);
             if (td == null) {
@@ -346,7 +346,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
                 throw i18n;
             } else {
                 anexo.setTipoDocumental(td);
-            }
+            }*/
 
             // ---------- BBDD -------------
             // Guardamos el anexo per a que tengui ID
@@ -418,6 +418,88 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
                     }
                 }
             }
+        }
+    }
+
+    /**
+     * Método que crea un anexo confidencial
+     */
+    public AnexoFull crearAnexoConfidencial(AnexoFull anexoFull, UsuarioEntidad usuarioEntidad,
+                                Long registroID, Long tipoRegistro) throws I18NException, I18NValidationException {
+
+        final boolean isNew = true;
+
+        Date inicio = new Date();
+        StringBuilder peticion = new StringBuilder();
+        long tiempo = System.currentTimeMillis();
+        String descripcion = "Nuevo anexo ";
+        String numRegFormat = "";
+        Entidad entidad = null;
+
+        try {
+
+            Anexo anexo = anexoFull.getAnexo();
+
+            //Obtenemos el registro con sus anexos, interesados y tipo Asunto
+            IRegistro registro = getIRegistro(registroID, tipoRegistro);
+            anexo.setRegistroDetalle(registro.getRegistroDetalle());
+
+            //Obtenemos la Entidad
+            entidad = registro.getOficina().getOrganismoResponsable().getEntidad();
+            numRegFormat = registro.getNumeroRegistroFormateado();
+
+            // Validador
+            validateAnexo(anexo, isNew);
+
+            anexo.setFechaCaptura(new Date());
+
+            // Integración
+            peticion.append("registro: ").append(registro.getNumeroRegistroFormateado()).append(System.getProperty("line.separator"));
+            peticion.append("tipoRegistro: ").append(tipoRegistro).append(System.getProperty("line.separator"));
+            peticion.append("oficina: ").append(registro.getOficina().getDenominacion()).append(System.getProperty("line.separator"));
+
+            //Si firmaValida es null, por defecto marcamos como false
+            if (anexo.getFirmaValida() == null) {
+                anexo.setFirmaValida(false);
+            }
+
+            //Si no és justificante, por defecto marcamos como false
+            if (!anexo.isJustificante()) {
+                anexo.setJustificante(false);
+            }
+
+            // ---------- BBDD -------------
+            // Guardamos el anexo per a que tengui ID
+            anexo = this.persist(anexo);
+
+            //Creamos el histórico de las modificaciones del registro debido a los anexos
+            crearHistorico(anexoFull, usuarioEntidad, registroID, tipoRegistro, isNew);
+
+            anexoFull.setAnexo(anexo);
+
+            // Integracion
+            integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_CUSTODIA, descripcion, peticion.toString(), System.currentTimeMillis() - tiempo, entidad.getId(), numRegFormat);
+
+            return anexoFull;
+
+        } catch (I18NException | I18NValidationException i18n) {
+            log.info("Error creant un anexe: " + i18n.getMessage(), i18n);
+            try {
+                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_CUSTODIA, descripcion, peticion.toString(), i18n, null, System.currentTimeMillis() - tiempo, entidad.getId(), numRegFormat);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            throw i18n;
+        } catch (Exception e) {
+            log.info("Error creant un anexe: " + e.getMessage(), e);
+            try {
+                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_CUSTODIA, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - tiempo, entidad.getId(), numRegFormat);
+            } catch (Exception ex) {
+                e.printStackTrace();
+            }
+
+            throw new I18NException(e, "anexo.error.guardando", new I18NArgumentString(e.getMessage()));
         }
     }
 
