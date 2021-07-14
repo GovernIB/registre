@@ -13,7 +13,7 @@ que se le indica -->
             </button>
 
             <ul class="nav nav-tabs" id="tab${param.tipo}">
-                <li class="active"><a href="#buscador${param.tipo}" data-toggle="tab"><h3><spring:message
+                <li class="active"><a href="#buscador${param.tipo}" data-toggle="tab"><h3 id="titulo${param.tipo}"><spring:message
                         code="organismo.buscador.${param.tipo}"/></h3></a></li>
                 <c:if test="${param.tipo != 'OficinaOrigen'}">
                     <li><a href="#organigrama${param.tipo}" data-toggle="tab"><h3>Organigrama</h3></a></li>

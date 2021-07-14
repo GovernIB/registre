@@ -262,10 +262,12 @@
                                         </div>
 
                                         <div class="col-xs-6 espaiLinies">
-                                            <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                            <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq" id="orgDest">
                                                 <label for="organDestinatari" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.destino.libroRegistro"/>" data-toggle="popover"><spring:message code="registroEntrada.organDestinatari"/></label>
                                             </div>
-                                            <div class="col-xs-2 pull-left etiqueta_regweb control-label hidden"  id="orgOrig"><spring:message code="registroEntrada.organismoOrigen"/></div>
+                                            <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq hidden" id="orgOrig">
+                                                <label for="organDestinatari" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.destino.libroRegistro"/>" data-toggle="popover"><spring:message code="registroEntrada.organismoOrigen"/></label>
+                                            </div>
                                             <div class="col-xs-6">
                                                 <form:select path="organDestinatari" cssClass="chosen-select" onchange="actualizarOrganDestinatariNom(${organismo.denominacion})">
                                                     <form:option value="" label="..."/>
@@ -276,9 +278,15 @@
                                                 <form:errors path="organDestinatari" cssClass="help-block" element="span"/>
                                                 <form:hidden path="organDestinatariNom"/>
                                             </div>
-                                            <div class="col-xs-2 padLateral5">
+                                            <div class="col-xs-2 padLateral5" id="busDest" >
                                                 <a data-toggle="modal" role="button" href="#modalBuscadorlistaRegEntrada"
-                                                   onclick="inicializarBuscador('#codNivelAdministracionlistaRegEntrada','#codComunidadAutonomalistaRegEntrada','#provincialistaRegEntrada','#localidadlistaRegEntrada','${oficina.organismoResponsable.nivelAdministracion.codigoNivelAdministracion}', '${oficina.organismoResponsable.codAmbComunidad.codigoComunidad}', 'listaRegEntrada' );"
+                                                   onclick="inicializarBuscador('#codNivelAdministracionlistaRegEntrada','#codComunidadAutonomalistaRegEntrada','#provincialistaRegEntrada','#localidadlistaRegEntrada','${loginInfo.oficinaActiva.organismoResponsable.nivelAdministracion.codigoNivelAdministracion}', '${loginInfo.oficinaActiva.organismoResponsable.codAmbComunidad.codigoComunidad}', 'listaRegEntrada' );"
+                                                   class="btn btn-warning btn-sm"><spring:message code="regweb.buscar"/></a>
+                                            </div>
+
+                                            <div class="col-xs-2 padLateral5 hidden" id="busOrig">
+                                                <a data-toggle="modal" role="button" href="#modalBuscadorlistaRegEntrada"
+                                                   onclick="inicializarBuscador('#codNivelAdministracionlistaRegEntrada','#codComunidadAutonomalistaRegEntrada','#provincialistaRegEntrada','#localidadlistaRegEntrada','${loginInfo.oficinaActiva.organismoResponsable.nivelAdministracion.codigoNivelAdministracion}', '${loginInfo.oficinaActiva.organismoResponsable.codAmbComunidad.codigoComunidad}', 'listaRegEntrada' );"
                                                    class="btn btn-warning btn-sm"><spring:message code="regweb.buscar"/></a>
                                             </div>
                                         </div>
@@ -343,15 +351,17 @@
     <!-- Importamos el codigo jsp del modal del formulario para realizar la búsqueda de organismos Destino o Origen
         Mediante el archivo "busquedaorganismo.js" se implementa dicha búsqueda -->
 
+
         <c:import url="../registro/buscadorOrganismosOficinasREPestanas.jsp">
             <c:param name="tipo" value="listaRegEntrada"/>
         </c:import>
 
-    <%--<c:if test="${tipo == 2}">--%>
-        <%--<c:import url="../registro/buscadorOrganismosOficinasREPestanas.jsp">--%>
-            <%--<c:param name="tipo" value="listaRegSalida"/>--%>
-        <%--</c:import>--%>
-    <%--</c:if>--%>
+
+    <%--<c:if test="${tipo == 2}">
+        <c:import url="../registro/buscadorOrganismosOficinasREPestanas.jsp">
+            &lt;%&ndash;<c:param name="tipo" value="listaRegSalida"/>&ndash;%&gt;
+        </c:import>
+    </c:if>--%>
 
 
 </div>
@@ -365,15 +375,24 @@
 
 function actualizarOrganismos(tipo){
     <c:url var="obtenerOrganismos" value="/informe/obtenerOrganismos" />
+
+
     actualizarOrganismosTodos('${obtenerOrganismos}','#organismos',$('#tipo option:selected').val(),$('#organismos option:selected').val(),true);
     // Mostram el camp segons el tipus de registre que cercam
-    if(tipo==0){
+    if(tipo===0){
         $("#orgDest").removeClass("hidden");
         $("#orgOrig").addClass("hidden");
+        $("#busDest").removeClass("hidden");
+        $("#busOrig").addClass("hidden");
+        $("#titulolistaRegEntrada").html("<spring:message code="organismo.buscador.listaRegEntrada"/>");
     }
-    if(tipo==1){
+    if(tipo===1){
         $("#orgDest").addClass("hidden");
         $("#orgOrig").removeClass("hidden");
+        $("#busDest").addClass("hidden");
+        $("#busOrig").removeClass("hidden");
+        $("#titulolistaRegEntrada").html("<spring:message code="organismo.buscador.listaRegSalida"/>");
+
     }
 }
 
