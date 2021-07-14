@@ -208,6 +208,9 @@
       <xs:element minOccurs="0" name="tipoMIMEFirmaAnexada" type="xs:string"/>
       <xs:element minOccurs="0" name="csv" type="xs:string"/>
       <xs:element minOccurs="0" name="justificante" type="xs:boolean"/>
+      <xs:element minOccurs="0" name="confidencial" type="xs:boolean"/>
+      <xs:element minOccurs="0" name="hash" type="xs:base64Binary"/>
+      <xs:element name="tamanoFichero" type="xs:int"/>
     </xs:sequence>
   </xs:complexType>
   <xs:complexType name="interesadoWs">

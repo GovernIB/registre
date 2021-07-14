@@ -162,6 +162,14 @@ public class AnexoConverter extends CommonConverter {
       // Part de firma Anexada
       if(anexoWs.getModoFirma()!=null){anexo.setModoFirma(anexoWs.getModoFirma());}
 
+      //Condifencial
+      if(anexoWs.getConfidencial()){
+         anexo.setConfidencial(anexoWs.getConfidencial());
+         if(StringUtils.isNotEmpty(anexoWs.getTitulo())){ anexo.setNombreFichero(anexoWs.getTitulo());}
+         if(anexoWs.getHash() != null){ anexo.setHash(anexoWs.getHash()); }
+         anexo.setTamanoFichero(anexoWs.getTamanoFichero());
+      }
+
       return anexo;
 
    }

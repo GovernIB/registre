@@ -36,6 +36,10 @@ public class AnexoWs {
     private String tipoMIMEFirmaAnexada;
     private String csv;
     private Boolean justificante = false;
+    private Boolean confidencial = false;
+    @XmlInlineBinaryData
+    private byte[] hash;
+    private int tamanoFichero;
 
     public String getTitulo() {
       return titulo;
@@ -164,5 +168,33 @@ public class AnexoWs {
 
     public void setJustificante(Boolean justificante) {
         this.justificante = justificante;
+    }
+
+    public Boolean getJustificante() {
+        return justificante;
+    }
+
+    public Boolean getConfidencial() {
+        return confidencial;
+    }
+
+    public void setConfidencial(Boolean confidencial) {
+        this.confidencial = confidencial;
+    }
+
+    public byte[] getHash() {
+        return hash;
+    }
+
+    public void setHash(byte[] hash) {
+        this.hash = hash;
+    }
+
+    public int getTamanoFichero() {
+        return tamanoFichero;
+    }
+
+    public void setTamanoFichero(int tamanoFichero) {
+        this.tamanoFichero = tamanoFichero;
     }
 }
