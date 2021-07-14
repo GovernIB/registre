@@ -18,8 +18,8 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 
 /**
@@ -454,48 +454,65 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
                 String nomFitxer = null;
                 String hash = null;
 
-                // És un document amb firma detached
-                if(anexo.getAnexo().getModoFirma()==RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED){
-                    cellInfoAnnexe2 = new PdfPCell(new Paragraph(anexo.getAnexo().getTitulo(), lletraGovern8));
-                    cellInfoAnnexe2.setRowspan(2);
-                    taulaAnnexe.addCell(cellInfoAnnexe2);
+                // Anexos confidenciales
+                if(anexo.getAnexo().getConfidencial()){
 
-                    // Document
-                    hash = new String(anexo.getAnexo().getHash());
-                    nomFitxer = anexo.getDocumentoCustody().getName();
-                    if(anexo.getDocumentoCustody().getData().length < 1024){
+                    cellInfoAnnexe2 = new PdfPCell(new Paragraph(anexo.getAnexo().getTitulo(), lletraGovern8));
+                    taulaAnnexe.addCell(cellInfoAnnexe2);
+                    taulaAnnexe.addCell(new PdfPCell(new Paragraph(anexo.getAnexo().getNombreFichero(), lletraGovern8)));
+                    if(anexo.getAnexo().getTamanoFichero() < 1024){
                         tamanyFitxer = "1 KB";
                     }else{
-                        tamanyFitxer = String.valueOf(anexo.getDocumentoCustody().getData().length/1024) + " KB";
+                        tamanyFitxer = anexo.getAnexo().getTamanoFichero()/1024 + " KB";
                     }
-                    taulaAnnexe.addCell(new PdfPCell(new Paragraph(nomFitxer, lletraGovern8)));
                     taulaAnnexe.addCell(new PdfPCell(new Paragraph(tamanyFitxer, lletraGovern8)));
-                    cellInfoAnnexe2 = new PdfPCell(new Paragraph(tradueixMissatge(locale,"tipoValidezDocumento." + anexo.getAnexo().getValidezDocumento()), lletraGovern8));
-                    cellInfoAnnexe2.setRowspan(2);
-                    taulaAnnexe.addCell(cellInfoAnnexe2);
-                    cellInfoAnnexe2 = new PdfPCell(new Paragraph(tradueixMissatge(locale,"tipoDocumento.0" + anexo.getAnexo().getTipoDocumento()), lletraGovern8));
-                    cellInfoAnnexe2.setRowspan(2);
-                    taulaAnnexe.addCell(cellInfoAnnexe2);
-                    taulaAnnexe.addCell(new PdfPCell(new Paragraph(hash, lletraGovern8)));
-                    cellInfoAnnexe2 = new PdfPCell(new Paragraph(anexo.getAnexo().getObservaciones(), lletraGovern8));
-                    cellInfoAnnexe2.setRowspan(2);
-                    taulaAnnexe.addCell(cellInfoAnnexe2);
+                    taulaAnnexe.addCell(new PdfPCell(new Paragraph(tradueixMissatge(locale, "tipoValidezDocumento." + anexo.getAnexo().getValidezDocumento()), lletraGovern8)));
+                    taulaAnnexe.addCell(new PdfPCell(new Paragraph(tradueixMissatge(locale, "tipoDocumento.0" + anexo.getAnexo().getTipoDocumento()), lletraGovern8)));
+                    taulaAnnexe.addCell(new PdfPCell(new Paragraph(new String(anexo.getAnexo().getHash()), lletraGovern8)));
+                    taulaAnnexe.addCell(new PdfPCell(new Paragraph(anexo.getAnexo().getObservaciones(), lletraGovern8)));
 
-                    // Firma
-                    hash = tradueixMissatge(locale,"justificante.firma") + ": " + new String(RegwebUtils.obtenerHash(anexo.getSignatureCustody().getData()));
-                    nomFitxer = tradueixMissatge(locale,"justificante.firma") + ": " + anexo.getSignatureCustody().getName();
-                    if (anexo.getSignatureCustody().getData().length < 1024) {
-                        tamanyFitxer = "1 KB";
-                    } else {
-                        tamanyFitxer = tradueixMissatge(locale,"justificante.firma") + ": " + String.valueOf(anexo.getSignatureCustody().getData().length / 1024) + " KB";
-                    }
-                    taulaAnnexe.addCell(new PdfPCell(new Paragraph(nomFitxer, lletraGovern8)));
-                    taulaAnnexe.addCell(new PdfPCell(new Paragraph(tamanyFitxer, lletraGovern8)));
-                    taulaAnnexe.addCell(new PdfPCell(new Paragraph(hash, lletraGovern8)));
+                }else{
 
-                }else {
-                    // És un document sense firma
-                    if(anexo.getAnexo().getModoFirma()==RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA){
+                    if(anexo.getAnexo().getModoFirma()==RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED){ // És un document amb firma detached
+                        cellInfoAnnexe2 = new PdfPCell(new Paragraph(anexo.getAnexo().getTitulo(), lletraGovern8));
+                        cellInfoAnnexe2.setRowspan(2);
+                        taulaAnnexe.addCell(cellInfoAnnexe2);
+
+                        // Document
+                        hash = new String(anexo.getAnexo().getHash());
+                        nomFitxer = anexo.getDocumentoCustody().getName();
+                        if(anexo.getDocumentoCustody().getData().length < 1024){
+                            tamanyFitxer = "1 KB";
+                        }else{
+                            tamanyFitxer = String.valueOf(anexo.getDocumentoCustody().getData().length/1024) + " KB";
+                        }
+                        taulaAnnexe.addCell(new PdfPCell(new Paragraph(nomFitxer, lletraGovern8)));
+                        taulaAnnexe.addCell(new PdfPCell(new Paragraph(tamanyFitxer, lletraGovern8)));
+                        cellInfoAnnexe2 = new PdfPCell(new Paragraph(tradueixMissatge(locale,"tipoValidezDocumento." + anexo.getAnexo().getValidezDocumento()), lletraGovern8));
+                        cellInfoAnnexe2.setRowspan(2);
+                        taulaAnnexe.addCell(cellInfoAnnexe2);
+                        cellInfoAnnexe2 = new PdfPCell(new Paragraph(tradueixMissatge(locale,"tipoDocumento.0" + anexo.getAnexo().getTipoDocumento()), lletraGovern8));
+                        cellInfoAnnexe2.setRowspan(2);
+                        taulaAnnexe.addCell(cellInfoAnnexe2);
+                        taulaAnnexe.addCell(new PdfPCell(new Paragraph(hash, lletraGovern8)));
+                        cellInfoAnnexe2 = new PdfPCell(new Paragraph(anexo.getAnexo().getObservaciones(), lletraGovern8));
+                        cellInfoAnnexe2.setRowspan(2);
+                        taulaAnnexe.addCell(cellInfoAnnexe2);
+
+                        // Firma
+                        hash = tradueixMissatge(locale,"justificante.firma") + ": " + new String(RegwebUtils.obtenerHash(anexo.getSignatureCustody().getData()));
+                        nomFitxer = tradueixMissatge(locale,"justificante.firma") + ": " + anexo.getSignatureCustody().getName();
+                        if (anexo.getSignatureCustody().getData().length < 1024) {
+                            tamanyFitxer = "1 KB";
+                        } else {
+                            tamanyFitxer = tradueixMissatge(locale,"justificante.firma") + ": " + String.valueOf(anexo.getSignatureCustody().getData().length / 1024) + " KB";
+                        }
+                        taulaAnnexe.addCell(new PdfPCell(new Paragraph(nomFitxer, lletraGovern8)));
+                        taulaAnnexe.addCell(new PdfPCell(new Paragraph(tamanyFitxer, lletraGovern8)));
+                        taulaAnnexe.addCell(new PdfPCell(new Paragraph(hash, lletraGovern8)));
+
+                    }else if(anexo.getAnexo().getModoFirma()==RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA) { // És un document sense firma
+
                         cellInfoAnnexe2 = new PdfPCell(new Paragraph(anexo.getAnexo().getTitulo(), lletraGovern8));
                         taulaAnnexe.addCell(cellInfoAnnexe2);
                         hash = new String(anexo.getAnexo().getHash());
@@ -505,28 +522,27 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
                         }else{
                             tamanyFitxer = String.valueOf(anexo.getDocumentoCustody().getData().length/1024) + " KB";
                         }
-                    }else {
-                        // És un document amb firma attached
-                        if (anexo.getAnexo().getModoFirma()==RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED) {
-                            cellInfoAnnexe2 = new PdfPCell(new Paragraph(anexo.getAnexo().getTitulo(), lletraGovern8));
-                            taulaAnnexe.addCell(cellInfoAnnexe2);
-                            hash = new String(anexo.getAnexo().getHash());
-                            nomFitxer = anexo.getSignatureCustody().getName();
-                            if (anexo.getSignatureCustody().getData().length < 1024) {
-                                tamanyFitxer = "1 KB";
-                            } else {
-                                tamanyFitxer = String.valueOf(anexo.getSignatureCustody().getData().length / 1024) + " KB";
-                            }
+                    }else if (anexo.getAnexo().getModoFirma()==RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED) { // És un document amb firma attached
+
+                        cellInfoAnnexe2 = new PdfPCell(new Paragraph(anexo.getAnexo().getTitulo(), lletraGovern8));
+                        taulaAnnexe.addCell(cellInfoAnnexe2);
+                        hash = new String(anexo.getAnexo().getHash());
+                        nomFitxer = anexo.getSignatureCustody().getName();
+                        if (anexo.getSignatureCustody().getData().length < 1024) {
+                            tamanyFitxer = "1 KB";
+                        } else {
+                            tamanyFitxer = String.valueOf(anexo.getSignatureCustody().getData().length / 1024) + " KB";
                         }
                     }
-                }
-                if(anexo.getAnexo().getModoFirma()!=RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED) {
-                    taulaAnnexe.addCell(new PdfPCell(new Paragraph(nomFitxer, lletraGovern8)));
-                    taulaAnnexe.addCell(new PdfPCell(new Paragraph(tamanyFitxer, lletraGovern8)));
-                    taulaAnnexe.addCell(new PdfPCell(new Paragraph(tradueixMissatge(locale, "tipoValidezDocumento." + anexo.getAnexo().getValidezDocumento()), lletraGovern8)));
-                    taulaAnnexe.addCell(new PdfPCell(new Paragraph(tradueixMissatge(locale, "tipoDocumento.0" + anexo.getAnexo().getTipoDocumento()), lletraGovern8)));
-                    taulaAnnexe.addCell(new PdfPCell(new Paragraph(hash, lletraGovern8)));
-                    taulaAnnexe.addCell(new PdfPCell(new Paragraph(anexo.getAnexo().getObservaciones(), lletraGovern8)));
+
+                    if(anexo.getAnexo().getModoFirma()!=RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED) {
+                        taulaAnnexe.addCell(new PdfPCell(new Paragraph(nomFitxer, lletraGovern8)));
+                        taulaAnnexe.addCell(new PdfPCell(new Paragraph(tamanyFitxer, lletraGovern8)));
+                        taulaAnnexe.addCell(new PdfPCell(new Paragraph(tradueixMissatge(locale, "tipoValidezDocumento." + anexo.getAnexo().getValidezDocumento()), lletraGovern8)));
+                        taulaAnnexe.addCell(new PdfPCell(new Paragraph(tradueixMissatge(locale, "tipoDocumento.0" + anexo.getAnexo().getTipoDocumento()), lletraGovern8)));
+                        taulaAnnexe.addCell(new PdfPCell(new Paragraph(hash, lletraGovern8)));
+                        taulaAnnexe.addCell(new PdfPCell(new Paragraph(anexo.getAnexo().getObservaciones(), lletraGovern8)));
+                    }
                 }
             }
             document.add(taulaAnnexe);
