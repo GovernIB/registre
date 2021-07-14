@@ -32,6 +32,9 @@ import java.sql.Timestamp;
  *         &lt;element name="tipoMIMEFirmaAnexada" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="csv" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="justificante" type="{http://www.w3.org/2001/XMLSchema}boolean" minOccurs="0"/>
+ *         &lt;element name="confidencial" type="{http://www.w3.org/2001/XMLSchema}boolean" minOccurs="0"/>
+ *         &lt;element name="hash" type="{http://www.w3.org/2001/XMLSchema}base64Binary" minOccurs="0"/>
+ *         &lt;element name="tamanoFichero" type="{http://www.w3.org/2001/XMLSchema}int"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -57,7 +60,10 @@ import java.sql.Timestamp;
     "firmaAnexada",
     "tipoMIMEFirmaAnexada",
     "csv",
-    "justificante"
+    "justificante",
+    "confidencial",
+    "hash",
+    "tamanoFichero"
 })
 public class AnexoWs {
 
@@ -80,6 +86,9 @@ public class AnexoWs {
     protected String tipoMIMEFirmaAnexada;
     protected String csv;
     protected Boolean justificante;
+    protected Boolean confidencial;
+    protected byte[] hash;
+    protected int tamanoFichero;
 
     /**
      * Obtiene el valor de la propiedad titulo.
@@ -459,6 +468,68 @@ public class AnexoWs {
      */
     public void setJustificante(Boolean value) {
         this.justificante = value;
+    }
+
+    /**
+     * Obtiene el valor de la propiedad confidencial.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Boolean }
+     *     
+     */
+    public Boolean isConfidencial() {
+        return confidencial;
+    }
+
+    /**
+     * Define el valor de la propiedad confidencial.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Boolean }
+     *     
+     */
+    public void setConfidencial(Boolean value) {
+        this.confidencial = value;
+    }
+
+    /**
+     * Obtiene el valor de la propiedad hash.
+     * 
+     * @return
+     *     possible object is
+     *     byte[]
+     */
+    public byte[] getHash() {
+        return hash;
+    }
+
+    /**
+     * Define el valor de la propiedad hash.
+     * 
+     * @param value
+     *     allowed object is
+     *     byte[]
+     */
+    public void setHash(byte[] value) {
+        this.hash = value;
+    }
+
+    /**
+     * Obtiene el valor de la propiedad tamanoFichero.
+     * 
+     */
+    public int getTamanoFichero() {
+        return tamanoFichero;
+    }
+
+    /**
+     * Define el valor de la propiedad tamanoFichero.
+     * 
+     */
+    public void setTamanoFichero(int value) {
+        this.tamanoFichero = value;
     }
 
 }
