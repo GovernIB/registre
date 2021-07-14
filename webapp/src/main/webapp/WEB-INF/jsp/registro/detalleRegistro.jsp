@@ -94,8 +94,10 @@
 </c:if>
 <c:if test="${not registro.registroDetalle.presencial}">
     <dt><i class="fa fa-street-view"></i> <spring:message code="registro.presencial"/>: </dt> <dd> <span class="label label-danger"><spring:message code="regweb.no" /></span></dd>
+    <c:if test="${not empty registro.registroDetalle.aplicacionTelematica}">
+        <dt><i class="fa fa-gears"></i> <spring:message code="registroEntrada.aplicacion"/>: </dt> <dd> ${registro.registroDetalle.aplicacionTelematica}</dd>
+    </c:if>
 </c:if>
-<dt><i class="fa fa-gears"></i> <spring:message code="registroEntrada.aplicacion"/>: </dt> <dd> ${registro.registroDetalle.aplicacion} ${registro.registroDetalle.version}</dd>
 <dt><i class="fa fa-bookmark"></i> <spring:message code="registroEntrada.estado"/>: </dt>
 <dd class="eti-rechazo">
     <c:import url="../registro/estadosRegistro.jsp">
