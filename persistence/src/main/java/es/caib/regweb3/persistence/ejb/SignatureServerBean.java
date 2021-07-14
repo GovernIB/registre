@@ -8,7 +8,6 @@ import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.persistence.utils.I18NLogicUtils;
 import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
-import es.caib.regweb3.utils.TimeUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.*;
@@ -356,7 +355,7 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
                                                           DocumentCustody doc, Long idEntidad) throws I18NException {
       ValidateSignatureResponse resp;
 
-      long start = System.currentTimeMillis();
+      //long start = System.currentTimeMillis();
 
       // TODO CACHE DE PLUGIN!!!!!
       IValidateSignaturePlugin validatePlugin;
@@ -410,7 +409,7 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
             new I18NArgumentString(e.getMessage()));
 
       }
-      log.info("Total validacion Firma: " + TimeUtils.formatElapsedTime(System.currentTimeMillis() - start));
+      //log.info("Total validacion Firma: " + TimeUtils.formatElapsedTime(System.currentTimeMillis() - start));
       return resp;
     }
 
