@@ -123,8 +123,12 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
                 for (AnexoFull anexoFull : anexosFull) {
                     anexoFull.getAnexo().setRegistroDetalle(registroEntrada.getRegistroDetalle());
-                    AnexoFull anexoFullCreado = anexoEjb.crearAnexo(anexoFull, usuarioEntidad, registroID, REGISTRO_ENTRADA, null, validarAnexos);
-
+                    AnexoFull anexoFullCreado;
+                    if(!anexoFull.getAnexo().getConfidencial()){
+                        anexoFullCreado = anexoEjb.crearAnexo(anexoFull, usuarioEntidad, registroID, REGISTRO_ENTRADA, null, validarAnexos);
+                    }else{
+                        anexoFullCreado = anexoEjb.crearAnexoConfidencial(anexoFull, usuarioEntidad, registroID, REGISTRO_ENTRADA);
+                    }
                     registroEntrada.getRegistroDetalle().getAnexos().add(anexoFullCreado.getAnexo());
                 }
 

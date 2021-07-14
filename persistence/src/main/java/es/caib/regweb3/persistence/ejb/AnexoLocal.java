@@ -42,6 +42,9 @@ public interface AnexoLocal extends BaseEjb<Anexo, Long> {
     AnexoFull crearAnexo(AnexoFull anexoFull, UsuarioEntidad usuarioEntidad,
                          Long registroID, Long tipoRegistro, String custodyID, Boolean validarAnexo) throws I18NException, I18NValidationException;
 
+    AnexoFull crearAnexoConfidencial(AnexoFull anexoFull, UsuarioEntidad usuarioEntidad,
+                                            Long registroID, Long tipoRegistro) throws I18NException, I18NValidationException;
+
 
     /**
      * Método que levanta la información de los anexos menos los archivos físicos.
