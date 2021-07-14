@@ -90,6 +90,8 @@ public class RegistroDetalle implements Serializable {
     @XmlTransient
     private String aplicacion = "RWE3";
     @XmlTransient
+    private String aplicacionTelematica;
+    @XmlTransient
     private String version = Versio.VERSIO;
     @XmlTransient
     @Transient
@@ -150,6 +152,7 @@ public class RegistroDetalle implements Serializable {
       this.codigoSia = rd.getCodigoSia();
       this.presencial = rd.getPresencial();
       this.tipoEnvioDocumentacion = rd.getTipoEnvioDocumentacion();
+      this.aplicacionTelematica = rd.getAplicacionTelematica();
     }
 
     /**
@@ -456,6 +459,15 @@ public class RegistroDetalle implements Serializable {
 
     public void setAplicacion(String aplicacion) {
         this.aplicacion = aplicacion;
+    }
+
+    @Column(name = "APLICACION_TELEMATICA")
+    public String getAplicacionTelematica() {
+        return aplicacionTelematica;
+    }
+
+    public void setAplicacionTelematica(String aplicacionTelematica) {
+        this.aplicacionTelematica = aplicacionTelematica;
     }
 
     @Column(name = "VERSION")
