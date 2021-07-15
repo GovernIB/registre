@@ -224,6 +224,15 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
     RegistroEntrada getConAnexosFullLigero(Long id) throws Exception, I18NException;
 
     /**
+     * Obtiene el Registro para Distribuir, son cargar el Justificante, porque solo se envía el custodyID
+     * @param id
+     * @return
+     * @throws Exception
+     * @throws I18NException
+     */
+    RegistroEntrada getConAnexosFullDistribuir(Long id) throws Exception, I18NException;
+
+    /**
      * Método que invoca al plugin post proceso al actualizar un registro entrada.
      *
      * @param re

@@ -149,7 +149,12 @@ public class DistribucionBean implements DistribucionLocal {
             IDistribucionPlugin distribucionPlugin = (IDistribucionPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_DISTRIBUCION);
 
             //Obtenemos el registro de entrada que se debe distribuir
-            RegistroEntrada registroEntrada = registroEntradaEjb.getConAnexosFull(elemento.getIdObjeto());
+            RegistroEntrada registroEntrada = null;
+            if(distribucionPlugin.getClass().getName().contains("DistribucionGoibPlugin")){
+                registroEntrada = registroEntradaEjb.getConAnexosFullDistribuir(elemento.getIdObjeto());
+            }else{
+                registroEntrada = registroEntradaEjb.getConAnexosFull(elemento.getIdObjeto());
+            }
 
             //Montamos la petición de la integración
             peticion.append("usuario: ").append(registroEntrada.getUsuario().getUsuario().getNombreIdentificador()).append(System.getProperty("line.separator"));
