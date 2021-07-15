@@ -94,19 +94,14 @@ public class DistribucionGoibPlugin extends AbstractPluginProperties implements 
 
             // Anexos
             for (AnexoFull anexoFull : registro.getRegistroDetalle().getAnexosFull()) {
-
                 // No distribuimos los Anexos de tipo Ficheros técnicos a Arxiu-Caib, ni los confidenciales
                 if (!RegwebConstantes.TIPO_DOCUMENTO_FICHERO_TECNICO.equals(anexoFull.getAnexo().getTipoDocumento()) && !anexoFull.getAnexo().getConfidencial()) {
-                    RegistreAnnex registreAnnex;
-                    if (anexoFull.getAnexo().isJustificante()) { //Si es justificante, solo enviamos referencia Arxiu
-                        registreAnnex = transformarARegistreAnnexJustificante(anexoFull.getAnexo());
-                        registreAnotacio.setJustificant(registreAnnex);
-                    } else {
-                        registreAnnex = transformarARegistreAnnex(anexoFull); //Contenido completo
-                        registreAnotacio.getAnnexos().add(registreAnnex);
-                    }
+                    registreAnotacio.getAnnexos().add(transformarARegistreAnnex(anexoFull));
                 }
             }
+
+            // Justificante (Solo se envía el custodyID)
+            registreAnotacio.setJustificant(transformarARegistreAnnexJustificante(registro.getRegistroDetalle().getJustificante()));
 
             //Obtenemos la entidad y la unidad Administrativa a donde distribuir el registro
             String entidadCodigo = registro.getOficina().getOrganismoResponsable().getEntidad().getCodigoDir3();

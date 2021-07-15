@@ -590,7 +590,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
         RegistroEntrada re = findByIdCompleto(id);
 
-        return cargarAnexosFull(re);
+        return cargarAnexosFull(re, true);
     }
 
     @Override
@@ -602,12 +602,19 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         List<Anexo> anexos = re.getRegistroDetalle().getAnexos();
         List<AnexoFull> anexosFull = new ArrayList<AnexoFull>();
         for (Anexo anexo : anexos) {
-            AnexoFull anexoFull = anexoEjb.getAnexoFullLigero(anexo.getId(),idEntidad);
-            anexosFull.add(anexoFull);
+            anexosFull.add(anexoEjb.getAnexoFullLigero(anexo.getId(),idEntidad));
         }
         //Asignamos los documentos recuperados de custodia al registro de entrada.
         re.getRegistroDetalle().setAnexosFull(anexosFull);
         return re;
+    }
+
+    @Override
+    public RegistroEntrada getConAnexosFullDistribuir(Long id) throws Exception, I18NException {
+
+        RegistroEntrada re = findByIdCompleto(id);
+
+        return cargarAnexosFull(re, false);
     }
 
     /**
@@ -618,14 +625,17 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
      * @throws Exception
      * @throws I18NException
      */
-    private RegistroEntrada cargarAnexosFull(RegistroEntrada registroEntrada) throws Exception, I18NException {
+    private RegistroEntrada cargarAnexosFull(RegistroEntrada registroEntrada, Boolean justificante) throws Exception, I18NException {
         Long idEntidad = registroEntrada.getOficina().getOrganismoResponsable().getEntidad().getId();
 
         List<Anexo> anexos = registroEntrada.getRegistroDetalle().getAnexos();
         List<AnexoFull> anexosFull = new ArrayList<AnexoFull>();
         for (Anexo anexo : anexos) {
-            AnexoFull anexoFull = anexoEjb.getAnexoFull(anexo.getId(), idEntidad);
-            anexosFull.add(anexoFull);
+            if(!anexo.isJustificante()){
+                anexosFull.add(anexoEjb.getAnexoFull(anexo.getId(), idEntidad));
+            }else if(justificante){
+                anexosFull.add(anexoEjb.getAnexoFull(anexo.getId(), idEntidad));
+            }
         }
         //Asignamos los documentos recuperados de custodia al registro de entrada.
         registroEntrada.getRegistroDetalle().setAnexosFull(anexosFull);
