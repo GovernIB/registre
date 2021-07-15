@@ -95,9 +95,8 @@ public class DistribucionGoibPlugin extends AbstractPluginProperties implements 
             // Anexos
             for (AnexoFull anexoFull : registro.getRegistroDetalle().getAnexosFull()) {
 
-                // No distribuimos los Ficheros técnicos a Arxiu-Caib
-                if (!RegwebConstantes.TIPO_DOCUMENTO_FICHERO_TECNICO.equals(anexoFull.getAnexo().getTipoDocumento())) {
-
+                // No distribuimos los Anexos de tipo Ficheros técnicos a Arxiu-Caib, ni los confidenciales
+                if (!RegwebConstantes.TIPO_DOCUMENTO_FICHERO_TECNICO.equals(anexoFull.getAnexo().getTipoDocumento()) && !anexoFull.getAnexo().getConfidencial()) {
                     RegistreAnnex registreAnnex;
                     if (anexoFull.getAnexo().isJustificante()) { //Si es justificante, solo enviamos referencia Arxiu
                         registreAnnex = transformarARegistreAnnexJustificante(anexoFull.getAnexo());
@@ -410,7 +409,6 @@ public class DistribucionGoibPlugin extends AbstractPluginProperties implements 
             registreAnnex.setFitxerContingut(anexoFull.getSignatureCustody().getData());
 
             // DISTRIBUCIÓ obliga a indicar un objeto Firma indicando el tipusMime, el perfil y el tipo de firma
-            log.info("Tipus Mime  " +anexoFull.getSignatureCustody().getMime());
             Firma firma = new Firma();
             firma.setTipusMime(anexoFull.getSignatureCustody().getMime());
             firma.setTipus(transformarTipoFirma(anexoFull.getAnexo()));
