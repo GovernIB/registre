@@ -6,5 +6,8 @@ ALTER TABLE RWE_ANEXO add CONFIDENCIAL number(1,0) DEFAULT 0 not null;
 ALTER TABLE RWE_ANEXO add NOMBRE_FICHERO varchar2(255 char);
 ALTER TABLE RWE_ANEXO add TAMANO_FICHERO number(10,0);
 
+--Nuevas secuencias
+create sequence RWE_COLA_SEQ;
+create sequence RWE_INT_SEQ;
 
 
