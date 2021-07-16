@@ -26,8 +26,10 @@ function obtenerAnexo(idAnexo, idEntidad){
             obtenerElementoTraducido(urlTipoDocumental, result.anexo.tipoDocumental.id, 'tipoDocumental');
             if(result.anexo.modoFirma == 0 || result.anexo.modoFirma == 2 ){
                 $('#mime').html(result.docMime);
+                $('#nombreFichero').html(result.docFileName);
             }else {
                 $('#mime').html(result.signMime);
+                $('#nombreFichero').html(result.signFileName);
             }
 
             if(result.anexo.modoFirma !== 0){ // Firma Attached o detached
@@ -57,6 +59,7 @@ function limpiarAnexoDetalle(){
     $('#tipoFirma').html('');
     $('#perfilFirma').html('');
     $('#formatoFirma').html('');
+    $('#nombreFichero').html('');
 
 }
 
