@@ -20,7 +20,7 @@ import java.util.Date;
 @org.hibernate.annotations.Table(appliesTo = "RWE_INTEGRACION", indexes = {
     @Index(name="RWE_INT_ENTIDAD_FK_I", columnNames = {"ENTIDAD"})
 })
-@SequenceGenerator(name="generator",sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
+@SequenceGenerator(name="generator",sequenceName = "RWE_INT_SEQ", allocationSize = 1)
 public class Integracion implements Serializable {
 
 

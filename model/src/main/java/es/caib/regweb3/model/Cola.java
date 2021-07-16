@@ -15,7 +15,7 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "RWE_COLA")
-@SequenceGenerator(name="generator",sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
+@SequenceGenerator(name="generator",sequenceName = "RWE_COLA_SEQ", allocationSize = 1)
 public class Cola implements Serializable{
 
 
