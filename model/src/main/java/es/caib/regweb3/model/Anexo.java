@@ -93,7 +93,7 @@ public class Anexo implements Serializable {
     @XmlTransient
     private String nombreFichero;
     @XmlTransient
-    private int tamanoFichero;
+    private Integer tamanoFichero;
 
 
     public Anexo() {
@@ -238,11 +238,11 @@ public class Anexo implements Serializable {
     }
 
     @Column(name = "TAMANO_FICHERO")
-    public int getTamanoFichero() {
+    public Integer getTamanoFichero() {
         return tamanoFichero;
     }
 
-    public void setTamanoFichero(int tamanoFichero) {
+    public void setTamanoFichero(Integer tamanoFichero) {
         this.tamanoFichero = tamanoFichero;
     }
 
@@ -474,19 +474,6 @@ public class Anexo implements Serializable {
         }
 
         return tituloCorto;
-    }
-
-    @Transient
-    public long getConfidencialSize() {
-
-        long size = getTamanoFichero();
-
-        if (size < 1024) {
-            return 1;
-        } else {
-            return size / 1024;
-        }
-
     }
 
     @Override
