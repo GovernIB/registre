@@ -707,27 +707,6 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
 
         registroEntrada = registroEntradaEjb.findById(idRegistro);
 
-        // Comprobamos si el RegistroEntrada tiene el estado Válido
-        if (!registroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO)) {
-            response.setStatus("FAIL_NOVALIDO");
-            response.setError(getMessage("registroEntrada.distribuir.error.novalido"));
-            response.setResult(respuesta);
-        }
-
-        // Comprobamos que el usuario tiene permisos para Distribuir el registro
-        if (!permisoOrganismoUsuarioEjb.tienePermiso(usuarioEntidad.getId(), registroEntrada.getOficina().getOrganismoResponsable().getId(), RegwebConstantes.PERMISO_DISTRIBUCION_REGISTRO, true)) {
-            response.setStatus("FAIL_NOPERMISOS");
-            response.setError(getMessage("registroEntrada.distribuir.error.nopermisos"));
-            response.setResult(respuesta);
-        }
-
-        // Comprobamos que el RegistroEntrada se puede Distribuir
-        if (!registroEntradaConsultaEjb.isDistribuir(idRegistro)) {
-            response.setStatus("FAIL_NOISDISTRIBUIR");
-            response.setError(getMessage("registroEntrada.distribuir.error.noIsdistribuir"));
-            response.setResult(respuesta);
-        }
-
         try {
             //Distribuimos el registro
             respuesta = distribucionEjb.distribuir(registroEntrada, usuarioEntidad);
