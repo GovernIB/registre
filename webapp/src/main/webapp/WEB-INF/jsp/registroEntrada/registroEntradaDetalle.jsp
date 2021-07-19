@@ -66,7 +66,7 @@
                             <c:if test="${registro.estado != RegwebConstantes.REGISTRO_RESERVA}">
 
                                 <%--Si no se ha generado el justificante y el registro no está ANULADO, muestra el boton para generarlo --%>
-                                <c:if test="${idJustificante == null && registro.estado != RegwebConstantes.REGISTRO_ANULADO && puedeEditar}">
+                                <c:if test="${idJustificante == null && registro.estado != RegwebConstantes.REGISTRO_ANULADO && puedeEditar && not empty registro.registroDetalle.interesados}">
                                     <div class="btn-group">
                                         <button type="button" class="btn btn-warning btn-sm dropdown-toggle" data-toggle="dropdown">
                                             <spring:message code="justificante.boton"/> <span class="caret"></span>
@@ -109,7 +109,7 @@
                     <c:if test="${registro.estado == RegwebConstantes.REGISTRO_VALIDO && puedeEditar}">
 
                         <%--ES UNA DISTRIBUCIÓN--%>
-                        <c:if test="${(registro.evento == RegwebConstantes.EVENTO_DISTRIBUIR && puedeDistribuir)}">
+                        <c:if test="${(registro.evento == RegwebConstantes.EVENTO_DISTRIBUIR && puedeDistribuir && not empty registro.registroDetalle.interesados)}">
                             <div class="panel-footer center">
 
                                 <c:if test="${distribuirRipea}">
