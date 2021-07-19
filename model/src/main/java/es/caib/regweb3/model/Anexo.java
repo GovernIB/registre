@@ -476,6 +476,22 @@ public class Anexo implements Serializable {
         return tituloCorto;
     }
 
+    @Transient
+    public Integer getConfidencialSize() {
+
+        Integer size = getTamanoFichero();
+
+        if(size != null){
+            if (size < 1024) {
+                return 1;
+            } else {
+                return size / 1024;
+            }
+        }
+
+        return null;
+    }
+
     @Override
     public boolean equals(Object o) {
       if (this == o) return true;
