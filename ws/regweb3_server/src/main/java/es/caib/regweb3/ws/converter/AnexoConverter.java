@@ -165,7 +165,11 @@ public class AnexoConverter extends CommonConverter {
       //Condifencial
       if(anexoWs.getConfidencial()){
          anexo.setConfidencial(anexoWs.getConfidencial());
-         if(StringUtils.isNotEmpty(anexoWs.getTitulo())){ anexo.setNombreFichero(anexoWs.getTitulo());}
+         if(StringUtils.isNotEmpty(anexoWs.getNombreFicheroAnexado())){
+            anexo.setNombreFichero(anexoWs.getNombreFicheroAnexado());
+         }else{
+            anexo.setNombreFichero(anexoWs.getTitulo());
+         }
          if(anexoWs.getHash() != null){ anexo.setHash(anexoWs.getHash()); }
          anexo.setTamanoFichero(anexoWs.getTamanoFichero());
       }
