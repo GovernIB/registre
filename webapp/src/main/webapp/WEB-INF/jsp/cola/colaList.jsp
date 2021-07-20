@@ -186,7 +186,7 @@
                                     </table>
 
                                     <%--Formulario de búsqueda de integraciones--%>
-                                    <form id="integracion" action="${pageContext.request.contextPath}/integracion/busqueda" method="post"target="_blank">
+                                    <form id="integracion" action="${pageContext.request.contextPath}/integracion/busqueda" method="post" target="_blank">
                                         <input type="hidden" id="texto" name="texto" value=""/>
                                     </form>
 
