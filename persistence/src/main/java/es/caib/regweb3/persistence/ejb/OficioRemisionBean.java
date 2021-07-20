@@ -639,7 +639,15 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
         q.setParameter("maxReintentos", PropiedadGlobalUtil.getMaxReintentosSir(idEntidad));
         q.setMaxResults(7);
 
-        return q.getResultList();
+        List<OficioRemision> oficios =  new ArrayList<OficioRemision>();
+        List<Object[]> result = q.getResultList();
+
+        for (Object[] object : result){
+            OficioRemision oficio = new OficioRemision((Date)object[0],(String)object[1],(Long)object[2]);
+            oficios.add(oficio);
+        }
+
+        return oficios;
     }
 
     @Override
