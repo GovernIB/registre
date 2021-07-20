@@ -56,6 +56,11 @@ public class OficioRemision implements Serializable {
     public OficioRemision() {
     }
 
+    public OficioRemision(Date fecha, String identificadorIntercambio, Long tipoOficioRemision) {
+        this.tipoOficioRemision = tipoOficioRemision;
+        this.fecha = fecha;
+        this.identificadorIntercambio = identificadorIntercambio;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "generator")
