@@ -118,6 +118,51 @@
                                     </div>
                                 </c:if>
 
+                                <%--ENVIOS SIR MAX REINTENTOS--%>
+                                <c:if test="${not empty enviadosSir}">
+                                    <div class="col-xs-6 filas">
+                                        <div class="panel panel-warning">
+                                            <div class="panel-heading">
+                                                <h3 class="panel-title"><i class="fa fa-book"></i> <strong><spring:message code="sir.enviados.max"/></strong> </h3>
+                                            </div>
+
+                                            <div class="panel-body">
+                                                <div class="table-responsive-inici">
+
+                                                    <table class="table table-hover table-striped marg-bot0">
+                                                        <thead>
+                                                            <tr>
+                                                                <th><spring:message code="oficioRemision.fecha"/></th>
+                                                                <th><spring:message code="oficioRemision.tipo"/></th>
+                                                                <th><spring:message code="registroSir.identificadorIntercambio"/></th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <c:forEach var="oficioRemision" items="${enviadosSir}">
+                                                                <tr>
+                                                                    <td><fmt:formatDate value="${oficioRemision.fecha}" pattern="dd/MM/yyyy HH:mm:ss"/></td>
+                                                                    <td>
+                                                                        <c:if test="${oficioRemision.tipoOficioRemision == RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA}">
+                                                                            <span class="label label-info"><spring:message code="registroSir.entrada"/></span>
+                                                                        </c:if>
+
+                                                                        <c:if test="${oficioRemision.tipoOficioRemision == RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA}">
+                                                                            <span class="label label-danger"><spring:message code="registroSir.salida"/></span>
+                                                                        </c:if>
+                                                                    </td>
+                                                                    <td>
+                                                                        <a href="<c:url value="/sir/${oficioRemision.identificadorIntercambio}/detalle"/>" target="_blank" title="<spring:message code="idIntercambio.detalle"/>">${oficioRemision.identificadorIntercambio}</a>
+                                                                    </td>
+                                                                </tr>
+                                                            </c:forEach>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </c:if>
+
                                 <%--INCIDENCIAS INTEGRACIONES SIR--%>
                                 <c:if test="${not empty incidenciasSir}">
                                     <div class="col-xs-6 filas">

@@ -76,16 +76,38 @@
                                         <dd><span class="label label-info"><spring:message code="registroSir.entrada"/></span></dd>
                                         <dt><i class="fa fa-barcode"></i> <spring:message code="registroEntrada.numeroRegistro"/>: </dt>
                                         <dd> ${registro.registroDetalle.numeroRegistroOrigen}</dd>
+
+                                        <%--Detalle registro--%>
                                         <c:import url="../registro/detalleRegistro.jsp">
                                             <c:param name="tipoRegistro" value="${RegwebConstantes.REGISTRO_ENTRADA}"/>
                                         </c:import>
+
+                                        <%--Reintentos--%>
+                                        <c:if test="${trazabilidades[0].oficioRemision.numeroReintentos > 0}">
+                                            <hr class="divider-warning">
+                                            <dt><i class="fa fa-retweet"></i> <spring:message code="oficioRemision.reintentos"/>:</dt>
+                                            <dd> ${trazabilidades[0].oficioRemision.numeroReintentos}</dd>
+                                        </c:if>
+
                                     </dl>
                                 </div>
-                                <%--BOTONERA--%>
+                                <%--BOTONERA DETALLE--%>
                                 <div class="panel-footer center">
                                     <div class="btn-group"><button type="button" onclick="goTo('<c:url value="/adminEntidad/registroEntrada/${registro.id}/detalle"/>')" class="btn btn-info btn-sm"><spring:message code="registroEntrada.detalle"/></button></div>
                                 </div>
+                                <%--BOTONERA REINICIAR Y REENVIAR--%>
+                                <div class="panel-footer center">
+                                    <c:if test="${trazabilidades[0].oficioRemision.estado != RegwebConstantes.OFICIO_ACEPTADO && trazabilidades[0].oficioRemision.estado != RegwebConstantes.OFICIO_SIR_RECHAZADO &&
+                                                                                  trazabilidades[0].oficioRemision.estado != RegwebConstantes.OFICIO_SIR_DEVUELTO && trazabilidades[0].oficioRemision.estado != RegwebConstantes.OFICIO_SIR_DEVUELTO}">
+                                        <c:url value="/sir/oficio/reiniciar" var="urlReiniciar"/>
+                                        <div class="btn-group"><button type="button" onclick="reiniciarContador('${trazabilidades[0].oficioRemision.id}','${urlReiniciar}')" class="btn btn-info btn-sm"><spring:message code="registroSir.reiniciar"/></button></div>
+                                    </c:if>
 
+                                    <c:if test="${trazabilidades[0].oficioRemision.estado == RegwebConstantes.OFICIO_SIR_ENVIADO || trazabilidades[0].oficioRemision.estado == RegwebConstantes.OFICIO_SIR_ENVIADO_ACK || trazabilidades[0].oficioRemision.estado == RegwebConstantes.OFICIO_SIR_RECHAZADO
+                                                                    || trazabilidades[0].oficioRemision.estado == RegwebConstantes.OFICIO_SIR_REENVIADO || trazabilidades[0].oficioRemision.estado == RegwebConstantes.OFICIO_SIR_REENVIADO_ACK}">
+                                        <div class="btn-group"><button type="button" onclick='confirm("javascript:reenviarIntercambio(${trazabilidades[0].oficioRemision.id})","<spring:message code="regweb.confirmar.enviarIntercambio" htmlEscape="true"/>")' class="btn btn-success btn-sm"><spring:message code="intercambio.reenviar"/></button></div>
+                                    </c:if>
+                                </div>
                             </c:if>
 
                             <%--REGISTRO SALIDA--%>
@@ -98,14 +120,35 @@
                                         <dt><i class="fa fa-barcode"></i> <spring:message code="registroSalida.numeroRegistro"/>: </dt>
                                         <dd> ${registro.registroDetalle.numeroRegistroOrigen}</dd>
 
+                                        <%--Detalle registro--%>
                                         <c:import url="../registro/detalleRegistro.jsp">
                                             <c:param name="tipoRegistro" value="${RegwebConstantes.REGISTRO_SALIDA}"/>
                                         </c:import>
+
+                                        <%--Reintentos--%>
+                                        <c:if test="${trazabilidades[0].oficioRemision.numeroReintentos > 0}">
+                                            <hr class="divider-warning">
+                                            <dt><i class="fa fa-retweet"></i> <spring:message code="oficioRemision.reintentos"/>:</dt>
+                                            <dd> ${trazabilidades[0].oficioRemision.numeroReintentos}</dd>
+                                        </c:if>
                                     </dl>
                                 </div>
                                 <%--BOTONERA--%>
                                 <div class="panel-footer center">
                                     <div class="btn-group"><button type="button" onclick="goTo('<c:url value="/adminEntidad/registroSalida/${registro.id}/detalle"/>')" class="btn btn-danger btn-sm"><spring:message code="registroSalida.detalle"/></button></div>
+                                </div>
+                                <%--BOTONERA REINICIAR Y REENVIAR--%>
+                                <div class="panel-footer center">
+                                    <c:if test="${trazabilidades[0].oficioRemision.estado != RegwebConstantes.OFICIO_ACEPTADO && trazabilidades[0].oficioRemision.estado != RegwebConstantes.OFICIO_SIR_RECHAZADO &&
+                                                                                  trazabilidades[0].oficioRemision.estado != RegwebConstantes.OFICIO_SIR_DEVUELTO && trazabilidades[0].oficioRemision.estado != RegwebConstantes.OFICIO_SIR_DEVUELTO}">
+                                        <c:url value="/sir/oficio/reiniciar" var="urlReiniciar"/>
+                                        <div class="btn-group"><button type="button" onclick="reiniciarContador('${trazabilidades[0].oficioRemision.id}','${urlReiniciar}')" class="btn btn-info btn-sm"><spring:message code="registroSir.reiniciar"/></button></div>
+                                    </c:if>
+
+                                    <c:if test="${trazabilidades[0].oficioRemision.estado == RegwebConstantes.OFICIO_SIR_ENVIADO || trazabilidades[0].oficioRemision.estado == RegwebConstantes.OFICIO_SIR_ENVIADO_ACK || trazabilidades[0].oficioRemision.estado == RegwebConstantes.OFICIO_SIR_RECHAZADO
+                                                                    || trazabilidades[0].oficioRemision.estado == RegwebConstantes.OFICIO_SIR_REENVIADO || trazabilidades[0].oficioRemision.estado == RegwebConstantes.OFICIO_SIR_REENVIADO_ACK}">
+                                        <div class="btn-group"><button type="button" onclick='confirm("javascript:reenviarIntercambio(${trazabilidades[0].oficioRemision.id})","<spring:message code="regweb.confirmar.enviarIntercambio" htmlEscape="true"/>")' class="btn btn-success btn-sm"><spring:message code="intercambio.reenviar"/></button></div>
+                                    </c:if>
                                 </div>
                             </c:if>
                         </c:if>
@@ -291,6 +334,9 @@
         tradsMensajeControl['mensajeControl.ACK.enviado.error'] = "<spring:message code='mensajeControl.ACK.enviado.error' javaScriptEscape='true' />";
         tradsMensajeControl['mensajeControl.confirmacion.enviado.ok'] = "<spring:message code='mensajeControl.confirmacion.enviado.ok' javaScriptEscape='true' />";
         tradsMensajeControl['mensajeControl.confirmacion.enviado.error'] = "<spring:message code='mensajeControl.confirmacion.enviado.error' javaScriptEscape='true' />";
+        var tradsSir = [];
+        tradsSir['registroSir.reiniciar.ok'] = "<spring:message code='registroSir.reiniciar.ok' javaScriptEscape='true' />";
+        tradsSir['registroSir.reiniciar.error'] = "<spring:message code='registroSir.reiniciar.error' javaScriptEscape='true' />";
 
     </script>
 

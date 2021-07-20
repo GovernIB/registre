@@ -117,11 +117,11 @@ public class InicioController extends BaseController{
             mav.addObject("incidenciasWs", integracionEjb.ultimasIntegracionesErrorTipo(entidadActiva.getId(), RegwebConstantes.INTEGRACION_WS));
             model.addAttribute("integracion", new BasicForm());
 
+            // SIR: Envios con estado OFICIO_SIR_ENVIADO o OFICIO_SIR_REENVIADO y 10 reintentos
+            mav.addObject("enviadosSir", oficioRemisionEjb.getEnviadosSinAckMaxReintentos(entidadActiva.getId()));
+
             // Elementos de la Cola en estadro Error
             mav.addObject("erroresCola", colaEjb.getElementosError(entidadActiva.getId()));
-
-            // Última sincronización de organismos
-            mav.addObject("descargaUnidad", descargaEjb.ultimaDescarga(RegwebConstantes.UNIDAD, entidadActiva.getId()));
 
             // Notificaciones
             mav.addObject("notificacionesPendientes", notificacionEjb.notificacionesPendientes(usuarioEntidad.getId()));
