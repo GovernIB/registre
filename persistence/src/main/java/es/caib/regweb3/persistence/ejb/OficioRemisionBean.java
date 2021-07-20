@@ -637,6 +637,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
         q.setParameter("reenviado", RegwebConstantes.OFICIO_SIR_REENVIADO);
         q.setParameter("idEntidad", idEntidad);
         q.setParameter("maxReintentos", PropiedadGlobalUtil.getMaxReintentosSir(idEntidad));
+        q.setMaxResults(7);
 
         return q.getResultList();
     }
