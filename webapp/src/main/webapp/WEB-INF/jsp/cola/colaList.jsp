@@ -120,7 +120,7 @@
                                             <c:forEach var="cola" items="${paginacion.listado}">
                                                 <tr>
                                                     <td class="center"><fmt:formatDate value="${cola.fecha}" pattern="dd/MM/yyyy HH:mm:ss"/></td>
-                                                    <td class="center">${cola.descripcionObjeto}</td>
+                                                    <td class="center"><a href="javascript:void(0);" onclick="buscarIntegraciones('${cola.descripcionObjeto}')" title="<spring:message code="integracion.busqueda"/>">${cola.descripcionObjeto}</a></td>
                                                     <td class="center">
                                                         <c:if test="${cola.estado == RegwebConstantes.COLA_ESTADO_PROCESADO}">
                                                             <span class="label label-success"><spring:message code="cola.estado.${cola.estado}"/></span>
@@ -184,6 +184,12 @@
                                             </c:forEach>
                                         </tbody>
                                     </table>
+
+                                    <%--Formulario de búsqueda de integraciones--%>
+                                    <form id="integracion" action="${pageContext.request.contextPath}/integracion/busqueda" method="post"target="_blank">
+                                        <input type="hidden" id="texto" name="texto" value=""/>
+                                    </form>
+
                                     <!-- Paginacion -->
                                     <c:import url="../modulos/paginacionBusqueda.jsp">
                                         <c:param name="entidad" value="cola"/>
@@ -234,13 +240,14 @@
 
     <c:import url="../modulos/pie.jsp"/>
 
+    <script type="text/javascript" src="<c:url value="/js/cola.js"/>"></script>
+    <script type="text/javascript" src="<c:url value="/js/integracion.js"/>"></script>
+
     <script type="text/javascript">
 
         var urlobtenerCola = '<c:url value="/rest/obtenerCola"/>';
 
     </script>
-
-    <script type="text/javascript" src="<c:url value="/js/cola.js"/>"></script>
 
    </body>
 </html>
