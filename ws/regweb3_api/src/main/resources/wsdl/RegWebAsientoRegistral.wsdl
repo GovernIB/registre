@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<wsdl:definitions name="RegWebAsientoRegistralWsService" targetNamespace="http://impl.v3.ws.regweb3.caib.es/"
-                  xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://impl.v3.ws.regweb3.caib.es/"
-                  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+<wsdl:definitions name="RegWebAsientoRegistralWsService" targetNamespace="http://impl.v3.ws.regweb3.caib.es/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://impl.v3.ws.regweb3.caib.es/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
   <wsdl:types>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://impl.v3.ws.regweb3.caib.es/" attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="http://impl.v3.ws.regweb3.caib.es/">
   <xs:element name="anexoWs" type="tns:anexoWs"/>
@@ -310,8 +308,10 @@
   </xs:complexType>
   <xs:complexType name="fileInfoWs">
     <xs:sequence>
+      <xs:element minOccurs="0" name="confidencial" type="xs:boolean"/>
       <xs:element minOccurs="0" name="fileID" type="xs:long"/>
       <xs:element minOccurs="0" name="filename" type="xs:string"/>
+      <xs:element minOccurs="0" name="hash" type="xs:base64Binary"/>
       <xs:element minOccurs="0" name="mime" type="xs:string"/>
       <xs:element minOccurs="0" name="name" type="xs:string"/>
       <xs:element minOccurs="0" name="size" type="xs:long"/>

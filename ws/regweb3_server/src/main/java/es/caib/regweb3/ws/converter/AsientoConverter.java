@@ -1,9 +1,14 @@
 package es.caib.regweb3.ws.converter;
 
-import es.caib.regweb3.model.*;
+import es.caib.regweb3.model.Entidad;
+import es.caib.regweb3.model.IRegistro;
+import es.caib.regweb3.model.RegistroDetalle;
+import es.caib.regweb3.model.RegistroEntrada;
+import es.caib.regweb3.model.RegistroSalida;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.persistence.ejb.AnexoLocal;
 import es.caib.regweb3.persistence.utils.I18NLogicUtils;
+import es.caib.regweb3.utils.MimeTypeUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 import es.caib.regweb3.ws.model.AsientoWs;
@@ -166,22 +171,31 @@ public class AsientoConverter extends CommonConverter {
         FileInfoWs fileInfo = new FileInfoWs();
         fileInfo.setFileID(anexoFull.getAnexo().getId());
         fileInfo.setName(anexoFull.getAnexo().getTitulo());
+        fileInfo.setConfidencial(anexoFull.getAnexo().getConfidencial());
+        fileInfo.setHash(anexoFull.getAnexo().getHash());
         if(anexoFull.getAnexo().getValidezDocumento()!=null){
             fileInfo.setValidezDocumento(anexoFull.getAnexo().getValidezDocumento().toString());
         }
 
 
-        if(anexoFull.getAnexo().getModoFirma() == RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA ||
-                anexoFull.getAnexo().getModoFirma()== RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED) {
+        if(!anexoFull.getAnexo().getConfidencial()){//si no es confidencial
 
-            fileInfo.setSize(anexoFull.getDocSize());
-            fileInfo.setMime(anexoFull.getDocMime());
+            if(anexoFull.getAnexo().getModoFirma() == RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA ||
+                    anexoFull.getAnexo().getModoFirma()== RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED) {
 
-        }else if(anexoFull.getAnexo().getModoFirma()== RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED){
+                fileInfo.setSize(anexoFull.getDocSize());
+                fileInfo.setMime(anexoFull.getDocMime());
 
-            fileInfo.setSize(anexoFull.getSignSize());
-            fileInfo.setMime(anexoFull.getSignMime());
+            }else if(anexoFull.getAnexo().getModoFirma()== RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED){
+
+                fileInfo.setSize(anexoFull.getSignSize());
+                fileInfo.setMime(anexoFull.getSignMime());
+            }
+        }else{
+            fileInfo.setSize(new Long(anexoFull.getAnexo().getTamanoFichero()));
+            fileInfo.setMime(MimeTypeUtils.getMimeTypeFileName(anexoFull.getAnexo().getNombreFichero()));
         }
+
 
         return fileInfo;
     }
