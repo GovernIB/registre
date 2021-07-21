@@ -28,7 +28,7 @@ public class RegWebAsientoRegistralTest extends RegWebTestUtils {
      */
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
-        setEntorno("_proves");
+        setEntorno("_localhost");
         asientoRegistralApi = getAsientoRegistralApi();
     }
 
@@ -117,12 +117,12 @@ public class RegWebAsientoRegistralTest extends RegWebTestUtils {
     @Test
     public void crearAsientoEntradaConAnexos() throws Exception {
 
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 1; i++) {
 
             try {
 
                 AsientoRegistralWs asientoRegistralWs = getAsiento_to_PersonaFisica(REGISTRO_ENTRADA, true, true);
-                asientoRegistralWs = asientoRegistralApi.crearAsientoRegistral(null,getTestEntidadCodigoDir3(),asientoRegistralWs,null,false,true);
+                asientoRegistralWs = asientoRegistralApi.crearAsientoRegistral(null,getTestEntidadCodigoDir3(),asientoRegistralWs,null,false,false);
 
                 printAsientoBasico(asientoRegistralWs);
 
@@ -204,7 +204,6 @@ public class RegWebAsientoRegistralTest extends RegWebTestUtils {
         for (int i = 0; i < 1; i++) {
 
             try {
-
                 AsientoRegistralWs asientoRegistralWs = getAsiento_to_AdministracionSir(REGISTRO_SALIDA, true);
                 asientoRegistralWs = asientoRegistralApi.crearAsientoRegistral(null,getTestEntidadCodigoDir3(),asientoRegistralWs,TIPO_OPERACION_COMUNICACION,false,false);
 
@@ -352,7 +351,7 @@ public class RegWebAsientoRegistralTest extends RegWebTestUtils {
     public void distribuirAsientoregistral() throws Exception{
 
         try {
-            AsientoRegistralWs entrada = getAsiento_to_AdministracionExterna(REGISTRO_ENTRADA, false);
+            AsientoRegistralWs entrada = getAsiento_to_AdministracionExterna(REGISTRO_SALIDA, false);
             entrada = asientoRegistralApi.crearAsientoRegistral(null,getTestEntidadCodigoDir3(), entrada,null,true,false);
 
             asientoRegistralApi.distribuirAsientoRegistral(getTestEntidadCodigoDir3(),entrada.getNumeroRegistroFormateado());
@@ -366,7 +365,7 @@ public class RegWebAsientoRegistralTest extends RegWebTestUtils {
     public void obtenerOficioExterno() {
 
         try {
-            AsientoRegistralWs entrada = getAsiento_to_AdministracionExterna(REGISTRO_ENTRADA, false);
+            AsientoRegistralWs entrada = getAsiento_to_AdministracionExterna(REGISTRO_SALIDA, false);
             entrada = asientoRegistralApi.crearAsientoRegistral(null,getTestEntidadCodigoDir3(), entrada,TIPO_OPERACION_COMUNICACION,true,false);
 
             OficioWs oficio = asientoRegistralApi.obtenerOficioExterno(getTestEntidadCodigoDir3(),entrada.getNumeroRegistroFormateado());
@@ -450,7 +449,7 @@ public class RegWebAsientoRegistralTest extends RegWebTestUtils {
     @Test
     public void obtenerAsientoCiudadanoCarpeta() {
 
-        AsientoWs asientoWs = asientoRegistralApi.obtenerAsientoCiudadanoCarpeta(getTestEntidadCodigoDir3(),"46164250F","GOIB-E-50/2021","es");
+        AsientoWs asientoWs = asientoRegistralApi.obtenerAsientoCiudadanoCarpeta(getTestEntidadCodigoDir3(),"44328254D","GPRO-E-161/2021","es");
 
         System.out.println("Num. Registro: " + asientoWs.getNumeroRegistro());
         System.out.println("Fecha: " + asientoWs.getFechaRegistro());
@@ -475,6 +474,7 @@ public class RegWebAsientoRegistralTest extends RegWebTestUtils {
             System.out.println("Anexo Nombre: " + fileInfoWs.getName());
             System.out.println("Anexo Mime: " + fileInfoWs.getMime());
             System.out.println("Anexo Size: " + fileInfoWs.getSize());
+            System.out.println("Anexo Hash: " + fileInfoWs.getHash());
         }
 
     }
