@@ -63,13 +63,6 @@ public interface WebServicesMethodsLocal {
 
     /**
      *
-     * @return
-     * @throws Exception
-     */
-    String getFormatosAnexosSir() throws Exception;
-
-    /**
-     *
      * @param codigo
      * @return
      * @throws Exception

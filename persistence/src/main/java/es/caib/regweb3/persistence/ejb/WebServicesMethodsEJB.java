@@ -73,11 +73,6 @@ public class WebServicesMethodsEJB implements WebServicesMethodsLocal {
     }
 
     @Override
-    public String getFormatosAnexosSir() throws Exception {
-        return PropiedadGlobalUtil.getFormatosAnexosSir();
-    }
-
-    @Override
     public Oficina obtenerOficina(String codigo) throws Exception {
         return oficinaEjb.findByCodigo(codigo);
     }

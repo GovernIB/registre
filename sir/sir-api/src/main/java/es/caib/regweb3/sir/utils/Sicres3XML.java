@@ -150,7 +150,7 @@ public class Sicres3XML {
      * Valida un Fichero de Intercambio recibido
      * @param fichero
      */
-    public void validarFicheroIntercambio(FicheroIntercambio fichero, Dir3CaibObtenerOficinasWs oficinasService, Dir3CaibObtenerUnidadesWs unidadesService, String formatosAnexosSir) {
+    public void validarFicheroIntercambio(FicheroIntercambio fichero, Dir3CaibObtenerOficinasWs oficinasService, Dir3CaibObtenerUnidadesWs unidadesService) {
 
         log.info("Validando FicheroIntercambio...");
 
@@ -171,7 +171,7 @@ public class Sicres3XML {
         validarSegmentoControl(fichero);
         validarSegmentoInteresados(fichero);
         validarSegmentoAsunto(fichero);
-        validarSegmentoAnexos(fichero,formatosAnexosSir);
+        validarSegmentoAnexos(fichero);
         validarSegmentoFormularioGenerico(fichero);
 
         log.info("Fichero de intercambio validado");
@@ -427,14 +427,14 @@ public class Sicres3XML {
      *
      * @param fichero Información del fichero de intercambio.
      */
-    private void validarSegmentoAnexos(FicheroIntercambio fichero, String formatosAnexosSir) {
+    private void validarSegmentoAnexos(FicheroIntercambio fichero) {
 
         // Validar los documentos
         if ((fichero.getFicheroIntercambio() != null)
                 && ArrayUtils.isNotEmpty(fichero.getFicheroIntercambio().getDe_Anexo())) {
             De_Anexo[] anexos = fichero.getFicheroIntercambio().getDe_Anexo();
             for (De_Anexo anexo : anexos) {
-                validarAnexo(anexo, fichero.getIdentificadorIntercambio(),formatosAnexosSir);
+                validarAnexo(anexo, fichero.getIdentificadorIntercambio());
 
                 //Si el anexo tiene identificador de documento firmado significa que es firma de otro anexo, se debe comprobar que es así.
                 if (StringUtils.isNotEmpty(anexo.getIdentificador_Documento_Firmado())) {
@@ -458,7 +458,7 @@ public class Sicres3XML {
      * @param anexo                    Información del anexo
      * @param identificadorIntercambio Identificador de intercambio
      */
-    private void validarAnexo(De_Anexo anexo, String identificadorIntercambio,String formatosAnexosSir) {
+    private void validarAnexo(De_Anexo anexo, String identificadorIntercambio) {
 
         if (anexo != null) {
 
@@ -475,9 +475,7 @@ public class Sicres3XML {
             String identificadorFichero = StringUtils.substringAfter(anexo.getIdentificador_Fichero(), identificadorIntercambio + "_");
             String[] tokens = StringUtils.split(identificadorFichero, "_.");
             String extensionFichero = tokens[2].toLowerCase();
-            Assert.isTrue(formatosAnexosSir.contains(extensionFichero), "La extensión del fichero [" + extensionFichero + "] no está permitida");
-
-
+            Assert.isTrue(Arrays.asList(RegwebConstantes.ANEXO_EXTENSIONES_SIR).contains(extensionFichero), "La extensión del fichero [" + extensionFichero + "] no está permitida");
 
             // Validar el campo validez de documento
             if (StringUtils.isNotBlank(anexo.getValidez_Documento())) {
@@ -495,10 +493,8 @@ public class Sicres3XML {
             // se especifica con qué algoritmo está generado.
             Assert.isTrue(!ArrayUtils.isEmpty(anexo.getHash()), "El campo 'Hash' del SegmentoAnexos, no puede estar vacio.");
 
-
             // Validar el contenido del anexo
             Assert.isTrue(anexo.getAnexo().length > 0, "El campo 'Anexo' del SegmentoAnexos, no puede estar vacio.");
-
 
             log.info("Anexo '"+anexo.getNombre_Fichero_Anexado()+"' validado!");
         }

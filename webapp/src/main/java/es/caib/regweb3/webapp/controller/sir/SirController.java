@@ -246,7 +246,8 @@ public class SirController extends BaseController {
 
         try{
 
-            if(oficioRemision.getEstado() == RegwebConstantes.OFICIO_SIR_ENVIADO && oficioRemision.getSir()){
+            if((oficioRemision.getEstado() == RegwebConstantes.OFICIO_SIR_ENVIADO || oficioRemision.getEstado() == RegwebConstantes.OFICIO_SIR_ENVIADO_ERROR)
+                    && oficioRemision.getSir()){
 
                 oficioRemision.setEstado(RegwebConstantes.OFICIO_ANULADO);
                 oficioRemision.setFechaEstado(new Date());
