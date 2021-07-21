@@ -234,8 +234,7 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
         AsientoRegistralWs asiento = new AsientoRegistralWs();
         asiento.setTipoRegistro(tipoRegistro);
 
-        asiento.setAplicacion("REGWEB3");
-        asiento.setAplicacionTelematica("REGWEB3");
+        asiento.setAplicacionTelematica("LOCAL-APP");
         asiento.setCodigoAsunto(null);
         asiento.setCodigoSia(getTestCodigoSia());
         asiento.setCodigoUsuario(getTestUserName());
@@ -247,7 +246,7 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
         asiento.setIdioma(RegwebConstantes.IDIOMA_CATALAN_ID);
         asiento.setLibroCodigo(getTestDestinoLibro());
         asiento.setPresencial(false);
-        asiento.setResumen("Registro de test  WS");
+        asiento.setResumen("Registro de test " + System.currentTimeMillis());
         asiento.setUnidadTramitacionOrigenCodigo(getTestOrigenCodigoDir3());
         asiento.setUnidadTramitacionDestinoCodigo(getTestDestinoCodigoDir3());
         asiento.setTipoDocumentacionFisicaCodigo(RegwebConstantes.TIPO_DOCFISICA_NO_ACOMPANYA_DOC);
@@ -520,6 +519,11 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
         // Anexo sin firma
         {
             AnexoWs anexoSinFirma = new AnexoWs();
+
+            //anexoSinFirma.setConfidencial(true);
+            //anexoSinFirma.setHash("sdfsdfsdfsd".getBytes(StandardCharsets.UTF_8));
+            //anexoSinFirma.setTamanoFichero(2157);
+
             final String fichero = "pdf_sin_firma.pdf";
             anexoSinFirma.setTitulo("Anexo Sin Firma");
             String copia = CODIGO_SICRES_BY_TIPOVALIDEZDOCUMENTO.get(TIPOVALIDEZDOCUMENTO_COPIA);
@@ -546,6 +550,10 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
         {
             AnexoWs anexoConFirmaAttached = new AnexoWs();
 
+            //anexoConFirmaAttached.setConfidencial(true);
+            //anexoConFirmaAttached.setHash("sdfsdfsdfsd".getBytes(StandardCharsets.UTF_8));
+            //anexoConFirmaAttached.setTamanoFichero(5684);
+
             final String fichero = "pdf_con_firma.pdf";
             anexoConFirmaAttached.setTitulo("Anexo Con Firma Attached");
             String original = CODIGO_SICRES_BY_TIPOVALIDEZDOCUMENTO.get(TIPOVALIDEZDOCUMENTO_ORIGINAL);
@@ -560,8 +568,7 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
             anexoConFirmaAttached.setFechaCaptura(new Timestamp(new Date().getTime()));
 
             // Fichero con firma
-            anexoConFirmaAttached.setFicheroAnexado(RegWebTestUtils
-                    .constructFitxerFromResource(fichero));
+            anexoConFirmaAttached.setFicheroAnexado(RegWebTestUtils.constructFitxerFromResource(fichero));
             anexoConFirmaAttached.setNombreFicheroAnexado(fichero);
             anexoConFirmaAttached.setTipoMIMEFicheroAnexado(Utils.getMimeType(fichero));
 
@@ -571,6 +578,10 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
         // Anexo con firma detached
         {
             AnexoWs anexoConFirmaDetached = new AnexoWs();
+
+            //anexoConFirmaDetached.setConfidencial(true);
+            //anexoConFirmaDetached.setHash("jyuushbdcjsabdoqbkacdcnoifw".getBytes(StandardCharsets.UTF_8));
+            //anexoConFirmaDetached.setTamanoFichero(3000);
 
             anexoConFirmaDetached.setTitulo("Anexo Con Firma Detached");
             String original = CODIGO_SICRES_BY_TIPOVALIDEZDOCUMENTO.get(TIPOVALIDEZDOCUMENTO_ORIGINAL);
@@ -586,15 +597,13 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
 
             // Fichero
             final String fichero = "foto.jpg";
-            anexoConFirmaDetached.setFicheroAnexado(RegWebTestUtils
-                    .constructFitxerFromResource(fichero));
+            anexoConFirmaDetached.setFicheroAnexado(RegWebTestUtils.constructFitxerFromResource(fichero));
             anexoConFirmaDetached.setNombreFicheroAnexado(fichero);
             anexoConFirmaDetached.setTipoMIMEFicheroAnexado(Utils.getMimeType(fichero));
 
             // Firma
             final String firma = "2018-01-24_CAdES_Detached_foto_jpg.csig";
-            anexoConFirmaDetached
-                    .setFirmaAnexada(RegWebTestUtils.constructFitxerFromResource(firma));
+            anexoConFirmaDetached.setFirmaAnexada(RegWebTestUtils.constructFitxerFromResource(firma));
             anexoConFirmaDetached.setNombreFirmaAnexada(firma);
             anexoConFirmaDetached.setTipoMIMEFirmaAnexada("application/octet-stream");
 
@@ -669,9 +678,15 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
         System.out.println("Total anexos: " + anexos.size());
         for (AnexoWs anexo : anexos) {
             System.out.println("");
-            System.out.println("Nombre anexo: " + anexo.getTitulo());
-            System.out.println("isJustificante: " + anexo.isJustificante());
-
+            if(!anexo.isConfidencial()){
+                System.out.println("Nombre anexo: " + anexo.getTitulo());
+                System.out.println("isJustificante: " + anexo.isJustificante());
+            }else{
+                System.out.println("Nombre anexo confidencial: " + anexo.getTitulo());
+                System.out.println("Nombre fichero confidencial: " + anexo.getNombreFicheroAnexado());
+                System.out.println("Hash confidencial: " + anexo.getHash().toString());
+                System.out.println("Tamaño confidencial: " + anexo.getTamanoFichero());
+            }
         }
     }
 
