@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
 
@@ -111,7 +112,6 @@ public abstract class AbstractRegistroCommonListController extends BaseControlle
     //Montamos la nota informativa de las limitaciones de los anexos cogiendo los valores de las propiedades configuradas
     public void initMensajeNotaInformativaAnexos(Entidad entidad, Model model) throws Exception{
         Integer numeroMaxAnexosSir = PropiedadGlobalUtil.getNumeroMaxAnexosSir();
-        String extensionesPermitidas = PropiedadGlobalUtil.getFormatosAnexosSir();
         Long tamanoMaximoAnexoSir= new Long(0);
         Long maxUploadSizeTotal= new Long(0);
         if(PropiedadGlobalUtil.getTamanoMaximoPorAnexoSir()!= null){
@@ -121,7 +121,7 @@ public abstract class AbstractRegistroCommonListController extends BaseControlle
             maxUploadSizeTotal = PropiedadGlobalUtil.getTamanoMaxTotalAnexosSir() / (1024 * 1024);
         }
         model.addAttribute("numeromaxanexossir", numeroMaxAnexosSir);
-        model.addAttribute("notainformativa", I18NUtils.tradueix("anexo.notainformativa",numeroMaxAnexosSir.toString(),tamanoMaximoAnexoSir.toString(),maxUploadSizeTotal.toString(),extensionesPermitidas ));
+        model.addAttribute("notainformativa", I18NUtils.tradueix("anexo.notainformativa",numeroMaxAnexosSir.toString(),tamanoMaximoAnexoSir.toString(),maxUploadSizeTotal.toString(),Arrays.toString(RegwebConstantes.ANEXO_EXTENSIONES_SIR) ));
     }
 
     /**

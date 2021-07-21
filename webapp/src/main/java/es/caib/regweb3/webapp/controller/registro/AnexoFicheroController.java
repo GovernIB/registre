@@ -95,6 +95,7 @@ public class AnexoFicheroController extends AnexoController {
         boolean isSIR = anexoForm.getOficioRemisionSir();
 
         if (isSIR) { //Verificación de las limitaciones de un anexo via SIR
+
             long docSize = -1;
             String docExtension = "";
             //Obtenemos extensión y tamaño del archivo
