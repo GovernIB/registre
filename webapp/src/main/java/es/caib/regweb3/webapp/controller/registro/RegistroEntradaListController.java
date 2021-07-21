@@ -250,7 +250,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
                 if (PropiedadGlobalUtil.getNoDistribuir(entidadActiva.getId())) {
                     for (Anexo anexo : registro.getRegistroDetalle().getAnexos()) {
                         //Solo miramos si la firma es valida si el anexo tiene firma
-                        if (anexo.getModoFirma() != RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA && !anexo.getTipoDocumento().equals(RegwebConstantes.TIPO_DOCUMENTO_FICHERO_TECNICO) && !anexo.isJustificante()) {
+                        if (anexo.getModoFirma() != RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA && !anexo.getTipoDocumento().equals(RegwebConstantes.TIPO_DOCUMENTO_FICHERO_TECNICO) && !anexo.isJustificante() && !anexo.getConfidencial()) {
                             if (!anexo.getFirmaValida()) { //Si la firma es invalida no se distribuye.
                                 distribuirRipea = false;
                                 break;
