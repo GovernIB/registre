@@ -65,9 +65,11 @@
             </p>
 
             <%--Motivo intercambio (Descripción Tipo anotación) --%>
-            <p>
-                <small><i class="fa fa-file-text-o"></i> <strong><spring:message code="registroSir.motivo"/>:</strong> ${decodificacionTipoAnotacion}</small>
-            </p>
+            <c:if test="${tipoAnotacion != RegwebConstantes.TIPO_ANOTACION_ENVIO}">
+                <p>
+                    <small><i class="fa fa-file-text-o"></i> <strong><spring:message code="registroSir.motivo"/>:</strong> ${decodificacionTipoAnotacion}</small>
+                </p>
+            </c:if>
 
             <%--Identificador intercambio--%>
             <p>

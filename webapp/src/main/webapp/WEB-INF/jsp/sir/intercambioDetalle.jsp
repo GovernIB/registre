@@ -54,7 +54,7 @@
                             </div>
                             <%--BOTONERA--%>
                             <div class="panel-footer center">
-                                <div class="btn-group"><button type="button" onclick="goTo('<c:url value="/registroSir/${registroSir.id}/detalle"/>')" class="btn btn-primary btn-sm"><spring:message code="registroSir.detalle"/></button></div>
+                                <div class="btn-group"><button type="button" onclick="goToNewPage('<c:url value="/registroSir/${registroSir.id}/detalle"/>')" class="btn btn-primary btn-sm"><spring:message code="registroSir.detalle"/></button></div>
                             </div>
                             <div class="panel-footer center">
                                 <div class="btn-group"><button type="button" onclick='confirm("javascript:enviarACK(${registroSir.id})","<spring:message code="regweb.confirmar.enviarMensaje" htmlEscape="true"/>")' class="btn btn-info btn-sm"><spring:message code="mensajeControl.enviar.ACK"/></button></div>
@@ -93,7 +93,7 @@
                                 </div>
                                 <%--BOTONERA DETALLE--%>
                                 <div class="panel-footer center">
-                                    <div class="btn-group"><button type="button" onclick="goTo('<c:url value="/adminEntidad/registroEntrada/${registro.id}/detalle"/>')" class="btn btn-info btn-sm"><spring:message code="registroEntrada.detalle"/></button></div>
+                                    <div class="btn-group"><button type="button" onclick="goToNewPage('<c:url value="/adminEntidad/registroEntrada/${registro.id}/detalle"/>')" class="btn btn-info btn-sm"><spring:message code="registroEntrada.detalle"/></button></div>
                                 </div>
                                 <%--BOTONERA REINICIAR Y REENVIAR--%>
                                 <div class="panel-footer center">
@@ -256,7 +256,7 @@
                                     </c:if>
                                 </c:forEach>
 
-                                <c:if test="${trazabilidades[0].oficioRemision.estado == RegwebConstantes.OFICIO_SIR_ENVIADO}">
+                                <c:if test="${trazabilidades[0].oficioRemision.estado == RegwebConstantes.OFICIO_SIR_ENVIADO || trazabilidades[0].oficioRemision.estado == RegwebConstantes.OFICIO_SIR_ENVIADO_ERROR}">
                                     <%--BOTONERA--%>
                                     <div class="panel-footer center">
                                         <div class="btn-group"><button type="button" onclick="goTo('<c:url value="/sir/${trazabilidades[0].oficioRemision.id}/anular"/>')" class="btn btn-danger btn-sm"><spring:message code="oficioRemision.anular"/></button></div>
@@ -329,6 +329,7 @@
 
         var urlEnviarACK = '<c:url value="/sir/enviarACK"/>';
         var urlEnviarConfirmacion = '<c:url value="/sir/enviarConfirmacion"/>';
+        var urlReenviarIntercambio = '<c:url value="/sir/reenviarIntercambio"/>';
         var tradsMensajeControl = [];
         tradsMensajeControl['mensajeControl.ACK.enviado.ok'] = "<spring:message code='mensajeControl.ACK.enviado.ok' javaScriptEscape='true' />";
         tradsMensajeControl['mensajeControl.ACK.enviado.error'] = "<spring:message code='mensajeControl.ACK.enviado.error' javaScriptEscape='true' />";
