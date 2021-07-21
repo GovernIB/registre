@@ -1,7 +1,26 @@
 package es.caib.regweb3.ws.v3.test;
 
 import es.caib.regweb3.utils.RegwebConstantes;
-import es.caib.regweb3.ws.api.v3.*;
+import es.caib.regweb3.ws.api.v3.AnexoWs;
+import es.caib.regweb3.ws.api.v3.AsientoRegistralWs;
+import es.caib.regweb3.ws.api.v3.DatosInteresadoWs;
+import es.caib.regweb3.ws.api.v3.IdentificadorWs;
+import es.caib.regweb3.ws.api.v3.InteresadoWs;
+import es.caib.regweb3.ws.api.v3.RegWebAsientoRegistralWs;
+import es.caib.regweb3.ws.api.v3.RegWebAsientoRegistralWsService;
+import es.caib.regweb3.ws.api.v3.RegWebHelloWorldWithSecurityWs;
+import es.caib.regweb3.ws.api.v3.RegWebHelloWorldWithSecurityWsService;
+import es.caib.regweb3.ws.api.v3.RegWebHelloWorldWs;
+import es.caib.regweb3.ws.api.v3.RegWebHelloWorldWsService;
+import es.caib.regweb3.ws.api.v3.RegWebInfoWs;
+import es.caib.regweb3.ws.api.v3.RegWebInfoWsService;
+import es.caib.regweb3.ws.api.v3.RegWebPersonasWs;
+import es.caib.regweb3.ws.api.v3.RegWebPersonasWsService;
+import es.caib.regweb3.ws.api.v3.RegWebRegistroEntradaWs;
+import es.caib.regweb3.ws.api.v3.RegWebRegistroEntradaWsService;
+import es.caib.regweb3.ws.api.v3.RegWebRegistroSalidaWs;
+import es.caib.regweb3.ws.api.v3.RegWebRegistroSalidaWsService;
+import es.caib.regweb3.ws.api.v3.RegistroEntradaWs;
 import es.caib.regweb3.ws.api.v3.utils.I18NUtils;
 import org.apache.commons.io.IOUtils;
 import org.fundaciobit.genapp.common.utils.Utils;
@@ -12,8 +31,14 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.sql.Timestamp;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 
 /**
  * @author anadal
@@ -249,7 +274,7 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
         asiento.setResumen("Registro de test " + System.currentTimeMillis());
         asiento.setUnidadTramitacionOrigenCodigo(getTestOrigenCodigoDir3());
         asiento.setUnidadTramitacionDestinoCodigo(getTestDestinoCodigoDir3());
-        asiento.setTipoDocumentacionFisicaCodigo(RegwebConstantes.TIPO_DOCFISICA_NO_ACOMPANYA_DOC);
+        asiento.setTipoDocumentacionFisicaCodigo(RegwebConstantes.TIPO_DOCFISICA_ACOMPANYA_DOC_REQUERIDA);
 
         asiento.setReferenciaExterna("FE4567Y");
         asiento.setNumeroExpediente("34567Y/2019");
@@ -286,39 +311,30 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
         return asiento;
     }
 
+
+
     /**
      *
      * @param tipoRegistro
+     * @param destino destino al que queremos enviar el registro de entrada
      * @return
      */
-    public AsientoRegistralWs getAsiento_to_AdministracionInterna(Long tipoRegistro, Boolean anexos){
+    private AsientoRegistralWs getDatosComunesAsientoDestino(Long tipoRegistro, String destino){
 
-        // Datos comunes
         AsientoRegistralWs asiento = getDatosComunesAsiento(tipoRegistro);
+        asiento.setUnidadTramitacionDestinoCodigo(destino);
 
-        // Interesados
-        InteresadoWs interesadoWs = new InteresadoWs();
-        interesadoWs.setInteresado(getAdministracionInterna());
-
-        asiento.getInteresados().add(interesadoWs);
-
-        if(anexos){
-            try {
-                asiento.getAnexos().addAll(getAnexos());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
 
         return asiento;
     }
 
+
     /**
-     *
+     * Define un interesado tipo administración dirigido a una administración externa.
      * @param tipoRegistro
      * @return
      */
-    public AsientoRegistralWs getAsiento_to_AdministracionExterna(Long tipoRegistro, boolean anexos){
+    public AsientoRegistralWs getAsiento_to_AdministracionExterna(Long tipoRegistro, Boolean anexos){
 
         // Datos comunes
         AsientoRegistralWs asiento = getDatosComunesAsiento(tipoRegistro);
@@ -340,10 +356,39 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
         return asiento;
     }
 
+
     /**
      *
      * @param tipoRegistro
      * @param representante
+     * @return
+     */
+    public AsientoRegistralWs getAsiento_to_Administracion(Long tipoRegistro, Boolean anexos, String razonSocial, String documento){
+
+        // Datos comunes
+        AsientoRegistralWs asiento = getDatosComunesAsiento(tipoRegistro);
+
+        // Interesados
+        InteresadoWs interesadoWs = new InteresadoWs();
+        interesadoWs.setInteresado(getAdministracion(razonSocial, documento));
+
+        asiento.getInteresados().add(interesadoWs);
+
+        if(anexos){
+            try {
+                asiento.getAnexos().addAll(getAnexos());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        return asiento;
+    }
+
+
+     /**
+     *
+     * @param tipoRegistro
      * @return
      */
     public AsientoRegistralWs getAsiento_to_PersonaFisica(Long tipoRegistro, Boolean representante, Boolean anexos) {
@@ -381,10 +426,50 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
      * @param representante
      * @return
      */
-    public AsientoRegistralWs getAsiento_to_PersonaJuridica(Long tipoRegistro, Boolean representante, Boolean anexos) {
+    public AsientoRegistralWs getAsiento_to_PersonaFisicaDestino(Long tipoRegistro, Boolean representante, Boolean anexos, String destino) {
 
         // Datos comunes
         AsientoRegistralWs asiento = getDatosComunesAsiento(tipoRegistro);
+
+        // Interesados
+        InteresadoWs interesadoWs = new InteresadoWs();
+
+        // Interesado persona fisica principal
+        interesadoWs.setInteresado(getPersonaFisica());
+
+        // Representante persona fisica
+        if(representante){
+            interesadoWs.setRepresentante(getRepresentante(TIPO_INTERESADO_PERSONA_FISICA));
+        }
+
+        asiento.getInteresados().add(interesadoWs);
+
+        if(anexos){
+            try {
+                asiento.getAnexos().addAll(getAnexos());
+                asiento.setTipoDocumentacionFisicaCodigo(RegwebConstantes.TIPO_DOCFISICA_NO_ACOMPANYA_DOC);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        return asiento;
+    }
+
+
+
+
+
+    /**
+     *
+     * @param tipoRegistro
+     * @param representante
+     * @return
+     */
+    public AsientoRegistralWs getAsiento_to_PersonaJuridica(Long tipoRegistro, Boolean representante, Boolean anexos) {
+
+        // Datos comunes
+        AsientoRegistralWs asiento = getDatosComunesAsientoDestino(tipoRegistro, destino);
 
         // Interesados
         InteresadoWs interesadoWs = new InteresadoWs();
@@ -402,6 +487,7 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
         if(anexos){
             try {
                 asiento.getAnexos().addAll(getAnexos());
+                asiento.setTipoDocumentacionFisicaCodigo(RegwebConstantes.TIPO_DOCFISICA_NO_ACOMPANYA_DOC);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -419,9 +505,9 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
         DatosInteresadoWs personaFisica = new DatosInteresadoWs();
         personaFisica.setTipoInteresado(TIPO_INTERESADO_PERSONA_FISICA);
         personaFisica.setTipoDocumentoIdentificacion("N");
-        personaFisica.setDocumento("46164250F");
-        personaFisica.setEmail("pgarcia@gmail.com");
-        personaFisica.setNombre("Julian");
+        personaFisica.setDocumento("44328254D");
+        personaFisica.setEmail("mgonzalez@fundaciobit.org");
+        personaFisica.setNombre("Marilen");
         personaFisica.setApellido1("González");
         personaFisica.setCanal((long) 1);
         personaFisica.setDireccion("Calle Aragón, 24, 5ºD");
@@ -477,34 +563,90 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
         return representante;
     }
 
+
+    /*
+      Conjunto de métodos para definir distintos interesados de tipo administración
+      Se han creado para realizar las distintas pruebas de registros de salida en un entorno multientidad
+    */
+
+    /*
+      Define un interesado de tipo administración integrado en SIR
+     */
     public DatosInteresadoWs getAdministracionSir(){
-        DatosInteresadoWs administracion = new DatosInteresadoWs();
-        administracion.setTipoInteresado(RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION); // == 1
-        administracion.setTipoDocumentoIdentificacion(String.valueOf(TIPODOCUMENTOID_CODIGO_ORIGEN));
-        administracion.setRazonSocial("Ayuntamiento de Jun");
-        administracion.setDocumento("L01181113");
-
-        return administracion;
+        return getAdministracion("Ayuntamiento de Jun","L01181113");
     }
 
+
+    /*
+      Define un interesado de tipo administración como administración externa
+     */
     public DatosInteresadoWs getAdministracionExterna(){
+        return getAdministracion("Ajuntament d'Escorca","L01070197");
+    }
+
+
+    /*
+      Define un interesado de tipo administración
+     */
+    public DatosInteresadoWs getAdministracion( String razonSocial, String documento){
         DatosInteresadoWs administracion = new DatosInteresadoWs();
         administracion.setTipoInteresado(RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION); // == 1
         administracion.setTipoDocumentoIdentificacion(String.valueOf(TIPODOCUMENTOID_CODIGO_ORIGEN));
-        administracion.setRazonSocial("Ayuntamiento de Algaida");
-        administracion.setDocumento("L01070048");
+        administracion.setRazonSocial(razonSocial);
+        administracion.setDocumento(documento);
 
         return administracion;
     }
 
-    public DatosInteresadoWs getAdministracionInterna(){
-        DatosInteresadoWs administracion = new DatosInteresadoWs();
-        administracion.setTipoInteresado(RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION); // == 1
-        administracion.setTipoDocumentoIdentificacion(String.valueOf(TIPODOCUMENTOID_CODIGO_ORIGEN));
-        administracion.setRazonSocial("Conselleria de Presidencia y Vicepresidencia");
-        administracion.setDocumento("A04015411");
 
-        return administracion;
+    /*
+      Conjunto de métodos para definir distintos organismos destino en los dos entornos de trabajo de dir3 (PRE y PRO)
+      Se han creado para realizar las distintas pruebas de registros de entrada en un entorno multientidad
+     */
+
+    public String getDestinoInterno(String entorno){
+        if("PRO".equals(entorno)){
+            return "A04005605";//Fundación Banco de Sangre y Tejidos de Les Illes Balears
+        }else{ //PRE
+            return "A04031290";//Servei D'Ocupació de Les Illes Balears
+        }
+    }
+
+    public String getDestinoSirMultientidad(String entorno) {
+
+        if ("PRO".equals(entorno)) {
+            return "A04013587"; //Agencia Tributaria Islas Baleares (ATIB)
+        } else {
+            return "A04032198"; //Agencia Tributaria Islas Baleares (ATIB)
+        }
+    }
+
+    public String getDestinoNoSirMultientidad(String entorno){
+
+        if("PRO".equals(entorno)){
+            return "A04019927"; //Delegación de la Atib de Ibiza
+        }else{
+            return null; // No hay equivalente en pre
+        }
+    }
+
+    public String getDestinoExternoSir(String entorno){
+
+        if("PRO".equals(entorno)){
+            return "L01070027"; //Ajuntament Alaior
+        }else{
+            return "L01070027"; //Ajuntament Alaior (tienen el mismo codigo en los 2 entornos)
+        }
+
+    }
+
+    public String getDestinoExternoNoSir(String entorno){
+
+        if("PRO".equals(entorno)){
+            return "L01070197"; //Ajuntament d'Escorca
+        }else{
+            return "L01070197"; //Ajuntament d'Escorca (tienen el mismo codigo en los 2 entornos)
+        }
     }
 
     public String getLoremIpsum(){
@@ -609,6 +751,39 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
 
             //anexos.add(anexoConFirmaDetached);
 
+        }
+
+        //Anexo confidencial
+        {
+
+            AnexoWs anexoConfidencial = new AnexoWs();
+
+            // Campos exclusivos para un anexo confidencial
+            anexoConfidencial.setConfidencial(true);
+            anexoConfidencial.setHash("sdfsdfsdfsd".getBytes(StandardCharsets.UTF_8));
+            anexoConfidencial.setTamanoFichero(5684);
+
+
+            final String fichero = "pdf_con_firma.pdf";
+            anexoConfidencial.setTitulo("Anexo Con Firma Attached");
+            String original = CODIGO_SICRES_BY_TIPOVALIDEZDOCUMENTO.get(TIPOVALIDEZDOCUMENTO_ORIGINAL);
+            anexoConfidencial.setValidezDocumento(original);
+            anexoConfidencial.setTipoDocumental(getTestAnexoTipoDocumental());
+            String formulario = CODIGO_SICRES_BY_TIPO_DOCUMENTO.get(TIPO_DOCUMENTO_FORMULARIO);
+            anexoConfidencial.setTipoDocumento(formulario);
+            anexoConfidencial.setOrigenCiudadanoAdmin(ANEXO_ORIGEN_CIUDADANO);
+            anexoConfidencial.setObservaciones("Observaciones de Marilen");
+
+            anexoConfidencial.setModoFirma(MODO_FIRMA_ANEXO_ATTACHED); // == 1
+            anexoConfidencial.setFechaCaptura(new Timestamp(new Date().getTime()));
+
+            // Fichero con firma
+            //anexoConfidencial.setFicheroAnexado(RegWebTestUtils
+             //  .constructFitxerFromResource(fichero));
+            //anexoConfidencial.setNombreFicheroAnexado(fichero);
+            anexoConfidencial.setTipoMIMEFicheroAnexado(Utils.getMimeType(fichero));
+
+            anexos.add(anexoConfidencial);
         }
 
         return anexos;
