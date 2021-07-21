@@ -44,15 +44,6 @@ public interface ColaLocal extends BaseEjb<Cola, Long> {
     Cola findByIdObjeto(Long idObjeto, Long idEntidad) throws Exception;
 
     /**
-     * Busca un objeto de la cola por su descripción
-     * @param descripcionObjeto
-     * @param idEntidad
-     * @return
-     * @throws Exception
-     */
-    Cola findByDescripcion(String descripcionObjeto,Long idEntidad) throws Exception;
-
-    /**
      * Busca un elemento de la cola por IdObjeto, Entidad y Estado
      * @param idObjeto
      * @param idEntidad

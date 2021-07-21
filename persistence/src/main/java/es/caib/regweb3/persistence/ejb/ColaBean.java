@@ -81,20 +81,6 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
     }
 
     @Override
-    public Cola findByDescripcion(String descripcionObjeto,Long idEntidad) throws Exception{
-
-        Query q = em.createQuery( "select cola.id from Cola as cola where cola.descripcionObjeto=:descripcionObjeto and cola.usuarioEntidad.entidad.id=:idEntidad");
-        q.setParameter("descripcionObjeto", descripcionObjeto);
-        q.setParameter("idEntidad", idEntidad);
-
-        if(q.getResultList().size()>0){
-            return (Cola)q.getResultList().get(0);
-        }else{
-            return null;
-        }
-    }
-
-    @Override
     public Cola findByIdObjetoEstado(Long idObjeto,Long idEntidad, Long idEstado) throws Exception{
 
         Query q = em.createQuery( "select cola from Cola as cola where cola.idObjeto=:idObjeto and cola.usuarioEntidad.entidad.id=:idEntidad and " +
@@ -253,26 +239,22 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
     public synchronized boolean enviarAColaDistribucion(RegistroEntrada re, UsuarioEntidad usuarioEntidad) throws Exception{
 
         try {
-            if(findByDescripcion(re.getNumeroRegistroFormateado(),usuarioEntidad.getEntidad().getId())==null){
-                //Creamos un elemento nuevo de la cola de distribución
-                Cola cola = new Cola();
-                cola.setIdObjeto(re.getId());
-                cola.setTipoRegistro(RegwebConstantes.REGISTRO_ENTRADA);
-                cola.setDescripcionObjeto(re.getNumeroRegistroFormateado());
-                cola.setTipo(RegwebConstantes.COLA_DISTRIBUCION);
-                cola.setUsuarioEntidad(usuarioEntidad);
-                cola.setDenominacionOficina(re.getOficina().getDenominacion());
-                cola.setEstado(RegwebConstantes.COLA_ESTADO_PENDIENTE);
 
-                persist(cola);
+            //Creamos un elemento nuevo de la cola de distribución
+            Cola cola = new Cola();
+            cola.setIdObjeto(re.getId());
+            cola.setTipoRegistro(RegwebConstantes.REGISTRO_ENTRADA);
+            cola.setDescripcionObjeto(re.getNumeroRegistroFormateado());
+            cola.setTipo(RegwebConstantes.COLA_DISTRIBUCION);
+            cola.setUsuarioEntidad(usuarioEntidad);
+            cola.setDenominacionOficina(re.getOficina().getDenominacion());
+            cola.setEstado(RegwebConstantes.COLA_ESTADO_PENDIENTE);
 
-                log.info("RegistroEntrada: " + re.getNumeroRegistroFormateado() + " enviado a la Cola de Distribución");
-                registroEntradaEjb.cambiarEstado(re.getId(),RegwebConstantes.REGISTRO_DISTRIBUYENDO);
-                return true;
-            }else{ // Si ya existe, no se incluye en la cola
-                log.error("El registre ja es troba a la coa; No es tornarà a afegir");
-                return false;
-            }
+            persist(cola);
+
+            log.info("RegistroEntrada: " + re.getNumeroRegistroFormateado() + " enviado a la Cola de Distribución");
+            registroEntradaEjb.cambiarEstado(re.getId(),RegwebConstantes.REGISTRO_DISTRIBUYENDO);
+            return true;
 
         } catch (Exception e) {
             e.printStackTrace();
