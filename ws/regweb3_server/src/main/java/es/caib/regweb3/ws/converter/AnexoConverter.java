@@ -43,6 +43,11 @@ public class AnexoConverter extends CommonConverter {
 
       AnexoFull anexoFull = new AnexoFull(anexo);
 
+      // Si se trata de un Anexo confidencial, no es necesario crear el transformar el AnexoFull
+      if(anexoWs.getConfidencial()){
+         return anexoFull;
+      }
+
       final int modoFirma = anexoWs.getModoFirma();
       DocumentCustody doc = null;
 

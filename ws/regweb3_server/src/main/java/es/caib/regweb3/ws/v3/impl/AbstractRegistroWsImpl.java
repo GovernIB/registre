@@ -135,7 +135,7 @@ public abstract class AbstractRegistroWsImpl extends AuthenticatedBaseWsImpl {
                 }
             }
 
-            validateAnexo(anexoFull, true,entidadID);
+            validateAnexo(anexoFull.getAnexo(),true);
 
             anexos.add(anexoFull);
         }
@@ -146,10 +146,10 @@ public abstract class AbstractRegistroWsImpl extends AuthenticatedBaseWsImpl {
 
 
     /**
-     * @param anexoFull
+     * @param anexo
      * @throws org.fundaciobit.genapp.common.i18n.I18NValidationException
      */
-    protected void validateAnexo(AnexoFull anexoFull, boolean isNou, Long entidadId) throws I18NValidationException, I18NException {
+    protected void validateAnexo(Anexo anexo, boolean isNou) throws I18NValidationException, I18NException {
 
         //Validamos el anexo contra afirma
 
@@ -157,7 +157,7 @@ public abstract class AbstractRegistroWsImpl extends AuthenticatedBaseWsImpl {
         AnexoBeanValidator pfbv = new AnexoBeanValidator(anexoValidator);
 
         //final boolean isNou = true;
-        pfbv.throwValidationExceptionIfErrors(anexoFull.getAnexo(), isNou);
+        pfbv.throwValidationExceptionIfErrors(anexo, isNou);
     }
 
     /**
