@@ -658,21 +658,20 @@ public class AnexoController extends BaseController {
 
 
         //Validamos que las extensiones del documento y la firma esten dentro de los formatos permitidos.
-        String extensionesPermitidas = PropiedadGlobalUtil.getFormatosAnexosSir();
         if (!docExtension.isEmpty()) {
-            if (!extensionesPermitidas.contains(docExtension)) {
+            if (!Arrays.asList(RegwebConstantes.ANEXO_EXTENSIONES_SIR).contains(docExtension)) {
                 if (!scan) {
-                    result.rejectValue("documentoFile", "formatonopermitido", new Object[]{docExtension, extensionesPermitidas}, I18NUtils.tradueix("formatonopermitido", docExtension, extensionesPermitidas));
+                    result.rejectValue("documentoFile", "formatonopermitido", new Object[]{docExtension, Arrays.toString(RegwebConstantes.ANEXO_EXTENSIONES_SIR)}, I18NUtils.tradueix("formatonopermitido", docExtension, Arrays.toString(RegwebConstantes.ANEXO_EXTENSIONES_SIR)));
                 } else {
-                    throw new I18NException("formatonopermitido", docExtension, extensionesPermitidas);
+                    throw new I18NException("formatonopermitido", docExtension, Arrays.toString(RegwebConstantes.ANEXO_EXTENSIONES_SIR));
                 }
             }
         } else {// Solo comprobamos la extensión en el documento firma en el caso que el documento este vacio, ya que se trata de firma attached
-            if (!extensionesPermitidas.contains(firmaExtension)) {
+            if (!Arrays.asList(RegwebConstantes.ANEXO_EXTENSIONES_SIR).contains(firmaExtension)) {
                 if (!scan) {
-                    result.rejectValue("firmaFile", "formatonopermitido", new Object[]{firmaExtension, extensionesPermitidas}, I18NUtils.tradueix("formatonopermitido", firmaExtension, extensionesPermitidas));
+                    result.rejectValue("firmaFile", "formatonopermitido", new Object[]{firmaExtension, Arrays.toString(RegwebConstantes.ANEXO_EXTENSIONES_SIR)}, I18NUtils.tradueix("formatonopermitido", firmaExtension, Arrays.toString(RegwebConstantes.ANEXO_EXTENSIONES_SIR)));
                 } else {
-                    throw new I18NException("formatonopermitido", firmaExtension, extensionesPermitidas);
+                    throw new I18NException("formatonopermitido", firmaExtension, Arrays.toString(RegwebConstantes.ANEXO_EXTENSIONES_SIR));
                 }
 
             }

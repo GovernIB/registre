@@ -10,6 +10,7 @@ import es.caib.regweb3.persistence.integracion.ArxiuCaibUtils;
 import es.caib.regweb3.persistence.integracion.JustificanteArxiu;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.utils.RegwebConstantes;
+import es.caib.regweb3.utils.StringUtils;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.jboss.ejb3.annotation.SecurityDomain;
@@ -80,13 +81,16 @@ public class CustodiaBean implements CustodiaLocal {
             peticion.append("idAnexo: ").append(anexo.getId()).append(System.getProperty("line.separator"));
             peticion.append("expediente creado: ").append(anexo.getExpedienteID()).append(System.getProperty("line.separator"));
             peticion.append("documento creado: ").append(anexo.getCustodiaID()).append(System.getProperty("line.separator"));
+            if(StringUtils.isNotEmpty(anexo.getCsv())){
+                peticion.append("csv: ").append(anexo.getCsv()).append(System.getProperty("line.separator"));
+            }
 
             integracionEjb.addIntegracionOk(inicio, tipoIntegracion, descripcion, peticion.toString(), System.currentTimeMillis() - tiempo, idEntidad, elemento.getDescripcionObjeto());
 
             return true;
 
         } catch (Exception | I18NException e) {
-            log.info("Error custodianto justificante de la Cola: " + elemento.getDescripcionObjeto());
+            log.info("Error custodiando justificante de la Cola: " + elemento.getDescripcionObjeto());
             e.printStackTrace();
             error = hora + e.getMessage();
             colaEjb.actualizarElementoCola(elemento, idEntidad, error);

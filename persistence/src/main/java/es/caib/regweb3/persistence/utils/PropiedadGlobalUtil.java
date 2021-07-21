@@ -183,22 +183,6 @@ public class PropiedadGlobalUtil {
     }
 
     /**
-     * Retorna el valor de la propiedad de formatos permitidos de la entidad indicada.
-     * Propiedad: es.caib.regweb3.sir.formatosAnexos
-     * @return
-     */
-    public static String getFormatosAnexosSir() {
-        final String partialPropertyName = "sir.formatosAnexos";
-
-        String valor = getString(partialPropertyName);
-
-        if(valor == null){ //si no esta definida la propiedad a nivel global se devuelven los formatos por defecto.
-            valor = RegwebConstantes.ANEXO_EXTENSIONES_SIR;
-        }
-        return valor;
-    }
-
-    /**
      * Retorna el valor de la propiedad maximo anexos permitidos de la entidad indicada.
      * Propiedad: es.caib.regweb3.sir.numMaxAnexos
      * @return

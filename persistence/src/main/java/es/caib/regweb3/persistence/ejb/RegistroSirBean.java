@@ -1329,7 +1329,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
             nombreFicheroSinExtension = nombreFicheroSinExtension.substring(0, RegwebConstantes.ANEXO_NOMBREFICHERO_MAXLENGTH_SIR-5);
             nombreFichero = nombreFicheroSinExtension + extension;
         }
-        anexoSir.setNombreFichero(nombreFichero);
+        anexoSir.setNombreFichero(es.caib.regweb3.utils.StringUtils.sustituirCaracteresProhibidosSIR(nombreFichero, '_'));
 
         anexoSir.setIdentificadorFichero(identificadorFichero);
 

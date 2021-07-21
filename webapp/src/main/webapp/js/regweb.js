@@ -270,6 +270,10 @@ function goTo(url) {
     document.location.href=url;
 }
 
+function goToNewPage(url){
+    window.open(url, '_blank');
+}
+
 function imprimirRecibo(url) {
 
     var idModelo = $('#idModelo').val();

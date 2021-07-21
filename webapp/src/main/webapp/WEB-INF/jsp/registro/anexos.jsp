@@ -71,8 +71,7 @@
 
                 <c:if test="${empty anexos}">
                     <div class="alert alert-grey alert-dismissable">
-                        <strong><spring:message code="regweb.listado.vacio"/> <spring:message
-                                code="anexo.anexo"/></strong>
+                        <strong><spring:message code="regweb.listado.vacio"/> <spring:message code="anexo.anexo"/></strong>
                     </div>
                 </c:if>
 
@@ -85,7 +84,7 @@
                 </c:if>
 
                 <c:if test="${empty erroresAnexosSir && fn:length(anexos) >= numeromaxanexossir }">
-                    <div class="alert alert-grey ">
+                    <div class="alert alert-warning">
                         <p><strong><spring:message code="anexo.numeroMaximo.superado"/></strong></p>
                     </div>
                 </c:if>

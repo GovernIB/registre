@@ -18,6 +18,7 @@ import java.nio.CharBuffer;
 import java.nio.charset.CharsetEncoder;
 import java.nio.charset.CodingErrorAction;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static java.nio.charset.StandardCharsets.ISO_8859_1;
@@ -40,7 +41,6 @@ public class AnexoUtils {
         List<String> mensajesError =  new ArrayList<String>();
 
         Long tamanyoMaximoTotalAnexos = PropiedadGlobalUtil.getTamanoMaxTotalAnexosSir();
-        String extensionesPermitidas = PropiedadGlobalUtil.getFormatosAnexosSir();
 
         // Número máximo de Anexos permitidos
         if(anexos.size() > PropiedadGlobalUtil.getNumeroMaxAnexosSir()){
@@ -63,7 +63,7 @@ public class AnexoUtils {
                 case RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED:
                     if(anexoFull.getSignatureCustody()!=null) {
                         extension = obtenerExtensionAnexo(anexoFull.getSignatureCustody().getName());
-                        if (!extensionesPermitidas.contains(extension)) {
+                        if (!Arrays.asList(RegwebConstantes.ANEXO_EXTENSIONES_SIR).contains(extension)) {
                             mensajesError.add(I18NUtils.tradueix("anexo.formato.nopermitido", extension, anexoFull.getAnexo().getTitulo()));
                         }
                     }else{
@@ -75,7 +75,7 @@ public class AnexoUtils {
 
                     if(anexoFull.getSignatureCustody()!=null) {
                         extension = obtenerExtensionAnexo(anexoFull.getSignatureCustody().getName());
-                        if (!extensionesPermitidas.contains(extension)) {
+                        if (!Arrays.asList(RegwebConstantes.ANEXO_EXTENSIONES_SIR).contains(extension)) {
                             mensajesError.add(I18NUtils.tradueix("anexo.formato.nopermitido", extension, anexoFull.getAnexo().getTitulo()));
                         }
                     }else{
@@ -83,7 +83,7 @@ public class AnexoUtils {
                     }
                     if(anexoFull.getDocumentoCustody()!=null) {
                         extension = obtenerExtensionAnexo(anexoFull.getDocumentoCustody().getName());
-                        if (!extensionesPermitidas.contains(extension)) {
+                        if (!Arrays.asList(RegwebConstantes.ANEXO_EXTENSIONES_SIR).contains(extension)) {
                             mensajesError.add(I18NUtils.tradueix("anexo.formato.nopermitido", extension, anexoFull.getAnexo().getTitulo()));
                         }
                     }else{
@@ -95,7 +95,7 @@ public class AnexoUtils {
 
                     if(anexoFull.getDocumentoCustody()!=null) {
                         extension = obtenerExtensionAnexo(anexoFull.getDocumentoCustody().getName());
-                        if (!extensionesPermitidas.contains(extension)) {
+                        if (!Arrays.asList(RegwebConstantes.ANEXO_EXTENSIONES_SIR).contains(extension)) {
                             mensajesError.add(I18NUtils.tradueix("anexo.formato.nopermitido", extension, anexoFull.getAnexo().getTitulo()));
                         }
                     }else{
