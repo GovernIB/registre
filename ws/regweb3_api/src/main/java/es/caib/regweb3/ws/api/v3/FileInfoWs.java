@@ -16,8 +16,10 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
+ *         &lt;element name="confidencial" type="{http://www.w3.org/2001/XMLSchema}boolean" minOccurs="0"/>
  *         &lt;element name="fileID" type="{http://www.w3.org/2001/XMLSchema}long" minOccurs="0"/>
  *         &lt;element name="filename" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
+ *         &lt;element name="hash" type="{http://www.w3.org/2001/XMLSchema}base64Binary" minOccurs="0"/>
  *         &lt;element name="mime" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="name" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="size" type="{http://www.w3.org/2001/XMLSchema}long" minOccurs="0"/>
@@ -32,8 +34,10 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "fileInfoWs", propOrder = {
+    "confidencial",
     "fileID",
     "filename",
+    "hash",
     "mime",
     "name",
     "size",
@@ -41,12 +45,38 @@ import javax.xml.bind.annotation.XmlType;
 })
 public class FileInfoWs {
 
+    protected Boolean confidencial;
     protected Long fileID;
     protected String filename;
+    protected byte[] hash;
     protected String mime;
     protected String name;
     protected Long size;
     protected String validezDocumento;
+
+    /**
+     * Obtiene el valor de la propiedad confidencial.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Boolean }
+     *     
+     */
+    public Boolean isConfidencial() {
+        return confidencial;
+    }
+
+    /**
+     * Define el valor de la propiedad confidencial.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Boolean }
+     *     
+     */
+    public void setConfidencial(Boolean value) {
+        this.confidencial = value;
+    }
 
     /**
      * Obtiene el valor de la propiedad fileID.
@@ -94,6 +124,28 @@ public class FileInfoWs {
      */
     public void setFilename(String value) {
         this.filename = value;
+    }
+
+    /**
+     * Obtiene el valor de la propiedad hash.
+     * 
+     * @return
+     *     possible object is
+     *     byte[]
+     */
+    public byte[] getHash() {
+        return hash;
+    }
+
+    /**
+     * Define el valor de la propiedad hash.
+     * 
+     * @param value
+     *     allowed object is
+     *     byte[]
+     */
+    public void setHash(byte[] value) {
+        this.hash = value;
     }
 
     /**

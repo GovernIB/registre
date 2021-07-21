@@ -8,6 +8,8 @@ public class FileInfoWs {
     private Long size;
     private String filename;
     private String validezDocumento;
+    private Boolean confidencial = false;
+    private byte[] hash;
 
     public Long getFileID() {
         return fileID;
@@ -55,5 +57,21 @@ public class FileInfoWs {
 
     public void setValidezDocumento(String validezDocumento) {
         this.validezDocumento = validezDocumento;
+    }
+
+    public Boolean getConfidencial() {
+        return confidencial;
+    }
+
+    public void setConfidencial(Boolean confidencial) {
+        this.confidencial = confidencial;
+    }
+
+    public byte[] getHash() {
+        return hash;
+    }
+
+    public void setHash(byte[] hash) {
+        this.hash = hash;
     }
 }
