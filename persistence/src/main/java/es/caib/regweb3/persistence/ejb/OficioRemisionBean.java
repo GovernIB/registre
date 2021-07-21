@@ -615,8 +615,8 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
         Query q = em.createQuery("Select oficioRemision from OficioRemision as oficioRemision where oficioRemision.usuarioResponsable.entidad.id = :idEntidad " +
                 "and (oficioRemision.estado = :enviadoError or oficioRemision.estado = :reenviadoError) " +
                 "and (oficioRemision.codigoError = '0039' or oficioRemision.codigoError = '0046' or oficioRemision.codigoError = '0057' or oficioRemision.codigoError = '0065' " +
-                "or oficioRemision.codigoError = '0063' or oficioRemision.codigoError = '0058' or oficioRemision.codigoError = '0068' or oficioRemision.codigoError = '0043' ) " +
-                "and oficioRemision.numeroReintentos < :maxReintentos");
+                "or oficioRemision.codigoError = '0063' or oficioRemision.codigoError = '0058' or oficioRemision.codigoError = '0068' or oficioRemision.codigoError = '0043' " +
+                "or oficioRemision.codigoError = '0037' ) and oficioRemision.numeroReintentos < :maxReintentos");
 
         q.setParameter("enviadoError", RegwebConstantes.OFICIO_SIR_ENVIADO_ERROR);
         q.setParameter("reenviadoError", RegwebConstantes.OFICIO_SIR_REENVIADO_ERROR);
@@ -655,7 +655,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
     public List<OficioRemision> getEnviadosErrorMaxReintentos(Long idEntidad) throws Exception {
 
         Query q = em.createQuery("Select oficioRemision.fecha, oficioRemision.identificadorIntercambio, oficioRemision.tipoOficioRemision from OficioRemision as oficioRemision where (oficioRemision.estado = :enviadoError or oficioRemision.estado = :reenviadoError) " +
-                "and oficioRemision.usuarioResponsable.entidad.id = :idEntidad and oficioRemision.numeroReintentos = :maxReintentos");
+                "and oficioRemision.usuarioResponsable.entidad.id = :idEntidad");
 
         q.setParameter("enviadoError", RegwebConstantes.OFICIO_SIR_ENVIADO_ERROR);
         q.setParameter("reenviadoError", RegwebConstantes.OFICIO_SIR_REENVIADO_ERROR);
