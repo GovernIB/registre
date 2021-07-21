@@ -55,6 +55,21 @@ public class StringUtils {
     }
 
     /**
+     * Dada una cadena, busca si existe alguna ocurrencia de los caracteres prohibidos por ARXIU {@link es.caib.regweb3.utils.RegwebConstantes} y los sustituye por el caracter indicado
+     * @param cadena
+     * @return
+     */
+    public static String sustituirCaracteresProhibidosSIR(String cadena, char sustituto){
+
+        for (char s: RegwebConstantes.CARACTERES_NO_PERMITIDOS_SIR.toCharArray()) {
+
+            cadena = cadena.replace(s, sustituto);
+        }
+
+        return cadena;
+    }
+
+    /**
      * Función que recorta un string a una longitud especificada
      * @param cadena cadena a recortar
      * @param length longitud a la que recortar
