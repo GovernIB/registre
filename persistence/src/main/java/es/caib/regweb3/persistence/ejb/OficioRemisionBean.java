@@ -615,7 +615,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
         Query q = em.createQuery("Select oficioRemision from OficioRemision as oficioRemision where oficioRemision.usuarioResponsable.entidad.id = :idEntidad " +
                 "and (oficioRemision.estado = :enviadoError or oficioRemision.estado = :reenviadoError) " +
                 "and (oficioRemision.codigoError = '0039' or oficioRemision.codigoError = '0046' or oficioRemision.codigoError = '0057' or oficioRemision.codigoError = '0065' " +
-                "or oficioRemision.codigoError = '0063' or oficioRemision.codigoError = '0058' or oficioRemision.codigoError = '0068') " +
+                "or oficioRemision.codigoError = '0063' or oficioRemision.codigoError = '0058' or oficioRemision.codigoError = '0068' or oficioRemision.codigoError = '0043' ) " +
                 "and oficioRemision.numeroReintentos < :maxReintentos");
 
         q.setParameter("enviadoError", RegwebConstantes.OFICIO_SIR_ENVIADO_ERROR);
@@ -637,6 +637,29 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
         q.setParameter("reenviado", RegwebConstantes.OFICIO_SIR_REENVIADO);
         q.setParameter("idEntidad", idEntidad);
         q.setParameter("maxReintentos", PropiedadGlobalUtil.getMaxReintentosSir(idEntidad));
+        q.setMaxResults(7);
+
+        List<OficioRemision> oficios =  new ArrayList<OficioRemision>();
+        List<Object[]> result = q.getResultList();
+
+        for (Object[] object : result){
+            OficioRemision oficio = new OficioRemision((Date)object[0],(String)object[1],(Long)object[2]);
+            oficios.add(oficio);
+        }
+
+        return oficios;
+    }
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public List<OficioRemision> getEnviadosErrorMaxReintentos(Long idEntidad) throws Exception {
+
+        Query q = em.createQuery("Select oficioRemision.fecha, oficioRemision.identificadorIntercambio, oficioRemision.tipoOficioRemision from OficioRemision as oficioRemision where (oficioRemision.estado = :enviadoError or oficioRemision.estado = :reenviadoError) " +
+                "and oficioRemision.usuarioResponsable.entidad.id = :idEntidad and oficioRemision.numeroReintentos = :maxReintentos");
+
+        q.setParameter("enviadoError", RegwebConstantes.OFICIO_SIR_ENVIADO_ERROR);
+        q.setParameter("reenviadoError", RegwebConstantes.OFICIO_SIR_REENVIADO_ERROR);
+        q.setParameter("idEntidad", idEntidad);
         q.setMaxResults(7);
 
         List<OficioRemision> oficios =  new ArrayList<OficioRemision>();

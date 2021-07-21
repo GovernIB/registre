@@ -117,8 +117,15 @@ public class InicioController extends BaseController{
             mav.addObject("incidenciasWs", integracionEjb.ultimasIntegracionesErrorTipo(entidadActiva.getId(), RegwebConstantes.INTEGRACION_WS));
             model.addAttribute("integracion", new BasicForm());
 
-            // SIR: Envios con estado OFICIO_SIR_ENVIADO o OFICIO_SIR_REENVIADO y 10 reintentos
-            mav.addObject("enviadosSir", oficioRemisionEjb.getEnviadosSinAckMaxReintentos(entidadActiva.getId()));
+            // SIR
+            if(entidadActiva.getSir()){
+
+                // SIR: Envios con estado OFICIO_SIR_ENVIADO o OFICIO_SIR_REENVIADO y 10 reintentos
+                mav.addObject("enviadosSir", oficioRemisionEjb.getEnviadosSinAckMaxReintentos(entidadActiva.getId()));
+
+                // SIR: Envios con estado OFICIO_SIR_ENVIADO o OFICIO_SIR_REENVIADO y 10 reintentos
+                mav.addObject("enviadosErrorSir", oficioRemisionEjb.getEnviadosErrorMaxReintentos(entidadActiva.getId()));
+            }
 
             // Elementos de la Cola en estadro Error
             mav.addObject("erroresCola", colaEjb.getElementosError(entidadActiva.getId()));
