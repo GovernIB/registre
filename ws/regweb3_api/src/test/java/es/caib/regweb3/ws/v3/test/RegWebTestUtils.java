@@ -469,7 +469,7 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
     public AsientoRegistralWs getAsiento_to_PersonaJuridica(Long tipoRegistro, Boolean representante, Boolean anexos) {
 
         // Datos comunes
-        AsientoRegistralWs asiento = getDatosComunesAsientoDestino(tipoRegistro, destino);
+        AsientoRegistralWs asiento = getDatosComunesAsiento(tipoRegistro);
 
         // Interesados
         InteresadoWs interesadoWs = new InteresadoWs();
@@ -780,7 +780,7 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
             // Fichero con firma
             //anexoConfidencial.setFicheroAnexado(RegWebTestUtils
              //  .constructFitxerFromResource(fichero));
-            //anexoConfidencial.setNombreFicheroAnexado(fichero);
+            anexoConfidencial.setNombreFicheroAnexado(fichero);
             anexoConfidencial.setTipoMIMEFicheroAnexado(Utils.getMimeType(fichero));
 
             anexos.add(anexoConfidencial);
