@@ -10,6 +10,7 @@ import es.caib.regweb3.persistence.utils.ScanWebConfigRegWeb;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.utils.AnexoUtils;
 import es.caib.regweb3.webapp.utils.Mensaje;
+import org.fundaciobit.genapp.common.i18n.I18NArgumentString;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
 import org.fundaciobit.plugins.documentcustody.api.DocumentCustody;
@@ -397,6 +398,10 @@ public class AnexoScanController extends AnexoController {
             metadatasScan.add(new Metadata(MetadataConstants.ENI_FECHA_INICIO, documento.getScanDate()));
         }
 
+        if(documento.getPaperSize()!= null){
+            metadatasScan.add(new Metadata(MetadataConstants.PAPER_SIZE, documento.getPaperSize()));
+        }
+
         //Metadatas adicionales
         if(documento.getAdditionalMetadatas() != null){
             metadatasScan.addAll(documento.getAdditionalMetadatas());
@@ -439,7 +444,7 @@ public class AnexoScanController extends AnexoController {
        // log.info("Error detectat REGWEB3: " + scanWebResult.getStatus().getErrorMsg());
         if (scanWebResult.getStatus().getErrorMsg() != null) {
             log.error(scanWebResult.getStatus().getErrorMsg());
-            throw new I18NException("anexo.perfilscan.error");
+            throw new I18NException("anexo.perfilscan.error", new I18NArgumentString(scanWebResult.getStatus().getErrorMsg()));
         }
 
 
