@@ -204,10 +204,11 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
         if(!registro.getEstado().equals(RegwebConstantes.REGISTRO_RESERVA)){
 
             // Justificante
-            if(tieneJustificante){
+            if (tieneJustificante) {
+                Anexo justificante = registro.getRegistroDetalle().getJustificante();
 
-                model.addAttribute("idJustificante", anexoEjb.getIdJustificante(registro.getRegistroDetalle().getId()));
-                String urlValidacion = anexoEjb.getUrlValidation(registro.getRegistroDetalle().getJustificante(),entidadActiva.getId());
+                model.addAttribute("idJustificante", justificante.getId());
+                String urlValidacion = anexoEjb.getUrlValidation(justificante,entidadActiva.getId());
                 model.addAttribute("tieneUrlValidacion", StringUtils.isNotEmpty(urlValidacion));
             }
 
@@ -216,6 +217,9 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
 
             // Trazabilidad
             model.addAttribute("trazabilidades", trazabilidadEjb.getByRegistroEntrada(registro.getId()));
+
+            model.addAttribute("isResponsableOrganismo", permisoOrganismoUsuarioEjb.isAdministradorOrganismo(usuarioEntidad.getId(),registro.getOficina().getOrganismoResponsable().getId()));
+
         }
 
         // Alta en tabla LOPD
@@ -233,7 +237,7 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
      */
     @ResponseBody
     @RequestMapping(value = "/registroEntrada/{idRegistro}/justificante/{idioma}", method = RequestMethod.POST)
-    public JsonResponse justificante(@PathVariable Long idRegistro, @PathVariable String idioma, HttpServletRequest request)
+    public JsonResponse justificanteEntrada(@PathVariable Long idRegistro, @PathVariable String idioma, HttpServletRequest request)
             throws Exception {
 
         JsonResponse jsonResponse = new JsonResponse();
@@ -407,11 +411,66 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
         // Trazabilidad
         model.addAttribute("trazabilidades", trazabilidadEjb.getByRegistroSalida(registro.getId()));
 
+        model.addAttribute("isResponsableOrganismo", permisoOrganismoUsuarioEjb.isAdministradorOrganismo(usuarioEntidad.getId(),registro.getOficina().getOrganismoResponsable().getId()));
 
         // Alta en tabla LOPD
         lopdEjb.altaLopd(registro.getNumeroRegistro(), registro.getFecha(), registro.getLibro().getId(), usuarioEntidad.getId(), RegwebConstantes.REGISTRO_SALIDA, RegwebConstantes.LOPD_CONSULTA);
 
         return "registroSalida/registroSalidaDetalleAdmin";
+    }
+
+    /**
+     * Método que genera el Justificante en pdf
+     *
+     * @param idRegistro identificador del registro de salida
+     * @return
+     * @throws Exception
+     */
+    @ResponseBody
+    @RequestMapping(value = "/registroSalida/{idRegistro}/justificante/{idioma}", method = RequestMethod.POST)
+    public JsonResponse justificanteSalida(@PathVariable Long idRegistro, @PathVariable String idioma, HttpServletRequest request)
+            throws Exception {
+
+        JsonResponse jsonResponse = new JsonResponse();
+
+        try {
+
+            synchronized (this) {
+
+                RegistroSalida registroSalida = registroSalidaEjb.getConAnexosFull(idRegistro);
+                UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
+
+                // Dispone de permisos para Editar el registro
+                if (permisoOrganismoUsuarioEjb.tienePermiso(usuarioEntidad.getId(), registroSalida.getOficina().getOrganismoResponsable().getId(), RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_SALIDA, true) && !registroSalida.getEstado().equals(RegwebConstantes.REGISTRO_ANULADO)) {
+
+                    // Creamos el anexo justificante y lo firmamos
+                    AnexoFull anexoFull = justificanteEjb.crearJustificante(usuarioEntidad, registroSalida, RegwebConstantes.REGISTRO_SALIDA, idioma);
+
+                    // Alta en tabla LOPD
+                    if (anexoFull != null) {
+                        lopdEjb.altaLopd(registroSalida.getNumeroRegistro(), registroSalida.getFecha(), registroSalida.getLibro().getId(), usuarioEntidad.getId(), RegwebConstantes.REGISTRO_SALIDA, RegwebConstantes.LOPD_JUSTIFICANTE);
+                    }
+
+                    jsonResponse.setStatus("SUCCESS");
+
+                } else {
+                    jsonResponse.setStatus("FAIL");
+                    jsonResponse.setError(getMessage("aviso.registro.editar"));
+                }
+            }
+
+        } catch (I18NException e) {
+            e.printStackTrace();
+            jsonResponse.setStatus("FAIL");
+            jsonResponse.setError(I18NUtils.getMessage(e));
+        } catch (I18NValidationException ve) {
+            ve.printStackTrace();
+            jsonResponse.setStatus("FAIL");
+            jsonResponse.setError(I18NUtils.getMessage(ve));
+        }
+
+        return jsonResponse;
+
     }
 
     /**

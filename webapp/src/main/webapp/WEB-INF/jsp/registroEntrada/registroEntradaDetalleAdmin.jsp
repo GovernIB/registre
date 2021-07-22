@@ -114,7 +114,9 @@
                         <c:if test="${not empty historicos && registro.estado != RegwebConstantes.REGISTRO_RESERVA}">
                             <li><a href="#modificaciones" data-toggle="tab"><i class="fa fa-pencil-square-o"></i> <spring:message code="regweb.modificaciones"/></a></li>
                         </c:if>
-
+                        <c:if test="${tieneJustificante}">
+                            <li><a href="#justificante" data-toggle="tab"><i class="fa fa-file-text-o"></i> <spring:message code="justificante.boton"/></a></li>
+                        </c:if>
                     </ul>
 
                     <div id="contenido" class="tab-content contentInfo">
@@ -147,7 +149,6 @@
 
                         <%--TRAZABILIDAD--%>
                         <c:if test="${not empty trazabilidades}">
-
                             <div class="tab-pane" id="trazabilidad">
                                 <c:import url="../trazabilidad/trazabilidadEntrada.jsp">
                                     <c:param name="adminEntidad" value="true"/>
@@ -164,13 +165,26 @@
                             </div>
                         </c:if>
 
+                        <%--JUSTIFICANTE--%>
+                        <c:if test="${tieneJustificante}">
+                            <div class="tab-pane" id="justificante">
+                                <div class="col-xs-12">
+                                    <dl class="detalle_registro">
+                                        <dt><i class="fa fa-home"></i> Csv: </dt> <dd> ${registro.registroDetalle.justificante.csv}</dd>
+                                        <dt><i class="fa fa-home"></i> Custodiado: </dt> <dd> ${registro.registroDetalle.justificante.custodiado}</dd>
+                                        <dt><i class="fa fa-home"></i> Perfil custodia: </dt> <dd> ${registro.registroDetalle.justificante.perfilCustodia}</dd>
+                                        <dt><i class="fa fa-home"></i> CustodyId: </dt> <dd> ${registro.registroDetalle.justificante.custodiaID}</dd>
+                                        <dt><i class="fa fa-home"></i> Expediente: </dt> <dd> ${registro.registroDetalle.justificante.expedienteID}</dd>
+                                    </dl>
+                                </div>
+                            </div>
+                        </c:if>
                     </div>
                 </div>
             </c:if>
 
         </div>
-    </div><!-- /div.row-->
-
+    </div>
 </div>
 
 
@@ -211,7 +225,6 @@
                 }
             }
         });
-
     }
 
 </script>
