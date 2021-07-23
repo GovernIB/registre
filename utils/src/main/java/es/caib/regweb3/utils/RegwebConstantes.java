@@ -115,6 +115,9 @@ public interface RegwebConstantes {
             PERFIL_CUSTODIA_ARXIU
     };
 
+    /* -------------- ARXIU CAIB --------------*/
+    String ARXIU_VERSION_DOC = "1.0";
+
     /* -------------- FORMATOS --------------*/
     String FORMATO_FECHA = "dd/MM/yyyy";
     String FORMATO_FECHA_HORA = "dd/MM/yyyy HH:mm";
