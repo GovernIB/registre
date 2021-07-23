@@ -5,6 +5,7 @@ import es.caib.regweb3.model.Anexo;
 import es.caib.regweb3.model.IRegistro;
 import es.caib.regweb3.model.Interesado;
 import es.caib.regweb3.model.utils.AnexoFull;
+import es.caib.regweb3.persistence.ejb.IntegracionLocal;
 import es.caib.regweb3.persistence.ejb.PluginLocal;
 import es.caib.regweb3.persistence.ejb.RegistroDetalleLocal;
 import es.caib.regweb3.utils.ClientUtils;
@@ -30,6 +31,9 @@ public class ArxiuCaibUtils {
 
     @EJB(mappedName = "regweb3/RegistroDetalleEJB/local")
     private RegistroDetalleLocal registroDetalleEjb;
+
+    @EJB(mappedName = "regweb3/IntegracionEJB/local")
+    private IntegracionLocal integracionEjb;
 
     private static final String basePluginArxiuCaib = RegwebConstantes.REGWEB3_PROPERTY_BASE + "plugin.arxiu.caib.";
     private static final String PROPERTY_APLICACION = basePluginArxiuCaib + "aplicacio.codi";
@@ -106,7 +110,45 @@ public class ArxiuCaibUtils {
             }
 
         }catch (ArxiuException e){
-            log.info("Error creando el justificante en Arxiu");
+            log.info("Error creando el justificante en Arxiu: " + e.getMessage());
+
+            // Si el error es porqué el Justificante ya existe, intentamos recuperarlo
+            if(e.getMessage().contains("Duplicate child name not allowed") || e.getMessage().contains("Null")){
+
+                try{
+                    if(StringUtils.isNotEmpty(expediente.getIdentificador())){
+                        log.info("Comprobamos si el Justificante ya existe, e intentamos asociarlo al expediente: " + expediente.getIdentificador());
+                        
+                        Date inicio = new Date();
+                        StringBuilder peticion = new StringBuilder();
+
+                        Expedient expedient = arxiuPlugin.expedientDetalls(expediente.getIdentificador(), null);
+
+                        if(expedient != null){
+                            for(ContingutArxiu contingutArxiu:expedient.getContinguts()){
+                                if(contingutArxiu.getNom().equals(firma.getFitxerNom())){
+                                    Document doc = arxiuPlugin.documentDetalls(contingutArxiu.getIdentificador(), "1.0", false);
+
+                                    // Integración
+                                    peticion.append("registro: ").append(registro.getNumeroRegistroFormateado()).append(System.getProperty("line.separator"));
+                                    peticion.append("tipoRegistro: ").append(tipoRegistro).append(System.getProperty("line.separator"));
+                                    peticion.append("expedienteID: ").append(expediente.getIdentificador()).append(System.getProperty("line.separator"));
+                                    peticion.append("documentoID: ").append(doc.getIdentificador()).append(System.getProperty("line.separator"));
+                                    peticion.append("csv: ").append(doc.getDocumentMetadades().getCsv()).append(System.getProperty("line.separator"));
+                                    integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_CUSTODIA, "Recuperar Justificante Api Arxiu", peticion.toString(), System.currentTimeMillis() - inicio.getTime(), registro.getUsuario().getEntidad().getId(), registro.getNumeroRegistroFormateado());
+
+                                    return new JustificanteArxiu(expediente, doc);
+                                }
+                            }
+                        }
+                    }
+
+                }catch (Exception e1){
+                    e.printStackTrace();
+                    log.info("Error intentando asociar el justificante ya existente: " + expediente.getIdentificador());
+                }
+            }
+
             e.printStackTrace();
             throw e;
         }
@@ -387,7 +429,6 @@ public class ArxiuCaibUtils {
                     String password = getPropertyConCsvPassword();
 
                     if(StringUtils.isNotEmpty(url)){
-
                         // Descargamos el Justificante desde la url de validación
                         data = ClientUtils.descargarArchivoUrl(url, username, password);
                         documento.getContingut().setContingut(data);
