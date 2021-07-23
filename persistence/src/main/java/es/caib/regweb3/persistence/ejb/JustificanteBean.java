@@ -138,6 +138,7 @@ public class JustificanteBean implements JustificanteLocal {
             peticion.append("usuario: ").append(usuarioEntidad.getUsuario().getNombreIdentificador()).append(System.getProperty("line.separator"));
             peticion.append("registro: ").append(registro.getNumeroRegistroFormateado()).append(System.getProperty("line.separator"));
             peticion.append("tipoRegistro: ").append(tipoRegistro).append(System.getProperty("line.separator"));
+            peticion.append("idioma: ").append(idioma).append(System.getProperty("line.separator"));
             peticion.append("oficina: ").append(registro.getOficina().getDenominacion()).append(System.getProperty("line.separator"));
 
             numRegFormat = registro.getNumeroRegistroFormateado();
@@ -297,6 +298,7 @@ public class JustificanteBean implements JustificanteLocal {
             peticion.append("usuario: ").append(usuarioEntidad.getUsuario().getNombreIdentificador()).append(System.getProperty("line.separator"));
             peticion.append("registro: ").append(registro.getNumeroRegistroFormateado()).append(System.getProperty("line.separator"));
             peticion.append("tipoRegistro: ").append(tipoRegistro).append(System.getProperty("line.separator"));
+            peticion.append("idioma: ").append(idioma).append(System.getProperty("line.separator"));
             peticion.append("oficina: ").append(registro.getOficina().getDenominacion()).append(System.getProperty("line.separator"));
 
             // Cargamos el plugin de Arxiu
