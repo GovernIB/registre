@@ -168,7 +168,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
                 // Cargamos el plugin de Arxiu
                 arxiuCaibUtils.cargarPlugin(idEntidad);
 
-                Document document = arxiuCaibUtils.getDocumento(custodyID,null,false,false);
+                Document document = arxiuCaibUtils.getDocumento(custodyID, RegwebConstantes.ARXIU_VERSION_DOC,false,false);
 
                 anexoFull.setDocument(document);
                 anexoFull.setDocumentoFileDelete(false);
@@ -241,7 +241,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
                 // Cargamos el plugin de Arxiu
                 arxiuCaibUtils.cargarPlugin(idEntidad);
 
-                Document document = arxiuCaibUtils.getDocumento(custodyID,null,true,true);
+                Document document = arxiuCaibUtils.getDocumento(custodyID, RegwebConstantes.ARXIU_VERSION_DOC,true,true);
 
                 anexoFull.setDocument(document);
                 anexoFull.setDocumentoFileDelete(false);
@@ -1383,7 +1383,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             // Cargamos el plugin de Arxiu
             arxiuCaibUtils.cargarPlugin(idEntidad);
 
-            Document document = arxiuCaibUtils.getDocumento(anexo.getCustodiaID(), null, true, true);
+            Document document = arxiuCaibUtils.getDocumento(anexo.getCustodiaID(), RegwebConstantes.ARXIU_VERSION_DOC, true, true);
 
             return document.getContingut().getContingut();
         }
@@ -1643,7 +1643,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
         }else if (anexo.getPerfilCustodia().equals(RegwebConstantes.PERFIL_CUSTODIA_ARXIU)) {
 
-            Document documento = arxiuCaibUtils.getDocumento(anexo.getCustodiaID(),null, true, false);
+            Document documento = arxiuCaibUtils.getDocumento(anexo.getCustodiaID(),RegwebConstantes.ARXIU_VERSION_DOC, true, false);
 
             return new AnexoSimple(documento.getContingut().getContingut(), documento.getContingut().getArxiuNom());
 
