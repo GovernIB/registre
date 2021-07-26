@@ -40,34 +40,6 @@ public class PermisosController extends BaseController {
     @EJB(mappedName = "regweb3/LibroEJB/local")
     private LibroLocal libroEjb;
 
-    /**
-     * Carga el formulario para un nuevo {@link es.caib.regweb3.model.PermisoLibroUsuario}
-     */
-    @RequestMapping(value = "/{idUsuarioEntidad}/{idOrganismo}/asignar", method = RequestMethod.GET)
-    public String asignarOrganismo(@PathVariable Long idUsuarioEntidad,@PathVariable Long idOrganismo) throws Exception {
-
-
-        UsuarioEntidad usuarioEntidad = usuarioEntidadEjb.findById(idUsuarioEntidad);
-        Organismo organismo = organismoEjb.findByIdLigero(idOrganismo);
-
-        permisoOrganismoUsuarioEjb.crearPermisosUsuarioOrganismo(usuarioEntidad, organismo);
-
-        return "redirect:/permisos/"+idUsuarioEntidad;
-
-    }
-
-    /**
-     * Elimina {@link es.caib.regweb3.model.PermisoLibroUsuario} de la relación de uin Usuario y un Organismo
-     */
-    @RequestMapping(value = "/{idUsuarioEntidad}/{idOrganismo}/eliminar", method = RequestMethod.GET)
-    public String eliminarPermisos(@PathVariable Long idUsuarioEntidad,@PathVariable Long idOrganismo) throws Exception {
-
-
-        permisoOrganismoUsuarioEjb.eliminarPermisosUsuarioOrganismo(idUsuarioEntidad, idOrganismo);
-
-        return "redirect:/permisos/"+idUsuarioEntidad;
-
-    }
 
     /**
      * Carga el formulario para un nuevo {@link es.caib.regweb3.model.PermisoLibroUsuario}
@@ -150,6 +122,64 @@ public class PermisosController extends BaseController {
 
         status.setComplete();
         return "redirect:/entidad/usuarios";
+    }
+
+    /**
+     * Carga el formulario para un nuevo {@link es.caib.regweb3.model.PermisoLibroUsuario}
+     */
+    @RequestMapping(value = "/{idUsuarioEntidad}/{idOrganismo}/asignar", method = RequestMethod.GET)
+    public String asignarOrganismo(@PathVariable Long idUsuarioEntidad,@PathVariable Long idOrganismo, HttpServletRequest request) throws Exception {
+
+
+        UsuarioEntidad usuarioEntidad = usuarioEntidadEjb.findById(idUsuarioEntidad);
+        Organismo organismo = organismoEjb.findByIdLigero(idOrganismo);
+
+        permisoOrganismoUsuarioEjb.crearPermisosUsuarioOrganismo(usuarioEntidad, organismo);
+
+        Mensaje.saveMessageInfo(request, getMessage("usuario.asignar.permisos.ok"));
+
+        return "redirect:/permisos/"+idUsuarioEntidad;
+
+    }
+
+    /**
+     * Carga el formulario para un nuevo {@link es.caib.regweb3.model.PermisoLibroUsuario}
+     */
+    @RequestMapping(value = "/{idUsuarioEntidad}/asignarTodos", method = RequestMethod.GET)
+    public String asignarOrganismosTodos(@PathVariable Long idUsuarioEntidad, HttpServletRequest request) throws Exception {
+
+        UsuarioEntidad usuarioEntidad = usuarioEntidadEjb.getReference(idUsuarioEntidad);
+
+        List<Organismo> organismosActivos = organismoEjb.getPermitirUsuarios(getEntidadActiva(request).getId());
+        List<Organismo> organismosAsignados = permisoOrganismoUsuarioEjb.getOrganismosByUsuario(usuarioEntidad.getId());
+
+        // Eliminamos los que ya estén asociados
+        for(Organismo organismoAsignado:organismosAsignados){
+            organismosActivos.remove(organismoAsignado);
+        }
+
+        // Asignamos todos los Organismos al usuario
+        for(Organismo organismo: organismosActivos){
+            permisoOrganismoUsuarioEjb.crearPermisosUsuarioOrganismo(usuarioEntidad, organismo);
+        }
+
+        Mensaje.saveMessageInfo(request, getMessage("usuario.asignar.permisos.ok"));
+
+        return "redirect:/permisos/"+idUsuarioEntidad;
+
+    }
+
+    /**
+     * Elimina {@link es.caib.regweb3.model.PermisoLibroUsuario} de la relación de uin Usuario y un Organismo
+     */
+    @RequestMapping(value = "/{idUsuarioEntidad}/{idOrganismo}/eliminar", method = RequestMethod.GET)
+    public String eliminarPermisos(@PathVariable Long idUsuarioEntidad,@PathVariable Long idOrganismo) throws Exception {
+
+
+        permisoOrganismoUsuarioEjb.eliminarPermisosUsuarioOrganismo(idUsuarioEntidad, idOrganismo);
+
+        return "redirect:/permisos/"+idUsuarioEntidad;
+
     }
 
     /**
