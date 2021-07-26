@@ -30,6 +30,7 @@
             </div>
         </div><!-- Fin miga de pan -->
 
+        <c:import url="../modulos/mensajes.jsp"/>
 
         <div class="row">
             <div class="col-xs-12">
@@ -52,15 +53,20 @@
                         <c:if test="${not empty organismosActivos}">
                             <div class="col-xs-12">
                                 <div class="form-group col-xs-12 espaiLinies senseMargeLat">
-                                    <div class="col-xs-3 pull-left etiqueta_regweb control-label textEsq">
+                                    <div class="col-xs-2 pull-left etiqueta_regweb control-label textEsq">
                                         <form:label path="organismos"><spring:message code="organismo.organismos"/></form:label>
                                     </div>
                                     <div class="col-xs-6">
                                         <form:select id="organismos" path="organismos"  items="${organismosActivos}" itemValue="id" itemLabel="denominacion" cssClass="chosen-select"/>
                                     </div>
-                                    <div class="col-xs-3">
+                                    <div class="col-xs-1">
                                         <button class="btn btn-warning btn-sm" onclick="asignarOrganismo()">Asignar</button>
                                     </div>
+                                    <c:if test="${fn:length(organismosActivos) > 1}">
+                                        <div class="col-xs-2">
+                                            <button class="btn btn-danger btn-sm" onclick="asignarOrganismosTodos()">Asignar todos</button>
+                                        </div>
+                                    </c:if>
                                 </div>
                             </div>
                         </c:if>
@@ -134,6 +140,12 @@
 
         var idOrganismo = $('#organismos option:selected').val();
         var url = '<c:url value="/permisos/${permisoOrganismoUsuarioForm.usuarioEntidad.id}"/>/'+idOrganismo+'/asignar';
+        document.location.href=url;
+    }
+
+    function asignarOrganismosTodos(){
+
+        var url = '<c:url value="/permisos/${permisoOrganismoUsuarioForm.usuarioEntidad.id}"/>/asignarTodos';
         document.location.href=url;
     }
 
