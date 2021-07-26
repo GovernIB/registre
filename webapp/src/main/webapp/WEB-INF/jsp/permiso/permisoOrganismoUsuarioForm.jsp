@@ -60,11 +60,11 @@
                                         <form:select id="organismos" path="organismos"  items="${organismosActivos}" itemValue="id" itemLabel="denominacion" cssClass="chosen-select"/>
                                     </div>
                                     <div class="col-xs-1">
-                                        <button class="btn btn-warning btn-sm" onclick="asignarOrganismo()">Asignar</button>
+                                        <button class="btn btn-warning btn-sm" onclick="asignarOrganismo()"><spring:message code="permisos.asignar"/></button>
                                     </div>
                                     <c:if test="${fn:length(organismosActivos) > 1}">
                                         <div class="col-xs-2">
-                                            <button class="btn btn-danger btn-sm" onclick="asignarOrganismosTodos()">Asignar todos</button>
+                                            <button class="btn btn-danger btn-sm" onclick="asignarOrganismosTodos()"><spring:message code="permisos.asignar.todos"/></button>
                                         </div>
                                     </c:if>
                                 </div>
