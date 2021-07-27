@@ -135,7 +135,7 @@
                                 </div>
                                 <%--BOTONERA--%>
                                 <div class="panel-footer center">
-                                    <div class="btn-group"><button type="button" onclick="goTo('<c:url value="/adminEntidad/registroSalida/${registro.id}/detalle"/>')" class="btn btn-danger btn-sm"><spring:message code="registroSalida.detalle"/></button></div>
+                                    <div class="btn-group"><button type="button" onclick="goToNewPage('<c:url value="/adminEntidad/registroSalida/${registro.id}/detalle"/>')" class="btn btn-danger btn-sm"><spring:message code="registroSalida.detalle"/></button></div>
                                 </div>
                                 <%--BOTONERA REINICIAR Y REENVIAR--%>
                                 <div class="panel-footer center">
