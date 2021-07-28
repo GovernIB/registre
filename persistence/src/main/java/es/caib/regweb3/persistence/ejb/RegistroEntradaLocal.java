@@ -224,7 +224,7 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
     RegistroEntrada getConAnexosFullLigero(Long id) throws Exception, I18NException;
 
     /**
-     * Obtiene el Registro para Distribuir, son cargar el Justificante, porque solo se envía el custodyID
+     * Obtiene el Registro para Distribuir, sin cargar el Justificante, porque solo se envía el custodyID
      * @param id
      * @return
      * @throws Exception

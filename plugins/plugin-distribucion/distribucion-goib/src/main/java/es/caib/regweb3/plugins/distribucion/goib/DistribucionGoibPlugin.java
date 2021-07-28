@@ -102,7 +102,7 @@ public class DistribucionGoibPlugin extends AbstractPluginProperties implements 
             }
 
             // Justificante (Solo se envía el custodyID)
-            registreAnotacio.setJustificant(transformarARegistreAnnexJustificante(registro.getRegistroDetalle().getJustificante()));
+            registreAnotacio.setJustificant(transformarARegistreAnnexJustificante(registro.getRegistroDetalle().getJustificanteAnexoFull().getAnexo()));
 
             //Obtenemos la entidad y la unidad Administrativa a donde distribuir el registro
             String entidadCodigo = registro.getOficina().getOrganismoResponsable().getEntidad().getCodigoDir3();
