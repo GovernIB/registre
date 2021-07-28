@@ -116,7 +116,7 @@ public class ArxiuCaibUtils {
             if(e.getMessage().contains("Duplicate child name not allowed") || e.getMessage().contains("Null")){
 
                 try{
-                    if(StringUtils.isNotEmpty(expediente.getIdentificador())){
+                    if(expediente != null){
                         log.info("Comprobamos si el Justificante ya existe, e intentamos asociarlo al expediente: " + expediente.getIdentificador());
                         
                         Date inicio = new Date();
