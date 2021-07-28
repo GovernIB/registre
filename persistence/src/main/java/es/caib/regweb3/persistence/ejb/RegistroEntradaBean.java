@@ -631,10 +631,12 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         List<Anexo> anexos = registroEntrada.getRegistroDetalle().getAnexos();
         List<AnexoFull> anexosFull = new ArrayList<AnexoFull>();
         for (Anexo anexo : anexos) {
-            if(!anexo.isJustificante()){
+            if(!anexo.isJustificante()){ // si no es Justificante, cargamos el AnexoFull
                 anexosFull.add(anexoEjb.getAnexoFull(anexo.getId(), idEntidad));
             }else if(justificante){
                 anexosFull.add(anexoEjb.getAnexoFull(anexo.getId(), idEntidad));
+            }else {
+                anexosFull.add(new AnexoFull(anexo));
             }
         }
         //Asignamos los documentos recuperados de custodia al registro de entrada.
