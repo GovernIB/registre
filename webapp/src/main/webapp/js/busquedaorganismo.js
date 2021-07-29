@@ -172,7 +172,7 @@ function organismoBusqueda(tipoOrganismo, urlServidor, idRegistroDetalle) {
     var mostrarThLocalidad="";
     var mostrarColLocalidad="";
     //Mostramos la localidad en Administraciones Locales y de Justicia si son organismos y siempre que sean oficinas.
-    if(codNivelAdministracion == 3 || codNivelAdministracion == 6 || tipoOrganismo == 'OficinaOrigen' || tipoOrganismo == 'OficinaSir' ){
+    if(codNivelAdministracion == 3 || (codNivelAdministracion == 6 && (tipoOrganismo == 'OficinaOrigen' || tipoOrganismo == 'OficinaSir'))){
         mostrarThLocalidad = '<th>' + tradorganismo['organismo.localidad'] + '</th>';
         mostrarColLocalidad = '<col width="125">';
     }
@@ -285,7 +285,7 @@ function organismoBusqueda(tipoOrganismo, urlServidor, idRegistroDetalle) {
 
                     //Mostramos la localidad en Administraciones Locales y de Justicia si son organismos y siempre que sean oficinas.
                     var mostrarLocalidad = "";
-                    if (codNivelAdministracion == 3 || codNivelAdministracion == 6 || tipoOrganismo == 'OficinaOrigen' || tipoOrganismo == 'OficinaSir') {
+                    if (codNivelAdministracion == 3 || (codNivelAdministracion == 6 && (tipoOrganismo == 'OficinaOrigen' || tipoOrganismo == 'OficinaSir'))) {
                         mostrarLocalidad = '<td style=\"text-align:left;\"> ' + result[i].localidad + '</td>';
                     }
 
