@@ -474,12 +474,21 @@ public class Sicres3XML {
             // Validar el identificador de fichero
             validarIdentificadorFichero(anexo, identificadorIntercambio);
 
-            // Validamos que la extensión del fichero esté dentro de los formatos de anexos Sir permitidos, si no es un Fichero Técnico (TipoDocumento = 03)
+            // Si no es un Fichero Técnico (TipoDocumento = 03), validmos la extensión y el Timo Mime
             if(!TipoDocumento.FICHERO_TECNICO_INTERNO.getValue().equals(anexo.getTipo_Documento())){
+                // Obtenemos la extensión del fichero
                 String identificadorFichero = StringUtils.substringAfter(anexo.getIdentificador_Fichero(), identificadorIntercambio + "_");
                 String[] tokens = StringUtils.split(identificadorFichero, "_.");
                 String extensionFichero = tokens[2].toLowerCase();
+
+                // Validamos si la extensión está permitida
                 Assert.isTrue(Arrays.asList(RegwebConstantes.ANEXO_EXTENSIONES_SIR).contains(extensionFichero), "La extensión del fichero [" + extensionFichero + "] no está permitida");
+
+                // Validar el tipo MIME
+                if (StringUtils.isNotBlank(anexo.getTipo_MIME())) {
+                    Assert.isTrue(StringUtils.equalsIgnoreCase(anexo.getTipo_MIME(), MimeTypeUtils.getMimeTypeExtension(extensionFichero)),
+                            "El Tipo mime: "+anexo.getTipo_MIME()+" del SegmentoAnexos, no coincide con el indicado en el campo 'IdentificadorFichero': " + identificadorFichero);
+                }
             }
 
             // Validar el campo validez de documento
@@ -540,18 +549,6 @@ public class Sicres3XML {
         Assert.isTrue(StringUtils.isNumeric(tokens[1]), "El valor del campo 'IdentificadorFichero': ["+identificadorFichero+"] del SegmentoAnexos, no es valido, hay un error en el numero secuencial, no es de tipo numerico.");
         // Extensión del fichero
         Assert.hasText(tokens[2], "El valor del campo 'IdentificadorFichero': ["+identificadorFichero+"] del SegmentoAnexos, no es valido, la extension del fichero no esta informada.");
-
-        // Validar el tipo MIME
-        if (StringUtils.isNotBlank(anexo.getTipo_MIME())) {
-
-            //Si el anexo es de tipo FICHERO TECNICO INTERNO, no se debe comprobar el MIME.
-            if (!anexo.getTipo_Documento().equals(TipoDocumento.FICHERO_TECNICO_INTERNO.getValue())) {
-                Assert.isTrue(StringUtils.equalsIgnoreCase(
-                        anexo.getTipo_MIME(), MimeTypeUtils.getMimeTypeExtension(tokens[2])),
-                        "El Tipo mime: "+anexo.getTipo_MIME()+" del SegmentoAnexos, no coincide con el indicado en el campo 'IdentificadorFichero': " + identificadorFichero);
-
-            }
-        }
     }
 
     /**
