@@ -2,6 +2,7 @@ create table RWE_ANEXO
 (
     ID                   number(19,0) not null,
     CERTIFICADO          raw(2000),
+    CONFIDENCIAL         number(1,0)  not null,
     CSV                  varchar2(255 char),
     CUSTODIAID           varchar2(256 char),
     CUSTODIADO           number(1,0),
@@ -15,6 +16,7 @@ create table RWE_ANEXO
     JUSTIFICANTE         number(1,0) not null,
     MODOFIRMA            number(10,0),
     MOTIVONOVALID        varchar2(255 char),
+    NOMBRE_FICHERO       varchar2(255 char),
     OBSERVACIONES        varchar2(50 char),
     ORIGEN               number(10,0),
     PERFIL_CUSTODIA      number(19,0),
@@ -23,6 +25,7 @@ create table RWE_ANEXO
     SIGNFORMAT           varchar2(255 char),
     SIGNPROFILE          varchar2(255 char),
     SIGNTYPE             varchar2(255 char),
+    TAMANO_FICHERO       number(10,0),
     TIMESTAMP            raw(2000),
     TIPODOC              number(19,0),
     TITULO               varchar2(200 char) not null,
@@ -585,6 +588,7 @@ create table RWE_REGISTRO_DETALLE
 (
     ID               number(19,0) not null,
     APLICACION       varchar2(255 char),
+    APLICACION_TELEMATICA varchar2(255 char),
     COD_ENT_REG_DEST varchar2(21 char),
     CODIGOSIA        number(19,0),
     DEC_ENT_REG_DEST varchar2(80 char),
@@ -895,6 +899,10 @@ create sequence RWE_POU_SEQ;
 create sequence RWE_SESION_SEQ;
 
 create sequence RWE_SIR_SEQ;
+
+create sequence RWE_COLA_SEQ;
+
+create sequence RWE_INT_SEQ;
 
 
 -- INICI Indexes
@@ -1934,6 +1942,8 @@ grant select on RWE_ALL_SEQ to www_regweb;
 grant select on RWE_POU_SEQ to www_regweb;
 grant select on RWE_SESION_SEQ to www_regweb;
 grant select on RWE_SIR_SEQ to www_regweb;
+grant select on RWE_COLA_SEQ to www_regweb;
+grant select on RWE_INT_SEQ to www_regweb;
 -- FINAL GRANTS
 
 -- INICI LOBS
