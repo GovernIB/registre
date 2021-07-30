@@ -3,6 +3,7 @@ create table RWE_ANEXO
     ID                   int8         not null,
     CERTIFICADO          bytea,
     CSV                  varchar(255),
+    CONFIDENCIAL            bool not null,
     CUSTODIAID           varchar(256),
     CUSTODIADO           bool       not null,
     ESTADOFIRMA          int4,
@@ -15,6 +16,7 @@ create table RWE_ANEXO
     JUSTIFICANTE         bool         not null,
     MODOFIRMA            int4,
     MOTIVONOVALID        varchar(255),
+    NOMBRE_FICHERO       varchar(255),
     OBSERVACIONES        varchar(50),
     ORIGEN               int4,
     PERFIL_CUSTODIA      int8,
@@ -29,6 +31,7 @@ create table RWE_ANEXO
     VAL_OCSP_CERTIFICADO bytea,
     TVALDOC              int8,
     REGISTRODETALLE      int8,
+    TAMANO_FICHERO        int4,
     TDOCUMENTAL          int8,
     primary key (ID)
 );
@@ -622,6 +625,7 @@ create table RWE_REGISTRO_DETALLE
 (
     ID               int8 not null,
     APLICACION       varchar(255),
+    APLICACION_TELEMATICA varchar(255),
     COD_ENT_REG_DEST varchar(21),
     CODIGOSIA        int8,
     DEC_ENT_REG_DEST varchar(80),
@@ -1755,3 +1759,7 @@ create sequence RWE_POU_SEQ;
 create sequence RWE_SESION_SEQ;
 
 create sequence RWE_SIR_SEQ;
+
+create sequence RWE_COLA_SEQ;
+
+create sequence RWE_INT_SEQ;
