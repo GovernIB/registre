@@ -463,30 +463,30 @@ public class Sicres3XML {
         if (anexo != null) {
 
             // Validar el nombre del fichero anexado
-            Assert.hasText(anexo.getNombre_Fichero_Anexado(),
-                    "El campo 'NombreFicheroAnexado' del SegmentoAnexos, no puede estar vacio.");
+            Assert.hasText(anexo.getNombre_Fichero_Anexado(), "El campo 'NombreFicheroAnexado' del SegmentoAnexos, no puede estar vacio.");
             Assert.isTrue(!StringUtils.containsAny(anexo.getNombre_Fichero_Anexado(), RegwebConstantes.CARACTERES_NO_PERMITIDOS_SIR),
                     "El campo 'NombreFicheroAnexado' del SegmentoAnexos, tiene caracteres no validos [" + anexo.getNombre_Fichero_Anexado() + "]");
-
-            // Validar el identificador de fichero
-            validarIdentificadorFichero(anexo, identificadorIntercambio);
-
-            //Validamos que la extensión del fichero esté dentro de los formatos de anexos Sir permitidos
-            String identificadorFichero = StringUtils.substringAfter(anexo.getIdentificador_Fichero(), identificadorIntercambio + "_");
-            String[] tokens = StringUtils.split(identificadorFichero, "_.");
-            String extensionFichero = tokens[2].toLowerCase();
-            Assert.isTrue(Arrays.asList(RegwebConstantes.ANEXO_EXTENSIONES_SIR).contains(extensionFichero), "La extensión del fichero [" + extensionFichero + "] no está permitida");
-
-            // Validar el campo validez de documento
-            if (StringUtils.isNotBlank(anexo.getValidez_Documento())) {
-                Assert.notNull(
-                        ValidezDocumento.getValidezDocumento(anexo.getValidez_Documento()),
-                        "El campo 'ValidezDocumento' del SegmentoAnexos, no es valido [" + anexo.getValidez_Documento() + "]");
-            }
 
             // Validar el campo tipo de documento
             Assert.hasText(anexo.getTipo_Documento(), "El campo 'TipoDocumento' del SegmentoAnexos, no puede estar vacio.");
             Assert.notNull(TipoDocumento.getTipoDocumento(anexo.getTipo_Documento()), "El valor [" + anexo.getTipo_Documento() + "] del campo 'TipoDocumento' del SegmentoAnexos, no esta dentro de la lista de permitidos.");
+
+            // Validar el identificador de fichero
+            validarIdentificadorFichero(anexo, identificadorIntercambio);
+
+            // Validamos que la extensión del fichero esté dentro de los formatos de anexos Sir permitidos, si no es un Fichero Técnico (TipoDocumento = 03)
+            if(!TipoDocumento.FICHERO_TECNICO_INTERNO.getValue().equals(anexo.getTipo_Documento())){
+                String identificadorFichero = StringUtils.substringAfter(anexo.getIdentificador_Fichero(), identificadorIntercambio + "_");
+                String[] tokens = StringUtils.split(identificadorFichero, "_.");
+                String extensionFichero = tokens[2].toLowerCase();
+                Assert.isTrue(Arrays.asList(RegwebConstantes.ANEXO_EXTENSIONES_SIR).contains(extensionFichero), "La extensión del fichero [" + extensionFichero + "] no está permitida");
+            }
+
+            // Validar el campo validez de documento
+            if (StringUtils.isNotBlank(anexo.getValidez_Documento())) {
+                Assert.notNull(ValidezDocumento.getValidezDocumento(anexo.getValidez_Documento()),
+                        "El campo 'ValidezDocumento' del SegmentoAnexos, no es valido [" + anexo.getValidez_Documento() + "]");
+            }
 
             // Validar el hash del documento
             // Nota: no se comprueba el código hash de los documentos porque no
