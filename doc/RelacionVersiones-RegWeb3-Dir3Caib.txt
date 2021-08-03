@@ -22,3 +22,5 @@ regweb 3.1.7  ---> dir3caib 1.0.12
 regweb 3.1.8  ---> dir3caib 1.0.12
 regweb 3.2.0  ---> dir3caib 1.0.13
 regweb 3.2.1  ---> dir3caib 1.0.13
+regweb 3.2.2  ---> dir3caib 1.0.13
+regweb 3.2.3  ---> dir3caib 1.0.14
