@@ -1258,7 +1258,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
     }
 
     @Override
-    public void purgarAnexo(String custodiaId, boolean isJustificante, Long idEntidad) throws Exception, I18NException {
+    public void purgarAnexo(String custodiaId, boolean isJustificante, Long idEntidad) throws  I18NException {
 
         try {
             Query query = em.createQuery("select anexo from Anexo as anexo where anexo.custodiaID=:custodiaId");
@@ -1271,8 +1271,9 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
                 merge(anexo);
             }
 
-        } catch (I18NException e) {
-            throw new I18NException("S'ha produit un error eliminant la custodia de l'annex");
+        } catch (I18NException | Exception e) {
+           e.printStackTrace();
+           throw new I18NException("S'ha produit un error eliminant la custodia de l'annex");
         }
 
     }
@@ -1503,7 +1504,6 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             }
 
             custody.deleteCustody(custodiaID);
-
             return true;
 
         }
