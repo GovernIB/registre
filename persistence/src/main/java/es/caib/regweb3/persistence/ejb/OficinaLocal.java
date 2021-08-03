@@ -28,6 +28,9 @@ public interface OficinaLocal extends BaseEjb<Oficina, Long> {
      */
     Oficina findByCodigo(String codigo) throws Exception;
 
+
+    Oficina findByCodigoMultientidad(String codigo) throws Exception;
+
     /**
      * Obtiene la oficina del codigo indicado, la entidad indicada independientemente del estado.
      * @param codigo
@@ -235,6 +238,16 @@ public interface OficinaLocal extends BaseEjb<Oficina, Long> {
      * @throws Exception
      */
     Long obtenerEntidad(String codigo) throws Exception;
+
+
+
+    /**
+     * Obtiene el id de la Entidad a la que pertenece la Oficina en un entorno multientidad
+     * @param codigo
+     * @return
+     * @throws Exception
+     */
+    Long obtenerEntidadMultiEntidad(String codigo) throws Exception;
 
     /**
      * Obtiene las oficinas SIR desde dir3caib(via WS) de la unidad indicada en el código

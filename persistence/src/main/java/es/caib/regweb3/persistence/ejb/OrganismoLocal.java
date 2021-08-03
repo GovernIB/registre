@@ -157,6 +157,9 @@ public interface OrganismoLocal extends BaseEjb<Organismo, Long> {
      */
     List<Organismo> findByEntidadByEstado(Long entidad, String estado) throws Exception;
 
+    /** PROVES MULTIENTITAT */
+    Organismo findByCodigoMultientidad(String codigo) throws Exception;
+
     /**
      * Comprueba si el Organismo indicado es gestionado por REGWEB3
      *
@@ -265,6 +268,14 @@ public interface OrganismoLocal extends BaseEjb<Organismo, Long> {
      * @throws Exception
      */
     Organismo getOrganismoSuperior(Long idOrganismo) throws Exception;
+
+    /**
+     * Obtiene el OrganismoRaiz de un Organismo, si es que lo tiene
+     * @param idOrganismo
+     * @return
+     * @throws Exception
+     */
+    Organismo getOrganismoRaiz(Long idOrganismo) throws Exception;
 
     /**
      * Elimina los Organismos de una Entidad
