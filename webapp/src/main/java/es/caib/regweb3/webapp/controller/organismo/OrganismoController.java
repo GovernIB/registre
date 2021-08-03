@@ -172,7 +172,9 @@ public class OrganismoController extends BaseController {
 
         try {
 
-            if(oficinaEjb.tieneOficinasServicio(idOrganismo, RegwebConstantes.OFICINA_VIRTUAL_SI)){
+            Organismo organismo = organismoEjb.findByIdLigero(idOrganismo);
+
+            if(oficinaEjb.tieneOficinasServicio(idOrganismo, RegwebConstantes.OFICINA_VIRTUAL_SI) && !entidadEjb.existeCodigoDir3Edit(organismo.getCodigo(), getEntidadActiva(request).getId())){
                 organismoEjb.activarUsuarios(idOrganismo);
 
                 Mensaje.saveMessageInfo(request, getMessage("organismo.activarUsuarios.ok"));

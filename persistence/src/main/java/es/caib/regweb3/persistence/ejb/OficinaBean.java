@@ -19,7 +19,11 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Fundació BIT.
@@ -106,6 +110,34 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
         }
 
     }
+
+    @Override
+    public Oficina findByCodigoMultientidad(String codigo) throws Exception {
+
+        Query q = em.createQuery("Select oficina from Oficina as oficina where " +
+           "oficina.codigo = :codigo");
+
+        q.setParameter("codigo", codigo);
+        q.setHint("org.hibernate.readOnly", true);
+
+        List<Oficina> oficinas = q.getResultList();
+
+        if(oficinas.size() == 1){
+            return oficinas.get(0);
+        }else if(oficinas.size()>1 ){
+            for(Oficina oficina: oficinas){
+                if(oficina.getOrganismoResponsable().getCodigo().equals(oficina.getOrganismoResponsable().getEntidad().getCodigoDir3())){
+                    return oficina;
+                }
+            }
+            return null;
+
+        }else {
+            return  null;
+        }
+
+    }
+
 
     @Override
     @SuppressWarnings(value = "unchecked")
@@ -593,6 +625,21 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
 
         return (Long) q.getSingleResult();
     }
+
+
+    /** PROVES MULTIENTITAT*/
+    public Long obtenerEntidadMultiEntidad(String codigo) throws Exception{
+
+        Oficina oficina = findByCodigoMultientidad(codigo);
+
+        if(oficina.getOrganismoResponsable().getEntidad().getSir()){
+            return oficina.getOrganismoResponsable().getEntidad().getId();
+        }else{
+            return null;
+        }
+    }
+
+
 
     /**
      * Obtiene las oficinas SIR desde dir3caib(via WS) de la unidad indicada en el código

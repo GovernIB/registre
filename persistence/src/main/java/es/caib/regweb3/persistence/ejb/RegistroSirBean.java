@@ -82,6 +82,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
     @EJB private TrazabilidadSirLocal trazabilidadSirEjb;
     @EJB private TrazabilidadLocal trazabilidadEjb;
     @EJB private SignatureServerLocal signatureServerEjb;
+    @EJB private MultiEntidadLocal multiEntidadEjb;
 
 
     @Override
@@ -199,7 +200,13 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
 
             // En caso de recepción, le asignamos la entidad a la que va dirigida
             if(registroSir.getEntidad() == null){
-                Entidad entidad = new Entidad(oficinaEjb.obtenerEntidad(registroSir.getCodigoEntidadRegistral()));
+
+                Entidad entidad;
+                if(multiEntidadEjb.isMultiEntidad()) {
+                    entidad = new Entidad(oficinaEjb.obtenerEntidadMultiEntidad(registroSir.getCodigoEntidadRegistral()));
+                }else{
+                    entidad = new Entidad(oficinaEjb.obtenerEntidad(registroSir.getCodigoEntidadRegistral()));
+                }
                 registroSir.setEntidad(entidad);
             }
 

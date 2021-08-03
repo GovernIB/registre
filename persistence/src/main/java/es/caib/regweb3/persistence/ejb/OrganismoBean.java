@@ -363,6 +363,40 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
     }
 
     @Override
+    public Organismo findByCodigoMultientidad(String codigo) throws Exception {
+
+        Query q = em.createQuery("Select organismo from Organismo as organismo where " +
+           "organismo.codigo = :codigo order by organismo.id asc");
+
+        q.setParameter("codigo", codigo);
+
+        List<Organismo> organismos = q.getResultList();
+
+        if(organismos.size() == 1){
+            return organismos.get(0);
+        }else if(organismos.size()>1 ){ //Caso multientidad ( encuentra 2)
+            for(Organismo organismo: organismos){
+                    Organismo raiz = getOrganismoRaiz(organismo.getId());
+                    /* La condición que determina cual es el organismo que tiene una entidad que le da soporte es que su raiz sea null
+                        eso quiere decir que realmente es un organismo que depende de otro, pero que está creado como entidad
+                        y por eso su raiz es null, porque al importar los datos de dir3caib,
+                        la raiz a la que pertenece no existe en el organigrama, porque no la trae
+                     */
+                    if(raiz == null){
+                        return organismo;
+                    }
+            }
+            return null;
+
+        }else {
+
+            return  null;
+        }
+
+    }
+
+
+    @Override
     @SuppressWarnings(value = "unchecked")
     public Boolean isOrganismoInterno(String codigo, Long idEntidad) throws Exception {
 
@@ -708,17 +742,38 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
     @Override
     public Organismo getOrganismoSuperior(Long idOrganismo) throws Exception {
 
-        Query q = em.createQuery("Select organismo.organismoSuperior.id from Organismo as organismo where " +
+        Query q = em.createQuery("Select organismo.organismoSuperior.id, organismoSuperior.codigo from Organismo as organismo where " +
                 "organismo.id = :idOrganismo");
 
         q.setParameter("idOrganismo", idOrganismo);
         q.setHint("org.hibernate.readOnly", true);
 
-        Long idOrganismoSuperior = (Long) q.getSingleResult();
 
-        if (idOrganismoSuperior != null) {
-            return new Organismo(idOrganismoSuperior);
-        } else{
+        List<Object[]> result = q.getResultList();
+        if (result.size() == 1) {
+            Organismo organismo = new Organismo((Long) result.get(0)[0], (String) result.get(0)[1], null);
+            return organismo;
+        } else {
+            return null;
+        }
+    }
+
+
+    @Override
+    public Organismo getOrganismoRaiz(Long idOrganismo) throws Exception {
+
+        Query q = em.createQuery("Select organismo.organismoRaiz.id, organismoRaiz.codigo from Organismo as organismo where " +
+           "organismo.id = :idOrganismo");
+
+        q.setParameter("idOrganismo", idOrganismo);
+        q.setHint("org.hibernate.readOnly", true);
+
+
+        List<Object[]> result = q.getResultList();
+        if (result.size() == 1) {
+            Organismo organismo = new Organismo((Long) result.get(0)[0], (String) result.get(0)[1], null);
+            return organismo;
+        } else {
             return null;
         }
     }

@@ -103,6 +103,15 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
 
 
     /**
+     * Comprueba si un RegistroEntrada se considera un OficioRemision SIR o no en un entorno multientidad
+     * @param idRegistro
+     * @return
+     * @throws Exception
+     */
+    List<OficinaTF> isOficioRemisionSirMultiEntidad(Long idRegistro) throws Exception;
+
+
+    /**
      * Obtiene el destino externo del registro de entrada de dir3caib
      * @param idRegistro
      * @return
@@ -118,6 +127,16 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      * @throws Exception
      */
     Long proximoEventoEntrada(RegistroEntrada registroEntrada, Entidad entidadActiva, Long idOficina) throws Exception;
+
+
+    /**
+     * Obtiene el próximo evento que habrá que realizar con el Registro en un entorno multientidad
+     * @param registroEntrada
+     * @param entidadActiva
+     * @return
+     * @throws Exception
+     */
+    Long proximoEventoEntradaMultiEntidad(RegistroEntrada registroEntrada, Entidad entidadActiva, Long idOficina) throws Exception;
 
 
     /**

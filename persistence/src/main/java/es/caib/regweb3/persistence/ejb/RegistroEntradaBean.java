@@ -65,6 +65,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     @EJB private TrazabilidadLocal trazabilidadEjb;
     @EJB private PluginLocal pluginEjb;
     @EJB private OrganismoLocal organismoEjb;
+    @EJB private MultiEntidadLocal multiEntidadEjb;
 
 
     @Override
@@ -137,8 +138,14 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
             // Obtenemos el próximo evento del Registro
             if(!registroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_RESERVA)){
-                Long evento = proximoEventoEntrada(registroEntrada, usuarioEntidad.getEntidad(), registroEntrada.getOficina().getId());
-                registroEntrada.setEvento(evento);
+
+                if(multiEntidadEjb.isMultiEntidad()) {
+                    Long evento = proximoEventoEntradaMultiEntidad(registroEntrada, usuarioEntidad.getEntidad(), registroEntrada.getOficina().getId());
+                    registroEntrada.setEvento(evento);
+                }else{
+                    Long evento = proximoEventoEntrada(registroEntrada, usuarioEntidad.getEntidad(), registroEntrada.getOficina().getId());
+                    registroEntrada.setEvento(evento);
+                }
             }
 
             //Llamamos al plugin de postproceso
@@ -168,9 +175,13 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         registroEntrada = merge(registroEntrada);
 
         // Obtenemos el próximo evento del Registro
-        Long evento = proximoEventoEntrada(registroEntrada, usuarioEntidad.getEntidad(), registroEntrada.getOficina().getId());
-
-        registroEntrada.setEvento(evento);
+        if(multiEntidadEjb.isMultiEntidad()) {
+            Long evento = proximoEventoEntradaMultiEntidad(registroEntrada, usuarioEntidad.getEntidad(), registroEntrada.getOficina().getId());
+            registroEntrada.setEvento(evento);
+        }else{
+            Long evento = proximoEventoEntrada(registroEntrada, usuarioEntidad.getEntidad(), registroEntrada.getOficina().getId());
+            registroEntrada.setEvento(evento);
+        }
 
         // Creamos el Historico RegistroEntrada
         historicoRegistroEntradaEjb.crearHistoricoRegistroEntrada(antiguo, usuarioEntidad, I18NLogicUtils.tradueix(LocaleContextHolder.getLocale(), "registro.modificacion.datos"), true);
@@ -335,6 +346,43 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
 
     @Override
+    @SuppressWarnings(value = "unchecked")
+    public List<OficinaTF> isOficioRemisionSirMultiEntidad(Long idRegistro) throws Exception {
+
+        //Miramos los externos
+        Query q;
+        q = em.createQuery("Select re.destinoExternoCodigo from RegistroEntrada as re where " +
+           "re.id = :idRegistro and re.destino is null and re.estado = :valido");
+
+        // Parámetros
+        q.setParameter("idRegistro", idRegistro);
+        q.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
+        q.setHint("org.hibernate.readOnly", true);
+
+        List<String> result = q.getResultList();
+
+        if(result.size() == 0){ //Si no hay externo miramos destino
+            q = em.createQuery("select re.destino.codigo from RegistroEntrada as re where re.id =:idRegistro and re.destino.codigo in(select entidad.codigoDir3 from Entidad as entidad)");
+
+            // Parámetros
+            q.setParameter("idRegistro", idRegistro);
+            q.setHint("org.hibernate.readOnly", true);
+
+            result = q.getResultList();
+        }
+
+        if(result.size()>0){ // Si hay buscamos las oficinas SIR
+            String codigoDir3 = result.get(0);
+            Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService(PropiedadGlobalUtil.getDir3CaibServer(), PropiedadGlobalUtil.getDir3CaibUsername(), PropiedadGlobalUtil.getDir3CaibPassword());
+
+            return oficinasService.obtenerOficinasSIRUnidad(codigoDir3);
+        }else{
+            return null;
+        }
+    }
+
+
+    @Override
     public String obtenerDestinoExternoRE(Long idRegistro) throws Exception {
 
         Query q;
@@ -376,6 +424,35 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         return RegwebConstantes.EVENTO_DISTRIBUIR;
     }
 
+
+    @Override
+    public Long proximoEventoEntradaMultiEntidad(RegistroEntrada registroEntrada, Entidad entidadActiva, Long idOficina) throws Exception {
+
+        //Si el destino no es null debemos obtener el organismo correcto en un entorno multientidad para poder comprobar
+        // en el siguiente if si hay una entidad que le da soporte
+        Organismo organismo = null;
+        if(registroEntrada.getDestino()!=null) {
+            organismo = organismoEjb.findByCodigoMultientidad(registroEntrada.getDestino().getCodigo());
+
+        }
+
+        if( registroEntrada.getDestino() == null || (organismo!=null &&!organismo.getEntidad().equals(entidadActiva))){ //Externo o multientidad
+
+            // Si la entidad está en SIR y la Oficina está activada para Envío Sir
+            if (entidadActiva.getSir() && oficinaEjb.isSIREnvio(idOficina)) {
+                List<OficinaTF> oficinasSIR = isOficioRemisionSirMultiEntidad(registroEntrada.getId());
+
+                if (oficinasSIR != null && !oficinasSIR.isEmpty()) {
+                    return RegwebConstantes.EVENTO_OFICIO_SIR;
+                }
+            }
+
+            return RegwebConstantes.EVENTO_OFICIO_EXTERNO;
+
+        }else{
+            return RegwebConstantes.EVENTO_DISTRIBUIR;
+        }
+    }
 
     @Override
     public void cambiarEstadoHistorico(RegistroEntrada registroEntrada, Long idEstado, UsuarioEntidad usuarioEntidad) throws Exception {
@@ -434,8 +511,13 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
         // Asignamos su evento
         if (registroEntrada.getEvento() != null) {
-            Long evento = proximoEventoEntrada(findById(registroEntrada.getId()), usuarioEntidad.getEntidad(), registroEntrada.getOficina().getId());
-            registroEntrada.setEvento(evento);
+            if(multiEntidadEjb.isMultiEntidad()) {
+                Long evento = proximoEventoEntradaMultiEntidad(registroEntrada, usuarioEntidad.getEntidad(), registroEntrada.getOficina().getId());
+                registroEntrada.setEvento(evento);
+            }else{
+                Long evento = proximoEventoEntrada(registroEntrada, usuarioEntidad.getEntidad(), registroEntrada.getOficina().getId());
+                registroEntrada.setEvento(evento);
+            }
             merge(registroEntrada);
         }
 

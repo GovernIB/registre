@@ -64,6 +64,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
     @EJB private TrazabilidadLocal trazabilidadEjb;
     @EJB private PluginLocal pluginEjb;
     @EJB private OrganismoLocal organismoEjb;
+    @EJB private MultiEntidadLocal multiEntidadEjb;
 
 
     @Override
@@ -129,8 +130,14 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
             }
 
             // Obtenemos el próximo evento del Registro
-            Long evento = proximoEventoSalida(registroSalida, usuarioEntidad.getEntidad());
-            registroSalida.setEvento(evento);
+            if(multiEntidadEjb.isMultiEntidad()) {
+                Long evento = proximoEventoSalidaMultiEntidad(registroSalida, usuarioEntidad.getEntidad());
+                registroSalida.setEvento(evento);
+            }else{
+                Long evento = proximoEventoSalida(registroSalida, usuarioEntidad.getEntidad());
+                registroSalida.setEvento(evento);
+            }
+
 
             //Llamamos al plugin de postproceso
             postProcesoNuevoRegistro(registroSalida, usuarioEntidad.getEntidad().getId());
@@ -159,9 +166,14 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
         registroSalida = merge(registroSalida);
 
         // Obtenemos el próximo evento del Registro
-        Long evento = proximoEventoSalida(registroSalida, usuarioEntidad.getEntidad());
+        if(multiEntidadEjb.isMultiEntidad()) {
+            Long evento = proximoEventoSalidaMultiEntidad(registroSalida, usuarioEntidad.getEntidad());
+            registroSalida.setEvento(evento);
+        }else{
+            Long evento = proximoEventoSalida(registroSalida, usuarioEntidad.getEntidad());
+            registroSalida.setEvento(evento);
+        }
 
-        registroSalida.setEvento(evento);
 
         // Creamos el Historico RegistroEntrada
         historicoRegistroSalidaEjb.crearHistoricoRegistroSalida(antiguo, usuarioEntidad, I18NLogicUtils.tradueix(LocaleContextHolder.getLocale(), "registro.modificacion.datos"), true);
@@ -197,6 +209,23 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
         return false;
     }
 
+
+    @Override
+    public Boolean isOficioRemisionExternoMultiEntidad(RegistroSalida registroSalida, Set<String> organismos) throws Exception {
+
+        String codigoDir3 = RegistroUtils.obtenerCodigoDir3Interesado(registroSalida);
+
+        if (StringUtils.isNotEmpty(codigoDir3)) {
+
+            Organismo organismo = organismoEjb.findByCodigoMultientidad(codigoDir3);
+            return organismo == null ||organismo!=null &&!organismo.getEntidad().equals(registroSalida.getOficina().getOrganismoResponsable().getEntidad());
+
+        }
+
+        return false;
+    }
+
+
     @Override
     @SuppressWarnings(value = "unchecked")
     public List<OficinaTF> isOficioRemisionSir(RegistroSalida registroSalida, Set<String> organismos) throws Exception {
@@ -206,6 +235,25 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
 
         // Si se trata de un OficioRemisionExterno, comprobamos si el destino tiene Oficinas Sir
         if (StringUtils.isNotEmpty(codigoDir3) && isOficioRemisionExterno(registroSalida, organismos)) {
+
+            Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService(PropiedadGlobalUtil.getDir3CaibServer(), PropiedadGlobalUtil.getDir3CaibUsername(), PropiedadGlobalUtil.getDir3CaibPassword());
+
+            return oficinasService.obtenerOficinasSIRUnidad(codigoDir3);
+        }
+
+        return null;
+    }
+
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public List<OficinaTF> isOficioRemisionSirMultiEntidad(RegistroSalida registroSalida, Set<String> organismos) throws Exception {
+
+        // Obtenemos el organismo destinatario del Registro en el caso de que sea un OficioRemision externo
+        String codigoDir3 = RegistroUtils.obtenerCodigoDir3Interesado(registroSalida);
+
+        // Si se trata de un OficioRemisionExterno, comprobamos si el destino tiene Oficinas Sir
+        if (StringUtils.isNotEmpty(codigoDir3) && isOficioRemisionExternoMultiEntidad(registroSalida, organismos)) {
 
             Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService(PropiedadGlobalUtil.getDir3CaibServer(), PropiedadGlobalUtil.getDir3CaibUsername(), PropiedadGlobalUtil.getDir3CaibPassword());
 
@@ -242,12 +290,45 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
                         return RegwebConstantes.EVENTO_OFICIO_SIR;
                     }
                 }
-
                 return RegwebConstantes.EVENTO_OFICIO_EXTERNO;
-
             }
         }
 
+        return RegwebConstantes.EVENTO_DISTRIBUIR;
+    }
+
+
+
+    @Override
+    public Long proximoEventoSalidaMultiEntidad(RegistroSalida registroSalida, Entidad entidadActiva) throws Exception {
+
+        Oficina oficina = oficinaEjb.findById(registroSalida.getOficina().getId());
+
+        // Obtiene los Organismos de la OficinaActiva en los que puede registrar sin generar OficioRemisión
+        LinkedHashSet<Organismo> organismos = organismoEjb.getByOficinaActiva(oficina, RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
+        // Creamos un Set solo con los codigos
+        Set<String> organismosCodigo = new HashSet<String>();
+
+        for (Organismo organismo : organismos) {
+            organismosCodigo.add(organismo.getCodigo());
+
+        }
+
+        if (registroSalida.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO) || registroSalida.getEstado().equals(RegwebConstantes.REGISTRO_PENDIENTE_VISAR)) {
+
+            if (isOficioRemisionExternoMultiEntidad(registroSalida, organismosCodigo)) { // Externo
+
+                // Si la entidad está en SIR y la Oficina está activada para Envío Sir
+                if (entidadActiva.getSir() && oficinaEjb.isSIREnvio(registroSalida.getOficina().getId())) {
+                    List<OficinaTF> oficinasSIR = isOficioRemisionSirMultiEntidad(registroSalida, organismosCodigo);
+
+                    if (oficinasSIR != null && !oficinasSIR.isEmpty()) {
+                        return RegwebConstantes.EVENTO_OFICIO_SIR;
+                    }
+                }
+                return RegwebConstantes.EVENTO_OFICIO_EXTERNO;
+            }
+        }
         return RegwebConstantes.EVENTO_DISTRIBUIR;
     }
 
@@ -257,9 +338,13 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
         RegistroSalida registroSalida = findById(idRegistro);
         Hibernate.initialize(registroSalida.getRegistroDetalle().getInteresados());
 
-        Long evento = proximoEventoSalida(registroSalida, entidadActiva);
-
-        registroSalida.setEvento(evento);
+        if(multiEntidadEjb.isMultiEntidad()) {
+            Long evento = proximoEventoSalidaMultiEntidad(registroSalida, entidadActiva);
+            registroSalida.setEvento(evento);
+        }else{
+            Long evento = proximoEventoSalida(registroSalida, entidadActiva);
+            registroSalida.setEvento(evento);
+        }
 
         merge(registroSalida);
     }
@@ -385,8 +470,13 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
 
         // Asignamos su evento
         if (registroSalida.getEvento() != null) {
-            Long evento = proximoEventoSalida(registroSalida, usuarioEntidad.getEntidad());
-            registroSalida.setEvento(evento);
+            if(multiEntidadEjb.isMultiEntidad()) {
+                Long evento = proximoEventoSalidaMultiEntidad(registroSalida, usuarioEntidad.getEntidad());
+                registroSalida.setEvento(evento);
+            }else{
+                Long evento = proximoEventoSalida(registroSalida, usuarioEntidad.getEntidad());
+                registroSalida.setEvento(evento);
+            }
             merge(registroSalida);
         }
 

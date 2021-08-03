@@ -41,6 +41,9 @@ public class WebServicesMethodsEJB implements WebServicesMethodsLocal {
     @EJB(mappedName = "regweb3/RegistroSirEJB/local")
     private RegistroSirLocal registroSirEjb;
 
+    @EJB(mappedName = "regweb3/MultiEntidadEJB/local")
+    private MultiEntidadLocal multiEntidadEjb;
+
 
     @Override
     public void procesarMensajeDatosControl(MensajeControl mensaje) throws Exception{
@@ -72,9 +75,15 @@ public class WebServicesMethodsEJB implements WebServicesMethodsLocal {
         return Dir3CaibUtils.getObtenerUnidadesService(PropiedadGlobalUtil.getDir3CaibServer(), PropiedadGlobalUtil.getDir3CaibUsername(), PropiedadGlobalUtil.getDir3CaibPassword());
     }
 
+
     @Override
     public Oficina obtenerOficina(String codigo) throws Exception {
-        return oficinaEjb.findByCodigo(codigo);
+
+        if(multiEntidadEjb.isMultiEntidad()){
+            return oficinaEjb.findByCodigoMultientidad(codigo);
+        }else{
+            return oficinaEjb.findByCodigo(codigo);
+        }
     }
 
     @Override

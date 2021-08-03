@@ -60,6 +60,16 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
      */
     Long proximoEventoSalida(RegistroSalida registroSalida, Entidad entidadActiva) throws Exception;
 
+
+    /**
+     * Obtiene el próximo evento que habrá que realizar con el Registro en un entorno multientidad
+     * @param registroSalida
+     * @param entidadActiva
+     * @return
+     * @throws Exception
+     */
+    Long proximoEventoSalidaMultiEntidad(RegistroSalida registroSalida, Entidad entidadActiva) throws Exception;
+
     /**
      *
      * @param idRegistro
@@ -105,6 +115,16 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
     Boolean isOficioRemisionExterno(RegistroSalida registroSalida, Set<String> organismos) throws Exception;
 
     /**
+     * Comprueba si un RegistroSalida se considera un OficioRemision externo o no en un entorno multientidad
+     * @param registroSalida
+     * @param organismos
+     * @return
+     * @throws Exception
+     */
+
+    Boolean isOficioRemisionExternoMultiEntidad(RegistroSalida registroSalida, Set<String> organismos) throws Exception;
+
+    /**
      * Comprueba si un RegistroSalida se considera un OficioRemision SIR o no
      * @param registroSalida
      * @param organismos
@@ -112,6 +132,16 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
      * @throws Exception
      */
     List<OficinaTF> isOficioRemisionSir(RegistroSalida registroSalida, Set<String> organismos) throws Exception;
+
+
+    /**
+     * Comprueba si un RegistroSalida se considera un OficioRemision SIR o no en un entorno multientidad
+     * @param registroSalida
+     * @param organismos
+     * @return
+     * @throws Exception
+     */
+    List<OficinaTF> isOficioRemisionSirMultiEntidad(RegistroSalida registroSalida, Set<String> organismos) throws Exception;
 
 
     /**

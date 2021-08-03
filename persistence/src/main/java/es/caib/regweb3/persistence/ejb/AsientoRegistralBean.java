@@ -42,6 +42,7 @@ public class AsientoRegistralBean implements AsientoRegistralLocal {
     @EJB private OrganismoLocal organismoEjb;
     @EJB private PermisoOrganismoUsuarioLocal permisoOrganismoUsuarioEjb;
     @EJB private DistribucionLocal distribucionEjb;
+    @EJB private MultiEntidadLocal multiEntidadEjb;
 
     @Override
     public UsuarioEntidad comprobarUsuarioEntidad(String identificador, Long idEntidad) throws Exception, I18NException {
@@ -129,8 +130,15 @@ public class AsientoRegistralBean implements AsientoRegistralLocal {
 
                     // Interesado es una administración
                 } else if (TIPO_INTERESADO_ADMINISTRACION.equals(interesado.getTipo())) {
+
                     //Obtenemos las oficinas SIR a las que va dirigido el registro de Salida
-                    List<OficinaTF> oficinasSIR = registroSalidaEjb.isOficioRemisionSir(registroSalida, getOrganismosOficioRemisionSalida(organismoEjb.getByOficinaActiva(registroSalida.getOficina(), RegwebConstantes.ESTADO_ENTIDAD_VIGENTE)));
+                    List<OficinaTF> oficinasSIR;
+                    if(multiEntidadEjb.isMultiEntidad()) {
+                        oficinasSIR = registroSalidaEjb.isOficioRemisionSirMultiEntidad(registroSalida, getOrganismosOficioRemisionSalida(organismoEjb.getByOficinaActiva(registroSalida.getOficina(), RegwebConstantes.ESTADO_ENTIDAD_VIGENTE)));
+                    }else{
+                        oficinasSIR = registroSalidaEjb.isOficioRemisionSir(registroSalida, getOrganismosOficioRemisionSalida(organismoEjb.getByOficinaActiva(registroSalida.getOficina(), RegwebConstantes.ESTADO_ENTIDAD_VIGENTE)));
+                    }
+
                     //No tiene oficinas en SIR
                     if (oficinasSIR.isEmpty()) {
                         //TODO hay que crear el oficio externo???
