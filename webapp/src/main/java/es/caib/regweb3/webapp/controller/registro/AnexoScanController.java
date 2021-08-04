@@ -230,13 +230,7 @@ public class AnexoScanController extends AnexoController {
         model.addAttribute("teScan", teScan);
 
         if (teScan) {//Si tiene scan
-
-            String languageUI = request.getParameter("lang");
-            if (languageUI == null) {
-                languageUI = I18NUtils.getLocale().getLanguage();
-
-            }
-            request.setAttribute("lang", languageUI);
+            String languageUI = I18NUtils.getLocale().getLanguage();
 
             // Utilitzam l'ID del registre per escanejar
             final String scanWebID = String.valueOf(registroID);
@@ -410,7 +404,11 @@ public class AnexoScanController extends AnexoController {
         anexoForm.setMetadatas(metadatasScan);
 
         //TODO Metadades del funcionari
-        anexoForm.getAnexo().setTitulo(documento.getTransactionName());
+
+        //Titol de l'annexe (eliminam caracters no vàlids i afegim sufixe "doc")
+        StringBuilder titulo = new StringBuilder().append("doc");
+        titulo.append(documento.getTransactionName().replace("/" , " de "));
+        anexoForm.getAnexo().setTitulo(titulo.toString());
 
 
         //Asignamos los valores de documentCustody y SignatureCustody en función de lo obtenido anteriormente.
