@@ -1,7 +1,5 @@
 package es.caib.regweb3.persistence.ejb;
 
-import es.caib.regweb3.model.Entidad;
-
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
 
@@ -14,7 +12,7 @@ import javax.ejb.Local;
 
 @Local
 @RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI","RWE_WS_ENTRADA","RWE_WS_SALIDA"})
-public interface MultiEntidadLocal extends BaseEjb<Entidad, Long>{
+public interface MultiEntidadLocal {
 
    /**
     * Determina si una implementación es multientidad (más de una entidad con sir activado)
