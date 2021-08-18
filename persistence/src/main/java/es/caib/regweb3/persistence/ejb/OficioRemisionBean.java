@@ -655,10 +655,11 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
     public List<OficioRemision> getEnviadosErrorMaxReintentos(Long idEntidad) throws Exception {
 
         Query q = em.createQuery("Select oficioRemision.fecha, oficioRemision.identificadorIntercambio, oficioRemision.tipoOficioRemision from OficioRemision as oficioRemision where (oficioRemision.estado = :enviadoError or oficioRemision.estado = :reenviadoError) " +
-                "and oficioRemision.usuarioResponsable.entidad.id = :idEntidad");
+                "and oficioRemision.usuarioResponsable.entidad.id = :idEntidad and oficioRemision.numeroReintentos = :maxReintentos");
 
         q.setParameter("enviadoError", RegwebConstantes.OFICIO_SIR_ENVIADO_ERROR);
         q.setParameter("reenviadoError", RegwebConstantes.OFICIO_SIR_REENVIADO_ERROR);
+        q.setParameter("maxReintentos", PropiedadGlobalUtil.getMaxReintentosSir(idEntidad));
         q.setParameter("idEntidad", idEntidad);
         q.setMaxResults(7);
 
