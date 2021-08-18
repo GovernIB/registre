@@ -158,4 +158,10 @@ public interface EntidadLocal extends BaseEjb<Entidad, Long> {
      */
     void marcarEntidadMantenimiento(Long idEntidad, Boolean mantenimiento) throws Exception;
 
+    /**
+     * Determina si una implementación es multientidad (más de una entidad con sir activado)
+     * @throws Exception
+     */
+    boolean isMultiEntidad() throws Exception;
+
 }

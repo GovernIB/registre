@@ -157,7 +157,12 @@ public interface OrganismoLocal extends BaseEjb<Organismo, Long> {
      */
     List<Organismo> findByEntidadByEstado(Long entidad, String estado) throws Exception;
 
-    /** PROVES MULTIENTITAT */
+    /**
+     * Obtiene un Organismo a partir de su código Dir3, teniendo en cuenta que se trata de una instalación multientidad
+     * @param codigo
+     * @return
+     * @throws Exception
+     */
     Organismo findByCodigoMultientidad(String codigo) throws Exception;
 
     /**
