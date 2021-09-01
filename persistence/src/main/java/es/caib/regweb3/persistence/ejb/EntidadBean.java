@@ -152,6 +152,9 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
         libro.setNombre(entidad.getLibro().getNombre());
         entidad.setLibro(libroEjb.crearLibro(libro));
 
+        // Perfil custodia por defecto
+        entidad.setPerfilCustodia(RegwebConstantes.PERFIL_CUSTODIA_DOCUMENT_CUSTODY);
+
         entidad = persist(entidad);
 
         // Creamos el UsuarioEntidad del propietario
