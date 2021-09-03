@@ -8,6 +8,7 @@ import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.PlantillaJson;
 import es.caib.regweb3.persistence.ejb.CodigoAsuntoLocal;
 import es.caib.regweb3.persistence.ejb.InteresadoLocal;
+import es.caib.regweb3.persistence.ejb.MultiEntidadLocal;
 import es.caib.regweb3.persistence.ejb.PlantillaLocal;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.persistence.utils.RegistroUtils;
@@ -56,6 +57,9 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
 
     @EJB(mappedName = "regweb3/InteresadoEJB/local")
     private InteresadoLocal interesadoEjb;
+
+    @EJB(mappedName = "regweb3/MultiEntidadEJB/local")
+    private MultiEntidadLocal multiEntidadEjb;
 
 
     /**
@@ -487,7 +491,17 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
     private RegistroEntrada procesarRegistroEntrada(RegistroEntrada registroEntrada, Entidad entidad) throws Exception{
 
         // Organismo destinatiario, determinando si es Interno o Externo. Si es organismo interno con una Entidad creada, será externo
-        Organismo orgDestino = organismoEjb.findByCodigoEntidadLigero(registroEntrada.getDestino().getCodigo(), entidad.getId());
+       // Organismo orgDestino = organismoEjb.findByCodigoEntidadLigero(registroEntrada.getDestino().getCodigo(), entidad.getId());
+
+
+        // Organismo destinatario, determinando si es Interno o Externo. Si es organismo interno con una Entidad creada, será externo
+        Organismo orgDestino;
+        if(multiEntidadEjb.isMultiEntidad()){
+            orgDestino = organismoEjb.findByCodigoLigero(registroEntrada.getDestino().getCodigo());
+        }else {
+            orgDestino = organismoEjb.findByCodigoEntidadLigero(registroEntrada.getDestino().getCodigo(), entidad.getId());
+        }
+
 
         if(orgDestino != null){ // es interno
             registroEntrada.setDestino(orgDestino);
