@@ -10,6 +10,7 @@ import es.caib.regweb3.utils.StringUtils;
 import es.caib.regweb3.utils.TimeUtils;
 import es.caib.regweb3.webapp.controller.registro.AbstractRegistroCommonListController;
 import es.caib.regweb3.webapp.form.AnularForm;
+import es.caib.regweb3.webapp.form.BasicForm;
 import es.caib.regweb3.webapp.form.RegistroEntradaBusqueda;
 import es.caib.regweb3.webapp.form.RegistroSalidaBusqueda;
 import es.caib.regweb3.webapp.utils.JsonResponse;
@@ -195,6 +196,7 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
         model.addAttribute("registro",registro);
         model.addAttribute("entidadActiva", entidadActiva);
         model.addAttribute("anularForm", new AnularForm());
+        model.addAttribute("integracion", new BasicForm());
 
         // Permisos
         Boolean tieneJustificante = registro.getRegistroDetalle().getTieneJustificante();
@@ -391,6 +393,7 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
         model.addAttribute("registro",registro);
         model.addAttribute("entidadActiva", entidadActiva);
         model.addAttribute("anularForm", new AnularForm());
+        model.addAttribute("integracion", new BasicForm());
 
         // Permisos
         Boolean tieneJustificante = registro.getRegistroDetalle().getTieneJustificante();
