@@ -317,7 +317,7 @@ public abstract class AbstractRegistroWsImpl extends AuthenticatedBaseWsImpl {
     }
 
     /**
-     * Valida el CódigoLibro indicado
+     * Valida el CódigoLibro indicado y enviar una Notificación a los Administradores si el Libro indicado no es correcto
      * @param codigoLibro
      * @param entidad
      * @throws I18NException
@@ -325,7 +325,7 @@ public abstract class AbstractRegistroWsImpl extends AuthenticatedBaseWsImpl {
      */
     protected Libro validarLibroUnico(String codigoLibro, Entidad entidad) throws  I18NException, Exception{
 
-        Libro libro = libroEjb.findByCodigoEntidad(codigoLibro, entidad.getId());
+        /*Libro libro = libroEjb.findByCodigoEntidad(codigoLibro, entidad.getId());
         String asunto = "Integración WS errónea del usuario " + UsuarioAplicacionCache.get().getUsuario().getIdentificador();
 
         if (libro == null) { //No existe
@@ -335,7 +335,7 @@ public abstract class AbstractRegistroWsImpl extends AuthenticatedBaseWsImpl {
         } else if (!libro.getActivo() || !libro.equals(entidad.getLibro())) { //Si está inactivo o no es el Libro único
             String mensaje = "El usuario "+UsuarioAplicacionCache.get().getUsuario().getIdentificador()+" ha enviado una petición de nuevo asiento registral a un Libro incorrecto.";
             notificacionEjb.notificacionAdminEntidad(entidad.getId(),asunto, mensaje);
-        }
+        }*/
 
         return entidad.getLibro();
     }
