@@ -22,11 +22,11 @@ import javax.ejb.Local;
 public interface DistribucionLocal {
 
     /**
-     * Método que obtiene los destinatarios a los que distribuir el registro
+     * Método que envía a la cola de Distribución el Registro indicado
      *
      * @param re registro de entrada a distribuir
      * @param usuarioEntidad
-     * @return lista de destinatarios a los que se debe distribuir el registro
+     * @return
      * @throws Exception
      * @throws I18NException
      */
