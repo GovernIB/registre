@@ -304,7 +304,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
     }
 
     @Override
-    public Paginacion busqueda(Integer pageNumber, Date fechaInicio, Date fechaFin, RegistroSir registroSir, String oficinaSir, String estado) throws Exception{
+    public Paginacion busqueda(Integer pageNumber, Date fechaInicio, Date fechaFin, RegistroSir registroSir, String oficinaSir, String estado, String entidad) throws Exception{
 
         Query q;
         Query q2;
@@ -315,6 +315,10 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
 
         if(es.caib.regweb3.utils.StringUtils.isNotEmpty(oficinaSir)){
             where.add(" (registroSir.codigoEntidadRegistral = :oficinaSir) "); parametros.put("oficinaSir",oficinaSir);
+        }
+
+        if(es.caib.regweb3.utils.StringUtils.isNotEmpty(entidad)){
+            where.add(" (registroSir.entidad.codigoDir3 = :entidad) "); parametros.put("entidad",entidad);
         }
 
         if (registroSir.getResumen() != null && registroSir.getResumen().length() > 0) {
