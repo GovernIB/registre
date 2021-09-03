@@ -244,7 +244,7 @@ public class IntegracionBean extends BaseEjbJPA<Integracion, Long> implements In
     public Integer purgarIntegraciones(Long idEntidad) throws Exception{
 
         Calendar hoy = Calendar.getInstance(); //obtiene la fecha de hoy
-        hoy.add(Calendar.DATE, -10); //el -10 indica que se le restaran 10 dias
+        hoy.add(Calendar.DATE, -20); //el -20 indica que se le restaran 10 dias
 
         List<?> integracion =  em.createQuery("select distinct(i.id) from Integracion as i where i.entidad.id = :idEntidad and i.fecha <= :fecha")
                 .setParameter("idEntidad",idEntidad)
