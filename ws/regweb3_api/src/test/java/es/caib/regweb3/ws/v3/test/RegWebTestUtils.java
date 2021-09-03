@@ -321,6 +321,9 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
      */
     private AsientoRegistralWs getDatosComunesAsientoDestino(Long tipoRegistro, String destino){
 
+        System.out.println("Destino " + destino);
+        System.out.println("Origen " + getTestOficinaOrigenCodigoDir3());
+
         AsientoRegistralWs asiento = getDatosComunesAsiento(tipoRegistro);
         asiento.setUnidadTramitacionDestinoCodigo(destino);
 
@@ -429,7 +432,7 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
     public AsientoRegistralWs getAsiento_to_PersonaFisicaDestino(Long tipoRegistro, Boolean representante, Boolean anexos, String destino) {
 
         // Datos comunes
-        AsientoRegistralWs asiento = getDatosComunesAsiento(tipoRegistro);
+        AsientoRegistralWs asiento = getDatosComunesAsientoDestino(tipoRegistro, destino);
 
         // Interesados
         InteresadoWs interesadoWs = new InteresadoWs();
@@ -608,7 +611,7 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
         if("PRO".equals(entorno)){
             return "A04005605";//Fundación Banco de Sangre y Tejidos de Les Illes Balears
         }else{ //PRE
-            return "A04031290";//Servei D'Ocupació de Les Illes Balears
+            return "A04031606";//Servei D'Ocupació de Les Illes Balears
         }
     }
 
@@ -633,9 +636,9 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
     public String getDestinoExternoSir(String entorno){
 
         if("PRO".equals(entorno)){
-            return "L01070027"; //Ajuntament Alaior
+            return "L01070033"; //Ajuntament Alcúdia
         }else{
-            return "L01070027"; //Ajuntament Alaior (tienen el mismo codigo en los 2 entornos)
+            return "L01070033"; //Ajuntament Alcúdia (tienen el mismo codigo en los 2 entornos)
         }
 
     }
