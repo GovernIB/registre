@@ -84,6 +84,9 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
     @EJB(mappedName = "regweb3/ModeloOficioRemisionEJB/local")
     private ModeloOficioRemisionLocal modeloOficioRemisionEjb;
 
+    @EJB(mappedName = "regweb3/MultiEntidadEJB/local")
+    private MultiEntidadLocal multiEntidadEjb;
+
     @EJB(mappedName = "regweb3/SesionEJB/local")
     private SesionLocal sesionEjb;
 
@@ -251,8 +254,13 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
                 }
 
                 // Comprobar que el Organismo destino está vigente
-                Organismo destinoInterno = organismoEjb.findByCodigoEntidadLigero(asientoRegistral.getUnidadTramitacionDestinoCodigo(), entidadActiva.getId());
                 UnidadTF destinoExterno = null;
+                Organismo destinoInterno;
+                if(multiEntidadEjb.isMultiEntidad()){
+                    destinoInterno = organismoEjb.findByCodigoLigero(asientoRegistral.getUnidadTramitacionDestinoCodigo());
+                }else {
+                    destinoInterno = organismoEjb.findByCodigoEntidadLigero(asientoRegistral.getUnidadTramitacionDestinoCodigo(), entidadActiva.getId());
+                }
 
                 if (destinoInterno == null) { // Se trata de un destino externo
 
