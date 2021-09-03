@@ -56,7 +56,7 @@
 
                     </div>
 
-                    <%--BOTONERA--%>
+                    <%--BOTONERA JUSTIFICANTE--%>
                     <div class="panel-footer center">
                         <c:if test="${registro.estado != RegwebConstantes.REGISTRO_RESERVA}">
 
@@ -72,7 +72,6 @@
                                     </ul>
                                 </div>
                             </c:if>
-
                         </c:if>
 
                         <%--Si se ha generado el justificante, muestra el boton paras descargarlo --%>
@@ -95,6 +94,16 @@
                                 </div>
                             </c:if>
                         </c:if>
+                    </div>
+
+                    <%--BOTONERA INTEGRACION--%>
+                    <div class="panel-footer center">
+                        <form:form modelAttribute="integracion" action="${pageContext.request.contextPath}/integracion/busqueda" method="post" cssClass="form-horizontal" target="_blank">
+                            <form:hidden path="texto"/>
+                        </form:form>
+                        <button type="button" onclick="buscarIntegraciones('${registro.numeroRegistroFormateado}')" class="btn btn-warning btn-sm btn-block">
+                            <spring:message code="integracion.integraciones"/>
+                        </button>
                     </div>
                 </div>
 
@@ -190,7 +199,7 @@
 
 <c:import url="../modulos/pie.jsp"/>
 
-<script type="text/javascript" src="<c:url value="/js/plantilla.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/integracion.js"/>"></script>
 
 <script type="text/javascript">
 
