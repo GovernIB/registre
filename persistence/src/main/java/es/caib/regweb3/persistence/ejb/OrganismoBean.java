@@ -210,7 +210,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
     @SuppressWarnings(value = "unchecked")
     public Organismo findByCodigoEntidadLigero(String codigo, Long idEntidad) throws Exception {
 
-        Query q = em.createQuery("Select organismo.id,organismo.codigo, organismo.denominacion, organismo.codAmbComunidad.id, organismo.estado.id from Organismo as organismo where " +
+        Query q = em.createQuery("Select organismo.id,organismo.codigo, organismo.denominacion, organismo.codAmbComunidad.id, organismo.estado.id, organismo.entidad.id from Organismo as organismo where " +
                 "organismo.codigo = :codigo and organismo.entidad.id = :idEntidad and organismo.estado.codigoEstadoEntidad=:vigente");
 
         q.setParameter("codigo", codigo);
@@ -223,6 +223,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
             Organismo organismo = new Organismo((Long) result.get(0)[0], (String) result.get(0)[1], (String) result.get(0)[2]);
             organismo.setCodAmbComunidad(new CatComunidadAutonoma((Long) result.get(0)[3]));
             organismo.setEstado(catEstadoEntidadEjb.findById((Long) result.get(0)[4]));
+            organismo.setEntidad(new Entidad ((Long) result.get(0)[5]));
             return organismo;
         } else {
             return null;
@@ -366,23 +367,32 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
     @SuppressWarnings(value = "unchecked")
     public Organismo findByCodigoMultientidad(String codigo) throws Exception {
 
-        Query q = em.createQuery("Select organismo from Organismo as organismo where organismo.codigo = :codigo order by organismo.id asc");
+        Query q = em.createQuery("Select organismo.id, organismo.codigo, organismo.denominacion, organismo.codAmbComunidad.id, organismo.estado.id, organismo.entidad.id from Organismo as organismo where organismo.codigo = :codigo order by organismo.id asc");
 
         q.setParameter("codigo", codigo);
 
-        List<Organismo> organismos = q.getResultList();
+        List<Object[]> result = q.getResultList();
 
-        if (organismos.size() == 1) {
-            return organismos.get(0);
-        } else if (organismos.size() > 1) { //Caso multientidad ( encuentra 2)
-            for (Organismo organismo : organismos) {
-                Organismo raiz = getOrganismoRaiz(organismo.getId());
+        if (result.size() == 1) {
+
+            Organismo organismo = new Organismo((Long) result.get(0)[0], (String) result.get(0)[1], (String) result.get(0)[2]);
+            organismo.setCodAmbComunidad(new CatComunidadAutonoma((Long) result.get(0)[3]));
+            organismo.setEstado(catEstadoEntidadEjb.findById((Long) result.get(0)[4]));
+            organismo.setEntidad(new Entidad ((Long) result.get(0)[5]));
+            return organismo;
+        } else if (result.size() > 1) { //Caso multientidad ( encuentra 2)
+            for (Object[] object : result) {
+                Organismo raiz = getOrganismoRaiz((Long) object[0]);
                 /* La condición que determina cual es el organismo que tiene una entidad que le da soporte es que su raiz sea null
                     eso quiere decir que realmente es un organismo que depende de otro, pero que está creado como entidad
                     y por eso su raiz es null, porque al importar los datos de dir3caib,
                     la raiz a la que pertenece no existe en el organigrama, porque no la trae
                  */
                 if (raiz == null) {
+                    Organismo organismo = new Organismo((Long) object[0], (String) object[1], (String) object[2]);
+                    organismo.setCodAmbComunidad(new CatComunidadAutonoma((Long) object[3]));
+                    organismo.setEstado(catEstadoEntidadEjb.findById((Long) object[4]));
+                    organismo.setEntidad(new Entidad ((Long) object[5]));
                     return organismo;
                 }
             }
@@ -760,7 +770,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
     @Override
     public Organismo getOrganismoRaiz(Long idOrganismo) throws Exception {
 
-        Query q = em.createQuery("Select organismo.organismoRaiz.id, organismoRaiz.codigo from Organismo as organismo where " +
+        Query q = em.createQuery("Select organismo.organismoRaiz.id, organismoRaiz.codigo, organismoRaiz.denominacion from Organismo as organismo where " +
                 "organismo.id = :idOrganismo");
 
         q.setParameter("idOrganismo", idOrganismo);
@@ -769,7 +779,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
 
         List<Object[]> result = q.getResultList();
         if (result.size() == 1) {
-            Organismo organismo = new Organismo((Long) result.get(0)[0], (String) result.get(0)[1], null);
+            Organismo organismo = new Organismo((Long) result.get(0)[0], (String) result.get(0)[1], (String) result.get(0)[2]);
             return organismo;
         } else {
             return null;

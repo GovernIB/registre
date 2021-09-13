@@ -2,11 +2,32 @@ package es.caib.regweb3.ws.v3.impl;
 
 import es.caib.dir3caib.ws.api.unidad.Dir3CaibObtenerUnidadesWs;
 import es.caib.dir3caib.ws.api.unidad.UnidadTF;
-import es.caib.regweb3.model.*;
+import es.caib.regweb3.model.Entidad;
+import es.caib.regweb3.model.Interesado;
+import es.caib.regweb3.model.Libro;
+import es.caib.regweb3.model.ModeloOficioRemision;
+import es.caib.regweb3.model.Oficina;
+import es.caib.regweb3.model.OficioRemision;
+import es.caib.regweb3.model.Organismo;
+import es.caib.regweb3.model.RegistroEntrada;
+import es.caib.regweb3.model.RegistroSalida;
+import es.caib.regweb3.model.Sesion;
+import es.caib.regweb3.model.UsuarioEntidad;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.model.utils.AnexoSimple;
-import es.caib.regweb3.persistence.ejb.*;
-import es.caib.regweb3.persistence.utils.*;
+import es.caib.regweb3.persistence.ejb.AsientoRegistralLocal;
+import es.caib.regweb3.persistence.ejb.DistribucionLocal;
+import es.caib.regweb3.persistence.ejb.ModeloOficioRemisionLocal;
+import es.caib.regweb3.persistence.ejb.MultiEntidadLocal;
+import es.caib.regweb3.persistence.ejb.OficioRemisionLocal;
+import es.caib.regweb3.persistence.ejb.RegistroEntradaConsultaLocal;
+import es.caib.regweb3.persistence.ejb.RegistroSalidaConsultaLocal;
+import es.caib.regweb3.persistence.ejb.SesionLocal;
+import es.caib.regweb3.persistence.utils.JustificanteReferencia;
+import es.caib.regweb3.persistence.utils.Paginacion;
+import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
+import es.caib.regweb3.persistence.utils.RegistroUtils;
+import es.caib.regweb3.persistence.utils.RespuestaDistribucion;
 import es.caib.regweb3.persistence.validator.RegistroEntradaBeanValidator;
 import es.caib.regweb3.persistence.validator.RegistroEntradaValidator;
 import es.caib.regweb3.persistence.validator.RegistroSalidaBeanValidator;
@@ -17,7 +38,14 @@ import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 import es.caib.regweb3.ws.converter.AsientoConverter;
 import es.caib.regweb3.ws.converter.AsientoRegistralConverter;
-import es.caib.regweb3.ws.model.*;
+import es.caib.regweb3.ws.model.AsientoRegistralSesionWs;
+import es.caib.regweb3.ws.model.AsientoRegistralWs;
+import es.caib.regweb3.ws.model.AsientoWs;
+import es.caib.regweb3.ws.model.FileContentWs;
+import es.caib.regweb3.ws.model.JustificanteReferenciaWs;
+import es.caib.regweb3.ws.model.JustificanteWs;
+import es.caib.regweb3.ws.model.OficioWs;
+import es.caib.regweb3.ws.model.ResultadoBusquedaWs;
 import es.caib.regweb3.ws.utils.UsuarioAplicacionCache;
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
@@ -40,7 +68,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import static es.caib.regweb3.utils.RegwebConstantes.*;
+import static es.caib.regweb3.utils.RegwebConstantes.RWE_WS_CIUDADANO;
+import static es.caib.regweb3.utils.RegwebConstantes.RWE_WS_ENTRADA;
+import static es.caib.regweb3.utils.RegwebConstantes.RWE_WS_SALIDA;
 
 /**
  *
@@ -257,26 +287,44 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
                 UnidadTF destinoExterno = null;
                 Organismo destinoInterno;
                 if(multiEntidadEjb.isMultiEntidad()){
-                    destinoInterno = organismoEjb.findByCodigoLigero(asientoRegistral.getUnidadTramitacionDestinoCodigo());
+                    destinoInterno = organismoEjb.findByCodigoMultientidad(asientoRegistral.getUnidadTramitacionDestinoCodigo());
+
+                    if(destinoInterno == null){ //Externo, lo vamos a buscar a dir3caib
+                        // Lo buscamos en DIR3CAIB
+                        Dir3CaibObtenerUnidadesWs unidadesService = Dir3CaibUtils.getObtenerUnidadesService(PropiedadGlobalUtil.getDir3CaibServer(), PropiedadGlobalUtil.getDir3CaibUsername(), PropiedadGlobalUtil.getDir3CaibPassword());
+                        destinoExterno = unidadesService.obtenerUnidad(asientoRegistral.getUnidadTramitacionDestinoCodigo(), null, null);
+
+                        if (destinoExterno == null) {
+                            throw new I18NException("registro.organismo.noExiste", asientoRegistral.getUnidadTramitacionDestinoCodigo());
+                        } else if (!destinoExterno.getCodigoEstadoEntidad().equals(ESTADO_ENTIDAD_VIGENTE)) {
+                            throw new I18NException("registro.organismo.extinguido", destinoExterno.getCodigo() + " - " + destinoExterno.getDenominacion());
+                        }
+                    }else if( !destinoInterno.getEntidad().getId().equals(entidadActiva.getId())){ //No hace falta ir a buscarlo a dir3caib, ya tenemos los datos mínimos.
+                        destinoExterno = new UnidadTF();
+                        destinoExterno.setCodigo(destinoInterno.getCodigo());
+                        destinoExterno.setDenominacion(destinoInterno.getDenominacion());
+                        destinoInterno = null;
+                    }
                 }else {
                     destinoInterno = organismoEjb.findByCodigoEntidadLigero(asientoRegistral.getUnidadTramitacionDestinoCodigo(), entidadActiva.getId());
-                }
 
-                if (destinoInterno == null) { // Se trata de un destino externo
+                    if (destinoInterno == null) { // Se trata de un destino externo
 
-                    // Lo buscamos en DIR3CAIB
-                    Dir3CaibObtenerUnidadesWs unidadesService = Dir3CaibUtils.getObtenerUnidadesService(PropiedadGlobalUtil.getDir3CaibServer(), PropiedadGlobalUtil.getDir3CaibUsername(), PropiedadGlobalUtil.getDir3CaibPassword());
-                    destinoExterno = unidadesService.obtenerUnidad(asientoRegistral.getUnidadTramitacionDestinoCodigo(), null, null);
+                        // Lo buscamos en DIR3CAIB
+                        Dir3CaibObtenerUnidadesWs unidadesService = Dir3CaibUtils.getObtenerUnidadesService(PropiedadGlobalUtil.getDir3CaibServer(), PropiedadGlobalUtil.getDir3CaibUsername(), PropiedadGlobalUtil.getDir3CaibPassword());
+                        destinoExterno = unidadesService.obtenerUnidad(asientoRegistral.getUnidadTramitacionDestinoCodigo(), null, null);
 
-                    if (destinoExterno == null) {
-                        throw new I18NException("registro.organismo.noExiste", asientoRegistral.getUnidadTramitacionDestinoCodigo());
-                    } else if (!destinoExterno.getCodigoEstadoEntidad().equals(ESTADO_ENTIDAD_VIGENTE)) {
-                        throw new I18NException("registro.organismo.extinguido", destinoExterno.getCodigo() + " - " + destinoExterno.getDenominacion());
+                        if (destinoExterno == null) {
+                            throw new I18NException("registro.organismo.noExiste", asientoRegistral.getUnidadTramitacionDestinoCodigo());
+                        } else if (!destinoExterno.getCodigoEstadoEntidad().equals(ESTADO_ENTIDAD_VIGENTE)) {
+                            throw new I18NException("registro.organismo.extinguido", destinoExterno.getCodigo() + " - " + destinoExterno.getDenominacion());
+                        }
+
+                    } else if (!destinoInterno.getEstado().getCodigoEstadoEntidad().equals(ESTADO_ENTIDAD_VIGENTE)) { //Si está extinguido
+                        throw new I18NException("registro.organismo.extinguido", destinoInterno.getNombreCompleto());
                     }
-
-                } else if (!destinoInterno.getEstado().getCodigoEstadoEntidad().equals(ESTADO_ENTIDAD_VIGENTE)) { //Si está extinguido
-                    throw new I18NException("registro.organismo.extinguido", destinoInterno.getNombreCompleto());
                 }
+
 
                 // Convertimos a Registro de Entrada
                 RegistroEntrada registroEntrada = AsientoRegistralConverter.getRegistroEntrada(
