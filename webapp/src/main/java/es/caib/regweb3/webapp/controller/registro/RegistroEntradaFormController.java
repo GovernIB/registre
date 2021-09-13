@@ -167,13 +167,16 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
 
             if (registroEntrada.getDestino() != null) { // Si se ha escogido un Organismo destino
 
-                Organismo organismo = organismoEjb.findByCodigoEntidadLigero(registroEntrada.getDestino().getCodigo(), entidad.getId());
+                Organismo organismo;
+                if(multiEntidadEjb.isMultiEntidad()) {
+                    organismo = organismoEjb.findByCodigoMultientidad(registroEntrada.getDestino().getCodigo());
+                }else{
+                    organismo = organismoEjb.findByCodigoEntidadLigero(registroEntrada.getDestino().getCodigo(), entidad.getId());
+                }
 
                 if (organismo == null) {// Si es externo, lo creamos nuevo y lo añadimos a la lista del select
-
                     organismosOficinaActiva.add(new Organismo(null, registroEntrada.getDestino().getCodigo(), registroEntrada.getDestino().getDenominacion()));
-
-                } else { // si es interno, miramos si ya esta en la lista, si no, lo añadimos
+                } else { // si es interno o multientidad  lo añadimos
                     organismosOficinaActiva.add(organismo);
                 }
 
@@ -340,12 +343,17 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
             LinkedHashSet<Organismo> organismosOficinaActiva = new LinkedHashSet<Organismo>(getOrganismosOficinaActiva(request));
             if (registroEntrada.getDestino() != null) { // Si se ha escogido un Organismo destino
 
-                Organismo organismo = organismoEjb.findByCodigoEntidadLigero(registroEntrada.getDestino().getCodigo(), entidad.getId());
+                Organismo organismo;
+                if(multiEntidadEjb.isMultiEntidad()) {
+                    organismo = organismoEjb.findByCodigoMultientidad(registroEntrada.getDestino().getCodigo());
+                }else{
+                    organismo = organismoEjb.findByCodigoEntidadLigero(registroEntrada.getDestino().getCodigo(), entidad.getId());
+                }
+
                 if (organismo == null) { // Si es externo, lo creamos nuevo y lo añadimos a la lista del select
                     log.info("Es organismo externo: " + registroEntrada.getDestino().getCodigo() + " - " + registroEntrada.getDestinoExternoDenominacion());
                     organismosOficinaActiva.add(new Organismo(null, registroEntrada.getDestino().getCodigo(), registroEntrada.getDestinoExternoDenominacion()));
-
-                    // si es interno, miramos si ya esta en la lista, si no, lo añadimos
+                    // si es interno o multientidad, miramos si ya esta en la lista, si no, lo añadimos
                 } else {
                     log.info("Es organismo interno: " + organismo.getDenominacion());
                     organismosOficinaActiva.add(organismo);
@@ -490,25 +498,22 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
      */
     private RegistroEntrada procesarRegistroEntrada(RegistroEntrada registroEntrada, Entidad entidad) throws Exception{
 
-        // Organismo destinatiario, determinando si es Interno o Externo. Si es organismo interno con una Entidad creada, será externo
-       // Organismo orgDestino = organismoEjb.findByCodigoEntidadLigero(registroEntrada.getDestino().getCodigo(), entidad.getId());
+        log.info("Entro en procesar entrada ");
 
-
-        // Organismo destinatario, determinando si es Interno o Externo. Si es organismo interno con una Entidad creada, será externo
+        // Organismo destinatario, lo buscamos en función de si es multientidad o no
         Organismo orgDestino;
         if(multiEntidadEjb.isMultiEntidad()){
-            orgDestino = organismoEjb.findByCodigoLigero(registroEntrada.getDestino().getCodigo());
+            orgDestino = organismoEjb.findByCodigoMultientidad(registroEntrada.getDestino().getCodigo());
+
         }else {
+            log.info("Entro en monoentidad");
             orgDestino = organismoEjb.findByCodigoEntidadLigero(registroEntrada.getDestino().getCodigo(), entidad.getId());
         }
 
 
-        if(orgDestino != null){ // es interno
-            registroEntrada.setDestino(orgDestino);
-            registroEntrada.setDestinoExternoCodigo(null);
-            registroEntrada.setDestinoExternoDenominacion(null);
+        //Organismo destinatario, determinamos si es interno o externo teniendo en cuenta la multientidad
+        if( orgDestino == null || (!entidad.getId().equals(orgDestino.getEntidad().getId()))){ //Externo
 
-        } else { // es externo
             registroEntrada.setDestinoExternoCodigo(registroEntrada.getDestino().getCodigo());
             if(registroEntrada.getId()!= null){//es una modificación
                 registroEntrada.setDestinoExternoDenominacion(registroEntrada.getDestinoExternoDenominacion());
@@ -517,7 +522,15 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
             }
 
             registroEntrada.setDestino(null);
+
+        }else{//Interno
+
+            registroEntrada.setDestino(orgDestino);
+            registroEntrada.setDestinoExternoCodigo(null);
+            registroEntrada.setDestinoExternoDenominacion(null);
         }
+
+
 
         // Oficina origen, determinando si es Interno o Externo
         Oficina oficinaOrigen = registroEntrada.getRegistroDetalle().getOficinaOrigen();

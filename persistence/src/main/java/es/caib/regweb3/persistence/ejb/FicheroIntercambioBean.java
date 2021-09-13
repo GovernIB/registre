@@ -40,6 +40,7 @@ public class FicheroIntercambioBean implements FicheroIntercambioLocal {
     @EJB private OficinaLocal oficinaEjb;
     @EJB private IntegracionLocal integracionEjb;
     @EJB private MensajeControlLocal mensajeControlEjb;
+    @EJB private MultiEntidadLocal multiEntidadEjb;
 
     /**
      * Recibe un fichero de intercambio en formato SICRES3 desde un nodo distribuido
@@ -319,9 +320,9 @@ public class FicheroIntercambioBean implements FicheroIntercambioLocal {
      */
     private Entidad obtenerEntidad(String codigoEntidadRegistralDestino) throws Exception{
 
-        if(codigoEntidadRegistralDestino != null){
+        if(codigoEntidadRegistralDestino != null) {
 
-            Oficina oficina = oficinaEjb.findByCodigo(codigoEntidadRegistralDestino);
+            Oficina oficina = obtenerOficina(codigoEntidadRegistralDestino);
 
             if(oficina != null){
                 return oficina.getOrganismoResponsable().getEntidad();
@@ -330,6 +331,16 @@ public class FicheroIntercambioBean implements FicheroIntercambioLocal {
 
         return null;
 
+    }
+
+
+    private Oficina obtenerOficina(String codigo) throws Exception {
+
+        if(multiEntidadEjb.isMultiEntidad()){
+            return oficinaEjb.findByCodigoMultientidad(codigo);
+        }else{
+            return oficinaEjb.findByCodigo(codigo);
+        }
     }
 
 }
