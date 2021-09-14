@@ -287,7 +287,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
                 UnidadTF destinoExterno = null;
                 Organismo destinoInterno;
                 if(multiEntidadEjb.isMultiEntidad()){
-                    destinoInterno = organismoEjb.findByCodigoMultientidad(asientoRegistral.getUnidadTramitacionDestinoCodigo());
+                    destinoInterno = organismoEjb.findByCodigoMultiEntidad(asientoRegistral.getUnidadTramitacionDestinoCodigo());
 
                     if(destinoInterno == null){ //Externo, lo vamos a buscar a dir3caib
                         // Lo buscamos en DIR3CAIB

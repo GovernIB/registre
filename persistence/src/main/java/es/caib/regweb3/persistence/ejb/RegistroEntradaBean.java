@@ -437,7 +437,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         // en el siguiente if si hay una entidad que le da soporte
         Organismo organismo = null;
         if(registroEntrada.getDestino()!=null) {
-            organismo = organismoEjb.findByCodigoMultientidad(registroEntrada.getDestino().getCodigo());
+            organismo = organismoEjb.findByCodigoMultiEntidad(registroEntrada.getDestino().getCodigo());
 
         }
 

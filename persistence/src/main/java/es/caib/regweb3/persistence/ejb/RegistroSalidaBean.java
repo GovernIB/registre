@@ -217,7 +217,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
 
         if (StringUtils.isNotEmpty(codigoDir3)) {
 
-            Organismo organismo = organismoEjb.findByCodigoMultientidad(codigoDir3);
+            Organismo organismo = organismoEjb.findByCodigoMultiEntidad(codigoDir3);
             return organismo == null ||organismo!=null &&!organismo.getEntidad().equals(registroSalida.getOficina().getOrganismoResponsable().getEntidad());
 
         }
