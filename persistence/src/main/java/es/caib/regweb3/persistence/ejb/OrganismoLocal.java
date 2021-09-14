@@ -163,7 +163,7 @@ public interface OrganismoLocal extends BaseEjb<Organismo, Long> {
      * @return
      * @throws Exception
      */
-    Organismo findByCodigoMultientidad(String codigo) throws Exception;
+    Organismo findByCodigoMultiEntidad(String codigo) throws Exception;
 
     /**
      * Comprueba si el Organismo indicado es gestionado por REGWEB3

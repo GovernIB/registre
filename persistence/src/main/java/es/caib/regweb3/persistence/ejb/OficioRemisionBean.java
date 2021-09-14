@@ -53,6 +53,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
     @EJB private ContadorLocal contadorEjb;
     @EJB private OrganismoLocal organismoEjb;
     @EJB private InteresadoLocal interesadoEjb;
+    @EJB private MultiEntidadLocal multiEntidadEjb;
 
 
     @Override
@@ -816,24 +817,34 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
         Oficio oficio = new Oficio();
         oficio.setOficioRemision(true);
 
-        Organismo organismo = organismoEjb.findByCodigoEntidadSinEstadoLigero(codigoOrganismo, idEntidad);
+        //Organismo organismo = organismoEjb.findByCodigoEntidadSinEstadoLigero(codigoOrganismo, idEntidad);
+        Organismo organismo;
+        if(multiEntidadEjb.isMultiEntidad()){
+             organismo = organismoEjb.findByCodigoMultiEntidad(codigoOrganismo);
+        }else{
+             organismo = organismoEjb.findByCodigoEntidadSinEstadoLigero(codigoOrganismo, idEntidad);
+        }
 
         if(organismo != null){
-
-            if(!organismo.getEdp()){
-                //log.info("Es un oficio interno");
-                oficio.setInterno(true);
+            if(!organismo.getEntidad().getId().equals(idEntidad)){
+                oficio.setExterno(true);
             }else{
-                // Comprobamos si el organismo edp tiene algún libro que le registre
-                Boolean oficioEdpInterno = organismoEjb.isEdpConLibro(organismo.getId());
-
-                if(oficioEdpInterno){
+                if(!organismo.getEdp()){
+                    //log.info("Es un oficio interno");
                     oficio.setInterno(true);
                 }else{
-                    oficio.setEdpExterno(true);
+                    // Comprobamos si el organismo edp tiene algún libro que le registre
+                    Boolean oficioEdpInterno = organismoEjb.isEdpConLibro(organismo.getId());
+
+                    if(oficioEdpInterno){
+                        oficio.setInterno(true);
+                    }else{
+                        oficio.setEdpExterno(true);
+                    }
+                    // log.info("Es un oficio edp interno?: " + oficioEdpInterno);
                 }
-               // log.info("Es un oficio edp interno?: " + oficioEdpInterno);
             }
+
         }else{
             oficio.setExterno(true);
             //log.info("Es un oficio externo");

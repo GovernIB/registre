@@ -254,7 +254,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
     @SuppressWarnings(value = "unchecked")
     public Organismo findByCodigoEntidadSinEstadoLigero(String codigo, Long idEntidad) throws Exception {
 
-        Query q = em.createQuery("Select organismo.id,organismo.codigo, organismo.denominacion, organismo.codAmbComunidad.id, organismo.estado, organismo.edp from Organismo as organismo where " +
+        Query q = em.createQuery("Select organismo.id,organismo.codigo, organismo.denominacion, organismo.codAmbComunidad.id, organismo.estado, organismo.edp, organismo.entidad.id from Organismo as organismo where " +
                 "organismo.codigo = :codigo and organismo.entidad.id = :idEntidad ");
 
         q.setParameter("codigo", codigo);
@@ -267,6 +267,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
             organismo.setCodAmbComunidad(new CatComunidadAutonoma((Long) result.get(0)[3]));
             organismo.setEstado((CatEstadoEntidad) result.get(0)[4]);
             organismo.setEdp((Boolean) result.get(0)[5]);
+            organismo.setEntidad(new Entidad((Long)result.get(0)[6]));
             return organismo;
         } else {
             return null;
@@ -365,7 +366,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Organismo findByCodigoMultientidad(String codigo) throws Exception {
+    public Organismo findByCodigoMultiEntidad(String codigo) throws Exception {
 
         Query q = em.createQuery("Select organismo.id, organismo.codigo, organismo.denominacion, organismo.codAmbComunidad.id, organismo.estado.id, organismo.entidad.id from Organismo as organismo where organismo.codigo = :codigo order by organismo.id asc");
 
@@ -843,7 +844,11 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
             return true;
 
         } else {
-            return isEdpConLibro(organismo.getOrganismoSuperior().getId());
+            if(organismo.getOrganismoSuperior()!=null) {
+                return isEdpConLibro(organismo.getOrganismoSuperior().getId());
+            }else{
+                return false;
+            }
         }
 
     }

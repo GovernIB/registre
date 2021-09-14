@@ -169,7 +169,7 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
 
                 Organismo organismo;
                 if(multiEntidadEjb.isMultiEntidad()) {
-                    organismo = organismoEjb.findByCodigoMultientidad(registroEntrada.getDestino().getCodigo());
+                    organismo = organismoEjb.findByCodigoMultiEntidad(registroEntrada.getDestino().getCodigo());
                 }else{
                     organismo = organismoEjb.findByCodigoEntidadLigero(registroEntrada.getDestino().getCodigo(), entidad.getId());
                 }
@@ -345,7 +345,7 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
 
                 Organismo organismo;
                 if(multiEntidadEjb.isMultiEntidad()) {
-                    organismo = organismoEjb.findByCodigoMultientidad(registroEntrada.getDestino().getCodigo());
+                    organismo = organismoEjb.findByCodigoMultiEntidad(registroEntrada.getDestino().getCodigo());
                 }else{
                     organismo = organismoEjb.findByCodigoEntidadLigero(registroEntrada.getDestino().getCodigo(), entidad.getId());
                 }
@@ -503,7 +503,7 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
         // Organismo destinatario, lo buscamos en función de si es multientidad o no
         Organismo orgDestino;
         if(multiEntidadEjb.isMultiEntidad()){
-            orgDestino = organismoEjb.findByCodigoMultientidad(registroEntrada.getDestino().getCodigo());
+            orgDestino = organismoEjb.findByCodigoMultiEntidad(registroEntrada.getDestino().getCodigo());
 
         }else {
             log.info("Entro en monoentidad");
