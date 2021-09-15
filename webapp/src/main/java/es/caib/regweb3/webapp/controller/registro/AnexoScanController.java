@@ -35,6 +35,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import static es.caib.regweb3.utils.StringUtils.sustituirCaracteresProhibidosArxiu;
+
 /**
  * Created by mgonzalez on 04/05/2017.
  * Controller que se encarga de gestionar los anexos introducidos via scan
@@ -404,11 +406,7 @@ public class AnexoScanController extends AnexoController {
         anexoForm.setMetadatas(metadatasScan);
 
         //TODO Metadades del funcionari
-
-        //Titol de l'annexe (eliminam caracters no vàlids i afegim sufixe "doc")
-        StringBuilder titulo = new StringBuilder().append("doc");
-        titulo.append(documento.getTransactionName().replace("/" , " de "));
-        anexoForm.getAnexo().setTitulo(titulo.toString());
+        anexoForm.getAnexo().setTitulo(sustituirCaracteresProhibidosArxiu(documento.getTransactionName(), '_'));
 
 
         //Asignamos los valores de documentCustody y SignatureCustody en función de lo obtenido anteriormente.
