@@ -428,11 +428,6 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     @Override
     public Long proximoEventoEntradaMultiEntidad(RegistroEntrada registroEntrada, Entidad entidadActiva, Long idOficina) throws Exception {
 
-        log.info("Entro en proximo evento multi");
-        log.info("XXXXX destino " + registroEntrada.getDestino());
-        log.info("XXXXX destino ext cod  " + registroEntrada.getDestinoExternoCodigo());
-        log.info("XXXXX destino ext den" + registroEntrada.getDestinoExternoDenominacion());
-
         //Si el destino no es null debemos obtener el organismo correcto en un entorno multientidad para poder comprobar
         // en el siguiente if si hay una entidad que le da soporte
         Organismo organismo = null;
