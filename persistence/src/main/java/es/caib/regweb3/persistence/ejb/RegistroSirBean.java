@@ -32,6 +32,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -60,6 +61,7 @@ import static es.caib.regweb3.utils.RegwebConstantes.*;
 @Stateless(name = "RegistroSirEJB")
 @SecurityDomain("seycon")
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+@RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI", "RWE_WS_ENTRADA", "RWE_WS_SALIDA"})
 public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements RegistroSirLocal {
 
     protected final Logger log = Logger.getLogger(getClass());

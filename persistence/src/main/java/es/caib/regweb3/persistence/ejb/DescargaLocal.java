@@ -13,7 +13,6 @@ import java.util.List;
  * Date: 10/10/13
  */
 @Local
-@RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN"})
 public interface DescargaLocal extends BaseEjb<Descarga, Long> {
 
   /**

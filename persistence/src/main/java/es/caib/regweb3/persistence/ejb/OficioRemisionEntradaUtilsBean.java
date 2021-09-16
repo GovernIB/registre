@@ -18,6 +18,7 @@ import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.hibernate.Session;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -35,6 +36,7 @@ import java.util.*;
  */
 @Stateless(name = "OficioRemisionEntradaUtilsEJB")
 @SecurityDomain("seycon")
+@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI"})
 public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtilsLocal {
 
     public final Logger log = Logger.getLogger(getClass());

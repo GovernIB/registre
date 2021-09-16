@@ -13,6 +13,7 @@ import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.log4j.Logger;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import java.util.Date;
@@ -26,6 +27,7 @@ import java.util.Date;
 
 @Stateless(name = "FicheroIntercambioEJB")
 @SecurityDomain("seycon")
+@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI"})
 public class FicheroIntercambioBean implements FicheroIntercambioLocal {
 
     protected final Logger log = Logger.getLogger(getClass());

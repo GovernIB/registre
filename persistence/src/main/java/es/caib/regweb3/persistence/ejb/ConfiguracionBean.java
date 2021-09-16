@@ -4,6 +4,7 @@ import es.caib.regweb3.model.Configuracion;
 import org.apache.log4j.Logger;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -20,6 +21,7 @@ import java.util.List;
 
 @Stateless(name = "ConfiguracionEJB")
 @SecurityDomain("seycon")
+@RolesAllowed({"RWE_SUPERADMIN"})
 public class ConfiguracionBean extends BaseEjbJPA<Configuracion, Long> implements ConfiguracionLocal{
 
     protected final Logger log = Logger.getLogger(getClass());

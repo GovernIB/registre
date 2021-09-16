@@ -7,6 +7,7 @@ import es.caib.regweb3.utils.StringUtils;
 import org.apache.log4j.Logger;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
+import javax.annotation.security.RolesAllowed;
 import javax.annotation.security.RunAs;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -29,6 +30,7 @@ import java.util.*;
 @SecurityDomain("seycon")
 @RunAs("RWE_SUPERADMIN")
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+@RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI","RWE_WS_ENTRADA","RWE_WS_SALIDA", "RWE_WS_CIUDADANO"})
 public class IntegracionBean extends BaseEjbJPA<Integracion, Long> implements IntegracionLocal{
 
     protected final Logger log = Logger.getLogger(getClass());

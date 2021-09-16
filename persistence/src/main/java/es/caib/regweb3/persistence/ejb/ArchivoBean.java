@@ -6,6 +6,7 @@ import es.caib.regweb3.persistence.utils.FileSystemManager;
 import org.apache.log4j.Logger;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -20,6 +21,7 @@ import java.util.List;
  */
 @Stateless(name = "ArchivoEJB")
 @SecurityDomain("seycon")
+@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI"})
 public class ArchivoBean extends BaseEjbJPA<Archivo, Long> implements ArchivoLocal{
 
     protected final Logger log = Logger.getLogger(getClass());
@@ -78,6 +80,8 @@ public class ArchivoBean extends BaseEjbJPA<Archivo, Long> implements ArchivoLoc
      * @param archivo
      * @return
      */
+
+    @RolesAllowed({"RWE_ADMIN"})
     @Override
     public boolean borrarArchivo(Archivo archivo) throws Exception{
         if (archivo != null) {

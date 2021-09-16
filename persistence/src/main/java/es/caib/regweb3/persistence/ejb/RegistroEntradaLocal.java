@@ -18,7 +18,6 @@ import java.util.Set;
  *         Date: 16/01/14
  */
 @Local
-@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI","RWE_WS_ENTRADA","RWE_WS_SALIDA", "RWE_WS_CIUDADANO"})
 public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal {
 
 

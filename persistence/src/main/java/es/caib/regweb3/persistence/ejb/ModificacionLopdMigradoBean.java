@@ -4,6 +4,7 @@ import es.caib.regweb3.model.ModificacionLopdMigrado;
 import org.apache.log4j.Logger;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -19,6 +20,7 @@ import java.util.List;
 
 @Stateless(name = "ModificacionLopdMigradoEJB")
 @SecurityDomain("seycon")
+@RolesAllowed({"RWE_USUARI"})
 public class ModificacionLopdMigradoBean extends BaseEjbJPA<ModificacionLopdMigrado, Long> implements ModificacionLopdMigradoLocal{
 
     protected final Logger log = Logger.getLogger(getClass());

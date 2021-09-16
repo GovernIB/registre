@@ -27,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
 
 import javax.annotation.Resource;
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.interceptor.Interceptors;
@@ -52,6 +53,7 @@ import static es.caib.regweb3.utils.RegwebConstantes.REGISTRO_ENTRADA;
 @Stateless(name = "AnexoEJB")
 @SecurityDomain("seycon")
 @Interceptors(SpringBeanAutowiringInterceptor.class)
+@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI", "RWE_WS_ENTRADA", "RWE_WS_SALIDA","RWE_WS_CIUDADANO"})
 public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
     protected final Logger log = Logger.getLogger(getClass());

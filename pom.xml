@@ -30,6 +30,8 @@
     <pluginsib-validatesignature-afirmacxf.version>2.0.5</pluginsib-validatesignature-afirmacxf.version>
     <arxiu.api.version>2.0.14</arxiu.api.version>
     <dir3caib-ws-api.version>1.0.14</dir3caib-ws-api.version>
+    <slf4j.version>1.7.21</slf4j.version>
+    <orika.version>1.1.7</orika.version>
     <maven.compiler.source>1.7</maven.compiler.source>
     <maven.compiler.target>1.7</maven.compiler.target>
   </properties>

@@ -16,6 +16,7 @@ import org.apache.log4j.Logger;
 import org.hibernate.Hibernate;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import java.sql.Timestamp;
@@ -30,6 +31,7 @@ import java.util.*;
  */
 @Stateless(name = "SincronizadorDir3EJB")
 @SecurityDomain("seycon")
+@RolesAllowed({"RWE_ADMIN"})
 public class SincronizadorDir3Bean implements SincronizadorDir3Local {
 
     protected final Logger log = Logger.getLogger(getClass());

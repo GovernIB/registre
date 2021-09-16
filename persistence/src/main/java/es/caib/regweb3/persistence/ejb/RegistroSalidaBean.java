@@ -24,6 +24,7 @@ import org.jboss.ejb3.annotation.SecurityDomain;
 import org.springframework.context.i18n.LocaleContextHolder;
 
 import javax.annotation.Resource;
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -43,6 +44,7 @@ import static es.caib.regweb3.utils.RegwebConstantes.REGISTRO_SALIDA;
 
 @Stateless(name = "RegistroSalidaEJB")
 @SecurityDomain("seycon")
+@RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI","RWE_WS_ENTRADA","RWE_WS_SALIDA", "RWE_WS_CIUDADANO"})
 /*@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)*/
 public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
         implements RegistroSalidaLocal {

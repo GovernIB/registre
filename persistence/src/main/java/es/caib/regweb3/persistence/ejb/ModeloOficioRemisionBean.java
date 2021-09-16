@@ -4,6 +4,7 @@ import es.caib.regweb3.model.ModeloOficioRemision;
 import org.apache.log4j.Logger;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -20,6 +21,7 @@ import java.util.List;
 
 @Stateless(name = "ModeloOficioRemisionEJB")
 @SecurityDomain("seycon")
+@RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI","RWE_WS_ENTRADA","RWE_WS_SALIDA"})
 public class ModeloOficioRemisionBean extends BaseEjbJPA<ModeloOficioRemision, Long> implements ModeloOficioRemisionLocal{
 
     protected final Logger log = Logger.getLogger(getClass());

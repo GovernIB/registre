@@ -303,6 +303,12 @@
         <artifactId>plugin-justificante-mock</artifactId>
         <version>${project.version}</version>
     </dependency>
+    
+    <dependency>
+        <groupId>es.caib.regweb3</groupId>
+        <artifactId>plugin-justificante-apb</artifactId>
+        <version>3.1.2</version>
+    </dependency>
 
     <!-- ================================================= -->
     <!-- ======== PLUGINS DE FIRMA EN SERVIDOR =========== -->
@@ -531,6 +537,12 @@
       </exclusions>
     </dependency>
 
+ <!-- APB-->
+	<dependency>
+		<groupId>org.fundaciobit.plugins</groupId>
+		<artifactId>plugin-documentcustody-arxiudigitalapb</artifactId>
+		<version>1.0.2</version>
+	</dependency>
   </dependencies>
 
 

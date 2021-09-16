@@ -50,7 +50,7 @@ public class ConfigurationJPA {
 
   @Bean
   public DataSource dataSource() {
-    return (DataSource) getFromInitialContext("java:/es.caib.regweb3.db");
+    return (DataSource) getFromInitialContext("java:/comp/env/jdbc/es.caib.regweb3.db");
   }
 
   private Properties additionalProperties() {

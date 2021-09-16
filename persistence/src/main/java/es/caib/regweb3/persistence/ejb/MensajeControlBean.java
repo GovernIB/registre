@@ -18,6 +18,7 @@ import es.caib.regweb3.utils.StringUtils;
 import org.apache.log4j.Logger;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -37,6 +38,7 @@ import java.util.*;
 @Stateless(name = "MensajeControlEJB")
 @SecurityDomain("seycon")
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+@RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI"})
 public class MensajeControlBean extends BaseEjbJPA<MensajeControl, Long> implements MensajeControlLocal{
 
     protected final Logger log = Logger.getLogger(getClass());

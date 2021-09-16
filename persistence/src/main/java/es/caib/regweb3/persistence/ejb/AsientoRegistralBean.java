@@ -11,7 +11,9 @@ import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.jboss.ejb3.annotation.SecurityDomain;
 import org.jboss.ejb3.common.proxy.plugins.async.AsyncUtils;
+import org.springframework.scheduling.annotation.Async;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.*;
 import java.util.HashSet;
 import java.util.List;
@@ -27,6 +29,7 @@ import static es.caib.regweb3.utils.RegwebConstantes.*;
 @Stateless(name = "AsientoRegistralEJB")
 @SecurityDomain("seycon")
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI", "RWE_WS_ENTRADA", "RWE_WS_SALIDA"})
 public class AsientoRegistralBean implements AsientoRegistralLocal {
 
     protected final Logger log = Logger.getLogger(getClass());
@@ -171,7 +174,7 @@ public class AsientoRegistralBean implements AsientoRegistralLocal {
         return registroSalida;
     }
 
-    @Asynchronous
+    @Async
     @Override
     public void crearJustificante(UsuarioEntidad usuarioEntidad, IRegistro registro, Long tipoRegistro, String idioma) throws I18NValidationException, I18NException {
 
@@ -181,7 +184,7 @@ public class AsientoRegistralBean implements AsientoRegistralLocal {
 
     }
 
-    @Asynchronous
+    @Async
     @Override
     public void distribuirRegistroEntrada(RegistroEntrada registroEntrada, UsuarioEntidad usuario) throws Exception, I18NException {
 
@@ -189,12 +192,12 @@ public class AsientoRegistralBean implements AsientoRegistralLocal {
 
         //  Comprobamos que el usuario tiene permisos para Distribuir el registro
         if(!permisoOrganismoUsuarioEjb.tienePermiso(usuario.getId(), registroEntrada.getOficina().getOrganismoResponsable().getId(), RegwebConstantes.PERMISO_DISTRIBUCION_REGISTRO, true)){
-            throw new I18NException("registroEntrada.distribuir.error.permiso");
+            //throw new I18NException("registroEntrada.distribuir.error.permiso");
         }
 
         // Comprobamos que el RegistroEntrada se puede Distribuir
         if (!registroEntradaConsultaEjb.isDistribuir(registroEntrada.getId())) {
-            throw new I18NException("registroEntrada.distribuir.noPermitido");
+            //throw new I18NException("registroEntrada.distribuir.noPermitido");
         }
 
         try{
@@ -203,7 +206,7 @@ public class AsientoRegistralBean implements AsientoRegistralLocal {
 
         }catch (Exception | I18NValidationException e){
             e.printStackTrace();
-            throw new I18NException("registroEntrada.distribuir.error");
+            //throw new I18NException("registroEntrada.distribuir.error");
         }
     }
 

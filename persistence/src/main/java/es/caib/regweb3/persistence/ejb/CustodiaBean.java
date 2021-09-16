@@ -18,6 +18,7 @@ import org.jboss.ejb3.annotation.TransactionTimeout;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.interceptor.Interceptors;
@@ -37,6 +38,7 @@ import static es.caib.regweb3.utils.RegwebConstantes.REGISTRO_ENTRADA;
 @Stateless(name = "CustodiaEJB")
 @SecurityDomain("seycon")
 @Interceptors(SpringBeanAutowiringInterceptor.class)
+@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI"})
 public class CustodiaBean implements CustodiaLocal {
 
     protected final Logger log = Logger.getLogger(getClass());

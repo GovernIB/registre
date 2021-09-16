@@ -342,6 +342,18 @@ public class PropiedadGlobalUtil {
     }
 
     /**
+     * Retorna el valor de la propiedad ArchivosPath global.
+     * Propiedad: es.caib.regweb3.archivos.path
+     * @param idEntidad
+     * @return
+     */
+    public static String getArchivosPath() {
+        final String partialPropertyName = "archivos.path";
+
+        return getString(partialPropertyName);
+    }
+    
+    /**
      * Retorna el valor de la propiedad Dir3CaibServer de la entidad indicada.
      * Propiedad: es.caib.regweb3.dir3caib.server
      * @return
@@ -808,7 +820,7 @@ public class PropiedadGlobalUtil {
 
         if (propiedadGlobalEjb == null) {
             try {
-                propiedadGlobalEjb = (PropiedadGlobalLocal) new InitialContext().lookup("regweb3/PropiedadGlobalEJB/local");
+                propiedadGlobalEjb = (PropiedadGlobalLocal) new InitialContext().lookup("java:comp/env/regweb3/PropiedadGlobalEJB/local");
             } catch (Throwable e) {
                 log.error("No se ha podido instanciar PropiedadGlobalEJB");
                 throw new Exception(e);

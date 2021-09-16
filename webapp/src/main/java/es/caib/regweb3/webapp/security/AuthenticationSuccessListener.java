@@ -70,7 +70,7 @@ public class AuthenticationSuccessListener implements
         if (usuarioEjb == null) {
 
             try {
-                usuarioEjb = (UsuarioLocal) new InitialContext().lookup("regweb3/UsuarioEJB/local");
+                usuarioEjb = (UsuarioLocal) new InitialContext().lookup("java:comp/env/regweb3/UsuarioEJB/local");
 
                 usuario = usuarioEjb.findByIdentificador(identificador);
 
@@ -174,7 +174,7 @@ public class AuthenticationSuccessListener implements
         if(roles.size() > 0){
 
             try {
-                RolLocal rolEjb = (RolLocal) new InitialContext().lookup("regweb3/RolEJB/local");
+                RolLocal rolEjb = (RolLocal) new InitialContext().lookup("java:comp/env/regweb3/RolEJB/local");
 
                 rolesUsuario = rolEjb.getByRol(roles);
 

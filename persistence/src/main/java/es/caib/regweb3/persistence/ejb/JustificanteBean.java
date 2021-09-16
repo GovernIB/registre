@@ -31,6 +31,7 @@ import org.jboss.ejb3.annotation.SecurityDomain;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -53,6 +54,7 @@ import java.util.Map;
 @SecurityDomain("seycon")
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 @Interceptors(SpringBeanAutowiringInterceptor.class)
+@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI", "RWE_WS_ENTRADA", "RWE_WS_SALIDA", "RWE_WS_CIUDADANO"})
 public class JustificanteBean implements JustificanteLocal {
 
     protected final Logger log = Logger.getLogger(getClass());

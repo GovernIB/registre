@@ -4,6 +4,7 @@ import es.caib.regweb3.model.PreRegistro;
 import org.apache.log4j.Logger;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -18,6 +19,7 @@ import java.util.List;
 
 @Stateless(name = "PreRegistroEJB")
 @SecurityDomain("seycon")
+@RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI"})
 public class PreRegistroBean extends BaseEjbJPA<PreRegistro, Long> implements PreRegistroLocal {
 
     protected final Logger log = Logger.getLogger(getClass());

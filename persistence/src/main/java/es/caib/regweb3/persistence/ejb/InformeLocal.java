@@ -15,7 +15,6 @@ import java.util.List;
  *         Date: 05/07/16
  */
 @Local
-@RolesAllowed({"RWE_ADMIN", "RWE_USUARI"})
 public interface InformeLocal {
 
     /**

@@ -18,7 +18,6 @@ import javax.ejb.Local;
  * Date: 10/10/13
  */
 @Local
-@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI", "RWE_WS_ENTRADA", "RWE_WS_SALIDA"})
 public interface DistribucionLocal {
 
     /**

@@ -12,7 +12,6 @@ import javax.ejb.Local;
  * Date: 07/07/15
  */
 @Local
-@RolesAllowed({"RWE_SUPERADMIN"})
 public interface ConfiguracionLocal extends BaseEjb<Configuracion, Long> {
 
 
