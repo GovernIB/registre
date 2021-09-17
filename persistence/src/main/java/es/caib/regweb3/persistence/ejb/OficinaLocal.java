@@ -34,7 +34,7 @@ public interface OficinaLocal extends BaseEjb<Oficina, Long> {
      * @return
      * @throws Exception
      */
-    Oficina findByCodigoMultientidad(String codigo) throws Exception;
+    Oficina findByCodigoMultiEntidad(String codigo) throws Exception;
 
     /**
      * Obtiene la oficina del codigo indicado, la entidad indicada independientemente del estado.
@@ -127,6 +127,17 @@ public interface OficinaLocal extends BaseEjb<Oficina, Long> {
      * @throws Exception
      */
     List<Oficina> findByEntidadByEstado(Long idEntidad, String estado) throws Exception;
+
+
+    /**
+     * Obtiene las Oficinas cuya Entidad responsable es la indicada y tienen el estado indicado y elimina aquellas oficinas
+     * que en un entorno multientidad estan repetidas en la entidad que les da servicio.
+     * @param idEntidad
+     * @param estado
+     * @return
+     * @throws Exception
+     */
+    List<Oficina> findByEntidadByEstadoMultiEntidad(Long idEntidad, String estado) throws Exception;
 
     /**
      * Obtiene las Oficinas responsables cuya Entidad responsable es la indicada

@@ -111,7 +111,7 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
     }
 
     @Override
-    public Oficina findByCodigoMultientidad(String codigo) throws Exception {
+    public Oficina findByCodigoMultiEntidad(String codigo) throws Exception {
 
         Query q = em.createQuery("Select oficina from Oficina as oficina where oficina.codigo = :codigo");
 
@@ -314,6 +314,31 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
             oficinas.add(oficina);
         }
 
+        return oficinas;
+    }
+
+
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public List<Oficina> findByEntidadByEstadoMultiEntidad(Long idEntidad, String estado) throws Exception{
+
+        List<Oficina> oficinas= findByEntidadByEstado(idEntidad,estado);
+        List<Oficina> oficinasAEliminar = new ArrayList<>();
+
+        for(Oficina oficina: oficinas){
+            Oficina oficina1= findByCodigoMultiEntidad(oficina.getCodigo());
+            Organismo raiz = organismoEjb.getOrganismoRaiz(oficina1.getOrganismoResponsable().getId());
+            log.info(" RAIZ " + raiz);
+            log.info(" RAIZ " + oficina1.getOrganismoResponsable().getDenominacion());
+            if(raiz!= null){
+
+
+                log.info(" Eliminamos oficina " + oficina.getDenominacion());
+                oficinasAEliminar.add(oficina);
+            }
+        }
+        oficinas.removeAll(oficinasAEliminar);
         return oficinas;
     }
 
@@ -628,7 +653,7 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
      */
     public Long obtenerEntidadMultiEntidad(String codigo) throws Exception {
 
-        Oficina oficina = findByCodigoMultientidad(codigo);
+        Oficina oficina = findByCodigoMultiEntidad(codigo);
 
         if (oficina.getOrganismoResponsable().getEntidad().getSir()) {
             return oficina.getOrganismoResponsable().getEntidad().getId();
