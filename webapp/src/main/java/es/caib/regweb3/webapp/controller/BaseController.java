@@ -416,6 +416,18 @@ public class BaseController {
         return new HashSet<Oficina>(oficinaEjb.findByEntidadByEstado(getEntidadActiva(request).getId(), RegwebConstantes.ESTADO_ENTIDAD_VIGENTE));
     }
 
+
+    /**
+     *  Obtiene todas las oficinas de la entidad activa vigentes
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    public Set<Oficina> getOficinasOrigenMultiEntidad(HttpServletRequest request ) throws  Exception {
+
+        return new HashSet<Oficina>(oficinaEjb.findByEntidadByEstadoMultiEntidad(getEntidadActiva(request).getId(), RegwebConstantes.ESTADO_ENTIDAD_VIGENTE));
+    }
+
     /**
      * Retorna los años para un select de búsqueda
      *

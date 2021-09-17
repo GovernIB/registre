@@ -337,7 +337,7 @@ public class FicheroIntercambioBean implements FicheroIntercambioLocal {
     private Oficina obtenerOficina(String codigo) throws Exception {
 
         if(multiEntidadEjb.isMultiEntidad()){
-            return oficinaEjb.findByCodigoMultientidad(codigo);
+            return oficinaEjb.findByCodigoMultiEntidad(codigo);
         }else{
             return oficinaEjb.findByCodigo(codigo);
         }
