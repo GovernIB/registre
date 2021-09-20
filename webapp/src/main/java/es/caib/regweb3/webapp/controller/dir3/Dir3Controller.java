@@ -28,10 +28,10 @@ public class Dir3Controller extends BaseController {
 
     //protected final Logger log = LoggerFactory.getLogger(getClass());
 
-    @EJB(mappedName = "regweb3/SincronizadorCatalogoEJB/local")
+    @EJB(mappedName = SincronizadorCatalogoLocal.JNDI_NAME)
     private SincronizadorCatalogoLocal sincronizadorCatalogoEjb;
     
-    @EJB(mappedName = "regweb3/DescargaEJB/local")
+    @EJB(mappedName = DescargaLocal.JNDI_NAME)
     private DescargaLocal descargaEjb;
 
 

@@ -18,6 +18,9 @@ import javax.ejb.Local;
 @RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI","RWE_WS_ENTRADA","RWE_WS_SALIDA"})
 public interface RegistroEntradaCambiarEstadoLocal extends BaseEjb<RegistroEntrada, Long> {
 
+    String JNDI_NAME = "java:app/regweb3-persistence/RegistroEntradaCambiarEstadoEJB";
+
+
     /**
      * Cambia el estado de un RegistroEntrada
      * @param idRegistro

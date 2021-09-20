@@ -40,22 +40,22 @@ import java.util.List;
 public class RegistroSirController extends BaseController {
 
 
-    @EJB(mappedName = "regweb3/RegistroSirEJB/local")
+    @EJB(mappedName = RegistroSirLocal.JNDI_NAME)
     private RegistroSirLocal registroSirEjb;
 
-    @EJB(mappedName = "regweb3/CatComunidadAutonomaEJB/local")
+    @EJB(mappedName = CatComunidadAutonomaLocal.JNDI_NAME)
     private CatComunidadAutonomaLocal catComunidadAutonomaEjb;
 
-    @EJB(mappedName = "regweb3/CatNivelAdministracionEJB/local")
+    @EJB(mappedName = CatNivelAdministracionLocal.JNDI_NAME)
     private CatNivelAdministracionLocal catNivelAdministracionEjb;
 
-    @EJB(mappedName = "regweb3/SirEnvioEJB/local")
+    @EJB(mappedName = SirEnvioLocal.JNDI_NAME)
     private SirEnvioLocal sirEnvioEjb;
 
-    @EJB(mappedName = "regweb3/OficioRemisionEJB/local")
+    @EJB(mappedName = OficioRemisionLocal.JNDI_NAME)
     private OficioRemisionLocal oficioRemisionEjb;
 
-    @EJB(mappedName = "regweb3/TrazabilidadSirEJB/local")
+    @EJB(mappedName = TrazabilidadSirLocal.JNDI_NAME)
     private TrazabilidadSirLocal trazabilidadSirEjb;
 
 

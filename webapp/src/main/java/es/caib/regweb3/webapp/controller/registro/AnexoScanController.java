@@ -17,11 +17,7 @@ import org.fundaciobit.plugins.documentcustody.api.DocumentCustody;
 import org.fundaciobit.plugins.documentcustody.api.SignatureCustody;
 import org.fundaciobit.pluginsib.core.utils.Metadata;
 import org.fundaciobit.pluginsib.core.utils.MetadataConstants;
-import org.fundaciobit.pluginsib.scanweb.api.ScanWebDocument;
-import org.fundaciobit.pluginsib.scanweb.api.ScanWebMode;
-import org.fundaciobit.pluginsib.scanweb.api.ScanWebRequest;
-import org.fundaciobit.pluginsib.scanweb.api.ScanWebRequestSignatureInfo;
-import org.fundaciobit.pluginsib.scanweb.api.ScanWebResult;
+import org.fundaciobit.pluginsib.scanweb.api.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -46,13 +42,13 @@ import static es.caib.regweb3.utils.StringUtils.sustituirCaracteresProhibidosArx
 public class AnexoScanController extends AnexoController {
 
 
-    @EJB(mappedName = "regweb3/ScanWebModuleEJB/local")
+    @EJB(mappedName = ScanWebModuleLocal.JNDI_NAME)
     private ScanWebModuleLocal scanWebModuleEjb;
 
-    @EJB(mappedName = "regweb3/RegistroDetalleEJB/local")
+    @EJB(mappedName = RegistroDetalleLocal.JNDI_NAME)
     private RegistroDetalleLocal registroDetalleEjb;
 
-    @EJB(mappedName = "regweb3/TipoDocumentalEJB/local")
+    @EJB(mappedName = TipoDocumentalLocal.JNDI_NAME)
     private TipoDocumentalLocal tipoDocumentalEjb;
 
 

@@ -18,8 +18,12 @@ import java.util.List;
 @RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI"})
 public interface RegistroMigradoLocal extends BaseEjb<RegistroMigrado, Long> {
 
+    String JNDI_NAME = "java:app/regweb3-persistence/RegistroMigradoEJB";
+
+
     /**
      * Obtiene una lista de Registros Migrados de una entidad
+     *
      * @param entidad código de la entidad
      * @return
      * @throws Exception
@@ -28,6 +32,7 @@ public interface RegistroMigradoLocal extends BaseEjb<RegistroMigrado, Long> {
 
     /**
      * Busca los Registros Migrados en función de los parámetros
+     *
      * @param pageNumber
      * @param fechaInicio
      * @param fechaFin
@@ -42,6 +47,7 @@ public interface RegistroMigradoLocal extends BaseEjb<RegistroMigrado, Long> {
 
     /**
      * Busca las Oficinas existentes en los Registros Migrados
+     *
      * @return
      * @throws Exception
      */
@@ -49,6 +55,7 @@ public interface RegistroMigradoLocal extends BaseEjb<RegistroMigrado, Long> {
 
     /**
      * Inserta la consulta de un Registro Migrado en las tablas de Lopd
+     *
      * @param idRegistroMigrado
      * @param idUsuarioEntidad
      * @throws Exception
@@ -57,6 +64,7 @@ public interface RegistroMigradoLocal extends BaseEjb<RegistroMigrado, Long> {
 
     /**
      * Inserta la búsqueda de un Registros Migrado en las tablas de Lopd
+     *
      * @param paginacion
      * @param idUsuarioEntidad
      * @throws Exception
@@ -65,6 +73,7 @@ public interface RegistroMigradoLocal extends BaseEjb<RegistroMigrado, Long> {
 
     /**
      * Elimina todos los RegistroMigrado de la Entidad
+     *
      * @param idEntidad
      * @return
      * @throws Exception

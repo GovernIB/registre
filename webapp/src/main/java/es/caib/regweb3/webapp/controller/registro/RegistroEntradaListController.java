@@ -55,22 +55,22 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
     @Autowired
     private RegistroEntradaBusquedaValidator registroEntradaBusquedaValidator;
 
-    @EJB(mappedName = "regweb3/HistoricoRegistroEntradaEJB/local")
+    @EJB(mappedName = HistoricoRegistroEntradaLocal.JNDI_NAME)
     private HistoricoRegistroEntradaLocal historicoRegistroEntradaEjb;
 
-    @EJB(mappedName = "regweb3/AnexoEJB/local")
+    @EJB(mappedName = AnexoLocal.JNDI_NAME)
     private AnexoLocal anexoEjb;
 
-    @EJB(mappedName = "regweb3/SirEnvioEJB/local")
+    @EJB(mappedName = SirEnvioLocal.JNDI_NAME)
     private SirEnvioLocal sirEnvioEjb;
 
-    @EJB(mappedName = "regweb3/JustificanteEJB/local")
+    @EJB(mappedName = JustificanteLocal.JNDI_NAME)
     private JustificanteLocal justificanteEjb;
 
-    @EJB(mappedName = "regweb3/DistribucionEJB/local")
+    @EJB(mappedName = DistribucionLocal.JNDI_NAME)
     private DistribucionLocal distribucionEjb;
 
-    @EJB(mappedName = "regweb3/PluginEJB/local")
+    @EJB(mappedName = PluginLocal.JNDI_NAME)
     private PluginLocal pluginEjb;
 
 

@@ -41,10 +41,10 @@ public class ModeloOficioRemisionController extends BaseController {
     @Autowired
     private ModeloOficioRemisionValidator modeloOficioRemisionValidator;
     
-    @EJB(mappedName = "regweb3/ModeloOficioRemisionEJB/local")
+    @EJB(mappedName = ModeloOficioRemisionLocal.JNDI_NAME)
     private ModeloOficioRemisionLocal modeloOficioRemisionEjb;
     
-    @EJB(mappedName = "regweb3/ArchivoEJB/local")
+    @EJB(mappedName =ArchivoLocal.JNDI_NAME)
     private ArchivoLocal archivoEjb;
     
    

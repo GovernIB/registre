@@ -27,28 +27,28 @@ import java.util.LinkedHashSet;
 @Controller
 public class InicioController extends BaseController{
     
-    @EJB(mappedName = "regweb3/OficioRemisionEJB/local")
+    @EJB(mappedName = OficioRemisionLocal.JNDI_NAME)
     private OficioRemisionLocal oficioRemisionEjb;
 
-    @EJB(mappedName = "regweb3/RegistroSirEJB/local")
+    @EJB(mappedName = RegistroSirLocal.JNDI_NAME)
     private RegistroSirLocal registroSirEjb;
 
-    @EJB(mappedName = "regweb3/DescargaEJB/local")
+    @EJB(mappedName = DescargaLocal.JNDI_NAME)
     private DescargaLocal descargaEjb;
 
-    @EJB(mappedName = "regweb3/OficioRemisionEntradaUtilsEJB/local")
+    @EJB(mappedName = OficioRemisionEntradaUtilsLocal.JNDI_NAME)
     private OficioRemisionEntradaUtilsLocal oficioRemisionEntradaUtilsEjb;
 
-    @EJB(mappedName = "regweb3/OficioRemisionSalidaUtilsEJB/local")
+    @EJB(mappedName =OficioRemisionSalidaUtilsLocal.JNDI_NAME)
     private OficioRemisionSalidaUtilsLocal oficioRemisionSalidaUtilsEjb;
 
-    @EJB(mappedName = "regweb3/TrazabilidadEJB/local")
+    @EJB(mappedName = TrazabilidadLocal.JNDI_NAME)
     private TrazabilidadLocal trazabilidadEjb;
 
-    @EJB(mappedName = "regweb3/IntegracionEJB/local")
+    @EJB(mappedName = IntegracionLocal.JNDI_NAME)
     private IntegracionLocal integracionEjb;
 
-    @EJB(mappedName = "regweb3/ColaEJB/local")
+    @EJB(mappedName = ColaLocal.JNDI_NAME)
     private ColaLocal colaEjb;
 
 

@@ -52,25 +52,25 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
     @Autowired
     private RegistroSalidaBusquedaValidator registroSalidaBusquedaValidator;
 
-    @EJB(mappedName = "regweb3/LibroEJB/local")
+    @EJB(mappedName = LibroLocal.JNDI_NAME)
     private LibroLocal libroEjb;
 
-    @EJB(mappedName = "regweb3/HistoricoRegistroEntradaEJB/local")
+    @EJB(mappedName = HistoricoRegistroEntradaLocal.JNDI_NAME)
     private HistoricoRegistroEntradaLocal historicoRegistroEntradaEjb;
 
-    @EJB(mappedName = "regweb3/HistoricoRegistroSalidaEJB/local")
+    @EJB(mappedName = HistoricoRegistroSalidaLocal.JNDI_NAME)
     private HistoricoRegistroSalidaLocal historicoRegistroSalidaEjb;
 
-    @EJB(mappedName = "regweb3/AnexoEJB/local")
+    @EJB(mappedName = AnexoLocal.JNDI_NAME)
     private AnexoLocal anexoEjb;
 
-    @EJB(mappedName = "regweb3/JustificanteEJB/local")
+    @EJB(mappedName = JustificanteLocal.JNDI_NAME)
     private JustificanteLocal justificanteEjb;
 
-    @EJB(mappedName = "regweb3/PersonaEJB/local")
+    @EJB(mappedName = PersonaLocal.JNDI_NAME)
     private PersonaLocal personaEjb;
 
-    @EJB(mappedName = "regweb3/InteresadoEJB/local")
+    @EJB(mappedName = InteresadoLocal.JNDI_NAME)
     private InteresadoLocal interesadoEjb;
 
 

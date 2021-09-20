@@ -15,6 +15,8 @@ import javax.ejb.Local;
 @RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI"})
 public interface CatEntidadGeograficaLocal extends BaseEjb<CatEntidadGeografica, Long> {
 
+  String JNDI_NAME = "java:app/regweb3-persistence/CatEntidadGeograficaEJB";
+
   /**
        * Retorna los {@link es.caib.regweb3.model.CatEntidadGeografica} a partir de un código
        * @param codigo

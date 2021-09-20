@@ -23,7 +23,7 @@ public class CodigoAsuntoValidator implements Validator {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
-    @EJB(mappedName = "regweb3/CodigoAsuntoEJB/local")
+    @EJB(mappedName = CodigoAsuntoLocal.JNDI_NAME)
     public CodigoAsuntoLocal codigoAsuntoEjb;
 
     @Override

@@ -17,12 +17,16 @@ import java.util.List;
  * Date: 16/01/14
  */
 @Local
-@RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI","RWE_WS_ENTRADA","RWE_WS_SALIDA", "RWE_WS_CIUDADANO"})
+@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI", "RWE_WS_ENTRADA", "RWE_WS_SALIDA", "RWE_WS_CIUDADANO"})
 public interface UsuarioLocal extends BaseEjb<Usuario, Long> {
+
+    String JNDI_NAME = "java:app/regweb3-persistence/UsuarioEJB";
+
 
     /**
      * Crea un nuevo usuario en REGWEB3, a partir del identificador de Seycon, obtiene sus
      * datos personales de la bbdd de Seycon.
+     *
      * @param identificador
      * @return
      * @throws Exception
@@ -31,6 +35,7 @@ public interface UsuarioLocal extends BaseEjb<Usuario, Long> {
 
     /**
      * Retorna el {@link es.caib.regweb3.model.Usuario} asociado a un identificador.
+     *
      * @param identificador
      * @return
      * @throws Exception
@@ -39,6 +44,7 @@ public interface UsuarioLocal extends BaseEjb<Usuario, Long> {
 
     /**
      * Retorna el {@link es.caib.regweb3.model.Usuario} asociado a un documento.
+     *
      * @param documento
      * @return
      * @throws Exception
@@ -47,6 +53,7 @@ public interface UsuarioLocal extends BaseEjb<Usuario, Long> {
 
     /**
      * Comprueba si el identificador dado existe en algún usuario excepto el selccionado.
+     *
      * @param identificador
      * @param idUsuario
      * @return
@@ -56,6 +63,7 @@ public interface UsuarioLocal extends BaseEjb<Usuario, Long> {
 
     /**
      * Comprueba si el documento dado existe en algún usuario excepto el selccionado.
+     *
      * @param documento
      * @param idUsuario
      * @return
@@ -65,6 +73,7 @@ public interface UsuarioLocal extends BaseEjb<Usuario, Long> {
 
     /**
      * Realiza una busqueda de {@link es.caib.regweb3.model.Usuario} según los parámetros
+     *
      * @param pageNumber
      * @param nombre
      * @param identificador
@@ -79,6 +88,7 @@ public interface UsuarioLocal extends BaseEjb<Usuario, Long> {
 
     /**
      * Asocia el idioma por defecto de la aplicación a los usurios sin idioma
+     *
      * @return
      * @throws Exception
      */
@@ -87,6 +97,7 @@ public interface UsuarioLocal extends BaseEjb<Usuario, Long> {
     /**
      * Obtiene los Roles del usuario autenticado mediante el plugin de Login.
      * Actualiza los Roles del usuario en la bbdd de REGWEB3
+     *
      * @param usuario
      * @param rolesUsuario
      * @throws Exception
@@ -97,6 +108,7 @@ public interface UsuarioLocal extends BaseEjb<Usuario, Long> {
     /**
      * Obtiene los Roles del usuario de WS autenticado mediante el plugin de Login.
      * Actualiza los Roles del usuario en la bbdd de REGWEB3
+     *
      * @param usuario
      * @throws Exception
      * @throws I18NException

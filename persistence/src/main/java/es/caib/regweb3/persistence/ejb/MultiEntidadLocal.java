@@ -11,12 +11,16 @@ import javax.ejb.Local;
  */
 
 @Local
-@RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI","RWE_WS_ENTRADA","RWE_WS_SALIDA"})
+@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI", "RWE_WS_ENTRADA", "RWE_WS_SALIDA"})
 public interface MultiEntidadLocal {
 
-   /**
-    * Determina si una implementación es multientidad (más de una entidad con sir activado)
-    * @throws Exception
-    */
-   boolean isMultiEntidad() throws Exception;
+    String JNDI_NAME = "java:app/regweb3-persistence/MultiEntidadEJB";
+
+
+    /**
+     * Determina si una implementación es multientidad (más de una entidad con sir activado)
+     *
+     * @throws Exception
+     */
+    boolean isMultiEntidad() throws Exception;
 }

@@ -16,6 +16,8 @@ import java.util.List;
 @RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI","RWE_WS_ENTRADA","RWE_WS_SALIDA"})
 public interface LibroLocal extends BaseEjb<Libro, Long> {
 
+    String JNDI_NAME = "java:app/regweb3-persistence/LibroEJB";
+
     /**
      * Devuelve los Libros activos relacionados con algún Organismos de la Entidad
      * @param idEntidad

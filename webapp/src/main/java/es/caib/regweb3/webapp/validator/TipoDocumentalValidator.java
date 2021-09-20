@@ -23,7 +23,7 @@ public class TipoDocumentalValidator implements Validator {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
-    @EJB(mappedName = "regweb3/TipoDocumentalEJB/local")
+    @EJB(mappedName = TipoDocumentalLocal.JNDI_NAME)
     private TipoDocumentalLocal tipoDocumentalEjb;
 
     @Override

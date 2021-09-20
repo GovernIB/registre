@@ -29,7 +29,7 @@ import java.io.IOException;
 @RunAs("RWE_SUPERADMIN")
 public class ScanRequestServlet extends HttpServlet { 
 
-  @EJB(mappedName = "regweb3/ScanWebModuleEJB/local")
+  @EJB(mappedName = ScanWebModuleLocal.JNDI_NAME)
   private ScanWebModuleLocal scanWebModuleEjb;
 
   protected static final Logger log = LoggerFactory.getLogger(ScanRequestServlet.class);

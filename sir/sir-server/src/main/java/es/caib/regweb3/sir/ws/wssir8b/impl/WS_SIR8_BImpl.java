@@ -51,10 +51,10 @@ public class WS_SIR8_BImpl implements WS_SIR8_B_PortType {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
-    @EJB(name = "RecepcionEJB")
+    @EJB(mappedName = RecepcionLocal.JNDI_NAME)
     private RecepcionLocal recepcionEjb;
 
-    @EJB(mappedName = "regweb3/WebServicesMethodsEJB/local")
+    @EJB(mappedName = WebServicesMethodsLocal.JNDI_NAME)
     private WebServicesMethodsLocal webServicesMethodsEjb;
 
     public static final String NAME = "WS_SIR8_B";

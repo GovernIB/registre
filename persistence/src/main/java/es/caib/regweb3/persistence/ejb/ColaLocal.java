@@ -19,6 +19,8 @@ import java.util.List;
 @RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI","RWE_WS_ENTRADA"})
 public interface ColaLocal extends BaseEjb<Cola, Long> {
 
+    String JNDI_NAME = "java:app/regweb3-persistence/ColaEJB";
+
     /**
      * @param inicio
      * @return

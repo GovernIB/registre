@@ -18,11 +18,15 @@ import java.util.List;
  * Date: 16/01/14
  */
 @Local
-@RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI","RWE_WS_ENTRADA","RWE_WS_SALIDA", "RWE_WS_CIUDADANO"})
+@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI", "RWE_WS_ENTRADA", "RWE_WS_SALIDA", "RWE_WS_CIUDADANO"})
 public interface UsuarioEntidadLocal extends BaseEjb<UsuarioEntidad, Long> {
+
+    String JNDI_NAME = "java:app/regweb3-persistence/UsuarioEntidadEJB";
+
 
     /**
      * Obtiene X valores comenzando en la posicion pasada por parametro
+     *
      * @param inicio
      * @param idEntidad
      * @return
@@ -32,6 +36,7 @@ public interface UsuarioEntidadLocal extends BaseEjb<UsuarioEntidad, Long> {
 
     /**
      * Obtiene el total de registros para la paginacion
+     *
      * @param idEntidad
      * @return
      * @throws Exception
@@ -40,6 +45,7 @@ public interface UsuarioEntidadLocal extends BaseEjb<UsuarioEntidad, Long> {
 
     /**
      * Crea un UsuarioEntidad, a partir de un identificador y la Entidad
+     *
      * @param identificador
      * @param idEntidad
      * @return
@@ -50,6 +56,7 @@ public interface UsuarioEntidadLocal extends BaseEjb<UsuarioEntidad, Long> {
 
     /**
      * Retorna el {@link es.caib.regweb3.model.UsuarioEntidad} asociado a un identificador.
+     *
      * @param identificador
      * @return
      * @throws Exception
@@ -57,7 +64,8 @@ public interface UsuarioEntidadLocal extends BaseEjb<UsuarioEntidad, Long> {
     UsuarioEntidad findByIdentificador(String identificador) throws Exception;
 
     /**
-     *  Retorna el {@link es.caib.regweb3.model.UsuarioEntidad} asociado a un identificador y a una Entidad
+     * Retorna el {@link es.caib.regweb3.model.UsuarioEntidad} asociado a un identificador y a una Entidad
+     *
      * @param identificador
      * @param idEntidad
      * @return
@@ -66,7 +74,8 @@ public interface UsuarioEntidadLocal extends BaseEjb<UsuarioEntidad, Long> {
     UsuarioEntidad findByIdentificadorEntidad(String identificador, Long idEntidad) throws Exception;
 
     /**
-     *  Retorna el {@link es.caib.regweb3.model.UsuarioEntidad} asociado a un identificador y el código DIR3 de la entidad
+     * Retorna el {@link es.caib.regweb3.model.UsuarioEntidad} asociado a un identificador y el código DIR3 de la entidad
+     *
      * @param identificador
      * @param codigoEntidad
      * @return
@@ -77,6 +86,7 @@ public interface UsuarioEntidadLocal extends BaseEjb<UsuarioEntidad, Long> {
 
     /**
      * Retorna el {@link es.caib.regweb3.model.UsuarioEntidad} asociado a un documento.
+     *
      * @param documento
      * @return
      * @throws Exception
@@ -85,7 +95,6 @@ public interface UsuarioEntidadLocal extends BaseEjb<UsuarioEntidad, Long> {
 
 
     /**
-     *
      * @param idEntidad
      * @return
      * @throws Exception
@@ -94,6 +103,7 @@ public interface UsuarioEntidadLocal extends BaseEjb<UsuarioEntidad, Long> {
 
     /**
      * Retorna todos los UsuarioEntidad activos de una entidad
+     *
      * @param idEntidad
      * @return
      * @throws Exception
@@ -102,6 +112,7 @@ public interface UsuarioEntidadLocal extends BaseEjb<UsuarioEntidad, Long> {
 
     /**
      * Devuelve los UsuarioEntidad de una Entidad que tiene el ROL RWE_ADMIN
+     *
      * @param idEntidad
      * @return
      * @throws Exception
@@ -109,7 +120,8 @@ public interface UsuarioEntidadLocal extends BaseEjb<UsuarioEntidad, Long> {
     List<UsuarioEntidad> findAdministradoresByEntidad(Long idEntidad) throws Exception;
 
     /**
-     *  Busca un UsuarioEntidad a partir del idUsuario y idEntidad
+     * Busca un UsuarioEntidad a partir del idUsuario y idEntidad
+     *
      * @param idUsuario
      * @param idEntidad
      * @return
@@ -119,6 +131,7 @@ public interface UsuarioEntidadLocal extends BaseEjb<UsuarioEntidad, Long> {
 
     /**
      * Busca un UsuarioEntidad activo a partir del idUsuario y idEntidad
+     *
      * @param idUsuario
      * @param idEntidad
      * @return
@@ -128,6 +141,7 @@ public interface UsuarioEntidadLocal extends BaseEjb<UsuarioEntidad, Long> {
 
     /**
      * Obtiene todas las Entidades en las cuales el Usuario está asociado
+     *
      * @param idUsuario
      * @return
      * @throws Exception
@@ -135,15 +149,17 @@ public interface UsuarioEntidadLocal extends BaseEjb<UsuarioEntidad, Long> {
     List<Entidad> getEntidadesByUsuario(Long idUsuario) throws Exception;
 
     /**
-    * Retorna los {@link es.caib.regweb3.model.Entidad} de un Usuario activos.
-    * @param idUsuario
-    * @return
-    * @throws Exception
-    */
+     * Retorna los {@link es.caib.regweb3.model.Entidad} de un Usuario activos.
+     *
+     * @param idUsuario
+     * @return
+     * @throws Exception
+     */
     List<Entidad> findByUsuario(Long idUsuario) throws Exception;
 
     /**
      * Realiza una busqueda de {@link es.caib.regweb3.model.UsuarioEntidad} según los parámetros
+     *
      * @param pageNumber
      * @param nombre
      * @param apellido1
@@ -158,6 +174,7 @@ public interface UsuarioEntidadLocal extends BaseEjb<UsuarioEntidad, Long> {
 
     /**
      * Devuelve los usuarios de la Entidad activos que no son el usuario actual y según el tipo de usuario
+     *
      * @param idEntidad
      * @param idUsuario
      * @return
@@ -167,6 +184,7 @@ public interface UsuarioEntidadLocal extends BaseEjb<UsuarioEntidad, Long> {
 
     /**
      * Modifica la última Oficina utilizada por el usuario
+     *
      * @param idUsuario
      * @param idOficina
      * @throws Exception
@@ -175,6 +193,7 @@ public interface UsuarioEntidadLocal extends BaseEjb<UsuarioEntidad, Long> {
 
     /**
      * Devuelve los UsuarioEntidad de una Entidad que tiene el ROL RWE_USUARIO activos o no activos
+     *
      * @param idEntidad
      * @return
      * @throws Exception
@@ -183,6 +202,7 @@ public interface UsuarioEntidadLocal extends BaseEjb<UsuarioEntidad, Long> {
 
     /**
      * Elimina las UsuarioEntidad de una Entidad
+     *
      * @param idEntidad
      * @return
      * @throws Exception
@@ -191,6 +211,7 @@ public interface UsuarioEntidadLocal extends BaseEjb<UsuarioEntidad, Long> {
 
     /**
      * Lista las {@link es.caib.regweb3.model.PermisoLibroUsuario} para Exportar a Excel
+     *
      * @param idEntidad
      * @param identificador
      * @param nombre

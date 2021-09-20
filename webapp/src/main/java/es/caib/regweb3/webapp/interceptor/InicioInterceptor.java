@@ -40,19 +40,19 @@ public class InicioInterceptor extends HandlerInterceptorAdapter {
     @Autowired
     private LoginService loginService;
 
-    @EJB(mappedName = "regweb3/UsuarioEJB/local")
+    @EJB(mappedName = UsuarioLocal.JNDI_NAME)
     private UsuarioLocal usuarioEjb;
 
-    @EJB(mappedName = "regweb3/PluginEJB/local")
+    @EJB(mappedName = PluginLocal.JNDI_NAME)
     private PluginLocal pluginEjb;
 
-    @EJB(mappedName = "regweb3/PendienteEJB/local")
+    @EJB(mappedName = PendienteLocal.JNDI_NAME)
     private PendienteLocal pendienteEjb;
 
-    @EJB(mappedName = "regweb3/TipoDocumentalEJB/local")
+    @EJB(mappedName = TipoDocumentalLocal.JNDI_NAME)
     private TipoDocumentalLocal tipoDocumentalEjb;
 
-    @EJB(mappedName = "regweb3/EntidadEJB/local")
+    @EJB(mappedName = EntidadLocal.JNDI_NAME)
     private EntidadLocal entidadEjb;
 
 

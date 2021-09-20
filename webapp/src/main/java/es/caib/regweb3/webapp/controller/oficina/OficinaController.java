@@ -28,7 +28,7 @@ public class OficinaController extends BaseController {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
-    @EJB(mappedName = "regweb3/CatEstadoEntidadEJB/local")
+    @EJB(mappedName = CatEstadoEntidadLocal.JNDI_NAME)
     private CatEstadoEntidadLocal catEstadoEntidadEjb;
 
     /**

@@ -35,19 +35,19 @@ import java.util.*;
 public class InformeController extends AbstractRegistroCommonFormController {
 
 
-    @EJB(mappedName = "regweb3/HistoricoRegistroEntradaEJB/local")
+    @EJB(mappedName = HistoricoRegistroEntradaLocal.JNDI_NAME)
     private HistoricoRegistroEntradaLocal historicoRegistroEntradaEjb;
     
-    @EJB(mappedName = "regweb3/LopdEJB/local")
+    @EJB(mappedName = LopdLocal.JNDI_NAME)
     private LopdLocal lopdEjb;
     
-    @EJB(mappedName = "regweb3/LibroEJB/local")
+    @EJB(mappedName = LibroLocal.JNDI_NAME)
     private LibroLocal libroEjb;
 
-    @EJB(mappedName = "regweb3/HistoricoRegistroSalidaEJB/local")
+    @EJB(mappedName = HistoricoRegistroSalidaLocal.JNDI_NAME)
     private HistoricoRegistroSalidaLocal historicoRegistroSalidaEjb;
 
-    @EJB(mappedName = "regweb3/InformeEJB/local")
+    @EJB(mappedName = InformeLocal.JNDI_NAME)
     private InformeLocal informeEjb;
 
     private SimpleDateFormat formatDate = new SimpleDateFormat("dd/MM/yyyy");

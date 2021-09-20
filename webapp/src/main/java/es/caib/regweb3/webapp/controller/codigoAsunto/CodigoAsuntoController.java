@@ -32,7 +32,7 @@ public class CodigoAsuntoController extends BaseController {
     @Autowired
     private CodigoAsuntoValidator codigoAsuntoValidator;
 
-    @EJB(mappedName = "regweb3/CodigoAsuntoEJB/local")
+    @EJB(mappedName = CodigoAsuntoLocal.JNDI_NAME)
     private CodigoAsuntoLocal codigoAsuntoEjb;
 
     /**

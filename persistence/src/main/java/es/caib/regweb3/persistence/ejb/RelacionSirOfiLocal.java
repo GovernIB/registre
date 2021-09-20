@@ -13,12 +13,18 @@ import java.util.List;
  * Created by Fundació BIT.
  *
  * @author earrivi
- *         Date: 10/10/13
+ * Date: 10/10/13
  */
 @Local
-@RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI","RWE_WS_ENTRADA","RWE_WS_SALIDA"})
+@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI", "RWE_WS_ENTRADA", "RWE_WS_SALIDA"})
 public interface RelacionSirOfiLocal extends BaseEjb<RelacionSirOfi, RelacionSirOfiPK> {
 
+    String JNDI_NAME = "java:app/regweb3-persistence/RelacionSirOfiEJB";
+
+
+    /**
+     * @throws Exception
+     */
     void deleteAll() throws Exception;
 
     int deleteByOficinaEntidad(Long idOficina) throws Exception;
@@ -35,6 +41,7 @@ public interface RelacionSirOfiLocal extends BaseEjb<RelacionSirOfi, RelacionSir
 
     /**
      * Obtiene las oficinas que son SIR de una Entidad según un estado
+     *
      * @param idEntidad
      * @param estado
      * @return
@@ -53,6 +60,7 @@ public interface RelacionSirOfiLocal extends BaseEjb<RelacionSirOfi, RelacionSir
 
     /**
      * Obtiene las Oficinas SIR de una Enitdad
+     *
      * @param idEntidad
      * @return
      * @throws Exception
@@ -61,6 +69,7 @@ public interface RelacionSirOfiLocal extends BaseEjb<RelacionSirOfi, RelacionSir
 
     /**
      * Obtiene los Organismos a los que da Servicio Sir una Oficina  integrada en SIR
+     *
      * @param idOficina
      * @return
      * @throws Exception

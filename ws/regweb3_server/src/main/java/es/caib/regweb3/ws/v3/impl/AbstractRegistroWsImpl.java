@@ -30,64 +30,64 @@ import java.util.Set;
  */
 public abstract class AbstractRegistroWsImpl extends AuthenticatedBaseWsImpl {
 
-    @EJB(mappedName = "regweb3/TipoAsuntoEJB/local")
+    @EJB(mappedName = TipoAsuntoLocal.JNDI_NAME)
     public TipoAsuntoLocal tipoAsuntoEjb;
 
-    @EJB(mappedName = "regweb3/CodigoAsuntoEJB/local")
+    @EJB(mappedName = CodigoAsuntoLocal.JNDI_NAME)
     public CodigoAsuntoLocal codigoAsuntoEjb;
 
-    @EJB(mappedName = "regweb3/OrganismoEJB/local")
+    @EJB(mappedName = OrganismoLocal.JNDI_NAME)
     public OrganismoLocal organismoEjb;
 
-    @EJB(mappedName = "regweb3/TipoDocumentalEJB/local")
+    @EJB(mappedName = TipoDocumentalLocal.JNDI_NAME)
     public TipoDocumentalLocal tipoDocumentalEjb;
 
-    @EJB(mappedName = "regweb3/AnexoEJB/local")
+    @EJB(mappedName = AnexoLocal.JNDI_NAME)
     public AnexoLocal anexoEjb;
 
-    @EJB(mappedName = "regweb3/EntidadEJB/local")
+    @EJB(mappedName = EntidadLocal.JNDI_NAME)
     public EntidadLocal entidadEjb;
 
-    @EJB(mappedName = "regweb3/UsuarioEntidadEJB/local")
+    @EJB(mappedName = UsuarioEntidadLocal.JNDI_NAME)
     public UsuarioEntidadLocal usuarioEntidadEjb;
 
-    @EJB(mappedName = "regweb3/OficinaEJB/local")
+    @EJB(mappedName = OficinaLocal.JNDI_NAME)
     public OficinaLocal oficinaEjb;
 
-    @EJB(mappedName = "regweb3/LibroEJB/local")
+    @EJB(mappedName = LibroLocal.JNDI_NAME)
     public LibroLocal libroEjb;
 
-    @EJB(mappedName = "regweb3/PermisoOrganismoUsuarioEJB/local")
+    @EJB(mappedName = PermisoOrganismoUsuarioLocal.JNDI_NAME)
     public PermisoOrganismoUsuarioLocal permisoOrganismoUsuarioEjb;
 
-    @EJB(mappedName = "regweb3/PendienteEJB/local")
+    @EJB(mappedName = PendienteLocal.JNDI_NAME)
     public PendienteLocal pendienteEjb;
 
-    @EJB(mappedName = "regweb3/CatProvinciaEJB/local")
+    @EJB(mappedName = CatProvinciaLocal.JNDI_NAME)
     public CatProvinciaLocal catProvinciaEjb;
 
-    @EJB(mappedName = "regweb3/CatLocalidadEJB/local")
+    @EJB(mappedName = CatLocalidadLocal.JNDI_NAME)
     public CatLocalidadLocal catLocalidadEjb;
 
-    @EJB(mappedName = "regweb3/CatPaisEJB/local")
+    @EJB(mappedName = CatPaisLocal.JNDI_NAME)
     public CatPaisLocal catPaisEjb;
 
-    @EJB(mappedName = "regweb3/InteresadoEJB/local")
+    @EJB(mappedName = InteresadoLocal.JNDI_NAME)
     public InteresadoLocal interesadoEjb;
 
-    @EJB(mappedName = "regweb3/PersonaEJB/local")
+    @EJB(mappedName = PersonaLocal.JNDI_NAME)
     public PersonaLocal personaEjb;
 
-    @EJB(mappedName = "regweb3/IntegracionEJB/local")
+    @EJB(mappedName = IntegracionLocal.JNDI_NAME)
     public IntegracionLocal integracionEjb;
 
-    @EJB(mappedName = "regweb3/JustificanteEJB/local")
+    @EJB(mappedName = JustificanteLocal.JNDI_NAME)
     public JustificanteLocal justificanteEjb;
 
-    @EJB(mappedName = "regweb3/LopdEJB/local")
+    @EJB(mappedName = LopdLocal.JNDI_NAME)
     public LopdLocal lopdEjb;
 
-    @EJB(mappedName = "regweb3/NotificacionEJB/local")
+    @EJB(mappedName = NotificacionLocal.JNDI_NAME)
     public NotificacionLocal notificacionEjb;
 
     public AnexoValidator<Anexo> anexoValidator = new AnexoValidator<Anexo>();

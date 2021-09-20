@@ -24,16 +24,16 @@ public class RolUtils {
 
     public final Logger log = LoggerFactory.getLogger(getClass());
 
-    @EJB(mappedName = "regweb3/PluginEJB/local")
+    @EJB(mappedName = PluginLocal.JNDI_NAME)
     private PluginLocal pluginEjb;
 
-    @EJB(mappedName = "regweb3/RolEJB/local")
+    @EJB(mappedName = RolLocal.JNDI_NAME)
     private RolLocal rolEjb;
 
-    @EJB(mappedName = "regweb3/UsuarioEntidadEJB/local")
+    @EJB(mappedName = UsuarioEntidadLocal.JNDI_NAME)
     private UsuarioEntidadLocal usuarioEntidadEjb;
 
-    @EJB(mappedName = "regweb3/UsuarioEJB/local")
+    @EJB(mappedName = UsuarioLocal.JNDI_NAME)
     private UsuarioLocal usuarioEjb;
 
 

@@ -46,22 +46,22 @@ public class OficioRemisionController extends BaseController {
     @Autowired
     private OficioRemisionBusquedaValidator oficioRemisionValidator;
 
-    @EJB(mappedName = "regweb3/OficioRemisionEntradaUtilsEJB/local")
+    @EJB(mappedName = OficioRemisionEntradaUtilsLocal.JNDI_NAME)
     private OficioRemisionEntradaUtilsLocal oficioRemisionEntradaUtilsEjb;
 
-    @EJB(mappedName = "regweb3/OficioRemisionSalidaUtilsEJB/local")
+    @EJB(mappedName =OficioRemisionSalidaUtilsLocal.JNDI_NAME)
     private OficioRemisionSalidaUtilsLocal oficioRemisionSalidaUtilsEjb;
 
-    @EJB(mappedName = "regweb3/OficioRemisionEJB/local")
+    @EJB(mappedName = OficioRemisionLocal.JNDI_NAME)
     private OficioRemisionLocal oficioRemisionEjb;
 
-    @EJB(mappedName = "regweb3/ModeloOficioRemisionEJB/local")
+    @EJB(mappedName = ModeloOficioRemisionLocal.JNDI_NAME)
     private ModeloOficioRemisionLocal modeloOficioRemisionEjb;
 
-    @EJB(mappedName = "regweb3/TrazabilidadEJB/local")
+    @EJB(mappedName = TrazabilidadLocal.JNDI_NAME)
     private TrazabilidadLocal trazabilidadEjb;
 
-    @EJB(mappedName = "regweb3/SirEnvioEJB/local")
+    @EJB(mappedName = SirEnvioLocal.JNDI_NAME)
     private SirEnvioLocal sirEnvioEjb;
 
 

@@ -27,13 +27,13 @@ import java.util.List;
 public class AvisoController extends BaseController {
 
     
-    @EJB(mappedName = "regweb3/OficioRemisionEJB/local")
+    @EJB(mappedName = OficioRemisionLocal.JNDI_NAME)
     private OficioRemisionLocal oficioRemisionEjb;
 
-    @EJB(mappedName = "regweb3/OficioRemisionEntradaUtilsEJB/local")
+    @EJB(mappedName = OficioRemisionEntradaUtilsLocal.JNDI_NAME)
     private OficioRemisionEntradaUtilsLocal oficioRemisionEntradaUtilsEjb;
 
-    @EJB(mappedName = "regweb3/OficioRemisionSalidaUtilsEJB/local")
+    @EJB(mappedName =OficioRemisionSalidaUtilsLocal.JNDI_NAME)
     private OficioRemisionSalidaUtilsLocal oficioRemisionSalidaUtilsEjb;
 
 

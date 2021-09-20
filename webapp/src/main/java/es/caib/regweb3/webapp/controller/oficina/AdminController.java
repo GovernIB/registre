@@ -36,7 +36,7 @@ import java.util.List;
 public class AdminController extends BaseController {
 
 
-    @EJB(mappedName = "regweb3/CatEstadoEntidadEJB/local")
+    @EJB(mappedName = CatEstadoEntidadLocal.JNDI_NAME)
     private CatEstadoEntidadLocal catEstadoEntidadEjb;
 
 

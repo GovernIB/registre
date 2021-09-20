@@ -23,7 +23,7 @@ public class TipoAsuntoValidator implements Validator {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
-    @EJB(mappedName = "regweb3/TipoAsuntoEJB/local")
+    @EJB(mappedName = TipoAsuntoLocal.JNDI_NAME)
     public TipoAsuntoLocal tipoAsuntoEjb;
 
     @Override

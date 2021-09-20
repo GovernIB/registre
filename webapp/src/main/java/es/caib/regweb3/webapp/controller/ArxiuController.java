@@ -53,13 +53,13 @@ public class ArxiuController extends BaseController {
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
 
-    @EJB(mappedName = "regweb3/AnexoEJB/local")
+    @EJB(mappedName = AnexoLocal.JNDI_NAME)
     private AnexoLocal anexoEjb;
 
-    @EJB(mappedName = "regweb3/PluginEJB/local")
+    @EJB(mappedName = PluginLocal.JNDI_NAME)
     private PluginLocal pluginEjb;
 
-    @EJB(mappedName = "regweb3/ArxiuEJB/local")
+    @EJB(mappedName = ArxiuLocal.JNDI_NAME)
     private ArxiuLocal arxiuEjb;
 
 

@@ -30,7 +30,7 @@ public class RegistroEntradaInterceptor extends HandlerInterceptorAdapter {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
-    @EJB(mappedName = "regweb3/RegistroEntradaConsultaEJB/local")
+    @EJB(mappedName = RegistroEntradaConsultaLocal.JNDI_NAME)
     private RegistroEntradaConsultaLocal registroEntradaConsultaEjb;
 
 

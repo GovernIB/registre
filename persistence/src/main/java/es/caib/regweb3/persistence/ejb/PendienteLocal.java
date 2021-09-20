@@ -15,6 +15,9 @@ import java.util.List;
 @RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI","RWE_WS_ENTRADA","RWE_WS_SALIDA", "RWE_WS_CIUDADANO"})
 public interface PendienteLocal extends BaseEjb<Pendiente, Long>  {
 
+  String JNDI_NAME = "java:app/regweb3-persistence/PendienteEJB";
+
+
   /**
    * Obtiene el registro pendiente del organismo en cuestión
    * @param idOrganismo

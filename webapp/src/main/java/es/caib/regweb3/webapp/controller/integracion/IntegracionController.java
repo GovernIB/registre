@@ -31,7 +31,7 @@ import java.util.List;
 @RequestMapping(value = "/integracion")
 public class IntegracionController extends BaseController {
 
-    @EJB(mappedName = "regweb3/IntegracionEJB/local")
+    @EJB(mappedName = IntegracionLocal.JNDI_NAME)
     private IntegracionLocal integracionEjb;
 
 

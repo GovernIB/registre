@@ -41,10 +41,10 @@ public class ModeloReciboController extends BaseController {
    @Autowired
    private ModeloReciboValidator modeloReciboValidator;
    
-   @EJB(mappedName = "regweb3/ArchivoEJB/local")
+   @EJB(mappedName =ArchivoLocal.JNDI_NAME)
    private ArchivoLocal archivoEjb;
    
-   @EJB(mappedName = "regweb3/ModeloReciboEJB/local")
+   @EJB(mappedName = ModeloReciboLocal.JNDI_NAME)
    private ModeloReciboLocal modeloReciboEjb;
 
    

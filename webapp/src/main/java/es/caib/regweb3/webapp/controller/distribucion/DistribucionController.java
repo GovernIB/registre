@@ -21,10 +21,10 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping(value = "/distribucion")
 public class DistribucionController extends BaseController {
 
-    @EJB(mappedName = "regweb3/DistribucionEJB/local")
+    @EJB(mappedName = DistribucionLocal.JNDI_NAME)
     private DistribucionLocal distribucionEjb;
 
-    @EJB(mappedName = "regweb3/ColaEJB/local")
+    @EJB(mappedName = ColaLocal.JNDI_NAME)
     private ColaLocal colaEjb;
 
 

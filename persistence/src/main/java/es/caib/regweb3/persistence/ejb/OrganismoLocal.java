@@ -23,6 +23,9 @@ import java.util.Set;
 @RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI", "RWE_WS_ENTRADA", "RWE_WS_SALIDA"})
 public interface OrganismoLocal extends BaseEjb<Organismo, Long> {
 
+    String JNDI_NAME = "java:app/regweb3-persistence/OrganismoEJB";
+
+
     /**
      * Obtiene el total de los organismos de una entidad
      *

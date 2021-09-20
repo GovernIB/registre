@@ -71,10 +71,10 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
     @EJB private PluginLocal pluginEjb;
     @EJB private IntegracionLocal integracionEjb;
 
-    @EJB(mappedName = "regweb3/RegistroEntradaCambiarEstadoEJB/local")
+    @EJB(mappedName = RegistroEntradaCambiarEstadoLocal.JNDI_NAME)
     private RegistroEntradaCambiarEstadoLocal registroEntradaEjb;
 
-    @EJB(mappedName = "regweb3/RegistroSalidaCambiarEstadoEJB/local")
+    @EJB(mappedName = RegistroSalidaCambiarEstadoLocal.JNDI_NAME)
     private RegistroSalidaCambiarEstadoLocal registroSalidaEjb;
 
     @Autowired

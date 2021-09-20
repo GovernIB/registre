@@ -13,19 +13,20 @@ import java.util.List;
  * Date: 16/01/14
  */
 @Local
-@RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI","RWE_WS_ENTRADA","RWE_WS_SALIDA"})
+@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI", "RWE_WS_ENTRADA", "RWE_WS_SALIDA"})
 public interface TipoAsuntoLocal extends BaseEjb<TipoAsunto, Long> {
 
+    String JNDI_NAME = "java:app/regweb3-persistence/TipoAsuntoEJB";
+
+
     /**
-     *
      * @param idEntidad
      * @return
      * @throws Exception
      */
     Long getTotal(Long idEntidad) throws Exception;
-    
+
     /**
-     * 
      * @param idEntidad
      * @return
      * @throws Exception
@@ -33,7 +34,6 @@ public interface TipoAsuntoLocal extends BaseEjb<TipoAsunto, Long> {
     List<TipoAsunto> getAll(Long idEntidad) throws Exception;
 
     /**
-     *
      * @param inicio
      * @param idEntidad
      * @return
@@ -42,15 +42,17 @@ public interface TipoAsuntoLocal extends BaseEjb<TipoAsunto, Long> {
     List<TipoAsunto> getPagination(int inicio, Long idEntidad) throws Exception;
 
     /**
-    * Método que obtiene los tipos asuntos que están activos.
-    * Se usa a la hora de crear un registro de entrada.
-    * @return
-    * @throws Exception
-    */
+     * Método que obtiene los tipos asuntos que están activos.
+     * Se usa a la hora de crear un registro de entrada.
+     *
+     * @return
+     * @throws Exception
+     */
     List<TipoAsunto> getActivosEntidad(Long idEntidad) throws Exception;
 
     /**
      * Comprueba la existencia del codigo en algún TipoAsunto
+     *
      * @param codigo
      * @param idTipoAsunto
      * @return
@@ -60,6 +62,7 @@ public interface TipoAsuntoLocal extends BaseEjb<TipoAsunto, Long> {
 
     /**
      * Retorna el {@link es.caib.regweb3.model.TipoAsunto} asociado a un codigo.
+     *
      * @param codigo
      * @return
      * @throws Exception
@@ -68,6 +71,7 @@ public interface TipoAsuntoLocal extends BaseEjb<TipoAsunto, Long> {
 
     /**
      * Retorna el {@link es.caib.regweb3.model.TipoAsunto} asociado a un codigo y a una Entidad
+     *
      * @param codigo
      * @return
      * @throws Exception
@@ -76,6 +80,7 @@ public interface TipoAsuntoLocal extends BaseEjb<TipoAsunto, Long> {
 
     /**
      * Obtiene el Total de {@link es.caib.regweb3.model.TipoAsunto} asociado a una Entidad
+     *
      * @param idEntidad
      * @return
      * @throws Exception
@@ -84,6 +89,7 @@ public interface TipoAsuntoLocal extends BaseEjb<TipoAsunto, Long> {
 
     /**
      * Elimina los {@link es.caib.regweb3.model.TipoAsunto} de una Entidad
+     *
      * @param idEntidad
      * @return
      * @throws Exception

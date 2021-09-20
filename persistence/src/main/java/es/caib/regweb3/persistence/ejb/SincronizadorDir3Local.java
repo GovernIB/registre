@@ -15,13 +15,17 @@ import java.sql.Timestamp;
 @RolesAllowed({"RWE_ADMIN"})
 public interface SincronizadorDir3Local {
 
-  /**
-   * @param entidadId
-   * @param fechaActualizacion
-   * @param fechaSincronizacion
-   * @return
-   * @throws Exception
-   */
-  int sincronizarActualizar(Long entidadId, Timestamp fechaActualizacion, Timestamp fechaSincronizacion) throws Exception;
+
+    String JNDI_NAME = "java:app/regweb3-persistence/SincronizadorDir3EJB";
+
+
+    /**
+     * @param entidadId
+     * @param fechaActualizacion
+     * @param fechaSincronizacion
+     * @return
+     * @throws Exception
+     */
+    int sincronizarActualizar(Long entidadId, Timestamp fechaActualizacion, Timestamp fechaSincronizacion) throws Exception;
 
 }

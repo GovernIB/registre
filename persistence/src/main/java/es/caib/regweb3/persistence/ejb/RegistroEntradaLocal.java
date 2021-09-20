@@ -21,6 +21,8 @@ import java.util.Set;
 @RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI","RWE_WS_ENTRADA","RWE_WS_SALIDA", "RWE_WS_CIUDADANO"})
 public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal {
 
+    String JNDI_NAME = "java:app/regweb3-persistence/RegistroEntradaEJB";
+
 
     /**
      * Obtiene un Registro de Entrada cargardo la relación con la tabla Anexos e Interesados

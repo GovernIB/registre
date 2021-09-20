@@ -37,7 +37,7 @@ import java.util.List;
 public class PlantillaController extends BaseController {
 
 
-    @EJB(mappedName = "regweb3/PlantillaEJB/local")
+    @EJB(mappedName = PlantillaLocal.JNDI_NAME)
     private PlantillaLocal plantillaEjb;
 
     @Autowired

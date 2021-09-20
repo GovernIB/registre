@@ -16,6 +16,8 @@ import java.util.List;
 @RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI","RWE_WS_ENTRADA","RWE_WS_SALIDA"})
 public interface CodigoAsuntoLocal extends BaseEjb<CodigoAsunto, Long> {
 
+    String JNDI_NAME = "java:app/regweb3-persistence/CodigoAsuntoEJB";
+
     /**
      *
      * @param idTipoAsunto

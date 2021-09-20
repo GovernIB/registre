@@ -29,10 +29,10 @@ public class RegistroSalidaInterceptor extends HandlerInterceptorAdapter {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
-    @EJB(mappedName = "regweb3/PermisoOrganismoUsuarioEJB/local")
+    @EJB(mappedName = PermisoOrganismoUsuarioLocal.JNDI_NAME)
     private PermisoOrganismoUsuarioLocal permisoOrganismoUsuarioEjb;
 
-    @EJB(mappedName = "regweb3/RegistroSalidaConsultaEJB/local")
+    @EJB(mappedName = RegistroSalidaConsultaLocal.JNDI_NAME)
     private RegistroSalidaConsultaLocal registroSalidaConsultaEjb;
 
     @Override

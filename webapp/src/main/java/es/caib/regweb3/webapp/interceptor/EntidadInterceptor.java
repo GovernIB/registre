@@ -30,7 +30,7 @@ public class EntidadInterceptor extends HandlerInterceptorAdapter {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
-    @EJB(mappedName = "regweb3/DescargaEJB/local")
+    @EJB(mappedName = DescargaLocal.JNDI_NAME)
     private DescargaLocal descargaEjb;
 
 

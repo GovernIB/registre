@@ -18,6 +18,9 @@ import java.util.List;
 @RolesAllowed({"RWE_ADMIN", "RWE_USUARI"})
 public interface InformeLocal {
 
+    String JNDI_NAME = "java:app/regweb3-persistence/InformeEJB";
+
+
     /**
      * Busca los Registros de Entrada en función de varios parámetros
      *

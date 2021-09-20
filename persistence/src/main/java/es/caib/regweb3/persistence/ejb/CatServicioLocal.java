@@ -15,6 +15,8 @@ import javax.ejb.Local;
 @RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI","RWE_WS_ENTRADA","RWE_WS_SALIDA"})
 public interface CatServicioLocal extends BaseEjb<CatServicio, Long> {
 
+  String JNDI_NAME = "java:app/regweb3-persistence/CatServicioEJB";
+
   CatServicio findByCodigo(Long codigo) throws Exception;
 
 }

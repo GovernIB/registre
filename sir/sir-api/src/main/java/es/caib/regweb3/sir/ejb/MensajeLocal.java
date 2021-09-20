@@ -14,33 +14,33 @@ import java.util.Date;
 /*@RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI"})*/
 public interface MensajeLocal {
 
+    String JNDI_NAME = "java:app/regweb3-sir-api/MensajeEJB";
+
+
     /**
-     *
      * @param registroSir
      * @param numeroRegistro
      */
     MensajeControl enviarMensajeConfirmacion(RegistroSir registroSir, String numeroRegistro, Date fechaRegistro);
 
     /**
-     *
      * @param ficheroIntercambio
      */
     MensajeControl enviarACK(FicheroIntercambio ficheroIntercambio);
 
     /**
-     *
      * @param mensaje
      */
     MensajeControl enviarACK(MensajeControl mensaje);
 
     /**
-     *
      * @param mensaje
      */
     MensajeControl enviarMensajeError(MensajeControl mensaje);
 
     /**
      * Reenvia un mensaje de control
+     *
      * @param mensaje
      * @return
      */

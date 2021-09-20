@@ -47,13 +47,13 @@ public class InteresadoController extends BaseController{
     @Autowired
     InteresadoWebValidator interesadoValidator;
 
-    @EJB(mappedName = "regweb3/PersonaEJB/local")
+    @EJB(mappedName = PersonaLocal.JNDI_NAME)
     private PersonaLocal personaEjb;
 
-    @EJB(mappedName = "regweb3/RegistroDetalleEJB/local")
+    @EJB(mappedName = RegistroDetalleLocal.JNDI_NAME)
     private RegistroDetalleLocal registroDetalleEjb;
 
-    @EJB(mappedName = "regweb3/InteresadoEJB/local")
+    @EJB(mappedName = InteresadoLocal.JNDI_NAME)
     private InteresadoLocal interesadoEjb;
 
 

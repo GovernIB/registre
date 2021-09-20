@@ -16,6 +16,9 @@ import java.util.List;
 @RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI","RWE_WS_ENTRADA","RWE_WS_SALIDA"})
 public interface ModeloOficioRemisionLocal extends BaseEjb<ModeloOficioRemision, Long> {
 
+    String JNDI_NAME = "java:app/regweb3-persistence/ModeloOficioRemisionEJB";
+
+
     /**
      *
      * @param idEntidad

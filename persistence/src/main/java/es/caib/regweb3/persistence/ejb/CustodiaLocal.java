@@ -14,6 +14,8 @@ import javax.ejb.Local;
 @RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI"})
 public interface CustodiaLocal {
 
+    String JNDI_NAME = "java:app/regweb3-persistence/CustodiaEJB";
+
     /**
      *
      * @param elemento

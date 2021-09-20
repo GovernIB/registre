@@ -11,6 +11,9 @@ import javax.ejb.Local;
 /*@RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI"})*/
 public interface RecepcionLocal {
 
+    String JNDI_NAME = "java:app/regweb3-sir-ws-server/RecepcionEJB";
+
+
     /**
      *
      * @param xmlFicheroIntercambio

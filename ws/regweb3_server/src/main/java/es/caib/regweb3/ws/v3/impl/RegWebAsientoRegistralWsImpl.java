@@ -67,28 +67,28 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
     RegistroSalidaValidator<RegistroSalida> registroSalidaValidator = new RegistroSalidaValidator<RegistroSalida>();
     RegistroEntradaValidator<RegistroEntrada> registroEntradaValidator = new RegistroEntradaValidator<RegistroEntrada>();
 
-    @EJB(mappedName = "regweb3/RegistroEntradaConsultaEJB/local")
+    @EJB(mappedName = RegistroEntradaConsultaLocal.JNDI_NAME)
     private RegistroEntradaConsultaLocal registroEntradaConsultaEjb;
 
-    @EJB(mappedName = "regweb3/RegistroSalidaConsultaEJB/local")
+    @EJB(mappedName = RegistroSalidaConsultaLocal.JNDI_NAME)
     private RegistroSalidaConsultaLocal registroSalidaConsultaEjb;
 
-    @EJB(mappedName = "regweb3/DistribucionEJB/local")
+    @EJB(mappedName = DistribucionLocal.JNDI_NAME)
     private DistribucionLocal distribucionEjb;
 
-    @EJB(mappedName = "regweb3/OficioRemisionEJB/local")
+    @EJB(mappedName = OficioRemisionLocal.JNDI_NAME)
     private OficioRemisionLocal oficioRemisionEjb;
 
-    @EJB(mappedName = "regweb3/AsientoRegistralEJB/local")
+    @EJB(mappedName = AsientoRegistralLocal.JNDI_NAME)
     private AsientoRegistralLocal asientoRegistralEjb;
 
-    @EJB(mappedName = "regweb3/ModeloOficioRemisionEJB/local")
+    @EJB(mappedName = ModeloOficioRemisionLocal.JNDI_NAME)
     private ModeloOficioRemisionLocal modeloOficioRemisionEjb;
 
-    @EJB(mappedName = "regweb3/MultiEntidadEJB/local")
+    @EJB(mappedName = MultiEntidadLocal.JNDI_NAME)
     private MultiEntidadLocal multiEntidadEjb;
 
-    @EJB(mappedName = "regweb3/SesionEJB/local")
+    @EJB(mappedName = SesionLocal.JNDI_NAME)
     private SesionLocal sesionEjb;
 
 

@@ -20,6 +20,9 @@ import java.util.List;
 @RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI","RWE_WS_ENTRADA","RWE_WS_SALIDA"})
 public interface OficinaLocal extends BaseEjb<Oficina, Long> {
 
+    String JNDI_NAME = "java:app/regweb3-persistence/OficinaEJB";
+
+
     /**
      * Busca una Oficina a partir de su código
      * @param codigo

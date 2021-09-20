@@ -16,6 +16,9 @@ import java.util.List;
 @RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN"})
 public interface DescargaLocal extends BaseEjb<Descarga, Long> {
 
+  String JNDI_NAME = "java:app/regweb3-persistence/DescargaEJB";
+
+
   /**
    * Busca una descarga solo por el tipo.
    * @param tipo

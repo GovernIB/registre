@@ -66,10 +66,10 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
 
     RegistroSalidaValidator<RegistroSalida> validator = new RegistroSalidaValidator<RegistroSalida>();
 
-    @EJB(mappedName = "regweb3/RegistroSalidaEJB/local")
+    @EJB(mappedName = RegistroSalidaLocal.JNDI_NAME)
     private RegistroSalidaLocal registroSalidaEjb;
 
-    @EJB(mappedName = "regweb3/RegistroSalidaConsultaEJB/local")
+    @EJB(mappedName = RegistroSalidaConsultaLocal.JNDI_NAME)
     private RegistroSalidaConsultaLocal registroSalidaConsultaEjb;
 
 

@@ -18,6 +18,9 @@ import java.util.List;
 @RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI"})
 public interface PlantillaLocal extends BaseEjb<Plantilla, Long> {
 
+    String JNDI_NAME = "java:app/regweb3-persistence/PlantillaEJB";
+
+
     /**
      * Obtiene la {@link Plantilla} de un {@link es.caib.regweb3.model.Usuario} con un orden
      * @param idUsuario

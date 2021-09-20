@@ -54,16 +54,16 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
     @Autowired
     private RegistroSalidaBusquedaValidator registroSalidaBusquedaValidator;
 
-    @EJB(mappedName = "regweb3/HistoricoRegistroSalidaEJB/local")
+    @EJB(mappedName = HistoricoRegistroSalidaLocal.JNDI_NAME)
     private HistoricoRegistroSalidaLocal historicoRegistroSalidaEjb;
 
-    @EJB(mappedName = "regweb3/AnexoEJB/local")
+    @EJB(mappedName = AnexoLocal.JNDI_NAME)
     private AnexoLocal anexoEjb;
 
-    @EJB(mappedName = "regweb3/SirEnvioEJB/local")
+    @EJB(mappedName = SirEnvioLocal.JNDI_NAME)
     private SirEnvioLocal sirEnvioEjb;
 
-    @EJB(mappedName = "regweb3/JustificanteEJB/local")
+    @EJB(mappedName = JustificanteLocal.JNDI_NAME)
     private JustificanteLocal justificanteEjb;
 
 

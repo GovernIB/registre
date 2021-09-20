@@ -18,6 +18,7 @@ import java.util.List;
 @RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI","RWE_WS_ENTRADA","RWE_WS_SALIDA", "RWE_WS_CIUDADANO"})
 public interface EntidadLocal extends BaseEjb<Entidad, Long> {
 
+    String JNDI_NAME = "java:app/regweb3-persistence/EntidadEJB";
 
     /**
      * Obtiene una Entidad con unos campos minimnos

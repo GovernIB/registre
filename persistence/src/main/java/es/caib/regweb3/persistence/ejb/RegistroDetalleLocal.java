@@ -15,11 +15,15 @@ import java.util.Set;
  * Date: 16/01/14
  */
 @Local
-@RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI"})
+@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI"})
 public interface RegistroDetalleLocal extends BaseEjb<RegistroDetalle, Long> {
+
+    String JNDI_NAME = "java:app/regweb3-persistence/RegistroDetalleEJB";
+
 
     /**
      * Obtiene el RegistroDetalle cargando los Interesados
+     *
      * @param id
      * @return
      * @throws Exception
@@ -28,6 +32,7 @@ public interface RegistroDetalleLocal extends BaseEjb<RegistroDetalle, Long> {
 
     /**
      * Obtiene el RegistroDetalle de un RegistroEntrada
+     *
      * @param idRegistroEntrada
      * @return
      * @throws Exception
@@ -36,6 +41,7 @@ public interface RegistroDetalleLocal extends BaseEjb<RegistroDetalle, Long> {
 
     /**
      * Elimina los RegistroDetalle
+     *
      * @param ids
      * @return
      * @throws Exception
@@ -44,6 +50,7 @@ public interface RegistroDetalleLocal extends BaseEjb<RegistroDetalle, Long> {
 
     /**
      * Obtiene todos los RegistroDetalle de una Entidad
+     *
      * @param idEntidad
      * @return
      * @throws Exception
@@ -62,9 +69,10 @@ public interface RegistroDetalleLocal extends BaseEjb<RegistroDetalle, Long> {
 
     /**
      * Obtiene todos los identificadores de los registros detalle que se han confirmado en destino (aceptado).
+     *
      * @param idEntidad
      * @return
      * @throws Exception
      */
-     Set<Long> getRegistrosDetalleConfirmados(Long idEntidad, Date fecha) throws Exception;
+    Set<Long> getRegistrosDetalleConfirmados(Long idEntidad, Date fecha) throws Exception;
 }

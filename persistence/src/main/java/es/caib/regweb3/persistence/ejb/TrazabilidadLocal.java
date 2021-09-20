@@ -16,14 +16,29 @@ import java.util.List;
  * Date: 16/01/14
  */
 @Local
-@RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI","RWE_WS_ENTRADA","RWE_WS_SALIDA", "RWE_WS_CIUDADANO"})
+@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI", "RWE_WS_ENTRADA", "RWE_WS_SALIDA", "RWE_WS_CIUDADANO"})
 public interface TrazabilidadLocal extends BaseEjb<Trazabilidad, Long> {
 
+    String JNDI_NAME = "java:app/regweb3-persistence/TrazabilidadEJB";
+
+
+    /**
+     * @param tipoOficio
+     * @return
+     * @throws Exception
+     */
     List<Trazabilidad> oficiosSinREDestino(Long tipoOficio) throws Exception;
+
+    /**
+     * @param idTrazabilidad
+     * @param idRegistro
+     * @throws Exception
+     */
     void actualizarTrazabilidad(Long idTrazabilidad, Long idRegistro) throws Exception;
 
     /**
      * Obtiene todas las Trazabilidades a partir de un Identificador Intercambio
+     *
      * @param idIntercambio
      * @return
      * @throws Exception
@@ -32,6 +47,7 @@ public interface TrazabilidadLocal extends BaseEjb<Trazabilidad, Long> {
 
     /**
      * Obtiene la Trazabilidad de un RegistroSalida
+     *
      * @param idRegistroSalida
      * @return
      * @throws Exception
@@ -40,6 +56,7 @@ public interface TrazabilidadLocal extends BaseEjb<Trazabilidad, Long> {
 
     /**
      * Obtiene la Trazabilidad de un RegistroEntrada
+     *
      * @param idRegistroEntrada
      * @return
      * @throws Exception
@@ -48,6 +65,7 @@ public interface TrazabilidadLocal extends BaseEjb<Trazabilidad, Long> {
 
     /**
      * Obtiene las Trazabilidades de un OficioRemision
+     *
      * @param idOficioRemision
      * @return
      * @throws Exception
@@ -56,6 +74,7 @@ public interface TrazabilidadLocal extends BaseEjb<Trazabilidad, Long> {
 
     /**
      * Obtiene la Trazabilidad correspondiente a un OficioRemision y a un RegistroEntrada
+     *
      * @param idOficioRemision
      * @param idRegistroEntrada
      * @return
@@ -65,6 +84,7 @@ public interface TrazabilidadLocal extends BaseEjb<Trazabilidad, Long> {
 
     /**
      * Obtiene la Trazabilidad correspondiente a un OficioRemision y a un RegistroSalida
+     *
      * @param idOficioRemision
      * @param idRegistroSalida
      * @return
@@ -74,6 +94,7 @@ public interface TrazabilidadLocal extends BaseEjb<Trazabilidad, Long> {
 
     /**
      * Obtiene las Trazabilidades de un RegistroSir
+     *
      * @param idRegistroSir
      * @return
      * @throws Exception
@@ -82,6 +103,7 @@ public interface TrazabilidadLocal extends BaseEjb<Trazabilidad, Long> {
 
     /**
      * Obtiene el Registro de Entrada generado a partir de la aceptación de un Registro Sir
+     *
      * @param idRegistroSir
      * @return
      * @throws Exception
@@ -90,6 +112,7 @@ public interface TrazabilidadLocal extends BaseEjb<Trazabilidad, Long> {
 
     /**
      * Elimina las Trazabilidades de una Entidad
+     *
      * @param idEntidad
      * @return
      * @throws Exception
@@ -98,6 +121,7 @@ public interface TrazabilidadLocal extends BaseEjb<Trazabilidad, Long> {
 
     /**
      * Obtiene los RegistroSalida generados en un OficioRemision
+     *
      * @param idOficioRemision
      * @return
      */
@@ -105,6 +129,7 @@ public interface TrazabilidadLocal extends BaseEjb<Trazabilidad, Long> {
 
     /**
      * Obtiene los RegistroEntrada validos que han sido creados a partir de una recepción SIR
+     *
      * @param idOficina
      * @param idEntidad
      * @param total
@@ -115,6 +140,7 @@ public interface TrazabilidadLocal extends BaseEjb<Trazabilidad, Long> {
 
     /**
      * Obtiene todos los RegistroEntrada validos que han sido creados a partir de una recepción SIR paginados
+     *
      * @param idOficina
      * @param idEntidad
      * @param pageNumber
@@ -124,7 +150,6 @@ public interface TrazabilidadLocal extends BaseEjb<Trazabilidad, Long> {
     Paginacion buscarPendientesDistribuirSir(Long idOficina, Long idEntidad, Integer pageNumber) throws Exception;
 
     /**
-     *
      * @param idEntidad
      * @return
      * @throws Exception
@@ -132,7 +157,6 @@ public interface TrazabilidadLocal extends BaseEjb<Trazabilidad, Long> {
     Integer actualizarEstadoSirEntrada(Long idEntidad) throws Exception;
 
     /**
-     *
      * @param idEntidad
      * @return
      * @throws Exception

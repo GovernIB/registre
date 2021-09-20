@@ -18,12 +18,15 @@ import java.util.Set;
  * Date: 16/01/14
  */
 @Local
-@RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI","RWE_WS_ENTRADA","RWE_WS_SALIDA", "RWE_WS_CIUDADANO"})
+@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI", "RWE_WS_ENTRADA", "RWE_WS_SALIDA", "RWE_WS_CIUDADANO"})
 public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
+
+    String JNDI_NAME = "java:app/regweb3-persistence/RegistroSalidaEJB";
 
 
     /**
      * Obtiene un Registro de Salida cargardo la relación con la tabla Anexos e Interesados
+     *
      * @param id
      * @return
      * @throws Exception
@@ -32,6 +35,7 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
 
     /**
      * Guarda un Registro de Salida (con anexos)
+     *
      * @param registroSalida
      * @return
      * @throws Exception
@@ -42,6 +46,7 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
 
     /**
      * Actualiza un Registro salida
+     *
      * @param antiguo
      * @param registroSalida
      * @param usuarioEntidad
@@ -53,6 +58,7 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
 
     /**
      * Obtiene el próximo evento que habrá que realizar con el Registro
+     *
      * @param registroSalida
      * @param entidadActiva
      * @return
@@ -63,6 +69,7 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
 
     /**
      * Obtiene el próximo evento que habrá que realizar con el Registro en un entorno multientidad
+     *
      * @param registroSalida
      * @param entidadActiva
      * @return
@@ -71,7 +78,6 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
     Long proximoEventoSalidaMultiEntidad(RegistroSalida registroSalida, Entidad entidadActiva) throws Exception;
 
     /**
-     *
      * @param idRegistro
      * @param entidadActiva
      * @throws Exception
@@ -80,6 +86,7 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
 
     /**
      * Actualiza los Registros de Salida que con de Evento Distribuir
+     *
      * @param oficina
      * @param entidad
      * @return
@@ -89,6 +96,7 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
 
     /**
      * Actualiza los Registros de Salida que con de Evento Distribuir cuyo destinatario es una Persona
+     *
      * @param oficina
      * @param entidad
      * @return
@@ -98,6 +106,7 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
 
     /**
      * Comprueba si un RegistroSalida se considera un OficioRemision interno o no
+     *
      * @param registroSalida
      * @param organismos
      * @return
@@ -107,6 +116,7 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
 
     /**
      * Comprueba si un RegistroSalida se considera un OficioRemision externo o no
+     *
      * @param registroSalida
      * @param organismos
      * @return
@@ -116,6 +126,7 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
 
     /**
      * Comprueba si un RegistroSalida se considera un OficioRemision externo o no en un entorno multientidad
+     *
      * @param registroSalida
      * @param organismos
      * @return
@@ -126,6 +137,7 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
 
     /**
      * Comprueba si un RegistroSalida se considera un OficioRemision SIR o no
+     *
      * @param registroSalida
      * @param organismos
      * @return
@@ -136,6 +148,7 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
 
     /**
      * Comprueba si un RegistroSalida se considera un OficioRemision SIR o no en un entorno multientidad
+     *
      * @param registroSalida
      * @param organismos
      * @return
@@ -146,6 +159,7 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
 
     /**
      * Anula un RegistroSalida, cambiandole el estado a anulado.
+     *
      * @param registroSalida
      * @param usuarioEntidad
      * @param observacionesAnulacion
@@ -155,6 +169,7 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
 
     /**
      * Activa un RegistroSalida, cambiandole el estado a anulado.
+     *
      * @param registroSalida
      * @param usuarioEntidad
      * @throws Exception
@@ -163,6 +178,7 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
 
     /**
      * Visa un RegistroSalida, cambiandole el estado a anulado.
+     *
      * @param registroSalida
      * @param usuarioEntidad
      * @throws Exception
@@ -171,6 +187,7 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
 
     /**
      * Elimina los RegistroSalida de una Entidad
+     *
      * @param idEntidad
      * @return
      * @throws Exception
@@ -179,6 +196,7 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
 
     /**
      * Cambia el estado de un RegistroSalida
+     *
      * @param registroSalida
      * @param idEstado
      * @param usuarioEntidad
@@ -199,6 +217,7 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
 
     /**
      * Rectificar Registro de Salida
+     *
      * @param registroSalida
      * @param usuarioEntidad
      * @return
@@ -219,6 +238,7 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
 
     /**
      * Método que devuelve un registro de salida completo, con los anexosFull pero sin los documentos fisicos.
+     *
      * @param id
      * @return
      * @throws Exception
@@ -228,6 +248,7 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
 
     /**
      * Metodo que llama al plugin de postproceso cuando creamos un registro de salida.
+     *
      * @param rs
      * @return
      * @throws Exception
@@ -236,6 +257,7 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
 
     /**
      * Metodo que llama al plugin de postproceso cuando actualizamos un registro de salida
+     *
      * @param rs
      * @return
      * @throws Exception

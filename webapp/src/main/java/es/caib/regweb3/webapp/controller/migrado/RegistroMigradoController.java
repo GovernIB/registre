@@ -42,13 +42,13 @@ public class RegistroMigradoController extends BaseController {
     @Autowired
     private RegistroMigradoBusquedaValidator registroMigradoBusquedaValidator;
 
-    @EJB(mappedName = "regweb3/RegistroMigradoEJB/local")
+    @EJB(mappedName = RegistroMigradoLocal.JNDI_NAME)
     private RegistroMigradoLocal registroMigradoEjb;
 
-    @EJB(mappedName = "regweb3/RegistroLopdMigradoEJB/local")
+    @EJB(mappedName = RegistroLopdMigradoLocal.JNDI_NAME)
     private RegistroLopdMigradoLocal registroLopdMigradoEjb;
 
-    @EJB(mappedName = "regweb3/ModificacionLopdMigradoEJB/local")
+    @EJB(mappedName = ModificacionLopdMigradoLocal.JNDI_NAME)
     private ModificacionLopdMigradoLocal modificacionLopdMigradoEjb;
 
     /**

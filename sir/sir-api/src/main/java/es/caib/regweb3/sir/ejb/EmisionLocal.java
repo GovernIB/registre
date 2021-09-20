@@ -11,9 +11,23 @@ import javax.ejb.Local;
 /*@RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI"})*/
 public interface EmisionLocal {
 
+    String JNDI_NAME = "java:app/regweb3-sir-api/EmisionEJB";
+
+    /**
+     * @param registroSir
+     * @throws Exception
+     */
     void enviarFicheroIntercambio(RegistroSir registroSir) throws Exception;
 
-    void reenviarFicheroIntercambio(RegistroSir registroSir)  throws Exception;
+    /**
+     * @param registroSir
+     * @throws Exception
+     */
+    void reenviarFicheroIntercambio(RegistroSir registroSir) throws Exception;
 
+    /**
+     * @param registroSir
+     * @throws Exception
+     */
     void rechazarFicheroIntercambio(RegistroSir registroSir) throws Exception;
 }

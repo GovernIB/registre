@@ -17,6 +17,8 @@ import javax.ejb.Local;
 @RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI"})
 public interface ArxiuLocal {
 
+    String JNDI_NAME = "java:app/regweb3-persistence/ArxiuEJB";
+
     /**
      *
      * @param expediente

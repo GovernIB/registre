@@ -19,6 +19,9 @@ import java.util.Date;
 @Local
 public interface WebServicesMethodsLocal {
 
+    String JNDI_NAME = "java:app/regweb3-persistence/WebServicesMethodsEJB";
+
+
     /**
      * Recibe un mensaje de control en formato SICRES3 desde un nodo distribuido
      * @param mensaje
