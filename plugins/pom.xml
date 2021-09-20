@@ -3,15 +3,15 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>regweb3-plugins</artifactId>
-    <version>3.2.4</version>
-    <packaging>pom</packaging>
-
     <parent>
         <artifactId>regweb3</artifactId>
         <groupId>es.caib.regweb3</groupId>
-        <version>3.2.4</version>
+        <version>3.3.0</version>
     </parent>
+
+    <artifactId>regweb3-plugins</artifactId>
+    <version>3.3.0</version>
+    <packaging>pom</packaging>
 
     <name>RegWeb3 - PLUGINS</name>
 
@@ -21,41 +21,31 @@
         <module>plugin-postproceso</module>
     </modules>
 
-    <repositories>
-        <repository>
-            <id>maven-nuxeo</id>
-            <name>Maven Nuxeo Repository</name>
-            <url>https://maven.nuxeo.org/nexus/content/groups/public/</url>
-            <layout>default</layout>
-            <releases>
-                <enabled>true</enabled>
-                <updatePolicy>never</updatePolicy>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-                <updatePolicy>never</updatePolicy>
-            </snapshots>
-        </repository>
-        <repository>
-            <id>maven-repos</id>
-            <name>GitHub GovernIB Maven Repository</name>
-            <url>http://governib.github.io/maven/maven/</url>
-        </repository>
-    </repositories>
+    <dependencies>
+        <dependency>
+            <groupId>es.caib.regweb3</groupId>
+            <artifactId>regweb3-model</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Dependències de test -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+    </dependencies>
 
     <build>
         <pluginManagement>
             <plugins>
-
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <configuration>
-                        <source>1.7</source>
-                        <target>1.7</target>
-                        <encoding>UTF-8</encoding>
-                    </configuration>
-                </plugin>
 
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>

@@ -2,8 +2,6 @@ package es.caib.regweb3.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import es.caib.regweb3.utils.RegwebConstantes;
-import org.hibernate.annotations.ForeignKey;
-import org.hibernate.annotations.Index;
 
 import javax.persistence.*;
 import javax.xml.bind.annotation.*;
@@ -19,20 +17,19 @@ import java.util.Set;
  * @author anadal (index)
  */
 @Entity
-@Table(name = "RWE_OFICINA")
-@org.hibernate.annotations.Table(appliesTo = "RWE_OFICINA", indexes = {
-    @Index(name="RWE_OFICIN_ESTENT_FK_I", columnNames = {"ESTADO"}),
-    @Index(name="RWE_OFICIN_PAIS_FK_I", columnNames = {"PAIS"}),
-    @Index(name="RWE_OFICIN_COMUNI_FK_I", columnNames = {"COMUNIDAD"}),
-    @Index(name="RWE_OFICIN_LOCALI_FK_I", columnNames = {"LOCALIDAD"}),
-    @Index(name="RWE_OFICIN_TVIA_FK_I", columnNames = {"TIPOVIA"}),
-    @Index(name="RWE_OFICIN_ORGANI_FK_I", columnNames = {"ORGANISMORESPONSABLE"}),
-    @Index(name="RWE_OFICIN_OFICIN_FK_I", columnNames = {"OFICINARESPONSABLE"})
+@Table(name = "RWE_OFICINA", indexes = {
+        @Index(name = "RWE_OFICIN_ESTENT_FK_I", columnList = "ESTADO"),
+        @Index(name = "RWE_OFICIN_PAIS_FK_I", columnList = "PAIS"),
+        @Index(name = "RWE_OFICIN_COMUNI_FK_I", columnList = "COMUNIDAD"),
+        @Index(name = "RWE_OFICIN_LOCALI_FK_I", columnList = "LOCALIDAD"),
+        @Index(name = "RWE_OFICIN_TVIA_FK_I", columnList = "TIPOVIA"),
+        @Index(name = "RWE_OFICIN_ORGANI_FK_I", columnList = "ORGANISMORESPONSABLE"),
+        @Index(name = "RWE_OFICIN_OFICIN_FK_I", columnList = "OFICINARESPONSABLE")
 })
-@SequenceGenerator(name="generator",sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
+@SequenceGenerator(name = "generator", sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
 @XmlRootElement(name = "oficina")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class Oficina implements Serializable{
+public class Oficina implements Serializable {
 
     @XmlAttribute
     private Long id;
@@ -47,8 +44,7 @@ public class Oficina implements Serializable{
     @XmlTransient
     private Oficina oficinaResponsable;
     @XmlTransient
-  	private Set<RelacionOrganizativaOfi> organizativasOfi;
-
+    private Set<RelacionOrganizativaOfi> organizativasOfi;
     @XmlTransient
     private CatPais codPais;
     @XmlTransient
@@ -75,8 +71,9 @@ public class Oficina implements Serializable{
     @Transient
     private Boolean isOficinaSir = false;
 
+
     public Oficina() {
-      super();
+        super();
     }
 
     public Oficina(Long id) {
@@ -117,29 +114,28 @@ public class Oficina implements Serializable{
         this.isSir = isSir;
     }
 
-    public Oficina(Long id, String codigo, String denominacion,  Long organismoResponsable, String organismoResponsableCodigo, String organismoResponsableDenominacion) {
+    public Oficina(Long id, String codigo, String denominacion, Long organismoResponsable, String organismoResponsableCodigo, String organismoResponsableDenominacion) {
         this.id = id;
         this.codigo = codigo;
         this.denominacion = denominacion;
-        this.organismoResponsable = new Organismo(organismoResponsable,organismoResponsableCodigo,organismoResponsableDenominacion );
+        this.organismoResponsable = new Organismo(organismoResponsable, organismoResponsableCodigo, organismoResponsableDenominacion);
     }
 
     public Oficina(Oficina o) {
-      super();
-      this.id = o.id;
-      this.codigo = o.codigo;
-      this.estado = o.estado;
-      this.denominacion = o.denominacion;
-      this.organismoResponsable = o.organismoResponsable;
-      this.oficinaResponsable = o.oficinaResponsable;
-      this.organizativasOfi = o.organizativasOfi;
+        super();
+        this.id = o.id;
+        this.codigo = o.codigo;
+        this.estado = o.estado;
+        this.denominacion = o.denominacion;
+        this.organismoResponsable = o.organismoResponsable;
+        this.oficinaResponsable = o.oficinaResponsable;
+        this.organizativasOfi = o.organizativasOfi;
     }
 
 
-
     @Id
-    @GeneratedValue(strategy=GenerationType.SEQUENCE,generator = "generator")
-    @Column(name="ID")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "generator")
+    @Column(name = "ID")
     public Long getId() {
         return id;
     }
@@ -151,18 +147,17 @@ public class Oficina implements Serializable{
 
     @Column(name = "CODIGO", nullable = false, length = 9)
     public String getCodigo() {
-      return codigo;
+        return codigo;
     }
 
 
     public void setCodigo(String codigo) {
-      this.codigo = codigo;
+        this.codigo = codigo;
     }
 
 
     @ManyToOne()
-    @JoinColumn(name = "ESTADO")
-    @ForeignKey(name = "RWE_OFICINA_ESTADO_FK")
+    @JoinColumn(name = "ESTADO", foreignKey = @ForeignKey(name = "RWE_OFICINA_ESTADO_FK"))
     public CatEstadoEntidad getEstado() {
         return estado;
     }
@@ -184,8 +179,7 @@ public class Oficina implements Serializable{
 
 
     @ManyToOne()
-    @JoinColumn(name="ORGANISMORESPONSABLE")
-    @ForeignKey(name="RWE_OFICINA_ORGANISMO_FK")
+    @JoinColumn(name = "ORGANISMORESPONSABLE", foreignKey = @ForeignKey(name = "RWE_OFICINA_ORGANISMO_FK"))
     @JsonIgnore
     public Organismo getOrganismoResponsable() {
         return organismoResponsable;
@@ -196,8 +190,7 @@ public class Oficina implements Serializable{
     }
 
     @ManyToOne()
-    @JoinColumn(name="OFICINARESPONSABLE")
-    @ForeignKey(name="RWE_OFICINA_OFICINA_FK")
+    @JoinColumn(name = "OFICINARESPONSABLE", foreignKey = @ForeignKey(name = "RWE_OFICINA_OFICINA_FK"))
     @JsonIgnore
     public Oficina getOficinaResponsable() {
         return oficinaResponsable;
@@ -209,25 +202,25 @@ public class Oficina implements Serializable{
 
 
     /**
-    * @return the organizativasOfi
-    */
-    @OneToMany(mappedBy="oficina")
-    @ForeignKey(name="RWE_OFICINA_RELORGOFI_FK")
+     * @return the organizativasOfi
+     */
+    @OneToMany(mappedBy = "oficina")
+    /*@ForeignKey(name = "RWE_OFICINA_RELORGOFI_FK")*/
     @JsonIgnore
     public Set<RelacionOrganizativaOfi> getOrganizativasOfi() {
-      return organizativasOfi;
+        return organizativasOfi;
     }
 
     /**
-    * @param organizativasOfi the organizativasOfi to set
-    */
+     * @param organizativasOfi the organizativasOfi to set
+     */
     public void setOrganizativasOfi(Set<RelacionOrganizativaOfi> organizativasOfi) {
-     this.organizativasOfi = organizativasOfi;
+        this.organizativasOfi = organizativasOfi;
     }
 
     @Transient
-    public String getNombreCompleto(){
-        return  getCodigo() +" "+ getDenominacion();
+    public String getNombreCompleto() {
+        return getCodigo() + " " + getDenominacion();
     }
 
     /**
@@ -243,8 +236,8 @@ public class Oficina implements Serializable{
         organismos.add(this.getOrganismoResponsable());
 
         // Añadimos solo los Organismos del estado que nos indican
-        for(RelacionOrganizativaOfi relacionOrganizativaOfi:this.getOrganizativasOfi()){
-            if(estado.equals(relacionOrganizativaOfi.getEstado().getCodigoEstadoEntidad())) {
+        for (RelacionOrganizativaOfi relacionOrganizativaOfi : this.getOrganizativasOfi()) {
+            if (estado.equals(relacionOrganizativaOfi.getEstado().getCodigoEstadoEntidad())) {
                 organismos.add(relacionOrganizativaOfi.getOrganismo());
             }
         }
@@ -255,8 +248,7 @@ public class Oficina implements Serializable{
 
 
     @ManyToOne()
-    @JoinColumn(name = "PAIS")
-    @ForeignKey(name = "RWE_OFICINA_PAIS_FK")
+    @JoinColumn(name = "PAIS", foreignKey = @ForeignKey(name = "RWE_OFICINA_PAIS_FK"))
     @JsonIgnore
     public CatPais getCodPais() {
         return codPais;
@@ -267,8 +259,7 @@ public class Oficina implements Serializable{
     }
 
     @ManyToOne()
-    @JoinColumn(name = "COMUNIDAD")
-    @ForeignKey(name = "RWE_OFICINA_COMUNIDAD_FK")
+    @JoinColumn(name = "COMUNIDAD", foreignKey = @ForeignKey(name = "RWE_OFICINA_COMUNIDAD_FK"))
     @JsonIgnore
     public CatComunidadAutonoma getCodComunidad() {
         return codComunidad;
@@ -279,8 +270,7 @@ public class Oficina implements Serializable{
     }
 
     @ManyToOne()
-    @JoinColumn(name = "LOCALIDAD")
-    @ForeignKey(name = "RWE_OFICINA_LOCALIDAD_FK")
+    @JoinColumn(name = "LOCALIDAD", foreignKey = @ForeignKey(name = "RWE_OFICINA_LOCALIDAD_FK"))
     @JsonIgnore
     public CatLocalidad getLocalidad() {
         return localidad;
@@ -291,8 +281,7 @@ public class Oficina implements Serializable{
     }
 
     @ManyToOne()
-    @JoinColumn(name = "TIPOVIA")
-    @ForeignKey(name = "RWE_OFICINA_TIPOVIA_FK")
+    @JoinColumn(name = "TIPOVIA", foreignKey = @ForeignKey(name = "RWE_OFICINA_TIPOVIA_FK"))
     @JsonIgnore
     public CatTipoVia getTipoVia() {
         return tipoVia;
@@ -333,8 +322,8 @@ public class Oficina implements Serializable{
     }
 
     @ManyToMany(targetEntity = CatServicio.class, fetch = FetchType.EAGER)
-    @JoinTable(name = "RWE_OFICINA_SERVICIO", joinColumns = { @JoinColumn(name = "IDOFICINA") }, inverseJoinColumns = { @JoinColumn(name = "IDSERVICIO") })
-    @ForeignKey(name = "RWE_SERVICIO_OFICINA_FK", inverseName = "RWE_OFICINA_SERVICIO_FK")
+    @JoinTable(name = "RWE_OFICINA_SERVICIO", foreignKey = @ForeignKey(name = "RWE_SERVICIO_OFICINA_FK"),
+            joinColumns = {@JoinColumn(name = "IDOFICINA")}, inverseJoinColumns = {@JoinColumn(name = "IDSERVICIO")})
     @OrderBy("id")
     @JsonIgnore
     public Set<CatServicio> getServicios() {
@@ -380,9 +369,9 @@ public class Oficina implements Serializable{
     public Boolean getOficinaSir() {
 
         for (CatServicio servicio : servicios) {
-            if(servicio.getCodServicio().equals(RegwebConstantes.OFICINA_INTEGRADA_SIR) ||
+            if (servicio.getCodServicio().equals(RegwebConstantes.OFICINA_INTEGRADA_SIR) ||
                     servicio.getCodServicio().equals(RegwebConstantes.OFICINA_INTEGRADA_SIR_ENVIO) ||
-                    servicio.getCodServicio().equals(RegwebConstantes.OFICINA_INTEGRADA_SIR_RECEPCION)){
+                    servicio.getCodServicio().equals(RegwebConstantes.OFICINA_INTEGRADA_SIR_RECEPCION)) {
                 return true;
             }
         }
@@ -390,7 +379,7 @@ public class Oficina implements Serializable{
     }
 
     @Transient
-    public String getNombre(){
+    public String getNombre() {
         return getDenominacion();
     }
 

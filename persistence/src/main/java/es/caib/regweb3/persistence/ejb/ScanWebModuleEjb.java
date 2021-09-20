@@ -2,13 +2,14 @@ package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.persistence.utils.ScanWebConfigRegWeb;
 import es.caib.regweb3.utils.RegwebConstantes;
-import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NArgumentString;
 import org.fundaciobit.genapp.common.i18n.I18NCommonUtils;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.pluginsib.scanweb.api.IScanWebPlugin;
 import org.fundaciobit.pluginsib.scanweb.api.ScanWebPlainFile;
 import org.jboss.ejb3.annotation.SecurityDomain;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.security.RunAs;
 import javax.ejb.EJB;
@@ -31,7 +32,7 @@ import java.util.Map.Entry;
 //@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI"})
 public class ScanWebModuleEjb implements ScanWebModuleLocal {
 
-  protected Logger log = Logger.getLogger(this.getClass());
+  protected Logger log = LoggerFactory.getLogger(this.getClass());
   
   @EJB(mappedName = "regweb3/PluginEJB/local")
   private PluginLocal pluginEjb;

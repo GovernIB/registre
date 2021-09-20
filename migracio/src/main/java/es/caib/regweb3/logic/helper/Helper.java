@@ -1,8 +1,9 @@
 package es.caib.regweb3.logic.helper;
 
 
-import org.apache.log4j.Logger;
 import org.hibernate.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -13,7 +14,7 @@ import java.util.Hashtable;
 
 public class Helper {
 
-    private static Logger log = Logger.getLogger(Helper.class);
+    private static Logger log = LoggerFactory.getLogger(Helper.class);
 
     public static int recogerNumeroEntrada(Session session, int anyo, String idOficina, Hashtable errores) throws HibernateException {
         return recogerNumero(session, anyo, idOficina, "E", errores);

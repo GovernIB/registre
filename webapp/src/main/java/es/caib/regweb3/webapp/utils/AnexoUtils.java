@@ -4,10 +4,11 @@ import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.commons.io.FilenameUtils;
-import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
 import org.fundaciobit.plugins.documentcustody.api.DocumentCustody;
 import org.fundaciobit.plugins.documentcustody.api.SignatureCustody;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.util.UriUtils;
 
 import javax.activation.MimetypesFileTypeMap;
@@ -28,7 +29,7 @@ import static java.nio.charset.StandardCharsets.ISO_8859_1;
  */
 public class AnexoUtils {
 
-    public static final Logger log = Logger.getLogger(AnexoUtils.class);
+    public static final Logger log = LoggerFactory.getLogger(AnexoUtils.class);
 
     /**
      *

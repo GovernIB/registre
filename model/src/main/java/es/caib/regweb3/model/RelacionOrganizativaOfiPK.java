@@ -1,14 +1,12 @@
 package es.caib.regweb3.model;
 
-import org.hibernate.annotations.ForeignKey;
-
+import javax.persistence.ForeignKey;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import java.io.Serializable;
 
 /**
- *
  * @author mgonzalez
  */
 public class RelacionOrganizativaOfiPK implements Serializable {
@@ -17,13 +15,13 @@ public class RelacionOrganizativaOfiPK implements Serializable {
     private Oficina oficina;
     private Organismo organismo;
 
-    public RelacionOrganizativaOfiPK() {}
+    public RelacionOrganizativaOfiPK() {
+    }
 
 
     @Id
     @ManyToOne()
-    @JoinColumn(name="IDOFICINA")
-    @ForeignKey(name="RWE_RELORGOFI_OFICINA_FK")
+    @JoinColumn(name = "IDOFICINA", foreignKey = @ForeignKey(name = "RWE_RELORGOFI_OFICINA_FK"))
     public Oficina getOficina() {
         return oficina;
     }
@@ -36,8 +34,7 @@ public class RelacionOrganizativaOfiPK implements Serializable {
 
     @Id
     @ManyToOne()
-    @JoinColumn (name="IDORGANISMO")
-    @ForeignKey(name="RWE_RELORGOFI_ORGANISMO_FK")
+    @JoinColumn(name = "IDORGANISMO", foreignKey = @ForeignKey(name = "RWE_RELORGOFI_ORGANISMO_FK"))
     public Organismo getOrganismo() {
         return organismo;
     }

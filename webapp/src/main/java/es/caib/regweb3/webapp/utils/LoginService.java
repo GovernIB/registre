@@ -7,10 +7,11 @@ import es.caib.regweb3.persistence.utils.RolUtils;
 import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.security.LoginInfo;
-import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.pluginsib.userinformation.IUserInformationPlugin;
 import org.fundaciobit.pluginsib.userinformation.UserInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,7 +33,7 @@ import java.util.List;
 @Service
 public class LoginService {
 
-    public final Logger log = Logger.getLogger(getClass());
+    public final Logger log = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private RolUtils rolUtils;

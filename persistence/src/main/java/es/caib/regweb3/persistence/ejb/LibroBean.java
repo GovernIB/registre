@@ -2,8 +2,9 @@ package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.Contador;
 import es.caib.regweb3.model.Libro;
-import org.apache.log4j.Logger;
 import org.jboss.ejb3.annotation.SecurityDomain;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.security.RunAs;
 import javax.ejb.EJB;
@@ -26,7 +27,7 @@ import java.util.List;
 @RunAs("RWE_SUPERADMIN")
 public class LibroBean extends BaseEjbJPA<Libro, Long> implements LibroLocal{
 
-    protected final Logger log = Logger.getLogger(getClass());
+    protected final Logger log = LoggerFactory.getLogger(getClass());
 
     @PersistenceContext(unitName="regweb3")
     private EntityManager em;

@@ -5,7 +5,8 @@ import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.controller.registro.ScanRequestServlet;
 import es.caib.regweb3.webapp.security.LoginInfo;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartException;
@@ -24,7 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 public class CommonsMultipartResolver extends
     org.springframework.web.multipart.commons.CommonsMultipartResolver {
 
-  protected final Logger log = Logger.getLogger(getClass());
+  protected final Logger log = LoggerFactory.getLogger(getClass());
 
   public CommonsMultipartResolver() {
     super();

@@ -11,15 +11,15 @@ import java.io.Serializable;
  */
 @Entity
 @Table(name = "RWE_CONTADOR")
-@SequenceGenerator(name="generator",sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
+@SequenceGenerator(name = "generator", sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
 public class Contador implements Serializable {
 
     private Long id;
-    private Integer numero= 0;
+    private Integer numero = 0;
 
     @Id
-    @GeneratedValue(strategy=GenerationType.SEQUENCE,generator = "generator")
-    @Column(name="ID")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "generator")
+    @Column(name = "ID")
     public Long getId() {
         return id;
     }

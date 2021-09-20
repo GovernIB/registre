@@ -1,7 +1,7 @@
 package es.caib.regweb3.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.hibernate.annotations.ForeignKey;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -14,7 +14,7 @@ import java.io.Serializable;
  */
 @Entity
 @Table(name = "RWE_REPRO")
-@SequenceGenerator(name="generator",sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
+@SequenceGenerator(name = "generator", sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
 public class Plantilla implements Serializable {
 
     private Long id;
@@ -34,8 +34,8 @@ public class Plantilla implements Serializable {
     }
 
     @Id
-    @GeneratedValue(strategy=GenerationType.SEQUENCE,generator = "generator")
-    @Column(name="ID")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "generator")
+    @Column(name = "ID")
     public Long getId() {
         return id;
     }
@@ -63,6 +63,7 @@ public class Plantilla implements Serializable {
     }
 
     @Lob
+    @Type(type = "org.hibernate.type.TextType")
     @Column(name = "REPRO")
     @JsonIgnore
     public String getRepro() {
@@ -74,8 +75,7 @@ public class Plantilla implements Serializable {
     }
 
     @ManyToOne()
-    @JoinColumn(name = "USUARIOENTIDAD")
-    @ForeignKey(name = "RWE_REPRO_USUARIO_FK")
+    @JoinColumn(name = "USUARIOENTIDAD", foreignKey = @ForeignKey(name = "RWE_REPRO_USUARIO_FK"))
     @JsonIgnore
     public UsuarioEntidad getUsuario() {
         return usuario;
@@ -95,11 +95,12 @@ public class Plantilla implements Serializable {
         this.activo = activo;
     }
 
-    @Column(name = "ORDEN", nullable=false)
+    @Column(name = "ORDEN", nullable = false)
     @JsonIgnore
     public int getOrden() {
         return orden;
     }
+
     public void setOrden(int orden) {
         this.orden = orden;
     }

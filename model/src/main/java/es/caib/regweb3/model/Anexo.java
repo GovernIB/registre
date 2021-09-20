@@ -1,8 +1,7 @@
 package es.caib.regweb3.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.hibernate.annotations.ForeignKey;
-import org.hibernate.annotations.Index;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import javax.xml.bind.annotation.*;
@@ -14,17 +13,18 @@ import java.util.List;
 /**
  * Created 27/05/14 12:59
  * Clase que representa un anexo dentro de regweb3.
+ *
  * @author mgonzalez
  * @author anadal (index, refactoring anexos)
  */
 
 @Entity
-@Table(name = "RWE_ANEXO")
-@org.hibernate.annotations.Table(appliesTo = "RWE_ANEXO", indexes = {
-    @Index(name="RWE_ANEXO_TDOCAL_FK_I", columnNames = {"TDOCUMENTAL"}),
-    @Index(name="RWE_ANEXO_REGDET_FK_I", columnNames = {"REGISTRODETALLE"})
-})
-@SequenceGenerator(name="generator",sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
+@SequenceGenerator(name = "generator", sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
+@Table(name = "RWE_ANEXO",
+        indexes = {
+                @Index(name = "RWE_ANEXO_TDOCAL_FK_I", columnList = "TDOCUMENTAL"),
+                @Index(name = "RWE_ANEXO_REGDET_FK_I", columnList = "REGISTRODETALLE"),
+        })
 @XmlRootElement(name = "anexo")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Anexo implements Serializable {
@@ -107,44 +107,44 @@ public class Anexo implements Serializable {
      *
      */
     public Anexo(Anexo a) {
-      super();
-      this.id = a.id;
-      this.perfilCustodia = a.perfilCustodia;
-      this.titulo = a.titulo;
-      this.tipoDocumental = a.tipoDocumental == null? null: new TipoDocumental(a.tipoDocumental);
-      this.validezDocumento = a.validezDocumento;
-      this.tipoDocumento = a.tipoDocumento;
-      this.registroDetalle = a.registroDetalle;
-      this.observaciones = a.observaciones;
-      this.origenCiudadanoAdmin = a.origenCiudadanoAdmin;
-      this.fechaCaptura = a.fechaCaptura;
-      this.modoFirma = a.modoFirma;
-      this.custodiaID = a.custodiaID;
-      this.certificado = a.certificado;
-      this.firma = a.firma;
-      this.validacionOCSPCertificado = a.validacionOCSPCertificado;
-      this.hash = a.hash;
-      this.timestamp = a.timestamp;
-      this.firmaValida = a.firmaValida;
-      this.justificante = a.justificante;
-      this.signFormat = a.signFormat;
-      this.signProfile = a.signProfile;
-      this.signType = a.signType;
-      this.purgado=a.purgado;
-      this.scan = a.scan;
+        super();
+        this.id = a.id;
+        this.perfilCustodia = a.perfilCustodia;
+        this.titulo = a.titulo;
+        this.tipoDocumental = a.tipoDocumental == null ? null : new TipoDocumental(a.tipoDocumental);
+        this.validezDocumento = a.validezDocumento;
+        this.tipoDocumento = a.tipoDocumento;
+        this.registroDetalle = a.registroDetalle;
+        this.observaciones = a.observaciones;
+        this.origenCiudadanoAdmin = a.origenCiudadanoAdmin;
+        this.fechaCaptura = a.fechaCaptura;
+        this.modoFirma = a.modoFirma;
+        this.custodiaID = a.custodiaID;
+        this.certificado = a.certificado;
+        this.firma = a.firma;
+        this.validacionOCSPCertificado = a.validacionOCSPCertificado;
+        this.hash = a.hash;
+        this.timestamp = a.timestamp;
+        this.firmaValida = a.firmaValida;
+        this.justificante = a.justificante;
+        this.signFormat = a.signFormat;
+        this.signProfile = a.signProfile;
+        this.signType = a.signType;
+        this.purgado = a.purgado;
+        this.scan = a.scan;
     }
 
     public static List<Anexo> clone(List<Anexo> list) {
-      if (list == null) {
-        return null;
-      }
-      
-      List<Anexo> clone = new ArrayList<Anexo>(list.size());
-      for (Anexo anexo : list) {
-        clone.add(anexo == null ? null : new Anexo(anexo));
-      }
-      
-      return clone;
+        if (list == null) {
+            return null;
+        }
+
+        List<Anexo> clone = new ArrayList<Anexo>(list.size());
+        for (Anexo anexo : list) {
+            clone.add(anexo == null ? null : new Anexo(anexo));
+        }
+
+        return clone;
     }
 
     public Anexo(String titulo, Long tipoDocumento) {
@@ -153,33 +153,33 @@ public class Anexo implements Serializable {
     }
 
     @Id
-    @GeneratedValue(strategy=GenerationType.SEQUENCE,generator = "generator")
-    @Column(name="ID")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "generator")
+    @Column(name = "ID")
     public Long getId() {
-      return id;
+        return id;
     }
 
     public void setId(Long id) {
-      this.id = id;
+        this.id = id;
     }
 
-    @Column(name ="TITULO", nullable = false, length=200)
+    @Column(name = "TITULO", nullable = false, length = 200)
     public String getTitulo() {
-      return titulo;
+        return titulo;
     }
 
     public void setTitulo(String titulo) {
-      this.titulo = titulo;
+        this.titulo = titulo;
     }
 
 
-    @Column(name = "CUSTODIAID", length= 256)
+    @Column(name = "CUSTODIAID", length = 256)
     public String getCustodiaID() {
-      return custodiaID;
+        return custodiaID;
     }
 
     public void setCustodiaID(String custodyID) {
-      this.custodiaID = custodyID;
+        this.custodiaID = custodyID;
     }
 
 
@@ -192,7 +192,7 @@ public class Anexo implements Serializable {
         this.perfilCustodia = perfilCustodia;
     }
 
-    @Column(name = "EXPEDIENTEID", length= 256)
+    @Column(name = "EXPEDIENTEID", length = 256)
     public String getExpedienteID() {
         return expedienteID;
     }
@@ -210,7 +210,7 @@ public class Anexo implements Serializable {
         this.custodiado = filesystem;
     }
 
-    @Column(name ="SCAN")
+    @Column(name = "SCAN")
     public Boolean getScan() {
         return scan;
     }
@@ -219,7 +219,7 @@ public class Anexo implements Serializable {
         this.scan = scan;
     }
 
-    @Column(name ="CONFIDENCIAL")
+    @Column(name = "CONFIDENCIAL")
     public Boolean getConfidencial() {
         return confidencial;
     }
@@ -228,7 +228,7 @@ public class Anexo implements Serializable {
         this.confidencial = confidencial;
     }
 
-    @Column(name ="NOMBRE_FICHERO", length=200)
+    @Column(name = "NOMBRE_FICHERO", length = 200)
     public String getNombreFichero() {
         return nombreFichero;
     }
@@ -247,38 +247,36 @@ public class Anexo implements Serializable {
     }
 
     @ManyToOne()
-    @JoinColumn(name = "TDOCUMENTAL")
-    @ForeignKey(name = "RWE_ANEXO_TDOCAL_FK")
+    @JoinColumn(name = "TDOCUMENTAL", foreignKey = @ForeignKey(name = "RWE_ANEXO_TDOCAL_FK"))
     public TipoDocumental getTipoDocumental() {
-      return tipoDocumental;
+        return tipoDocumental;
     }
 
     public void setTipoDocumental(TipoDocumental tipoDocumental) {
-      this.tipoDocumental = tipoDocumental;
+        this.tipoDocumental = tipoDocumental;
     }
 
 
     @Column(name = "TVALDOC")
     public Long getValidezDocumento() {
-      return validezDocumento;
+        return validezDocumento;
     }
 
     public void setValidezDocumento(Long validezDocumento) {
-      this.validezDocumento = validezDocumento;
+        this.validezDocumento = validezDocumento;
     }
 
     @Column(name = "TIPODOC")
     public Long getTipoDocumento() {
-      return tipoDocumento;
+        return tipoDocumento;
     }
 
     public void setTipoDocumento(Long tipoDocumento) {
-      this.tipoDocumento = tipoDocumento;
+        this.tipoDocumento = tipoDocumento;
     }
 
     @ManyToOne()
-    @JoinColumn(name = "REGISTRODETALLE")
-    @ForeignKey(name = "RWE_ANEXO_REGDET_FK")
+    @JoinColumn(name = "REGISTRODETALLE", foreignKey = @ForeignKey(name = "RWE_ANEXO_REGDET_FK"))
     @JsonIgnore
     public RegistroDetalle getRegistroDetalle() {
         return registroDetalle;
@@ -290,40 +288,40 @@ public class Anexo implements Serializable {
 
     @Column(name = "OBSERVACIONES", length = 50)
     public String getObservaciones() {
-      return observaciones;
+        return observaciones;
     }
 
     public void setObservaciones(String observaciones) {
-      this.observaciones = observaciones;
+        this.observaciones = observaciones;
     }
 
     @Column(name = "ORIGEN")
     public Integer getOrigenCiudadanoAdmin() {
-      return origenCiudadanoAdmin;
+        return origenCiudadanoAdmin;
     }
 
     public void setOrigenCiudadanoAdmin(Integer origenCiudadanoAdmin) {
-      this.origenCiudadanoAdmin = origenCiudadanoAdmin;
+        this.origenCiudadanoAdmin = origenCiudadanoAdmin;
     }
 
 
     @Column(name = "FECHACAPTURA", nullable = false)
     @JsonIgnore
     public Date getFechaCaptura() {
-      return fechaCaptura;
+        return fechaCaptura;
     }
 
     public void setFechaCaptura(Date fechaCaptura) {
-      this.fechaCaptura = fechaCaptura;
+        this.fechaCaptura = fechaCaptura;
     }
 
     @Column(name = "MODOFIRMA")
     public int getModoFirma() {
-      return modoFirma;
+        return modoFirma;
     }
 
     public void setModoFirma(int modoFirma) {
-      this.modoFirma = modoFirma;
+        this.modoFirma = modoFirma;
     }
 
 
@@ -337,6 +335,7 @@ public class Anexo implements Serializable {
     }
 
     @Lob
+    @Type(type = "org.hibernate.type.TextType")
     @Column(name = "FIRMA", length = 2147483647)
     public String getFirma() {
         return firma;
@@ -383,7 +382,7 @@ public class Anexo implements Serializable {
         this.csv = csv;
     }
 
-    @Column(name ="FIRMAVALIDA")
+    @Column(name = "FIRMAVALIDA")
     public Boolean getFirmaValida() {
         return firmaValida;
     }
@@ -465,7 +464,7 @@ public class Anexo implements Serializable {
     }
 
     @Transient
-    public String getTituloCorto(){
+    public String getTituloCorto() {
 
         String tituloCorto = getTitulo();
 
@@ -481,7 +480,7 @@ public class Anexo implements Serializable {
 
         Integer size = getTamanoFichero();
 
-        if(size != null){
+        if (size != null) {
             if (size < 1024) {
                 return 1;
             } else {
@@ -494,19 +493,19 @@ public class Anexo implements Serializable {
 
     @Override
     public boolean equals(Object o) {
-      if (this == o) return true;
-      if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
-      Anexo anexo = (Anexo) o;
+        Anexo anexo = (Anexo) o;
 
-      if (id != null ? !id.equals(anexo.id) : anexo.id != null) return false;
+        if (id != null ? !id.equals(anexo.id) : anexo.id != null) return false;
 
-      return true;
+        return true;
     }
 
     @Override
     public int hashCode() {
-      return id != null ? id.hashCode() : 0;
+        return id != null ? id.hashCode() : 0;
     }
 }
 

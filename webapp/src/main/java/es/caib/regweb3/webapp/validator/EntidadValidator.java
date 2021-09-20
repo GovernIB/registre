@@ -6,7 +6,8 @@ import es.caib.regweb3.persistence.ejb.EntidadLocal;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.form.EntidadForm;
 import es.caib.regweb3.webapp.security.LoginInfo;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
@@ -28,7 +29,7 @@ import javax.servlet.http.HttpSession;
 public class EntidadValidator implements Validator {
 
 
-    protected final Logger log = Logger.getLogger(getClass());
+    protected final Logger log = LoggerFactory.getLogger(getClass());
 
     @EJB(mappedName = "regweb3/EntidadEJB/local")
     public EntidadLocal entidadEjb;

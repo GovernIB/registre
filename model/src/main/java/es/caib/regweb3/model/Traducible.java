@@ -1,6 +1,7 @@
 package es.caib.regweb3.model;
 
-import es.caib.regweb3.utils.Configuracio;
+import es.caib.regweb3.utils.RegwebConstantes;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import javax.xml.bind.annotation.XmlTransient;
 import java.io.Serializable;
@@ -16,14 +17,18 @@ import java.util.Set;
  */
 @XmlTransient
 public class Traducible implements Serializable {
-    @XmlTransient
-    protected Map<String,Traduccion> traducciones = new HashMap<String,Traduccion>();
 
-    public Map<String,Traduccion> getTraducciones() {
+    @ConfigProperty(name = "es.caib.regweb3.defaultlanguage", defaultValue = RegwebConstantes.IDIOMA_CATALAN_CODIGO)
+    private String defautLanguage;
+
+    @XmlTransient
+    protected Map<String, Traduccion> traducciones = new HashMap<String, Traduccion>();
+
+    public Map<String, Traduccion> getTraducciones() {
         return traducciones;
     }
 
-    public void setTraducciones(Map<String,Traduccion> traducciones) {
+    public void setTraducciones(Map<String, Traduccion> traducciones) {
         this.traducciones = traducciones;
     }
 
@@ -31,6 +36,7 @@ public class Traducible implements Serializable {
 
     /**
      * Conjunto de idiomas para los que hay traduccion.
+     *
      * @return codigos de idioma para los que hay traduccion.
      */
     public Set<String> getLangs() {
@@ -40,14 +46,16 @@ public class Traducible implements Serializable {
 
     /**
      * Obtiene la traduccion por defecto.
+     *
      * @return La traduccion en el idioma per defecto.
      */
     public Traduccion getTraduccion() {
-        return traducciones.get(Configuracio.getDefaultLanguage());
+        return traducciones.get(defautLanguage);
     }
 
     /**
      * Obtiene la traduccion en un idioma determinado o <code>null</code>.
+     *
      * @param idioma Idioma de la traduccion.
      * @return Traduccion en el idioma indicado o <code>null</code> si no existe.
      */
@@ -58,7 +66,8 @@ public class Traducible implements Serializable {
 
     /**
      * Fija una traduccion en un idioma determinado, o la borra si es <code>null</code>.
-     * @param idioma Idioma de la traduccion,
+     *
+     * @param idioma     Idioma de la traduccion,
      * @param traduccion La traduccion a fijar.
      */
     public void setTraduccion(String idioma, Traduccion traduccion) {

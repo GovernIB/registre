@@ -5,13 +5,13 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>regweb3-ws-api</artifactId>
-    <version>3.2.4</version>
+    <version>3.3.0</version>
     <packaging>jar</packaging>
 
     <parent>
         <groupId>es.caib.regweb3</groupId>
         <artifactId>regweb3-ws</artifactId>
-        <version>3.2.4</version>
+        <version>3.3.0</version>
     </parent>
 
     <name>RegWeb3 - WS - API</name>
@@ -169,7 +169,7 @@
                         <enabled>true</enabled>
                         <updatePolicy>never</updatePolicy>
                     </snapshots>
-             </pluginRepository>
+                </pluginRepository>
 
                 <!-- Requerim RIPEA, PluginsIB(ScanWeb) i Dir3CAIB -->
                 <pluginRepository>
@@ -180,7 +180,6 @@
             </pluginRepositories>
             <build>
                 <plugins>
-
 
                     <plugin>
                         <groupId>org.apache.cxf</groupId>
@@ -232,7 +231,8 @@
                                     <frontend>jaxws</frontend>
                                     <databinding>jaxb</databinding>
                                     <outputFile>${basedir}/src/main/resources/wsdl/RegWebHelloWorld.wsdl</outputFile>
-                                    <argline>-s ${basedir}/code -portname RegWebHelloWorldWs -address http://localhost:8080/regweb3/ws/v3/RegWebHelloWorld
+                                    <argline>-s ${basedir}/code -portname RegWebHelloWorldWs -address
+                                        http://localhost:8080/regweb3/ws/v3/RegWebHelloWorld
                                     </argline>
                                 </configuration>
                                 <goals>
@@ -248,7 +248,8 @@
                                     <verbose>true</verbose>
                                     <outputFile>${basedir}/src/main/resources/wsdl/RegWebHelloWorldWithSecurity.wsdl
                                     </outputFile>
-                                    <argline>-s ${basedir}/code -portname RegWebHelloWorldWithSecurityWs -address http://localhost:8080/regweb3/ws/v3/RegWebHelloWorldWithSecurity
+                                    <argline>-s ${basedir}/code -portname RegWebHelloWorldWithSecurityWs -address
+                                        http://localhost:8080/regweb3/ws/v3/RegWebHelloWorldWithSecurity
                                     </argline>
                                 </configuration>
                                 <goals>
@@ -264,7 +265,8 @@
                                     <genWsdl>true</genWsdl>
                                     <verbose>true</verbose>
                                     <outputFile>${basedir}/src/main/resources/wsdl/RegWebInfo.wsdl</outputFile>
-                                    <argline>-s ${basedir}/code -portname RegWebInfoWs -address http://localhost:8080/regweb3/ws/v3/RegWebInfo
+                                    <argline>-s ${basedir}/code -portname RegWebInfoWs -address
+                                        http://localhost:8080/regweb3/ws/v3/RegWebInfo
                                     </argline>
                                 </configuration>
                                 <goals>
@@ -279,7 +281,8 @@
                                     <genWsdl>true</genWsdl>
                                     <verbose>true</verbose>
                                     <outputFile>${basedir}/src/main/resources/wsdl/RegWebPersonas.wsdl</outputFile>
-                                    <argline>-s ${basedir}/code -portname RegWebPersonasWs -address http://localhost:8080/regweb3/ws/v3/RegWebPersonas
+                                    <argline>-s ${basedir}/code -portname RegWebPersonasWs -address
+                                        http://localhost:8080/regweb3/ws/v3/RegWebPersonas
                                     </argline>
                                 </configuration>
                                 <goals>
@@ -295,7 +298,8 @@
                                     <verbose>true</verbose>
                                     <outputFile>${basedir}/src/main/resources/wsdl/RegWebRegistroEntrada.wsdl
                                     </outputFile>
-                                    <argline>-s ${basedir}/code -portname RegWebRegistroEntradaWs -address http://localhost:8080/regweb3/ws/v3/RegWebRegistroEntrada
+                                    <argline>-s ${basedir}/code -portname RegWebRegistroEntradaWs -address
+                                        http://localhost:8080/regweb3/ws/v3/RegWebRegistroEntrada
                                     </argline>
                                 </configuration>
                                 <goals>
@@ -311,7 +315,8 @@
                                     <verbose>true</verbose>
                                     <outputFile>${basedir}/src/main/resources/wsdl/RegWebRegistroSalida.wsdl
                                     </outputFile>
-                                    <argline>-s ${basedir}/code -portname RegWebRegistroSalidaWs -address http://localhost:8080/regweb3/ws/v3/RegWebRegistroSalida
+                                    <argline>-s ${basedir}/code -portname RegWebRegistroSalidaWs -address
+                                        http://localhost:8080/regweb3/ws/v3/RegWebRegistroSalida
                                     </argline>
                                 </configuration>
                                 <goals>
@@ -327,7 +332,8 @@
                                     <verbose>true</verbose>
                                     <outputFile>${basedir}/src/main/resources/wsdl/RegWebAsientoRegistral.wsdl
                                     </outputFile>
-                                    <argline>-s ${basedir}/code -portname RegWebAsientoRegistralWs -address http://localhost:8080/regweb3/ws/v3/RegWebAsientoRegistral
+                                    <argline>-s ${basedir}/code -portname RegWebAsientoRegistralWs -address
+                                        http://localhost:8080/regweb3/ws/v3/RegWebAsientoRegistral
                                     </argline>
                                 </configuration>
                                 <goals>
@@ -496,14 +502,22 @@
         <dependency>
             <groupId>org.jboss.ws.cxf</groupId>
             <artifactId>jbossws-cxf-client</artifactId>
-            <version>5.0.0.Beta2</version>
             <scope>provided</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>javax.xml.bind</groupId>
+                    <artifactId>jaxb-api</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-            <version>2.2</version>
             <scope>test</scope>
         </dependency>
 

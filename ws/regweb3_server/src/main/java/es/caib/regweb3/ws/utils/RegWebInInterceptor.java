@@ -5,21 +5,21 @@ import es.caib.regweb3.model.Usuario;
 import es.caib.regweb3.persistence.utils.I18NLogicUtils;
 import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.cxf.frontend.MethodDispatcher;
 import org.apache.cxf.interceptor.Fault;
 import org.apache.cxf.message.Message;
 import org.apache.cxf.phase.AbstractPhaseInterceptor;
 import org.apache.cxf.phase.Phase;
 import org.apache.cxf.security.SecurityContext;
 import org.apache.cxf.service.Service;
+import org.apache.cxf.service.invoker.MethodDispatcher;
 import org.apache.cxf.service.model.BindingOperationInfo;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.fundaciobit.genapp.common.ws.WsI18NException;
 import org.fundaciobit.pluginsib.userinformation.IUserInformationPlugin;
 import org.fundaciobit.pluginsib.userinformation.RolesInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
@@ -35,7 +35,7 @@ import java.util.Locale;
 
 public class RegWebInInterceptor extends AbstractPhaseInterceptor<Message> {
 
-    protected final Log log = LogFactory.getLog(getClass());
+    protected final Logger log = LoggerFactory.getLogger(getClass());
 
     public RegWebInInterceptor() {
         // Veure https://cxf.apache.org/docs/interceptors.html

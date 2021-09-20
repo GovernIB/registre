@@ -1,8 +1,6 @@
 package es.caib.regweb3.model;
 
 import es.caib.regweb3.utils.RegwebConstantes;
-import org.hibernate.annotations.ForeignKey;
-import org.hibernate.annotations.Index;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -11,16 +9,16 @@ import java.util.Date;
 
 /**
  * Created by Fundació BIT.
+ *
  * @author earrivi
  * Date: 12/04/18
  */
 @Entity
-@Table(name = "RWE_NOTIFICACION")
-@org.hibernate.annotations.Table(appliesTo = "RWE_NOTIFICACION", indexes = {
-    @Index(name="RWE_NOTIF_REMIT_FK_I", columnNames = {"REMITENTE"}),
-    @Index(name="RWE_NOTIF_DEST_FK_I", columnNames = {"DESTINATARIO"})
+@Table(name = "RWE_NOTIFICACION", indexes = {
+        @Index(name = "RWE_NOTIF_REMIT_FK_I", columnList = "REMITENTE"),
+        @Index(name = "RWE_NOTIF_DEST_FK_I", columnList = "DESTINATARIO")
 })
-@SequenceGenerator(name="generator",sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
+@SequenceGenerator(name = "generator", sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
 public class Notificacion implements Serializable {
 
     private Long id;
@@ -34,7 +32,8 @@ public class Notificacion implements Serializable {
     private String mensaje;
 
 
-    public Notificacion() { }
+    public Notificacion() {
+    }
 
     public Notificacion(Long tipo) {
         this.tipo = tipo;
@@ -44,8 +43,8 @@ public class Notificacion implements Serializable {
 
 
     @Id
-    @GeneratedValue(strategy=GenerationType.SEQUENCE,generator = "generator")
-    @Column(name="ID")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "generator")
+    @Column(name = "ID")
     public Long getId() {
         return id;
     }
@@ -55,8 +54,7 @@ public class Notificacion implements Serializable {
     }
 
     @ManyToOne()
-    @JoinColumn(name="REMITENTE")
-    @ForeignKey(name="RWE_NOTIF_REMIT_FK")
+    @JoinColumn(name = "REMITENTE", foreignKey = @ForeignKey(name = "RWE_NOTIF_REMIT_FK"))
     public UsuarioEntidad getRemitente() {
         return remitente;
     }
@@ -66,8 +64,7 @@ public class Notificacion implements Serializable {
     }
 
     @ManyToOne(optional = false)
-    @JoinColumn(name="DESTINATARIO")
-    @ForeignKey(name="RWE_NOTIF_DEST_FK")
+    @JoinColumn(name = "DESTINATARIO", foreignKey = @ForeignKey(name = "RWE_NOTIF_DEST_FK"))
     public UsuarioEntidad getDestinatario() {
         return destinatario;
     }
@@ -150,9 +147,9 @@ public class Notificacion implements Serializable {
 
     @Transient
     public String getNombreRemitente() {
-        if(remitente != null){
+        if (remitente != null) {
             return remitente.getNombreCompleto();
-        }else{
+        } else {
             return RegwebConstantes.APLICACION_NOMBRE;
         }
 
@@ -164,7 +161,7 @@ public class Notificacion implements Serializable {
     }
 
     @Transient
-    public String getAsuntoCorto(){
+    public String getAsuntoCorto() {
 
         String asuntoCorto = getAsunto();
 

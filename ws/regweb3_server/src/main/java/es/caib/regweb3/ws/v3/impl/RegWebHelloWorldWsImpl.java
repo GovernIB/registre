@@ -2,8 +2,8 @@ package es.caib.regweb3.ws.v3.impl;
 
 
 import es.caib.regweb3.ws.utils.BaseWsImpl;
-import org.jboss.wsf.spi.annotation.TransportGuarantee;
-import org.jboss.wsf.spi.annotation.WebContext;
+import org.jboss.ws.api.annotation.TransportGuarantee;
+import org.jboss.ws.api.annotation.WebContext;
 
 import javax.ejb.Stateless;
 import javax.jws.WebMethod;

@@ -1,15 +1,12 @@
 package es.caib.regweb3.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.hibernate.annotations.ForeignKey;
-import org.hibernate.annotations.Index;
 
 import javax.persistence.*;
 import javax.xml.bind.annotation.*;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
-
 
 
 /**
@@ -20,20 +17,19 @@ import java.util.Set;
  */
 
 @Entity
-@Table(name = "RWE_ORGANISMO")
-@org.hibernate.annotations.Table(appliesTo = "RWE_ORGANISMO", indexes = {
-    @Index(name="RWE_ORGANI_ENTIDA_FK_I", columnNames = {"ENTIDAD"}),
-    @Index(name="RWE_ORGANI_ESTADO_FK_I", columnNames = {"ESTADO"}),
-    @Index(name="RWE_ORGANI_SUPERI_FK_I", columnNames = {"ORGANISMOSUPERIOR"}),
-    @Index(name="RWE_ORGANI_RAIZ_FK_I", columnNames = {"ORGANISMORAIZ"}),
-    @Index(name="RWE_ORGANI_EDP_FK_I", columnNames = {"EDPRINCIPAL"}),
-    @Index(name="RWE_ORGANI_CAUTON_FK_I", columnNames = {"CODAMBCOMUNIDAD"}),
-    @Index(name="RWE_ORGANI_PAIS_FK_I", columnNames = {"PAIS"}),
-    @Index(name="RWE_ORGANI_LOCALI_FK_I", columnNames = {"LOCALIDAD"}),
-    @Index(name="RWE_ORGANI_TVIA_FK_I", columnNames = {"TIPOVIA"}),
-    @Index(name="RWE_ORGANI_PROVIN_FK_I", columnNames = {"CODAMBPROVINCIA"})
+@Table(name = "RWE_ORGANISMO", indexes = {
+        @Index(name = "RWE_ORGANI_ENTIDA_FK_I", columnList = "ENTIDAD"),
+        @Index(name = "RWE_ORGANI_ESTADO_FK_I", columnList = "ESTADO"),
+        @Index(name = "RWE_ORGANI_SUPERI_FK_I", columnList = "ORGANISMOSUPERIOR"),
+        @Index(name = "RWE_ORGANI_RAIZ_FK_I", columnList = "ORGANISMORAIZ"),
+        @Index(name = "RWE_ORGANI_EDP_FK_I", columnList = "EDPRINCIPAL"),
+        @Index(name = "RWE_ORGANI_CAUTON_FK_I", columnList = "CODAMBCOMUNIDAD"),
+        @Index(name = "RWE_ORGANI_PAIS_FK_I", columnList = "PAIS"),
+        @Index(name = "RWE_ORGANI_LOCALI_FK_I", columnList = "LOCALIDAD"),
+        @Index(name = "RWE_ORGANI_TVIA_FK_I", columnList = "TIPOVIA"),
+        @Index(name = "RWE_ORGANI_PROVIN_FK_I", columnList = "CODAMBPROVINCIA")
 })
-@SequenceGenerator(name="generator",sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
+@SequenceGenerator(name = "generator", sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
 @XmlRootElement(name = "organismo")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Organismo implements Serializable {
@@ -89,7 +85,8 @@ public class Organismo implements Serializable {
     private Boolean permiteUsuarios = false; // Permite asociar usuarios
 
 
-    public Organismo() {}
+    public Organismo() {
+    }
 
     public Organismo(Long id) {
         this.id = id;
@@ -162,8 +159,8 @@ public class Organismo implements Serializable {
     }
 
     @Id
-    @GeneratedValue(strategy= GenerationType.SEQUENCE,generator = "generator")
-    @Column(name="ID")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "generator")
+    @Column(name = "ID")
     public Long getId() {
         return id;
     }
@@ -193,8 +190,7 @@ public class Organismo implements Serializable {
 
 
     @ManyToOne()
-    @JoinColumn(name = "ENTIDAD")
-    @ForeignKey(name = "RWE_ORGANISMO_ENTIDAD_FK")
+    @JoinColumn(name = "ENTIDAD", foreignKey = @ForeignKey(name = "RWE_ORGANISMO_ENTIDAD_FK"))
     @JsonIgnore
     public Entidad getEntidad() {
         return entidad;
@@ -205,8 +201,7 @@ public class Organismo implements Serializable {
     }
 
     @ManyToOne()
-    @JoinColumn(name = "ESTADO")
-    @ForeignKey(name = "RWE_ORGANISMO_ESTADO_FK")
+    @JoinColumn(name = "ESTADO", foreignKey = @ForeignKey(name = "RWE_ORGANISMO_ESTADO_FK"))
     @JsonIgnore
     public CatEstadoEntidad getEstado() {
         return estado;
@@ -229,8 +224,7 @@ public class Organismo implements Serializable {
 
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="ORGANISMOSUPERIOR")
-    @ForeignKey(name="RWE_ORGANISMO_ORG_SUPERIOR_FK")
+    @JoinColumn(name = "ORGANISMOSUPERIOR", foreignKey = @ForeignKey(name = "RWE_ORGANISMO_ORG_SUPERIOR_FK"))
     @JsonIgnore
     public Organismo getOrganismoSuperior() {
         return organismoSuperior;
@@ -241,8 +235,7 @@ public class Organismo implements Serializable {
     }
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="ORGANISMORAIZ")
-    @ForeignKey(name="RWE_ORGANISMO_ORGRAIZ_FK")
+    @JoinColumn(name = "ORGANISMORAIZ", foreignKey =  @ForeignKey(name = "RWE_ORGANISMO_ORGRAIZ_FK"))
     @JsonIgnore
     public Organismo getOrganismoRaiz() {
         return organismoRaiz;
@@ -252,7 +245,7 @@ public class Organismo implements Serializable {
         this.organismoRaiz = organismoRaiz;
     }
 
-    @Column(name="EDP")
+    @Column(name = "EDP")
     public Boolean getEdp() {
         return edp;
     }
@@ -262,8 +255,7 @@ public class Organismo implements Serializable {
     }
 
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
-    @JoinColumn(name="EDPRINCIPAL")
-    @ForeignKey(name="RWE_ORGANISMO_EDPRIN_FK")
+    @JoinColumn(name = "EDPRINCIPAL", foreignKey = @ForeignKey(name = "RWE_ORGANISMO_EDPRIN_FK"))
     @JsonIgnore
     public Organismo getEdpPrincipal() {
         return edpPrincipal;
@@ -274,7 +266,7 @@ public class Organismo implements Serializable {
     }
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "organismo")
-     /*@LazyCollection(LazyCollectionOption.FALSE)*/
+    /*@LazyCollection(LazyCollectionOption.FALSE)*/
     @OrderColumn(name = "id")
     @OrderBy("id")
     @JsonIgnore
@@ -283,14 +275,12 @@ public class Organismo implements Serializable {
     }
 
 
-
     public void setLibros(List<Libro> libros) {
         this.libros = libros;
     }
 
     @ManyToOne()
-    @JoinColumn(name="NIVELADMINISTRACION")
-    @ForeignKey(name="RWE_ORGANISMO_CATNIVELADMIN_FK")
+    @JoinColumn(name = "NIVELADMINISTRACION", foreignKey = @ForeignKey(name = "RWE_ORGANISMO_CATNIVELADMIN_FK"))
     @JsonIgnore
     public CatNivelAdministracion getNivelAdministracion() {
         return nivelAdministracion;
@@ -302,8 +292,7 @@ public class Organismo implements Serializable {
     }
 
     @ManyToOne()
-    @JoinColumn(name="CODAMBCOMUNIDAD")
-    @ForeignKey(name="RWE_ORGANISMO_CATAMBCOMAUTO_FK")
+    @JoinColumn(name = "CODAMBCOMUNIDAD", foreignKey = @ForeignKey(name = "RWE_ORGANISMO_CATAMBCOMAUTO_FK"))
     @JsonIgnore
     public CatComunidadAutonoma getCodAmbComunidad() {
         return codAmbComunidad;
@@ -314,8 +303,7 @@ public class Organismo implements Serializable {
     }
 
     @ManyToOne()
-    @JoinColumn(name="CODAMBPROVINCIA")
-    @ForeignKey(name="RWE_ORGANISMO_CATPROVINCIA_FK")
+    @JoinColumn(name = "CODAMBPROVINCIA", foreignKey = @ForeignKey(name = "RWE_ORGANISMO_CATPROVINCIA_FK"))
     @JsonIgnore
     public CatProvincia getCodAmbProvincia() {
         return codAmbProvincia;
@@ -325,10 +313,8 @@ public class Organismo implements Serializable {
         this.codAmbProvincia = codAmbProvincia;
     }
 
-
     @ManyToOne()
-    @JoinColumn(name = "PAIS")
-    @ForeignKey(name = "RWE_ORGANISMO_PAIS_FK")
+    @JoinColumn(name = "PAIS", foreignKey = @ForeignKey(name = "RWE_ORGANISMO_PAIS_FK"))
     public CatPais getCodPais() {
         return codPais;
     }
@@ -338,8 +324,7 @@ public class Organismo implements Serializable {
     }
 
     @ManyToOne()
-    @JoinColumn(name = "LOCALIDAD")
-    @ForeignKey(name = "RWE_ORGANISMO_LOCALIDAD_FK")
+    @JoinColumn(name = "LOCALIDAD", foreignKey =  @ForeignKey(name = "RWE_ORGANISMO_LOCALIDAD_FK"))
     public CatLocalidad getLocalidad() {
         return localidad;
     }
@@ -349,8 +334,7 @@ public class Organismo implements Serializable {
     }
 
     @ManyToOne()
-    @JoinColumn(name = "TIPOVIA")
-    @ForeignKey(name = "RWE_ORGANISMO_TIPOVIA_FK")
+    @JoinColumn(name = "TIPOVIA", foreignKey = @ForeignKey(name = "RWE_ORGANISMO_TIPOVIA_FK"))
     public CatTipoVia getTipoVia() {
         return tipoVia;
     }
@@ -387,21 +371,19 @@ public class Organismo implements Serializable {
     }
 
     @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
-    @JoinTable(name="RWE_HISTORICOUO",
-               joinColumns=@JoinColumn(name="CODANTERIOR"),
-               inverseJoinColumns=@JoinColumn(name="CODULTIMA"))
-    @ForeignKey(name="RWE_ORG_ORG_HISTANTE_FK", inverseName = "RWE_ORG_ORG_HISTULTI_FK")
+    @JoinTable(name = "RWE_HISTORICOUO", foreignKey = @ForeignKey(name = "RWE_ORG_ORG_HISTANTE_FK"),
+            joinColumns = @JoinColumn(name = "CODANTERIOR"), inverseJoinColumns = @JoinColumn(name = "CODULTIMA"))
     @JsonIgnore
     public Set<Organismo> getHistoricoUO() {
-      return historicoUO;
+        return historicoUO;
     }
 
 
     public void setHistoricoUO(Set<Organismo> historicoUO) {
-      this.historicoUO = historicoUO;
+        this.historicoUO = historicoUO;
     }
 
-    @Column(name="PERMITE_USUARIOS")
+    @Column(name = "PERMITE_USUARIOS")
     public Boolean getPermiteUsuarios() {
         return permiteUsuarios;
     }
@@ -411,8 +393,8 @@ public class Organismo implements Serializable {
     }
 
     @Transient
-    public String getNombreCompleto(){
-        return  getDenominacion() +" - "+ getCodigo();
+    public String getNombreCompleto() {
+        return getDenominacion() + " - " + getCodigo();
     }
 
     @Override
@@ -438,6 +420,5 @@ public class Organismo implements Serializable {
     public String toString() {
         return denominacion;
     }
-
 
 }

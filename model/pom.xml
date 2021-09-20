@@ -5,13 +5,13 @@
     <parent>
         <artifactId>regweb3</artifactId>
         <groupId>es.caib.regweb3</groupId>
-        <version>3.2.4</version>
+        <version>3.3.0</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>regweb3-model</artifactId>
-    <version>3.2.4</version>
+    <version>3.3.0</version>
     <packaging>jar</packaging>
 
     <name>RegWeb3 - Model</name>
@@ -21,51 +21,20 @@
     </properties>
 
     <dependencies>
-        <!-- Internas -->
-
+        <!-- Especificacions i llibreries proporcionades per JBoss -->
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>regweb3-utils</artifactId>
-            <version>${project.version}</version>
+            <groupId>org.jboss.spec</groupId>
+            <artifactId>jboss-javaee-8.0</artifactId>
+            <type>pom</type>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.microprofile.config</groupId>
+            <artifactId>microprofile-config-api</artifactId>
             <scope>provided</scope>
         </dependency>
 
-        <!-- Externas -->
-
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-core</artifactId>
-            <version>3.3.2.GA</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-annotations</artifactId>
-            <version>3.4.0.GA</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>javax</groupId>
-            <artifactId>javaee-api</artifactId>
-            <version>6.0</version>
-            <scope>provided</scope>
-        </dependency>
-        
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-annotations</artifactId>
-            <version>2.6.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.fundaciobit.pluginsib.core</groupId>
-            <artifactId>pluginsib-core</artifactId>
-            <version>2.0.0</version>
-            <scope>provided</scope>
-        </dependency>
-
+        <!-- Plugin DocumentCustody -->
         <dependency>
             <groupId>org.fundaciobit.pluginsib.documentcustody</groupId>
             <artifactId>pluginsib-documentcustody-api</artifactId>
@@ -73,16 +42,32 @@
             <scope>provided</scope>
         </dependency>
 
+        <!-- Altres mòduls del projecte -->
         <dependency>
-            <groupId>org.fundaciobit.pluginsib.arxiu</groupId>
-            <artifactId>pluginsib-arxiu-caib</artifactId>
-            <version>${arxiu.api.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>log4j</groupId>
-                    <artifactId>log4j</artifactId>
-                </exclusion>
-            </exclusions>
+            <artifactId>regweb3-utils</artifactId>
+            <groupId>es.caib.regweb3</groupId>
+            <scope>provided</scope>
+        </dependency>
+        <!--
+        Per generar el metamodel de JPA
+        Veure: https://docs.jboss.org/hibernate/orm/5.3/topical/html_single/metamodelgen/MetamodelGenerator.html
+        -->
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-jpamodelgen</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <!--Jackson-->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 </project>

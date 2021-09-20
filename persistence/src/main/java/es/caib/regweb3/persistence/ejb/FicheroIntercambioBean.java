@@ -10,8 +10,9 @@ import es.caib.regweb3.sir.core.excepcion.ValidacionException;
 import es.caib.regweb3.sir.core.utils.FicheroIntercambio;
 import es.caib.regweb3.sir.ejb.MensajeLocal;
 import es.caib.regweb3.utils.RegwebConstantes;
-import org.apache.log4j.Logger;
 import org.jboss.ejb3.annotation.SecurityDomain;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -28,7 +29,7 @@ import java.util.Date;
 @SecurityDomain("seycon")
 public class FicheroIntercambioBean implements FicheroIntercambioLocal {
 
-    protected final Logger log = Logger.getLogger(getClass());
+    protected final Logger log = LoggerFactory.getLogger(getClass());
 
     @EJB private RegistroEntradaLocal registroEntradaEjb;
     @EJB private RegistroSalidaLocal registroSalidaEjb;

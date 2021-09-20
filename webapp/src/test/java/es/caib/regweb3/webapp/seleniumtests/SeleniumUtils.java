@@ -1,10 +1,11 @@
 package es.caib.regweb3.webapp.seleniumtests;
 
 import junit.framework.Assert;
-import org.apache.log4j.Logger;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -22,7 +23,7 @@ public class SeleniumUtils {
 
   private static Properties testProperties = new Properties();
 
-  public final Logger log = Logger.getLogger(this.getClass());
+  public final Logger log = LoggerFactory.getLogger(this.getClass());
 
   public enum SearchType {
     HTMLCODE, HTMLTAGS

@@ -26,7 +26,7 @@ import java.io.OutputStream;
 @Controller
 public class ArchivoController extends BaseController{
 
-    //protected final Logger log = Logger.getLogger(getClass());
+    //protected final Logger log = LoggerFactory.getLogger(getClass());
     
     @EJB(mappedName = "regweb3/ArchivoEJB/local")
     private ArchivoLocal archivoEjb;
@@ -75,7 +75,7 @@ public class ArchivoController extends BaseController{
             }
 
         } catch (NumberFormatException e) {
-            log.info(e);
+            log.info(e.getMessage());
         }  catch (Exception e) {
             e.printStackTrace();
         }

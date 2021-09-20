@@ -11,9 +11,10 @@ import es.caib.regweb3.persistence.ejb.RegistroDetalleLocal;
 import es.caib.regweb3.utils.ClientUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
-import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.plugins.validatesignature.api.ValidateSignatureConstants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import javax.ejb.EJB;
@@ -24,7 +25,7 @@ import java.util.*;
 @Component
 public class ArxiuCaibUtils {
 
-    public static final Logger log = Logger.getLogger(ArxiuCaibUtils.class);
+    public static final Logger log = LoggerFactory.getLogger(ArxiuCaibUtils.class);
 
     @EJB(mappedName = "regweb3/PluginEJB/local")
     private PluginLocal pluginEjb;

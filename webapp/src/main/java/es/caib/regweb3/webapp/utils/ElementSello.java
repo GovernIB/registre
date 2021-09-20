@@ -4,11 +4,12 @@ import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Element;
 import com.itextpdf.text.Font;
 import com.itextpdf.text.pdf.BaseFont;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ElementSello {
     	
-	protected final Logger log = Logger.getLogger(getClass());
+	protected final Logger log = LoggerFactory.getLogger(getClass());
 	
 	// Propietats estàtiques per a calcular paràmetres per defecte
 	public static float posxRefLinia = 0;

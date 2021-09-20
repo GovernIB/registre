@@ -1,8 +1,7 @@
 package es.caib.regweb3.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.hibernate.annotations.ForeignKey;
-import org.hibernate.annotations.Index;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlElement;
@@ -16,13 +15,9 @@ import java.util.Date;
  * Date: 06/03/18
  */
 @Entity
-@Table(name = "RWE_INTEGRACION")
-@org.hibernate.annotations.Table(appliesTo = "RWE_INTEGRACION", indexes = {
-    @Index(name="RWE_INT_ENTIDAD_FK_I", columnNames = {"ENTIDAD"})
-})
+@Table(name = "RWE_INTEGRACION", indexes = @Index(name="RWE_INT_ENTIDAD_FK_I", columnList = "ENTIDAD"))
 @SequenceGenerator(name="generator",sequenceName = "RWE_INT_SEQ", allocationSize = 1)
 public class Integracion implements Serializable {
-
 
     private Long id;
     private Entidad entidad;
@@ -88,8 +83,7 @@ public class Integracion implements Serializable {
 
 
     @ManyToOne()
-    @JoinColumn(name = "ENTIDAD")
-    @ForeignKey(name = "RWE_INT_ENTIDAD_FK")
+    @JoinColumn(name = "ENTIDAD", foreignKey =@ForeignKey(name = "RWE_INT_ENTIDAD_FK"))
     @JsonIgnore
     public Entidad getEntidad() {
         return entidad;
@@ -154,6 +148,7 @@ public class Integracion implements Serializable {
     }
 
     @Lob
+    @Type(type = "org.hibernate.type.TextType")
     @Column(name = "ERROR", length = 2147483647)
     public String getError() {
         return error;
@@ -164,6 +159,7 @@ public class Integracion implements Serializable {
     }
 
     @Lob
+    @Type(type = "org.hibernate.type.TextType")
     @Column(name = "EXCEPCION", length = 2147483647)
     public String getExcepcion() {
         return excepcion;

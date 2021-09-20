@@ -3,10 +3,11 @@ package es.caib.regweb3.persistence.ejb;
 import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.utils.RegwebConstantes;
-import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.jboss.ejb3.annotation.SecurityDomain;
 import org.jboss.ejb3.annotation.TransactionTimeout;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.security.RunAs;
 import javax.ejb.EJB;
@@ -26,7 +27,7 @@ import java.util.List;
 @RunAs("RWE_USUARI")
 public class SchedulerBean implements SchedulerLocal{
 
-    protected final Logger log = Logger.getLogger(getClass());
+    protected final Logger log = LoggerFactory.getLogger(getClass());
 
     @EJB private SirEnvioLocal sirEnvioEjb;
     @EJB private EntidadLocal entidadEjb;

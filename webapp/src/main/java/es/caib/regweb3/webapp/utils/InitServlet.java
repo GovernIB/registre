@@ -3,8 +3,9 @@ package es.caib.regweb3.webapp.utils;
 import es.caib.regweb3.persistence.utils.I18NLogicUtils;
 import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.Versio;
-import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.stereotype.Component;
 
@@ -24,7 +25,7 @@ import java.util.Set;
 @Component
 public class InitServlet extends HttpServlet {
 
-  protected final Logger log = Logger.getLogger(getClass());
+  protected final Logger log = LoggerFactory.getLogger(getClass());
   
 
   @Override

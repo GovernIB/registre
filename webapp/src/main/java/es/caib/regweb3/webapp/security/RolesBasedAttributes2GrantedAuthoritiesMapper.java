@@ -1,6 +1,7 @@
 package es.caib.regweb3.webapp.security;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.authority.mapping.Attributes2GrantedAuthoritiesMapper;
@@ -16,7 +17,7 @@ import java.util.*;
  */
 public class RolesBasedAttributes2GrantedAuthoritiesMapper implements Attributes2GrantedAuthoritiesMapper {
 
-    protected final Logger log = Logger.getLogger(getClass());
+    protected final Logger log = LoggerFactory.getLogger(getClass());
 
     @SuppressWarnings("rawtypes")
     private Map baseRoleMapping = new HashMap();

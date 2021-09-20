@@ -9,7 +9,6 @@ import es.caib.regweb3.persistence.utils.I18NLogicUtils;
 import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.commons.io.FileUtils;
-import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.*;
 import org.fundaciobit.plugins.documentcustody.api.AnnexCustody;
 import org.fundaciobit.plugins.documentcustody.api.DocumentCustody;
@@ -18,6 +17,8 @@ import org.fundaciobit.plugins.signature.api.*;
 import org.fundaciobit.plugins.signatureserver.api.ISignatureServerPlugin;
 import org.fundaciobit.plugins.validatesignature.api.*;
 import org.jboss.ejb3.annotation.SecurityDomain;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -34,7 +35,7 @@ import java.util.*;
 @SecurityDomain("seycon")
 public class SignatureServerBean implements SignatureServerLocal, ValidateSignatureConstants {
 
-    protected final Logger log = Logger.getLogger(getClass());
+    protected final Logger log = LoggerFactory.getLogger(getClass());
 
     @EJB private PluginLocal pluginEjb;
     @EJB private IntegracionLocal integracionEjb;
@@ -287,7 +288,7 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
                     input.getAnexo().setMotivoNoValidacion(we.getCause().toString());
                 }
                 log.info("WebServiceException CheckDocument");
-                log.error(we);
+                log.error(we.getMessage());
             }
 
             final String perfil = resp.getSignProfile();

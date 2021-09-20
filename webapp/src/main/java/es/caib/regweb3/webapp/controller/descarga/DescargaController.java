@@ -34,7 +34,7 @@ import java.util.List;
 @SessionAttributes("descarga")
 public class DescargaController extends BaseController {
 
-    //protected final Logger log = Logger.getLogger(getClass());
+    //protected final Logger log = LoggerFactory.getLogger(getClass());
 
     @EJB(mappedName = "regweb3/DescargaEJB/local")
     private DescargaLocal descargaEjb;

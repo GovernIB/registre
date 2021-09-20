@@ -11,15 +11,16 @@ import es.caib.regweb3.ws.model.PersonaWs;
 import es.caib.regweb3.ws.utils.AuthenticatedBaseWsImpl;
 import es.caib.regweb3.ws.utils.UsuarioAplicacionCache;
 import es.caib.regweb3.ws.utils.UsuarioInfo;
-import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NArgumentCode;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.fundaciobit.genapp.common.ws.WsI18NException;
 import org.fundaciobit.genapp.common.ws.WsValidationException;
 import org.jboss.ejb3.annotation.SecurityDomain;
-import org.jboss.wsf.spi.annotation.TransportGuarantee;
-import org.jboss.wsf.spi.annotation.WebContext;
+import org.jboss.ws.api.annotation.TransportGuarantee;
+import org.jboss.ws.api.annotation.WebContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
@@ -48,7 +49,7 @@ import java.util.List;
 @WebContext(contextRoot = "/regweb3/ws", urlPattern = "/v3/" + RegWebPersonasWsImpl.NAME, transportGuarantee = TransportGuarantee.NONE, secureWSDLAccess = false, authMethod = "WSBASIC")
 public class RegWebPersonasWsImpl  extends AuthenticatedBaseWsImpl implements RegWebPersonasWs {
 
-  protected final Logger log = Logger.getLogger(getClass());
+  protected final Logger log = LoggerFactory.getLogger(getClass());
 
   public static final String NAME = "RegWebPersonas";
 

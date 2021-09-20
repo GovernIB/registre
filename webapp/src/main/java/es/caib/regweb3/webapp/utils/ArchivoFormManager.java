@@ -4,7 +4,8 @@ package es.caib.regweb3.webapp.utils;
 import es.caib.regweb3.model.Archivo;
 import es.caib.regweb3.persistence.ejb.ArchivoLocal;
 import es.caib.regweb3.persistence.utils.FileSystemManager;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 /**
@@ -14,7 +15,7 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile;
  */
 public class ArchivoFormManager {
 
-    protected final Logger log = Logger.getLogger(getClass());
+    protected final Logger log = LoggerFactory.getLogger(getClass());
 
     private final ArchivoLocal archivoEjb;
     private final CommonsMultipartFile archivoSubido;

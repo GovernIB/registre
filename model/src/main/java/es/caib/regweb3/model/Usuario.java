@@ -17,7 +17,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "RWE_USUARIO")
-@SequenceGenerator(name="generator",sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
+@SequenceGenerator(name = "generator", sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
 @XmlRootElement(name = "usuario")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Usuario implements Serializable {
@@ -64,7 +64,7 @@ public class Usuario implements Serializable {
     }
 
     public Usuario(Long id) {
-        this.id=id;
+        this.id = id;
     }
 
     /**
@@ -88,8 +88,8 @@ public class Usuario implements Serializable {
     }
 
     @Id
-    @GeneratedValue(strategy=GenerationType.SEQUENCE,generator = "generator")
-    @Column(name="ID")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "generator")
+    @Column(name = "ID")
     public Long getId() {
         return id;
     }
@@ -151,16 +151,19 @@ public class Usuario implements Serializable {
     public void setIdentificador(String identificador) {
         this.identificador = identificador;
     }
-    
 
-    @Column(name = "TIPOUSUARIO")    
+
+    @Column(name = "TIPOUSUARIO")
     @JsonIgnore
-    public Long getTipoUsuario() { return tipoUsuario; }
-    
-    public void setTipoUsuario(Long tipoUsuario) { this.tipoUsuario = tipoUsuario; }
+    public Long getTipoUsuario() {
+        return tipoUsuario;
+    }
 
+    public void setTipoUsuario(Long tipoUsuario) {
+        this.tipoUsuario = tipoUsuario;
+    }
 
-    @Column(name="IDIOMA")
+    @Column(name = "IDIOMA")
     public Long getIdioma() {
         return idioma;
     }
@@ -168,7 +171,6 @@ public class Usuario implements Serializable {
     public void setIdioma(Long idioma) {
         this.idioma = idioma;
     }
-   
 
     @Column(name = "RWE_SUPERADMIN", nullable = false)
     public Boolean getRwe_superadmin() {
@@ -234,7 +236,7 @@ public class Usuario implements Serializable {
     }
 
     @Transient
-    public void setRoles(List<Rol> roles){
+    public void setRoles(List<Rol> roles) {
 
         setRwe_superadmin(roles.contains(new Rol(RegwebConstantes.RWE_SUPERADMIN)));
         setRwe_admin(roles.contains(new Rol(RegwebConstantes.RWE_ADMIN)));
@@ -245,14 +247,14 @@ public class Usuario implements Serializable {
         setDib_user(roles.contains(new Rol(RegwebConstantes.DIB_USER)));
     }
 
-   @Transient
-    public String getNombreCompleto(){
+    @Transient
+    public String getNombreCompleto() {
 
         String nombreCompleto = getNombre();
-        if(getApellido1() != null){
+        if (getApellido1() != null) {
             nombreCompleto = nombreCompleto + " " + getApellido1();
         }
-        if(getApellido2() != null){
+        if (getApellido2() != null) {
             nombreCompleto = nombreCompleto + " " + getApellido2();
         }
 
@@ -260,16 +262,16 @@ public class Usuario implements Serializable {
     }
 
     @Transient
-    public String getNombreIdentificador(){
+    public String getNombreIdentificador() {
 
-        return getNombreCompleto() + " ("+getIdentificador()+")";
+        return getNombreCompleto() + " (" + getIdentificador() + ")";
     }
 
     @Override
     public String toString() {
-        if(id != null){
+        if (id != null) {
             return id.toString();
-        }else{
+        } else {
             return null;
         }
     }

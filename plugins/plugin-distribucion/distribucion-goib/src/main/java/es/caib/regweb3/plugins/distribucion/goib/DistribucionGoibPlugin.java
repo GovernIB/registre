@@ -8,10 +8,11 @@ import es.caib.regweb3.plugins.distribucion.IDistribucionPlugin;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 import org.apache.commons.codec.binary.Base64;
-import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NCommonUtils;
 import org.fundaciobit.plugins.validatesignature.api.ValidateSignatureConstants;
 import org.fundaciobit.pluginsib.core.utils.AbstractPluginProperties;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
@@ -27,7 +28,7 @@ import java.util.Properties;
  */
 public class DistribucionGoibPlugin extends AbstractPluginProperties implements IDistribucionPlugin {
 
-    protected final Logger log = Logger.getLogger(getClass());
+    protected final Logger log = LoggerFactory.getLogger(getClass());
 
     private static final String basePluginDistribucionGoib = DISTRIBUCION_BASE_PROPERTY + "goib.";
     private static final String PROPERTY_USUARIO = basePluginDistribucionGoib + "usuario";

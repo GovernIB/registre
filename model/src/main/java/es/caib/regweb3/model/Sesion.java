@@ -4,9 +4,6 @@
  */
 package es.caib.regweb3.model;
 
-import org.hibernate.annotations.ForeignKey;
-import org.hibernate.annotations.Index;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
@@ -17,9 +14,8 @@ import java.util.Date;
  * @author earrivi
  * Date: 31/10/19
  */
-@Table(name = "RWE_SESION")
-@org.hibernate.annotations.Table(appliesTo = "RWE_SESION", indexes = {
-        @Index(name = "RWE_SESION_USUENT_FK_I", columnNames = {"USUARIO"})
+@Table(name = "RWE_SESION", indexes = {
+        @Index(name = "RWE_SESION_USUENT_FK_I", columnList = "USUARIO")
 })
 @Entity
 @SequenceGenerator(name = "generator", sequenceName = "RWE_SESION_SEQ", allocationSize = 1)
@@ -74,8 +70,7 @@ public class Sesion implements Serializable {
     }
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "USUARIO")
-    @ForeignKey(name = "RWE_SESION_USUENT_FK")
+    @JoinColumn(name = "USUARIO", foreignKey = @ForeignKey(name = "RWE_SESION_USUENT_FK"))
     public UsuarioEntidad getUsuario() {
         return usuario;
     }

@@ -1,7 +1,5 @@
 package es.caib.regweb3.model;
 
-import org.hibernate.annotations.ForeignKey;
-import org.hibernate.annotations.Index;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -15,12 +13,11 @@ import java.io.Serializable;
  */
 
 @Entity
-@Table(name = "RWE_PERMLIBUSU")
-@org.hibernate.annotations.Table(appliesTo = "RWE_PERMLIBUSU", indexes = {
-    @Index(name="RWE_PELIUS_LIBRO_FK_I", columnNames = {"LIBRO"}),
-    @Index(name="RWE_PELIUS_USUARI_FK_I", columnNames = {"USUARIO"})
+@Table(name = "RWE_PERMLIBUSU", indexes = {
+        @Index(name = "RWE_PELIUS_LIBRO_FK_I", columnList = "LIBRO"),
+        @Index(name = "RWE_PELIUS_USUARI_FK_I", columnList = "USUARIO")
 })
-@SequenceGenerator(name="generator",sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
+@SequenceGenerator(name = "generator", sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
 public class PermisoLibroUsuario implements Serializable {
 
     private Long id;
@@ -41,15 +38,15 @@ public class PermisoLibroUsuario implements Serializable {
 
     public PermisoLibroUsuario(Long idUsuario, String identificador, String nombre, String apellido1,
                                String apellido2, String documento, Long tipo, String mail, Long permiso, Long id) {
-        this.usuario = new UsuarioEntidad(idUsuario,identificador, nombre, apellido1, apellido2, documento, tipo, mail);
+        this.usuario = new UsuarioEntidad(idUsuario, identificador, nombre, apellido1, apellido2, documento, tipo, mail);
         this.permiso = permiso;
         this.id = id;
     }
 
 
     @Id
-    @GeneratedValue(strategy=GenerationType.SEQUENCE,generator = "generator")
-    @Column(name="ID")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "generator")
+    @Column(name = "ID")
     public Long getId() {
         return id;
     }
@@ -58,36 +55,34 @@ public class PermisoLibroUsuario implements Serializable {
         this.id = id;
     }
 
-    
-    @Column(name="PERMISO")
+
+    @Column(name = "PERMISO")
     public Long getPermiso() {
-      return permiso;
+        return permiso;
     }
 
     public void setPermiso(Long permiso) {
-      this.permiso = permiso;
+        this.permiso = permiso;
     }
 
     @ManyToOne()
-    @JoinColumn(name="LIBRO")
-    @ForeignKey(name="RWE_PERMLIBUSU_LIBRO_FK")
+    @JoinColumn(name = "LIBRO", foreignKey = @ForeignKey(name = "RWE_PERMLIBUSU_LIBRO_FK"))
     public Libro getLibro() {
-      return libro;
+        return libro;
     }
 
     public void setLibro(Libro libro) {
-      this.libro = libro;
+        this.libro = libro;
     }
 
     @ManyToOne()
-    @JoinColumn(name="USUARIO")
-    @ForeignKey(name="RWE_PERMLIBUSU_USUENT_FK")
+    @JoinColumn(name = "USUARIO", foreignKey = @ForeignKey(name = "RWE_PERMLIBUSU_USUENT_FK"))
     public UsuarioEntidad getUsuario() {
-      return usuario;
+        return usuario;
     }
 
     public void setUsuario(UsuarioEntidad usuario) {
-      this.usuario = usuario;
+        this.usuario = usuario;
     }
 
     @Column(name = "ACTIVO", nullable = false)
@@ -101,9 +96,9 @@ public class PermisoLibroUsuario implements Serializable {
 
     @Override
     public String toString() {
-        if(id != null){
+        if (id != null) {
             return id.toString();
-        }else{
+        } else {
             return null;
         }
     }
@@ -119,6 +114,5 @@ public class PermisoLibroUsuario implements Serializable {
 
         return true;
     }
-
 
 }

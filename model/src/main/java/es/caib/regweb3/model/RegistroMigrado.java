@@ -1,10 +1,5 @@
 package es.caib.regweb3.model;
 
-import org.hibernate.annotations.ForeignKey;
-import org.hibernate.annotations.Index;
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
@@ -15,10 +10,20 @@ import java.util.Set;
  */
 
 @Entity
-@Table(name = "RWE_REGISTRO_MIGRADO", uniqueConstraints = { 
-    @UniqueConstraint( 
-        columnNames = { "ANO", "NUMERO", "CODOFICINA", "TREGISTRO", "IDENTIDAD" } ) })
-@SequenceGenerator(name="generator",sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
+@Table(name = "RWE_REGISTRO_MIGRADO",
+        indexes = {
+                @Index(name = "RWE_REGMIG_ANO_I", columnList = "ANO"),
+                @Index(name = "RWE_REGMIG_NUM_I", columnList = "NUMERO"),
+                @Index(name = "RWE_REGMIG_TREG_I", columnList = "TREGISTRO"),
+                @Index(name = "RWE_REGMIG_CODOF_I", columnList = "CODOFICINA"),
+                @Index(name = "RWE_REGMIG_EXTR_I", columnList = "EXTRACTO"),
+                @Index(name = "RWE_REGMIG_FECREG_I", columnList = "FECHAREG"),
+                @Index(name = "RWE_REGMIG_REMDES_I", columnList = "DESREMDES"),
+        },
+        uniqueConstraints = {
+                @UniqueConstraint(columnNames = {"ANO", "NUMERO", "CODOFICINA", "TREGISTRO", "IDENTIDAD"})
+        })
+@SequenceGenerator(name = "generator", sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
 public class RegistroMigrado implements Serializable {
 
     public static final boolean TIPOREGISTRO_ENTRADA = true;
@@ -75,9 +80,9 @@ public class RegistroMigrado implements Serializable {
 
 
     @Id
-    @GeneratedValue(strategy=GenerationType.SEQUENCE,generator = "generator")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "generator")
     //@Index(name="RWE_REGISTRO_MIGRADO_PK_I")
-    @Column(name="ID")
+    @Column(name = "ID")
     public Long getId() {
         return id;
     }
@@ -86,8 +91,7 @@ public class RegistroMigrado implements Serializable {
         this.id = id;
     }
 
-    @Index(name="RWE_REGMIG_ANO_I")
-    @Column(name="ANO", nullable = false, length = 4)
+    @Column(name = "ANO", nullable = false, length = 4)
     public int getAno() {
         return ano;
     }
@@ -96,8 +100,7 @@ public class RegistroMigrado implements Serializable {
         this.ano = ano;
     }
 
-    @Index(name="RWE_REGMIG_NUM_I")
-    @Column(name="NUMERO", nullable = false, length = 5)
+    @Column(name = "NUMERO", nullable = false, length = 5)
     public int getNumero() {
         return numero;
     }
@@ -106,8 +109,7 @@ public class RegistroMigrado implements Serializable {
         this.numero = numero;
     }
 
-    @Index(name="RWE_REGMIG_TREG_I")
-    @Column(name="TREGISTRO")
+    @Column(name = "TREGISTRO")
     public boolean isTipoRegistro() {
         return tipoRegistro;
     }
@@ -117,8 +119,7 @@ public class RegistroMigrado implements Serializable {
     }
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @ForeignKey(name="RWE_REGMIG_ENTIDAD_FK")
-    @JoinColumn(name = "IDENTIDAD", referencedColumnName ="ID", nullable = true)
+    @JoinColumn(name = "IDENTIDAD", referencedColumnName = "ID", nullable = true, foreignKey = @ForeignKey(name = "RWE_REGMIG_ENTIDAD_FK"))
     public Entidad getEntidad() {
         return entidad;
     }
@@ -127,8 +128,7 @@ public class RegistroMigrado implements Serializable {
         this.entidad = entidad;
     }
 
-    @Index(name="RWE_REGMIG_CODOF_I")
-    @Column(name="CODOFICINA", nullable = false)
+    @Column(name = "CODOFICINA", nullable = false)
     public int getCodigoOficina() {
         return codigoOficina;
     }
@@ -137,7 +137,7 @@ public class RegistroMigrado implements Serializable {
         this.codigoOficina = codigoOficina;
     }
 
-    @Column(name="DENOFICINA", nullable = false)
+    @Column(name = "DENOFICINA", nullable = false)
     public String getDenominacionOficina() {
         return denominacionOficina;
     }
@@ -146,7 +146,7 @@ public class RegistroMigrado implements Serializable {
         this.denominacionOficina = denominacionOficina;
     }
 
-    @Column(name="CODOFIFIS", nullable = false)
+    @Column(name = "CODOFIFIS", nullable = false)
     public int getCodigoOficinaFisica() {
         return codigoOficinaFisica;
     }
@@ -155,7 +155,7 @@ public class RegistroMigrado implements Serializable {
         this.codigoOficinaFisica = codigoOficinaFisica;
     }
 
-    @Column(name="DENOFIFIS", nullable = false, length = 60)
+    @Column(name = "DENOFIFIS", nullable = false, length = 60)
     public String getDenominacionOficinaFisica() {
         return denominacionOficinaFisica;
     }
@@ -164,8 +164,7 @@ public class RegistroMigrado implements Serializable {
         this.denominacionOficinaFisica = denominacionOficinaFisica;
     }
 
-    @Index(name="RWE_REGMIG_EXTR_I")
-    @Column(name="EXTRACTO", nullable = false, length = 2000)
+    @Column(name = "EXTRACTO", nullable = false, length = 2000)
     public String getExtracto() {
         return extracto;
     }
@@ -174,7 +173,7 @@ public class RegistroMigrado implements Serializable {
         this.extracto = extracto;
     }
 
-    @Column(name="FECHADOC", nullable = false)
+    @Column(name = "FECHADOC", nullable = false)
     public Date getFechaDocumento() {
         return fechaDocumento;
     }
@@ -183,8 +182,7 @@ public class RegistroMigrado implements Serializable {
         this.fechaDocumento = fechaDocumento;
     }
 
-    @Index(name="RWE_REGMIG_FECREG_I")
-    @Column(name="FECHAREG", nullable = false)
+    @Column(name = "FECHAREG", nullable = false)
     public Date getFechaRegistro() {
         return fechaRegistro;
     }
@@ -193,8 +191,7 @@ public class RegistroMigrado implements Serializable {
         this.fechaRegistro = fechaRegistro;
     }
 
-    @Index(name="RWE_REGMIG_REMDES_I")
-    @Column(name="DESREMDES", nullable = false, length = 160)
+    @Column(name = "DESREMDES", nullable = false, length = 160)
     public String getDescripcionRemitenteDestinatario() {
         return descripcionRemitenteDestinatario;
     }
@@ -203,7 +200,7 @@ public class RegistroMigrado implements Serializable {
         this.descripcionRemitenteDestinatario = descripcionRemitenteDestinatario;
     }
 
-    @Column(name="CODORGDESEMI", nullable = false, length = 4)
+    @Column(name = "CODORGDESEMI", nullable = false, length = 4)
     public int getCodigoOrganismoDestinatarioEmisor() {
         return codigoOrganismoDestinatarioEmisor;
     }
@@ -212,7 +209,7 @@ public class RegistroMigrado implements Serializable {
         this.codigoOrganismoDestinatarioEmisor = codigoOrganismoDestinatarioEmisor;
     }
 
-    @Column(name="DESORGDESEMI", length = 60)
+    @Column(name = "DESORGDESEMI", length = 60)
     public String getDescripcionOrganismoDestinatarioEmisor() {
         return descripcionOrganismoDestinatarioEmisor;
     }
@@ -221,7 +218,7 @@ public class RegistroMigrado implements Serializable {
         this.descripcionOrganismoDestinatarioEmisor = descripcionOrganismoDestinatarioEmisor;
     }
 
-    @Column(name="TIPODOC", nullable = false, length = 2)
+    @Column(name = "TIPODOC", nullable = false, length = 2)
     public String getTipoDocumento() {
         return tipoDocumento;
     }
@@ -230,7 +227,7 @@ public class RegistroMigrado implements Serializable {
         this.tipoDocumento = tipoDocumento;
     }
 
-    @Column(name="DESCDOC", nullable = false, length = 60)
+    @Column(name = "DESCDOC", nullable = false, length = 60)
     public String getDescripcionDocumento() {
         return descripcionDocumento;
     }
@@ -239,7 +236,7 @@ public class RegistroMigrado implements Serializable {
         this.descripcionDocumento = descripcionDocumento;
     }
 
-    @Column(name="CODIDIDOC", nullable = false, length = 1)
+    @Column(name = "CODIDIDOC", nullable = false, length = 1)
     public int getCodigoIdiomaDocumento() {
         return codigoIdiomaDocumento;
     }
@@ -248,7 +245,7 @@ public class RegistroMigrado implements Serializable {
         this.codigoIdiomaDocumento = codigoIdiomaDocumento;
     }
 
-    @Column(name="DESIDIDOC", nullable = false, length = 15)
+    @Column(name = "DESIDIDOC", nullable = false, length = 15)
     public String getDescripcionIdiomaDocumento() {
         return descripcionIdiomaDocumento;
     }
@@ -257,7 +254,7 @@ public class RegistroMigrado implements Serializable {
         this.descripcionIdiomaDocumento = descripcionIdiomaDocumento;
     }
 
-    @Column(name="FECHAVIS")
+    @Column(name = "FECHAVIS")
     public Date getFechaVisado() {
         return fechaVisado;
     }
@@ -266,7 +263,7 @@ public class RegistroMigrado implements Serializable {
         this.fechaVisado = fechaVisado;
     }
 
-    @Column(name="ANULADO")
+    @Column(name = "ANULADO")
     public boolean isAnulado() {
         return anulado;
     }
@@ -275,7 +272,7 @@ public class RegistroMigrado implements Serializable {
         this.anulado = anulado;
     }
 
-    @Column(name="OTROS", length = 255)
+    @Column(name = "OTROS", length = 255)
     public String getOtros() {
         return otros;
     }
@@ -284,7 +281,7 @@ public class RegistroMigrado implements Serializable {
         this.otros = otros;
     }
 
-    @Column(name="PRODESGEOBAL", nullable = false, length = 3)
+    @Column(name = "PRODESGEOBAL", nullable = false, length = 3)
     public int getProcedenciaDestinoGeograficoBaleares() {
         return procedenciaDestinoGeograficoBaleares;
     }
@@ -293,7 +290,7 @@ public class RegistroMigrado implements Serializable {
         this.procedenciaDestinoGeograficoBaleares = procedenciaDestinoGeograficoBaleares;
     }
 
-    @Column(name="PRODESGEOFUE", length = 50)
+    @Column(name = "PRODESGEOFUE", length = 50)
     public String getProcedenciaDestinoGeograficoFuera() {
         return procedenciaDestinoGeograficoFuera;
     }
@@ -302,7 +299,7 @@ public class RegistroMigrado implements Serializable {
         this.procedenciaDestinoGeograficoFuera = procedenciaDestinoGeograficoFuera;
     }
 
-    @Column(name="PRODESGEO", nullable = false, length = 50)
+    @Column(name = "PRODESGEO", nullable = false, length = 50)
     public String getProcedenciaDestinoGeografico() {
         return procedenciaDestinoGeografico;
     }
@@ -311,7 +308,7 @@ public class RegistroMigrado implements Serializable {
         this.procedenciaDestinoGeografico = procedenciaDestinoGeografico;
     }
 
-    @Column(name="NUMENTSAL", nullable = false, length = 6)
+    @Column(name = "NUMENTSAL", nullable = false, length = 6)
     public int getNumeroEntradaSalida() {
         return numeroEntradaSalida;
     }
@@ -320,7 +317,7 @@ public class RegistroMigrado implements Serializable {
         this.numeroEntradaSalida = numeroEntradaSalida;
     }
 
-    @Column(name="ANOENTSAL", nullable = false, length = 4)
+    @Column(name = "ANOENTSAL", nullable = false, length = 4)
     public int getAnoEntradaSalida() {
         return anoEntradaSalida;
     }
@@ -329,7 +326,7 @@ public class RegistroMigrado implements Serializable {
         this.anoEntradaSalida = anoEntradaSalida;
     }
 
-    @Column(name="CODIDIEXT", nullable = false)
+    @Column(name = "CODIDIEXT", nullable = false)
     public int getCodigoIdiomaExtracto() {
         return codigoIdiomaExtracto;
     }
@@ -338,7 +335,7 @@ public class RegistroMigrado implements Serializable {
         this.codigoIdiomaExtracto = codigoIdiomaExtracto;
     }
 
-    @Column(name="DESIDIEXT", nullable = false, length = 15)
+    @Column(name = "DESIDIEXT", nullable = false, length = 15)
     public String getNombreIdiomaExtracto() {
         return nombreIdiomaExtracto;
     }
@@ -347,7 +344,7 @@ public class RegistroMigrado implements Serializable {
         this.nombreIdiomaExtracto = nombreIdiomaExtracto;
     }
 
-    @Column(name="NUMDISQUET", length = 5)
+    @Column(name = "NUMDISQUET", length = 5)
     public Integer getNumeroDisquet() {
         return numeroDisquet;
     }
@@ -356,7 +353,7 @@ public class RegistroMigrado implements Serializable {
         this.numeroDisquet = numeroDisquet;
     }
 
-    @Column(name="NUMCORREO", length = 8)
+    @Column(name = "NUMCORREO", length = 8)
     public String getNumeroCorreo() {
         return numeroCorreo;
     }
@@ -365,7 +362,7 @@ public class RegistroMigrado implements Serializable {
         this.numeroCorreo = numeroCorreo;
     }
 
-    @Column(name="MAILREMITENTE", length = 50)
+    @Column(name = "MAILREMITENTE", length = 50)
     public String getEmailRemitente() {
         return emailRemitente;
     }
@@ -374,10 +371,8 @@ public class RegistroMigrado implements Serializable {
         this.emailRemitente = emailRemitente;
     }
 
-    @OneToMany(cascade= CascadeType.REMOVE,targetEntity=RegistroLopdMigrado.class)
-    @LazyCollection(value= LazyCollectionOption.FALSE)
-    @JoinColumn(name="REGMIG")
-    @ForeignKey(name="RWE_REGLOPDMIG_REGMIG_FK")
+    @OneToMany(cascade = CascadeType.REMOVE, targetEntity = RegistroLopdMigrado.class, fetch = FetchType.EAGER)
+    @JoinColumn(name = "REGMIG", foreignKey = @ForeignKey(name = "RWE_REGLOPDMIG_REGMIG_FK"))
     public Set<RegistroLopdMigrado> getRegistroLopdMigrados() {
         return registroLopdMigrados;
     }
@@ -386,10 +381,8 @@ public class RegistroMigrado implements Serializable {
         this.registroLopdMigrados = registroLopdMigrados;
     }
 
-    @OneToMany(cascade= CascadeType.REMOVE,targetEntity=ModificacionLopdMigrado.class)
-    @LazyCollection(value= LazyCollectionOption.FALSE)
-    @JoinColumn(name="REGMIG")
-    @ForeignKey(name="RWE_MODLOPDMIG_REGMIG_FK")
+    @OneToMany(cascade = CascadeType.REMOVE, targetEntity = ModificacionLopdMigrado.class, fetch = FetchType.EAGER)
+    @JoinColumn(name = "REGMIG", foreignKey = @ForeignKey(name = "RWE_MODLOPDMIG_REGMIG_FK"))
     public Set<ModificacionLopdMigrado> getModificacionLopdMigrados() {
         return modificacionLopdMigrados;
     }
@@ -402,7 +395,7 @@ public class RegistroMigrado implements Serializable {
         return infoAdicional;
     }
 
-    @Column(name="INFOADICIONAL", length = 4000)
+    @Column(name = "INFOADICIONAL", length = 4000)
     public void setInfoAdicional(String infoAdicional) {
         this.infoAdicional = infoAdicional;
     }

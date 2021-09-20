@@ -1,6 +1,5 @@
 package es.caib.regweb3.model;
 
-import org.hibernate.annotations.ForeignKey;
 
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -16,7 +15,7 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = "RWE_CONFIGURACION")
-@SequenceGenerator(name="generator",sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
+@SequenceGenerator(name = "generator", sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
 public class Configuracion implements Serializable {
 
     @XmlAttribute
@@ -30,31 +29,23 @@ public class Configuracion implements Serializable {
     @XmlTransient
     private Archivo logoPie;
 
-
-    /**
-     *
-     */
     public Configuracion() {
-        super();
+
     }
 
-
-    /**
-     * @param e
-     */
-    public Configuracion(Configuracion e) {
+    public Configuracion(Configuracion c) {
         super();
-        this.id = e.id;
-        this.colorMenu = e.colorMenu;
-        this.textoPie = e.textoPie;
-        this.logoMenu = e.logoMenu;
-        this.logoPie = e.logoPie;
+        this.id = c.id;
+        this.colorMenu = c.colorMenu;
+        this.textoPie = c.textoPie;
+        this.logoMenu = c.logoMenu;
+        this.logoPie = c.logoPie;
     }
 
 
     @Id
-    @GeneratedValue(strategy= GenerationType.SEQUENCE,generator = "generator")
-    @Column(name="ID")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "generator")
+    @Column(name = "ID")
     public Long getId() {
         return id;
     }
@@ -64,7 +55,7 @@ public class Configuracion implements Serializable {
     }
 
 
-    @Column(name="COLORMENU")
+    @Column(name = "COLORMENU")
     public String getColorMenu() {
         return colorMenu;
     }
@@ -82,9 +73,8 @@ public class Configuracion implements Serializable {
         this.textoPie = textoPie;
     }
 
-    @ManyToOne(cascade=CascadeType.ALL)
-    @JoinColumn (name="LOGOMENU")
-    @ForeignKey(name = "RWE_CONFIGURACION_LOGOMENU_FK")
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "LOGOMENU", foreignKey =@ForeignKey(name = "RWE_CONFIGURACION_LOGOMENU_FK"))
     public Archivo getLogoMenu() {
         return logoMenu;
     }
@@ -93,9 +83,8 @@ public class Configuracion implements Serializable {
         this.logoMenu = logoMenu;
     }
 
-    @ManyToOne(cascade=CascadeType.ALL)
-    @JoinColumn (name="LOGOPIE")
-    @ForeignKey(name = "RWE_CONFIGURACION_LOGOPIE_FK")
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "LOGOPIE", foreignKey =@ForeignKey(name = "RWE_CONFIGURACION_LOGOPIE_FK"))
     public Archivo getLogoPie() {
         return logoPie;
     }

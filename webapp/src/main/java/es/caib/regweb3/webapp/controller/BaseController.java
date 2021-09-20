@@ -5,8 +5,9 @@ import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.security.LoginInfo;
-import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
@@ -24,7 +25,7 @@ import java.util.*;
  */
 public class BaseController {
 
-    protected final Logger log = Logger.getLogger(getClass());
+    protected final Logger log = LoggerFactory.getLogger(getClass());
 
     @EJB(mappedName = "regweb3/PermisoOrganismoUsuarioEJB/local")
     public PermisoOrganismoUsuarioLocal permisoOrganismoUsuarioEjb;

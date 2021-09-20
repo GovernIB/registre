@@ -9,8 +9,9 @@ import es.caib.regweb3.plugins.justificante.utils.I18NJustificanteUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.RegwebUtils;
 import es.caib.regweb3.utils.StringUtils;
-import org.apache.log4j.Logger;
 import org.fundaciobit.pluginsib.core.utils.AbstractPluginProperties;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.imageio.ImageIO;
 import java.io.*;
@@ -32,7 +33,7 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
 
     public static final String PROPERTY_CAIB_BASE = IJustificantePlugin.JUSTIFICANTE_BASE_PROPERTY + "caib.";
 
-    protected final Logger log = Logger.getLogger(getClass());
+    protected final Logger log = LoggerFactory.getLogger(getClass());
 
     private String estampat = null;
     private String rutaImatge = null;

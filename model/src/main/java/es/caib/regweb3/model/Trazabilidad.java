@@ -1,7 +1,5 @@
 package es.caib.regweb3.model;
 
-import org.hibernate.annotations.ForeignKey;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
@@ -13,7 +11,7 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "RWE_TRAZABILIDAD")
-@SequenceGenerator(name="generator",sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
+@SequenceGenerator(name = "generator", sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
 public class Trazabilidad implements Serializable {
 
     private Long id;
@@ -34,8 +32,8 @@ public class Trazabilidad implements Serializable {
     }
 
     @Id
-    @GeneratedValue(strategy=GenerationType.SEQUENCE,generator = "generator")
-    @Column(name="ID")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "generator")
+    @Column(name = "ID")
     public Long getId() {
         return id;
     }
@@ -44,7 +42,7 @@ public class Trazabilidad implements Serializable {
         this.id = id;
     }
 
-    @Column(name="tipo", nullable = false)
+    @Column(name = "tipo", nullable = false)
     public Long getTipo() {
         return tipo;
     }
@@ -54,8 +52,7 @@ public class Trazabilidad implements Serializable {
     }
 
     @ManyToOne(optional = true)
-    @JoinColumn(name="REGENT_ORIGEN")
-    @ForeignKey(name="RWE_TRAZAB_REGENTO_FK")
+    @JoinColumn(name = "REGENT_ORIGEN", foreignKey = @ForeignKey(name = "RWE_TRAZAB_REGENTO_FK"))
     public RegistroEntrada getRegistroEntradaOrigen() {
         return registroEntradaOrigen;
     }
@@ -65,8 +62,7 @@ public class Trazabilidad implements Serializable {
     }
 
     @ManyToOne(optional = true)
-    @JoinColumn(name="REGENT_DESTINO")
-    @ForeignKey(name="RWE_TRAZAB_REGENTD_FK")
+    @JoinColumn(name = "REGENT_DESTINO", foreignKey = @ForeignKey(name = "RWE_TRAZAB_REGENTD_FK"))
     public RegistroEntrada getRegistroEntradaDestino() {
         return registroEntradaDestino;
     }
@@ -76,8 +72,7 @@ public class Trazabilidad implements Serializable {
     }
 
     @ManyToOne(optional = true)
-    @JoinColumn(name="REGISTRO_SALIDA")
-    @ForeignKey(name="RWE_TRAZAB_REGSAL_FK")
+    @JoinColumn(name = "REGISTRO_SALIDA", foreignKey = @ForeignKey(name = "RWE_TRAZAB_REGSAL_FK"))
     public RegistroSalida getRegistroSalida() {
         return registroSalida;
     }
@@ -87,8 +82,7 @@ public class Trazabilidad implements Serializable {
     }
 
     @ManyToOne(optional = true)
-    @JoinColumn(name="REGISTRO_SALIDA_RECT")
-    @ForeignKey(name="RWE_TRAZAB_RGSRCT_FK")
+    @JoinColumn(name = "REGISTRO_SALIDA_RECT", foreignKey = @ForeignKey(name = "RWE_TRAZAB_RGSRCT_FK"))
     public RegistroSalida getRegistroSalidaRectificado() {
         return registroSalidaRectificado;
     }
@@ -98,8 +92,7 @@ public class Trazabilidad implements Serializable {
     }
 
     @ManyToOne(optional = true)
-    @JoinColumn(name="OFICIO_REMISION")
-    @ForeignKey(name="RWE_TRAZAB_OFIREM_FK")
+    @JoinColumn(name = "OFICIO_REMISION", foreignKey = @ForeignKey(name = "RWE_TRAZAB_OFIREM_FK"))
     public OficioRemision getOficioRemision() {
         return oficioRemision;
     }
@@ -109,8 +102,7 @@ public class Trazabilidad implements Serializable {
     }
 
     @ManyToOne(optional = true)
-    @JoinColumn(name="REGISTRO_SIR")
-    @ForeignKey(name="RWE_TRAZAB_REGSIR_FK")
+    @JoinColumn(name = "REGISTRO_SIR", foreignKey = @ForeignKey(name = "RWE_TRAZAB_REGSIR_FK"))
 
     public RegistroSir getRegistroSir() {
         return registroSir;
@@ -129,12 +121,11 @@ public class Trazabilidad implements Serializable {
         this.fecha = fecha;
     }
 
-
     @Override
     public String toString() {
-        if(id != null){
+        if (id != null) {
             return id.toString();
-        }else{
+        } else {
             return null;
         }
     }

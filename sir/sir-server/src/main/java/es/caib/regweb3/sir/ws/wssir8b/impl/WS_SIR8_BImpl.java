@@ -7,9 +7,10 @@ import es.caib.regweb3.sir.core.excepcion.ServiceException;
 import es.caib.regweb3.sir.ws.ejb.RecepcionLocal;
 import es.caib.regweb3.sir.ws.wssir8b.RespuestaWS;
 import es.caib.regweb3.sir.ws.wssir8b.WS_SIR8_B_PortType;
-import org.apache.log4j.Logger;
-import org.jboss.wsf.spi.annotation.TransportGuarantee;
-import org.jboss.wsf.spi.annotation.WebContext;
+import org.jboss.ws.api.annotation.TransportGuarantee;
+import org.jboss.ws.api.annotation.WebContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -48,7 +49,7 @@ import javax.jws.soap.SOAPBinding;
 @HandlerChain(file = "/handler-chain.xml")
 public class WS_SIR8_BImpl implements WS_SIR8_B_PortType {
 
-    protected final Logger log = Logger.getLogger(getClass());
+    protected final Logger log = LoggerFactory.getLogger(getClass());
 
     @EJB(name = "RecepcionEJB")
     private RecepcionLocal recepcionEjb;

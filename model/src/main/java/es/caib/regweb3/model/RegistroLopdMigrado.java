@@ -1,7 +1,5 @@
 package es.caib.regweb3.model;
 
-import org.hibernate.annotations.ForeignKey;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
@@ -11,7 +9,7 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "RWE_REGISTROLOPD_MIGRADO")
-@SequenceGenerator(name="generator",sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
+@SequenceGenerator(name = "generator", sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
 public class RegistroLopdMigrado implements Serializable {
 
     private Long id;
@@ -32,9 +30,9 @@ public class RegistroLopdMigrado implements Serializable {
     }
 
     @Id
-    @GeneratedValue(strategy=GenerationType.SEQUENCE,generator = "generator")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "generator")
     //@Index(name="RWE_REGLOPD_MIGRADO_PK_I")
-    @Column(name="ID")
+    @Column(name = "ID")
     public Long getId() {
         return id;
     }
@@ -44,8 +42,7 @@ public class RegistroLopdMigrado implements Serializable {
     }
 
     @ManyToOne()
-    @JoinColumn(name = "REGMIG")
-    @ForeignKey(name = "RWE_REGLOPDMIG_REGMIG_FK")
+    @JoinColumn(name = "REGMIG", foreignKey = @ForeignKey(name = "RWE_REGLOPDMIG_REGMIG_FK"))
     public RegistroMigrado getRegistroMigrado() {
         return registroMigrado;
     }
@@ -54,7 +51,7 @@ public class RegistroLopdMigrado implements Serializable {
         this.registroMigrado = registroMigrado;
     }
 
-    @Column(name="FECHA", nullable = false)
+    @Column(name = "FECHA", nullable = false)
     public Date getFecha() {
         return fecha;
     }

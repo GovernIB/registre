@@ -8,8 +8,9 @@ import es.caib.regweb3.utils.DocumentoUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 import es.caib.regweb3.utils.Validacion;
-import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.validation.IValidatorResult;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -22,7 +23,7 @@ import org.fundaciobit.genapp.common.validation.IValidatorResult;
  */
 public class PersonaValidator<T> extends AbstractRegWebValidator<T> {
 
-    protected final Logger log = Logger.getLogger(getClass());
+    protected final Logger log = LoggerFactory.getLogger(getClass());
 
 
     public void validate(IValidatorResult<T> errors, T __target__, boolean __isNou__,

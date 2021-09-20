@@ -10,29 +10,25 @@ import java.io.Serializable;
  */
 @Entity
 @Table(name = "RWE_CATESTADOENTIDAD")
-@SequenceGenerator(name="generator",sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
+@SequenceGenerator(name = "generator", sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
 public class CatEstadoEntidad implements Serializable {
 
     private Long id;
     private String codigoEstadoEntidad;
     private String descripcionEstadoEntidad;
 
-  	public CatEstadoEntidad(){
+    public CatEstadoEntidad() {
 
-  	}
-
+    }
 
     public CatEstadoEntidad(Long id) {
         this.id = id;
     }
 
-    public void finalize() throws Throwable {
-
-  	}
 
     @Id
-    @GeneratedValue(strategy=GenerationType.SEQUENCE,generator = "generator")
-    @Column(name="ID")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "generator")
+    @Column(name = "ID")
     public Long getId() {
         return id;
     }
@@ -44,22 +40,22 @@ public class CatEstadoEntidad implements Serializable {
 
     @Column(name = "CODIGOESTADOENTIDAD", nullable = false, length = 2, unique = true)
     public String getCodigoEstadoEntidad() {
-      return codigoEstadoEntidad;
+        return codigoEstadoEntidad;
     }
 
 
     public void setCodigoEstadoEntidad(String codigoEstadoEntidad) {
-      this.codigoEstadoEntidad = codigoEstadoEntidad;
+        this.codigoEstadoEntidad = codigoEstadoEntidad;
     }
 
 
     @Column(name = "DESCRIPCIONESTADOENTIDAD", nullable = false, length = 50)
     public String getDescripcionEstadoEntidad() {
-      return descripcionEstadoEntidad;
+        return descripcionEstadoEntidad;
     }
 
 
     public void setDescripcionEstadoEntidad(String descripcionEstadoEntidad) {
-      this.descripcionEstadoEntidad = descripcionEstadoEntidad;
+        this.descripcionEstadoEntidad = descripcionEstadoEntidad;
     }
 }

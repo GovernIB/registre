@@ -12,7 +12,8 @@ import es.caib.regweb3.sir.ws.api.wssir7.WS_SIR7ServiceLocator;
 import es.caib.regweb3.sir.ws.api.wssir7.WS_SIR7_PortType;
 import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ejb.Stateless;
 import java.net.URL;
@@ -24,7 +25,7 @@ import java.util.Date;
 @Stateless(name = "MensajeEJB")
 public class MensajeBean implements MensajeLocal {
 
-    public final Logger log = Logger.getLogger(getClass());
+    public final Logger log = LoggerFactory.getLogger(getClass());
 
     private Sicres3XML sicres3XML = new Sicres3XML();
 

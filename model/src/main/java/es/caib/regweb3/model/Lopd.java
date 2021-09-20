@@ -1,7 +1,5 @@
 package es.caib.regweb3.model;
 
-import org.hibernate.annotations.ForeignKey;
-import org.hibernate.annotations.Index;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -14,13 +12,11 @@ import java.util.Date;
  * @author anadal (index)
  */
 @Entity
-@Table(name = "RWE_LOPD")
-@org.hibernate.annotations.Table(appliesTo = "RWE_LOPD", indexes = {
-    @Index(name="RWE_LOPD_LIBRO_FK_I", columnNames = {"LIBRO"}),
-    @Index(name="RWE_LOPD_USUENT_FK_I", columnNames = {"USUARIO"})
-})
-@SequenceGenerator(name="generator",sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
-public class Lopd implements Serializable{
+@Table(name = "RWE_LOPD", indexes = {
+        @Index(name = "RWE_LOPD_LIBRO_FK_I", columnList = "LIBRO"),
+        @Index(name = "RWE_LOPD_USUENT_FK_I", columnList = "USUARIO")})
+@SequenceGenerator(name = "generator", sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
+public class Lopd implements Serializable {
 
     private Long id;
     private Integer numeroRegistro;
@@ -33,8 +29,8 @@ public class Lopd implements Serializable{
 
 
     @Id
-    @GeneratedValue(strategy=GenerationType.SEQUENCE,generator = "generator")
-    @Column(name="ID")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "generator")
+    @Column(name = "ID")
     public Long getId() {
         return id;
     }
@@ -54,7 +50,7 @@ public class Lopd implements Serializable{
     }
 
 
-    @Column(name = "TIPOREGISTRO", nullable=false)
+    @Column(name = "TIPOREGISTRO", nullable = false)
     public Long getTipoRegistro() {
         return tipoRegistro;
     }
@@ -64,7 +60,7 @@ public class Lopd implements Serializable{
     }
 
 
-    @Column(name = "ANYOREGISTRO", nullable=false)
+    @Column(name = "ANYOREGISTRO", nullable = false)
     public String getAnyoRegistro() {
         return anyoRegistro;
     }
@@ -75,8 +71,7 @@ public class Lopd implements Serializable{
 
 
     @ManyToOne(optional = false)
-    @JoinColumn(name="LIBRO")
-    @ForeignKey(name="RWE_LOPD_LIBRO_FK")
+    @JoinColumn(name = "LIBRO", foreignKey = @ForeignKey(name = "RWE_LOPD_LIBRO_FK"))
     public Libro getLibro() {
         return libro;
     }
@@ -97,8 +92,7 @@ public class Lopd implements Serializable{
 
 
     @ManyToOne(optional = false)
-    @JoinColumn(name="USUARIO")
-    @ForeignKey(name="RWE_LOPD_USUENT_FK")
+    @JoinColumn(name = "USUARIO", foreignKey = @ForeignKey(name = "RWE_LOPD_USUENT_FK"))
     public UsuarioEntidad getUsuario() {
         return usuario;
     }
@@ -108,7 +102,7 @@ public class Lopd implements Serializable{
     }
 
 
-    @Column(name = "ACCION", nullable=false)
+    @Column(name = "ACCION", nullable = false)
     public Long getAccion() {
         return accion;
     }

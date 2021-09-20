@@ -32,7 +32,7 @@ import javax.servlet.http.HttpServletRequest;
 @SessionAttributes("usuario")
 public class UsuarioExisteController extends BaseController {
 
-    //protected final Logger log = Logger.getLogger(getClass());
+    //protected final Logger log = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private UsuarioDocumentoValidator usuarioDocumentoValidator;

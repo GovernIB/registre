@@ -8,7 +8,8 @@ import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.controller.BaseController;
 import es.caib.regweb3.webapp.form.OficinaBusquedaForm;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -25,7 +26,7 @@ import javax.servlet.http.HttpServletResponse;
 @RequestMapping(value = "/oficina")
 public class OficinaController extends BaseController {
 
-    protected final Logger log = Logger.getLogger(getClass());
+    protected final Logger log = LoggerFactory.getLogger(getClass());
 
     @EJB(mappedName = "regweb3/CatEstadoEntidadEJB/local")
     private CatEstadoEntidadLocal catEstadoEntidadEjb;

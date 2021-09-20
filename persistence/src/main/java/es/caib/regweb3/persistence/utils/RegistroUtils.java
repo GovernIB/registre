@@ -4,7 +4,8 @@ import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.PlantillaJson;
 import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -26,7 +27,7 @@ import java.util.Locale;
 
 public class RegistroUtils{
 
-    public static final Logger log = Logger.getLogger(RegistroUtils.class);
+    public static final Logger log = LoggerFactory.getLogger(RegistroUtils.class);
 
     private RegistroUtils() {
     }

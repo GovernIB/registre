@@ -1,11 +1,8 @@
 package es.caib.regweb3.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.hibernate.annotations.*;
 
 import javax.persistence.*;
-import javax.persistence.Entity;
-import javax.persistence.Table;
 import javax.xml.bind.annotation.*;
 import java.util.HashMap;
 import java.util.Map;
@@ -18,7 +15,7 @@ import java.util.Map;
  */
 @Entity
 @Table(name = "RWE_TIPODOCUMENTAL")
-@SequenceGenerator(name="generator",sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
+@SequenceGenerator(name = "generator", sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
 @XmlRootElement(name = "tipoDocumental")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class TipoDocumental extends Traducible {
@@ -34,7 +31,7 @@ public class TipoDocumental extends Traducible {
     }
 
     public TipoDocumental(String id) {
-      this.id= Long.valueOf(id);
+        this.id = Long.valueOf(id);
     }
 
     public TipoDocumental(String codigoNTI, Long idEntidad) {
@@ -42,21 +39,17 @@ public class TipoDocumental extends Traducible {
         this.entidad = new Entidad(idEntidad);
     }
 
-    /**
-     *
-     * @param td
-     */
     public TipoDocumental(TipoDocumental td) {
-      super();
-      this.id = td.id;
-      this.codigoNTI = td.codigoNTI;
-      this.traducciones = new HashMap<String, Traduccion>(td.getTraducciones());
-      this.entidad = td.entidad == null? null : new Entidad(td.entidad);
+        super();
+        this.id = td.id;
+        this.codigoNTI = td.codigoNTI;
+        this.traducciones = new HashMap<String, Traduccion>(td.getTraducciones());
+        this.entidad = td.entidad == null ? null : new Entidad(td.entidad);
     }
 
     @Id
-    @GeneratedValue(strategy=GenerationType.SEQUENCE,generator = "generator")
-    @Column(name="ID")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "generator")
+    @Column(name = "ID")
     public Long getId() {
         return id;
     }
@@ -67,16 +60,15 @@ public class TipoDocumental extends Traducible {
 
     @Column(name = "CODIGONTI")
     public String getCodigoNTI() {
-      return codigoNTI;
+        return codigoNTI;
     }
 
     public void setCodigoNTI(String codigoNTI) {
-      this.codigoNTI = codigoNTI;
+        this.codigoNTI = codigoNTI;
     }
 
     @ManyToOne()
-    @JoinColumn(name = "ENTIDAD")
-    @ForeignKey(name = "RWE_TIPODOCUMENTAL_ENTIDAD_FK")
+    @JoinColumn(name = "ENTIDAD", foreignKey = @ForeignKey(name = "RWE_TIPODOCUMENTAL_ENTIDAD_FK"))
     @JsonIgnore
     public Entidad getEntidad() {
         return entidad;
@@ -86,16 +78,11 @@ public class TipoDocumental extends Traducible {
         this.entidad = entidad;
     }
 
-
-
-    @CollectionOfElements(fetch=FetchType.LAZY,targetElement = TraduccionTipoDocumental.class)
-    @Cascade(value=org.hibernate.annotations.CascadeType.ALL)
-    @LazyCollection(value= LazyCollectionOption.FALSE)
-    @JoinTable(name="RWE_TRA_TDOCUMENTAL",joinColumns={@JoinColumn(name="IDTDOCUMENTAL")})
-    @org.hibernate.annotations.MapKey(columns={@Column(name="LANG",length=2)})
-    @ForeignKey(name="RWE_TIPODOC_TRATIPODOC_FK", inverseName = "RWE_TRATIPODOC_TIPODOC_FK")
+    @ElementCollection(targetClass = TraduccionTipoDocumental.class, fetch = FetchType.EAGER)
+    @CollectionTable(name = "RWE_TRA_TDOCUMENTAL", foreignKey = @ForeignKey(name="RWE_TIPODOC_TRATIPODOC_FK"), joinColumns = @JoinColumn(name = "IDTDOCUMENTAL"))
+    @MapKeyColumn(name = "LANG", length = 2)
     @Override
-    public Map<String,Traduccion> getTraducciones() {
+    public Map<String, Traduccion> getTraducciones() {
         return traducciones;
     }
 }

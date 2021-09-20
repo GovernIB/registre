@@ -509,7 +509,7 @@ public class AnexoController extends BaseController {
             log.error(I18NUtils.getMessage(i18ne), i18ne);
         } catch (NumberFormatException e) {
             // TODO QUE FER
-            log.info(e);
+            log.info(e.getMessage());
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -3,99 +3,44 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>plugin-justificante-mock</artifactId>
-    <packaging>jar</packaging>
-    <version>3.2.4</version>
-
     <parent>
         <groupId>es.caib.regweb3</groupId>
-        <version>3.2.4</version>
+        <version>3.3.0</version>
         <artifactId>plugin-justificante</artifactId>
     </parent>
 
+    <artifactId>plugin-justificante-mock</artifactId>
+    <packaging>jar</packaging>
+    <version>3.3.0</version>
+
     <name>RegWeb3 - Justificante Plugin - Mock</name>
-
-    <repositories>
-        <repository>
-            <id>maven-nuxeo</id>
-            <name>Maven Nuxeo Repository</name>
-            <url>https://maven.nuxeo.org/nexus/content/groups/public/</url>
-            <layout>default</layout>
-            <releases>
-                <enabled>true</enabled>
-                <updatePolicy>never</updatePolicy>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-                <updatePolicy>never</updatePolicy>
-            </snapshots>
-        </repository>
-
-    </repositories>
 
     <dependencies>
 
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-            <version>2.0</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
-            <groupId>${project.groupId}</groupId>
+            <groupId>es.caib.regweb3</groupId>
             <artifactId>plugin-justificante-api</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>regweb3-model</artifactId>
-            <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-annotations</artifactId>
-            <version>3.4.0.GA</version>
+            <groupId>org.fundaciobit.pluginsib.documentcustody</groupId>
+            <artifactId>pluginsib-documentcustody-api</artifactId>
+            <version>${documentcustody.api.version}</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
-            <groupId>${project.groupId}</groupId>
+            <groupId>es.caib.regweb3</groupId>
             <artifactId>regweb3-utils</artifactId>
-            <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
-<!-- XYZ ZZZ
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>regweb3-persistence</artifactId>
-            <version>${project.version}</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.fundaciobit.genapp</groupId>
-            <artifactId>genapp-web</artifactId>
-            <version>1.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>javax</groupId>
-            <artifactId>javaee-api</artifactId>
-            <version>6.0</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>jstl</artifactId>
-            <version>1.2</version>
-            <scope>provided</scope>
-        </dependency>
-        -->
 
         <!-- iText -->
         <dependency>
@@ -110,6 +55,12 @@
             <artifactId>xmlworker</artifactId>
             <version>1.1.1</version>
             <type>jar</type>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.itextpdf</groupId>
+                    <artifactId>itextpdf</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
     </dependencies>
@@ -117,15 +68,6 @@
 
     <build>
         <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
-                    <encoding>UTF-8</encoding>
-                </configuration>
-            </plugin>
 
             <plugin>
                 <artifactId>maven-resources-plugin</artifactId>

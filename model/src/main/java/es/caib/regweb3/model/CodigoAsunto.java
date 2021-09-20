@@ -1,10 +1,7 @@
 package es.caib.regweb3.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.hibernate.annotations.*;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
 import javax.persistence.*;
 import javax.xml.bind.annotation.*;
 import java.util.HashMap;
@@ -72,8 +69,7 @@ public class CodigoAsunto extends Traducible {
     }
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "ENTIDAD")
-    @ForeignKey(name = "RWE_CODASUNTO_ENTIDAD_FK")
+    @JoinColumn(name = "ENTIDAD", foreignKey = @ForeignKey(name = "RWE_CODASUNTO_ENTIDAD_FK"))
     public Entidad getEntidad() {
         return entidad;
     }
@@ -101,12 +97,9 @@ public class CodigoAsunto extends Traducible {
         this.activo = activo;
     }
 
-    @CollectionOfElements(fetch=FetchType.LAZY,targetElement = TraduccionCodigoAsunto.class)
-    @Cascade(value=org.hibernate.annotations.CascadeType.ALL)
-    @LazyCollection(value= LazyCollectionOption.FALSE)
-    @JoinTable(name="RWE_TRA_CODIGOASUNTO",joinColumns={@JoinColumn(name="IDCODIGOASUNTO")})
-    @org.hibernate.annotations.MapKey(columns={@Column(name="LANG",length=2)})
-    @ForeignKey(name="RWE_CODASUNTO_TRACODASUNTO_FK", inverseName = "RWE_TRACODASUNTO_CODASUNTO_FK")
+    @ElementCollection(targetClass = TraduccionCodigoAsunto.class, fetch = FetchType.EAGER)
+    @CollectionTable(name = "RWE_TRA_CODIGOASUNTO", foreignKey = @ForeignKey(name="RWE_CODASUNTO_TRACODASUNTO_FK"), joinColumns = @JoinColumn(name = "IDCODIGOASUNTO"))
+    @MapKeyColumn(name = "LANG", length = 2)
     @Override
     @XmlTransient
     public Map<String,Traduccion> getTraducciones() {

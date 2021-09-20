@@ -2,8 +2,9 @@ package es.caib.regweb3.webapp.validator;
 
 import es.caib.regweb3.model.RegistroEntrada;
 import es.caib.regweb3.persistence.validator.RegistroEntradaValidator;
-import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.web.validation.WebValidationResult;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
@@ -15,7 +16,7 @@ import org.springframework.validation.Validator;
 @Component
 public class RegistroEntradaWebValidator implements Validator {
 
-  protected final Logger log = Logger.getLogger(getClass());
+  protected final Logger log = LoggerFactory.getLogger(getClass());
 
   protected RegistroEntradaValidator<Object> validator = new RegistroEntradaValidator<Object>();
 

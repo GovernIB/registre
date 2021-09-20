@@ -1,7 +1,5 @@
 package es.caib.regweb3.model;
 
-import org.hibernate.annotations.ForeignKey;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
@@ -13,7 +11,7 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "RWE_TRAZABILIDAD_SIR")
-@SequenceGenerator(name="generator",sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
+@SequenceGenerator(name = "generator", sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
 public class TrazabilidadSir implements Serializable {
 
     private Long id;
@@ -41,8 +39,8 @@ public class TrazabilidadSir implements Serializable {
     }
 
     @Id
-    @GeneratedValue(strategy=GenerationType.SEQUENCE,generator = "generator")
-    @Column(name="ID")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "generator")
+    @Column(name = "ID")
     public Long getId() {
         return id;
     }
@@ -51,7 +49,7 @@ public class TrazabilidadSir implements Serializable {
         this.id = id;
     }
 
-    @Column(name="tipo", nullable = false)
+    @Column(name = "tipo", nullable = false)
     public Long getTipo() {
         return tipo;
     }
@@ -61,8 +59,7 @@ public class TrazabilidadSir implements Serializable {
     }
 
     @ManyToOne(optional = false)
-    @JoinColumn(name="REGISTRO_SIR")
-    @ForeignKey(name="RWE_TRASIR_REGSIR_FK")
+    @JoinColumn(name = "REGISTRO_SIR", foreignKey = @ForeignKey(name = "RWE_TRASIR_REGSIR_FK"))
     public RegistroSir getRegistroSir() {
         return registroSir;
     }
@@ -72,8 +69,7 @@ public class TrazabilidadSir implements Serializable {
     }
 
     @ManyToOne(optional = true)
-    @JoinColumn(name="REGISTRO_ENTRADA")
-    @ForeignKey(name="RWE_TRASIR_REGENT_FK")
+    @JoinColumn(name = "REGISTRO_ENTRADA", foreignKey = @ForeignKey(name = "RWE_TRASIR_REGENT_FK"))
     public RegistroEntrada getRegistroEntrada() {
         return registroEntrada;
     }
@@ -185,9 +181,9 @@ public class TrazabilidadSir implements Serializable {
 
     @Override
     public String toString() {
-        if(id != null){
+        if (id != null) {
             return id.toString();
-        }else{
+        } else {
             return null;
         }
     }

@@ -1,13 +1,13 @@
 package es.caib.regweb3.model;
 
-import org.hibernate.annotations.ForeignKey;
 
 import javax.persistence.*;
 import java.io.Serializable;
 
 /**
  * Created 19/02/14 9:55
- *  Esta relación representa la dependencia funcional entre unidades y oficinas
+ * Esta relación representa la dependencia funcional entre unidades y oficinas
+ *
  * @author mgonzalez
  */
 
@@ -17,10 +17,11 @@ import java.io.Serializable;
 public class RelacionOrganizativaOfi implements Serializable {
 
     private Oficina oficina;
-  	private Organismo organismo;
-  	private CatEstadoEntidad estado;
+    private Organismo organismo;
+    private CatEstadoEntidad estado;
 
-  	public RelacionOrganizativaOfi(){}
+    public RelacionOrganizativaOfi() {
+    }
 
     public RelacionOrganizativaOfi(Long idOficina, String codOficina, String denOficina, Long idOrganismo, Long idOrgResponsable, Long idOrgRaiz) {
         this.oficina = new Oficina(idOficina, codOficina, denOficina, idOrgResponsable);
@@ -30,44 +31,41 @@ public class RelacionOrganizativaOfi implements Serializable {
 
     @Id
     @ManyToOne()
-    @JoinColumn (name="IDOFICINA")
-    @ForeignKey(name="RWE_RELORGOFI_CATOFI_FK")
+    @JoinColumn(name = "IDOFICINA", foreignKey = @ForeignKey(name = "RWE_RELORGOFI_OFICINA_FK"))
     public Oficina getOficina() {
-      return oficina;
+        return oficina;
     }
 
     /**
-    * @param oficina the codOficina to set
-    */
+     * @param oficina the codOficina to set
+     */
     public void setOficina(Oficina oficina) {
-      this.oficina = oficina;
+        this.oficina = oficina;
     }
 
 
     @Id
     @ManyToOne(optional = false)
-    @JoinColumn (name="IDORGANISMO")
-    @ForeignKey(name="RWE_RELORGOFI_ORGANISMO_FK")
+    @JoinColumn(name = "IDORGANISMO", foreignKey = @ForeignKey(name = "RWE_RELORGOFI_ORGANISMO_FK"))
     public Organismo getOrganismo() {
-      return organismo;
+        return organismo;
     }
 
 
     public void setOrganismo(Organismo organismo) {
-      this.organismo = organismo;
+        this.organismo = organismo;
     }
 
 
     @ManyToOne(optional = false)
-    @JoinColumn(name="ESTADO")
-    @ForeignKey(name="RWE_RELORGANOFI_CATESTENT_FK")
+    @JoinColumn(name = "ESTADO", foreignKey = @ForeignKey(name = "RWE_RELORGANOFI_CATESTENT_FK"))
     public CatEstadoEntidad getEstado() {
-      return estado;
+        return estado;
     }
 
 
     public void setEstado(CatEstadoEntidad estado) {
-      this.estado = estado;
+        this.estado = estado;
     }
 
     @Override

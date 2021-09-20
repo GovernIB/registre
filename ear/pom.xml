@@ -2,748 +2,489 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-  <parent>
-    <artifactId>regweb3</artifactId>
-    <groupId>es.caib.regweb3</groupId>
-    <version>3.2.4</version>
-  </parent>
-  <modelVersion>4.0.0</modelVersion>
-
-  <artifactId>regweb3-ear</artifactId>
-  <version>3.2.4</version>
-  <packaging>ear</packaging>
-
-  <name>RegWeb3 - Ear</name>
-
-  <build>
-
-    <finalName>regweb3</finalName>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-ear-plugin</artifactId>
-        <version>2.8</version>
-        <!-- configuring the ear plugin -->
-        <configuration>
-          <applicationName>regweb3</applicationName>
-          <displayName>Govern de les Illes Balears</displayName>
-          <description>Registre Web</description>
-          <defaultLibBundleDir>lib</defaultLibBundleDir>
-
-          <jboss>
-            <version>5</version>
-            <loader-repository>es.caib.regweb3:loader=regweb3.ear</loader-repository>
-            <loader-repository-config>java2ParentDelegation=false</loader-repository-config>
-          </jboss>
-
-          <modules>
-
-            <webModule>
-              <groupId>es.caib.regweb3</groupId>
-              <artifactId>regweb3-webapp</artifactId>
-              <contextRoot>regweb3</contextRoot>
-            </webModule>
-
-            <ejbModule>
-              <groupId>es.caib.regweb3</groupId>
-              <artifactId>regweb3-persistence</artifactId>
-            </ejbModule>
-
-            <ejbModule>
-              <groupId>es.caib.regweb3</groupId>
-              <artifactId>regweb3-ws-server</artifactId>
-            </ejbModule>
-
-            <ejbModule>
-              <groupId>es.caib.regweb3</groupId>
-              <artifactId>regweb3-sir-ws-server</artifactId>
-            </ejbModule>
-
-            <ejbModule>
-              <groupId>es.caib.regweb3</groupId>
-              <artifactId>regweb3-sir-api</artifactId>
-            </ejbModule>
-
-            <jarModule>
-              <groupId>es.caib.regweb3</groupId>
-              <artifactId>regweb3-model</artifactId>
-              <includeInApplicationXml>true</includeInApplicationXml>
-              <bundleDir>/</bundleDir>
-            </jarModule>
-
-            <jarModule>
-              <groupId>es.caib.regweb3</groupId>
-              <artifactId>regweb3-utils</artifactId>
-              <includeInApplicationXml>true</includeInApplicationXml>
-              <bundleDir>/</bundleDir>
-            </jarModule>
-
-            <jarModule>
-              <groupId>es.caib.regweb3</groupId>
-              <artifactId>regweb3-sir-core</artifactId>
-              <includeInApplicationXml>true</includeInApplicationXml>
-              <bundleDir>/</bundleDir>
-            </jarModule>
-
-          </modules>
-
-        </configuration>
-      </plugin>
-
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>jboss-maven-plugin</artifactId>
-        <version>1.5.0</version>
-        <configuration>
-          <jbossHome>D:\servidores\jboss-eap-5.1\jboss-as</jbossHome>
-          <serverName>default</serverName>
-          <fileName>target/regweb3.ear</fileName>
-        </configuration>
-      </plugin>
-
-    </plugins>
-  </build>
-
-  <dependencies>
-
-    <!-- Internas -->
-
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>regweb3-persistence</artifactId>
-      <version>${project.version}</version>
-      <type>ejb</type>
-    </dependency>
-
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>regweb3-webapp</artifactId>
-      <version>${project.version}</version>
-      <type>war</type>
-    </dependency>
-
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>regweb3-ws-server</artifactId>
-      <version>${project.version}</version>
-      <type>ejb</type>
-    </dependency>
-
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>regweb3-sir-ws-server</artifactId>
-      <version>${project.version}</version>
-      <type>ejb</type>
-    </dependency>
-
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>regweb3-model</artifactId>
-      <version>${project.version}</version>
-      <type>jar</type>
-    </dependency>
-
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>regweb3-utils</artifactId>
-      <version>${project.version}</version>
-      <type>jar</type>
-    </dependency>
-
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>regweb3-sir-api</artifactId>
-      <version>${project.version}</version>
-      <type>ejb</type>
-    </dependency>
-
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>regweb3-sir-core</artifactId>
-      <version>${project.version}</version>
-      <type>jar</type>
-    </dependency>
-
-
-
-    <!-- ======================= -->
-    <!-- ===== PLUGINS API ===== -->
-    <!-- ======================= -->
-
-    <dependency>
-      <groupId>org.fundaciobit.pluginsib.core</groupId>
-      <artifactId>pluginsib-core</artifactId>
-      <version>2.0.0</version>
-    </dependency>
-
-    <!-- ============================================ -->
-    <!-- ============= PLUGINS DE CUSTODIA ========== -->
-    <!-- ============================================ -->
-
-    <dependency>
-      <groupId>org.fundaciobit.pluginsib.documentcustody</groupId>
-      <artifactId>pluginsib-documentcustody-api</artifactId>
-      <version>${documentcustody.api.version}</version>
-    </dependency>
-
-
-    <dependency>
-      <groupId>org.fundaciobit.pluginsib.documentcustody</groupId>
-      <artifactId>pluginsib-documentcustody-filesystem</artifactId>
-      <version>${documentcustody-filesystem.version}</version>
-    </dependency>
-
-
-    <dependency>
-      <groupId>org.fundaciobit.pluginsib.documentcustody</groupId>
-      <artifactId>pluginsib-documentcustody-alfresco</artifactId>
-      <version>${documentcustody.api.version}</version>
-      <exclusions>
-        <exclusion>
-          <groupId>org.slf4j</groupId>
-          <artifactId>slf4j-api</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>javax.xml.stream</groupId>
-          <artifactId>stax-api</artifactId>
-        </exclusion>
-       <!-- <exclusion>
-          <groupId>org.codehaus.woodstox</groupId>
-          <artifactId>stax2-api</artifactId>
-        </exclusion>-->
-        <exclusion>
-          <groupId>xpp3</groupId>
-          <artifactId>xpp3</artifactId>
-        </exclusion>
-      </exclusions> 
-    </dependency>
-
-    <dependency>
-      <groupId>org.fundaciobit.pluginsib.documentcustody</groupId>
-      <artifactId>pluginsib-documentcustody-arxiudigitalcaib</artifactId>
-      <version>${plugin-documentcustody-arxiudigitalcaib.version}</version>
-    </dependency>
-
-
-    <!-- ====================================== -->
-    <!-- ===== PLUGINS DE USERINFORMATION ===== -->
-    <!-- ====================================== -->
-
-    <dependency>
-      <groupId>org.fundaciobit.pluginsib.userinformation</groupId>
-      <artifactId>pluginsib-userinformation-ldap</artifactId>
-      <version>2.0.1</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.fundaciobit.pluginsib.userinformation</groupId>
-      <artifactId>pluginsib-userinformation-database</artifactId>
-      <version>2.0.0</version>
-    </dependency>
-
-    <!--   VEURE APARTAT DE PROFILES AL FINAL D'AQUEST POM -->
-
-    <!-- ============================================ -->
-    <!-- ======== PLUGINS DE DISTRIBUCION =========== -->
-    <!-- ============================================ -->
-
-    <dependency>
-      <groupId>es.caib.regweb3</groupId>
-      <artifactId>plugin-distribucion-api</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>es.caib.regweb3</groupId>
-      <artifactId>plugin-distribucion-mock</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>es.caib.regweb3</groupId>
-      <artifactId>plugin-distribucion-goib</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-
-    <!-- ============================================ -->
-    <!-- ======== PLUGINS DE POSTPROCES =========== -->
-    <!-- ============================================ -->
-
-    <dependency>
-      <groupId>es.caib.regweb3</groupId>
-      <artifactId>plugin-postproceso-api</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>es.caib.regweb3</groupId>
-      <artifactId>plugin-postproceso-mock</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-
-    <!-- ============================================ -->
-    <!-- ======== PLUGINS DE JUSTIFICANTE =========== -->
-    <!-- ============================================ -->
-
-    <dependency>
-      <groupId>es.caib.regweb3</groupId>
-      <artifactId>plugin-justificante-api</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>es.caib.regweb3</groupId>
-      <artifactId>plugin-justificante-caib</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-
-    <dependency>
+    <parent>
+        <artifactId>regweb3</artifactId>
         <groupId>es.caib.regweb3</groupId>
-        <artifactId>plugin-justificante-mock</artifactId>
-        <version>${project.version}</version>
-    </dependency>
+        <version>3.3.0</version>
+    </parent>
 
-    <!-- ================================================= -->
-    <!-- ======== PLUGINS DE FIRMA EN SERVIDOR =========== -->
-    <!-- ================================================= -->
+    <artifactId>regweb3-ear</artifactId>
+    <packaging>ear</packaging>
+    <name>RegWeb3 - Ear</name>
+    <description>EAR de regweb3</description>
 
+    <build>
 
-    <dependency>
-      <groupId>org.fundaciobit.pluginsib.signatureserver</groupId>
-      <artifactId>pluginsib-signatureserver-api</artifactId>
-      <version>3.0.0</version>
-    </dependency>
+        <finalName>${project.parent.artifactId}</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-ear-plugin</artifactId>
+                <!-- configuring the ear plugin -->
+                <configuration>
+                    <generateApplicationXml>true</generateApplicationXml>
+                    <defaultLibBundleDir>lib</defaultLibBundleDir>
+                    <includeLibInApplicationXml>false</includeLibInApplicationXml>
+                    <applicationName>regweb3</applicationName>
+                    <displayName>Govern de les Illes Balears</displayName>
+                    <description>Registre Web</description>
+                    <!-- Nom mòduls d'acord amb punt 4.2 de l'Estàndard CAIB -->
+                    <outputFileNameMapping>@{artifactId}@-@{version}@.@{extension}@</outputFileNameMapping>
+                    <version>8</version>
+                    <archive>
+                        <manifestEntries>
+                            <project-version>${project.version}</project-version>
+                            <project-buildtime>${maven.build.timestamp}</project-buildtime>
+                            <scm-revision>${buildNumber}</scm-revision>
+                        </manifestEntries>
+                    </archive>
 
+                    <modules>
 
-    <dependency>
-      <groupId>org.fundaciobit.pluginsib.signatureserver</groupId>
-      <artifactId>pluginsib-signatureserver-miniappletinserver</artifactId>
-      <version>3.0.0</version>
-    </dependency>
-    
-    <dependency>
-      <groupId>org.fundaciobit.pluginsib.signatureserver</groupId>
-      <artifactId>pluginsib-signatureserver-afirmaserver</artifactId>
-      <version>3.0.1</version>
-      
-      <exclusions> 
-        <exclusion>  
-          <groupId>xerces</groupId>
-          <artifactId>xercesImpl</artifactId>
-        </exclusion>
+                        <webModule>
+                            <groupId>es.caib.regweb3</groupId>
+                            <artifactId>regweb3-webapp</artifactId>
+                            <contextRoot>regweb3</contextRoot>
+                            <bundleFileName>regweb3-webapp.war</bundleFileName>
+                        </webModule>
 
-        <exclusion>  
-          <groupId>com.sun.xml.bind</groupId>
-          <artifactId>jaxb-impl</artifactId>
-        </exclusion>
+                        <ejbModule>
+                            <groupId>es.caib.regweb3</groupId>
+                            <artifactId>regweb3-persistence</artifactId>
+                            <bundleFileName>regweb3-persistence.jar</bundleFileName>
+                        </ejbModule>
 
-        <exclusion>  
-          <groupId>xalan</groupId>
-          <artifactId>xalan</artifactId>
-        </exclusion>
+                        <ejbModule>
+                            <groupId>es.caib.regweb3</groupId>
+                            <artifactId>regweb3-ws-server</artifactId>
+                            <bundleFileName>regweb3-ws-server.jar</bundleFileName>
+                        </ejbModule>
 
-        <exclusion>  
-          <groupId>org.slf4j</groupId>
-          <artifactId>log4j-over-slf4j</artifactId>
-        </exclusion>
+                        <ejbModule>
+                            <groupId>es.caib.regweb3</groupId>
+                            <artifactId>regweb3-sir-ws-server</artifactId>
+                            <bundleFileName>regweb3-sir-ws-server.jar</bundleFileName>
+                        </ejbModule>
 
-        <exclusion>  
-          <groupId>org.slf4j</groupId>
-          <artifactId>jcl-over-slf4j</artifactId>
-        </exclusion>
-        
-        <exclusion>  
-          <groupId>org.apache.ws.security</groupId>
-          <artifactId>wss4j</artifactId>
-        </exclusion>
-        
-        <exclusion>  
-          <groupId>org.apache.santuario</groupId>
-          <artifactId>xmlsec</artifactId>
-        </exclusion>
-      </exclusions> 
-    </dependency>
+                        <ejbModule>
+                            <groupId>es.caib.regweb3</groupId>
+                            <artifactId>regweb3-sir-api</artifactId>
+                            <bundleFileName>regweb3-sir-api.jar</bundleFileName>
+                        </ejbModule>
 
+                    </modules>
 
-    <!-- ===================================================== -->
-    <!-- ===== PLUGINS DE VALIDACIO/INFORMACIO DE FIRMES ===== -->
-    <!-- ===================================================== -->
+                </configuration>
+            </plugin>
 
-    <dependency>
-      <groupId>org.fundaciobit.pluginsib.validatesignature</groupId>
-      <artifactId>pluginsib-validatesignature-api</artifactId>
-      <version>2.0.0</version>
-    </dependency>
+        </plugins>
+    </build>
 
-    
-    <!-- PLUGIN DE INTEGRA NOMÉS DISPONIBLE SI EXECUTAM
-         AMB JDK 1.7, PER AIXÒ E STROA EN l'APARTAT DE PROFILES -->
-    
-    <!-- PLUGIN DE @FIRMA -->
-    <dependency>
-      <groupId>org.apache.santuario</groupId>
-      <artifactId>xmlsec</artifactId>
-      <version>1.5.5</version>
-
-    </dependency>
-
-    <dependency>
-      <groupId>org.fundaciobit.pluginsib.validatesignature</groupId>
-      <artifactId>pluginsib-validatesignature-afirmacxf</artifactId>
-      <version>${pluginsib-validatesignature-afirmacxf.version}</version>
-
-        <exclusions>
-          <exclusion>
-          <groupId>xerces</groupId>
-          <artifactId>xercesImpl</artifactId>
-        </exclusion>
-
-        <exclusion>
-          <groupId>com.sun.xml.bind</groupId>
-          <artifactId>jaxb-impl</artifactId>
-        </exclusion>
-
-        <exclusion>
-          <groupId>xalan</groupId>
-          <artifactId>xalan</artifactId>
-        </exclusion>
-
-        <exclusion>
-          <groupId>org.slf4j</groupId>
-          <artifactId>log4j-over-slf4j</artifactId>
-        </exclusion>
-
-        <exclusion>
-          <groupId>org.slf4j</groupId>
-          <artifactId>jcl-over-slf4j</artifactId>
-        </exclusion>
-
-         <exclusion>
-          <groupId>org.apache.ws.security</groupId>
-          <artifactId>wss4j</artifactId>
-        </exclusion>
-
-       <!-- <exclusion>
-          <groupId>org.apache.santuario</groupId>
-          <artifactId>xmlsec</artifactId>
-        </exclusion>-->
-      </exclusions>
-    </dependency>
-
-    <!-- ================================================= -->
-    <!-- ======== API DE PLUGIN DE SCANWEB =========== -->
-    <!-- ================================================= -->
-
-    <dependency>
-      <groupId>org.fundaciobit.pluginsib.scanweb</groupId>
-      <artifactId>pluginsib-scanweb-api</artifactId>
-      <version>${scanweb.api.version}</version>
-    </dependency>
-
-
-    <!-- ============================================ -->
-    <!-- =============    FINAL PLUGINS   =========== -->
-    <!-- ============================================ -->
-
-    <!-- Externas -->
-    <dependency>
-      <groupId>org.fundaciobit.genapp</groupId>
-      <artifactId>genapp-core</artifactId>
-      <version>1.0</version>
-    </dependency>
-
-
-    <dependency>
-      <groupId>org.codehaus.jackson</groupId>
-      <artifactId>jackson-mapper-asl</artifactId>
-      <version>1.9.9</version>
-      <type>jar</type>
-    </dependency>
-
-    <dependency>
-      <groupId>org.codehaus.jackson</groupId>
-      <artifactId>jackson-core-asl</artifactId>
-      <version>1.9.9</version>
-      <type>jar</type>
-    </dependency>
-
-
-    <dependency>
-      <groupId>commons-io</groupId>
-      <artifactId>commons-io</artifactId>
-      <version>2.0</version>
-    </dependency>
-
-    <!-- Apache Commons -->
-    <dependency>
-      <groupId>commons-fileupload</groupId>
-      <artifactId>commons-fileupload</artifactId>
-      <version>1.2.2</version>
-    </dependency>
-
-    <dependency>
-      <groupId>commons-beanutils</groupId>
-      <artifactId>commons-beanutils</artifactId>
-      <version>1.9.1</version>
-    </dependency>
-
-    <!-- Apache Discovery IO -->
-    <dependency>
-      <groupId>commons-discovery</groupId>
-      <artifactId>commons-discovery</artifactId>
-      <version>0.5</version>
-    </dependency>
-
-
-    <dependency>
-      <groupId>org.bouncycastle</groupId>
-      <artifactId>bctsp-jdk15on</artifactId>
-      <version>1.46</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.bouncycastle</groupId>
-      <artifactId>bcprov-jdk15on</artifactId>
-      <version>${bouncycastle.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.bouncycastle</groupId>
-      <artifactId>bcmail-jdk15on</artifactId>
-      <version>${bouncycastle.version}</version>
-    </dependency>
-
-    <!-- apache POI -->
-    <dependency>
-      <groupId>org.apache.poi</groupId>
-      <artifactId>poi</artifactId>
-      <version>3.6</version>
-      <exclusions>
-        <exclusion>
-          <groupId>commons-logging</groupId>
-          <artifactId>commons-logging</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>log4j</groupId>
-          <artifactId>log4j</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-
-  </dependencies>
-
-
-  <profiles>
-  
-    <!-- ======================================================== -->
-    <!-- ============= PLUGINS DE VALIDACIO DE FIRMES =========== -->
-    <!-- ======================================================== -->
-    
-    <!-- ========== PLUGIN DE INTEGRA =========== -->
-
-    <profile>
-      <activation>
-        <jdk>[1.7,)</jdk>
-      </activation>
-      <dependencies>
+    <dependencies>
+        <!-- Especificacions i llibreries proporcionades per JBoss -->
         <dependency>
-          <groupId>org.fundaciobit.pluginsib.validatesignature</groupId>
-          <artifactId>pluginsib-validatesignature-integra</artifactId>
-          <version>2.0.0</version>
-          
-          <exclusions>
-            <!-- Eliminam tota la comunicació AXIS -->
-            <exclusion>  
-              <groupId>org.apache.axis</groupId>
-              <artifactId>axis</artifactId>
-            </exclusion>
-            <exclusion>  
-              <groupId>org.apache.axis</groupId>
-              <artifactId>axis-jaxrpc</artifactId>
-            </exclusion>
-            <exclusion>  
-              <groupId>org.apache.axis</groupId>
-              <artifactId>axis-saaj</artifactId>
-            </exclusion>
-            <exclusion>  
-              <groupId>org.apache.santuario</groupId>
-              <artifactId>xmlsec</artifactId>
-            </exclusion>
-            <exclusion>  
-              <groupId>com.sun.xml.wss</groupId>
-              <artifactId>xws-security</artifactId>
-            </exclusion>
-            
-            <!-- Altres llibreries no necessaries -->
-            <exclusion>  
-              <groupId>xerces</groupId>
-              <artifactId>xercesImpl</artifactId>
-            </exclusion>
-
-            <exclusion>  
-              <groupId>com.sun.xml.bind</groupId>
-              <artifactId>jaxb-impl</artifactId>
-            </exclusion>
-
-            <exclusion>  
-              <groupId>xalan</groupId>
-              <artifactId>xalan</artifactId>
-            </exclusion>
-
-            <exclusion>  
-              <groupId>org.slf4j</groupId>
-              <artifactId>log4j-over-slf4j</artifactId>
-            </exclusion>
-
-            <exclusion>  
-              <groupId>org.slf4j</groupId>
-              <artifactId>jcl-over-slf4j</artifactId>
-            </exclusion>
-
-            <exclusion>  
-              <groupId>org.apache.ws.security</groupId>
-              <artifactId>wss4j</artifactId>
-            </exclusion>
-
-            <exclusion>
-              <groupId>xml-security</groupId>
-              <artifactId>xmlsec</artifactId>
-            </exclusion>
-
-
-          </exclusions> 
-
-        </dependency>
-      </dependencies>
-    </profile>
- 
-  
-  
-
-    <!-- ============================================ -->
-    <!-- ============= PLUGINS DE SCANNER =========== -->
-    <!-- ============================================ -->
-
-    <!-- ========== PLUGIN DE SCAN DE IECISA =========== -->
-    <profile>
-      <id>iecisascanweb</id>
-      <dependencies>
-        <dependency>
-          <groupId>org.fundaciobit.pluginsib.scanweb</groupId>
-          <artifactId>pluginsib-scanweb-iecisascanweb-plugin</artifactId>
-          <version>4.0.0</version>
-        </dependency>
-      </dependencies>
-    </profile>
-
-
-    <!-- ====== PLUGIN DE SCAN DE DynamicWebTwain (DWT) ====== -->
-    <profile>
-      <id>dwtscanweb</id>
-      <dependencies>
-        <dependency>
-          <groupId>org.fundaciobit.pluginsib.scanweb</groupId>
-          <artifactId>pluginsib-scanweb-dynamicwebtwain</artifactId>
-          <version>4.0.0</version>
-        </dependency>
-      </dependencies>
-    </profile>
-
-    <!-- ========== PLUGIN DE SCAN DE DIGITALIB =========== -->
-    <profile>
-      <id>digitalibscanweb</id>
-      <dependencies>
-        <dependency>
-          <groupId>org.fundaciobit.pluginsib.scanweb</groupId>
-          <artifactId>pluginsib-scanweb-digitalib</artifactId>
-          <version>4.0.1</version>
-        </dependency>
-        <!-- incluimos la dependencia jersey porque si no da un error de json -->
-       <dependency>
-          <groupId>com.sun.jersey</groupId>
-          <artifactId>jersey-json</artifactId>
-          <version>1.19</version>
-
-         <!-- Añadimos estas exclusiones para que funcione el plugin de afirmaserver-->
-         <exclusions>
-           <exclusion>
-             <groupId>javax.xml.bind</groupId>
-             <artifactId>jaxb-api</artifactId>
-           </exclusion>
-           <exclusion>
-             <groupId>com.sun.xml.bind</groupId>
-             <artifactId>jaxb-impl</artifactId>
-           </exclusion>
-           <exclusion>
-             <groupId>javax.xml.stream</groupId>
-             <artifactId>stax-api</artifactId>
-           </exclusion>
-         </exclusions>
-
-       </dependency>
-
-
-       <dependency>
-         <groupId>org.codehaus.jackson</groupId>
-         <artifactId>jackson-jaxrs</artifactId>
-         <version>1.9.9</version>
-       </dependency>
-       <dependency>
-         <groupId>org.codehaus.jackson</groupId>
-         <artifactId>jackson-xc</artifactId>
-         <version>1.9.9</version>
-       </dependency>
-     </dependencies>
-   </profile>
-
-    <!-- ========== PLUGIN DE SCAN DE DIGITALIB MASSIVE =========== -->
-    <profile>
-      <id>digitalibmassivescanweb</id>
-      <dependencies>
-        <dependency>
-          <groupId>org.fundaciobit.pluginsib.scanweb</groupId>
-          <artifactId>pluginsib-scanweb-digitalibmassive</artifactId>
-          <version>4.0.0</version>
-        </dependency>
-        <!-- incluimos la dependencia jersey porque si no da un error de json -->
-        <dependency>
-          <groupId>com.sun.jersey</groupId>
-          <artifactId>jersey-json</artifactId>
-          <version>1.19</version>
-
-          <!-- Añadimos estas exclusiones para que funcione el plugin de afirmaserver-->
-          <exclusions>
-            <exclusion>
-              <groupId>javax.xml.bind</groupId>
-              <artifactId>jaxb-api</artifactId>
-            </exclusion>
-            <exclusion>
-              <groupId>com.sun.xml.bind</groupId>
-              <artifactId>jaxb-impl</artifactId>
-            </exclusion>
-            <exclusion>
-              <groupId>javax.xml.stream</groupId>
-              <artifactId>stax-api</artifactId>
-            </exclusion>
-          </exclusions>
-
+            <groupId>org.jboss.spec</groupId>
+            <artifactId>jboss-javaee-8.0</artifactId>
+            <type>pom</type>
+            <scope>provided</scope>
         </dependency>
 
+        <!-- ============= PLUGINS DE CUSTODIA ========== -->
+        <dependency>
+            <groupId>org.fundaciobit.pluginsib.documentcustody</groupId>
+            <artifactId>pluginsib-documentcustody-api</artifactId>
+            <version>${documentcustody.api.version}</version>
+        </dependency>
 
         <dependency>
-          <groupId>org.codehaus.jackson</groupId>
-          <artifactId>jackson-jaxrs</artifactId>
-          <version>1.9.9</version>
+            <groupId>org.fundaciobit.pluginsib.documentcustody</groupId>
+            <artifactId>pluginsib-documentcustody-filesystem</artifactId>
+            <version>${documentcustody-filesystem.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.fundaciobit.pluginsib.documentcustody</groupId>
+            <artifactId>pluginsib-documentcustody-alfresco</artifactId>
+            <version>${documentcustody.api.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>javax.xml.stream</groupId>
+                    <artifactId>stax-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>xpp3</groupId>
+                    <artifactId>xpp3</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
-          <groupId>org.codehaus.jackson</groupId>
-          <artifactId>jackson-xc</artifactId>
-          <version>1.9.9</version>
+            <groupId>org.fundaciobit.pluginsib.documentcustody</groupId>
+            <artifactId>pluginsib-documentcustody-arxiudigitalcaib</artifactId>
+            <version>${plugin-documentcustody-arxiudigitalcaib.version}</version>
         </dependency>
-      </dependencies>
-    </profile>
+        <!-- ============= FIN PLUGINS DE CUSTODIA ========== -->
 
- </profiles>
+        <!--  PLUGINS DE USERINFORMATION  -->
+        <dependency>
+            <groupId>org.fundaciobit.pluginsib.userinformation</groupId>
+            <artifactId>pluginsib-userinformation-api</artifactId>
+            <version>2.0.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.fundaciobit.pluginsib.userinformation</groupId>
+            <artifactId>pluginsib-userinformation-ldap</artifactId>
+            <version>2.0.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.fundaciobit.pluginsib.userinformation</groupId>
+            <artifactId>pluginsib-userinformation-database</artifactId>
+            <version>2.0.0</version>
+        </dependency>
+
+        <!-- ======== API DE PLUGIN DE SCANWEB =========== -->
+        <dependency>
+            <groupId>org.fundaciobit.pluginsib.scanweb</groupId>
+            <artifactId>pluginsib-scanweb-api</artifactId>
+            <version>${scanweb.api.version}</version>
+        </dependency>
+
+        <!-- ===== PLUGINS DE VALIDACIO/INFORMACIO DE FIRMES ===== -->
+
+        <dependency>
+            <groupId>org.fundaciobit.pluginsib.validatesignature</groupId>
+            <artifactId>pluginsib-validatesignature-api</artifactId>
+            <version>${pluginsib-validatesignature-api}</version>
+        </dependency>
+
+        <!-- ======== PLUGINS DE FIRMA EN SERVIDOR =========== -->
+
+        <dependency>
+            <groupId>org.fundaciobit.pluginsib.signatureserver</groupId>
+            <artifactId>pluginsib-signatureserver-api</artifactId>
+            <version>${pluginsib-signatureserver-api}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.fundaciobit.pluginsib.signatureserver</groupId>
+            <artifactId>pluginsib-signatureserver-miniappletinserver</artifactId>
+            <version>${pluginsib-signatureserver-miniappletinserver}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.fundaciobit.pluginsib.signatureserver</groupId>
+            <artifactId>pluginsib-signatureserver-afirmaserver</artifactId>
+            <version>${pluginsib-signatureserver-afirmaserver}</version>
+
+            <exclusions>
+                <exclusion>
+                    <groupId>xerces</groupId>
+                    <artifactId>xercesImpl</artifactId>
+                </exclusion>
+
+                <exclusion>
+                    <groupId>com.sun.xml.bind</groupId>
+                    <artifactId>jaxb-impl</artifactId>
+                </exclusion>
+
+                <exclusion>
+                    <groupId>xalan</groupId>
+                    <artifactId>xalan</artifactId>
+                </exclusion>
+
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>log4j-over-slf4j</artifactId>
+                </exclusion>
+
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>jcl-over-slf4j</artifactId>
+                </exclusion>
+
+                <exclusion>
+                    <groupId>org.apache.ws.security</groupId>
+                    <artifactId>wss4j</artifactId>
+                </exclusion>
+
+                <exclusion>
+                    <groupId>org.apache.santuario</groupId>
+                    <artifactId>xmlsec</artifactId>
+                </exclusion>
+
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!-- Externas -->
+        <dependency>
+            <groupId>org.fundaciobit.genapp</groupId>
+            <artifactId>genapp-core</artifactId>
+            <version>1.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.fundaciobit.pluginsib.core</groupId>
+            <artifactId>pluginsib-core</artifactId>
+            <version>2.0.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Mòduls que van dins l'application.xml -->
+        <dependency>
+            <groupId>es.caib.regweb3</groupId>
+            <artifactId>regweb3-persistence</artifactId>
+            <type>ejb</type>
+        </dependency>
+
+        <dependency>
+            <groupId>es.caib.regweb3</groupId>
+            <artifactId>regweb3-webapp</artifactId>
+            <type>war</type>
+        </dependency>
+
+        <dependency>
+            <groupId>es.caib.regweb3</groupId>
+            <artifactId>regweb3-ws-server</artifactId>
+            <type>ejb</type>
+        </dependency>
+
+        <!--
+        Mòduls que van dins el lib/
+        Tenir en compte a l'hora de incloure dependències només si és imprescindible i no està ja dins
+        un mòdul sobre el que es pugui establir una dependència als descriptors.
+        https://docs.jboss.org/author/display/AS72/Implicit+module+dependencies+for+deployments
+        -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-beans</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>es.caib.regweb3</groupId>
+            <artifactId>regweb3-utils</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>es.caib.regweb3</groupId>
+            <artifactId>regweb3-model</artifactId>
+        </dependency>
+
+        <!-- ======== PLUGINS DE DISTRIBUCION =========== -->
+
+        <dependency>
+            <groupId>es.caib.regweb3</groupId>
+            <artifactId>plugin-distribucion-api</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>es.caib.regweb3</groupId>
+            <artifactId>plugin-distribucion-mock</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>es.caib.regweb3</groupId>
+            <artifactId>plugin-distribucion-goib</artifactId>
+        </dependency>
+
+        <!-- ======== PLUGINS DE POSTPROCES =========== -->
+
+        <dependency>
+            <groupId>es.caib.regweb3</groupId>
+            <artifactId>plugin-postproceso-api</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>es.caib.regweb3</groupId>
+            <artifactId>plugin-postproceso-mock</artifactId>
+        </dependency>
+
+        <!-- ======== PLUGINS DE JUSTIFICANTE =========== -->
+
+        <dependency>
+            <groupId>es.caib.regweb3</groupId>
+            <artifactId>plugin-justificante-api</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>es.caib.regweb3</groupId>
+            <artifactId>plugin-justificante-caib</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>es.caib.regweb3</groupId>
+            <artifactId>plugin-justificante-mock</artifactId>
+        </dependency>
+
+        <!-- ======== SIR =========== -->
+
+        <dependency>
+            <groupId>es.caib.regweb3</groupId>
+            <artifactId>regweb3-sir-api</artifactId>
+            <type>ejb</type>
+        </dependency>
+        <dependency>
+            <groupId>es.caib.regweb3</groupId>
+            <artifactId>regweb3-sir-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>es.caib.regweb3</groupId>
+            <artifactId>regweb3-sir-ws-server</artifactId>
+            <type>ejb</type>
+        </dependency>
+
+        <!-- iText -->
+        <dependency>
+            <groupId>com.itextpdf</groupId>
+            <artifactId>itextpdf</artifactId>
+            <version>${itext.version}</version>
+        </dependency>
+
+    </dependencies>
+
+
+    <profiles>
+
+        <!-- ========== PLUGIN DE SCAN DE IECISA =========== -->
+        <profile>
+            <id>iecisascanweb</id>
+            <dependencies>
+                <dependency>
+                    <groupId>org.fundaciobit.pluginsib.scanweb</groupId>
+                    <artifactId>pluginsib-scanweb-iecisascanweb-plugin</artifactId>
+                    <version>4.0.0</version>
+                </dependency>
+            </dependencies>
+        </profile>
+
+
+        <!-- ====== PLUGIN DE SCAN DE DynamicWebTwain (DWT) ====== -->
+        <profile>
+            <id>dwtscanweb</id>
+            <dependencies>
+                <dependency>
+                    <groupId>org.fundaciobit.pluginsib.scanweb</groupId>
+                    <artifactId>pluginsib-scanweb-dynamicwebtwain</artifactId>
+                    <version>4.0.0</version>
+                </dependency>
+            </dependencies>
+        </profile>
+
+        <!-- ========== PLUGIN DE SCAN DE DIGITALIB =========== -->
+        <profile>
+            <id>digitalibscanweb</id>
+            <dependencies>
+                <dependency>
+                    <groupId>org.fundaciobit.pluginsib.scanweb</groupId>
+                    <artifactId>pluginsib-scanweb-digitalib</artifactId>
+                    <version>4.0.1</version>
+                </dependency>
+                <!-- incluimos la dependencia jersey porque si no da un error de json -->
+                <dependency>
+                    <groupId>com.sun.jersey</groupId>
+                    <artifactId>jersey-json</artifactId>
+                    <version>1.19</version>
+
+                    <!-- Añadimos estas exclusiones para que funcione el plugin de afirmaserver-->
+                    <exclusions>
+                        <exclusion>
+                            <groupId>javax.xml.bind</groupId>
+                            <artifactId>jaxb-api</artifactId>
+                        </exclusion>
+                        <exclusion>
+                            <groupId>com.sun.xml.bind</groupId>
+                            <artifactId>jaxb-impl</artifactId>
+                        </exclusion>
+                        <exclusion>
+                            <groupId>javax.xml.stream</groupId>
+                            <artifactId>stax-api</artifactId>
+                        </exclusion>
+                    </exclusions>
+
+                </dependency>
+
+
+                <dependency>
+                    <groupId>org.codehaus.jackson</groupId>
+                    <artifactId>jackson-jaxrs</artifactId>
+                    <version>1.9.9</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.codehaus.jackson</groupId>
+                    <artifactId>jackson-xc</artifactId>
+                    <version>1.9.9</version>
+                </dependency>
+            </dependencies>
+        </profile>
+
+        <!-- ========== PLUGIN DE SCAN DE DIGITALIB MASSIVE =========== -->
+        <profile>
+            <id>digitalibmassivescanweb</id>
+            <dependencies>
+                <dependency>
+                    <groupId>org.fundaciobit.pluginsib.scanweb</groupId>
+                    <artifactId>pluginsib-scanweb-digitalibmassive</artifactId>
+                    <version>4.0.0</version>
+                </dependency>
+                <!-- incluimos la dependencia jersey porque si no da un error de json -->
+                <dependency>
+                    <groupId>com.sun.jersey</groupId>
+                    <artifactId>jersey-json</artifactId>
+                    <version>1.19</version>
+
+                    <!-- Añadimos estas exclusiones para que funcione el plugin de afirmaserver-->
+                    <exclusions>
+                        <exclusion>
+                            <groupId>javax.xml.bind</groupId>
+                            <artifactId>jaxb-api</artifactId>
+                        </exclusion>
+                        <exclusion>
+                            <groupId>com.sun.xml.bind</groupId>
+                            <artifactId>jaxb-impl</artifactId>
+                        </exclusion>
+                        <exclusion>
+                            <groupId>javax.xml.stream</groupId>
+                            <artifactId>stax-api</artifactId>
+                        </exclusion>
+                    </exclusions>
+
+                </dependency>
+
+                <dependency>
+                    <groupId>org.codehaus.jackson</groupId>
+                    <artifactId>jackson-jaxrs</artifactId>
+                    <version>1.9.9</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.codehaus.jackson</groupId>
+                    <artifactId>jackson-xc</artifactId>
+                    <version>1.9.9</version>
+                </dependency>
+            </dependencies>
+        </profile>
+
+    </profiles>
 
 </project>

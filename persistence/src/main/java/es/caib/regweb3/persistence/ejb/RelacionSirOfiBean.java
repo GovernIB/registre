@@ -5,8 +5,9 @@ import es.caib.regweb3.model.Organismo;
 import es.caib.regweb3.model.RelacionSirOfi;
 import es.caib.regweb3.model.RelacionSirOfiPK;
 import es.caib.regweb3.utils.RegwebConstantes;
-import org.apache.log4j.Logger;
 import org.jboss.ejb3.annotation.SecurityDomain;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
@@ -28,7 +29,7 @@ import java.util.List;
 @SecurityDomain("seycon")
 @RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI"})
 public class RelacionSirOfiBean extends BaseEjbJPA<RelacionSirOfi, RelacionSirOfiPK> implements RelacionSirOfiLocal {
-    protected final Logger log = Logger.getLogger(getClass());
+    protected final Logger log = LoggerFactory.getLogger(getClass());
 
     @PersistenceContext
     private EntityManager em;

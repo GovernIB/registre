@@ -3,7 +3,8 @@ package es.caib.regweb3.ws.utils;
 import es.caib.regweb3.persistence.ejb.PluginLocal;
 import es.caib.regweb3.persistence.ejb.UsuarioEntidadLocal;
 import es.caib.regweb3.persistence.ejb.UsuarioLocal;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.naming.InitialContext;
 
@@ -14,7 +15,7 @@ import javax.naming.InitialContext;
  */
 public final class EjbManager {
 
-  protected static final Logger log = Logger.getLogger(EjbManager.class);
+  protected static final Logger log = LoggerFactory.getLogger(EjbManager.class);
 
 
   protected static UsuarioEntidadLocal usuariEntitatEjb;

@@ -16,7 +16,6 @@ import es.caib.regweb3.plugins.justificante.IJustificantePlugin;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.RegwebUtils;
 import es.caib.regweb3.utils.TimeUtils;
-import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NArgumentCode;
 import org.fundaciobit.genapp.common.i18n.I18NArgumentString;
 import org.fundaciobit.genapp.common.i18n.I18NException;
@@ -28,6 +27,8 @@ import org.fundaciobit.plugins.signatureserver.api.ISignatureServerPlugin;
 import org.fundaciobit.pluginsib.core.utils.Metadata;
 import org.fundaciobit.pluginsib.core.utils.MetadataConstants;
 import org.jboss.ejb3.annotation.SecurityDomain;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
 
@@ -55,7 +56,7 @@ import java.util.Map;
 @Interceptors(SpringBeanAutowiringInterceptor.class)
 public class JustificanteBean implements JustificanteLocal {
 
-    protected final Logger log = Logger.getLogger(getClass());
+    protected final Logger log = LoggerFactory.getLogger(getClass());
 
     @EJB private PluginLocal pluginEjb;
     @EJB private TipoDocumentalLocal tipoDocumentalEjb;

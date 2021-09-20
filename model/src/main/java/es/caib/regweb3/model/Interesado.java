@@ -3,8 +3,6 @@ package es.caib.regweb3.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
-import org.hibernate.annotations.ForeignKey;
-import org.hibernate.annotations.Index;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -21,14 +19,13 @@ import java.util.List;
  * Date: 6/02/14
  */
 @Entity
-@Table(name = "RWE_INTERESADO")
-@org.hibernate.annotations.Table(appliesTo = "RWE_INTERESADO", indexes = {
-    @Index(name="RWE_INTERES_CATPAI_FK_I", columnNames = {"PAIS"}),
-    @Index(name="RWE_INTERES_CATLOC_FK_I", columnNames = {"LOCALIDAD"}),
-    @Index(name="RWE_INTERES_REPADO_FK_I", columnNames = {"REPRESENTADO"}),
-    @Index(name="RWE_INTERES_REPANT_FK_I", columnNames = {"REPRESENTANTE"})
+@Table(name = "RWE_INTERESADO", indexes = {
+        @Index(name = "RWE_INTERES_CATPAI_FK_I", columnList = "PAIS"),
+        @Index(name = "RWE_INTERES_CATLOC_FK_I", columnList = "LOCALIDAD"),
+        @Index(name = "RWE_INTERES_REPADO_FK_I", columnList = "REPRESENTADO"),
+        @Index(name = "RWE_INTERES_REPANT_FK_I", columnList = "REPRESENTANTE")
 })
-@SequenceGenerator(name="generator",sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
+@SequenceGenerator(name = "generator", sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
 @XmlRootElement(name = "interesado")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Interesado implements Serializable {
@@ -89,8 +86,8 @@ public class Interesado implements Serializable {
     //Metadatos nueva arquitectura SIR
     @XmlTransient
     private String codigoDire;
-    
-    
+
+
     public Interesado() {
     }
 
@@ -98,11 +95,11 @@ public class Interesado implements Serializable {
         this.id = id;
     }
 
-    public Interesado(String id){
+    public Interesado(String id) {
 
-        if(id != null){
+        if (id != null) {
             this.id = Long.valueOf(id);
-        }else{
+        } else {
             this.id = null;
         }
     }
@@ -128,14 +125,15 @@ public class Interesado implements Serializable {
 
     /**
      * Constructor para un Interesado de Tipo Persona
+     *
      * @param persona
      */
     public Interesado(Persona persona) {
 
-        if(persona.getTipo().equals(RegwebConstantes.TIPO_PERSONA_FISICA)){
+        if (persona.getTipo().equals(RegwebConstantes.TIPO_PERSONA_FISICA)) {
             this.tipo = RegwebConstantes.TIPO_INTERESADO_PERSONA_FISICA;
 
-        }else if(persona.getTipo().equals(RegwebConstantes.TIPO_PERSONA_JURIDICA)){
+        } else if (persona.getTipo().equals(RegwebConstantes.TIPO_PERSONA_JURIDICA)) {
             this.tipo = RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA;
         }
 
@@ -147,7 +145,7 @@ public class Interesado implements Serializable {
         }*/
 
         this.id = persona.getId();
-     //   this.isRepresentante = persona.getIsRepresentante();
+        //   this.isRepresentante = persona.getIsRepresentante();
         this.razonSocial = persona.getRazonSocial();
         this.nombre = persona.getNombre();
         this.apellido1 = persona.getApellido1();
@@ -168,71 +166,71 @@ public class Interesado implements Serializable {
 
     /**
      * Constructor para un Interesado de Tipo Administración
+     *
      * @param codigoDir3
      * @param organismo
      */
-    public Interesado(String codigoDir3,String organismo){
+    public Interesado(String codigoDir3, String organismo) {
         this.tipo = RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION;
         this.razonSocial = organismo;
         this.tipoDocumentoIdentificacion = RegwebConstantes.TIPODOCUMENTOID_CODIGO_ORIGEN_ID;
         this.documento = codigoDir3;
         this.codigoDir3 = codigoDir3;
     }
-    
 
 
     /**
      * @param i
      */
     public Interesado(Interesado i) {
-      super();
-      this.id = i.id;
-      this.tipo = i.tipo;
-      this.nombre = i.nombre;
-      this.apellido1 = i.apellido1;
-      this.apellido2 = i.apellido2;
-      this.razonSocial = i.razonSocial;
-      this.codigoDir3 = i.codigoDir3;
-      this.tipoDocumentoIdentificacion = i.tipoDocumentoIdentificacion;
-      this.documento = i.documento;
-      this.pais = i.pais == null? null : new CatPais(i.pais);
-      this.provincia = i.provincia == null? null : new CatProvincia(i.provincia);
-      this.localidad = i.localidad == null? null : new CatLocalidad(i.localidad);
-      this.direccion = i.direccion;
-      this.cp = i.cp;
-      this.email = i.email;
-      this.telefono = i.telefono;
-      this.direccionElectronica = i.direccionElectronica;
-      this.canal = i.canal;
-      // Comentada la linea porque provocaba una referencia cíclica
-      // this.representado = i.representado == null? null : new Interesado(i.representado);
-      this.representante = i.representante == null? null : new Interesado(i.representante);
-      this.isRepresentante = i.isRepresentante;
-      this.observaciones = i.observaciones;
-      //this.registroDetalle = i.registroDetalle;
-      this.guardarInteresado = i.guardarInteresado;
-      this.entidad = i.entidad;
-      this.codigoDire = i.codigoDire;
+        super();
+        this.id = i.id;
+        this.tipo = i.tipo;
+        this.nombre = i.nombre;
+        this.apellido1 = i.apellido1;
+        this.apellido2 = i.apellido2;
+        this.razonSocial = i.razonSocial;
+        this.codigoDir3 = i.codigoDir3;
+        this.tipoDocumentoIdentificacion = i.tipoDocumentoIdentificacion;
+        this.documento = i.documento;
+        this.pais = i.pais == null ? null : new CatPais(i.pais);
+        this.provincia = i.provincia == null ? null : new CatProvincia(i.provincia);
+        this.localidad = i.localidad == null ? null : new CatLocalidad(i.localidad);
+        this.direccion = i.direccion;
+        this.cp = i.cp;
+        this.email = i.email;
+        this.telefono = i.telefono;
+        this.direccionElectronica = i.direccionElectronica;
+        this.canal = i.canal;
+        // Comentada la linea porque provocaba una referencia cíclica
+        // this.representado = i.representado == null? null : new Interesado(i.representado);
+        this.representante = i.representante == null ? null : new Interesado(i.representante);
+        this.isRepresentante = i.isRepresentante;
+        this.observaciones = i.observaciones;
+        //this.registroDetalle = i.registroDetalle;
+        this.guardarInteresado = i.guardarInteresado;
+        this.entidad = i.entidad;
+        this.codigoDire = i.codigoDire;
     }
 
-    
+
     public static List<Interesado> clone(List<Interesado> list) {
-      if (list == null) {
-        return null;
-      }
-      
-      List<Interesado> clone = new ArrayList<Interesado>(list.size());
-      for (Interesado interesado : list) {
-        clone.add(interesado == null ? null : new Interesado(interesado));
-      }
-      
-      return clone;
+        if (list == null) {
+            return null;
+        }
+
+        List<Interesado> clone = new ArrayList<Interesado>(list.size());
+        for (Interesado interesado : list) {
+            clone.add(interesado == null ? null : new Interesado(interesado));
+        }
+
+        return clone;
     }
-    
-    
+
+
     @Id
-    @GeneratedValue(strategy=GenerationType.SEQUENCE,generator = "generator")
-    @Column(name="ID")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "generator")
+    @Column(name = "ID")
     public Long getId() {
         return id;
     }
@@ -315,7 +313,6 @@ public class Interesado implements Serializable {
         this.direccionElectronica = direccionElectronica;
     }
 
-   
     @Column(name = "TIPOINTERESADO")
     public Long getTipo() {
         return tipo;
@@ -343,7 +340,6 @@ public class Interesado implements Serializable {
         this.razonSocial = razonSocial;
     }
 
-
     @Column(name = "TIPODOCIDENT")
     public Long getTipoDocumentoIdentificacion() {
         return tipoDocumentoIdentificacion;
@@ -363,8 +359,7 @@ public class Interesado implements Serializable {
     }
 
     @ManyToOne()
-    @JoinColumn(name = "PAIS")
-    @ForeignKey(name = "RWE_INTERESADO_PAIS_FK")
+    @JoinColumn(name = "PAIS", foreignKey = @ForeignKey(name = "RWE_INTERESADO_PAIS_FK"))
     public CatPais getPais() {
         return pais;
     }
@@ -374,8 +369,7 @@ public class Interesado implements Serializable {
     }
 
     @ManyToOne()
-    @JoinColumn(name = "PROVINCIA")
-    @ForeignKey(name = "RWE_INTERESADO_PROVINCIA_FK")
+    @JoinColumn(name = "PROVINCIA", foreignKey = @ForeignKey(name = "RWE_INTERESADO_PROVINCIA_FK"))
     public CatProvincia getProvincia() {
         return provincia;
     }
@@ -385,8 +379,7 @@ public class Interesado implements Serializable {
     }
 
     @ManyToOne()
-    @JoinColumn(name = "LOCALIDAD")
-    @ForeignKey(name = "RWE_INTERESADO_LOCALIDAD_FK")
+    @JoinColumn(name = "LOCALIDAD", foreignKey = @ForeignKey(name = "RWE_INTERESADO_LOCALIDAD_FK"))
     public CatLocalidad getLocalidad() {
         return localidad;
     }
@@ -395,8 +388,8 @@ public class Interesado implements Serializable {
         this.localidad = localidad;
     }
 
-    
-    @Column(name = "CANALNOTIF")    
+
+    @Column(name = "CANALNOTIF")
     public Long getCanal() {
         return canal;
     }
@@ -415,9 +408,8 @@ public class Interesado implements Serializable {
     }
 
     @ManyToOne()
-    @JoinColumn(name = "REPRESENTADO")
-    @ForeignKey(name = "RWE_INTERESADO_REPRESENT_FK")
-/*    @JsonIgnore*/
+    @JoinColumn(name = "REPRESENTADO", foreignKey = @ForeignKey(name = "RWE_INTERESADO_REPRESENT_FK"))
+    /*    @JsonIgnore*/
     public Interesado getRepresentado() {
         return representado;
     }
@@ -427,8 +419,7 @@ public class Interesado implements Serializable {
     }
 
     @ManyToOne()
-    @JoinColumn(name = "REPRESENTANTE")
-    @ForeignKey(name = "RWE_INTERESADO_REPREANTE_FK")
+    @JoinColumn(name = "REPRESENTANTE", foreignKey = @ForeignKey(name = "RWE_INTERESADO_REPREANTE_FK"))
     @JsonIgnore
     public Interesado getRepresentante() {
         return representante;
@@ -448,8 +439,7 @@ public class Interesado implements Serializable {
     }
 
     @ManyToOne()
-    @JoinColumn(name = "REGISTRODETALLE")
-    @ForeignKey(name = "RWE_INTERESADO_REGDET_FK")
+    @JoinColumn(name = "REGISTRODETALLE", foreignKey = @ForeignKey(name = "RWE_INTERESADO_REGDET_FK"))
     @JsonIgnore
     public RegistroDetalle getRegistroDetalle() {
         return registroDetalle;
@@ -470,46 +460,76 @@ public class Interesado implements Serializable {
     }
 
     @Transient
-    public String getInformacionHtml(){
+    public String getInformacionHtml() {
         String info = "";
 
-        if(tipo.equals(RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION)){
+        if (tipo.equals(RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION)) {
 
             info = (getRazonSocial() != null) ? getRazonSocial() : getNombre();
             info = info + " <br/>";
-            if(StringUtils.isNotEmpty(getCodigoDir3())){info = info + "DIR3: " +getCodigoDir3()+ " <br/>";}
+            if (StringUtils.isNotEmpty(getCodigoDir3())) {
+                info = info + "DIR3: " + getCodigoDir3() + " <br/>";
+            }
 
-        }else if(tipo.equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_FISICA)){
+        } else if (tipo.equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_FISICA)) {
 
             info = getNombrePersonaFisica() + " <br/>";
-            if(StringUtils.isNotEmpty(getDireccion())){info = info + getDireccion()+ " <br/>";}
-            if(getProvincia() != null){info = info + getProvincia().getDescripcionProvincia()+ " <br/>";}
-            if(getLocalidad() != null){info = info + getLocalidad().getNombre()+ " <br/>";}
-            if(StringUtils.isNotEmpty(getCp())){info = info + "Cp: " +getCp()+ " <br/>";}
-            if(StringUtils.isNotEmpty(getTelefono())){info = info + "Tlf: " +getTelefono()+ " <br/>";}
-            if(StringUtils.isNotEmpty(getEmail())){info = info + "Email: " +getEmail()+ " <br/>";}
-            if(StringUtils.isNotEmpty(getDireccionElectronica())){info = info + "Dir. elect: " +getEmail()+ " <br/>";}
+            if (StringUtils.isNotEmpty(getDireccion())) {
+                info = info + getDireccion() + " <br/>";
+            }
+            if (getProvincia() != null) {
+                info = info + getProvincia().getDescripcionProvincia() + " <br/>";
+            }
+            if (getLocalidad() != null) {
+                info = info + getLocalidad().getNombre() + " <br/>";
+            }
+            if (StringUtils.isNotEmpty(getCp())) {
+                info = info + "Cp: " + getCp() + " <br/>";
+            }
+            if (StringUtils.isNotEmpty(getTelefono())) {
+                info = info + "Tlf: " + getTelefono() + " <br/>";
+            }
+            if (StringUtils.isNotEmpty(getEmail())) {
+                info = info + "Email: " + getEmail() + " <br/>";
+            }
+            if (StringUtils.isNotEmpty(getDireccionElectronica())) {
+                info = info + "Dir. elect: " + getEmail() + " <br/>";
+            }
 
-        }else if(tipo.equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA)){
+        } else if (tipo.equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA)) {
             info = getNombrePersonaJuridica() + " <br/>";
-            if(StringUtils.isNotEmpty(getDireccion())){info = info + getDireccion()+ " <br/>";}
-            if(getProvincia() != null){info = info + getProvincia().getDescripcionProvincia()+ " <br/>";}
-            if(getLocalidad() != null){info = info + getLocalidad().getNombre()+ " <br/>";}
-            if(StringUtils.isNotEmpty(getCp())){info = info + "Cp: " +getCp()+ " <br/>";}
-            if(StringUtils.isNotEmpty(getTelefono())){info = info + "Tlf: " +getTelefono()+ " <br/>";}
-            if(StringUtils.isNotEmpty(getEmail())){info = info + "Email: " +getEmail()+ " <br/>";}
-            if(StringUtils.isNotEmpty(getDireccionElectronica())){info = info + "Dir. elect: " +getEmail()+ " <br/>";}
+            if (StringUtils.isNotEmpty(getDireccion())) {
+                info = info + getDireccion() + " <br/>";
+            }
+            if (getProvincia() != null) {
+                info = info + getProvincia().getDescripcionProvincia() + " <br/>";
+            }
+            if (getLocalidad() != null) {
+                info = info + getLocalidad().getNombre() + " <br/>";
+            }
+            if (StringUtils.isNotEmpty(getCp())) {
+                info = info + "Cp: " + getCp() + " <br/>";
+            }
+            if (StringUtils.isNotEmpty(getTelefono())) {
+                info = info + "Tlf: " + getTelefono() + " <br/>";
+            }
+            if (StringUtils.isNotEmpty(getEmail())) {
+                info = info + "Email: " + getEmail() + " <br/>";
+            }
+            if (StringUtils.isNotEmpty(getDireccionElectronica())) {
+                info = info + "Dir. elect: " + getEmail() + " <br/>";
+            }
         }
 
         return info;
     }
 
     @Transient
-    public String getNombreCompleto(){
+    public String getNombreCompleto() {
 
-        if(tipo.equals(RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION)){
+        if (tipo.equals(RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION)) {
             return getNombreOrganismo();
-        }else if(tipo.equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_FISICA)){
+        } else if (tipo.equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_FISICA)) {
             return getNombrePersonaFisicaCorto();
         } else if (tipo.equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA)) {
             return getNombrePersonaJuridica();
@@ -526,7 +546,7 @@ public class Interesado implements Serializable {
             return getNombreOrganismo();
         } else if (tipo.equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_FISICA)) {
             return getNombrePersonaFisica();
-        }else if(tipo.equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA)){
+        } else if (tipo.equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA)) {
             return getNombrePersonaJuridica();
         }
 
@@ -535,19 +555,19 @@ public class Interesado implements Serializable {
     }
 
     @Transient
-    public String getNombrePersonaFisica(){
+    public String getNombrePersonaFisica() {
 
-        String personaFisica = "" ;
+        String personaFisica = "";
 
-        if(StringUtils.isNotEmpty(getNombre())){
+        if (StringUtils.isNotEmpty(getNombre())) {
 
-            personaFisica = getNombre()+ " " + getApellido1();
+            personaFisica = getNombre() + " " + getApellido1();
 
-            if(getApellido2() != null && getApellido2().length() > 0){
+            if (getApellido2() != null && getApellido2().length() > 0) {
                 personaFisica = personaFisica.concat(" " + getApellido2());
             }
 
-            if(getDocumento() != null && getDocumento().length() > 0){
+            if (getDocumento() != null && getDocumento().length() > 0) {
                 personaFisica = personaFisica.concat(" - " + getDocumento());
             }
         }
@@ -556,15 +576,15 @@ public class Interesado implements Serializable {
     }
 
     @Transient
-    public String getNombrePersonaFisicaCorto(){
+    public String getNombrePersonaFisicaCorto() {
 
-        String personaFisica = "" ;
+        String personaFisica = "";
 
-        if(StringUtils.isNotEmpty(getNombre())){
+        if (StringUtils.isNotEmpty(getNombre())) {
 
-            personaFisica = getNombre()+ " " + getApellido1();
+            personaFisica = getNombre() + " " + getApellido1();
 
-            if(getApellido2() != null && getApellido2().length() > 0){
+            if (getApellido2() != null && getApellido2().length() > 0) {
                 personaFisica = personaFisica.concat(" " + getApellido2());
             }
 
@@ -574,24 +594,24 @@ public class Interesado implements Serializable {
     }
 
     @Transient
-    public String getNombrePersonaJuridica(){
+    public String getNombrePersonaJuridica() {
 
         String personaJuridica = "";
 
-        if(StringUtils.isNotEmpty(getRazonSocial())){
+        if (StringUtils.isNotEmpty(getRazonSocial())) {
 
             personaJuridica = getRazonSocial();
 
-            if(getDocumento() != null && getDocumento().length() > 0){
+            if (getDocumento() != null && getDocumento().length() > 0) {
                 personaJuridica = personaJuridica.concat(" - " + getDocumento());
             }
         }
 
-        return  personaJuridica;
+        return personaJuridica;
     }
 
     @Transient
-    public String getNombreOrganismo(){
+    public String getNombreOrganismo() {
         String nombre = (getRazonSocial() != null) ? getRazonSocial() : getNombre();
 
         if (getCodigoDir3() != null) {
@@ -603,11 +623,11 @@ public class Interesado implements Serializable {
     }
 
     @Transient
-    public String getDocumentoNTI(){
+    public String getDocumentoNTI() {
 
-        if(StringUtils.isNotEmpty(getDocumento())){
+        if (StringUtils.isNotEmpty(getDocumento())) {
             return getDocumento();
-        }else{
+        } else {
             return getCodigoDir3();
         }
     }

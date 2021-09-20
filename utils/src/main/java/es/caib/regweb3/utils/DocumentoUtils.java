@@ -1,6 +1,7 @@
 package es.caib.regweb3.utils;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -13,7 +14,7 @@ import java.util.regex.Pattern;
  */
 public class DocumentoUtils {
 
-    protected final Logger log = Logger.getLogger(getClass());
+    protected final Logger log = LoggerFactory.getLogger(getClass());
 
     private static final String LETRAS_NIF = "TRWAGMYFPDXBNJZSQVHLCKE";
 

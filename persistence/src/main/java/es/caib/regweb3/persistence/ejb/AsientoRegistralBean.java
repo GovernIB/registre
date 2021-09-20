@@ -6,11 +6,12 @@ import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.persistence.utils.JustificanteReferencia;
 import es.caib.regweb3.persistence.utils.RegistroUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
-import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.jboss.ejb3.annotation.SecurityDomain;
 import org.jboss.ejb3.common.proxy.plugins.async.AsyncUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ejb.*;
 import java.util.HashSet;
@@ -29,7 +30,7 @@ import static es.caib.regweb3.utils.RegwebConstantes.*;
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 public class AsientoRegistralBean implements AsientoRegistralLocal {
 
-    protected final Logger log = Logger.getLogger(getClass());
+    protected final Logger log = LoggerFactory.getLogger(getClass());
 
     @EJB private RegistroSalidaLocal registroSalidaEjb;
     @EJB private RegistroEntradaLocal registroEntradaEjb;

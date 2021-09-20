@@ -12,9 +12,10 @@ import es.caib.regweb3.utils.Dir3CaibUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 import es.caib.regweb3.utils.TimeUtils;
-import org.apache.log4j.Logger;
 import org.hibernate.Hibernate;
 import org.jboss.ejb3.annotation.SecurityDomain;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -32,7 +33,7 @@ import java.util.*;
 @SecurityDomain("seycon")
 public class SincronizadorDir3Bean implements SincronizadorDir3Local {
 
-    protected final Logger log = Logger.getLogger(getClass());
+    protected final Logger log = LoggerFactory.getLogger(getClass());
 
     @EJB private OrganismoLocal organismoEjb;
     @EJB private OficinaLocal oficinaEjb;

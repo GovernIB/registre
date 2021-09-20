@@ -1,7 +1,5 @@
 package es.caib.regweb3.model;
 
-import org.hibernate.annotations.ForeignKey;
-
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -20,7 +18,8 @@ public class RelacionSirOfi implements Serializable {
     private Organismo organismo;
     private CatEstadoEntidad estado;
 
-    public RelacionSirOfi(){}
+    public RelacionSirOfi() {
+    }
 
     public RelacionSirOfi(Long idOficina, String codOficina, String denOficina, Long idOrganismo, Long idOrgResponsable) {
         this.oficina = new Oficina(idOficina, codOficina, denOficina, idOrgResponsable);
@@ -30,8 +29,7 @@ public class RelacionSirOfi implements Serializable {
 
     @Id
     @ManyToOne(optional = false)
-    @JoinColumn (name="IDOFICINA")
-    @ForeignKey(name="RWE_RELSIROFI_OFICINA_FK")
+    @JoinColumn(name = "IDOFICINA", foreignKey = @ForeignKey(name = "RWE_RELSIROFI_OFICINA_FK"))
     public Oficina getOficina() {
         return oficina;
     }
@@ -44,8 +42,7 @@ public class RelacionSirOfi implements Serializable {
 
     @Id
     @ManyToOne(optional = false)
-    @JoinColumn (name="IDORGANISMO")
-    @ForeignKey(name="RWE_RELSIROFI_ORGANISMO_FK")
+    @JoinColumn(name = "IDORGANISMO", foreignKey = @ForeignKey(name = "RWE_RELSIROFI_ORGANISMO_FK"))
     public Organismo getOrganismo() {
         return organismo;
     }
@@ -57,8 +54,7 @@ public class RelacionSirOfi implements Serializable {
 
 
     @ManyToOne(optional = false)
-    @JoinColumn(name="ESTADO")
-    @ForeignKey(name="RWE_RELSIROFI_CATESTENTI_FK")
+    @JoinColumn(name = "ESTADO", foreignKey = @ForeignKey(name = "RWE_RELSIROFI_CATESTENTI_FK"))
     public CatEstadoEntidad getEstado() {
         return estado;
     }

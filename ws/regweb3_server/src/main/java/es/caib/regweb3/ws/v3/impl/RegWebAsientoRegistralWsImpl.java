@@ -2,32 +2,11 @@ package es.caib.regweb3.ws.v3.impl;
 
 import es.caib.dir3caib.ws.api.unidad.Dir3CaibObtenerUnidadesWs;
 import es.caib.dir3caib.ws.api.unidad.UnidadTF;
-import es.caib.regweb3.model.Entidad;
-import es.caib.regweb3.model.Interesado;
-import es.caib.regweb3.model.Libro;
-import es.caib.regweb3.model.ModeloOficioRemision;
-import es.caib.regweb3.model.Oficina;
-import es.caib.regweb3.model.OficioRemision;
-import es.caib.regweb3.model.Organismo;
-import es.caib.regweb3.model.RegistroEntrada;
-import es.caib.regweb3.model.RegistroSalida;
-import es.caib.regweb3.model.Sesion;
-import es.caib.regweb3.model.UsuarioEntidad;
+import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.model.utils.AnexoSimple;
-import es.caib.regweb3.persistence.ejb.AsientoRegistralLocal;
-import es.caib.regweb3.persistence.ejb.DistribucionLocal;
-import es.caib.regweb3.persistence.ejb.ModeloOficioRemisionLocal;
-import es.caib.regweb3.persistence.ejb.MultiEntidadLocal;
-import es.caib.regweb3.persistence.ejb.OficioRemisionLocal;
-import es.caib.regweb3.persistence.ejb.RegistroEntradaConsultaLocal;
-import es.caib.regweb3.persistence.ejb.RegistroSalidaConsultaLocal;
-import es.caib.regweb3.persistence.ejb.SesionLocal;
-import es.caib.regweb3.persistence.utils.JustificanteReferencia;
-import es.caib.regweb3.persistence.utils.Paginacion;
-import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
-import es.caib.regweb3.persistence.utils.RegistroUtils;
-import es.caib.regweb3.persistence.utils.RespuestaDistribucion;
+import es.caib.regweb3.persistence.ejb.*;
+import es.caib.regweb3.persistence.utils.*;
 import es.caib.regweb3.persistence.validator.RegistroEntradaBeanValidator;
 import es.caib.regweb3.persistence.validator.RegistroEntradaValidator;
 import es.caib.regweb3.persistence.validator.RegistroSalidaBeanValidator;
@@ -38,24 +17,18 @@ import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 import es.caib.regweb3.ws.converter.AsientoConverter;
 import es.caib.regweb3.ws.converter.AsientoRegistralConverter;
-import es.caib.regweb3.ws.model.AsientoRegistralSesionWs;
-import es.caib.regweb3.ws.model.AsientoRegistralWs;
-import es.caib.regweb3.ws.model.AsientoWs;
-import es.caib.regweb3.ws.model.FileContentWs;
-import es.caib.regweb3.ws.model.JustificanteReferenciaWs;
-import es.caib.regweb3.ws.model.JustificanteWs;
-import es.caib.regweb3.ws.model.OficioWs;
-import es.caib.regweb3.ws.model.ResultadoBusquedaWs;
+import es.caib.regweb3.ws.model.*;
 import es.caib.regweb3.ws.utils.UsuarioAplicacionCache;
 import org.apache.commons.io.IOUtils;
-import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.fundaciobit.genapp.common.ws.WsI18NException;
 import org.fundaciobit.genapp.common.ws.WsValidationException;
 import org.jboss.ejb3.annotation.SecurityDomain;
-import org.jboss.wsf.spi.annotation.TransportGuarantee;
-import org.jboss.wsf.spi.annotation.WebContext;
+import org.jboss.ws.api.annotation.TransportGuarantee;
+import org.jboss.ws.api.annotation.WebContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
@@ -68,9 +41,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import static es.caib.regweb3.utils.RegwebConstantes.RWE_WS_CIUDADANO;
-import static es.caib.regweb3.utils.RegwebConstantes.RWE_WS_ENTRADA;
-import static es.caib.regweb3.utils.RegwebConstantes.RWE_WS_SALIDA;
+import static es.caib.regweb3.utils.RegwebConstantes.*;
 
 /**
  *
@@ -87,7 +58,7 @@ import static es.caib.regweb3.utils.RegwebConstantes.RWE_WS_SALIDA;
 @WebContext(contextRoot = "/regweb3/ws", urlPattern = "/v3/" + RegWebAsientoRegistralWsImpl.NAME, transportGuarantee = TransportGuarantee.NONE, secureWSDLAccess = false, authMethod = "WSBASIC")
 public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl implements RegWebAsientoRegistralWs {
 
-    protected final Logger log = Logger.getLogger(getClass());
+    protected final Logger log = LoggerFactory.getLogger(getClass());
 
     public static final String NAME = "RegWebAsientoRegistral";
 

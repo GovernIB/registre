@@ -1,7 +1,5 @@
 package es.caib.regweb3.model;
 
-import org.hibernate.annotations.ForeignKey;
-
 import javax.persistence.*;
 import javax.xml.bind.annotation.*;
 import java.util.Date;
@@ -15,7 +13,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "RWE_REGISTRO_ENTRADA")
-@SequenceGenerator(name="generator",sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
+@SequenceGenerator(name = "generator", sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
 @XmlRootElement(name = "registroEntrada")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class RegistroEntrada implements IRegistro {
@@ -47,34 +45,31 @@ public class RegistroEntrada implements IRegistro {
     private RegistroDetalle registroDetalle;
 
 
-    /**
-     * 
-     */
     public RegistroEntrada() {
-      this.registroDetalle = new RegistroDetalle();
+        this.registroDetalle = new RegistroDetalle();
     }
 
     public RegistroEntrada(Long id) {
-        this.id=id;
+        this.id = id;
     }
 
     /**
      * @param re
      */
     public RegistroEntrada(RegistroEntrada re) {
-      
-      this.id = re.id;
-      this.usuario = re.usuario;
-      this.oficina = re.oficina;
-      this.destino = re.destino;
-      this.destinoExternoCodigo = re.destinoExternoCodigo;
-      this.destinoExternoDenominacion = re.destinoExternoDenominacion;
-      this.fecha = re.fecha;
-      this.libro = re.libro;
-      this.numeroRegistro = re.numeroRegistro;
-      this.numeroRegistroFormateado = re.numeroRegistroFormateado;
-      this.estado = re.estado;
-      this.registroDetalle = re.registroDetalle == null? null : new RegistroDetalle(re.registroDetalle);
+
+        this.id = re.id;
+        this.usuario = re.usuario;
+        this.oficina = re.oficina;
+        this.destino = re.destino;
+        this.destinoExternoCodigo = re.destinoExternoCodigo;
+        this.destinoExternoDenominacion = re.destinoExternoDenominacion;
+        this.fecha = re.fecha;
+        this.libro = re.libro;
+        this.numeroRegistro = re.numeroRegistro;
+        this.numeroRegistroFormateado = re.numeroRegistroFormateado;
+        this.estado = re.estado;
+        this.registroDetalle = re.registroDetalle == null ? null : new RegistroDetalle(re.registroDetalle);
     }
 
     public RegistroEntrada(Long id, Integer numeroRegistro, Date fecha, Long idLibro, String nombreLibro, String denominacionOficina, String denominacionOrganismo) {
@@ -112,8 +107,8 @@ public class RegistroEntrada implements IRegistro {
 
 
     @Id
-    @GeneratedValue(strategy=GenerationType.SEQUENCE,generator = "generator")
-    @Column(name="ID")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "generator")
+    @Column(name = "ID")
     public Long getId() {
         return id;
     }
@@ -122,7 +117,7 @@ public class RegistroEntrada implements IRegistro {
         this.id = id;
     }
 
-    @Column(name="EVENTO")
+    @Column(name = "EVENTO")
     public Long getEvento() {
         return evento;
     }
@@ -132,8 +127,7 @@ public class RegistroEntrada implements IRegistro {
     }
 
     @ManyToOne(optional = false)
-    @JoinColumn(name="USUARIO")
-    @ForeignKey(name="RWE_REGENT_USUENT_FK")
+    @JoinColumn(name = "USUARIO", foreignKey = @ForeignKey(name = "RWE_REGENT_USUENT_FK"))
     public UsuarioEntidad getUsuario() {
         return usuario;
     }
@@ -143,8 +137,7 @@ public class RegistroEntrada implements IRegistro {
     }
 
     @ManyToOne(optional = false)
-    @JoinColumn(name="OFICINA")
-    @ForeignKey(name="RWE_REGENT_OFICINA_FK")
+    @JoinColumn(name = "OFICINA", foreignKey = @ForeignKey(name = "RWE_REGENT_OFICINA_FK"))
     public Oficina getOficina() {
         return oficina;
     }
@@ -154,8 +147,7 @@ public class RegistroEntrada implements IRegistro {
     }
 
     @ManyToOne()
-    @JoinColumn(name="DESTINO")
-    @ForeignKey(name="RWE_REGENT_DESTINO_FK")
+    @JoinColumn(name = "DESTINO", foreignKey = @ForeignKey(name = "RWE_REGENT_DESTINO_FK"))
     public Organismo getDestino() {
         return destino;
     }
@@ -192,8 +184,7 @@ public class RegistroEntrada implements IRegistro {
     }
 
     @ManyToOne(optional = false)
-    @JoinColumn(name="LIBRO")
-    @ForeignKey(name="RWE_REGENT_LIBRO_FK")
+    @JoinColumn(name = "LIBRO", foreignKey = @ForeignKey(name = "RWE_REGENT_LIBRO_FK"))
     public Libro getLibro() {
         return libro;
     }
@@ -220,8 +211,8 @@ public class RegistroEntrada implements IRegistro {
         this.numeroRegistroFormateado = numeroRegistroFormateado;
     }
 
-    
-    @Column(name="ESTADO", nullable=false)    
+
+    @Column(name = "ESTADO", nullable = false)
     public Long getEstado() {
         return estado;
     }
@@ -232,8 +223,7 @@ public class RegistroEntrada implements IRegistro {
 
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinColumn(name = "REGISTRO_DETALLE")
-    @ForeignKey(name = "RWE_REGENT_REGDET_FK")
+    @JoinColumn(name = "REGISTRO_DETALLE", foreignKey = @ForeignKey(name = "RWE_REGENT_REGDET_FK"))
     public RegistroDetalle getRegistroDetalle() {
         return registroDetalle;
     }
@@ -241,7 +231,6 @@ public class RegistroEntrada implements IRegistro {
     public void setRegistroDetalle(RegistroDetalle registroDetalle) {
         this.registroDetalle = registroDetalle;
     }
-
 
 
     @Override
@@ -258,15 +247,15 @@ public class RegistroEntrada implements IRegistro {
 
     @Override
     public String toString() {
-        if(id != null){
+        if (id != null) {
             return id.toString();
-        }else{
+        } else {
             return null;
         }
     }
 
     @Override
     public int hashCode() {
-      return id != null ? id.hashCode() : 0;
+        return id != null ? id.hashCode() : 0;
     }
 }

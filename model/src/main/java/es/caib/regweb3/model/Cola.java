@@ -1,6 +1,7 @@
 package es.caib.regweb3.model;
 
-import org.hibernate.annotations.ForeignKey;
+
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlElement;
@@ -15,8 +16,8 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "RWE_COLA")
-@SequenceGenerator(name="generator",sequenceName = "RWE_COLA_SEQ", allocationSize = 1)
-public class Cola implements Serializable{
+@SequenceGenerator(name = "generator", sequenceName = "RWE_COLA_SEQ", allocationSize = 1)
+public class Cola implements Serializable {
 
 
     private Long id;
@@ -36,13 +37,13 @@ public class Cola implements Serializable{
     public static final int RESULTADOS_PAGINACION = 20;
 
     public Cola() {
-        this.fecha= new Date();
-        this.error= "&nbsp;";
+        this.fecha = new Date();
+        this.error = "&nbsp;";
     }
 
     @Id
-    @Column(name="ID")
-    @GeneratedValue(strategy=GenerationType.SEQUENCE,generator = "generator")
+    @Column(name = "ID")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "generator")
     public Long getId() {
         return id;
     }
@@ -51,7 +52,7 @@ public class Cola implements Serializable{
         this.id = id;
     }
 
-    @Column(name="TIPO")
+    @Column(name = "TIPO")
     public Long getTipo() {
         return tipo;
     }
@@ -60,7 +61,7 @@ public class Cola implements Serializable{
         this.tipo = tipo;
     }
 
-    @Column(name="NUMMAXREINTENTOS")
+    @Column(name = "NUMMAXREINTENTOS")
     public Integer getNumeroMaximoReintentos() {
         return numeroMaximoReintentos;
     }
@@ -69,7 +70,7 @@ public class Cola implements Serializable{
         this.numeroMaximoReintentos = numeroMaximoReintentos;
     }
 
-    @Column(name="NUMREINTENTOS")
+    @Column(name = "NUMREINTENTOS")
     public int getNumeroReintentos() {
         return numeroReintentos;
     }
@@ -78,7 +79,7 @@ public class Cola implements Serializable{
         this.numeroReintentos = numeroReintentos;
     }
 
-    @Column(name="IDOBJETO")
+    @Column(name = "IDOBJETO")
     public Long getIdObjeto() {
         return idObjeto;
     }
@@ -87,7 +88,7 @@ public class Cola implements Serializable{
         this.idObjeto = idObjeto;
     }
 
-    @Column(name="DESCRIPCIONOBJETO")
+    @Column(name = "DESCRIPCIONOBJETO")
     public String getDescripcionObjeto() {
         return descripcionObjeto;
     }
@@ -98,8 +99,7 @@ public class Cola implements Serializable{
 
 
     @ManyToOne(optional = false)
-    @JoinColumn(name="USUARIOENTIDAD")
-    @ForeignKey(name="RWE_COLA_USUENTI_FK")
+    @JoinColumn(name = "USUARIOENTIDAD", foreignKey =@ForeignKey(name = "RWE_COLA_USUENTI_FK"))
     public UsuarioEntidad getUsuarioEntidad() {
         return usuarioEntidad;
     }
@@ -109,7 +109,7 @@ public class Cola implements Serializable{
     }
 
 
-    @Column(name="DENOMINACIONOFICINA")
+    @Column(name = "DENOMINACIONOFICINA")
     public String getDenominacionOficina() {
         return denominacionOficina;
     }
@@ -119,7 +119,8 @@ public class Cola implements Serializable{
     }
 
     @Lob
-    @Column(name="ERROR",  length=2147483647)
+    @Type(type = "org.hibernate.type.TextType")
+    @Column(name = "ERROR", length = 2147483647)
     public String getError() {
         return error;
     }
@@ -177,8 +178,8 @@ public class Cola implements Serializable{
         this.pageNumber = pageNumber;
     }
 
-    @XmlElement(name="fechaFormateada")
-    public String fechaFormateada(){
+    @XmlElement(name = "fechaFormateada")
+    public String fechaFormateada() {
         SimpleDateFormat formatDate = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         return formatDate.format(fecha);
     }

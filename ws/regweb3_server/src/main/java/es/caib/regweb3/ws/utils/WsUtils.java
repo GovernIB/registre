@@ -2,13 +2,14 @@ package es.caib.regweb3.ws.utils;
 
 import es.caib.regweb3.persistence.utils.I18NLogicUtils;
 import org.apache.cxf.binding.soap.SoapFault;
-import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.*;
 import org.fundaciobit.genapp.common.query.Field;
 import org.fundaciobit.genapp.common.ws.WsFieldValidationError;
 import org.fundaciobit.genapp.common.ws.WsI18NArgument;
 import org.fundaciobit.genapp.common.ws.WsI18NTranslation;
 import org.fundaciobit.genapp.common.ws.WsValidationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.ws.WebServiceContext;
@@ -25,7 +26,7 @@ import java.util.Locale;
  */
 public class WsUtils {
   
-  protected static final Logger log = Logger.getLogger(WsUtils.class);
+  protected static final Logger log = LoggerFactory.getLogger(WsUtils.class);
   
   
   public static final javax.xml.namespace.QName QNAME = new javax.xml.namespace.QName("-1");

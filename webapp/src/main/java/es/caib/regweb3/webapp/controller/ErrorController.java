@@ -4,8 +4,9 @@ import es.caib.regweb3.webapp.controller.registro.ScanRequestServlet;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import es.caib.regweb3.webapp.utils.RegWebMaxUploadSizeExceededException;
 import org.apache.commons.fileupload.FileUploadBase.SizeLimitExceededException;
-import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
@@ -26,7 +27,7 @@ import java.io.PrintWriter;
 @ControllerAdvice
 public class ErrorController {
 
-    protected final Logger log = Logger.getLogger(getClass());
+    protected final Logger log = LoggerFactory.getLogger(getClass());
 
     @ExceptionHandler(Exception.class)
     public ModelAndView handleException(HttpServletRequest req, Exception exception) {

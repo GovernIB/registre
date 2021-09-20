@@ -3,8 +3,8 @@ package es.caib.regweb3.ws.v3.impl;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.ws.utils.AuthenticatedBaseWsImpl;
 import org.jboss.ejb3.annotation.SecurityDomain;
-import org.jboss.wsf.spi.annotation.TransportGuarantee;
-import org.jboss.wsf.spi.annotation.WebContext;
+import org.jboss.ws.api.annotation.TransportGuarantee;
+import org.jboss.ws.api.annotation.WebContext;
 
 import javax.annotation.Resource;
 import javax.annotation.security.RolesAllowed;
