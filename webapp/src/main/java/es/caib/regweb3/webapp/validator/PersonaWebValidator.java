@@ -4,8 +4,9 @@ import es.caib.regweb3.model.Persona;
 import es.caib.regweb3.persistence.ejb.CatPaisLocal;
 import es.caib.regweb3.persistence.ejb.PersonaLocal;
 import es.caib.regweb3.persistence.validator.PersonaValidator;
-import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.web.validation.WebValidationResult;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
@@ -19,7 +20,7 @@ import javax.ejb.EJB;
 @Component
 public class PersonaWebValidator implements Validator {
 
-  protected final Logger log = Logger.getLogger(getClass());
+  protected final Logger log = LoggerFactory.getLogger(getClass());
 
   protected PersonaValidator<Object> validator = new PersonaValidator<Object>();
 

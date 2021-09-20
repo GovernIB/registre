@@ -26,7 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping(value = "/dir3")
 public class Dir3Controller extends BaseController {
 
-    //protected final Logger log = Logger.getLogger(getClass());
+    //protected final Logger log = LoggerFactory.getLogger(getClass());
 
     @EJB(mappedName = "regweb3/SincronizadorCatalogoEJB/local")
     private SincronizadorCatalogoLocal sincronizadorCatalogoEjb;

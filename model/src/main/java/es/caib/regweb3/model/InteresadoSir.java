@@ -3,7 +3,6 @@ package es.caib.regweb3.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
-import org.hibernate.annotations.ForeignKey;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -68,8 +67,7 @@ public class InteresadoSir implements Serializable {
     }
 
     @ManyToOne()
-    @JoinColumn(name = "REGISTRO_SIR")
-    @ForeignKey(name = "RWE_INTERESADOSIR_REGSIR_FK")
+    @JoinColumn(name = "REGISTRO_SIR", foreignKey = @ForeignKey(name = "RWE_INTERESADOSIR_REGSIR_FK"))
     public RegistroSir getRegistroSir() {
         return registroSir;
     }

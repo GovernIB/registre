@@ -1,12 +1,13 @@
 package es.caib.regweb3.webapp.view;
 
 import es.caib.regweb3.utils.RegwebConstantes;
-import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.servlet.view.document.AbstractExcelView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -22,7 +23,7 @@ import java.util.Map;
 
 public class IndicadoresExcel extends AbstractExcelView {
 
-    protected final Logger log = Logger.getLogger(getClass());
+    protected final Logger log = LoggerFactory.getLogger(getClass());
 
     /**
      * Retorna el mensaje traducido según el idioma del usuario

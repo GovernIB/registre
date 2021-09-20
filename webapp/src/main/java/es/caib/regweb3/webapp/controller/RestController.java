@@ -9,9 +9,10 @@ import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.utils.Dir3CaibUtils;
 import es.caib.regweb3.webapp.utils.LocalidadJson;
-import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -33,7 +34,7 @@ import java.util.Locale;
 @RequestMapping(value = "/rest")
 public class RestController extends BaseController {
 
-    protected final Logger log = Logger.getLogger(getClass());
+    protected final Logger log = LoggerFactory.getLogger(getClass());
 
     @EJB(mappedName = "regweb3/CatLocalidadEJB/local")
     private CatLocalidadLocal catLocalidadEjb;

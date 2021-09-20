@@ -14,11 +14,12 @@ import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.Dir3CaibUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
-import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.hibernate.Session;
 import org.jboss.ejb3.annotation.SecurityDomain;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -40,7 +41,7 @@ import java.util.*;
 @SecurityDomain("seycon")
 public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtilsLocal {
 
-    public final Logger log = Logger.getLogger(getClass());
+    public final Logger log = LoggerFactory.getLogger(getClass());
 
     @PersistenceContext(unitName = "regweb3")
     private EntityManager em;

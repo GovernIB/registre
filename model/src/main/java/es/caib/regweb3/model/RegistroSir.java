@@ -4,9 +4,7 @@ import es.caib.regweb3.model.utils.DocumentacionFisica;
 import es.caib.regweb3.model.utils.EstadoRegistroSir;
 import es.caib.regweb3.model.utils.IndicadorPrueba;
 import es.caib.regweb3.model.utils.TipoRegistro;
-import org.hibernate.annotations.ForeignKey;
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -239,8 +237,7 @@ public class RegistroSir implements Serializable {
     }
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "ENTIDAD")
-    @ForeignKey(name = "RWE_RES_ENTIDAD_FK")
+    @JoinColumn(name = "ENTIDAD", foreignKey = @ForeignKey(name = "RWE_RES_ENTIDAD_FK"))
     public Entidad getEntidad() {
         return entidad;
     }
@@ -299,6 +296,7 @@ public class RegistroSir implements Serializable {
     }
 
     @Lob
+    @Type(type = "org.hibernate.type.TextType")
     @Column(name = "TIMESTAMP", length = 2147483647)
     public String getTimestampRegistro() {
         return timestampRegistro;
@@ -546,6 +544,7 @@ public class RegistroSir implements Serializable {
     }
 
     @Lob
+    @Type(type = "org.hibernate.type.TextType")
     @Column(name = "EXPONE", length = 2147483647)
     public String getExpone() {
         return expone;
@@ -556,6 +555,7 @@ public class RegistroSir implements Serializable {
     }
 
     @Lob
+    @Type(type = "org.hibernate.type.TextType")
     @Column(name = "SOLICITA", length = 2147483647)
     public String getSolicita() {
         return solicita;
@@ -566,8 +566,7 @@ public class RegistroSir implements Serializable {
     }
 
 
-    @OneToMany(cascade= CascadeType.ALL,targetEntity=AnexoSir.class, mappedBy="registroSir")
-    @LazyCollection(value= LazyCollectionOption.TRUE)
+    @OneToMany(cascade= CascadeType.ALL,targetEntity=AnexoSir.class, mappedBy="registroSir", fetch = FetchType.LAZY)
     public List<AnexoSir> getAnexos() {
         if (anexos == null) {
             anexos = new ArrayList<AnexoSir>();
@@ -580,8 +579,7 @@ public class RegistroSir implements Serializable {
         this.anexos = anexos;
     }
 
-    @OneToMany(cascade= CascadeType.ALL,targetEntity=InteresadoSir.class, mappedBy="registroSir")
-    @LazyCollection(value= LazyCollectionOption.TRUE)
+    @OneToMany(cascade= CascadeType.ALL,targetEntity=InteresadoSir.class, mappedBy="registroSir", fetch = FetchType.LAZY)
     public List<InteresadoSir> getInteresados() {
         if (interesados == null) {
             interesados = new ArrayList<InteresadoSir>();

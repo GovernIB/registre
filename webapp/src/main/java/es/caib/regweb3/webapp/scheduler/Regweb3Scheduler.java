@@ -3,7 +3,8 @@ package es.caib.regweb3.webapp.scheduler;
 
 import es.caib.regweb3.persistence.ejb.SchedulerLocal;
 import es.caib.regweb3.utils.Configuracio;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +19,7 @@ import javax.ejb.EJB;
 @Service
 public class Regweb3Scheduler {
 
-    protected final Logger log = Logger.getLogger(getClass());
+    protected final Logger log = LoggerFactory.getLogger(getClass());
 
     @EJB(mappedName = "regweb3/SchedulerEJB/local")
     private SchedulerLocal schedulerEjb;

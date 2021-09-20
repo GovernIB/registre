@@ -17,7 +17,8 @@ import es.caib.regweb3.sir.utils.Sicres3XML;
 import es.caib.regweb3.sir.utils.XPathReaderUtil;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Node;
 
 import javax.ejb.EJB;
@@ -34,7 +35,7 @@ import java.util.Date;
 @Stateless(name = "RecepcionEJB")
 public class RecepcionBean implements RecepcionLocal{
 
-    private final Logger log = Logger.getLogger(getClass());
+    private final Logger log = LoggerFactory.getLogger(getClass());
 
     @EJB private MensajeLocal mensajeEjb;
 

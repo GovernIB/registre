@@ -3,7 +3,8 @@ package es.caib.regweb3.persistence.utils;
 import es.caib.regweb3.model.Archivo;
 import es.caib.regweb3.persistence.ejb.ArchivoLocal;
 import es.caib.regweb3.utils.MimeTypeUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Created by Fundació BIT.
@@ -12,7 +13,7 @@ import org.apache.log4j.Logger;
  */
 public class ArchivoManager {
 
-    protected final Logger log = Logger.getLogger(getClass());
+    protected final Logger log = LoggerFactory.getLogger(getClass());
 
     private ArchivoLocal archivoEjb;
     private Archivo archivoActual;

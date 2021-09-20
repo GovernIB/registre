@@ -11,8 +11,8 @@ import java.io.Serializable;
  */
 @Entity
 @Table(name = "RWE_ROL")
-@SequenceGenerator(name="generator",sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
-public class Rol implements Serializable{
+@SequenceGenerator(name = "generator", sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
+public class Rol implements Serializable {
 
     private Long id;
     private String nombre;
@@ -31,8 +31,8 @@ public class Rol implements Serializable{
     }
 
     @Id
-    @GeneratedValue(strategy=GenerationType.SEQUENCE,generator = "generator")
-    @Column(name="ID")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "generator")
+    @Column(name = "ID")
     public Long getId() {
         return id;
     }

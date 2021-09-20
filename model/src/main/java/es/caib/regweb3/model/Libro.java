@@ -1,27 +1,24 @@
 package es.caib.regweb3.model;
 
-import org.hibernate.annotations.ForeignKey;
-import org.hibernate.annotations.Index;
-
 import javax.persistence.*;
 import javax.xml.bind.annotation.*;
 import java.io.Serializable;
 
 /**
  * Created by Fundació BIT.
+ *
  * @author anadal (index)
  * @author earrivi
  * Date: 16/01/14
  */
 @Entity
-@Table(name = "RWE_LIBRO")
-@org.hibernate.annotations.Table(appliesTo = "RWE_LIBRO", indexes = {
-    @Index(name="RWE_LIBRO_CONENT_FK_I", columnNames = {"CONTADOR_ENTRADA"}),
-    @Index(name="RWE_LIBRO_CONSAL_FK_I", columnNames = {"CONTADOR_SALIDA"}),
-    @Index(name="RWE_LIBRO_CONOFI_FK_I", columnNames = {"CONTADOR_OFICIO_REMISION"}),
-    @Index(name="RWE_LIBRO_ORGANI_FK_I", columnNames = {"ORGANISMO"})
+@Table(name = "RWE_LIBRO", indexes = {
+        @Index(name = "RWE_LIBRO_CONENT_FK_I", columnList = "CONTADOR_ENTRADA"),
+        @Index(name = "RWE_LIBRO_CONSAL_FK_I", columnList = "CONTADOR_SALIDA"),
+        @Index(name = "RWE_LIBRO_CONOFI_FK_I", columnList = "CONTADOR_OFICIO_REMISION"),
+        @Index(name = "RWE_LIBRO_ORGANI_FK_I", columnList = "ORGANISMO")
 })
-@SequenceGenerator(name="generator",sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
+@SequenceGenerator(name = "generator", sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
 @XmlRootElement(name = "libro")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Libro implements Serializable {
@@ -84,8 +81,8 @@ public class Libro implements Serializable {
     }
 
     @Id
-    @GeneratedValue(strategy=GenerationType.SEQUENCE,generator = "generator")
-    @Column(name="ID")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "generator")
+    @Column(name = "ID")
     public Long getId() {
         return id;
     }
@@ -112,7 +109,7 @@ public class Libro implements Serializable {
         this.codigo = codigo;
     }
 
-    @Column(name="ACTIVO", nullable= false)
+    @Column(name = "ACTIVO", nullable = false)
     public Boolean getActivo() {
         return activo;
     }
@@ -122,8 +119,7 @@ public class Libro implements Serializable {
     }
 
     @ManyToOne(cascade = {CascadeType.REMOVE})
-    @JoinColumn(name = "CONTADOR_ENTRADA")
-    @ForeignKey(name = "RWE_LIBRO_CONT_ENT_FK")
+    @JoinColumn(name = "CONTADOR_ENTRADA", foreignKey = @ForeignKey(name = "RWE_LIBRO_CONT_ENT_FK"))
     public Contador getContadorEntrada() {
         return contadorEntrada;
     }
@@ -133,8 +129,7 @@ public class Libro implements Serializable {
     }
 
     @ManyToOne(cascade = {CascadeType.REMOVE})
-    @JoinColumn(name = "CONTADOR_SALIDA")
-    @ForeignKey(name = "RWE_LIBRO_CONT_SAL_FK")
+    @JoinColumn(name = "CONTADOR_SALIDA", foreignKey = @ForeignKey(name = "RWE_LIBRO_CONT_SAL_FK"))
     public Contador getContadorSalida() {
         return contadorSalida;
     }
@@ -144,8 +139,7 @@ public class Libro implements Serializable {
     }
 
     @ManyToOne(cascade = {CascadeType.REMOVE})
-    @JoinColumn(name = "CONTADOR_OFICIO_REMISION")
-    @ForeignKey(name = "RWE_LIBRO_CONT_ORM_FK")
+    @JoinColumn(name = "CONTADOR_OFICIO_REMISION", foreignKey = @ForeignKey(name = "RWE_LIBRO_CONT_ORM_FK"))
     public Contador getContadorOficioRemision() {
         return contadorOficioRemision;
     }
@@ -155,8 +149,7 @@ public class Libro implements Serializable {
     }
 
     @ManyToOne(cascade = {CascadeType.REMOVE})
-    @JoinColumn(name = "CONTADOR_SIR")
-    @ForeignKey(name = "RWE_LIBRO_CONT_SIR_FK")
+    @JoinColumn(name = "CONTADOR_SIR", foreignKey = @ForeignKey(name = "RWE_LIBRO_CONT_SIR_FK"))
     public Contador getContadorSir() {
         return contadorSir;
     }
@@ -166,8 +159,7 @@ public class Libro implements Serializable {
     }
 
     @ManyToOne()
-    @JoinColumn(name = "ORGANISMO")
-    @ForeignKey(name = "RWE_LIBRO_ORGANISMO_FK")
+    @JoinColumn(name = "ORGANISMO", foreignKey = @ForeignKey(name = "RWE_LIBRO_ORGANISMO_FK"))
     public Organismo getOrganismo() {
         return organismo;
     }
@@ -177,21 +169,21 @@ public class Libro implements Serializable {
     }
 
     @Transient
-    public String getLibroOrganismo(){
+    public String getLibroOrganismo() {
         return getNombre() + " - " + getOrganismo().getDenominacion();
     }
 
     @Transient
-    public String getNombreCompleto(){
-        if(getOrganismo() != null){
+    public String getNombreCompleto() {
+        if (getOrganismo() != null) {
             return getOrganismo().getDenominacion() + " - " + getNombre();
-        }else{
+        } else {
             return getNombre();
         }
     }
 
     @Transient
-    public String getCodigoNombre(){
+    public String getCodigoNombre() {
         return getCodigo() + " - " + getNombre();
     }
 
@@ -209,11 +201,11 @@ public class Libro implements Serializable {
 
     @Override
     public String toString() {
-        if(nombre != null){
-            return  nombre;
-        } else if(id != null){
+        if (nombre != null) {
+            return nombre;
+        } else if (id != null) {
             return id.toString();
-        }else{
+        } else {
             return null;
         }
     }

@@ -6,8 +6,9 @@ import es.caib.regweb3.persistence.ejb.RolLocal;
 import es.caib.regweb3.persistence.ejb.UsuarioLocal;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.utils.LoginService;
-import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.security.authentication.event.InteractiveAuthenticationSuccessEvent;
@@ -32,7 +33,7 @@ import java.util.List;
 public class AuthenticationSuccessListener implements
         ApplicationListener<InteractiveAuthenticationSuccessEvent> {
 
-    protected final Logger log = Logger.getLogger(getClass());
+    protected final Logger log = LoggerFactory.getLogger(getClass());
 
 
     private UsuarioLocal usuarioEjb = null;

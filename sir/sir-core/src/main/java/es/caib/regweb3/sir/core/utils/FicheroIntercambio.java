@@ -8,7 +8,8 @@ import es.caib.regweb3.sir.core.schema.Fichero_Intercambio_SICRES_3;
 import es.caib.regweb3.sir.core.schema.types.Tipo_RegistroType;
 import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -24,7 +25,7 @@ import java.util.Date;
  */
 public class FicheroIntercambio {
 
-    public final Logger log = Logger.getLogger(getClass());
+    public final Logger log = LoggerFactory.getLogger(getClass());
 
     private static final SimpleDateFormat SDF = new SimpleDateFormat("yyyyMMddHHmmss");
 

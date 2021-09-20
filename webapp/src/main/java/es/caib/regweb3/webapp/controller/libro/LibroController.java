@@ -35,7 +35,7 @@ import java.util.List;
 @SessionAttributes(types = Libro.class)
 public class LibroController extends BaseController {
 
-    //protected final Logger log = Logger.getLogger(getClass());
+    //protected final Logger log = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private LibroValidator libroValidator;

@@ -16,9 +16,9 @@ import java.util.Map;
  */
 public class ConversationIdRequestProcessor implements RequestDataValueProcessor {
 
-    @Override
-    public String processAction(HttpServletRequest request, String action) {
-        return action;
+     @Override
+    public String processAction(HttpServletRequest httpServletRequest, String s, String s1) {
+        return s;
     }
 
     @Override

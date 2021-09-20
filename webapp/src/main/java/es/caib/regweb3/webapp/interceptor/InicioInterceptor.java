@@ -10,9 +10,10 @@ import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.security.LoginInfo;
 import es.caib.regweb3.webapp.utils.LoginService;
 import es.caib.regweb3.webapp.utils.Mensaje;
-import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
@@ -34,7 +35,7 @@ import javax.servlet.http.HttpSession;
  */
 public class InicioInterceptor extends HandlerInterceptorAdapter {
 
-    protected final Logger log = Logger.getLogger(getClass());
+    protected final Logger log = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private LoginService loginService;

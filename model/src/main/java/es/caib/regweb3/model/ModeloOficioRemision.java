@@ -1,8 +1,5 @@
 package es.caib.regweb3.model;
 
-import org.hibernate.annotations.ForeignKey;
-import org.hibernate.annotations.Index;
-
 import javax.persistence.*;
 /**
  * Created 2/09/14 13:45
@@ -11,11 +8,9 @@ import javax.persistence.*;
  * @author anadal (index)
  */
 @Entity
-@Table(name = "RWE_MODELO_OFICIO_REMISION")
-@org.hibernate.annotations.Table(appliesTo = "RWE_MODELO_OFICIO_REMISION", indexes = {
-    @Index(name="RWE_MODOFI_ENTIDA_FK_I", columnNames = {"ENTIDAD"}),
-    @Index(name="RWE_MODOFI_ARCHIV_FK_I", columnNames = {"MODELO"})
-})
+@Table(name = "RWE_MODELO_OFICIO_REMISION", indexes = {
+    @Index(name="RWE_MODOFI_ENTIDA_FK_I", columnList = "ENTIDAD"),
+    @Index(name="RWE_MODOFI_ARCHIV_FK_I", columnList = "MODELO")})
 @SequenceGenerator(name="generator",sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
 public class ModeloOficioRemision extends Traducible{
 
@@ -53,8 +48,7 @@ public class ModeloOficioRemision extends Traducible{
     }
 
     @ManyToOne()
-    @JoinColumn(name = "ENTIDAD")
-    @ForeignKey(name = "RWE_MODELOFREMISION_ENTIDAD_FK")
+    @JoinColumn(name = "ENTIDAD", foreignKey =@ForeignKey(name = "RWE_MODELOFREMISION_ENTIDAD_FK"))
     public Entidad getEntidad() {
         return entidad;
     }
@@ -64,8 +58,7 @@ public class ModeloOficioRemision extends Traducible{
     }
 
     @ManyToOne(cascade={CascadeType.MERGE, CascadeType.REMOVE})
-    @JoinColumn (name="MODELO")
-    @ForeignKey(name="RWE_MODELOFREMISION_MODELO_FK")
+    @JoinColumn (name="MODELO", foreignKey = @ForeignKey(name="RWE_MODELOFREMISION_MODELO_FK"))
 
     public Archivo getModelo() {
         return modelo;
@@ -74,7 +67,4 @@ public class ModeloOficioRemision extends Traducible{
     public void setModelo(Archivo modelo) {
         this.modelo = modelo;
     }
-
-
-
 }

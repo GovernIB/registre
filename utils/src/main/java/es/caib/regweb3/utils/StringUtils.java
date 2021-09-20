@@ -1,7 +1,8 @@
 package es.caib.regweb3.utils;
 
 import org.apache.commons.io.FilenameUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 import java.util.List;
@@ -14,7 +15,7 @@ import java.util.List;
  */
 public class StringUtils {
 
-    public final Logger log = Logger.getLogger(getClass());
+    public final Logger log = LoggerFactory.getLogger(getClass());
     private static final List<String> excepciones = Arrays.asList("de", "la", "y", "del", "el", "los", "las", "SL");
     private static final List<String> mayusculas = Arrays.asList("sl","s.l.","sa","s.a.", "cb", "c.b.");
 

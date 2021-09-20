@@ -12,7 +12,6 @@ import es.caib.regweb3.persistence.validator.AnexoBeanValidator;
 import es.caib.regweb3.persistence.validator.AnexoValidator;
 import es.caib.regweb3.utils.*;
 import org.apache.commons.lang.time.DateUtils;
-import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NArgumentString;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
@@ -23,6 +22,8 @@ import org.fundaciobit.pluginsib.core.utils.ISO8601;
 import org.fundaciobit.pluginsib.core.utils.Metadata;
 import org.fundaciobit.pluginsib.core.utils.MetadataConstants;
 import org.jboss.ejb3.annotation.SecurityDomain;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
 
@@ -54,7 +55,7 @@ import static es.caib.regweb3.utils.RegwebConstantes.REGISTRO_ENTRADA;
 @Interceptors(SpringBeanAutowiringInterceptor.class)
 public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
-    protected final Logger log = Logger.getLogger(getClass());
+    protected final Logger log = LoggerFactory.getLogger(getClass());
 
 
     @Resource

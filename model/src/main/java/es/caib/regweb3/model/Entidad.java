@@ -1,11 +1,5 @@
 package es.caib.regweb3.model;
 
-
-import org.hibernate.annotations.ForeignKey;
-import org.hibernate.annotations.Index;
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
-
 import javax.persistence.*;
 import javax.xml.bind.annotation.*;
 import java.io.Serializable;
@@ -15,16 +9,15 @@ import java.util.Set;
 
 /**
  * Created by Fundació BIT.
+ *
  * @author earrivi
  * @author anadal (index)
  * Date: 16/01/14
  */
 @Entity
-@Table(name = "RWE_ENTIDAD")
-@org.hibernate.annotations.Table(appliesTo = "RWE_ENTIDAD", indexes = {
-    @Index(name="RWE_ENTIDA_PRO_FK_I", columnNames = {"PROPIETARIO"})
-})
-@SequenceGenerator(name="generator",sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
+@Table(name = "RWE_ENTIDAD", indexes =
+@Index(name = "RWE_ENTIDA_PRO_FK_I", columnList = "PROPIETARIO"))
+@SequenceGenerator(name = "generator", sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
 @XmlRootElement(name = "entidad")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Entidad implements Serializable {
@@ -71,12 +64,13 @@ public class Entidad implements Serializable {
     private Boolean activo = true;
     @XmlTransient
     private Boolean mantenimiento = false;
-    
-    /**  IMPORTANT: Ja no s'utilitza. Es mante per si en un futur a
-     *  l'Administrador d'Entitat se i permet tenir varis Plugins donats d'alta i
-     *  des d'aquest valor poder anar canviant de tipus d'scan.
+
+    /**
+     * IMPORTANT: Ja no s'utilitza. Es mante per si en un futur a
+     * l'Administrador d'Entitat se i permet tenir varis Plugins donats d'alta i
+     * des d'aquest valor poder anar canviant de tipus d'scan.
      */
-    @XmlTransient    
+    @XmlTransient
     private String tipoScan;
     @XmlTransient
     private Integer posXsello;
@@ -87,10 +81,10 @@ public class Entidad implements Serializable {
 
     @XmlTransient
     private Libro libro;
-    
+
 
     public Entidad() {
-      super();
+        super();
     }
 
 
@@ -108,28 +102,28 @@ public class Entidad implements Serializable {
      * @param e
      */
     public Entidad(Entidad e) {
-      super();
-      this.id = e.id;
-      this.nombre = e.nombre;
-      this.descripcion = e.descripcion;
-      this.codigoDir3 = e.codigoDir3;
-      this.sello = e.sello;
-      this.propietario = e.propietario;
-      this.administradores = e.administradores;
-      this.organismos = e.organismos;
-      this.numRegistro = e.numRegistro;
-      this.configuracionPersona = e.configuracionPersona;
-      this.colorMenu = e.colorMenu;
-      this.textoPie = e.textoPie;
-      this.logoMenu = e.logoMenu;
-      this.logoPie = e.logoPie;
-      this.logoSello = e.logoSello;
-      this.diasVisado = e.diasVisado;
-      this.sir = e.sir;
-      this.activo = e.activo;
-      this.tipoScan = e.tipoScan;
-      this.posXsello = e.posXsello;
-      this.posYsello = e.posYsello;
+        super();
+        this.id = e.id;
+        this.nombre = e.nombre;
+        this.descripcion = e.descripcion;
+        this.codigoDir3 = e.codigoDir3;
+        this.sello = e.sello;
+        this.propietario = e.propietario;
+        this.administradores = e.administradores;
+        this.organismos = e.organismos;
+        this.numRegistro = e.numRegistro;
+        this.configuracionPersona = e.configuracionPersona;
+        this.colorMenu = e.colorMenu;
+        this.textoPie = e.textoPie;
+        this.logoMenu = e.logoMenu;
+        this.logoPie = e.logoPie;
+        this.logoSello = e.logoSello;
+        this.diasVisado = e.diasVisado;
+        this.sir = e.sir;
+        this.activo = e.activo;
+        this.tipoScan = e.tipoScan;
+        this.posXsello = e.posXsello;
+        this.posYsello = e.posYsello;
     }
 
     public Entidad(Long id, String nombre, Boolean oficioRemision) {
@@ -139,33 +133,33 @@ public class Entidad implements Serializable {
     }
 
     @Id
-    @GeneratedValue(strategy=GenerationType.SEQUENCE,generator = "generator")
-    @Column(name="ID")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "generator")
+    @Column(name = "ID")
     public Long getId() {
         return id;
     }
 
 
-
     public void setId(Long id) {
         this.id = id;
     }
-    
-    /**  IMPORTANT: Ja no s'utilitza. Es mante per si en un futur a
-     *  l'Administrador d'Entitat se i permet tenir varis Plugins donats d'alta i
-     *  des d'aquest valor poder anar canviant de tipus d'scan.
-     */   
+
+    /**
+     * IMPORTANT: Ja no s'utilitza. Es mante per si en un futur a
+     * l'Administrador d'Entitat se i permet tenir varis Plugins donats d'alta i
+     * des d'aquest valor poder anar canviant de tipus d'scan.
+     */
     @Deprecated
-    @Column(name="TIPSCAN", length = 20)
+    @Column(name = "TIPSCAN", length = 20)
     public String getTipoScan() {
-      return tipoScan;
+        return tipoScan;
     }
 
     @Deprecated
     public void setTipoScan(String tipoScan) {
-      this.tipoScan = tipoScan;
+        this.tipoScan = tipoScan;
     }
-    
+
 
     @Column(name = "NOMBRE", nullable = false)
     public String getNombre() {
@@ -185,7 +179,7 @@ public class Entidad implements Serializable {
         this.descripcion = descripcion;
     }
 
-    @Column(name="CODIGODIR3", nullable = false, unique = true)
+    @Column(name = "CODIGODIR3", nullable = false, unique = true)
     public String getCodigoDir3() {
         return codigoDir3;
     }
@@ -194,7 +188,7 @@ public class Entidad implements Serializable {
         this.codigoDir3 = codigoDir3;
     }
 
-    @Column(name="SELLO",length = 4000)
+    @Column(name = "SELLO", length = 4000)
     public String getSello() {
         return sello;
     }
@@ -204,8 +198,7 @@ public class Entidad implements Serializable {
     }
 
     @ManyToOne()
-    @JoinColumn(name = "PROPIETARIO")
-    @ForeignKey(name = "RWE_ENTIDAD_USU_PROP_FK")
+    @JoinColumn(name = "PROPIETARIO", foreignKey = @ForeignKey(name = "RWE_ENTIDAD_USU_PROP_FK"))
     public Usuario getPropietario() {
         return propietario;
     }
@@ -215,8 +208,8 @@ public class Entidad implements Serializable {
     }
 
     @ManyToMany(targetEntity = UsuarioEntidad.class, fetch = FetchType.EAGER)
-    @JoinTable(name = "RWE_ENTIDAD_USUENT", joinColumns = { @JoinColumn(name = "IDENTIDAD") }, inverseJoinColumns = { @JoinColumn(name = "IDUSUENT") })
-    @ForeignKey(name = "RWE_USU_ADM_ENTIDAD_FK", inverseName = "RWE_ENTIDAD_USU_ADM_FK")
+    @JoinTable(name = "RWE_ENTIDAD_USUENT", foreignKey = @ForeignKey(name = "RWE_USU_ADM_ENTIDAD_FK"),
+            joinColumns = {@JoinColumn(name = "IDENTIDAD")}, inverseJoinColumns = {@JoinColumn(name = "IDUSUENT")})
     @OrderBy("id")
     public Set<UsuarioEntidad> getAdministradores() {
         return administradores;
@@ -227,10 +220,8 @@ public class Entidad implements Serializable {
     }
 
 
-    @OneToMany(cascade= CascadeType.REMOVE,targetEntity=Organismo.class)
-    @LazyCollection(value = LazyCollectionOption.TRUE)
-    @JoinColumn(name="ENTIDAD")
-    @ForeignKey(name="RWE_ORGANISMO_ENTIDAD_FK")
+    @OneToMany(cascade = CascadeType.REMOVE, targetEntity = Organismo.class, fetch = FetchType.LAZY)
+    @JoinColumn(name = "ENTIDAD", foreignKey = @ForeignKey(name = "RWE_ORGANISMO_ENTIDAD_FK"))
     public List<Organismo> getOrganismos() {
         return organismos;
     }
@@ -239,7 +230,7 @@ public class Entidad implements Serializable {
         this.organismos = organismos;
     }
 
-    @Column(name="NUMREGISTRO", length = 4000)
+    @Column(name = "NUMREGISTRO", length = 4000)
     public String getNumRegistro() {
         return numRegistro;
     }
@@ -248,7 +239,7 @@ public class Entidad implements Serializable {
         this.numRegistro = numRegistro;
     }
 
-    
+
     @Column(name = "CONFIGPERSONA")
     public Long getConfiguracionPersona() {
         return configuracionPersona;
@@ -258,7 +249,7 @@ public class Entidad implements Serializable {
         this.configuracionPersona = configuracionPersona;
     }
 
-    @Column(name="COLORMENU")
+    @Column(name = "COLORMENU")
     public String getColorMenu() {
         return colorMenu;
     }
@@ -276,10 +267,8 @@ public class Entidad implements Serializable {
         this.textoPie = textoPie;
     }
 
-    @ManyToOne(cascade=CascadeType.ALL)
-    @JoinColumn (name="LOGOMENU")
-    @ForeignKey(name="RWE_ENTIDAD_LOGOMENU_FK")
-
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "LOGOMENU", foreignKey = @ForeignKey(name = "RWE_ENTIDAD_LOGOMENU_FK"))
     public Archivo getLogoMenu() {
         return logoMenu;
     }
@@ -288,9 +277,8 @@ public class Entidad implements Serializable {
         this.logoMenu = logoMenu;
     }
 
-    @ManyToOne(cascade=CascadeType.ALL)
-    @JoinColumn (name="LOGOPIE")
-    @ForeignKey(name="RWE_ENTIDAD_LOGOPIE_FK")
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "LOGOPIE", foreignKey = @ForeignKey(name = "RWE_ENTIDAD_LOGOPIE_FK"))
     public Archivo getLogoPie() {
         return logoPie;
     }
@@ -299,9 +287,8 @@ public class Entidad implements Serializable {
         this.logoPie = logoPie;
     }
 
-    @ManyToOne(cascade=CascadeType.ALL)
-    @JoinColumn (name="LOGOSELLO")
-    @ForeignKey(name="RWE_ENTIDAD_LOGOSELLO_FK")
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "LOGOSELLO", foreignKey = @ForeignKey(name = "RWE_ENTIDAD_LOGOSELLO_FK"))
     public Archivo getLogoSello() {
         return logoSello;
     }
@@ -311,21 +298,21 @@ public class Entidad implements Serializable {
     }
 
 
-    @Column(name="DIASVISADO")
+    @Column(name = "DIASVISADO")
     public Integer getDiasVisado() {
-      return diasVisado;
+        return diasVisado;
     }
 
     public void setDiasVisado(Integer diasVisado) {
-      this.diasVisado = diasVisado;
+        this.diasVisado = diasVisado;
     }
 
-    @Column(name="SIR",nullable= false)
+    @Column(name = "SIR", nullable = false)
     public Boolean getSir() {
         return sir;
     }
 
-    @Column(name="OFICIOREMISION",nullable= false)
+    @Column(name = "OFICIOREMISION", nullable = false)
     public Boolean getOficioRemision() {
         return oficioRemision;
     }
@@ -339,8 +326,7 @@ public class Entidad implements Serializable {
     }
 
     @ManyToOne(cascade = {CascadeType.REMOVE})
-    @JoinColumn(name = "CONTADOR_SIR")
-    @ForeignKey(name = "RWE_ENTIDAD_CONT_SIR_FK")
+    @JoinColumn(name = "CONTADOR_SIR", foreignKey = @ForeignKey(name = "RWE_ENTIDAD_CONT_SIR_FK"))
     public Contador getContadorSir() {
         return contadorSir;
     }
@@ -349,7 +335,7 @@ public class Entidad implements Serializable {
         this.contadorSir = contadorSir;
     }
 
-    @Column(name="ACTIVO",nullable= false)
+    @Column(name = "ACTIVO", nullable = false)
     public Boolean getActivo() {
         return activo;
     }
@@ -358,7 +344,7 @@ public class Entidad implements Serializable {
         this.activo = activo;
     }
 
-    @Column(name="MANTENIMIENTO",nullable= false)
+    @Column(name = "MANTENIMIENTO", nullable = false)
     public Boolean getMantenimiento() {
         return mantenimiento;
     }
@@ -367,15 +353,23 @@ public class Entidad implements Serializable {
         this.mantenimiento = mantenimiento;
     }
 
-    @Column(name="POSXSELLO",length = 3)
-    public Integer getPosXsello() { return posXsello; }
+    @Column(name = "POSXSELLO", length = 3)
+    public Integer getPosXsello() {
+        return posXsello;
+    }
 
-    public void setPosXsello(Integer posXsello) { this.posXsello = posXsello; }
+    public void setPosXsello(Integer posXsello) {
+        this.posXsello = posXsello;
+    }
 
-    @Column(name="POSYSELLO",length = 3)
-    public Integer getPosYsello() { return posYsello; }
+    @Column(name = "POSYSELLO", length = 3)
+    public Integer getPosYsello() {
+        return posYsello;
+    }
 
-    public void setPosYsello(Integer posYsello) { this.posYsello = posYsello; }
+    public void setPosYsello(Integer posYsello) {
+        this.posYsello = posYsello;
+    }
 
     @Column(name = "PERFIL_CUSTODIA")
     public Long getPerfilCustodia() {
@@ -386,9 +380,8 @@ public class Entidad implements Serializable {
         this.perfilCustodia = perfilCustodia;
     }
 
-    @ManyToOne(cascade=CascadeType.ALL)
-    @JoinColumn (name="LIBRO")
-    @ForeignKey(name="RWE_ENTIDAD_LIBRO_FK")
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "LIBRO", foreignKey = @ForeignKey(name = "RWE_ENTIDAD_LIBRO_FK"))
     public Libro getLibro() {
         return libro;
     }
@@ -413,6 +406,5 @@ public class Entidad implements Serializable {
     public String toString() {
         return nombre;
     }
-
 
 }

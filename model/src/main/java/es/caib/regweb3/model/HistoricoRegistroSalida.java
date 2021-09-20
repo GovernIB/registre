@@ -1,6 +1,7 @@
 package es.caib.regweb3.model;
 
-import org.hibernate.annotations.ForeignKey;
+
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -14,7 +15,7 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "RWE_HISTORICO_REGISTRO_SALIDA")
-@SequenceGenerator(name="generator",sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
+@SequenceGenerator(name = "generator", sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
 public class HistoricoRegistroSalida implements Serializable {
 
     private Long id;
@@ -45,8 +46,8 @@ public class HistoricoRegistroSalida implements Serializable {
     }
 
     @Id
-    @GeneratedValue(strategy=GenerationType.SEQUENCE,generator = "generator")
-    @Column(name="ID")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "generator")
+    @Column(name = "ID")
     public Long getId() {
         return id;
     }
@@ -57,8 +58,7 @@ public class HistoricoRegistroSalida implements Serializable {
 
 
     @ManyToOne()
-    @JoinColumn(name = "REGISTRO_SALIDA")
-    @ForeignKey(name = "RWE_HITORICO_RS_FK")
+    @JoinColumn(name = "REGISTRO_SALIDA", foreignKey = @ForeignKey(name = "RWE_HITORICO_RS_FK"))
     public RegistroSalida getRegistroSalida() {
         return registroSalida;
     }
@@ -68,6 +68,7 @@ public class HistoricoRegistroSalida implements Serializable {
     }
 
     @Lob
+    @Type(type = "org.hibernate.type.TextType")
     @Column(name = "RS_ORIGINAL")
     public String getRegistroSalidaOriginal() {
         return registroSalidaOriginal;
@@ -77,8 +78,8 @@ public class HistoricoRegistroSalida implements Serializable {
         this.registroSalidaOriginal = registroSalidaOriginal;
     }
 
-    
-    @Column(name = "ESTADO")    
+
+    @Column(name = "ESTADO")
     public Long getEstado() {
         return estado;
     }
@@ -107,8 +108,7 @@ public class HistoricoRegistroSalida implements Serializable {
     }
 
     @ManyToOne()
-    @JoinColumn(name = "USUARIO")
-    @ForeignKey(name = "RWE_HISTORICO_USUARIO_RS_FK")
+    @JoinColumn(name = "USUARIO", foreignKey =@ForeignKey(name = "RWE_HISTORICO_USUARIO_RS_FK"))
     public UsuarioEntidad getUsuario() {
         return usuario;
     }
@@ -116,7 +116,6 @@ public class HistoricoRegistroSalida implements Serializable {
     public void setUsuario(UsuarioEntidad usuario) {
         this.usuario = usuario;
     }
-
 
     @Override
     public boolean equals(Object o) {
@@ -132,9 +131,9 @@ public class HistoricoRegistroSalida implements Serializable {
 
     @Override
     public String toString() {
-        if(id != null){
+        if (id != null) {
             return id.toString();
-        }else{
+        } else {
             return null;
         }
     }

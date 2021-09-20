@@ -6,11 +6,12 @@ import es.caib.arxiudigital.apirest.facade.pojos.Expediente;
 import es.caib.arxiudigital.apirest.facade.resultados.Resultado;
 import es.caib.arxiudigital.apirest.facade.resultados.ResultadoBusqueda;
 import es.caib.regweb3.utils.RegwebConstantes;
-import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.plugins.documentcustody.api.CustodyException;
 import org.fundaciobit.plugins.documentcustody.arxiudigitalcaib.ArxiuDigitalCAIBDocumentCustodyPlugin;
 import org.jboss.ejb3.annotation.SecurityDomain;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.security.RunAs;
 import javax.ejb.EJB;
@@ -31,7 +32,7 @@ import java.util.List;
 @RunAs("RWE_SUPERADMIN")
 public class ArxiuBean implements ArxiuLocal{
 
-    protected final Logger log = Logger.getLogger(getClass());
+    protected final Logger log = LoggerFactory.getLogger(getClass());
 
     @EJB(mappedName = "regweb3/IntegracionEJB/local")
     private IntegracionLocal integracionEjb;

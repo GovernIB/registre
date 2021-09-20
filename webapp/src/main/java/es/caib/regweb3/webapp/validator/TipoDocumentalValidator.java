@@ -3,7 +3,8 @@ package es.caib.regweb3.webapp.validator;
 import es.caib.regweb3.model.TipoDocumental;
 import es.caib.regweb3.persistence.ejb.TipoDocumentalLocal;
 import es.caib.regweb3.utils.RegwebConstantes;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
@@ -20,7 +21,7 @@ import javax.ejb.EJB;
 @Component
 public class TipoDocumentalValidator implements Validator {
 
-    protected final Logger log = Logger.getLogger(getClass());
+    protected final Logger log = LoggerFactory.getLogger(getClass());
 
     @EJB(mappedName = "regweb3/TipoDocumentalEJB/local")
     private TipoDocumentalLocal tipoDocumentalEjb;

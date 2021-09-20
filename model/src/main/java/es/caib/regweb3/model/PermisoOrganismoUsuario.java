@@ -1,7 +1,5 @@
 package es.caib.regweb3.model;
 
-import org.hibernate.annotations.ForeignKey;
-import org.hibernate.annotations.Index;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -14,10 +12,9 @@ import java.io.Serializable;
  */
 
 @Entity
-@Table(name = "RWE_PERMORGUSU")
-@org.hibernate.annotations.Table(appliesTo = "RWE_PERMORGUSU", indexes = {
-    @Index(name="RWE_POU_ORG_FK_I", columnNames = {"ORGANISMO"}),
-    @Index(name="RWE_POU_USUARI_FK_I", columnNames = {"USUARIO"})
+@Table(name = "RWE_PERMORGUSU", indexes = {
+    @Index(name="RWE_POU_ORG_FK_I", columnList = "ORGANISMO"),
+    @Index(name="RWE_POU_USUARI_FK_I", columnList = "USUARIO")
 })
 @SequenceGenerator(name="generator",sequenceName = "RWE_POU_SEQ", allocationSize = 1)
 public class PermisoOrganismoUsuario implements Serializable {
@@ -68,8 +65,7 @@ public class PermisoOrganismoUsuario implements Serializable {
     }
 
     @ManyToOne()
-    @JoinColumn(name="ORGANISMO")
-    @ForeignKey(name="RWE_POU_ORG_FK")
+    @JoinColumn(name="ORGANISMO", foreignKey = @ForeignKey(name="RWE_POU_ORG_FK"))
     public Organismo getOrganismo() {
       return organismo;
     }
@@ -79,8 +75,7 @@ public class PermisoOrganismoUsuario implements Serializable {
     }
 
     @ManyToOne()
-    @JoinColumn(name="USUARIO")
-    @ForeignKey(name="RWE_POU_USUENT_FK")
+    @JoinColumn(name="USUARIO", foreignKey = @ForeignKey(name="RWE_POU_USUENT_FK"))
     public UsuarioEntidad getUsuario() {
       return usuario;
     }
@@ -118,6 +113,5 @@ public class PermisoOrganismoUsuario implements Serializable {
 
         return true;
     }
-
 
 }

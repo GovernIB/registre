@@ -1,6 +1,6 @@
 package es.caib.regweb3.model;
 
-import org.hibernate.annotations.ForeignKey;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -117,8 +117,7 @@ public class AnexoSir implements Serializable {
     }
 
     @ManyToOne()
-    @JoinColumn(name = "REGISTRO_SIR")
-    @ForeignKey(name = "RWE_ANEXOSIR_REGSIR_FK")
+    @JoinColumn(name = "REGISTRO_SIR", foreignKey = @ForeignKey(name = "RWE_ANEXOSIR_REGSIR_FK"))
     public RegistroSir getRegistroSir() {
         return registroSir;
     }
@@ -164,6 +163,7 @@ public class AnexoSir implements Serializable {
     }
 
     @Lob
+    @Type(type = "org.hibernate.type.TextType")
     @Column(name = "CERTIFICADO", length = 2147483647)
     public String getCertificado() {
         return certificado;
@@ -174,6 +174,7 @@ public class AnexoSir implements Serializable {
     }
 
     @Lob
+    @Type(type = "org.hibernate.type.TextType")
     @Column(name = "FIRMA", length = 2147483647)
     public String getFirma() {
         return firma;
@@ -184,6 +185,7 @@ public class AnexoSir implements Serializable {
     }
 
     @Lob
+    @Type(type = "org.hibernate.type.TextType")
     @Column(name = "TIMESTAMP", length = 2147483647)
     public String getTimestamp() {
         return timestamp;
@@ -194,6 +196,7 @@ public class AnexoSir implements Serializable {
     }
 
     @Lob
+    @Type(type = "org.hibernate.type.TextType")
     @Column(name = "VAL_OCSP_CE", length = 2147483647)
     public String getValidacionOCSPCertificado() {
         return validacionOCSPCertificado;
@@ -204,6 +207,7 @@ public class AnexoSir implements Serializable {
     }
 
     @Lob
+    @Type(type = "org.hibernate.type.TextType")
     @Column(name = "HASH", nullable = false, length = 2147483647)
     public String getHash() {
         return hash;
@@ -223,8 +227,7 @@ public class AnexoSir implements Serializable {
     }
 
     @ManyToOne(cascade=CascadeType.ALL)
-    @JoinColumn (name="ANEXO")
-    @ForeignKey(name="RWE_ANEXOSIR_ANEXO_FK")
+    @JoinColumn (name="ANEXO", foreignKey = @ForeignKey(name="RWE_ANEXOSIR_ANEXO_FK"))
     public Archivo getAnexo() {
         return anexo;
     }

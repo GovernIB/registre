@@ -4,7 +4,8 @@ import es.caib.regweb3.model.Usuario;
 import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.security.LoginInfo;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
@@ -21,7 +22,7 @@ import java.util.Locale;
 @Component
 public class RegWebSessionLocaleResolver extends SessionLocaleResolver {
 
-  protected final Logger log = Logger.getLogger(getClass());
+  protected final Logger log = LoggerFactory.getLogger(getClass());
 
   @Override
   protected Locale determineDefaultLocale(HttpServletRequest request) {

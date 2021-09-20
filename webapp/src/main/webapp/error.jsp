@@ -9,7 +9,7 @@
 %><%@ page isErrorPage="true" language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"
 %><%!
 
-protected final Logger log = Logger.getLogger(getClass());
+protected final Logger log = LoggerFactory.getLogger(getClass());
 
 %><%
 // Página d'error que mostra per pantalla i amb format els errors que es produeixen.

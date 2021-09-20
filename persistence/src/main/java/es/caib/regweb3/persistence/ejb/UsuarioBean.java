@@ -6,12 +6,13 @@ import es.caib.regweb3.persistence.utils.DataBaseUtils;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
-import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.pluginsib.userinformation.IUserInformationPlugin;
 import org.fundaciobit.pluginsib.userinformation.RolesInfo;
 import org.fundaciobit.pluginsib.userinformation.UserInfo;
 import org.jboss.ejb3.annotation.SecurityDomain;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -32,7 +33,7 @@ import java.util.*;
 @SecurityDomain("seycon")
 public class UsuarioBean extends BaseEjbJPA<Usuario, Long> implements UsuarioLocal{
 
-    protected final Logger log = Logger.getLogger(getClass());
+    protected final Logger log = LoggerFactory.getLogger(getClass());
 
     @PersistenceContext(unitName="regweb3")
     private EntityManager em;

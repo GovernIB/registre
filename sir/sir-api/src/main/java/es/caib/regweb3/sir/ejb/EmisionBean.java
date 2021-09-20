@@ -8,8 +8,9 @@ import es.caib.regweb3.sir.ws.api.wssir6b.RespuestaWS;
 import es.caib.regweb3.sir.ws.api.wssir6b.WS_SIR6_BServiceLocator;
 import es.caib.regweb3.sir.ws.api.wssir6b.WS_SIR6_B_PortType;
 import es.caib.regweb3.utils.Configuracio;
-import org.apache.log4j.Logger;
 import org.dom4j.Document;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ejb.Stateless;
 import java.net.URL;
@@ -21,7 +22,7 @@ import java.net.URL;
 @Stateless(name = "EmisionEJB")
 public class EmisionBean implements EmisionLocal{
 
-    public final Logger log = Logger.getLogger(getClass());
+    public final Logger log = LoggerFactory.getLogger(getClass());
 
     private Sicres3XML sicres3XML = new Sicres3XML();
 

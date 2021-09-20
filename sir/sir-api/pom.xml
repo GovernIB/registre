@@ -4,22 +4,18 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>regweb3-sir-api</artifactId>
-    <version>3.2.4</version>
-    <packaging>jar</packaging>
-
     <parent>
         <groupId>es.caib.regweb3</groupId>
         <artifactId>regweb3-sir</artifactId>
-        <version>3.2.4</version>
+        <version>3.3.0</version>
     </parent>
+
+    <artifactId>regweb3-sir-api</artifactId>
+    <version>3.3.0</version>
+    <packaging>jar</packaging>
 
     <name>RegWeb3 - SIR - API</name>
 
-
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
 
     <build>
 
@@ -28,7 +24,6 @@
             <!-- Sempre fer net -->
             <plugin>
                 <artifactId>maven-clean-plugin</artifactId>
-                <version>2.4.1</version>
                 <executions>
                     <execution>
                         <id>auto-clean</id>
@@ -43,9 +38,8 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-ejb-plugin</artifactId>
-                <version>2.3</version>
                 <configuration>
-                    <ejbVersion>3.0</ejbVersion>
+                    <ejbVersion>3.2</ejbVersion>
                 </configuration>
             </plugin>
 
@@ -113,11 +107,11 @@
                         <artifactId>mail</artifactId>
                         <version>1.4.1</version>
                     </dependency>
-                    <dependency>
+                    <!--<dependency>
                         <groupId>javax.activation</groupId>
                         <artifactId>activation</artifactId>
                         <version>1.1</version>
-                    </dependency>
+                    </dependency>-->
                 </dependencies>
 
             </plugin>
@@ -129,26 +123,22 @@
 
     <dependencies>
 
-        <!--Internas-->
+        <!-- Especificacions i llibreries proporcionades per JBoss -->
 
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>regweb3-model</artifactId>
-            <version>${project.version}</version>
+            <groupId>org.dom4j</groupId>
+            <artifactId>dom4j</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>es.caib.regweb3</groupId>
-            <artifactId>regweb3-utils</artifactId>
-            <version>${project.version}</version>
-            <scope>compile</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>${project.groupId}</groupId>
             <artifactId>regweb3-sir-core</artifactId>
-            <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
 
@@ -157,7 +147,6 @@
             <groupId>org.apache.axis</groupId>
             <artifactId>axis</artifactId>
             <version>1.4</version>
-            <scope>provided</scope>
         </dependency>
 
         <dependency>
@@ -177,7 +166,6 @@
         <dependency>
             <groupId>wsdl4j</groupId>
             <artifactId>wsdl4j</artifactId>
-            <version>1.6.2</version>
             <scope>provided</scope>
         </dependency>
 
@@ -191,22 +179,25 @@
         <dependency>
             <groupId>javax.activation</groupId>
             <artifactId>activation</artifactId>
-            <version>1.1</version>
             <scope>provided</scope>
         </dependency>
-
 
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-            <version>2.2</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
-            <version>1.5</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
@@ -223,18 +214,10 @@
             <scope>provided</scope>
         </dependency>
 
-
         <dependency>
             <groupId>org.fundaciobit.pluginsib.documentcustody</groupId>
             <artifactId>pluginsib-documentcustody-api</artifactId>
             <version>${documentcustody.api.version}</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-annotations</artifactId>
-            <version>3.4.0.GA</version>
             <scope>provided</scope>
         </dependency>
 

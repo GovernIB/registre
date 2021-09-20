@@ -4,7 +4,8 @@ import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.model.Oficina;
 import es.caib.regweb3.webapp.controller.BaseController;
 import es.caib.regweb3.webapp.utils.Mensaje;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,7 +23,7 @@ import java.util.List;
 @Controller
 public class EventoController extends BaseController {
 
-    protected final Logger log = Logger.getLogger(getClass());
+    protected final Logger log = LoggerFactory.getLogger(getClass());
 
 
     @RequestMapping(value = "/eventos")

@@ -2,7 +2,8 @@ package es.caib.regweb3.persistence.utils;
 
 import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.commons.io.IOUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 
@@ -15,7 +16,7 @@ public class FileSystemManager {
 
 
 
-    protected static final Logger log = Logger.getLogger(FileSystemManager.class);
+    protected static final Logger log = LoggerFactory.getLogger(FileSystemManager.class);
 
     /**
      * Obtiene el fichero existente en el sistema de archivos

@@ -1,6 +1,7 @@
 package es.caib.regweb3.webapp.utils;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
@@ -44,7 +45,7 @@ public class ConversationalSessionAttributeStore implements SessionAttributeStor
 
     @Autowired
     private RequestMappingHandlerAdapter requestMappingHandlerAdapter;
-    private Logger logger = Logger.getLogger(ConversationalSessionAttributeStore.class.getName());
+    private Logger logger = LoggerFactory.getLogger(ConversationalSessionAttributeStore.class);
 
     private int keepAliveConversations = 10;
 

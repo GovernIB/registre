@@ -1,6 +1,6 @@
 package es.caib.regweb3.model;
 
-import org.hibernate.annotations.Index;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -13,7 +13,7 @@ import java.io.Serializable;
  * @author earrivi
  */
 @Entity
-@Table(name = "RWE_PLUGIN")
+@Table(name = "RWE_PLUGIN", indexes = {@Index(name = "RWE_PLUGI_ENTIDA_FK_I", columnList = "ENTIDAD")})
 @SequenceGenerator(name = "generator", sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
 public class Plugin implements Serializable {
 
@@ -85,6 +85,7 @@ public class Plugin implements Serializable {
     }
 
     @Lob
+    @Type(type = "org.hibernate.type.TextType")
     @Column(name = "PROPIEDADES_ADMIN", length = 2147483647)
     public String getPropiedadesAdmin() {
         return propiedadesAdmin;
@@ -95,6 +96,7 @@ public class Plugin implements Serializable {
     }
 
     @Lob
+    @Type(type = "org.hibernate.type.TextType")
     @Column(name = "PROPIEDADES_ENTIDAD", length = 2147483647)
     public String getPropiedadesEntidad() {
         return propiedadesEntidad;
@@ -113,7 +115,7 @@ public class Plugin implements Serializable {
         this.activo = activo;
     }
 
-    @Index(name = "RWE_PLUGI_ENTIDA_FK_I")
+
     @Column(name = "ENTIDAD", length = 50)
     public Long getEntidad() {
         return entidad;

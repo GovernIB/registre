@@ -1,6 +1,7 @@
 package es.caib.regweb3.utils;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -10,7 +11,7 @@ import org.apache.log4j.Logger;
  */
 public class Configuracio implements RegwebConstantes {
 
-	protected static final Logger log = Logger.getLogger(Configuracio.class);
+	protected static final Logger log = LoggerFactory.getLogger(Configuracio.class);
 
     public static boolean isCAIB() {
       return Boolean.getBoolean(REGWEB3_PROPERTY_BASE + "iscaib");

@@ -5,8 +5,9 @@ import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import es.caib.regweb3.webapp.utils.AbstractIText5PdfView;
-import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -20,7 +21,7 @@ import java.util.Map;
  */
 public class IndicadoresOficinaPdf extends AbstractIText5PdfView{
 
-    protected final Logger log = Logger.getLogger(getClass());
+    protected final Logger log = LoggerFactory.getLogger(getClass());
 
     private ArrayList<String> entradaAnosValor = new ArrayList<String>();
     private ArrayList<String> entradaAnosNombre = new ArrayList<String>();

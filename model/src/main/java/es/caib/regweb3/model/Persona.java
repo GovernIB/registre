@@ -3,8 +3,6 @@ package es.caib.regweb3.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
-import org.hibernate.annotations.ForeignKey;
-import org.hibernate.annotations.Index;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -16,11 +14,10 @@ import java.io.Serializable;
  * Date: 6/02/14
  */
 @Entity
-@Table(name = "RWE_PERSONA")
-@org.hibernate.annotations.Table(appliesTo = "RWE_PERSONA", indexes = {
-        @Index(name="RWE_PERSONA_ENTIDAD_FK_I", columnNames = {"ENTIDAD"})
+@Table(name = "RWE_PERSONA", indexes = {
+        @Index(name = "RWE_PERSONA_ENTIDAD_FK_I", columnList = "ENTIDAD")
 })
-@SequenceGenerator(name="generator",sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
+@SequenceGenerator(name = "generator", sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
 public class Persona implements Serializable {
 
     private Long id;
@@ -50,14 +47,15 @@ public class Persona implements Serializable {
 
     private boolean guardarInteresado;
 
-    public Persona() {}
+    public Persona() {
+    }
 
     public Persona(Long id) {
         this.id = id;
     }
 
-    public Persona(String id){
-        this.id= Long.valueOf(id);
+    public Persona(String id) {
+        this.id = Long.valueOf(id);
     }
 
     public Persona(Long id, String razonSocial, String documento, Long tipo) {
@@ -92,10 +90,10 @@ public class Persona implements Serializable {
 
     public Persona(Interesado interesado) {
 
-        if(interesado.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_FISICA)){
+        if (interesado.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_FISICA)) {
             this.tipo = RegwebConstantes.TIPO_PERSONA_FISICA;
 
-        }else if(interesado.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA)){
+        } else if (interesado.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA)) {
             this.tipo = RegwebConstantes.TIPO_PERSONA_JURIDICA;
         }
 
@@ -120,8 +118,8 @@ public class Persona implements Serializable {
 
 
     @Id
-    @GeneratedValue(strategy=GenerationType.SEQUENCE,generator = "generator")
-    @Column(name="ID")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "generator")
+    @Column(name = "ID")
     public Long getId() {
         return id;
     }
@@ -229,10 +227,9 @@ public class Persona implements Serializable {
     public void setDocumento(String documento) {
         this.documento = documento;
     }
-    
-    
-    
-    @Column(name = "TIPOPERSONA", nullable = false)    
+
+
+    @Column(name = "TIPOPERSONA", nullable = false)
     public Long getTipo() {
         return tipo;
     }
@@ -240,12 +237,10 @@ public class Persona implements Serializable {
     public void setTipo(Long tipo) {
         this.tipo = tipo;
     }
-    
-    
+
 
     @ManyToOne(optional = true)
-    @JoinColumn(name = "PAIS")
-    @ForeignKey(name = "RWE_PERSONA_PAIS_FK")
+    @JoinColumn(name = "PAIS", foreignKey = @ForeignKey(name = "RWE_PERSONA_PAIS_FK"))
     public CatPais getPais() {
         return pais;
     }
@@ -255,8 +250,7 @@ public class Persona implements Serializable {
     }
 
     @ManyToOne(optional = true)
-    @JoinColumn(name = "PROVINCIA")
-    @ForeignKey(name = "RWE_PERSONA_PROVINCIA_FK")
+    @JoinColumn(name = "PROVINCIA", foreignKey = @ForeignKey(name = "RWE_PERSONA_PROVINCIA_FK"))
     public CatProvincia getProvincia() {
         return provincia;
     }
@@ -266,8 +260,7 @@ public class Persona implements Serializable {
     }
 
     @ManyToOne()
-    @JoinColumn(name = "LOCALIDAD")
-    @ForeignKey(name = "RWE_PERSONA_LOCALIDAD_FK")
+    @JoinColumn(name = "LOCALIDAD", foreignKey = @ForeignKey(name = "RWE_PERSONA_LOCALIDAD_FK"))
     public CatLocalidad getLocalidad() {
         return localidad;
     }
@@ -296,8 +289,7 @@ public class Persona implements Serializable {
     }
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "ENTIDAD")
-    @ForeignKey(name = "RWE_PERSONA_ENTIDAD_FK")
+    @JoinColumn(name = "ENTIDAD", foreignKey = @ForeignKey(name = "RWE_PERSONA_ENTIDAD_FK"))
     @JsonIgnore
     public Entidad getEntidad() {
         return entidad;
@@ -319,19 +311,19 @@ public class Persona implements Serializable {
 
 
     @Transient
-    public String getNombrePersonaFisica(){
+    public String getNombrePersonaFisica() {
 
-        String personaFisica = "" ;
+        String personaFisica = "";
 
-        if(StringUtils.isNotEmpty(getNombre())){
+        if (StringUtils.isNotEmpty(getNombre())) {
 
-            personaFisica = getNombre()+ " " + getApellido1();
+            personaFisica = getNombre() + " " + getApellido1();
 
-            if(getApellido2() != null && getApellido2().length() > 0){
+            if (getApellido2() != null && getApellido2().length() > 0) {
                 personaFisica = personaFisica.concat(" " + getApellido2());
             }
 
-            if(getDocumento() != null && getDocumento().length() > 0){
+            if (getDocumento() != null && getDocumento().length() > 0) {
                 personaFisica = personaFisica.concat(" - " + getDocumento());
             }
         }
@@ -340,14 +332,14 @@ public class Persona implements Serializable {
     }
 
     @Transient
-    public String getNombrePersonaFisicaCorto(){
+    public String getNombrePersonaFisicaCorto() {
 
         String personaFisica = "";
 
-        if(StringUtils.isNotEmpty(getNombre())){
-            personaFisica = getNombre()+ " " + getApellido1();
+        if (StringUtils.isNotEmpty(getNombre())) {
+            personaFisica = getNombre() + " " + getApellido1();
 
-            if(getApellido2() != null && getApellido2().length() > 0){
+            if (getApellido2() != null && getApellido2().length() > 0) {
                 personaFisica = personaFisica.concat(" " + getApellido2());
             }
         }
@@ -356,27 +348,27 @@ public class Persona implements Serializable {
     }
 
     @Transient
-    public String getNombrePersonaJuridica(){
+    public String getNombrePersonaJuridica() {
 
         String personaJuridica = "";
 
-        if(StringUtils.isNotEmpty(getRazonSocial())){
+        if (StringUtils.isNotEmpty(getRazonSocial())) {
 
             personaJuridica = getRazonSocial();
 
-            if(getDocumento() != null && getDocumento().length() > 0){
+            if (getDocumento() != null && getDocumento().length() > 0) {
                 personaJuridica = personaJuridica.concat(" - " + getDocumento());
             }
         }
 
-        return  personaJuridica;
+        return personaJuridica;
     }
 
     @Override
     public String toString() {
-        if(id != null){
+        if (id != null) {
             return id.toString();
-        }else{
+        } else {
             return null;
         }
     }

@@ -629,7 +629,7 @@ public class SirController extends BaseController {
 
 
                 } catch (NumberFormatException e) {
-                    log.info(e);
+                    log.info(e.getMessage());
                 }  catch (Exception e) {
                     e.printStackTrace();
                 }

@@ -8,10 +8,11 @@ import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 import es.caib.regweb3.ws.model.AnexoWs;
 import es.caib.regweb3.ws.v3.impl.CommonConverter;
-import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.plugins.documentcustody.api.DocumentCustody;
 import org.fundaciobit.plugins.documentcustody.api.SignatureCustody;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Calendar;
 
@@ -25,7 +26,7 @@ import java.util.Calendar;
 public class AnexoConverter extends CommonConverter {
 
 
-   public static final Logger log = Logger.getLogger(AnexoConverter.class);
+   public static final Logger log = LoggerFactory.getLogger(AnexoConverter.class);
 
    /**
     * Convierte un {@link es.caib.regweb3.ws.model.AnexoWs} en un {@link es.caib.regweb3.model.Anexo}

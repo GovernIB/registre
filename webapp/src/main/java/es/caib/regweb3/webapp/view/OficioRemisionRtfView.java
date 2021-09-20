@@ -4,7 +4,8 @@ import es.caib.regweb3.model.ModeloOficioRemision;
 import es.caib.regweb3.model.OficioRemision;
 import es.caib.regweb3.persistence.ejb.OficioRemisionLocal;
 import es.caib.regweb3.utils.CombineStream;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.servlet.view.AbstractView;
 
 import javax.ejb.EJB;
@@ -22,7 +23,7 @@ import java.util.Map;
  */
 public class OficioRemisionRtfView extends AbstractView {
 
-    protected final Logger log = Logger.getLogger(getClass());
+    protected final Logger log = LoggerFactory.getLogger(getClass());
 
     @EJB(mappedName = "regweb3/OficioRemisionEJB/local")
     private OficioRemisionLocal oficioRemisionEjb;

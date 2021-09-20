@@ -17,10 +17,11 @@ import es.caib.regweb3.webapp.utils.JsonResponse;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import es.caib.regweb3.webapp.validator.RegistroEntradaBusquedaValidator;
 import es.caib.regweb3.webapp.validator.RegistroSalidaBusquedaValidator;
-import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
@@ -43,7 +44,7 @@ import java.util.List;
 @RequestMapping(value = "/adminEntidad")
 public class AdminEntidadController extends AbstractRegistroCommonListController {
 
-    protected final Logger log = Logger.getLogger(getClass());
+    protected final Logger log = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private RegistroEntradaBusquedaValidator registroEntradaBusquedaValidator;

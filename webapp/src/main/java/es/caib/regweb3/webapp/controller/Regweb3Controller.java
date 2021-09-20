@@ -6,7 +6,8 @@ import es.caib.regweb3.model.Rol;
 import es.caib.regweb3.persistence.ejb.RolLocal;
 import es.caib.regweb3.webapp.utils.LoginService;
 import es.caib.regweb3.webapp.utils.Mensaje;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,7 +28,7 @@ import java.util.List;
 @Controller
 public class Regweb3Controller extends BaseController {
 
-    protected final Logger log = Logger.getLogger(getClass());
+    protected final Logger log = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private LoginService loginService;

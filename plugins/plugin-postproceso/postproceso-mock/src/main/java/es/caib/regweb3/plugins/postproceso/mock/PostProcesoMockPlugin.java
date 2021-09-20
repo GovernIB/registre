@@ -5,8 +5,9 @@ import es.caib.regweb3.model.Interesado;
 import es.caib.regweb3.model.RegistroEntrada;
 import es.caib.regweb3.model.RegistroSalida;
 import es.caib.regweb3.plugins.postproceso.IPostProcesoPlugin;
-import org.apache.log4j.Logger;
 import org.fundaciobit.pluginsib.core.utils.AbstractPluginProperties;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Properties;
 
@@ -15,7 +16,7 @@ import java.util.Properties;
  */
 public class PostProcesoMockPlugin extends AbstractPluginProperties implements IPostProcesoPlugin {
 
-    protected final Logger log = Logger.getLogger(getClass());
+    protected final Logger log = LoggerFactory.getLogger(getClass());
 
 
     /**

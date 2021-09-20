@@ -51,7 +51,7 @@ import java.util.*;
 @RequestMapping(value = "/entidad")
 public class EntidadController extends BaseController {
 
-    //protected final Logger log = Logger.getLogger(getClass());
+    //protected final Logger log = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private EntidadValidator entidadValidator;

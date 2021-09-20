@@ -1,7 +1,5 @@
 package es.caib.regweb3.model;
 
-import org.hibernate.annotations.Index;
-
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -13,8 +11,14 @@ import java.io.Serializable;
  * @author earrivi
  */
 @Entity
-@Table(name = "RWE_PROPIEDADGLOBAL", uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"CLAVE", "ENTIDAD"})})
+@Table(name = "RWE_PROPIEDADGLOBAL",
+        indexes = {
+                @Index(name = "RWE_PROPIE_ENTIDA_FK_I", columnList = "ENTIDAD"),
+        },
+        uniqueConstraints = {
+                @UniqueConstraint(columnNames = {"CLAVE", "ENTIDAD"
+                })
+        })
 @SequenceGenerator(name = "generator", sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
 public class PropiedadGlobal implements Serializable {
 
@@ -79,7 +83,6 @@ public class PropiedadGlobal implements Serializable {
         this.descripcion = descripcion;
     }
 
-    @Index(name = "RWE_PROPIE_ENTIDA_FK_I")
     @Column(name = "ENTIDAD", length = 50)
     public Long getEntidad() {
         return entidad;
@@ -112,7 +115,7 @@ public class PropiedadGlobal implements Serializable {
     }
 
     @Transient
-    public String getValorCorto(){
+    public String getValorCorto() {
 
         String valorCorto = getValor();
 
@@ -124,7 +127,7 @@ public class PropiedadGlobal implements Serializable {
     }
 
     @Transient
-    public String getClaveCorto(){
+    public String getClaveCorto() {
 
         String claveCorto = getClave();
 

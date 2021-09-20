@@ -1,7 +1,6 @@
 package es.caib.regweb3.model;
 
-import org.hibernate.annotations.ForeignKey;
-
+import javax.persistence.ForeignKey;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -22,8 +21,7 @@ public class RelacionSirOfiPK implements Serializable {
 
     @Id
     @ManyToOne()
-    @JoinColumn(name="IDOFICINA")
-    @ForeignKey(name="RWE_RELSIROFI_OFICINA_FK")
+    @JoinColumn(name="IDOFICINA", foreignKey = @ForeignKey(name="RWE_RELSIROFI_OFICINA_FK"))
     public Oficina getOficina() {
         return oficina;
     }
@@ -36,8 +34,7 @@ public class RelacionSirOfiPK implements Serializable {
 
     @Id
     @ManyToOne()
-    @JoinColumn (name="IDORGANISMO")
-    @ForeignKey(name="RWE_RELSIROFI_ORGANISMO_FK")
+    @JoinColumn (name="IDORGANISMO", foreignKey = @ForeignKey(name="RWE_RELSIROFI_ORGANISMO_FK"))
     public Organismo getOrganismo() {
         return organismo;
     }

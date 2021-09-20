@@ -1,6 +1,7 @@
 package es.caib.regweb3.persistence.ejb;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.security.RolesAllowed;
 import javax.persistence.EntityManager;
@@ -16,7 +17,7 @@ import java.io.Serializable;
 @RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI"})
 public abstract class BaseEjbJPA<T extends Serializable, E> implements BaseEjb<T, E> {
 
-    public final Logger log = Logger.getLogger(this.getClass());
+    public final Logger log = LoggerFactory.getLogger(this.getClass());
     public static final int RESULTADOS_PAGINACION = 10;
 
     @PersistenceContext(unitName="regweb3")
@@ -27,7 +28,7 @@ public abstract class BaseEjbJPA<T extends Serializable, E> implements BaseEjb<T
         try{
             em.remove(em.merge(persistentInstance));
         }catch (Exception e){
-            log.error(e);
+            log.error(e.getMessage());
             throw e;
         }
 
@@ -43,7 +44,7 @@ public abstract class BaseEjbJPA<T extends Serializable, E> implements BaseEjb<T
             em.persist(transientInstance);
             return transientInstance;
         }catch (Exception e){
-            log.error(e);
+            log.error(e.getMessage());
             throw e;
         }
 
@@ -54,7 +55,7 @@ public abstract class BaseEjbJPA<T extends Serializable, E> implements BaseEjb<T
         try{
             return em.merge(instance);
         }catch (Exception e){
-            log.error(e);
+            log.error(e.getMessage());
             throw e;
         }
 

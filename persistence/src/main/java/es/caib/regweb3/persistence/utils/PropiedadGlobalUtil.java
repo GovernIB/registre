@@ -3,7 +3,8 @@ package es.caib.regweb3.persistence.utils;
 import es.caib.regweb3.model.PropiedadGlobal;
 import es.caib.regweb3.persistence.ejb.PropiedadGlobalLocal;
 import es.caib.regweb3.utils.RegwebConstantes;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.naming.InitialContext;
 import java.util.List;
@@ -14,7 +15,7 @@ import java.util.Properties;
  */
 public class PropiedadGlobalUtil {
 
-    protected static final Logger log = Logger.getLogger(PropiedadGlobalUtil.class);
+    protected static final Logger log = LoggerFactory.getLogger(PropiedadGlobalUtil.class);
 
     protected static PropiedadGlobalLocal propiedadGlobalEjb;
 

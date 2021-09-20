@@ -1,7 +1,6 @@
 package es.caib.regweb3.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.hibernate.annotations.ForeignKey;
 
 import javax.persistence.*;
 import javax.xml.bind.annotation.*;
@@ -67,8 +66,7 @@ public class UsuarioEntidad implements Serializable{
     }
 
     @ManyToOne()
-    @JoinColumn(name = "USUARIO")
-    @ForeignKey(name = "RWE_USUENT_USUARIO_FK")
+    @JoinColumn(name = "USUARIO", foreignKey = @ForeignKey(name = "RWE_USUENT_USUARIO_FK"))
     public Usuario getUsuario() {
         return usuario;
     }
@@ -78,8 +76,7 @@ public class UsuarioEntidad implements Serializable{
     }
 
     @ManyToOne()
-    @JoinColumn(name = "ENTIDAD")
-    @ForeignKey(name = "RWE_USUENT_ENTIDAD_FK")
+    @JoinColumn(name = "ENTIDAD", foreignKey = @ForeignKey(name = "RWE_USUENT_ENTIDAD_FK"))
     @JsonIgnore
     public Entidad getEntidad() {
         return entidad;
@@ -99,8 +96,7 @@ public class UsuarioEntidad implements Serializable{
     }
 
     @ManyToOne()
-    @JoinColumn(name = "ULTIMAOFICINA")
-    @ForeignKey(name = "RWE_USUENT_OFICINA_FK")
+    @JoinColumn(name = "ULTIMAOFICINA", foreignKey = @ForeignKey(name = "RWE_USUENT_OFICINA_FK"))
     @JsonIgnore
     public Oficina getUltimaOficina() {
         return ultimaOficina;

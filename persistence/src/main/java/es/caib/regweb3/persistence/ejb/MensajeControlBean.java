@@ -15,8 +15,9 @@ import es.caib.regweb3.sir.core.excepcion.ValidacionException;
 import es.caib.regweb3.utils.Dir3CaibUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
-import org.apache.log4j.Logger;
 import org.jboss.ejb3.annotation.SecurityDomain;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -39,7 +40,7 @@ import java.util.*;
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 public class MensajeControlBean extends BaseEjbJPA<MensajeControl, Long> implements MensajeControlLocal{
 
-    protected final Logger log = Logger.getLogger(getClass());
+    protected final Logger log = LoggerFactory.getLogger(getClass());
 
     @PersistenceContext(unitName="regweb3")
     private EntityManager em;

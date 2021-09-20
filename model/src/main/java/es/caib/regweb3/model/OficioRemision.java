@@ -1,8 +1,5 @@
 package es.caib.regweb3.model;
 
-import org.hibernate.annotations.ForeignKey;
-import org.hibernate.annotations.Index;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
@@ -15,12 +12,12 @@ import java.util.List;
  * @author anadal (index)
  */
 @Entity
-@Table(name = "RWE_OFICIO_REMISION")
-@org.hibernate.annotations.Table(appliesTo = "RWE_OFICIO_REMISION", indexes = {
-        @Index(name = "RWE_OFIREM_ORGANI_FK_I", columnNames = {"ORGANISMODEST"}),
-        @Index(name = "RWE_OFIREM_LIBRO_FK_I", columnNames = {"LIBRO"}),
-        @Index(name = "RWE_OFIREM_OFICIN_FK_I", columnNames = {"OFICINA"}),
-        @Index(name = "RWE_OFIREM_USUARI_FK_I", columnNames = {"USUARIO"})})
+@Table(name = "RWE_OFICIO_REMISION", indexes = {
+        @Index(name = "RWE_OFIREM_ORGANI_FK_I", columnList = "ORGANISMODEST"),
+        @Index(name = "RWE_OFIREM_LIBRO_FK_I", columnList = "LIBRO"),
+        @Index(name = "RWE_OFIREM_OFICIN_FK_I", columnList = "OFICINA"),
+        @Index(name = "RWE_OFIREM_USUARI_FK_I", columnList = "USUARIO")
+})
 @SequenceGenerator(name = "generator", sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
 public class OficioRemision implements Serializable {
 
@@ -74,8 +71,7 @@ public class OficioRemision implements Serializable {
     }
 
     @ManyToOne()
-    @JoinColumn(name = "ORGANISMODEST")
-    @ForeignKey(name = "RWE_OFIREM_ORGANISMODEST_FK")
+    @JoinColumn(name = "ORGANISMODEST", foreignKey = @ForeignKey(name = "RWE_OFIREM_ORGANISMODEST_FK"))
     public Organismo getOrganismoDestinatario() {
         return organismoDestinatario;
     }
@@ -85,8 +81,7 @@ public class OficioRemision implements Serializable {
     }
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "LIBRO")
-    @ForeignKey(name = "RWE_OFIREM_LIBRO_FK")
+    @JoinColumn(name = "LIBRO", foreignKey = @ForeignKey(name = "RWE_OFIREM_LIBRO_FK"))
     public Libro getLibro() {
         return libro;
     }
@@ -105,8 +100,7 @@ public class OficioRemision implements Serializable {
     }
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "OFICINA")
-    @ForeignKey(name = "RWE_OFIREM_OFICINA_FK")
+    @JoinColumn(name = "OFICINA", foreignKey = @ForeignKey(name = "RWE_OFIREM_OFICINA_FK"))
     public Oficina getOficina() {
         return oficina;
     }
@@ -116,8 +110,8 @@ public class OficioRemision implements Serializable {
     }
 
     @ManyToMany(targetEntity = RegistroEntrada.class, fetch = FetchType.LAZY)
-    @JoinTable(name = "RWE_OFIREM_REGENT", joinColumns = {@JoinColumn(name = "IDOFIREM")}, inverseJoinColumns = {@JoinColumn(name = "IDREGENT")})
-    @ForeignKey(name = "RWE_REGENT_OFIREM_FK", inverseName = "RWE_OFIREM_REGENT_FK")
+    @JoinTable(name = "RWE_OFIREM_REGENT", foreignKey = @ForeignKey(name = "RWE_REGENT_OFIREM_FK"),
+            joinColumns = {@JoinColumn(name = "IDOFIREM")}, inverseJoinColumns = {@JoinColumn(name = "IDREGENT")})
     @OrderBy("id")
     public List<RegistroEntrada> getRegistrosEntrada() {
         return registrosEntrada;
@@ -128,8 +122,8 @@ public class OficioRemision implements Serializable {
     }
 
     @ManyToMany(targetEntity = RegistroSalida.class, fetch = FetchType.LAZY)
-    @JoinTable(name = "RWE_OFIREM_REGSAL", joinColumns = {@JoinColumn(name = "IDOFIREM")}, inverseJoinColumns = {@JoinColumn(name = "IDREGSAL")})
-    @ForeignKey(name = "RWE_REGSAL_OFIREM_FK", inverseName = "RWE_OFIREM_REGSAL_FK")
+    @JoinTable(name = "RWE_OFIREM_REGSAL", foreignKey = @ForeignKey(name = "RWE_REGSAL_OFIREM_FK"),
+            joinColumns = {@JoinColumn(name = "IDOFIREM")}, inverseJoinColumns = {@JoinColumn(name = "IDREGSAL")})
     @OrderBy("id")
     public List<RegistroSalida> getRegistrosSalida() {
         return registrosSalida;
@@ -159,8 +153,7 @@ public class OficioRemision implements Serializable {
 
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "USUARIO")
-    @ForeignKey(name = "RWE_OFIREM_USUORM_FK")
+    @JoinColumn(name = "USUARIO", foreignKey = @ForeignKey(name = "RWE_OFIREM_USUORM_FK"))
     public UsuarioEntidad getUsuarioResponsable() {
         return usuarioResponsable;
     }

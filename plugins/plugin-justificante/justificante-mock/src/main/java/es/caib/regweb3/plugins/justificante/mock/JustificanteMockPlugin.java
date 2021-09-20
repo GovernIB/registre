@@ -9,16 +9,17 @@ import es.caib.regweb3.plugins.justificante.utils.I18NJustificanteUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.RegwebUtils;
 import es.caib.regweb3.utils.StringUtils;
-import org.apache.log4j.Logger;
 import org.fundaciobit.pluginsib.core.utils.AbstractPluginProperties;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.imageio.ImageIO;
 import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
 import java.text.SimpleDateFormat;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 
 /**
@@ -31,7 +32,7 @@ public class JustificanteMockPlugin extends AbstractPluginProperties implements 
 
     public static final String PROPERTY_CAIB_BASE = IJustificantePlugin.JUSTIFICANTE_BASE_PROPERTY + "mock.";
 
-    protected final Logger log = Logger.getLogger(getClass());
+    protected final Logger log = LoggerFactory.getLogger(getClass());
 
     private String declaracion = null;
     private String ley = null;

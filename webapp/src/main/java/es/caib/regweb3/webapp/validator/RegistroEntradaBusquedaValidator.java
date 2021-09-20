@@ -1,7 +1,8 @@
 package es.caib.regweb3.webapp.validator;
 
 import es.caib.regweb3.webapp.form.RegistroEntradaBusqueda;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
@@ -18,7 +19,7 @@ import java.util.Calendar;
 @Component
 public class RegistroEntradaBusquedaValidator implements Validator {
 
-    protected final Logger log = Logger.getLogger(getClass());
+    protected final Logger log = LoggerFactory.getLogger(getClass());
 
 
     @Override

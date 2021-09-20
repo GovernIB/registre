@@ -6,18 +6,20 @@ import java.io.Serializable;
 
 /**
  * Created by Fundació BIT.
+ *
  * @author earrivi
  */
 @Entity
 @Table(name = "RWE_CATTIPOVIA")
-@SequenceGenerator(name="generator",sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
+@SequenceGenerator(name = "generator", sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
 public class CatTipoVia implements Serializable {
 
     private Long id;
     private Long codigoTipoVia;
     private String descripcionTipoVia;
 
-	public CatTipoVia(){}
+    public CatTipoVia() {
+    }
 
     public CatTipoVia(Long codigoTipoVia, String descripcionTipoVia) {
         this.codigoTipoVia = codigoTipoVia;
@@ -26,13 +28,13 @@ public class CatTipoVia implements Serializable {
 
     @Id
     @Column(name = "ID")
-    @GeneratedValue(strategy=GenerationType.SEQUENCE,generator = "generator")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "generator")
     public Long getId() {
-      return id;
+        return id;
     }
 
     public void setId(Long id) {
-      this.id = id;
+        this.id = id;
     }
 
     @Column(name = "CODIGOTIPOVIA", nullable = false)

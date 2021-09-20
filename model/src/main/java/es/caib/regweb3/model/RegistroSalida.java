@@ -1,7 +1,6 @@
 package es.caib.regweb3.model;
 
 import es.caib.regweb3.utils.RegwebConstantes;
-import org.hibernate.annotations.ForeignKey;
 
 import javax.persistence.*;
 import javax.xml.bind.annotation.*;
@@ -16,7 +15,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "RWE_REGISTRO_SALIDA")
-@SequenceGenerator(name="generator",sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
+@SequenceGenerator(name = "generator", sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
 @XmlRootElement(name = "registroSalida")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class RegistroSalida implements IRegistro {
@@ -48,10 +47,6 @@ public class RegistroSalida implements IRegistro {
     private RegistroDetalle registroDetalle;
 
 
-
-    /**
-     * 
-     */
     public RegistroSalida() {
         this.registroDetalle = new RegistroDetalle();
     }
@@ -64,19 +59,19 @@ public class RegistroSalida implements IRegistro {
      * @param rs
      */
     public RegistroSalida(RegistroSalida rs) {
-      super();
-      this.id = rs.id;
-      this.usuario = rs.usuario;
-      this.oficina = rs.oficina;
-      this.origen = rs.origen;
-      this.origenExternoCodigo = rs.origenExternoCodigo;
-      this.origenExternoDenominacion = rs.origenExternoDenominacion;
-      this.fecha = rs.fecha;
-      this.libro = rs.libro;
-      this.numeroRegistro = rs.numeroRegistro;
-      this.numeroRegistroFormateado = rs.numeroRegistroFormateado;
-      this.estado = rs.estado;
-      this.registroDetalle =  rs.registroDetalle == null? null : new RegistroDetalle(rs.registroDetalle);
+        super();
+        this.id = rs.id;
+        this.usuario = rs.usuario;
+        this.oficina = rs.oficina;
+        this.origen = rs.origen;
+        this.origenExternoCodigo = rs.origenExternoCodigo;
+        this.origenExternoDenominacion = rs.origenExternoDenominacion;
+        this.fecha = rs.fecha;
+        this.libro = rs.libro;
+        this.numeroRegistro = rs.numeroRegistro;
+        this.numeroRegistroFormateado = rs.numeroRegistroFormateado;
+        this.estado = rs.estado;
+        this.registroDetalle = rs.registroDetalle == null ? null : new RegistroDetalle(rs.registroDetalle);
     }
 
     public RegistroSalida(Long id, Integer numeroRegistro, Date fecha, Long idLibro, String nombreLibro, String denominacionOficina, String denominacionOrganismo) {
@@ -113,8 +108,8 @@ public class RegistroSalida implements IRegistro {
     }
 
     @Id
-    @GeneratedValue(strategy=GenerationType.SEQUENCE,generator = "generator")
-    @Column(name="ID")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "generator")
+    @Column(name = "ID")
     public Long getId() {
         return id;
     }
@@ -123,7 +118,7 @@ public class RegistroSalida implements IRegistro {
         this.id = id;
     }
 
-    @Column(name="EVENTO")
+    @Column(name = "EVENTO")
     public Long getEvento() {
         return evento;
     }
@@ -133,8 +128,7 @@ public class RegistroSalida implements IRegistro {
     }
 
     @ManyToOne(optional = false)
-    @JoinColumn(name="USUARIO")
-    @ForeignKey(name="RWE_REGSAL_USUSAL_FK")
+    @JoinColumn(name = "USUARIO", foreignKey = @ForeignKey(name = "RWE_REGSAL_USUSAL_FK"))
     public UsuarioEntidad getUsuario() {
         return usuario;
     }
@@ -144,8 +138,7 @@ public class RegistroSalida implements IRegistro {
     }
 
     @ManyToOne(optional = false)
-    @JoinColumn(name="OFICINA")
-    @ForeignKey(name="RWE_REGSAL_OFICINA_FK")
+    @JoinColumn(name = "OFICINA", foreignKey = @ForeignKey(name = "RWE_REGSAL_OFICINA_FK"))
     public Oficina getOficina() {
         return oficina;
     }
@@ -155,8 +148,7 @@ public class RegistroSalida implements IRegistro {
     }
 
     @ManyToOne()
-    @JoinColumn(name="ORIGEN")
-    @ForeignKey(name="RWE_REGSAL_ORIGEN_FK")
+    @JoinColumn(name = "ORIGEN", foreignKey = @ForeignKey(name = "RWE_REGSAL_ORIGEN_FK"))
     public Organismo getOrigen() {
         return origen;
     }
@@ -193,8 +185,7 @@ public class RegistroSalida implements IRegistro {
     }
 
     @ManyToOne(optional = false)
-    @JoinColumn(name="LIBRO")
-    @ForeignKey(name="RWE_REGSAL_LIBRO_FK")
+    @JoinColumn(name = "LIBRO", foreignKey = @ForeignKey(name = "RWE_REGSAL_LIBRO_FK"))
     public Libro getLibro() {
         return libro;
     }
@@ -221,8 +212,8 @@ public class RegistroSalida implements IRegistro {
         this.numeroRegistroFormateado = numeroRegistroFormateado;
     }
 
-    
-    @Column(name="ESTADO", nullable=false)    
+
+    @Column(name = "ESTADO", nullable = false)
     public Long getEstado() {
         return estado;
     }
@@ -232,8 +223,7 @@ public class RegistroSalida implements IRegistro {
     }
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinColumn(name = "REGISTRO_DETALLE")
-    @ForeignKey(name = "RWE_REGSAL_REGDET_FK")
+    @JoinColumn(name = "REGISTRO_DETALLE", foreignKey = @ForeignKey(name = "RWE_REGSAL_REGDET_FK"))
     public RegistroDetalle getRegistroDetalle() {
         return registroDetalle;
     }
@@ -244,12 +234,12 @@ public class RegistroSalida implements IRegistro {
 
 
     @Transient
-    public String interesadoDestinoCodigo() throws Exception{
+    public String interesadoDestinoCodigo() throws Exception {
 
         List<Interesado> interesados = this.getRegistroDetalle().getInteresados();
 
         for (Interesado interesado : interesados) {
-            if(interesado.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION)){
+            if (interesado.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION)) {
 
                 return interesado.getCodigoDir3();
             }
@@ -259,12 +249,12 @@ public class RegistroSalida implements IRegistro {
     }
 
     @Transient
-    public String getInteresadoDestinoDenominacion() throws Exception{
+    public String getInteresadoDestinoDenominacion() throws Exception {
 
         List<Interesado> interesados = this.getRegistroDetalle().getInteresados();
 
         for (Interesado interesado : interesados) {
-            if(interesado.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION)){
+            if (interesado.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION)) {
 
                 return interesado.getRazonSocial();
             }
@@ -287,9 +277,9 @@ public class RegistroSalida implements IRegistro {
 
     @Override
     public String toString() {
-        if(id != null){
+        if (id != null) {
             return id.toString();
-        }else{
+        } else {
             return null;
         }
     }
@@ -298,6 +288,5 @@ public class RegistroSalida implements IRegistro {
     public int hashCode() {
         return id != null ? id.hashCode() : 0;
     }
-
 
 }

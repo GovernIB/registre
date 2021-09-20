@@ -2,9 +2,10 @@ package es.caib.regweb3.webapp.controller.registro;
 
 import es.caib.regweb3.persistence.ejb.ScanWebModuleLocal;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
-import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 
 import javax.annotation.security.RunAs;
@@ -31,7 +32,7 @@ public class ScanRequestServlet extends HttpServlet {
   @EJB(mappedName = "regweb3/ScanWebModuleEJB/local")
   private ScanWebModuleLocal scanWebModuleEjb;
 
-  protected static final Logger log = Logger.getLogger(ScanRequestServlet.class);
+  protected static final Logger log = LoggerFactory.getLogger(ScanRequestServlet.class);
   
   public static final String CONTEXTWEB = "/anexo/scanwebmodule/requestPlugin/";
 

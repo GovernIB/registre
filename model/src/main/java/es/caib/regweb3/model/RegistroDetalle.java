@@ -3,9 +3,7 @@ package es.caib.regweb3.model;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.model.utils.IndicadorPrueba;
 import es.caib.regweb3.utils.Versio;
-import org.hibernate.annotations.ForeignKey;
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import javax.xml.bind.annotation.*;
@@ -21,7 +19,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "RWE_REGISTRO_DETALLE")
-@SequenceGenerator(name="generator",sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
+@SequenceGenerator(name = "generator", sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
 @XmlRootElement(name = "registroDetalle")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class RegistroDetalle implements Serializable {
@@ -82,10 +80,10 @@ public class RegistroDetalle implements Serializable {
     private String solicita;
     @XmlElement
     private String reserva;
-    @XmlElement( name="interesado" )
-    @XmlElementWrapper( name="interesados" )
+    @XmlElement(name = "interesado")
+    @XmlElementWrapper(name = "interesados")
     private List<Interesado> interesados = new ArrayList<Interesado>();
-    @XmlElementWrapper( name="anexos" )
+    @XmlElementWrapper(name = "anexos")
     private List<Anexo> anexos = new ArrayList<Anexo>();
     @XmlTransient
     private String aplicacion = "RWE3";
@@ -116,43 +114,42 @@ public class RegistroDetalle implements Serializable {
 
 
     /**
-     *
      * @param rd
      */
     public RegistroDetalle(RegistroDetalle rd) {
-      this.id = rd.id;
-      this.extracto = rd.extracto;
-      this.tipoDocumentacionFisica = rd.tipoDocumentacionFisica;
-      this.idioma = rd.idioma;
-      this.codigoAsunto = rd.codigoAsunto == null? null : new CodigoAsunto(rd.codigoAsunto);
-      this.referenciaExterna = rd.referenciaExterna;
-      this.expediente = rd.expediente;
-      this.transporte = rd.transporte;
-      this.numeroTransporte = rd.numeroTransporte;
-      this.observaciones = rd.observaciones;
-      this.oficinaOrigen = rd.oficinaOrigen == null? null : new Oficina(rd.oficinaOrigen);
-      this.oficinaOrigenExternoCodigo = rd.oficinaOrigenExternoCodigo;
-      this.oficinaOrigenExternoDenominacion = rd.oficinaOrigenExternoDenominacion;
-      this.numeroRegistroOrigen = rd.numeroRegistroOrigen;
-      this.fechaOrigen = rd.fechaOrigen;
-      this.expedienteJustificante = rd.expedienteJustificante;
-      this.expone = rd.expone;
-      this.solicita = rd.solicita;
-      this.reserva = rd.reserva;
-      this.interesados = Interesado.clone(rd.interesados);
-      //this.anexos = rd.anexos;
-      this.aplicacion = rd.aplicacion;
-      this.version = rd.version;
-      this.indicadorPrueba = rd.getIndicadorPrueba();
-      this.tipoAnotacion = rd.getTipoAnotacion();
-      this.decodificacionTipoAnotacion = rd.getDecodificacionTipoAnotacion();
-      this.codigoEntidadRegistralDestino = rd.getCodigoEntidadRegistralDestino();
-      this.decodificacionEntidadRegistralDestino = rd.getDecodificacionEntidadRegistralDestino();
-      this.identificadorIntercambio = rd.getIdentificadorIntercambio();
-      this.codigoSia = rd.getCodigoSia();
-      this.presencial = rd.getPresencial();
-      this.tipoEnvioDocumentacion = rd.getTipoEnvioDocumentacion();
-      this.aplicacionTelematica = rd.getAplicacionTelematica();
+        this.id = rd.id;
+        this.extracto = rd.extracto;
+        this.tipoDocumentacionFisica = rd.tipoDocumentacionFisica;
+        this.idioma = rd.idioma;
+        this.codigoAsunto = rd.codigoAsunto == null ? null : new CodigoAsunto(rd.codigoAsunto);
+        this.referenciaExterna = rd.referenciaExterna;
+        this.expediente = rd.expediente;
+        this.transporte = rd.transporte;
+        this.numeroTransporte = rd.numeroTransporte;
+        this.observaciones = rd.observaciones;
+        this.oficinaOrigen = rd.oficinaOrigen == null ? null : new Oficina(rd.oficinaOrigen);
+        this.oficinaOrigenExternoCodigo = rd.oficinaOrigenExternoCodigo;
+        this.oficinaOrigenExternoDenominacion = rd.oficinaOrigenExternoDenominacion;
+        this.numeroRegistroOrigen = rd.numeroRegistroOrigen;
+        this.fechaOrigen = rd.fechaOrigen;
+        this.expedienteJustificante = rd.expedienteJustificante;
+        this.expone = rd.expone;
+        this.solicita = rd.solicita;
+        this.reserva = rd.reserva;
+        this.interesados = Interesado.clone(rd.interesados);
+        //this.anexos = rd.anexos;
+        this.aplicacion = rd.aplicacion;
+        this.version = rd.version;
+        this.indicadorPrueba = rd.getIndicadorPrueba();
+        this.tipoAnotacion = rd.getTipoAnotacion();
+        this.decodificacionTipoAnotacion = rd.getDecodificacionTipoAnotacion();
+        this.codigoEntidadRegistralDestino = rd.getCodigoEntidadRegistralDestino();
+        this.decodificacionEntidadRegistralDestino = rd.getDecodificacionEntidadRegistralDestino();
+        this.identificadorIntercambio = rd.getIdentificadorIntercambio();
+        this.codigoSia = rd.getCodigoSia();
+        this.presencial = rd.getPresencial();
+        this.tipoEnvioDocumentacion = rd.getTipoEnvioDocumentacion();
+        this.aplicacionTelematica = rd.getAplicacionTelematica();
     }
 
     /**
@@ -179,8 +176,8 @@ public class RegistroDetalle implements Serializable {
     }
 
     @Id
-    @GeneratedValue(strategy=GenerationType.SEQUENCE,generator = "generator")
-    @Column(name="ID")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "generator")
+    @Column(name = "ID")
     public Long getId() {
         return id;
     }
@@ -200,8 +197,7 @@ public class RegistroDetalle implements Serializable {
     }
 
 
-
-    @Column(name="TIPODOCFISICA")
+    @Column(name = "TIPODOCFISICA")
     public Long getTipoDocumentacionFisica() {
         return tipoDocumentacionFisica;
     }
@@ -211,8 +207,7 @@ public class RegistroDetalle implements Serializable {
     }
 
     @ManyToOne()
-    @JoinColumn(name="TIPOASUNTO")
-    @ForeignKey(name="RWE_REGDET_TIPOASUNTO_FK")
+    @JoinColumn(name = "TIPOASUNTO", foreignKey = @ForeignKey(name = "RWE_REGDET_TIPOASUNTO_FK"))
     public TipoAsunto getTipoAsunto() {
         return tipoAsunto;
     }
@@ -222,7 +217,7 @@ public class RegistroDetalle implements Serializable {
     }
 
 
-    @Column(name="IDIOMA")
+    @Column(name = "IDIOMA")
     public Long getIdioma() {
         return idioma;
     }
@@ -232,8 +227,7 @@ public class RegistroDetalle implements Serializable {
     }
 
     @ManyToOne()
-    @JoinColumn(name="CODASUNTO")
-    @ForeignKey(name="RWE_REGDET_CODASUNTO_FK")
+    @JoinColumn(name = "CODASUNTO", foreignKey = @ForeignKey(name = "RWE_REGDET_CODASUNTO_FK"))
     public CodigoAsunto getCodigoAsunto() {
         return codigoAsunto;
     }
@@ -260,7 +254,7 @@ public class RegistroDetalle implements Serializable {
         this.expediente = expediente;
     }
 
-    @Column(name="TRANSPORTE")
+    @Column(name = "TRANSPORTE")
     public Long getTransporte() {
         return transporte;
     }
@@ -288,8 +282,7 @@ public class RegistroDetalle implements Serializable {
     }
 
     @ManyToOne()
-    @JoinColumn(name="OFICINAORIG")
-    @ForeignKey(name="RWE_REGDET_OFICINAORIG_FK")
+    @JoinColumn(name = "OFICINAORIG", foreignKey = @ForeignKey(name = "RWE_REGDET_OFICINAORIG_FK"))
     public Oficina getOficinaOrigen() {
         return oficinaOrigen;
     }
@@ -334,7 +327,7 @@ public class RegistroDetalle implements Serializable {
         this.fechaOrigen = fechaOrigen;
     }
 
-    @Column(name = "EXPEDIENTE_JUST", length= 256)
+    @Column(name = "EXPEDIENTE_JUST", length = 256)
     public String getExpedienteJustificante() {
         return expedienteJustificante;
     }
@@ -399,6 +392,7 @@ public class RegistroDetalle implements Serializable {
     }
 
     @Lob
+    @Type(type = "org.hibernate.type.TextType")
     @Column(name = "EXPONE", length = 2147483647, nullable = true)
     public String getExpone() {
         return expone;
@@ -409,6 +403,7 @@ public class RegistroDetalle implements Serializable {
     }
 
     @Lob
+    @Type(type = "org.hibernate.type.TextType")
     @Column(name = "SOLICITA", length = 2147483647, nullable = true)
     public String getSolicita() {
         return solicita;
@@ -427,8 +422,7 @@ public class RegistroDetalle implements Serializable {
         this.reserva = reserva;
     }
 
-    @OneToMany(cascade= CascadeType.ALL,targetEntity=Interesado.class, mappedBy="registroDetalle")
-    @LazyCollection(value= LazyCollectionOption.TRUE)
+    @OneToMany(cascade = CascadeType.ALL, targetEntity = Interesado.class, mappedBy = "registroDetalle", fetch = FetchType.LAZY)
     @OrderBy("id")
     public List<Interesado> getInteresados() {
         return interesados;
@@ -438,11 +432,10 @@ public class RegistroDetalle implements Serializable {
         this.interesados = interesados;
     }
 
-    @OneToMany(cascade= CascadeType.ALL,targetEntity=Anexo.class, mappedBy="registroDetalle")
-    @LazyCollection(value= LazyCollectionOption.TRUE)
+    @OneToMany(cascade = CascadeType.ALL, targetEntity = Anexo.class, mappedBy = "registroDetalle", fetch = FetchType.LAZY)
     @OrderBy("tipoDocumento")
     public List<Anexo> getAnexos() {
-        if(anexos == null){
+        if (anexos == null) {
             return new ArrayList<Anexo>();
         }
         return anexos;
@@ -480,7 +473,9 @@ public class RegistroDetalle implements Serializable {
     }
 
     @Column(name = "CODIGOSIA")
-    public Long getCodigoSia() { return codigoSia; }
+    public Long getCodigoSia() {
+        return codigoSia;
+    }
 
     public void setCodigoSia(Long codigoSia) {
         this.codigoSia = codigoSia;
@@ -515,17 +510,17 @@ public class RegistroDetalle implements Serializable {
     }
 
     @Transient
-    public String getNombreInteresadosHtml(){
-        if(interesados != null && interesados.size() > 0){
+    public String getNombreInteresadosHtml() {
+        if (interesados != null && interesados.size() > 0) {
             String nombres = "";
             for (Interesado interesado : interesados) {
-                if(!interesado.getIsRepresentante()){
-                    nombres = nombres.concat("- "+interesado.getNombreCompleto());
+                if (!interesado.getIsRepresentante()) {
+                    nombres = nombres.concat("- " + interesado.getNombreCompleto());
 
-                    if(interesado.getRepresentante() != null){
-                        nombres = nombres.concat(" (R: "+interesado.getRepresentante().getNombreCompleto()+")");
+                    if (interesado.getRepresentante() != null) {
+                        nombres = nombres.concat(" (R: " + interesado.getRepresentante().getNombreCompleto() + ")");
 
-                    }else{
+                    } else {
                         nombres = nombres.concat(" <br/>");
                     }
                 }
@@ -533,32 +528,35 @@ public class RegistroDetalle implements Serializable {
 
             }
 
-            return  nombres;
+            return nombres;
         }
 
         return "";
     }
 
     @Transient
-    public Integer getTotalInteresados(){
+    public Integer getTotalInteresados() {
 
         int total = 0;
 
         for (Interesado interesado : interesados) {
-            if(!interesado.getIsRepresentante()){total = total +1;}
+            if (!interesado.getIsRepresentante()) {
+                total = total + 1;
+            }
         }
 
-        return  total;
+        return total;
     }
 
     /**
      * Comprueba si el Registro tiene el Justificante generado
+     *
      * @return
      */
     @Transient
-    public boolean getTieneJustificante(){
+    public boolean getTieneJustificante() {
         for (Anexo anexo : anexos) {
-            if(anexo.isJustificante()){
+            if (anexo.isJustificante()) {
                 return true;
             }
         }
@@ -567,12 +565,13 @@ public class RegistroDetalle implements Serializable {
 
     /**
      * Comprueba si el Registro tiene el Justificante generado
+     *
      * @return
      */
     @Transient
-    public boolean getTieneJustificanteCustodiado(){
+    public boolean getTieneJustificanteCustodiado() {
         for (Anexo anexo : anexos) {
-            if(anexo.isJustificante() && anexo.getCustodiado()){
+            if (anexo.isJustificante() && anexo.getCustodiado()) {
                 return true;
             }
         }
@@ -581,12 +580,13 @@ public class RegistroDetalle implements Serializable {
 
     /**
      * devuelve el Justificante generado
+     *
      * @return
      */
     @Transient
-    public Anexo getJustificante(){
+    public Anexo getJustificante() {
         for (Anexo anexo : anexos) {
-            if(anexo.isJustificante()){
+            if (anexo.isJustificante()) {
                 return anexo;
             }
         }
@@ -595,15 +595,16 @@ public class RegistroDetalle implements Serializable {
 
     /**
      * Devuelve el Justificante generado de tipo AnexoFull
+     *
      * @return
      */
     @Transient
-    public AnexoFull getJustificanteAnexoFull(){
+    public AnexoFull getJustificanteAnexoFull() {
 
-        if(getAnexosFull() != null && getAnexosFull().size() > 0){
+        if (getAnexosFull() != null && getAnexosFull().size() > 0) {
 
             for (AnexoFull anexoFull : getAnexosFull()) {
-                if(anexoFull.getAnexo().isJustificante()){
+                if (anexoFull.getAnexo().isJustificante()) {
                     return anexoFull;
                 }
             }
@@ -614,18 +615,19 @@ public class RegistroDetalle implements Serializable {
 
     /**
      * Devuelve si el registroDetalle tiene anexos
+     *
      * @return
      */
     @Transient
-    public boolean getTieneAnexos(){
+    public boolean getTieneAnexos() {
 
-        if(anexos.size()>=1){
+        if (anexos.size() >= 1) {
             //Si solo tiene un anexo y es el justificante, no tiene anexos
-            if(anexos.size() == 1 && getTieneJustificante()){
+            if (anexos.size() == 1 && getTieneJustificante()) {
                 return false;
             }
             //Si solo tiene un anexo y no es el justificante, tiene un anexo
-            if(anexos.size() == 1 && !getTieneJustificante()){
+            if (anexos.size() == 1 && !getTieneJustificante()) {
                 return true;
             }
             return true; //Tiene más de un anexo
@@ -635,13 +637,14 @@ public class RegistroDetalle implements Serializable {
 
     /**
      * Devuelve si el registroDetalle tiene los anexos purgados
+     *
      * @return
      */
     @Transient
-    public boolean isDetallePurgado(){
+    public boolean isDetallePurgado() {
 
-        for(Anexo anexo: anexos){
-            if(anexo.isPurgado() && !anexo.isJustificante()){
+        for (Anexo anexo : anexos) {
+            if (anexo.isPurgado() && !anexo.isJustificante()) {
                 return true;
             }
         }
@@ -649,7 +652,7 @@ public class RegistroDetalle implements Serializable {
     }
 
     @Transient
-    public String getExtractoCorto(){
+    public String getExtractoCorto() {
 
         String extractoCorto = getExtracto();
 
@@ -661,7 +664,7 @@ public class RegistroDetalle implements Serializable {
     }
 
     @Transient
-    public String getReservaCorto(){
+    public String getReservaCorto() {
 
         String reservaCorto = getReserva();
 

@@ -37,7 +37,7 @@ import javax.validation.Valid;
 @SessionAttributes("usuario")
 public class UsuarioController extends BaseController {
 
-    //protected final Logger log = Logger.getLogger(getClass());
+    //protected final Logger log = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private UsuarioValidator usuarioValidator;

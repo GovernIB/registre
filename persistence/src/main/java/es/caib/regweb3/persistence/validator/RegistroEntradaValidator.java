@@ -3,9 +3,10 @@ package es.caib.regweb3.persistence.validator;
 import es.caib.regweb3.model.RegistroDetalle;
 import es.caib.regweb3.model.RegistroEntrada;
 import es.caib.regweb3.utils.StringUtils;
-import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.query.Field;
 import org.fundaciobit.genapp.common.validation.IValidatorResult;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Created by Fundació BIT.
@@ -16,7 +17,7 @@ import org.fundaciobit.genapp.common.validation.IValidatorResult;
  */
 public class RegistroEntradaValidator<T> extends AbstractRegWebValidator<T> {
 
-    protected final Logger log = Logger.getLogger(getClass());
+    protected final Logger log = LoggerFactory.getLogger(getClass());
 
 
 

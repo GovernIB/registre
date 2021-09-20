@@ -7,7 +7,8 @@ import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
 import com.sun.jersey.api.client.filter.HTTPBasicAuthFilter;
 import com.sun.jersey.client.urlconnection.HTTPSProperties;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.net.ssl.*;
 import java.io.BufferedInputStream;
@@ -18,7 +19,7 @@ import java.security.cert.X509Certificate;
 
 public class ClientUtils {
 
-    protected static final Logger log = Logger.getLogger(ClientUtils.class);
+    protected static final Logger log = LoggerFactory.getLogger(ClientUtils.class);
 
 
     /**

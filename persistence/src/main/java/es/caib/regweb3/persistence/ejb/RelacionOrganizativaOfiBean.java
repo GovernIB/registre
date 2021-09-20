@@ -6,9 +6,10 @@ import es.caib.regweb3.model.Organismo;
 import es.caib.regweb3.model.RelacionOrganizativaOfi;
 import es.caib.regweb3.model.RelacionOrganizativaOfiPK;
 import es.caib.regweb3.utils.RegwebConstantes;
-import org.apache.log4j.Logger;
 import org.hibernate.Hibernate;
 import org.jboss.ejb3.annotation.SecurityDomain;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -28,7 +29,7 @@ import java.util.List;
 @SecurityDomain("seycon")
 public class RelacionOrganizativaOfiBean extends BaseEjbJPA<RelacionOrganizativaOfi, RelacionOrganizativaOfiPK> implements RelacionOrganizativaOfiLocal{
 
-    protected final Logger log = Logger.getLogger(getClass());
+    protected final Logger log = LoggerFactory.getLogger(getClass());
 
     @PersistenceContext
     private EntityManager em;

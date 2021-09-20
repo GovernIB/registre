@@ -20,13 +20,14 @@ import es.caib.regweb3.utils.RegwebUtils;
 import es.caib.regweb3.utils.StringUtils;
 import es.caib.regweb3.webapp.form.CerrarExpedientesForm;
 import es.caib.regweb3.webapp.utils.Mensaje;
-import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.plugins.documentcustody.api.CustodyException;
 import org.fundaciobit.plugins.documentcustody.api.IDocumentCustodyPlugin;
 import org.fundaciobit.plugins.documentcustody.arxiudigitalcaib.ArxiuDigitalCAIBDocumentCustodyPlugin;
 import org.fundaciobit.pluginsib.core.utils.Metadata;
 import org.fundaciobit.pluginsib.core.utils.MetadataConstants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -49,7 +50,7 @@ import java.util.*;
 @RequestMapping(value = "/arxiu")
 public class ArxiuController extends BaseController {
 
-    protected final Logger log = Logger.getLogger(getClass());
+    protected final Logger log = LoggerFactory.getLogger(getClass());
 
 
     @EJB(mappedName = "regweb3/AnexoEJB/local")

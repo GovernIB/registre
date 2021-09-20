@@ -1,7 +1,7 @@
 package es.caib.regweb3.model;
 
-import org.hibernate.annotations.ForeignKey;
-import org.hibernate.annotations.Index;
+
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -16,12 +16,10 @@ import java.util.Date;
  * Date: 16/01/14
  */
 @Entity
-@Table(name = "RWE_HISTORICO_REGISTRO_ENTRADA")
-@org.hibernate.annotations.Table(appliesTo = "RWE_HISTORICO_REGISTRO_ENTRADA", indexes = {
-    @Index(name="RWE_HRE_REGENT_FK_I", columnNames = {"REGISTRO_ENTRADA"}),
-    @Index(name="RWE_HRE_USUENT_FK_I", columnNames = {"USUARIO"})
-})
-@SequenceGenerator(name="generator",sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
+@Table(name = "RWE_HISTORICO_REGISTRO_ENTRADA", indexes = {
+        @Index(name = "RWE_HRE_REGENT_FK_I", columnList = "REGISTRO_ENTRADA"),
+        @Index(name = "RWE_HRE_USUENT_FK_I", columnList = "USUARIO")})
+@SequenceGenerator(name = "generator", sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
 public class HistoricoRegistroEntrada implements Serializable {
 
     private Long id;
@@ -41,7 +39,7 @@ public class HistoricoRegistroEntrada implements Serializable {
         this.estado = estado;
         this.fecha = fecha;
         this.modificacion = modificacion;
-        this.usuario = new UsuarioEntidad(usuarioEntidad, usuario,null);
+        this.usuario = new UsuarioEntidad(usuarioEntidad, usuario, null);
     }
 
     public HistoricoRegistroEntrada(Long idRegistro, Integer numeroRegistro, String nombreLibro, String denominacionOficina, String denominacionOrganismo, Date fechaRegistro, Date fecha, String modificacion) {
@@ -51,8 +49,8 @@ public class HistoricoRegistroEntrada implements Serializable {
     }
 
     @Id
-    @GeneratedValue(strategy=GenerationType.SEQUENCE,generator = "generator")
-    @Column(name="ID")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "generator")
+    @Column(name = "ID")
     public Long getId() {
         return id;
     }
@@ -63,8 +61,7 @@ public class HistoricoRegistroEntrada implements Serializable {
 
 
     @ManyToOne()
-    @JoinColumn(name = "REGISTRO_ENTRADA")
-    @ForeignKey(name = "RWE_HITORICO_RE_FK")
+    @JoinColumn(name = "REGISTRO_ENTRADA", foreignKey =@ForeignKey(name = "RWE_HITORICO_RE_FK"))
     public RegistroEntrada getRegistroEntrada() {
         return registroEntrada;
     }
@@ -74,6 +71,7 @@ public class HistoricoRegistroEntrada implements Serializable {
     }
 
     @Lob
+    @Type(type = "org.hibernate.type.TextType")
     @Column(name = "RE_ORIGINAL")
     public String getRegistroEntradaOriginal() {
         return registroEntradaOriginal;
@@ -112,8 +110,7 @@ public class HistoricoRegistroEntrada implements Serializable {
     }
 
     @ManyToOne()
-    @JoinColumn(name = "USUARIO")
-    @ForeignKey(name = "RWE_HISTORICO_USUARIO_FK")
+    @JoinColumn(name = "USUARIO", foreignKey =@ForeignKey(name = "RWE_HISTORICO_USUARIO_FK"))
     public UsuarioEntidad getUsuario() {
         return usuario;
     }
@@ -121,7 +118,6 @@ public class HistoricoRegistroEntrada implements Serializable {
     public void setUsuario(UsuarioEntidad usuario) {
         this.usuario = usuario;
     }
-
 
     @Override
     public boolean equals(Object o) {
@@ -137,9 +133,9 @@ public class HistoricoRegistroEntrada implements Serializable {
 
     @Override
     public String toString() {
-        if(id != null){
+        if (id != null) {
             return id.toString();
-        }else{
+        } else {
             return null;
         }
     }

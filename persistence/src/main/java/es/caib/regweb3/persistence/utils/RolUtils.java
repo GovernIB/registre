@@ -7,10 +7,11 @@ import es.caib.regweb3.persistence.ejb.RolLocal;
 import es.caib.regweb3.persistence.ejb.UsuarioEntidadLocal;
 import es.caib.regweb3.persistence.ejb.UsuarioLocal;
 import es.caib.regweb3.utils.RegwebConstantes;
-import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.pluginsib.userinformation.IUserInformationPlugin;
 import org.fundaciobit.pluginsib.userinformation.RolesInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import javax.ejb.EJB;
@@ -21,7 +22,7 @@ import java.util.List;
 @Component
 public class RolUtils {
 
-    public final Logger log = Logger.getLogger(getClass());
+    public final Logger log = LoggerFactory.getLogger(getClass());
 
     @EJB(mappedName = "regweb3/PluginEJB/local")
     private PluginLocal pluginEjb;

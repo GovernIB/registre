@@ -9,8 +9,9 @@ import es.caib.regweb3.persistence.ejb.UsuarioEntidadLocal;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.security.LoginInfo;
 import es.caib.regweb3.webapp.utils.Mensaje;
-import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.ejb.EJB;
@@ -30,7 +31,7 @@ import java.util.StringTokenizer;
  */
 public class PlantillaInterceptor extends HandlerInterceptorAdapter {
 
-    protected final Logger log = Logger.getLogger(getClass());
+    protected final Logger log = LoggerFactory.getLogger(getClass());
 
     @EJB(mappedName = "regweb3/UsuarioEntidadEJB/local")
     private UsuarioEntidadLocal usuarioEntidadEjb;

@@ -39,7 +39,7 @@ import java.util.List;
 @SessionAttributes("persona")
 public class PersonaController extends BaseController {
 
-    //protected final Logger log = Logger.getLogger(getClass());
+    //protected final Logger log = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private PersonaWebValidator personaValidator;
