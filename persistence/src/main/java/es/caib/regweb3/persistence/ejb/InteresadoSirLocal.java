@@ -16,6 +16,8 @@ import javax.ejb.Local;
 @RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI"})
 public interface InteresadoSirLocal extends BaseEjb<InteresadoSir, Long> {
 
+    String JNDI_NAME = "java:app/regweb3-persistence/InteresadoSirEJB";
+
     /**
      * Guarda una interesado normalizando algunos campos
      * @param interesadoSir

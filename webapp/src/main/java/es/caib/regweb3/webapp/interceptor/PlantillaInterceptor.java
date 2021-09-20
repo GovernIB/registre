@@ -33,10 +33,10 @@ public class PlantillaInterceptor extends HandlerInterceptorAdapter {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
-    @EJB(mappedName = "regweb3/UsuarioEntidadEJB/local")
+    @EJB(mappedName = UsuarioEntidadLocal.JNDI_NAME)
     private UsuarioEntidadLocal usuarioEntidadEjb;
 
-    @EJB(mappedName = "regweb3/PlantillaEJB/local")
+    @EJB(mappedName = PlantillaLocal.JNDI_NAME)
     private PlantillaLocal plantillaEjb;
 
     @Override

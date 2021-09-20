@@ -38,37 +38,37 @@ public class LoginService {
     @Autowired
     private RolUtils rolUtils;
 
-    @EJB(mappedName = "regweb3/UsuarioEJB/local")
+    @EJB(mappedName = UsuarioLocal.JNDI_NAME)
     private UsuarioLocal usuarioEjb;
 
-    @EJB(mappedName = "regweb3/RolEJB/local")
+    @EJB(mappedName = RolLocal.JNDI_NAME)
     private RolLocal rolEjb;
 
-    @EJB(mappedName = "regweb3/EntidadEJB/local")
+    @EJB(mappedName = EntidadLocal.JNDI_NAME)
     private EntidadLocal entidadEjb;
 
-    @EJB(mappedName = "regweb3/UsuarioEntidadEJB/local")
+    @EJB(mappedName = UsuarioEntidadLocal.JNDI_NAME)
     private UsuarioEntidadLocal usuarioEntidadEjb;
 
-    @EJB(mappedName = "regweb3/PermisoOrganismoUsuarioEJB/local")
+    @EJB(mappedName = PermisoOrganismoUsuarioLocal.JNDI_NAME)
     private PermisoOrganismoUsuarioLocal permisoOrganismoUsuarioEjb;
 
-    @EJB(mappedName = "regweb3/OficinaEJB/local")
+    @EJB(mappedName = OficinaLocal.JNDI_NAME)
     private OficinaLocal oficinaEjb;
 
-    @EJB(mappedName = "regweb3/RegistroMigradoEJB/local")
+    @EJB(mappedName = RegistroMigradoLocal.JNDI_NAME)
     private RegistroMigradoLocal registroMigradoEjb;
 
-    @EJB(mappedName = "regweb3/ConfiguracionEJB/local")
+    @EJB(mappedName =ConfiguracionLocal.JNDI_NAME)
     private ConfiguracionLocal configuracionEjb;
 
-    @EJB(mappedName = "regweb3/OrganismoEJB/local")
+    @EJB(mappedName = OrganismoLocal.JNDI_NAME)
     private OrganismoLocal organismoEjb;
 
-    @EJB(mappedName = "regweb3/PluginEJB/local")
+    @EJB(mappedName = PluginLocal.JNDI_NAME)
     private PluginLocal pluginEjb;
 
-    @EJB(mappedName = "regweb3/PlantillaEJB/local")
+    @EJB(mappedName = PlantillaLocal.JNDI_NAME)
     private PlantillaLocal plantillaEjb;
 
 

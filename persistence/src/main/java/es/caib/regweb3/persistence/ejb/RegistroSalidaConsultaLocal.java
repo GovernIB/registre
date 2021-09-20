@@ -19,20 +19,25 @@ import java.util.List;
  * Date: 16/01/14
  */
 @Local
-@RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI","RWE_WS_ENTRADA","RWE_WS_SALIDA", "RWE_WS_CIUDADANO"})
-public interface RegistroSalidaConsultaLocal{
+@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI", "RWE_WS_ENTRADA", "RWE_WS_SALIDA", "RWE_WS_CIUDADANO"})
+public interface RegistroSalidaConsultaLocal {
+
+    String JNDI_NAME = "java:app/regweb3-persistence/RegistroSalidaConsultaEJB";
+
 
     /**
      * Obtiene un RegistroSalida con un mínimo de campos
+     *
      * @param idRegistroSalida
      * @return
      * @throws Exception
      */
     RegistroBasico findByIdLigero(Long idRegistroSalida) throws Exception;
-    
+
 
     /**
      * Busca los Registros de Salida en función de los parametros
+     *
      * @param pageNumber
      * @param registroSalida
      * @return
@@ -40,9 +45,10 @@ public interface RegistroSalidaConsultaLocal{
      */
     Paginacion busqueda(Integer pageNumber, List<Long> organismos, Date fechaInicio, Date fechaFin, RegistroSalida registroSalida, String interesadoNom, String interesadoDoc, String interesadoLli1, String interesadoLli2, String observaciones, String usuario, Long idEntidad) throws Exception;
 
-    
+
     /**
      * Busca los Registros de Salida en función de los parametros
+     *
      * @param numero
      * @param anyo
      * @param libro
@@ -53,6 +59,7 @@ public interface RegistroSalidaConsultaLocal{
 
     /**
      * Obtiene el RegistroSalida a partir de su numero de registro formateado, la entidad y el libro.
+     *
      * @param numeroRegistroFormateado
      * @return
      * @throws Exception
@@ -62,6 +69,7 @@ public interface RegistroSalidaConsultaLocal{
 
     /**
      * Obtiene el RegistroSalida a partir de su numero de registro formateado, la entidad y el libro y carga los anexos
+     *
      * @param codigoEntidad
      * @param numeroRegistroFormateado
      * @return
@@ -74,6 +82,7 @@ public interface RegistroSalidaConsultaLocal{
     /**
      * Devuelve el numero de registro formateado a partir de un registro detalle.
      * Se necesita para el plug-in postproceso para pasarselo cuando creamos interesados.
+     *
      * @param idRegistroDetalle
      * @return
      * @throws Exception
@@ -82,6 +91,7 @@ public interface RegistroSalidaConsultaLocal{
 
     /**
      * Retorna el identificador del Libro al que pertenece el RegistroSalida
+     *
      * @param idRegistroSalida
      * @return
      * @throws Exception
@@ -90,6 +100,7 @@ public interface RegistroSalidaConsultaLocal{
 
     /**
      * Retorna el Organismo al que pertenece el RegistroSalida
+     *
      * @param idRegistroSalida
      * @return
      * @throws Exception
@@ -98,6 +109,7 @@ public interface RegistroSalidaConsultaLocal{
 
     /**
      * Busca los Registros de Salida de un listado de Libros en función de su estado.
+     *
      * @param organismos
      * @param idEstado
      * @return
@@ -107,6 +119,7 @@ public interface RegistroSalidaConsultaLocal{
 
     /**
      * Busca los Registros de Salida de un listado de Organismos en función de su estado.
+     *
      * @param inicio
      * @param organismos
      * @param idEstado
@@ -117,6 +130,7 @@ public interface RegistroSalidaConsultaLocal{
 
     /**
      * Busca los Registros de Salida de un Libro.
+     *
      * @param idLibro
      * @return
      * @throws Exception
@@ -133,7 +147,6 @@ public interface RegistroSalidaConsultaLocal{
     Boolean obtenerPorUsuario(Long idUsuarioEntidad) throws Exception;
 
     /**
-     *
      * @param pageNumber
      * @param idOficina
      * @return
@@ -143,6 +156,7 @@ public interface RegistroSalidaConsultaLocal{
 
     /**
      * Busca los Registros de Salida de una OficinaActiva Rechazados o Reenviados por SIR
+     *
      * @param idOficina
      * @param total
      * @return
@@ -152,6 +166,7 @@ public interface RegistroSalidaConsultaLocal{
 
     /**
      * Total de Registros de Salida de una OficinaActiva Rechazados o Reenviados por SIR
+     *
      * @param idOficina
      * @return
      * @throws Exception
@@ -159,7 +174,6 @@ public interface RegistroSalidaConsultaLocal{
     Long getSirRechazadosReenviadosCount(Long idOficina) throws Exception;
 
     /**
-     *
      * @param idEntidad
      * @param documento
      * @return
@@ -168,7 +182,6 @@ public interface RegistroSalidaConsultaLocal{
     List<RegistroSalida> getByDocumento(Long idEntidad, String documento) throws Exception;
 
     /**
-     *
      * @param query
      * @return
      * @throws Exception
@@ -176,7 +189,8 @@ public interface RegistroSalidaConsultaLocal{
     Long queryCount(String query) throws Exception;
 
     /**
-     *  Obtiene los últimos organismos destinatario de los registros realizados por el usuario indicado
+     * Obtiene los últimos organismos destinatario de los registros realizados por el usuario indicado
+     *
      * @param usuarioEntidad
      * @return
      * @throws Exception

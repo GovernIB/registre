@@ -27,13 +27,13 @@ public class ArxiuCaibUtils {
 
     public static final Logger log = LoggerFactory.getLogger(ArxiuCaibUtils.class);
 
-    @EJB(mappedName = "regweb3/PluginEJB/local")
+    @EJB(mappedName = PluginLocal.JNDI_NAME)
     private PluginLocal pluginEjb;
 
-    @EJB(mappedName = "regweb3/RegistroDetalleEJB/local")
+    @EJB(mappedName = RegistroDetalleLocal.JNDI_NAME)
     private RegistroDetalleLocal registroDetalleEjb;
 
-    @EJB(mappedName = "regweb3/IntegracionEJB/local")
+    @EJB(mappedName = IntegracionLocal.JNDI_NAME)
     private IntegracionLocal integracionEjb;
 
     private static final String basePluginArxiuCaib = RegwebConstantes.REGWEB3_PROPERTY_BASE + "plugin.arxiu.caib.";

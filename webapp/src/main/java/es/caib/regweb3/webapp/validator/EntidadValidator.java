@@ -31,7 +31,7 @@ public class EntidadValidator implements Validator {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
-    @EJB(mappedName = "regweb3/EntidadEJB/local")
+    @EJB(mappedName = EntidadLocal.JNDI_NAME)
     public EntidadLocal entidadEjb;
 
     @Override

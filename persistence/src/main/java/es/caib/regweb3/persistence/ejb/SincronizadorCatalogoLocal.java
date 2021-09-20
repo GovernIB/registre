@@ -16,6 +16,18 @@ import javax.ejb.Local;
 @RolesAllowed({"RWE_SUPERADMIN"})
 public interface SincronizadorCatalogoLocal {
 
-  Descarga sincronizarCatalogo() throws Exception;
-  Descarga actualizarCatalogo() throws Exception;
+    String JNDI_NAME = "java:app/regweb3-persistence/SincronizadorCatalogoEJB";
+
+
+    /**
+     * @return
+     * @throws Exception
+     */
+    Descarga sincronizarCatalogo() throws Exception;
+
+    /**
+     * @return
+     * @throws Exception
+     */
+    Descarga actualizarCatalogo() throws Exception;
 }

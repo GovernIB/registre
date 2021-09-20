@@ -31,7 +31,7 @@ public class PropiedadGlobalValidator implements Validator {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
-    @EJB(mappedName = "regweb3/PropiedadGlobalEJB/local")
+    @EJB(mappedName = PropiedadGlobalLocal.JNDI_NAME)
     private PropiedadGlobalLocal propiedadGlobalEjb;
 
     @Override

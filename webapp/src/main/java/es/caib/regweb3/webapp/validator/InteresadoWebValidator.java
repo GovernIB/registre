@@ -25,13 +25,13 @@ public class InteresadoWebValidator implements Validator {
 
   protected InteresadoValidator<Object> validator = new InteresadoValidator<Object>();
 
-  @EJB(mappedName = "regweb3/CatPaisEJB/local")
+  @EJB(mappedName = CatPaisLocal.JNDI_NAME)
   protected CatPaisLocal catPaisEjb;
 
-  @EJB(mappedName = "regweb3/InteresadoEJB/local")
+  @EJB(mappedName = InteresadoLocal.JNDI_NAME)
   protected InteresadoLocal interesadoEjb;
 
-  @EJB(mappedName = "regweb3/PersonaEJB/local")
+  @EJB(mappedName = PersonaLocal.JNDI_NAME)
   protected PersonaLocal personaEjb;
 
 

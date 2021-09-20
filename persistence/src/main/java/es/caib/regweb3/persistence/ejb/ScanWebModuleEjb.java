@@ -34,7 +34,7 @@ public class ScanWebModuleEjb implements ScanWebModuleLocal {
 
   protected Logger log = LoggerFactory.getLogger(this.getClass());
   
-  @EJB(mappedName = "regweb3/PluginEJB/local")
+  @EJB(mappedName = PluginLocal.JNDI_NAME)
   private PluginLocal pluginEjb;
 
 

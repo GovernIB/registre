@@ -30,7 +30,7 @@ public class RegistroSirInterceptor extends HandlerInterceptorAdapter {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
-    @EJB(mappedName = "regweb3/UsuarioEntidadEJB/local")
+    @EJB(mappedName = UsuarioEntidadLocal.JNDI_NAME)
     public UsuarioEntidadLocal usuarioEntidadEjb;
 
     @Override

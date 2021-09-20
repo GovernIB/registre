@@ -28,7 +28,7 @@ public class PendienteBean extends BaseEjbJPA<Pendiente, Long> implements Pendie
     @PersistenceContext(unitName="regweb3")
     private EntityManager em;
 
-    @EJB(mappedName = "regweb3/OrganismoEJB/local")
+    @EJB(mappedName = OrganismoLocal.JNDI_NAME)
     private OrganismoLocal organismoEjb;
 
 

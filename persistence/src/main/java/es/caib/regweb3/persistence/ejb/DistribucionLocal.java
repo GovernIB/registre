@@ -21,6 +21,8 @@ import javax.ejb.Local;
 @RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI", "RWE_WS_ENTRADA", "RWE_WS_SALIDA"})
 public interface DistribucionLocal {
 
+    String JNDI_NAME = "java:app/regweb3-persistence/DistribucionEJB";
+
     /**
      * Método que envía a la cola de Distribución el Registro indicado
      *

@@ -26,22 +26,22 @@ import java.util.Date;
 @RunAs("RWE_USUARI")
 public class WebServicesMethodsEJB implements WebServicesMethodsLocal {
 
-    @EJB(mappedName = "regweb3/FicheroIntercambioEJB/local")
+    @EJB(mappedName = FicheroIntercambioLocal.JNDI_NAME)
     private FicheroIntercambioLocal ficheroIntercambioEjb;
 
-    @EJB(mappedName = "regweb3/OficinaEJB/local")
+    @EJB(mappedName = OficinaLocal.JNDI_NAME)
     private OficinaLocal oficinaEjb;
 
-    @EJB(mappedName = "regweb3/IntegracionEJB/local")
+    @EJB(mappedName = IntegracionLocal.JNDI_NAME)
     private IntegracionLocal integracionEjb;
 
-    @EJB(mappedName = "regweb3/MensajeControlEJB/local")
+    @EJB(mappedName = MensajeControlLocal.JNDI_NAME)
     private MensajeControlLocal mensajeControlEjb;
 
-    @EJB(mappedName = "regweb3/RegistroSirEJB/local")
+    @EJB(mappedName = RegistroSirLocal.JNDI_NAME)
     private RegistroSirLocal registroSirEjb;
 
-    @EJB(mappedName = "regweb3/MultiEntidadEJB/local")
+    @EJB(mappedName = MultiEntidadLocal.JNDI_NAME)
     private MultiEntidadLocal multiEntidadEjb;
 
 

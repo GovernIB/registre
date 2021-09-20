@@ -27,37 +27,37 @@ public class BaseController {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
-    @EJB(mappedName = "regweb3/PermisoOrganismoUsuarioEJB/local")
+    @EJB(mappedName = PermisoOrganismoUsuarioLocal.JNDI_NAME)
     public PermisoOrganismoUsuarioLocal permisoOrganismoUsuarioEjb;
 
-    @EJB(mappedName = "regweb3/UsuarioEntidadEJB/local")
+    @EJB(mappedName = UsuarioEntidadLocal.JNDI_NAME)
     public UsuarioEntidadLocal usuarioEntidadEjb;
 
-    @EJB(mappedName = "regweb3/OficinaEJB/local")
+    @EJB(mappedName = OficinaLocal.JNDI_NAME)
     public OficinaLocal oficinaEjb;
 
-    @EJB(mappedName = "regweb3/EntidadEJB/local")
+    @EJB(mappedName = EntidadLocal.JNDI_NAME)
     public EntidadLocal entidadEjb;
 
-    @EJB(mappedName = "regweb3/TipoDocumentalEJB/local")
+    @EJB(mappedName = TipoDocumentalLocal.JNDI_NAME)
     public TipoDocumentalLocal tipoDocumentalEjb;
 
-    @EJB(mappedName = "regweb3/RegistroSalidaEJB/local")
+    @EJB(mappedName = RegistroSalidaLocal.JNDI_NAME)
     public RegistroSalidaLocal registroSalidaEjb;
 
-    @EJB(mappedName = "regweb3/RegistroEntradaEJB/local")
+    @EJB(mappedName = RegistroEntradaLocal.JNDI_NAME)
     public RegistroEntradaLocal registroEntradaEjb;
 
-    @EJB(mappedName = "regweb3/RegistroEntradaConsultaEJB/local")
+    @EJB(mappedName = RegistroEntradaConsultaLocal.JNDI_NAME)
     public RegistroEntradaConsultaLocal registroEntradaConsultaEjb;
 
-    @EJB(mappedName = "regweb3/RegistroSalidaConsultaEJB/local")
+    @EJB(mappedName = RegistroSalidaConsultaLocal.JNDI_NAME)
     public RegistroSalidaConsultaLocal registroSalidaConsultaEjb;
 
-    @EJB(mappedName = "regweb3/NotificacionEJB/local")
+    @EJB(mappedName = NotificacionLocal.JNDI_NAME)
     public NotificacionLocal notificacionEjb;
 
-    @EJB(mappedName = "regweb3/OrganismoEJB/local")
+    @EJB(mappedName = OrganismoLocal.JNDI_NAME)
     public OrganismoLocal organismoEjb;
 
 

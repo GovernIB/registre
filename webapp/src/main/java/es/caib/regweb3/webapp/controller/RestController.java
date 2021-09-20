@@ -36,37 +36,37 @@ public class RestController extends BaseController {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
-    @EJB(mappedName = "regweb3/CatLocalidadEJB/local")
+    @EJB(mappedName = CatLocalidadLocal.JNDI_NAME)
     private CatLocalidadLocal catLocalidadEjb;
 
-    @EJB(mappedName = "regweb3/CatProvinciaEJB/local")
+    @EJB(mappedName = CatProvinciaLocal.JNDI_NAME)
     private CatProvinciaLocal catProvinciaEjb;
 
-    @EJB(mappedName = "regweb3/CodigoAsuntoEJB/local")
+    @EJB(mappedName = CodigoAsuntoLocal.JNDI_NAME)
     private CodigoAsuntoLocal codigoAsuntoEjb;
 
-    @EJB(mappedName = "regweb3/TipoAsuntoEJB/local")
+    @EJB(mappedName = TipoAsuntoLocal.JNDI_NAME)
     private TipoAsuntoLocal tipoAsuntoEjb;
 
-    @EJB(mappedName = "regweb3/PersonaEJB/local")
+    @EJB(mappedName = PersonaLocal.JNDI_NAME)
     private PersonaLocal personaEjb;
 
-    @EJB(mappedName = "regweb3/PlantillaEJB/local")
+    @EJB(mappedName = PlantillaLocal.JNDI_NAME)
     private PlantillaLocal plantillaEjb;
 
-    @EJB(mappedName = "regweb3/InteresadoSirEJB/local")
+    @EJB(mappedName = InteresadoSirLocal.JNDI_NAME)
     private InteresadoSirLocal interesadoSirEjb;
 
-    @EJB(mappedName = "regweb3/InteresadoEJB/local")
+    @EJB(mappedName = InteresadoLocal.JNDI_NAME)
     private InteresadoLocal interesadoEjb;
 
-    @EJB(mappedName = "regweb3/AnexoEJB/local")
+    @EJB(mappedName = AnexoLocal.JNDI_NAME)
     private AnexoLocal anexoEjb;
 
-    @EJB(mappedName = "regweb3/IntegracionEJB/local")
+    @EJB(mappedName = IntegracionLocal.JNDI_NAME)
     private IntegracionLocal integracionEjb;
 
-    @EJB(mappedName = "regweb3/ColaEJB/local")
+    @EJB(mappedName = ColaLocal.JNDI_NAME)
     private ColaLocal colaEjb;
 
 

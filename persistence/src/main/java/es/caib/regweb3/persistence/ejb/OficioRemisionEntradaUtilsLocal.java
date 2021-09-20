@@ -23,6 +23,9 @@ import java.util.List;
 @RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI"})
 public interface OficioRemisionEntradaUtilsLocal {
 
+    String JNDI_NAME = "java:app/regweb3-persistence/OficioRemisionEntradaUtilsEJB";
+
+
     /**
      *
      * @param idOficina

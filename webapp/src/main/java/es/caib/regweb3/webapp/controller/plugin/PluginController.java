@@ -41,7 +41,7 @@ public class PluginController extends BaseController {
     @Autowired
     private PluginValidator pluginValidator;
 
-    @EJB(mappedName = "regweb3/PluginEJB/local")
+    @EJB(mappedName = PluginLocal.JNDI_NAME)
     private PluginLocal pluginEjb;
 
 

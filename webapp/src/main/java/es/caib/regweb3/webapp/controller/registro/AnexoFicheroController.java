@@ -37,7 +37,7 @@ import java.util.Date;
 public class AnexoFicheroController extends AnexoController {
 
 
-    @EJB(mappedName = "regweb3/RegistroDetalleEJB/local")
+    @EJB(mappedName = RegistroDetalleLocal.JNDI_NAME)
     private RegistroDetalleLocal registroDetalleEjb;
 
 

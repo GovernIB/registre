@@ -15,6 +15,8 @@ import javax.ejb.Local;
 @RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI"})
 public interface CatComunidadAutonomaLocal extends BaseEjb<CatComunidadAutonoma, Long> {
 
+  String JNDI_NAME = "java:app/regweb3-persistence/CatComunidadAutonomaEJB";
+
   CatComunidadAutonoma findByCodigo(Long codigo) throws Exception;
 }
 

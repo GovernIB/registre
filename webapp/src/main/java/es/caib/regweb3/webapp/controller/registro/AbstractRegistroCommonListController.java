@@ -30,25 +30,25 @@ import java.util.List;
 public abstract class AbstractRegistroCommonListController extends BaseController {
 
   
-    @EJB(mappedName = "regweb3/CatComunidadAutonomaEJB/local")
+    @EJB(mappedName = CatComunidadAutonomaLocal.JNDI_NAME)
     public CatComunidadAutonomaLocal catComunidadAutonomaEjb;
 
-    @EJB(mappedName = "regweb3/CatNivelAdministracionEJB/local")
+    @EJB(mappedName = CatNivelAdministracionLocal.JNDI_NAME)
     public CatNivelAdministracionLocal catNivelAdministracionEjb;
 
-    @EJB(mappedName = "regweb3/CatProvinciaEJB/local")
+    @EJB(mappedName = CatProvinciaLocal.JNDI_NAME)
     private CatProvinciaLocal catProvinciaEjb;
 
-    @EJB(mappedName = "regweb3/TrazabilidadEJB/local")
+    @EJB(mappedName = TrazabilidadLocal.JNDI_NAME)
     public TrazabilidadLocal trazabilidadEjb;
 
-    @EJB(mappedName = "regweb3/LopdEJB/local")
+    @EJB(mappedName = LopdLocal.JNDI_NAME)
     public LopdLocal lopdEjb;
 
-    @EJB(mappedName = "regweb3/CatPaisEJB/local")
+    @EJB(mappedName = CatPaisLocal.JNDI_NAME)
     private CatPaisLocal catPaisEjb;
     
-    @EJB(mappedName = "regweb3/ScanWebModuleEJB/local")
+    @EJB(mappedName = ScanWebModuleLocal.JNDI_NAME)
     private ScanWebModuleLocal scanWebModuleEjb;
 
   

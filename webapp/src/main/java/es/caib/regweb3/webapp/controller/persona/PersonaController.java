@@ -44,13 +44,13 @@ public class PersonaController extends BaseController {
     @Autowired
     private PersonaWebValidator personaValidator;
 
-    @EJB(mappedName = "regweb3/PersonaEJB/local")
+    @EJB(mappedName = PersonaLocal.JNDI_NAME)
     private PersonaLocal personaEjb;
 
-    @EJB(mappedName = "regweb3/CatProvinciaEJB/local")
+    @EJB(mappedName = CatProvinciaLocal.JNDI_NAME)
     private CatProvinciaLocal catProvinciaEjb;
 
-    @EJB(mappedName = "regweb3/CatPaisEJB/local")
+    @EJB(mappedName = CatPaisLocal.JNDI_NAME)
     private CatPaisLocal catPaisEjb;
 
 

@@ -15,6 +15,8 @@ import javax.ejb.Local;
 @RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI","RWE_WS_ENTRADA","RWE_WS_SALIDA"})
 public interface CatEstadoEntidadLocal extends BaseEjb<CatEstadoEntidad, Long> {
 
+    String JNDI_NAME = "java:app/regweb3-persistence/CatEstadoEntidadEJB";
+
     /**
      * Retorna los {@link es.caib.regweb3.model.CatEstadoEntidad} a partir de un código
      * @param codigo

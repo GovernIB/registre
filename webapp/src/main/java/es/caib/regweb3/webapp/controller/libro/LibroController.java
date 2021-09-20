@@ -40,7 +40,7 @@ public class LibroController extends BaseController {
     @Autowired
     private LibroValidator libroValidator;
     
-    @EJB(mappedName = "regweb3/LibroEJB/local")
+    @EJB(mappedName = LibroLocal.JNDI_NAME)
     private LibroLocal libroEjb;
 
 

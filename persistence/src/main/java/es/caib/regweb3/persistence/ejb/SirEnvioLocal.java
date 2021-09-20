@@ -21,13 +21,32 @@ import java.util.List;
 @RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI", "RWE_WS_ENTRADA", "RWE_WS_SALIDA"})
 public interface SirEnvioLocal {
 
+    String JNDI_NAME = "java:app/regweb3-persistence/SirEnvioEJB";
 
-    Integer aceptarRegistrosERTE(List<Long> registros, String destino, Oficina oficina,Long idLibro, UsuarioEntidad usuarioEntidad, Long idEntidad) throws Exception;
 
+    /**
+     * @param registros
+     * @param destino
+     * @param oficina
+     * @param idLibro
+     * @param usuarioEntidad
+     * @param idEntidad
+     * @return
+     * @throws Exception
+     */
+    Integer aceptarRegistrosERTE(List<Long> registros, String destino, Oficina oficina, Long idLibro, UsuarioEntidad usuarioEntidad, Long idEntidad) throws Exception;
+
+    /**
+     * @param registros
+     * @param idEntidad
+     * @return
+     * @throws Exception
+     */
     Integer copiarDocumentacionERTE(List<Long> registros, Long idEntidad) throws Exception;
 
     /**
      * Envia un intercambio a la oficina destino
+     *
      * @param tipoRegistro
      * @param idRegistro
      * @param oficinaActiva
@@ -42,6 +61,7 @@ public interface SirEnvioLocal {
 
     /**
      * Reenvia un intercambio, cuando este ha sido RECHAZADO O REENVIADO
+     *
      * @param tipoRegistro
      * @param idRegistro
      * @param oficinaReenvio
@@ -54,11 +74,12 @@ public interface SirEnvioLocal {
 
     /**
      * Vuelve a enviar un intercambio que ya había sido enviado previamente
+     *
      * @param idOficioRemision
      * @return
      * @throws Exception
      */
-    void reenviarIntercambio(Long idOficioRemision)throws Exception, I18NException;
+    void reenviarIntercambio(Long idOficioRemision) throws Exception, I18NException;
 
     /**
      * Envía un mensaje ACK a partir de los datos de un RegistroSir

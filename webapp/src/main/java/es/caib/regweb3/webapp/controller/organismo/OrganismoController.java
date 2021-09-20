@@ -31,19 +31,19 @@ import java.util.Map;
 @SessionAttributes(types = Organismo.class)
 public class OrganismoController extends BaseController {
     
-    @EJB(mappedName = "regweb3/DescargaEJB/local")
+    @EJB(mappedName = DescargaLocal.JNDI_NAME)
     private DescargaLocal descargaEjb;
     
-    @EJB(mappedName = "regweb3/CatEstadoEntidadEJB/local")
+    @EJB(mappedName = CatEstadoEntidadLocal.JNDI_NAME)
     private CatEstadoEntidadLocal catEstadoEntidadEjb;
 
-    @EJB(mappedName = "regweb3/LibroEJB/local")
+    @EJB(mappedName = LibroLocal.JNDI_NAME)
     private LibroLocal libroEjb;
 
-    @EJB(mappedName = "regweb3/RelacionOrganizativaOfiEJB/local")
+    @EJB(mappedName = RelacionOrganizativaOfiLocal.JNDI_NAME)
     private RelacionOrganizativaOfiLocal relacionOrganizativaOfiEjb;
 
-    @EJB(mappedName = "regweb3/RelacionSirOfiEJB/local")
+    @EJB(mappedName = RelacionSirOfiLocal.JNDI_NAME)
     private RelacionSirOfiLocal relacionSirOfiEjb;
 
 

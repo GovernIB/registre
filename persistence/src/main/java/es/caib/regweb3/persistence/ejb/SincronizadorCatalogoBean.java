@@ -32,34 +32,34 @@ public class SincronizadorCatalogoBean implements SincronizadorCatalogoLocal {
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
 
-    @EJB(mappedName = "regweb3/CatEstadoEntidadEJB/local")
+    @EJB(mappedName = CatEstadoEntidadLocal.JNDI_NAME)
     public CatEstadoEntidadLocal catEstadoEntidadEjb;
 
-    @EJB(mappedName = "regweb3/CatNivelAdministracionEJB/local")
+    @EJB(mappedName = CatNivelAdministracionLocal.JNDI_NAME)
     public CatNivelAdministracionLocal catNivelAdministracionEjb;
 
-    @EJB(mappedName = "regweb3/CatPaisEJB/local")
+    @EJB(mappedName = CatPaisLocal.JNDI_NAME)
     public CatPaisLocal catPaisEjb;
 
-    @EJB(mappedName = "regweb3/CatComunidadAutonomaEJB/local")
+    @EJB(mappedName = CatComunidadAutonomaLocal.JNDI_NAME)
     public CatComunidadAutonomaLocal catComunidadAutonomaEjb;
 
-    @EJB(mappedName = "regweb3/CatProvinciaEJB/local")
+    @EJB(mappedName = CatProvinciaLocal.JNDI_NAME)
     public CatProvinciaLocal catProvinciaEjb;
 
-    @EJB(mappedName = "regweb3/CatEntidadGeograficaEJB/local")
+    @EJB(mappedName = CatEntidadGeograficaLocal.JNDI_NAME)
     public CatEntidadGeograficaLocal catEntidadGeograficaEjb;
 
-    @EJB(mappedName = "regweb3/CatLocalidadEJB/local")
+    @EJB(mappedName = CatLocalidadLocal.JNDI_NAME)
     public CatLocalidadLocal catLocalidadEjb;
 
-    @EJB(mappedName = "regweb3/DescargaEJB/local")
+    @EJB(mappedName = DescargaLocal.JNDI_NAME)
     public DescargaLocal descargaEjb;
 
-    @EJB(mappedName = "regweb3/CatServicioEJB/local")
+    @EJB(mappedName = CatServicioLocal.JNDI_NAME)
     public CatServicioLocal catServicioEjb;
 
-    @EJB(mappedName = "regweb3/CatTipoViaEJB/local")
+    @EJB(mappedName = CatTipoViaLocal.JNDI_NAME)
     public CatTipoViaLocal catTipoViaEjb;
 
     SimpleDateFormat formatoFecha = new SimpleDateFormat(RegwebConstantes.FORMATO_FECHA);

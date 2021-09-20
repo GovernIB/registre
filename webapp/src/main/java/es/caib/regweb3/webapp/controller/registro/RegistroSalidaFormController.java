@@ -46,10 +46,10 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
     private RegistroSalidaWebValidator registroSalidaValidator;
 
 
-    @EJB(mappedName = "regweb3/PlantillaEJB/local")
+    @EJB(mappedName = PlantillaLocal.JNDI_NAME)
     private PlantillaLocal plantillaEjb;
 
-    @EJB(mappedName = "regweb3/CodigoAsuntoEJB/local")
+    @EJB(mappedName = CodigoAsuntoLocal.JNDI_NAME)
     private CodigoAsuntoLocal codigoAsuntoEjb;
 
     /**

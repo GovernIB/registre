@@ -19,6 +19,9 @@ import java.util.List;
 @RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI","RWE_WS_ENTRADA","RWE_WS_SALIDA", "RWE_WS_CIUDADANO"})
 public interface LopdLocal extends BaseEjb<Lopd, Long> {
 
+    String JNDI_NAME = "java:app/regweb3-persistence/LopdEJB";
+
+
     /**
      * Devuelve los registros Lopd entre dos fechas para un Usuario en concreto y una lista de Libros, con la Accion (listado/consulta) y el TipoRegistro (entrada/salida)
      *

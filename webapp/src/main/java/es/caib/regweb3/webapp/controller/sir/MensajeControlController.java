@@ -23,10 +23,10 @@ import java.util.Date;
 public class MensajeControlController extends BaseController {
 
 
-    @EJB(mappedName = "regweb3/MensajeControlEJB/local")
+    @EJB(mappedName = MensajeControlLocal.JNDI_NAME)
     private MensajeControlLocal mensajeControlEjb;
 
-    @EJB(mappedName = "regweb3/SirEnvioEJB/local")
+    @EJB(mappedName = SirEnvioLocal.JNDI_NAME)
     private SirEnvioLocal sirEnvioEjb;
 
     /**

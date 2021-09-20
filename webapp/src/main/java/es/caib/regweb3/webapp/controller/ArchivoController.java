@@ -28,7 +28,7 @@ public class ArchivoController extends BaseController{
 
     //protected final Logger log = LoggerFactory.getLogger(getClass());
     
-    @EJB(mappedName = "regweb3/ArchivoEJB/local")
+    @EJB(mappedName =ArchivoLocal.JNDI_NAME)
     private ArchivoLocal archivoEjb;
 
     @RequestMapping(value = "/archivo/{archivoId}", method = RequestMethod.GET)

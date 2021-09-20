@@ -16,6 +16,8 @@ import javax.ejb.Local;
 @RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI"})
 public interface AnexoSirLocal extends BaseEjb<AnexoSir, Long> {
 
+    String JNDI_NAME = "java:app/regweb3-persistence/AnexoSirEJB";
+
     /**
      * Elimina los Archivos del sistema de archivos de los RegistrosSir Aceptados, Rechazados o Reenviados
      * @param idEntidad

@@ -16,6 +16,8 @@ import javax.ejb.Local;
 @RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI"})
 public interface FicheroIntercambioLocal {
 
+    String JNDI_NAME = "java:app/regweb3-persistence/FicheroIntercambioEJB";
+
     /**
      * Recibe un fichero de intercambio en formato SICRES3 desde un nodo distribuido
      * @param ficheroIntercambio

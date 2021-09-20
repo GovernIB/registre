@@ -24,10 +24,10 @@ public class PersonaWebValidator implements Validator {
 
   protected PersonaValidator<Object> validator = new PersonaValidator<Object>();
 
-  @EJB(mappedName = "regweb3/CatPaisEJB/local")
+  @EJB(mappedName = CatPaisLocal.JNDI_NAME)
   protected CatPaisLocal catPaisEjb;
 
-  @EJB(mappedName = "regweb3/PersonaEJB/local")
+  @EJB(mappedName = PersonaLocal.JNDI_NAME)
   protected PersonaLocal personaEjb;
 
 

@@ -38,31 +38,31 @@ import java.util.List;
 @RequestMapping(value = "/sir")
 public class SirController extends BaseController {
 
-    @EJB(mappedName = "regweb3/OficioRemisionEJB/local")
+    @EJB(mappedName = OficioRemisionLocal.JNDI_NAME)
     private OficioRemisionLocal oficioRemisionEjb;
 
-    @EJB(mappedName = "regweb3/LibroEJB/local")
+    @EJB(mappedName = LibroLocal.JNDI_NAME)
     private LibroLocal libroEjb;
 
-    @EJB(mappedName = "regweb3/RegistroSirEJB/local")
+    @EJB(mappedName = RegistroSirLocal.JNDI_NAME)
     private RegistroSirLocal registroSirEjb;
 
-    @EJB(mappedName = "regweb3/TrazabilidadEJB/local")
+    @EJB(mappedName = TrazabilidadLocal.JNDI_NAME)
     private TrazabilidadLocal trazabilidadEjb;
 
-    @EJB(mappedName = "regweb3/TrazabilidadSirEJB/local")
+    @EJB(mappedName = TrazabilidadSirLocal.JNDI_NAME)
     private TrazabilidadSirLocal trazabilidadSirEjb;
 
-    @EJB(mappedName = "regweb3/ArchivoEJB/local")
+    @EJB(mappedName =ArchivoLocal.JNDI_NAME)
     private ArchivoLocal archivoEjb;
 
-    @EJB(mappedName = "regweb3/SirEnvioEJB/local")
+    @EJB(mappedName = SirEnvioLocal.JNDI_NAME)
     private SirEnvioLocal sirEnvioEjb;
 
-    @EJB(mappedName = "regweb3/MensajeControlEJB/local")
+    @EJB(mappedName = MensajeControlLocal.JNDI_NAME)
     private MensajeControlLocal mensajeControlEjb;
 
-    @EJB(mappedName = "regweb3/MensajeEJB/local")
+    @EJB(mappedName = MensajeLocal.JNDI_NAME)
     private MensajeLocal mensajeEjb;
 
 

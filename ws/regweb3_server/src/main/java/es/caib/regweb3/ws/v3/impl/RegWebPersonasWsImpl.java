@@ -55,22 +55,22 @@ public class RegWebPersonasWsImpl  extends AuthenticatedBaseWsImpl implements Re
 
   public static final String NAME_WS = NAME + "Ws";
 
-  @EJB(mappedName = "regweb3/PersonaEJB/local")
+  @EJB(mappedName = PersonaLocal.JNDI_NAME)
   public PersonaLocal personaEjb;
 
-  @EJB(mappedName = "regweb3/EntidadEJB/local")
+  @EJB(mappedName = EntidadLocal.JNDI_NAME)
   public EntidadLocal entidadEjb;
 
-  @EJB(mappedName = "regweb3/CatPaisEJB/local")
+  @EJB(mappedName = CatPaisLocal.JNDI_NAME)
   public CatPaisLocal catPaisEjb;
 
-  @EJB(mappedName = "regweb3/CatComunidadAutonomaEJB/local")
+  @EJB(mappedName = CatComunidadAutonomaLocal.JNDI_NAME)
   public CatComunidadAutonomaLocal catComunidadAutonomaEjb;
 
-  @EJB(mappedName = "regweb3/CatProvinciaEJB/local")
+  @EJB(mappedName = CatProvinciaLocal.JNDI_NAME)
   public CatProvinciaLocal catProvinciaEjb;
 
-  @EJB(mappedName = "regweb3/CatLocalidadEJB/local")
+  @EJB(mappedName = CatLocalidadLocal.JNDI_NAME)
   public CatLocalidadLocal catLocalidadEjb;
 
   PersonaValidator<Persona> personaValidator = new PersonaValidator<Persona>();

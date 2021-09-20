@@ -17,6 +17,9 @@ import java.util.List;
 @RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI","RWE_WS_ENTRADA","RWE_WS_SALIDA", "RWE_WS_CIUDADANO"})
 public interface NotificacionLocal extends BaseEjb<Notificacion, Long> {
 
+    String JNDI_NAME = "java:app/regweb3-persistence/NotificacionEJB";
+
+
     /**
      * Obtiene el total de notificaciones de un usuario y estado
      * @param idUsuarioEntidad

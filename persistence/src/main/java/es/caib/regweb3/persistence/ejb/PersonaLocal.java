@@ -18,6 +18,9 @@ import java.util.List;
 @RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI","RWE_WS_ENTRADA","RWE_WS_SALIDA"})
 public interface PersonaLocal extends BaseEjb<Persona, Long> {
 
+    String JNDI_NAME = "java:app/regweb3-persistence/PersonaEJB";
+
+
     /**
      * Guarda una persona normalizando algunos campos
      * @param persona

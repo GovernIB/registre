@@ -74,13 +74,13 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
     RegistroEntradaValidator<RegistroEntrada> registroEntradaValidator = new RegistroEntradaValidator<RegistroEntrada>();
 
 
-    @EJB(mappedName = "regweb3/RegistroEntradaConsultaEJB/local")
+    @EJB(mappedName = RegistroEntradaConsultaLocal.JNDI_NAME)
     private RegistroEntradaConsultaLocal registroEntradaConsultaEjb;
 
-    @EJB(mappedName = "regweb3/RegistroEntradaEJB/local")
+    @EJB(mappedName = RegistroEntradaLocal.JNDI_NAME)
     private RegistroEntradaLocal registroEntradaEjb;
 
-    @EJB(mappedName = "regweb3/DistribucionEJB/local")
+    @EJB(mappedName = DistribucionLocal.JNDI_NAME)
     private DistribucionLocal distribucionEjb;
 
     @Override

@@ -40,7 +40,7 @@ public class PropiedadGlobalController extends BaseController {
     @Autowired
     private PropiedadGlobalValidator propiedadGlobalValidator;
 
-    @EJB(mappedName = "regweb3/PropiedadGlobalEJB/local")
+    @EJB(mappedName = PropiedadGlobalLocal.JNDI_NAME)
     private PropiedadGlobalLocal propiedadGlobalEjb;
 
 

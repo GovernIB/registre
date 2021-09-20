@@ -48,22 +48,22 @@ public class RegWebInfoWsImpl extends AbstractRegistroWsImpl implements RegWebIn
     public static final String NAME_WS = NAME + "Ws";
 
 
-    @EJB(mappedName = "regweb3/TipoDocumentalEJB/local")
+    @EJB(mappedName = TipoDocumentalLocal.JNDI_NAME)
     private TipoDocumentalLocal tipoDocumentalEjb;
 
-    @EJB(mappedName = "regweb3/OrganismoEJB/local")
+    @EJB(mappedName = OrganismoLocal.JNDI_NAME)
     private OrganismoLocal organismoEjb;
 
-    @EJB(mappedName = "regweb3/CodigoAsuntoEJB/local")
+    @EJB(mappedName = CodigoAsuntoLocal.JNDI_NAME)
     private CodigoAsuntoLocal codigoAsuntoEjb;
 
-    @EJB(mappedName = "regweb3/UsuarioEntidadEJB/local")
+    @EJB(mappedName = UsuarioEntidadLocal.JNDI_NAME)
     private UsuarioEntidadLocal usuarioEntidadEjb;
 
-    @EJB(mappedName = "regweb3/OficinaEJB/local")
+    @EJB(mappedName = OficinaLocal.JNDI_NAME)
     private OficinaLocal oficinaEjb;
 
-    @EJB(mappedName = "regweb3/RelacionOrganizativaOfiEJB/local")
+    @EJB(mappedName = RelacionOrganizativaOfiLocal.JNDI_NAME)
     private RelacionOrganizativaOfiLocal relacionOrganizativaOfiLocalEjb;
 
 

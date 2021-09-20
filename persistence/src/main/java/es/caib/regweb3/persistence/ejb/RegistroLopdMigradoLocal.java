@@ -16,8 +16,12 @@ import java.util.List;
 @RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI"})
 public interface RegistroLopdMigradoLocal extends BaseEjb<RegistroLopdMigrado, Long> {
 
+    String JNDI_NAME = "java:app/regweb3-persistence/RegistroLopdMigradoEJB";
+
+
     /**
      * Devuelve los registros Lopd de un Registro Migrado concreto, pasando la Accion
+     *
      * @param numRegistro
      * @param accion
      * @return
@@ -27,6 +31,7 @@ public interface RegistroLopdMigradoLocal extends BaseEjb<RegistroLopdMigrado, L
 
     /**
      * Devuelve el registro Lopd de un Registro Migrado concreto
+     *
      * @param numRegistro
      * @param accion
      * @return
@@ -36,6 +41,7 @@ public interface RegistroLopdMigradoLocal extends BaseEjb<RegistroLopdMigrado, L
 
     /**
      * Elimina todos los Registros LOPD de una entidad
+     *
      * @param idEntidad
      * @return
      * @throws Exception

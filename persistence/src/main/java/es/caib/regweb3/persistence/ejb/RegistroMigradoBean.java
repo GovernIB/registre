@@ -34,10 +34,10 @@ public class RegistroMigradoBean extends BaseEjbJPA<RegistroMigrado, Long> imple
     @PersistenceContext(unitName="regweb3")
     private EntityManager em;
 
-    @EJB(mappedName = "regweb3/UsuarioEntidadEJB/local")
+    @EJB(mappedName = UsuarioEntidadLocal.JNDI_NAME)
     public UsuarioEntidadLocal usuarioEntidadEjb;
 
-    @EJB(mappedName = "regweb3/RegistroLopdMigradoEJB/local")
+    @EJB(mappedName = RegistroLopdMigradoLocal.JNDI_NAME)
     public RegistroLopdMigradoLocal registroLopdMigradoEjb;
 
 

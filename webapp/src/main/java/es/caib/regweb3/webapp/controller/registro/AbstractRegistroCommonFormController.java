@@ -24,19 +24,19 @@ import java.util.List;
 public abstract class AbstractRegistroCommonFormController extends BaseController {
 
 
-    @EJB(mappedName = "regweb3/CodigoAsuntoEJB/local")
+    @EJB(mappedName = CodigoAsuntoLocal.JNDI_NAME)
     private CodigoAsuntoLocal codigoAsuntoEjb;
 
-    @EJB(mappedName = "regweb3/CatProvinciaEJB/local")
+    @EJB(mappedName = CatProvinciaLocal.JNDI_NAME)
     private CatProvinciaLocal catProvinciaEjb;
 
-    @EJB(mappedName = "regweb3/CatComunidadAutonomaEJB/local")
+    @EJB(mappedName = CatComunidadAutonomaLocal.JNDI_NAME)
     private CatComunidadAutonomaLocal catComunidadAutonomaEjb;
 
-    @EJB(mappedName = "regweb3/CatPaisEJB/local")
+    @EJB(mappedName = CatPaisLocal.JNDI_NAME)
     private CatPaisLocal catPaisEjb;
 
-    @EJB(mappedName = "regweb3/CatNivelAdministracionEJB/local")
+    @EJB(mappedName = CatNivelAdministracionLocal.JNDI_NAME)
     private CatNivelAdministracionLocal catNivelAdministracionEjb;
 
 

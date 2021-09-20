@@ -16,6 +16,9 @@ import java.util.List;
 @RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI","RWE_WS_ENTRADA","RWE_WS_SALIDA","RWE_WS_CIUDADANO"})
 public interface PermisoLibroUsuarioLocal extends BaseEjb<PermisoLibroUsuario, Long> {
 
+    String JNDI_NAME = "java:app/regweb3-persistence/PermisoLibroUsuarioEJB";
+
+
 
     /**
      * Retorna los {@link es.caib.regweb3.model.PermisoLibroUsuario} de un {@link es.caib.regweb3.model.Libro}

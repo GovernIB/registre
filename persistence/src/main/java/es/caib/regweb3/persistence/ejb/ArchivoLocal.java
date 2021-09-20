@@ -17,6 +17,8 @@ import java.util.List;
 @RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI"})
 public interface ArchivoLocal extends BaseEjb<Archivo, Long> {
 
+    String JNDI_NAME = "java:app/regweb3-persistence/ArchivoEJB";
+
     /**
      * Obtiene los id's de todos los Archivos de la aplicación
      * @return

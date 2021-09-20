@@ -12,6 +12,9 @@ import javax.ejb.Local;
 /*@RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI"})*/
 public interface SchedulerLocal {
 
+    String JNDI_NAME = "java:app/regweb3-persistence/SchedulerEJB";
+
+
     /**
      *
      * @throws Exception

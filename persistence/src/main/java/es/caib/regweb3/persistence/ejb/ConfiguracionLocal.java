@@ -15,5 +15,7 @@ import javax.ejb.Local;
 @RolesAllowed({"RWE_SUPERADMIN"})
 public interface ConfiguracionLocal extends BaseEjb<Configuracion, Long> {
 
+    String JNDI_NAME = "java:app/regweb3-persistence/ConfiguracionEJB";
+
 
 }

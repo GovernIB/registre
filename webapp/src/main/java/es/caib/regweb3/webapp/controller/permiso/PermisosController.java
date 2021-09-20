@@ -34,10 +34,10 @@ public class PermisosController extends BaseController {
     @Autowired
     private RolUtils rolUtils;
 
-    @EJB(mappedName = "regweb3/UsuarioEJB/local")
+    @EJB(mappedName = UsuarioLocal.JNDI_NAME)
     private UsuarioLocal usuarioEjb;
 
-    @EJB(mappedName = "regweb3/LibroEJB/local")
+    @EJB(mappedName = LibroLocal.JNDI_NAME)
     private LibroLocal libroEjb;
 
 

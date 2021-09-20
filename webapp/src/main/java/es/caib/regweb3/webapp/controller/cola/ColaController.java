@@ -32,13 +32,13 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping(value = "/cola")
 public class ColaController extends BaseController {
 
-    @EJB(mappedName = "regweb3/ColaEJB/local")
+    @EJB(mappedName = ColaLocal.JNDI_NAME)
     private ColaLocal colaEjb;
 
-    @EJB(mappedName = "regweb3/DistribucionEJB/local")
+    @EJB(mappedName = DistribucionLocal.JNDI_NAME)
     private DistribucionLocal distribucionEjb;
 
-    @EJB(mappedName = "regweb3/CustodiaEJB/local")
+    @EJB(mappedName = CustodiaLocal.JNDI_NAME)
     private CustodiaLocal custodiaEjb;
 
 

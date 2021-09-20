@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class RegWebLocaleChangeInterceptor extends LocaleChangeInterceptor{
 
-    @EJB(mappedName = "regweb3/UsuarioEJB/local")
+    @EJB(mappedName = UsuarioLocal.JNDI_NAME)
     public UsuarioLocal usuarioEjb;
 
     protected final Logger log = LoggerFactory.getLogger(getClass());

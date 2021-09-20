@@ -20,6 +20,8 @@ import java.util.List;
 @RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI", "RWE_WS_ENTRADA", "RWE_WS_SALIDA"})
 public interface AsientoRegistralLocal {
 
+    String JNDI_NAME = "java:app/regweb3-persistence/AsientoRegistralEJB";
+
     /**
      * Cra un neuvo UsuarioEntidad haciendo uso de @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
      *

@@ -33,7 +33,7 @@ public class Regweb3Controller extends BaseController {
     @Autowired
     private LoginService loginService;
     
-    @EJB(mappedName = "regweb3/RolEJB/local")
+    @EJB(mappedName = RolLocal.JNDI_NAME)
     private RolLocal rolEjb;
 
 

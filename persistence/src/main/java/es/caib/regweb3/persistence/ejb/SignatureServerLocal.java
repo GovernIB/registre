@@ -13,19 +13,23 @@ import java.util.Locale;
 
 /**
  * Created by jpernia on 04/04/2017.
+ *
  * @author anadal
  */
 @Local
-@RolesAllowed({"RWE_USUARI","RWE_WS_ENTRADA","RWE_WS_SALIDA", "RWE_WS_CIUDADANO"})
+@RolesAllowed({"RWE_USUARI", "RWE_WS_ENTRADA", "RWE_WS_SALIDA", "RWE_WS_CIUDADANO"})
 public interface SignatureServerLocal {
-  
-      
+
+    String JNDI_NAME = "java:app/regweb3-persistence/SignatureServerEJB";
+
+
     // La configuracio del plugin indicarà quin certificat usar
     String CONFIG_USERNAME = null;
-  
+
 
     /**
      * Método que genera el {@link org.fundaciobit.plugins.documentcustody.api.SignatureCustody} de un Justificante
+     *
      * @param pdfsource
      * @param languageUI
      * @param idEntidadActiva
@@ -37,6 +41,7 @@ public interface SignatureServerLocal {
 
     /**
      * Método que genera una  {@link es.caib.plugins.arxiu.api.Firma} de un Justificante
+     *
      * @param pdfsource
      * @param languageUI
      * @param idEntidadActiva
@@ -45,10 +50,11 @@ public interface SignatureServerLocal {
      * @throws Exception
      */
     Firma signJustificanteApiArxiu(byte[] pdfsource, String languageUI, Long idEntidadActiva, StringBuilder peticion, String numeroRegistro, String fileName) throws Exception, I18NException;
-    
-    
+
+
     /**
      * Ho hem de fer passar per un EJB a causa del BUG CXF des de capa WEB
+     *
      * @param input
      * @param idEntidad
      * @param sir
@@ -61,7 +67,8 @@ public interface SignatureServerLocal {
 
 
     /**
-     *  mitjancant el plugin de validar Firma
+     * mitjancant el plugin de validar Firma
+     *
      * @param input
      * @param idEntidad
      * @param locale
@@ -73,9 +80,8 @@ public interface SignatureServerLocal {
 
 
     /**
-     * 
-     * @param input Parametre d'entrada sortida. Si tot al final aquest
-     *  objecte contindrà la signatura. 
+     * @param input     Parametre d'entrada sortida. Si tot al final aquest
+     *                  objecte contindrà la signatura.
      * @param idEntidad
      * @param locale
      * @throws I18NException
@@ -83,7 +89,6 @@ public interface SignatureServerLocal {
     void firmaPAdESEPES(AnexoFull input, long idEntidad, Locale locale, String numeroRegistro) throws I18NException;
 
     /**
-     *
      * @param anexosEnviarASir
      * @param idEntidad
      * @param locale
@@ -91,5 +96,5 @@ public interface SignatureServerLocal {
      * @throws I18NException
      */
     List<AnexoFull> firmarAnexosEnvioSir(List<AnexoFull> anexosEnviarASir, Long idEntidad, Locale locale, boolean force, String numeroRegistro) throws I18NException;
-    
+
 }

@@ -13,11 +13,15 @@ import java.util.List;
  * Date: 16/01/14
  */
 @Local
-@RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI","RWE_WS_ENTRADA","RWE_WS_SALIDA", "RWE_WS_CIUDADANO"})
+@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI", "RWE_WS_ENTRADA", "RWE_WS_SALIDA", "RWE_WS_CIUDADANO"})
 public interface TrazabilidadSirLocal extends BaseEjb<TrazabilidadSir, Long> {
+
+    String JNDI_NAME = "java:app/regweb3-persistence/TrazabilidadSirEJB";
+
 
     /**
      * Obtiene las TrazabilidadesSir de un RegistroSir
+     *
      * @param idRegistroSir
      * @return
      * @throws Exception
@@ -26,6 +30,7 @@ public interface TrazabilidadSirLocal extends BaseEjb<TrazabilidadSir, Long> {
 
     /**
      * Obtiene todas las TrazabilidadesSir a partir de un Identificador Intercambio
+     *
      * @param idIntercambio
      * @return
      * @throws Exception
@@ -34,6 +39,7 @@ public interface TrazabilidadSirLocal extends BaseEjb<TrazabilidadSir, Long> {
 
     /**
      * Obtiene la TrazabilidadSir de un RegistroSir aceptado
+     *
      * @param idRegistroSir
      * @return
      * @throws Exception
@@ -42,6 +48,7 @@ public interface TrazabilidadSirLocal extends BaseEjb<TrazabilidadSir, Long> {
 
     /**
      * Eimina todas las TrazabilidadesSir de una Entidad
+     *
      * @param idEntidad
      * @return
      * @throws Exception

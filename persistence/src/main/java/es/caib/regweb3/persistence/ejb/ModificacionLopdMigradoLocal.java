@@ -16,6 +16,9 @@ import java.util.List;
 @RolesAllowed({"RWE_USUARI"})
 public interface ModificacionLopdMigradoLocal extends BaseEjb<ModificacionLopdMigrado, Long> {
 
+    String JNDI_NAME = "java:app/regweb3-persistence/ModificacionLopdMigradoEJB";
+
+
     /**
      * Devuelve el registro Lopd de un Registro Migrado concreto
      * @param numRegistroMigrado

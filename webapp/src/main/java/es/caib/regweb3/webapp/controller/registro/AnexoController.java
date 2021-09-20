@@ -66,16 +66,16 @@ public class AnexoController extends BaseController {
     private AnexoWebValidator anexoValidator;
 
 
-    @EJB(mappedName = "regweb3/AnexoEJB/local")
+    @EJB(mappedName = AnexoLocal.JNDI_NAME)
     private AnexoLocal anexoEjb;
 
-    @EJB(mappedName = "regweb3/RegistroDetalleEJB/local")
+    @EJB(mappedName = RegistroDetalleLocal.JNDI_NAME)
     private RegistroDetalleLocal registroDetalleEjb;
 
-    @EJB(mappedName = "regweb3/ScanWebModuleEJB/local")
+    @EJB(mappedName = ScanWebModuleLocal.JNDI_NAME)
     private ScanWebModuleLocal scanWebModuleEjb;
 
-    @EJB(mappedName = "regweb3/SignatureServerEJB/local")
+    @EJB(mappedName = SignatureServerLocal.JNDI_NAME)
     private SignatureServerLocal signatureServerEjb;
 
     @Autowired

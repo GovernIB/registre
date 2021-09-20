@@ -49,16 +49,16 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
     @Autowired
     private RegistroEntradaWebValidator registroEntradaValidator;
 
-    @EJB(mappedName = "regweb3/PlantillaEJB/local")
+    @EJB(mappedName = PlantillaLocal.JNDI_NAME)
     private PlantillaLocal plantillaEjb;
 
-    @EJB(mappedName = "regweb3/CodigoAsuntoEJB/local")
+    @EJB(mappedName = CodigoAsuntoLocal.JNDI_NAME)
     private CodigoAsuntoLocal codigoAsuntoEjb;
 
-    @EJB(mappedName = "regweb3/InteresadoEJB/local")
+    @EJB(mappedName = InteresadoLocal.JNDI_NAME)
     private InteresadoLocal interesadoEjb;
 
-    @EJB(mappedName = "regweb3/MultiEntidadEJB/local")
+    @EJB(mappedName = MultiEntidadLocal.JNDI_NAME)
     private MultiEntidadLocal multiEntidadEjb;
 
 

@@ -21,7 +21,7 @@ public class Regweb3Scheduler {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
-    @EJB(mappedName = "regweb3/SchedulerEJB/local")
+    @EJB(mappedName = SchedulerLocal.JNDI_NAME)
     private SchedulerLocal schedulerEjb;
 
 

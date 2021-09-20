@@ -13,11 +13,15 @@ import javax.ejb.Local;
  * Date: 31/10/19
  */
 @Local
-@RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI","RWE_WS_ENTRADA","RWE_WS_SALIDA","RWE_WS_CIUDADANO"})
+@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI", "RWE_WS_ENTRADA", "RWE_WS_SALIDA", "RWE_WS_CIUDADANO"})
 public interface SesionLocal extends BaseEjb<Sesion, Long> {
+
+    String JNDI_NAME = "java:app/regweb3-persistence/SesionEJB";
+
 
     /**
      * Crea una nueva Sesión con el estado NO_INICIADA
+     *
      * @param usuario
      * @return
      * @throws Exception
@@ -26,6 +30,7 @@ public interface SesionLocal extends BaseEjb<Sesion, Long> {
 
     /**
      * Busca una Sesión a partir de id y el usuario
+     *
      * @param idSesion
      * @param usuario
      * @return
@@ -34,6 +39,7 @@ public interface SesionLocal extends BaseEjb<Sesion, Long> {
 
     /**
      * Busca una Sesión a partir de id, usuario y estado
+     *
      * @param idSesion
      * @param usuario
      * @param estado
@@ -43,6 +49,7 @@ public interface SesionLocal extends BaseEjb<Sesion, Long> {
 
     /**
      * Cambia el estado de una Sesión
+     *
      * @param idSesion
      * @param usuario
      * @param estado
@@ -52,6 +59,7 @@ public interface SesionLocal extends BaseEjb<Sesion, Long> {
 
     /**
      * Crea una nueva Sesión con estado INICIADO
+     *
      * @param idSesion
      * @param usuario
      * @throws Exception
@@ -60,6 +68,7 @@ public interface SesionLocal extends BaseEjb<Sesion, Long> {
 
     /**
      * Marca la Sesión como finalizada, añadiendole el numero de registro
+     *
      * @param idSesion
      * @param usuario
      * @param tipoRegistro
@@ -70,6 +79,7 @@ public interface SesionLocal extends BaseEjb<Sesion, Long> {
 
     /**
      * Purgado de sesiones
+     *
      * @param idEntidad
      */
     void purgarSesiones(Long idEntidad) throws Exception;

@@ -19,6 +19,9 @@ import java.util.List;
 @RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI"})
 public interface MensajeControlLocal extends BaseEjb<MensajeControl, Long> {
 
+    String JNDI_NAME = "java:app/regweb3-persistence/MensajeControlEJB";
+
+
     /**
      * Obtiene las mensajeControles de una entidad
      * @param idEntidad

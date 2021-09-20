@@ -51,10 +51,10 @@ public class WS_SIR9Impl implements WS_SIR9_PortType {
 
     public static final String NAME_WS = NAME;
 
-    @EJB(mappedName = "regweb3/WebServicesMethodsEJB/local")
+    @EJB(mappedName = WebServicesMethodsLocal.JNDI_NAME)
     public WebServicesMethodsLocal webServicesMethodsEjb;
 
-    @EJB(name = "RecepcionEJB")
+    @EJB(mappedName = RecepcionLocal.JNDI_NAME)
     public RecepcionLocal recepcionEjb;
 
 

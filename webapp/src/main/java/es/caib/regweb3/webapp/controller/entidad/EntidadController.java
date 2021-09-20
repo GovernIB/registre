@@ -62,31 +62,31 @@ public class EntidadController extends BaseController {
     @Autowired
     private RolUtils rolUtils;
 
-    @EJB(mappedName = "regweb3/DescargaEJB/local")
+    @EJB(mappedName = DescargaLocal.JNDI_NAME)
     private DescargaLocal descargaEjb;
 
-    @EJB(mappedName = "regweb3/SincronizadorDir3EJB/local")
+    @EJB(mappedName = SincronizadorDir3Local.JNDI_NAME)
     private SincronizadorDir3Local sincronizadorDIR3Ejb;
 
-    @EJB(mappedName = "regweb3/PendienteEJB/local")
+    @EJB(mappedName = PendienteLocal.JNDI_NAME)
     private PendienteLocal pendienteEjb;
 
-    @EJB(mappedName = "regweb3/LibroEJB/local")
+    @EJB(mappedName = LibroLocal.JNDI_NAME)
     private LibroLocal libroEjb;
 
-    @EJB(mappedName = "regweb3/ArchivoEJB/local")
+    @EJB(mappedName =ArchivoLocal.JNDI_NAME)
     private ArchivoLocal archivoEjb;
 
-    @EJB(mappedName = "regweb3/UsuarioEJB/local")
+    @EJB(mappedName = UsuarioLocal.JNDI_NAME)
     private UsuarioLocal usuarioEjb;
 
-    @EJB(mappedName = "regweb3/PluginEJB/local")
+    @EJB(mappedName = PluginLocal.JNDI_NAME)
     private PluginLocal pluginEjb;
 
-    @EJB(mappedName = "regweb3/ContadorEJB/local")
+    @EJB(mappedName = ContadorLocal.JNDI_NAME)
     private ContadorLocal contadorEjb;
 
-    @EJB(mappedName = "regweb3/OficioRemisionEJB/local")
+    @EJB(mappedName = OficioRemisionLocal.JNDI_NAME)
     private OficioRemisionLocal oficioRemisionEjb;
 
 

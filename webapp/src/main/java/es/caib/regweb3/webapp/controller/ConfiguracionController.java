@@ -32,10 +32,10 @@ import javax.validation.Valid;
 @RequestMapping(value = "/configuracion")
 public class ConfiguracionController extends BaseController {
 
-    @EJB(mappedName = "regweb3/ArchivoEJB/local")
+    @EJB(mappedName =ArchivoLocal.JNDI_NAME)
     private ArchivoLocal archivoEjb;
 
-    @EJB(mappedName = "regweb3/ConfiguracionEJB/local")
+    @EJB(mappedName =ConfiguracionLocal.JNDI_NAME)
     private ConfiguracionLocal configuracionEjb;
 
     /**

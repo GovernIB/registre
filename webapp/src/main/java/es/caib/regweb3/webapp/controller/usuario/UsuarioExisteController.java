@@ -43,7 +43,7 @@ public class UsuarioExisteController extends BaseController {
     @Autowired
     private RolUtils rolUtils;
     
-    @EJB(mappedName = "regweb3/UsuarioEJB/local")
+    @EJB(mappedName = UsuarioLocal.JNDI_NAME)
     private UsuarioLocal usuarioEjb;
 
     /**

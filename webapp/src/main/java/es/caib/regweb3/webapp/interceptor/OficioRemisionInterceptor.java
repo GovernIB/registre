@@ -31,10 +31,10 @@ public class OficioRemisionInterceptor extends HandlerInterceptorAdapter {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
-    @EJB(mappedName = "regweb3/ModeloOficioRemisionEJB/local")
+    @EJB(mappedName = ModeloOficioRemisionLocal.JNDI_NAME)
     private ModeloOficioRemisionLocal modeloOficioRemisionEjb;
 
-    @EJB(mappedName = "regweb3/PermisoOrganismoUsuarioEJB/local")
+    @EJB(mappedName = PermisoOrganismoUsuarioLocal.JNDI_NAME)
     private PermisoOrganismoUsuarioLocal permisoOrganismoUsuarioEjb;
 
 
