@@ -54,7 +54,7 @@
                             <form:errors path="entidad.posXsello" cssClass="has-error help-block" element="span"><span class="help-block-red"><spring:message code="entidad.sello.posicionX.obligatorio"/></span></form:errors>
                             <form:errors path="entidad.posYsello" cssClass="has-error help-block" element="span"><span class="help-block-red"><spring:message code="entidad.sello.posicionY.obligatorio"/></span></form:errors>
                             <c:if test="${loginInfo.rolActivo.nombre == 'RWE_SUPERADMIN'}">
-                                <sec:authorize access="hasRole('RWE_SUPERADMIN')">
+                                <sec:authorize access="hasAuthority('RWE_SUPERADMIN')">
 
                                 <div class="col-xs-12">
                                     <div class="form-group col-xs-6 espaiLinies senseMargeLat">
@@ -161,7 +161,7 @@
                             </c:if>
 
                             <c:if test="${loginInfo.rolActivo.nombre == 'RWE_ADMIN'}">
-                                <sec:authorize access="hasRole('RWE_ADMIN')">
+                                <sec:authorize access="hasAuthority('RWE_ADMIN')">
                                     <ul class="nav nav-tabs" id="myTab">
                                         <li><a href="#Datos" data-toggle="tab"><spring:message code="entidad.datos"/></a></li>
                                         <li><a href="#Libro" data-toggle="tab"><spring:message code="libro.libro"/></a></li>
@@ -528,12 +528,12 @@
                                 </sec:authorize>
                             </c:if>
 
-                            <sec:authorize access="!hasRole('RWE_ADMIN')">
+                            <sec:authorize access="!hasAuthority('RWE_ADMIN')">
                                 <c:if test="${not empty entidadForm.entidad.configuracionPersona}">
                                     <form:input path="entidad.configuracionPersona" type="hidden"/>
                                 </c:if>
                             </sec:authorize>
-                            <sec:authorize access="!hasRole('RWE_SUPERADMIN')">
+                            <sec:authorize access="!hasAuthority('RWE_SUPERADMIN')">
                                 <form:input path="entidad.propietario.id" type="hidden"/>
                             </sec:authorize>
 
