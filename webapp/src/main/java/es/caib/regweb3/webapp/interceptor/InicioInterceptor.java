@@ -5,7 +5,7 @@ import es.caib.regweb3.model.Usuario;
 import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.persistence.utils.FileSystemManager;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
-import es.caib.regweb3.utils.Configuracio;
+import es.caib.regweb3.utils.Propiedades;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.security.LoginInfo;
 import es.caib.regweb3.webapp.utils.LoginService;
@@ -39,6 +39,9 @@ public class InicioInterceptor extends HandlerInterceptorAdapter {
 
     @Autowired
     private LoginService loginService;
+
+    @Autowired
+    private Propiedades propiedades;
 
     @EJB(mappedName = UsuarioLocal.JNDI_NAME)
     private UsuarioLocal usuarioEjb;
@@ -219,7 +222,7 @@ public class InicioInterceptor extends HandlerInterceptorAdapter {
                             entidadEjb.marcarEntidadMantenimiento(entidadActiva.getId(), true);
                         }
                         // Sir ServerBAse
-                        if (entidadActiva.getSir() && Configuracio.getSirServerBase() == null) {
+                        if (entidadActiva.getSir() && propiedades.getSirServerbase() == null) {
                             log.info("Error, falta propiedad sirserverbase");
                             Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.sirserverbase"));
                             entidadEjb.marcarEntidadMantenimiento(entidadActiva.getId(), true);
