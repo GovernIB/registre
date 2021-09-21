@@ -10,6 +10,7 @@ import es.caib.regweb3.persistence.utils.RespuestaRecepcionSir;
 import es.caib.regweb3.sir.core.utils.FicheroIntercambio;
 import es.caib.regweb3.utils.Dir3CaibUtils;
 
+import javax.annotation.security.RolesAllowed;
 import javax.annotation.security.RunAs;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -21,6 +22,7 @@ import java.util.Date;
  * @author earrivi
  */
 @Stateless(name = "WebServicesMethodsEJB")
+@RolesAllowed({"RWE_USUARI"})
 @RunAs("RWE_USUARI")
 public class WebServicesMethodsEJB implements WebServicesMethodsLocal {
 
