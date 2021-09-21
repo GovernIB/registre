@@ -329,12 +329,10 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
         for(Oficina oficina: oficinas){
             Oficina oficina1= findByCodigoMultiEntidad(oficina.getCodigo());
             Organismo raiz = organismoEjb.getOrganismoRaiz(oficina1.getOrganismoResponsable().getId());
-            log.info(" RAIZ " + raiz);
-            log.info(" RAIZ " + oficina1.getOrganismoResponsable().getDenominacion());
-            if(raiz!= null){
-
-
-                log.info(" Eliminamos oficina " + oficina.getDenominacion());
+            //Si la raiz es null(es parte de otra entidad) y la entidad del organismo responsable no es igual
+            // a la entidad en la que estamos se debe eliminar la oficina porque significa que hay otra entidad
+            // que le da servicio
+            if(raiz== null  && !oficina1.getOrganismoResponsable().getEntidad().getId().equals( idEntidad)){
                 oficinasAEliminar.add(oficina);
             }
         }
