@@ -10,6 +10,7 @@ import org.fundaciobit.pluginsib.scanweb.api.ScanWebPlainFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.security.RolesAllowed;
 import javax.annotation.security.RunAs;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -24,8 +25,8 @@ import java.util.Map.Entry;
  * @author anadal migracio a ScanWebApi 2.0.0 (06/07/2016)
  */
 @Stateless(name = "ScanWebModuleEJB")
+@RolesAllowed({"RWE_ADMIN","RWE_USUARI"})
 @RunAs("RWE_ADMIN")
-//@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI"})
 public class ScanWebModuleEjb implements ScanWebModuleLocal {
 
     protected Logger log = LoggerFactory.getLogger(this.getClass());

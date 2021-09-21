@@ -3,7 +3,6 @@ package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.Archivo;
 
-import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
 import java.util.List;
 
@@ -31,6 +30,5 @@ public interface ArchivoLocal extends BaseEjb<Archivo, Long> {
      * @return
      * @throws Exception
      */
-    @RolesAllowed({"RWE_ADMIN"})
     boolean borrarArchivo(Archivo archivo) throws Exception;
 }

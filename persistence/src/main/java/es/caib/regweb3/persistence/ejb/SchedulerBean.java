@@ -8,6 +8,7 @@ import org.jboss.ejb3.annotation.TransactionTimeout;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.security.RolesAllowed;
 import javax.annotation.security.RunAs;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -22,6 +23,7 @@ import java.util.List;
  */
 
 @Stateless(name = "SchedulerEJB")
+@RolesAllowed({"RWE_ADMIN","RWE_USUARI"})
 @RunAs("RWE_USUARI")
 public class SchedulerBean implements SchedulerLocal {
 
