@@ -43,8 +43,8 @@ public class DescargaBean extends BaseEjbJPA<Descarga, Long> implements Descarga
     @Override
     @SuppressWarnings(value = "unchecked")
     public Descarga findByTipo(String tipo) throws Exception {
-        Query q = em.createQuery("select descarga from Descarga as descarga where descarga.tipo=? order by descarga.id desc");
-        q.setParameter(1, tipo);
+        Query q = em.createQuery("select descarga from Descarga as descarga where descarga.tipo=:tipo order by descarga.id desc");
+        q.setParameter("tipo", tipo);
         q.setHint("org.hibernate.readOnly", true);
 
         List<Descarga> descargas = q.getResultList();
@@ -60,9 +60,10 @@ public class DescargaBean extends BaseEjbJPA<Descarga, Long> implements Descarga
     @SuppressWarnings(value = "unchecked")
     public Descarga ultimaDescarga(String tipo, Long idEntidad) throws Exception {
 
-        Query q = em.createQuery("select descarga from Descarga as descarga where descarga.tipo=? and descarga.entidad.id =? order by descarga.id desc");
-        q.setParameter(1, tipo);
-        q.setParameter(2, idEntidad);
+        Query q = em.createQuery("select descarga from Descarga as descarga where descarga.tipo = :tipo and descarga.entidad.id = :idEntidad order by descarga.id desc");
+
+        q.setParameter("tipo", tipo);
+        q.setParameter("idEntidad", idEntidad);
         q.setHint("org.hibernate.readOnly", true);
 
         List<Descarga> descargas = q.getResultList();
@@ -77,9 +78,10 @@ public class DescargaBean extends BaseEjbJPA<Descarga, Long> implements Descarga
     @SuppressWarnings(value = "unchecked")
     public Descarga findByTipoEntidadInverse(String tipo, Long idEntidad) throws Exception {
 
-        Query q = em.createQuery("select descarga from Descarga as descarga where descarga.tipo=? and descarga.entidad.id = ? order by descarga.id asc");
-        q.setParameter(1, tipo);
-        q.setParameter(2, idEntidad);
+        Query q = em.createQuery("select descarga from Descarga as descarga where descarga.tipo=:tipo and descarga.entidad.id = :idEntidad order by descarga.id asc");
+
+        q.setParameter("tipo", tipo);
+        q.setParameter("idEntidad", idEntidad);
         q.setHint("org.hibernate.readOnly", true);
 
         List<Descarga> descargas = q.getResultList();
@@ -143,8 +145,8 @@ public class DescargaBean extends BaseEjbJPA<Descarga, Long> implements Descarga
     @SuppressWarnings(value = "unchecked")
     public void deleteByTipo(String tipo) throws Exception {
 
-        Query query = em.createQuery("delete from Descarga as descarga where descarga.tipo=?");
-        query.setParameter(1, tipo);
+        Query query = em.createQuery("delete from Descarga as descarga where descarga.tipo=:tipo");
+        query.setParameter("tipo", tipo);
         query.executeUpdate();
 
     }
