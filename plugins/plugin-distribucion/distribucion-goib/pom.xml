@@ -31,6 +31,12 @@
         </dependency>
 
         <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
             <groupId>es.caib.regweb3</groupId>
             <artifactId>plugin-distribucion-api</artifactId>
             <scope>provided</scope>
