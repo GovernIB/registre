@@ -9,56 +9,49 @@ import org.slf4j.LoggerFactory;
 import javax.naming.InitialContext;
 
 /**
- * 
  * @author anadal
- * 
  */
 public final class EjbManager {
 
-  protected static final Logger log = LoggerFactory.getLogger(EjbManager.class);
+    protected static final Logger log = LoggerFactory.getLogger(EjbManager.class);
 
 
-  protected static UsuarioEntidadLocal usuariEntitatEjb;
-  protected static UsuarioLocal usuariEjb;
-  protected static PluginLocal pluginEjb;
+    protected static UsuarioEntidadLocal usuariEntitatEjb;
+    protected static UsuarioLocal usuariEjb;
+    protected static PluginLocal pluginEjb;
 
 
+    public static UsuarioEntidadLocal getUsuarioEntidadEJB() throws Exception {
 
-  public static UsuarioEntidadLocal getUsuarioEntidadEJB() throws Exception {
+        if (usuariEntitatEjb == null) {
 
-    if (usuariEntitatEjb == null) {
-      
-        usuariEntitatEjb = (UsuarioEntidadLocal) new InitialContext()
-            .lookup("regweb3/UsuarioEntidadEJB/local");
-      
+            usuariEntitatEjb = (UsuarioEntidadLocal) new InitialContext().lookup(UsuarioEntidadLocal.JNDI_NAME);
+
+        }
+        return usuariEntitatEjb;
     }
-    return usuariEntitatEjb;
-  }
-  
-  
-  public static UsuarioLocal getUsuarioEJB() throws Exception {
 
-    if (usuariEjb == null) {
-      
-        usuariEjb = (UsuarioLocal) new InitialContext()
-            .lookup("regweb3/UsuarioEJB/local");
-      
-    }
-    return usuariEjb;
 
-  }
+    public static UsuarioLocal getUsuarioEJB() throws Exception {
 
-  public static PluginLocal getPluginEJB() throws Exception {
+        if (usuariEjb == null) {
 
-    if (pluginEjb == null) {
+            usuariEjb = (UsuarioLocal) new InitialContext().lookup(UsuarioLocal.JNDI_NAME);
 
-      pluginEjb = (PluginLocal) new InitialContext()
-            .lookup("regweb3/PluginEJB/local");
+        }
+        return usuariEjb;
 
     }
-    return pluginEjb;
-  }
-  
-  
-  
+
+    public static PluginLocal getPluginEJB() throws Exception {
+
+        if (pluginEjb == null) {
+
+            pluginEjb = (PluginLocal) new InitialContext().lookup(PluginLocal.JNDI_NAME);
+
+        }
+        return pluginEjb;
+    }
+
+
 }
