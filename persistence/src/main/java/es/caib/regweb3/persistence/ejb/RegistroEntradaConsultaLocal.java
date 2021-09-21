@@ -7,7 +7,6 @@ import es.caib.regweb3.model.utils.RegistroBasico;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 
-import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
 import java.util.Date;
 import java.util.List;
@@ -19,14 +18,12 @@ import java.util.List;
  * Date: 14/05/19
  */
 @Local
-@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI","RWE_WS_ENTRADA","RWE_WS_SALIDA", "RWE_WS_CIUDADANO"})
 public interface RegistroEntradaConsultaLocal {
 
     String JNDI_NAME = "java:app/regweb3-persistence/RegistroEntradaConsultaEJB";
 
 
     /**
-     *
      * @param numeroRegistroFormateado
      * @param idRegistro
      * @return
@@ -36,6 +33,7 @@ public interface RegistroEntradaConsultaLocal {
 
     /**
      * Obtiene un RegistroEntrada con un mínimo de campos
+     *
      * @param idRegistroEntrada
      * @return
      * @throws Exception
@@ -65,7 +63,6 @@ public interface RegistroEntradaConsultaLocal {
     List<RegistroBasico> getByOficinaEstado(Long idOficina, Long idEstado, Integer total) throws Exception;
 
     /**
-     *
      * @param pageNumber
      * @param idOficinaActiva
      * @param idEstado
@@ -76,9 +73,9 @@ public interface RegistroEntradaConsultaLocal {
 
     /**
      * Registros pendientes de distribuir
+     *
      * @param pageNumber
      * @param idOficinaActiva
-
      * @return
      * @throws Exception
      */
@@ -118,6 +115,7 @@ public interface RegistroEntradaConsultaLocal {
 
     /**
      * Obtiene el RegistroEntrada a partir de su numero de registro formateado, entidad y el libro
+     *
      * @param codigoEntidad
      * @param numeroRegistroFormateado
      * @return
@@ -127,6 +125,7 @@ public interface RegistroEntradaConsultaLocal {
 
     /**
      * Obtiene el RegistroEntrada a partir de su numero de registro formateado, entidad y el libro cargando sus anexos.
+     *
      * @param codigoEntidad
      * @param numeroRegistroFormateado
      * @return
@@ -169,6 +168,7 @@ public interface RegistroEntradaConsultaLocal {
 
     /**
      * Retorna el Organismo al que pertenece el RegistroEntrada
+     *
      * @param idRegistroEntrada
      * @return
      * @throws Exception
@@ -185,7 +185,6 @@ public interface RegistroEntradaConsultaLocal {
     Boolean isDistribuir(Long idRegistro) throws Exception;
 
     /**
-     *
      * @param query
      * @return
      * @throws Exception
@@ -231,7 +230,6 @@ public interface RegistroEntradaConsultaLocal {
 
 
     /**
-     *
      * @param pageNumber
      * @param idOficina
      * @return
@@ -241,6 +239,7 @@ public interface RegistroEntradaConsultaLocal {
 
     /**
      * Busca los Registros de Entrada de una OficinaActiva Rechazados o Reenviados por SIR
+     *
      * @param idOficina
      * @param total
      * @return
@@ -250,6 +249,7 @@ public interface RegistroEntradaConsultaLocal {
 
     /**
      * Total de Registros de Entrada de una OficinaActiva Rechazados o Reenviados por SIR
+     *
      * @param idOficina
      * @return
      * @throws Exception
@@ -259,6 +259,7 @@ public interface RegistroEntradaConsultaLocal {
 
     /**
      * Obtiene los registros de un ciudadano
+     *
      * @param idEntidad
      * @param documento
      * @return
@@ -268,6 +269,7 @@ public interface RegistroEntradaConsultaLocal {
 
     /**
      * Obtiene los registros de un ciudadano, paginados
+     *
      * @param idEntidad
      * @param documento
      * @param pageNumber
@@ -278,6 +280,7 @@ public interface RegistroEntradaConsultaLocal {
 
     /**
      * Obtiene un Registro a partir de su número y el documento del Ciudadano
+     *
      * @param idEntidad
      * @param documento
      * @param numeroRegistroFormateado
@@ -288,6 +291,7 @@ public interface RegistroEntradaConsultaLocal {
 
     /**
      * Obtiene los últimos organismos interesado de los registros realizados por el usuario indicado
+     *
      * @param usuarioEntidad
      * @return
      * @throws Exception

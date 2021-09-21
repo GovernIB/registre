@@ -2,7 +2,6 @@ package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.ModificacionLopdMigrado;
 
-import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
 import java.util.List;
 
@@ -13,7 +12,6 @@ import java.util.List;
  * Date: 09/12/14
  */
 @Local
-@RolesAllowed({"RWE_USUARI"})
 public interface ModificacionLopdMigradoLocal extends BaseEjb<ModificacionLopdMigrado, Long> {
 
     String JNDI_NAME = "java:app/regweb3-persistence/ModificacionLopdMigradoEJB";
@@ -21,6 +19,7 @@ public interface ModificacionLopdMigradoLocal extends BaseEjb<ModificacionLopdMi
 
     /**
      * Devuelve el registro Lopd de un Registro Migrado concreto
+     *
      * @param numRegistroMigrado
      * @return
      * @throws Exception

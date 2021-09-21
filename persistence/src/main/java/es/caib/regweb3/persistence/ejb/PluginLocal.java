@@ -3,7 +3,6 @@ package es.caib.regweb3.persistence.ejb;
 import es.caib.regweb3.model.Plugin;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 
-import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
 import java.util.List;
 import java.util.Properties;
@@ -15,7 +14,6 @@ import java.util.Properties;
  * Date: 05/05/16
  */
 @Local
-@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI","RWE_WS_ENTRADA","RWE_WS_SALIDA","RWE_WS_CIUDADANO"})
 public interface PluginLocal extends BaseEjb<Plugin, Long> {
 
     String JNDI_NAME = "java:app/regweb3-persistence/PluginEJB";
@@ -69,6 +67,7 @@ public interface PluginLocal extends BaseEjb<Plugin, Long> {
 
     /**
      * Obtiene en plugin determinado
+     *
      * @param idEntidad
      * @param tipoPlugin
      * @return
@@ -78,6 +77,7 @@ public interface PluginLocal extends BaseEjb<Plugin, Long> {
 
     /**
      * Obtiene las Propiedades del plugin determinado
+     *
      * @param idEntidad
      * @param tipoPlugin
      * @return
@@ -88,6 +88,7 @@ public interface PluginLocal extends BaseEjb<Plugin, Long> {
 
     /**
      * Comprueba si el plugin está definido
+     *
      * @param idEntidad
      * @param tipoPlugin
      * @return
@@ -97,6 +98,7 @@ public interface PluginLocal extends BaseEjb<Plugin, Long> {
 
     /**
      * Obtiene todos los plgins del tipo espeficicado
+     *
      * @param idEntidad
      * @param tipoPlugin
      * @return

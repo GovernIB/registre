@@ -6,11 +6,11 @@ import es.caib.regweb3.model.Trazabilidad;
 import es.caib.regweb3.model.utils.EstadoRegistroSir;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.utils.RegwebConstantes;
-import org.jboss.ejb3.annotation.SecurityDomain;
 import org.jboss.ejb3.annotation.TransactionTimeout;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -27,25 +27,25 @@ import java.util.List;
  */
 
 @Stateless(name = "TrazabilidadEJB")
-@SecurityDomain("seycon")
-public class TrazabilidadBean extends BaseEjbJPA<Trazabilidad, Long> implements TrazabilidadLocal{
+@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI", "RWE_WS_ENTRADA", "RWE_WS_SALIDA", "RWE_WS_CIUDADANO"})
+public class TrazabilidadBean extends BaseEjbJPA<Trazabilidad, Long> implements TrazabilidadLocal {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
-    @PersistenceContext(unitName="regweb3")
+    @PersistenceContext(unitName = "regweb3")
     private EntityManager em;
 
 
     @Override
     @SuppressWarnings(value = "unchecked")
     @TransactionTimeout(value = 1200)  // 20 minutos
-    public List<Trazabilidad> oficiosSinREDestino(Long tipoOficio) throws Exception{
+    public List<Trazabilidad> oficiosSinREDestino(Long tipoOficio) throws Exception {
         Query q = em.createQuery("Select t from Trazabilidad as t " +
                 "where t.tipo = :tipoTrazabilidad and t.oficioRemision.tipoOficioRemision = :tipoOficio and t.oficioRemision.estado = :estadoOficio " +
                 "and t.registroEntradaDestino is null");
 
-        q.setParameter("tipoTrazabilidad",RegwebConstantes.TRAZABILIDAD_OFICIO);
-        q.setParameter("estadoOficio",RegwebConstantes.OFICIO_ACEPTADO);
+        q.setParameter("tipoTrazabilidad", RegwebConstantes.TRAZABILIDAD_OFICIO);
+        q.setParameter("estadoOficio", RegwebConstantes.OFICIO_ACEPTADO);
         q.setParameter("tipoOficio", tipoOficio);
         q.setMaxResults(20);
 
@@ -54,7 +54,7 @@ public class TrazabilidadBean extends BaseEjbJPA<Trazabilidad, Long> implements 
 
     @Override
     @TransactionTimeout(value = 1200)  // 20 minutos
-    public void actualizarTrazabilidad(Long idTrazabilidad, Long idRegistro) throws Exception{
+    public void actualizarTrazabilidad(Long idTrazabilidad, Long idRegistro) throws Exception {
 
         Query q = em.createQuery("update from Trazabilidad set registroEntradaDestino.id = :idRegistro where id = :idTrazabilidad");
 
@@ -80,7 +80,7 @@ public class TrazabilidadBean extends BaseEjbJPA<Trazabilidad, Long> implements 
     @SuppressWarnings(value = "unchecked")
     public List<Trazabilidad> getAll() throws Exception {
 
-        return  em.createQuery("Select trazabilidad from Trazabilidad as trazabilidad order by trazabilidad.id").getResultList();
+        return em.createQuery("Select trazabilidad from Trazabilidad as trazabilidad order by trazabilidad.id").getResultList();
     }
 
     @Override
@@ -160,13 +160,13 @@ public class TrazabilidadBean extends BaseEjbJPA<Trazabilidad, Long> implements 
     }
 
     @Override
-    public Trazabilidad getByOficioRegistroEntrada(Long idOficioRemision, Long idRegistroEntrada) throws Exception{
+    public Trazabilidad getByOficioRegistroEntrada(Long idOficioRemision, Long idRegistroEntrada) throws Exception {
 
         Query q = em.createQuery("Select trazabilidad from Trazabilidad as trazabilidad " +
                 "where trazabilidad.oficioRemision.id = :idOficioRemision and trazabilidad.registroEntradaOrigen.id = :idRegistroEntrada");
 
-        q.setParameter("idOficioRemision",idOficioRemision);
-        q.setParameter("idRegistroEntrada",idRegistroEntrada);
+        q.setParameter("idOficioRemision", idOficioRemision);
+        q.setParameter("idRegistroEntrada", idRegistroEntrada);
         //q.setHint("org.hibernate.readOnly", true);
 
         return (Trazabilidad) q.getSingleResult();
@@ -174,12 +174,12 @@ public class TrazabilidadBean extends BaseEjbJPA<Trazabilidad, Long> implements 
     }
 
     @Override
-    public Trazabilidad getByOficioRegistroSalida(Long idOficioRemision, Long idRegistroSalida) throws Exception{
+    public Trazabilidad getByOficioRegistroSalida(Long idOficioRemision, Long idRegistroSalida) throws Exception {
         Query q = em.createQuery("Select trazabilidad from Trazabilidad as trazabilidad " +
                 "where trazabilidad.oficioRemision.id = :idOficioRemision and trazabilidad.registroSalida.id = :idRegistroSalida");
 
-        q.setParameter("idOficioRemision",idOficioRemision);
-        q.setParameter("idRegistroSalida",idRegistroSalida);
+        q.setParameter("idOficioRemision", idOficioRemision);
+        q.setParameter("idRegistroSalida", idRegistroSalida);
         //q.setHint("org.hibernate.readOnly", true);
 
         return (Trazabilidad) q.getSingleResult();
@@ -211,11 +211,11 @@ public class TrazabilidadBean extends BaseEjbJPA<Trazabilidad, Long> implements 
 
         List<Object[]> result = q.getResultList();
 
-        if(result.size() == 1){
+        if (result.size() == 1) {
             Object[] object = result.get(0);
 
             RegistroEntrada registroEntrada = new RegistroEntrada();
-            registroEntrada.setId((Long)  object[0]);
+            registroEntrada.setId((Long) object[0]);
             registroEntrada.setNumeroRegistroFormateado((String) object[1]);
             registroEntrada.setFecha((Date) object[2]);
 
@@ -227,18 +227,18 @@ public class TrazabilidadBean extends BaseEjbJPA<Trazabilidad, Long> implements 
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<RegistroSalida> obtenerRegistrosSalida(Long idOficioRemision) throws Exception{
+    public List<RegistroSalida> obtenerRegistrosSalida(Long idOficioRemision) throws Exception {
 
         Query q = em.createQuery("Select t.registroSalida.id, t.registroSalida.estado from Trazabilidad as t " +
                 "where t.oficioRemision.id = :idOficioRemision");
 
-        q.setParameter("idOficioRemision",idOficioRemision);
+        q.setParameter("idOficioRemision", idOficioRemision);
         q.setHint("org.hibernate.readOnly", true);
 
-        List<RegistroSalida> registros =  new ArrayList<RegistroSalida>();
+        List<RegistroSalida> registros = new ArrayList<RegistroSalida>();
         List<Object[]> result = q.getResultList();
 
-        for (Object[] object : result){
+        for (Object[] object : result) {
             RegistroSalida registroSalida = new RegistroSalida();
             registroSalida.setId((Long) object[0]);
             registroSalida.setEstado((Long) object[1]);
@@ -267,7 +267,7 @@ public class TrazabilidadBean extends BaseEjbJPA<Trazabilidad, Long> implements 
         q.setParameter("distribuir", RegwebConstantes.EVENTO_DISTRIBUIR);
         q.setHint("org.hibernate.readOnly", true);
 
-        if(total != null){
+        if (total != null) {
             q.setMaxResults(total);
         }
 
@@ -343,12 +343,12 @@ public class TrazabilidadBean extends BaseEjbJPA<Trazabilidad, Long> implements 
     }
 
     @Override
-    public Integer eliminarByEntidad(Long idEntidad) throws Exception{
+    public Integer eliminarByEntidad(Long idEntidad) throws Exception {
 
-        List<?> trazabilidades =  em.createQuery("Select id from Trazabilidad where oficioRemision.usuarioResponsable.entidad.id=:idEntidad").setParameter("idEntidad",idEntidad).getResultList();
-        List<?> trazabilidadesSir =  em.createQuery("Select id from Trazabilidad where registroSir.entidad.id=:idEntidad").setParameter("idEntidad",idEntidad).getResultList();
-        List<?> trazabilidadesRectificacionEntrada =  em.createQuery("Select id from Trazabilidad where registroEntradaOrigen.usuario.entidad.id=:idEntidad and tipo = :rectificacion").setParameter("idEntidad",idEntidad).setParameter("rectificacion",RegwebConstantes.TRAZABILIDAD_RECTIFICACION_ENTRADA).getResultList();
-        List<?> trazabilidadesRectificacionSalida =  em.createQuery("Select id from Trazabilidad where registroSalida.usuario.entidad.id=:idEntidad and tipo = :rectificacion").setParameter("idEntidad",idEntidad).setParameter("rectificacion",RegwebConstantes.TRAZABILIDAD_RECTIFICACION_SALIDA).getResultList();
+        List<?> trazabilidades = em.createQuery("Select id from Trazabilidad where oficioRemision.usuarioResponsable.entidad.id=:idEntidad").setParameter("idEntidad", idEntidad).getResultList();
+        List<?> trazabilidadesSir = em.createQuery("Select id from Trazabilidad where registroSir.entidad.id=:idEntidad").setParameter("idEntidad", idEntidad).getResultList();
+        List<?> trazabilidadesRectificacionEntrada = em.createQuery("Select id from Trazabilidad where registroEntradaOrigen.usuario.entidad.id=:idEntidad and tipo = :rectificacion").setParameter("idEntidad", idEntidad).setParameter("rectificacion", RegwebConstantes.TRAZABILIDAD_RECTIFICACION_ENTRADA).getResultList();
+        List<?> trazabilidadesRectificacionSalida = em.createQuery("Select id from Trazabilidad where registroSalida.usuario.entidad.id=:idEntidad and tipo = :rectificacion").setParameter("idEntidad", idEntidad).setParameter("rectificacion", RegwebConstantes.TRAZABILIDAD_RECTIFICACION_SALIDA).getResultList();
         Integer total = trazabilidades.size() + trazabilidadesSir.size();
 
         eliminarTrazabilidades(trazabilidades);
@@ -360,7 +360,7 @@ public class TrazabilidadBean extends BaseEjbJPA<Trazabilidad, Long> implements 
 
     }
 
-    private void eliminarTrazabilidades(List<?> trazabilidades){
+    private void eliminarTrazabilidades(List<?> trazabilidades) {
 
         if (trazabilidades.size() > 0) {
 
@@ -379,24 +379,24 @@ public class TrazabilidadBean extends BaseEjbJPA<Trazabilidad, Long> implements 
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Integer actualizarEstadoSirEntrada(Long idEntidad) throws Exception{
+    public Integer actualizarEstadoSirEntrada(Long idEntidad) throws Exception {
 
-        Query q =  em.createQuery("Select registroEntradaOrigen.id from Trazabilidad where " +
+        Query q = em.createQuery("Select registroEntradaOrigen.id from Trazabilidad where " +
                 "oficioRemision.sir = true " +
                 "and oficioRemision.tipoOficioRemision = :entrada " +
                 "and registroEntradaOrigen.estado = :oficioExterno " +
                 "and oficioRemision.usuarioResponsable.entidad.id = :idEntidad");
 
-        q.setParameter("entrada",RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA);
-        q.setParameter("idEntidad",idEntidad);
-        q.setParameter("oficioExterno",RegwebConstantes.REGISTRO_OFICIO_EXTERNO);
+        q.setParameter("entrada", RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA);
+        q.setParameter("idEntidad", idEntidad);
+        q.setParameter("oficioExterno", RegwebConstantes.REGISTRO_OFICIO_EXTERNO);
 
         List<Long> registrosEntrada = q.getResultList();
 
         Integer total = registrosEntrada.size();
         log.info("Total registros entrada: " + total);
 
-        if(total > 0){
+        if (total > 0) {
             while (registrosEntrada.size() > RegwebConstantes.NUMBER_EXPRESSIONS_IN) {
 
                 List<?> subList = registrosEntrada.subList(0, RegwebConstantes.NUMBER_EXPRESSIONS_IN);
@@ -414,24 +414,24 @@ public class TrazabilidadBean extends BaseEjbJPA<Trazabilidad, Long> implements 
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Integer actualizarEstadoSirSalida(Long idEntidad) throws Exception{
+    public Integer actualizarEstadoSirSalida(Long idEntidad) throws Exception {
 
-        Query q1 =  em.createQuery("Select registroSalida.id from Trazabilidad where " +
+        Query q1 = em.createQuery("Select registroSalida.id from Trazabilidad where " +
                 "oficioRemision.sir = true " +
                 "and oficioRemision.tipoOficioRemision = :salida " +
                 "and registroSalida.estado = :oficioExterno " +
                 "and oficioRemision.usuarioResponsable.entidad.id = :idEntidad");
 
-        q1.setParameter("salida",RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA);
-        q1.setParameter("idEntidad",idEntidad);
-        q1.setParameter("oficioExterno",RegwebConstantes.REGISTRO_OFICIO_EXTERNO);
+        q1.setParameter("salida", RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA);
+        q1.setParameter("idEntidad", idEntidad);
+        q1.setParameter("oficioExterno", RegwebConstantes.REGISTRO_OFICIO_EXTERNO);
 
         List<Long> registrosSalida = q1.getResultList();
 
         Integer total = registrosSalida.size();
         log.info("Total registros salida: " + total);
 
-        if(total > 0){
+        if (total > 0) {
             while (registrosSalida.size() > RegwebConstantes.NUMBER_EXPRESSIONS_IN) {
 
                 List<?> subList = registrosSalida.subList(0, RegwebConstantes.NUMBER_EXPRESSIONS_IN);

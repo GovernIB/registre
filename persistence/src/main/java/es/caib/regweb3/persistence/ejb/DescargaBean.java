@@ -2,10 +2,10 @@ package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.Descarga;
 import es.caib.regweb3.utils.RegwebConstantes;
-import org.jboss.ejb3.annotation.SecurityDomain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -19,12 +19,12 @@ import java.util.List;
  * Date: 10/10/13
  */
 @Stateless(name = "DescargaEJB")
-@SecurityDomain("seycon")
-public class DescargaBean extends BaseEjbJPA<Descarga, Long> implements DescargaLocal{
+@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN"})
+public class DescargaBean extends BaseEjbJPA<Descarga, Long> implements DescargaLocal {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
-    @PersistenceContext(unitName="regweb3")
+    @PersistenceContext(unitName = "regweb3")
     private EntityManager em;
 
 
@@ -42,51 +42,51 @@ public class DescargaBean extends BaseEjbJPA<Descarga, Long> implements Descarga
 
     @Override
     @SuppressWarnings(value = "unchecked")
-     public Descarga findByTipo(String tipo) throws Exception {
-        Query q = em.createQuery( "select descarga from Descarga as descarga where descarga.tipo=? order by descarga.id desc");
+    public Descarga findByTipo(String tipo) throws Exception {
+        Query q = em.createQuery("select descarga from Descarga as descarga where descarga.tipo=? order by descarga.id desc");
         q.setParameter(1, tipo);
         q.setHint("org.hibernate.readOnly", true);
 
         List<Descarga> descargas = q.getResultList();
-        if(!descargas.isEmpty()){
-          return (Descarga) q.getResultList().get(0);
+        if (!descargas.isEmpty()) {
+            return (Descarga) q.getResultList().get(0);
         } else {
-          return null;
+            return null;
         }
 
-     }
+    }
 
     @Override
     @SuppressWarnings(value = "unchecked")
     public Descarga ultimaDescarga(String tipo, Long idEntidad) throws Exception {
 
-        Query q = em.createQuery( "select descarga from Descarga as descarga where descarga.tipo=? and descarga.entidad.id =? order by descarga.id desc");
+        Query q = em.createQuery("select descarga from Descarga as descarga where descarga.tipo=? and descarga.entidad.id =? order by descarga.id desc");
         q.setParameter(1, tipo);
         q.setParameter(2, idEntidad);
         q.setHint("org.hibernate.readOnly", true);
 
         List<Descarga> descargas = q.getResultList();
-        if(!descargas.isEmpty()){
-          return (Descarga) q.getResultList().get(0);
+        if (!descargas.isEmpty()) {
+            return (Descarga) q.getResultList().get(0);
         } else {
-          return null;
-        } 
+            return null;
+        }
     }
 
     @Override
     @SuppressWarnings(value = "unchecked")
     public Descarga findByTipoEntidadInverse(String tipo, Long idEntidad) throws Exception {
 
-        Query q = em.createQuery( "select descarga from Descarga as descarga where descarga.tipo=? and descarga.entidad.id = ? order by descarga.id asc");
+        Query q = em.createQuery("select descarga from Descarga as descarga where descarga.tipo=? and descarga.entidad.id = ? order by descarga.id asc");
         q.setParameter(1, tipo);
         q.setParameter(2, idEntidad);
         q.setHint("org.hibernate.readOnly", true);
 
         List<Descarga> descargas = q.getResultList();
-        if(!descargas.isEmpty()){
-          return (Descarga) q.getResultList().get(0);
+        if (!descargas.isEmpty()) {
+            return (Descarga) q.getResultList().get(0);
         } else {
-          return null;
+            return null;
         }
     }
 
@@ -94,7 +94,7 @@ public class DescargaBean extends BaseEjbJPA<Descarga, Long> implements Descarga
     @SuppressWarnings(value = "unchecked")
     public List<Descarga> getAll() throws Exception {
 
-        return  em.createQuery("Select descarga from Descarga as descarga order by descarga.id").getResultList();
+        return em.createQuery("Select descarga from Descarga as descarga order by descarga.id").getResultList();
     }
 
     @Override
@@ -129,7 +129,7 @@ public class DescargaBean extends BaseEjbJPA<Descarga, Long> implements Descarga
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Descarga> getPaginationByEntidad(int inicio,Long idEntidad) throws Exception {
+    public List<Descarga> getPaginationByEntidad(int inicio, Long idEntidad) throws Exception {
 
         Query q = em.createQuery("Select descarga from Descarga as descarga where descarga.entidad.id=:idEntidad order by descarga.id desc").setParameter("idEntidad", idEntidad);
         q.setFirstResult(inicio);
@@ -146,25 +146,25 @@ public class DescargaBean extends BaseEjbJPA<Descarga, Long> implements Descarga
         Query query = em.createQuery("delete from Descarga as descarga where descarga.tipo=?");
         query.setParameter(1, tipo);
         query.executeUpdate();
-         
+
     }
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Descarga> findByEntidad(Long idEntidad) throws Exception{
+    public List<Descarga> findByEntidad(Long idEntidad) throws Exception {
 
-       return em.createQuery("Select descarga from Descarga as descarga where descarga.entidad.id =:idEntidad order by descarga.id").setParameter("idEntidad",idEntidad).getResultList();
+        return em.createQuery("Select descarga from Descarga as descarga where descarga.entidad.id =:idEntidad order by descarga.id").setParameter("idEntidad", idEntidad).getResultList();
 
     }
 
     @Override
-    public Integer eliminarByEntidad(Long idEntidad) throws Exception{
+    public Integer eliminarByEntidad(Long idEntidad) throws Exception {
 
-        List<?> descargas = em.createQuery("Select distinct(id) from Descarga where entidad.id =:idEntidad").setParameter("idEntidad",idEntidad).getResultList();
+        List<?> descargas = em.createQuery("Select distinct(id) from Descarga where entidad.id =:idEntidad").setParameter("idEntidad", idEntidad).getResultList();
         Integer total = descargas.size();
 
 
-        if(descargas.size() > 0){
+        if (descargas.size() > 0) {
 
             // Si hay más de 1000 registros, dividimos las queries (ORA-01795).
             while (descargas.size() > RegwebConstantes.NUMBER_EXPRESSIONS_IN) {
@@ -204,5 +204,5 @@ public class DescargaBean extends BaseEjbJPA<Descarga, Long> implements Descarga
 
         return (Long) q.getSingleResult();
     }
-    
+
 }

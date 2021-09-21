@@ -15,10 +15,10 @@ import es.caib.regweb3.sir.core.excepcion.ValidacionException;
 import es.caib.regweb3.utils.Dir3CaibUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
-import org.jboss.ejb3.annotation.SecurityDomain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -36,13 +36,13 @@ import java.util.*;
  */
 
 @Stateless(name = "MensajeControlEJB")
-@SecurityDomain("seycon")
+@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI"})
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-public class MensajeControlBean extends BaseEjbJPA<MensajeControl, Long> implements MensajeControlLocal{
+public class MensajeControlBean extends BaseEjbJPA<MensajeControl, Long> implements MensajeControlLocal {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
-    @PersistenceContext(unitName="regweb3")
+    @PersistenceContext(unitName = "regweb3")
     private EntityManager em;
 
     @EJB private RegistroSirLocal registroSirEjb;
@@ -69,7 +69,7 @@ public class MensajeControlBean extends BaseEjbJPA<MensajeControl, Long> impleme
     @SuppressWarnings(value = "unchecked")
     public List<MensajeControl> getAll() throws Exception {
 
-        return  em.createQuery("Select mc from MensajeControl as mc order by mc.id").getResultList();
+        return em.createQuery("Select mc from MensajeControl as mc order by mc.id").getResultList();
     }
 
     @Override
@@ -95,10 +95,10 @@ public class MensajeControlBean extends BaseEjbJPA<MensajeControl, Long> impleme
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<MensajeControl> getByEntidad(Long idEntidad) throws Exception{
+    public List<MensajeControl> getByEntidad(Long idEntidad) throws Exception {
 
         Query q = em.createQuery("Select mc from MensajeControl as mc where mc.entidad.id = :idEntidad order by mc.id");
-        q.setParameter("idEntidad",idEntidad);
+        q.setParameter("idEntidad", idEntidad);
 
         return q.getResultList();
 
@@ -116,26 +116,31 @@ public class MensajeControlBean extends BaseEjbJPA<MensajeControl, Long> impleme
         StringBuilder query = new StringBuilder("Select mensaje from MensajeControl as mensaje ");
 
         // Entidad
-        where.add(" mensaje.entidad.id = :idEntidad "); parametros.put("idEntidad",entidad.getId());
+        where.add(" mensaje.entidad.id = :idEntidad ");
+        parametros.put("idEntidad", entidad.getId());
 
         // Tipo Mensaje Control
-        if(StringUtils.isNotEmpty(mensajeControl.getTipoMensaje())){
-            where.add(" mensaje.tipoMensaje = :tipoMensaje "); parametros.put("tipoMensaje",mensajeControl.getTipoMensaje());
+        if (StringUtils.isNotEmpty(mensajeControl.getTipoMensaje())) {
+            where.add(" mensaje.tipoMensaje = :tipoMensaje ");
+            parametros.put("tipoMensaje", mensajeControl.getTipoMensaje());
         }
 
         // Tipo Comunicación
-        if(mensajeControl.getTipoComunicacion() != null){
-            where.add(" mensaje.tipoComunicacion = :tipoComunicacion "); parametros.put("tipoComunicacion",mensajeControl.getTipoComunicacion());
+        if (mensajeControl.getTipoComunicacion() != null) {
+            where.add(" mensaje.tipoComunicacion = :tipoComunicacion ");
+            parametros.put("tipoComunicacion", mensajeControl.getTipoComunicacion());
         }
 
         // Identificador Intercambio
-        if(StringUtils.isNotEmpty(mensajeControl.getIdentificadorIntercambio())){
+        if (StringUtils.isNotEmpty(mensajeControl.getIdentificadorIntercambio())) {
             where.add(DataBaseUtils.like("mensaje.identificadorIntercambio", "identificadorIntercambio", parametros, mensajeControl.getIdentificadorIntercambio()));
         }
 
         // Intervalo fechas
-        where.add(" (mensaje.fecha >= :fechaInicio  "); parametros.put("fechaInicio", fechaInicio);
-        where.add(" mensaje.fecha <= :fechaFin) "); parametros.put("fechaFin", fechaFin);
+        where.add(" (mensaje.fecha >= :fechaInicio  ");
+        parametros.put("fechaInicio", fechaInicio);
+        where.add(" mensaje.fecha <= :fechaFin) ");
+        parametros.put("fechaFin", fechaFin);
 
         // Parametros
         if (parametros.size() != 0) {
@@ -158,7 +163,7 @@ public class MensajeControlBean extends BaseEjbJPA<MensajeControl, Long> impleme
                 q2.setParameter(param.getKey(), param.getValue());
             }
 
-        }else{
+        } else {
             q2 = em.createQuery(query.toString().replaceAll("Select mensaje from MensajeControl as mensaje ", "Select count(mensaje.id) from MensajeControl as mensaje "));
             query.append("order by mensaje.id desc");
             q = em.createQuery(query.toString());
@@ -167,13 +172,13 @@ public class MensajeControlBean extends BaseEjbJPA<MensajeControl, Long> impleme
 
         Paginacion paginacion;
 
-        if(pageNumber != null){ // Comprobamos si es una busqueda paginada o no
-            Long total = (Long)q2.getSingleResult();
+        if (pageNumber != null) { // Comprobamos si es una busqueda paginada o no
+            Long total = (Long) q2.getSingleResult();
             paginacion = new Paginacion(total.intValue(), pageNumber);
             int inicio = (pageNumber - 1) * BaseEjbJPA.RESULTADOS_PAGINACION;
             q.setFirstResult(inicio);
             q.setMaxResults(RESULTADOS_PAGINACION);
-        }else{
+        } else {
             paginacion = new Paginacion(0, 0);
         }
 
@@ -187,13 +192,13 @@ public class MensajeControlBean extends BaseEjbJPA<MensajeControl, Long> impleme
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<MensajeControl> getByIdentificadorIntercambio(String identificadorIntercambio, Long idEntidad) throws Exception{
+    public List<MensajeControl> getByIdentificadorIntercambio(String identificadorIntercambio, Long idEntidad) throws Exception {
 
         Query q = em.createQuery("Select mc from MensajeControl as mc where " +
                 "mc.entidad.id = :idEntidad and mc.identificadorIntercambio =:identificadorIntercambio order by mc.id");
 
-        q.setParameter("idEntidad",idEntidad);
-        q.setParameter("identificadorIntercambio",identificadorIntercambio);
+        q.setParameter("idEntidad", idEntidad);
+        q.setParameter("identificadorIntercambio", identificadorIntercambio);
 
         return q.getResultList();
 
@@ -201,11 +206,12 @@ public class MensajeControlBean extends BaseEjbJPA<MensajeControl, Long> impleme
 
     /**
      * Realiza las acciones pertinentes cuando se recibie un mensaje de control
+     *
      * @param mensaje
      * @throws Exception
      */
     @Override
-    public void procesarMensajeDatosControl(MensajeControl mensaje) throws Exception{
+    public void procesarMensajeDatosControl(MensajeControl mensaje) throws Exception {
 
         // Comprobamos que el destino pertenece a alguna de las Entidades configuradas
         Entidad entidad = comprobarEntidadMensajeControl(mensaje.getCodigoEntidadRegistralDestino());
@@ -220,51 +226,51 @@ public class MensajeControlBean extends BaseEjbJPA<MensajeControl, Long> impleme
         peticion.append("Descripcion: ").append(mensaje.getDescripcionMensaje()).append(System.getProperty("line.separator"));
 
         // Mensaje ACK
-        if(mensaje.getTipoMensaje().equals(TipoMensaje.ACK.getValue())){
+        if (mensaje.getTipoMensaje().equals(TipoMensaje.ACK.getValue())) {
 
             OficioRemision oficioRemision = oficioRemisionEjb.getByIdentificadorIntercambio(mensaje.getIdentificadorIntercambio(), mensaje.getCodigoEntidadRegistralDestino());
-            RegistroSir registroSir = registroSirEjb.getRegistroSir(mensaje.getIdentificadorIntercambio(),mensaje.getCodigoEntidadRegistralDestino());
+            RegistroSir registroSir = registroSirEjb.getRegistroSir(mensaje.getIdentificadorIntercambio(), mensaje.getCodigoEntidadRegistralDestino());
 
-            if(oficioRemision != null){
+            if (oficioRemision != null) {
                 procesarMensajeACK(oficioRemision);
-            }else if(registroSir != null){
+            } else if (registroSir != null) {
                 procesarMensajeACK(registroSir);
-            }else{
+            } else {
                 log.info("El mensaje de control corresponde a un IdentificadorIntercambio que no existe en el sistema");
                 throw new ValidacionException(Errores.ERROR_0037, "El mensaje de control corresponde a un IdentificadorIntercambio que no existe en el sistema");
             }
 
             // Mensaje CONFIRMACIÓN
-        }else if(mensaje.getTipoMensaje().equals(TipoMensaje.CONFIRMACION.getValue())){
+        } else if (mensaje.getTipoMensaje().equals(TipoMensaje.CONFIRMACION.getValue())) {
 
             OficioRemision oficioRemision = oficioRemisionEjb.getByIdentificadorIntercambio(mensaje.getIdentificadorIntercambio(), mensaje.getCodigoEntidadRegistralDestino());
 
-            if(oficioRemision != null){
+            if (oficioRemision != null) {
                 procesarMensajeCONFIRMACION(oficioRemision, mensaje);
-            }else{
+            } else {
                 log.info("El mensaje de control corresponde a un IdentificadorIntercambio que no existe en el sistema");
                 throw new ValidacionException(Errores.ERROR_0037, "El mensaje de control corresponde a un IdentificadorIntercambio que no existe en el sistema");
             }
 
 
             // Mensaje ERROR
-        }else if(mensaje.getTipoMensaje().equals(TipoMensaje.ERROR.getValue())){
+        } else if (mensaje.getTipoMensaje().equals(TipoMensaje.ERROR.getValue())) {
 
             OficioRemision oficioRemision = oficioRemisionEjb.getByIdentificadorIntercambio(mensaje.getIdentificadorIntercambio(), mensaje.getCodigoEntidadRegistralDestino());
-            RegistroSir registroSir = registroSirEjb.getRegistroSir(mensaje.getIdentificadorIntercambio(),mensaje.getCodigoEntidadRegistralDestino());
+            RegistroSir registroSir = registroSirEjb.getRegistroSir(mensaje.getIdentificadorIntercambio(), mensaje.getCodigoEntidadRegistralDestino());
 
             peticion.append("CodigoError: ").append(mensaje.getCodigoError()).append(System.getProperty("line.separator"));
 
-            if(oficioRemision != null){
+            if (oficioRemision != null) {
                 procesarMensajeERROR(oficioRemision, mensaje);
-            }else if(registroSir != null){
+            } else if (registroSir != null) {
                 procesarMensajeERROR(registroSir, mensaje);
-            }else{
+            } else {
                 log.info("El mensaje de control corresponde a un IdentificadorIntercambio que no existe en el sistema");
                 throw new ValidacionException(Errores.ERROR_0037, "El mensaje de control corresponde a un IdentificadorIntercambio que no existe en el sistema");
             }
 
-        }else{
+        } else {
             log.info("El tipo mensaje de control no es válido: " + mensaje.getTipoMensaje());
             throw new ValidacionException(Errores.ERROR_0037, "El tipo mensaje de control no es válido: " + mensaje.getTipoMensaje());
         }
@@ -274,16 +280,17 @@ public class MensajeControlBean extends BaseEjbJPA<MensajeControl, Long> impleme
         persist(mensaje);
 
         // Integración
-        integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_SIR, descripcion,peticion.toString(),System.currentTimeMillis() - tiempo, entidad.getId(), mensaje.getIdentificadorIntercambio());
+        integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_SIR, descripcion, peticion.toString(), System.currentTimeMillis() - tiempo, entidad.getId(), mensaje.getIdentificadorIntercambio());
 
     }
 
     /**
      * Procesa un mensaje de control de tipo ACK
+     *
      * @param oficioRemision
      * @throws Exception
      */
-    private void procesarMensajeACK(OficioRemision oficioRemision) throws Exception{
+    private void procesarMensajeACK(OficioRemision oficioRemision) throws Exception {
 
         switch (oficioRemision.getEstado()) {
 
@@ -319,13 +326,14 @@ public class MensajeControlBean extends BaseEjbJPA<MensajeControl, Long> impleme
 
     /**
      * Procesa un mensaje de control de tipo ACK
+     *
      * @param registroSir
      * @throws Exception
      */
-    private void procesarMensajeACK(RegistroSir registroSir) throws Exception{
+    private void procesarMensajeACK(RegistroSir registroSir) throws Exception {
 
         if (EstadoRegistroSir.REENVIADO.equals(registroSir.getEstado()) ||
-                EstadoRegistroSir.REENVIADO_Y_ERROR.equals(registroSir.getEstado())){
+                EstadoRegistroSir.REENVIADO_Y_ERROR.equals(registroSir.getEstado())) {
 
             // Actualizamos el registroSir
             registroSir.setEstado(EstadoRegistroSir.REENVIADO_Y_ACK);
@@ -333,7 +341,7 @@ public class MensajeControlBean extends BaseEjbJPA<MensajeControl, Long> impleme
             registroSirEjb.merge(registroSir);
 
         } else if (EstadoRegistroSir.RECHAZADO.equals(registroSir.getEstado()) ||
-                EstadoRegistroSir.RECHAZADO_Y_ERROR.equals(registroSir.getEstado())){
+                EstadoRegistroSir.RECHAZADO_Y_ERROR.equals(registroSir.getEstado())) {
 
             // Actualizamos el registroSir
             registroSir.setEstado(EstadoRegistroSir.RECHAZADO_Y_ACK);
@@ -341,11 +349,11 @@ public class MensajeControlBean extends BaseEjbJPA<MensajeControl, Long> impleme
             registroSirEjb.merge(registroSir);
 
         } else if (EstadoRegistroSir.REENVIADO_Y_ACK.equals(registroSir.getEstado()) ||
-                EstadoRegistroSir.RECHAZADO_Y_ACK.equals(registroSir.getEstado())){
+                EstadoRegistroSir.RECHAZADO_Y_ACK.equals(registroSir.getEstado())) {
 
             log.info("Se ha recibido un mensaje ACK duplicado con identificador: " + registroSir.getIdentificadorIntercambio());
 
-        }else{
+        } else {
             log.info("Se ha recibido un mensaje que no tiene el estado adecuado para recibir un ACK");
             throw new ValidacionException(Errores.ERROR_0037, "Se ha recibido un mensaje que no tiene el estado adecuado para recibir un ACK");
         }
@@ -353,10 +361,11 @@ public class MensajeControlBean extends BaseEjbJPA<MensajeControl, Long> impleme
 
     /**
      * Procesa un mensaje de control de tipo CONFIRMACION
+     *
      * @param oficioRemision
      * @throws Exception
      */
-    private void procesarMensajeCONFIRMACION(OficioRemision oficioRemision, MensajeControl mensaje) throws Exception{
+    private void procesarMensajeCONFIRMACION(OficioRemision oficioRemision, MensajeControl mensaje) throws Exception {
 
         switch (oficioRemision.getEstado()) {
 
@@ -379,8 +388,8 @@ public class MensajeControlBean extends BaseEjbJPA<MensajeControl, Long> impleme
                 if (oficioRemision.getTipoOficioRemision().equals(RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA)) {
                     registroEntradaEjb.cambiarEstado(oficioRemision.getRegistrosEntrada().get(0).getId(), RegwebConstantes.REGISTRO_OFICIO_ACEPTADO);
 
-                }else if(oficioRemision.getTipoOficioRemision().equals(RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA)){
-                    registroSalidaEjb.cambiarEstado(oficioRemision.getRegistrosSalida().get(0).getId(),RegwebConstantes.REGISTRO_OFICIO_ACEPTADO);
+                } else if (oficioRemision.getTipoOficioRemision().equals(RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA)) {
+                    registroSalidaEjb.cambiarEstado(oficioRemision.getRegistrosSalida().get(0).getId(), RegwebConstantes.REGISTRO_OFICIO_ACEPTADO);
 
                 }
 
@@ -400,17 +409,18 @@ public class MensajeControlBean extends BaseEjbJPA<MensajeControl, Long> impleme
 
     /**
      * Procesa un mensaje de control de tipo ERROR
+     *
      * @param oficioRemision
      * @param mensaje
      * @throws Exception
      */
-    private void procesarMensajeERROR(OficioRemision oficioRemision, MensajeControl mensaje) throws Exception{
+    private void procesarMensajeERROR(OficioRemision oficioRemision, MensajeControl mensaje) throws Exception {
 
         switch (oficioRemision.getEstado()) {
 
             case (RegwebConstantes.OFICIO_SIR_ENVIADO):
 
-                if(!mensaje.getCodigoError().equals(Errores.ERROR_0039.getValue())){ // Solo modificamos su estado si no es un error 0039
+                if (!mensaje.getCodigoError().equals(Errores.ERROR_0039.getValue())) { // Solo modificamos su estado si no es un error 0039
                     oficioRemision.setEstado(RegwebConstantes.OFICIO_SIR_ENVIADO_ERROR);
                     oficioRemision.setCodigoError(mensaje.getCodigoError());
                     oficioRemision.setDescripcionError(mensaje.getDescripcionMensaje());
@@ -422,7 +432,7 @@ public class MensajeControlBean extends BaseEjbJPA<MensajeControl, Long> impleme
 
             case (RegwebConstantes.OFICIO_SIR_REENVIADO):
 
-                if(!mensaje.getCodigoError().equals(Errores.ERROR_0039.getValue())){ // Solo modificamos su estado si no es un error 0039
+                if (!mensaje.getCodigoError().equals(Errores.ERROR_0039.getValue())) { // Solo modificamos su estado si no es un error 0039
 
                     oficioRemision.setEstado(RegwebConstantes.OFICIO_SIR_REENVIADO_ERROR);
                     oficioRemision.setCodigoError(mensaje.getCodigoError());
@@ -444,13 +454,14 @@ public class MensajeControlBean extends BaseEjbJPA<MensajeControl, Long> impleme
 
     /**
      * Procesa un mensaje de control de tipo ERROR
+     *
      * @param registroSir
      * @param mensaje
      * @throws Exception
      */
-    private void procesarMensajeERROR(RegistroSir registroSir, MensajeControl mensaje) throws Exception{
+    private void procesarMensajeERROR(RegistroSir registroSir, MensajeControl mensaje) throws Exception {
 
-        if (EstadoRegistroSir.REENVIADO.equals(registroSir.getEstado())){
+        if (EstadoRegistroSir.REENVIADO.equals(registroSir.getEstado())) {
 
             registroSir.setEstado(EstadoRegistroSir.REENVIADO_Y_ERROR);
             registroSir.setCodigoError(mensaje.getCodigoError());
@@ -458,7 +469,7 @@ public class MensajeControlBean extends BaseEjbJPA<MensajeControl, Long> impleme
             registroSir.setFechaEstado(new Date());
             registroSirEjb.merge(registroSir);
 
-        } else if (EstadoRegistroSir.RECHAZADO.equals(registroSir.getEstado())){
+        } else if (EstadoRegistroSir.RECHAZADO.equals(registroSir.getEstado())) {
 
             registroSir.setEstado(EstadoRegistroSir.RECHAZADO_Y_ERROR);
             registroSir.setCodigoError(mensaje.getCodigoError());
@@ -467,7 +478,7 @@ public class MensajeControlBean extends BaseEjbJPA<MensajeControl, Long> impleme
             registroSirEjb.merge(registroSir);
 
         } else if (EstadoRegistroSir.REENVIADO_Y_ERROR.equals(registroSir.getEstado()) ||
-                EstadoRegistroSir.RECHAZADO_Y_ERROR.equals(registroSir.getEstado())){
+                EstadoRegistroSir.RECHAZADO_Y_ERROR.equals(registroSir.getEstado())) {
 
             log.info("Se ha recibido un mensaje de error duplicado con identificador: " + registroSir.getIdentificadorIntercambio());
             throw new ValidacionException(Errores.ERROR_0037, "Se ha recibido un mensaje de error duplicado con identificador: " + registroSir.getIdentificadorIntercambio());
@@ -477,41 +488,42 @@ public class MensajeControlBean extends BaseEjbJPA<MensajeControl, Long> impleme
 
     /**
      * Comprueba a partir de la Oficina destino, si la Entidad está integrada en SIR
+     *
      * @param codigoEntidadRegistralDestino
      * @throws Exception
      */
-    private Entidad comprobarEntidadMensajeControl(String codigoEntidadRegistralDestino) throws Exception{
+    private Entidad comprobarEntidadMensajeControl(String codigoEntidadRegistralDestino) throws Exception {
 
         Entidad entidad;
         Oficina oficina = oficinaEjb.findByCodigo(codigoEntidadRegistralDestino);
 
-        if(oficina != null){
+        if (oficina != null) {
             entidad = oficina.getOrganismoResponsable().getEntidad();
 
-            if(!entidad.getActivo() || !entidad.getSir()){
-                log.info("La Entidad de la oficina "+ oficina.getDenominacion() +" no esta activa o no se ha activado su integracion con SIR");
-                throw new ValidacionException(Errores.ERROR_0037, "La Entidad de la oficina "+ oficina.getDenominacion() +" no esta activa o no se ha activado su integracion con SIR");
+            if (!entidad.getActivo() || !entidad.getSir()) {
+                log.info("La Entidad de la oficina " + oficina.getDenominacion() + " no esta activa o no se ha activado su integracion con SIR");
+                throw new ValidacionException(Errores.ERROR_0037, "La Entidad de la oficina " + oficina.getDenominacion() + " no esta activa o no se ha activado su integracion con SIR");
 
-            }else if(!oficinaEjb.isSIREnvio(oficina.getId())){
-                log.info("La Oficina "+ oficina.getDenominacion() +" no esta habilitada para enviar asientos SIR");
-                throw new ValidacionException(Errores.ERROR_0037, "La Oficina "+ oficina.getDenominacion() +" no esta habilitada para enviar asientos SIR");
+            } else if (!oficinaEjb.isSIREnvio(oficina.getId())) {
+                log.info("La Oficina " + oficina.getDenominacion() + " no esta habilitada para enviar asientos SIR");
+                throw new ValidacionException(Errores.ERROR_0037, "La Oficina " + oficina.getDenominacion() + " no esta habilitada para enviar asientos SIR");
             }
 
             return entidad;
 
-        }else{
+        } else {
             log.info("El CodigoEntidadRegistralDestino del FicheroIntercambio no pertenece a ninguna Entidad del sistema: " + codigoEntidadRegistralDestino);
             throw new ValidacionException(Errores.ERROR_0037, "El CodigoEntidadRegistralDestino del FicheroIntercambio no pertenece a ninguna Entidad del sistema: " + codigoEntidadRegistralDestino);
         }
     }
 
     @Override
-    public Integer eliminarByEntidad(Long idEntidad) throws Exception{
+    public Integer eliminarByEntidad(Long idEntidad) throws Exception {
 
-        List<?> mensajes =  em.createQuery("select distinct(mc.id) from MensajeControl as mc where mc.entidad.id = :idEntidad").setParameter("idEntidad",idEntidad).getResultList();
+        List<?> mensajes = em.createQuery("select distinct(mc.id) from MensajeControl as mc where mc.entidad.id = :idEntidad").setParameter("idEntidad", idEntidad).getResultList();
         Integer total = mensajes.size();
 
-        if(mensajes.size() > 0){
+        if (mensajes.size() > 0) {
 
             // Si hay más de 1000 registros, dividimos las queries (ORA-01795).
             while (mensajes.size() > RegwebConstantes.NUMBER_EXPRESSIONS_IN) {

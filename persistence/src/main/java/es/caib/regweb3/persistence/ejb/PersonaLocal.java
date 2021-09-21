@@ -4,7 +4,6 @@ import es.caib.regweb3.model.Persona;
 import es.caib.regweb3.model.utils.ObjetoBasico;
 import es.caib.regweb3.persistence.utils.Paginacion;
 
-import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
 import java.util.List;
 
@@ -12,10 +11,9 @@ import java.util.List;
  * Created by Fundació BIT.
  *
  * @author earrivi
- *         Date: 16/01/14
+ * Date: 16/01/14
  */
 @Local
-@RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI","RWE_WS_ENTRADA","RWE_WS_SALIDA"})
 public interface PersonaLocal extends BaseEjb<Persona, Long> {
 
     String JNDI_NAME = "java:app/regweb3-persistence/PersonaEJB";
@@ -23,6 +21,7 @@ public interface PersonaLocal extends BaseEjb<Persona, Long> {
 
     /**
      * Guarda una persona normalizando algunos campos
+     *
      * @param persona
      * @return
      * @throws Exception
@@ -31,6 +30,7 @@ public interface PersonaLocal extends BaseEjb<Persona, Long> {
 
     /**
      * Obtiene todas las {@link es.caib.regweb3.model.Persona} de una {@link es.caib.regweb3.model.Entidad} y su TipoPersona
+     *
      * @param idEntidad
      * @return
      * @throws Exception
@@ -39,6 +39,7 @@ public interface PersonaLocal extends BaseEjb<Persona, Long> {
 
     /**
      * Obtiene todas las {@link es.caib.regweb3.model.Persona} Juridicas de una {@link es.caib.regweb3.model.Entidad}
+     *
      * @param idEntidad
      * @return
      * @throws Exception
@@ -47,6 +48,7 @@ public interface PersonaLocal extends BaseEjb<Persona, Long> {
 
     /**
      * Obtiene todas las {@link es.caib.regweb3.model.Persona} Fisicas de una {@link es.caib.regweb3.model.Entidad}
+     *
      * @param idEntidad
      * @return
      * @throws Exception
@@ -55,6 +57,7 @@ public interface PersonaLocal extends BaseEjb<Persona, Long> {
 
     /**
      * * Comprueba la existencia de un Documento en el sistema
+     *
      * @param documento
      * @return
      * @throws Exception
@@ -63,6 +66,7 @@ public interface PersonaLocal extends BaseEjb<Persona, Long> {
 
     /**
      * Comprueba la existencia de un Documento en el sistema para la edición de una Persona
+     *
      * @param documento
      * @param idPersona
      * @return
@@ -72,6 +76,7 @@ public interface PersonaLocal extends BaseEjb<Persona, Long> {
 
     /**
      * Realiza una busqueda de {@link es.caib.regweb3.model.Persona} según los parámetros
+     *
      * @param nombre
      * @param apellido1
      * @param apellido2
@@ -84,6 +89,7 @@ public interface PersonaLocal extends BaseEjb<Persona, Long> {
 
     /**
      * Realiza una busqueda de {@link es.caib.regweb3.model.Persona} según los parámetros
+     *
      * @param nombre
      * @param apellido1
      * @param apellido2
@@ -95,6 +101,7 @@ public interface PersonaLocal extends BaseEjb<Persona, Long> {
 
     /**
      * Realiza una busqueda de {@link es.caib.regweb3.model.Persona} según los parámetros
+     *
      * @param documento
      * @return
      * @throws Exception
@@ -103,6 +110,7 @@ public interface PersonaLocal extends BaseEjb<Persona, Long> {
 
     /**
      * Elimina las Personas de una Entidad
+     *
      * @param idEntidad
      * @return
      * @throws Exception
@@ -110,7 +118,6 @@ public interface PersonaLocal extends BaseEjb<Persona, Long> {
     Integer eliminarByEntidad(Long idEntidad) throws Exception;
 
     /**
-     *
      * @param q
      * @param tipoPersona
      * @param idEntidad
@@ -121,6 +128,7 @@ public interface PersonaLocal extends BaseEjb<Persona, Long> {
 
     /**
      * Busca las Personas con un mismo Documento de una Entidad determinada
+     *
      * @param documento
      * @param idEntidad
      * @return
@@ -130,6 +138,7 @@ public interface PersonaLocal extends BaseEjb<Persona, Long> {
 
     /**
      * Busca Personas duplicadas según su Documento
+     *
      * @param idEntidad
      * @return
      * @throws Exception
@@ -138,6 +147,7 @@ public interface PersonaLocal extends BaseEjb<Persona, Long> {
 
     /**
      * Lista las {@link es.caib.regweb3.model.Persona} para Exportar a Excel
+     *
      * @param idEntidad
      * @param nombre
      * @param apellido1
@@ -150,7 +160,6 @@ public interface PersonaLocal extends BaseEjb<Persona, Long> {
     List<Persona> getExportarExcel(Long idEntidad, String nombre, String apellido1, String apellido2, String documento, Long tipo) throws Exception;
 
     /**
-     *
      * @param idEntidad
      * @return
      * @throws Exception
@@ -158,7 +167,6 @@ public interface PersonaLocal extends BaseEjb<Persona, Long> {
     void capitalizarPersonasJuridicas(Long idEntidad) throws Exception;
 
     /**
-     *
      * @param idEntidad
      * @throws Exception
      */

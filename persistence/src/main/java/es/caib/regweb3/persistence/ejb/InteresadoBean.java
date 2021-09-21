@@ -6,11 +6,11 @@ import es.caib.regweb3.plugins.postproceso.IPostProcesoPlugin;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 import org.fundaciobit.genapp.common.i18n.I18NException;
-import org.jboss.ejb3.annotation.SecurityDomain;
 import org.jboss.ejb3.annotation.TransactionTimeout;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -29,18 +29,18 @@ import static es.caib.regweb3.utils.RegwebConstantes.REGISTRO_ENTRADA;
  */
 
 @Stateless(name = "InteresadoEJB")
-@SecurityDomain("seycon")
-public class InteresadoBean extends BaseEjbJPA<Interesado, Long> implements InteresadoLocal{
+@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI", "RWE_WS_ENTRADA", "RWE_WS_SALIDA"})
+public class InteresadoBean extends BaseEjbJPA<Interesado, Long> implements InteresadoLocal {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
-    @PersistenceContext(unitName="regweb3")
+    @PersistenceContext(unitName = "regweb3")
     private EntityManager em;
 
     @EJB private RegistroDetalleLocal registroDetalleEjb;
     @EJB private PluginLocal pluginEjb;
-    @EJB public RegistroEntradaConsultaLocal registroEntradaConsultaEjb;
-    @EJB public RegistroSalidaConsultaLocal registroSalidaConsultaEjb;
+    @EJB private RegistroEntradaConsultaLocal registroEntradaConsultaEjb;
+    @EJB private RegistroSalidaConsultaLocal registroSalidaConsultaEjb;
 
 
     @Override
@@ -59,7 +59,7 @@ public class InteresadoBean extends BaseEjbJPA<Interesado, Long> implements Inte
     @SuppressWarnings(value = "unchecked")
     public List<Interesado> getAll() throws Exception {
 
-        return  em.createQuery("Select interesado from Interesado as interesado order by interesado.id").getResultList();
+        return em.createQuery("Select interesado from Interesado as interesado order by interesado.id").getResultList();
     }
 
     @Override
@@ -97,17 +97,17 @@ public class InteresadoBean extends BaseEjbJPA<Interesado, Long> implements Inte
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Interesado> findByRegistroDetalle(Long registroDetalle) throws Exception{
+    public List<Interesado> findByRegistroDetalle(Long registroDetalle) throws Exception {
 
         Query q = em.createQuery("Select interesado.tipo, interesado.nombre, interesado.apellido1, interesado.apellido2, interesado.documento, interesado.razonSocial, interesado.codigoDir3 from Interesado as interesado " +
                 "where interesado.registroDetalle.id = :registroDetalle");
 
-        q.setParameter("registroDetalle",registroDetalle);
+        q.setParameter("registroDetalle", registroDetalle);
         q.setHint("org.hibernate.readOnly", true);
 
         List<Object[]> results = q.getResultList();
         List<Interesado> interesados = new ArrayList<>();
-        if(results.size() > 0){
+        if (results.size() > 0) {
 
             for (Object[] result : results) {
                 Interesado interesado = new Interesado();
@@ -124,40 +124,40 @@ public class InteresadoBean extends BaseEjbJPA<Interesado, Long> implements Inte
 
             return interesados;
 
-        }else{
-            return  null;
+        } else {
+            return null;
         }
 
     }
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Interesado findByCodigoDir3RegistroDetalle(String codigoDir3, Long idRegistroDetalle) throws Exception{
+    public Interesado findByCodigoDir3RegistroDetalle(String codigoDir3, Long idRegistroDetalle) throws Exception {
         Query q = em.createQuery("Select interesado.id from Interesado as interesado where interesado.codigoDir3 = :codigoDir3 " +
                 "and interesado.registroDetalle.id = :idRegistroDetalle");
 
         q.setParameter("codigoDir3", codigoDir3);
-        q.setParameter("idRegistroDetalle",idRegistroDetalle);
+        q.setParameter("idRegistroDetalle", idRegistroDetalle);
         q.setHint("org.hibernate.readOnly", true);
 
         Long idInteresado = (Long) q.getSingleResult();
 
-        if(idInteresado != null){
+        if (idInteresado != null) {
             return new Interesado(idInteresado);
-        }else{
+        } else {
             return null;
         }
-        
+
     }
 
     @Override
-    public void eliminarInteresadoRegistroDetalle(Long idInteresado, Long idRegistroDetalle) throws Exception{
+    public void eliminarInteresadoRegistroDetalle(Long idInteresado, Long idRegistroDetalle) throws Exception {
 
         Interesado interesado = findById(idInteresado);
         RegistroDetalle registroDetalle = registroDetalleEjb.findByIdConInteresados(idRegistroDetalle);
 
-        if(interesado != null && registroDetalle != null){
-            if(interesado.getRepresentante() != null){ // Si tiene representante, lo eliminamos
+        if (interesado != null && registroDetalle != null) {
+            if (interesado.getRepresentante() != null) { // Si tiene representante, lo eliminamos
                 eliminarInteresado(interesado.getRepresentante(), registroDetalle);
             }
             eliminarInteresado(interesado, registroDetalle);
@@ -167,34 +167,35 @@ public class InteresadoBean extends BaseEjbJPA<Interesado, Long> implements Inte
 
     /**
      * Operaciones necesarias para eliminar un Interesado
+     *
      * @param interesado
      * @param registroDetalle
      * @throws Exception
      */
-    private void eliminarInteresado(Interesado interesado, RegistroDetalle registroDetalle) throws Exception{
+    private void eliminarInteresado(Interesado interesado, RegistroDetalle registroDetalle) throws Exception {
         registroDetalle.getInteresados().remove(interesado);
         registroDetalleEjb.merge(registroDetalle);
         remove(interesado);
     }
 
     @Override
-    public Boolean existeDocumentoNew(String documento) throws Exception{
+    public Boolean existeDocumentoNew(String documento) throws Exception {
         Query q = em.createQuery("Select interesado.id from Interesado as interesado where " +
                 "interesado.documento = :documento");
 
-        q.setParameter("documento",documento);
+        q.setParameter("documento", documento);
         q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList().size() > 0;
     }
 
     @Override
-    public Boolean existeDocumentoEdit(String documento, Long idInteresado) throws Exception{
+    public Boolean existeDocumentoEdit(String documento, Long idInteresado) throws Exception {
         Query q = em.createQuery("Select interesado.id from Interesado as interesado where " +
                 "interesado.id != :idInteresado and interesado.documento = :documento");
 
-        q.setParameter("documento",documento);
-        q.setParameter("idInteresado",idInteresado);
+        q.setParameter("documento", documento);
+        q.setParameter("idInteresado", idInteresado);
         q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList().size() > 0;
@@ -202,16 +203,16 @@ public class InteresadoBean extends BaseEjbJPA<Interesado, Long> implements Inte
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public String existeInteresadoAdministracion(Long idRegistroDetalle) throws Exception{
+    public String existeInteresadoAdministracion(Long idRegistroDetalle) throws Exception {
         Query q = em.createQuery("Select interesado.codigoDir3 from Interesado as interesado where " +
                 "interesado.registroDetalle.id = :idRegistroDetalle and interesado.tipo = :administracion");
 
-        q.setParameter("idRegistroDetalle",idRegistroDetalle);
+        q.setParameter("idRegistroDetalle", idRegistroDetalle);
         q.setParameter("administracion", RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION);
         q.setHint("org.hibernate.readOnly", true);
 
         List<String> result = q.getResultList();
-        if(result.size() > 0){
+        if (result.size() > 0) {
             return result.get(0);
         }
 
@@ -219,18 +220,18 @@ public class InteresadoBean extends BaseEjbJPA<Interesado, Long> implements Inte
     }
 
     @Override
-    public List<Interesado> guardarInteresados(List<Interesado> interesadosGuardar, RegistroDetalle registroDetalle) throws Exception{
+    public List<Interesado> guardarInteresados(List<Interesado> interesadosGuardar, RegistroDetalle registroDetalle) throws Exception {
 
-        List<Interesado> interesados  = new ArrayList<Interesado>();
+        List<Interesado> interesados = new ArrayList<Interesado>();
 
-        for(Interesado interesado:interesadosGuardar){
+        for (Interesado interesado : interesadosGuardar) {
 
             // Lo asociamos al RegistroDetalle
             interesado.setRegistroDetalle(registroDetalle);
 
-            if(!interesado.getIsRepresentante()){ // Solo los Interesados
+            if (!interesado.getIsRepresentante()) { // Solo los Interesados
 
-                if(interesado.getRepresentante() != null){ // Tiene Representante
+                if (interesado.getRepresentante() != null) { // Tiene Representante
 
                     // Obtenemos el Representante
                     Interesado representante = interesadosGuardar.get(interesadosGuardar.indexOf(interesado.getRepresentante()));
@@ -255,7 +256,7 @@ public class InteresadoBean extends BaseEjbJPA<Interesado, Long> implements Inte
                     interesados.add(interesado);
                     interesados.add(representante);
 
-                }else{
+                } else {
                     interesado.setRegistroDetalle(registroDetalle);
                     interesado.setId(null); // ponemos su id a null
                     interesado.setRepresentante(null);
@@ -274,7 +275,7 @@ public class InteresadoBean extends BaseEjbJPA<Interesado, Long> implements Inte
     public void postProcesoNuevoInteresado(Interesado interesado, Long idRegistroDetalle, Long tipoRegistro, Long entidadId) throws Exception, I18NException {
         IPostProcesoPlugin postProcesoPlugin = (IPostProcesoPlugin) pluginEjb.getPlugin(entidadId, RegwebConstantes.PLUGIN_POSTPROCESO);
 
-        if(postProcesoPlugin != null) {
+        if (postProcesoPlugin != null) {
             if (tipoRegistro.equals(REGISTRO_ENTRADA)) {
                 String numeroRegistroFormateado = registroEntradaConsultaEjb.findNumeroRegistroFormateadoByRegistroDetalle(idRegistroDetalle);
                 postProcesoPlugin.nuevoInteresadoEntrada(interesado, numeroRegistroFormateado);
@@ -289,7 +290,7 @@ public class InteresadoBean extends BaseEjbJPA<Interesado, Long> implements Inte
     public void postProcesoActualizarInteresado(Interesado interesado, Long idRegistroDetalle, Long tipoRegistro, Long entidadId) throws Exception, I18NException {
         IPostProcesoPlugin postProcesoPlugin = (IPostProcesoPlugin) pluginEjb.getPlugin(entidadId, RegwebConstantes.PLUGIN_POSTPROCESO);
 
-        if(postProcesoPlugin != null) {
+        if (postProcesoPlugin != null) {
             if (tipoRegistro.equals(REGISTRO_ENTRADA)) {
                 String numeroRegistroFormateado = registroEntradaConsultaEjb.findNumeroRegistroFormateadoByRegistroDetalle(idRegistroDetalle);
                 postProcesoPlugin.actualizarInteresadoEntrada(interesado, numeroRegistroFormateado);
@@ -304,7 +305,7 @@ public class InteresadoBean extends BaseEjbJPA<Interesado, Long> implements Inte
     public void postProcesoEliminarInteresado(Long idInteresado, Long idRegistroDetalle, Long tipoRegistro, Long entidadId) throws Exception, I18NException {
         IPostProcesoPlugin postProcesoPlugin = (IPostProcesoPlugin) pluginEjb.getPlugin(entidadId, RegwebConstantes.PLUGIN_POSTPROCESO);
 
-        if(postProcesoPlugin != null) {
+        if (postProcesoPlugin != null) {
             if (tipoRegistro.equals(REGISTRO_ENTRADA)) {
                 String numeroRegistroFormateado = registroEntradaConsultaEjb.findNumeroRegistroFormateadoByRegistroDetalle(idRegistroDetalle);
                 postProcesoPlugin.eliminarInteresadoEntrada(idInteresado, numeroRegistroFormateado);

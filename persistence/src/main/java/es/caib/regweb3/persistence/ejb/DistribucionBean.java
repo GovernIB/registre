@@ -12,11 +12,11 @@ import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
-import org.jboss.ejb3.annotation.SecurityDomain;
 import org.jboss.ejb3.annotation.TransactionTimeout;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -33,7 +33,7 @@ import java.util.Locale;
  * Created by mgonzalez on 27/11/2018.
  */
 @Stateless(name = "DistribucionEJB")
-@SecurityDomain("seycon")
+@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI", "RWE_WS_ENTRADA", "RWE_WS_SALIDA"})
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 public class DistribucionBean implements DistribucionLocal {
 
@@ -48,7 +48,8 @@ public class DistribucionBean implements DistribucionLocal {
 
     /**
      * Método que envía a la cola de Distribución el Registro indicado
-     * @param re registro de entrada a distribuir
+     *
+     * @param re             registro de entrada a distribuir
      * @param usuarioEntidad
      * @return
      * @throws Exception
@@ -74,7 +75,7 @@ public class DistribucionBean implements DistribucionLocal {
 
                 return respuestaDistribucion;
 
-            }else{
+            } else {
                 respuestaDistribucion.setHayPlugin(false);
                 respuestaDistribucion.setEnviadoCola(false);
             }
@@ -112,15 +113,15 @@ public class DistribucionBean implements DistribucionLocal {
             registroEntrada.getRegistroDetalle().getAnexosFull().add(justificante);
 
             // Si la custodia en diferido está activa, tiene Justificante, pero no está custodiado, no distribuimos!
-        }else if (PropiedadGlobalUtil.getCustodiaDiferida(registroEntrada.getUsuario().getEntidad().getId()) && !registroEntrada.getRegistroDetalle().getTieneJustificanteCustodiado()) {
-            log.info("El registro: " + registroEntrada.getNumeroRegistroFormateado()+" no se distribuira en esta iteracion porque no tiene el Justificante custodiado");
+        } else if (PropiedadGlobalUtil.getCustodiaDiferida(registroEntrada.getUsuario().getEntidad().getId()) && !registroEntrada.getRegistroDetalle().getTieneJustificanteCustodiado()) {
+            log.info("El registro: " + registroEntrada.getNumeroRegistroFormateado() + " no se distribuira en esta iteracion porque no tiene el Justificante custodiado");
             return false;
         }
 
         // Si no hay plugin de distribución configurado, marcamos correctamente la Distribución
         if (distribucionPlugin == null) {
             return true;
-        }else{
+        } else {
 
             distribuido = distribucionPlugin.distribuir(registroEntrada, new Locale(RegwebConstantes.IDIOMA_CATALAN_CODIGO));
         }
@@ -131,7 +132,7 @@ public class DistribucionBean implements DistribucionLocal {
     /**
      * Procesa un registro de la cola de manera individual
      *
-     * @param elemento elemento de la cola
+     * @param elemento  elemento de la cola
      * @param idEntidad
      * @return
      * @throws Exception
@@ -158,9 +159,9 @@ public class DistribucionBean implements DistribucionLocal {
 
             //Obtenemos el registro de entrada que se debe distribuir
             RegistroEntrada registroEntrada = null;
-            if(distribucionPlugin.getClass().getName().contains("DistribucionGoibPlugin")){
+            if (distribucionPlugin.getClass().getName().contains("DistribucionGoibPlugin")) {
                 registroEntrada = registroEntradaEjb.getConAnexosFullDistribuir(elemento.getIdObjeto());
-            }else{
+            } else {
                 registroEntrada = registroEntradaEjb.getConAnexosFull(elemento.getIdObjeto());
             }
 
@@ -185,7 +186,7 @@ public class DistribucionBean implements DistribucionLocal {
             error = hora + e.getMessage();
             colaEjb.actualizarElementoCola(elemento, idEntidad, error);
             // Añadimos el error a la integración
-            integracionEjb.addIntegracionError(tipoIntegracon, descripcion, peticion.toString(), e, null,System.currentTimeMillis() - tiempo, idEntidad, elemento.getDescripcionObjeto());
+            integracionEjb.addIntegracionError(tipoIntegracon, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - tiempo, idEntidad, elemento.getDescripcionObjeto());
         }
 
         return distribuido;
@@ -236,7 +237,7 @@ public class DistribucionBean implements DistribucionLocal {
             String asunto = I18NLogicUtils.tradueix(locale, "cola.mail.asunto");
 
             //Montamos el mensaje del mail con el nombre de la Entidad
-            String[] args = {Integer.toString(numRegistrosMaxReintentos),entidad.getNombre()};
+            String[] args = {Integer.toString(numRegistrosMaxReintentos), entidad.getNombre()};
             String mensajeTexto = I18NLogicUtils.tradueix(locale, "cola.mail.cuerpo", args);
 
             //Enviamos el mail a todos los usuarios

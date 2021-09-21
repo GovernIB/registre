@@ -19,13 +19,13 @@ import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
-import org.jboss.ejb3.annotation.SecurityDomain;
 import org.jboss.ejb3.annotation.TransactionTimeout;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.i18n.LocaleContextHolder;
 
 import javax.annotation.Resource;
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -44,7 +44,7 @@ import static es.caib.regweb3.utils.RegwebConstantes.REGISTRO_ENTRADA;
  */
 
 @Stateless(name = "RegistroEntradaEJB")
-@SecurityDomain("seycon")
+@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI", "RWE_WS_ENTRADA", "RWE_WS_SALIDA", "RWE_WS_CIUDADANO"})
 /*@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)*/
 public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         implements RegistroEntradaLocal {
@@ -126,9 +126,9 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
                 for (AnexoFull anexoFull : anexosFull) {
                     anexoFull.getAnexo().setRegistroDetalle(registroEntrada.getRegistroDetalle());
                     AnexoFull anexoFullCreado;
-                    if(!anexoFull.getAnexo().getConfidencial()){
+                    if (!anexoFull.getAnexo().getConfidencial()) {
                         anexoFullCreado = anexoEjb.crearAnexo(anexoFull, usuarioEntidad, registroID, REGISTRO_ENTRADA, null, validarAnexos);
-                    }else{
+                    } else {
                         anexoFullCreado = anexoEjb.crearAnexoConfidencial(anexoFull, usuarioEntidad, registroID, REGISTRO_ENTRADA);
                     }
                     registroEntrada.getRegistroDetalle().getAnexos().add(anexoFullCreado.getAnexo());
@@ -138,12 +138,12 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
             }
 
             // Obtenemos el próximo evento del Registro
-            if(!registroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_RESERVA)){
+            if (!registroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_RESERVA)) {
 
-                if(multiEntidadEjb.isMultiEntidad()) {
+                if (multiEntidadEjb.isMultiEntidad()) {
                     Long evento = proximoEventoEntradaMultiEntidad(registroEntrada, usuarioEntidad.getEntidad(), registroEntrada.getOficina().getId());
                     registroEntrada.setEvento(evento);
-                }else{
+                } else {
                     Long evento = proximoEventoEntrada(registroEntrada, usuarioEntidad.getEntidad(), registroEntrada.getOficina().getId());
                     registroEntrada.setEvento(evento);
                 }
@@ -176,10 +176,10 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         registroEntrada = merge(registroEntrada);
 
         // Obtenemos el próximo evento del Registro
-        if(multiEntidadEjb.isMultiEntidad()) {
+        if (multiEntidadEjb.isMultiEntidad()) {
             Long evento = proximoEventoEntradaMultiEntidad(registroEntrada, usuarioEntidad.getEntidad(), registroEntrada.getOficina().getId());
             registroEntrada.setEvento(evento);
-        }else{
+        } else {
             Long evento = proximoEventoEntrada(registroEntrada, usuarioEntidad.getEntidad(), registroEntrada.getOficina().getId());
             registroEntrada.setEvento(evento);
         }
@@ -353,7 +353,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         //Miramos los externos
         Query q;
         q = em.createQuery("Select re.destinoExternoCodigo from RegistroEntrada as re where " +
-           "re.id = :idRegistro and re.destino is null and re.estado = :valido");
+                "re.id = :idRegistro and re.destino is null and re.estado = :valido");
 
         // Parámetros
         q.setParameter("idRegistro", idRegistro);
@@ -362,7 +362,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
         List<String> result = q.getResultList();
 
-        if(result.size() == 0){ //Si no hay externo miramos destino
+        if (result.size() == 0) { //Si no hay externo miramos destino
             q = em.createQuery("select re.destino.codigo from RegistroEntrada as re where re.id =:idRegistro and re.destino.codigo in(select entidad.codigoDir3 from Entidad as entidad)");
 
             // Parámetros
@@ -372,12 +372,12 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
             result = q.getResultList();
         }
 
-        if(result.size()>0){ // Si hay buscamos las oficinas SIR
+        if (result.size() > 0) { // Si hay buscamos las oficinas SIR
             String codigoDir3 = result.get(0);
             Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService(PropiedadGlobalUtil.getDir3CaibServer(), PropiedadGlobalUtil.getDir3CaibUsername(), PropiedadGlobalUtil.getDir3CaibPassword());
 
             return oficinasService.obtenerOficinasSIRUnidad(codigoDir3);
-        }else{
+        } else {
             return null;
         }
     }
@@ -432,12 +432,12 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         //Si el destino no es null debemos obtener el organismo correcto en un entorno multientidad para poder comprobar
         // en el siguiente if si hay una entidad que le da soporte
         Organismo organismo = null;
-        if(registroEntrada.getDestino()!=null) {
+        if (registroEntrada.getDestino() != null) {
             organismo = organismoEjb.findByCodigoMultiEntidad(registroEntrada.getDestino().getCodigo());
 
         }
 
-        if( registroEntrada.getDestino() == null || (organismo!=null &&!organismo.getEntidad().getId().equals(entidadActiva.getId()))){ //Externo o multientidad
+        if (registroEntrada.getDestino() == null || (organismo != null && !organismo.getEntidad().getId().equals(entidadActiva.getId()))) { //Externo o multientidad
 
             // Si la entidad está en SIR y la Oficina está activada para Envío Sir
             if (entidadActiva.getSir() && oficinaEjb.isSIREnvio(idOficina)) {
@@ -450,7 +450,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
             return RegwebConstantes.EVENTO_OFICIO_EXTERNO;
 
-        }else{
+        } else {
             return RegwebConstantes.EVENTO_DISTRIBUIR;
         }
     }
@@ -512,10 +512,10 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
         // Asignamos su evento
         if (registroEntrada.getEvento() != null) {
-            if(multiEntidadEjb.isMultiEntidad()) {
+            if (multiEntidadEjb.isMultiEntidad()) {
                 Long evento = proximoEventoEntradaMultiEntidad(registroEntrada, usuarioEntidad.getEntidad(), registroEntrada.getOficina().getId());
                 registroEntrada.setEvento(evento);
-            }else{
+            } else {
                 Long evento = proximoEventoEntrada(registroEntrada, usuarioEntidad.getEntidad(), registroEntrada.getOficina().getId());
                 registroEntrada.setEvento(evento);
             }
@@ -688,7 +688,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         List<Anexo> anexos = re.getRegistroDetalle().getAnexos();
         List<AnexoFull> anexosFull = new ArrayList<AnexoFull>();
         for (Anexo anexo : anexos) {
-            anexosFull.add(anexoEjb.getAnexoFullLigero(anexo.getId(),idEntidad));
+            anexosFull.add(anexoEjb.getAnexoFullLigero(anexo.getId(), idEntidad));
         }
         //Asignamos los documentos recuperados de custodia al registro de entrada.
         re.getRegistroDetalle().setAnexosFull(anexosFull);
@@ -717,11 +717,11 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         List<Anexo> anexos = registroEntrada.getRegistroDetalle().getAnexos();
         List<AnexoFull> anexosFull = new ArrayList<AnexoFull>();
         for (Anexo anexo : anexos) {
-            if(!anexo.isJustificante()){ // si no es Justificante, cargamos el AnexoFull
+            if (!anexo.isJustificante()) { // si no es Justificante, cargamos el AnexoFull
                 anexosFull.add(anexoEjb.getAnexoFull(anexo.getId(), idEntidad));
-            }else if(justificante){
+            } else if (justificante) {
                 anexosFull.add(anexoEjb.getAnexoFull(anexo.getId(), idEntidad));
-            }else {
+            } else {
                 anexosFull.add(new AnexoFull(anexo));
             }
         }

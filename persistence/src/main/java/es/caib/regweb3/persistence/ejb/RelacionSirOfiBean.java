@@ -5,7 +5,6 @@ import es.caib.regweb3.model.Organismo;
 import es.caib.regweb3.model.RelacionSirOfi;
 import es.caib.regweb3.model.RelacionSirOfiPK;
 import es.caib.regweb3.utils.RegwebConstantes;
-import org.jboss.ejb3.annotation.SecurityDomain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,20 +21,19 @@ import java.util.List;
  * Created by Fundació BIT.
  *
  * @author earrivi
- *         Date: 16/01/14
+ * Date: 16/01/14
  */
 
 @Stateless(name = "RelacionSirOfiEJB")
-@SecurityDomain("seycon")
-@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI"})
+@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI", "RWE_WS_ENTRADA", "RWE_WS_SALIDA"})
 public class RelacionSirOfiBean extends BaseEjbJPA<RelacionSirOfi, RelacionSirOfiPK> implements RelacionSirOfiLocal {
+
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
     @PersistenceContext
     private EntityManager em;
 
-    @EJB
-    private CatServicioLocal catServicioEjb;
+    @EJB private CatServicioLocal catServicioEjb;
 
 
     @Override
@@ -116,13 +114,13 @@ public class RelacionSirOfiBean extends BaseEjbJPA<RelacionSirOfi, RelacionSirOf
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<RelacionSirOfi> relacionesSirOfiByEntidadEstado(Long idEntidad, String estado) throws Exception{
+    public List<RelacionSirOfi> relacionesSirOfiByEntidadEstado(Long idEntidad, String estado) throws Exception {
         Query q = em.createQuery("Select relacionSirOfi.oficina.id, relacionSirOfi.oficina.codigo, relacionSirOfi.oficina.denominacion, " +
                 "relacionSirOfi.organismo.id, relacionSirOfi.oficina.organismoResponsable.id from RelacionSirOfi as relacionSirOfi where " +
                 "relacionSirOfi.organismo.entidad.id =:idEntidad and relacionSirOfi.estado.codigoEstadoEntidad =:estado order by relacionSirOfi.oficina.codigo");
 
-        q.setParameter("idEntidad",idEntidad);
-        q.setParameter("estado",estado);
+        q.setParameter("idEntidad", idEntidad);
+        q.setParameter("estado", estado);
         q.setHint("org.hibernate.readOnly", true);
 
         List<Object[]> result = q.getResultList();
@@ -148,12 +146,12 @@ public class RelacionSirOfiBean extends BaseEjbJPA<RelacionSirOfi, RelacionSirOf
         q.setParameter("oficinaSir", catServicioEjb.findByCodigo(RegwebConstantes.OFICINA_INTEGRADA_SIR));
         q.setHint("org.hibernate.readOnly", true);
 
-        List<Oficina> oficinas =  new ArrayList<Oficina>();
+        List<Oficina> oficinas = new ArrayList<Oficina>();
 
         List<Object[]> result = q.getResultList();
 
-        for (Object[] object : result){
-            Oficina oficina = new Oficina((Long)object[0],(String)object[1],(String)object[2],(Long)object[3]);
+        for (Object[] object : result) {
+            Oficina oficina = new Oficina((Long) object[0], (String) object[1], (String) object[2], (Long) object[3]);
 
             oficinas.add(oficina);
         }
@@ -173,12 +171,12 @@ public class RelacionSirOfiBean extends BaseEjbJPA<RelacionSirOfi, RelacionSirOf
         q.setParameter("oficinaSir", catServicioEjb.findByCodigo(RegwebConstantes.OFICINA_INTEGRADA_SIR));
         q.setHint("org.hibernate.readOnly", true);
 
-        List<Oficina> oficinas =  new ArrayList<Oficina>();
+        List<Oficina> oficinas = new ArrayList<Oficina>();
 
         List<Object[]> result = q.getResultList();
 
-        for (Object[] object : result){
-            Oficina oficina = new Oficina((Long)object[0],(String)object[1],(String)object[2],(Long)object[3]);
+        for (Object[] object : result) {
+            Oficina oficina = new Oficina((Long) object[0], (String) object[1], (String) object[2], (Long) object[3]);
 
             oficinas.add(oficina);
         }
@@ -188,7 +186,7 @@ public class RelacionSirOfiBean extends BaseEjbJPA<RelacionSirOfi, RelacionSirOf
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Organismo> organimosServicioSIR(Long idOficina) throws Exception{
+    public List<Organismo> organimosServicioSIR(Long idOficina) throws Exception {
 
         Query q = em.createQuery("Select distinct rso.organismo.id, rso.organismo.codigo, rso.organismo.denominacion from RelacionSirOfi as rso " +
                 "where rso.oficina.id = :idOficina and rso.estado.codigoEstadoEntidad = :vigente");
@@ -197,12 +195,12 @@ public class RelacionSirOfiBean extends BaseEjbJPA<RelacionSirOfi, RelacionSirOf
         q.setParameter("vigente", RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
         q.setHint("org.hibernate.readOnly", true);
 
-        List<Organismo> organismos =  new ArrayList<Organismo>();
+        List<Organismo> organismos = new ArrayList<Organismo>();
 
         List<Object[]> result = q.getResultList();
 
-        for (Object[] object : result){
-            Organismo organismo = new Organismo((Long)object[0],(String)object[1],(String)object[2]);
+        for (Object[] object : result) {
+            Organismo organismo = new Organismo((Long) object[0], (String) object[1], (String) object[2]);
 
             organismos.add(organismo);
         }

@@ -7,10 +7,10 @@ import es.caib.regweb3.model.RegistroSalida;
 import es.caib.regweb3.persistence.utils.DataBaseUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
-import org.jboss.ejb3.annotation.SecurityDomain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -22,11 +22,11 @@ import java.util.*;
  * Created by Fundació BIT.
  *
  * @author jpernia
- *         Date: 05/07/16
+ * Date: 05/07/16
  */
 
 @Stateless(name = "InformeEJB")
-@SecurityDomain("seycon")
+@RolesAllowed({"RWE_ADMIN", "RWE_USUARI"})
 public class InformeBean implements InformeLocal {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
@@ -34,7 +34,7 @@ public class InformeBean implements InformeLocal {
     @PersistenceContext(unitName = "regweb3")
     private EntityManager em;
 
-    @EJB public OrganismoLocal organismoEjb;
+    @EJB private OrganismoLocal organismoEjb;
 
 
     @Override
@@ -250,7 +250,7 @@ public class InformeBean implements InformeLocal {
 
                     interesados.add(interesado);
                 }
-            } else{
+            } else {
                 interesados = null;
             }
 
@@ -482,7 +482,7 @@ public class InformeBean implements InformeLocal {
                     interesados.add(interesado);
                 }
 
-            } else{
+            } else {
                 interesados = null;
             }
 

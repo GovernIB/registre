@@ -1,10 +1,10 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.RegistroSalida;
-import org.jboss.ejb3.annotation.SecurityDomain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -15,20 +15,18 @@ import java.util.List;
  * Created by Fundació BIT.
  *
  * @author earrivi
- *  @author anadal
+ * @author anadal
  * Date: 16/01/14
  */
 
 @Stateless(name = "RegistroSalidaCambiarEstadoEJB")
-@SecurityDomain("seycon")
-public class RegistroSalidaCambiarEstadoBean extends BaseEjbJPA<RegistroSalida, Long>
-    implements RegistroSalidaCambiarEstadoLocal {
+@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI", "RWE_WS_ENTRADA", "RWE_WS_SALIDA"})
+public class RegistroSalidaCambiarEstadoBean extends BaseEjbJPA<RegistroSalida, Long> implements RegistroSalidaCambiarEstadoLocal {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
-    @PersistenceContext(unitName="regweb3")
+    @PersistenceContext(unitName = "regweb3")
     private EntityManager em;
-
 
 
     @Override
@@ -47,7 +45,7 @@ public class RegistroSalidaCambiarEstadoBean extends BaseEjbJPA<RegistroSalida, 
     @SuppressWarnings(value = "unchecked")
     public List<RegistroSalida> getAll() throws Exception {
 
-        return  em.createQuery("Select registroSalida from RegistroSalida as registroSalida order by registroSalida.id").getResultList();
+        return em.createQuery("Select registroSalida from RegistroSalida as registroSalida order by registroSalida.id").getResultList();
     }
 
     @Override
@@ -72,7 +70,7 @@ public class RegistroSalidaCambiarEstadoBean extends BaseEjbJPA<RegistroSalida, 
 
 
     @Override
-    public void cambiarEstado(Long idRegistro, Long idEstado) throws Exception{
+    public void cambiarEstado(Long idRegistro, Long idEstado) throws Exception {
 
         Query q = em.createQuery("update RegistroSalida set estado=:idEstado where id = :idRegistro");
         q.setParameter("idEstado", idEstado);
@@ -80,6 +78,5 @@ public class RegistroSalidaCambiarEstadoBean extends BaseEjbJPA<RegistroSalida, 
         q.executeUpdate();
     }
 
-   
 
 }

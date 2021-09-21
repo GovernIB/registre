@@ -3,10 +3,10 @@ package es.caib.regweb3.persistence.ejb;
 import es.caib.regweb3.model.InteresadoSir;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
-import org.jboss.ejb3.annotation.SecurityDomain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -21,12 +21,12 @@ import java.util.List;
  */
 
 @Stateless(name = "InteresadoSirEJB")
-@SecurityDomain("seycon")
-public class InteresadoSirBean extends BaseEjbJPA<InteresadoSir, Long> implements InteresadoSirLocal{
+@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI"})
+public class InteresadoSirBean extends BaseEjbJPA<InteresadoSir, Long> implements InteresadoSirLocal {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
-    @PersistenceContext(unitName="regweb3")
+    @PersistenceContext(unitName = "regweb3")
     private EntityManager em;
 
 
@@ -46,7 +46,7 @@ public class InteresadoSirBean extends BaseEjbJPA<InteresadoSir, Long> implement
     @SuppressWarnings(value = "unchecked")
     public List<InteresadoSir> getAll() throws Exception {
 
-        return  em.createQuery("Select interesadoSir from InteresadoSir as interesadoSir order by interesadoSir.id").getResultList();
+        return em.createQuery("Select interesadoSir from InteresadoSir as interesadoSir order by interesadoSir.id").getResultList();
     }
 
     @Override
@@ -87,12 +87,12 @@ public class InteresadoSirBean extends BaseEjbJPA<InteresadoSir, Long> implement
     }
 
     @Override
-    public Integer eliminarByEntidad(Long idEntidad) throws Exception{
+    public Integer eliminarByEntidad(Long idEntidad) throws Exception {
 
-        List<?> result = em.createQuery("Select distinct(i.id) from InteresadoSir as i where i.registroSir.entidad.id =:idEntidad").setParameter("idEntidad",idEntidad).getResultList();
+        List<?> result = em.createQuery("Select distinct(i.id) from InteresadoSir as i where i.registroSir.entidad.id =:idEntidad").setParameter("idEntidad", idEntidad).getResultList();
         Integer total = result.size();
 
-        if(result.size() > 0){
+        if (result.size() > 0) {
 
             // Si hay más de 1000 registros, dividimos las queries (ORA-01795).
             while (result.size() > RegwebConstantes.NUMBER_EXPRESSIONS_IN) {

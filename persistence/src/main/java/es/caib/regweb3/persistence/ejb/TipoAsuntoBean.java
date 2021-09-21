@@ -1,10 +1,10 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.TipoAsunto;
-import org.jboss.ejb3.annotation.SecurityDomain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -19,12 +19,12 @@ import java.util.List;
  */
 
 @Stateless(name = "TipoAsuntoEJB")
-@SecurityDomain("seycon")
-public class TipoAsuntoBean extends BaseEjbJPA<TipoAsunto, Long> implements TipoAsuntoLocal{
+@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI", "RWE_WS_ENTRADA", "RWE_WS_SALIDA"})
+public class TipoAsuntoBean extends BaseEjbJPA<TipoAsunto, Long> implements TipoAsuntoLocal {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
-    @PersistenceContext(unitName="regweb3")
+    @PersistenceContext(unitName = "regweb3")
     private EntityManager em;
 
 
@@ -44,7 +44,7 @@ public class TipoAsuntoBean extends BaseEjbJPA<TipoAsunto, Long> implements Tipo
     @SuppressWarnings(value = "unchecked")
     public List<TipoAsunto> getAll() throws Exception {
 
-        return  em.createQuery("Select tipoAsunto from TipoAsunto as tipoAsunto  order by tipoAsunto.id ").getResultList();
+        return em.createQuery("Select tipoAsunto from TipoAsunto as tipoAsunto  order by tipoAsunto.id ").getResultList();
     }
 
     @Override
@@ -59,7 +59,7 @@ public class TipoAsuntoBean extends BaseEjbJPA<TipoAsunto, Long> implements Tipo
     public Long getTotal(Long idEntidad) throws Exception {
 
         Query q = em.createQuery("Select count(tipoAsunto.id) from TipoAsunto as tipoAsunto where tipoAsunto.entidad.id = :idEntidad");
-        q.setParameter("idEntidad",idEntidad);
+        q.setParameter("idEntidad", idEntidad);
 
         return (Long) q.getSingleResult();
     }
@@ -81,7 +81,7 @@ public class TipoAsuntoBean extends BaseEjbJPA<TipoAsunto, Long> implements Tipo
     public List<TipoAsunto> getPagination(int inicio, Long idEntidad) throws Exception {
 
         Query q = em.createQuery("Select tipoAsunto from TipoAsunto as tipoAsunto where tipoAsunto.entidad.id = :idEntidad order by tipoAsunto.activo desc, tipoAsunto.codigo");
-        q.setParameter("idEntidad",idEntidad);
+        q.setParameter("idEntidad", idEntidad);
         q.setFirstResult(inicio);
         q.setMaxResults(RESULTADOS_PAGINACION);
 
@@ -94,21 +94,20 @@ public class TipoAsuntoBean extends BaseEjbJPA<TipoAsunto, Long> implements Tipo
     public List<TipoAsunto> getAll(Long idEntidad) throws Exception {
 
         Query q = em.createQuery("Select tipoAsunto from TipoAsunto as tipoAsunto where tipoAsunto.entidad.id = :idEntidad order by tipoAsunto.id");
-        q.setParameter("idEntidad",idEntidad);
+        q.setParameter("idEntidad", idEntidad);
 
         return q.getResultList();
     }
-    
-    
+
 
     @Override
     @SuppressWarnings(value = "unchecked")
     public List<TipoAsunto> getActivosEntidad(Long idEntidad) throws Exception {
 
-        Query q =  em.createQuery("Select tipoAsunto from TipoAsunto as tipoAsunto where tipoAsunto.activo= true " +
+        Query q = em.createQuery("Select tipoAsunto from TipoAsunto as tipoAsunto where tipoAsunto.activo= true " +
                 "and tipoAsunto.entidad.id = :idEntidad order by tipoAsunto.id ");
 
-        q.setParameter("idEntidad",idEntidad);
+        q.setParameter("idEntidad", idEntidad);
         return q.getResultList();
 
 
@@ -120,14 +119,14 @@ public class TipoAsuntoBean extends BaseEjbJPA<TipoAsunto, Long> implements Tipo
 
         Query q = em.createQuery("Select tipoAsunto from TipoAsunto as tipoAsunto where tipoAsunto.codigo = :codigo");
 
-        q.setParameter("codigo",codigo);
+        q.setParameter("codigo", codigo);
 
         List<TipoAsunto> tipoAsunto = q.getResultList();
 
-        if(tipoAsunto.size() == 1){
+        if (tipoAsunto.size() == 1) {
             return tipoAsunto.get(0);
-        }else{
-            return  null;
+        } else {
+            return null;
         }
     }
 
@@ -137,9 +136,9 @@ public class TipoAsuntoBean extends BaseEjbJPA<TipoAsunto, Long> implements Tipo
         Query q = em.createQuery("Select tipoAsunto.id from TipoAsunto as tipoAsunto where " +
                 "tipoAsunto.id != :idTipoAsunto and tipoAsunto.codigo = :codigo and tipoAsunto.entidad.id = :idEntidad");
 
-        q.setParameter("codigo",codigo);
-        q.setParameter("idTipoAsunto",idTipoAsunto);
-        q.setParameter("idEntidad",idEntidad);
+        q.setParameter("codigo", codigo);
+        q.setParameter("idTipoAsunto", idTipoAsunto);
+        q.setParameter("idEntidad", idEntidad);
 
         return q.getResultList().size() > 0;
 
@@ -147,20 +146,20 @@ public class TipoAsuntoBean extends BaseEjbJPA<TipoAsunto, Long> implements Tipo
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public TipoAsunto findByCodigoEntidad(String codigo,Long idEntidad) throws Exception{
+    public TipoAsunto findByCodigoEntidad(String codigo, Long idEntidad) throws Exception {
 
         Query q = em.createQuery("Select tipoAsunto from TipoAsunto as tipoAsunto where tipoAsunto.codigo = :codigo " +
                 "and tipoAsunto.entidad.id = :idEntidad");
 
-        q.setParameter("codigo",codigo);
-        q.setParameter("idEntidad",idEntidad);
+        q.setParameter("codigo", codigo);
+        q.setParameter("idEntidad", idEntidad);
 
         List<TipoAsunto> tipoAsunto = q.getResultList();
 
-        if(tipoAsunto.size() == 1){
+        if (tipoAsunto.size() == 1) {
             return tipoAsunto.get(0);
-        }else{
-            return  null;
+        } else {
+            return null;
         }
     }
 
@@ -170,15 +169,15 @@ public class TipoAsuntoBean extends BaseEjbJPA<TipoAsunto, Long> implements Tipo
         Query q = em.createQuery("Select count(tipoAsunto.id) from TipoAsunto as tipoAsunto " +
                 "where tipoAsunto.entidad.id = :idEntidad");
 
-        q.setParameter("idEntidad",idEntidad);
+        q.setParameter("idEntidad", idEntidad);
 
         return (Long) q.getSingleResult();
     }
 
     @Override
-    public Integer eliminarByEntidad(Long idEntidad) throws Exception{
+    public Integer eliminarByEntidad(Long idEntidad) throws Exception {
 
-        List<?> tipos = em.createQuery("Select distinct(id) from TipoAsunto where entidad.id =:idEntidad").setParameter("idEntidad",idEntidad).getResultList();
+        List<?> tipos = em.createQuery("Select distinct(id) from TipoAsunto where entidad.id =:idEntidad").setParameter("idEntidad", idEntidad).getResultList();
 
         for (Object id : tipos) {
             remove(findById((Long) id));

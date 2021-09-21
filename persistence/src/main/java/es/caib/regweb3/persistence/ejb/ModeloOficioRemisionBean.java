@@ -1,10 +1,10 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.ModeloOficioRemision;
-import org.jboss.ejb3.annotation.SecurityDomain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -20,12 +20,12 @@ import java.util.List;
  */
 
 @Stateless(name = "ModeloOficioRemisionEJB")
-@SecurityDomain("seycon")
-public class ModeloOficioRemisionBean extends BaseEjbJPA<ModeloOficioRemision, Long> implements ModeloOficioRemisionLocal{
+@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI", "RWE_WS_ENTRADA", "RWE_WS_SALIDA"})
+public class ModeloOficioRemisionBean extends BaseEjbJPA<ModeloOficioRemision, Long> implements ModeloOficioRemisionLocal {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
-    @PersistenceContext(unitName="regweb3")
+    @PersistenceContext(unitName = "regweb3")
     private EntityManager em;
 
 
@@ -45,7 +45,7 @@ public class ModeloOficioRemisionBean extends BaseEjbJPA<ModeloOficioRemision, L
     @SuppressWarnings(value = "unchecked")
     public List<ModeloOficioRemision> getAll() throws Exception {
 
-        return  em.createQuery("Select modeloOficioRemision from ModeloOficioRemision as modeloOficioRemision order by modeloOficioRemision.id").getResultList();
+        return em.createQuery("Select modeloOficioRemision from ModeloOficioRemision as modeloOficioRemision order by modeloOficioRemision.id").getResultList();
     }
 
     @Override
@@ -60,7 +60,7 @@ public class ModeloOficioRemisionBean extends BaseEjbJPA<ModeloOficioRemision, L
     public Long getTotal(Long idEntidad) throws Exception {
 
         Query q = em.createQuery("Select count(modeloOficioRemision.id) from ModeloOficioRemision as modeloOficioRemision where modeloOficioRemision.entidad.id = :idEntidad");
-        q.setParameter("idEntidad",idEntidad);
+        q.setParameter("idEntidad", idEntidad);
 
         return (Long) q.getSingleResult();
     }
@@ -70,14 +70,14 @@ public class ModeloOficioRemisionBean extends BaseEjbJPA<ModeloOficioRemision, L
     public List<ModeloOficioRemision> getByEntidad(Long idEntidad) throws Exception {
 
         Query q = em.createQuery("Select modelo.id, modelo.nombre from ModeloOficioRemision as modelo where modelo.entidad.id = :idEntidad");
-        q.setParameter("idEntidad",idEntidad);
+        q.setParameter("idEntidad", idEntidad);
         q.setHint("org.hibernate.readOnly", true);
 
-        List<ModeloOficioRemision> modelos =  new ArrayList<ModeloOficioRemision>();
+        List<ModeloOficioRemision> modelos = new ArrayList<ModeloOficioRemision>();
 
         List<Object[]> result = q.getResultList();
 
-        for (Object[] object : result){
+        for (Object[] object : result) {
             modelos.add(new ModeloOficioRemision((Long) object[0], (String) object[1]));
         }
 
@@ -102,7 +102,7 @@ public class ModeloOficioRemisionBean extends BaseEjbJPA<ModeloOficioRemision, L
     public List<ModeloOficioRemision> getPagination(int inicio, Long idEntidad) throws Exception {
 
         Query q = em.createQuery("Select modeloOficioRemision from ModeloOficioRemision as modeloOficioRemision where modeloOficioRemision.entidad.id = :idEntidad order by modeloOficioRemision.id");
-        q.setParameter("idEntidad",idEntidad);
+        q.setParameter("idEntidad", idEntidad);
         q.setFirstResult(inicio);
         q.setMaxResults(RESULTADOS_PAGINACION);
         q.setHint("org.hibernate.readOnly", true);
@@ -111,9 +111,9 @@ public class ModeloOficioRemisionBean extends BaseEjbJPA<ModeloOficioRemision, L
     }
 
     @Override
-    public Integer eliminarByEntidad(Long idEntidad) throws Exception{
+    public Integer eliminarByEntidad(Long idEntidad) throws Exception {
 
-        List<?> modelos = em.createQuery("Select distinct(id) from ModeloOficioRemision where entidad.id =:idEntidad").setParameter("idEntidad",idEntidad).getResultList();
+        List<?> modelos = em.createQuery("Select distinct(id) from ModeloOficioRemision where entidad.id =:idEntidad").setParameter("idEntidad", idEntidad).getResultList();
 
         for (Object id : modelos) {
             remove(findById((Long) id));

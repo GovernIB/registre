@@ -9,10 +9,10 @@ import es.caib.regweb3.utils.RegwebConstantes;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.plugins.documentcustody.api.CustodyException;
 import org.fundaciobit.plugins.documentcustody.arxiudigitalcaib.ArxiuDigitalCAIBDocumentCustodyPlugin;
-import org.jboss.ejb3.annotation.SecurityDomain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.security.RolesAllowed;
 import javax.annotation.security.RunAs;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -28,17 +28,14 @@ import java.util.List;
  */
 
 @Stateless(name = "ArxiuEJB")
-@SecurityDomain("seycon")
+@RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI"})
 @RunAs("RWE_SUPERADMIN")
 public class ArxiuBean implements ArxiuLocal{
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
-    @EJB(mappedName = IntegracionLocal.JNDI_NAME)
-    private IntegracionLocal integracionEjb;
-
-    @EJB(mappedName = PluginLocal.JNDI_NAME)
-    private PluginLocal pluginEjb;
+    @EJB private IntegracionLocal integracionEjb;
+    @EJB private PluginLocal pluginEjb;
 
 
     @Override

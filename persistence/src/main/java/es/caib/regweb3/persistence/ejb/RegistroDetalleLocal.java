@@ -3,7 +3,6 @@ package es.caib.regweb3.persistence.ejb;
 import es.caib.regweb3.model.RegistroDetalle;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 
-import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
 import java.util.Date;
 import java.util.Set;
@@ -15,7 +14,6 @@ import java.util.Set;
  * Date: 16/01/14
  */
 @Local
-@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI"})
 public interface RegistroDetalleLocal extends BaseEjb<RegistroDetalle, Long> {
 
     String JNDI_NAME = "java:app/regweb3-persistence/RegistroDetalleEJB";

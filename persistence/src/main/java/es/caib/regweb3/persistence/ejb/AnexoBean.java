@@ -21,13 +21,13 @@ import org.fundaciobit.plugins.documentcustody.api.SignatureCustody;
 import org.fundaciobit.pluginsib.core.utils.ISO8601;
 import org.fundaciobit.pluginsib.core.utils.Metadata;
 import org.fundaciobit.pluginsib.core.utils.MetadataConstants;
-import org.jboss.ejb3.annotation.SecurityDomain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
 
 import javax.annotation.Resource;
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.interceptor.Interceptors;
@@ -51,7 +51,7 @@ import static es.caib.regweb3.utils.RegwebConstantes.REGISTRO_ENTRADA;
  * Date: 6/03/13
  */
 @Stateless(name = "AnexoEJB")
-@SecurityDomain("seycon")
+@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI", "RWE_WS_ENTRADA", "RWE_WS_SALIDA","RWE_WS_CIUDADANO"})
 @Interceptors(SpringBeanAutowiringInterceptor.class)
 public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 

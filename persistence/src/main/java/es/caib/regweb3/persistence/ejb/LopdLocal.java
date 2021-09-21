@@ -4,7 +4,6 @@ import es.caib.regweb3.model.Libro;
 import es.caib.regweb3.model.Lopd;
 import es.caib.regweb3.persistence.utils.Paginacion;
 
-import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
 import java.util.Date;
 import java.util.List;
@@ -16,7 +15,6 @@ import java.util.List;
  * Date: 02/10/14
  */
 @Local
-@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI","RWE_WS_ENTRADA","RWE_WS_SALIDA", "RWE_WS_CIUDADANO"})
 public interface LopdLocal extends BaseEjb<Lopd, Long> {
 
     String JNDI_NAME = "java:app/regweb3-persistence/LopdEJB";
@@ -39,6 +37,7 @@ public interface LopdLocal extends BaseEjb<Lopd, Long> {
 
     /**
      * Devuelve los registros Lopd entre dos fechas para un Usuario en concreto y un Libro en concreto, con la Accion (listado/consulta) y el TipoRegistro (entrada/salida)
+     *
      * @param fechaInicio
      * @param fechaFin
      * @param idUsuarioEntidad
@@ -53,6 +52,7 @@ public interface LopdLocal extends BaseEjb<Lopd, Long> {
 
     /**
      * Devuelve los registros Lopd de un Registro concreto, pasando el Tipo de Registro y la Accion
+     *
      * @param anyoRegistro
      * @param numRegistro
      * @param idLibro
@@ -65,6 +65,7 @@ public interface LopdLocal extends BaseEjb<Lopd, Long> {
 
     /**
      * Realiza una Alta en las tablas de Lopd
+     *
      * @param numeroRegistro
      * @param fecha
      * @param idLibro
@@ -77,6 +78,7 @@ public interface LopdLocal extends BaseEjb<Lopd, Long> {
 
     /**
      * Inserta la búsqueda de Registros en las tablas de Lopd
+     *
      * @param paginacion
      * @param idUsuarioEntidad
      * @throws Exception
@@ -94,6 +96,7 @@ public interface LopdLocal extends BaseEjb<Lopd, Long> {
 
     /**
      * Elimina las Lopd de una Entidad
+     *
      * @param idEntidad
      * @return
      * @throws Exception
@@ -134,7 +137,6 @@ public interface LopdLocal extends BaseEjb<Lopd, Long> {
      * @param fechaFin
      * @param idUsuario
      * @param idLibro
-
      * @return
      * @throws Exception
      */

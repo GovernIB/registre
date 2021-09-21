@@ -1,10 +1,10 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.Pendiente;
-import org.jboss.ejb3.annotation.SecurityDomain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -19,17 +19,16 @@ import java.util.List;
  * @author mgonzalez
  */
 @Stateless(name = "PendienteEJB")
-@SecurityDomain("seycon")
+@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI", "RWE_WS_ENTRADA", "RWE_WS_SALIDA", "RWE_WS_CIUDADANO"})
 public class PendienteBean extends BaseEjbJPA<Pendiente, Long> implements PendienteLocal {
-  
-  
+
+
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
-    @PersistenceContext(unitName="regweb3")
+    @PersistenceContext(unitName = "regweb3")
     private EntityManager em;
 
-    @EJB(mappedName = OrganismoLocal.JNDI_NAME)
-    private OrganismoLocal organismoEjb;
+    @EJB private OrganismoLocal organismoEjb;
 
 
     @Override
@@ -49,7 +48,7 @@ public class PendienteBean extends BaseEjbJPA<Pendiente, Long> implements Pendie
 
         Query q = em.createQuery("Select pendiente from Pendiente as pendiente where pendiente.idOrganismo=:idOrganismo and pendiente.procesado = false ");
         q.setParameter("idOrganismo", idOrganismo);
-        return (Pendiente)q.getSingleResult();
+        return (Pendiente) q.getSingleResult();
 
     }
 
@@ -75,10 +74,10 @@ public class PendienteBean extends BaseEjbJPA<Pendiente, Long> implements Pendie
         Query q = em.createQuery("Select pendiente from Pendiente as pendiente where pendiente.procesado = false");
 
         List<Pendiente> pendientes = q.getResultList();
-        List<Pendiente> pendientesEntidad= new ArrayList<Pendiente>();
-        for(Pendiente pendiente: pendientes){
+        List<Pendiente> pendientesEntidad = new ArrayList<Pendiente>();
+        for (Pendiente pendiente : pendientes) {
             Long entidadOrganismo = organismoEjb.getEntidad(pendiente.getIdOrganismo());
-            if(idEntidad.equals(entidadOrganismo)){
+            if (idEntidad.equals(entidadOrganismo)) {
                 pendientesEntidad.add(pendiente);
             }
         }
@@ -91,7 +90,7 @@ public class PendienteBean extends BaseEjbJPA<Pendiente, Long> implements Pendie
     @SuppressWarnings(value = "unchecked")
     public List<Pendiente> getAll() throws Exception {
 
-        return  em.createQuery("Select pendiente from Pendiente as pendiente order by pendiente.id").getResultList();
+        return em.createQuery("Select pendiente from Pendiente as pendiente order by pendiente.id").getResultList();
     }
 
     @Override

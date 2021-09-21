@@ -11,10 +11,10 @@ import es.caib.regweb3.utils.Dir3CaibUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 import org.hibernate.Hibernate;
-import org.jboss.ejb3.annotation.SecurityDomain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -30,7 +30,7 @@ import java.util.*;
  */
 
 @Stateless(name = "OficinaEJB")
-@SecurityDomain("seycon")
+@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI", "RWE_WS_ENTRADA", "RWE_WS_SALIDA"})
 public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLocal {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
@@ -38,14 +38,10 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
     @PersistenceContext(unitName = "regweb3")
     private EntityManager em;
 
-    @EJB
-    private RelacionOrganizativaOfiLocal relacionOrganizativaOfiEjb;
-    @EJB
-    private RelacionSirOfiLocal relacionSirOfiEjb;
-    @EJB
-    private CatServicioLocal catServicioEjb;
-    @EJB
-    private OrganismoLocal organismoEjb;
+    @EJB private RelacionOrganizativaOfiLocal relacionOrganizativaOfiEjb;
+    @EJB private RelacionSirOfiLocal relacionSirOfiEjb;
+    @EJB private CatServicioLocal catServicioEjb;
+    @EJB private OrganismoLocal organismoEjb;
 
 
     @Override
@@ -319,20 +315,19 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
     }
 
 
-
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Oficina> findByEntidadByEstadoMultiEntidad(Long idEntidad, String estado) throws Exception{
+    public List<Oficina> findByEntidadByEstadoMultiEntidad(Long idEntidad, String estado) throws Exception {
 
-        List<Oficina> oficinas= findByEntidadByEstado(idEntidad,estado);
+        List<Oficina> oficinas = findByEntidadByEstado(idEntidad, estado);
         List<Oficina> oficinasAEliminar = new ArrayList<>();
 
-        for(Oficina oficina: oficinas){
-            Oficina oficina1= findByCodigoMultiEntidad(oficina.getCodigo());
+        for (Oficina oficina : oficinas) {
+            Oficina oficina1 = findByCodigoMultiEntidad(oficina.getCodigo());
             Organismo raiz = organismoEjb.getOrganismoRaiz(oficina1.getOrganismoResponsable().getId());
             log.info(" RAIZ " + raiz);
             log.info(" RAIZ " + oficina1.getOrganismoResponsable().getDenominacion());
-            if(raiz!= null){
+            if (raiz != null) {
 
 
                 log.info(" Eliminamos oficina " + oficina.getDenominacion());

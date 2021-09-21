@@ -5,10 +5,10 @@ import es.caib.regweb3.model.RegistroDetalle;
 import es.caib.regweb3.utils.RegwebConstantes;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.hibernate.Hibernate;
-import org.jboss.ejb3.annotation.SecurityDomain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -27,16 +27,15 @@ import java.util.Set;
  */
 
 @Stateless(name = "RegistroDetalleEJB")
-@SecurityDomain("seycon")
-public class RegistroDetalleBean extends BaseEjbJPA<RegistroDetalle, Long> implements RegistroDetalleLocal{
+@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI"})
+public class RegistroDetalleBean extends BaseEjbJPA<RegistroDetalle, Long> implements RegistroDetalleLocal {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
-    @PersistenceContext(unitName="regweb3")
+    @PersistenceContext(unitName = "regweb3")
     private EntityManager em;
 
-    @EJB(mappedName = AnexoLocal.JNDI_NAME)
-    public AnexoLocal anexoEjb;
+    @EJB private AnexoLocal anexoEjb;
 
 
     @Override
@@ -65,7 +64,7 @@ public class RegistroDetalleBean extends BaseEjbJPA<RegistroDetalle, Long> imple
     @SuppressWarnings(value = "unchecked")
     public List<RegistroDetalle> getAll() throws Exception {
 
-        return  em.createQuery("Select registroDetalle from RegistroDetalle as registroDetalle order by registroDetalle.id").getResultList();
+        return em.createQuery("Select registroDetalle from RegistroDetalle as registroDetalle order by registroDetalle.id").getResultList();
     }
 
     @Override
@@ -92,20 +91,20 @@ public class RegistroDetalleBean extends BaseEjbJPA<RegistroDetalle, Long> imple
     public RegistroDetalle findByRegistroEntrada(Long idRegistroEntrada) throws Exception {
 
         Query q = em.createQuery("Select re.registroDetalle from RegistroEntrada as re where re.id = :idRegistroEntrada");
-        q.setParameter("idRegistroEntrada",idRegistroEntrada);
+        q.setParameter("idRegistroEntrada", idRegistroEntrada);
 
         return (RegistroDetalle) q.getSingleResult();
     }
 
     @Override
-    public Integer eliminar(Set<Long> ids, Long idEntidad) throws Exception, I18NException{
+    public Integer eliminar(Set<Long> ids, Long idEntidad) throws Exception, I18NException {
 
         for (Object id : ids) {
 
-            RegistroDetalle registroDetalle = findById((Long)id);
+            RegistroDetalle registroDetalle = findById((Long) id);
 
             //Elimina los anexos
-            for(Anexo anexo: registroDetalle.getAnexos()){
+            for (Anexo anexo : registroDetalle.getAnexos()) {
                 anexoEjb.eliminarCustodia(anexo.getCustodiaID(), anexo, idEntidad);
             }
             remove(registroDetalle);
@@ -118,34 +117,33 @@ public class RegistroDetalleBean extends BaseEjbJPA<RegistroDetalle, Long> imple
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Set<Long> getRegistrosDetalle(Long idEntidad) throws Exception{
+    public Set<Long> getRegistrosDetalle(Long idEntidad) throws Exception {
         Set<Long> registrosDetalle = new HashSet<Long>();
 
-        registrosDetalle.addAll(em.createQuery("Select distinct(registroDetalle.id) from RegistroEntrada where usuario.entidad.id = :idEntidad").setParameter("idEntidad",idEntidad).getResultList()) ;
-        registrosDetalle.addAll(em.createQuery("Select distinct(registroDetalle.id) from RegistroSalida where usuario.entidad.id = :idEntidad").setParameter("idEntidad",idEntidad).getResultList()) ;
+        registrosDetalle.addAll(em.createQuery("Select distinct(registroDetalle.id) from RegistroEntrada where usuario.entidad.id = :idEntidad").setParameter("idEntidad", idEntidad).getResultList());
+        registrosDetalle.addAll(em.createQuery("Select distinct(registroDetalle.id) from RegistroSalida where usuario.entidad.id = :idEntidad").setParameter("idEntidad", idEntidad).getResultList());
 
         return registrosDetalle;
     }
 
 
-
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Set<Long> getRegistrosDetalleConfirmados(Long idEntidad, Date fecha) throws Exception{
+    public Set<Long> getRegistrosDetalleConfirmados(Long idEntidad, Date fecha) throws Exception {
         Set<Long> registrosDetalle = new HashSet<Long>();
         //Obtenemos los registros detalle de los registros de entrada que se han aceptado
         Query query = em.createQuery("Select distinct(registroDetalle.id) from RegistroEntrada where usuario.entidad.id = :idEntidad and estado =:aceptado");
-        query.setParameter("idEntidad",idEntidad);
+        query.setParameter("idEntidad", idEntidad);
         query.setParameter("aceptado", RegwebConstantes.REGISTRO_OFICIO_ACEPTADO);
         registrosDetalle.addAll(query.getResultList());
 
         //Obtenemos los registros detalle de los registros de salida que se han aceptado
         Query queryS = em.createQuery("Select distinct(registroDetalle.id) from RegistroSalida where usuario.entidad.id = :idEntidad and estado =:aceptado");
-        queryS.setParameter("idEntidad",idEntidad);
+        queryS.setParameter("idEntidad", idEntidad);
         queryS.setParameter("aceptado", RegwebConstantes.REGISTRO_OFICIO_ACEPTADO);
         registrosDetalle.addAll(queryS.getResultList());
 
-        registrosDetalle.addAll(queryS.getResultList()) ;
+        registrosDetalle.addAll(queryS.getResultList());
 
         return registrosDetalle;
     }

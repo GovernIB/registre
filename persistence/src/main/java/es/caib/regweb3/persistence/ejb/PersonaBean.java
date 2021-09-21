@@ -6,11 +6,11 @@ import es.caib.regweb3.persistence.utils.DataBaseUtils;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
-import org.jboss.ejb3.annotation.SecurityDomain;
 import org.jboss.ejb3.annotation.TransactionTimeout;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -28,7 +28,7 @@ import java.util.Map;
  */
 
 @Stateless(name = "PersonaEJB")
-@SecurityDomain("seycon")
+@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI", "RWE_WS_ENTRADA", "RWE_WS_SALIDA"})
 public class PersonaBean extends BaseEjbJPA<Persona, Long> implements PersonaLocal {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());

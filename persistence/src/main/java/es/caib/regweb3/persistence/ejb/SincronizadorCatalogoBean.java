@@ -8,13 +8,12 @@ import es.caib.regweb3.model.*;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.utils.Dir3CaibUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
-import org.jboss.ejb3.annotation.SecurityDomain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -26,44 +25,23 @@ import java.util.TreeMap;
  * @author mgonzalez
  */
 @Stateless(name = "SincronizadorCatalogoEJB")
-@SecurityDomain("seycon")
+@RolesAllowed({"RWE_SUPERADMIN"})
 public class SincronizadorCatalogoBean implements SincronizadorCatalogoLocal {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
+    
+    @EJB private CatEstadoEntidadLocal catEstadoEntidadEjb;
+    @EJB private CatNivelAdministracionLocal catNivelAdministracionEjb;
+    @EJB private CatPaisLocal catPaisEjb;
+    @EJB private CatComunidadAutonomaLocal catComunidadAutonomaEjb;
+    @EJB private CatProvinciaLocal catProvinciaEjb;
+    @EJB private CatEntidadGeograficaLocal catEntidadGeograficaEjb;
+    @EJB private CatLocalidadLocal catLocalidadEjb;
+    @EJB private DescargaLocal descargaEjb;
+    @EJB private CatServicioLocal catServicioEjb;
+    @EJB private CatTipoViaLocal catTipoViaEjb;
 
-
-    @EJB(mappedName = CatEstadoEntidadLocal.JNDI_NAME)
-    public CatEstadoEntidadLocal catEstadoEntidadEjb;
-
-    @EJB(mappedName = CatNivelAdministracionLocal.JNDI_NAME)
-    public CatNivelAdministracionLocal catNivelAdministracionEjb;
-
-    @EJB(mappedName = CatPaisLocal.JNDI_NAME)
-    public CatPaisLocal catPaisEjb;
-
-    @EJB(mappedName = CatComunidadAutonomaLocal.JNDI_NAME)
-    public CatComunidadAutonomaLocal catComunidadAutonomaEjb;
-
-    @EJB(mappedName = CatProvinciaLocal.JNDI_NAME)
-    public CatProvinciaLocal catProvinciaEjb;
-
-    @EJB(mappedName = CatEntidadGeograficaLocal.JNDI_NAME)
-    public CatEntidadGeograficaLocal catEntidadGeograficaEjb;
-
-    @EJB(mappedName = CatLocalidadLocal.JNDI_NAME)
-    public CatLocalidadLocal catLocalidadEjb;
-
-    @EJB(mappedName = DescargaLocal.JNDI_NAME)
-    public DescargaLocal descargaEjb;
-
-    @EJB(mappedName = CatServicioLocal.JNDI_NAME)
-    public CatServicioLocal catServicioEjb;
-
-    @EJB(mappedName = CatTipoViaLocal.JNDI_NAME)
-    public CatTipoViaLocal catTipoViaEjb;
-
-    SimpleDateFormat formatoFecha = new SimpleDateFormat(RegwebConstantes.FORMATO_FECHA);
-
+    
     @Override
     public Descarga sincronizarCatalogo() throws Exception {
 
@@ -71,7 +49,7 @@ public class SincronizadorCatalogoBean implements SincronizadorCatalogoLocal {
 
         Dir3CaibObtenerCatalogosWs catalogosService = Dir3CaibUtils.getObtenerCatalogosService(PropiedadGlobalUtil.getDir3CaibServer(), PropiedadGlobalUtil.getDir3CaibUsername(), PropiedadGlobalUtil.getDir3CaibPassword());
 
-       /* CACHE */
+        /* CACHE */
         Map<Long, CatPais> cachePais = new TreeMap<Long, CatPais>();
         Map<Long, CatProvincia> cacheProvincia = new TreeMap<Long, CatProvincia>();
         Map<Long, CatComunidadAutonoma> cacheComunidadAutonoma = new TreeMap<Long, CatComunidadAutonoma>();

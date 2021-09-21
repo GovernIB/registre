@@ -4,10 +4,10 @@ import es.caib.regweb3.model.Integracion;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
-import org.jboss.ejb3.annotation.SecurityDomain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.security.RolesAllowed;
 import javax.annotation.security.RunAs;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -27,14 +27,14 @@ import java.util.*;
  */
 
 @Stateless(name = "IntegracionEJB")
-@SecurityDomain("seycon")
+@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI", "RWE_WS_ENTRADA", "RWE_WS_SALIDA", "RWE_WS_CIUDADANO"})
 @RunAs("RWE_SUPERADMIN")
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-public class IntegracionBean extends BaseEjbJPA<Integracion, Long> implements IntegracionLocal{
+public class IntegracionBean extends BaseEjbJPA<Integracion, Long> implements IntegracionLocal {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
-    @PersistenceContext(unitName="regweb3")
+    @PersistenceContext(unitName = "regweb3")
     private EntityManager em;
 
 
@@ -54,7 +54,7 @@ public class IntegracionBean extends BaseEjbJPA<Integracion, Long> implements In
     @SuppressWarnings(value = "unchecked")
     public List<Integracion> getAll() throws Exception {
 
-        return  em.createQuery("Select integracion from Integracion as integracion order by integracion.id").getResultList();
+        return em.createQuery("Select integracion from Integracion as integracion order by integracion.id").getResultList();
     }
 
     @Override
@@ -80,10 +80,10 @@ public class IntegracionBean extends BaseEjbJPA<Integracion, Long> implements In
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Integracion> getByEntidad(Long idEntidad) throws Exception{
+    public List<Integracion> getByEntidad(Long idEntidad) throws Exception {
 
         Query q = em.createQuery("Select integracion from Integracion as integracion where integracion.entidad.id = :idEntidad order by integracion.id");
-        q.setParameter("idEntidad",idEntidad);
+        q.setParameter("idEntidad", idEntidad);
         q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList();
@@ -92,13 +92,13 @@ public class IntegracionBean extends BaseEjbJPA<Integracion, Long> implements In
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Integracion> getByEntidadNumReg(Long idEntidad, String numeroRegistro) throws Exception{
+    public List<Integracion> getByEntidadNumReg(Long idEntidad, String numeroRegistro) throws Exception {
 
         Query q = em.createQuery("Select integracion from Integracion as integracion where " +
                 "integracion.entidad.id = :idEntidad and integracion.numRegFormat =:numeroRegistro order by integracion.fecha desc");
 
-        q.setParameter("idEntidad",idEntidad);
-        q.setParameter("numeroRegistro",numeroRegistro);
+        q.setParameter("idEntidad", idEntidad);
+        q.setParameter("numeroRegistro", numeroRegistro);
         q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList();
@@ -192,15 +192,15 @@ public class IntegracionBean extends BaseEjbJPA<Integracion, Long> implements In
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Integracion> ultimasIntegracionesErrorTipo(Long idEntidad, Long tipo) throws Exception{
+    public List<Integracion> ultimasIntegracionesErrorTipo(Long idEntidad, Long tipo) throws Exception {
 
         Query q = em.createQuery("Select i.fecha, i.tipo, i.numRegFormat, i.descripcion from Integracion as i where " +
                 "i.entidad.id = :idEntidad and i.estado =:estado and i.tipo = :tipo and " +
                 "i.fecha >= :fecha order by i.fecha desc");
 
-        q.setParameter("idEntidad",idEntidad);
-        q.setParameter("estado",RegwebConstantes.INTEGRACION_ESTADO_ERROR);
-        q.setParameter("tipo",tipo);
+        q.setParameter("idEntidad", idEntidad);
+        q.setParameter("estado", RegwebConstantes.INTEGRACION_ESTADO_ERROR);
+        q.setParameter("tipo", tipo);
 
         Calendar hoy = Calendar.getInstance(); //obtiene la fecha de hoy
         hoy.add(Calendar.DATE, -2); //el -2 indica que se le restaran 3 dias
@@ -208,11 +208,11 @@ public class IntegracionBean extends BaseEjbJPA<Integracion, Long> implements In
         q.setMaxResults(7);
         q.setHint("org.hibernate.readOnly", true);
 
-        List<Integracion> integraciones =  new ArrayList<Integracion>();
+        List<Integracion> integraciones = new ArrayList<Integracion>();
         List<Object[]> result = q.getResultList();
 
-        for (Object[] object : result){
-            Integracion integracion = new Integracion((Date)object[0],(Long)object[1],(String)object[2],(String)object[3]);
+        for (Object[] object : result) {
+            Integracion integracion = new Integracion((Date) object[0], (Long) object[1], (String) object[2], (String) object[3]);
             integraciones.add(integracion);
         }
 
@@ -221,7 +221,7 @@ public class IntegracionBean extends BaseEjbJPA<Integracion, Long> implements In
     }
 
     @Override
-    public void addIntegracionOk(Date inicio, Long tipo, String descripcion, String peticion, Long tiempo, Long idEntidad, String numRegFormat) throws Exception{
+    public void addIntegracionOk(Date inicio, Long tipo, String descripcion, String peticion, Long tiempo, Long idEntidad, String numRegFormat) throws Exception {
 
         persist(new Integracion(inicio, tipo, RegwebConstantes.INTEGRACION_ESTADO_OK, descripcion, peticion, tiempo, idEntidad, numRegFormat));
     }
@@ -234,26 +234,26 @@ public class IntegracionBean extends BaseEjbJPA<Integracion, Long> implements In
         th.printStackTrace(pw);
         String exception = sw.getBuffer().toString();
 
-        if (StringUtils.isEmpty(error)){
+        if (StringUtils.isEmpty(error)) {
             error = th.getMessage();
         }
 
-        persist(new Integracion(tipo, RegwebConstantes.INTEGRACION_ESTADO_ERROR, descripcion, peticion, error, exception,tiempo, idEntidad, numRegFormat));
+        persist(new Integracion(tipo, RegwebConstantes.INTEGRACION_ESTADO_ERROR, descripcion, peticion, error, exception, tiempo, idEntidad, numRegFormat));
     }
 
     @Override
-    public Integer purgarIntegraciones(Long idEntidad) throws Exception{
+    public Integer purgarIntegraciones(Long idEntidad) throws Exception {
 
         Calendar hoy = Calendar.getInstance(); //obtiene la fecha de hoy
         hoy.add(Calendar.DATE, -20); //el -20 indica que se le restaran 10 dias
 
-        List<?> integracion =  em.createQuery("select distinct(i.id) from Integracion as i where i.entidad.id = :idEntidad and i.fecha <= :fecha")
-                .setParameter("idEntidad",idEntidad)
+        List<?> integracion = em.createQuery("select distinct(i.id) from Integracion as i where i.entidad.id = :idEntidad and i.fecha <= :fecha")
+                .setParameter("idEntidad", idEntidad)
                 .setParameter("fecha", hoy.getTime()).getResultList();
 
         Integer total = integracion.size();
 
-        if(integracion.size() > 0){
+        if (integracion.size() > 0) {
 
             // Si hay más de 1000 registros, dividimos las queries (ORA-01795).
             while (integracion.size() > RegwebConstantes.NUMBER_EXPRESSIONS_IN) {
@@ -269,12 +269,12 @@ public class IntegracionBean extends BaseEjbJPA<Integracion, Long> implements In
     }
 
     @Override
-    public Integer eliminarByEntidad(Long idEntidad) throws Exception{
+    public Integer eliminarByEntidad(Long idEntidad) throws Exception {
 
-        List<?> integracion =  em.createQuery("select distinct(i.id) from Integracion as i where i.entidad.id = :idEntidad").setParameter("idEntidad",idEntidad).getResultList();
+        List<?> integracion = em.createQuery("select distinct(i.id) from Integracion as i where i.entidad.id = :idEntidad").setParameter("idEntidad", idEntidad).getResultList();
         Integer total = integracion.size();
 
-        if(integracion.size() > 0){
+        if (integracion.size() > 0) {
 
             // Si hay más de 1000 registros, dividimos las queries (ORA-01795).
             while (integracion.size() > RegwebConstantes.NUMBER_EXPRESSIONS_IN) {

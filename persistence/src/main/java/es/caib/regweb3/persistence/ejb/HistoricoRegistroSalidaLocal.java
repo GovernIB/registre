@@ -4,7 +4,6 @@ import es.caib.regweb3.model.HistoricoRegistroSalida;
 import es.caib.regweb3.model.RegistroSalida;
 import es.caib.regweb3.model.UsuarioEntidad;
 
-import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
 import java.util.List;
 
@@ -15,7 +14,6 @@ import java.util.List;
  * Date: 30/10/14
  */
 @Local
-@RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI","RWE_WS_ENTRADA","RWE_WS_SALIDA"})
 public interface HistoricoRegistroSalidaLocal extends BaseEjb<HistoricoRegistroSalida, Long> {
 
     String JNDI_NAME = "java:app/regweb3-persistence/HistoricoRegistroSalidaEJB";
@@ -25,6 +23,7 @@ public interface HistoricoRegistroSalidaLocal extends BaseEjb<HistoricoRegistroS
 
     /**
      * Crea un HistoricoRegistroSalida según los parámetros
+     *
      * @param registroSalida
      * @param usuarioEntidad
      * @param modificacion
@@ -46,6 +45,7 @@ public interface HistoricoRegistroSalidaLocal extends BaseEjb<HistoricoRegistroS
 
     /**
      * Elimina las HistoricoRegistroEntrada de una Entidad
+     *
      * @param idEntidad
      * @return
      * @throws Exception

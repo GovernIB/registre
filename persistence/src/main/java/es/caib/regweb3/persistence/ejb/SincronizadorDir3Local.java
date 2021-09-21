@@ -1,7 +1,6 @@
 package es.caib.regweb3.persistence.ejb;
 
 
-import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
 import java.sql.Timestamp;
 
@@ -12,7 +11,6 @@ import java.sql.Timestamp;
  * Date: 6/03/13
  */
 @Local
-@RolesAllowed({"RWE_ADMIN"})
 public interface SincronizadorDir3Local {
 
 

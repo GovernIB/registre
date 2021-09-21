@@ -2,10 +2,10 @@ package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.Contador;
 import es.caib.regweb3.model.Libro;
-import org.jboss.ejb3.annotation.SecurityDomain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.security.RolesAllowed;
 import javax.annotation.security.RunAs;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -23,17 +23,16 @@ import java.util.List;
  */
 
 @Stateless(name = "LibroEJB")
-@SecurityDomain("seycon")
+@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI", "RWE_WS_ENTRADA", "RWE_WS_SALIDA"})
 @RunAs("RWE_SUPERADMIN")
-public class LibroBean extends BaseEjbJPA<Libro, Long> implements LibroLocal{
+public class LibroBean extends BaseEjbJPA<Libro, Long> implements LibroLocal {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
-    @PersistenceContext(unitName="regweb3")
+    @PersistenceContext(unitName = "regweb3")
     private EntityManager em;
 
-    @EJB
-    private ContadorLocal contadorEjb;
+    @EJB private ContadorLocal contadorEjb;
 
 
     @Override
@@ -52,7 +51,7 @@ public class LibroBean extends BaseEjbJPA<Libro, Long> implements LibroLocal{
     @SuppressWarnings(value = "unchecked")
     public List<Libro> getAll() throws Exception {
 
-        return  em.createQuery("Select libro from Libro as libro order by libro.id").getResultList();
+        return em.createQuery("Select libro from Libro as libro order by libro.id").getResultList();
     }
 
     @Override
@@ -78,17 +77,17 @@ public class LibroBean extends BaseEjbJPA<Libro, Long> implements LibroLocal{
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Libro> getLibrosEntidad(Long idEntidad) throws Exception{
+    public List<Libro> getLibrosEntidad(Long idEntidad) throws Exception {
 
         Query q = em.createQuery("Select libro.id, libro.nombre,libro.codigo, libro.organismo.id,libro.organismo.denominacion from Libro as libro where libro.activo = true and libro.organismo.entidad.id = :idEntidad order by libro.id");
-        q.setParameter("idEntidad",idEntidad);
+        q.setParameter("idEntidad", idEntidad);
         q.setHint("org.hibernate.readOnly", true);
 
-        List<Libro> libros =  new ArrayList<Libro>();
+        List<Libro> libros = new ArrayList<Libro>();
 
         List<Object[]> result = q.getResultList();
 
-        for (Object[] object : result){
+        for (Object[] object : result) {
             Libro libro = new Libro((Long) object[0], (String) object[1], (String) object[2], (Long) object[3], (String) object[4]);
 
             libros.add(libro);
@@ -104,9 +103,9 @@ public class LibroBean extends BaseEjbJPA<Libro, Long> implements LibroLocal{
         Query q = em.createQuery("Select libro.id from Libro as libro where " +
                 "libro.id != :idLibro and libro.codigo = :codigo and libro.organismo.entidad.id = :idEntidad");
 
-        q.setParameter("codigo",codigo);
-        q.setParameter("idLibro",idLibro);
-        q.setParameter("idEntidad",idEntidad);
+        q.setParameter("codigo", codigo);
+        q.setParameter("idLibro", idLibro);
+        q.setParameter("idEntidad", idEntidad);
         q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList().size() > 0;
@@ -119,14 +118,14 @@ public class LibroBean extends BaseEjbJPA<Libro, Long> implements LibroLocal{
 
         Query q = em.createQuery("Select libro from Libro as libro where libro.codigo = :codigo");
 
-        q.setParameter("codigo",codigo);
+        q.setParameter("codigo", codigo);
         q.setHint("org.hibernate.readOnly", true);
 
         List<Libro> libro = q.getResultList();
-        if(libro.size() == 1){
+        if (libro.size() == 1) {
             return libro.get(0);
-        }else{
-            return  null;
+        } else {
+            return null;
         }
 
     }
@@ -134,32 +133,32 @@ public class LibroBean extends BaseEjbJPA<Libro, Long> implements LibroLocal{
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Libro findByCodigoEntidad(String codigo, Long idEntidad) throws Exception{
+    public Libro findByCodigoEntidad(String codigo, Long idEntidad) throws Exception {
 
         Query q = em.createQuery("Select libro from Libro as libro where libro.codigo = :codigo " +
                 "and libro.organismo.entidad.id = :idEntidad");
 
-        q.setParameter("codigo",codigo);
-        q.setParameter("idEntidad",idEntidad);
+        q.setParameter("codigo", codigo);
+        q.setParameter("idEntidad", idEntidad);
         q.setHint("org.hibernate.readOnly", true);
 
         List<Libro> libro = q.getResultList();
 
-        if(libro.size() == 1){
+        if (libro.size() == 1) {
             return libro.get(0);
-        }else{
-            return  null;
+        } else {
+            return null;
         }
     }
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Boolean tieneLibro(Long idOrganismo) throws Exception{
+    public Boolean tieneLibro(Long idOrganismo) throws Exception {
 
         Query q = em.createQuery("Select libro.id from Libro as libro where " +
                 "libro.organismo.id = :idOrganismo and libro.activo = true");
 
-        q.setParameter("idOrganismo",idOrganismo);
+        q.setParameter("idOrganismo", idOrganismo);
         q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList().size() > 0;
@@ -168,12 +167,12 @@ public class LibroBean extends BaseEjbJPA<Libro, Long> implements LibroLocal{
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Libro> getLibrosActivosOrganismo(Long idOrganismo) throws Exception{
+    public List<Libro> getLibrosActivosOrganismo(Long idOrganismo) throws Exception {
 
         Query q = em.createQuery("Select libro.id,libro.codigo, libro.nombre from Libro as libro where " +
                 "libro.organismo.id = :idOrganismo and libro.activo = true");
 
-        q.setParameter("idOrganismo",idOrganismo);
+        q.setParameter("idOrganismo", idOrganismo);
         q.setHint("org.hibernate.readOnly", true);
 
         List<Object[]> result = q.getResultList();
@@ -190,13 +189,13 @@ public class LibroBean extends BaseEjbJPA<Libro, Long> implements LibroLocal{
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Libro> getLibrosActivosOrganismoDiferente(String codigoOrganismo, Long idEntidad) throws Exception{
+    public List<Libro> getLibrosActivosOrganismoDiferente(String codigoOrganismo, Long idEntidad) throws Exception {
 
         Query q = em.createQuery("Select libro.id,libro.codigo, libro.nombre from Libro as libro where " +
                 "libro.organismo.codigo = :codigoOrganismo and libro.activo = true and organismo.entidad.id != :idEntidad");
 
-        q.setParameter("codigoOrganismo",codigoOrganismo);
-        q.setParameter("idEntidad",idEntidad);
+        q.setParameter("codigoOrganismo", codigoOrganismo);
+        q.setParameter("idEntidad", idEntidad);
         q.setHint("org.hibernate.readOnly", true);
 
         List<Object[]> result = q.getResultList();
@@ -213,31 +212,31 @@ public class LibroBean extends BaseEjbJPA<Libro, Long> implements LibroLocal{
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Libro> getLibrosOrganismo(Long idOrganismo) throws Exception{
+    public List<Libro> getLibrosOrganismo(Long idOrganismo) throws Exception {
 
         Query q = em.createQuery("Select libro from Libro as libro where " +
                 "libro.organismo.id = :idOrganismo");
 
-        q.setParameter("idOrganismo",idOrganismo);
+        q.setParameter("idOrganismo", idOrganismo);
         q.setHint("org.hibernate.readOnly", true);
 
-        return  q.getResultList();
+        return q.getResultList();
     }
 
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Libro> getTodosLibrosEntidad(Long idEntidad) throws Exception{
+    public List<Libro> getTodosLibrosEntidad(Long idEntidad) throws Exception {
 
         Query q = em.createQuery("Select libro from Libro as libro where libro.organismo.entidad.id = :idEntidad order by libro.id");
-        q.setParameter("idEntidad",idEntidad);
+        q.setParameter("idEntidad", idEntidad);
         q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList();
     }
 
     @Override
-    public void reiniciarContadores(Long idLibro) throws Exception{
+    public void reiniciarContadores(Long idLibro) throws Exception {
 
         Libro libro = findById(idLibro);
 
@@ -249,7 +248,7 @@ public class LibroBean extends BaseEjbJPA<Libro, Long> implements LibroLocal{
     }
 
     @Override
-    public Libro crearLibro(Libro libro) throws Exception{
+    public Libro crearLibro(Libro libro) throws Exception {
 
         Contador contadorEntrada = contadorEjb.persist(new Contador());
         Contador contadorSalida = contadorEjb.persist(new Contador());
@@ -265,9 +264,9 @@ public class LibroBean extends BaseEjbJPA<Libro, Long> implements LibroLocal{
     }
 
     @Override
-    public Integer eliminarByEntidad(Long idEntidad) throws Exception{
+    public Integer eliminarByEntidad(Long idEntidad) throws Exception {
 
-        List<?> libros = em.createQuery("Select distinct(o.id) from Libro as o where o.organismo.entidad.id =:idEntidad").setParameter("idEntidad",idEntidad).getResultList();
+        List<?> libros = em.createQuery("Select distinct(o.id) from Libro as o where o.organismo.entidad.id =:idEntidad").setParameter("idEntidad", idEntidad).getResultList();
 
         for (Object idLibro : libros) {
             Long id = (Long) idLibro;

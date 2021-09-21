@@ -10,10 +10,10 @@ import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.pluginsib.userinformation.IUserInformationPlugin;
 import org.fundaciobit.pluginsib.userinformation.RolesInfo;
 import org.fundaciobit.pluginsib.userinformation.UserInfo;
-import org.jboss.ejb3.annotation.SecurityDomain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.naming.InitialContext;
@@ -30,12 +30,12 @@ import java.util.*;
  */
 
 @Stateless(name = "UsuarioEJB")
-@SecurityDomain("seycon")
-public class UsuarioBean extends BaseEjbJPA<Usuario, Long> implements UsuarioLocal{
+@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI", "RWE_WS_ENTRADA", "RWE_WS_SALIDA", "RWE_WS_CIUDADANO"})
+public class UsuarioBean extends BaseEjbJPA<Usuario, Long> implements UsuarioLocal {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
-    @PersistenceContext(unitName="regweb3")
+    @PersistenceContext(unitName = "regweb3")
     private EntityManager em;
 
     @EJB private PluginLocal pluginEjb;
@@ -57,7 +57,7 @@ public class UsuarioBean extends BaseEjbJPA<Usuario, Long> implements UsuarioLoc
     @SuppressWarnings(value = "unchecked")
     public List<Usuario> getAll() throws Exception {
 
-        return  em.createQuery("Select usuario from Usuario as usuario order by usuario.id").getResultList();
+        return em.createQuery("Select usuario from Usuario as usuario order by usuario.id").getResultList();
     }
 
     @Override
@@ -83,6 +83,7 @@ public class UsuarioBean extends BaseEjbJPA<Usuario, Long> implements UsuarioLoc
     /**
      * Crea un nuevo usuario en REGWEB3, a partir del identificador de Seycon, obtiene sus
      * datos personales de la bbdd de Seycon, aunque no tenga ningún ROL de REGWEB3.
+     *
      * @param identificador
      * @return
      * @throws Exception
@@ -93,27 +94,27 @@ public class UsuarioBean extends BaseEjbJPA<Usuario, Long> implements UsuarioLoc
         Usuario usuario = findByIdentificador(identificador);
 
         // Si no existe, lo creamos
-        if(usuario == null){
+        if (usuario == null) {
 
-            IUserInformationPlugin loginPlugin = (IUserInformationPlugin) pluginEjb.getPlugin(null,RegwebConstantes.PLUGIN_USER_INFORMATION);
+            IUserInformationPlugin loginPlugin = (IUserInformationPlugin) pluginEjb.getPlugin(null, RegwebConstantes.PLUGIN_USER_INFORMATION);
             UserInfo regwebUserInfo = loginPlugin.getUserInfoByUserName(identificador);
 
-            if(regwebUserInfo != null){ // Si el documento existe en el Sistema de autentificación
+            if (regwebUserInfo != null) { // Si el documento existe en el Sistema de autentificación
 
                 usuario = new Usuario();
                 usuario.setNombre(regwebUserInfo.getName());
 
                 //Idioma por defecto
-                Long idioma  = RegwebConstantes.IDIOMA_ID_BY_CODIGO.get(Configuracio.getDefaultLanguage());
+                Long idioma = RegwebConstantes.IDIOMA_ID_BY_CODIGO.get(Configuracio.getDefaultLanguage());
                 usuario.setIdioma(idioma);
 
-                if(regwebUserInfo.getSurname1() != null){
+                if (regwebUserInfo.getSurname1() != null) {
                     usuario.setApellido1(regwebUserInfo.getSurname1());
-                }else{
+                } else {
                     usuario.setApellido1("");
                 }
 
-                if(regwebUserInfo.getSurname2() != null){
+                if (regwebUserInfo.getSurname2() != null) {
                     usuario.setApellido2(regwebUserInfo.getSurname2());
                 } else {
                     usuario.setApellido2("");
@@ -123,30 +124,30 @@ public class UsuarioBean extends BaseEjbJPA<Usuario, Long> implements UsuarioLoc
                 usuario.setIdentificador(identificador);
 
                 // Email
-                if(regwebUserInfo.getEmail() != null){
+                if (regwebUserInfo.getEmail() != null) {
                     usuario.setEmail(regwebUserInfo.getEmail());
-                }else{
+                } else {
                     usuario.setEmail("no hi ha email");
                 }
 
                 // Tipo Usuario
-                if(identificador.startsWith("$")){
+                if (identificador.startsWith("$")) {
                     usuario.setTipoUsuario(RegwebConstantes.TIPO_USUARIO_APLICACION);
-                }else{
+                } else {
                     usuario.setTipoUsuario(RegwebConstantes.TIPO_USUARIO_PERSONA);
                 }
 
                 // Roles
                 RolesInfo rolesInfo = loginPlugin.getRolesByUsername(identificador);
 
-                if(rolesInfo != null && rolesInfo.getRoles().length > 0){
+                if (rolesInfo != null && rolesInfo.getRoles().length > 0) {
                     List<String> roles = new ArrayList<String>();
                     Collections.addAll(roles, rolesInfo.getRoles());
 
-                    if(roles.size() > 0){
+                    if (roles.size() > 0) {
                         usuario.setRoles(rolEjb.getByRol(roles));
                     }
-                }else{
+                } else {
                     log.info("El usuario " + identificador + " no dispone de ningun Rol de REGWEB3 en el sistema de autentificacion");
                 }
 
@@ -154,7 +155,7 @@ public class UsuarioBean extends BaseEjbJPA<Usuario, Long> implements UsuarioLoc
                 usuario = persist(usuario);
                 log.info("Usuario " + usuario.getNombreCompleto() + " creado correctamente");
                 return usuario;
-            }else{
+            } else {
                 log.info("Usuario " + identificador + " no encontrado en el sistema de usuarios");
                 return null;
             }
@@ -169,29 +170,29 @@ public class UsuarioBean extends BaseEjbJPA<Usuario, Long> implements UsuarioLoc
 
         Query q = em.createQuery("Select usuario from Usuario as usuario where usuario.identificador = :identificador");
 
-        q.setParameter("identificador",identificador);
+        q.setParameter("identificador", identificador);
 
         List<Usuario> usuario = q.getResultList();
-        if(usuario.size() == 1){
+        if (usuario.size() == 1) {
             return usuario.get(0);
-        }else{
-            return  null;
+        } else {
+            return null;
         }
 
     }
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Usuario findByDocumento(String documento) throws Exception{
+    public Usuario findByDocumento(String documento) throws Exception {
         Query q = em.createQuery("Select usuario from Usuario as usuario where usuario.documento = :documento");
 
-        q.setParameter("documento",documento);
+        q.setParameter("documento", documento);
 
         List<Usuario> usuario = q.getResultList();
-        if(usuario.size() == 1){
+        if (usuario.size() == 1) {
             return usuario.get(0);
-        }else{
-            return  null;
+        } else {
+            return null;
         }
     }
 
@@ -201,27 +202,27 @@ public class UsuarioBean extends BaseEjbJPA<Usuario, Long> implements UsuarioLoc
         Query q = em.createQuery("Select usuario.id from Usuario as usuario where " +
                 "usuario.id != :idUsuario and usuario.identificador = :identificador");
 
-        q.setParameter("identificador",identificador);
-        q.setParameter("idUsuario",idUsuario);
+        q.setParameter("identificador", identificador);
+        q.setParameter("idUsuario", idUsuario);
 
         return q.getResultList().size() > 0;
 
     }
 
     @Override
-    public Boolean existeDocumentioEdit(String documento, Long idUsuario) throws Exception{
+    public Boolean existeDocumentioEdit(String documento, Long idUsuario) throws Exception {
         Query q = em.createQuery("Select usuario.id from Usuario as usuario where " +
                 "usuario.id != :idUsuario and usuario.documento = :documento");
 
-        q.setParameter("documento",documento);
-        q.setParameter("idUsuario",idUsuario);
+        q.setParameter("documento", documento);
+        q.setParameter("idUsuario", idUsuario);
 
         return q.getResultList().size() > 0;
     }
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Paginacion busqueda(Integer pageNumber,String identificador,String nombre, String apellido1, String apellido2, String documento, Long tipoUsuario) throws Exception {
+    public Paginacion busqueda(Integer pageNumber, String identificador, String nombre, String apellido1, String apellido2, String documento, Long tipoUsuario) throws Exception {
 
         Query q;
         Query q2;
@@ -230,11 +231,22 @@ public class UsuarioBean extends BaseEjbJPA<Usuario, Long> implements UsuarioLoc
 
         StringBuilder query = new StringBuilder("Select usuario from Usuario as usuario ");
 
-        if(identificador!= null && identificador.length() > 0){where.add(DataBaseUtils.like("usuario.identificador","identificador",parametros,identificador));}
-        if(nombre!= null && nombre.length() > 0){where.add(DataBaseUtils.like("usuario.nombre","nombre",parametros,nombre));}
-        if(apellido1!= null && apellido1.length() > 0){where.add(DataBaseUtils.like("usuario.apellido1","apellido1",parametros,apellido1));}
-        if(apellido2!= null && apellido2.length() > 0){where.add(DataBaseUtils.like("usuario.apellido2","apellido2",parametros,apellido2));}
-        if(documento!= null && documento.length() > 0){where.add(" upper(usuario.documento) like upper(:documento) "); parametros.put("documento","%"+documento.toLowerCase()+"%");}
+        if (identificador != null && identificador.length() > 0) {
+            where.add(DataBaseUtils.like("usuario.identificador", "identificador", parametros, identificador));
+        }
+        if (nombre != null && nombre.length() > 0) {
+            where.add(DataBaseUtils.like("usuario.nombre", "nombre", parametros, nombre));
+        }
+        if (apellido1 != null && apellido1.length() > 0) {
+            where.add(DataBaseUtils.like("usuario.apellido1", "apellido1", parametros, apellido1));
+        }
+        if (apellido2 != null && apellido2.length() > 0) {
+            where.add(DataBaseUtils.like("usuario.apellido2", "apellido2", parametros, apellido2));
+        }
+        if (documento != null && documento.length() > 0) {
+            where.add(" upper(usuario.documento) like upper(:documento) ");
+            parametros.put("documento", "%" + documento.toLowerCase() + "%");
+        }
         if (tipoUsuario != null && tipoUsuario > 0) {
             where.add(" usuario.tipoUsuario = :tipoUsuario ");
             parametros.put("tipoUsuario", tipoUsuario);
@@ -260,7 +272,7 @@ public class UsuarioBean extends BaseEjbJPA<Usuario, Long> implements UsuarioLoc
                 q2.setParameter(param.getKey(), param.getValue());
             }
 
-        }else{
+        } else {
             q2 = em.createQuery(query.toString().replaceAll("Select usuario from Usuario as usuario ", "Select count(usuario.id) from Usuario as usuario "));
             query.append("order by usuario.nombre, usuario.apellido1");
             q = em.createQuery(query.toString());
@@ -268,13 +280,13 @@ public class UsuarioBean extends BaseEjbJPA<Usuario, Long> implements UsuarioLoc
 
         Paginacion paginacion;
 
-        if(pageNumber != null){ // Comprobamos si es una busqueda paginada o no
-            Long total = (Long)q2.getSingleResult();
+        if (pageNumber != null) { // Comprobamos si es una busqueda paginada o no
+            Long total = (Long) q2.getSingleResult();
             paginacion = new Paginacion(total.intValue(), pageNumber);
             int inicio = (pageNumber - 1) * BaseEjbJPA.RESULTADOS_PAGINACION;
             q.setFirstResult(inicio);
             q.setMaxResults(RESULTADOS_PAGINACION);
-        }else{
+        } else {
             paginacion = new Paginacion(0, 0);
         }
 
@@ -301,7 +313,7 @@ public class UsuarioBean extends BaseEjbJPA<Usuario, Long> implements UsuarioLoc
 
         //List<Rol> rolesUsuario = rolEjb.obtenerRolesUserPlugin(usuario.getIdentificador());
 
-        if(rolesUsuario != null) {
+        if (rolesUsuario != null) {
 
             // Actualizamos los Roles del usuario según sistema externo
             usuario.setRoles(rolesUsuario);
@@ -317,18 +329,18 @@ public class UsuarioBean extends BaseEjbJPA<Usuario, Long> implements UsuarioLoc
         List<String> roles = new ArrayList<String>();
         List<Rol> rolesUsuario = null;
 
-        if(rolesInfo != null && rolesInfo.getRoles().length > 0){
+        if (rolesInfo != null && rolesInfo.getRoles().length > 0) {
 
             Collections.addAll(roles, rolesInfo.getRoles());
-            if(roles.size() > 0){
+            if (roles.size() > 0) {
 
                 rolesUsuario = rolEjb.getByRol(roles);
             }
-        }else{
+        } else {
             log.info("El usuario " + usuario.getIdentificador() + " no dispone de ningun Rol de REGWEB3 en el sistema de autentificacion");
         }
 
-        if(rolesUsuario != null) {
+        if (rolesUsuario != null) {
 
             // Actualizamos los Roles del usuario según sistema externo
             usuario.setRoles(rolesUsuario);

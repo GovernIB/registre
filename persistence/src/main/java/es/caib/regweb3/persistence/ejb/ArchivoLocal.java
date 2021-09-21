@@ -14,7 +14,6 @@ import java.util.List;
  * Date: 6/03/13
  */
 @Local
-@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI"})
 public interface ArchivoLocal extends BaseEjb<Archivo, Long> {
 
     String JNDI_NAME = "java:app/regweb3-persistence/ArchivoEJB";

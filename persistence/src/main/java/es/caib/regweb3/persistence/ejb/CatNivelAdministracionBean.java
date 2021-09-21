@@ -1,10 +1,10 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.CatNivelAdministracion;
-import org.jboss.ejb3.annotation.SecurityDomain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -19,7 +19,7 @@ import java.util.List;
  */
 
 @Stateless(name = "CatNivelAdministracionEJB")
-@SecurityDomain("seycon")
+@RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI"})
 public class CatNivelAdministracionBean extends BaseEjbJPA<CatNivelAdministracion, Long> implements CatNivelAdministracionLocal{
 
     protected final Logger log = LoggerFactory.getLogger(getClass());

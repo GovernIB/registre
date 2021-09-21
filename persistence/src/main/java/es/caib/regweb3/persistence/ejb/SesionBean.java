@@ -4,10 +4,10 @@ import es.caib.regweb3.model.Sesion;
 import es.caib.regweb3.model.UsuarioEntidad;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.utils.RegwebConstantes;
-import org.jboss.ejb3.annotation.SecurityDomain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -26,13 +26,13 @@ import java.util.List;
  */
 
 @Stateless(name = "SesionEJB")
-@SecurityDomain("seycon")
+@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI", "RWE_WS_ENTRADA", "RWE_WS_SALIDA", "RWE_WS_CIUDADANO"})
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-public class SesionBean extends BaseEjbJPA<Sesion, Long> implements SesionLocal{
+public class SesionBean extends BaseEjbJPA<Sesion, Long> implements SesionLocal {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
-    @PersistenceContext(unitName="regweb3")
+    @PersistenceContext(unitName = "regweb3")
     private EntityManager em;
 
 
@@ -52,7 +52,7 @@ public class SesionBean extends BaseEjbJPA<Sesion, Long> implements SesionLocal{
     @SuppressWarnings(value = "unchecked")
     public List<Sesion> getAll() throws Exception {
 
-        return  em.createQuery("Select sesion from Sesion as sesion order by sesion.id").getResultList();
+        return em.createQuery("Select sesion from Sesion as sesion order by sesion.id").getResultList();
     }
 
     @Override
@@ -76,7 +76,7 @@ public class SesionBean extends BaseEjbJPA<Sesion, Long> implements SesionLocal{
     }
 
     @Override
-    public Sesion nuevaSesion(UsuarioEntidad usuario) throws Exception{
+    public Sesion nuevaSesion(UsuarioEntidad usuario) throws Exception {
 
         // Creamos un nuevo token
         SecureRandom secureRandom = new SecureRandom();
@@ -99,10 +99,10 @@ public class SesionBean extends BaseEjbJPA<Sesion, Long> implements SesionLocal{
         q.setParameter("idUsuario", usuario.getId());
 
         List<Sesion> result = q.getResultList();
-        if(result.size() == 1){
+        if (result.size() == 1) {
             return result.get(0);
-        }else{
-            return  null;
+        } else {
+            return null;
         }
     }
 
@@ -118,15 +118,15 @@ public class SesionBean extends BaseEjbJPA<Sesion, Long> implements SesionLocal{
         q.setParameter("estado", estado);
 
         List<Sesion> result = q.getResultList();
-        if(result.size() == 1){
+        if (result.size() == 1) {
             return result.get(0);
-        }else{
-            return  null;
+        } else {
+            return null;
         }
     }
 
     @Override
-    public void cambiarEstado(Long idSesion, UsuarioEntidad usuario, Long estado) throws Exception{
+    public void cambiarEstado(Long idSesion, UsuarioEntidad usuario, Long estado) throws Exception {
 
         Sesion sesion = findByIdSesionUsuario(idSesion, usuario);
 
@@ -136,7 +136,7 @@ public class SesionBean extends BaseEjbJPA<Sesion, Long> implements SesionLocal{
     }
 
     @Override
-    public void iniciarSesion(Long idSesion, UsuarioEntidad usuario) throws Exception{
+    public void iniciarSesion(Long idSesion, UsuarioEntidad usuario) throws Exception {
 
         Sesion sesion;
 
@@ -149,20 +149,20 @@ public class SesionBean extends BaseEjbJPA<Sesion, Long> implements SesionLocal{
 
         List<Sesion> result = q.getResultList();
 
-        if(result.size() == 1){
+        if (result.size() == 1) {
 
-            sesion =  result.get(0);
+            sesion = result.get(0);
 
             sesion.setEstado(RegwebConstantes.SESION_INICIADA);
             merge(sesion);
 
-        }else{
+        } else {
             throw new Exception("El idSesion no existe en el sistema");
         }
     }
 
     @Override
-    public void finalizarSesion(Long idSesion, UsuarioEntidad usuario, Long tipoRegistro, String numeroRegistro) throws Exception{
+    public void finalizarSesion(Long idSesion, UsuarioEntidad usuario, Long tipoRegistro, String numeroRegistro) throws Exception {
 
         Sesion sesion = findByIdSesionUsuario(idSesion, usuario);
 
@@ -174,7 +174,7 @@ public class SesionBean extends BaseEjbJPA<Sesion, Long> implements SesionLocal{
     }
 
     @Override
-    public void purgarSesiones(Long idEntidad) throws Exception{
+    public void purgarSesiones(Long idEntidad) throws Exception {
 
         purgarSesionesIniciadas(idEntidad);
         purgarSesionesErrorFinalidadas(idEntidad);
@@ -182,12 +182,12 @@ public class SesionBean extends BaseEjbJPA<Sesion, Long> implements SesionLocal{
 
     }
 
-    private void purgarSesionesIniciadas(Long idEntidad) throws Exception{
+    private void purgarSesionesIniciadas(Long idEntidad) throws Exception {
 
         Calendar hoy = Calendar.getInstance(); //obtiene la fecha de hoy
         hoy.add(Calendar.MINUTE, -PropiedadGlobalUtil.getSesionMinutosPurgadoIniciadas(idEntidad)); //el -X indica que se le restaran X minutos
 
-        List<?> result =  em.createQuery("select distinct(s.id) from Sesion as s where s.usuario.entidad.id = :idEntidad and s.estado = :iniciada and s.fecha <= :fecha")
+        List<?> result = em.createQuery("select distinct(s.id) from Sesion as s where s.usuario.entidad.id = :idEntidad and s.estado = :iniciada and s.fecha <= :fecha")
                 .setParameter("idEntidad", idEntidad)
                 .setParameter("iniciada", RegwebConstantes.SESION_INICIADA)
                 .setParameter("fecha", hoy.getTime()).getResultList();
@@ -196,12 +196,12 @@ public class SesionBean extends BaseEjbJPA<Sesion, Long> implements SesionLocal{
 
     }
 
-    private void purgarSesionesNoIniciadas(Long idEntidad) throws Exception{
+    private void purgarSesionesNoIniciadas(Long idEntidad) throws Exception {
 
         Calendar hoy = Calendar.getInstance(); //obtiene la fecha de hoy
         hoy.add(Calendar.MINUTE, -PropiedadGlobalUtil.getSesionMinutosPurgadoNoIniciadas(idEntidad)); //el -X indica que se le restaran X minutos
 
-        List<?> result =  em.createQuery("select distinct(s.id) from Sesion as s where s.usuario.entidad.id = :idEntidad and s.estado = :no_iniciada and s.fecha <= :fecha")
+        List<?> result = em.createQuery("select distinct(s.id) from Sesion as s where s.usuario.entidad.id = :idEntidad and s.estado = :no_iniciada and s.fecha <= :fecha")
                 .setParameter("idEntidad", idEntidad)
                 .setParameter("no_iniciada", RegwebConstantes.SESION_NO_INICIADA)
                 .setParameter("fecha", hoy.getTime()).getResultList();
@@ -209,12 +209,12 @@ public class SesionBean extends BaseEjbJPA<Sesion, Long> implements SesionLocal{
         eliminarSesiones(result);
     }
 
-    private void purgarSesionesErrorFinalidadas(Long idEntidad) throws Exception{
+    private void purgarSesionesErrorFinalidadas(Long idEntidad) throws Exception {
 
         Calendar hoy = Calendar.getInstance(); //obtiene la fecha de hoy
         hoy.add(Calendar.MINUTE, -PropiedadGlobalUtil.getSesionMinutosPurgadoFinalizadas(idEntidad)); //el -X indica que se le restaran X minutos
 
-        List<?> result =  em.createQuery("select distinct(s.id) from Sesion as s where s.usuario.entidad.id = :idEntidad and (s.estado = :error or s.estado = :finalizada) and s.fecha <= :fecha")
+        List<?> result = em.createQuery("select distinct(s.id) from Sesion as s where s.usuario.entidad.id = :idEntidad and (s.estado = :error or s.estado = :finalizada) and s.fecha <= :fecha")
                 .setParameter("idEntidad", idEntidad)
                 .setParameter("error", RegwebConstantes.SESION_ERROR)
                 .setParameter("finalizada", RegwebConstantes.SESION_FINALIZADA)
@@ -223,9 +223,9 @@ public class SesionBean extends BaseEjbJPA<Sesion, Long> implements SesionLocal{
         eliminarSesiones(result);
     }
 
-    private void eliminarSesiones(List<?> sesiones) throws Exception{
+    private void eliminarSesiones(List<?> sesiones) throws Exception {
 
-        if(sesiones.size() > 0){
+        if (sesiones.size() > 0) {
 
             // Si hay más de 1000 registros, dividimos las queries (ORA-01795).
             while (sesiones.size() > RegwebConstantes.NUMBER_EXPRESSIONS_IN) {

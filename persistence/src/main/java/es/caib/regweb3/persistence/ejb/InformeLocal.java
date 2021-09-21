@@ -3,7 +3,6 @@ package es.caib.regweb3.persistence.ejb;
 import es.caib.regweb3.model.RegistroEntrada;
 import es.caib.regweb3.model.RegistroSalida;
 
-import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
 import java.util.Date;
 import java.util.List;
@@ -12,10 +11,9 @@ import java.util.List;
  * Created by Fundació BIT.
  *
  * @author jpernia
- *         Date: 05/07/16
+ * Date: 05/07/16
  */
 @Local
-@RolesAllowed({"RWE_ADMIN", "RWE_USUARI"})
 public interface InformeLocal {
 
     String JNDI_NAME = "java:app/regweb3-persistence/InformeEJB";

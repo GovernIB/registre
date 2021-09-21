@@ -4,7 +4,6 @@ import es.caib.regweb3.model.Contador;
 import es.caib.regweb3.model.Libro;
 import es.caib.regweb3.persistence.utils.NumeroRegistro;
 
-import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
 
 /**
@@ -14,13 +13,13 @@ import javax.ejb.Local;
  * Date: 16/01/14
  */
 @Local
-@RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI","RWE_WS_ENTRADA","RWE_WS_SALIDA"})
 public interface ContadorLocal extends BaseEjb<Contador, Long> {
 
     String JNDI_NAME = "java:app/regweb3-persistence/ContadorEJB";
 
     /**
      * Aumenta el 1 el contador pasado por parámetro
+     *
      * @param idContador
      * @return
      * @throws Exception
@@ -29,6 +28,7 @@ public interface ContadorLocal extends BaseEjb<Contador, Long> {
 
     /**
      * Pone a 0 el Contador
+     *
      * @param idContador
      * @throws Exception
      */
@@ -36,6 +36,7 @@ public interface ContadorLocal extends BaseEjb<Contador, Long> {
 
     /**
      * Reinicia todos los contadores de un Libro
+     *
      * @param libro
      * @throws Exception
      */
@@ -43,6 +44,7 @@ public interface ContadorLocal extends BaseEjb<Contador, Long> {
 
     /**
      * Obtiene una secuenta de 8 dígitos a partir del Contador Sir de la Entidad
+     *
      * @param idContador
      * @return
      * @throws Exception

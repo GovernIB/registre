@@ -1,10 +1,10 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.RegistroEntrada;
-import org.jboss.ejb3.annotation.SecurityDomain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -20,19 +20,18 @@ import java.util.List;
  */
 
 @Stateless(name = "RegistroEntradaCambiarEstadoEJB")
-@SecurityDomain("seycon")
+@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI", "RWE_WS_ENTRADA", "RWE_WS_SALIDA"})
 public class RegistroEntradaCambiarEstadoBean extends BaseEjbJPA<RegistroEntrada, Long>
-   implements RegistroEntradaCambiarEstadoLocal {
+        implements RegistroEntradaCambiarEstadoLocal {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
-    @PersistenceContext(unitName="regweb3")
+    @PersistenceContext(unitName = "regweb3")
     private EntityManager em;
 
 
-
     @Override
-    public void cambiarEstado(Long idRegistro, Long idEstado) throws Exception{
+    public void cambiarEstado(Long idRegistro, Long idEstado) throws Exception {
 
         Query q = em.createQuery("update RegistroEntrada set estado=:idEstado where id = :idRegistro");
         q.setParameter("idEstado", idEstado);
@@ -57,7 +56,7 @@ public class RegistroEntradaCambiarEstadoBean extends BaseEjbJPA<RegistroEntrada
     @SuppressWarnings(value = "unchecked")
     public List<RegistroEntrada> getAll() throws Exception {
 
-        return  em.createQuery("Select registroEntrada from RegistroEntrada as registroEntrada order by registroEntrada.id").getResultList();
+        return em.createQuery("Select registroEntrada from RegistroEntrada as registroEntrada order by registroEntrada.id").getResultList();
     }
 
     @Override

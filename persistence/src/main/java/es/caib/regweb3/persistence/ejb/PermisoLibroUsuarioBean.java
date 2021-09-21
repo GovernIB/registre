@@ -2,10 +2,10 @@ package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.PermisoLibroUsuario;
 import es.caib.regweb3.utils.RegwebConstantes;
-import org.jboss.ejb3.annotation.SecurityDomain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -22,13 +22,13 @@ import java.util.List;
  */
 
 @Stateless(name = "PermisoLibroUsuarioEJB")
-@SecurityDomain("seycon")
-public class PermisoLibroUsuarioBean extends BaseEjbJPA<PermisoLibroUsuario, Long> 
-   implements PermisoLibroUsuarioLocal, RegwebConstantes {
+@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI", "RWE_WS_ENTRADA", "RWE_WS_SALIDA", "RWE_WS_CIUDADANO"})
+public class PermisoLibroUsuarioBean extends BaseEjbJPA<PermisoLibroUsuario, Long>
+        implements PermisoLibroUsuarioLocal, RegwebConstantes {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
-    @PersistenceContext(unitName="regweb3")
+    @PersistenceContext(unitName = "regweb3")
     private EntityManager em;
 
     @EJB private CatEstadoEntidadLocal catEstadoEntidadEjb;
@@ -52,7 +52,7 @@ public class PermisoLibroUsuarioBean extends BaseEjbJPA<PermisoLibroUsuario, Lon
     @SuppressWarnings(value = "unchecked")
     public List<PermisoLibroUsuario> getAll() throws Exception {
 
-        return  em.createQuery("Select permisoLibroUsuario from PermisoLibroUsuario as permisoLibroUsuario order by permisoLibroUsuario.libro.id").getResultList();
+        return em.createQuery("Select permisoLibroUsuario from PermisoLibroUsuario as permisoLibroUsuario order by permisoLibroUsuario.libro.id").getResultList();
     }
 
     @Override
@@ -83,14 +83,14 @@ public class PermisoLibroUsuarioBean extends BaseEjbJPA<PermisoLibroUsuario, Lon
 
         Query q = em.createQuery("Select plu.id, plu.permiso, plu.activo, plu.usuario.id from PermisoLibroUsuario as plu where plu.libro.id = :idLibro order by plu.usuario.id");
 
-        q.setParameter("idLibro",idLibro);
+        q.setParameter("idLibro", idLibro);
 
         List<PermisoLibroUsuario> plus = new ArrayList<PermisoLibroUsuario>();
 
         List<Object[]> result = q.getResultList();
 
         for (Object[] object : result) {
-            PermisoLibroUsuario plu = new PermisoLibroUsuario((Long) object[0],(Long) object[1], (Boolean) object[2], (Long) object[3]);
+            PermisoLibroUsuario plu = new PermisoLibroUsuario((Long) object[0], (Long) object[1], (Boolean) object[2], (Long) object[3]);
 
             plus.add(plu);
         }
@@ -99,12 +99,12 @@ public class PermisoLibroUsuarioBean extends BaseEjbJPA<PermisoLibroUsuario, Lon
     }
 
     @Override
-    public Integer eliminarByEntidad(Long idEntidad) throws Exception{
+    public Integer eliminarByEntidad(Long idEntidad) throws Exception {
 
-        List<?> plus = em.createQuery("select distinct(plu.id) from PermisoLibroUsuario as plu where plu.usuario.entidad.id =:idEntidad").setParameter("idEntidad",idEntidad).getResultList();
+        List<?> plus = em.createQuery("select distinct(plu.id) from PermisoLibroUsuario as plu where plu.usuario.entidad.id =:idEntidad").setParameter("idEntidad", idEntidad).getResultList();
         Integer total = plus.size();
 
-        if(plus.size() > 0){
+        if (plus.size() > 0) {
 
             // Si hay más de 1000 registros, dividimos las queries (ORA-01795).
             while (plus.size() > RegwebConstantes.NUMBER_EXPRESSIONS_IN) {

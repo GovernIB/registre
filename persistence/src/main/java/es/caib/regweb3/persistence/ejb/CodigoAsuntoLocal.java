@@ -2,7 +2,6 @@ package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.CodigoAsunto;
 
-import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
 import java.util.List;
 
@@ -13,13 +12,11 @@ import java.util.List;
  * Date: 16/01/14
  */
 @Local
-@RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI","RWE_WS_ENTRADA","RWE_WS_SALIDA"})
 public interface CodigoAsuntoLocal extends BaseEjb<CodigoAsunto, Long> {
 
     String JNDI_NAME = "java:app/regweb3-persistence/CodigoAsuntoEJB";
 
     /**
-     *
      * @param idTipoAsunto
      * @return
      * @throws Exception
@@ -27,7 +24,6 @@ public interface CodigoAsuntoLocal extends BaseEjb<CodigoAsunto, Long> {
     Long getTotal(Long idTipoAsunto) throws Exception;
 
     /**
-     *
      * @param inicio
      * @param idEntidad
      * @return
@@ -36,7 +32,6 @@ public interface CodigoAsuntoLocal extends BaseEjb<CodigoAsunto, Long> {
     List<CodigoAsunto> getPagination(int inicio, Long idEntidad) throws Exception;
 
     /**
-     *
      * @param idEntidad
      * @return
      * @throws Exception
@@ -45,6 +40,7 @@ public interface CodigoAsuntoLocal extends BaseEjb<CodigoAsunto, Long> {
 
     /**
      * Obtiene los CodigoAsunto pertenecientes a un TipoAsunto
+     *
      * @param idTipoAsunto
      * @return
      * @throws Exception
@@ -52,7 +48,6 @@ public interface CodigoAsuntoLocal extends BaseEjb<CodigoAsunto, Long> {
     List<CodigoAsunto> getByTipoAsunto(Long idTipoAsunto) throws Exception;
 
     /**
-     *
      * @param idEntidad
      * @return
      * @throws Exception
@@ -61,6 +56,7 @@ public interface CodigoAsuntoLocal extends BaseEjb<CodigoAsunto, Long> {
 
     /**
      * Obtiene los CodigoAsunto Activos pertenecientes a un TipoAsunto
+     *
      * @param idTipoAsunto
      * @return
      * @throws Exception
@@ -69,6 +65,7 @@ public interface CodigoAsuntoLocal extends BaseEjb<CodigoAsunto, Long> {
 
     /**
      * Retorna el {@link es.caib.regweb3.model.CodigoAsunto} asociado a un codigo.
+     *
      * @param codigo
      * @return
      * @throws Exception
@@ -76,7 +73,6 @@ public interface CodigoAsuntoLocal extends BaseEjb<CodigoAsunto, Long> {
     CodigoAsunto findByCodigo(String codigo) throws Exception;
 
     /**
-     *
      * @param codigo
      * @param idCodigoAsunto
      * @param idEntidad
@@ -87,6 +83,7 @@ public interface CodigoAsuntoLocal extends BaseEjb<CodigoAsunto, Long> {
 
     /**
      * Comprueba que el {@link es.caib.regweb3.model.CodigoAsunto} codigo de asunto ya no existe para una Entidad.
+     *
      * @param codigo
      * @param idEntidad
      * @return
@@ -96,6 +93,7 @@ public interface CodigoAsuntoLocal extends BaseEjb<CodigoAsunto, Long> {
 
     /**
      * Elimina los CodigoAsunto de una Entidad
+     *
      * @param idEntidad
      * @return
      * @throws Exception

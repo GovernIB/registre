@@ -7,7 +7,6 @@ import es.caib.regweb3.persistence.utils.OficiosRemisionOrganismo;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 
-import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -18,17 +17,15 @@ import java.util.List;
  *
  * @author earrivi
  * @author anadal (EJB)
- *         Date: 16/01/14
+ * Date: 16/01/14
  */
 @Local
-@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI","RWE_WS_ENTRADA","RWE_WS_SALIDA"})
 public interface OficioRemisionSalidaUtilsLocal {
 
     String JNDI_NAME = "java:app/regweb3-persistence/OficioRemisionSalidaUtilsEJB";
 
 
     /**
-     *
      * @param idOficina
      * @param tipoEvento
      * @param total
@@ -39,6 +36,7 @@ public interface OficioRemisionSalidaUtilsLocal {
 
     /**
      * Obtiene el total de Registros de Salida que están considerados Oficios de Remisión
+     *
      * @param idOficina
      * @param tipoEvento
      * @return
@@ -48,9 +46,10 @@ public interface OficioRemisionSalidaUtilsLocal {
 
     /**
      * Obtiene todos los Registros de Salida que están considerados Oficios de Remisión de un Organismo destinatario en concreto
+     *
      * @param pageNumber
      * @param any
-     * @param oficinaActiva Oficina activa
+     * @param oficinaActiva   Oficina activa
      * @param idOrganismo
      * @param codigoOrganismo Organismo destinatario seleccionado
      * @param entidadActiva
@@ -82,6 +81,7 @@ public interface OficioRemisionSalidaUtilsLocal {
 
     /**
      * Genera los Justificantes de todos los registros de un Oficio de Remisión
+     *
      * @param registros
      * @param usuario
      * @throws Exception

@@ -3,10 +3,10 @@ package es.caib.regweb3.persistence.ejb;
 import es.caib.regweb3.model.Contador;
 import es.caib.regweb3.model.Libro;
 import es.caib.regweb3.persistence.utils.NumeroRegistro;
-import org.jboss.ejb3.annotation.SecurityDomain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -24,13 +24,13 @@ import java.util.List;
  */
 
 @Stateless(name = "ContadorEJB")
-@SecurityDomain("seycon")
+@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI", "RWE_WS_ENTRADA", "RWE_WS_SALIDA"})
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-public class ContadorBean extends BaseEjbJPA<Contador, Long> implements ContadorLocal{
+public class ContadorBean extends BaseEjbJPA<Contador, Long> implements ContadorLocal {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
-    @PersistenceContext(unitName="regweb3")
+    @PersistenceContext(unitName = "regweb3")
     private EntityManager em;
 
 
@@ -50,7 +50,7 @@ public class ContadorBean extends BaseEjbJPA<Contador, Long> implements Contador
     @SuppressWarnings(value = "unchecked")
     public List<Contador> getAll() throws Exception {
 
-        return  em.createQuery("Select contador from Contador as contador order by contador.id").getResultList();
+        return em.createQuery("Select contador from Contador as contador order by contador.id").getResultList();
     }
 
     @Override
@@ -85,12 +85,12 @@ public class ContadorBean extends BaseEjbJPA<Contador, Long> implements Contador
         Integer numero = (Integer) em.createQuery("select numero from Contador where id = :idContador").setParameter("idContador", idContador).getSingleResult();
         //q.setHint("org.hibernate.cacheMode", CacheMode.IGNORE);
 
-        return new NumeroRegistro(numero,Calendar.getInstance().getTime());
+        return new NumeroRegistro(numero, Calendar.getInstance().getTime());
 
     }
 
     @Override
-    public void reiniciarContador(Long idContador) throws Exception{
+    public void reiniciarContador(Long idContador) throws Exception {
 
         Query q = em.createQuery("update Contador set numero = 0 where id = :idContador ");
         q.setParameter("idContador", idContador);
@@ -99,7 +99,7 @@ public class ContadorBean extends BaseEjbJPA<Contador, Long> implements Contador
     }
 
     @Override
-    public void reiniciarContadoresLibro(Libro libro) throws Exception{
+    public void reiniciarContadoresLibro(Libro libro) throws Exception {
 
         reiniciarContador(libro.getContadorEntrada().getId());
         reiniciarContador(libro.getContadorSalida().getId());
@@ -108,16 +108,16 @@ public class ContadorBean extends BaseEjbJPA<Contador, Long> implements Contador
     }
 
     @Override
-    public String secuenciaSir(Long idContador) throws Exception{
+    public String secuenciaSir(Long idContador) throws Exception {
 
         NumeroRegistro numero = incrementarContador(idContador);
 
         String secuencia = numero.getNumero().toString();
 
-        if(secuencia.length() < 8){
+        if (secuencia.length() < 8) {
             secuencia = String.format("%08d", numero.getNumero());
 
-        }else if(secuencia.length() > 8){
+        } else if (secuencia.length() > 8) {
             throw new Exception("El valor de la secuencia obtenido del Contador no puede ser superior a 8");
         }
 

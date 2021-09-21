@@ -7,7 +7,6 @@ import es.caib.regweb3.utils.CombineStream;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 
-import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
 import java.util.Date;
 import java.util.List;
@@ -20,7 +19,6 @@ import java.util.Set;
  * Date: 16/01/14
  */
 @Local
-@RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI","RWE_WS_ENTRADA","RWE_WS_SALIDA", "RWE_WS_CIUDADANO"})
 public interface OficioRemisionLocal extends BaseEjb<OficioRemision, Long> {
 
     String JNDI_NAME = "java:app/regweb3-persistence/OficioRemisionEJB";
@@ -28,6 +26,7 @@ public interface OficioRemisionLocal extends BaseEjb<OficioRemision, Long> {
 
     /**
      * Realizada una Búsqueda según los parámetros
+     *
      * @param pageNumber
      * @param idOrganismo
      * @param fechaInicio
@@ -41,16 +40,18 @@ public interface OficioRemisionLocal extends BaseEjb<OficioRemision, Long> {
 
     /**
      * Registra un OficioRemision asignandole número
+     *
      * @param oficioRemision
      * @param estado
      * @return
      * @throws Exception
      */
     OficioRemision registrarOficioRemision(OficioRemision oficioRemision, Long estado)
-        throws Exception, I18NException, I18NValidationException;
+            throws Exception, I18NException, I18NValidationException;
 
     /**
      * Anula un Oficio de Remisión
+     *
      * @param idOficioRemision
      * @param usuarioEntidad
      * @throws Exception
@@ -59,6 +60,7 @@ public interface OficioRemisionLocal extends BaseEjb<OficioRemision, Long> {
 
     /**
      * Devuelve los Oficios de Remisión pendientes de procesar de los organismos seleccionados
+     *
      * @param organismos
      * @return
      * @throws Exception
@@ -67,6 +69,7 @@ public interface OficioRemisionLocal extends BaseEjb<OficioRemision, Long> {
 
     /**
      * Actualiza el destino extinguido de los Oficios pendientes de llegada por el Organismo que le sustituye
+     *
      * @param idOrganismoExtinguido
      * @param idOrganismoSustituto
      * @throws Exception
@@ -75,6 +78,7 @@ public interface OficioRemisionLocal extends BaseEjb<OficioRemision, Long> {
 
     /**
      * Devuelve los Oficios de Remisión de los organismos seleccionados según su estado
+     *
      * @param organismos
      * @param oficioRemision
      * @return
@@ -84,6 +88,7 @@ public interface OficioRemisionLocal extends BaseEjb<OficioRemision, Long> {
 
     /**
      * Devuelve los Oficios de Remisión pendientes de procesar de los organismos seleccionados
+     *
      * @param organismos
      * @return
      * @throws Exception
@@ -92,6 +97,7 @@ public interface OficioRemisionLocal extends BaseEjb<OficioRemision, Long> {
 
     /**
      * Busca Registros de Entrada que pertenecen a un OficioRemision
+     *
      * @param idOficioRemision
      * @return
      * @throws Exception
@@ -100,6 +106,7 @@ public interface OficioRemisionLocal extends BaseEjb<OficioRemision, Long> {
 
     /**
      * Obtiene los Oficios de Remisión de un determinado Estado y Entidad
+     *
      * @param idEstado
      * @param idOficina
      * @return
@@ -109,6 +116,7 @@ public interface OficioRemisionLocal extends BaseEjb<OficioRemision, Long> {
 
     /**
      * Obtiene los Oficios de Remisión de un determinado Estado y Entidad
+     *
      * @param idEstado
      * @param idOficina
      * @return
@@ -118,6 +126,7 @@ public interface OficioRemisionLocal extends BaseEjb<OficioRemision, Long> {
 
     /**
      * Busca los Oficios de Remisión según su oficia origen y estado
+     *
      * @param pageNumber
      * @param idOficinaActiva
      * @param idEstado
@@ -128,6 +137,7 @@ public interface OficioRemisionLocal extends BaseEjb<OficioRemision, Long> {
 
     /**
      * Obtiene los Oficios de Remisión que han de reintentar su envío al componente CIR
+     *
      * @param idEntidad
      * @return
      * @throws Exception
@@ -135,7 +145,6 @@ public interface OficioRemisionLocal extends BaseEjb<OficioRemision, Long> {
     List<OficioRemision> getEnviadosSinAck(Long idEntidad) throws Exception;
 
     /**
-     *
      * @param idEntidad
      * @return
      * @throws Exception
@@ -144,6 +153,7 @@ public interface OficioRemisionLocal extends BaseEjb<OficioRemision, Long> {
 
     /**
      * Oficios enviados o reenviados sin ACK y con el máx de reintentos acumulados
+     *
      * @param idEntidad
      * @return
      * @throws Exception
@@ -152,6 +162,7 @@ public interface OficioRemisionLocal extends BaseEjb<OficioRemision, Long> {
 
     /**
      * Oficios enviados o reenviados con ERROR y con el máx de reintentos acumulados
+     *
      * @param idEntidad
      * @return
      * @throws Exception
@@ -159,16 +170,18 @@ public interface OficioRemisionLocal extends BaseEjb<OficioRemision, Long> {
     List<OficioRemision> getEnviadosErrorMaxReintentos(Long idEntidad) throws Exception;
 
 
-        /**
-         * Busca Registros de Salida que pertenecen a un OficioRemision
-         * @param idOficioRemision
-         * @return
-         * @throws Exception
-         */
+    /**
+     * Busca Registros de Salida que pertenecen a un OficioRemision
+     *
+     * @param idOficioRemision
+     * @return
+     * @throws Exception
+     */
     List<RegistroSalida> getSalidasByOficioRemision(Long idOficioRemision) throws Exception;
 
     /**
      * Obtiene un OficioRemisionSir a partir del identificadorIntercambio del envío
+     *
      * @param identificadorIntercambio
      * @return
      * @throws Exception
@@ -177,6 +190,7 @@ public interface OficioRemisionLocal extends BaseEjb<OficioRemision, Long> {
 
     /**
      * Obtiene un OficioRemisionSir a partir del identificadorIntercambio del envío en estado RECHAZADO
+     *
      * @param identificadorIntercambio
      * @param codigoEntidadRegistralDestino
      * @return
@@ -186,6 +200,7 @@ public interface OficioRemisionLocal extends BaseEjb<OficioRemision, Long> {
 
     /**
      * Obtiene un OficioRemisionSir a partir del identificadorIntercambio del envío
+     *
      * @param identificadorIntercambio
      * @return
      * @throws Exception
@@ -194,6 +209,7 @@ public interface OficioRemisionLocal extends BaseEjb<OficioRemision, Long> {
 
     /**
      * Modifica el Estado de un OficioRemision
+     *
      * @param idOficioRemision
      * @param estado
      * @throws Exception
@@ -202,6 +218,7 @@ public interface OficioRemisionLocal extends BaseEjb<OficioRemision, Long> {
 
     /**
      * Reinicia el contador de reintentos SIR
+     *
      * @param idOficioRemision
      * @throws Exception
      */
@@ -209,6 +226,7 @@ public interface OficioRemisionLocal extends BaseEjb<OficioRemision, Long> {
 
     /**
      * Busca los Números de Registro Formateados de los Registros de Entrada que pertenecen a un OficioRemision
+     *
      * @param idOficioRemision
      * @return
      * @throws Exception
@@ -217,6 +235,7 @@ public interface OficioRemisionLocal extends BaseEjb<OficioRemision, Long> {
 
     /**
      * Busca los Números de Registro Formateados de los Registros de Salida que pertenecen a un OficioRemision
+     *
      * @param idOficioRemision
      * @return
      * @throws Exception
@@ -224,16 +243,16 @@ public interface OficioRemisionLocal extends BaseEjb<OficioRemision, Long> {
     List<String> getNumerosRegistroSalidaFormateadoByOficioRemision(Long idOficioRemision) throws Exception;
 
     /**
-     *
      * @param codigoOrganismo
      * @param idEntidad
      * @return
      * @throws Exception
      */
-    Oficio obtenerTipoOficio (String codigoOrganismo, Long idEntidad) throws Exception;
+    Oficio obtenerTipoOficio(String codigoOrganismo, Long idEntidad) throws Exception;
 
     /**
      * Elimina los Oficios de remisión de una Entidad
+     *
      * @param idEntidad
      * @return
      * @throws Exception
@@ -242,6 +261,7 @@ public interface OficioRemisionLocal extends BaseEjb<OficioRemision, Long> {
 
     /**
      * Obtiene el oficio de Remisión a partir de un numero de registro formateado
+     *
      * @param numeroRegistroFormateado
      * @return
      */
@@ -249,6 +269,7 @@ public interface OficioRemisionLocal extends BaseEjb<OficioRemision, Long> {
 
     /**
      * Genera el pdf del oficio de remisión para obtenerlo via WS
+     *
      * @param oficioRemision
      * @param modeloOficioRemision
      * @param registrosEntrada

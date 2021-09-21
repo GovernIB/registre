@@ -1,10 +1,10 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.RegistroLopdMigrado;
-import org.jboss.ejb3.annotation.SecurityDomain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -19,12 +19,12 @@ import java.util.List;
  */
 
 @Stateless(name = "RegistroLopdMigradoEJB")
-@SecurityDomain("seycon")
-public class RegistroLopdMigradoBean extends BaseEjbJPA<RegistroLopdMigrado, Long> implements RegistroLopdMigradoLocal{
+@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI"})
+public class RegistroLopdMigradoBean extends BaseEjbJPA<RegistroLopdMigrado, Long> implements RegistroLopdMigradoLocal {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
-    @PersistenceContext(unitName="regweb3")
+    @PersistenceContext(unitName = "regweb3")
     private EntityManager em;
 
 
@@ -45,7 +45,7 @@ public class RegistroLopdMigradoBean extends BaseEjbJPA<RegistroLopdMigrado, Lon
     @SuppressWarnings(value = "unchecked")
     public List<RegistroLopdMigrado> getAll() throws Exception {
 
-        return  em.createQuery("Select registroLopdMigrado from RegistroLopdMigrado as registroLopdMigrado order by registroLopdMigrado.id").getResultList();
+        return em.createQuery("Select registroLopdMigrado from RegistroLopdMigrado as registroLopdMigrado order by registroLopdMigrado.id").getResultList();
     }
 
     @Override
@@ -95,18 +95,18 @@ public class RegistroLopdMigradoBean extends BaseEjbJPA<RegistroLopdMigrado, Lon
         q.setParameter("accion", accion);
 
         List<RegistroLopdMigrado> registroLopdMigrado = q.getResultList();
-        if(registroLopdMigrado.size() == 1){
+        if (registroLopdMigrado.size() == 1) {
             return registroLopdMigrado.get(0);
-        }else{
-            return  null;
+        } else {
+            return null;
         }
     }
 
 
     @Override
-    public Integer eliminarByEntidad(Long idEntidad) throws Exception{
+    public Integer eliminarByEntidad(Long idEntidad) throws Exception {
 
-        List<?> tipos = em.createQuery("Select distinct(id) from RegistroLopdMigrado where registroMigrado.entidad.id =:idEntidad").setParameter("idEntidad",idEntidad).getResultList();
+        List<?> tipos = em.createQuery("Select distinct(id) from RegistroLopdMigrado where registroMigrado.entidad.id =:idEntidad").setParameter("idEntidad", idEntidad).getResultList();
 
         for (Object id : tipos) {
             remove(findById((Long) id));

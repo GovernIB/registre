@@ -7,10 +7,10 @@ import es.caib.regweb3.model.RelacionOrganizativaOfi;
 import es.caib.regweb3.model.RelacionOrganizativaOfiPK;
 import es.caib.regweb3.utils.RegwebConstantes;
 import org.hibernate.Hibernate;
-import org.jboss.ejb3.annotation.SecurityDomain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -26,16 +26,15 @@ import java.util.List;
  * Date: 10/10/13
  */
 @Stateless(name = "RelacionOrganizativaOfiEJB")
-@SecurityDomain("seycon")
-public class RelacionOrganizativaOfiBean extends BaseEjbJPA<RelacionOrganizativaOfi, RelacionOrganizativaOfiPK> implements RelacionOrganizativaOfiLocal{
+@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI", "RWE_WS_ENTRADA", "RWE_WS_SALIDA"})
+public class RelacionOrganizativaOfiBean extends BaseEjbJPA<RelacionOrganizativaOfi, RelacionOrganizativaOfiPK> implements RelacionOrganizativaOfiLocal {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
     @PersistenceContext
     private EntityManager em;
 
-    @EJB
-    private CatServicioLocal catServicioLocalEjb;
+    @EJB private CatServicioLocal catServicioLocalEjb;
 
 
     @Override
@@ -54,7 +53,7 @@ public class RelacionOrganizativaOfiBean extends BaseEjbJPA<RelacionOrganizativa
     @SuppressWarnings(value = "unchecked")
     public List<RelacionOrganizativaOfi> getAll() throws Exception {
 
-        return  em.createQuery("Select relacionOrganizativaOfi from RelacionOrganizativaOfi as relacionOrganizativaOfi ").getResultList();
+        return em.createQuery("Select relacionOrganizativaOfi from RelacionOrganizativaOfi as relacionOrganizativaOfi ").getResultList();
     }
 
     @Override
@@ -80,14 +79,14 @@ public class RelacionOrganizativaOfiBean extends BaseEjbJPA<RelacionOrganizativa
     public void deleteAll() throws Exception {
 
         em.createQuery("delete from RelacionOrganizativaOfi").executeUpdate();
-        
+
     }
 
     @Override
     public int deleteByOficinaEntidad(Long idOficina) throws Exception {
 
         Query q = em.createQuery("delete from RelacionOrganizativaOfi as roo where roo.oficina.id = :idOficina ");
-      q.setParameter("idOficina", idOficina);
+        q.setParameter("idOficina", idOficina);
 
         return q.executeUpdate();
     }
@@ -104,7 +103,7 @@ public class RelacionOrganizativaOfiBean extends BaseEjbJPA<RelacionOrganizativa
         q.setHint("org.hibernate.readOnly", true);
 
         List<Oficina> oficinas = q.getResultList();
-        for(Oficina oficina:oficinas){
+        for (Oficina oficina : oficinas) {
             Hibernate.initialize(oficina.getOrganizativasOfi());
         }
 
@@ -133,12 +132,12 @@ public class RelacionOrganizativaOfiBean extends BaseEjbJPA<RelacionOrganizativa
             q.setParameter("oficinaVirtual", catServicioLocalEjb.findByCodigo(RegwebConstantes.REGISTRO_VIRTUAL_NO_PRESENCIAL));
         }
 
-        List<Oficina> oficinas =  new ArrayList<Oficina>();
+        List<Oficina> oficinas = new ArrayList<Oficina>();
 
         List<Object[]> result = q.getResultList();
 
-        for (Object[] object : result){
-            Oficina oficina = new Oficina((Long)object[0],(String)object[1],(String)object[2],(Long)object[3],(String)object[4],(String)object[5]);
+        for (Object[] object : result) {
+            Oficina oficina = new Oficina((Long) object[0], (String) object[1], (String) object[2], (Long) object[3], (String) object[4], (String) object[5]);
 
             oficinas.add(oficina);
         }
@@ -148,7 +147,7 @@ public class RelacionOrganizativaOfiBean extends BaseEjbJPA<RelacionOrganizativa
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Organismo> getOrganismosByOficina(Long idOficina) throws Exception{
+    public List<Organismo> getOrganismosByOficina(Long idOficina) throws Exception {
 
         Query q = em.createQuery("Select distinct relacionOrganizativaOfi.organismo from RelacionOrganizativaOfi as relacionOrganizativaOfi " +
                 "where relacionOrganizativaOfi.oficina.id = :idOficina and relacionOrganizativaOfi.estado.codigoEstadoEntidad = :vigente");
@@ -173,25 +172,25 @@ public class RelacionOrganizativaOfiBean extends BaseEjbJPA<RelacionOrganizativa
         q.setParameter("vigente", RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
         q.setHint("org.hibernate.readOnly", true);
 
-        List<RelacionOrganizativaOfi> relaciones =  q.getResultList();
+        List<RelacionOrganizativaOfi> relaciones = q.getResultList();
 
-        if(relaciones.size() > 0){
-            return  relaciones.get(0);
-        }else{
+        if (relaciones.size() > 0) {
+            return relaciones.get(0);
+        } else {
             return null;
         }
     }
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<RelacionOrganizativaOfi> organizativaByEntidadEstado(Long idEntidad, String estado) throws Exception{
+    public List<RelacionOrganizativaOfi> organizativaByEntidadEstado(Long idEntidad, String estado) throws Exception {
         Query q = em.createQuery("Select relacionOrganizativaOfi.oficina.id, relacionOrganizativaOfi.oficina.codigo, relacionOrganizativaOfi.oficina.denominacion, " +
                 "relacionOrganizativaOfi.organismo.id, relacionOrganizativaOfi.oficina.organismoResponsable.id, relacionOrganizativaOfi.organismo.organismoRaiz.id " +
                 "from RelacionOrganizativaOfi as relacionOrganizativaOfi where " +
                 "relacionOrganizativaOfi.organismo.entidad.id =:idEntidad and relacionOrganizativaOfi.estado.codigoEstadoEntidad =:estado order by relacionOrganizativaOfi.oficina.codigo");
 
-        q.setParameter("idEntidad",idEntidad);
-        q.setParameter("estado",estado);
+        q.setParameter("idEntidad", idEntidad);
+        q.setParameter("estado", estado);
         q.setHint("org.hibernate.readOnly", true);
 
         List<Object[]> result = q.getResultList();
@@ -207,12 +206,12 @@ public class RelacionOrganizativaOfiBean extends BaseEjbJPA<RelacionOrganizativa
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Integer eliminarByEntidad(Long idEntidad) throws Exception{
+    public Integer eliminarByEntidad(Long idEntidad) throws Exception {
 
-        List<?> relaciones = em.createQuery("Select distinct(o.id) from RelacionOrganizativaOfi as o where o.organismo.entidad.id =:idEntidad").setParameter("idEntidad",idEntidad).getResultList();
+        List<?> relaciones = em.createQuery("Select distinct(o.id) from RelacionOrganizativaOfi as o where o.organismo.entidad.id =:idEntidad").setParameter("idEntidad", idEntidad).getResultList();
         Integer total = relaciones.size();
 
-        if(relaciones.size() > 0){
+        if (relaciones.size() > 0) {
 
             // Si hay más de 1000 registros, dividimos las queries (ORA-01795).
             while (relaciones.size() > RegwebConstantes.NUMBER_EXPRESSIONS_IN) {

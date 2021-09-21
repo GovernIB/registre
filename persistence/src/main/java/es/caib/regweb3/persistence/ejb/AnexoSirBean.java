@@ -4,10 +4,10 @@ import es.caib.regweb3.model.AnexoSir;
 import es.caib.regweb3.model.utils.EstadoRegistroSir;
 import es.caib.regweb3.persistence.utils.FileSystemManager;
 import es.caib.regweb3.utils.RegwebConstantes;
-import org.jboss.ejb3.annotation.SecurityDomain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -22,7 +22,7 @@ import java.util.List;
  */
 
 @Stateless(name = "AnexoSirEJB")
-@SecurityDomain("seycon")
+@RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI"})
 public class AnexoSirBean extends BaseEjbJPA<AnexoSir, Long> implements AnexoSirLocal{
 
     protected final Logger log = LoggerFactory.getLogger(getClass());

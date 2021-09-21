@@ -12,7 +12,6 @@ import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.fundaciobit.plugins.documentcustody.api.DocumentCustody;
 import org.fundaciobit.plugins.documentcustody.api.SignatureCustody;
 
-import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
 import java.util.List;
 
@@ -25,7 +24,6 @@ import java.util.List;
  * Date: 6/03/13
  */
 @Local
-@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI", "RWE_WS_ENTRADA", "RWE_WS_SALIDA","RWE_WS_CIUDADANO"})
 public interface AnexoLocal extends BaseEjb<Anexo, Long> {
 
     String JNDI_NAME = "java:app/regweb3-persistence/AnexoEJB";

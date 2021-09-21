@@ -19,12 +19,12 @@ import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
-import org.jboss.ejb3.annotation.SecurityDomain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.i18n.LocaleContextHolder;
 
 import javax.annotation.Resource;
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -43,7 +43,7 @@ import static es.caib.regweb3.utils.RegwebConstantes.REGISTRO_SALIDA;
  */
 
 @Stateless(name = "RegistroSalidaEJB")
-@SecurityDomain("seycon")
+@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI", "RWE_WS_ENTRADA", "RWE_WS_SALIDA", "RWE_WS_CIUDADANO"})
 /*@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)*/
 public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
         implements RegistroSalidaLocal {
@@ -81,7 +81,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
 
     @Override
     public RegistroSalida registrarSalida(RegistroSalida registroSalida,
-                                                       UsuarioEntidad usuarioEntidad, List<Interesado> interesados, List<AnexoFull> anexosFull, Boolean validarAnexos)
+                                          UsuarioEntidad usuarioEntidad, List<Interesado> interesados, List<AnexoFull> anexosFull, Boolean validarAnexos)
             throws Exception, I18NException, I18NValidationException {
 
         try {
@@ -131,10 +131,10 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
             }
 
             // Obtenemos el próximo evento del Registro
-            if(multiEntidadEjb.isMultiEntidad()) {
+            if (multiEntidadEjb.isMultiEntidad()) {
                 Long evento = proximoEventoSalidaMultiEntidad(registroSalida, usuarioEntidad.getEntidad());
                 registroSalida.setEvento(evento);
-            }else{
+            } else {
                 Long evento = proximoEventoSalida(registroSalida, usuarioEntidad.getEntidad());
                 registroSalida.setEvento(evento);
             }
@@ -167,10 +167,10 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
         registroSalida = merge(registroSalida);
 
         // Obtenemos el próximo evento del Registro
-        if(multiEntidadEjb.isMultiEntidad()) {
+        if (multiEntidadEjb.isMultiEntidad()) {
             Long evento = proximoEventoSalidaMultiEntidad(registroSalida, usuarioEntidad.getEntidad());
             registroSalida.setEvento(evento);
-        }else{
+        } else {
             Long evento = proximoEventoSalida(registroSalida, usuarioEntidad.getEntidad());
             registroSalida.setEvento(evento);
         }
@@ -219,7 +219,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
         if (StringUtils.isNotEmpty(codigoDir3)) {
 
             Organismo organismo = organismoEjb.findByCodigoMultiEntidad(codigoDir3);
-            return organismo == null ||organismo!=null &&!organismo.getEntidad().equals(registroSalida.getOficina().getOrganismoResponsable().getEntidad());
+            return organismo == null || organismo != null && !organismo.getEntidad().equals(registroSalida.getOficina().getOrganismoResponsable().getEntidad());
 
         }
 
@@ -299,7 +299,6 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
     }
 
 
-
     @Override
     public Long proximoEventoSalidaMultiEntidad(RegistroSalida registroSalida, Entidad entidadActiva) throws Exception {
 
@@ -339,10 +338,10 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
         RegistroSalida registroSalida = findById(idRegistro);
         Hibernate.initialize(registroSalida.getRegistroDetalle().getInteresados());
 
-        if(multiEntidadEjb.isMultiEntidad()) {
+        if (multiEntidadEjb.isMultiEntidad()) {
             Long evento = proximoEventoSalidaMultiEntidad(registroSalida, entidadActiva);
             registroSalida.setEvento(evento);
-        }else{
+        } else {
             Long evento = proximoEventoSalida(registroSalida, entidadActiva);
             registroSalida.setEvento(evento);
         }
@@ -471,10 +470,10 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
 
         // Asignamos su evento
         if (registroSalida.getEvento() != null) {
-            if(multiEntidadEjb.isMultiEntidad()) {
+            if (multiEntidadEjb.isMultiEntidad()) {
                 Long evento = proximoEventoSalidaMultiEntidad(registroSalida, usuarioEntidad.getEntidad());
                 registroSalida.setEvento(evento);
-            }else{
+            } else {
                 Long evento = proximoEventoSalida(registroSalida, usuarioEntidad.getEntidad());
                 registroSalida.setEvento(evento);
             }

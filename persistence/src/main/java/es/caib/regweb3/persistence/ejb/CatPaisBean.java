@@ -1,10 +1,10 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.CatPais;
-import org.jboss.ejb3.annotation.SecurityDomain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -19,7 +19,7 @@ import java.util.List;
  */
 
 @Stateless(name = "CatPaisEJB")
-@SecurityDomain("seycon")
+@RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI","RWE_WS_ENTRADA","RWE_WS_SALIDA"})
 public class CatPaisBean extends BaseEjbJPA<CatPais, Long> implements CatPaisLocal{
 
     protected final Logger log = LoggerFactory.getLogger(getClass());

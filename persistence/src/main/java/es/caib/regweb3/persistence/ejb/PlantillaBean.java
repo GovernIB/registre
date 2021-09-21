@@ -13,10 +13,10 @@ import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.persistence.utils.RegistroUtils;
 import es.caib.regweb3.utils.Dir3CaibUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
-import org.jboss.ejb3.annotation.SecurityDomain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -36,16 +36,18 @@ import java.util.Set;
  */
 
 @Stateless(name = "PlantillaEJB")
-@SecurityDomain("seycon")
-public class PlantillaBean extends BaseEjbJPA<Plantilla, Long> implements PlantillaLocal{
+@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI"})
+public class PlantillaBean extends BaseEjbJPA<Plantilla, Long> implements PlantillaLocal {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
-    @PersistenceContext(unitName="regweb3")
+    @PersistenceContext(unitName = "regweb3")
     private EntityManager em;
 
-    @EJB private OrganismoLocal organismoEjb;
-    @EJB public OficinaLocal oficinaEjb;
+    @EJB
+    private OrganismoLocal organismoEjb;
+    @EJB
+    public OficinaLocal oficinaEjb;
 
 
     @Override
@@ -66,8 +68,8 @@ public class PlantillaBean extends BaseEjbJPA<Plantilla, Long> implements Planti
         Query q = em.createQuery("Select plantilla from Plantilla as plantilla where " +
                 "plantilla.usuario.id = :idUsuario and plantilla.orden = :orden");
 
-        q.setParameter("idUsuario",idUsuario);
-        q.setParameter("orden",orden);
+        q.setParameter("idUsuario", idUsuario);
+        q.setParameter("orden", orden);
         q.setHint("org.hibernate.readOnly", true);
 
         return (Plantilla) q.getSingleResult();
@@ -77,7 +79,7 @@ public class PlantillaBean extends BaseEjbJPA<Plantilla, Long> implements Planti
     @Override
     public List<Plantilla> getAll() throws Exception {
 
-        return  em.createQuery("Select plantilla from Plantilla as plantilla order by plantilla.id").getResultList();
+        return em.createQuery("Select plantilla from Plantilla as plantilla order by plantilla.id").getResultList();
     }
 
     @Override
@@ -107,7 +109,7 @@ public class PlantillaBean extends BaseEjbJPA<Plantilla, Long> implements Planti
         Query q = em.createQuery("Select plantilla from Plantilla as plantilla  " +
                 "where plantilla.usuario.id = :idUsuario order by plantilla.orden");
 
-        q.setParameter("idUsuario",idUsuario);
+        q.setParameter("idUsuario", idUsuario);
         q.setFirstResult(inicio);
         q.setMaxResults(RESULTADOS_PAGINACION);
         q.setHint("org.hibernate.readOnly", true);
@@ -125,7 +127,7 @@ public class PlantillaBean extends BaseEjbJPA<Plantilla, Long> implements Planti
         q.setParameter("idUsuario", idUsuario);
         q.setHint("org.hibernate.readOnly", true);
 
-        return  q.getResultList();
+        return q.getResultList();
     }
 
     @Override
@@ -135,8 +137,8 @@ public class PlantillaBean extends BaseEjbJPA<Plantilla, Long> implements Planti
         Query q = em.createQuery("Select plantilla.id, plantilla.nombre from Plantilla as plantilla  " +
                 "where plantilla.usuario.id = :idUsuario and plantilla.tipoRegistro = :tipoRegistro and plantilla.activo = true order by plantilla.orden");
 
-        q.setParameter("idUsuario",idUsuario);
-        q.setParameter("tipoRegistro",tipoRegistro);
+        q.setParameter("idUsuario", idUsuario);
+        q.setParameter("tipoRegistro", tipoRegistro);
         q.setHint("org.hibernate.readOnly", true);
 
         List<Plantilla> plantillas = new ArrayList<Plantilla>();
@@ -158,31 +160,31 @@ public class PlantillaBean extends BaseEjbJPA<Plantilla, Long> implements Planti
         Query q = em.createQuery("Select count(plantilla.id) from Plantilla as plantilla " +
                 "where plantilla.usuario.id = :idUsuario");
 
-        q.setParameter("idUsuario",idUsuario);
+        q.setParameter("idUsuario", idUsuario);
         q.setHint("org.hibernate.readOnly", true);
 
         return (Long) q.getSingleResult();
     }
 
     @Override
-    public Integer maxOrdenPlantilla(Long idUsuario) throws Exception{
+    public Integer maxOrdenPlantilla(Long idUsuario) throws Exception {
 
         Query q = em.createQuery("Select max(plantilla.orden) from Plantilla as plantilla  " +
                 "where plantilla.usuario.id = :idUsuario");
 
-        q.setParameter("idUsuario",idUsuario);
+        q.setParameter("idUsuario", idUsuario);
         q.setHint("org.hibernate.readOnly", true);
 
         return (Integer) q.getSingleResult();
     }
 
     @Override
-    public Long obtenerUsuarioPlantilla(Long idPlantilla) throws Exception{
+    public Long obtenerUsuarioPlantilla(Long idPlantilla) throws Exception {
 
         Query q = em.createQuery("Select plantilla.usuario.id from Plantilla as plantilla  " +
                 "where plantilla.id = :idPlantilla");
 
-        q.setParameter("idPlantilla",idPlantilla);
+        q.setParameter("idPlantilla", idPlantilla);
         q.setHint("org.hibernate.readOnly", true);
 
         return (Long) q.getSingleResult();
@@ -190,23 +192,23 @@ public class PlantillaBean extends BaseEjbJPA<Plantilla, Long> implements Planti
 
 
     @Override
-    public void modificarOrden(Long idPlantilla, int orden) throws Exception{
+    public void modificarOrden(Long idPlantilla, int orden) throws Exception {
 
         Query q = em.createQuery("Update Plantilla set orden = :orden where " +
                 "id = :idPlantilla");
 
-        q.setParameter("idPlantilla",idPlantilla);
-        q.setParameter("orden",orden);
+        q.setParameter("idPlantilla", idPlantilla);
+        q.setParameter("orden", orden);
         q.executeUpdate();
     }
 
 
     @Override
-    public Boolean subirOrden(Long idPlantilla) throws Exception{
+    public Boolean subirOrden(Long idPlantilla) throws Exception {
 
         boolean result;
 
-        try{
+        try {
             Long idUsuario = obtenerUsuarioPlantilla(idPlantilla);
 
             Plantilla plantilla = findById(idPlantilla);
@@ -214,7 +216,7 @@ public class PlantillaBean extends BaseEjbJPA<Plantilla, Long> implements Planti
             int ordenActual = plantilla.getOrden();
 
             int ordenNuevo = 1;
-            if(ordenActual > 1){
+            if (ordenActual > 1) {
                 ordenNuevo = ordenActual - 1;
             }
 
@@ -225,7 +227,7 @@ public class PlantillaBean extends BaseEjbJPA<Plantilla, Long> implements Planti
             modificarOrden(plantillaAnterior.getId(), ordenActual);
             result = true;
 
-        } catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             result = false;
         }
@@ -235,11 +237,11 @@ public class PlantillaBean extends BaseEjbJPA<Plantilla, Long> implements Planti
     }
 
     @Override
-    public Boolean bajarOrden(Long idPlantilla) throws Exception{
+    public Boolean bajarOrden(Long idPlantilla) throws Exception {
 
         boolean result;
 
-        try{
+        try {
             Long idUsuario = obtenerUsuarioPlantilla(idPlantilla);
             List<Plantilla> plantillas = getAllbyUsuario(idUsuario);
 
@@ -248,7 +250,7 @@ public class PlantillaBean extends BaseEjbJPA<Plantilla, Long> implements Planti
             int ordenActual = plantilla.getOrden();
 
             int ordenNuevo = plantillas.size();
-            if(ordenActual < plantillas.size()){
+            if (ordenActual < plantillas.size()) {
                 ordenNuevo = ordenActual + 1;
             }
 
@@ -259,7 +261,7 @@ public class PlantillaBean extends BaseEjbJPA<Plantilla, Long> implements Planti
             modificarOrden(plantillaPosterior.getId(), ordenActual);
             result = true;
 
-        } catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             result = false;
         }
@@ -269,23 +271,23 @@ public class PlantillaBean extends BaseEjbJPA<Plantilla, Long> implements Planti
     }
 
     @Override
-    public Boolean cambiarEstado(Long idPlantilla) throws Exception{
+    public Boolean cambiarEstado(Long idPlantilla) throws Exception {
 
         boolean result;
 
-        try{
+        try {
             Plantilla plantilla = findById(idPlantilla);
 
-            if(plantilla.getActivo()){
+            if (plantilla.getActivo()) {
                 plantilla.setActivo(false);
-            }else{
+            } else {
                 plantilla.setActivo(true);
             }
 
             merge(plantilla);
             result = true;
 
-        } catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             result = false;
         }
@@ -294,12 +296,12 @@ public class PlantillaBean extends BaseEjbJPA<Plantilla, Long> implements Planti
     }
 
     @Override
-    public Integer eliminarByEntidad(Long idEntidad) throws Exception{
+    public Integer eliminarByEntidad(Long idEntidad) throws Exception {
 
-        List<?> plantillas =  em.createQuery("select distinct(r.id) from Plantilla as r where r.usuario.entidad.id =:idEntidad").setParameter("idEntidad",idEntidad).getResultList();
+        List<?> plantillas = em.createQuery("select distinct(r.id) from Plantilla as r where r.usuario.entidad.id =:idEntidad").setParameter("idEntidad", idEntidad).getResultList();
         Integer total = plantillas.size();
 
-        if(plantillas.size() > 0){
+        if (plantillas.size() > 0) {
 
             // Si hay más de 1000 registros, dividimos las queries (ORA-01795).
             while (plantillas.size() > RegwebConstantes.NUMBER_EXPRESSIONS_IN) {
@@ -328,21 +330,21 @@ public class PlantillaBean extends BaseEjbJPA<Plantilla, Long> implements Planti
         return (Long) q.getSingleResult() > 0;
     }
 
-    public PlantillaJson obtenerPlantilla(Long idPlantilla, Entidad entidad) throws Exception{
+    public PlantillaJson obtenerPlantilla(Long idPlantilla, Entidad entidad) throws Exception {
 
         Plantilla plantilla = findById(idPlantilla);
         PlantillaJson plantillaJson = RegistroUtils.desSerilizarPlantillaXml(plantilla.getRepro());
 
-        switch (plantilla.getTipoRegistro().intValue()){
+        switch (plantilla.getTipoRegistro().intValue()) {
 
             case 1: //RegistroEntrada
 
                 // Comprobamos la unidad destino
-                if(plantillaJson.getDestinoCodigo()!= null && plantillaJson.isDestinoExterno()){ // Preguntamos a DIR3 si está Vigente
+                if (plantillaJson.getDestinoCodigo() != null && plantillaJson.isDestinoExterno()) { // Preguntamos a DIR3 si está Vigente
                     Dir3CaibObtenerUnidadesWs unidadesService = Dir3CaibUtils.getObtenerUnidadesService(PropiedadGlobalUtil.getDir3CaibServer(), PropiedadGlobalUtil.getDir3CaibUsername(), PropiedadGlobalUtil.getDir3CaibPassword());
                     UnidadTF unidad = unidadesService.obtenerUnidad(plantillaJson.getDestinoCodigo(), null, null);
 
-                    if(!unidad.getCodigoEstadoEntidad().equals(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE)){// Ya no es vigente
+                    if (!unidad.getCodigoEstadoEntidad().equals(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE)) {// Ya no es vigente
                         plantillaJson.setDestinoExterno(null);
                         plantillaJson.setDestinoCodigo(null);
                         plantillaJson.setDestinoDenominacion(null);
@@ -350,9 +352,9 @@ public class PlantillaBean extends BaseEjbJPA<Plantilla, Long> implements Planti
                         merge(plantilla);
                     }
 
-                }else{ // Comprobamos en REGWEB3 si está vigente
+                } else { // Comprobamos en REGWEB3 si está vigente
                     Organismo organismoDestino = organismoEjb.findByCodigoEntidadSinEstado(plantillaJson.getDestinoCodigo(), entidad.getId());
-                    if(organismoDestino != null) {
+                    if (organismoDestino != null) {
                         if (!organismoDestino.getEstado().getCodigoEstadoEntidad().equals(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE)) { // Ya no es vigente
                             Set<Organismo> organismoHistoricosFinales = new HashSet<Organismo>();
                             organismoEjb.obtenerHistoricosFinales(organismoDestino.getId(), organismoHistoricosFinales);
@@ -369,11 +371,11 @@ public class PlantillaBean extends BaseEjbJPA<Plantilla, Long> implements Planti
             case 2: //RegistroSalida
 
                 // Comprobamos la unidad origen
-                if(plantillaJson.getOrigenCodigo()!= null && plantillaJson.isOrigenExterno()){ // Preguntamos a DIR3 si está Vigente
+                if (plantillaJson.getOrigenCodigo() != null && plantillaJson.isOrigenExterno()) { // Preguntamos a DIR3 si está Vigente
                     Dir3CaibObtenerUnidadesWs unidadesService = Dir3CaibUtils.getObtenerUnidadesService(PropiedadGlobalUtil.getDir3CaibServer(), PropiedadGlobalUtil.getDir3CaibUsername(), PropiedadGlobalUtil.getDir3CaibPassword());
                     UnidadTF unidad = unidadesService.obtenerUnidad(plantillaJson.getOrigenCodigo(), null, null);
 
-                    if(!unidad.getCodigoEstadoEntidad().equals(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE)){// Ya no es vigente
+                    if (!unidad.getCodigoEstadoEntidad().equals(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE)) {// Ya no es vigente
                         plantillaJson.setOrigenExterno(null);
                         plantillaJson.setOrigenCodigo(null);
                         plantillaJson.setOrigenDenominacion(null);
@@ -381,9 +383,9 @@ public class PlantillaBean extends BaseEjbJPA<Plantilla, Long> implements Planti
                         merge(plantilla);
                     }
 
-                }else{ // Comprobamos en REGWEB3 si está vigente
+                } else { // Comprobamos en REGWEB3 si está vigente
                     Organismo organismoOrigen = organismoEjb.findByCodigoEntidadSinEstado(plantillaJson.getOrigenCodigo(), entidad.getId());
-                    if(organismoOrigen != null) {
+                    if (organismoOrigen != null) {
                         if (!organismoOrigen.getEstado().getCodigoEstadoEntidad().equals(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE)) { // Ya no es vigente
                             Set<Organismo> organismoHistoricosFinales = new HashSet<Organismo>();
                             organismoEjb.obtenerHistoricosFinales(organismoOrigen.getId(), organismoHistoricosFinales);
@@ -402,11 +404,11 @@ public class PlantillaBean extends BaseEjbJPA<Plantilla, Long> implements Planti
         }
 
         // Oficina Origen
-        if(plantillaJson.getOficinaCodigo()!= null  && !plantillaJson.getOficinaCodigo().equals("-1") && plantillaJson.isOficinaExterna()){// Preguntamos a DIR3 si está Vigente
+        if (plantillaJson.getOficinaCodigo() != null && !plantillaJson.getOficinaCodigo().equals("-1") && plantillaJson.isOficinaExterna()) {// Preguntamos a DIR3 si está Vigente
             Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService(PropiedadGlobalUtil.getDir3CaibServer(), PropiedadGlobalUtil.getDir3CaibUsername(), PropiedadGlobalUtil.getDir3CaibPassword());
-            OficinaTF oficina = oficinasService.obtenerOficina(plantillaJson.getOficinaCodigo(),null,null);
+            OficinaTF oficina = oficinasService.obtenerOficina(plantillaJson.getOficinaCodigo(), null, null);
 
-            if(!oficina.getEstado().equals(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE)){// Ya no es vigente
+            if (!oficina.getEstado().equals(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE)) {// Ya no es vigente
                 plantillaJson.setOficinaCodigo(null);
                 plantillaJson.setOficinaDenominacion(null);
                 plantillaJson.setOficinaExterna(null);
@@ -414,9 +416,9 @@ public class PlantillaBean extends BaseEjbJPA<Plantilla, Long> implements Planti
                 merge(plantilla);
             }
 
-        }else{// Comprobamos en REGWEB3 si está vigente
+        } else {// Comprobamos en REGWEB3 si está vigente
             Oficina oficinaOrigen = oficinaEjb.findByCodigoVigente(plantillaJson.getOficinaCodigo());
-            if(oficinaOrigen == null){
+            if (oficinaOrigen == null) {
                 plantillaJson.setOficinaCodigo(null);
                 plantillaJson.setOficinaDenominacion(null);
                 plantillaJson.setOficinaExterna(null);

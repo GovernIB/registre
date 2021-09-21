@@ -9,7 +9,6 @@ import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.persistence.utils.RespuestaRecepcionSir;
 import es.caib.regweb3.sir.core.utils.FicheroIntercambio;
 import es.caib.regweb3.utils.Dir3CaibUtils;
-import org.jboss.ejb3.annotation.SecurityDomain;
 
 import javax.annotation.security.RunAs;
 import javax.ejb.EJB;
@@ -22,46 +21,34 @@ import java.util.Date;
  * @author earrivi
  */
 @Stateless(name = "WebServicesMethodsEJB")
-@SecurityDomain("seycon")
 @RunAs("RWE_USUARI")
 public class WebServicesMethodsEJB implements WebServicesMethodsLocal {
 
-    @EJB(mappedName = FicheroIntercambioLocal.JNDI_NAME)
-    private FicheroIntercambioLocal ficheroIntercambioEjb;
-
-    @EJB(mappedName = OficinaLocal.JNDI_NAME)
-    private OficinaLocal oficinaEjb;
-
-    @EJB(mappedName = IntegracionLocal.JNDI_NAME)
-    private IntegracionLocal integracionEjb;
-
-    @EJB(mappedName = MensajeControlLocal.JNDI_NAME)
-    private MensajeControlLocal mensajeControlEjb;
-
-    @EJB(mappedName = RegistroSirLocal.JNDI_NAME)
-    private RegistroSirLocal registroSirEjb;
-
-    @EJB(mappedName = MultiEntidadLocal.JNDI_NAME)
-    private MultiEntidadLocal multiEntidadEjb;
+    @EJB private FicheroIntercambioLocal ficheroIntercambioEjb;
+    @EJB private OficinaLocal oficinaEjb;
+    @EJB private IntegracionLocal integracionEjb;
+    @EJB private MensajeControlLocal mensajeControlEjb;
+    @EJB private RegistroSirLocal registroSirEjb;
+    @EJB private MultiEntidadLocal multiEntidadEjb;
 
 
     @Override
-    public void procesarMensajeDatosControl(MensajeControl mensaje) throws Exception{
+    public void procesarMensajeDatosControl(MensajeControl mensaje) throws Exception {
         mensajeControlEjb.procesarMensajeDatosControl(mensaje);
     }
 
     @Override
-    public RespuestaRecepcionSir procesarFicheroIntercambio(FicheroIntercambio ficheroIntercambio) throws Exception{
+    public RespuestaRecepcionSir procesarFicheroIntercambio(FicheroIntercambio ficheroIntercambio) throws Exception {
         return ficheroIntercambioEjb.procesarFicheroIntercambio(ficheroIntercambio);
     }
 
     @Override
-    public void eliminarRegistroSir(RegistroSir registroSir) throws Exception{
+    public void eliminarRegistroSir(RegistroSir registroSir) throws Exception {
         registroSirEjb.eliminarRegistroSir(registroSir);
     }
 
     @Override
-    public void guardarMensajeControl(MensajeControl mensajeControl) throws Exception{
+    public void guardarMensajeControl(MensajeControl mensajeControl) throws Exception {
         mensajeControlEjb.persist(mensajeControl);
     }
 
@@ -79,9 +66,9 @@ public class WebServicesMethodsEJB implements WebServicesMethodsLocal {
     @Override
     public Oficina obtenerOficina(String codigo) throws Exception {
 
-        if(multiEntidadEjb.isMultiEntidad()){
+        if (multiEntidadEjb.isMultiEntidad()) {
             return oficinaEjb.findByCodigoMultiEntidad(codigo);
-        }else{
+        } else {
             return oficinaEjb.findByCodigo(codigo);
         }
     }

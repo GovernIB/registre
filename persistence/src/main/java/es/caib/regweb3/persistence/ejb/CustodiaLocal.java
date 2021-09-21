@@ -2,22 +2,18 @@ package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.Cola;
 
-import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
 
 /**
- *
  * @author earrivi
  * Date: 04/06/21
  */
 @Local
-@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI"})
 public interface CustodiaLocal {
 
     String JNDI_NAME = "java:app/regweb3-persistence/CustodiaEJB";
 
     /**
-     *
      * @param elemento
      * @param idEntidad
      * @param tipoIntegracon
@@ -26,7 +22,6 @@ public interface CustodiaLocal {
     Boolean custodiarJustificanteEnCola(Cola elemento, Long idEntidad, Long tipoIntegracon) throws Exception;
 
     /**
-     *
      * @param idEntidad
      * @throws Exception
      */

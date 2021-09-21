@@ -6,7 +6,6 @@ import es.caib.regweb3.model.utils.AnexoFull;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 
-import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
 import java.util.List;
 import java.util.Set;
@@ -18,7 +17,6 @@ import java.util.Set;
  * Date: 16/01/14
  */
 @Local
-@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI", "RWE_WS_ENTRADA", "RWE_WS_SALIDA", "RWE_WS_CIUDADANO"})
 public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
 
     String JNDI_NAME = "java:app/regweb3-persistence/RegistroSalidaEJB";

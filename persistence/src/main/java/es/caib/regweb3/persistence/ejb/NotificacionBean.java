@@ -7,10 +7,10 @@ import es.caib.regweb3.model.UsuarioEntidad;
 import es.caib.regweb3.persistence.utils.I18NLogicUtils;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.utils.RegwebConstantes;
-import org.jboss.ejb3.annotation.SecurityDomain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -26,12 +26,12 @@ import java.util.*;
  */
 
 @Stateless(name = "NotificacionEJB")
-@SecurityDomain("seycon")
-public class NotificacionBean extends BaseEjbJPA<Notificacion, Long> implements NotificacionLocal{
+@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI", "RWE_WS_ENTRADA", "RWE_WS_SALIDA", "RWE_WS_CIUDADANO"})
+public class NotificacionBean extends BaseEjbJPA<Notificacion, Long> implements NotificacionLocal {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
-    @PersistenceContext(unitName="regweb3")
+    @PersistenceContext(unitName = "regweb3")
     private EntityManager em;
 
     @EJB private OficinaLocal oficinaEjb;
@@ -58,7 +58,7 @@ public class NotificacionBean extends BaseEjbJPA<Notificacion, Long> implements 
     @SuppressWarnings(value = "unchecked")
     public List<Notificacion> getAll() throws Exception {
 
-        return  em.createQuery("Select notificacion from Notificacion as notificacion order by notificacion.id").getResultList();
+        return em.createQuery("Select notificacion from Notificacion as notificacion order by notificacion.id").getResultList();
     }
 
     @Override
@@ -85,11 +85,11 @@ public class NotificacionBean extends BaseEjbJPA<Notificacion, Long> implements 
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Long getByEstadoCount(Long idUsuarioEntidad, Long idEstado) throws Exception{
+    public Long getByEstadoCount(Long idUsuarioEntidad, Long idEstado) throws Exception {
 
-        String queryEstado="";
-        if(idEstado != null){
-            queryEstado="and no.estado = :idEstado";
+        String queryEstado = "";
+        if (idEstado != null) {
+            queryEstado = "and no.estado = :idEstado";
         }
 
         Query q = em.createQuery("Select count(no.id) from Notificacion as no where no.destinatario.id = :idUsuarioEntidad " + queryEstado);
@@ -97,7 +97,7 @@ public class NotificacionBean extends BaseEjbJPA<Notificacion, Long> implements 
         q.setParameter("idUsuarioEntidad", idUsuarioEntidad);
         q.setHint("org.hibernate.readOnly", true);
 
-        if(idEstado != null){
+        if (idEstado != null) {
             q.setParameter("idEstado", idEstado);
         }
 
@@ -106,10 +106,10 @@ public class NotificacionBean extends BaseEjbJPA<Notificacion, Long> implements 
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Notificacion> getByEntidad(Long idEntidad) throws Exception{
+    public List<Notificacion> getByEntidad(Long idEntidad) throws Exception {
 
         Query q = em.createQuery("Select notificacion from Notificacion as notificacion where notificacion.destinatario.entidad.id = :idEntidad order by notificacion.id");
-        q.setParameter("idEntidad",idEntidad);
+        q.setParameter("idEntidad", idEntidad);
         q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList();
@@ -184,7 +184,7 @@ public class NotificacionBean extends BaseEjbJPA<Notificacion, Long> implements 
     }
 
     @Override
-    public void leerNotificacion(Long idNotificacion) throws Exception{
+    public void leerNotificacion(Long idNotificacion) throws Exception {
 
         Query q = em.createQuery("update from Notificacion set estado = :leido, fechaLeido = :fechaLeido where id = :idNotificacion");
 
@@ -196,20 +196,20 @@ public class NotificacionBean extends BaseEjbJPA<Notificacion, Long> implements 
     }
 
     @Override
-    public Long notificacionesPendientes(Long idUsuarioEntidad) throws Exception{
+    public Long notificacionesPendientes(Long idUsuarioEntidad) throws Exception {
 
         Query q = em.createQuery("Select count(n.id) from Notificacion as n where n.destinatario.id = :idUsuarioEntidad " +
                 "and n.estado = :nueva");
 
-        q.setParameter("idUsuarioEntidad",idUsuarioEntidad);
-        q.setParameter("nueva",RegwebConstantes.NOTIFICACION_ESTADO_NUEVA);
+        q.setParameter("idUsuarioEntidad", idUsuarioEntidad);
+        q.setParameter("nueva", RegwebConstantes.NOTIFICACION_ESTADO_NUEVA);
         q.setHint("org.hibernate.readOnly", true);
 
         return (Long) q.getSingleResult();
     }
 
     @Override
-    public void notificacionAdminEntidad(Long idEntidad, String asunto, String mensaje) throws Exception{
+    public void notificacionAdminEntidad(Long idEntidad, String asunto, String mensaje) throws Exception {
 
         List<UsuarioEntidad> administradores = usuarioEntidadEjb.findAdministradoresByEntidad(idEntidad);
 
@@ -228,17 +228,17 @@ public class NotificacionBean extends BaseEjbJPA<Notificacion, Long> implements 
     }
 
     @Override
-    public void notificacionesRegistrosSirPendientes(Long idEntidad) throws Exception{
+    public void notificacionesRegistrosSirPendientes(Long idEntidad) throws Exception {
 
         List<Oficina> oficinasSir = oficinaEjb.oficinasSIREntidad(idEntidad);
 
         for (Oficina oficina : oficinasSir) {
 
-            if(registroSirEjb.getPendientesProcesarCount(oficina.getCodigo()) > 10){
+            if (registroSirEjb.getPendientesProcesarCount(oficina.getCodigo()) > 10) {
                 log.info("Conunicaciones RegistrosSirPendientes para la oficina: " + oficina.getDenominacion());
 
                 //Obtener los usuarios con Permiso SIR en la Oficina indicada
-                LinkedHashSet<Organismo> organismos = organismoEjb.getByOficinaActiva(oficina,RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
+                LinkedHashSet<Organismo> organismos = organismoEjb.getByOficinaActiva(oficina, RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
                 List<UsuarioEntidad> usuarios = permisoOrganismoUsuarioEjb.getUsuariosPermiso(organismos, RegwebConstantes.PERMISO_SIR);
 
                 //Crear notificación para cada usuario
@@ -259,18 +259,18 @@ public class NotificacionBean extends BaseEjbJPA<Notificacion, Long> implements 
     }
 
     @Override
-    public void notificacionesRechazadosDevueltos(Long idEntidad) throws Exception{
+    public void notificacionesRechazadosDevueltos(Long idEntidad) throws Exception {
 
         List<Oficina> oficinasSir = oficinaEjb.oficinasSIREntidad(idEntidad);
 
         for (Oficina oficina : oficinasSir) {
 
             // Registros entrada Rechazados o Devueltos al origen
-            if(registroEntradaConsultaEjb.getSirRechazadosReenviadosCount(oficina.getId()) > 0){
+            if (registroEntradaConsultaEjb.getSirRechazadosReenviadosCount(oficina.getId()) > 0) {
                 log.info("Conunicaciones Entradas RechazadosDevueltos para la oficina: " + oficina.getDenominacion());
 
                 //Obtener los usuarios con Permiso SIR en la Oficina indicada
-                LinkedHashSet<Organismo> organismos = organismoEjb.getByOficinaActiva(oficina,RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
+                LinkedHashSet<Organismo> organismos = organismoEjb.getByOficinaActiva(oficina, RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
                 List<UsuarioEntidad> usuarios = permisoOrganismoUsuarioEjb.getUsuariosPermiso(organismos, RegwebConstantes.PERMISO_SIR);
 
                 //Crear notificación para cada usuario
@@ -289,11 +289,11 @@ public class NotificacionBean extends BaseEjbJPA<Notificacion, Long> implements 
             }
 
             // Registros salida Rechazados o Devueltos al origen
-            if(registroSalidaConsultaEjb.getSirRechazadosReenviadosCount(oficina.getId()) > 0){
+            if (registroSalidaConsultaEjb.getSirRechazadosReenviadosCount(oficina.getId()) > 0) {
                 log.info("Conunicaciones Salidas RechazadosDevueltos para la oficina: " + oficina.getDenominacion());
 
                 //Obtener los usuarios con Permiso SIR en la Oficina indicada
-                LinkedHashSet<Organismo> organismos = organismoEjb.getByOficinaActiva(oficina,RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
+                LinkedHashSet<Organismo> organismos = organismoEjb.getByOficinaActiva(oficina, RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
                 List<UsuarioEntidad> usuarios = permisoOrganismoUsuarioEjb.getUsuariosPermiso(organismos, RegwebConstantes.PERMISO_SIR);
 
                 //Crear notificación para cada usuario
@@ -315,12 +315,12 @@ public class NotificacionBean extends BaseEjbJPA<Notificacion, Long> implements 
 
 
     @Override
-    public Integer eliminarByEntidad(Long idEntidad) throws Exception{
+    public Integer eliminarByEntidad(Long idEntidad) throws Exception {
 
-        List<?> notificacion =  em.createQuery("select distinct(i.id) from Notificacion as i where i.destinatario.entidad.id = :idEntidad").setParameter("idEntidad",idEntidad).getResultList();
+        List<?> notificacion = em.createQuery("select distinct(i.id) from Notificacion as i where i.destinatario.entidad.id = :idEntidad").setParameter("idEntidad", idEntidad).getResultList();
         Integer total = notificacion.size();
 
-        if(notificacion.size() > 0){
+        if (notificacion.size() > 0) {
 
             // Si hay más de 1000 registros, dividimos las queries (ORA-01795).
             while (notificacion.size() > RegwebConstantes.NUMBER_EXPRESSIONS_IN) {
@@ -337,9 +337,9 @@ public class NotificacionBean extends BaseEjbJPA<Notificacion, Long> implements 
     }
 
     @Override
-    public void eliminarByUsuario(Long idUsuarioEntidad) throws Exception{
+    public void eliminarByUsuario(Long idUsuarioEntidad) throws Exception {
         Query q = em.createQuery("delete from Notificacion as n where n.remitente.id=:idUsuarioEntidad or n.destinatario.id=:idUsuarioEntidad");
-        q.setParameter("idUsuarioEntidad" , idUsuarioEntidad);
+        q.setParameter("idUsuarioEntidad", idUsuarioEntidad);
         q.executeUpdate();
 
     }

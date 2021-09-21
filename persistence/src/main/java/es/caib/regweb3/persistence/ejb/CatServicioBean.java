@@ -1,10 +1,10 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.CatServicio;
-import org.jboss.ejb3.annotation.SecurityDomain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -19,12 +19,12 @@ import java.util.List;
  */
 
 @Stateless(name = "CatServicioEJB")
-@SecurityDomain("seycon")
-public class CatServicioBean extends BaseEjbJPA<CatServicio, Long> implements CatServicioLocal{
+@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI", "RWE_WS_ENTRADA", "RWE_WS_SALIDA"})
+public class CatServicioBean extends BaseEjbJPA<CatServicio, Long> implements CatServicioLocal {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
-    @PersistenceContext(unitName="regweb3")
+    @PersistenceContext(unitName = "regweb3")
     private EntityManager em;
 
 
@@ -44,7 +44,7 @@ public class CatServicioBean extends BaseEjbJPA<CatServicio, Long> implements Ca
     @SuppressWarnings(value = "unchecked")
     public List<CatServicio> getAll() throws Exception {
 
-        return  em.createQuery("Select catServicio from CatServicio as catServicio order by catServicio.descServicio").getResultList();
+        return em.createQuery("Select catServicio from CatServicio as catServicio order by catServicio.descServicio").getResultList();
     }
 
     @Override
@@ -73,15 +73,15 @@ public class CatServicioBean extends BaseEjbJPA<CatServicio, Long> implements Ca
     public CatServicio findByCodigo(Long codigo) throws Exception {
         Query q = em.createQuery("Select catServicio from CatServicio as catServicio where catServicio.codServicio = :codigo");
 
-        q.setParameter("codigo",codigo);
+        q.setParameter("codigo", codigo);
         q.setHint("org.hibernate.readOnly", true);
 
         List<CatServicio> catServicio = q.getResultList();
 
-        if(catServicio.size() == 1){
+        if (catServicio.size() == 1) {
             return catServicio.get(0);
-        }else{
-            return  null;
+        } else {
+            return null;
         }
     }
 }

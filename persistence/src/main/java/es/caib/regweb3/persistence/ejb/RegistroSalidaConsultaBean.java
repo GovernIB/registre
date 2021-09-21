@@ -13,10 +13,10 @@ import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.hibernate.Hibernate;
-import org.jboss.ejb3.annotation.SecurityDomain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -34,7 +34,7 @@ import static es.caib.regweb3.persistence.ejb.BaseEjbJPA.RESULTADOS_PAGINACION;
  */
 
 @Stateless(name = "RegistroSalidaConsultaEJB")
-@SecurityDomain("seycon")
+@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI", "RWE_WS_ENTRADA", "RWE_WS_SALIDA", "RWE_WS_CIUDADANO"})
 public class RegistroSalidaConsultaBean implements RegistroSalidaConsultaLocal {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
@@ -48,7 +48,7 @@ public class RegistroSalidaConsultaBean implements RegistroSalidaConsultaLocal {
 
     @Override
     @SuppressWarnings("unchecked")
-    public RegistroBasico findByIdLigero(Long idRegistroSalida) throws Exception{
+    public RegistroBasico findByIdLigero(Long idRegistroSalida) throws Exception {
         Query q;
 
         q = em.createQuery("Select rs.id, rs.numeroRegistroFormateado, rs.fecha, rs.libro.nombre, rs.usuario.usuario.identificador, rs.estado " +
@@ -60,11 +60,11 @@ public class RegistroSalidaConsultaBean implements RegistroSalidaConsultaLocal {
 
         List<Object[]> result = q.getResultList();
 
-        if(result.size() == 1){
+        if (result.size() == 1) {
             Object[] object = result.get(0);
 
             RegistroBasico registroBasico = new RegistroBasico();
-            registroBasico.setId((Long)  object[0]);
+            registroBasico.setId((Long) object[0]);
             registroBasico.setNumeroRegistroFormateado((String) object[1]);
             registroBasico.setFecha((Date) object[2]);
             registroBasico.setLibro((String) object[3]);
@@ -80,7 +80,7 @@ public class RegistroSalidaConsultaBean implements RegistroSalidaConsultaLocal {
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Paginacion busqueda(Integer pageNumber,List<Long> organismos, Date fechaInicio, Date fechaFin, RegistroSalida registroSalida, String interesadoNom, String interesadoLli1, String interesadoLli2, String interesadoDoc, String observaciones, String usuario, Long idEntidad) throws Exception {
+    public Paginacion busqueda(Integer pageNumber, List<Long> organismos, Date fechaInicio, Date fechaFin, RegistroSalida registroSalida, String interesadoNom, String interesadoLli1, String interesadoLli2, String interesadoDoc, String observaciones, String usuario, Long idEntidad) throws Exception {
 
         Query q;
         Query q2;
@@ -91,7 +91,7 @@ public class RegistroSalidaConsultaBean implements RegistroSalidaConsultaLocal {
         StringBuilder queryBase = new StringBuilder("Select DISTINCT registroSalida from RegistroSalida as registroSalida ");
 
         // Si la búsqueda incluye referencias al interesado, hacemos la left outer join
-        if(busquedaInteresados){
+        if (busquedaInteresados) {
             queryBase.append("left outer join registroSalida.registroDetalle.interesados interessat ");
         }
 
@@ -102,10 +102,10 @@ public class RegistroSalidaConsultaBean implements RegistroSalidaConsultaLocal {
         parametros.put("idEntidad", idEntidad);
 
         // Organismo
-        if(organismos.size() == 1){
+        if (organismos.size() == 1) {
             where.add(" registroSalida.oficina.organismoResponsable.id = :idOrganismo ");
             parametros.put("idOrganismo", organismos.get(0));
-        }else{
+        } else {
             where.add(" registroSalida.oficina.organismoResponsable.id in (:organismos) ");
             parametros.put("organismos", organismos);
         }
@@ -179,7 +179,7 @@ public class RegistroSalidaConsultaBean implements RegistroSalidaConsultaLocal {
         parametros.put("fechaFin", fechaFin);
 
         //Presencial
-        if(registroSalida.getRegistroDetalle().getPresencial() != null){
+        if (registroSalida.getRegistroDetalle().getPresencial() != null) {
             where.add(" registroSalida.registroDetalle.presencial = :presencial ");
             parametros.put("presencial", registroSalida.getRegistroDetalle().getPresencial());
         }
@@ -197,7 +197,7 @@ public class RegistroSalidaConsultaBean implements RegistroSalidaConsultaLocal {
 
         // Duplicamos la query solo para obtener los resultados totales
         StringBuilder queryCount = new StringBuilder("Select count(DISTINCT registroSalida.id) from RegistroSalida as registroSalida ");
-        if(busquedaInteresados){
+        if (busquedaInteresados) {
             queryCount.append("left outer join registroSalida.registroDetalle.interesados interessat ");
         }
         q2 = em.createQuery(query.toString().replaceAll(queryBase.toString(), queryCount.toString()));
@@ -280,17 +280,16 @@ public class RegistroSalidaConsultaBean implements RegistroSalidaConsultaLocal {
     @Override
     public RegistroSalida findByNumeroRegistroFormateadoCompleto(String codigoEntidad, String numeroRegistroFormateado) throws Exception, I18NException {
 
-        RegistroSalida registroSalida = findByNumeroRegistroFormateado(codigoEntidad,numeroRegistroFormateado);
+        RegistroSalida registroSalida = findByNumeroRegistroFormateado(codigoEntidad, numeroRegistroFormateado);
 
-        if(registroSalida!= null){
+        if (registroSalida != null) {
             Hibernate.initialize(registroSalida.getRegistroDetalle().getAnexos());
             Hibernate.initialize(registroSalida.getRegistroDetalle().getInteresados());
             return cargarAnexosFull(registroSalida);
-        }else{
+        } else {
             return null;
         }
     }
-
 
 
     @Override
@@ -494,7 +493,7 @@ public class RegistroSalidaConsultaBean implements RegistroSalidaConsultaLocal {
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Long getSirRechazadosReenviadosCount(Long idOficina) throws Exception{
+    public Long getSirRechazadosReenviadosCount(Long idOficina) throws Exception {
 
         Query q;
 
@@ -512,7 +511,7 @@ public class RegistroSalidaConsultaBean implements RegistroSalidaConsultaLocal {
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<RegistroSalida> getByDocumento(Long idEntidad, String documento) throws Exception{
+    public List<RegistroSalida> getByDocumento(Long idEntidad, String documento) throws Exception {
 
         Query q;
 
@@ -553,7 +552,7 @@ public class RegistroSalidaConsultaBean implements RegistroSalidaConsultaLocal {
 
         List<Long> registros = q.getResultList();
 
-        if(registros.isEmpty()){
+        if (registros.isEmpty()) {
             return null;
         }
 
@@ -577,6 +576,7 @@ public class RegistroSalidaConsultaBean implements RegistroSalidaConsultaLocal {
 
     /**
      * Carga los Anexos Completos al RegistroSalida pasado por parámetro
+     *
      * @param registroSalida
      * @return
      * @throws Exception
@@ -598,6 +598,7 @@ public class RegistroSalidaConsultaBean implements RegistroSalidaConsultaLocal {
 
     /**
      * Comprueba si alguno de los valores de búsqueda referentes al Interesado se ha rellenado
+     *
      * @param interesadoNom
      * @param interesadoLli1
      * @param interesadoLli2
