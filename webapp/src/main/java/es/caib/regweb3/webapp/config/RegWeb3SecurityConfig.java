@@ -52,10 +52,52 @@ public class RegWeb3SecurityConfig extends WebSecurityConfigurerAdapter {
                 logoutSuccessUrl("/").
                 permitAll(false);
         http.authorizeRequests().
-                //antMatchers("/test").hasRole("tothom").
-                //antMatchers("/api/**/*").permitAll().
-                //anyRequest().permitAll();
-                        anyRequest().authenticated();
+                antMatchers("/js/**").permitAll().
+                antMatchers("/img/**").permitAll().
+                antMatchers("/css/**").permitAll().
+                antMatchers("/error.jsp").permitAll().
+                antMatchers("/anexo/guardarScan/**").permitAll().
+                antMatchers("/anexo/scanwebresource/**").permitAll().
+                /* ----- RWE_SUPERADMIN ----- */
+                antMatchers("/entidad/new").hasAuthority("RWE_SUPERADMIN").
+                antMatchers("/entidad/list").hasAuthority("RWE_SUPERADMIN").
+                antMatchers("/entidad/**/eliminar").hasAuthority("RWE_SUPERADMIN").
+                antMatchers("/entidad/**/anular").hasAuthority("RWE_SUPERADMIN").
+                antMatchers("/entidad/**/activar").hasAuthority("RWE_SUPERADMIN").
+                antMatchers("/usuario/list").hasAuthority("RWE_SUPERADMIN").
+                antMatchers("/usuario/**/delete").hasAuthority("RWE_SUPERADMIN").
+                antMatchers("/dir3/**").hasAuthority("RWE_SUPERADMIN").
+                antMatchers("/configuracion/**").hasAuthority("RWE_SUPERADMIN").
+                /* ----- RWE_ADMIN ----- */
+                antMatchers("/configuracion/**").hasAuthority("RWE_ADMIN").
+                antMatchers("/entidad/permisos/**").hasAuthority("RWE_ADMIN").
+                antMatchers("/entidad/pendientesprocesar").hasAuthority("RWE_ADMIN").
+                antMatchers("/entidad/usuarios").hasAuthority("RWE_ADMIN").
+                antMatchers("/entidad/**/sincronizar").hasAuthority("RWE_ADMIN").
+                antMatchers("/entidad/**/actualizar").hasAuthority("RWE_ADMIN").
+                antMatchers("/entidad/procesarlibroorganismo/**").hasAuthority("RWE_ADMIN").
+                antMatchers("/tipoAsunto/**").hasAuthority("RWE_ADMIN").
+                antMatchers("/usuario/existeUsuario").hasAuthority("RWE_ADMIN").
+                antMatchers("/organismo/**").hasAuthority("RWE_ADMIN").
+                antMatchers("/tipoDocumental/**").hasAuthority("RWE_ADMIN").
+                antMatchers("/modeloOficioRemision/**").hasAuthority("RWE_ADMIN").
+                antMatchers("/libro/**").hasAuthority("RWE_ADMIN").
+                antMatchers("/sir/**").hasAuthority("RWE_ADMIN").
+                antMatchers("/cola/**").hasAuthority("RWE_ADMIN").
+                /* ----- RWE_SUPERADMIN y RWE_ADMIN ----- */
+                antMatchers("/entidad/**/edit").hasAnyAuthority("RWE_SUPERADMIN","RWE_ADMIN").
+                antMatchers("/usuario/new").hasAnyAuthority("RWE_SUPERADMIN","RWE_ADMIN").
+                antMatchers("/usuario/**/edit").hasAnyAuthority("RWE_SUPERADMIN","RWE_ADMIN").
+                antMatchers("/informe/**").hasAnyAuthority("RWE_SUPERADMIN","RWE_ADMIN").
+                antMatchers("/persona/**").hasAnyAuthority("RWE_SUPERADMIN","RWE_ADMIN").
+                antMatchers("/propiedadGlobal/**").hasAnyAuthority("RWE_SUPERADMIN","RWE_ADMIN").
+                antMatchers("/plugin/**").hasAnyAuthority("RWE_SUPERADMIN","RWE_ADMIN").
+                /* ----- RWE_USUARI ----- */
+                antMatchers("/registroEntrada/**").hasAuthority("RWE_USUARI").
+                antMatchers("/registroSalida/**").hasAuthority("RWE_USUARI").
+                antMatchers("/oficioRemision/**").hasAuthority("RWE_USUARI").
+                antMatchers("/plantilla/**").hasAuthority("RWE_USUARI").
+                anyRequest().authenticated();
         http.cors();
         http.csrf().disable();
         http.headers().frameOptions().disable();
