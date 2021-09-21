@@ -46,7 +46,7 @@
                         <webModule>
                             <groupId>es.caib.regweb3</groupId>
                             <artifactId>regweb3-webapp</artifactId>
-                            <contextRoot>regweb3</contextRoot>
+                            <contextRoot>/regweb3</contextRoot>
                             <bundleFileName>regweb3-webapp.war</bundleFileName>
                         </webModule>
 
