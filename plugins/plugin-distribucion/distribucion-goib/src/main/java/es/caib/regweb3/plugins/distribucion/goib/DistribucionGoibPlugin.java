@@ -1,8 +1,18 @@
 package es.caib.regweb3.plugins.distribucion.goib;
 
 
-import es.caib.distribucio.ws.v1.bustia.*;
-import es.caib.regweb3.model.*;
+import es.caib.distribucio.ws.v1.bustia.BustiaV1;
+import es.caib.distribucio.ws.v1.bustia.Firma;
+import es.caib.distribucio.ws.v1.bustia.RegistreAnnex;
+import es.caib.distribucio.ws.v1.bustia.RegistreAnotacio;
+import es.caib.distribucio.ws.v1.bustia.RegistreInteressat;
+import es.caib.regweb3.model.Anexo;
+import es.caib.regweb3.model.CatLocalidad;
+import es.caib.regweb3.model.CatPais;
+import es.caib.regweb3.model.CatProvincia;
+import es.caib.regweb3.model.Interesado;
+import es.caib.regweb3.model.RegistroEntrada;
+import es.caib.regweb3.model.TraduccionCodigoAsunto;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.plugins.distribucion.IDistribucionPlugin;
 import es.caib.regweb3.utils.RegwebConstantes;
@@ -11,6 +21,8 @@ import org.apache.commons.codec.binary.Base64;
 import org.fundaciobit.genapp.common.i18n.I18NCommonUtils;
 import org.fundaciobit.plugins.validatesignature.api.ValidateSignatureConstants;
 import org.fundaciobit.pluginsib.core.utils.AbstractPluginProperties;
+import org.fundaciobit.pluginsib.core.utils.Metadata;
+import org.fundaciobit.pluginsib.core.utils.MetadataConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,6 +30,7 @@ import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.ws.BindingProvider;
 import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
@@ -380,6 +393,28 @@ public class DistribucionGoibPlugin extends AbstractPluginProperties implements 
         registreAnnex.setObservacions(anexoFull.getAnexo().getObservaciones());
         //Validación OCSP
         registreAnnex.setValidacioOCSP(Base64.encodeBase64String(anexoFull.getAnexo().getValidacionOCSPCertificado()));
+
+        //Metadatos de escaneo
+        List<Metadata> metadadesAnexo = anexoFull.getMetadatas();
+        // De momento solo se pueden enviar estos 2 metadatos
+        if(metadadesAnexo!= null){
+            RegistreAnnex.MetaDades metaDades = new RegistreAnnex.MetaDades();
+            for(Metadata metadata: metadadesAnexo){
+                if(metadata.getKey().equals(MetadataConstants.EEMGDE_RESOLUCION)){
+                    RegistreAnnex.MetaDades.Entry resolucion = new RegistreAnnex.MetaDades.Entry();
+                    resolucion.setKey("eni:resolucion");
+                    resolucion.setValue(metadata.getValue());
+                    metaDades.getEntry().add(resolucion);
+                }
+                if(metadata.getKey().equals(MetadataConstants.EEMGDE_PROFUNDIDAD_COLOR)){
+                    RegistreAnnex.MetaDades.Entry profundidadColor = new RegistreAnnex.MetaDades.Entry();
+                    profundidadColor.setKey("eni:profundidad_color");
+                    profundidadColor.setValue(metadata.getValue());
+                    metaDades.getEntry().add(profundidadColor);
+                }
+            }
+            registreAnnex.setMetaDades(metaDades);
+        }
 
         //Fecha de Captura
         GregorianCalendar c = new GregorianCalendar();

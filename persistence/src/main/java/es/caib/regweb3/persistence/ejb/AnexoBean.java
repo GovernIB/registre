@@ -237,6 +237,25 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
                 anexoFull.setSignatureCustody(custody.getSignatureInfo(custodyID));//Firma asociada al anexo
                 anexoFull.setSignatureFileDelete(false);
 
+                //cargamos los metadatos de escaneo
+                if(!anexo.isJustificante()) {
+                    List<Metadata> metadataList = new ArrayList<>();
+
+                    //Profundidad color
+                    Metadata profundidadColor = custody.getOnlyOneMetadata(custodyID, MetadataConstants.EEMGDE_PROFUNDIDAD_COLOR);
+                    if (profundidadColor != null) {
+                        metadataList.add(profundidadColor);
+                    }
+
+                    //Resolución
+                    Metadata resolucion = custody.getOnlyOneMetadata(custodyID, MetadataConstants.EEMGDE_RESOLUCION);
+                    if (resolucion != null) {
+                        metadataList.add(resolucion);
+                    }
+                    anexoFull.setMetadatas(metadataList);
+
+                }
+
             } else if(anexo.getPerfilCustodia().equals(RegwebConstantes.PERFIL_CUSTODIA_ARXIU)){
 
                 // Cargamos el plugin de Arxiu
