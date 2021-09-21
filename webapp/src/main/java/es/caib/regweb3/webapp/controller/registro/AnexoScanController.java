@@ -333,6 +333,8 @@ public class AnexoScanController extends AnexoController {
             log.info(sc.getName());
         }
 
+        anexoForm.getAnexo().setScan(true);
+
         //Fijamos el MODO DE FIRMA
         final int modoFirma;
         if (dc == null) {
