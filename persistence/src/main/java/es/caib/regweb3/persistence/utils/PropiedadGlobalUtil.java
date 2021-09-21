@@ -809,7 +809,7 @@ public class PropiedadGlobalUtil {
 
         if (propiedadGlobalEjb == null) {
             try {
-                propiedadGlobalEjb = (PropiedadGlobalLocal) new InitialContext().lookup("regweb3/PropiedadGlobalEJB/local");
+                propiedadGlobalEjb = (PropiedadGlobalLocal) new InitialContext().lookup(PropiedadGlobalLocal.JNDI_NAME);
             } catch (Throwable e) {
                 log.error("No se ha podido instanciar PropiedadGlobalEJB");
                 throw new Exception(e);

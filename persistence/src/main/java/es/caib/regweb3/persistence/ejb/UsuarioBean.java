@@ -324,7 +324,7 @@ public class UsuarioBean extends BaseEjbJPA<Usuario, Long> implements UsuarioLoc
     @Override
     public void actualizarRolesWs(Usuario usuario, RolesInfo rolesInfo) throws Exception, I18NException {
 
-        RolLocal rolEjb = (RolLocal) new InitialContext().lookup("regweb3/RolEJB/local");
+        RolLocal rolEjb = (RolLocal) new InitialContext().lookup(RolLocal.JNDI_NAME);
 
         List<String> roles = new ArrayList<String>();
         List<Rol> rolesUsuario = null;
