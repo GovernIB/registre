@@ -3,7 +3,6 @@ package es.caib.regweb3.persistence.ejb;
 import es.caib.regweb3.model.Sesion;
 import es.caib.regweb3.model.UsuarioEntidad;
 
-import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
 
 /**
@@ -13,7 +12,6 @@ import javax.ejb.Local;
  * Date: 31/10/19
  */
 @Local
-@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI", "RWE_WS_ENTRADA", "RWE_WS_SALIDA", "RWE_WS_CIUDADANO"})
 public interface SesionLocal extends BaseEjb<Sesion, Long> {
 
     String JNDI_NAME = "java:app/regweb3-persistence/SesionEJB";

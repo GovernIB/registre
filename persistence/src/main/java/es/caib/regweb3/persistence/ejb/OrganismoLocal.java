@@ -6,7 +6,6 @@ import es.caib.regweb3.model.Oficina;
 import es.caib.regweb3.model.Organismo;
 import es.caib.regweb3.persistence.utils.Paginacion;
 
-import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -20,7 +19,6 @@ import java.util.Set;
  * Date: 16/01/14
  */
 @Local
-@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI", "RWE_WS_ENTRADA", "RWE_WS_SALIDA"})
 public interface OrganismoLocal extends BaseEjb<Organismo, Long> {
 
     String JNDI_NAME = "java:app/regweb3-persistence/OrganismoEJB";
@@ -162,6 +160,7 @@ public interface OrganismoLocal extends BaseEjb<Organismo, Long> {
 
     /**
      * Obtiene un Organismo a partir de su código Dir3, teniendo en cuenta que se trata de una instalación multientidad
+     *
      * @param codigo
      * @return
      * @throws Exception
@@ -263,6 +262,7 @@ public interface OrganismoLocal extends BaseEjb<Organismo, Long> {
 
     /**
      * Obtiene el id de la entidad a la que pertenece este organismo
+     *
      * @param idOrganismo
      * @return
      * @throws Exception
@@ -271,6 +271,7 @@ public interface OrganismoLocal extends BaseEjb<Organismo, Long> {
 
     /**
      * Obtiene el OrganismoSuperior de un Organismo, si es que lo tiene
+     *
      * @param idOrganismo
      * @return
      * @throws Exception
@@ -279,6 +280,7 @@ public interface OrganismoLocal extends BaseEjb<Organismo, Long> {
 
     /**
      * Obtiene el OrganismoRaiz de un Organismo, si es que lo tiene
+     *
      * @param idOrganismo
      * @return
      * @throws Exception

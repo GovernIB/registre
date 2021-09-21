@@ -2,7 +2,6 @@ package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.Configuracion;
 
-import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
 
 /**
@@ -12,7 +11,6 @@ import javax.ejb.Local;
  * Date: 07/07/15
  */
 @Local
-@RolesAllowed({"RWE_SUPERADMIN"})
 public interface ConfiguracionLocal extends BaseEjb<Configuracion, Long> {
 
     String JNDI_NAME = "java:app/regweb3-persistence/ConfiguracionEJB";

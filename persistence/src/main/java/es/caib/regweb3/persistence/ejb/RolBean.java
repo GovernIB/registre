@@ -1,10 +1,10 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.Rol;
-import org.jboss.ejb3.annotation.SecurityDomain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -20,12 +20,12 @@ import java.util.List;
  */
 
 @Stateless(name = "RolEJB")
-@SecurityDomain("seycon")
-public class RolBean extends BaseEjbJPA<Rol, Long> implements RolLocal{
+@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI", "RWE_WS_ENTRADA", "RWE_WS_SALIDA", "RWE_WS_CIUDADANO"})
+public class RolBean extends BaseEjbJPA<Rol, Long> implements RolLocal {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
-    @PersistenceContext(unitName="regweb3")
+    @PersistenceContext(unitName = "regweb3")
     private EntityManager em;
 
     @EJB private PluginLocal pluginEjb;
@@ -47,7 +47,7 @@ public class RolBean extends BaseEjbJPA<Rol, Long> implements RolLocal{
     @SuppressWarnings(value = "unchecked")
     public List<Rol> getAll() throws Exception {
 
-        return  em.createQuery("Select rol from Rol as rol order by rol.id").getResultList();
+        return em.createQuery("Select rol from Rol as rol order by rol.id").getResultList();
     }
 
     @Override
@@ -77,7 +77,7 @@ public class RolBean extends BaseEjbJPA<Rol, Long> implements RolLocal{
 
         Query q = em.createQuery("Select rol from Rol as rol where rol.nombre IN (:roles) order by rol.orden");
 
-        q.setParameter("roles",roles);
+        q.setParameter("roles", roles);
         q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList();

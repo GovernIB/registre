@@ -10,10 +10,10 @@ import es.caib.regweb3.sir.core.excepcion.ValidacionException;
 import es.caib.regweb3.sir.core.utils.FicheroIntercambio;
 import es.caib.regweb3.sir.ejb.MensajeLocal;
 import es.caib.regweb3.utils.RegwebConstantes;
-import org.jboss.ejb3.annotation.SecurityDomain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import java.util.Date;
@@ -26,7 +26,7 @@ import java.util.Date;
  */
 
 @Stateless(name = "FicheroIntercambioEJB")
-@SecurityDomain("seycon")
+@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI"})
 public class FicheroIntercambioBean implements FicheroIntercambioLocal {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
@@ -45,11 +45,12 @@ public class FicheroIntercambioBean implements FicheroIntercambioLocal {
 
     /**
      * Recibe un fichero de intercambio en formato SICRES3 desde un nodo distribuido
+     *
      * @param ficheroIntercambio
      * @throws Exception
      */
     @Override
-    public RespuestaRecepcionSir procesarFicheroIntercambio(FicheroIntercambio ficheroIntercambio) throws Exception{
+    public RespuestaRecepcionSir procesarFicheroIntercambio(FicheroIntercambio ficheroIntercambio) throws Exception {
 
         RespuestaRecepcionSir respuesta = new RespuestaRecepcionSir();
         RegistroSir registroSir = null;
@@ -85,7 +86,7 @@ public class FicheroIntercambioBean implements FicheroIntercambioLocal {
                     respuesta.setAck(false);
                 } else {
                     log.info("Se ha recibido un ENVIO con estado incompatible: " + ficheroIntercambio.getIdentificadorIntercambio());
-                    throw new ValidacionException(Errores.ERROR_0037,"Se ha recibido un ENVIO con estado incompatible: " + ficheroIntercambio.getIdentificadorIntercambio());
+                    throw new ValidacionException(Errores.ERROR_0037, "Se ha recibido un ENVIO con estado incompatible: " + ficheroIntercambio.getIdentificadorIntercambio());
                 }
 
             } else {
@@ -96,9 +97,9 @@ public class FicheroIntercambioBean implements FicheroIntercambioLocal {
             }
 
             // REENVIO
-        }else if (TipoAnotacion.REENVIO.getValue().equals(ficheroIntercambio.getTipoAnotacion())) {
+        } else if (TipoAnotacion.REENVIO.getValue().equals(ficheroIntercambio.getTipoAnotacion())) {
 
-            log.info("El ficheroIntercambio recibido es un REENVIO: " + ficheroIntercambio.getDescripcionTipoAnotacion() +" - " + ficheroIntercambio.getIdentificadorIntercambio());
+            log.info("El ficheroIntercambio recibido es un REENVIO: " + ficheroIntercambio.getDescripcionTipoAnotacion() + " - " + ficheroIntercambio.getIdentificadorIntercambio());
 
             // Buscamos si el Registro recibido ya existe en el sistema
             registroSir = registroSirEjb.getRegistroSir(ficheroIntercambio.getIdentificadorIntercambio(), ficheroIntercambio.getCodigoEntidadRegistralDestino());
@@ -139,28 +140,28 @@ public class FicheroIntercambioBean implements FicheroIntercambioLocal {
 
                     log.info("El registroSir existia en el sistema, se ha vuelto a recibir: " + registroSir.getIdentificadorIntercambio());
 
-                }else if (EstadoRegistroSir.RECIBIDO.equals(registroSir.getEstado())) {
+                } else if (EstadoRegistroSir.RECIBIDO.equals(registroSir.getEstado())) {
 
                     log.info("Se ha recibido un REENVIO que ya habia sido recibido previamente: " + ficheroIntercambio.getIdentificadorIntercambio() + ", volvemos a enviar un ACK");
 
-                }else if (EstadoRegistroSir.ACEPTADO.equals(registroSir.getEstado())) {
+                } else if (EstadoRegistroSir.ACEPTADO.equals(registroSir.getEstado())) {
 
                     log.info("Se ha recibido un REENVIO que ya habia sido aceptado previamente: " + ficheroIntercambio.getIdentificadorIntercambio() + ", volvemos a enviar un ACK");
 
-                } else{
+                } else {
                     log.info("Se ha recibido un REENVIO con estado incompatible: " + ficheroIntercambio.getIdentificadorIntercambio());
                     throw new ValidacionException(Errores.ERROR_0037, "Se ha recibido un REENVIO con estado incompatible: " + ficheroIntercambio.getIdentificadorIntercambio());
                 }
 
                 // Oficio Remision: Ha sido enviado por nosotros a SIR
-            }else if(oficioRemision != null){ // Ya existe en el sistema
+            } else if (oficioRemision != null) { // Ya existe en el sistema
 
-                if(oficioRemision.getEstado() == RegwebConstantes.OFICIO_SIR_ENVIADO ||
+                if (oficioRemision.getEstado() == RegwebConstantes.OFICIO_SIR_ENVIADO ||
                         oficioRemision.getEstado() == RegwebConstantes.OFICIO_SIR_ENVIADO_ACK ||
                         oficioRemision.getEstado() == RegwebConstantes.OFICIO_SIR_REENVIADO ||
-                        oficioRemision.getEstado() == RegwebConstantes.OFICIO_SIR_REENVIADO_ACK){
+                        oficioRemision.getEstado() == RegwebConstantes.OFICIO_SIR_REENVIADO_ACK) {
 
-                    if(oficioRemision.getTipoOficioRemision().equals(RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA)){
+                    if (oficioRemision.getTipoOficioRemision().equals(RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA)) {
 
                         RegistroEntrada registroEntrada = oficioRemision.getRegistrosEntrada().get(0);
                         // Actualizamos el registro de entrada
@@ -171,7 +172,7 @@ public class FicheroIntercambioBean implements FicheroIntercambioLocal {
                         registroEntrada.getRegistroDetalle().setDecodificacionTipoAnotacion(ficheroIntercambio.getDescripcionTipoAnotacion());
                         registroEntradaEjb.merge(registroEntrada);
 
-                    }else if(oficioRemision.getTipoOficioRemision().equals(RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA)){
+                    } else if (oficioRemision.getTipoOficioRemision().equals(RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA)) {
 
                         RegistroSalida registroSalida = oficioRemision.getRegistrosSalida().get(0);
                         // Actualizamos el registro de salida
@@ -192,22 +193,22 @@ public class FicheroIntercambioBean implements FicheroIntercambioLocal {
 
                     log.info("El oficio de remision existia en el sistema, nos lo han renviado: " + oficioRemision.getIdentificadorIntercambio());
 
-                }else if(oficioRemision.getEstado() == RegwebConstantes.OFICIO_SIR_DEVUELTO){
+                } else if (oficioRemision.getEstado() == RegwebConstantes.OFICIO_SIR_DEVUELTO) {
                     log.info("Se ha recibido un REENVIO que ya habia sido recibido previamente: " + ficheroIntercambio.getIdentificadorIntercambio() + ", volvemos a enviar un ACK");
 
-                } else{
+                } else {
                     log.info("Se ha recibido un REENVIO con estado incompatible: " + ficheroIntercambio.getIdentificadorIntercambio());
                     throw new ValidacionException(Errores.ERROR_0037, "Se ha recibido un REENVIO con estado incompatible: " + ficheroIntercambio.getIdentificadorIntercambio());
                 }
 
-            }else{
+            } else {
                 // Creamos un nuevo RegistroSir
                 registroSir = registroSirEjb.crearRegistroSir(ficheroIntercambio);
                 log.info("El registroSir no existia en el sistema y se ha creado: " + registroSir.getIdentificadorIntercambio());
             }
 
             // RECHAZO
-        }else if (TipoAnotacion.RECHAZO.getValue().equals(ficheroIntercambio.getTipoAnotacion())) {
+        } else if (TipoAnotacion.RECHAZO.getValue().equals(ficheroIntercambio.getTipoAnotacion())) {
 
             log.info("El ficheroIntercambio recibido es un RECHAZO");
 
@@ -215,14 +216,14 @@ public class FicheroIntercambioBean implements FicheroIntercambioLocal {
             oficioRemision = oficioRemisionEjb.getByIdentificadorIntercambio(ficheroIntercambio.getIdentificadorIntercambio(), ficheroIntercambio.getCodigoEntidadRegistralDestino());
 
             // Oficio Remision: Ha sido enviado por nosotros a SIR
-            if(oficioRemision != null) { // Existe en el sistema
+            if (oficioRemision != null) { // Existe en el sistema
 
-                if(oficioRemision.getEstado() == RegwebConstantes.OFICIO_SIR_ENVIADO ||
+                if (oficioRemision.getEstado() == RegwebConstantes.OFICIO_SIR_ENVIADO ||
                         oficioRemision.getEstado() == RegwebConstantes.OFICIO_SIR_ENVIADO_ACK ||
                         oficioRemision.getEstado() == RegwebConstantes.OFICIO_SIR_REENVIADO ||
-                        oficioRemision.getEstado() == RegwebConstantes.OFICIO_SIR_REENVIADO_ACK){
+                        oficioRemision.getEstado() == RegwebConstantes.OFICIO_SIR_REENVIADO_ACK) {
 
-                    if(oficioRemision.getTipoOficioRemision().equals(RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA)){
+                    if (oficioRemision.getTipoOficioRemision().equals(RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA)) {
 
                         RegistroEntrada registroEntrada = oficioRemision.getRegistrosEntrada().get(0);
                         // Actualizamos el registro de entrada
@@ -233,7 +234,7 @@ public class FicheroIntercambioBean implements FicheroIntercambioLocal {
                         registroEntrada.getRegistroDetalle().setDecodificacionTipoAnotacion(ficheroIntercambio.getDescripcionTipoAnotacion());
                         registroEntradaEjb.merge(registroEntrada);
 
-                    }else if(oficioRemision.getTipoOficioRemision().equals(RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA)){
+                    } else if (oficioRemision.getTipoOficioRemision().equals(RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA)) {
 
                         RegistroSalida registroSalida = oficioRemision.getRegistrosSalida().get(0);
                         // Actualizamos el registro de salida
@@ -254,26 +255,26 @@ public class FicheroIntercambioBean implements FicheroIntercambioLocal {
 
                     log.info("El oficio de remision existia en el sistema, nos lo han rechazado: " + oficioRemision.getIdentificadorIntercambio());
 
-                }else if(oficioRemision.getEstado() == RegwebConstantes.OFICIO_SIR_RECHAZADO){
+                } else if (oficioRemision.getEstado() == RegwebConstantes.OFICIO_SIR_RECHAZADO) {
 
                     log.info("Se ha recibido un RECHAZO de un registroSir que ya esta devuelto" + ficheroIntercambio.getIdentificadorIntercambio());
                     throw new ValidacionException(Errores.ERROR_0037, "Se ha recibido un RECHAZO de un registroSir que ya esta devuelto" + ficheroIntercambio.getIdentificadorIntercambio());
 
-                }else{
+                } else {
                     log.info("Se ha recibido un RECHAZO cuyo estado no lo permite: " + ficheroIntercambio.getIdentificadorIntercambio());
                     throw new ValidacionException(Errores.ERROR_0037, "Se ha recibido un RECHAZO cuyo estado no lo permite: " + ficheroIntercambio.getIdentificadorIntercambio());
                 }
 
-            }else{
+            } else {
                 // Caso extinguido de RECHAZO A ORIGEN
-                registroSir = registroSirEjb.getRegistroSir(ficheroIntercambio.getIdentificadorIntercambio(),ficheroIntercambio.getCodigoEntidadRegistralDestino());
+                registroSir = registroSirEjb.getRegistroSir(ficheroIntercambio.getIdentificadorIntercambio(), ficheroIntercambio.getCodigoEntidadRegistralDestino());
 
-                if(registroSir != null){
+                if (registroSir != null) {
 
                     log.info("Se trata de un Rechazo a Origen: " + ficheroIntercambio.getIdentificadorIntercambio());
 
-                    if(EstadoRegistroSir.REENVIADO.equals(registroSir.getEstado()) ||
-                            EstadoRegistroSir.REENVIADO_Y_ACK.equals(registroSir.getEstado())){
+                    if (EstadoRegistroSir.REENVIADO.equals(registroSir.getEstado()) ||
+                            EstadoRegistroSir.REENVIADO_Y_ACK.equals(registroSir.getEstado())) {
 
                         // Modificar el estado del Registro a RECIBIDO
                         registroSir.setEstado(EstadoRegistroSir.RECIBIDO);
@@ -294,13 +295,13 @@ public class FicheroIntercambioBean implements FicheroIntercambioLocal {
                         trazabilidadSirEjb.persist(trazabilidadSir);
 
                     }
-                }else{
+                } else {
                     //Buscamos si ya está rechazado
                     oficioRemision = oficioRemisionEjb.getBySirRechazado(ficheroIntercambio.getIdentificadorIntercambio(), ficheroIntercambio.getCodigoEntidadRegistralDestino());
 
-                    if(oficioRemision != null){
+                    if (oficioRemision != null) {
                         log.info("Se ha recibido un RECHAZO que ya habia sido rechazado previamente: " + ficheroIntercambio.getIdentificadorIntercambio() + ", volvemos a enviar un ACK");
-                    }else{
+                    } else {
                         log.info("El registro recibido no existe en el sistema: " + ficheroIntercambio.getIdentificadorIntercambio());
                         throw new ValidacionException(Errores.ERROR_0065, "El registro recibido no existe en el sistema: " + ficheroIntercambio.getIdentificadorIntercambio());
                     }
@@ -316,16 +317,17 @@ public class FicheroIntercambioBean implements FicheroIntercambioLocal {
 
     /**
      * Obtiene la Entidad de REBWEB3 a partir de la Oficina destino
+     *
      * @param codigoEntidadRegistralDestino
      * @throws Exception
      */
-    private Entidad obtenerEntidad(String codigoEntidadRegistralDestino) throws Exception{
+    private Entidad obtenerEntidad(String codigoEntidadRegistralDestino) throws Exception {
 
-        if(codigoEntidadRegistralDestino != null) {
+        if (codigoEntidadRegistralDestino != null) {
 
             Oficina oficina = obtenerOficina(codigoEntidadRegistralDestino);
 
-            if(oficina != null){
+            if (oficina != null) {
                 return oficina.getOrganismoResponsable().getEntidad();
             }
         }
@@ -337,9 +339,9 @@ public class FicheroIntercambioBean implements FicheroIntercambioLocal {
 
     private Oficina obtenerOficina(String codigo) throws Exception {
 
-        if(multiEntidadEjb.isMultiEntidad()){
+        if (multiEntidadEjb.isMultiEntidad()) {
             return oficinaEjb.findByCodigoMultiEntidad(codigo);
-        }else{
+        } else {
             return oficinaEjb.findByCodigo(codigo);
         }
     }

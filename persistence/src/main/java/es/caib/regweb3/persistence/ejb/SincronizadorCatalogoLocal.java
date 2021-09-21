@@ -3,7 +3,6 @@ package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.Descarga;
 
-import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
 
 /**
@@ -13,7 +12,6 @@ import javax.ejb.Local;
  * Date: 6/03/13
  */
 @Local
-@RolesAllowed({"RWE_SUPERADMIN"})
 public interface SincronizadorCatalogoLocal {
 
     String JNDI_NAME = "java:app/regweb3-persistence/SincronizadorCatalogoEJB";

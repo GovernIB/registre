@@ -5,7 +5,6 @@ import es.caib.regweb3.model.Oficina;
 import es.caib.regweb3.model.Organismo;
 import es.caib.regweb3.persistence.utils.Paginacion;
 
-import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -17,7 +16,6 @@ import java.util.List;
  * Date: 16/01/14
  */
 @Local
-@RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI","RWE_WS_ENTRADA","RWE_WS_SALIDA"})
 public interface OficinaLocal extends BaseEjb<Oficina, Long> {
 
     String JNDI_NAME = "java:app/regweb3-persistence/OficinaEJB";
@@ -25,6 +23,7 @@ public interface OficinaLocal extends BaseEjb<Oficina, Long> {
 
     /**
      * Busca una Oficina a partir de su código
+     *
      * @param codigo
      * @return
      * @throws Exception
@@ -33,6 +32,7 @@ public interface OficinaLocal extends BaseEjb<Oficina, Long> {
 
     /**
      * Busca una Oficina a partir de su código, teniendo en cuenta que se trata de una instalación Multientidad
+     *
      * @param codigo
      * @return
      * @throws Exception
@@ -41,6 +41,7 @@ public interface OficinaLocal extends BaseEjb<Oficina, Long> {
 
     /**
      * Obtiene la oficina del codigo indicado, la entidad indicada independientemente del estado.
+     *
      * @param codigo
      * @param idEntidad
      * @return
@@ -50,6 +51,7 @@ public interface OficinaLocal extends BaseEjb<Oficina, Long> {
 
     /**
      * Busca una Oficina a partir de su código
+     *
      * @param codigo
      * @return Solo el id de la Oficina
      * @throws Exception
@@ -58,6 +60,7 @@ public interface OficinaLocal extends BaseEjb<Oficina, Long> {
 
     /**
      * Busca una Oficina a partir de su código y la Entidad a la que pertenece
+     *
      * @param codigo
      * @return
      * @throws Exception
@@ -66,6 +69,7 @@ public interface OficinaLocal extends BaseEjb<Oficina, Long> {
 
     /**
      * Busca una Oficina válida a partir de su código
+     *
      * @param codigo
      * @return
      * @throws Exception
@@ -74,6 +78,7 @@ public interface OficinaLocal extends BaseEjb<Oficina, Long> {
 
     /**
      * Obtiene las Oficinas cuyo Organismo responsable es el indicado
+     *
      * @param idOrganismo
      * @return
      * @throws Exception
@@ -82,6 +87,7 @@ public interface OficinaLocal extends BaseEjb<Oficina, Long> {
 
     /**
      * Obtiene las Oficinas funcionales de un Organismo
+     *
      * @param idOrganismo
      * @param oficinaVirtual
      * @return
@@ -91,6 +97,7 @@ public interface OficinaLocal extends BaseEjb<Oficina, Long> {
 
     /**
      * Obtiene las Oficinas organizativas de un Organismo
+     *
      * @param idOrganismo
      * @param oficinaVirtual
      * @return
@@ -100,6 +107,7 @@ public interface OficinaLocal extends BaseEjb<Oficina, Long> {
 
     /**
      * Obtiene las Oficinas SIR de un Organismo
+     *
      * @param idOrganismo
      * @return
      * @throws Exception
@@ -108,6 +116,7 @@ public interface OficinaLocal extends BaseEjb<Oficina, Long> {
 
     /**
      * Obtiene las Oficinas SIR de una Entidad
+     *
      * @param idEntidad
      * @return
      * @throws Exception
@@ -116,6 +125,7 @@ public interface OficinaLocal extends BaseEjb<Oficina, Long> {
 
     /**
      * Obtiene las Oficinas cuya Entidad responsable es la indicada
+     *
      * @param idEntidad
      * @return
      * @throws Exception
@@ -124,6 +134,7 @@ public interface OficinaLocal extends BaseEjb<Oficina, Long> {
 
     /**
      * Obtiene las Oficinas cuya Entidad responsable es la indicada y tienen el estado indicado
+     *
      * @param idEntidad
      * @param estado
      * @return
@@ -135,6 +146,7 @@ public interface OficinaLocal extends BaseEjb<Oficina, Long> {
     /**
      * Obtiene las Oficinas cuya Entidad responsable es la indicada y tienen el estado indicado y elimina aquellas oficinas
      * que en un entorno multientidad estan repetidas en la entidad que les da servicio.
+     *
      * @param idEntidad
      * @param estado
      * @return
@@ -144,6 +156,7 @@ public interface OficinaLocal extends BaseEjb<Oficina, Long> {
 
     /**
      * Obtiene las Oficinas responsables cuya Entidad responsable es la indicada
+     *
      * @param idEntidad
      * @param estado
      * @return
@@ -153,6 +166,7 @@ public interface OficinaLocal extends BaseEjb<Oficina, Long> {
 
     /**
      * Obtiene las Oficinas dependientes cuya Entidad responsable es la indicada
+     *
      * @param idEntidad
      * @param estado
      * @return
@@ -163,6 +177,7 @@ public interface OficinaLocal extends BaseEjb<Oficina, Long> {
     /**
      * Retorna las Oficinas(Funcionales y Organizativas) que dan servicio a un Organismo,
      * teniendo en cuenta las oficinas que dan servicio a sus Organismos superiores en el Organigrama.
+     *
      * @param idOrganismo
      * @param oficinaVirtual Boolean para tener en cuenta o no las REGISTRO_VIRTUAL_NO_PRESENCIAL
      * @return
@@ -173,6 +188,7 @@ public interface OficinaLocal extends BaseEjb<Oficina, Long> {
     /**
      * Booleano si tiene Oficinas(Funcionales y Organizativas) que dan servicio a un Organismo,
      * teniendo en cuenta las oficinas que dan servicio a sus Organismos superiores en el Organigrama.
+     *
      * @param idOrganismo
      * @param oficinaVirtual
      * @return
@@ -183,6 +199,7 @@ public interface OficinaLocal extends BaseEjb<Oficina, Long> {
 
     /**
      * Obtiene las Oficinas que dan servicio a los Organismos seleccionados
+     *
      * @param organismos
      * @param oficinaVirtual 'true' se incluirán las Oficinas virtuales
      * @return
@@ -192,6 +209,7 @@ public interface OficinaLocal extends BaseEjb<Oficina, Long> {
 
     /**
      * Obtiene las Oficinas que dan servicio SIR a los Libros seleccionados
+     *
      * @param organismos
      * @return
      * @throws Exception
@@ -200,6 +218,7 @@ public interface OficinaLocal extends BaseEjb<Oficina, Long> {
 
     /**
      * Consulta si una Oficina puede recibir via SIR
+     *
      * @param idOficina
      * @return
      * @throws Exception
@@ -208,6 +227,7 @@ public interface OficinaLocal extends BaseEjb<Oficina, Long> {
 
     /**
      * Consulta si una Oficina puede enviar via SIR
+     *
      * @param idOficina
      * @return
      * @throws Exception
@@ -216,6 +236,7 @@ public interface OficinaLocal extends BaseEjb<Oficina, Long> {
 
     /**
      * Consulta si una Oficina es SIR (Servicio Integrada en SIR)
+     *
      * @param idOficina
      * @return
      * @throws Exception
@@ -225,6 +246,7 @@ public interface OficinaLocal extends BaseEjb<Oficina, Long> {
 
     /**
      * Consulta si una Oficina es SIR Completa(tiene todos los servicios SIR: Integrada en SIR, SIR Envio, SIR Recepción)
+     *
      * @param idOficina
      * @return
      * @throws Exception
@@ -233,6 +255,7 @@ public interface OficinaLocal extends BaseEjb<Oficina, Long> {
 
     /**
      * Elimina las Oficinas de una Entidad
+     *
      * @param idEntidad
      * @return
      * @throws Exception
@@ -252,6 +275,7 @@ public interface OficinaLocal extends BaseEjb<Oficina, Long> {
 
     /**
      * Obtiene el id de la Entidad a la que pertenece la Oficina
+     *
      * @param codigo
      * @return
      * @throws Exception
@@ -259,9 +283,9 @@ public interface OficinaLocal extends BaseEjb<Oficina, Long> {
     Long obtenerEntidad(String codigo) throws Exception;
 
 
-
     /**
      * Obtiene el id de la Entidad a la que pertenece la Oficina en un entorno multientidad
+     *
      * @param codigo
      * @return
      * @throws Exception
@@ -270,6 +294,7 @@ public interface OficinaLocal extends BaseEjb<Oficina, Long> {
 
     /**
      * Obtiene las oficinas SIR desde dir3caib(via WS) de la unidad indicada en el código
+     *
      * @param codigo
      * @return
      * @throws Exception

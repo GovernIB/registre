@@ -6,10 +6,10 @@ import es.caib.regweb3.model.Usuario;
 import es.caib.regweb3.model.UsuarioEntidad;
 import es.caib.regweb3.persistence.utils.RegistroUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
-import org.jboss.ejb3.annotation.SecurityDomain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -26,12 +26,12 @@ import java.util.List;
  */
 
 @Stateless(name = "HistoricoRegistroEntradaEJB")
-@SecurityDomain("seycon")
-public class HistoricoRegistroEntradaBean extends BaseEjbJPA<HistoricoRegistroEntrada, Long> implements HistoricoRegistroEntradaLocal{
+@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI", "RWE_WS_ENTRADA", "RWE_WS_SALIDA"})
+public class HistoricoRegistroEntradaBean extends BaseEjbJPA<HistoricoRegistroEntrada, Long> implements HistoricoRegistroEntradaLocal {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
-    @PersistenceContext(unitName="regweb3")
+    @PersistenceContext(unitName = "regweb3")
     private EntityManager em;
 
 
@@ -51,7 +51,7 @@ public class HistoricoRegistroEntradaBean extends BaseEjbJPA<HistoricoRegistroEn
     @SuppressWarnings(value = "unchecked")
     public List<HistoricoRegistroEntrada> getAll() throws Exception {
 
-        return  em.createQuery("Select historicoRegistroEntrada from HistoricoRegistroEntrada as historicoRegistroEntrada order by historicoRegistroEntrada.id").getResultList();
+        return em.createQuery("Select historicoRegistroEntrada from HistoricoRegistroEntrada as historicoRegistroEntrada order by historicoRegistroEntrada.id").getResultList();
     }
 
     @Override
@@ -98,7 +98,7 @@ public class HistoricoRegistroEntradaBean extends BaseEjbJPA<HistoricoRegistroEn
 
 
     @Override
-    public HistoricoRegistroEntrada crearHistoricoRegistroEntrada(RegistroEntrada registroEntrada, UsuarioEntidad usuarioEntidad, String modificacion, boolean serializar) throws Exception{
+    public HistoricoRegistroEntrada crearHistoricoRegistroEntrada(RegistroEntrada registroEntrada, UsuarioEntidad usuarioEntidad, String modificacion, boolean serializar) throws Exception {
 
         HistoricoRegistroEntrada historico = new HistoricoRegistroEntrada();
 
@@ -108,7 +108,7 @@ public class HistoricoRegistroEntradaBean extends BaseEjbJPA<HistoricoRegistroEn
         historico.setModificacion(modificacion);
         historico.setUsuario(usuarioEntidad);
         //Serializamos el RegistroEntrada original
-        if(serializar){
+        if (serializar) {
             String registroEntradaOrigial = RegistroUtils.serilizarXml(registroEntrada);
             historico.setRegistroEntradaOriginal(registroEntradaOrigial);
         }
@@ -131,12 +131,12 @@ public class HistoricoRegistroEntradaBean extends BaseEjbJPA<HistoricoRegistroEn
     }
 
     @Override
-    public Integer eliminarByEntidad(Long idEntidad) throws Exception{
+    public Integer eliminarByEntidad(Long idEntidad) throws Exception {
 
-        List<?> hre = em.createQuery("Select distinct(hre.id) from HistoricoRegistroEntrada as hre where hre.registroEntrada.usuario.entidad.id =:idEntidad").setParameter("idEntidad",idEntidad).getResultList();
+        List<?> hre = em.createQuery("Select distinct(hre.id) from HistoricoRegistroEntrada as hre where hre.registroEntrada.usuario.entidad.id =:idEntidad").setParameter("idEntidad", idEntidad).getResultList();
         Integer total = hre.size();
 
-        if(hre.size() >0){
+        if (hre.size() > 0) {
 
             // Si hay más de 1000 registros, dividimos las queries (ORA-01795).
             while (hre.size() > RegwebConstantes.NUMBER_EXPRESSIONS_IN) {

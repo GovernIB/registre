@@ -10,10 +10,10 @@ import es.caib.regweb3.utils.Dir3CaibUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 import org.hibernate.Hibernate;
-import org.jboss.ejb3.annotation.SecurityDomain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -30,7 +30,7 @@ import java.util.*;
  */
 
 @Stateless(name = "OrganismoEJB")
-@SecurityDomain("seycon")
+@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI", "RWE_WS_ENTRADA", "RWE_WS_SALIDA"})
 public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements OrganismoLocal {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
@@ -224,7 +224,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
             Organismo organismo = new Organismo((Long) result.get(0)[0], (String) result.get(0)[1], (String) result.get(0)[2]);
             organismo.setCodAmbComunidad(new CatComunidadAutonoma((Long) result.get(0)[3]));
             organismo.setEstado(catEstadoEntidadEjb.findById((Long) result.get(0)[4]));
-            organismo.setEntidad(new Entidad ((Long) result.get(0)[5]));
+            organismo.setEntidad(new Entidad((Long) result.get(0)[5]));
             return organismo;
         } else {
             return null;
@@ -268,7 +268,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
             organismo.setCodAmbComunidad(new CatComunidadAutonoma((Long) result.get(0)[3]));
             organismo.setEstado((CatEstadoEntidad) result.get(0)[4]);
             organismo.setEdp((Boolean) result.get(0)[5]);
-            organismo.setEntidad(new Entidad((Long)result.get(0)[6]));
+            organismo.setEntidad(new Entidad((Long) result.get(0)[6]));
             return organismo;
         } else {
             return null;
@@ -380,7 +380,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
             Organismo organismo = new Organismo((Long) result.get(0)[0], (String) result.get(0)[1], (String) result.get(0)[2]);
             organismo.setCodAmbComunidad(new CatComunidadAutonoma((Long) result.get(0)[3]));
             organismo.setEstado(catEstadoEntidadEjb.findById((Long) result.get(0)[4]));
-            organismo.setEntidad(new Entidad ((Long) result.get(0)[5]));
+            organismo.setEntidad(new Entidad((Long) result.get(0)[5]));
             return organismo;
         } else if (result.size() > 1) { //Caso multientidad ( encuentra 2)
             for (Object[] object : result) {
@@ -394,7 +394,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
                     Organismo organismo = new Organismo((Long) object[0], (String) object[1], (String) object[2]);
                     organismo.setCodAmbComunidad(new CatComunidadAutonoma((Long) object[3]));
                     organismo.setEstado(catEstadoEntidadEjb.findById((Long) object[4]));
-                    organismo.setEntidad(new Entidad ((Long) object[5]));
+                    organismo.setEntidad(new Entidad((Long) object[5]));
                     return organismo;
                 }
             }
@@ -845,9 +845,9 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
             return true;
 
         } else {
-            if(organismo.getOrganismoSuperior()!=null) {
+            if (organismo.getOrganismoSuperior() != null) {
                 return isEdpConLibro(organismo.getOrganismoSuperior().getId());
-            }else{
+            } else {
                 return false;
             }
         }

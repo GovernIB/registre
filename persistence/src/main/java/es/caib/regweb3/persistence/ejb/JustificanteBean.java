@@ -26,12 +26,12 @@ import org.fundaciobit.plugins.signature.api.FileInfoSignature;
 import org.fundaciobit.plugins.signatureserver.api.ISignatureServerPlugin;
 import org.fundaciobit.pluginsib.core.utils.Metadata;
 import org.fundaciobit.pluginsib.core.utils.MetadataConstants;
-import org.jboss.ejb3.annotation.SecurityDomain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -51,7 +51,7 @@ import java.util.Map;
  */
 
 @Stateless(name = "JustificanteEJB")
-@SecurityDomain("seycon")
+@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI", "RWE_WS_ENTRADA", "RWE_WS_SALIDA", "RWE_WS_CIUDADANO"})
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 @Interceptors(SpringBeanAutowiringInterceptor.class)
 public class JustificanteBean implements JustificanteLocal {
@@ -75,11 +75,11 @@ public class JustificanteBean implements JustificanteLocal {
             throw new I18NException("aviso.justificante.existe");
         }
 
-        if(usuarioEntidad.getEntidad().getPerfilCustodia().equals(RegwebConstantes.PERFIL_CUSTODIA_DOCUMENT_CUSTODY)){
+        if (usuarioEntidad.getEntidad().getPerfilCustodia().equals(RegwebConstantes.PERFIL_CUSTODIA_DOCUMENT_CUSTODY)) {
 
             return crearJustificanteDocumentCustody(usuarioEntidad, registro, tipoRegistro, idioma, false);
 
-        }else if(usuarioEntidad.getEntidad().getPerfilCustodia().equals(RegwebConstantes.PERFIL_CUSTODIA_ARXIU)){
+        } else if (usuarioEntidad.getEntidad().getPerfilCustodia().equals(RegwebConstantes.PERFIL_CUSTODIA_ARXIU)) {
 
             return crearJustificanteApiArxiu(usuarioEntidad, registro, tipoRegistro, idioma);
 
@@ -89,7 +89,7 @@ public class JustificanteBean implements JustificanteLocal {
     }
 
     @Override
-    public AnexoFull crearJustificanteWS(UsuarioEntidad usuarioEntidad, IRegistro registro, Long tipoRegistro, String idioma) throws I18NException, I18NValidationException{
+    public AnexoFull crearJustificanteWS(UsuarioEntidad usuarioEntidad, IRegistro registro, Long tipoRegistro, String idioma) throws I18NException, I18NValidationException {
 
         // Comprobamos si ya se ha generado el Justificante
         if (registro.getRegistroDetalle().getTieneJustificante()) {
@@ -97,10 +97,10 @@ public class JustificanteBean implements JustificanteLocal {
         }
 
         // Si la custodia en diferido está activa generamos el justificante en Filesystem y enviamos a la Cola de custodia
-        if(PropiedadGlobalUtil.getCustodiaDiferida(usuarioEntidad.getEntidad().getId())){
+        if (PropiedadGlobalUtil.getCustodiaDiferida(usuarioEntidad.getEntidad().getId())) {
             return crearJustificanteDocumentCustody(usuarioEntidad, registro, tipoRegistro, idioma, true);
             //return crearJustificanteApiArxiu(usuarioEntidad, registro, tipoRegistro, idioma, true);
-        }else{
+        } else {
             return crearJustificante(usuarioEntidad, registro, tipoRegistro, idioma);
         }
 
@@ -108,6 +108,7 @@ public class JustificanteBean implements JustificanteLocal {
 
     /**
      * Crear el Justificante del Registro utilizando el API {@link org.fundaciobit.plugins.documentcustody}
+     *
      * @param usuarioEntidad
      * @param registro
      * @param tipoRegistro
@@ -116,7 +117,7 @@ public class JustificanteBean implements JustificanteLocal {
      * @throws I18NException
      * @throws I18NValidationException
      */
-    private AnexoFull crearJustificanteDocumentCustody(UsuarioEntidad usuarioEntidad, IRegistro registro, Long tipoRegistro, String idioma, Boolean fileSystem) throws I18NException, I18NValidationException{
+    private AnexoFull crearJustificanteDocumentCustody(UsuarioEntidad usuarioEntidad, IRegistro registro, Long tipoRegistro, String idioma, Boolean fileSystem) throws I18NException, I18NValidationException {
 
         String custodyID = null;
         boolean error = false;
@@ -154,11 +155,11 @@ public class JustificanteBean implements JustificanteLocal {
             }
 
             // Carregam el plugin de Custodia del Justificante
-            if(fileSystem){ // Si no se va a custodiar es porqué se va a generar el FileSystem
+            if (fileSystem) { // Si no se va a custodiar es porqué se va a generar el FileSystem
                 log.info("Cargamos el plugin para generar el Justificante en filesystem");
                 documentCustodyPlugin = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA_FS_JUSTIFICANTE);
 
-            }else{
+            } else {
                 documentCustodyPlugin = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE);
             }
 
@@ -219,7 +220,7 @@ public class JustificanteBean implements JustificanteLocal {
             anexoFull = anexoEjb.crearAnexo(anexoFull, usuarioEntidad, registro.getId(), tipoRegistro, custodyID, false);
 
             // Cola distribución
-            if(fileSystem){ // Si no se va a custodiar inicialmente, lo metemos en la cola de Custodia en diferido
+            if (fileSystem) { // Si no se va a custodiar inicialmente, lo metemos en la cola de Custodia en diferido
                 colaEjb.enviarAColaCustodia(registro, tipoRegistro, usuarioEntidad);
             }
 
@@ -267,6 +268,7 @@ public class JustificanteBean implements JustificanteLocal {
 
     /**
      * Crear el Justificante del Registro utilizando el API {@link es.caib.plugins.arxiu}
+     *
      * @param usuarioEntidad
      * @param registro
      * @param tipoRegistro
@@ -275,7 +277,7 @@ public class JustificanteBean implements JustificanteLocal {
      * @throws I18NException
      * @throws I18NValidationException
      */
-    private AnexoFull crearJustificanteApiArxiu(UsuarioEntidad usuarioEntidad, IRegistro registro, Long tipoRegistro, String idioma) throws I18NException, I18NValidationException{
+    private AnexoFull crearJustificanteApiArxiu(UsuarioEntidad usuarioEntidad, IRegistro registro, Long tipoRegistro, String idioma) throws I18NException, I18NValidationException {
 
         JustificanteArxiu justificanteArxiu = null;
         IArxiuPlugin iArxiuPlugin = null;
@@ -289,7 +291,7 @@ public class JustificanteBean implements JustificanteLocal {
 
         final Entidad entidad = usuarioEntidad.getEntidad();
 
-        try{
+        try {
 
             log.info("------------------------------------------------------------");
             log.info("Generando Justificante para el registro: " + registro.getNumeroRegistroFormateado());
@@ -327,7 +329,7 @@ public class JustificanteBean implements JustificanteLocal {
             // Asociamos el ExpedienteId, CustodyId y Csv al anexo que vamos a crear
             anexo.setExpedienteID(justificanteArxiu.getExpediente().getIdentificador());
             anexo.setCustodiaID(justificanteArxiu.getDocumento().getIdentificador());
-            if(justificanteArxiu.getDocumento().getDocumentMetadades() != null){
+            if (justificanteArxiu.getDocumento().getDocumentMetadades() != null) {
                 anexo.setCsv(justificanteArxiu.getDocumento().getDocumentMetadades().getCsv());
                 anexo.setCustodiado(true);
             }
@@ -340,7 +342,7 @@ public class JustificanteBean implements JustificanteLocal {
             anexo = anexoEjb.persist(anexo);
 
             // Componemos el AnexoFull
-            Document document  = crearDocumentJustificante(firma);
+            Document document = crearDocumentJustificante(firma);
             anexoFull.setDocument(document);
             anexoFull.setAnexo(anexo);
 
@@ -353,7 +355,7 @@ public class JustificanteBean implements JustificanteLocal {
 
             return anexoFull;
 
-        }catch (Exception e){
+        } catch (Exception e) {
             //error = true;
 
             try {
@@ -367,7 +369,6 @@ public class JustificanteBean implements JustificanteLocal {
     }
 
     /**
-     *
      * @param idEntidad
      * @param registro
      * @param idioma
@@ -405,10 +406,11 @@ public class JustificanteBean implements JustificanteLocal {
 
     /**
      * Genera una instancia de la clase {@link es.caib.plugins.arxiu.api.Document} que representa a un Justificante
+     *
      * @param firma
      * @return
      */
-    private Document crearDocumentJustificante(Firma firma){
+    private Document crearDocumentJustificante(Firma firma) {
 
         Document document = new Document();
         DocumentContingut dc = new DocumentContingut();
@@ -452,6 +454,7 @@ public class JustificanteBean implements JustificanteLocal {
 
     /**
      * Crea el objeto de Anexo para un Justificante
+     *
      * @param perfilCustodia
      * @param locale
      * @param registroDetalle

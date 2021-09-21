@@ -4,7 +4,6 @@ import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.model.Plantilla;
 import es.caib.regweb3.model.utils.PlantillaJson;
 
-import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
 import java.util.List;
 
@@ -12,10 +11,9 @@ import java.util.List;
  * Created by Fundació BIT.
  *
  * @author jpernia
- *         Date: 16/07/14
+ * Date: 16/07/14
  */
 @Local
-@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI"})
 public interface PlantillaLocal extends BaseEjb<Plantilla, Long> {
 
     String JNDI_NAME = "java:app/regweb3-persistence/PlantillaEJB";
@@ -23,6 +21,7 @@ public interface PlantillaLocal extends BaseEjb<Plantilla, Long> {
 
     /**
      * Obtiene la {@link Plantilla} de un {@link es.caib.regweb3.model.Usuario} con un orden
+     *
      * @param idUsuario
      * @param orden
      * @return
@@ -32,6 +31,7 @@ public interface PlantillaLocal extends BaseEjb<Plantilla, Long> {
 
     /**
      * Obtiene todas las {@link Plantilla} de un {@link es.caib.regweb3.model.Usuario}, paginadas.
+     *
      * @param inicio
      * @param idUsuario
      * @return
@@ -41,6 +41,7 @@ public interface PlantillaLocal extends BaseEjb<Plantilla, Long> {
 
     /**
      * Obtiene todas las {@link Plantilla} de un {@link es.caib.regweb3.model.Usuario}
+     *
      * @param idUsuario
      * @return
      * @throws Exception
@@ -49,6 +50,7 @@ public interface PlantillaLocal extends BaseEjb<Plantilla, Long> {
 
     /**
      * Obtiene las {@link Plantilla} de un {@link es.caib.regweb3.model.Usuario} Activas
+     *
      * @param idUsuario
      * @return
      * @throws Exception
@@ -57,6 +59,7 @@ public interface PlantillaLocal extends BaseEjb<Plantilla, Long> {
 
     /**
      * Obtiene el número total de {@link Plantilla} de un {@link es.caib.regweb3.model.Usuario}
+     *
      * @param idUsuario
      * @return
      * @throws Exception
@@ -65,6 +68,7 @@ public interface PlantillaLocal extends BaseEjb<Plantilla, Long> {
 
     /**
      * Obtiene el orden máximo de una {@link Plantilla} existente
+     *
      * @param idUsuario
      * @return
      * @throws Exception
@@ -73,6 +77,7 @@ public interface PlantillaLocal extends BaseEjb<Plantilla, Long> {
 
     /**
      * Obtener usuario de una {@link Plantilla}
+     *
      * @param idPlantilla
      * @return
      * @throws Exception
@@ -100,6 +105,7 @@ public interface PlantillaLocal extends BaseEjb<Plantilla, Long> {
 
     /**
      * Baja orden en una {@link Plantilla}
+     *
      * @param idPlantilla
      * @return
      * @throws Exception
@@ -108,6 +114,7 @@ public interface PlantillaLocal extends BaseEjb<Plantilla, Long> {
 
     /**
      * Cambiar estado de una {@link Plantilla}
+     *
      * @param idPlantilla
      * @return
      * @throws Exception
@@ -116,6 +123,7 @@ public interface PlantillaLocal extends BaseEjb<Plantilla, Long> {
 
     /**
      * Elimina las Plantillas de una Entidad
+     *
      * @param idEntidad
      * @return
      * @throws Exception
@@ -132,7 +140,6 @@ public interface PlantillaLocal extends BaseEjb<Plantilla, Long> {
     Boolean obtenerPorUsuario(Long idUsuarioEntidad) throws Exception;
 
     /**
-     *
      * @param idPlantilla
      * @return
      * @throws Exception

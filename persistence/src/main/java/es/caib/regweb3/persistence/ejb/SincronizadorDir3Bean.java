@@ -13,10 +13,10 @@ import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 import es.caib.regweb3.utils.TimeUtils;
 import org.hibernate.Hibernate;
-import org.jboss.ejb3.annotation.SecurityDomain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import java.sql.Timestamp;
@@ -30,7 +30,7 @@ import java.util.*;
  * @author mgonzalez
  */
 @Stateless(name = "SincronizadorDir3EJB")
-@SecurityDomain("seycon")
+@RolesAllowed({"RWE_ADMIN"})
 public class SincronizadorDir3Bean implements SincronizadorDir3Local {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
@@ -164,8 +164,8 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
         }
         //Si no hay pendientes de procesar desactivamos el mantenimiento de la entidad
         // porque ya ha acabado el proceso de sincronización
-        if(pendienteEjb.findPendientesProcesar(entidadId).size()==0){
-            entidadEjb.marcarEntidadMantenimiento(entidadId,false);
+        if (pendienteEjb.findPendientesProcesar(entidadId).size() == 0) {
+            entidadEjb.marcarEntidadMantenimiento(entidadId, false);
         }
 
         log.info(" REGWEB3 ORGANISMOS ACTUALIZADOS:  " + arbol.size());
@@ -307,7 +307,7 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
                     } else {
                         log.info("TIENE OFICINA RESPONSABLE, PERO NO LA ENCUENTRA: " + oficinaTF.getCodOfiResponsable());
                     }
-                }else{
+                } else {
                     oficina.setOficinaResponsable(null);
                     oficinaEjb.merge(oficina);
                 }
@@ -564,7 +564,7 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
             }
 
             oficina.setServicios(servicios);
-        }else{
+        } else {
             oficina.setServicios(null);
         }
     }
@@ -587,11 +587,11 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
 
     /**
      * Comprueba si el Organismo se ha extinguido y realiza las acciones en consecuencia:
-     *
+     * <p>
      * 1- Crea una entrada en la tabla de RWE_PENDIENTE que indica que es un organismo que está pendiente
      * de procesar(reasignar sus libros a los organismos que lo sustituyen). Se crea según el estado del organismo
      * recibido y si tiene libros.
-     *
+     * <p>
      * 2- Reasigna el destino de los Registros de Entrada que estaban dirigidos al organismo extinguido
      *
      * @param organismo organismo a tratar
@@ -599,7 +599,7 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
      */
     private void procesarExtinguido(Organismo organismo) throws Exception {
 
-        if(organismo != null){
+        if (organismo != null) {
 
             String estado = organismo.getEstado().getCodigoEstadoEntidad();
 
@@ -620,6 +620,7 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
 
     /**
      * Inicializa los caches que se utilizarán en el método
+     *
      * @throws Exception
      */
     private void inicializarCaches() throws Exception {

@@ -24,6 +24,7 @@ public interface WebServicesMethodsLocal {
 
     /**
      * Recibe un mensaje de control en formato SICRES3 desde un nodo distribuido
+     *
      * @param mensaje
      * @throws Exception
      */
@@ -31,6 +32,7 @@ public interface WebServicesMethodsLocal {
 
     /**
      * Recibe un fichero de intercambio en formato SICRES3 desde un nodo distribuido
+     *
      * @param ficheroIntercambio
      * @throws Exception
      */
@@ -38,6 +40,7 @@ public interface WebServicesMethodsLocal {
 
     /**
      * Elimina un RegistroSir creado
+     *
      * @param registroSir
      * @throws Exception
      */
@@ -45,27 +48,25 @@ public interface WebServicesMethodsLocal {
 
     /**
      * Guarda un nuevo Mensaje de Control
+     *
      * @param mensajeControl
      * @throws Exception
      */
     void guardarMensajeControl(MensajeControl mensajeControl) throws Exception;
 
     /**
-     *
      * @return
      * @throws Exception
      */
     Dir3CaibObtenerOficinasWs getObtenerOficinasService() throws Exception;
 
     /**
-     *
      * @return
      * @throws Exception
      */
     Dir3CaibObtenerUnidadesWs getObtenerUnidadesService() throws Exception;
 
     /**
-     *
      * @param codigo
      * @return
      * @throws Exception
@@ -73,7 +74,6 @@ public interface WebServicesMethodsLocal {
     Oficina obtenerOficina(String codigo) throws Exception;
 
     /**
-     *
      * @param tipo
      * @param descripcion
      * @param peticion
@@ -86,7 +86,6 @@ public interface WebServicesMethodsLocal {
     void addIntegracionError(Long tipo, String descripcion, String peticion, Throwable th, String error, Long tiempo, Long idEntidad, String numregformat) throws Exception;
 
     /**
-     *
      * @param inicio
      * @param tipo
      * @param descripcion

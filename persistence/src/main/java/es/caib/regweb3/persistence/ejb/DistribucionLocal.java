@@ -8,7 +8,6 @@ import es.caib.regweb3.persistence.utils.RespuestaDistribucion;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 
-import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
 
 /**
@@ -18,7 +17,6 @@ import javax.ejb.Local;
  * Date: 10/10/13
  */
 @Local
-@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI", "RWE_WS_ENTRADA", "RWE_WS_SALIDA"})
 public interface DistribucionLocal {
 
     String JNDI_NAME = "java:app/regweb3-persistence/DistribucionEJB";
@@ -26,7 +24,7 @@ public interface DistribucionLocal {
     /**
      * Método que envía a la cola de Distribución el Registro indicado
      *
-     * @param re registro de entrada a distribuir
+     * @param re             registro de entrada a distribuir
      * @param usuarioEntidad
      * @return
      * @throws Exception
@@ -44,6 +42,7 @@ public interface DistribucionLocal {
 
     /**
      * Envia un email con los errores de la cola de distribución a los Administradores de la Entidad
+     *
      * @param entidad
      * @throws Exception
      */

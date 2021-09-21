@@ -1,10 +1,10 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.PropiedadGlobal;
-import org.jboss.ejb3.annotation.SecurityDomain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -15,10 +15,10 @@ import java.util.List;
  * Created by Fundació BIT.
  *
  * @author earrivi
- *         Date: 05/05/16
+ * Date: 05/05/16
  */
 @Stateless(name = "PropiedadGlobalEJB")
-@SecurityDomain("seycon")
+@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI", "RWE_WS_ENTRADA", "RWE_WS_SALIDA", "RWE_WS_CIUDADANO"})
 public class PropiedadGlobalBean extends BaseEjbJPA<PropiedadGlobal, Long> implements PropiedadGlobalLocal {
 
 
@@ -74,15 +74,15 @@ public class PropiedadGlobalBean extends BaseEjbJPA<PropiedadGlobal, Long> imple
     public List<PropiedadGlobal> findByEntidad(Long idEntidad, Long tipo) throws Exception {
 
         String tipoWhere = "";
-        if(tipo != null){
+        if (tipo != null) {
             tipoWhere = "and p.tipo = :tipo ";
         }
 
-        Query q = em.createQuery("Select p from PropiedadGlobal as p where p.entidad = :idEntidad "+tipoWhere+" order by p.id");
+        Query q = em.createQuery("Select p from PropiedadGlobal as p where p.entidad = :idEntidad " + tipoWhere + " order by p.id");
         q.setParameter("idEntidad", idEntidad);
         q.setHint("org.hibernate.readOnly", true);
 
-        if(tipo != null){
+        if (tipo != null) {
             q.setParameter("tipo", tipo);
         }
 
@@ -130,15 +130,15 @@ public class PropiedadGlobalBean extends BaseEjbJPA<PropiedadGlobal, Long> imple
     public Long getTotalByEntidad(Long idEntidad, Long tipo) throws Exception {
 
         String tipoWhere = "";
-        if(tipo != null){
+        if (tipo != null) {
             tipoWhere = "and p.tipo = :tipo ";
         }
 
-        Query q = em.createQuery("Select count(p.id) from PropiedadGlobal as p where p.entidad = :idEntidad "+tipoWhere);
+        Query q = em.createQuery("Select count(p.id) from PropiedadGlobal as p where p.entidad = :idEntidad " + tipoWhere);
         q.setParameter("idEntidad", idEntidad);
         q.setHint("org.hibernate.readOnly", true);
 
-        if(tipo != null){
+        if (tipo != null) {
             q.setParameter("tipo", tipo);
         }
 
@@ -150,17 +150,17 @@ public class PropiedadGlobalBean extends BaseEjbJPA<PropiedadGlobal, Long> imple
     public List<PropiedadGlobal> getPaginationByEntidad(int inicio, Long idEntidad, Long tipo) throws Exception {
 
         String tipoWhere = "";
-        if(tipo != null){
+        if (tipo != null) {
             tipoWhere = "and p.tipo = :tipo ";
         }
 
-        Query q = em.createQuery("Select p from PropiedadGlobal as p where p.entidad = :idEntidad "+tipoWhere+" order by p.id");
+        Query q = em.createQuery("Select p from PropiedadGlobal as p where p.entidad = :idEntidad " + tipoWhere + " order by p.id");
         q.setParameter("idEntidad", idEntidad);
         q.setFirstResult(inicio);
         q.setMaxResults(RESULTADOS_PAGINACION);
         q.setHint("org.hibernate.readOnly", true);
 
-        if(tipo != null){
+        if (tipo != null) {
             q.setParameter("tipo", tipo);
         }
 
@@ -171,14 +171,14 @@ public class PropiedadGlobalBean extends BaseEjbJPA<PropiedadGlobal, Long> imple
     public Long getTotalREGWEB3(Long tipo) throws Exception {
 
         String tipoWhere = "";
-        if(tipo != null){
+        if (tipo != null) {
             tipoWhere = "and p.tipo = :tipo ";
         }
 
-        Query q = em.createQuery("Select count(p.id) from PropiedadGlobal as p where p.entidad is null "+tipoWhere);
+        Query q = em.createQuery("Select count(p.id) from PropiedadGlobal as p where p.entidad is null " + tipoWhere);
         q.setHint("org.hibernate.readOnly", true);
 
-        if(tipo != null){
+        if (tipo != null) {
             q.setParameter("tipo", tipo);
         }
 
@@ -190,16 +190,16 @@ public class PropiedadGlobalBean extends BaseEjbJPA<PropiedadGlobal, Long> imple
     public List<PropiedadGlobal> getPaginationREGWEB3(int inicio, Long tipo) throws Exception {
 
         String tipoWhere = "";
-        if(tipo != null){
+        if (tipo != null) {
             tipoWhere = "and p.tipo = :tipo ";
         }
 
-        Query q = em.createQuery("Select p from PropiedadGlobal as p where p.entidad is null "+tipoWhere+" order by p.id");
+        Query q = em.createQuery("Select p from PropiedadGlobal as p where p.entidad is null " + tipoWhere + " order by p.id");
         q.setFirstResult(inicio);
         q.setMaxResults(RESULTADOS_PAGINACION);
         q.setHint("org.hibernate.readOnly", true);
 
-        if(tipo != null){
+        if (tipo != null) {
             q.setParameter("tipo", tipo);
         }
 
@@ -219,7 +219,7 @@ public class PropiedadGlobalBean extends BaseEjbJPA<PropiedadGlobal, Long> imple
     }
 
     @Override
-    public String getPropertyByEntidad(Long idEntidad, String clave) throws Exception{
+    public String getPropertyByEntidad(Long idEntidad, String clave) throws Exception {
 
         Query q = em.createQuery("Select pg.valor from PropiedadGlobal as pg where pg.entidad = :idEntidad and pg.clave = :clave");
         q.setParameter("idEntidad", idEntidad);
@@ -228,12 +228,12 @@ public class PropiedadGlobalBean extends BaseEjbJPA<PropiedadGlobal, Long> imple
 
         List<?> list = q.getResultList();
 
-        return list != null && list.size() != 0? (String) list.get(0):null;
+        return list != null && list.size() != 0 ? (String) list.get(0) : null;
 
     }
 
     @Override
-    public String getProperty(String clave) throws Exception{
+    public String getProperty(String clave) throws Exception {
 
         Query q = em.createQuery("Select pg.valor from PropiedadGlobal as pg where pg.entidad is null and pg.clave = :clave");
         q.setParameter("clave", clave);
@@ -241,7 +241,7 @@ public class PropiedadGlobalBean extends BaseEjbJPA<PropiedadGlobal, Long> imple
 
         List<?> list = q.getResultList();
 
-        return list != null && list.size() != 0? (String) list.get(0):null;
+        return list != null && list.size() != 0 ? (String) list.get(0) : null;
 
     }
 
@@ -251,6 +251,7 @@ public class PropiedadGlobalBean extends BaseEjbJPA<PropiedadGlobal, Long> imple
 
         return value != null && "true".equals(value);
     }
+
     public Boolean getBooleanProperty(String clave) throws Exception {
         String value = getProperty(clave);
 
@@ -265,7 +266,7 @@ public class PropiedadGlobalBean extends BaseEjbJPA<PropiedadGlobal, Long> imple
         } else {
             try {
                 return Long.parseLong(value);
-            } catch(NumberFormatException e) {
+            } catch (NumberFormatException e) {
                 log.error("Error conviertiendo a long el valor (" + value + ")  de la propiedad " + clave + ": " + e.getMessage(), e);
                 return null;
             }
@@ -275,12 +276,12 @@ public class PropiedadGlobalBean extends BaseEjbJPA<PropiedadGlobal, Long> imple
     @Override
     public Long getLongProperty(String clave) throws Exception {
         String value = getProperty(clave);
-        if (value == null  || value.trim().length() == 0) {
+        if (value == null || value.trim().length() == 0) {
             return null;
         } else {
             try {
                 return Long.parseLong(value);
-            } catch(NumberFormatException e) {
+            } catch (NumberFormatException e) {
                 log.error("Error conviertiendo a long el valor (" + value + ")  de la propiedad " + clave + ": " + e.getMessage(), e);
                 return null;
             }
@@ -290,12 +291,12 @@ public class PropiedadGlobalBean extends BaseEjbJPA<PropiedadGlobal, Long> imple
     @Override
     public Integer getIntegerPropertyByEntitat(Long idEntidad, String clave) throws Exception {
         String value = getPropertyByEntidad(idEntidad, clave);
-        if (value == null  || value.trim().length() == 0) {
+        if (value == null || value.trim().length() == 0) {
             return null;
         } else {
             try {
                 return Integer.parseInt(value);
-            } catch(NumberFormatException e) {
+            } catch (NumberFormatException e) {
                 log.error("Error conviertiendo a int el valor (" + value + ")  de la propiedad " + clave + ": " + e.getMessage(), e);
                 return null;
             }
@@ -305,12 +306,12 @@ public class PropiedadGlobalBean extends BaseEjbJPA<PropiedadGlobal, Long> imple
     @Override
     public Integer getIntegerProperty(String clave) throws Exception {
         String value = getProperty(clave);
-        if (value == null  || value.trim().length() == 0) {
+        if (value == null || value.trim().length() == 0) {
             return null;
         } else {
             try {
                 return Integer.parseInt(value);
-            } catch(NumberFormatException e) {
+            } catch (NumberFormatException e) {
                 log.error("Error conviertiendo a int el valor (" + value + ")  de la propiedad " + clave + ": " + e.getMessage(), e);
                 return null;
             }
@@ -336,7 +337,7 @@ public class PropiedadGlobalBean extends BaseEjbJPA<PropiedadGlobal, Long> imple
     public List<PropiedadGlobal> getAllProperties() throws Exception {
 
         Query q = em.createQuery("Select pg from PropiedadGlobal as pg where pg.entidad is null");
-        
+
         List<?> list = q.getResultList();
 
         return (List<PropiedadGlobal>) list;

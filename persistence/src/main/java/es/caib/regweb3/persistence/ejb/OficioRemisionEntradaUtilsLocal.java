@@ -7,7 +7,6 @@ import es.caib.regweb3.persistence.utils.OficiosRemisionOrganismo;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 
-import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
 import java.util.List;
 
@@ -17,17 +16,15 @@ import java.util.List;
  *
  * @author earrivi
  * @author anadal (EJB)
- *         Date: 16/01/14
+ * Date: 16/01/14
  */
 @Local
-@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI"})
 public interface OficioRemisionEntradaUtilsLocal {
 
     String JNDI_NAME = "java:app/regweb3-persistence/OficioRemisionEntradaUtilsEJB";
 
 
     /**
-     *
      * @param idOficina
      * @param libros
      * @param total
@@ -37,7 +34,6 @@ public interface OficioRemisionEntradaUtilsLocal {
     List<Organismo> organismosEntradaPendientesRemisionInternos(Long idOficina, List<Libro> libros, Integer total) throws Exception;
 
     /**
-     *
      * @param idOficina
      * @param tipoEvento
      * @param total
@@ -49,6 +45,7 @@ public interface OficioRemisionEntradaUtilsLocal {
 
     /**
      * Obtiene el total de Registros de Entrada que están considerados Oficios de Remisión internos
+     *
      * @param idOficina
      * @param libros
      * @return
@@ -58,6 +55,7 @@ public interface OficioRemisionEntradaUtilsLocal {
 
     /**
      * Obtiene el total de Registros de Entrada que están considerados Oficios de Remisión externos
+     *
      * @param idOficina
      * @param libros
      * @return
@@ -67,10 +65,11 @@ public interface OficioRemisionEntradaUtilsLocal {
 
     /**
      * Obtiene todos los Registros de Entrada que están considerados Oficios de Remisión de un Organismo destinatario en concreto
+     *
      * @param tipoEvento
      * @param pageNumber
      * @param any
-     * @param oficinaActiva Oficina activa
+     * @param oficinaActiva   Oficina activa
      * @param codigoOrganismo Organismo destinatario seleccionado
      * @param entidadActiva
      * @return
@@ -113,6 +112,7 @@ public interface OficioRemisionEntradaUtilsLocal {
 
     /**
      * Genera los Justificantes de todos los registros de un Oficio de Remisión
+     *
      * @param registros
      * @param usuario
      * @throws Exception

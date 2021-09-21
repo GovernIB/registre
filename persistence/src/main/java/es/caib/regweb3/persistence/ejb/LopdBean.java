@@ -5,10 +5,10 @@ import es.caib.regweb3.persistence.utils.I18NLogicUtils;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
-import org.jboss.ejb3.annotation.SecurityDomain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -25,12 +25,12 @@ import java.util.*;
  */
 
 @Stateless(name = "LopdEJB")
-@SecurityDomain("seycon")
-public class LopdBean extends BaseEjbJPA<Lopd, Long> implements LopdLocal{
+@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI", "RWE_WS_ENTRADA", "RWE_WS_SALIDA", "RWE_WS_CIUDADANO"})
+public class LopdBean extends BaseEjbJPA<Lopd, Long> implements LopdLocal {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
-    @PersistenceContext(unitName="regweb3")
+    @PersistenceContext(unitName = "regweb3")
     private EntityManager em;
 
 
@@ -50,7 +50,7 @@ public class LopdBean extends BaseEjbJPA<Lopd, Long> implements LopdLocal{
     @SuppressWarnings(value = "unchecked")
     public List<Lopd> getAll() throws Exception {
 
-        return  em.createQuery("Select lopd from Lopd as lopd order by lopd.id").getResultList();
+        return em.createQuery("Select lopd from Lopd as lopd order by lopd.id").getResultList();
     }
 
     @Override
@@ -72,7 +72,7 @@ public class LopdBean extends BaseEjbJPA<Lopd, Long> implements LopdLocal{
                 "lopd.fecha >= :fechaInicio and lopd.fecha <= :fechaFin and lopd.accion = :accion and " +
                 "lopd.tipoRegistro = :tipoRegistro and lopd.libro in (:libros) order by lopd.fecha desc");
 
-        q.setParameter("idUsuarioEntidad",idUsuarioEntidad);
+        q.setParameter("idUsuarioEntidad", idUsuarioEntidad);
         q.setParameter("fechaInicio", fechaInicio);
         q.setParameter("fechaFin", fechaFin);
         q.setParameter("libros", libros);
@@ -84,7 +84,7 @@ public class LopdBean extends BaseEjbJPA<Lopd, Long> implements LopdLocal{
                 "lopd.fecha >= :fechaInicio and lopd.fecha <= :fechaFin and lopd.accion = :accion and " +
                 "lopd.tipoRegistro = :tipoRegistro and lopd.libro in (:libros)");
 
-        q2.setParameter("idUsuarioEntidad",idUsuarioEntidad);
+        q2.setParameter("idUsuarioEntidad", idUsuarioEntidad);
         q2.setParameter("fechaInicio", fechaInicio);
         q2.setParameter("fechaFin", fechaFin);
         q2.setParameter("libros", libros);
@@ -120,7 +120,7 @@ public class LopdBean extends BaseEjbJPA<Lopd, Long> implements LopdLocal{
                 "lopd.fecha >= :fechaInicio and lopd.fecha <= :fechaFin and lopd.accion = :accion and " +
                 "lopd.tipoRegistro = :tipoRegistro and lopd.libro.id = :idLibro order by lopd.fecha desc");
 
-        q.setParameter("idUsuarioEntidad",idUsuarioEntidad);
+        q.setParameter("idUsuarioEntidad", idUsuarioEntidad);
         q.setParameter("fechaInicio", fechaInicio);
         q.setParameter("fechaFin", fechaFin);
         q.setParameter("idLibro", idLibro);
@@ -132,7 +132,7 @@ public class LopdBean extends BaseEjbJPA<Lopd, Long> implements LopdLocal{
                 "lopd.fecha >= :fechaInicio and lopd.fecha <= :fechaFin and lopd.accion = :accion and " +
                 "lopd.tipoRegistro = :tipoRegistro and lopd.libro.id = :idLibro");
 
-        q2.setParameter("idUsuarioEntidad",idUsuarioEntidad);
+        q2.setParameter("idUsuarioEntidad", idUsuarioEntidad);
         q2.setParameter("fechaInicio", fechaInicio);
         q2.setParameter("fechaFin", fechaFin);
         q2.setParameter("idLibro", idLibro);
@@ -206,20 +206,20 @@ public class LopdBean extends BaseEjbJPA<Lopd, Long> implements LopdLocal{
     }
 
     @Override
-    public void insertarRegistros(Paginacion paginacion, Long idUsuarioEntidad, Long tipoRegistro, Long accion) throws Exception{
+    public void insertarRegistros(Paginacion paginacion, Long idUsuarioEntidad, Long tipoRegistro, Long accion) throws Exception {
 
         SimpleDateFormat formatYear = new SimpleDateFormat("yyyy");
 
-        for (int i = 0; i<paginacion.getListado().size(); i++){
+        for (int i = 0; i < paginacion.getListado().size(); i++) {
             Lopd lopd = new Lopd();
             lopd.setTipoRegistro(tipoRegistro);
 
-            if(tipoRegistro.equals(RegwebConstantes.REGISTRO_ENTRADA)){
+            if (tipoRegistro.equals(RegwebConstantes.REGISTRO_ENTRADA)) {
                 RegistroEntrada registro = (RegistroEntrada) paginacion.getListado().get(i);
                 lopd.setNumeroRegistro(registro.getNumeroRegistro());
                 lopd.setAnyoRegistro(formatYear.format(registro.getFecha()));
                 lopd.setLibro(registro.getLibro());
-            }else {
+            } else {
                 RegistroSalida registro = (RegistroSalida) paginacion.getListado().get(i);
                 lopd.setNumeroRegistro(registro.getNumeroRegistro());
                 lopd.setAnyoRegistro(formatYear.format(registro.getFecha()));
@@ -248,12 +248,12 @@ public class LopdBean extends BaseEjbJPA<Lopd, Long> implements LopdLocal{
     }
 
     @Override
-    public Integer eliminarByEntidad(Long idEntidad) throws Exception{
+    public Integer eliminarByEntidad(Long idEntidad) throws Exception {
 
-        List<?> lopd =  em.createQuery("select distinct(l.id) from Lopd as l where l.usuario.entidad.id =:idEntidad").setParameter("idEntidad",idEntidad).getResultList();
+        List<?> lopd = em.createQuery("select distinct(l.id) from Lopd as l where l.usuario.entidad.id =:idEntidad").setParameter("idEntidad", idEntidad).getResultList();
         Integer total = lopd.size();
 
-        if(lopd.size() > 0){
+        if (lopd.size() > 0) {
 
             // Si hay más de 1000 registros, dividimos las queries (ORA-01795).
             while (lopd.size() > RegwebConstantes.NUMBER_EXPRESSIONS_IN) {
@@ -331,12 +331,12 @@ public class LopdBean extends BaseEjbJPA<Lopd, Long> implements LopdLocal{
 
 
     @Override
-    public Paginacion entradaModificadaPorUsuarioLibro(Integer pageNumber, final Integer resultsPerPage, Date fechaInicio, Date fechaFin, Long idUsuario, Long idLibro) throws Exception{
+    public Paginacion entradaModificadaPorUsuarioLibro(Integer pageNumber, final Integer resultsPerPage, Date fechaInicio, Date fechaFin, Long idUsuario, Long idLibro) throws Exception {
 
         Query q;
         Query q2;
 
-        String accio = I18NLogicUtils.tradueix(new Locale(Configuracio.getDefaultLanguage()),"registro.modificacion.creacion" );
+        String accio = I18NLogicUtils.tradueix(new Locale(Configuracio.getDefaultLanguage()), "registro.modificacion.creacion");
 
         q = em.createQuery("Select historicoRegistroEntrada.registroEntrada.numeroRegistro, historicoRegistroEntrada.registroEntrada.libro.nombre, " +
                 "historicoRegistroEntrada.registroEntrada.oficina.denominacion, historicoRegistroEntrada.registroEntrada.libro.organismo.denominacion, " +
@@ -456,12 +456,12 @@ public class LopdBean extends BaseEjbJPA<Lopd, Long> implements LopdLocal{
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Paginacion salidaModificadaPorUsuarioLibro(Integer pageNumber, final Integer resultsPerPage, Date fechaInicio, Date fechaFin, Long idUsuario, Long idLibro) throws Exception{
+    public Paginacion salidaModificadaPorUsuarioLibro(Integer pageNumber, final Integer resultsPerPage, Date fechaInicio, Date fechaFin, Long idUsuario, Long idLibro) throws Exception {
 
         Query q;
         Query q2;
 
-        String accio = I18NLogicUtils.tradueix(new Locale(Configuracio.getDefaultLanguage()),"registro.modificacion.creacion" );
+        String accio = I18NLogicUtils.tradueix(new Locale(Configuracio.getDefaultLanguage()), "registro.modificacion.creacion");
 
         q = em.createQuery("Select historicoRegistroSalida.registroSalida.numeroRegistro, historicoRegistroSalida.registroSalida.libro.nombre, " +
                 "historicoRegistroSalida.registroSalida.oficina.denominacion, historicoRegistroSalida.registroSalida.libro.organismo.denominacion, " +
@@ -578,12 +578,12 @@ public class LopdBean extends BaseEjbJPA<Lopd, Long> implements LopdLocal{
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Paginacion entradaModificadaPorUsuario(Integer pageNumber, final Integer resultsPerPage, Date fechaInicio, Date fechaFin, Long idUsuario, List<Libro> libros) throws Exception{
+    public Paginacion entradaModificadaPorUsuario(Integer pageNumber, final Integer resultsPerPage, Date fechaInicio, Date fechaFin, Long idUsuario, List<Libro> libros) throws Exception {
 
         Query q;
         Query q2;
 
-        String accio = I18NLogicUtils.tradueix(new Locale(Configuracio.getDefaultLanguage()),"registro.modificacion.creacion" );
+        String accio = I18NLogicUtils.tradueix(new Locale(Configuracio.getDefaultLanguage()), "registro.modificacion.creacion");
 
         q = em.createQuery("Select historicoRegistroEntrada.registroEntrada.numeroRegistro, historicoRegistroEntrada.registroEntrada.libro.nombre, " +
                 "historicoRegistroEntrada.registroEntrada.oficina.denominacion, historicoRegistroEntrada.registroEntrada.libro.organismo.denominacion, " +
@@ -701,12 +701,12 @@ public class LopdBean extends BaseEjbJPA<Lopd, Long> implements LopdLocal{
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Paginacion salidaModificadaPorUsuario(Integer pageNumber, final Integer resultsPerPage, Date fechaInicio, Date fechaFin, Long idUsuario, List<Libro> libros) throws Exception{
+    public Paginacion salidaModificadaPorUsuario(Integer pageNumber, final Integer resultsPerPage, Date fechaInicio, Date fechaFin, Long idUsuario, List<Libro> libros) throws Exception {
 
         Query q;
         Query q2;
 
-        String accio = I18NLogicUtils.tradueix(new Locale(Configuracio.getDefaultLanguage()),"registro.modificacion.creacion" );
+        String accio = I18NLogicUtils.tradueix(new Locale(Configuracio.getDefaultLanguage()), "registro.modificacion.creacion");
 
         q = em.createQuery("Select historicoRegistroSalida.registroSalida.numeroRegistro, historicoRegistroSalida.registroSalida.libro.nombre, " +
                 "historicoRegistroSalida.registroSalida.oficina.denominacion, historicoRegistroSalida.registroSalida.libro.organismo.denominacion, " +

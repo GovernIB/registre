@@ -8,10 +8,10 @@ import es.caib.regweb3.persistence.utils.DataBaseUtils;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.utils.RegwebConstantes;
 import org.fundaciobit.genapp.common.i18n.I18NException;
-import org.jboss.ejb3.annotation.SecurityDomain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -30,12 +30,12 @@ import java.util.Map;
  */
 
 @Stateless(name = "UsuarioEntidadEJB")
-@SecurityDomain("seycon")
-public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> implements UsuarioEntidadLocal{
+@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI", "RWE_WS_ENTRADA", "RWE_WS_SALIDA", "RWE_WS_CIUDADANO"})
+public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> implements UsuarioEntidadLocal {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
-    @PersistenceContext(unitName="regweb3")
+    @PersistenceContext(unitName = "regweb3")
     private EntityManager em;
 
     @EJB private UsuarioLocal usuarioEjb;
@@ -57,7 +57,7 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
     @SuppressWarnings(value = "unchecked")
     public List<UsuarioEntidad> getAll() throws Exception {
 
-        return  em.createQuery("Select usuarioEntidad from UsuarioEntidad as usuarioEntidad order by usuarioEntidad.id").getResultList();
+        return em.createQuery("Select usuarioEntidad from UsuarioEntidad as usuarioEntidad order by usuarioEntidad.id").getResultList();
     }
 
     @Override
@@ -76,7 +76,7 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
         Query q = em.createQuery("Select usuarioEntidad from UsuarioEntidad as usuarioEntidad " +
                 "where usuarioEntidad.entidad.id = :idEntidad and usuarioEntidad.activo = true order by usuarioEntidad.id");
 
-        q.setParameter("idEntidad",idEntidad);
+        q.setParameter("idEntidad", idEntidad);
         q.setFirstResult(inicio);
         q.setMaxResults(RESULTADOS_PAGINACION);
         q.setHint("org.hibernate.readOnly", true);
@@ -115,13 +115,13 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
 
         UsuarioEntidad usuarioEntidad = findByIdentificadorEntidad(identificador, idEntidad);
 
-        if(usuarioEntidad == null){
+        if (usuarioEntidad == null) {
 
-            log.info("Usuario " +identificador+" no existe en la entidad, lo buscamos en el sistema de autentificación");
+            log.info("Usuario " + identificador + " no existe en la entidad, lo buscamos en el sistema de autentificación");
 
             // Creamos el Usuario en el sistema
             Usuario usuario = usuarioEjb.crearUsuario(identificador);
-            if(usuario != null){
+            if (usuario != null) {
                 return persist(new UsuarioEntidad(null, usuario, idEntidad));
             }
         }
@@ -134,36 +134,36 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
     public UsuarioEntidad findByIdentificador(String identificador) throws Exception {
 
         Query q = em.createQuery("Select usuarioEntidad from UsuarioEntidad as usuarioEntidad "
-            + " where upper(usuarioEntidad.usuario.identificador) = :identificador");
+                + " where upper(usuarioEntidad.usuario.identificador) = :identificador");
 
         q.setParameter("identificador", identificador.toUpperCase());
         q.setHint("org.hibernate.readOnly", true);
 
         List<UsuarioEntidad> usuarioEntidad = q.getResultList();
-        if(usuarioEntidad.size() == 1){
+        if (usuarioEntidad.size() == 1) {
             return usuarioEntidad.get(0);
-        }else{
-            return  null;
+        } else {
+            return null;
         }
 
     }
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Entidad> findByUsuario(Long idUsuario) throws Exception{
+    public List<Entidad> findByUsuario(Long idUsuario) throws Exception {
 
         Query q = em.createQuery("Select usuarioEntidad.entidad.id, usuarioEntidad.entidad.nombre, usuarioEntidad.entidad.codigoDir3 from UsuarioEntidad as usuarioEntidad "
-            + "where usuarioEntidad.usuario.id = :idUsuario and usuarioEntidad.activo = true and " +
+                + "where usuarioEntidad.usuario.id = :idUsuario and usuarioEntidad.activo = true and " +
                 "usuarioEntidad.entidad.activo = true");
 
-        q.setParameter("idUsuario",idUsuario);
+        q.setParameter("idUsuario", idUsuario);
         q.setHint("org.hibernate.readOnly", true);
 
-        List<Entidad> entidades =  new ArrayList<>();
+        List<Entidad> entidades = new ArrayList<>();
         List<Object[]> result = q.getResultList();
 
-        for (Object[] object : result){
-            Entidad entidad = new Entidad((Long)object[0],(String)object[1],(String)object[2]);
+        for (Object[] object : result) {
+            Entidad entidad = new Entidad((Long) object[0], (String) object[1], (String) object[2]);
             entidades.add(entidad);
         }
 
@@ -179,51 +179,51 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
                 "upper(usuarioEntidad.usuario.identificador) = :identificador and " +
                 "usuarioEntidad.entidad.id = :idEntidad");
 
-        q.setParameter("identificador",identificador.toUpperCase());
-        q.setParameter("idEntidad",idEntidad);
+        q.setParameter("identificador", identificador.toUpperCase());
+        q.setParameter("idEntidad", idEntidad);
         q.setHint("org.hibernate.readOnly", true);
 
         List<UsuarioEntidad> usuarioEntidad = q.getResultList();
-        if(usuarioEntidad.size() == 1){
+        if (usuarioEntidad.size() == 1) {
             return usuarioEntidad.get(0);
-        }else{
-            return  null;
+        } else {
+            return null;
         }
 
     }
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public UsuarioEntidad findByIdentificadorCodigoEntidad(String identificador, String codigoEntidad) throws Exception{
+    public UsuarioEntidad findByIdentificadorCodigoEntidad(String identificador, String codigoEntidad) throws Exception {
         Query q = em.createQuery("Select usuarioEntidad from UsuarioEntidad as usuarioEntidad where " +
                 "upper(usuarioEntidad.usuario.identificador) = :identificador and " +
                 "usuarioEntidad.entidad.codigoDir3 = :codigoEntidad");
 
-        q.setParameter("identificador",identificador.toUpperCase());
-        q.setParameter("codigoEntidad",codigoEntidad);
+        q.setParameter("identificador", identificador.toUpperCase());
+        q.setParameter("codigoEntidad", codigoEntidad);
         q.setHint("org.hibernate.readOnly", true);
 
         List<UsuarioEntidad> usuarioEntidad = q.getResultList();
-        if(usuarioEntidad.size() == 1){
+        if (usuarioEntidad.size() == 1) {
             return usuarioEntidad.get(0);
-        }else{
-            return  null;
+        } else {
+            return null;
         }
     }
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public UsuarioEntidad findByDocumento(String documento) throws Exception{
+    public UsuarioEntidad findByDocumento(String documento) throws Exception {
         Query q = em.createQuery("Select usuarioEntidad from UsuarioEntidad as usuarioEntidad where usuarioEntidad.usuario.documento = :documento");
 
-        q.setParameter("documento",documento);
+        q.setParameter("documento", documento);
         q.setHint("org.hibernate.readOnly", true);
 
         List<UsuarioEntidad> usuarioEntidad = q.getResultList();
-        if(usuarioEntidad.size() == 1){
+        if (usuarioEntidad.size() == 1) {
             return usuarioEntidad.get(0);
-        }else{
-            return  null;
+        } else {
+            return null;
         }
     }
 
@@ -234,7 +234,7 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
         Query q = em.createQuery("Select usuarioEntidad.id, usuarioEntidad.usuario from UsuarioEntidad as usuarioEntidad where " +
                 "usuarioEntidad.entidad.id= :idEntidad order by usuarioEntidad.usuario.apellido1");
 
-        q.setParameter("idEntidad",idEntidad);
+        q.setParameter("idEntidad", idEntidad);
         q.setHint("org.hibernate.readOnly", true);
 
         List<Object[]> result = q.getResultList();
@@ -256,7 +256,7 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
         Query q = em.createQuery("Select usuarioEntidad.usuario from UsuarioEntidad as usuarioEntidad where " +
                 "usuarioEntidad.entidad.id = :idEntidad and usuarioEntidad.activo = true and usuarioEntidad.usuario.rwe_admin = true order by usuarioEntidad.usuario.apellido1");
 
-        q.setParameter("idEntidad",idEntidad);
+        q.setParameter("idEntidad", idEntidad);
         q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList();
@@ -269,7 +269,7 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
         Query q = em.createQuery("Select usuarioEntidad from UsuarioEntidad as usuarioEntidad where " +
                 "usuarioEntidad.entidad.id= :idEntidad and usuarioEntidad.usuario.rwe_admin = true and usuarioEntidad.activo = true order by usuarioEntidad.usuario.apellido1");
 
-        q.setParameter("idEntidad",idEntidad);
+        q.setParameter("idEntidad", idEntidad);
         q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList();
@@ -277,42 +277,42 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public UsuarioEntidad findByUsuarioEntidad(Long idUsuario, Long idEntidad) throws Exception{
+    public UsuarioEntidad findByUsuarioEntidad(Long idUsuario, Long idEntidad) throws Exception {
 
         Query q = em.createQuery("Select usuarioEntidad from UsuarioEntidad as usuarioEntidad where " +
                 "usuarioEntidad.entidad.id= :idEntidad and usuarioEntidad.usuario.id= :idUsuario");
 
-        q.setParameter("idEntidad",idEntidad);
-        q.setParameter("idUsuario",idUsuario);
+        q.setParameter("idEntidad", idEntidad);
+        q.setParameter("idUsuario", idUsuario);
         q.setHint("org.hibernate.readOnly", true);
 
-        List<UsuarioEntidad> usuarios =  q.getResultList();
+        List<UsuarioEntidad> usuarios = q.getResultList();
 
-        if(usuarios.size()>0){
+        if (usuarios.size() > 0) {
             return usuarios.get(0);
-        }else{
-            return  null;
+        } else {
+            return null;
         }
     }
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public UsuarioEntidad findByUsuarioEntidadActivo(Long idUsuario, Long idEntidad) throws Exception{
+    public UsuarioEntidad findByUsuarioEntidadActivo(Long idUsuario, Long idEntidad) throws Exception {
 
         Query q = em.createQuery("Select usuarioEntidad from UsuarioEntidad as usuarioEntidad where " +
                 "usuarioEntidad.entidad.id= :idEntidad and usuarioEntidad.usuario.id= :idUsuario and " +
                 "usuarioEntidad.activo = true");
 
-        q.setParameter("idEntidad",idEntidad);
+        q.setParameter("idEntidad", idEntidad);
         q.setParameter("idUsuario", idUsuario);
         q.setHint("org.hibernate.readOnly", true);
 
-        List<UsuarioEntidad> usuarios =  q.getResultList();
+        List<UsuarioEntidad> usuarios = q.getResultList();
 
-        if(usuarios.size()>0){
+        if (usuarios.size() > 0) {
             return usuarios.get(0);
-        }else{
-            return  null;
+        } else {
+            return null;
         }
     }
 
@@ -323,15 +323,15 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
         Query q = em.createQuery("Select usuarioEntidad.entidad.id, usuarioEntidad.entidad.nombre, usuarioEntidad.entidad.oficioRemision from UsuarioEntidad as usuarioEntidad where " +
                 "usuarioEntidad.usuario.id = :idUsuario and usuarioEntidad.entidad.activo = true and usuarioEntidad.activo = true order by usuarioEntidad.entidad.id");
 
-        q.setParameter("idUsuario",idUsuario);
+        q.setParameter("idUsuario", idUsuario);
         q.setHint("org.hibernate.readOnly", true);
 
-        List<Entidad> entidades =  new ArrayList<Entidad>();
+        List<Entidad> entidades = new ArrayList<Entidad>();
 
         List<Object[]> result = q.getResultList();
 
-        for (Object[] object : result){
-            Entidad entidad = new Entidad((Long)object[0],(String)object[1], (Boolean) object[2]);
+        for (Object[] object : result) {
+            Entidad entidad = new Entidad((Long) object[0], (String) object[1], (Boolean) object[2]);
 
             entidades.add(entidad);
         }
@@ -342,7 +342,7 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Paginacion busqueda(Integer pageNumber,Long idEntidad,String identificador,String nombre, String apellido1, String apellido2, String documento, Long tipoUsuario, Long idOrganismo) throws Exception {
+    public Paginacion busqueda(Integer pageNumber, Long idEntidad, String identificador, String nombre, String apellido1, String apellido2, String documento, Long tipoUsuario, Long idOrganismo) throws Exception {
 
         Query q;
         Query q2;
@@ -353,15 +353,26 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
 
         if (idOrganismo != null && idOrganismo > 0) { //Si s'ha triat un Organismo a la cerca
             query = new StringBuilder("Select DISTINCT usuarioEntidad.id, usuarioEntidad.usuario from UsuarioEntidad as usuarioEntidad, PermisoOrganismoUsuario as pou ");
-        } else{  //Si NO s'ha triat cap llibre a la cerca
+        } else {  //Si NO s'ha triat cap llibre a la cerca
             query = new StringBuilder("Select DISTINCT usuarioEntidad.id, usuarioEntidad.usuario from UsuarioEntidad as usuarioEntidad ");
         }
 
-        if(identificador!= null && identificador.length() > 0){where.add(DataBaseUtils.like("usuarioEntidad.usuario.identificador","identificador",parametros,identificador));}
-        if(nombre!= null && nombre.length() > 0){where.add(DataBaseUtils.like("usuarioEntidad.usuario.nombre","nombre",parametros,nombre));}
-        if(apellido1!= null && apellido1.length() > 0){where.add(DataBaseUtils.like("usuarioEntidad.usuario.apellido1","apellido1",parametros,apellido1));}
-        if(apellido2!= null && apellido2.length() > 0){where.add(DataBaseUtils.like("usuarioEntidad.usuario.apellido2","apellido2", parametros,apellido2));}
-        if(documento!= null && documento.length() > 0){where.add(" upper(usuarioEntidad.usuario.documento) like upper(:documento) "); parametros.put("documento","%"+documento.toLowerCase()+"%");}
+        if (identificador != null && identificador.length() > 0) {
+            where.add(DataBaseUtils.like("usuarioEntidad.usuario.identificador", "identificador", parametros, identificador));
+        }
+        if (nombre != null && nombre.length() > 0) {
+            where.add(DataBaseUtils.like("usuarioEntidad.usuario.nombre", "nombre", parametros, nombre));
+        }
+        if (apellido1 != null && apellido1.length() > 0) {
+            where.add(DataBaseUtils.like("usuarioEntidad.usuario.apellido1", "apellido1", parametros, apellido1));
+        }
+        if (apellido2 != null && apellido2.length() > 0) {
+            where.add(DataBaseUtils.like("usuarioEntidad.usuario.apellido2", "apellido2", parametros, apellido2));
+        }
+        if (documento != null && documento.length() > 0) {
+            where.add(" upper(usuarioEntidad.usuario.documento) like upper(:documento) ");
+            parametros.put("documento", "%" + documento.toLowerCase() + "%");
+        }
         if (tipoUsuario != null && tipoUsuario > 0) {
             where.add("usuarioEntidad.usuario.tipoUsuario = :tipoUsuario ");
             parametros.put("tipoUsuario", tipoUsuario);
@@ -374,7 +385,8 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
             where.add("pou.activo = true ");
         }
 
-        where.add("usuarioEntidad.entidad.id = :idEntidad "); parametros.put("idEntidad",idEntidad);
+        where.add("usuarioEntidad.entidad.id = :idEntidad ");
+        parametros.put("idEntidad", idEntidad);
         where.add("usuarioEntidad.activo = true ");
 
         if (parametros.size() != 0) {
@@ -396,7 +408,7 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
                 q2.setParameter(param.getKey(), param.getValue());
             }
 
-        }else{
+        } else {
             q2 = em.createQuery(query.toString().replaceAll("Select DISTINCT usuarioEntidad.id, usuarioEntidad.usuario from UsuarioEntidad as usuarioEntidad", "Select count(DISTINCT usuarioEntidad.usuario.id) from UsuarioEntidad as usuarioEntidad "));
             query.append("order by usuarioEntidad.usuario.nombre, usuarioEntidad.usuario.apellido1");
             q = em.createQuery(query.toString());
@@ -404,15 +416,15 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
 
         Paginacion paginacion;
 
-        if(pageNumber != null){ // Comprobamos si es una busqueda paginada o no
+        if (pageNumber != null) { // Comprobamos si es una busqueda paginada o no
             q2.setHint("org.hibernate.readOnly", true);
-            Long total = (Long)q2.getSingleResult();
+            Long total = (Long) q2.getSingleResult();
             paginacion = new Paginacion(total.intValue(), pageNumber);
             int inicio = (pageNumber - 1) * BaseEjbJPA.RESULTADOS_PAGINACION;
             q.setFirstResult(inicio);
             q.setMaxResults(RESULTADOS_PAGINACION);
             q.setHint("org.hibernate.readOnly", true);
-        }else{
+        } else {
             paginacion = new Paginacion(0, 0);
         }
 
@@ -442,9 +454,9 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
                 "usuarioEntidad.usuario.id!= :idUsuario and usuarioEntidad.activo = true and " +
                 "usuarioEntidad.usuario.tipoUsuario= :tipoUsuario order by usuarioEntidad.usuario.apellido1");
 
-        q.setParameter("idEntidad",idEntidad);
-        q.setParameter("idUsuario",idUsuario);
-        q.setParameter("tipoUsuario",tipoUsuario);
+        q.setParameter("idEntidad", idEntidad);
+        q.setParameter("idUsuario", idUsuario);
+        q.setParameter("tipoUsuario", tipoUsuario);
         q.setHint("org.hibernate.readOnly", true);
 
         List<UsuarioEntidad> usuarios = new ArrayList<UsuarioEntidad>();
@@ -461,13 +473,13 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
     }
 
     @Override
-    public void actualizarOficinaUsuario(Long idUsuario, Long idOficina) throws Exception{
+    public void actualizarOficinaUsuario(Long idUsuario, Long idOficina) throws Exception {
 
         Query q = em.createQuery("Update UsuarioEntidad set ultimaOficina.id = :idOficina " +
                 "where id = :idUsuario");
 
-        q.setParameter("idOficina",idOficina);
-        q.setParameter("idUsuario",idUsuario);
+        q.setParameter("idOficina", idOficina);
+        q.setParameter("idUsuario", idUsuario);
         q.executeUpdate();
 
     }
@@ -486,12 +498,12 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
     }
 
     @Override
-    public Integer eliminarByEntidad(Long idEntidad) throws Exception{
+    public Integer eliminarByEntidad(Long idEntidad) throws Exception {
 
-        List<?> usuarios = em.createQuery("Select distinct(o.id) from UsuarioEntidad as o where o.entidad.id =:idEntidad").setParameter("idEntidad",idEntidad).getResultList();
+        List<?> usuarios = em.createQuery("Select distinct(o.id) from UsuarioEntidad as o where o.entidad.id =:idEntidad").setParameter("idEntidad", idEntidad).getResultList();
         Integer total = usuarios.size();
 
-        if(usuarios.size() > 0){
+        if (usuarios.size() > 0) {
 
             // Si hay más de 1000 registros, dividimos las queries (ORA-01795).
             while (usuarios.size() > RegwebConstantes.NUMBER_EXPRESSIONS_IN) {

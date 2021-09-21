@@ -4,10 +4,10 @@ import es.caib.regweb3.model.Plugin;
 import es.caib.regweb3.utils.RegwebConstantes;
 import org.fundaciobit.genapp.common.i18n.I18NArgumentString;
 import org.fundaciobit.genapp.common.i18n.I18NException;
-import org.jboss.ejb3.annotation.SecurityDomain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -23,10 +23,10 @@ import java.util.Properties;
  * Created by Fundació BIT.
  *
  * @author earrivi
- *         Date: 05/05/16
+ * Date: 05/05/16
  */
 @Stateless(name = "PluginEJB")
-@SecurityDomain("seycon")
+@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI", "RWE_WS_ENTRADA", "RWE_WS_SALIDA", "RWE_WS_CIUDADANO"})
 public class PluginBean extends BaseEjbJPA<Plugin, Long> implements PluginLocal {
 
 
@@ -82,14 +82,14 @@ public class PluginBean extends BaseEjbJPA<Plugin, Long> implements PluginLocal 
     public Long getTotalByEntidad(Long idEntidad, Long tipo) throws Exception {
 
         String tipoWhere = "";
-        if(tipo != null){
+        if (tipo != null) {
             tipoWhere = "and p.tipo = :tipo ";
         }
 
-        Query q = em.createQuery("Select count(p.id) from Plugin as p where p.entidad = :idEntidad "+tipoWhere);
+        Query q = em.createQuery("Select count(p.id) from Plugin as p where p.entidad = :idEntidad " + tipoWhere);
         q.setParameter("idEntidad", idEntidad);
 
-        if(tipo != null){
+        if (tipo != null) {
             q.setParameter("tipo", tipo);
         }
         q.setHint("org.hibernate.readOnly", true);
@@ -102,17 +102,17 @@ public class PluginBean extends BaseEjbJPA<Plugin, Long> implements PluginLocal 
     public List<Plugin> getPaginationByEntidad(int inicio, Long idEntidad, Long tipo) throws Exception {
 
         String tipoWhere = "";
-        if(tipo != null){
+        if (tipo != null) {
             tipoWhere = "and p.tipo = :tipo ";
         }
 
-        Query q = em.createQuery("Select p from Plugin as p where p.entidad = :idEntidad "+tipoWhere+" order by p.id");
+        Query q = em.createQuery("Select p from Plugin as p where p.entidad = :idEntidad " + tipoWhere + " order by p.id");
         q.setParameter("idEntidad", idEntidad);
         q.setFirstResult(inicio);
         q.setMaxResults(RESULTADOS_PAGINACION);
         q.setHint("org.hibernate.readOnly", true);
 
-        if(tipo != null){
+        if (tipo != null) {
             q.setParameter("tipo", tipo);
         }
 
@@ -123,13 +123,13 @@ public class PluginBean extends BaseEjbJPA<Plugin, Long> implements PluginLocal 
     public Long getTotalREGWEB3(Long tipo) throws Exception {
 
         String tipoWhere = "";
-        if(tipo != null){
+        if (tipo != null) {
             tipoWhere = "and p.tipo = :tipo ";
         }
 
-        Query q = em.createQuery("Select count(p.id) from Plugin as p where p.entidad is null "+tipoWhere);
+        Query q = em.createQuery("Select count(p.id) from Plugin as p where p.entidad is null " + tipoWhere);
 
-        if(tipo != null){
+        if (tipo != null) {
             q.setParameter("tipo", tipo);
         }
         q.setHint("org.hibernate.readOnly", true);
@@ -142,16 +142,16 @@ public class PluginBean extends BaseEjbJPA<Plugin, Long> implements PluginLocal 
     public List<Plugin> getPaginationREGWEB3(int inicio, Long tipo) throws Exception {
 
         String tipoWhere = "";
-        if(tipo != null){
+        if (tipo != null) {
             tipoWhere = "and p.tipo = :tipo ";
         }
 
-        Query q = em.createQuery("Select p from Plugin as p where p.entidad is null "+tipoWhere+" order by p.id");
+        Query q = em.createQuery("Select p from Plugin as p where p.entidad is null " + tipoWhere + " order by p.id");
         q.setFirstResult(inicio);
         q.setMaxResults(RESULTADOS_PAGINACION);
         q.setHint("org.hibernate.readOnly", true);
 
-        if(tipo != null){
+        if (tipo != null) {
             q.setParameter("tipo", tipo);
         }
 
@@ -170,7 +170,7 @@ public class PluginBean extends BaseEjbJPA<Plugin, Long> implements PluginLocal 
             entidadQuery = "p.entidad is null";
         }
 
-        Query q = em.createQuery("Select p from Plugin as p where "+entidadQuery+" and p.tipo = :tipo order by p.id");
+        Query q = em.createQuery("Select p from Plugin as p where " + entidadQuery + " and p.tipo = :tipo order by p.id");
 
         if (idEntidad != null) {
             q.setParameter("idEntidad", idEntidad);
@@ -201,7 +201,7 @@ public class PluginBean extends BaseEjbJPA<Plugin, Long> implements PluginLocal 
     }
 
     @Override
-    public Properties getPropertiesPlugin(Long idEntidad, Long tipoPlugin) throws I18NException{
+    public Properties getPropertiesPlugin(Long idEntidad, Long tipoPlugin) throws I18NException {
 
         try {
             List<Plugin> plugins;
@@ -226,7 +226,7 @@ public class PluginBean extends BaseEjbJPA<Plugin, Long> implements PluginLocal 
 
             plugins = findByEntidadTipo(idEntidad, tipoPlugin);
 
-            return (plugins.size()>0);
+            return (plugins.size() > 0);
         } catch (Exception e) {
             throw new I18NException(e, "error.desconegut", new I18NArgumentString(e.getMessage()));
         }
@@ -234,7 +234,7 @@ public class PluginBean extends BaseEjbJPA<Plugin, Long> implements PluginLocal 
     }
 
     @Override
-    public List<Object> getPlugins(Long idEntidad, Long tipoPlugin) throws Exception{
+    public List<Object> getPlugins(Long idEntidad, Long tipoPlugin) throws Exception {
 
         List<Plugin> plugins = findByEntidadTipo(idEntidad, tipoPlugin);
 
@@ -264,7 +264,6 @@ public class PluginBean extends BaseEjbJPA<Plugin, Long> implements PluginLocal 
     }
 
     /**
-     *
      * @param plugin
      * @return
      * @throws Exception
@@ -298,7 +297,6 @@ public class PluginBean extends BaseEjbJPA<Plugin, Long> implements PluginLocal 
     }
 
     /**
-     *
      * @param plugin
      * @return
      * @throws Exception

@@ -6,7 +6,6 @@ import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NTranslation;
 import org.fundaciobit.plugins.documentcustody.api.SignatureCustody;
 
-import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
 import java.util.List;
 import java.util.Locale;
@@ -17,7 +16,6 @@ import java.util.Locale;
  * @author anadal
  */
 @Local
-@RolesAllowed({"RWE_USUARI", "RWE_WS_ENTRADA", "RWE_WS_SALIDA", "RWE_WS_CIUDADANO"})
 public interface SignatureServerLocal {
 
     String JNDI_NAME = "java:app/regweb3-persistence/SignatureServerEJB";

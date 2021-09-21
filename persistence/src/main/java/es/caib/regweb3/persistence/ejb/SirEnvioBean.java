@@ -22,12 +22,12 @@ import es.caib.regweb3.utils.StringUtils;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.hibernate.Session;
-import org.jboss.ejb3.annotation.SecurityDomain;
 import org.jboss.ejb3.annotation.TransactionTimeout;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -47,7 +47,7 @@ import java.util.*;
  */
 
 @Stateless(name = "SirEnvioEJB")
-@SecurityDomain("seycon")
+@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI", "RWE_WS_ENTRADA", "RWE_WS_SALIDA"})
 public class SirEnvioBean implements SirEnvioLocal {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
@@ -409,7 +409,7 @@ public class SirEnvioBean implements SirEnvioLocal {
             enviarMensajeConfirmacion(registroSir, registroEntrada.getNumeroRegistroFormateado(), registroEntrada.getFecha());
 
             // Distribuimos el Registro de Entrada si así se ha indicado
-            if(distribuir){
+            if (distribuir) {
                 distribucionEjb.distribuir(registroEntrada, usuario);
             }
 
@@ -472,12 +472,12 @@ public class SirEnvioBean implements SirEnvioLocal {
             TrazabilidadSir trazabilidadSir = new TrazabilidadSir(RegwebConstantes.TRAZABILIDAD_SIR_REENVIO);
             trazabilidadSir.setRegistroSir(registroSir);
             trazabilidadSir.setCodigoEntidadRegistralOrigen(oficinaActiva.getCodigo());
-            trazabilidadSir.setDecodificacionEntidadRegistralOrigen(StringUtils.recortarCadena(oficinaActiva.getDenominacion(),80));
+            trazabilidadSir.setDecodificacionEntidadRegistralOrigen(StringUtils.recortarCadena(oficinaActiva.getDenominacion(), 80));
             trazabilidadSir.setCodigoEntidadRegistralDestino(oficinaReenvio.getCodigo());
-            trazabilidadSir.setDecodificacionEntidadRegistralDestino(StringUtils.recortarCadena(oficinaReenvio.getDenominacion(),80));
+            trazabilidadSir.setDecodificacionEntidadRegistralDestino(StringUtils.recortarCadena(oficinaReenvio.getDenominacion(), 80));
             trazabilidadSir.setCodigoUnidadTramitacionDestino(oficinaReenvio.getOrganismoResponsable().getCodigo());
-            if(StringUtils.isNotEmpty(oficinaReenvio.getOrganismoResponsable().getDenominacion())){
-                trazabilidadSir.setDecodificacionUnidadTramitacionDestino(StringUtils.recortarCadena(oficinaReenvio.getOrganismoResponsable().getDenominacion(),80));
+            if (StringUtils.isNotEmpty(oficinaReenvio.getOrganismoResponsable().getDenominacion())) {
+                trazabilidadSir.setDecodificacionUnidadTramitacionDestino(StringUtils.recortarCadena(oficinaReenvio.getOrganismoResponsable().getDenominacion(), 80));
             }
             trazabilidadSir.setAplicacion(RegwebConstantes.CODIGO_APLICACION);
             trazabilidadSir.setNombreUsuario(usuario.getNombreCompleto());
@@ -587,7 +587,7 @@ public class SirEnvioBean implements SirEnvioLocal {
     }
 
     @Override
-    public void reenviarIntercambio(Long idOficioRemision)throws Exception, I18NException{
+    public void reenviarIntercambio(Long idOficioRemision) throws Exception, I18NException {
 
         OficioRemision oficioRemision = oficioRemisionEjb.findById(idOficioRemision);
         RegistroSir registroSir = null;
@@ -617,14 +617,14 @@ public class SirEnvioBean implements SirEnvioLocal {
             peticion.append("Destino: ").append(registroSir.getDecodificacionEntidadRegistralDestino()).append(System.getProperty("line.separator"));
 
             // Enviamos el Registro al Componente CIR
-            if(registroSir != null){
+            if (registroSir != null) {
                 emisionEjb.enviarFicheroIntercambio(registroSir);
             }
 
             // Integración
             integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_SIR, descripcion, peticion.toString(), System.currentTimeMillis() - tiempo, registroSir.getEntidad().getId(), registroSir.getIdentificadorIntercambio());
 
-        }catch(I18NException | Exception e){
+        } catch (I18NException | Exception e) {
             log.info("Ha ocurrido un error reenviando el intercambio: " + e.getLocalizedMessage());
             e.printStackTrace();
             if (registroSir != null) {
@@ -891,7 +891,7 @@ public class SirEnvioBean implements SirEnvioLocal {
                 // Enviamos el Registro al Componente CIR
                 emisionEjb.enviarFicheroIntercambio(registroSir);
 
-            }catch (I18NException | Exception e){
+            } catch (I18NException | Exception e) {
                 e.printStackTrace();
                 integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_SIR, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - tiempo, oficio.getUsuarioResponsable().getEntidad().getId(), oficio.getIdentificadorIntercambio());
                 throw e;
@@ -910,7 +910,7 @@ public class SirEnvioBean implements SirEnvioLocal {
                 // Enviamos el Registro al Componente CIR
                 emisionEjb.enviarFicheroIntercambio(registroSir);
 
-            }catch (I18NException | Exception e){
+            } catch (I18NException | Exception e) {
                 e.printStackTrace();
                 integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_SIR, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - tiempo, oficio.getUsuarioResponsable().getEntidad().getId(), oficio.getIdentificadorIntercambio());
                 throw e;
@@ -952,7 +952,7 @@ public class SirEnvioBean implements SirEnvioLocal {
 
     @Override
     @TransactionTimeout(value = 3000)  // 50 minutos
-    public Integer aceptarRegistrosERTE(List<Long> registros, String destino, Oficina oficina,Long idLibro, UsuarioEntidad usuarioEntidad, Long idEntidad) throws Exception{
+    public Integer aceptarRegistrosERTE(List<Long> registros, String destino, Oficina oficina, Long idLibro, UsuarioEntidad usuarioEntidad, Long idEntidad) throws Exception {
 
         // ruta actual: /app/caib/regweb/archivos
         // ruta erte: /app/caib/regweb/dades/erte
@@ -961,14 +961,14 @@ public class SirEnvioBean implements SirEnvioLocal {
 
         SimpleDateFormat formatDate = new SimpleDateFormat("dd-MM-yyyy HH.mm.ss");
 
-        try{
+        try {
 
             log.info("Total registros pendientes erte: " + registros.size());
             log.info("");
 
-            for(Long erte:registros){
+            for (Long erte : registros) {
 
-                try{
+                try {
 
                     // Cargamos el registro
                     RegistroSir registroSir = registroSirEjb.findById(erte);
@@ -976,8 +976,8 @@ public class SirEnvioBean implements SirEnvioLocal {
                     log.info("Procesando el registro sir pendiente: " + registroSir.getId());
 
                     // Crear List<CamposNTI> ficticia
-                    List<CamposNTI> camposNTIS =  new ArrayList<CamposNTI>();
-                    for(AnexoSir anexoSir:registroSir.getAnexos()){
+                    List<CamposNTI> camposNTIS = new ArrayList<CamposNTI>();
+                    for (AnexoSir anexoSir : registroSir.getAnexos()) {
                         CamposNTI campoNTI = new CamposNTI();
                         campoNTI.setId(anexoSir.getId());
 
@@ -987,31 +987,31 @@ public class SirEnvioBean implements SirEnvioLocal {
                     Organismo organismoDestino = organismoEjb.findByCodigoEntidadLigero(destino, idEntidad);
 
                     //Aceptar el RegistroSir
-                    RegistroEntrada registroEntrada = aceptarRegistroSir(registroSir, usuarioEntidad, oficina,idLibro,RegwebConstantes.IDIOMA_CASTELLANO_ID,camposNTIS, organismoDestino.getId(), true);
+                    RegistroEntrada registroEntrada = aceptarRegistroSir(registroSir, usuarioEntidad, oficina, idLibro, RegwebConstantes.IDIOMA_CASTELLANO_ID, camposNTIS, organismoDestino.getId(), true);
 
                     // Copiamos cada anexo en la carpeta creada
-                    for(AnexoSir anexoSir:registroSir.getAnexos()){
+                    for (AnexoSir anexoSir : registroSir.getAnexos()) {
 
                         Archivo archivo = anexoSir.getAnexo();
 
                         File origen = FileSystemManager.getArchivo(archivo.getId());
 
-                        String rutaDestino = rutaERTE + formatDate.format(registroEntrada.getFecha()) + " - " + registroEntrada.getNumeroRegistroFormateado().replace("/","-");
+                        String rutaDestino = rutaERTE + formatDate.format(registroEntrada.getFecha()) + " - " + registroEntrada.getNumeroRegistroFormateado().replace("/", "-");
 
                         Files.createDirectories(Paths.get(rutaDestino));
 
-                        try{
+                        try {
                             log.info("Copiamos la documentación del registro aceptado a: " + rutaDestino);
-                            Files.copy(origen.toPath(), (new File(rutaDestino +"/"+ archivo.getNombre())).toPath(), StandardCopyOption.REPLACE_EXISTING);
+                            Files.copy(origen.toPath(), (new File(rutaDestino + "/" + archivo.getNombre())).toPath(), StandardCopyOption.REPLACE_EXISTING);
 
-                        }catch (Exception e){
+                        } catch (Exception e) {
                             log.info("No encuentra el fichero");
                         }
                     }
 
                     distribucionEjb.distribuir(registroEntrada, usuarioEntidad);
 
-                }catch (Exception e){
+                } catch (Exception e) {
                     log.info("Error procesando un registro sir");
                 }
             }
@@ -1019,7 +1019,7 @@ public class SirEnvioBean implements SirEnvioLocal {
 
             return registros.size();
 
-        } catch(Exception e){
+        } catch (Exception e) {
             log.info("Error generando carpetas ERTE");
             e.printStackTrace();
         } catch (I18NValidationException | I18NException e) {
@@ -1033,7 +1033,7 @@ public class SirEnvioBean implements SirEnvioLocal {
 
     @Override
     @TransactionTimeout(value = 3000)  // 50 minutos
-    public Integer copiarDocumentacionERTE(List<Long> registros, Long idEntidad) throws Exception{
+    public Integer copiarDocumentacionERTE(List<Long> registros, Long idEntidad) throws Exception {
 
         // ruta actual: /app/caib/regweb/archivos
         // ruta erte: /app/caib/regweb/dades/erte
@@ -1042,14 +1042,14 @@ public class SirEnvioBean implements SirEnvioLocal {
 
         SimpleDateFormat formatDate = new SimpleDateFormat("dd-MM-yyyy HH.mm.ss");
 
-        try{
+        try {
 
             log.info("Total registros aceptados erte: " + registros.size());
             log.info("");
 
-            for(Long erte:registros){
+            for (Long erte : registros) {
 
-                try{
+                try {
 
                     // Cargamos el registro
                     TrazabilidadSir trazabilidadSir = trazabilidadSirEjb.getByRegistroSirAceptado(erte);
@@ -1060,26 +1060,26 @@ public class SirEnvioBean implements SirEnvioLocal {
                     log.info("Procesando el registro aceptado: " + registroSir.getId());
 
                     // Copiamos cada anexo en la carpeta creada
-                    for(AnexoSir anexoSir:registroSir.getAnexos()){
+                    for (AnexoSir anexoSir : registroSir.getAnexos()) {
 
                         Archivo archivo = anexoSir.getAnexo();
 
                         File origen = FileSystemManager.getArchivo(archivo.getId());
 
-                        String rutaDestino = rutaERTE + formatDate.format(registroEntrada.getFecha()) + " - " + registroEntrada.getNumeroRegistroFormateado().replace("/","-");
+                        String rutaDestino = rutaERTE + formatDate.format(registroEntrada.getFecha()) + " - " + registroEntrada.getNumeroRegistroFormateado().replace("/", "-");
 
                         Files.createDirectories(Paths.get(rutaDestino));
 
-                        try{
+                        try {
                             log.info("Copiamos la documentación del registro aceptado a: " + rutaDestino);
-                            Files.copy(origen.toPath(), (new File(rutaDestino +"/"+ archivo.getNombre())).toPath(), StandardCopyOption.REPLACE_EXISTING);
+                            Files.copy(origen.toPath(), (new File(rutaDestino + "/" + archivo.getNombre())).toPath(), StandardCopyOption.REPLACE_EXISTING);
 
-                        }catch (Exception e){
+                        } catch (Exception e) {
                             log.info("No encuentra el fichero");
                         }
                     }
 
-                }catch (Exception e){
+                } catch (Exception e) {
                     log.info("Error procesando un registro sir");
                 }
             }
@@ -1087,7 +1087,7 @@ public class SirEnvioBean implements SirEnvioLocal {
 
             return registros.size();
 
-        } catch(Exception e){
+        } catch (Exception e) {
             log.info("Error generando carpetas ERTE");
             e.printStackTrace();
         }

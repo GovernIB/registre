@@ -2,7 +2,6 @@ package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.*;
 
-import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -14,7 +13,6 @@ import java.util.Set;
  * @author earrivi
  */
 @Local
-@RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI","RWE_WS_ENTRADA","RWE_WS_SALIDA","RWE_WS_CIUDADANO"})
 public interface PermisoOrganismoUsuarioLocal extends BaseEjb<PermisoOrganismoUsuario, Long> {
 
     String JNDI_NAME = "java:app/regweb3-persistence/PermisoOrganismoUsuarioEJB";
@@ -22,6 +20,7 @@ public interface PermisoOrganismoUsuarioLocal extends BaseEjb<PermisoOrganismoUs
 
     /**
      * Crea los permisos de un Usuario relacionado con un Organismo
+     *
      * @param usuarioEntidad
      * @param organismo
      * @throws Exception
@@ -30,6 +29,7 @@ public interface PermisoOrganismoUsuarioLocal extends BaseEjb<PermisoOrganismoUs
 
     /**
      * Elimina todos los permisos de un determinado Organismo
+     *
      * @param idOrganismo
      * @throws Exception
      */
@@ -37,6 +37,7 @@ public interface PermisoOrganismoUsuarioLocal extends BaseEjb<PermisoOrganismoUs
 
     /**
      * Elimina todos los permidos de un Usuario y un Organismo
+     *
      * @param idUsuarioEntidad
      * @param idOrganismo
      * @throws Exception
@@ -45,6 +46,7 @@ public interface PermisoOrganismoUsuarioLocal extends BaseEjb<PermisoOrganismoUs
 
     /**
      * Retorna los {@link PermisoOrganismoUsuario} a partir de un {@link UsuarioEntidad}
+     *
      * @param idUsuarioEntidad
      * @return
      * @throws Exception
@@ -54,15 +56,17 @@ public interface PermisoOrganismoUsuarioLocal extends BaseEjb<PermisoOrganismoUs
 
     /**
      * Obtiene los Organismos asociados de un UsuarioEntidad
+     *
      * @param idUsuarioEntidad
      * @return
      * @throws Exception
      */
-    List<Organismo> getOrganismosByUsuario(Long idUsuarioEntidad)throws Exception;
+    List<Organismo> getOrganismosByUsuario(Long idUsuarioEntidad) throws Exception;
 
     /**
      * Retorna los {@link PermisoOrganismoUsuario} a partir de un {@link UsuarioEntidad}
      * y de un {@link Organismo}
+     *
      * @param idUsuarioEntidad
      * @return
      * @throws Exception
@@ -71,6 +75,7 @@ public interface PermisoOrganismoUsuarioLocal extends BaseEjb<PermisoOrganismoUs
 
     /**
      * Retorna los {@link PermisoOrganismoUsuario} de un {@link Organismo}
+     *
      * @param idOrganismo
      * @return
      * @throws Exception
@@ -79,6 +84,7 @@ public interface PermisoOrganismoUsuarioLocal extends BaseEjb<PermisoOrganismoUs
 
     /**
      * Comprueba si un Organismos tiene permisos
+     *
      * @param idOrganismo
      * @return
      * @throws Exception
@@ -87,6 +93,7 @@ public interface PermisoOrganismoUsuarioLocal extends BaseEjb<PermisoOrganismoUs
 
     /**
      * Retorna los {@link UsuarioEntidad} de un {@link Organismo}
+     *
      * @param idOrganismo
      * @return
      * @throws Exception
@@ -95,6 +102,7 @@ public interface PermisoOrganismoUsuarioLocal extends BaseEjb<PermisoOrganismoUs
 
     /**
      * etorna los {@link UsuarioEntidad} de una lista de {@link Organismo}
+     *
      * @param organismos
      * @return
      * @throws Exception
@@ -103,6 +111,7 @@ public interface PermisoOrganismoUsuarioLocal extends BaseEjb<PermisoOrganismoUs
 
     /**
      * Retorna los {@link Organismo} en los que un UsuarioEntidad tiene acceso según el permiso dado
+     *
      * @param idUsuarioEntidad
      * @param idPermiso
      * @return
@@ -112,6 +121,7 @@ public interface PermisoOrganismoUsuarioLocal extends BaseEjb<PermisoOrganismoUs
 
     /**
      * Retorna los {@link Oficina} en los que un UsuarioEntidad puede Registrar
+     *
      * @param idUsuarioEntidad
      * @return
      * @throws Exception
@@ -120,6 +130,7 @@ public interface PermisoOrganismoUsuarioLocal extends BaseEjb<PermisoOrganismoUs
 
     /**
      * Retorna los {@link Oficina} en los que un UsuarioEntidad tiene acceso según el permiso dado
+     *
      * @param idUsuarioEntidad
      * @param idPermiso
      * @return
@@ -129,6 +140,7 @@ public interface PermisoOrganismoUsuarioLocal extends BaseEjb<PermisoOrganismoUs
 
     /**
      * Obtiene los Organismos donde el UsuarioEntidad puede registrar
+     *
      * @param idUsuarioEntidad
      * @return
      * @throws Exception
@@ -137,6 +149,7 @@ public interface PermisoOrganismoUsuarioLocal extends BaseEjb<PermisoOrganismoUs
 
     /**
      * Obtiene los Organismos donde el UsuarioEntidad puede consultar
+     *
      * @param idUsuarioEntidad
      * @return
      * @throws Exception
@@ -145,6 +158,7 @@ public interface PermisoOrganismoUsuarioLocal extends BaseEjb<PermisoOrganismoUs
 
     /**
      * Retorna los {@link Oficina} en los que un UsuarioEntidad puede Consultar
+     *
      * @param idUsuarioEntidad
      * @return
      * @throws Exception
@@ -153,6 +167,7 @@ public interface PermisoOrganismoUsuarioLocal extends BaseEjb<PermisoOrganismoUs
 
     /**
      * Retorna los {@link Oficina} a los que un UsuarioEntidad tiene acceso SIR
+     *
      * @param idUsuarioEntidad
      * @return
      * @throws Exception
@@ -161,6 +176,7 @@ public interface PermisoOrganismoUsuarioLocal extends BaseEjb<PermisoOrganismoUs
 
     /**
      * Retorna las {@link Oficina} en los que un UsuarioEntidad es responsable
+     *
      * @param idUsuarioEntidad
      * @return
      * @throws Exception
@@ -169,6 +185,7 @@ public interface PermisoOrganismoUsuarioLocal extends BaseEjb<PermisoOrganismoUs
 
     /**
      * Comprueba si un usuario tiene un permiso en un grupo de organismos
+     *
      * @param organismos
      * @param idUsuarioEntidad
      * @param idPermiso
@@ -179,6 +196,7 @@ public interface PermisoOrganismoUsuarioLocal extends BaseEjb<PermisoOrganismoUs
 
     /**
      * Obtiene los UsuarioEntidad que pueden registrar en los organismos de los Organismos seleccionados
+     *
      * @param idEntidad
      * @return
      * @throws Exception
@@ -187,6 +205,7 @@ public interface PermisoOrganismoUsuarioLocal extends BaseEjb<PermisoOrganismoUs
 
     /**
      * Obtiene los Usuarios que pueden registrar en una lista de Organismos
+     *
      * @param organismos
      * @return
      * @throws Exception
@@ -195,6 +214,7 @@ public interface PermisoOrganismoUsuarioLocal extends BaseEjb<PermisoOrganismoUs
 
     /**
      * Comprueba si un Usuario es Administrador de un determinado Organismo.
+     *
      * @param idUsuarioEntidad
      * @param idOrganismo
      * @return
@@ -204,6 +224,7 @@ public interface PermisoOrganismoUsuarioLocal extends BaseEjb<PermisoOrganismoUs
 
     /**
      * Comprueba si un Usuario tiene el Permiso espeficicado sobre el Organismo especificado.
+     *
      * @param idUsuarioEntidad
      * @param idOrganismo
      * @param idPermiso
@@ -215,6 +236,7 @@ public interface PermisoOrganismoUsuarioLocal extends BaseEjb<PermisoOrganismoUs
 
     /**
      * Comprueba si un UsuarioEntidad puede registrar en un determinado Organismo
+     *
      * @param idUsuarioEntidad
      * @param idOrganismo
      * @return
@@ -224,6 +246,7 @@ public interface PermisoOrganismoUsuarioLocal extends BaseEjb<PermisoOrganismoUs
 
     /**
      * Obtiene los Organismo que administra un usuario
+     *
      * @param idUsuarioEntidad
      * @return
      * @throws Exception
@@ -232,6 +255,7 @@ public interface PermisoOrganismoUsuarioLocal extends BaseEjb<PermisoOrganismoUs
 
     /**
      * Modifica el estado de un Permiso que tiene un Usuario sobre un Organismo
+     *
      * @param idPermisoOrganismoUsuario
      * @param activo
      * @throws Exception
@@ -240,6 +264,7 @@ public interface PermisoOrganismoUsuarioLocal extends BaseEjb<PermisoOrganismoUs
 
     /**
      * Comprueba si un Usuario tiene Inicializado el Permiso espeficicado sobre el Organismo especificado.
+     *
      * @param idUsuarioEntidad
      * @param idOrganismo
      * @param idPermiso
@@ -250,6 +275,7 @@ public interface PermisoOrganismoUsuarioLocal extends BaseEjb<PermisoOrganismoUs
 
     /**
      * Obtiene los Usuarios que tienen el permiso indicado en una lista de organismos
+     *
      * @param organismos
      * @return
      * @throws Exception
@@ -258,6 +284,7 @@ public interface PermisoOrganismoUsuarioLocal extends BaseEjb<PermisoOrganismoUs
 
     /**
      * Elimina las PermisoOrganismoUsuario de un Usuario
+     *
      * @param idUsuarioEntidad
      * @throws Exception
      */
@@ -265,6 +292,7 @@ public interface PermisoOrganismoUsuarioLocal extends BaseEjb<PermisoOrganismoUs
 
     /**
      * Elimina las PermisoOrganismoUsuario de una Entidad
+     *
      * @param idEntidad
      * @return
      * @throws Exception
@@ -273,6 +301,7 @@ public interface PermisoOrganismoUsuarioLocal extends BaseEjb<PermisoOrganismoUs
 
     /**
      * Migra los Permisos existentes en la nueva tabla PermiloOrganismoUsuario
+     *
      * @param libro
      * @return
      */

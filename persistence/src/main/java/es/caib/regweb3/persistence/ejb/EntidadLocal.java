@@ -4,7 +4,6 @@ import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.model.UsuarioEntidad;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 
-import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
 import java.util.List;
 
@@ -12,16 +11,16 @@ import java.util.List;
  * Created by Fundació BIT.
  *
  * @author earrivi
- *         Date: 16/01/14
+ * Date: 16/01/14
  */
 @Local
-@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI","RWE_WS_ENTRADA","RWE_WS_SALIDA", "RWE_WS_CIUDADANO"})
 public interface EntidadLocal extends BaseEjb<Entidad, Long> {
 
     String JNDI_NAME = "java:app/regweb3-persistence/EntidadEJB";
 
     /**
      * Obtiene una Entidad con unos campos minimnos
+     *
      * @param idEntidad
      * @return
      * @throws Exception
@@ -75,10 +74,11 @@ public interface EntidadLocal extends BaseEjb<Entidad, Long> {
 
     /**
      * Obtiene las entidades activas.
+     *
      * @return
      * @throws Exception
      */
-     List<Entidad> getEntidadesActivas() throws Exception;
+    List<Entidad> getEntidadesActivas() throws Exception;
 
     /**
      * Comprueba si el codigoDir3 dado existe en alguna entidad excepto la selccionado.
@@ -121,6 +121,7 @@ public interface EntidadLocal extends BaseEjb<Entidad, Long> {
 
     /**
      * Obtiene todas las entidades que están marcadas como SIR
+     *
      * @return
      * @throws Exception
      */
@@ -128,6 +129,7 @@ public interface EntidadLocal extends BaseEjb<Entidad, Long> {
 
     /**
      * Comprueba las diferentes dependencias del UsuarioEntidad para saber si es posible eliminarlo
+     *
      * @param idUsuarioEntidad
      * @return
      * @throws Exception
@@ -153,6 +155,7 @@ public interface EntidadLocal extends BaseEjb<Entidad, Long> {
 
     /**
      * Marca/Desmarca una entidad que está en mantenimiento durante el proceso de sincronización
+     *
      * @param idEntidad
      * @param mantenimiento
      * @throws Exception
@@ -161,6 +164,7 @@ public interface EntidadLocal extends BaseEjb<Entidad, Long> {
 
     /**
      * Determina si una implementación es multientidad (más de una entidad con sir activado)
+     *
      * @throws Exception
      */
     boolean isMultiEntidad() throws Exception;

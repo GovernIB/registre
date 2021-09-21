@@ -8,7 +8,6 @@ import es.caib.regweb3.persistence.utils.Paginacion;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 
-import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
 import java.util.List;
 
@@ -16,7 +15,6 @@ import java.util.List;
  * Created by mgonzalez on 21/03/2018.
  */
 @Local
-@RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI","RWE_WS_ENTRADA"})
 public interface ColaLocal extends BaseEjb<Cola, Long> {
 
     String JNDI_NAME = "java:app/regweb3-persistence/ColaEJB";
@@ -30,14 +28,16 @@ public interface ColaLocal extends BaseEjb<Cola, Long> {
 
     /**
      * Busca todos los elementos de la cola del mismo tipo
+     *
      * @param tipo tipo de elemento
      * @return
      * @throws Exception
      */
-    List<Cola> findByTipoEntidad(Long tipo, Long idEntidad,Integer total) throws Exception;
+    List<Cola> findByTipoEntidad(Long tipo, Long idEntidad, Integer total) throws Exception;
 
     /**
      * Busca un elemento de la cola por IdObjeto y por entidad
+     *
      * @param idObjeto
      * @param idEntidad
      * @return
@@ -47,17 +47,19 @@ public interface ColaLocal extends BaseEjb<Cola, Long> {
 
     /**
      * Busca un elemento de la cola por IdObjeto, Entidad y Estado
+     *
      * @param idObjeto
      * @param idEntidad
      * @param idEstado
      * @return
      * @throws Exception
      */
-    Cola findByIdObjetoEstado(Long idObjeto,Long idEntidad, Long idEstado) throws Exception;
+    Cola findByIdObjetoEstado(Long idObjeto, Long idEntidad, Long idEstado) throws Exception;
 
     /**
      * Obtiene los elementos de la cola por tipo y por entidad que han alcanzado el máximo de reintentos
-     * @param tipo tipo de elemento
+     *
+     * @param tipo      tipo de elemento
      * @param idEntidad entidad a la que pertenece
      * @return
      * @throws Exception
@@ -66,6 +68,7 @@ public interface ColaLocal extends BaseEjb<Cola, Long> {
 
     /**
      * Realiza la busqueda de los elementos de la cola por entidad
+     *
      * @param cola
      * @param idEntidad
      * @return
@@ -74,7 +77,6 @@ public interface ColaLocal extends BaseEjb<Cola, Long> {
     Paginacion busqueda(Cola cola, Long idEntidad) throws Exception;
 
     /**
-     *
      * @param re
      * @param usuarioEntidad
      * @throws Exception
@@ -85,6 +87,7 @@ public interface ColaLocal extends BaseEjb<Cola, Long> {
 
     /**
      * añade a la cola de cusodia un nuevo anexo Justificante
+     *
      * @param registro
      * @param usuarioEntidad
      * @return
@@ -93,24 +96,25 @@ public interface ColaLocal extends BaseEjb<Cola, Long> {
 
     /**
      * Vuelve a activar los elementos en la cola poniendo el contador a 0 para que se puedan volver a enviar
+     *
      * @param idEntidad
      * @throws Exception
      * @throws I18NException
      * @throws I18NValidationException
      */
-     void reiniciarColabyEntidadTipo(Long idEntidad, Long tipo) throws Exception, I18NException;
+    void reiniciarColabyEntidadTipo(Long idEntidad, Long tipo) throws Exception, I18NException;
 
     /**
-     *
      * @param elemento
      * @param error
      * @param entidadId
      * @throws Exception
      */
-     void actualizarElementoCola(Cola elemento,Long entidadId, String error) throws Exception;
+    void actualizarElementoCola(Cola elemento, Long entidadId, String error) throws Exception;
 
     /**
      * Elimina los elementos de la cola de distribución de la entidad indicada
+     *
      * @param idEntidad
      * @return
      * @throws Exception
@@ -119,6 +123,7 @@ public interface ColaLocal extends BaseEjb<Cola, Long> {
 
     /**
      * Reiniciamos un elemento de la cola para que vuelva a relanzarse
+     *
      * @param idCola
      * @throws Exception
      */
@@ -126,18 +131,21 @@ public interface ColaLocal extends BaseEjb<Cola, Long> {
 
     /**
      * MArca como procesado un elemento de la Cola
+     *
      * @param elemento
      */
     void procesarElemento(Cola elemento) throws Exception;
 
     /**
      * Marca como procesado un elemento de tipo Distribución de la Cola y cambia el estado del RegistroEntrada
+     *
      * @param elemento
      */
     void procesarElementoDistribucion(Cola elemento) throws Exception;
 
     /**
      * Método que elimina los elementos que fueron procesados hace x meses
+     *
      * @param idEntidad
      * @param meses
      * @throws Exception
@@ -146,9 +154,10 @@ public interface ColaLocal extends BaseEjb<Cola, Long> {
 
     /**
      * Obtiene los elementos de cualquier cola que estén en estado Error
+     *
      * @param idEntidad
      * @return
      * @throws Exception
      */
-    List<Cola> getElementosError( Long idEntidad) throws Exception;
+    List<Cola> getElementosError(Long idEntidad) throws Exception;
 }

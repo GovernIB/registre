@@ -6,7 +6,6 @@ import es.caib.regweb3.model.utils.AnexoFull;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 
-import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
 
 /**
@@ -16,14 +15,30 @@ import javax.ejb.Local;
  * Date: 22/06/16
  */
 @Local
-@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI", "RWE_WS_ENTRADA", "RWE_WS_SALIDA", "RWE_WS_CIUDADANO"})
 public interface JustificanteLocal {
 
     String JNDI_NAME = "java:app/regweb3-persistence/JustificanteEJB";
 
-
+    /**
+     * @param usuarioEntidad
+     * @param registro
+     * @param tipoRegistro
+     * @param idioma
+     * @return
+     * @throws I18NException
+     * @throws I18NValidationException
+     */
     AnexoFull crearJustificante(UsuarioEntidad usuarioEntidad, IRegistro registro, Long tipoRegistro, String idioma) throws I18NException, I18NValidationException;
 
+    /**
+     * @param usuarioEntidad
+     * @param registro
+     * @param tipoRegistro
+     * @param idioma
+     * @return
+     * @throws I18NException
+     * @throws I18NValidationException
+     */
     AnexoFull crearJustificanteWS(UsuarioEntidad usuarioEntidad, IRegistro registro, Long tipoRegistro, String idioma) throws I18NException, I18NValidationException;
 }
 

@@ -2,7 +2,6 @@ package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.ModeloOficioRemision;
 
-import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
 import java.util.List;
 
@@ -13,14 +12,12 @@ import java.util.List;
  * Date: 2/09/14
  */
 @Local
-@RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI","RWE_WS_ENTRADA","RWE_WS_SALIDA"})
 public interface ModeloOficioRemisionLocal extends BaseEjb<ModeloOficioRemision, Long> {
 
     String JNDI_NAME = "java:app/regweb3-persistence/ModeloOficioRemisionEJB";
 
 
     /**
-     *
      * @param idEntidad
      * @return
      * @throws Exception
@@ -28,7 +25,6 @@ public interface ModeloOficioRemisionLocal extends BaseEjb<ModeloOficioRemision,
     Long getTotal(Long idEntidad) throws Exception;
 
     /**
-     *
      * @param idEntidad
      * @return
      * @throws Exception
@@ -36,7 +32,6 @@ public interface ModeloOficioRemisionLocal extends BaseEjb<ModeloOficioRemision,
     List<ModeloOficioRemision> getByEntidad(Long idEntidad) throws Exception;
 
     /**
-     *
      * @param inicio
      * @param idEntidad
      * @return
@@ -46,6 +41,7 @@ public interface ModeloOficioRemisionLocal extends BaseEjb<ModeloOficioRemision,
 
     /**
      * Elimina los {@link es.caib.regweb3.model.ModeloOficioRemision} de una Entidad
+     *
      * @param idEntidad
      * @return
      * @throws Exception

@@ -2,10 +2,10 @@ package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.TipoDocumental;
 import es.caib.regweb3.model.TraduccionTipoDocumental;
-import org.jboss.ejb3.annotation.SecurityDomain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -20,12 +20,12 @@ import java.util.List;
  */
 
 @Stateless(name = "TipoDocumentalEJB")
-@SecurityDomain("seycon")
-public class TipoDocumentalBean extends BaseEjbJPA<TipoDocumental, Long> implements TipoDocumentalLocal{
+@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI", "RWE_WS_ENTRADA", "RWE_WS_SALIDA", "RWE_WS_CIUDADANO"})
+public class TipoDocumentalBean extends BaseEjbJPA<TipoDocumental, Long> implements TipoDocumentalLocal {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
-    @PersistenceContext(unitName="regweb3")
+    @PersistenceContext(unitName = "regweb3")
     private EntityManager em;
 
 
@@ -45,7 +45,7 @@ public class TipoDocumentalBean extends BaseEjbJPA<TipoDocumental, Long> impleme
     @SuppressWarnings(value = "unchecked")
     public List<TipoDocumental> getAll() throws Exception {
 
-        return  em.createQuery("Select tipoDocumental from TipoDocumental as tipoDocumental order by tipoDocumental.id").getResultList();
+        return em.createQuery("Select tipoDocumental from TipoDocumental as tipoDocumental order by tipoDocumental.id").getResultList();
     }
 
     @Override
@@ -60,7 +60,7 @@ public class TipoDocumentalBean extends BaseEjbJPA<TipoDocumental, Long> impleme
     public Long getTotal(Long idEntidad) throws Exception {
 
         Query q = em.createQuery("Select count(tipoDocumental.id) from TipoDocumental as tipoDocumental where tipoDocumental.entidad.id = :idEntidad");
-        q.setParameter("idEntidad",idEntidad);
+        q.setParameter("idEntidad", idEntidad);
 
         return (Long) q.getSingleResult();
     }
@@ -83,7 +83,7 @@ public class TipoDocumentalBean extends BaseEjbJPA<TipoDocumental, Long> impleme
     public List<TipoDocumental> getPagination(int inicio, Long idEntidad) throws Exception {
 
         Query q = em.createQuery("Select tipoDocumental from TipoDocumental as tipoDocumental where tipoDocumental.entidad.id = :idEntidad order by tipoDocumental.id");
-        q.setParameter("idEntidad",idEntidad);
+        q.setParameter("idEntidad", idEntidad);
         q.setFirstResult(inicio);
         q.setMaxResults(RESULTADOS_PAGINACION);
         q.setHint("org.hibernate.readOnly", true);
@@ -93,21 +93,21 @@ public class TipoDocumentalBean extends BaseEjbJPA<TipoDocumental, Long> impleme
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public TipoDocumental findByCodigoEntidad(String codigoNTI,Long idEntidad) throws Exception{
+    public TipoDocumental findByCodigoEntidad(String codigoNTI, Long idEntidad) throws Exception {
 
         Query q = em.createQuery("Select tipoDocumental from TipoDocumental as tipoDocumental where tipoDocumental.codigoNTI = :codigoNTI " +
                 "and tipoDocumental.entidad.id = :idEntidad");
 
-        q.setParameter("codigoNTI",codigoNTI);
-        q.setParameter("idEntidad",idEntidad);
+        q.setParameter("codigoNTI", codigoNTI);
+        q.setParameter("idEntidad", idEntidad);
         q.setHint("org.hibernate.readOnly", true);
 
         List<TipoDocumental> tipoDocumental = q.getResultList();
 
-        if(tipoDocumental.size() == 1){
+        if (tipoDocumental.size() == 1) {
             return tipoDocumental.get(0);
-        }else{
-            return  null;
+        } else {
+            return null;
         }
     }
 
@@ -117,9 +117,9 @@ public class TipoDocumentalBean extends BaseEjbJPA<TipoDocumental, Long> impleme
         Query q = em.createQuery("Select tipoDocumental.id from TipoDocumental as tipoDocumental where " +
                 "tipoDocumental.id != :idTipoDocumental and tipoDocumental.codigoNTI = :codigoNTI and tipoDocumental.entidad.id = :idEntidad");
 
-        q.setParameter("codigoNTI",codigoNTI);
-        q.setParameter("idTipoDocumental",idTipoDocumental);
-        q.setParameter("idEntidad",idEntidad);
+        q.setParameter("codigoNTI", codigoNTI);
+        q.setParameter("idTipoDocumental", idTipoDocumental);
+        q.setParameter("idEntidad", idEntidad);
         q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList().size() > 0;
@@ -131,16 +131,16 @@ public class TipoDocumentalBean extends BaseEjbJPA<TipoDocumental, Long> impleme
     public List<TipoDocumental> getByEntidad(Long idEntidad) throws Exception {
 
         Query q = em.createQuery("Select tipoDocumental from TipoDocumental as tipoDocumental where tipoDocumental.entidad.id = :idEntidad");
-        q.setParameter("idEntidad",idEntidad);
+        q.setParameter("idEntidad", idEntidad);
         q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList();
     }
 
     @Override
-    public Integer eliminarByEntidad(Long idEntidad) throws Exception{
+    public Integer eliminarByEntidad(Long idEntidad) throws Exception {
 
-        List<?> tipos = em.createQuery("Select distinct(id) from TipoDocumental where entidad.id =:idEntidad").setParameter("idEntidad",idEntidad).getResultList();
+        List<?> tipos = em.createQuery("Select distinct(id) from TipoDocumental where entidad.id =:idEntidad").setParameter("idEntidad", idEntidad).getResultList();
 
         for (Object id : tipos) {
             remove(findById((Long) id));
@@ -158,7 +158,7 @@ public class TipoDocumentalBean extends BaseEjbJPA<TipoDocumental, Long> impleme
         tipoDocumental.setTraduccion("ca", tra1);
         tipoDocumental.setTraduccion("es", tra2);
 
-        return  persist(tipoDocumental);
+        return persist(tipoDocumental);
 
     }
 

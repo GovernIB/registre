@@ -12,13 +12,13 @@ import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 import org.fundaciobit.genapp.common.i18n.I18NException;
-import org.jboss.ejb3.annotation.SecurityDomain;
 import org.jboss.ejb3.annotation.TransactionTimeout;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.interceptor.Interceptors;
@@ -30,13 +30,12 @@ import static es.caib.regweb3.utils.RegwebConstantes.REGISTRO_ENTRADA;
 
 
 /**
- *
  * @author earrivi
  * Date: 04/06/21
  */
 
 @Stateless(name = "CustodiaEJB")
-@SecurityDomain("seycon")
+@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI"})
 @Interceptors(SpringBeanAutowiringInterceptor.class)
 public class CustodiaBean implements CustodiaLocal {
 
@@ -47,8 +46,8 @@ public class CustodiaBean implements CustodiaLocal {
     @EJB private ColaLocal colaEjb;
     @EJB private RegistroEntradaLocal registroEntradaEjb;
     @EJB private RegistroSalidaLocal registroSalidaEjb;
-    @Autowired ArxiuCaibUtils arxiuCaibUtils;
-
+    @Autowired
+    ArxiuCaibUtils arxiuCaibUtils;
 
 
     @Override
@@ -82,7 +81,7 @@ public class CustodiaBean implements CustodiaLocal {
             peticion.append("idAnexo: ").append(anexo.getId()).append(System.getProperty("line.separator"));
             peticion.append("expediente creado: ").append(anexo.getExpedienteID()).append(System.getProperty("line.separator"));
             peticion.append("documento creado: ").append(anexo.getCustodiaID()).append(System.getProperty("line.separator"));
-            if(StringUtils.isNotEmpty(anexo.getCsv())){
+            if (StringUtils.isNotEmpty(anexo.getCsv())) {
                 peticion.append("csv: ").append(anexo.getCsv()).append(System.getProperty("line.separator"));
             }
 
@@ -120,7 +119,6 @@ public class CustodiaBean implements CustodiaLocal {
     }
 
     /**
-     *
      * @param elemento
      * @param idEntidad
      * @return
@@ -149,10 +147,10 @@ public class CustodiaBean implements CustodiaLocal {
         Firma justificanteFirmado = justificante.signatureCustodytoFirma();
         JustificanteArxiu justificanteArxiuCaib = arxiuCaibUtils.crearJustificanteArxiuCaib(registro, elemento.getTipoRegistro(), justificanteFirmado);
 
-        try{
+        try {
             // Eliminamos el Justificantre en FileSystem
             anexoEjb.eliminarCustodia(custodyIdFileSystem, justificante.getAnexo(), idEntidad);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             log.info("Error al eliminarCustodia");
         }

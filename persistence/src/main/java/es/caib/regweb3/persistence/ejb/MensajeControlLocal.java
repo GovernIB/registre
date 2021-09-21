@@ -4,7 +4,6 @@ import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.model.sir.MensajeControl;
 import es.caib.regweb3.persistence.utils.Paginacion;
 
-import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
 import java.util.Date;
 import java.util.List;
@@ -16,7 +15,6 @@ import java.util.List;
  * Date: 16/01/14
  */
 @Local
-@RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI"})
 public interface MensajeControlLocal extends BaseEjb<MensajeControl, Long> {
 
     String JNDI_NAME = "java:app/regweb3-persistence/MensajeControlEJB";
@@ -24,6 +22,7 @@ public interface MensajeControlLocal extends BaseEjb<MensajeControl, Long> {
 
     /**
      * Obtiene las mensajeControles de una entidad
+     *
      * @param idEntidad
      * @return
      * @throws Exception
@@ -32,6 +31,7 @@ public interface MensajeControlLocal extends BaseEjb<MensajeControl, Long> {
 
     /**
      * Realiza la búsque de Mensaje de Control según los datos del formulario
+     *
      * @param pageNumber
      * @param fechaInicio
      * @param fechaFin
@@ -44,6 +44,7 @@ public interface MensajeControlLocal extends BaseEjb<MensajeControl, Long> {
 
     /**
      * Obtiene los Mensajes de control de un IdentificadorIntercambio
+     *
      * @param identificadorIntercambio
      * @param idEntidad
      * @return
@@ -53,6 +54,7 @@ public interface MensajeControlLocal extends BaseEjb<MensajeControl, Long> {
 
     /**
      * Realiza las acciones pertinentes cuando se recibie un mensaje de control
+     *
      * @param mensaje
      * @throws Exception
      */
@@ -60,6 +62,7 @@ public interface MensajeControlLocal extends BaseEjb<MensajeControl, Long> {
 
     /**
      * Elimina las mensajeControles de una Entidad
+     *
      * @param idEntidad
      * @return
      * @throws Exception

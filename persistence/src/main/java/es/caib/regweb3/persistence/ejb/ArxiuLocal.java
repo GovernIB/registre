@@ -4,7 +4,6 @@ package es.caib.regweb3.persistence.ejb;
 import es.caib.arxiudigital.apirest.ApiArchivoDigital;
 import es.caib.arxiudigital.apirest.facade.pojos.Expediente;
 
-import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
 
 /**
@@ -14,7 +13,6 @@ import javax.ejb.Local;
  * Date: 16/01/14
  */
 @Local
-@RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI"})
 public interface ArxiuLocal {
 
     String JNDI_NAME = "java:app/regweb3-persistence/ArxiuEJB";

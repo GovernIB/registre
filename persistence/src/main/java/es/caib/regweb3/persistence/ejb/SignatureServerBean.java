@@ -16,10 +16,10 @@ import org.fundaciobit.plugins.documentcustody.api.SignatureCustody;
 import org.fundaciobit.plugins.signature.api.*;
 import org.fundaciobit.plugins.signatureserver.api.ISignatureServerPlugin;
 import org.fundaciobit.plugins.validatesignature.api.*;
-import org.jboss.ejb3.annotation.SecurityDomain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.xml.ws.WebServiceException;
@@ -32,7 +32,7 @@ import java.util.*;
  * @author anadal (08/05/2017) Mètode checkDocumentAndSignature
  */
 @Stateless(name = "SignatureServerEJB")
-@SecurityDomain("seycon")
+@RolesAllowed({"RWE_USUARI", "RWE_WS_ENTRADA", "RWE_WS_SALIDA", "RWE_WS_CIUDADANO"})
 public class SignatureServerBean implements SignatureServerLocal, ValidateSignatureConstants {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
@@ -69,7 +69,7 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
         final boolean epes = true;
 
         // Firmamos el Justificante
-        byte[]firma = signFile(fileName, pdfsource, FileInfoSignature.PDF_MIME_TYPE, signType, signMode, epes, signaturePlugin, new Locale(languageUI),
+        byte[] firma = signFile(fileName, pdfsource, FileInfoSignature.PDF_MIME_TYPE, signType, signMode, epes, signaturePlugin, new Locale(languageUI),
                 reason, idEntidadActiva, new Date(), peticion, numeroRegistro);
 
         // Creamos el SignatureCustody
@@ -106,7 +106,7 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
         final boolean epes = true;
 
         // Firmamos el Justificante
-        byte[] firmaJustificante =  signFile(fileName,pdfsource,FileInfoSignature.PDF_MIME_TYPE, signType, signMode, epes, signaturePlugin, new Locale(languageUI),
+        byte[] firmaJustificante = signFile(fileName, pdfsource, FileInfoSignature.PDF_MIME_TYPE, signType, signMode, epes, signaturePlugin, new Locale(languageUI),
                 reason, idEntidadActiva, new Date(), peticion, numeroRegistro);
 
         // Creamos la Firma
@@ -255,6 +255,7 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
 
     /**
      * Valida un document mitjancant el plugin de validar Firma
+     *
      * @param input
      * @param idEntidad
      * @param locale
@@ -275,16 +276,16 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
             // VALIDAR FIRMA
             ValidateSignatureResponse resp = new ValidateSignatureResponse();
             try {
-                resp = callToValidaFirma(locale, sign, doc,idEntidad);
-            } catch(I18NException i18ne) {
+                resp = callToValidaFirma(locale, sign, doc, idEntidad);
+            } catch (I18NException i18ne) {
                 input.getAnexo().setEstadoFirma(RegwebConstantes.ANEXO_FIRMA_ERROR);
-                if(i18ne.getCause()!=null) {
+                if (i18ne.getCause() != null) {
                     input.getAnexo().setMotivoNoValidacion(i18ne.getCause().toString());
                 }
                 return processError(i18ne, force);
-            } catch (WebServiceException we){
+            } catch (WebServiceException we) {
                 input.getAnexo().setEstadoFirma(RegwebConstantes.ANEXO_FIRMA_NOINFO);
-                if(we.getCause()!=null) {
+                if (we.getCause() != null) {
                     input.getAnexo().setMotivoNoValidacion(we.getCause().toString());
                 }
                 log.info("WebServiceException CheckDocument");
@@ -303,10 +304,10 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
             anexo.setEstadoFirma(resp.getValidationStatus().getStatus());
             anexo.setFechaValidacion(new Date());
             anexo.setFirmaValida(resp.getValidationStatus().getStatus() == RegwebConstantes.ANEXO_FIRMA_VALIDA);
-            if(resp.getValidationStatus().getStatus() == RegwebConstantes.ANEXO_FIRMA_INVALIDA){//Indica que no es valida la firma
+            if (resp.getValidationStatus().getStatus() == RegwebConstantes.ANEXO_FIRMA_INVALIDA) {//Indica que no es valida la firma
                 anexo.setMotivoNoValidacion(resp.getValidationStatus().getErrorMsg());
-            }else if(resp.getValidationStatus().getStatus() == RegwebConstantes.ANEXO_FIRMA_ERROR){//Indica que ha habido una excepción en el proceso de validación
-                if(resp.getValidationStatus().getErrorException()!=null) {
+            } else if (resp.getValidationStatus().getStatus() == RegwebConstantes.ANEXO_FIRMA_ERROR) {//Indica que ha habido una excepción en el proceso de validación
+                if (resp.getValidationStatus().getErrorException() != null) {
                     anexo.setMotivoNoValidacion(resp.getValidationStatus().getErrorException().getCause().toString());
                 }
             }
@@ -354,64 +355,64 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
 
     protected ValidateSignatureResponse callToValidaFirma(Locale locale, SignatureCustody sign,
                                                           DocumentCustody doc, Long idEntidad) throws I18NException {
-      ValidateSignatureResponse resp;
+        ValidateSignatureResponse resp;
 
-      //long start = System.currentTimeMillis();
+        //long start = System.currentTimeMillis();
 
-      // TODO CACHE DE PLUGIN!!!!!
-      IValidateSignaturePlugin validatePlugin;
-      validatePlugin = (IValidateSignaturePlugin) pluginEjb.getPlugin(idEntidad,
-                 RegwebConstantes.PLUGIN_VALIDACION_FIRMAS);
+        // TODO CACHE DE PLUGIN!!!!!
+        IValidateSignaturePlugin validatePlugin;
+        validatePlugin = (IValidateSignaturePlugin) pluginEjb.getPlugin(idEntidad,
+                RegwebConstantes.PLUGIN_VALIDACION_FIRMAS);
 
-      if (validatePlugin == null) {// El plugin de Validació de Firmes no s'ha definit.
+        if (validatePlugin == null) {// El plugin de Validació de Firmes no s'ha definit.
 
-          // Creamos una respuesta de "No validación"
-          resp = new ValidateSignatureResponse();
-          ValidationStatus validationStatus = new ValidationStatus();
-          validationStatus.setStatus(-2);
-          validationStatus.setErrorMsg(I18NLogicUtils.tradueix(new Locale(Configuracio.getDefaultLanguage()), "error.plugin.validasign.noDefinido"));
-          resp.setValidationStatus(validationStatus);
+            // Creamos una respuesta de "No validación"
+            resp = new ValidateSignatureResponse();
+            ValidationStatus validationStatus = new ValidationStatus();
+            validationStatus.setStatus(-2);
+            validationStatus.setErrorMsg(I18NLogicUtils.tradueix(new Locale(Configuracio.getDefaultLanguage()), "error.plugin.validasign.noDefinido"));
+            resp.setValidationStatus(validationStatus);
 
-          return resp;
-        //throw new I18NException("error.plugin.nodefinit", new I18NArgumentCode("plugin.tipo.8"));
-      }
+            return resp;
+            //throw new I18NException("error.plugin.nodefinit", new I18NArgumentCode("plugin.tipo.8"));
+        }
 
-      // Verificar que ofereix servei de informació de firmes
-      SignatureRequestedInformation sri = validatePlugin.getSupportedSignatureRequestedInformation();
+        // Verificar que ofereix servei de informació de firmes
+        SignatureRequestedInformation sri = validatePlugin.getSupportedSignatureRequestedInformation();
 
-      if (!Boolean.TRUE.equals(sri.getReturnSignatureTypeFormatProfile())) {
-        // El plugin de Validació/Informació de Firmes no proveeix informació de firmes.
-        throw new I18NException("error.plugin.validasign.noinfo");
-      }
+        if (!Boolean.TRUE.equals(sri.getReturnSignatureTypeFormatProfile())) {
+            // El plugin de Validació/Informació de Firmes no proveeix informació de firmes.
+            throw new I18NException("error.plugin.validasign.noinfo");
+        }
 
-      sri = new SignatureRequestedInformation();
-      sri.setReturnSignatureTypeFormatProfile(true);
-      sri.setReturnCertificateInfo(false);
-      sri.setReturnCertificates(false);
-      sri.setReturnTimeStampInfo(false);
-      sri.setReturnValidationChecks(false);
-      sri.setValidateCertificateRevocation(false);
+        sri = new SignatureRequestedInformation();
+        sri.setReturnSignatureTypeFormatProfile(true);
+        sri.setReturnCertificateInfo(false);
+        sri.setReturnCertificates(false);
+        sri.setReturnTimeStampInfo(false);
+        sri.setReturnValidationChecks(false);
+        sri.setValidateCertificateRevocation(false);
 
-      ValidateSignatureRequest validationRequest = new ValidateSignatureRequest();
-      validationRequest.setLanguage(locale.getLanguage());
-      validationRequest.setSignatureData(sign.getData());
-      validationRequest.setSignatureRequestedInformation(sri);
-      if (doc != null) {
-        validationRequest.setSignedDocumentData(doc.getData());
-      }
+        ValidateSignatureRequest validationRequest = new ValidateSignatureRequest();
+        validationRequest.setLanguage(locale.getLanguage());
+        validationRequest.setSignatureData(sign.getData());
+        validationRequest.setSignatureRequestedInformation(sri);
+        if (doc != null) {
+            validationRequest.setSignedDocumentData(doc.getData());
+        }
 
-      try {
-          resp = validatePlugin.validateSignature(validationRequest);
-      }catch(WebServiceException we){
-          throw we;
-      } catch (Exception e) {
-          e.printStackTrace();
-          throw new I18NException(e, "error.checkanexosir.validantfirma",
-            new I18NArgumentString(e.getMessage()));
+        try {
+            resp = validatePlugin.validateSignature(validationRequest);
+        } catch (WebServiceException we) {
+            throw we;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new I18NException(e, "error.checkanexosir.validantfirma",
+                    new I18NArgumentString(e.getMessage()));
 
-      }
-      //log.info("Total validacion Firma: " + TimeUtils.formatElapsedTime(System.currentTimeMillis() - start));
-      return resp;
+        }
+        //log.info("Total validacion Firma: " + TimeUtils.formatElapsedTime(System.currentTimeMillis() - start));
+        return resp;
     }
 
 
@@ -447,9 +448,9 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
         // (2) Enviam a firmar
         firmaCAdESEPESDetached(input, doc, locale, signaturePlugin, idEntidad, numeroRegistro);
 
-         //input.getSignatureCustody().setName(doc.getName().replace('.', '_') + "_EPES.csig");
+        //input.getSignatureCustody().setName(doc.getName().replace('.', '_') + "_EPES.csig");
         // El nombre de la firma es el mismo que el fichero pero cambiando su extension a .csig
-        input.getSignatureCustody().setName(doc.getName().replace(".pdf" , ".csig"));
+        input.getSignatureCustody().setName(doc.getName().replace(".pdf", ".csig"));
 
     }
 
@@ -543,7 +544,7 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
             AnexoFull anexo = new AnexoFull(anexoFull);
 
             // Si el anexo es un Justificante creado con el ApiArxiu, lo transformamos
-            if(anexo.getAnexo().getPerfilCustodia().equals(RegwebConstantes.PERFIL_CUSTODIA_ARXIU)){
+            if (anexo.getAnexo().getPerfilCustodia().equals(RegwebConstantes.PERFIL_CUSTODIA_ARXIU)) {
                 anexo.arxiuDocumentToCustody();
             }
 
@@ -632,7 +633,7 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
      * @throws I18NException
      */
     protected byte[] signFile(String fileName, byte[] data, String mimeType, String signType,
-                                        int signMode, boolean epes, ISignatureServerPlugin plugin, Locale locale, String reason, Long idEntidadActiva, Date inicio, StringBuilder peticion, String numeroRegistro)
+                              int signMode, boolean epes, ISignatureServerPlugin plugin, Locale locale, String reason, Long idEntidadActiva, Date inicio, StringBuilder peticion, String numeroRegistro)
             throws I18NException {
 
         File source = null;
@@ -685,17 +686,16 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
 
             File previusSignatureDetachedFile = null;
             int signOperation = FileInfoSignature.SIGN_OPERATION_SIGN;
-            String expedientCode=null;
-            String expedientName=null;
-            String expedientUrl= null;
-            String procedureCode=null;
-            String procedureName=null;
-            FileInfoSignature fileInfo = new  FileInfoSignature(signID, source, previusSignatureDetachedFile,
-               mimeType,  name, reason,  location, signerEmail, signNumber, locale.getLanguage(),
-               signOperation, signType, signAlgorithm, signMode, signaturesTableLocation, signaturesTableHeader,
-               pdfInfoSignature, csvStampInfo, userRequiresTimeStamp,  timeStampGenerator, policyInfoSignature,
-                expedientCode,  expedientName,  expedientUrl,  procedureCode,  procedureName);
-
+            String expedientCode = null;
+            String expedientName = null;
+            String expedientUrl = null;
+            String procedureCode = null;
+            String procedureName = null;
+            FileInfoSignature fileInfo = new FileInfoSignature(signID, source, previusSignatureDetachedFile,
+                    mimeType, name, reason, location, signerEmail, signNumber, locale.getLanguage(),
+                    signOperation, signType, signAlgorithm, signMode, signaturesTableLocation, signaturesTableHeader,
+                    pdfInfoSignature, csvStampInfo, userRequiresTimeStamp, timeStampGenerator, policyInfoSignature,
+                    expedientCode, expedientName, expedientUrl, procedureCode, procedureName);
 
 
             final String signaturesSetID = String.valueOf(System.currentTimeMillis());
@@ -703,16 +703,16 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
                     new FileInfoSignature[]{fileInfo});
 
             // Check si passa filtre
-            Map<String, Object> parameters = new HashMap<String,Object>();
-            String error = plugin.filter(signaturesSet,parameters);
-            if (error !=null) {
+            Map<String, Object> parameters = new HashMap<String, Object>();
+            String error = plugin.filter(signaturesSet, parameters);
+            if (error != null) {
                 // "El plugin no suporta aquest tipus de firma/mode (" + signType + ", " + signMode + ")
                 // o s'ha produit un error greou durant la firma"
-                throw new I18NException("error.plugin.firma.nosuportat", signType, String.valueOf(signMode),error);
+                throw new I18NException("error.plugin.firma.nosuportat", signType, String.valueOf(signMode), error);
             }
 
             final String timestampUrlBase = null;
-            signaturesSet = plugin.signDocuments(signaturesSet, timestampUrlBase,parameters);
+            signaturesSet = plugin.signDocuments(signaturesSet, timestampUrlBase, parameters);
             StatusSignaturesSet sss = signaturesSet.getStatusSignaturesSet();
 
             if (sss.getStatus() != StatusSignaturesSet.STATUS_FINAL_OK) {
@@ -739,14 +739,14 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
 
         } catch (I18NException i18ne) {
             try {
-                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_FIRMA, reason, peticion.toString(), i18ne, null,System.currentTimeMillis() - tiempo, idEntidadActiva, numeroRegistro);
+                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_FIRMA, reason, peticion.toString(), i18ne, null, System.currentTimeMillis() - tiempo, idEntidadActiva, numeroRegistro);
             } catch (Exception e) {
                 e.printStackTrace();
             }
             throw i18ne;
         } catch (Exception e) {
             try {
-                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_FIRMA, reason, peticion.toString(), e, null,System.currentTimeMillis() - tiempo, idEntidadActiva, numeroRegistro);
+                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_FIRMA, reason, peticion.toString(), e, null, System.currentTimeMillis() - tiempo, idEntidadActiva, numeroRegistro);
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
@@ -768,6 +768,7 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
 
     /**
      * Crea un {@link org.fundaciobit.plugins.documentcustody.api.SignatureCustody} a partir de los parámetros
+     *
      * @param signType
      * @param signMode
      * @param firma

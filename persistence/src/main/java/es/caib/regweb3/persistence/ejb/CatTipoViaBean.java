@@ -1,10 +1,10 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.CatTipoVia;
-import org.jboss.ejb3.annotation.SecurityDomain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -19,12 +19,12 @@ import java.util.List;
  */
 
 @Stateless(name = "CatTipoViaEJB")
-@SecurityDomain("seycon")
-public class CatTipoViaBean extends BaseEjbJPA<CatTipoVia, Long> implements CatTipoViaLocal{
+@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI"})
+public class CatTipoViaBean extends BaseEjbJPA<CatTipoVia, Long> implements CatTipoViaLocal {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
-    @PersistenceContext(unitName="regweb3")
+    @PersistenceContext(unitName = "regweb3")
     private EntityManager em;
 
 
@@ -44,7 +44,7 @@ public class CatTipoViaBean extends BaseEjbJPA<CatTipoVia, Long> implements CatT
     @SuppressWarnings(value = "unchecked")
     public List<CatTipoVia> getAll() throws Exception {
 
-        return  em.createQuery("Select catTipoVia from CatTipoVia as catTipoVia order by catTipoVia.codigoTipoVia").getResultList();
+        return em.createQuery("Select catTipoVia from CatTipoVia as catTipoVia order by catTipoVia.codigoTipoVia").getResultList();
     }
 
     @Override
@@ -74,21 +74,21 @@ public class CatTipoViaBean extends BaseEjbJPA<CatTipoVia, Long> implements CatT
 
         Query q = em.createQuery("Select catTipoVia from CatTipoVia as catTipoVia where catTipoVia.codigoTipoVia = :codigo");
 
-         q.setParameter("codigo", codigo);
+        q.setParameter("codigo", codigo);
         q.setHint("org.hibernate.readOnly", true);
 
-         List<CatTipoVia> catTipoVia = q.getResultList();
-         if(catTipoVia.size() == 1){
-             return catTipoVia.get(0);
-         }else{
-             return  null;
-         }
+        List<CatTipoVia> catTipoVia = q.getResultList();
+        if (catTipoVia.size() == 1) {
+            return catTipoVia.get(0);
+        } else {
+            return null;
+        }
 
     }
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public CatTipoVia findByDescripcion(String descripcion) throws Exception{
+    public CatTipoVia findByDescripcion(String descripcion) throws Exception {
 
         Query q = em.createQuery("Select catTipoVia from CatTipoVia as catTipoVia where catTipoVia.descripcionTipoVia = :descripcion");
 
@@ -96,10 +96,10 @@ public class CatTipoViaBean extends BaseEjbJPA<CatTipoVia, Long> implements CatT
         q.setHint("org.hibernate.readOnly", true);
 
         List<CatTipoVia> catTipoVia = q.getResultList();
-        if(catTipoVia.size() == 1){
+        if (catTipoVia.size() == 1) {
             return catTipoVia.get(0);
-        }else{
-            return  null;
+        } else {
+            return null;
         }
     }
 }

@@ -14,10 +14,10 @@ import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.hibernate.Hibernate;
-import org.jboss.ejb3.annotation.SecurityDomain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -36,7 +36,7 @@ import static es.caib.regweb3.persistence.ejb.BaseEjbJPA.RESULTADOS_PAGINACION;
  */
 
 @Stateless(name = "RegistroEntradaConsultaEJB")
-@SecurityDomain("seycon")
+@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI", "RWE_WS_ENTRADA", "RWE_WS_SALIDA", "RWE_WS_CIUDADANO"})
 public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
@@ -53,13 +53,13 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
     public Long findByNumeroRegistroOrigen(String numeroRegistroFormateado, Long idRegistro) throws Exception {
 
         Query q = em.createQuery("Select re.id from RegistroEntrada as re where re.registroDetalle.numeroRegistroOrigen LIKE :numeroRegistroFormateado " +
-           "and re.id != :idRegistro ");
+                "and re.id != :idRegistro ");
 
-        q.setParameter("numeroRegistroFormateado", "%" +numeroRegistroFormateado+ "%");
+        q.setParameter("numeroRegistroFormateado", "%" + numeroRegistroFormateado + "%");
         q.setParameter("idRegistro", idRegistro);
 
         List<Long> registros = q.getResultList();
-        log.info("findByNumeroRegistroOrigen ("+numeroRegistroFormateado+"): " + registros.size());
+        log.info("findByNumeroRegistroOrigen (" + numeroRegistroFormateado + "): " + registros.size());
         if (registros.size() == 1) {
             return registros.get(0);
         } else {
@@ -69,7 +69,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
 
     @SuppressWarnings("unchecked")
     @Override
-    public RegistroBasico findByIdLigero(Long idRegistroEntrada) throws Exception{
+    public RegistroBasico findByIdLigero(Long idRegistroEntrada) throws Exception {
 
         Query q;
 
@@ -81,11 +81,11 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
 
         List<Object[]> result = q.getResultList();
 
-        if(result.size() == 1){
+        if (result.size() == 1) {
             Object[] object = result.get(0);
 
             RegistroBasico registroBasico = new RegistroBasico();
-            registroBasico.setId((Long)  object[0]);
+            registroBasico.setId((Long) object[0]);
             registroBasico.setNumeroRegistroFormateado((String) object[1]);
             registroBasico.setFecha((Date) object[2]);
             registroBasico.setLibro((String) object[3]);
@@ -112,7 +112,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
         StringBuilder queryBase = new StringBuilder("Select DISTINCT registroEntrada from RegistroEntrada as registroEntrada ");
 
         // Si la búsqueda incluye referencias al interesado, hacemos la left outer join
-        if(busquedaInteresados){
+        if (busquedaInteresados) {
             queryBase.append("left outer join registroEntrada.registroDetalle.interesados interessat ");
         }
 
@@ -123,10 +123,10 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
         parametros.put("idEntidad", idEntidad);
 
         // Organismo
-        if(organismos.size() == 1){
+        if (organismos.size() == 1) {
             where.add(" registroEntrada.oficina.organismoResponsable.id = :idOrganismo ");
             parametros.put("idOrganismo", organismos.get(0));
-        }else{
+        } else {
             where.add(" registroEntrada.oficina.organismoResponsable.id in (:organismos) ");
             parametros.put("organismos", organismos);
         }
@@ -212,7 +212,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
         parametros.put("fechaFin", fechaFin);
 
         //Presencial
-        if(re.getRegistroDetalle().getPresencial() != null){
+        if (re.getRegistroDetalle().getPresencial() != null) {
             where.add(" registroEntrada.registroDetalle.presencial = :presencial ");
             parametros.put("presencial", re.getRegistroDetalle().getPresencial());
         }
@@ -230,7 +230,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
 
         // Duplicamos la query solo para obtener los resultados totales
         StringBuilder queryCount = new StringBuilder("Select count(DISTINCT registroEntrada.id) from RegistroEntrada as registroEntrada ");
-        if(busquedaInteresados){
+        if (busquedaInteresados) {
             queryCount.append("left outer join registroEntrada.registroDetalle.interesados interessat ");
         }
         q2 = em.createQuery(query.toString().replaceAll(queryBase.toString(), queryCount.toString()));
@@ -331,7 +331,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Paginacion pendientesDistribuir(Integer pageNumber, Long idOficinaActiva) throws Exception{
+    public Paginacion pendientesDistribuir(Integer pageNumber, Long idOficinaActiva) throws Exception {
 
         Query q;
         Query q2;
@@ -446,15 +446,15 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
     @SuppressWarnings(value = "unchecked")
     public RegistroEntrada findByNumeroRegistroFormateadoCompleto(String codigoEntidad, String numeroRegistroFormateado) throws Exception, I18NException {
 
-       RegistroEntrada registroEntrada = findByNumeroRegistroFormateado(codigoEntidad,numeroRegistroFormateado);
+        RegistroEntrada registroEntrada = findByNumeroRegistroFormateado(codigoEntidad, numeroRegistroFormateado);
 
-       if(registroEntrada != null){
-           Hibernate.initialize(registroEntrada.getRegistroDetalle().getAnexos());
-           Hibernate.initialize(registroEntrada.getRegistroDetalle().getInteresados());
-           return cargarAnexosFull(registroEntrada);
-       }else{
-           return null;
-       }
+        if (registroEntrada != null) {
+            Hibernate.initialize(registroEntrada.getRegistroDetalle().getAnexos());
+            Hibernate.initialize(registroEntrada.getRegistroDetalle().getInteresados());
+            return cargarAnexosFull(registroEntrada);
+        } else {
+            return null;
+        }
 
     }
 
@@ -488,7 +488,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
         Query q = em.createQuery("Select registroEntrada.numeroRegistroFormateado "
                 + " from RegistroEntrada as registroEntrada"
                 + " where registroEntrada.registroDetalle.id = :idRegistroDetalle "
-              );
+        );
 
         q.setParameter("idRegistroDetalle", idRegistroDetalle);
         q.setHint("org.hibernate.readOnly", true);
@@ -550,7 +550,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
 
         Query q;
         q = em.createQuery("Select re.id from RegistroEntrada as re where " +
-                "re.id = :idRegistro and re.estado = :valido and re.evento = :distribuir " );
+                "re.id = :idRegistro and re.estado = :valido and re.evento = :distribuir ");
 
         // Parámetros
         q.setParameter("idRegistro", idRegistro);
@@ -658,7 +658,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Paginacion getSirRechazadosReenviadosPaginado(Integer pageNumber,Long idOficina) throws Exception {
+    public Paginacion getSirRechazadosReenviadosPaginado(Integer pageNumber, Long idOficina) throws Exception {
 
         Query q;
         Query q2;
@@ -750,6 +750,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
 
     /**
      * Carga los Anexos Completos al RegistroEntrada pasado por parámetro
+     *
      * @param registroEntrada
      * @return
      * @throws Exception
@@ -771,6 +772,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
 
     /**
      * Carga los Anexos Ligero al RegistroEntrada pasado por parámetro
+     *
      * @param registroEntrada
      * @return
      * @throws Exception
@@ -838,7 +840,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
         List<String> where = new ArrayList<String>();
 
         String queryBase = "Select DISTINCT re.id, re.numeroRegistroFormateado, re.fecha, re.registroDetalle.extracto, re.destino, re.destinoExternoCodigo, re.destinoExternoDenominacion, re.estado " +
-           "from RegistroEntrada as re left outer join re.registroDetalle.interesados interessat LEFT JOIN re.destino destino ";
+                "from RegistroEntrada as re left outer join re.registroDetalle.interesados interessat LEFT JOIN re.destino destino ";
         StringBuilder query = new StringBuilder(queryBase);
 
 
@@ -848,49 +850,50 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
 
         //Entidad
         where.add(" re.usuario.entidad.id = :idEntidad ");
-        parametros.put("idEntidad" , idEntidad);
+        parametros.put("idEntidad", idEntidad);
 
         //Estado Anulado
         where.add(" re.estado != :anulado ");
-        parametros.put("anulado" , RegwebConstantes.REGISTRO_ANULADO);
+        parametros.put("anulado", RegwebConstantes.REGISTRO_ANULADO);
 
         //Estado rectificado
         where.add(" re.estado != :rectificado ");
-        parametros.put("rectificado" , RegwebConstantes.REGISTRO_RECTIFICADO);
+        parametros.put("rectificado", RegwebConstantes.REGISTRO_RECTIFICADO);
 
         //Estado reserva
         where.add(" re.estado != :reserva ");
-        parametros.put("reserva" , RegwebConstantes.REGISTRO_RESERVA);
+        parametros.put("reserva", RegwebConstantes.REGISTRO_RESERVA);
 
         //Fecha Inicio
-        if(fechaInicio!=null) {
+        if (fechaInicio != null) {
             where.add("  (re.fecha >= :fechaInicio ");
             parametros.put("fechaInicio", fechaInicio);
         }
         //Fecha fin
-        if(fechaFin !=null) {
+        if (fechaFin != null) {
             where.add(" re.fecha <= :fechaFin) ");
             parametros.put("fechaFin", fechaFin);
         }
 
         // Numero registro
-        if(numeroRegistro!=null && !numeroRegistro.isEmpty()){
+        if (numeroRegistro != null && !numeroRegistro.isEmpty()) {
             where.add(" re.numeroRegistroFormateado LIKE :numeroRegistroFormateado ");
             parametros.put("numeroRegistroFormateado", "%" + numeroRegistro + "%");
         }
 
 
         //Estados (hacemos una or con todos los estados que nos envian)
-        if(estados != null && !estados.isEmpty()){
+        if (estados != null && !estados.isEmpty()) {
             StringBuilder sEstados = new StringBuilder();
             sEstados.append(" ( ");
-            for(int i= 0; i<estados.size(); i++){
+            for (int i = 0; i < estados.size(); i++) {
                 int estado = estados.get(i);
-                if(i != estados.size()-1) {
-                    sEstados.append(" re.estado= "+estado+" or ");
-                }else{
-                    sEstados.append(" re.estado= "+estado+ " ");
-                };
+                if (i != estados.size() - 1) {
+                    sEstados.append(" re.estado= " + estado + " or ");
+                } else {
+                    sEstados.append(" re.estado= " + estado + " ");
+                }
+                ;
             }
             sEstados.append(" ) ");
             where.add(sEstados.toString());
@@ -912,7 +915,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
 
             // Duplicamos la query solo para obtener los resultados totales
             q2 = em.createQuery(query.toString().replaceAll(queryBase, "Select DISTINCT count(re.id) " +
-               "from RegistroEntrada as re left outer join re.registroDetalle.interesados interessat LEFT JOIN re.destino destino "));
+                    "from RegistroEntrada as re left outer join re.registroDetalle.interesados interessat LEFT JOIN re.destino destino "));
             query.append(" order by re.fecha desc ");
             q1 = em.createQuery(query.toString());
 
@@ -925,7 +928,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
         } else {
             // Duplicamos la query solo para obtener los resultados totales
             q2 = em.createQuery(query.toString().replaceAll(queryBase, "Select DISTINCT count(re.id) " +
-               "from RegistroEntrada as re left outer join re.registroDetalle.interesados interessat LEFT JOIN re.destino destino "));
+                    "from RegistroEntrada as re left outer join re.registroDetalle.interesados interessat LEFT JOIN re.destino destino "));
             query.append(" order by re.fecha desc ");
             q1 = em.createQuery(query.toString());
 
@@ -948,7 +951,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
             Object[] object = result.get(i);
 
             RegistroEntrada registroEntrada = new RegistroEntrada();
-            registroEntrada.setId((Long)  object[0]);
+            registroEntrada.setId((Long) object[0]);
             registroEntrada.setNumeroRegistroFormateado((String) object[1]);
             registroEntrada.setFecha((Date) object[2]);
             registroEntrada.getRegistroDetalle().setExtracto((String) object[3]);
@@ -1003,7 +1006,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
 
         List<Long> registros = q.getResultList();
 
-        if(registros.isEmpty()){
+        if (registros.isEmpty()) {
             return null;
         }
 
@@ -1026,6 +1029,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
 
     /**
      * Comprueba si alguno de los valores de búsqueda referentes al Interesado se ha rellenado
+     *
      * @param interesadoNom
      * @param interesadoLli1
      * @param interesadoLli2

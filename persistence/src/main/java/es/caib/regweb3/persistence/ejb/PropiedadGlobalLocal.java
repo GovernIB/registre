@@ -2,7 +2,6 @@ package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.PropiedadGlobal;
 
-import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
 import java.util.List;
 
@@ -10,10 +9,9 @@ import java.util.List;
  * Created by Fundació BIT.
  *
  * @author earrivi
- *         Date: 05/05/16
+ * Date: 05/05/16
  */
 @Local
-@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI","RWE_WS_ENTRADA","RWE_WS_SALIDA","RWE_WS_CIUDADANO"})
 public interface PropiedadGlobalLocal extends BaseEjb<PropiedadGlobal, Long> {
 
     String JNDI_NAME = "java:app/regweb3-persistence/PropiedadGlobalEJB";
@@ -77,8 +75,9 @@ public interface PropiedadGlobalLocal extends BaseEjb<PropiedadGlobal, Long> {
 
     /**
      * Obtiene el valor de una {@link es.caib.regweb3.model.PropiedadGlobal} de una {@link es.caib.regweb3.model.Entidad}
+     *
      * @param idEntidad de la Entidad
-     * @param clave de la propiedad
+     * @param clave     de la propiedad
      * @return
      * @throws Exception
      */
@@ -86,6 +85,7 @@ public interface PropiedadGlobalLocal extends BaseEjb<PropiedadGlobal, Long> {
 
     /**
      * Obtiene el valor de una {@link es.caib.regweb3.model.PropiedadGlobal}
+     *
      * @param clave de la propiedad
      * @return
      * @throws Exception
@@ -94,8 +94,9 @@ public interface PropiedadGlobalLocal extends BaseEjb<PropiedadGlobal, Long> {
 
     /**
      * Obtiene el valor Boolean de una {@link es.caib.regweb3.model.PropiedadGlobal} de una {@link es.caib.regweb3.model.Entidad}
+     *
      * @param idEntidad de la Entidad
-     * @param clave de la propiedad
+     * @param clave     de la propiedad
      * @return
      * @throws Exception
      */
@@ -103,6 +104,7 @@ public interface PropiedadGlobalLocal extends BaseEjb<PropiedadGlobal, Long> {
 
     /**
      * Obtiene el valor Boolean de una {@link es.caib.regweb3.model.PropiedadGlobal}
+     *
      * @param clave de la propiedad
      * @return
      * @throws Exception
@@ -111,8 +113,9 @@ public interface PropiedadGlobalLocal extends BaseEjb<PropiedadGlobal, Long> {
 
     /**
      * Obtiene el valor Long de una {@link es.caib.regweb3.model.PropiedadGlobal} de una {@link es.caib.regweb3.model.Entidad}
+     *
      * @param idEntidad de la Entidad
-     * @param clave de la propiedad
+     * @param clave     de la propiedad
      * @return
      * @throws Exception
      */
@@ -120,6 +123,7 @@ public interface PropiedadGlobalLocal extends BaseEjb<PropiedadGlobal, Long> {
 
     /**
      * Obtiene el valor Long de una {@link es.caib.regweb3.model.PropiedadGlobal}
+     *
      * @param clave
      * @return
      * @throws Exception
@@ -128,6 +132,7 @@ public interface PropiedadGlobalLocal extends BaseEjb<PropiedadGlobal, Long> {
 
     /**
      * Obtiene el valor Integer de una {@link es.caib.regweb3.model.PropiedadGlobal}
+     *
      * @param idEntidad
      * @param clave
      * @return
@@ -137,6 +142,7 @@ public interface PropiedadGlobalLocal extends BaseEjb<PropiedadGlobal, Long> {
 
     /**
      * Obtiene el valor Integer de una {@link es.caib.regweb3.model.PropiedadGlobal}
+     *
      * @param clave
      * @return
      * @throws Exception
@@ -145,15 +151,17 @@ public interface PropiedadGlobalLocal extends BaseEjb<PropiedadGlobal, Long> {
 
     /**
      * Obtiene las {@link es.caib.regweb3.model.PropiedadGlobal} de una {@link es.caib.regweb3.model.Entidad}
+     *
      * @param idEntidad
      * @return
      * @throws Exception
      */
     List<PropiedadGlobal> getAllPropertiesByEntidad(Long idEntidad) throws Exception;
-    
+
     /**
-     * Obtiene todas las {@link es.caib.regweb3.model.PropiedadGlobal} que no estan asociadas 
+     * Obtiene todas las {@link es.caib.regweb3.model.PropiedadGlobal} que no estan asociadas
      * a alguna {@link es.caib.regweb3.model.Entidad}
+     *
      * @return
      * @throws Exception
      */

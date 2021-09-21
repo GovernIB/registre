@@ -7,9 +7,8 @@
 http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd">
 
     <persistence-unit name="regweb3" transaction-type="JTA">
-        <provider>org.hibernate.ejb.HibernatePersistence</provider>
 
-        <jta-data-source>java:/es.caib.regweb3.db</jta-data-source>
+        <jta-data-source>java:jboss/datasources/regweb3DS</jta-data-source>
 
         <class>es.caib.regweb3.model.Anexo</class>
         <class>es.caib.regweb3.model.Archivo</class>
@@ -73,8 +72,17 @@ http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd">
 
 
         <properties>
-            <!--<property name="jboss.as.jpa.providerModule"  value="${jboss.as.jpa.providerModule}" />-->
+            <!-- Per les propietats estandard veure punt 8.2.1.9 de l'especificació JPA -->
+
+            <!--
+            Per un bug a Hibernate, el JBoss EAP 7.2 que no tenen el patch 9 no detecten correctament
+            les versions d'Oracle superiors a la 12. Per això cal definir explicitament el dialect.
+            -->
+            <!--<property name="hibernate.dialect" value="org.hibernate.dialect.Oracle12cDialect"/>-->
+            <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
             <property name="hibernate.show_sql" value="false"/>
+            <!--Permite tener @SequenceGenerator con el mismo nombre-->
+            <property name="hibernate.jpa.compliance.global_id_generators" value="false"/>
         </properties>
 
     </persistence-unit>

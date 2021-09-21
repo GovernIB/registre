@@ -6,7 +6,6 @@ import es.caib.regweb3.model.utils.AnexoFull;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 
-import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
 import java.util.List;
 import java.util.Set;
@@ -15,10 +14,9 @@ import java.util.Set;
  * Created by Fundació BIT.
  *
  * @author earrivi
- *         Date: 16/01/14
+ * Date: 16/01/14
  */
 @Local
-@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI","RWE_WS_ENTRADA","RWE_WS_SALIDA", "RWE_WS_CIUDADANO"})
 public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal {
 
     String JNDI_NAME = "java:app/regweb3-persistence/RegistroEntradaEJB";
@@ -26,6 +24,7 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
 
     /**
      * Obtiene un Registro de Entrada cargardo la relación con la tabla Anexos e Interesados
+     *
      * @param id
      * @return
      * @throws Exception
@@ -46,6 +45,7 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
 
     /**
      * Actualiza un Registro de entrada
+     *
      * @param registroEntrada
      * @param usuarioEntidad
      * @return
@@ -66,13 +66,13 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
 
     /**
      * Identifica todos los registros de una oficina que son Oficios Internos
+     *
      * @param oficina
      * @throws Exception
      */
     Integer actualizarEventoOficioInterno(Oficina oficina) throws Exception;
 
     /**
-     *
      * @param oficina
      * @return
      * @throws Exception
@@ -80,7 +80,6 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
     Integer actualizarEventoDistribuir(Oficina oficina) throws Exception;
 
     /**
-     *
      * @param oficina
      * @return
      * @throws Exception
@@ -89,6 +88,7 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
 
     /**
      * Comprueba si un RegistroEntrada se considera un OficioRemision externo o no
+     *
      * @param idRegistro
      * @return
      * @throws Exception
@@ -97,6 +97,7 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
 
     /**
      * Comprueba si un RegistroEntrada se considera un OficioRemision SIR o no
+     *
      * @param idRegistro
      * @return
      * @throws Exception
@@ -106,6 +107,7 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
 
     /**
      * Comprueba si un RegistroEntrada se considera un OficioRemision SIR o no en un entorno multientidad
+     *
      * @param idRegistro
      * @return
      * @throws Exception
@@ -115,6 +117,7 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
 
     /**
      * Obtiene el destino externo del registro de entrada de dir3caib
+     *
      * @param idRegistro
      * @return
      * @throws Exception
@@ -123,6 +126,7 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
 
     /**
      * Obtiene el próximo evento que habrá que realizar con el Registro
+     *
      * @param registroEntrada
      * @param entidadActiva
      * @return
@@ -133,6 +137,7 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
 
     /**
      * Obtiene el próximo evento que habrá que realizar con el Registro en un entorno multientidad
+     *
      * @param registroEntrada
      * @param entidadActiva
      * @return
@@ -218,6 +223,7 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
 
     /**
      * Actualiza el Destino extinguido por el que le sustituye
+     *
      * @param idOrganismoExtinguido
      * @param idOrganismo
      * @throws Exception
@@ -246,6 +252,7 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
 
     /**
      * Obtiene el Registro para Distribuir, sin cargar el Justificante, porque solo se envía el custodyID
+     *
      * @param id
      * @return
      * @throws Exception

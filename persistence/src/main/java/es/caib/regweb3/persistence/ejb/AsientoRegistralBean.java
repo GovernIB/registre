@@ -8,11 +8,11 @@ import es.caib.regweb3.persistence.utils.RegistroUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
-import org.jboss.ejb3.annotation.SecurityDomain;
 import org.jboss.ejb3.common.proxy.plugins.async.AsyncUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.*;
 import java.util.HashSet;
 import java.util.List;
@@ -26,7 +26,7 @@ import static es.caib.regweb3.utils.RegwebConstantes.*;
  * de un Registro y generar el justificante conjuntamente.
  */
 @Stateless(name = "AsientoRegistralEJB")
-@SecurityDomain("seycon")
+@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI", "RWE_WS_ENTRADA", "RWE_WS_SALIDA"})
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 public class AsientoRegistralBean implements AsientoRegistralLocal {
 

@@ -2,7 +2,6 @@ package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.RegistroLopdMigrado;
 
-import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
 import java.util.List;
 
@@ -13,7 +12,6 @@ import java.util.List;
  * Date: 19/11/14
  */
 @Local
-@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI"})
 public interface RegistroLopdMigradoLocal extends BaseEjb<RegistroLopdMigrado, Long> {
 
     String JNDI_NAME = "java:app/regweb3-persistence/RegistroLopdMigradoEJB";

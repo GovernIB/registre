@@ -5,7 +5,6 @@ import es.caib.regweb3.model.Organismo;
 import es.caib.regweb3.model.RelacionSirOfi;
 import es.caib.regweb3.model.RelacionSirOfiPK;
 
-import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
 import java.util.List;
 
@@ -16,7 +15,6 @@ import java.util.List;
  * Date: 10/10/13
  */
 @Local
-@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI", "RWE_WS_ENTRADA", "RWE_WS_SALIDA"})
 public interface RelacionSirOfiLocal extends BaseEjb<RelacionSirOfi, RelacionSirOfiPK> {
 
     String JNDI_NAME = "java:app/regweb3-persistence/RelacionSirOfiEJB";
@@ -27,6 +25,11 @@ public interface RelacionSirOfiLocal extends BaseEjb<RelacionSirOfi, RelacionSir
      */
     void deleteAll() throws Exception;
 
+    /**
+     * @param idOficina
+     * @return
+     * @throws Exception
+     */
     int deleteByOficinaEntidad(Long idOficina) throws Exception;
 
     /**

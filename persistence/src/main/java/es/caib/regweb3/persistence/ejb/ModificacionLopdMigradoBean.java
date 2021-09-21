@@ -1,10 +1,10 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.ModificacionLopdMigrado;
-import org.jboss.ejb3.annotation.SecurityDomain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -19,12 +19,12 @@ import java.util.List;
  */
 
 @Stateless(name = "ModificacionLopdMigradoEJB")
-@SecurityDomain("seycon")
-public class ModificacionLopdMigradoBean extends BaseEjbJPA<ModificacionLopdMigrado, Long> implements ModificacionLopdMigradoLocal{
+@RolesAllowed({"RWE_USUARI"})
+public class ModificacionLopdMigradoBean extends BaseEjbJPA<ModificacionLopdMigrado, Long> implements ModificacionLopdMigradoLocal {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
-    @PersistenceContext(unitName="regweb3")
+    @PersistenceContext(unitName = "regweb3")
     private EntityManager em;
 
 
@@ -46,7 +46,7 @@ public class ModificacionLopdMigradoBean extends BaseEjbJPA<ModificacionLopdMigr
     @SuppressWarnings(value = "unchecked")
     public List<ModificacionLopdMigrado> getAll() throws Exception {
 
-        return  em.createQuery("Select modificacionLopdMigrado from ModificacionLopdMigrado as modificacionLopdMigrado order by modificacionLopdMigrado.id").getResultList();
+        return em.createQuery("Select modificacionLopdMigrado from ModificacionLopdMigrado as modificacionLopdMigrado order by modificacionLopdMigrado.id").getResultList();
     }
 
     @Override

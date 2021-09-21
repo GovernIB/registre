@@ -7,10 +7,10 @@ import es.caib.regweb3.persistence.utils.DataBaseUtils;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.utils.RegwebConstantes;
 import org.hibernate.Hibernate;
-import org.jboss.ejb3.annotation.SecurityDomain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -26,19 +26,16 @@ import java.util.*;
  */
 
 @Stateless(name = "RegistroMigradoEJB")
-@SecurityDomain("seycon")
-public class RegistroMigradoBean extends BaseEjbJPA<RegistroMigrado, Long> implements RegistroMigradoLocal{
+@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI"})
+public class RegistroMigradoBean extends BaseEjbJPA<RegistroMigrado, Long> implements RegistroMigradoLocal {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
-    @PersistenceContext(unitName="regweb3")
+    @PersistenceContext(unitName = "regweb3")
     private EntityManager em;
 
-    @EJB(mappedName = UsuarioEntidadLocal.JNDI_NAME)
-    public UsuarioEntidadLocal usuarioEntidadEjb;
-
-    @EJB(mappedName = RegistroLopdMigradoLocal.JNDI_NAME)
-    public RegistroLopdMigradoLocal registroLopdMigradoEjb;
+    @EJB private UsuarioEntidadLocal usuarioEntidadEjb;
+    @EJB private RegistroLopdMigradoLocal registroLopdMigradoEjb;
 
 
     @Override
@@ -61,7 +58,7 @@ public class RegistroMigradoBean extends BaseEjbJPA<RegistroMigrado, Long> imple
     @SuppressWarnings(value = "unchecked")
     public List<RegistroMigrado> getAll() throws Exception {
 
-        return  em.createQuery("Select registroMigrado from RegistroMigrado as registroMigrado order by registroMigrado.id").getResultList();
+        return em.createQuery("Select registroMigrado from RegistroMigrado as registroMigrado order by registroMigrado.id").getResultList();
     }
 
     @Override
@@ -91,14 +88,14 @@ public class RegistroMigradoBean extends BaseEjbJPA<RegistroMigrado, Long> imple
         Query q = em.createQuery("Select count(registroMigrado.id) from RegistroMigrado as registroMigrado where " +
                 "registroMigrado.entidad.id = :entidad");
 
-        q.setParameter("entidad",entidad);
+        q.setParameter("entidad", entidad);
 
         return (Long) q.getSingleResult() > 0;
     }
 
 
     @Override
-    public Paginacion busqueda(Integer pageNumber, Date fechaInicio, Date fechaFin, Integer numeroRegistro, Integer anoRegistro, RegistroMigrado registroMigrado, Long idEntidad) throws Exception{
+    public Paginacion busqueda(Integer pageNumber, Date fechaInicio, Date fechaFin, Integer numeroRegistro, Integer anoRegistro, RegistroMigrado registroMigrado, Long idEntidad) throws Exception {
 
         Query q;
         Query q2;
@@ -108,23 +105,44 @@ public class RegistroMigradoBean extends BaseEjbJPA<RegistroMigrado, Long> imple
         StringBuilder query = new StringBuilder("Select registroMigrado from RegistroMigrado as registroMigrado ");
 
 
-        where.add(" registroMigrado.tipoRegistro = :tipoRegistro"); parametros.put("tipoRegistro",registroMigrado.isTipoRegistro());
+        where.add(" registroMigrado.tipoRegistro = :tipoRegistro");
+        parametros.put("tipoRegistro", registroMigrado.isTipoRegistro());
 
-        if(registroMigrado.getExtracto() != null && registroMigrado.getExtracto().length() > 0){where.add(DataBaseUtils.like("registroMigrado.extracto", "extracto", parametros, registroMigrado.getExtracto()));}
+        if (registroMigrado.getExtracto() != null && registroMigrado.getExtracto().length() > 0) {
+            where.add(DataBaseUtils.like("registroMigrado.extracto", "extracto", parametros, registroMigrado.getExtracto()));
+        }
 
-        if(registroMigrado.getDescripcionRemitenteDestinatario() != null && registroMigrado.getDescripcionRemitenteDestinatario().length() > 0){where.add(DataBaseUtils.like("registroMigrado.descripcionRemitenteDestinatario", "descripcionRemitenteDestinatario", parametros, registroMigrado.getDescripcionRemitenteDestinatario()));}
+        if (registroMigrado.getDescripcionRemitenteDestinatario() != null && registroMigrado.getDescripcionRemitenteDestinatario().length() > 0) {
+            where.add(DataBaseUtils.like("registroMigrado.descripcionRemitenteDestinatario", "descripcionRemitenteDestinatario", parametros, registroMigrado.getDescripcionRemitenteDestinatario()));
+        }
 
-        if(anoRegistro != null){where.add(" registroMigrado.ano = :anoRegistro ");parametros.put("anoRegistro", anoRegistro);}
+        if (anoRegistro != null) {
+            where.add(" registroMigrado.ano = :anoRegistro ");
+            parametros.put("anoRegistro", anoRegistro);
+        }
 
-        if(numeroRegistro != null){where.add(" registroMigrado.numero = :numeroRegistro ");parametros.put("numeroRegistro", numeroRegistro);}
+        if (numeroRegistro != null) {
+            where.add(" registroMigrado.numero = :numeroRegistro ");
+            parametros.put("numeroRegistro", numeroRegistro);
+        }
 
-        if(registroMigrado.getCodigoOficina() > 0){where.add(" registroMigrado.codigoOficina = :codigoOficina"); parametros.put("codigoOficina",registroMigrado.getCodigoOficina());}
+        if (registroMigrado.getCodigoOficina() > 0) {
+            where.add(" registroMigrado.codigoOficina = :codigoOficina");
+            parametros.put("codigoOficina", registroMigrado.getCodigoOficina());
+        }
 
-        if(fechaInicio != null){where.add(" registroMigrado.fechaRegistro >= :fechaInicio ");parametros.put("fechaInicio", fechaInicio);}
+        if (fechaInicio != null) {
+            where.add(" registroMigrado.fechaRegistro >= :fechaInicio ");
+            parametros.put("fechaInicio", fechaInicio);
+        }
 
-        if(fechaFin != null){where.add(" registroMigrado.fechaRegistro <= :fechaFin ");parametros.put("fechaFin", fechaFin);}
+        if (fechaFin != null) {
+            where.add(" registroMigrado.fechaRegistro <= :fechaFin ");
+            parametros.put("fechaFin", fechaFin);
+        }
 
-        where.add(" registroMigrado.entidad.id = :idEntidad ");parametros.put("idEntidad", idEntidad);
+        where.add(" registroMigrado.entidad.id = :idEntidad ");
+        parametros.put("idEntidad", idEntidad);
 
         if (parametros.size() != 0) {
             query.append("where ");
@@ -146,7 +164,7 @@ public class RegistroMigradoBean extends BaseEjbJPA<RegistroMigrado, Long> imple
                 q2.setParameter(param.getKey(), param.getValue());
             }
 
-        }else{
+        } else {
             q2 = em.createQuery(query.toString().replaceAll("Select registroMigrado from RegistroMigrado as registroMigrado ", "Select count(registroMigrado.id) from RegistroMigrado as registroMigrado "));
             query.append("order by registroMigrado.id desc");
             q = em.createQuery(query.toString());
@@ -155,13 +173,13 @@ public class RegistroMigradoBean extends BaseEjbJPA<RegistroMigrado, Long> imple
 
         Paginacion paginacion;
 
-        if(pageNumber != null){ // Comprobamos si es una busqueda paginada o no
-            Long total = (Long)q2.getSingleResult();
+        if (pageNumber != null) { // Comprobamos si es una busqueda paginada o no
+            Long total = (Long) q2.getSingleResult();
             paginacion = new Paginacion(total.intValue(), pageNumber);
             int inicio = (pageNumber - 1) * BaseEjbJPA.RESULTADOS_PAGINACION;
             q.setFirstResult(inicio);
             q.setMaxResults(RESULTADOS_PAGINACION);
-        }else{
+        } else {
             paginacion = new Paginacion(0, 0);
         }
 
@@ -172,7 +190,7 @@ public class RegistroMigradoBean extends BaseEjbJPA<RegistroMigrado, Long> imple
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<String[]> getOficinas() throws Exception{
+    public List<String[]> getOficinas() throws Exception {
 
         Query q;
 
@@ -183,7 +201,7 @@ public class RegistroMigradoBean extends BaseEjbJPA<RegistroMigrado, Long> imple
     }
 
     @Override
-    public void insertarRegistroLopdMigrado(Long idRegistroMigrado, Long idUsuarioEntidad) throws Exception{
+    public void insertarRegistroLopdMigrado(Long idRegistroMigrado, Long idUsuarioEntidad) throws Exception {
 
         RegistroMigrado registroMigrado = findById(idRegistroMigrado);
         UsuarioEntidad usuarioEntidad = usuarioEntidadEjb.findById(idUsuarioEntidad);
@@ -197,11 +215,11 @@ public class RegistroMigradoBean extends BaseEjbJPA<RegistroMigrado, Long> imple
     }
 
     @Override
-    public void insertarRegistrosLopdMigrado(Paginacion paginacion, Long idUsuarioEntidad) throws Exception{
+    public void insertarRegistrosLopdMigrado(Paginacion paginacion, Long idUsuarioEntidad) throws Exception {
 
         UsuarioEntidad usuarioEntidad = usuarioEntidadEjb.findById(idUsuarioEntidad);
 
-        for (int i = 0; i<paginacion.getListado().size(); i++){
+        for (int i = 0; i < paginacion.getListado().size(); i++) {
             RegistroMigrado registroMigrado = (RegistroMigrado) paginacion.getListado().get(i);
             RegistroLopdMigrado registroLopdMigrado = new RegistroLopdMigrado();
             registroLopdMigrado.setRegistroMigrado(registroMigrado);
@@ -214,9 +232,9 @@ public class RegistroMigradoBean extends BaseEjbJPA<RegistroMigrado, Long> imple
     }
 
     @Override
-    public Integer eliminarByEntidad(Long idEntidad) throws Exception{
+    public Integer eliminarByEntidad(Long idEntidad) throws Exception {
 
-        List<?> tipos = em.createQuery("Select distinct(id) from RegistroMigrado where entidad.id =:idEntidad").setParameter("idEntidad",idEntidad).getResultList();
+        List<?> tipos = em.createQuery("Select distinct(id) from RegistroMigrado where entidad.id =:idEntidad").setParameter("idEntidad", idEntidad).getResultList();
 
         for (Object id : tipos) {
             remove(findById((Long) id));

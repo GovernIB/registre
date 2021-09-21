@@ -1,10 +1,10 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.CodigoAsunto;
-import org.jboss.ejb3.annotation.SecurityDomain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -18,7 +18,7 @@ import java.util.List;
  * @author mgonzalez
  */
 @Stateless(name = "CodigoAsuntoEJB")
-@SecurityDomain("seycon")
+@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI", "RWE_WS_ENTRADA", "RWE_WS_SALIDA"})
 public class CodigoAsuntoBean extends BaseEjbJPA<CodigoAsunto, Long> implements CodigoAsuntoLocal {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
@@ -26,8 +26,8 @@ public class CodigoAsuntoBean extends BaseEjbJPA<CodigoAsunto, Long> implements 
     @PersistenceContext(unitName = "regweb3")
     private EntityManager em;
 
-    @EJB  private TipoAsuntoLocal tipoAsuntoEjb;
-    @EJB  private EntidadLocal entidadEjb;
+    @EJB private TipoAsuntoLocal tipoAsuntoEjb;
+    @EJB private EntidadLocal entidadEjb;
 
 
     @Override
@@ -100,7 +100,7 @@ public class CodigoAsuntoBean extends BaseEjbJPA<CodigoAsunto, Long> implements 
         Query q = em.createQuery("Select count(codigoAsunto.id) from CodigoAsunto as codigoAsunto " +
                 "where codigoAsunto.entidad.id = :idEntidad");
 
-        q.setParameter("idEntidad",idEntidad);
+        q.setParameter("idEntidad", idEntidad);
         q.setHint("org.hibernate.readOnly", true);
 
         return (Long) q.getSingleResult();
@@ -122,10 +122,10 @@ public class CodigoAsuntoBean extends BaseEjbJPA<CodigoAsunto, Long> implements 
     @SuppressWarnings(value = "unchecked")
     public List<CodigoAsunto> getActivosEntidad(Long idEntidad) throws Exception {
 
-        Query q =  em.createQuery("Select codigoAsunto from CodigoAsunto as codigoAsunto where codigoAsunto.activo = true " +
+        Query q = em.createQuery("Select codigoAsunto from CodigoAsunto as codigoAsunto where codigoAsunto.activo = true " +
                 "and codigoAsunto.entidad.id = :idEntidad order by codigoAsunto.id ");
 
-        q.setParameter("idEntidad",idEntidad);
+        q.setParameter("idEntidad", idEntidad);
         q.setHint("org.hibernate.readOnly", true);
         return q.getResultList();
     }

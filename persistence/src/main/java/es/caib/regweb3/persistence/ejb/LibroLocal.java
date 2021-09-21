@@ -2,7 +2,6 @@ package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.Libro;
 
-import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
 import java.util.List;
 
@@ -13,13 +12,13 @@ import java.util.List;
  * Date: 16/01/14
  */
 @Local
-@RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI","RWE_WS_ENTRADA","RWE_WS_SALIDA"})
 public interface LibroLocal extends BaseEjb<Libro, Long> {
 
     String JNDI_NAME = "java:app/regweb3-persistence/LibroEJB";
 
     /**
      * Devuelve los Libros activos relacionados con algún Organismos de la Entidad
+     *
      * @param idEntidad
      * @return
      * @throws Exception
@@ -29,6 +28,7 @@ public interface LibroLocal extends BaseEjb<Libro, Long> {
 
     /**
      * Retorna true o false en función de si ya existe algún Libro con ese código
+     *
      * @param codigo
      * @param idLibro
      * @return
@@ -38,6 +38,7 @@ public interface LibroLocal extends BaseEjb<Libro, Long> {
 
     /**
      * Retorna un Libro a partir de su código
+     *
      * @param codigo
      * @return
      * @throws Exception
@@ -46,6 +47,7 @@ public interface LibroLocal extends BaseEjb<Libro, Long> {
 
     /**
      * Retorna un Libro a partir de su código y la Entidad a la que pertenece
+     *
      * @param codigo
      * @param idEntidad
      * @return
@@ -55,6 +57,7 @@ public interface LibroLocal extends BaseEjb<Libro, Long> {
 
     /**
      * Comprueba si un Organimo tiene un Libro activo
+     *
      * @param idOrganismo
      * @return
      * @throws Exception
@@ -63,6 +66,7 @@ public interface LibroLocal extends BaseEjb<Libro, Long> {
 
     /**
      * Lista los Libros activos de un Organismo
+     *
      * @param idOrganismo
      * @return
      * @throws Exception
@@ -72,6 +76,7 @@ public interface LibroLocal extends BaseEjb<Libro, Long> {
 
     /**
      * Lista los Libros activos de un Organismo de otra entidad
+     *
      * @param codigoOrganismo
      * @param idEntidad
      * @return
@@ -81,6 +86,7 @@ public interface LibroLocal extends BaseEjb<Libro, Long> {
 
     /**
      * Lista los Libros de un Organismo
+     *
      * @param idOrganismo
      * @return
      * @throws Exception
@@ -89,6 +95,7 @@ public interface LibroLocal extends BaseEjb<Libro, Long> {
 
     /**
      * Retorna todos los Libros de relacionados con algún Organismos de la Entidad, activo o no
+     *
      * @param idEntidad
      * @return
      * @throws Exception
@@ -97,6 +104,7 @@ public interface LibroLocal extends BaseEjb<Libro, Long> {
 
     /**
      * Pone a 0 todos los contadores de un Libro
+     *
      * @param idLibro
      * @throws Exception
      */
@@ -104,6 +112,7 @@ public interface LibroLocal extends BaseEjb<Libro, Long> {
 
     /**
      * Crea un libro y le asocia sus contadores
+     *
      * @param libro
      * @return
      * @throws Exception
@@ -112,6 +121,7 @@ public interface LibroLocal extends BaseEjb<Libro, Long> {
 
     /**
      * Elimina los Libros de una Entidad
+     *
      * @param idEntidad
      * @return
      * @throws Exception
