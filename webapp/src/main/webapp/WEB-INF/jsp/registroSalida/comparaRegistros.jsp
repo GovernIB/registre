@@ -266,34 +266,19 @@
                                                </div>
                                                <!-- Pone el color que corresponde con el el Tipo de documentacion elegido -->
                                                <c:if test="${reOriginal.registroDetalle.tipoDocumentacionFisica==RegwebConstantes.TIPO_DOCFISICA_ACOMPANYA_DOC_REQUERIDA}">
-                                                    <div class="col-xs-8 text-vermell" id="tipoDocumentacionFisica_${status.count}_${reOriginal.registroDetalle.tipoDocumentacionFisica}">
-                                                        <script type="text/javascript">
-                                                            $(document).ready(function(){
-                                                                obtenerElementoTraducido('<c:url value="/rest/obtenerTipoDocumentacionFisica"/>', '${reOriginal.registroDetalle.tipoDocumentacionFisica}', 'tipoDocumentacionFisica_${status.count}_${reOriginal.registroDetalle.tipoDocumentacionFisica}');
-                                                            });
-                                                        </script>
-
-                                                    </div>
+                                                   <div class="col-xs-8 text-vermell" id="tipoDocumentacionFisica_${status.count}_${reOriginal.registroDetalle.tipoDocumentacionFisica}">
+                                                       <spring:message code="tipoDocumentacionFisica.${reOriginal.registroDetalle.tipoDocumentacionFisica}"/>
+                                                   </div>
                                                </c:if>
                                                <c:if test="${reOriginal.registroDetalle.tipoDocumentacionFisica==RegwebConstantes.TIPO_DOCFISICA_ACOMPANYA_DOC_COMPLEMENTARIA}">
-                                                    <div class="col-xs-8 text-taronja" id="tipoDocumentacionFisica_${status.count}_${reOriginal.registroDetalle.tipoDocumentacionFisica}">
-                                                        <script type="text/javascript">
-                                                            $(document).ready(function(){
-                                                                obtenerElementoTraducido('<c:url value="/rest/obtenerTipoDocumentacionFisica"/>', '${reOriginal.registroDetalle.tipoDocumentacionFisica}', 'tipoDocumentacionFisica_${status.count}_${reOriginal.registroDetalle.tipoDocumentacionFisica}');
-                                                            });
-                                                        </script>
-
-                                                    </div>
+                                                   <div class="col-xs-8 text-taronja" id="tipoDocumentacionFisica_${status.count}_${reOriginal.registroDetalle.tipoDocumentacionFisica}">
+                                                       <spring:message code="tipoDocumentacionFisica.${reOriginal.registroDetalle.tipoDocumentacionFisica}"/>
+                                                   </div>
                                                </c:if>
                                                <c:if test="${reOriginal.registroDetalle.tipoDocumentacionFisica==RegwebConstantes.TIPO_DOCFISICA_NO_ACOMPANYA_DOC}">
-                                                    <div class="col-xs-8 text-verd" id="tipoDocumentacionFisica_${status.count}_${reOriginal.registroDetalle.tipoDocumentacionFisica}">
-                                                        <script type="text/javascript">
-                                                            $(document).ready(function(){
-                                                                obtenerElementoTraducido('<c:url value="/rest/obtenerTipoDocumentacionFisica"/>', '${reOriginal.registroDetalle.tipoDocumentacionFisica}', 'tipoDocumentacionFisica_${status.count}_${reOriginal.registroDetalle.tipoDocumentacionFisica}');
-                                                            });
-                                                        </script>
-
-                                                    </div>
+                                                   <div class="col-xs-8 text-verd" id="tipoDocumentacionFisica_${status.count}_${reOriginal.registroDetalle.tipoDocumentacionFisica}">
+                                                       <spring:message code="tipoDocumentacionFisica.${reOriginal.registroDetalle.tipoDocumentacionFisica}"/>
+                                                   </div>
                                                </c:if>
                                            </div>
                                        </c:if>
@@ -372,12 +357,7 @@
                                                    <label><spring:message code="registroEntrada.transporte"/></label>
                                                </div>
                                                <div class="col-xs-6" id="transporte_${status.count}_${reOriginal.registroDetalle.transporte}">
-                                                   <script type="text/javascript">
-                                                       $(document).ready(function(){
-                                                           obtenerElementoTraducido('<c:url value="/rest/obtenerTransporte"/>', '${reOriginal.registroDetalle.transporte}', 'transporte_${status.count}_${reOriginal.registroDetalle.transporte}');
-                                                       });
-                                                   </script>
-
+                                                   <spring:message code="transporte.0${reOriginal.registroDetalle.transporte}" />
                                                </div>
                                                <div class="col-xs-4">${reOriginal.registroDetalle.numeroTransporte}</div>
                                            </div>
