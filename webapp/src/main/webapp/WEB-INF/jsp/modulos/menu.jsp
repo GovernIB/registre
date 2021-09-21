@@ -83,7 +83,7 @@
 
                 <%--MENÚ ENTIDADES ADMINISTRADAS--%>
                 <c:if test="${loginInfo.rolActivo.nombre == 'RWE_ADMIN' || loginInfo.rolActivo.nombre == 'RWE_USUARI'}">
-                    <sec:authorize access="hasAnyRole('RWE_ADMIN','RWE_USUARI')">
+                    <sec:authorize access="hasAnyAuthority('RWE_ADMIN','RWE_USUARI')">
                         <c:if test="${fn:length(loginInfo.entidades) > 1}">
 
                             <li class="dropdown">
@@ -104,7 +104,7 @@
 
                 <%--MENÚ OFICINAS--%>
                 <c:if test="${loginInfo.rolActivo.nombre == 'RWE_USUARI'}">
-                    <sec:authorize access="hasRole('RWE_USUARI')">
+                    <sec:authorize access="hasAuthority('RWE_USUARI')">
                         <c:if test="${fn:length(loginInfo.oficinasAcceso) > 1}">
 
                             <li class="dropdown">
@@ -159,13 +159,13 @@
 
                 <%--MENÚ USUARIO REGISTRO--%>
                 <c:if test="${loginInfo.rolActivo.nombre == 'RWE_USUARI'}">
-                    <sec:authorize access="hasRole('RWE_USUARI')">
+                    <sec:authorize access="hasAuthority('RWE_USUARI')">
                         <c:import url="/WEB-INF/jsp/modulos/menuUsuario.jsp"/>
                     </sec:authorize>
                 </c:if>
 
                 <%--MENÚ ADMINISTRADOR ENTIDAD--%>
-                <sec:authorize access="hasRole('RWE_ADMIN')">
+                <sec:authorize access="hasAuthority('RWE_ADMIN')">
                     <c:if test="${loginInfo.rolActivo.nombre == 'RWE_ADMIN'}">
                         <c:import url="/WEB-INF/jsp/modulos/menuAdminEntidad.jsp"/>
                     </c:if>
