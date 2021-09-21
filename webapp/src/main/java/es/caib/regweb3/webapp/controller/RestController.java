@@ -97,17 +97,6 @@ public class RestController extends BaseController {
     }
 
     /**
-     * Obtiene el nombre traducido de un TipoDocumentacionFisica.
-     */
-    @RequestMapping(value = "/obtenerTipoDocumentacionFisica", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
-    @ResponseBody
-    public String obtenerTipoDocumentacionFisica(@RequestParam Long id) throws Exception {
-
-        return I18NUtils.tradueix("tipoDocumentacionFisica." + id);
-
-    }
-
-    /**
      * Obtiene el nombre traducido de un Transporte.
      */
     @RequestMapping(value = "/obtenerTransporte", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
