@@ -141,7 +141,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
                 anexoFull.setSignatureFileDelete(false);
 
             //Obtenemos las metadatas de escaneo del anexo si no es justificante
-            if(!anexo.isJustificante()) {
+            if(anexo.getScan()) {
                 List<Metadata> metadataList = new ArrayList<>();
                 //Profundidad color
                 Metadata profundidadColor = custody.getOnlyOneMetadata(custodyID, MetadataConstants.EEMGDE_PROFUNDIDAD_COLOR);
@@ -238,7 +238,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
                 anexoFull.setSignatureFileDelete(false);
 
                 //cargamos los metadatos de escaneo
-                if(!anexo.isJustificante()) {
+                if(anexo.getScan()) {
                     List<Metadata> metadataList = new ArrayList<>();
 
                     //Profundidad color
