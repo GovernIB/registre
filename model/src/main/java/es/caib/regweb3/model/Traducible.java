@@ -1,7 +1,6 @@
 package es.caib.regweb3.model;
 
 import es.caib.regweb3.utils.RegwebConstantes;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import javax.xml.bind.annotation.XmlTransient;
 import java.io.Serializable;
@@ -18,8 +17,8 @@ import java.util.Set;
 @XmlTransient
 public class Traducible implements Serializable {
 
-    @ConfigProperty(name = "es.caib.regweb3.defaultlanguage", defaultValue = RegwebConstantes.IDIOMA_CATALAN_CODIGO)
-    private String defautLanguage;
+    //todo añadir referencia Propiedades.getDefaultLanguage
+    private final String defautLanguage = RegwebConstantes.IDIOMA_CATALAN_CODIGO;
 
     @XmlTransient
     protected Map<String, Traduccion> traducciones = new HashMap<String, Traduccion>();
