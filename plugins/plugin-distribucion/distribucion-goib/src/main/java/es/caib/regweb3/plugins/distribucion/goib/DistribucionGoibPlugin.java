@@ -397,7 +397,7 @@ public class DistribucionGoibPlugin extends AbstractPluginProperties implements 
         //Metadatos de escaneo
         List<Metadata> metadadesAnexo = anexoFull.getMetadatas();
         // De momento solo se pueden enviar estos 2 metadatos
-        if(metadadesAnexo!= null){
+        if(metadadesAnexo!= null && anexoFull.getAnexo().getScan()){
             RegistreAnnex.MetaDades metaDades = new RegistreAnnex.MetaDades();
             for(Metadata metadata: metadadesAnexo){
                 if(metadata.getKey().equals(MetadataConstants.EEMGDE_RESOLUCION)){
