@@ -222,42 +222,6 @@
                         <executions>
 
                             <execution>
-                                <id>generate-wsdl-RegWebHelloWorldWs</id>
-                                <phase>generate-sources</phase>
-                                <configuration>
-                                    <className>es.caib.regweb3.ws.v3.impl.RegWebHelloWorldWs</className>
-                                    <genWsdl>true</genWsdl>
-                                    <verbose>true</verbose>
-                                    <frontend>jaxws</frontend>
-                                    <databinding>jaxb</databinding>
-                                    <outputFile>${basedir}/src/main/resources/wsdl/RegWebHelloWorld.wsdl</outputFile>
-                                    <argline>-s ${basedir}/code -portname RegWebHelloWorldWs -address
-                                        http://localhost:8080/regweb3/ws/v3/RegWebHelloWorld
-                                    </argline>
-                                </configuration>
-                                <goals>
-                                    <goal>java2ws</goal>
-                                </goals>
-                            </execution>
-                            <execution>
-                                <id>generate-wsdl-RegWebHelloWorldWithSecurityWs</id>
-                                <phase>generate-sources</phase>
-                                <configuration>
-                                    <className>es.caib.regweb3.ws.v3.impl.RegWebHelloWorldWithSecurityWs</className>
-                                    <genWsdl>true</genWsdl>
-                                    <verbose>true</verbose>
-                                    <outputFile>${basedir}/src/main/resources/wsdl/RegWebHelloWorldWithSecurity.wsdl
-                                    </outputFile>
-                                    <argline>-s ${basedir}/code -portname RegWebHelloWorldWithSecurityWs -address
-                                        http://localhost:8080/regweb3/ws/v3/RegWebHelloWorldWithSecurity
-                                    </argline>
-                                </configuration>
-                                <goals>
-                                    <goal>java2ws</goal>
-                                </goals>
-                            </execution>
-
-                            <execution>
                                 <id>generate-wsdl-RegWebInfoWs</id>
                                 <phase>generate-sources</phase>
                                 <configuration>
