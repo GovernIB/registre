@@ -39,6 +39,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
 
     @EJB private CatEstadoEntidadLocal catEstadoEntidadEjb;
     @EJB private LibroLocal libroEjb;
+    @EJB private MultiEntidadLocal multiEntidadEjb;
 
 
     @Override
@@ -400,6 +401,19 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
         }
 
         return null;
+    }
+
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public Organismo findByCodigoByEntidadMultiEntidad(String codigo, Long idEntidad) throws Exception{
+
+        if (multiEntidadEjb.isMultiEntidad()) {
+            return findByCodigoMultiEntidad(codigo);
+        } else {
+            return findByCodigoEntidadLigero(codigo, idEntidad);
+        }
+
     }
 
 
