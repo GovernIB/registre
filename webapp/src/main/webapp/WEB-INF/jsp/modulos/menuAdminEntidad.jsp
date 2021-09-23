@@ -84,9 +84,10 @@
                 <a href="javascript:void(0);"><i class="fa fa-chevron-left"></i> <spring:message code="menu.colas"/></a>
                 <ul class="dropdown-menu">
                     <li><a href="<c:url value="/cola/list/0"/>"><i class="fa fa-sign-out"></i> <spring:message code="cola.tipo.0" /></a></li>
-                    <%if (Configuracio.isCAIB()) {%>
+                    <spring:eval expression="@environment.getProperty('es.caib.regweb3.iscaib')" var="isCaib"/>
+                    <c:if test="${isCaib}">
                         <li><a href="<c:url value="/cola/list/1"/>"><i class="fa fa-file-archive-o"></i> <spring:message code="cola.tipo.1" /></a></li>
-                    <%}%>
+                    </c:if>
                 </ul>
             </li>
             <li class="divider"></li>

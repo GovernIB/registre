@@ -57,6 +57,8 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
+    @Autowired
+    private Propiedades propiedades;
 
     @Resource
     private javax.ejb.SessionContext ejbContext;
@@ -659,7 +661,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
                     registroEntradaEjb.cambiarEstado(registroID, RegwebConstantes.REGISTRO_PENDIENTE_VISAR);
 
                     // Creamos el historico de registro de entrada
-                    historicoRegistroEntradaEjb.crearHistoricoRegistroEntrada(registroEntrada, usuarioEntidad, I18NLogicUtils.tradueix(new Locale(Configuracio.getDefaultLanguage()), "registro.modificacion.anexos"), true);
+                    historicoRegistroEntradaEjb.crearHistoricoRegistroEntrada(registroEntrada, usuarioEntidad, I18NLogicUtils.tradueix(new Locale(propiedades.getDefaultLanguage()), "registro.modificacion.anexos"), true);
                 }
 
             } else {// MODIFICACION DE ANEXO
@@ -669,7 +671,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
                 }
 
                 // Creamos el historico de registro de entrada, siempre creamos histórico independiente de los dias.
-                historicoRegistroEntradaEjb.crearHistoricoRegistroEntrada(registroEntrada, usuarioEntidad, I18NLogicUtils.tradueix(new Locale(Configuracio.getDefaultLanguage()), "registro.modificacion.anexos"), true);
+                historicoRegistroEntradaEjb.crearHistoricoRegistroEntrada(registroEntrada, usuarioEntidad, I18NLogicUtils.tradueix(new Locale(propiedades.getDefaultLanguage()), "registro.modificacion.anexos"), true);
             }
             anexoFull.getAnexo().setRegistroDetalle(registroEntrada.getRegistroDetalle());
 
@@ -686,7 +688,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
                     registroSalidaEjb.cambiarEstado(registroID, RegwebConstantes.REGISTRO_PENDIENTE_VISAR);
 
                     // Creamos el historico de registro de entrada
-                    historicoRegistroSalidaEjb.crearHistoricoRegistroSalida(registroSalida, usuarioEntidad, I18NLogicUtils.tradueix(new Locale(Configuracio.getDefaultLanguage()), "registro.modificacion.anexos"), true);
+                    historicoRegistroSalidaEjb.crearHistoricoRegistroSalida(registroSalida, usuarioEntidad, I18NLogicUtils.tradueix(new Locale(propiedades.getDefaultLanguage()), "registro.modificacion.anexos"), true);
                 }
 
             } else {// MODIFICACION DE ANEXO
@@ -695,7 +697,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
                     registroSalidaEjb.cambiarEstado(registroID, RegwebConstantes.REGISTRO_PENDIENTE_VISAR);
                 }
                 // Creamos el historico de registro de entrada, siempre creamos histórico independiente de los dias.
-                historicoRegistroSalidaEjb.crearHistoricoRegistroSalida(registroSalida, usuarioEntidad, I18NLogicUtils.tradueix(new Locale(Configuracio.getDefaultLanguage()), "registro.modificacion.anexos"), true);
+                historicoRegistroSalidaEjb.crearHistoricoRegistroSalida(registroSalida, usuarioEntidad, I18NLogicUtils.tradueix(new Locale(propiedades.getDefaultLanguage()), "registro.modificacion.anexos"), true);
             }
             anexoFull.getAnexo().setRegistroDetalle(registroSalida.getRegistroDetalle());
         }
@@ -877,7 +879,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
         if (documentCustody != null || signatureCustody != null) {
 
             // Actualitzar Metadades
-            final String lang = Configuracio.getDefaultLanguage();
+            final String lang = propiedades.getDefaultLanguage();
             final Locale loc = new Locale(lang);
             List<Metadata> metadades = new ArrayList<Metadata>();
 

@@ -11,8 +11,8 @@ import es.caib.regweb3.persistence.utils.NumeroRegistro;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.persistence.utils.RegistroUtils;
 import es.caib.regweb3.plugins.postproceso.IPostProcesoPlugin;
-import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.Dir3CaibUtils;
+import es.caib.regweb3.utils.Propiedades;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 import org.fundaciobit.genapp.common.i18n.I18NException;
@@ -21,12 +21,15 @@ import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
 
 import javax.annotation.Resource;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import javax.interceptor.Interceptors;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
@@ -44,11 +47,13 @@ import static es.caib.regweb3.utils.RegwebConstantes.REGISTRO_SALIDA;
 
 @Stateless(name = "RegistroSalidaEJB")
 @RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI", "RWE_WS_ENTRADA", "RWE_WS_SALIDA", "RWE_WS_CIUDADANO"})
-/*@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)*/
-public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
-        implements RegistroSalidaLocal {
+@Interceptors(SpringBeanAutowiringInterceptor.class)
+public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean implements RegistroSalidaLocal {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
+
+    @Autowired
+    private Propiedades propiedades;
 
     @PersistenceContext(unitName = "regweb3")
     private EntityManager em;
@@ -110,7 +115,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
             registroSalida = persist(registroSalida);
 
             //Guardamos el HistorioRegistroSalida
-            historicoRegistroSalidaEjb.crearHistoricoRegistroSalida(registroSalida, usuarioEntidad, I18NLogicUtils.tradueix(new Locale(Configuracio.getDefaultLanguage()), "registro.modificacion.creacion"), false);
+            historicoRegistroSalidaEjb.crearHistoricoRegistroSalida(registroSalida, usuarioEntidad, I18NLogicUtils.tradueix(new Locale(propiedades.getDefaultLanguage()), "registro.modificacion.creacion"), false);
 
             // Procesamos los Interesados
             if (interesados != null && interesados.size() > 0) {
@@ -536,7 +541,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
 
         // Creamos el HistoricoRegistroSalida para la modificación de estado
         historicoRegistroSalidaEjb.crearHistoricoRegistroSalida(registroSalida,
-                usuarioEntidad, I18NLogicUtils.tradueix(new Locale(Configuracio.getDefaultLanguage()), "registro.modificacion.estado"), false);
+                usuarioEntidad, I18NLogicUtils.tradueix(new Locale(propiedades.getDefaultLanguage()), "registro.modificacion.estado"), false);
     }
 
     @Override
