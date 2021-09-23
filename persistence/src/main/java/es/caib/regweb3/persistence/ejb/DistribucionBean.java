@@ -7,7 +7,7 @@ import es.caib.regweb3.persistence.utils.MailUtils;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.persistence.utils.RespuestaDistribucion;
 import es.caib.regweb3.plugins.distribucion.IDistribucionPlugin;
-import es.caib.regweb3.utils.Configuracio;
+import es.caib.regweb3.utils.Propiedades;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 import org.fundaciobit.genapp.common.i18n.I18NException;
@@ -15,12 +15,15 @@ import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.jboss.ejb3.annotation.TransactionTimeout;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
+import javax.interceptor.Interceptors;
 import javax.mail.Message;
 import javax.mail.internet.InternetAddress;
 import java.text.SimpleDateFormat;
@@ -35,9 +38,13 @@ import java.util.Locale;
 @Stateless(name = "DistribucionEJB")
 @RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI", "RWE_WS_ENTRADA", "RWE_WS_SALIDA"})
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+@Interceptors(SpringBeanAutowiringInterceptor.class)
 public class DistribucionBean implements DistribucionLocal {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
+
+    @Autowired
+    private Propiedades propiedades;
 
     @EJB private RegistroEntradaLocal registroEntradaEjb;
     @EJB private JustificanteLocal justificanteEjb;
@@ -109,7 +116,7 @@ public class DistribucionBean implements DistribucionLocal {
 
         // Si no tiene Justificante, lo creamos
         if (!registroEntrada.getRegistroDetalle().getTieneJustificante()) {
-            AnexoFull justificante = justificanteEjb.crearJustificante(registroEntrada.getUsuario(), registroEntrada, RegwebConstantes.REGISTRO_ENTRADA, Configuracio.getDefaultLanguage());
+            AnexoFull justificante = justificanteEjb.crearJustificante(registroEntrada.getUsuario(), registroEntrada, RegwebConstantes.REGISTRO_ENTRADA, propiedades.getDefaultLanguage());
             registroEntrada.getRegistroDetalle().getAnexosFull().add(justificante);
 
             // Si la custodia en diferido está activa, tiene Justificante, pero no está custodiado, no distribuimos!

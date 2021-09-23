@@ -5,7 +5,6 @@ import es.caib.regweb3.model.Plugin;
 import es.caib.regweb3.persistence.ejb.BaseEjbJPA;
 import es.caib.regweb3.persistence.ejb.PluginLocal;
 import es.caib.regweb3.persistence.utils.Paginacion;
-import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.controller.BaseController;
 import es.caib.regweb3.webapp.form.PluginForm;
@@ -238,7 +237,7 @@ public class PluginController extends BaseController {
     public
     Long[] tiposPlugin() throws Exception {
 
-        if(Configuracio.isCAIB()){
+        if(propiedades.isCAIB()){
             return RegwebConstantes.TIPOS_PLUGIN_CAIB;
         }else{
             return RegwebConstantes.TIPOS_PLUGIN;

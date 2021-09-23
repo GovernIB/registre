@@ -3,13 +3,15 @@ package es.caib.regweb3.webapp.interceptor;
 import es.caib.regweb3.model.Descarga;
 import es.caib.regweb3.model.Rol;
 import es.caib.regweb3.persistence.ejb.DescargaLocal;
-import es.caib.regweb3.persistence.utils.FileSystemManager;
+import es.caib.regweb3.utils.Propiedades;
 import es.caib.regweb3.utils.RegwebConstantes;
+import es.caib.regweb3.utils.StringUtils;
 import es.caib.regweb3.webapp.security.LoginInfo;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.ejb.EJB;
@@ -29,6 +31,9 @@ import javax.servlet.http.HttpSession;
 public class EntidadInterceptor extends HandlerInterceptorAdapter {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
+
+    @Autowired
+    private Propiedades propiedades;
 
     @EJB(mappedName = DescargaLocal.JNDI_NAME)
     private DescargaLocal descargaEjb;
@@ -74,7 +79,7 @@ public class EntidadInterceptor extends HandlerInterceptorAdapter {
                     return false;
                 }
                 //comprobar variable archivos path
-                if(FileSystemManager.getArchivosPath()==null && rolActivo.getNombre().equals(RegwebConstantes.RWE_ADMIN)){
+                if(StringUtils.isEmpty(propiedades.getArchivosPath()) && rolActivo.getNombre().equals(RegwebConstantes.RWE_ADMIN)){
                     log.info("Error, editar entidad");
                     Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.archivospath"));
                     response.sendRedirect("/regweb3/aviso");

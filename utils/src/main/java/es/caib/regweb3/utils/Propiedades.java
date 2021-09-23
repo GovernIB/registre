@@ -25,15 +25,15 @@ public class Propiedades {
     private String archivosPath;
 
 
-    public String getSirServerbase() {
+    public String getSirServerBase() {
         return sirServerbase;
     }
 
-    public Boolean getCaib() {
+    public Boolean isCAIB() {
         return isCaib;
     }
 
-    public Boolean getShowtimestamp() {
+    public Boolean showTimeStamp() {
         return showtimestamp;
     }
 

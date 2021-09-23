@@ -260,7 +260,8 @@
                                         <c:if test="${(registro.estado == RegwebConstantes.REGISTRO_VALIDO || registro.estado == RegwebConstantes.REGISTRO_RESERVA || registro.estado == RegwebConstantes.REGISTRO_PENDIENTE_VISAR) && puedeEditar && !anexoFull.anexo.confidencial}">
 
                                             <%--Instalación estándar --%>
-                                            <%if (!Configuracio.isCAIB()) {%>
+                                            <spring:eval expression="@environment.getProperty('es.caib.regweb3.iscaib')" var="isCaib"/>
+                                            <c:if test="${not isCaib}">
 
                                                 <a class="btn btn-warning btn-sm" data-toggle="modal" data-target="#modalAnexos"
                                                    onclick="editarAnexoFull('${anexoFull.anexo.id}','${registro.id}','${registro.registroDetalle.id}','${param.tipoRegistro}')"
@@ -268,10 +269,10 @@
                                                 <a class="btn btn-danger btn-default btn-sm"
                                                    onclick="eliminarAnexo('${anexoFull.anexo.id}','${registro.id}','${registro.registroDetalle.id}','${param.tipoRegistro}', '<spring:message code="anexo.confirmar.eliminar" javaScriptEscape='true'/>')" href="#"
                                                    title="Eliminar"><span class="fa fa-eraser"></span></a>
-                                            <%}%>
+                                            </c:if>
 
                                             <%--Si se trata de una instalación CAIB, comprobamos si el usuario tiene el rol DIB_USER--%>
-                                            <%if (Configuracio.isCAIB()) {%>
+                                            <c:if test="${isCaib}">
                                                 <%--Si el anexo es copia auténtica y el usuario tiene el rol DIB_USER--%>
                                                 <c:if test="${anexoFull.anexo.validezDocumento == RegwebConstantes.TIPOVALIDEZDOCUMENTO_COPIA_ORIGINAL && loginInfo.usuarioAutenticado.dib_user}">
                                                     <a class="btn btn-warning btn-sm" data-toggle="modal" data-target="#modalAnexos"
@@ -296,7 +297,7 @@
                                                        onclick="eliminarAnexo('${anexoFull.anexo.id}','${registro.id}','${registro.registroDetalle.id}','${param.tipoRegistro}', '<spring:message code="anexo.confirmar.eliminar" javaScriptEscape='true'/>')" href="#"
                                                        title="Eliminar"><span class="fa fa-eraser"></span></a>
                                                 </c:if>
-                                            <%}%>
+                                            </c:if>
 
                                         </c:if>
                                         <c:if test="${(registro.estado != RegwebConstantes.REGISTRO_VALIDO && registro.estado != RegwebConstantes.REGISTRO_RESERVA && registro.estado != RegwebConstantes.REGISTRO_PENDIENTE_VISAR) || !puedeEditar || anexoFull.anexo.confidencial}">

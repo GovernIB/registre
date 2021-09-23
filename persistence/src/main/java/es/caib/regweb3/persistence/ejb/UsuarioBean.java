@@ -4,7 +4,7 @@ import es.caib.regweb3.model.Rol;
 import es.caib.regweb3.model.Usuario;
 import es.caib.regweb3.persistence.utils.DataBaseUtils;
 import es.caib.regweb3.persistence.utils.Paginacion;
-import es.caib.regweb3.utils.Configuracio;
+import es.caib.regweb3.utils.Propiedades;
 import es.caib.regweb3.utils.RegwebConstantes;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.pluginsib.userinformation.IUserInformationPlugin;
@@ -12,10 +12,13 @@ import org.fundaciobit.pluginsib.userinformation.RolesInfo;
 import org.fundaciobit.pluginsib.userinformation.UserInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import javax.interceptor.Interceptors;
 import javax.naming.InitialContext;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -31,9 +34,13 @@ import java.util.*;
 
 @Stateless(name = "UsuarioEJB")
 @RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI", "RWE_WS_ENTRADA", "RWE_WS_SALIDA", "RWE_WS_CIUDADANO"})
+@Interceptors(SpringBeanAutowiringInterceptor.class)
 public class UsuarioBean extends BaseEjbJPA<Usuario, Long> implements UsuarioLocal {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
+
+    @Autowired
+    private Propiedades propiedades;
 
     @PersistenceContext(unitName = "regweb3")
     private EntityManager em;
@@ -105,7 +112,7 @@ public class UsuarioBean extends BaseEjbJPA<Usuario, Long> implements UsuarioLoc
                 usuario.setNombre(regwebUserInfo.getName());
 
                 //Idioma por defecto
-                Long idioma = RegwebConstantes.IDIOMA_ID_BY_CODIGO.get(Configuracio.getDefaultLanguage());
+                Long idioma = RegwebConstantes.IDIOMA_ID_BY_CODIGO.get(propiedades.getDefaultLanguage());
                 usuario.setIdioma(idioma);
 
                 if (regwebUserInfo.getSurname1() != null) {
@@ -302,7 +309,7 @@ public class UsuarioBean extends BaseEjbJPA<Usuario, Long> implements UsuarioLoc
 
         Query q = em.createQuery("update from Usuario set idioma = :idioma where idioma is null");
 
-        q.setParameter("idioma", RegwebConstantes.IDIOMA_ID_BY_CODIGO.get(Configuracio.getDefaultLanguage()));
+        q.setParameter("idioma", RegwebConstantes.IDIOMA_ID_BY_CODIGO.get(propiedades.getDefaultLanguage()));
 
         return q.executeUpdate();
 

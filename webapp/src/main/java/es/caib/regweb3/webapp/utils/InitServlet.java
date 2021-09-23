@@ -1,11 +1,12 @@
 package es.caib.regweb3.webapp.utils;
 
 import es.caib.regweb3.persistence.utils.I18NLogicUtils;
-import es.caib.regweb3.utils.Configuracio;
+import es.caib.regweb3.utils.Propiedades;
 import es.caib.regweb3.utils.Versio;
 import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.stereotype.Component;
 
@@ -24,6 +25,9 @@ import java.util.Set;
  */
 @Component
 public class InitServlet extends HttpServlet {
+
+  @Autowired
+  private Propiedades propiedades;
 
   protected final Logger log = LoggerFactory.getLogger(getClass());
   
@@ -69,7 +73,7 @@ public class InitServlet extends HttpServlet {
 
 
     // Mostrar Versió
-    String ver = Versio.VERSIO + (Configuracio.isCAIB()?"-caib" : "");
+    String ver = Versio.VERSIO + (propiedades.isCAIB()?"-caib" : "");
     try {
       log.info("RegWeb3 Version: " + ver);
     } catch (Throwable e) {

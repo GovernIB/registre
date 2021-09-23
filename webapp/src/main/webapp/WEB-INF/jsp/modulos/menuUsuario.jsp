@@ -36,10 +36,11 @@
         <li class="submenu-complet"><a href="<c:url value="/registroEntrada/pendientesDistribuir/list/1"/>"><i class="fa fa-sign-out"></i> <spring:message code="registroEntrada.pendientesDistribuir"/></a></li>
         <li class="submenu-complet"><a href="<c:url value="/registroEntrada/reservas/list/1"/>"><i class="fa fa-file-text-o"></i> <spring:message code="registroEntrada.reservas"/></a></li>
         <li class="submenu-complet"><a href="<c:url value="/registroEntrada/pendientesVisar/list/1"/>"><i class="fa fa-check-square-o"></i> <spring:message code="registroEntrada.pendientesVisar"/></a></li>
-        <%if (Configuracio.isCAIB()) {%>
+        <spring:eval expression="@environment.getProperty('es.caib.regweb3.iscaib')" var="isCaib"/>
+        <c:if test="${isCaib}">
             <li class="divider"></li>
-            <li class="submenu-complet"><a href="<%=Configuracio.getUrlPreregistre()%>" target="_blank"><i class="fa fa-external-link"></i> <spring:message code="regweb.preregistro.caib"/></a></li>
-        <%}%>
+            <li class="submenu-complet"><a href="<spring:eval expression="@environment.getProperty('es.caib.regweb3.preregistre')" var="urlPreregistre"/>" target="_blank"><i class="fa fa-external-link"></i> <spring:message code="regweb.preregistro.caib"/></a></li>
+        </c:if>
 
     </ul>
 </div>

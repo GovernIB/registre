@@ -20,6 +20,8 @@ import es.caib.regweb3.webapp.form.*;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import org.dom4j.Document;
 import org.fundaciobit.genapp.common.i18n.I18NException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -37,6 +39,8 @@ import java.util.List;
 @Controller
 @RequestMapping(value = "/sir")
 public class SirController extends BaseController {
+
+    protected final Logger log = LoggerFactory.getLogger(getClass());
 
     @EJB(mappedName = OficioRemisionLocal.JNDI_NAME)
     private OficioRemisionLocal oficioRemisionEjb;
@@ -653,7 +657,7 @@ public class SirController extends BaseController {
         Integer huerfanos = 0;
 
         try {
-            File directorio = FileSystemManager.getArchivosPath();
+            File directorio = new File(propiedades.getArchivosPath());
             List<Long> archivos = archivoEjb.getAllLigero();
 
             if(directorio != null){
@@ -700,7 +704,7 @@ public class SirController extends BaseController {
         Integer count = 0;
 
         try {
-            File directorio = FileSystemManager.getArchivosPath();
+            File directorio = new File(propiedades.getArchivosPath());
             List<Long> archivos = archivoEjb.getAllLigero();
 
             if(directorio != null){

@@ -3,10 +3,10 @@ package es.caib.regweb3.webapp.interceptor;
 import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.model.Usuario;
 import es.caib.regweb3.persistence.ejb.*;
-import es.caib.regweb3.persistence.utils.FileSystemManager;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.utils.Propiedades;
 import es.caib.regweb3.utils.RegwebConstantes;
+import es.caib.regweb3.utils.StringUtils;
 import es.caib.regweb3.webapp.security.LoginInfo;
 import es.caib.regweb3.webapp.utils.LoginService;
 import es.caib.regweb3.webapp.utils.Mensaje;
@@ -222,7 +222,7 @@ public class InicioInterceptor extends HandlerInterceptorAdapter {
                             entidadEjb.marcarEntidadMantenimiento(entidadActiva.getId(), true);
                         }
                         // Sir ServerBAse
-                        if (entidadActiva.getSir() && propiedades.getSirServerbase() == null) {
+                        if (entidadActiva.getSir() && propiedades.getSirServerBase() == null) {
                             log.info("Error, falta propiedad sirserverbase");
                             Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.sirserverbase"));
                             entidadEjb.marcarEntidadMantenimiento(entidadActiva.getId(), true);
@@ -267,7 +267,7 @@ public class InicioInterceptor extends HandlerInterceptorAdapter {
                     case RegwebConstantes.RWE_SUPERADMIN:
 
                         //Validamos variable es.caib.regweb3.archivos.path
-                        if (request.getRequestURI().equals("/regweb3/configuracion/editar") && FileSystemManager.getArchivosPath() == null) {
+                        if (request.getRequestURI().equals("/regweb3/configuracion/editar") && StringUtils.isEmpty(propiedades.getArchivosPath())) {
                             log.info("Error, editar entidad");
                             Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.archivospath"));
                             response.sendRedirect("/regweb3/aviso");

@@ -2,9 +2,10 @@ package es.caib.regweb3.webapp.scheduler;
 
 
 import es.caib.regweb3.persistence.ejb.SchedulerLocal;
-import es.caib.regweb3.utils.Configuracio;
+import es.caib.regweb3.utils.Propiedades;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,9 @@ import javax.ejb.EJB;
 public class Regweb3Scheduler {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
+
+    @Autowired
+    private Propiedades propiedades;
 
     @EJB(mappedName = SchedulerLocal.JNDI_NAME)
     private SchedulerLocal schedulerEjb;
@@ -223,7 +227,7 @@ public class Regweb3Scheduler {
     public void cerrarExpedientes(){
         try {
 
-            if(Configuracio.isCAIB()){ // Solo si es una instalación GOIB
+            if(propiedades.isCAIB()){ // Solo si es una instalación GOIB
                 schedulerEjb.cerrarExpedientes();
             }
 
