@@ -168,6 +168,15 @@ public interface OrganismoLocal extends BaseEjb<Organismo, Long> {
     Organismo findByCodigoMultiEntidad(String codigo) throws Exception;
 
     /**
+     * Obtiene un organismo distinguiendo que mètodo usar en función de si la instancia es multientidad o no.
+     * @param codigo
+     * @param idEntidad
+     * @return
+     * @throws Exception
+     */
+    public Organismo findByCodigoByEntidadMultiEntidad(String codigo, Long idEntidad) throws Exception;
+
+    /**
      * Comprueba si el Organismo indicado es gestionado por REGWEB3
      *
      * @param codigo
