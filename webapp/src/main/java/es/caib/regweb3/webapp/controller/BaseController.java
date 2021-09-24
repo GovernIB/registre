@@ -4,6 +4,8 @@ import es.caib.regweb3.model.*;
 import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.utils.Propiedades;
 import es.caib.regweb3.utils.RegwebConstantes;
+import es.caib.regweb3.utils.TimeStamp;
+import es.caib.regweb3.utils.Versio;
 import es.caib.regweb3.webapp.security.LoginInfo;
 import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
 import org.slf4j.Logger;
@@ -535,12 +537,16 @@ public class BaseController {
     }
 
     @ModelAttribute("tiposIntegracion")
-    public
-    Long[] tiposIntegracion() {
+    public Long[] tiposIntegracion() {
         if(propiedades.isCAIB()){
             return RegwebConstantes.INTEGRACION_TIPOS_CAIB;
         }else{
             return RegwebConstantes.INTEGRACION_TIPOS;
         }
+    }
+
+    @ModelAttribute("version")
+    public String version() {
+        return Versio.VERSIO + (propiedades.isCAIB()?"-caib":"") + " " + (propiedades.showTimeStamp()? TimeStamp.TIMESTAMP : "");
     }
 }
