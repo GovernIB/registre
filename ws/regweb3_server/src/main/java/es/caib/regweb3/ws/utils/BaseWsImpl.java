@@ -1,6 +1,5 @@
 package es.caib.regweb3.ws.utils;
 
-import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.Versio;
 import org.slf4j.Logger;
@@ -25,7 +24,7 @@ public class BaseWsImpl implements RegwebConstantes {
 
     @WebMethod
     public String getVersion() {
-        return Versio.VERSIO + (Configuracio.isCAIB() ? "-caib" : "");
+        return Versio.VERSIO;
     }
 
 
