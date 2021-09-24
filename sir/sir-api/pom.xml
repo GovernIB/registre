@@ -12,10 +12,9 @@
 
     <artifactId>regweb3-sir-api</artifactId>
     <version>3.3.0</version>
-    <packaging>jar</packaging>
+    <packaging>ejb</packaging>
 
     <name>RegWeb3 - SIR - API</name>
-
 
     <build>
 
