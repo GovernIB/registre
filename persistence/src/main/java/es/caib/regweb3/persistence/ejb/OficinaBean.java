@@ -45,6 +45,9 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
     private CatServicioLocal catServicioEjb;
     @EJB
     private OrganismoLocal organismoEjb;
+    @EJB
+    private MultiEntidadLocal multiEntidadEjb;
+
 
 
     @Override
@@ -131,6 +134,16 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
         }
 
         return null;
+    }
+
+
+    @Override
+    public Oficina findByCodigoByEntidadMultiEntidad(String codigo, Long idEntidad) throws Exception{
+        if(multiEntidadEjb.isMultiEntidad()){
+            return findByCodigoMultiEntidad(codigo);
+        }else{
+            return findByCodigoEntidad(codigo, idEntidad);
+        }
     }
 
 
