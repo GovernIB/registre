@@ -165,6 +165,15 @@ public interface OrganismoLocal extends BaseEjb<Organismo, Long> {
      */
     Organismo findByCodigoMultiEntidad(String codigo) throws Exception;
 
+
+    /**
+     * Método que retorna todos los organismos de una entidad menos aquellos que les da soporte otra entidad en un entorno multientidad
+     * @param idEntidad
+     * @return
+     * @throws Exception
+     */
+    List<Organismo> getAllByEntidadMultiEntidad(Long idEntidad) throws Exception;
+
     /**
      * Obtiene un organismo distinguiendo que mètodo usar en función de si la instancia es multientidad o no.
      * @param codigo

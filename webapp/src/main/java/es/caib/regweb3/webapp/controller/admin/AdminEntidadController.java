@@ -72,6 +72,9 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
     @EJB(mappedName = "regweb3/InteresadoEJB/local")
     private InteresadoLocal interesadoEjb;
 
+    @EJB(mappedName = "regweb3/MultiEntidadEJB/local")
+    private MultiEntidadLocal multiEntidadEjb;
+
 
     /**
      * Listado de registros de entrada
@@ -89,7 +92,12 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
 
         model.addAttribute("registroEntradaBusqueda", registroEntradaBusqueda);
         model.addAttribute("organosOrigen", organismoEjb.getPermitirUsuarios(entidadActiva.getId()));
-        model.addAttribute("organosDestino", organismoEjb.getAllByEntidad(entidadActiva.getId()));
+        if(multiEntidadEjb.isMultiEntidad()) {
+            log.info("Entro en multientidad");
+            model.addAttribute("organosDestino", organismoEjb.getAllByEntidadMultiEntidad(entidadActiva.getId()));
+        }else{
+            model.addAttribute("organosDestino", organismoEjb.getAllByEntidad(entidadActiva.getId()));
+        }
         model.addAttribute("oficinasRegistro",  oficinaEjb.findByEntidadByEstado(entidadActiva.getId(), RegwebConstantes.ESTADO_ENTIDAD_VIGENTE));
 
         // Obtenemos los usuarios de la Entidad
@@ -109,7 +117,13 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
         Entidad entidadActiva = getEntidadActiva(request);
 
         List<Organismo> organosOrigen = organismoEjb.getPermitirUsuarios(entidadActiva.getId());
-        List<Organismo> organosDestino = organismoEjb.getAllByEntidad(entidadActiva.getId());
+        List<Organismo> organosDestino;
+        if(multiEntidadEjb.isMultiEntidad()) {
+            log.info("Entro en multientidad");
+            organosDestino = organismoEjb.getAllByEntidadMultiEntidad(entidadActiva.getId());
+        }else{
+            organosDestino = organismoEjb.getAllByEntidad(entidadActiva.getId());
+        }
         List<Oficina> oficinasRegistro = oficinaEjb.findByEntidadByEstado(entidadActiva.getId(),RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
         List<UsuarioEntidad> usuariosEntidad = usuarioEntidadEjb.findByEntidad(entidadActiva.getId());
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
@@ -159,7 +173,8 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
 
         // Comprobamos si el Organismo destinatario es externo, para añadirlo a la lista.
         if (StringUtils.isNotEmpty(busqueda.getOrganDestinatari())) {
-            Organismo org = organismoEjb.findByCodigoEntidadLigero(busqueda.getOrganDestinatari(), usuarioEntidad.getEntidad().getId());
+            //Organismo org = organismoEjb.findByCodigoEntidadLigero(busqueda.getOrganDestinatari(), usuarioEntidad.getEntidad().getId());
+            Organismo org = organismoEjb.findByCodigoByEntidadMultiEntidad(busqueda.getOrganDestinatari(), usuarioEntidad.getEntidad().getId());
             if(org== null || !organosDestino.contains(org)){ //Es organismo externo, lo añadimos a la lista
                 organosDestino.add(new Organismo(null,busqueda.getOrganDestinatari(),new String(busqueda.getOrganDestinatariNom().getBytes("ISO-8859-1"), "UTF-8") ));
             }

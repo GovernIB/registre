@@ -406,6 +406,30 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
 
     @Override
     @SuppressWarnings(value = "unchecked")
+    public List<Organismo> getAllByEntidadMultiEntidad(Long idEntidad) throws Exception{
+
+        List<Organismo> organismos= getAllByEntidad(idEntidad);
+        List<Organismo> organismosAEliminar = new ArrayList<>();
+
+        for(Organismo organismo: organismos){
+            Organismo organismo1= findByCodigoMultiEntidad(organismo.getCodigo());
+            if(organismo1 != null) {// Multientidad o interno
+                Organismo raiz = getOrganismoRaiz(organismo1.getId());
+                //Si la raiz es null(es parte de otra entidad) y la entidad del organismo no es igual
+                // a la entidad en la que estamos se debe eliminar el organismo porque significa que hay otra entidad
+                // que le da servicio
+                if(raiz == null && !idEntidad.equals(organismo1.getEntidad().getId())){
+                    organismosAEliminar.add(organismo);
+                }
+            }
+        }
+        organismos.removeAll(organismosAEliminar);
+        return organismos;
+    }
+
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
     public Organismo findByCodigoByEntidadMultiEntidad(String codigo, Long idEntidad) throws Exception{
 
         if (multiEntidadEjb.isMultiEntidad()) {
