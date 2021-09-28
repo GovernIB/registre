@@ -8,7 +8,6 @@ import es.caib.regweb3.persistence.utils.RegistroUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
-import org.jboss.ejb3.common.proxy.plugins.async.AsyncUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -174,8 +173,8 @@ public class AsientoRegistralBean implements AsientoRegistralLocal {
     public void crearJustificante(UsuarioEntidad usuarioEntidad, IRegistro registro, Long tipoRegistro, String idioma) throws I18NValidationException, I18NException {
 
         //Llamada asincrona al método para generar el justficante dle regitro
-        JustificanteLocal asynchJustificante = AsyncUtils.mixinAsync(justificanteEjb);
-        asynchJustificante.crearJustificanteWS(usuarioEntidad, registro, tipoRegistro, idioma);
+        //JustificanteLocal asynchJustificante = AsyncUtils.mixinAsync(justificanteEjb);
+        justificanteEjb.crearJustificanteWS(usuarioEntidad, registro, tipoRegistro, idioma);
 
     }
 
@@ -183,7 +182,7 @@ public class AsientoRegistralBean implements AsientoRegistralLocal {
     @Override
     public void distribuirRegistroEntrada(RegistroEntrada registroEntrada, UsuarioEntidad usuario) throws Exception, I18NException {
 
-        DistribucionLocal asynchDistribucion = AsyncUtils.mixinAsync(distribucionEjb);
+        //DistribucionLocal asynchDistribucion = AsyncUtils.mixinAsync(distribucionEjb);
 
         //  Comprobamos que el usuario tiene permisos para Distribuir el registro
         if(!permisoOrganismoUsuarioEjb.tienePermiso(usuario.getId(), registroEntrada.getOficina().getOrganismoResponsable().getId(), RegwebConstantes.PERMISO_DISTRIBUCION_REGISTRO, true)){
@@ -197,7 +196,7 @@ public class AsientoRegistralBean implements AsientoRegistralLocal {
 
         try{
             // Distribuimos el registro de entrada
-            asynchDistribucion.distribuir(registroEntrada, usuario);
+            distribucionEjb.distribuir(registroEntrada, usuario);
 
         }catch (Exception | I18NValidationException e){
             e.printStackTrace();

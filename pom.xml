@@ -34,10 +34,11 @@
         <documentcustody.api.version>4.0.1</documentcustody.api.version>
         <documentcustody-filesystem.version>4.0.2</documentcustody-filesystem.version>
         <plugin-documentcustody-arxiudigitalcaib.version>4.0.1</plugin-documentcustody-arxiudigitalcaib.version>
+        <pluginsib-core.version>2.0.0</pluginsib-core.version>
         <pluginsib-validatesignature-api>2.0.0</pluginsib-validatesignature-api>
-        <pluginsib-signatureserver-api>3.0.0</pluginsib-signatureserver-api>
+        <pluginsib-signatureserver-api>3.1.0-SNAPSHOT</pluginsib-signatureserver-api>
         <pluginsib-signatureserver-miniappletinserver>3.0.0</pluginsib-signatureserver-miniappletinserver>
-        <pluginsib-signatureserver-afirmaserver>3.0.1</pluginsib-signatureserver-afirmaserver>
+        <pluginsib-signatureserver-afirmaserver>3.1.0-SNAPSHOT</pluginsib-signatureserver-afirmaserver>
         <dir3caib-ws-api.version>1.0.14</dir3caib-ws-api.version>
         <scanweb.api.version>4.0.0</scanweb.api.version>
         <cxf.version>3.2.12</cxf.version>
@@ -96,6 +97,11 @@
                 <type>war</type>
             </dependency>
             <!-- ======== PLUGINS =========== -->
+            <dependency>
+                <groupId>org.fundaciobit.pluginsib.core</groupId>
+                <artifactId>pluginsib-core</artifactId>
+                <version>${pluginsib-core.version}</version>
+            </dependency>
             <dependency>
                 <groupId>es.caib.regweb3</groupId>
                 <artifactId>plugin-distribucion-api</artifactId>
@@ -279,6 +285,12 @@
                 <groupId>org.fundaciobit.pluginsib.documentcustody</groupId>
                 <artifactId>pluginsib-documentcustody-api</artifactId>
                 <version>${documentcustody.api.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.jvnet.mimepull</groupId>
+                <artifactId>mimepull</artifactId>
+                <version>1.9.10</version>
             </dependency>
 
             <!-- Dependències emprades als tests -->

@@ -172,11 +172,11 @@
             <version>${pluginsib-signatureserver-api}</version>
         </dependency>
 
-        <dependency>
+        <!--<dependency>
             <groupId>org.fundaciobit.pluginsib.signatureserver</groupId>
             <artifactId>pluginsib-signatureserver-miniappletinserver</artifactId>
             <version>${pluginsib-signatureserver-miniappletinserver}</version>
-        </dependency>
+        </dependency>-->
 
         <dependency>
             <groupId>org.fundaciobit.pluginsib.signatureserver</groupId>
@@ -236,7 +236,7 @@
         <dependency>
             <groupId>org.fundaciobit.pluginsib.core</groupId>
             <artifactId>pluginsib-core</artifactId>
-            <version>2.0.0</version>
+            <version>${pluginsib-core.version}</version>
         </dependency>
 
         <dependency>
