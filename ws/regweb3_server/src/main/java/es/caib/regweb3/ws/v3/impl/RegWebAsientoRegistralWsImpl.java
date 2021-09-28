@@ -24,7 +24,6 @@ import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.fundaciobit.genapp.common.ws.WsI18NException;
 import org.fundaciobit.genapp.common.ws.WsValidationException;
-import org.jboss.ejb3.annotation.SecurityDomain;
 import org.jboss.ws.api.annotation.TransportGuarantee;
 import org.jboss.ws.api.annotation.WebContext;
 import org.slf4j.Logger;
@@ -46,7 +45,7 @@ import static es.caib.regweb3.utils.RegwebConstantes.*;
 /**
  *
  */
-@SecurityDomain(RegwebConstantes.SECURITY_DOMAIN)
+//@SecurityDomain(RegwebConstantes.SECURITY_DOMAIN)
 @Stateless(name = RegWebAsientoRegistralWsImpl.NAME + "Ejb")
 @RolesAllowed({RWE_WS_ENTRADA, RWE_WS_SALIDA, RWE_WS_CIUDADANO})
 @SOAPBinding(style = SOAPBinding.Style.RPC)
@@ -55,7 +54,7 @@ import static es.caib.regweb3.utils.RegwebConstantes.*;
 @WebService(name = RegWebAsientoRegistralWsImpl.NAME_WS, portName = RegWebAsientoRegistralWsImpl.NAME_WS,
         serviceName = RegWebAsientoRegistralWsImpl.NAME_WS + "Service",
         endpointInterface = "es.caib.regweb3.ws.v3.impl.RegWebAsientoRegistralWs")
-@WebContext(contextRoot = "/regweb3/ws", urlPattern = "/v3/" + RegWebAsientoRegistralWsImpl.NAME, transportGuarantee = TransportGuarantee.NONE, secureWSDLAccess = false, authMethod = "WSBASIC")
+@WebContext(contextRoot = "/regweb3/ws", urlPattern = "/v3/" + RegWebAsientoRegistralWsImpl.NAME, transportGuarantee = TransportGuarantee.NONE, secureWSDLAccess = false, authMethod = "BASIC")
 public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl implements RegWebAsientoRegistralWs {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
