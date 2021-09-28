@@ -6,7 +6,7 @@ import es.caib.plugins.arxiu.api.FirmaTipus;
 import es.caib.regweb3.model.Anexo;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.persistence.utils.I18NLogicUtils;
-import es.caib.regweb3.utils.Propiedades;
+import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.commons.io.FileUtils;
 import org.fundaciobit.genapp.common.i18n.*;
@@ -18,7 +18,6 @@ import org.fundaciobit.plugins.signatureserver.api.ISignatureServerPlugin;
 import org.fundaciobit.plugins.validatesignature.api.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
 
 import javax.annotation.security.RolesAllowed;
@@ -40,9 +39,6 @@ import java.util.*;
 public class SignatureServerBean implements SignatureServerLocal, ValidateSignatureConstants {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
-
-    @Autowired
-    private Propiedades propiedades;
 
     @EJB private PluginLocal pluginEjb;
     @EJB private IntegracionLocal integracionEjb;
@@ -377,7 +373,7 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
             resp = new ValidateSignatureResponse();
             ValidationStatus validationStatus = new ValidationStatus();
             validationStatus.setStatus(-2);
-            validationStatus.setErrorMsg(I18NLogicUtils.tradueix(new Locale(propiedades.getDefaultLanguage()), "error.plugin.validasign.noDefinido"));
+            validationStatus.setErrorMsg(I18NLogicUtils.tradueix(new Locale(Configuracio.getDefaultLanguage()), "error.plugin.validasign.noDefinido"));
             resp.setValidationStatus(validationStatus);
 
             return resp;

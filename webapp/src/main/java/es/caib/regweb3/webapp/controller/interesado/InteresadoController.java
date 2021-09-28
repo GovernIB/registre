@@ -7,6 +7,7 @@ import es.caib.regweb3.model.RegistroDetalle;
 import es.caib.regweb3.persistence.ejb.InteresadoLocal;
 import es.caib.regweb3.persistence.ejb.PersonaLocal;
 import es.caib.regweb3.persistence.ejb.RegistroDetalleLocal;
+import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 import es.caib.regweb3.webapp.controller.BaseController;
@@ -76,7 +77,7 @@ public class InteresadoController extends BaseController{
 
         try {
 
-            if(propiedades.isCAIB()){ // si la instalación es CAIB, no permitimos realizar registros con interesado administración de la propia entidad
+            if(Configuracio.isCAIB()){ // si la instalación es CAIB, no permitimos realizar registros con interesado administración de la propia entidad
 
                 if(organismoEjb.isOrganismoInterno(codigoDir3, entidadActiva.getId())){ // Comprobamos si el Organismo indicado pruede ser Interesado o Destinatario
 

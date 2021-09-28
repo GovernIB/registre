@@ -7,6 +7,7 @@ import es.caib.regweb3.persistence.ejb.ColaLocal;
 import es.caib.regweb3.persistence.ejb.CustodiaLocal;
 import es.caib.regweb3.persistence.ejb.DistribucionLocal;
 import es.caib.regweb3.persistence.utils.Paginacion;
+import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.controller.BaseController;
 import es.caib.regweb3.webapp.utils.Mensaje;
@@ -224,7 +225,7 @@ public class ColaController extends BaseController {
     public
     Long[] tiposCola() {
 
-        if(propiedades.isCAIB()){
+        if(Configuracio.isCAIB()){
             return RegwebConstantes.COLA_TIPOS_CAIB;
         }else{
             return RegwebConstantes.COLA_TIPOS;

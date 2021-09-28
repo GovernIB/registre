@@ -1,5 +1,6 @@
 package es.caib.regweb3.persistence.utils;
 
+import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
@@ -59,7 +60,7 @@ public class FileSystemManager {
      * @return
      */
     public static File getArchivosPath() {
-        if(System.getProperty(RegwebConstantes.ARCHIVOS_LOCATION_PROPERTY) != null) {
+        if(Configuracio.getArchivosPath() != null) {
             return new File(System.getProperty(RegwebConstantes.ARCHIVOS_LOCATION_PROPERTY));
         }else{
             return null;

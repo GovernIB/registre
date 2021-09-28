@@ -11,8 +11,8 @@ import es.caib.regweb3.persistence.utils.NumeroRegistro;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.persistence.utils.RegistroUtils;
 import es.caib.regweb3.plugins.postproceso.IPostProcesoPlugin;
+import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.Dir3CaibUtils;
-import es.caib.regweb3.utils.Propiedades;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 import org.fundaciobit.genapp.common.i18n.I18NException;
@@ -22,7 +22,6 @@ import org.hibernate.Session;
 import org.jboss.ejb3.annotation.TransactionTimeout;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
 
@@ -52,9 +51,6 @@ import static es.caib.regweb3.utils.RegwebConstantes.REGISTRO_ENTRADA;
 public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean implements RegistroEntradaLocal {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
-
-    @Autowired
-    private Propiedades propiedades;
 
     @PersistenceContext(unitName = "regweb3")
     private EntityManager em;
@@ -116,7 +112,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean implem
             registroEntrada = persist(registroEntrada);
 
             // Guardar el HistorioRegistroEntrada
-            historicoRegistroEntradaEjb.crearHistoricoRegistroEntrada(registroEntrada, usuarioEntidad, I18NLogicUtils.tradueix(new Locale(propiedades.getDefaultLanguage()), "registro.modificacion.creacion"), false);
+            historicoRegistroEntradaEjb.crearHistoricoRegistroEntrada(registroEntrada, usuarioEntidad, I18NLogicUtils.tradueix(new Locale(Configuracio.getDefaultLanguage()), "registro.modificacion.creacion"), false);
 
             // Procesamos los Interesados
             if (interesados != null && interesados.size() > 0) {
@@ -472,7 +468,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean implem
 
         // Creamos el HistoricoRegistroEntrada para la modificación d estado
         historicoRegistroEntradaEjb.crearHistoricoRegistroEntrada(registroEntrada,
-                usuarioEntidad, I18NLogicUtils.tradueix(new Locale(propiedades.getDefaultLanguage()), "registro.modificacion.estado"), false);
+                usuarioEntidad, I18NLogicUtils.tradueix(new Locale(Configuracio.getDefaultLanguage()), "registro.modificacion.estado"), false);
     }
 
     @Override
@@ -545,7 +541,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean implem
         // Creamos el HistoricoRegistroEntrada para la distribución
         registroEntrada.setEstado(RegwebConstantes.REGISTRO_DISTRIBUIDO);
         historicoRegistroEntradaEjb.crearHistoricoRegistroEntrada(registroEntrada,
-                registroEntrada.getUsuario(), I18NLogicUtils.tradueix(new Locale(propiedades.getDefaultLanguage()), "registro.modificacion.estado"), false);
+                registroEntrada.getUsuario(), I18NLogicUtils.tradueix(new Locale(Configuracio.getDefaultLanguage()), "registro.modificacion.estado"), false);
 
     }
 

@@ -2,15 +2,12 @@ package es.caib.regweb3.webapp.controller;
 
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.persistence.ejb.*;
-import es.caib.regweb3.utils.Propiedades;
+import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
-import es.caib.regweb3.utils.TimeStamp;
-import es.caib.regweb3.utils.Versio;
 import es.caib.regweb3.webapp.security.LoginInfo;
 import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
@@ -29,9 +26,6 @@ import java.util.*;
 public class BaseController {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
-
-    @Autowired
-    public Propiedades propiedades;
 
     @EJB(mappedName = PermisoOrganismoUsuarioLocal.JNDI_NAME)
     public PermisoOrganismoUsuarioLocal permisoOrganismoUsuarioEjb;
@@ -538,15 +532,10 @@ public class BaseController {
 
     @ModelAttribute("tiposIntegracion")
     public Long[] tiposIntegracion() {
-        if(propiedades.isCAIB()){
+        if(Configuracio.isCAIB()){
             return RegwebConstantes.INTEGRACION_TIPOS_CAIB;
         }else{
             return RegwebConstantes.INTEGRACION_TIPOS;
         }
-    }
-
-    @ModelAttribute("version")
-    public String version() {
-        return Versio.VERSIO + (propiedades.isCAIB()?"-caib":"") + " " + (propiedades.showTimeStamp()? TimeStamp.TIMESTAMP : "");
     }
 }
