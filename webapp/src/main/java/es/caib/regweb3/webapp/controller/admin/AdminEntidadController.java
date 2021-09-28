@@ -73,7 +73,7 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
     @EJB(mappedName = InteresadoLocal.JNDI_NAME)
     private InteresadoLocal interesadoEjb;
 
-    @EJB(mappedName = "regweb3/MultiEntidadEJB/local")
+    @EJB(mappedName = MultiEntidadLocal.JNDI_NAME)
     private MultiEntidadLocal multiEntidadEjb;
 
 
