@@ -16,7 +16,6 @@ import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.fundaciobit.genapp.common.ws.WsI18NException;
 import org.fundaciobit.genapp.common.ws.WsValidationException;
-import org.jboss.ejb3.annotation.SecurityDomain;
 import org.jboss.ws.api.annotation.TransportGuarantee;
 import org.jboss.ws.api.annotation.WebContext;
 import org.slf4j.Logger;
@@ -37,7 +36,7 @@ import java.util.List;
  * @author anadal
  *
  */
-@SecurityDomain(RegwebConstantes.SECURITY_DOMAIN)
+//@SecurityDomain(RegwebConstantes.SECURITY_DOMAIN)
 @Stateless(name = RegWebPersonasWsImpl.NAME + "Ejb")
 @RolesAllowed({ RegwebConstantes.RWE_SUPERADMIN})
 @SOAPBinding(style = SOAPBinding.Style.RPC)
@@ -46,7 +45,7 @@ import java.util.List;
 @WebService(name = RegWebPersonasWsImpl.NAME_WS, portName = RegWebPersonasWsImpl.NAME_WS,
     serviceName = RegWebPersonasWsImpl.NAME_WS  + "Service",
     endpointInterface = "es.caib.regweb3.ws.v3.impl.RegWebPersonasWs")
-@WebContext(contextRoot = "/regweb3/ws", urlPattern = "/v3/" + RegWebPersonasWsImpl.NAME, transportGuarantee = TransportGuarantee.NONE, secureWSDLAccess = false, authMethod = "WSBASIC")
+@WebContext(contextRoot = "/regweb3/ws", urlPattern = "/v3/" + RegWebPersonasWsImpl.NAME, transportGuarantee = TransportGuarantee.NONE, secureWSDLAccess = false, authMethod = "BASIC")
 public class RegWebPersonasWsImpl  extends AuthenticatedBaseWsImpl implements RegWebPersonasWs {
 
   protected final Logger log = LoggerFactory.getLogger(getClass());

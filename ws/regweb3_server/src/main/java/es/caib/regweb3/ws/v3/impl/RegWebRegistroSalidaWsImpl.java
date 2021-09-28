@@ -21,7 +21,6 @@ import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.fundaciobit.genapp.common.ws.WsI18NException;
 import org.fundaciobit.genapp.common.ws.WsValidationException;
-import org.jboss.ejb3.annotation.SecurityDomain;
 import org.jboss.ws.api.annotation.TransportGuarantee;
 import org.jboss.ws.api.annotation.WebContext;
 import org.slf4j.Logger;
@@ -45,7 +44,7 @@ import java.util.Locale;
  * @author earrivi
  * @author anadal
  */
-@SecurityDomain(RegwebConstantes.SECURITY_DOMAIN)
+//@SecurityDomain(RegwebConstantes.SECURITY_DOMAIN)
 @Stateless(name = RegWebRegistroSalidaWsImpl.NAME + "Ejb")
 @RolesAllowed({RegwebConstantes.RWE_SUPERADMIN})
 @SOAPBinding(style = SOAPBinding.Style.RPC)
@@ -54,7 +53,7 @@ import java.util.Locale;
 @WebService(name = RegWebRegistroSalidaWsImpl.NAME_WS, portName = RegWebRegistroSalidaWsImpl.NAME_WS,
         serviceName = RegWebRegistroSalidaWsImpl.NAME_WS + "Service",
         endpointInterface = "es.caib.regweb3.ws.v3.impl.RegWebRegistroSalidaWs")
-@WebContext(contextRoot = "/regweb3/ws", urlPattern = "/v3/" + RegWebRegistroSalidaWsImpl.NAME, transportGuarantee = TransportGuarantee.NONE, secureWSDLAccess = false, authMethod = "WSBASIC")
+@WebContext(contextRoot = "/regweb3/ws", urlPattern = "/v3/" + RegWebRegistroSalidaWsImpl.NAME, transportGuarantee = TransportGuarantee.NONE, secureWSDLAccess = false, authMethod = "BASIC")
 public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implements RegWebRegistroSalidaWs {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
