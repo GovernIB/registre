@@ -4,7 +4,7 @@ import es.caib.regweb3.model.*;
 import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.persistence.utils.RolUtils;
-import es.caib.regweb3.utils.Propiedades;
+import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.security.LoginInfo;
 import org.fundaciobit.genapp.common.i18n.I18NException;
@@ -37,9 +37,6 @@ public class LoginService {
 
     @Autowired
     private RolUtils rolUtils;
-
-    @Autowired
-    private Propiedades propiedades;
 
     @EJB(mappedName = UsuarioLocal.JNDI_NAME)
     private UsuarioLocal usuarioEjb;
@@ -462,7 +459,7 @@ public class LoginService {
             usuario.setNombre(regwebUserInfo.getName());
 
             //Idioma por defecto
-            Long idioma = RegwebConstantes.IDIOMA_ID_BY_CODIGO.get(propiedades.getDefaultLanguage());
+            Long idioma = RegwebConstantes.IDIOMA_ID_BY_CODIGO.get(Configuracio.getDefaultLanguage());
             usuario.setIdioma(idioma);
 
             if (regwebUserInfo.getSurname1() != null) {

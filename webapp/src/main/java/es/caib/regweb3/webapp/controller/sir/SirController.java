@@ -12,6 +12,7 @@ import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.persistence.utils.RegistroUtils;
 import es.caib.regweb3.sir.ejb.MensajeLocal;
 import es.caib.regweb3.sir.utils.Sicres3XML;
+import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.Dir3CaibUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.TimeUtils;
@@ -657,7 +658,7 @@ public class SirController extends BaseController {
         Integer huerfanos = 0;
 
         try {
-            File directorio = new File(propiedades.getArchivosPath());
+            File directorio = new File(Configuracio.getArchivosPath());
             List<Long> archivos = archivoEjb.getAllLigero();
 
             if(directorio != null){
@@ -704,7 +705,7 @@ public class SirController extends BaseController {
         Integer count = 0;
 
         try {
-            File directorio = new File(propiedades.getArchivosPath());
+            File directorio = new File(Configuracio.getArchivosPath());
             List<Long> archivos = archivoEjb.getAllLigero();
 
             if(directorio != null){

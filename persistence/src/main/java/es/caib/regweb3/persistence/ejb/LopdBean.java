@@ -3,11 +3,10 @@ package es.caib.regweb3.persistence.ejb;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.persistence.utils.I18NLogicUtils;
 import es.caib.regweb3.persistence.utils.Paginacion;
-import es.caib.regweb3.utils.Propiedades;
+import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
 
 import javax.annotation.security.RolesAllowed;
@@ -33,9 +32,6 @@ import java.util.*;
 public class LopdBean extends BaseEjbJPA<Lopd, Long> implements LopdLocal {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
-
-    @Autowired
-    private Propiedades propiedades;
 
     @PersistenceContext(unitName = "regweb3")
     private EntityManager em;
@@ -343,7 +339,7 @@ public class LopdBean extends BaseEjbJPA<Lopd, Long> implements LopdLocal {
         Query q;
         Query q2;
 
-        String accio = I18NLogicUtils.tradueix(new Locale(propiedades.getDefaultLanguage()), "registro.modificacion.creacion");
+        String accio = I18NLogicUtils.tradueix(new Locale(Configuracio.getDefaultLanguage()), "registro.modificacion.creacion");
 
         q = em.createQuery("Select historicoRegistroEntrada.registroEntrada.numeroRegistro, historicoRegistroEntrada.registroEntrada.libro.nombre, " +
                 "historicoRegistroEntrada.registroEntrada.oficina.denominacion, historicoRegistroEntrada.registroEntrada.libro.organismo.denominacion, " +
@@ -468,7 +464,7 @@ public class LopdBean extends BaseEjbJPA<Lopd, Long> implements LopdLocal {
         Query q;
         Query q2;
 
-        String accio = I18NLogicUtils.tradueix(new Locale(propiedades.getDefaultLanguage()), "registro.modificacion.creacion");
+        String accio = I18NLogicUtils.tradueix(new Locale(Configuracio.getDefaultLanguage()), "registro.modificacion.creacion");
 
         q = em.createQuery("Select historicoRegistroSalida.registroSalida.numeroRegistro, historicoRegistroSalida.registroSalida.libro.nombre, " +
                 "historicoRegistroSalida.registroSalida.oficina.denominacion, historicoRegistroSalida.registroSalida.libro.organismo.denominacion, " +
@@ -590,7 +586,7 @@ public class LopdBean extends BaseEjbJPA<Lopd, Long> implements LopdLocal {
         Query q;
         Query q2;
 
-        String accio = I18NLogicUtils.tradueix(new Locale(propiedades.getDefaultLanguage()), "registro.modificacion.creacion");
+        String accio = I18NLogicUtils.tradueix(new Locale(Configuracio.getDefaultLanguage()), "registro.modificacion.creacion");
 
         q = em.createQuery("Select historicoRegistroEntrada.registroEntrada.numeroRegistro, historicoRegistroEntrada.registroEntrada.libro.nombre, " +
                 "historicoRegistroEntrada.registroEntrada.oficina.denominacion, historicoRegistroEntrada.registroEntrada.libro.organismo.denominacion, " +
@@ -713,7 +709,7 @@ public class LopdBean extends BaseEjbJPA<Lopd, Long> implements LopdLocal {
         Query q;
         Query q2;
 
-        String accio = I18NLogicUtils.tradueix(new Locale(propiedades.getDefaultLanguage()), "registro.modificacion.creacion");
+        String accio = I18NLogicUtils.tradueix(new Locale(Configuracio.getDefaultLanguage()), "registro.modificacion.creacion");
 
         q = em.createQuery("Select historicoRegistroSalida.registroSalida.numeroRegistro, historicoRegistroSalida.registroSalida.libro.nombre, " +
                 "historicoRegistroSalida.registroSalida.oficina.denominacion, historicoRegistroSalida.registroSalida.libro.organismo.denominacion, " +
