@@ -547,15 +547,7 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
         log.info("Entro en procesar entrada ");
 
         // Organismo destinatario, lo buscamos en función de si es multientidad o no
-        Organismo orgDestino;
-        if(multiEntidadEjb.isMultiEntidad()){
-            orgDestino = organismoEjb.findByCodigoMultiEntidad(registroEntrada.getDestino().getCodigo());
-
-        }else {
-            log.info("Entro en monoentidad");
-            orgDestino = organismoEjb.findByCodigoEntidadLigero(registroEntrada.getDestino().getCodigo(), entidad.getId());
-        }
-
+        Organismo orgDestino = organismoEjb.findByCodigoByEntidadMultiEntidad(registroEntrada.getDestino().getCodigo(),entidad.getId());
 
         //Organismo destinatario, determinamos si es interno o externo teniendo en cuenta la multientidad
         if( orgDestino == null || (!entidad.getId().equals(orgDestino.getEntidad().getId()))){ //Externo
@@ -591,14 +583,7 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
         } else { // Han indicado oficina origen
 
             //Oficina ofiOrigen = oficinaEjb.findByCodigoEntidad(oficinaOrigen.getCodigo(), entidad.getId());
-            Oficina ofiOrigen;
-
-            //Tener en cuenta la multientidad
-            if(multiEntidadEjb.isMultiEntidad()){
-                ofiOrigen = oficinaEjb.findByCodigoMultiEntidad(oficinaOrigen.getCodigo());
-            }else{
-                ofiOrigen = oficinaEjb.findByCodigoEntidad(oficinaOrigen.getCodigo(), entidad.getId());
-            }
+            Oficina ofiOrigen =oficinaEjb.findByCodigoByEntidadMultiEntidad(oficinaOrigen.getCodigo(), entidad.getId());
 
             if (ofiOrigen == null || (!entidad.getId().equals(ofiOrigen.getOrganismoResponsable().getEntidad().getId())) ) { // Es externa
 
