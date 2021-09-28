@@ -21,4 +21,13 @@
         <module>justificante-mock</module>
     </modules>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.fundaciobit.genapp</groupId>
+            <artifactId>genapp-core</artifactId>
+            <version>1.0</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+
 </project>
