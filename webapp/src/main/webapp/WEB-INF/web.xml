@@ -4,6 +4,18 @@
          version="4.0">
     <display-name>REGWEB3</display-name>
 
+    <!--  Tiempo de sesión 30 minutos -->
+    <session-config>
+        <session-timeout>30</session-timeout>
+    </session-config>
+
+    <!--  LOAD-ON-STARTUP SERVLET -->
+    <servlet>
+        <servlet-name>InitServlet</servlet-name>
+        <servlet-class>es.caib.regweb3.webapp.utils.InitServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
     <login-config>
         <auth-method>KEYCLOAK</auth-method>
         <realm-name>Govern de les Illes Balears</realm-name>
