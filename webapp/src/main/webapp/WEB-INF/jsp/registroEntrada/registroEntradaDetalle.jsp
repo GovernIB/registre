@@ -304,7 +304,7 @@
                             <c:if test="${registro.estado == RegwebConstantes.REGISTRO_VALIDO && puedeEditar && !tieneJustificante}">
                                 <c:import url="../registro/interesados.jsp">
                                     <c:param name="tipoRegistro" value="${RegwebConstantes.REGISTRO_ENTRADA}"/>
-                                    <c:param name="comunidad" value="${comunidad.codigoComunidad}"/>
+                                    <%--<c:param name="comunidad" value="${comunidad.codigoComunidad}"/>--%>
                                     <c:param name="idRegistroDetalle" value="${registro.registroDetalle.id}"/>
                                 </c:import>
                             </c:if>
