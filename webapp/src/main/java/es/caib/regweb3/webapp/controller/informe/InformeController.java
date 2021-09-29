@@ -124,7 +124,7 @@ public class InformeController extends AbstractRegistroCommonFormController {
             if(!informeOrganismoBusquedaForm.getOrganDestinatariNom().equals("")) {
                 nomOrganismeDest = informeOrganismoBusquedaForm.getOrganDestinatariNom();
             } else{
-                nomOrganismeDest = organismoEjb.findByCodigoEntidadLigero(codigoOrganDest, usuarioEntidad.getEntidad().getId()).getDenominacion();
+                nomOrganismeDest = organismoEjb.findByCodigoByEntidadMultiEntidad(codigoOrganDest,usuarioEntidad.getEntidad().getId()).getDenominacion();
             }
         }
 

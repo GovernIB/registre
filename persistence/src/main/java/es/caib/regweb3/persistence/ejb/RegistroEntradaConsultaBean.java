@@ -189,7 +189,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
 
         // Organismo destinatario
         if (StringUtils.isNotEmpty((organoDest))) {
-            Organismo organismo = organismoEjb.findByCodigoEntidadSinEstadoLigero(organoDest, idEntidad);
+            Organismo organismo = organismoEjb.findByCodigoMultiEntidad(organoDest);
             if (organismo == null) {
                 where.add(" registroEntrada.destinoExternoCodigo = :organoDest ");
             } else {

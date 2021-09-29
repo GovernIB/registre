@@ -314,7 +314,7 @@
                    <c:set var="registro" value="${registroEntrada}"/>
                    <c:import url="../registro/interesados.jsp">
                        <c:param name="tipoRegistro" value="${RegwebConstantes.REGISTRO_ENTRADA}"/>
-                       <c:param name="comunidad" value="${comunidad.codigoComunidad}"/>
+                       <%--<c:param name="comunidad" value="${comunidad.codigoComunidad}"/>--%>
                    </c:import>
                </c:if>
 

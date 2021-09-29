@@ -158,27 +158,26 @@ public class PlantillaController extends BaseController {
         switch (tipoRegistro.intValue()){
 
             case 1: //RegistroEntrada
-                Organismo organismoDestino = organismoEjb.findByCodigoEntidadLigero(plantillaJson.getDestinoCodigo(), usuarioEntidad.getEntidad().getId());
+                Organismo organismoDestino = organismoEjb.findByCodigoByEntidadMultiEntidad(plantillaJson.getDestinoCodigo(), usuarioEntidad.getEntidad().getId());
 
-                if(organismoDestino != null) { // es interno
-                    plantillaJson.setDestinoExterno(false);
-
-                }else{ // es externo
+                if(organismoDestino == null  || !usuarioEntidad.getEntidad().getId().equals(organismoDestino.getEntidad().getId())){//Externo o multientidad
                     plantillaJson.setDestinoExterno(true);
+                }else{
+                    plantillaJson.setDestinoExterno(false);
                 }
 
-            break;
+                break;
 
             case 2: //RegistroSalida
-                Organismo organismoOrigen = organismoEjb.findByCodigoEntidadLigero(plantillaJson.getOrigenCodigo(), usuarioEntidad.getEntidad().getId());
 
-                if(organismoOrigen != null) { // es interno
-                    plantillaJson.setOrigenExterno(false);
+                Organismo organismoOrigen = organismoEjb.findByCodigoByEntidadMultiEntidad(plantillaJson.getOrigenCodigo(), usuarioEntidad.getEntidad().getId());
 
-                }else{ // es externo
+                if(organismoOrigen == null || !usuarioEntidad.getEntidad().getId().equals(organismoOrigen.getEntidad().getId())) { //Externo o multientidad
                     plantillaJson.setOrigenExterno(true);
-                }
 
+                }else{ // es interno
+                    plantillaJson.setOrigenExterno(false);
+                }
             break;
         }
 
