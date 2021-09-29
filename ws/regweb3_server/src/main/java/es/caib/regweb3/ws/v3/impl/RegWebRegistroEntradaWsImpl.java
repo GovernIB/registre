@@ -135,25 +135,25 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
         Entidad entidadActiva = validarEntidad(entidad);
 
         // 2.- Comprobar que el Organismo destino está vigente
-        Organismo destinoInterno = organismoEjb.findByCodigoEntidadLigero(registroEntradaWs.getDestino(), entidadActiva.getId());
         UnidadTF destinoExterno = null;
-
-        if (destinoInterno == null) { // Se trata de un destino externo
-
+        Organismo destinoInterno = organismoEjb.findByCodigoByEntidadMultiEntidad(registroEntradaWs.getDestino(),entidadActiva.getId());
+        if(destinoInterno == null){ //Externo, lo vamos a buscar a dir3caib
             // Lo buscamos en DIR3CAIB
             Dir3CaibObtenerUnidadesWs unidadesService = Dir3CaibUtils.getObtenerUnidadesService(PropiedadGlobalUtil.getDir3CaibServer(), PropiedadGlobalUtil.getDir3CaibUsername(), PropiedadGlobalUtil.getDir3CaibPassword());
             destinoExterno = unidadesService.obtenerUnidad(registroEntradaWs.getDestino(), null, null);
 
-            if (destinoExterno == null) {
+            if (destinoExterno == null) { //o no existe o está extinguido
                 throw new I18NException("registro.organismo.noExiste", registroEntradaWs.getDestino());
-            } else if (!destinoExterno.getCodigoEstadoEntidad().equals(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE)) {
-                throw new I18NException("registro.organismo.extinguido", destinoExterno.getCodigo() + " - " + destinoExterno.getDenominacion());
             }
-
-
+        }else if( !destinoInterno.getEntidad().getId().equals(entidadActiva.getId())){ //No hace falta ir a buscarlo a dir3caib, ya tenemos los datos mínimos.
+            destinoExterno = new UnidadTF();
+            destinoExterno.setCodigo(destinoInterno.getCodigo());
+            destinoExterno.setDenominacion(destinoInterno.getDenominacion());
+            destinoInterno = null;
         } else if (!destinoInterno.getEstado().getCodigoEstadoEntidad().equals(ESTADO_ENTIDAD_VIGENTE)) { //Si está extinguido
             throw new I18NException("registro.organismo.extinguido", destinoInterno.getNombreCompleto());
         }
+
 
         // 3.- Comprobar que la Oficina está vigente
         Oficina oficina = validarOficina(registroEntradaWs.getOficina(), entidadActiva.getId());

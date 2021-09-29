@@ -285,44 +285,22 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
 
                 // Comprobar que el Organismo destino está vigente
                 UnidadTF destinoExterno = null;
-                Organismo destinoInterno;
-                if(multiEntidadEjb.isMultiEntidad()){
-                    destinoInterno = organismoEjb.findByCodigoMultiEntidad(asientoRegistral.getUnidadTramitacionDestinoCodigo());
+                Organismo destinoInterno = organismoEjb.findByCodigoByEntidadMultiEntidad(asientoRegistral.getUnidadTramitacionDestinoCodigo(),entidadActiva.getId());
+                if(destinoInterno == null){ //Externo, lo vamos a buscar a dir3caib
+                    // Lo buscamos en DIR3CAIB
+                    Dir3CaibObtenerUnidadesWs unidadesService = Dir3CaibUtils.getObtenerUnidadesService(PropiedadGlobalUtil.getDir3CaibServer(), PropiedadGlobalUtil.getDir3CaibUsername(), PropiedadGlobalUtil.getDir3CaibPassword());
+                    destinoExterno = unidadesService.obtenerUnidad(asientoRegistral.getUnidadTramitacionDestinoCodigo(), null, null);
 
-                    if(destinoInterno == null){ //Externo, lo vamos a buscar a dir3caib
-                        // Lo buscamos en DIR3CAIB
-                        Dir3CaibObtenerUnidadesWs unidadesService = Dir3CaibUtils.getObtenerUnidadesService(PropiedadGlobalUtil.getDir3CaibServer(), PropiedadGlobalUtil.getDir3CaibUsername(), PropiedadGlobalUtil.getDir3CaibPassword());
-                        destinoExterno = unidadesService.obtenerUnidad(asientoRegistral.getUnidadTramitacionDestinoCodigo(), null, null);
-
-                        if (destinoExterno == null) {
-                            throw new I18NException("registro.organismo.noExiste", asientoRegistral.getUnidadTramitacionDestinoCodigo());
-                        } else if (!destinoExterno.getCodigoEstadoEntidad().equals(ESTADO_ENTIDAD_VIGENTE)) {
-                            throw new I18NException("registro.organismo.extinguido", destinoExterno.getCodigo() + " - " + destinoExterno.getDenominacion());
-                        }
-                    }else if( !destinoInterno.getEntidad().getId().equals(entidadActiva.getId())){ //No hace falta ir a buscarlo a dir3caib, ya tenemos los datos mínimos.
-                        destinoExterno = new UnidadTF();
-                        destinoExterno.setCodigo(destinoInterno.getCodigo());
-                        destinoExterno.setDenominacion(destinoInterno.getDenominacion());
-                        destinoInterno = null;
+                    if (destinoExterno == null) { //o no existe o está extinguido
+                        throw new I18NException("registro.organismo.noExiste", asientoRegistral.getUnidadTramitacionDestinoCodigo());
                     }
-                }else {
-                    destinoInterno = organismoEjb.findByCodigoEntidadLigero(asientoRegistral.getUnidadTramitacionDestinoCodigo(), entidadActiva.getId());
-
-                    if (destinoInterno == null) { // Se trata de un destino externo
-
-                        // Lo buscamos en DIR3CAIB
-                        Dir3CaibObtenerUnidadesWs unidadesService = Dir3CaibUtils.getObtenerUnidadesService(PropiedadGlobalUtil.getDir3CaibServer(), PropiedadGlobalUtil.getDir3CaibUsername(), PropiedadGlobalUtil.getDir3CaibPassword());
-                        destinoExterno = unidadesService.obtenerUnidad(asientoRegistral.getUnidadTramitacionDestinoCodigo(), null, null);
-
-                        if (destinoExterno == null) {
-                            throw new I18NException("registro.organismo.noExiste", asientoRegistral.getUnidadTramitacionDestinoCodigo());
-                        } else if (!destinoExterno.getCodigoEstadoEntidad().equals(ESTADO_ENTIDAD_VIGENTE)) {
-                            throw new I18NException("registro.organismo.extinguido", destinoExterno.getCodigo() + " - " + destinoExterno.getDenominacion());
-                        }
-
-                    } else if (!destinoInterno.getEstado().getCodigoEstadoEntidad().equals(ESTADO_ENTIDAD_VIGENTE)) { //Si está extinguido
-                        throw new I18NException("registro.organismo.extinguido", destinoInterno.getNombreCompleto());
-                    }
+                }else if( !destinoInterno.getEntidad().getId().equals(entidadActiva.getId())){ //No hace falta ir a buscarlo a dir3caib, ya tenemos los datos mínimos.
+                    destinoExterno = new UnidadTF();
+                    destinoExterno.setCodigo(destinoInterno.getCodigo());
+                    destinoExterno.setDenominacion(destinoInterno.getDenominacion());
+                    destinoInterno = null;
+                } else if (!destinoInterno.getEstado().getCodigoEstadoEntidad().equals(ESTADO_ENTIDAD_VIGENTE)) { //Si está extinguido
+                    throw new I18NException("registro.organismo.extinguido", destinoInterno.getNombreCompleto());
                 }
 
 
