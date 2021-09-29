@@ -5,7 +5,6 @@ import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.*;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -240,7 +239,6 @@ public class Interesado implements Serializable {
     }
 
     @Column(name = "NOMBRE")
-    @NotNull
     public String getNombre() {
         return nombre;
     }
@@ -250,7 +248,6 @@ public class Interesado implements Serializable {
     }
 
     @Column(name = "APELLIDO1")
-    @NotNull
     public String getApellido1() {
         return apellido1;
     }
