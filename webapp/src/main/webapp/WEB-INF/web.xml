@@ -16,6 +16,16 @@
         <load-on-startup>1</load-on-startup>
     </servlet>
 
+    <servlet>
+        <servlet-name>PluginScanWebRequests</servlet-name>
+        <servlet-class>es.caib.regweb3.webapp.controller.registro.ScanRequestServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>PluginScanWebRequests</servlet-name>
+        <url-pattern>/anexo/scanwebmodule/requestPlugin/*</url-pattern>
+    </servlet-mapping>
+
     <login-config>
         <auth-method>KEYCLOAK</auth-method>
         <realm-name>Govern de les Illes Balears</realm-name>
