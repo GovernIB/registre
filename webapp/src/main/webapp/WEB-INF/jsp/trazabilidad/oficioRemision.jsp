@@ -72,9 +72,18 @@
             </c:if>
 
             <%--Identificador intercambio--%>
-            <p>
-                <small><i class="fa fa-qrcode"></i> <strong><spring:message code="registroSir.identificadorIntercambio"/>:</strong> ${oficioRemision.identificadorIntercambio}</small>
-            </p>
+            <c:if test="${loginInfo.rolActivo.nombre == 'RWE_ADMIN'}">
+                <p>
+                    <small><i class="fa fa-qrcode"></i> <strong><spring:message code="registroSir.identificadorIntercambio"/>:</strong>
+                        <a target="_blank" href="<c:url value="/sir/${oficioRemision.identificadorIntercambio}/detalle"/>">${oficioRemision.identificadorIntercambio}</a>
+                    </small>
+                </p>
+            </c:if>
+            <c:if test="${loginInfo.rolActivo.nombre == 'RWE_USUARI'}">
+                <p>
+                    <small><i class="fa fa-qrcode"></i> <strong><spring:message code="registroSir.identificadorIntercambio"/>:</strong> ${oficioRemision.identificadorIntercambio}</small>
+                </p>
+            </c:if>
 
             <%--Estado --%>
             <p>
