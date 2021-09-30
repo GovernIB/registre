@@ -615,7 +615,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean implemen
 
             /* En el caso de rectificar se escoge el primer sustituto de la lista que nos devuelven y se cambia de manera transparente para el usuario */
             if (interesadoAdministracion != null && !interesadoAdministracion.getCodigoDir3().isEmpty()) {
-                Organismo organismo = organismoEjb.findByCodigoEntidadLigero(codigoDir3, registroSalida.getUsuario().getEntidad().getId());
+                Organismo organismo = organismoEjb.findByCodigoByEntidadMultiEntidad(codigoDir3, registroSalida.getUsuario().getEntidad().getId());
                 if (organismo != null) { //Destino interno
                     if (!organismo.getEstado().getCodigoEstadoEntidad().equals(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE)) {
                         Set<Organismo> historicosFinales = new HashSet<Organismo>();
