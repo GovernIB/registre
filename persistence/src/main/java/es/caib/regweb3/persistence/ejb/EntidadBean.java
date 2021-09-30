@@ -182,6 +182,25 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
         tipoDocumentalEjb.nuevoTraduccion("TD18", entidad.getId(), "Comunicació ciutadà", "Comunicación ciudadano");
         tipoDocumentalEjb.nuevoTraduccion("TD19", entidad.getId(), "Factura", "Factura");
         tipoDocumentalEjb.nuevoTraduccion("TD20", entidad.getId(), "Altres confiscats", "Otros incautados");
+        tipoDocumentalEjb.nuevoTraduccion("TD51", entidad.getId(), "Llei", "Ley");
+        tipoDocumentalEjb.nuevoTraduccion("TD52", entidad.getId(), "Moció", "Moción");
+        tipoDocumentalEjb.nuevoTraduccion("TD53", entidad.getId(), "Instrucció", "Instrucción");
+        tipoDocumentalEjb.nuevoTraduccion("TD54", entidad.getId(), "Convocatòria", "Convocatoria");
+        tipoDocumentalEjb.nuevoTraduccion("TD55", entidad.getId(), "Ordre del dia", "Orden del día");
+        tipoDocumentalEjb.nuevoTraduccion("TD56", entidad.getId(), "Informe de Ponència", "Informe de Ponencia");
+        tipoDocumentalEjb.nuevoTraduccion("TD57", entidad.getId(), "Dictamen de Comissió", "Dictamen de Comisión");
+        tipoDocumentalEjb.nuevoTraduccion("TD58", entidad.getId(), "Iniciativa legislativa", "Iniciativa legislativa");
+        tipoDocumentalEjb.nuevoTraduccion("TD59", entidad.getId(), "Pregunta", "Pregunta");
+        tipoDocumentalEjb.nuevoTraduccion("TD60", entidad.getId(), "Interpel·lació", "Interpelación");
+        tipoDocumentalEjb.nuevoTraduccion("TD61", entidad.getId(), "Resposta", "Respuesta");
+        tipoDocumentalEjb.nuevoTraduccion("TD62", entidad.getId(), "Proposició no de llei", "Proposición no de ley");
+        tipoDocumentalEjb.nuevoTraduccion("TD63", entidad.getId(), "Esmena", "Enmienda");
+        tipoDocumentalEjb.nuevoTraduccion("TD64", entidad.getId(), "Proposta de resolució", "Propuesta de resolución");
+        tipoDocumentalEjb.nuevoTraduccion("TD65", entidad.getId(), "Compareixença", "Comparecencia");
+        tipoDocumentalEjb.nuevoTraduccion("TD66", entidad.getId(), "Sol·licitud d'informació", "Solicitud de información");
+        tipoDocumentalEjb.nuevoTraduccion("TD67", entidad.getId(), "Escrit", "Escrito");
+        tipoDocumentalEjb.nuevoTraduccion("TD68", entidad.getId(), "Iniciativa legislativa", "Iniciativa legislativa");
+        tipoDocumentalEjb.nuevoTraduccion("TD69", entidad.getId(), "Petició", "Petición");
         tipoDocumentalEjb.nuevoTraduccion("TD99", entidad.getId(), "Altres", "Otros");
 
         // Creamos las propiedades globales por defecto
