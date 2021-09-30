@@ -188,12 +188,7 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
 
             if (registroEntrada.getDestino() != null) { // Si se ha escogido un Organismo destino
 
-                Organismo organismo;
-                if(multiEntidadEjb.isMultiEntidad()) {
-                    organismo = organismoEjb.findByCodigoMultiEntidad(registroEntrada.getDestino().getCodigo());
-                }else{
-                    organismo = organismoEjb.findByCodigoEntidadLigero(registroEntrada.getDestino().getCodigo(), entidad.getId());
-                }
+                Organismo organismo = organismoEjb.findByCodigoByEntidadMultiEntidad(registroEntrada.getDestino().getCodigo(), entidad.getId());
 
                 if (organismo == null) {// Si es externo, lo creamos nuevo y lo añadimos a la lista del select
                     organismosOficinaActiva.add(new Organismo(null, registroEntrada.getDestino().getCodigo(), registroEntrada.getDestino().getDenominacion()));
@@ -375,12 +370,7 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
             LinkedHashSet<Organismo> organismosOficinaActiva = new LinkedHashSet<Organismo>(getOrganismosOficinaActiva(request));
             if (registroEntrada.getDestino() != null) { // Si se ha escogido un Organismo destino
 
-                Organismo organismo;
-                if(multiEntidadEjb.isMultiEntidad()) {
-                    organismo = organismoEjb.findByCodigoMultiEntidad(registroEntrada.getDestino().getCodigo());
-                }else{
-                    organismo = organismoEjb.findByCodigoEntidadLigero(registroEntrada.getDestino().getCodigo(), entidad.getId());
-                }
+                Organismo organismo = organismoEjb.findByCodigoByEntidadMultiEntidad(registroEntrada.getDestino().getCodigo(), entidad.getId());
 
                 if (organismo == null) { // Si es externo, lo creamos nuevo y lo añadimos a la lista del select
                     log.info("Es organismo externo: " + registroEntrada.getDestino().getCodigo() + " - " + registroEntrada.getDestinoExternoDenominacion());
