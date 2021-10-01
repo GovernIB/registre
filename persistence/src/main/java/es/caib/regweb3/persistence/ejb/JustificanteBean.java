@@ -325,6 +325,7 @@ public class JustificanteBean implements JustificanteLocal {
 
             // Guardamos el Justificante en Arxiu
             justificanteArxiu = arxiuCaibUtils.crearJustificanteArxiuCaib(registro, tipoRegistro, firma);
+            peticion.append("idAnexo: ").append(anexo.getId()).append(System.getProperty("line.separator"));
 
             // Asociamos el ExpedienteId, CustodyId y Csv al anexo que vamos a crear
             anexo.setExpedienteID(justificanteArxiu.getExpediente().getIdentificador());
