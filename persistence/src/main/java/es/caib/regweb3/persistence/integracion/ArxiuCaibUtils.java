@@ -127,7 +127,7 @@ public class ArxiuCaibUtils {
                         if(expedient != null){
                             for(ContingutArxiu contingutArxiu:expedient.getContinguts()){
                                 if(contingutArxiu.getNom().equals(firma.getFitxerNom())){
-                                    Document doc = arxiuPlugin.documentDetalls(contingutArxiu.getIdentificador(), "1.0", false);
+                                    Document doc = arxiuPlugin.documentDetalls(contingutArxiu.getIdentificador(), null, false);
 
                                     // Integración
                                     peticion.append("registro: ").append(registro.getNumeroRegistroFormateado()).append(System.getProperty("line.separator"));
