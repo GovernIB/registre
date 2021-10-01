@@ -817,7 +817,6 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
         Oficio oficio = new Oficio();
         oficio.setOficioRemision(true);
 
-        //Organismo organismo = organismoEjb.findByCodigoEntidadSinEstadoLigero(codigoOrganismo, idEntidad);
         Organismo organismo;
         if(multiEntidadEjb.isMultiEntidad()){
              organismo = organismoEjb.findByCodigoMultiEntidad(codigoOrganismo);
