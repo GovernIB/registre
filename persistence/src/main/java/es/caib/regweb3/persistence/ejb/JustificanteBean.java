@@ -337,6 +337,7 @@ public class JustificanteBean implements JustificanteLocal {
 
             // Guardamos el Anexo
             anexo = anexoEjb.persist(anexo);
+            peticion.append("idAnexo: ").append(anexo.getId()).append(System.getProperty("line.separator"));
 
             // Componemos el AnexoFull
             Document document  = crearDocumentJustificante(firma);
