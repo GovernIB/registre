@@ -96,14 +96,20 @@
                         </c:if>
                     </div>
 
-                    <%--BOTONERA INTEGRACION--%>
+                    <%--BOTONERA --%>
                     <div class="panel-footer center">
                         <form:form modelAttribute="integracion" action="${pageContext.request.contextPath}/integracion/busqueda" method="post" cssClass="form-horizontal" target="_blank">
                             <form:hidden path="texto"/>
                         </form:form>
-                        <button type="button" onclick="buscarIntegraciones('${registro.numeroRegistroFormateado}')" class="btn btn-warning btn-sm btn-block">
-                            <spring:message code="integracion.integraciones"/>
-                        </button>
+                        <div class="btn-group">
+                            <button type="button" onclick="buscarIntegraciones('${registro.numeroRegistroFormateado}')" class="btn btn-warning btn-sm btn-block">
+                                <spring:message code="integracion.integraciones"/>
+                            </button>
+                        </div>
+
+                        <c:if test="${not empty registro.registroDetalle.identificadorIntercambio}">
+                            <div class="btn-group"><button type="button" onclick="goToNewPage('<c:url value="/sir/${registro.registroDetalle.identificadorIntercambio}/detalle"/>')" class="btn btn-primary btn-sm"><spring:message code="idIntercambio.detalle"/></button></div>
+                        </c:if>
                     </div>
                 </div>
 
