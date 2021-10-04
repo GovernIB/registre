@@ -187,7 +187,7 @@ public class SchedulerBean implements SchedulerLocal {
 
         for (Entidad entidad : entidades) {
             log.info(" ");
-            log.info("------------- SIR: Reintentando envios sin ack de " + entidad.getNombre() + " -------------");
+            log.info("------------- SIR: Reintentando envios sin ACK de " + entidad.getNombre() + " -------------");
             log.info(" ");
             sirEnvioEjb.reintentarEnviosSinConfirmacion(entidad);
         }
@@ -199,7 +199,9 @@ public class SchedulerBean implements SchedulerLocal {
         List<Entidad> entidades = entidadEjb.getEntidadesSir();
 
         for (Entidad entidad : entidades) {
-
+            log.info(" ");
+            log.info("------------- SIR: Reintentando envios con ERROR de " + entidad.getNombre() + " -------------");
+            log.info(" ");
             sirEnvioEjb.reintentarEnviosConError(entidad);
         }
     }

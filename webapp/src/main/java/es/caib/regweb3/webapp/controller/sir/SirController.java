@@ -483,8 +483,9 @@ public class SirController extends BaseController {
     public Boolean reenviarIntercambio(@RequestParam Long idOficioRemision)throws Exception {
 
         try{
+            OficioRemision oficioRemision = oficioRemisionEjb.findById(idOficioRemision);
+            sirEnvioEjb.reenviarIntercambio(oficioRemision);
 
-            sirEnvioEjb.reenviarIntercambio(idOficioRemision);
             return true;
 
         }catch (Exception | I18NException e){
