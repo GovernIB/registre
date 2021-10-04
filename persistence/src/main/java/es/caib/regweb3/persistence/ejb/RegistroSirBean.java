@@ -975,13 +975,14 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
 
         Query q = em.createQuery("Select registroSir.id from RegistroSir as registroSir " +
                 "where registroSir.entidad.id = :idEntidad and (registroSir.estado = :reenviado or registroSir.estado = :rechazado) " +
-                "and registroSir.numeroReintentos < :maxReintentos");
+                "and registroSir.numeroReintentos < :maxReintentos order by id");
 
         q.setParameter("idEntidad", idEntidad);
         q.setParameter("reenviado", EstadoRegistroSir.REENVIADO);
         q.setParameter("rechazado", EstadoRegistroSir.RECHAZADO);
         q.setParameter("maxReintentos", PropiedadGlobalUtil.getMaxReintentosSir(idEntidad));
         q.setHint("org.hibernate.readOnly", true);
+        q.setMaxResults(20);
 
         return  q.getResultList();
 
@@ -994,13 +995,14 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         Query q = em.createQuery("Select registroSir.id from RegistroSir as registroSir " +
                 "where registroSir.entidad.id = :idEntidad and registroSir.estado = :reenviado or registroSir.estado = :rechazado " +
                 "and (registroSir.codigoError = '0039' or registroSir.codigoError = '0046' or registroSir.codigoError = '0057' or  registroSir.codigoError = '0058') " +
-                "and registroSir.numeroReintentos < :maxReintentos");
+                "and registroSir.numeroReintentos < :maxReintentos order by id");
 
         q.setParameter("idEntidad", idEntidad);
         q.setParameter("reenviado", EstadoRegistroSir.REENVIADO_Y_ERROR);
         q.setParameter("rechazado", EstadoRegistroSir.RECHAZADO_Y_ERROR);
         q.setParameter("maxReintentos", PropiedadGlobalUtil.getMaxReintentosSir(idEntidad));
         q.setHint("org.hibernate.readOnly", true);
+        q.setMaxResults(20);
 
         return  q.getResultList();
 

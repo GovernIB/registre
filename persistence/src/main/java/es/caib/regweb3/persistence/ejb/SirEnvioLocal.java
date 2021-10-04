@@ -54,11 +54,11 @@ public interface SirEnvioLocal {
 
     /**
      * Vuelve a enviar un intercambio que ya había sido enviado previamente
-     * @param idOficioRemision
+     * @param oficioRemision
      * @return
      * @throws Exception
      */
-    void reenviarIntercambio(Long idOficioRemision)throws Exception, I18NException;
+    void reenviarIntercambio(OficioRemision oficioRemision)throws Exception, I18NException;
 
     /**
      * Envía un mensaje ACK a partir de los datos de un RegistroSir
