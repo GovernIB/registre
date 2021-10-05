@@ -699,7 +699,8 @@ public interface RegwebConstantes {
     Long PLUGIN_VALIDACION_FIRMAS = 8L;
     Long PLUGIN_CUSTODIA_FS_JUSTIFICANTE = 9L;
     Long PLUGIN_ARXIU_JUSTIFICANTE = 10L;
-
+    Long PLUGIN_GEISER = 11L;
+    
     Long[] TIPOS_PLUGIN = {
             PLUGIN_CUSTODIA_ANEXOS,
             PLUGIN_JUSTIFICANTE,
@@ -710,7 +711,8 @@ public interface RegwebConstantes {
             PLUGIN_SCAN,
             PLUGIN_CUSTODIA_JUSTIFICANTE,
             PLUGIN_VALIDACION_FIRMAS,
-            PLUGIN_ARXIU_JUSTIFICANTE
+            PLUGIN_ARXIU_JUSTIFICANTE,
+            PLUGIN_GEISER
     };
 
     Long[] TIPOS_PLUGIN_CAIB = {

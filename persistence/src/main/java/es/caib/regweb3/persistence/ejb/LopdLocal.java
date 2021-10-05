@@ -57,7 +57,7 @@ public interface LopdLocal extends BaseEjb<Lopd, Long> {
      * @return
      * @throws Exception
      */
-    List<Lopd> getByRegistro(String anyoRegistro, Integer numRegistro, Long idLibro, Long accion, Long tipoRegistro) throws Exception;
+    List<Lopd> getByRegistro(String anyoRegistro, String numRegistro, Long idLibro, Long accion, Long tipoRegistro) throws Exception;
 
     /**
      * Realiza una Alta en las tablas de Lopd
@@ -69,7 +69,7 @@ public interface LopdLocal extends BaseEjb<Lopd, Long> {
      * @param accion
      * @throws Exception
      */
-    void altaLopd(Integer numeroRegistro, Date fecha, Long idLibro, Long idUsuarioEntidad, Long tipoRegistro, Long accion) throws Exception;
+    void altaLopd(String numeroRegistro, Date fecha, Long idLibro, Long idUsuarioEntidad, Long tipoRegistro, Long accion) throws Exception;
 
     /**
      * Inserta la búsqueda de Registros en las tablas de Lopd

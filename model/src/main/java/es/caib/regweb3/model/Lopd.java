@@ -23,7 +23,7 @@ import java.util.Date;
 public class Lopd implements Serializable{
 
     private Long id;
-    private Integer numeroRegistro;
+    private String numeroRegistro;
     private Long tipoRegistro;
     private String anyoRegistro;
     private Libro libro;
@@ -44,12 +44,12 @@ public class Lopd implements Serializable{
     }
 
 
-    @Column(name = "NUMREGISTRO", nullable = false)
-    public Integer getNumeroRegistro() {
+    @Column(name = "NUMREGISTRO", nullable = true)
+    public String getNumeroRegistro() {
         return numeroRegistro;
     }
 
-    public void setNumeroRegistro(Integer numeroRegistro) {
+    public void setNumeroRegistro(String numeroRegistro) {
         this.numeroRegistro = numeroRegistro;
     }
 
@@ -64,7 +64,7 @@ public class Lopd implements Serializable{
     }
 
 
-    @Column(name = "ANYOREGISTRO", nullable=false)
+    @Column(name = "ANYOREGISTRO", nullable=true)
     public String getAnyoRegistro() {
         return anyoRegistro;
     }

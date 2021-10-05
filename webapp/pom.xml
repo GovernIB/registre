@@ -960,13 +960,22 @@
 				        </exclusion>
 				      </exclusions> 
 				    </dependency>
-				    
+									 
+					<!-- ============================================ -->
+				    <!-- ======== PLUGINS GEISER =========== -->
+				    <!-- ============================================ -->
+				
 				    <dependency>
-				    	<groupId>es.gob.afirma</groupId>
-						<artifactId>afirma-crypto-pdf</artifactId>
-						<version>1.6.5</version>
-						<type>jar</type>
+				      <groupId>es.caib.regweb3</groupId>
+				      <artifactId>plugin-geiser-api</artifactId>
+				      <version>${project.version}</version>
 				    </dependency>
+				
+				    <dependency>
+				      <groupId>es.caib.regweb3</groupId>
+				      <artifactId>plugin-geiser-apb</artifactId>
+				      <version>${project.version}</version>
+				    </dependency>   
 			</dependencies>
 			<build>
 				<plugins>

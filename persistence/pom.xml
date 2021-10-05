@@ -67,6 +67,13 @@
             <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
+        
+        <dependency>
+	      <groupId>es.caib.regweb3</groupId>
+	      <artifactId>plugin-geiser-api</artifactId>
+	      <version>${project.version}</version>
+	      <scope>provided</scope>
+	    </dependency>
 
         <!-- Externas -->
         <dependency>
@@ -291,6 +298,26 @@
             <scope>test</scope>
         </dependency>-->
 
+		<!-- ConversionHelper -->
+		<dependency>
+			<groupId>ma.glasnost.orika</groupId>
+			<artifactId>orika-core</artifactId>
+			<version>${orika.version}</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>slf4j-simple</artifactId>
+					<groupId>org.slf4j</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>javassist</artifactId>
+					<groupId>javassist</groupId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-api</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
     </dependencies>
 
     <build>

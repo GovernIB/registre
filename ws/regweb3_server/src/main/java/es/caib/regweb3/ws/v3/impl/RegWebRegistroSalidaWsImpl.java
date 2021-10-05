@@ -417,7 +417,7 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
     @Deprecated
     public IdentificadorWs obtenerRegistroSalidaID(
             @WebParam(name = "anyo") int anyo,
-            @WebParam(name = "numeroRegistro") int numeroRegistro,
+            @WebParam(name = "numeroRegistro") String numeroRegistro,
             @WebParam(name = "libro") String codigoLibro,
             @WebParam(name = "usuario") String usuario,
             @WebParam(name = "entidad") String entidad)
@@ -429,7 +429,7 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
             throw new I18NException("error.valor.requerido.ws", "anyo");
         }
 
-        if (numeroRegistro <= 0) {
+        if (numeroRegistro == null || numeroRegistro.isEmpty()) {
             throw new I18NException("error.valor.requerido.ws", "numeroRegistro");
         }
 

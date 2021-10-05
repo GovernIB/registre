@@ -38,7 +38,7 @@ public class RegistroEntrada implements IRegistro {
     @XmlElement
     private Libro libro;
     @XmlElement
-    private Integer numeroRegistro;
+    private String numeroRegistro;
     @XmlElement
     private String numeroRegistroFormateado;
     @XmlElement
@@ -77,7 +77,7 @@ public class RegistroEntrada implements IRegistro {
       this.registroDetalle = re.registroDetalle == null? null : new RegistroDetalle(re.registroDetalle);
     }
 
-    public RegistroEntrada(Long id, Integer numeroRegistro, Date fecha, Long idLibro, String nombreLibro, String denominacionOficina, String denominacionOrganismo) {
+    public RegistroEntrada(Long id, String numeroRegistro, Date fecha, Long idLibro, String nombreLibro, String denominacionOficina, String denominacionOrganismo) {
         this.id = id;
         this.numeroRegistro = numeroRegistro;
         this.fecha = fecha;
@@ -89,7 +89,7 @@ public class RegistroEntrada implements IRegistro {
      * Constructor para Informe LibroRegistro
      */
     public RegistroEntrada(Long idRegistro, Long idLibro, String nombreLibro, Long idOficina, String denominacionOficina, Date fecha,
-                           Integer numeroRegistro, String numeroRegistroFormateado, String extracto, Long idOficinaOrigen, String denominacionOficinaOrigen,
+                           String numeroRegistro, String numeroRegistroFormateado, String extracto, Long idOficinaOrigen, String denominacionOficinaOrigen,
                            String numeroRegistroOrigen, Date fechaOrigen, String destinoExternoDenominacion, Long idDestino,
                            String denominacionDestino, Long tipoDocumentacionFisica, Long idioma, String observaciones, Long estado,
                            String expediente, Long idCodigoAsunto, String referenciaExterna, Long transporte, String numeroTransporte,
@@ -182,7 +182,7 @@ public class RegistroEntrada implements IRegistro {
         this.destinoExternoDenominacion = destinoExternoDenominacion;
     }
 
-    @Column(name = "FECHA", nullable = false)
+    @Column(name = "FECHA", nullable = true)
     public Date getFecha() {
         return fecha;
     }
@@ -202,16 +202,16 @@ public class RegistroEntrada implements IRegistro {
         this.libro = libro;
     }
 
-    @Column(name = "NUMREGISTRO", nullable = false)
-    public Integer getNumeroRegistro() {
+    @Column(name = "NUMREGISTRO", nullable = true)
+    public String getNumeroRegistro() {
         return numeroRegistro;
     }
 
-    public void setNumeroRegistro(Integer numeroRegistro) {
+    public void setNumeroRegistro(String numeroRegistro) {
         this.numeroRegistro = numeroRegistro;
     }
 
-    @Column(name = "NUMREGFORMAT", nullable = false)
+    @Column(name = "NUMREGFORMAT", nullable = true)
     public String getNumeroRegistroFormateado() {
         return numeroRegistroFormateado;
     }

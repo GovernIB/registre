@@ -260,7 +260,7 @@ public class InformeBean implements InformeLocal {
             }
 
             RegistroEntrada registroEntrada = new RegistroEntrada(idRE, (Long) object[1], (String) object[2],
-                    (Long) object[3], (String) object[4], (Date) object[5], (Integer) object[6], (String) object[7], (String) object[8],
+                    (Long) object[3], (String) object[4], (Date) object[5], (String) object[6], (String) object[7], (String) object[8],
                     (Long) object[9], (String) object[10], (String) object[11], (Date) object[12], (String) object[13], (Long) object[14],
                     (String) object[15], (Long) object[16], (Long) object[17], (String) object[18], (Long) object[19], (String) object[20],
                     (Long) object[21], (String) object[22], (Long) object[23], (String) object[24], (Long) object[25], (String) object[26], interesados);
@@ -493,7 +493,7 @@ public class InformeBean implements InformeLocal {
             }
 
             RegistroSalida registroSalida = new RegistroSalida(idRS, (Long) object[1], (String) object[2],
-                    (Long) object[3], (String) object[4], (Date) object[5], (Integer) object[6], (String) object[7], (String) object[8],
+                    (Long) object[3], (String) object[4], (Date) object[5], (String) object[6], (String) object[7], (String) object[8],
                     (Long) object[9], (String) object[10], (String) object[11], (Date) object[12], (String) object[13], (Long) object[14],
                     (String) object[15], (Long) object[16], (Long) object[17], (String) object[18], (Long) object[19], (String) object[20],
                     (Long) object[21], (String) object[22], (Long) object[23], (String) object[24], (Long) object[25], (String) object[26], interesados);

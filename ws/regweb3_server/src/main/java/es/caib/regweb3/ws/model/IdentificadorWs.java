@@ -16,23 +16,23 @@ import java.util.Date;
 public class IdentificadorWs implements Serializable {
 
     private String numeroRegistroFormateado;
-    private Integer numero;
+    private String numero;
     private Date fecha;
 
     public IdentificadorWs() {
     }
 
-    public IdentificadorWs(String numeroRegistroFormateado, Integer numero, Date fecha) {
+    public IdentificadorWs(String numeroRegistroFormateado, String numero, Date fecha) {
         this.numeroRegistroFormateado = numeroRegistroFormateado;
         this.numero = numero;
         this.fecha = fecha;
     }
 
-    public Integer getNumero() {
+    public String getNumero() {
         return numero;
     }
 
-    public void setNumero(Integer numero) {
+    public void setNumero(String numero) {
         this.numero = numero;
     }
 

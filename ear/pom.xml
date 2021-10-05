@@ -543,6 +543,22 @@
 		<artifactId>plugin-documentcustody-arxiudigitalapb</artifactId>
 		<version>1.0.2</version>
 	</dependency>
+	
+	<!-- ============================================ -->
+    <!-- ======== PLUGINS GEISER =========== -->
+    <!-- ============================================ -->
+
+    <dependency>
+      <groupId>es.caib.regweb3</groupId>
+      <artifactId>plugin-geiser-api</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>es.caib.regweb3</groupId>
+      <artifactId>plugin-geiser-apb</artifactId>
+      <version>${project.version}</version>
+    </dependency>
   </dependencies>
 
 

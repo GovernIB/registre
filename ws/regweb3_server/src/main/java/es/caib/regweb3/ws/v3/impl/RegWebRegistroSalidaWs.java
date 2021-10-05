@@ -107,7 +107,7 @@ public interface RegWebRegistroSalidaWs /*extends IBaseWs*/ {
     @Deprecated
     public IdentificadorWs obtenerRegistroSalidaID(
          @WebParam(name = "any")int any,
-         @WebParam(name = "numeroRegistro")int numeroRegistro,
+         @WebParam(name = "numeroRegistro")String numeroRegistro,
          @WebParam(name = "libro")String libro,
          @WebParam(name = "usuario")String usuario,
          @WebParam(name = "entidad")String entidad) 

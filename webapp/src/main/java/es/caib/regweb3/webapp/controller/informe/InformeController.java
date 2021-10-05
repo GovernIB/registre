@@ -983,7 +983,7 @@ public class InformeController extends AbstractRegistroCommonFormController {
 
         Entidad entidadActiva = getEntidadActiva(request);
 
-        Integer numRegistro = null;
+        String numRegistro = null;
         String anyoRegistro = "";
         Libro libro = null;
 

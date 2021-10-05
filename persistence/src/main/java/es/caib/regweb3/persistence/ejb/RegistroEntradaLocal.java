@@ -5,6 +5,7 @@ import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.AnexoFull;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
+import org.plugin.geiser.api.RespuestaRegistroGeiser;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
@@ -265,5 +266,16 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      * @throws Exception
      */
     void postProcesoNuevoRegistro(RegistroEntrada re, Long entidadId) throws Exception, I18NException;
+
+
+    /**
+     * Envia el registro a GEISER
+     * @param re
+     * @param entidadId
+     * @return 
+     * @throws Exception
+     * @throws I18NException
+     */
+	RespuestaRegistroGeiser postProcesoNuevoRegistroGeiser(RegistroEntrada re, UsuarioEntidad usuarioEntidad) throws Exception, I18NException;
 
 }

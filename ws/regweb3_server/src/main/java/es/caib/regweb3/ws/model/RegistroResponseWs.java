@@ -16,7 +16,7 @@ public class RegistroResponseWs implements Serializable {
 
     private String entidadCodigo;
     private String entidadDenominacion;
-    private int numeroRegistro;
+    private String numeroRegistro;
     private String numeroRegistroFormateado;
     private Date fechaRegistro;
     private String codigoUsuario;
@@ -69,11 +69,11 @@ public class RegistroResponseWs implements Serializable {
         this.entidadDenominacion = entidadDenominacion;
     }
 
-    public int getNumeroRegistro() {
+    public String getNumeroRegistro() {
         return numeroRegistro;
     }
 
-    public void setNumeroRegistro(int numeroRegistro) {
+    public void setNumeroRegistro(String numeroRegistro) {
         this.numeroRegistro = numeroRegistro;
     }
 

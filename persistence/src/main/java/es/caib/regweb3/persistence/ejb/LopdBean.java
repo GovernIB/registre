@@ -161,7 +161,7 @@ public class LopdBean extends BaseEjbJPA<Lopd, Long> implements LopdLocal{
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Lopd> getByRegistro(String anyoRegistro, Integer numRegistro, Long idLibro, Long accion, Long tipoRegistro) throws Exception {
+    public List<Lopd> getByRegistro(String anyoRegistro, String numRegistro, Long idLibro, Long accion, Long tipoRegistro) throws Exception {
 
         Query q = em.createQuery("Select lopd from Lopd as lopd where lopd.anyoRegistro = :anyoRegistro and " +
                 "lopd.accion = :accion and lopd.numeroRegistro = :numRegistro and " +
@@ -191,13 +191,14 @@ public class LopdBean extends BaseEjbJPA<Lopd, Long> implements LopdLocal{
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public void altaLopd(Integer numeroRegistro, Date fecha, Long idLibro, Long idUsuarioEntidad, Long tipoRegistro, Long accion) throws Exception {
+    public void altaLopd(String numeroRegistro, Date fecha, Long idLibro, Long idUsuarioEntidad, Long tipoRegistro, Long accion) throws Exception {
 
         SimpleDateFormat formatYear = new SimpleDateFormat("yyyy");
         Lopd lopd = new Lopd();
         lopd.setNumeroRegistro(numeroRegistro);
         lopd.setTipoRegistro(tipoRegistro);
-        lopd.setAnyoRegistro(formatYear.format(fecha));
+        if (fecha != null)
+        	lopd.setAnyoRegistro(formatYear.format(fecha));
         lopd.setLibro(new Libro(idLibro));
         lopd.setFecha(Calendar.getInstance().getTime());
         lopd.setUsuario(new UsuarioEntidad(idUsuarioEntidad));
@@ -218,12 +219,14 @@ public class LopdBean extends BaseEjbJPA<Lopd, Long> implements LopdLocal{
             if(tipoRegistro.equals(RegwebConstantes.REGISTRO_ENTRADA)){
                 RegistroEntrada registro = (RegistroEntrada) paginacion.getListado().get(i);
                 lopd.setNumeroRegistro(registro.getNumeroRegistro());
-                lopd.setAnyoRegistro(formatYear.format(registro.getFecha()));
+                if (registro.getFecha() != null)
+                	lopd.setAnyoRegistro(formatYear.format(registro.getFecha()));
                 lopd.setLibro(registro.getLibro());
             }else {
                 RegistroSalida registro = (RegistroSalida) paginacion.getListado().get(i);
                 lopd.setNumeroRegistro(registro.getNumeroRegistro());
-                lopd.setAnyoRegistro(formatYear.format(registro.getFecha()));
+                if (registro.getFecha() != null)
+                	lopd.setAnyoRegistro(formatYear.format(registro.getFecha()));
                 lopd.setLibro(registro.getLibro());
             }
 
@@ -320,7 +323,7 @@ public class LopdBean extends BaseEjbJPA<Lopd, Long> implements LopdLocal{
         List<Object[]> result = q.getResultList();
 
         for (Object[] object : result) {
-            RegistroEntrada registroEntrada = new RegistroEntrada(null, (Integer) object[0], (Date) object[1], null, (String) object[2], (String) object[3], (String) object[4]);
+            RegistroEntrada registroEntrada = new RegistroEntrada(null, (String) object[0], (Date) object[1], null, (String) object[2], (String) object[3], (String) object[4]);
 
             registrosEntrada.add(registroEntrada);
         }
@@ -384,7 +387,7 @@ public class LopdBean extends BaseEjbJPA<Lopd, Long> implements LopdLocal{
         List<Object[]> result = q.getResultList();
 
         for (Object[] object : result) {
-            HistoricoRegistroEntrada historicoRegistroEntrada = new HistoricoRegistroEntrada(null, (Integer) object[0], (String) object[1], (String) object[2], (String) object[3], (Date) object[4], (Date) object[5], (String) object[6]);
+            HistoricoRegistroEntrada historicoRegistroEntrada = new HistoricoRegistroEntrada(null, (String) object[0], (String) object[1], (String) object[2], (String) object[3], (Date) object[4], (Date) object[5], (String) object[6]);
 
             historicosRegistroEntrada.add(historicoRegistroEntrada);
         }
@@ -445,7 +448,7 @@ public class LopdBean extends BaseEjbJPA<Lopd, Long> implements LopdLocal{
         List<Object[]> result = q.getResultList();
 
         for (Object[] object : result) {
-            RegistroSalida registroSalida = new RegistroSalida(null, (Integer) object[0], (Date) object[1], null, (String) object[2], (String) object[3], (String) object[4]);
+            RegistroSalida registroSalida = new RegistroSalida(null, (String) object[0], (Date) object[1], null, (String) object[2], (String) object[3], (String) object[4]);
 
             registrosSalida.add(registroSalida);
         }
@@ -509,7 +512,7 @@ public class LopdBean extends BaseEjbJPA<Lopd, Long> implements LopdLocal{
         List<Object[]> result = q.getResultList();
 
         for (Object[] object : result) {
-            HistoricoRegistroSalida historicoRegistroSalida = new HistoricoRegistroSalida(null, (Integer) object[0], (String) object[1], (String) object[2], (String) object[3], (Date) object[4], (Date) object[5], (String) object[6]);
+            HistoricoRegistroSalida historicoRegistroSalida = new HistoricoRegistroSalida(null, (String) object[0], (String) object[1], (String) object[2], (String) object[3], (Date) object[4], (Date) object[5], (String) object[6]);
 
             historicosRegistroSalida.add(historicoRegistroSalida);
         }
@@ -566,7 +569,7 @@ public class LopdBean extends BaseEjbJPA<Lopd, Long> implements LopdLocal{
         List<Object[]> result = q.getResultList();
 
         for (Object[] object : result) {
-            RegistroEntrada registroEntrada = new RegistroEntrada(null, (Integer) object[0], (Date) object[1], null, (String) object[2], (String) object[3], (String) object[4]);
+            RegistroEntrada registroEntrada = new RegistroEntrada(null, (String) object[0], (Date) object[1], null, (String) object[2], (String) object[3], (String) object[4]);
 
             registrosEntrada.add(registroEntrada);
         }
@@ -631,7 +634,7 @@ public class LopdBean extends BaseEjbJPA<Lopd, Long> implements LopdLocal{
         List<Object[]> result = q.getResultList();
 
         for (Object[] object : result) {
-            HistoricoRegistroEntrada historicoRegistroEntrada = new HistoricoRegistroEntrada(null, (Integer) object[0], (String) object[1], (String) object[2], (String) object[3], (Date) object[4], (Date) object[5], (String) object[6]);
+            HistoricoRegistroEntrada historicoRegistroEntrada = new HistoricoRegistroEntrada(null, (String) object[0], (String) object[1], (String) object[2], (String) object[3], (Date) object[4], (Date) object[5], (String) object[6]);
 
             historicosRegistroEntrada.add(historicoRegistroEntrada);
         }
@@ -689,7 +692,7 @@ public class LopdBean extends BaseEjbJPA<Lopd, Long> implements LopdLocal{
         List<Object[]> result = q.getResultList();
 
         for (Object[] object : result) {
-            RegistroSalida registroSalida = new RegistroSalida(null, (Integer) object[0], (Date) object[1], null, (String) object[2], (String) object[3], (String) object[4]);
+            RegistroSalida registroSalida = new RegistroSalida(null, (String) object[0], (Date) object[1], null, (String) object[2], (String) object[3], (String) object[4]);
 
             registrosSalida.add(registroSalida);
         }
@@ -754,7 +757,7 @@ public class LopdBean extends BaseEjbJPA<Lopd, Long> implements LopdLocal{
         List<Object[]> result = q.getResultList();
 
         for (Object[] object : result) {
-            HistoricoRegistroSalida historicoRegistroSalida = new HistoricoRegistroSalida(null, (Integer) object[0], (String) object[1], (String) object[2], (String) object[3], (Date) object[4], (Date) object[5], (String) object[6]);
+            HistoricoRegistroSalida historicoRegistroSalida = new HistoricoRegistroSalida(null, (String) object[0], (String) object[1], (String) object[2], (String) object[3], (Date) object[4], (Date) object[5], (String) object[6]);
 
             historicosRegistroSalida.add(historicoRegistroSalida);
         }
@@ -899,7 +902,7 @@ public class LopdBean extends BaseEjbJPA<Lopd, Long> implements LopdLocal{
         List<Object[]> result = q.getResultList();
 
         for (Object[] object : result) {
-            RegistroEntrada registroEntrada = new RegistroEntrada((Long) object[0], (Integer) object[1], (Date) object[2], (Long) object[3], (String) object[4], (String) object[5], (String) object[6]);
+            RegistroEntrada registroEntrada = new RegistroEntrada((Long) object[0], (String) object[1], (Date) object[2], (Long) object[3], (String) object[4], (String) object[5], (String) object[6]);
 
             registrosEntrada.add(registroEntrada);
         }
@@ -983,7 +986,7 @@ public class LopdBean extends BaseEjbJPA<Lopd, Long> implements LopdLocal{
         List<Object[]> result = q.getResultList();
 
         for (Object[] object : result) {
-            RegistroSalida registroSalida = new RegistroSalida((Long) object[0], (Integer) object[1], (Date) object[2], (Long) object[3], (String) object[4], (String) object[5], (String) object[6]);
+            RegistroSalida registroSalida = new RegistroSalida((Long) object[0], (String) object[1], (Date) object[2], (Long) object[3], (String) object[4], (String) object[5], (String) object[6]);
 
             registrosSalida.add(registroSalida);
         }

@@ -374,8 +374,8 @@
                                                     <tbody>
                                                         <c:forEach var="registro" items="${paginacion.listado}" varStatus="status">
                                                             <tr>
-                                                                <td>${registro.numeroRegistroFormateado}</td>
-                                                                <td class="center"><fmt:formatDate value="${registro.fecha}" pattern="dd/MM/yyyy"/></td>
+                                                                <td>${not empty registro.numeroRegistroFormateado ? registro.numeroRegistroFormateado : '<label>Pendiente</label>'}</td>
+                                                                <td class="center"><c:choose><c:when test="${not empty registro.fecha}"><fmt:formatDate value="${registro.fecha}" pattern="dd/MM/yyyy"/></c:when><c:otherwise><label>Pendiente</label></c:otherwise></c:choose></td>
                                                                 <td class="center">${registro.usuario.usuario.identificador}</td>
                                                                 <td class="center"><label class="no-bold" rel="popupAbajo" data-content="${registro.oficina.denominacion}" data-toggle="popover">${registro.oficina.codigo}</label></td>
                                                                 <td>${(empty registro.destino)? registro.destinoExternoDenominacion : registro.destino.denominacion}</td>

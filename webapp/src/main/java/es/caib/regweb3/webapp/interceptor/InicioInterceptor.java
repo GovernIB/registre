@@ -217,13 +217,13 @@ public class InicioInterceptor extends HandlerInterceptorAdapter {
                             Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.pluginfirma"));
                             entidadEjb.marcarEntidadMantenimiento(entidadActiva.getId(), true);
                         }
-                        // Sir ServerBAse
-                        if (entidadActiva.getSir() && Configuracio.getSirServerBase() == null) {
-                            log.info("Error, falta propiedad sirserverbase");
-                            Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.sirserverbase"));
-                            entidadEjb.marcarEntidadMantenimiento(entidadActiva.getId(), true);
-                            response.sendRedirect("/regweb3/aviso");
-                        }
+//                        // Sir ServerBAse
+//                        if (entidadActiva.getSir() && Configuracio.getSirServerBase() == null) {
+//                            log.info("Error, falta propiedad sirserverbase");
+//                            Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.sirserverbase"));
+//                            entidadEjb.marcarEntidadMantenimiento(entidadActiva.getId(), true);
+//                            response.sendRedirect("/regweb3/aviso");
+//                        }
 
                         // Dir3Caib Server
                         if (PropiedadGlobalUtil.getDir3CaibServer() == null || PropiedadGlobalUtil.getDir3CaibServer().isEmpty()) {

@@ -207,9 +207,9 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
         }
 
         // Intervalo fechas
-        where.add(" (registroEntrada.fecha >= :fechaInicio  ");
+        where.add(" (registroEntrada.fecha is null or (registroEntrada.fecha >= :fechaInicio  ");
         parametros.put("fechaInicio", fechaInicio);
-        where.add(" registroEntrada.fecha <= :fechaFin) ");
+        where.add(" registroEntrada.fecha <= :fechaFin)) ");
         parametros.put("fechaFin", fechaFin);
 
         //Presencial
@@ -462,7 +462,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public RegistroEntrada findByNumeroAnyoLibro(int numero, int anyo, String libro) throws Exception {
+    public RegistroEntrada findByNumeroAnyoLibro(String numero, int anyo, String libro) throws Exception {
 
         Query q = em.createQuery("Select registroEntrada "
                 + " from RegistroEntrada as registroEntrada"

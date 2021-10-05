@@ -135,7 +135,7 @@ public interface RegistroEntradaConsultaLocal {
      * @return
      * @throws Exception
      */
-    RegistroEntrada findByNumeroAnyoLibro(int numero, int anyo, String libro) throws Exception;
+    RegistroEntrada findByNumeroAnyoLibro(String numero, int anyo, String libro) throws Exception;
 
     /**
      * Devuelve el numero de registro formateado a partir de un registro detalle.

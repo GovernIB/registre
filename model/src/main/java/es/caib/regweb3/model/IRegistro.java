@@ -30,9 +30,9 @@ public interface IRegistro extends Serializable {
 
   void setLibro(Libro libro);
 
-  Integer getNumeroRegistro();
+  String getNumeroRegistro();
 
-  void setNumeroRegistro(Integer numeroRegistro);
+  void setNumeroRegistro(String numeroRegistro);
 
   String getNumeroRegistroFormateado();
 

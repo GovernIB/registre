@@ -235,7 +235,7 @@ public class RegistroSalidaConsultaBean implements RegistroSalidaConsultaLocal {
 
     @Override
     @SuppressWarnings("unchecked")
-    public RegistroSalida findByNumeroAnyoLibro(int numero, int anyo, String libro) throws Exception {
+    public RegistroSalida findByNumeroAnyoLibro(String numero, int anyo, String libro) throws Exception {
 
         Query q = em.createQuery("Select registroSalida "
                 + " from RegistroSalida as registroSalida"

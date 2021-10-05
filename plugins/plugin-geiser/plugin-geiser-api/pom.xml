@@ -1,0 +1,67 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>plugin-geiser-api</artifactId>
+	<name>geiser-api</name>
+
+	<parent>
+		<groupId>es.caib.regweb3</groupId>
+		<artifactId>plugin-geiser</artifactId>
+		<version>3.2.4</version>
+	</parent>
+	
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.18.12</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.fundaciobit.pluginsib.core</groupId>
+			<artifactId>pluginsib-core</artifactId>
+			<version>2.0.0</version>
+		</dependency>
+	</dependencies>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>jaxws-maven-plugin</artifactId>
+				<version>2.4.1</version>
+				<executions>
+					<execution>
+						<id>generate-reports-ws-code</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>wsimport</goal>
+						</goals>
+						<configuration>
+							<wsdlUrls>
+								<wsdlUrl>${basedir}/wsdl/RegistroWebService.wsdl</wsdlUrl>
+							</wsdlUrls>
+							<packageName>org.geiser.api.ws</packageName>
+							<vmArgs>
+								<vmArg>-Djavax.xml.accessExternalSchema=all -Djavax.net.ssl.trustStore=${basedir}/doc/rgecopruebas.jks -Djavax.net.ssl.trustStorePassword=tecnologies</vmArg>
+							</vmArgs>
+							<verbose>true</verbose>
+							<sourceDestDir>${basedir}/src/main/java</sourceDestDir>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+	<repositories>
+		<repository>
+			<name>Local Maven repository</name>
+			<id>maven-repository</id>
+			<url>file://${basedir}/../local-repo</url>
+		</repository>
+	</repositories>
+</project>

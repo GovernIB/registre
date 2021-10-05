@@ -6,8 +6,8 @@ import es.caib.dir3caib.ws.api.unidad.UnidadTF;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.model.utils.RegistroBasico;
+import es.caib.regweb3.persistence.utils.ConversionHelper;
 import es.caib.regweb3.persistence.utils.I18NLogicUtils;
-import es.caib.regweb3.persistence.utils.NumeroRegistro;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.persistence.utils.RegistroUtils;
 import es.caib.regweb3.plugins.postproceso.IPostProcesoPlugin;
@@ -16,17 +16,25 @@ import es.caib.regweb3.utils.Dir3CaibUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 import org.apache.log4j.Logger;
+import org.fundaciobit.genapp.common.i18n.I18NArgumentCode;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.jboss.ejb3.annotation.SecurityDomain;
+import org.plugin.geiser.api.GeiserPluginException;
+import org.plugin.geiser.api.IGeiserPlugin;
+import org.plugin.geiser.api.PeticionRegistroGeiser;
+import org.plugin.geiser.api.RespuestaRegistroGeiser;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
 
 import javax.annotation.Resource;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import javax.interceptor.Interceptors;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
@@ -45,6 +53,7 @@ import static es.caib.regweb3.utils.RegwebConstantes.REGISTRO_SALIDA;
 @Stateless(name = "RegistroSalidaEJB")
 @SecurityDomain("seycon")
 @RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI","RWE_WS_ENTRADA","RWE_WS_SALIDA", "RWE_WS_CIUDADANO"})
+@Interceptors(SpringBeanAutowiringInterceptor.class)
 /*@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)*/
 public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
         implements RegistroSalidaLocal {
@@ -53,7 +62,10 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
 
     @PersistenceContext(unitName = "regweb3")
     private EntityManager em;
-
+    
+    @Autowired
+    ConversionHelper conversioHelper;
+    
     @Resource
     private javax.ejb.SessionContext ejbContext;
 
@@ -89,12 +101,12 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
 
             // Obtenemos el Número de registro
             Libro libro = libroEjb.findById(registroSalida.getLibro().getId());
-            NumeroRegistro numeroRegistro = contadorEjb.incrementarContador(libro.getContadorSalida().getId());
-            registroSalida.setNumeroRegistro(numeroRegistro.getNumero());
-            registroSalida.setFecha(numeroRegistro.getFecha());
+//            NumeroRegistro numeroRegistro = contadorEjb.incrementarContador(libro.getContadorSalida().getId());
+//            registroSalida.setNumeroRegistro(numeroRegistro.getNumero());
+//            registroSalida.setFecha(numeroRegistro.getFecha());
 
             // Generamos el Número de registro formateado
-            registroSalida.setNumeroRegistroFormateado(RegistroUtils.numeroRegistroFormateado(registroSalida, libro, usuarioEntidad.getEntidad()));
+//            registroSalida.setNumeroRegistroFormateado(RegistroUtils.numeroRegistroFormateado(registroSalida, libro, usuarioEntidad.getEntidad()));
 
             // Si no ha introducido ninguna fecha de Origen
             if (registroSalida.getRegistroDetalle().getFechaOrigen() == null) {
@@ -106,7 +118,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
 
                 registroSalida.getRegistroDetalle().setNumeroRegistroOrigen(registroSalida.getNumeroRegistroFormateado());
             }
-
+            
             // Guardamos el RegistroSalida
             registroSalida = persist(registroSalida);
 
@@ -144,6 +156,27 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
             //Llamamos al plugin de postproceso
             postProcesoNuevoRegistro(registroSalida, usuarioEntidad.getEntidad().getId());
 
+          //Envío directo GEISER si el destinatario no está integrado con SIR
+            if (registroSalida.getEvento() != RegwebConstantes.EVENTO_OFICIO_SIR) {
+	            try {
+		            //Registro interno en GEISER
+		            RespuestaRegistroGeiser respuesta = postProcesoNuevoRegistroGeiser(registroSalida, usuarioEntidad);
+		            if (respuesta != null) {
+		            	registroSalida.setNumeroRegistro(respuesta.getNuRegistro());
+		            	registroSalida.setFecha(respuesta.getFechaRegistro());
+		            	registroSalida.setNumeroRegistroFormateado(RegistroUtils.numeroRegistroFormateado(registroSalida, libro, usuarioEntidad.getEntidad()));
+		            } else {
+		                // No s´ha definit cap plugin de Justificant. Consulti amb el seu Administrador.
+		                throw new I18NException("error.plugin.nodefinit", new I18NArgumentCode("plugin.tipo.11"));
+		            }
+	            } catch (GeiserPluginException gpe) {
+					log.error("Ha habido un error realizando el registro en GEISER");
+					gpe.printStackTrace();
+					ejbContext.setRollbackOnly();
+					throw gpe;
+				}
+            }
+            
             return registroSalida;
 
         } catch (I18NException | Exception i18n) {
@@ -745,5 +778,18 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
         if (postProcesoPlugin != null) {
             postProcesoPlugin.nuevoRegistroSalida(rs);
         }
+    }
+    
+    @Override
+    public RespuestaRegistroGeiser postProcesoNuevoRegistroGeiser(RegistroSalida rs, UsuarioEntidad usuarioEntidad) throws Exception, I18NException {
+    	RespuestaRegistroGeiser respuesta = null;
+    	IGeiserPlugin geiserPlugin = (IGeiserPlugin) pluginEjb.getPlugin(usuarioEntidad.getEntidad().getId(), RegwebConstantes.PLUGIN_GEISER);
+        if (geiserPlugin != null) {
+        	respuesta = geiserPlugin.registrar(
+        			conversioHelper.convertir(
+        					rs, 
+        					PeticionRegistroGeiser.class));
+        }
+		return respuesta;
     }
 }

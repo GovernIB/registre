@@ -19,9 +19,8 @@
         <module>plugin-distribucion</module>
         <module>plugin-justificante</module>
         <module>plugin-postproceso</module>
-    <module>plugin-geiser</module>
-  </modules>
-
+    	<module>plugin-geiser</module>
+  	</modules>
     <repositories>
         <repository>
             <id>maven-nuxeo</id>

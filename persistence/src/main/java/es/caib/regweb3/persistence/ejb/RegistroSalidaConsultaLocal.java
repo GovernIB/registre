@@ -48,7 +48,7 @@ public interface RegistroSalidaConsultaLocal{
      * @return
      * @throws Exception
      */
-    RegistroSalida findByNumeroAnyoLibro(int numero, int anyo, String libro) throws Exception;
+    RegistroSalida findByNumeroAnyoLibro(String numero, int anyo, String libro) throws Exception;
 
     /**
      * Obtiene el RegistroSalida a partir de su numero de registro formateado, la entidad y el libro.

@@ -44,7 +44,7 @@ public class HistoricoRegistroEntrada implements Serializable {
         this.usuario = new UsuarioEntidad(usuarioEntidad, usuario,null);
     }
 
-    public HistoricoRegistroEntrada(Long idRegistro, Integer numeroRegistro, String nombreLibro, String denominacionOficina, String denominacionOrganismo, Date fechaRegistro, Date fecha, String modificacion) {
+    public HistoricoRegistroEntrada(Long idRegistro, String numeroRegistro, String nombreLibro, String denominacionOficina, String denominacionOrganismo, Date fechaRegistro, Date fecha, String modificacion) {
         this.registroEntrada = new RegistroEntrada(idRegistro, numeroRegistro, fechaRegistro, null, nombreLibro, denominacionOficina, denominacionOrganismo);
         this.fecha = fecha;
         this.modificacion = modificacion;
