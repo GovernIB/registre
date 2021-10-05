@@ -876,7 +876,11 @@ public class SirEnvioBean implements SirEnvioLocal {
             } catch (I18NException | Exception e) {
                 e.printStackTrace();
                 integracionEjb.addIntegracionError(tipoIntegracion, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - tiempo, oficio.getUsuarioResponsable().getEntidad().getId(), oficio.getIdentificadorIntercambio());
-                throw e;
+
+                // Solo lanzamos la Excepción si no se trata del SCHEDULER
+                if(tipoIntegracion.equals(RegwebConstantes.INTEGRACION_SIR)){
+                    throw e;
+                }
             }
 
 
@@ -895,7 +899,11 @@ public class SirEnvioBean implements SirEnvioLocal {
             } catch (I18NException | Exception e) {
                 e.printStackTrace();
                 integracionEjb.addIntegracionError(tipoIntegracion, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - tiempo, oficio.getUsuarioResponsable().getEntidad().getId(), oficio.getIdentificadorIntercambio());
-                throw e;
+
+                // Solo lanzamos la Excepción si no se trata del SCHEDULER
+                if(tipoIntegracion.equals(RegwebConstantes.INTEGRACION_SIR)){
+                    throw e;
+                }
             }
 
         }
