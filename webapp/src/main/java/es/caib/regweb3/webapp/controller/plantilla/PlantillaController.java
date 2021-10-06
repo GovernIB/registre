@@ -183,12 +183,12 @@ public class PlantillaController extends BaseController {
 
         if (!plantillaJson.getOficinaCodigo().equals("-1")) {
 
-            Oficina oficina = oficinaEjb.findByCodigoEntidad(plantillaJson.getOficinaCodigo(), usuarioEntidad.getEntidad().getId());
+            Oficina oficina = oficinaEjb.findByCodigoByEntidadMultiEntidad(plantillaJson.getOficinaCodigo(), usuarioEntidad.getEntidad().getId());
 
-            if (oficina != null) { // es interna
-                plantillaJson.setOficinaExterna(false);
-            } else { // es externa
+            if(oficina == null ||!usuarioEntidad.getEntidad().getId().equals(oficina.getOrganismoResponsable().getEntidad().getId())){ //Externo o multientidad
                 plantillaJson.setOficinaExterna(true);
+            }else{
+                plantillaJson.setOficinaExterna(false);
             }
         }
 
