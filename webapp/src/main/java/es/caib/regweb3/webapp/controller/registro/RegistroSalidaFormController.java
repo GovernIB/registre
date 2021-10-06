@@ -5,6 +5,7 @@ import es.caib.dir3caib.ws.api.oficina.OficinaTF;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.PlantillaJson;
 import es.caib.regweb3.persistence.ejb.CodigoAsuntoLocal;
+import es.caib.regweb3.persistence.ejb.MultiEntidadLocal;
 import es.caib.regweb3.persistence.ejb.PlantillaLocal;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.persistence.utils.RegistroUtils;
@@ -52,6 +53,9 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
     @EJB(mappedName = "regweb3/CodigoAsuntoEJB/local")
     private CodigoAsuntoLocal codigoAsuntoEjb;
 
+    @EJB(mappedName = "regweb3/MultiEntidadEJB/local")
+    private MultiEntidadLocal multiEntidadEjb;
+
     /**
      * Carga el formulario para un nuevo {@link es.caib.regweb3.model.RegistroSalida} a partir de una {@link Plantilla}
      */
@@ -61,7 +65,12 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
         // Buscamos la Plantilla
         Plantilla plantilla = plantillaEjb.findById(idPlantilla);
 
-        LinkedHashSet<Oficina> oficinasOrigen = new LinkedHashSet<Oficina>(getOficinasOrigen(request));
+        LinkedHashSet<Oficina> oficinasOrigen;
+        if(multiEntidadEjb.isMultiEntidad()){
+            oficinasOrigen = new LinkedHashSet<>(getOficinasOrigenMultiEntidad(request));
+        }else{
+            oficinasOrigen = new LinkedHashSet<>(getOficinasOrigen(request));
+        }
 
         // Buscamos nuestra oficina activa
         Oficina oficinaActiva = getOficinaActiva(request);
@@ -94,6 +103,13 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
 
         Oficina oficina = getOficinaActiva(request);
 
+        LinkedHashSet<Oficina> oficinasOrigen;
+        if(multiEntidadEjb.isMultiEntidad()){
+            oficinasOrigen = new LinkedHashSet<>(getOficinasOrigenMultiEntidad(request));
+        }else{
+            oficinasOrigen = new LinkedHashSet<>(getOficinasOrigen(request));
+        }
+
         RegistroSalida registroSalida = new RegistroSalida();
         registroSalida.setLibro(getLibroEntidad(request));
         registroSalida.setOficina(oficina);
@@ -107,7 +123,7 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
         model.addAttribute(oficina);
         model.addAttribute("registroSalida",registroSalida);
         model.addAttribute("organismosOficinaActiva", getOrganismosOficinaActiva(request));
-        model.addAttribute("oficinasOrigen",  getOficinasOrigen(request));
+        model.addAttribute("oficinasOrigen",  oficinasOrigen);
         model.addAttribute("ultimosOrganismos",  registroSalidaConsultaEjb.ultimosOrganismosRegistro(getUsuarioEntidadActivo(request)));
 
 
@@ -142,10 +158,17 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
                 model.addAttribute("errorInteresado", errorInteresado);
             }
 
+            LinkedHashSet<Oficina> oficinasOrigen;
+            if(multiEntidadEjb.isMultiEntidad()){
+                oficinasOrigen = new LinkedHashSet<>(getOficinasOrigenMultiEntidad(request));
+            }else{
+                oficinasOrigen = new LinkedHashSet<>(getOficinasOrigen(request));
+            }
+
             model.addAttribute(entidad);
             model.addAttribute(getUsuarioAutenticado(request));
             model.addAttribute(getOficinaActiva(request));
-            model.addAttribute("oficinasOrigen",  getOficinasOrigen(request));
+            model.addAttribute("oficinasOrigen",  oficinasOrigen);
 
             // Organismo origen: Select
             LinkedHashSet<Organismo> organismosOficinaActiva = new LinkedHashSet<Organismo>(getOrganismosOficinaActiva(request));
@@ -153,16 +176,13 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
             model.addAttribute("organismosOficinaActiva", organismosOficinaActiva);
 
             // Si la Oficina Origen es Externa, la añadimos al listado.
-            Set<Oficina> oficinasOrigen = getOficinasOrigen(request);
             if (!registroSalida.getRegistroDetalle().getOficinaOrigen().getCodigo().equals("-1")) {// Han indicado oficina de origen
 
-                Oficina oficinaOrigen = oficinaEjb.findByCodigoEntidad(registroSalida.getRegistroDetalle().getOficinaOrigen().getCodigo(), entidad.getId());
-
-                if (oficinaOrigen == null) { // Es externa
-
+                Oficina oficinaOrigen = oficinaEjb.findByCodigoByEntidadMultiEntidad(registroSalida.getRegistroDetalle().getOficinaOrigen().getCodigo(), entidad.getId());
+                if (oficinaOrigen == null)  { // Es externa
                     oficinasOrigen.add(new Oficina(null, registroSalida.getRegistroDetalle().getOficinaOrigen().getCodigo(), registroSalida.getRegistroDetalle().getOficinaOrigen().getDenominacion()));
 
-                } else { // Es interna, la añadimos a la lista por si acaso no está
+                } else { // Es interna o multientidad, la añadimos a la lista por si acaso no está
                     oficinasOrigen.add(oficinaOrigen);
                 }
             }
@@ -239,12 +259,16 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
             }
 
             // Oficina Origen: Select
-            Set<Oficina> oficinasOrigen = getOficinasOrigen(request);
+            Set<Oficina> oficinasOrigen;
+            if(multiEntidadEjb.isMultiEntidad()){
+                oficinasOrigen = new LinkedHashSet<>(getOficinasOrigenMultiEntidad(request));
+            }else{
+                oficinasOrigen = new LinkedHashSet<>(getOficinasOrigen(request));
+            }
 
             // Si la Oficina Origen es Externa, la añadimos al listado.
             Oficina oficinaOrigen = registroSalida.getRegistroDetalle().getOficinaOrigen();
-            if (oficinaOrigen == null) {// Si  Externa, la añadimos al listado.
-
+            if (oficinaOrigen == null && registroSalida.getRegistroDetalle().getOficinaOrigenExternoCodigo() != null) {// Si  Externa, la añadimos al listado.
                 oficinasOrigen.add(new Oficina(null, registroSalida.getRegistroDetalle().getOficinaOrigenExternoCodigo(), registroSalida.getRegistroDetalle().getOficinaOrigenExternoDenominacion()));
 
             } else if (!oficinasOrigen.contains(oficinaOrigen)) {// Si es Interna, pero no esta relacionado con la Oficina Activa
@@ -293,17 +317,20 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
             model.addAttribute("organismosOficinaActiva", organismosOficinaActiva);
 
             // Oficina Origen: Select
-            Set<Oficina> oficinasOrigen = getOficinasOrigen(request);
+            Set<Oficina> oficinasOrigen;
+            if(multiEntidadEjb.isMultiEntidad()){
+                oficinasOrigen = new LinkedHashSet<>(getOficinasOrigenMultiEntidad(request));
+            }else{
+                oficinasOrigen = new LinkedHashSet<>(getOficinasOrigen(request));
+            }
 
             if (!registroSalida.getRegistroDetalle().getOficinaOrigen().getCodigo().equals("-1")) { // Si han indicado OficinaOrigen
-                Oficina oficinaOrigen = oficinaEjb.findByCodigoEntidad(registroSalida.getRegistroDetalle().getOficinaOrigen().getCodigo(), entidad.getId());
+                Oficina oficinaOrigen = oficinaEjb.findByCodigoByEntidadMultiEntidad(registroSalida.getRegistroDetalle().getOficinaOrigen().getCodigo(), entidad.getId());
 
                 if (oficinaOrigen == null) { // Es externa
-                    log.info("Es oficina externa: " + registroSalida.getRegistroDetalle().getOficinaOrigenExternoDenominacion());
                     oficinasOrigen.add(new Oficina(null, registroSalida.getRegistroDetalle().getOficinaOrigen().getCodigo(), registroSalida.getRegistroDetalle().getOficinaOrigenExternoDenominacion()));
 
                 } else { // Es interna, la añadimos a la lista por si acaso no está
-                    log.info("Es oficina interna: " + oficinaOrigen.getDenominacion());
                     oficinasOrigen.add(oficinaOrigen);
                 }
             }
@@ -439,14 +466,9 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
 
         } else { // Han indicado oficina origen
 
-            Oficina ofiOrigen = oficinaEjb.findByCodigoEntidad(oficinaOrigen.getCodigo(), entidad.getId());
-            if (ofiOrigen != null) { // Es interna
+            Oficina ofiOrigen = oficinaEjb.findByCodigoByEntidadMultiEntidad(oficinaOrigen.getCodigo(), entidad.getId());
 
-                registroSalida.getRegistroDetalle().setOficinaOrigen(ofiOrigen);
-                registroSalida.getRegistroDetalle().setOficinaOrigenExternoCodigo(null);
-                registroSalida.getRegistroDetalle().setOficinaOrigenExternoDenominacion(null);
-
-            } else {  // es externa
+            if (ofiOrigen == null || (!entidad.getId().equals(ofiOrigen.getOrganismoResponsable().getEntidad().getId())) ) { // Es externa
                 registroSalida.getRegistroDetalle().setOficinaOrigenExternoCodigo(registroSalida.getRegistroDetalle().getOficinaOrigen().getCodigo());
                 if (registroSalida.getId() != null) {//es una modificación
                     registroSalida.getRegistroDetalle().setOficinaOrigenExternoDenominacion(registroSalida.getRegistroDetalle().getOficinaOrigenExternoDenominacion());
@@ -455,6 +477,11 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
                 }
 
                 registroSalida.getRegistroDetalle().setOficinaOrigen(null);
+
+            }else{ //Interna
+                registroSalida.getRegistroDetalle().setOficinaOrigen(ofiOrigen);
+                registroSalida.getRegistroDetalle().setOficinaOrigenExternoCodigo(null);
+                registroSalida.getRegistroDetalle().setOficinaOrigenExternoDenominacion(null);
             }
         }
 

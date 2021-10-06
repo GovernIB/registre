@@ -78,12 +78,7 @@ public class WebServicesMethodsEJB implements WebServicesMethodsLocal {
 
     @Override
     public Oficina obtenerOficina(String codigo) throws Exception {
-
-        if(multiEntidadEjb.isMultiEntidad()){
-            return oficinaEjb.findByCodigoMultiEntidad(codigo);
-        }else{
-            return oficinaEjb.findByCodigo(codigo);
-        }
+        return oficinaEjb.findByMultiEntidad(codigo);
     }
 
     @Override

@@ -37,6 +37,14 @@ public interface OficinaLocal extends BaseEjb<Oficina, Long> {
     Oficina findByCodigoMultiEntidad(String codigo) throws Exception;
 
     /**
+     * Obtiene una oficina teniendo en cuenta la configuración de si es multientidad o no.
+     * @param codigo
+     * @return
+     * @throws Exception
+     */
+    Oficina findByMultiEntidad(String codigo) throws Exception;
+
+    /**
      * Obtiene una oficina distinguiendo que mètodo usar en función de si la instancia es multientidad o no.
      * @param codigo
      * @param idEntidad

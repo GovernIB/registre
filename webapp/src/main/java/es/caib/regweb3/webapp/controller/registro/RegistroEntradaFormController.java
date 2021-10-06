@@ -205,13 +205,7 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
 
             if (!registroEntrada.getRegistroDetalle().getOficinaOrigen().getCodigo().equals("-1")) {// Han indicado oficina de origen
 
-                Oficina oficinaOrigen;
-                if(multiEntidadEjb.isMultiEntidad()) {
-                    oficinaOrigen = oficinaEjb.findByCodigoMultiEntidad(registroEntrada.getRegistroDetalle().getOficinaOrigen().getCodigo());
-                }else{
-                    oficinaOrigen = oficinaEjb.findByCodigoEntidad(registroEntrada.getRegistroDetalle().getOficinaOrigen().getCodigo(), entidad.getId());
-                }
-
+                Oficina oficinaOrigen = oficinaEjb.findByCodigoByEntidadMultiEntidad(registroEntrada.getRegistroDetalle().getOficinaOrigen().getCodigo(),entidad.getId());
                 if (oficinaOrigen == null) { // Es externa
                     oficinasOrigen.add(new Oficina(null, registroEntrada.getRegistroDetalle().getOficinaOrigen().getCodigo(), registroEntrada.getRegistroDetalle().getOficinaOrigen().getDenominacion()));
                 } else { // Es interna o multientidad, la añadimos a la lista por si acaso no está
@@ -395,14 +389,8 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
             //Set<Oficina> oficinasOrigen = getOficinasOrigen(request);
 
             if (!registroEntrada.getRegistroDetalle().getOficinaOrigen().getCodigo().equals("-1")) { // Si han indicado OficinaOrigen
-                //Oficina oficinaOrigen = oficinaEjb.findByCodigoEntidad(registroEntrada.getRegistroDetalle().getOficinaOrigen().getCodigo(), entidad.getId());
 
-                Oficina oficinaOrigen;
-                if(multiEntidadEjb.isMultiEntidad()) {
-                    oficinaOrigen = oficinaEjb.findByCodigoMultiEntidad(registroEntrada.getRegistroDetalle().getOficinaOrigen().getCodigo());
-                }else{
-                    oficinaOrigen = oficinaEjb.findByCodigoEntidad(registroEntrada.getRegistroDetalle().getOficinaOrigen().getCodigo(), entidad.getId());
-                }
+                Oficina oficinaOrigen = oficinaEjb.findByCodigoByEntidadMultiEntidad(registroEntrada.getRegistroDetalle().getOficinaOrigen().getCodigo(), entidad.getId());
 
                 if (oficinaOrigen == null) { // Es externa
                     log.info("Es oficina externa: " + registroEntrada.getRegistroDetalle().getOficinaOrigenExternoDenominacion());
