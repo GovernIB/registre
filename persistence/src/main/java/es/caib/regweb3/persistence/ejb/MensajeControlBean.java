@@ -495,7 +495,7 @@ public class MensajeControlBean extends BaseEjbJPA<MensajeControl, Long> impleme
     private Entidad comprobarEntidadMensajeControl(String codigoEntidadRegistralDestino) throws Exception {
 
         Entidad entidad;
-        Oficina oficina = oficinaEjb.findByCodigo(codigoEntidadRegistralDestino);
+        Oficina oficina = oficinaEjb.findByMultiEntidad(codigoEntidadRegistralDestino);
 
         if (oficina != null) {
             entidad = oficina.getOrganismoResponsable().getEntidad();
