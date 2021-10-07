@@ -630,28 +630,47 @@ public class AnexoController extends BaseController {
         //Se suman las distintas medidas de los anexos que tiene el registro hasta el momento.
         long tamanyoTotalAnexos = AnexoUtils.obtenerTamanoTotalAnexos(anexosFull);
 
-        // Comprobamos que el nuevo anexo no supere el tamaño máximo.
-        Long tamanyoMaximoTotalAnexos = PropiedadGlobalUtil.getTamanoMaxTotalAnexosSir();
+        Long tamanyoMaximoTotalAnexosSIR = PropiedadGlobalUtil.getTamanoMaxTotalAnexosSir();
+        String maxTotalAnexos = AnexoUtils.bytesToHuman(tamanyoMaximoTotalAnexosSIR);
+
+        Long tamanoMaximoPorAnexoSIR = PropiedadGlobalUtil.getTamanoMaximoPorAnexoSir();
+        String sTamanoMaximoPorAnexoSIR = AnexoUtils.bytesToHuman(tamanoMaximoPorAnexoSIR);
+
+        // Comprobamos que el nuevo anexo no supere el tamaño máximo total ni el maximo por anexo en sir
         if (docSize != 0) {
+            String tamanoDoc= AnexoUtils.bytesToHuman(docSize);
             tamanyoTotalAnexos += docSize;
-            if (tamanyoTotalAnexos > tamanyoMaximoTotalAnexos) {
-                String totalAnexos = tamanyoTotalAnexos / (1024 * 1024) + " Mb";
-                String maxTotalAnexos = tamanyoMaximoTotalAnexos / (1024 * 1024) + " Mb";
+            if (tamanyoTotalAnexos > tamanyoMaximoTotalAnexosSIR) {
+                String totalAnexos = AnexoUtils.bytesToHuman(tamanyoTotalAnexos );
                 if (!scan) {
                     result.rejectValue("documentoFile", "tamanymaxtotalsuperat", new Object[]{totalAnexos, maxTotalAnexos}, I18NUtils.tradueix("tamanymaxtotalsuperat", totalAnexos, maxTotalAnexos));
                 } else {
                     throw new I18NException("tamanymaxtotalsuperat", totalAnexos, maxTotalAnexos);
                 }
             }
+            if (docSize > tamanoMaximoPorAnexoSIR) {
+                if (!scan) {
+                    result.rejectValue("documentoFile", "tamanyfitxerpujatsuperat", new Object[]{tamanoDoc, sTamanoMaximoPorAnexoSIR}, I18NUtils.tradueix("tamanyfitxerpujatsuperat",tamanoDoc, sTamanoMaximoPorAnexoSIR));
+                } else {
+                    throw new I18NException("tamanyfitxerpujatsuperat", tamanoDoc, sTamanoMaximoPorAnexoSIR);
+                }
+            }
         } else {// Solo comprobamos el tamaño en el documento firma en el caso que el documento este vacio, ya que se trata de firma attached
+            String tamanoFirma = AnexoUtils.bytesToHuman(firmaSize);
             tamanyoTotalAnexos += firmaSize;
-            if (tamanyoTotalAnexos > tamanyoMaximoTotalAnexos) {
-                String totalAnexos = tamanyoTotalAnexos / (1024 * 1024) + " Mb";
-                String maxTotalAnexos = tamanyoMaximoTotalAnexos / (1024 * 1024) + " Mb";
+            if (tamanyoTotalAnexos > tamanyoMaximoTotalAnexosSIR) {
+                String totalAnexos = AnexoUtils.bytesToHuman(tamanyoTotalAnexos);
                 if (!scan) {
                     result.rejectValue("firmaFile", "tamanymaxtotalsuperat", new Object[]{totalAnexos, maxTotalAnexos}, I18NUtils.tradueix("tamanymaxtotalsuperat", totalAnexos, maxTotalAnexos));
                 } else {
                     throw new I18NException("tamanymaxtotalsuperat", totalAnexos, maxTotalAnexos);
+                }
+            }
+            if (firmaSize > tamanoMaximoPorAnexoSIR) {
+                if (!scan) {
+                    result.rejectValue("firmaFile", "tamanyfitxerpujatsuperat", new Object[]{tamanoFirma, sTamanoMaximoPorAnexoSIR}, I18NUtils.tradueix("tamanyfitxerpujatsuperat", tamanoFirma, sTamanoMaximoPorAnexoSIR));
+                } else {
+                    throw new I18NException("tamanyfitxerpujatsuperat", tamanoFirma, sTamanoMaximoPorAnexoSIR);
                 }
             }
         }
