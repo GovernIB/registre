@@ -1,18 +1,8 @@
 package es.caib.regweb3.plugins.distribucion.goib;
 
 
-import es.caib.distribucio.ws.v1.bustia.BustiaV1;
-import es.caib.distribucio.ws.v1.bustia.Firma;
-import es.caib.distribucio.ws.v1.bustia.RegistreAnnex;
-import es.caib.distribucio.ws.v1.bustia.RegistreAnotacio;
-import es.caib.distribucio.ws.v1.bustia.RegistreInteressat;
-import es.caib.regweb3.model.Anexo;
-import es.caib.regweb3.model.CatLocalidad;
-import es.caib.regweb3.model.CatPais;
-import es.caib.regweb3.model.CatProvincia;
-import es.caib.regweb3.model.Interesado;
-import es.caib.regweb3.model.RegistroEntrada;
-import es.caib.regweb3.model.TraduccionCodigoAsunto;
+import es.caib.distribucio.ws.v1.bustia.*;
+import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.plugins.distribucion.IDistribucionPlugin;
 import es.caib.regweb3.utils.RegwebConstantes;
@@ -29,11 +19,7 @@ import org.slf4j.LoggerFactory;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.ws.BindingProvider;
-import java.util.GregorianCalendar;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 
 /**
  * Plugin para distribuir registros a DISTRIBUCIÓ
@@ -214,10 +200,10 @@ public class DistribucionGoibPlugin extends AbstractPluginProperties implements 
         //Oficina Origen
         if(re.getRegistroDetalle().getOficinaOrigen() != null) {
             registreAnotacio.setOficinaOrigenCodi(re.getRegistroDetalle().getOficinaOrigen().getCodigo());
-            registreAnotacio.setOficinaDescripcio(re.getRegistroDetalle().getOficinaOrigen().getDenominacion());
+            registreAnotacio.setOficinaOrigenDescripcio(re.getRegistroDetalle().getOficinaOrigen().getDenominacion());
         }else{
             registreAnotacio.setOficinaOrigenCodi(re.getRegistroDetalle().getOficinaOrigenExternoCodigo());
-            registreAnotacio.setOficinaDescripcio(re.getRegistroDetalle().getOficinaOrigenExternoDenominacion());
+            registreAnotacio.setOficinaOrigenDescripcio(re.getRegistroDetalle().getOficinaOrigenExternoDenominacion());
         }
 
         //Numero Registro Origen y Fecha Registro Origen
