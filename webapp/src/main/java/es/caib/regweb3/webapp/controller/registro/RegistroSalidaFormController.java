@@ -617,7 +617,7 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
             }
             // Interna
         }else{// Comprobamos en REGWEB3 si está vigente
-            Oficina oficinaOrigen = oficinaEjb.findByCodigoVigente(plantillaJson.getOficinaCodigo());
+            Oficina oficinaOrigen = oficinaEjb.findByCodigoEntidad(plantillaJson.getOficinaCodigo(), entidadActiva.getId());
             if(oficinaOrigen != null){
                 registroSalida.getRegistroDetalle().setOficinaOrigen(oficinaOrigen);
             }
