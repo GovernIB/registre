@@ -151,6 +151,14 @@ public interface OficinaLocal extends BaseEjb<Oficina, Long> {
     List<Oficina> findByEntidad(Long idEntidad) throws Exception;
 
     /**
+     * Obtiene todos las oficinas de una entidad solo id y denominacion
+     * @param entidad
+     * @return
+     * @throws Exception
+     */
+    List<Oficina> findByEntidadReduce(Long entidad) throws Exception;
+
+    /**
      * Obtiene las Oficinas cuya Entidad responsable es la indicada y tienen el estado indicado
      *
      * @param idEntidad
