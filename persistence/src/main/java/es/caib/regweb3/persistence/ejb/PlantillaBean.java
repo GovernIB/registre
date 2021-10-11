@@ -417,7 +417,7 @@ public class PlantillaBean extends BaseEjbJPA<Plantilla, Long> implements Planti
             }
 
         } else {// Comprobamos en REGWEB3 si está vigente
-            Oficina oficinaOrigen = oficinaEjb.findByCodigoVigente(plantillaJson.getOficinaCodigo());
+            Oficina oficinaOrigen = oficinaEjb.findByCodigoEntidad(plantillaJson.getOficinaCodigo(), entidad.getId());
             if (oficinaOrigen == null) {
                 plantillaJson.setOficinaCodigo(null);
                 plantillaJson.setOficinaDenominacion(null);
