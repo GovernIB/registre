@@ -586,7 +586,7 @@ public class InformeController extends AbstractRegistroCommonFormController {
         String formato = informeIndicadoresBusquedaForm.getFormato();
         Long calendario = informeIndicadoresBusquedaForm.getCampoCalendario();
         Integer tipoLibro = informeIndicadoresBusquedaForm.getTipo().intValue();
-        List<Oficina> oficinas = oficinaEjb.findByEntidad(entidadActiva.getId());
+        List<Oficina> oficinas = oficinaEjb.findByEntidadReduce(entidadActiva.getId());
         List<Organismo> organismos = organismoEjb.findByEntidadReduce(entidadActiva.getId());
 
         ModelAndView mav = new ModelAndView();

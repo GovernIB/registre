@@ -320,6 +320,27 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
 
     @Override
     @SuppressWarnings(value = "unchecked")
+    public List<Oficina> findByEntidadReduce(Long entidad) throws Exception {
+
+        Query q = em.createQuery("Select oficina.id, oficina.denominacion from Oficina as oficina where " +
+           "oficina.organismoResponsable.entidad.id = :entidad");
+
+        q.setParameter("entidad", entidad);
+        q.setHint("org.hibernate.readOnly", true);
+
+        List<Object[]> result = q.getResultList();
+        List<Oficina> oficinas = new ArrayList<Oficina>();
+        for (Object[] object : result) {
+            Oficina org = new Oficina((Long) object[0], null,(String) object[1]);
+            oficinas.add(org);
+        }
+
+        return oficinas;
+
+    }
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
     public List<Oficina> findByEntidadByEstado(Long idEntidad, String estado) throws Exception {
 
         Query q = em.createQuery("Select oficina.id, oficina.codigo, oficina.denominacion from Oficina as oficina where " +
@@ -592,7 +613,7 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
         parametros.put("idEntidad", idEntidad);
 
         // Estado de la Oficina
-        where.add(" oficina.estado.id = :idCatEstadoEntidad");
+        where.add(" oficina.estado.id = :idCatEstadoEntidad ");
         parametros.put("idCatEstadoEntidad", idCatEstadoEntidad);
 
 
@@ -603,8 +624,9 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
             where.add(DataBaseUtils.like("oficina.denominacion", "denominacion", parametros, denominacion));
         }
 
-        where.add(" oficina.estado.codigoEstadoEntidad = :vigente ");
-        parametros.put("vigente", RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
+
+       // where.add(" oficina.estado.codigoEstadoEntidad = :vigente ");
+       // parametros.put("vigente", RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
 
         if (parametros.size() != 0) {
             query.append("where ");
