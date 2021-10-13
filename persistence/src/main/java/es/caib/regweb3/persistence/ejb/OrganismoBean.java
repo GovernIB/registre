@@ -809,7 +809,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
     @Override
     public Organismo getOrganismoRaiz(Long idOrganismo) throws Exception {
 
-        Query q = em.createQuery("Select organismo.organismoRaiz.id, organismoRaiz.codigo, organismoRaiz.denominacion from Organismo as organismo where " +
+        Query q = em.createQuery("Select organismo.organismoRaiz.id, organismo.organismoRaiz.codigo, organismo.organismoRaiz.denominacion from Organismo as organismo where " +
                 "organismo.id = :idOrganismo");
 
         q.setParameter("idOrganismo", idOrganismo);
