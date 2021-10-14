@@ -624,10 +624,6 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
             where.add(DataBaseUtils.like("oficina.denominacion", "denominacion", parametros, denominacion));
         }
 
-
-       // where.add(" oficina.estado.codigoEstadoEntidad = :vigente ");
-       // parametros.put("vigente", RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
-
         if (parametros.size() != 0) {
             query.append("where ");
             int count = 0;
