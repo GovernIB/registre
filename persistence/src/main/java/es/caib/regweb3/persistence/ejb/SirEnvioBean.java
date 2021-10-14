@@ -668,7 +668,7 @@ public class SirEnvioBean implements SirEnvioLocal {
 
         StringBuilder peticion = new StringBuilder();
         long tiempo = System.currentTimeMillis();
-        String descripcion = "Reintentar Envios Sir sin confirmación";
+        String descripcion = "Reenviar SIR sin confirmación";
         Date inicio = new Date();
 
         try {
@@ -726,7 +726,7 @@ public class SirEnvioBean implements SirEnvioLocal {
 
         StringBuilder peticion = new StringBuilder();
         long tiempo = System.currentTimeMillis();
-        String descripcion = "Reintentar Envios Sir con Error";
+        String descripcion = "Reenviar SIR con Error";
         Date inicio = new Date();
 
         try {
@@ -803,7 +803,7 @@ public class SirEnvioBean implements SirEnvioLocal {
 
         StringBuilder peticion = new StringBuilder();
         long tiempo = System.currentTimeMillis();
-        String descripcion = "Reintentar Envio Sir ";
+        String descripcion = "Reenviar RegistroSir a: ";
         Date inicio = new Date();
 
         peticion.append("entidad: ").append(entidad.getNombre()).append(System.getProperty("line.separator"));
@@ -813,8 +813,9 @@ public class SirEnvioBean implements SirEnvioLocal {
 
             RegistroSir registroSir = registroSirEjb.getRegistroSirConAnexos(idRegistroSir);
 
-            log.info("Reintentando envio RegistroSir " + registroSir.getIdentificadorIntercambio() + " a " + registroSir.getDecodificacionEntidadRegistralDestino());
+            log.info("Reenviado RegistroSir " + registroSir.getIdentificadorIntercambio() + " a " + registroSir.getDecodificacionEntidadRegistralDestino());
 
+            descripcion = "Reenviar RegistroSir a: " + registroSir.getCodigoEntidadRegistralDestino();
             peticion.append("IdentificadorIntercambio: ").append(registroSir.getIdentificadorIntercambio()).append(System.getProperty("line.separator"));
             peticion.append("Origen: ").append(registroSir.getDecodificacionEntidadRegistralOrigen()).append(System.getProperty("line.separator"));
             peticion.append("Destino: ").append(registroSir.getDecodificacionEntidadRegistralDestino()).append(System.getProperty("line.separator"));
@@ -832,7 +833,7 @@ public class SirEnvioBean implements SirEnvioLocal {
 
             registroSirEjb.merge(registroSir);
 
-            integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_SCHEDULERS, descripcion, peticion.toString(), System.currentTimeMillis() - tiempo, entidad.getId(), "");
+            integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_SCHEDULERS, descripcion, peticion.toString(), System.currentTimeMillis() - tiempo, entidad.getId(), registroSir.getIdentificadorIntercambio());
 
         }catch (Exception e){
             log.info("Error al reintenar el envio del RegistroSir id: " + idRegistroSir);
@@ -852,7 +853,7 @@ public class SirEnvioBean implements SirEnvioLocal {
         Date inicio = new Date();
         StringBuilder peticion = new StringBuilder();
         long tiempo = System.currentTimeMillis();
-        String descripcion = "Reintentar envío a: " + oficio.getCodigoEntidadRegistralDestino();
+        String descripcion = "Reenviar oficio a: " + oficio.getCodigoEntidadRegistralDestino();
         peticion.append("IdentificadorIntercambio: ").append(oficio.getIdentificadorIntercambio()).append(System.getProperty("line.separator"));
         peticion.append("Origen: ").append(oficio.getOficina().getDenominacion()).append(System.getProperty("line.separator"));
         peticion.append("Destino: ").append(oficio.getDecodificacionEntidadRegistralDestino()).append(System.getProperty("line.separator"));
@@ -860,7 +861,7 @@ public class SirEnvioBean implements SirEnvioLocal {
         if (oficio.getTipoOficioRemision().equals(RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA)) {
 
             try {
-                log.info("Reintentando envio OficioRemisionSir entrada " + oficio.getIdentificadorIntercambio() + " a " + oficio.getDecodificacionEntidadRegistralDestino() + " (" + oficio.getCodigoEntidadRegistralDestino() + ")");
+                log.info("Reenviando OficioRemisionSir entrada " + oficio.getIdentificadorIntercambio() + " a " + oficio.getDecodificacionEntidadRegistralDestino() + " (" + oficio.getCodigoEntidadRegistralDestino() + ")");
 
                 // Transformamos el RegistroEntrada en un RegistroSir
                 RegistroEntrada registroEntrada = registroEntradaEjb.getConAnexosFull(oficio.getRegistrosEntrada().get(0).getId());
@@ -883,7 +884,7 @@ public class SirEnvioBean implements SirEnvioLocal {
         } else if (oficio.getTipoOficioRemision().equals(RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA)) {
 
             try {
-                log.info("Reintentando envio OficioRemisionSir salida " + oficio.getIdentificadorIntercambio() + " a " + oficio.getDecodificacionEntidadRegistralDestino() + " (" + oficio.getCodigoEntidadRegistralDestino() + ")");
+                log.info("Reenviando OficioRemisionSir salida " + oficio.getIdentificadorIntercambio() + " a " + oficio.getDecodificacionEntidadRegistralDestino() + " (" + oficio.getCodigoEntidadRegistralDestino() + ")");
 
                 // Transformamos el RegistroSalida en un RegistroSir
                 RegistroSalida registroSalida = registroSalidaEjb.getConAnexosFull(oficio.getRegistrosSalida().get(0).getId());
