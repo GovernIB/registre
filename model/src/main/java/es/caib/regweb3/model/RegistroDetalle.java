@@ -106,6 +106,9 @@ public class RegistroDetalle implements Serializable {
     private String tipoEnvioDocumentacion;
     // Fin Metadatos nueva arquitectura SIR
 
+    @XmlTransient
+    private Boolean recibidoSir = false;
+
 
     public RegistroDetalle() {
     }
@@ -502,6 +505,15 @@ public class RegistroDetalle implements Serializable {
 
     public void setTipoEnvioDocumentacion(String tipoEnvioDocumentacion) {
         this.tipoEnvioDocumentacion = tipoEnvioDocumentacion;
+    }
+
+    @Column(name = "RECIBIDO_SIR")
+    public Boolean getRecibidoSir() {
+        return recibidoSir;
+    }
+
+    public void setRecibidoSir(Boolean sir) {
+        this.recibidoSir = sir;
     }
 
     @Transient
