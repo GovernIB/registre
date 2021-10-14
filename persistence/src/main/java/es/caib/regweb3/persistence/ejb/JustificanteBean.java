@@ -156,7 +156,6 @@ public class JustificanteBean implements JustificanteLocal {
 
             // Carregam el plugin de Custodia del Justificante
             if (fileSystem) { // Si no se va a custodiar es porqué se va a generar el FileSystem
-                log.info("Cargamos el plugin para generar el Justificante en filesystem");
                 documentCustodyPlugin = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA_FS_JUSTIFICANTE);
 
             } else {

@@ -1642,6 +1642,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
 
         RegistroDetalle registroDetalle = new RegistroDetalle();
 
+        registroDetalle.setRecibidoSir(true);
         registroDetalle.setPresencial(false);
         registroDetalle.setExtracto(registroSir.getResumen());
         registroDetalle.setTipoDocumentacionFisica(Long.valueOf(registroSir.getDocumentacionFisica()));
