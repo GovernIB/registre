@@ -1,6 +1,7 @@
 package es.caib.regweb3.webapp.controller.registro;
 
 import es.caib.regweb3.model.Entidad;
+import es.caib.regweb3.model.Oficina;
 import es.caib.regweb3.model.UsuarioEntidad;
 import es.caib.regweb3.persistence.ejb.RegistroDetalleLocal;
 import es.caib.regweb3.persistence.ejb.ScanWebModuleLocal;
@@ -255,6 +256,7 @@ public class AnexoScanController extends AnexoController {
 
         //  Pasamos los datos del funcionario que realiza el escaneo en el list de metadades
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
+        Oficina oficinaActiva = getOficinaActiva(request);
 
 
         final  String scanType = ScanWebDocument.SCANTYPE_MIME_PDF;
@@ -281,7 +283,7 @@ public class AnexoScanController extends AnexoController {
 
         long expiryTransaction = caducitat.getTimeInMillis();
         String transactionName = scanWebID;
-        ScanWebRequestSignatureInfo signatureInfo = new ScanWebRequestSignatureInfo(usuarioEntidad.getNombreCompleto(),  usuarioEntidad.getUsuario().getDocumento(),  usuarioEntidad.getEntidad().getCodigoDir3());
+        ScanWebRequestSignatureInfo signatureInfo = new ScanWebRequestSignatureInfo(usuarioEntidad.getNombreCompleto(),  usuarioEntidad.getUsuario().getDocumento(), oficinaActiva.getOrganismoResponsable().getCodigo());
         ScanWebRequest scanWebRequest = new ScanWebRequest( scanWebID, transactionName,  scanType,  flag,  mode,  languageUI,  usuarioEntidad.getUsuario().getIdentificador(),  urlFinal,  metadades, signatureInfo);
 
         ScanWebConfigRegWeb ss = new ScanWebConfigRegWeb(scanWebRequest,expiryTransaction);
