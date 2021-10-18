@@ -12,6 +12,8 @@ import org.apache.log4j.Logger;
 import org.dom4j.Document;
 
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import java.net.URL;
 
 /**
@@ -19,6 +21,7 @@ import java.net.URL;
  *
  */
 @Stateless(name = "EmisionEJB")
+@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 public class EmisionBean implements EmisionLocal{
 
     public final Logger log = Logger.getLogger(getClass());
