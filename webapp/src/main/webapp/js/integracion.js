@@ -18,7 +18,7 @@ function infoIntegracion(idIntegracion){
         success: function(result) {
 
             $('#fecha').html(result.fechaFormateada);
-            $('#descripcion').html(result.descripcion);
+            $('#descripcionIntegracion').html(result.descripcion);
             $('#tiempo').html(result.tiempoFormateado);
             $("#tipo").html(tradsIntegracion['integracion.tipo.'+result.tipo]);
 
@@ -55,7 +55,7 @@ function infoIntegracion(idIntegracion){
 function limpiarIntegracion(){
 
     $('#fecha').html('');
-    $('#descripcion').html('');
+    $('#descripcionIntegracion').html('');
     $('#tiempo').html('');
     $('#tipo').html('');
     $('#estadoIntegracion').html('');
