@@ -286,6 +286,11 @@ public class AnexoScanController extends AnexoController {
         ScanWebRequestSignatureInfo signatureInfo = new ScanWebRequestSignatureInfo(usuarioEntidad.getNombreCompleto(),  usuarioEntidad.getUsuario().getDocumento(), oficinaActiva.getOrganismoResponsable().getCodigo());
         ScanWebRequest scanWebRequest = new ScanWebRequest( scanWebID, transactionName,  scanType,  flag,  mode,  languageUI,  usuarioEntidad.getUsuario().getIdentificador(),  urlFinal,  metadades, signatureInfo);
 
+        //PARCHE PARA SOLUCIONAR QUE EL PLUGIN "org.fundaciobit.pluginsib.scanweb.digitalib.DigitalIBScanWebPlugin"
+        // no retorna el valor de FunctionaryAdministrationID.
+        //TODO ELiminar cuando se active el plugin de Digitalización masiva
+        scanWebRequest.getSignatureInfo().setFunctionaryAdministrationID(oficinaActiva.getOrganismoResponsable().getCodigo());
+
         ScanWebConfigRegWeb ss = new ScanWebConfigRegWeb(scanWebRequest,expiryTransaction);
         ss.setEntitatID(entitatID);
 
