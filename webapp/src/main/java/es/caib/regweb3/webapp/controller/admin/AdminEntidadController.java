@@ -299,6 +299,36 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
     }
 
     /**
+     * Anular un {@link es.caib.regweb3.model.RegistroEntrada}
+     */
+    @RequestMapping(value = "/registroEntrada/anular", method = RequestMethod.POST)
+    public String anularRegistroEntrada(@ModelAttribute AnularForm anularForm, HttpServletRequest request) {
+
+        try {
+
+            RegistroEntrada registroEntrada = registroEntradaEjb.findById(anularForm.getIdAnular());
+            UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
+
+            // Anulamos el RegistroEntrada
+            String motivoAnulacion;
+            if (StringUtils.isEmpty(anularForm.getObservacionesAnulacion())) {
+                motivoAnulacion = getMessage("registro.modificacion.anulacion");
+            } else {
+                motivoAnulacion = getMessage("registro.modificacion.anulacion") + ": " + anularForm.getObservacionesAnulacion();
+            }
+            registroEntradaEjb.anularRegistroEntrada(registroEntrada, usuarioEntidad, motivoAnulacion);
+
+            Mensaje.saveMessageInfo(request, getMessage("registroEntrada.anular"));
+
+        } catch (Exception e) {
+            Mensaje.saveMessageError(request, getMessage("regweb.error.registro"));
+            e.printStackTrace();
+        }
+
+        return "redirect:/adminEntidad/registroEntrada/" + anularForm.getIdAnular() + "/detalle";
+    }
+
+    /**
      * Listado de registros de salida
      * @return
      * @throws Exception
@@ -488,6 +518,36 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
 
         return jsonResponse;
 
+    }
+
+    /**
+     * Anular un {@link es.caib.regweb3.model.RegistroSalida}
+     */
+    @RequestMapping(value = "/registroSalida/anular", method = RequestMethod.POST)
+    public String anularRegistroSalida(@ModelAttribute AnularForm anularForm, HttpServletRequest request) {
+
+        try {
+
+            RegistroSalida registroSalida = registroSalidaEjb.findById(anularForm.getIdAnular());
+            UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
+
+            // Anulamos el RegistroEntrada
+            String motivoAnulacion;
+            if (StringUtils.isEmpty(anularForm.getObservacionesAnulacion())) {
+                motivoAnulacion = getMessage("registro.modificacion.anulacion");
+            } else {
+                motivoAnulacion = getMessage("registro.modificacion.anulacion") + ": " + anularForm.getObservacionesAnulacion();
+            }
+            registroSalidaEjb.anularRegistroSalida(registroSalida, usuarioEntidad, motivoAnulacion);
+
+            Mensaje.saveMessageInfo(request, getMessage("registroSalida.anular"));
+
+        } catch (Exception e) {
+            Mensaje.saveMessageError(request, getMessage("regweb.error.registro"));
+            e.printStackTrace();
+        }
+
+        return "redirect:/adminEntidad/registroSalida/" + anularForm.getIdAnular() + "/detalle";
     }
 
     /**

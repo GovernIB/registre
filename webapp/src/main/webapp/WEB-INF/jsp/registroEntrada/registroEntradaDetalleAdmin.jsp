@@ -94,6 +94,13 @@
                                 </div>
                             </c:if>
                         </c:if>
+
+                        <%--Botón Anular--%>
+                        <c:if test="${registro.estado != RegwebConstantes.REGISTRO_ANULADO && registro.estado != RegwebConstantes.REGISTRO_RECTIFICADO}">
+                            <div class="btn-group">
+                                <a data-toggle="modal" role="button" href="#anularModal" onclick="limpiarModalAnulacion(${registro.id});" class="btn btn-danger btn-sm"><spring:message code="regweb.anular"/></a>
+                            </div>
+                        </c:if>
                     </div>
 
                     <%--BOTONERA --%>
@@ -101,12 +108,15 @@
                         <form:form modelAttribute="integracion" action="${pageContext.request.contextPath}/integracion/busqueda" method="post" cssClass="form-horizontal" target="_blank">
                             <form:hidden path="texto"/>
                         </form:form>
+
+                        <%--Botón integraciones--%>
                         <div class="btn-group">
                             <button type="button" onclick="buscarIntegraciones('${registro.numeroRegistroFormateado}')" class="btn btn-warning btn-sm btn-block">
                                 <spring:message code="integracion.integraciones"/>
                             </button>
                         </div>
 
+                        <%--Botón detalle Intercambio SIR--%>
                         <c:if test="${not empty registro.registroDetalle.identificadorIntercambio}">
                             <div class="btn-group"><button type="button" onclick="goToNewPage('<c:url value="/sir/${registro.registroDetalle.identificadorIntercambio}/detalle"/>')" class="btn btn-primary btn-sm"><spring:message code="idIntercambio.detalle"/></button></div>
                         </c:if>
@@ -200,6 +210,12 @@
 
         </div>
     </div>
+
+    <%--Modal ANULAR--%>
+    <c:import url="../registro/anular.jsp">
+        <c:param name="tipoRegistro" value="${RegwebConstantes.REGISTRO_ENTRADA}"/>
+    </c:import>
+
 </div>
 
 
