@@ -19,7 +19,13 @@
             </div>
 
             <div class="modal-body">
-                <c:url value="/${tipoRegistro}/anular" var="urlAnular" scope="request"/>
+                <c:if test="${loginInfo.rolActivo.nombre == 'RWE_USUARI'}">
+                    <c:url value="/${tipoRegistro}/anular" var="urlAnular" scope="request"/>
+                </c:if>
+                <c:if test="${loginInfo.rolActivo.nombre == 'RWE_ADMIN'}">
+                    <c:url value="/adminEntidad/${tipoRegistro}/anular" var="urlAnular" scope="request"/>
+                </c:if>
+
                 <form:form modelAttribute="anularForm" method="post" action="${urlAnular}" cssClass="form-horizontal">
 
                     <form:input type="hidden" path="idAnular" value=""/>
