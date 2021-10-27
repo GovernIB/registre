@@ -125,8 +125,8 @@ public class AsientoRegistralBean implements AsientoRegistralLocal {
                 if (TIPO_INTERESADO_PERSONA_FISICA.equals(interesado.getTipo())
                         || TIPO_INTERESADO_PERSONA_JURIDICA.equals(interesado.getTipo())) {
                     //Creamos el justificante del registroSalida y lo marcamos como REGISTRO_VALIDO
-                    crearJustificanteCambioEstado(registroSalida, REGISTRO_VALIDO);
-                    registroSalida.setEstado(REGISTRO_VALIDO);
+                    crearJustificanteCambioEstado(registroSalida, REGISTRO_ENVIADO_NOTIFICAR);
+                    registroSalida.setEstado(REGISTRO_ENVIADO_NOTIFICAR);
 
                     // Interesado es una administración
                 } else if (TIPO_INTERESADO_ADMINISTRACION.equals(interesado.getTipo())) {
