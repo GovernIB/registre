@@ -99,6 +99,8 @@
       <xs:element minOccurs="0" name="fechaFin" type="xs:dateTime"/>
       <xs:element minOccurs="0" name="numeroRegistroFormateado" type="xs:string"/>
       <xs:element maxOccurs="unbounded" minOccurs="0" name="estados" type="xs:int"/>
+      <xs:element minOccurs="0" name="extracto" type="xs:string"/>
+      <xs:element minOccurs="0" name="resultPorPagina" type="xs:int"/>
     </xs:sequence>
   </xs:complexType>
   <xs:complexType name="obtenerAsientosCiudadanoCarpetaResponse">

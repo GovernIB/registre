@@ -1,7 +1,26 @@
 package es.caib.regweb3.ws.v3.test;
 
 import es.caib.regweb3.utils.RegwebConstantes;
-import es.caib.regweb3.ws.api.v3.*;
+import es.caib.regweb3.ws.api.v3.AnexoWs;
+import es.caib.regweb3.ws.api.v3.AsientoRegistralWs;
+import es.caib.regweb3.ws.api.v3.DatosInteresadoWs;
+import es.caib.regweb3.ws.api.v3.IdentificadorWs;
+import es.caib.regweb3.ws.api.v3.InteresadoWs;
+import es.caib.regweb3.ws.api.v3.RegWebAsientoRegistralWs;
+import es.caib.regweb3.ws.api.v3.RegWebAsientoRegistralWsService;
+import es.caib.regweb3.ws.api.v3.RegWebHelloWorldWithSecurityWs;
+import es.caib.regweb3.ws.api.v3.RegWebHelloWorldWithSecurityWsService;
+import es.caib.regweb3.ws.api.v3.RegWebHelloWorldWs;
+import es.caib.regweb3.ws.api.v3.RegWebHelloWorldWsService;
+import es.caib.regweb3.ws.api.v3.RegWebInfoWs;
+import es.caib.regweb3.ws.api.v3.RegWebInfoWsService;
+import es.caib.regweb3.ws.api.v3.RegWebPersonasWs;
+import es.caib.regweb3.ws.api.v3.RegWebPersonasWsService;
+import es.caib.regweb3.ws.api.v3.RegWebRegistroEntradaWs;
+import es.caib.regweb3.ws.api.v3.RegWebRegistroEntradaWsService;
+import es.caib.regweb3.ws.api.v3.RegWebRegistroSalidaWs;
+import es.caib.regweb3.ws.api.v3.RegWebRegistroSalidaWsService;
+import es.caib.regweb3.ws.api.v3.RegistroEntradaWs;
 import es.caib.regweb3.ws.api.v3.utils.I18NUtils;
 import org.apache.commons.io.IOUtils;
 import org.fundaciobit.genapp.common.utils.Utils;
@@ -12,14 +31,22 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.sql.Timestamp;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 
 /**
  * @author anadal
  */
 public abstract class RegWebTestUtils implements RegwebConstantes {
+
+    public static final String HELLO_WORLD = "RegWebHelloWorld";
+
+    public static final String HELLO_WORLD_WITH_SECURITY = "RegWebHelloWorldWithSecurity";
 
     public static final String REGWEB3_PERSONAS = "RegWebPersonas";
     public static final String REGWEB3_ASIENTO_REGISTRAL = "RegWebAsientoRegistral";
@@ -30,7 +57,8 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
     // TODO GEN APP ADD OTHERS
 
     private static Properties testProperties = new Properties();
-    private static String entorno = "_localhost";
+   // private static String entorno = "_localhost";
+    private static String entorno = "_proves";
 
     static {
         // Traduccions
@@ -117,6 +145,38 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
 
     public static Long getTestCodigoSia() {
         return new Long(testProperties.getProperty("test_codigo_sia" + entorno));
+    }
+
+    public static RegWebHelloWorldWs getHelloWorldApi() throws Exception {
+
+        final String endpoint = getEndPoint(HELLO_WORLD);
+
+        final URL wsdl = new URL(endpoint + "?wsdl");
+
+
+        RegWebHelloWorldWsService helloService = new RegWebHelloWorldWsService(wsdl);
+
+        RegWebHelloWorldWs helloApi = helloService.getRegWebHelloWorldWs();
+
+        // Adreça servidor
+        Map<String, Object> reqContext = ((BindingProvider) helloApi).getRequestContext();
+        reqContext.put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, endpoint);
+
+        return helloApi;
+
+    }
+
+
+    public static RegWebHelloWorldWithSecurityWs getHelloWorldWithSecurityApi() throws Exception {
+        final String endpoint = getEndPoint(HELLO_WORLD_WITH_SECURITY);
+        final URL wsdl = new URL(endpoint + "?wsdl");
+        RegWebHelloWorldWithSecurityWsService service = new RegWebHelloWorldWithSecurityWsService(wsdl);
+
+        RegWebHelloWorldWithSecurityWs api = service.getRegWebHelloWorldWithSecurityWs();
+
+        configAddressUserPassword(getTestAppUserName(), getTestAppPassword(), endpoint, api);
+
+        return api;
     }
 
 
@@ -697,7 +757,7 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
         }
 
         //Anexo confidencial
-        {
+        /*{
 
             AnexoWs anexoConfidencial = new AnexoWs();
 
@@ -727,7 +787,7 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
             anexoConfidencial.setTipoMIMEFicheroAnexado(Utils.getMimeType(fichero));
 
             anexos.add(anexoConfidencial);
-        }
+        }*/
 
         return anexos;
     }
