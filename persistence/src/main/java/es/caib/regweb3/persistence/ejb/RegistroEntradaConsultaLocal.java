@@ -22,6 +22,8 @@ import java.util.List;
 @RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI","RWE_WS_ENTRADA","RWE_WS_SALIDA", "RWE_WS_CIUDADANO"})
 public interface RegistroEntradaConsultaLocal {
 
+    String JNDI_NAME = "java:app/regweb3-persistence/RegistroEntradaConsultaEJB";
+
 
     Long findByNumeroRegistroOrigen(String numeroRegistroFormateado, Long idRegistro) throws Exception;
 
