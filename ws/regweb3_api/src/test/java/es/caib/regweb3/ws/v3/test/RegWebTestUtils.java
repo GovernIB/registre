@@ -31,7 +31,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -58,7 +57,8 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
     // TODO GEN APP ADD OTHERS
 
     private static Properties testProperties = new Properties();
-    private static String entorno = "_localhost";
+   // private static String entorno = "_localhost";
+    private static String entorno = "_proves";
 
     static {
         // Traduccions
@@ -757,7 +757,7 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
         }
 
         //Anexo confidencial
-        {
+        /*{
 
             AnexoWs anexoConfidencial = new AnexoWs();
 
@@ -787,7 +787,7 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
             anexoConfidencial.setTipoMIMEFicheroAnexado(Utils.getMimeType(fichero));
 
             anexos.add(anexoConfidencial);
-        }
+        }*/
 
         return anexos;
     }

@@ -829,7 +829,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Paginacion getByDocumento(Long idEntidad, String documento, Integer pageNumber, Date fechaInicio, Date fechaFin, String numeroRegistro, List<Integer> estados) throws Exception {
+    public Paginacion getByDocumento(Long idEntidad, String documento, Integer pageNumber, Date fechaInicio, Date fechaFin, String numeroRegistro, List<Integer> estados, String extracto, Integer resultPorPagina) throws Exception {
 
         Query q1;
         Query q2;
@@ -876,6 +876,12 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
         if(numeroRegistro!=null && !numeroRegistro.isEmpty()){
             where.add(" re.numeroRegistroFormateado LIKE :numeroRegistroFormateado ");
             parametros.put("numeroRegistroFormateado", "%" + numeroRegistro + "%");
+        }
+
+        //Extracto
+        if(extracto!=null && !extracto.isEmpty()){
+            where.add(" re.registroDetalle.extracto LIKE :extracto ");
+            parametros.put("extracto", "%" + extracto + "%");
         }
 
 
@@ -933,10 +939,11 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
 
         Long total = (Long) q2.getSingleResult();
 
-
-        int inicio = pageNumber * RESULTADOS_PAGINACION;
+        Integer resultadosPorPagina= resultPorPagina!=null?resultPorPagina:RESULTADOS_PAGINACION;
+        int inicio = pageNumber * resultadosPorPagina;
         q1.setFirstResult(inicio);
-        q1.setMaxResults(RESULTADOS_PAGINACION);
+        q1.setMaxResults(resultadosPorPagina);
+
 
         Paginacion paginacion = new Paginacion(total.intValue(), pageNumber);
 
