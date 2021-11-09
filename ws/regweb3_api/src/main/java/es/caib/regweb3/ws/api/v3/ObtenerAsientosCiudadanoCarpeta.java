@@ -30,6 +30,8 @@ import java.util.List;
  *         &lt;element name="fechaFin" type="{http://www.w3.org/2001/XMLSchema}dateTime" minOccurs="0"/>
  *         &lt;element name="numeroRegistroFormateado" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="estados" type="{http://www.w3.org/2001/XMLSchema}int" maxOccurs="unbounded" minOccurs="0"/>
+ *         &lt;element name="extracto" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
+ *         &lt;element name="resultPorPagina" type="{http://www.w3.org/2001/XMLSchema}int" minOccurs="0"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -47,7 +49,9 @@ import java.util.List;
     "fechaInicio",
     "fechaFin",
     "numeroRegistroFormateado",
-    "estados"
+    "estados",
+    "extracto",
+    "resultPorPagina"
 })
 public class ObtenerAsientosCiudadanoCarpeta {
 
@@ -66,6 +70,8 @@ public class ObtenerAsientosCiudadanoCarpeta {
     protected String numeroRegistroFormateado;
     @XmlElement(type = Integer.class)
     protected List<Integer> estados;
+    protected String extracto;
+    protected Integer resultPorPagina;
 
     /**
      * Obtiene el valor de la propiedad entidad.
@@ -262,6 +268,54 @@ public class ObtenerAsientosCiudadanoCarpeta {
             estados = new ArrayList<Integer>();
         }
         return this.estados;
+    }
+
+    /**
+     * Obtiene el valor de la propiedad extracto.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getExtracto() {
+        return extracto;
+    }
+
+    /**
+     * Define el valor de la propiedad extracto.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setExtracto(String value) {
+        this.extracto = value;
+    }
+
+    /**
+     * Obtiene el valor de la propiedad resultPorPagina.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Integer }
+     *     
+     */
+    public Integer getResultPorPagina() {
+        return resultPorPagina;
+    }
+
+    /**
+     * Define el valor de la propiedad resultPorPagina.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Integer }
+     *     
+     */
+    public void setResultPorPagina(Integer value) {
+        this.resultPorPagina = value;
     }
 
 }
