@@ -28,7 +28,9 @@ public class RegWebAsientoRegistralTest extends RegWebTestUtils {
      */
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
-        setEntorno("_localhost");
+        //setEntorno("_localhost");
+        //setEntorno("_registre3");
+        setEntorno("_proves");
         asientoRegistralApi = getAsientoRegistralApi();
     }
 
@@ -117,7 +119,7 @@ public class RegWebAsientoRegistralTest extends RegWebTestUtils {
     @Test
     public void crearAsientoEntradaConAnexos() throws Exception {
 
-        for (int i = 0; i < 1; i++) {
+        for (int i = 0; i < 10; i++) {
 
             try {
 
@@ -418,6 +420,8 @@ public class RegWebAsientoRegistralTest extends RegWebTestUtils {
             Timestamp tFechaInicio = setDate(01,01,2020);
 
             Timestamp tFechaFin = setDate(05,07,2021);
+            Integer resultPorPagina= 5;
+            String numeroRegistroFormateado="GPRO-E-3/2021";
 
             List<Integer> estados = new ArrayList<>();
             estados.add(1);
@@ -426,7 +430,7 @@ public class RegWebAsientoRegistralTest extends RegWebTestUtils {
             estados.add(6);
             estados.add(7);
 
-            ResultadoBusquedaWs asientos = asientoRegistralApi.obtenerAsientosCiudadanoCarpeta(getTestEntidadCodigoDir3(),"44328254D",0,"es",null, null,"GPRO-E-3/2021", estados );
+            ResultadoBusquedaWs asientos = asientoRegistralApi.obtenerAsientosCiudadanoCarpeta(getTestEntidadCodigoDir3(),"44328254D",0,"es",null, null,"", estados, "test", resultPorPagina );
 
             System.out.println("Asientos encontrados: " +asientos.getTotalResults());
 
@@ -437,7 +441,7 @@ public class RegWebAsientoRegistralTest extends RegWebTestUtils {
                 System.out.println("Destino codigo: " + asientoWs.getCodigoDestino());
                 System.out.println("Destino denominacion: " + asientoWs.getDenominacionDestino());
                 System.out.println("Extracto: " + asientoWs.getExtracto());
-                System.out.println("Estado: " + asientoWs.getDescripcionEstado());
+                System.out.println("Estado: " + asientoWs.getEstado());
                 System.out.println("");
             }
 

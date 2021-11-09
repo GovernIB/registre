@@ -177,7 +177,7 @@ public interface RegWebAsientoRegistralWs {
      * @throws WsValidationException
      */
     @WebMethod
-    ResultadoBusquedaWs obtenerAsientosCiudadanoCarpeta(@WebParam(name = "entidad") String entidad, @WebParam(name = "documento") String documento, @WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "idioma") String idioma, @WebParam(name = "fechaInicio") Date fechaInicio, @WebParam(name = "fechaFin") Date fechaFin, @WebParam(name = "numeroRegistroFormateado") String numeroRegistroFormateado, @WebParam(name = "estados") List<Integer> estados) throws Throwable, WsI18NException, WsValidationException;
+    ResultadoBusquedaWs obtenerAsientosCiudadanoCarpeta(@WebParam(name = "entidad") String entidad, @WebParam(name = "documento") String documento, @WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "idioma") String idioma, @WebParam(name = "fechaInicio") Date fechaInicio, @WebParam(name = "fechaFin") Date fechaFin, @WebParam(name = "numeroRegistroFormateado") String numeroRegistroFormateado, @WebParam(name = "estados") List<Integer> estados, @WebParam(name = "extracto") String extracto, @WebParam(name = "resultPorPagina") Integer resultPorPagina) throws Throwable, WsI18NException, WsValidationException;
 
     /**
      *

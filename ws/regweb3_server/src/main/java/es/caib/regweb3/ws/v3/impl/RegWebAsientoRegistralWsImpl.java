@@ -2,11 +2,32 @@ package es.caib.regweb3.ws.v3.impl;
 
 import es.caib.dir3caib.ws.api.unidad.Dir3CaibObtenerUnidadesWs;
 import es.caib.dir3caib.ws.api.unidad.UnidadTF;
-import es.caib.regweb3.model.*;
+import es.caib.regweb3.model.Entidad;
+import es.caib.regweb3.model.Interesado;
+import es.caib.regweb3.model.Libro;
+import es.caib.regweb3.model.ModeloOficioRemision;
+import es.caib.regweb3.model.Oficina;
+import es.caib.regweb3.model.OficioRemision;
+import es.caib.regweb3.model.Organismo;
+import es.caib.regweb3.model.RegistroEntrada;
+import es.caib.regweb3.model.RegistroSalida;
+import es.caib.regweb3.model.Sesion;
+import es.caib.regweb3.model.UsuarioEntidad;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.model.utils.AnexoSimple;
-import es.caib.regweb3.persistence.ejb.*;
-import es.caib.regweb3.persistence.utils.*;
+import es.caib.regweb3.persistence.ejb.AsientoRegistralLocal;
+import es.caib.regweb3.persistence.ejb.DistribucionLocal;
+import es.caib.regweb3.persistence.ejb.ModeloOficioRemisionLocal;
+import es.caib.regweb3.persistence.ejb.MultiEntidadLocal;
+import es.caib.regweb3.persistence.ejb.OficioRemisionLocal;
+import es.caib.regweb3.persistence.ejb.RegistroEntradaConsultaLocal;
+import es.caib.regweb3.persistence.ejb.RegistroSalidaConsultaLocal;
+import es.caib.regweb3.persistence.ejb.SesionLocal;
+import es.caib.regweb3.persistence.utils.JustificanteReferencia;
+import es.caib.regweb3.persistence.utils.Paginacion;
+import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
+import es.caib.regweb3.persistence.utils.RegistroUtils;
+import es.caib.regweb3.persistence.utils.RespuestaDistribucion;
 import es.caib.regweb3.persistence.validator.RegistroEntradaBeanValidator;
 import es.caib.regweb3.persistence.validator.RegistroEntradaValidator;
 import es.caib.regweb3.persistence.validator.RegistroSalidaBeanValidator;
@@ -17,13 +38,21 @@ import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 import es.caib.regweb3.ws.converter.AsientoConverter;
 import es.caib.regweb3.ws.converter.AsientoRegistralConverter;
-import es.caib.regweb3.ws.model.*;
+import es.caib.regweb3.ws.model.AsientoRegistralSesionWs;
+import es.caib.regweb3.ws.model.AsientoRegistralWs;
+import es.caib.regweb3.ws.model.AsientoWs;
+import es.caib.regweb3.ws.model.FileContentWs;
+import es.caib.regweb3.ws.model.JustificanteReferenciaWs;
+import es.caib.regweb3.ws.model.JustificanteWs;
+import es.caib.regweb3.ws.model.OficioWs;
+import es.caib.regweb3.ws.model.ResultadoBusquedaWs;
 import es.caib.regweb3.ws.utils.UsuarioAplicacionCache;
 import org.apache.commons.io.IOUtils;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.fundaciobit.genapp.common.ws.WsI18NException;
 import org.fundaciobit.genapp.common.ws.WsValidationException;
+import org.jboss.ejb3.annotation.SecurityDomain;
 import org.jboss.ws.api.annotation.TransportGuarantee;
 import org.jboss.ws.api.annotation.WebContext;
 import org.slf4j.Logger;
@@ -40,12 +69,14 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import static es.caib.regweb3.utils.RegwebConstantes.*;
+import static es.caib.regweb3.utils.RegwebConstantes.RWE_WS_CIUDADANO;
+import static es.caib.regweb3.utils.RegwebConstantes.RWE_WS_ENTRADA;
+import static es.caib.regweb3.utils.RegwebConstantes.RWE_WS_SALIDA;
 
 /**
  *
  */
-//@SecurityDomain(RegwebConstantes.SECURITY_DOMAIN)
+@SecurityDomain(RegwebConstantes.SECURITY_DOMAIN)
 @Stateless(name = RegWebAsientoRegistralWsImpl.NAME + "Ejb")
 @RolesAllowed({RWE_WS_ENTRADA, RWE_WS_SALIDA, RWE_WS_CIUDADANO})
 @SOAPBinding(style = SOAPBinding.Style.RPC)
@@ -54,7 +85,7 @@ import static es.caib.regweb3.utils.RegwebConstantes.*;
 @WebService(name = RegWebAsientoRegistralWsImpl.NAME_WS, portName = RegWebAsientoRegistralWsImpl.NAME_WS,
         serviceName = RegWebAsientoRegistralWsImpl.NAME_WS + "Service",
         endpointInterface = "es.caib.regweb3.ws.v3.impl.RegWebAsientoRegistralWs")
-@WebContext(contextRoot = "/regweb3/ws", urlPattern = "/v3/" + RegWebAsientoRegistralWsImpl.NAME, transportGuarantee = TransportGuarantee.NONE, secureWSDLAccess = false, authMethod = "BASIC")
+@WebContext(contextRoot = "/regweb3/ws", urlPattern = "/v3/" + RegWebAsientoRegistralWsImpl.NAME, transportGuarantee = TransportGuarantee.NONE, secureWSDLAccess = false, authMethod = "WSBASIC")
 public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl implements RegWebAsientoRegistralWs {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
@@ -66,28 +97,28 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
     RegistroSalidaValidator<RegistroSalida> registroSalidaValidator = new RegistroSalidaValidator<RegistroSalida>();
     RegistroEntradaValidator<RegistroEntrada> registroEntradaValidator = new RegistroEntradaValidator<RegistroEntrada>();
 
-    @EJB(mappedName = RegistroEntradaConsultaLocal.JNDI_NAME)
+    @EJB(mappedName = "regweb3/RegistroEntradaConsultaEJB/local")
     private RegistroEntradaConsultaLocal registroEntradaConsultaEjb;
 
-    @EJB(mappedName = RegistroSalidaConsultaLocal.JNDI_NAME)
+    @EJB(mappedName = "regweb3/RegistroSalidaConsultaEJB/local")
     private RegistroSalidaConsultaLocal registroSalidaConsultaEjb;
 
-    @EJB(mappedName = DistribucionLocal.JNDI_NAME)
+    @EJB(mappedName = "regweb3/DistribucionEJB/local")
     private DistribucionLocal distribucionEjb;
 
-    @EJB(mappedName = OficioRemisionLocal.JNDI_NAME)
+    @EJB(mappedName = "regweb3/OficioRemisionEJB/local")
     private OficioRemisionLocal oficioRemisionEjb;
 
-    @EJB(mappedName = AsientoRegistralLocal.JNDI_NAME)
+    @EJB(mappedName = "regweb3/AsientoRegistralEJB/local")
     private AsientoRegistralLocal asientoRegistralEjb;
 
-    @EJB(mappedName = ModeloOficioRemisionLocal.JNDI_NAME)
+    @EJB(mappedName = "regweb3/ModeloOficioRemisionEJB/local")
     private ModeloOficioRemisionLocal modeloOficioRemisionEjb;
 
-    @EJB(mappedName = MultiEntidadLocal.JNDI_NAME)
+    @EJB(mappedName = "regweb3/MultiEntidadEJB/local")
     private MultiEntidadLocal multiEntidadEjb;
 
-    @EJB(mappedName = SesionLocal.JNDI_NAME)
+    @EJB(mappedName = "regweb3/SesionEJB/local")
     private SesionLocal sesionEjb;
 
 
@@ -862,7 +893,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
     @RolesAllowed({RWE_WS_CIUDADANO})
     @Override
     @WebMethod
-    public ResultadoBusquedaWs obtenerAsientosCiudadanoCarpeta(@WebParam(name = "entidad") String entidad,  @WebParam(name = "documento") String documento, @WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "idioma") String idioma, @WebParam(name = "fechaInicio") Date fechaInicio, @WebParam(name = "fechaFin") Date fechaFin, @WebParam(name = "numeroRegistroFormateado") String numeroRegistroFormateado, @WebParam(name = "estados") List<Integer> estados) throws Throwable, WsI18NException, WsValidationException{
+    public ResultadoBusquedaWs obtenerAsientosCiudadanoCarpeta(@WebParam(name = "entidad") String entidad,  @WebParam(name = "documento") String documento, @WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "idioma") String idioma, @WebParam(name = "fechaInicio") Date fechaInicio, @WebParam(name = "fechaFin") Date fechaFin, @WebParam(name = "numeroRegistroFormateado") String numeroRegistroFormateado, @WebParam(name = "estados") List<Integer> estados, @WebParam(name = "extracto") String extracto, @WebParam(name = "resultPorPagina") Integer resultPorPagina) throws Throwable, WsI18NException, WsValidationException{
 
         // Definimos la petición que se guardá en el monitor de integración
         Date inicio = new Date();
@@ -904,7 +935,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
         try{
 
             // Obtenemos los Registros de Entrada de un ciudadano
-            Paginacion entradas = registroEntradaConsultaEjb.getByDocumento(entidadActiva.getId(),documento, pageNumber, fechaInicio, fechaFin,numeroRegistroFormateado,estados);
+            Paginacion entradas = registroEntradaConsultaEjb.getByDocumento(entidadActiva.getId(),documento, pageNumber, fechaInicio, fechaFin,numeroRegistroFormateado,estados,extracto, resultPorPagina);
             resultado.setTotalResults(entradas.getTotalResults());
             resultado.setPageNumber(pageNumber);
 
