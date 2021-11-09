@@ -28,13 +28,13 @@ public interface SchedulerLocal {
      *
      * @throws Exception
      */
-    void reintentarEnviosSinConfirmacion() throws Exception;
+    void reintentarIntercambiosSinConfirmacion() throws Exception;
 
     /**
      *
      * @throws Exception
      */
-    void reintentarEnviosConError() throws Exception;
+    void reintentarIntercambiosConError() throws Exception;
 
     /**
      *

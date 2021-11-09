@@ -41,9 +41,6 @@ public class SirController extends BaseController {
     @EJB(mappedName = "regweb3/OficioRemisionEJB/local")
     private OficioRemisionLocal oficioRemisionEjb;
 
-    @EJB(mappedName = "regweb3/LibroEJB/local")
-    private LibroLocal libroEjb;
-
     @EJB(mappedName = "regweb3/RegistroSirEJB/local")
     private RegistroSirLocal registroSirEjb;
 
@@ -324,6 +321,7 @@ public class SirController extends BaseController {
         model.addAttribute("trazabilidades", trazabilidades);
         model.addAttribute("mensajes", mensajes);
         model.addAttribute("idIntercambio", idIntercambio);
+        model.addAttribute("integracion", new BasicForm());
 
         return "sir/intercambioDetalle";
     }

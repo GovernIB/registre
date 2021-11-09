@@ -9,6 +9,7 @@ import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.persistence.utils.RegistroUtils;
 import es.caib.regweb3.persistence.utils.RespuestaDistribucion;
+import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 import es.caib.regweb3.webapp.form.AnularForm;
@@ -380,8 +381,19 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         JsonResponse jsonResponse = new JsonResponse();
 
         try {
+            RegistroEntrada registroEntrada = registroEntradaEjb.getConAnexosFull(idRegistro);
 
-            sirEnvioEjb.enviarIntercambio(RegwebConstantes.REGISTRO_ENTRADA, idRegistro, getOficinaActiva(request), usuarioEntidad, oficinaSIRCodigo);
+            // Crear el Justificante
+            if (!registroEntrada.getRegistroDetalle().getTieneJustificante()) {
+
+                // Creamos el anexo del justificante y se lo añadimos al registro
+                AnexoFull anexoFull = justificanteEjb.crearJustificante(usuarioEntidad, registroEntrada, RegwebConstantes.REGISTRO_ENTRADA, Configuracio.getDefaultLanguage());
+                registroEntrada.getRegistroDetalle().getAnexosFull().add(anexoFull);
+            }
+
+            // Enviar el Intercambio
+            sirEnvioEjb.enviarIntercambio(RegwebConstantes.REGISTRO_ENTRADA, registroEntrada, getOficinaActiva(request), usuarioEntidad, oficinaSIRCodigo);
+
             Mensaje.saveMessageInfo(request, getMessage("registroEntrada.envioSir.ok"));
             jsonResponse.setStatus("SUCCESS");
 

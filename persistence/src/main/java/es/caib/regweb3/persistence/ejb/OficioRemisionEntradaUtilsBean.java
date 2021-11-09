@@ -7,10 +7,7 @@ import es.caib.dir3caib.ws.api.unidad.UnidadTF;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.model.utils.OficioPendienteLlegada;
-import es.caib.regweb3.persistence.utils.Oficio;
-import es.caib.regweb3.persistence.utils.OficiosRemisionOrganismo;
-import es.caib.regweb3.persistence.utils.Paginacion;
-import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
+import es.caib.regweb3.persistence.utils.*;
 import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.Dir3CaibUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
@@ -512,6 +509,37 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
         synchronized (this) {
             oficioRemision = oficioRemisionEjb.registrarOficioRemision(oficioRemision, RegwebConstantes.REGISTRO_OFICIO_EXTERNO);
         }
+
+        return oficioRemision;
+
+    }
+
+    @Override
+    public OficioRemision crearOficioRemisionSIR(RegistroEntrada registroEntrada, Oficina oficinaActiva, UsuarioEntidad usuarioEntidad, OficinaTF oficinaSirDestino )
+            throws Exception, I18NException, I18NValidationException {
+
+        // Creamos el OficioRemision
+        OficioRemision oficioRemision = new OficioRemision();
+        oficioRemision.setSir(true);
+        oficioRemision.setEstado(RegwebConstantes.OFICIO_SIR_ENVIADO);
+        oficioRemision.setFechaEstado(new Date());
+        oficioRemision.setOficina(oficinaActiva);
+        oficioRemision.setUsuarioResponsable(usuarioEntidad);
+
+        oficioRemision.setLibro(new Libro(registroEntrada.getLibro().getId()));
+        oficioRemision.setIdentificadorIntercambio(registroEntrada.getRegistroDetalle().getIdentificadorIntercambio());
+        oficioRemision.setTipoOficioRemision(RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA);
+        oficioRemision.setDestinoExternoCodigo(registroEntrada.getDestinoExternoCodigo());
+        oficioRemision.setDestinoExternoDenominacion(registroEntrada.getDestinoExternoDenominacion());
+        oficioRemision.setRegistrosEntrada(Collections.singletonList(registroEntrada));
+        oficioRemision.setOrganismoDestinatario(null);
+        oficioRemision.setRegistrosSalida(null);
+        oficioRemision.setCodigoEntidadRegistralDestino(oficinaSirDestino.getCodigo());
+        oficioRemision.setDecodificacionEntidadRegistralDestino(oficinaSirDestino.getDenominacion());
+        oficioRemision.setContactosEntidadRegistralDestino(RegistroUtils.getContactosOficinaSir(oficinaSirDestino));
+
+        // Registramos el Oficio de Remisión SIR
+        oficioRemision = oficioRemisionEjb.registrarOficioRemision(oficioRemision, RegwebConstantes.REGISTRO_OFICIO_SIR);
 
         return oficioRemision;
 
