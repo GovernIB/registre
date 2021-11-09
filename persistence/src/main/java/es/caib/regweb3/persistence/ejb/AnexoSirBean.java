@@ -7,7 +7,6 @@ import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.log4j.Logger;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
-import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -23,7 +22,6 @@ import java.util.List;
 
 @Stateless(name = "AnexoSirEJB")
 @SecurityDomain("seycon")
-@RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI"})
 public class AnexoSirBean extends BaseEjbJPA<AnexoSir, Long> implements AnexoSirLocal{
 
     protected final Logger log = Logger.getLogger(getClass());
@@ -79,7 +77,7 @@ public class AnexoSirBean extends BaseEjbJPA<AnexoSir, Long> implements AnexoSir
                 "where anexoSir.purgado = false and anexoSir.registroSir.estado = :aceptado");
 
 
-        q.setParameter("aceptado", EstadoRegistroSir.ACEPTADO);
+        q.setParameter("aceptado", EstadoRegistroSir.ENVIADO_CONFIRMADO);
         if(numElementos!= null) {
             q.setMaxResults(numElementos);
         }
@@ -118,4 +116,13 @@ public class AnexoSirBean extends BaseEjbJPA<AnexoSir, Long> implements AnexoSir
         return total;
 
     }
+    
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<AnexoSir> findByDocumento(AnexoSir anexo) {
+//		Query q = em.createQuery("Select a from AnexoSir as a where a.identificadorDocumentoFirmado = :identificadorDocumento");
+//        q.setParameter("identificadorDocumento", anexo);
+//        return q.getResultList();
+		return null;
+	}
 }

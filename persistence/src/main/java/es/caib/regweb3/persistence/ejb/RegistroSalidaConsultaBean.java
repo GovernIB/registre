@@ -16,7 +16,6 @@ import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.hibernate.Hibernate;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
-import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -35,7 +34,6 @@ import static es.caib.regweb3.persistence.ejb.BaseEjbJPA.RESULTADOS_PAGINACION;
 
 @Stateless(name = "RegistroSalidaConsultaEJB")
 @SecurityDomain("seycon")
-@RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI","RWE_WS_ENTRADA","RWE_WS_SALIDA", "RWE_WS_CIUDADANO"})
 public class RegistroSalidaConsultaBean implements RegistroSalidaConsultaLocal {
 
     protected final Logger log = Logger.getLogger(getClass());
@@ -81,7 +79,7 @@ public class RegistroSalidaConsultaBean implements RegistroSalidaConsultaLocal {
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Paginacion busqueda(Integer pageNumber,List<Long> organismos, Date fechaInicio, Date fechaFin, RegistroSalida registroSalida, String interesadoNom, String interesadoLli1, String interesadoLli2, String interesadoDoc, String observaciones, String usuario, Long idEntidad) throws Exception {
+    public Paginacion busqueda(Integer pageNumber,List<Long> organismos, Date fechaInicio, Date fechaFin, RegistroSalida registroSalida, String interesadoNom, String interesadoLli1, String interesadoLli2, String interesadoDoc, String observaciones, String usuario, Long idEntidad, boolean incluirPendientesGeiser) throws Exception {
 
         Query q;
         Query q2;
@@ -172,12 +170,19 @@ public class RegistroSalidaConsultaBean implements RegistroSalidaConsultaLocal {
             where.add(" registroSalida.registroDetalle.tipoDocumentacionFisica = :tipoDocumentacion ");
             parametros.put("tipoDocumentacion", registroSalida.getRegistroDetalle().getTipoDocumentacionFisica());
         }
-
+        
         // Intervalo fechas
-        where.add(" (registroSalida.fecha >= :fechaInicio  ");
-        parametros.put("fechaInicio", fechaInicio);
-        where.add(" registroSalida.fecha <= :fechaFin) ");
-        parametros.put("fechaFin", fechaFin);
+        if (incluirPendientesGeiser) {
+	        where.add(" (registroSalida.fecha is null or (registroSalida.fecha >= :fechaInicio  ");
+	        parametros.put("fechaInicio", fechaInicio);
+	        where.add(" registroSalida.fecha <= :fechaFin)) ");
+	        parametros.put("fechaFin", fechaFin);
+        } else {
+        	 where.add(" (registroSalida.fecha >= :fechaInicio  ");
+ 	        parametros.put("fechaInicio", fechaInicio);
+ 	        where.add(" registroSalida.fecha <= :fechaFin) ");
+ 	        parametros.put("fechaFin", fechaFin);
+        }
 
         //Presencial
         if(registroSalida.getRegistroDetalle().getPresencial() != null){
@@ -277,6 +282,25 @@ public class RegistroSalidaConsultaBean implements RegistroSalidaConsultaLocal {
             return null;
         }
     }
+    
+	@Override
+	public RegistroSalida findByNumeroRegistro(String codigoEntidad, String numeroRegistro) throws Exception {
+		
+		Query q = em.createQuery("Select rs from RegistroSalida as rs where rs.numeroRegistro = :numeroRegistro " +
+                "and rs.usuario.entidad.codigoDir3 = :codigoEntidad ");
+
+        q.setParameter("numeroRegistro", numeroRegistro);
+        q.setParameter("codigoEntidad", codigoEntidad);
+        q.setHint("org.hibernate.readOnly", true);
+
+        List<RegistroSalida> registro = q.getResultList();
+
+        if (registro.size() == 1) {
+            return registro.get(0);
+        } else {
+            return null;
+        }
+	}
 
     @Override
     public RegistroSalida findByNumeroRegistroFormateadoCompleto(String codigoEntidad, String numeroRegistroFormateado) throws Exception, I18NException {

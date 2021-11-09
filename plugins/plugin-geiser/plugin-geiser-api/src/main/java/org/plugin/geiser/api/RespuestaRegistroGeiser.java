@@ -6,8 +6,9 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
-public class RespuestaRegistroGeiser extends Respuesta {
+public class RespuestaRegistroGeiser {
 
+	private Respuesta respuesta;
 	private String nuRegistro;
 	private Date fechaRegistro;
 	

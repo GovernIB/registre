@@ -119,12 +119,6 @@
       <artifactId>regweb3-utils</artifactId>
       <version>${project.version}</version>
       <scope>provided</scope>
-      <exclusions>
-      	<exclusion>
-			<artifactId>slf4j-api</artifactId>
-			<groupId>org.slf4j</groupId>
-		</exclusion>
-      </exclusions>
     </dependency>
 
     <dependency>
@@ -156,6 +150,14 @@
       <version>${project.version}</version>
       <scope>provided</scope>
     </dependency>
+
+	<dependency>
+		<groupId>${project.groupId}</groupId>
+		<artifactId>plugin-geiser-api</artifactId>
+		<type>jar</type>
+		<version>${project.version}</version>
+		<scope>provided</scope>
+	</dependency>
 
     <!-- Externas -->
 
@@ -312,45 +314,13 @@
       <version>${spring.security.version}</version>
       <exclusions>
         <exclusion>
+          <groupId>org.springframework</groupId>
+          <artifactId>spring-expression</artifactId>
+        </exclusion>
+        <exclusion>
           <groupId>commons-logging</groupId>
           <artifactId>commons-logging</artifactId>
         </exclusion>
-         <exclusion>
-		  <artifactId>spring-beans</artifactId>
-		  <groupId>org.springframework</groupId>
-		</exclusion>
-		<exclusion>
-		<artifactId>spring-aop</artifactId>
-			<groupId>org.springframework</groupId>
-		</exclusion>
-		<exclusion>
-			<artifactId>spring-core</artifactId>
-			<groupId>org.springframework</groupId>
-		</exclusion>
-		<exclusion>
-			<artifactId>spring-expression</artifactId>
-			<groupId>org.springframework</groupId>
-		</exclusion>
-		<exclusion>
-			<artifactId>spring-web</artifactId>
-			<groupId>org.springframework</groupId>
-		</exclusion>
-		<exclusion>
-			<artifactId>spring-beans</artifactId>
-			<groupId>org.springframework</groupId>
-		</exclusion>
-		<exclusion>
-			<artifactId>spring-context</artifactId>
-			<groupId>org.springframework</groupId>
-		</exclusion>
-		<exclusion>
-			<artifactId>spring-tx</artifactId>
-			<groupId>org.springframework</groupId>
-		</exclusion>
-		<exclusion>
-			<artifactId>spring-jdbc</artifactId>
-			<groupId>org.springframework</groupId>
-		</exclusion>
       </exclusions>
     </dependency>
 
@@ -363,42 +333,6 @@
           <groupId>commons-logging</groupId>
           <artifactId>commons-logging</artifactId>
         </exclusion>
-         <exclusion>
-		  <artifactId>spring-beans</artifactId>
-		  <groupId>org.springframework</groupId>
-		</exclusion>
-		<exclusion>
-		<artifactId>spring-aop</artifactId>
-			<groupId>org.springframework</groupId>
-		</exclusion>
-		<exclusion>
-			<artifactId>spring-core</artifactId>
-			<groupId>org.springframework</groupId>
-		</exclusion>
-		<exclusion>
-			<artifactId>spring-expression</artifactId>
-			<groupId>org.springframework</groupId>
-		</exclusion>
-		<exclusion>
-			<artifactId>spring-web</artifactId>
-			<groupId>org.springframework</groupId>
-		</exclusion>
-		<exclusion>
-			<artifactId>spring-beans</artifactId>
-			<groupId>org.springframework</groupId>
-		</exclusion>
-		<exclusion>
-			<artifactId>spring-context</artifactId>
-			<groupId>org.springframework</groupId>
-		</exclusion>
-		<exclusion>
-			<artifactId>spring-tx</artifactId>
-			<groupId>org.springframework</groupId>
-		</exclusion>
-		<exclusion>
-			<artifactId>spring-jdbc</artifactId>
-			<groupId>org.springframework</groupId>
-		</exclusion>
       </exclusions>
     </dependency>
 
@@ -411,26 +345,6 @@
           <groupId>commons-logging</groupId>
           <artifactId>commons-logging</artifactId>
         </exclusion>
-        <exclusion>
-			<artifactId>spring-expression</artifactId>
-			<groupId>org.springframework</groupId>
-		</exclusion>
-		<exclusion>
-			<artifactId>spring-core</artifactId>
-			<groupId>org.springframework</groupId>
-		</exclusion>
-		<exclusion>
-			<artifactId>spring-aop</artifactId>
-			<groupId>org.springframework</groupId>
-		</exclusion>
-		<exclusion>
-			<artifactId>spring-context</artifactId>
-			<groupId>org.springframework</groupId>
-		</exclusion>
-		<exclusion>
-			<artifactId>spring-beans</artifactId>
-			<groupId>org.springframework</groupId>
-		</exclusion>
       </exclusions>
     </dependency>
 
@@ -443,42 +357,6 @@
           <groupId>commons-logging</groupId>
           <artifactId>commons-logging</artifactId>
         </exclusion>
-        <exclusion>
-		  <artifactId>spring-beans</artifactId>
-		  <groupId>org.springframework</groupId>
-		</exclusion>
-		<exclusion>
-		<artifactId>spring-aop</artifactId>
-			<groupId>org.springframework</groupId>
-		</exclusion>
-		<exclusion>
-			<artifactId>spring-core</artifactId>
-			<groupId>org.springframework</groupId>
-		</exclusion>
-		<exclusion>
-			<artifactId>spring-expression</artifactId>
-			<groupId>org.springframework</groupId>
-		</exclusion>
-		<exclusion>
-			<artifactId>spring-web</artifactId>
-			<groupId>org.springframework</groupId>
-		</exclusion>
-		<exclusion>
-			<artifactId>spring-beans</artifactId>
-			<groupId>org.springframework</groupId>
-		</exclusion>
-		<exclusion>
-			<artifactId>spring-context</artifactId>
-			<groupId>org.springframework</groupId>
-		</exclusion>
-		<exclusion>
-			<artifactId>spring-tx</artifactId>
-			<groupId>org.springframework</groupId>
-		</exclusion>
-		<exclusion>
-			<artifactId>spring-jdbc</artifactId>
-			<groupId>org.springframework</groupId>
-		</exclusion>
       </exclusions>
     </dependency>
 
@@ -534,13 +412,6 @@
     </dependency>
 
 
-	<dependency>
-		<groupId>org.slf4j</groupId>
-		<artifactId>slf4j-api</artifactId>
-		<version>${slf4j.version}</version>
-		<scope>provided</scope>
-	</dependency>
-
 
     <!-- Apache Commons Upload -->
     <dependency>
@@ -563,12 +434,6 @@
       <artifactId>hibernate-annotations</artifactId>
       <version>3.4.0.GA</version>
       <scope>provided</scope>
-      <exclusions>
-      	<exclusion>
-			<artifactId>slf4j-api</artifactId>
-			<groupId>org.slf4j</groupId>
-		</exclusion>
-      </exclusions>
     </dependency>
 
     <!-- Apache Discovery IO -->
@@ -679,7 +544,7 @@
 			<id>tomcat</id>
 			<activation>
 				<file>
-					<exists>appserv_tomcat</exists>
+					<exists>appserv_tomee</exists>
 				</file>
 				<activeByDefault>false</activeByDefault>
 			</activation>
@@ -974,6 +839,11 @@
 				    <dependency>
 				      <groupId>es.caib.regweb3</groupId>
 				      <artifactId>plugin-geiser-apb</artifactId>
+				      <version>${project.version}</version>
+				    </dependency>
+				    <dependency>
+				      <groupId>es.caib.regweb3</groupId>
+				      <artifactId>plugin-geiser-mock</artifactId>
 				      <version>${project.version}</version>
 				    </dependency>   
 			</dependencies>

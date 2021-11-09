@@ -67,7 +67,7 @@ public class EntidadValidator implements Validator {
         if(rolActivo.getNombre().equals(RegwebConstantes.RWE_ADMIN)){
             ValidationUtils.rejectIfEmptyOrWhitespace(errors, "entidad.colorMenu", "error.valor.requerido", "El camp és obligatori");
             ValidationUtils.rejectIfEmptyOrWhitespace(errors, "entidad.sello", "error.valor.requerido", "El camp Format Segell és obligatori");
-            ValidationUtils.rejectIfEmptyOrWhitespace(errors, "entidad.numRegistro", "error.valor.requerido", "El camp Format Número Registre és obligatori");
+//            ValidationUtils.rejectIfEmptyOrWhitespace(errors, "entidad.numRegistro", "error.valor.requerido", "El camp Format Número Registre és obligatori");
         }
 
         /*Validación del campo único CodigoDir3*/
@@ -118,7 +118,7 @@ public class EntidadValidator implements Validator {
             }
         }
 
-        /*Validación de Format Num.Registre*/
+        /*Validación de Format Num.Registre
         if(entidad.getNumRegistro() != null){
             try {
                 if(!entidad.getNumRegistro().contains("${tipusRegistre}")){ //Si no conté el camp tipusRegistre
@@ -128,7 +128,7 @@ public class EntidadValidator implements Validator {
                 e.printStackTrace();
             }
 
-        }
+        }*/
 
     }
 

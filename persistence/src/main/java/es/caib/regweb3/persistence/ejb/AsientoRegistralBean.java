@@ -11,9 +11,7 @@ import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.jboss.ejb3.annotation.SecurityDomain;
 import org.jboss.ejb3.common.proxy.plugins.async.AsyncUtils;
-import org.springframework.scheduling.annotation.Async;
 
-import javax.annotation.security.RolesAllowed;
 import javax.ejb.*;
 import java.util.HashSet;
 import java.util.List;
@@ -29,7 +27,6 @@ import static es.caib.regweb3.utils.RegwebConstantes.*;
 @Stateless(name = "AsientoRegistralEJB")
 @SecurityDomain("seycon")
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI", "RWE_WS_ENTRADA", "RWE_WS_SALIDA"})
 public class AsientoRegistralBean implements AsientoRegistralLocal {
 
     protected final Logger log = Logger.getLogger(getClass());
@@ -54,18 +51,18 @@ public class AsientoRegistralBean implements AsientoRegistralLocal {
 
     @Override
     public RegistroSalida registrarSalida(RegistroSalida registroSalida,
-                                          UsuarioEntidad usuarioEntidad, List<Interesado> interesados, List<AnexoFull> anexos, Boolean validarAnexos)
+                                          UsuarioEntidad usuarioEntidad, List<Interesado> interesados, List<AnexoFull> anexos, Boolean validarAnexos, Boolean enviarGeiser)
             throws Exception, I18NException, I18NValidationException {
 
-        return registroSalidaEjb.registrarSalida(registroSalida, usuarioEntidad, interesados, anexos, validarAnexos);
+        return registroSalidaEjb.registrarSalida(registroSalida, usuarioEntidad, interesados, anexos, validarAnexos, enviarGeiser);
     }
 
     @Override
     public RegistroEntrada registrarEntrada(RegistroEntrada registroEntrada,
-                                            UsuarioEntidad usuarioEntidad, List<Interesado> interesados, List<AnexoFull> anexos, Boolean validarAnexos)
+                                            UsuarioEntidad usuarioEntidad, List<Interesado> interesados, List<AnexoFull> anexos, Boolean validarAnexos, Boolean enviarGeiser)
             throws Exception, I18NException, I18NValidationException {
 
-        return registroEntradaEjb.registrarEntrada(registroEntrada, usuarioEntidad, interesados, anexos, validarAnexos);
+        return registroEntradaEjb.registrarEntrada(registroEntrada, usuarioEntidad, interesados, anexos, validarAnexos, enviarGeiser);
 
     }
 
@@ -152,17 +149,35 @@ public class AsientoRegistralBean implements AsientoRegistralLocal {
                     } else { //Tiene oficinas en SIR, se crear el intercambio
 
                         try {
+                            // Crear el intercambio, posteriormente se enviará
+//                            registroSalida = sirEnvioEjb.crearIntercambioSalida(registroSalida, registroSalida.getOficina(), registroSalida.getUsuario(), oficinasSIR.get(0).getCodigo());
+//
+//                            registroSalida.setEstado(REGISTRO_OFICIO_SIR);
+//                            registroSalida.getRegistroDetalle().setIdentificadorIntercambio(registroSalida.getRegistroDetalle().getIdentificadorIntercambio());
+                            
+                            
+                            // Envío directo GEISER si el destinatario está integrado con SIR y además viene
+                			// de WS (hay que devolver el numero de registro a la aplicación origen)
+                			if (registroSalida.getEvento() == RegwebConstantes.EVENTO_OFICIO_SIR) {
+                				RegistroSir registroSir = sirEnvioEjb.enviarIntercambio(
+                						REGISTRO_SALIDA, 
+                						registroSalida, 
+                						registroSalida.getOficina(),
+                						registroSalida.getUsuario(), 
+                						registroSalida.getOficina().getCodigo());
+                				sirEnvioEjb.forzarGuardado();
+                				// Actualizar registro sir con info de GEISER
+//                            	sirEnvioEjb.actualizarEnvioSirRealizado(registroSir, usuario);
+                				if (registroSir != null) {
+                    				registroSalida.setNumeroRegistro("0");
+                    				registroSalida.setNumeroRegistroFormateado(registroSir.getNumeroRegistro());
+                    				registroSalida.setFecha(registroSir.getFechaRegistro());
+                    				registroSalida.setEstado(REGISTRO_OFICIO_SIR);
+                    			}
+                			}
 
                             // Crear Justificante
                             crearJustificante(registroSalida.getUsuario(), registroSalida, RegwebConstantes.REGISTRO_SALIDA, RegistroUtils.getIdiomaJustificante(registroSalida));
-
-                            // Crear el intercambio, posteriormente se enviará
-                            registroSalida = sirEnvioEjb.crearIntercambioSalida(registroSalida, registroSalida.getOficina(),
-                                    registroSalida.getUsuario(), oficinasSIR.get(0).getCodigo());
-
-                            registroSalida.setEstado(REGISTRO_OFICIO_SIR);
-                            registroSalida.getRegistroDetalle().setIdentificadorIntercambio(registroSalida.getRegistroDetalle().getIdentificadorIntercambio());
-
                         } catch (Exception e) {
                             throw new I18NException("registroSir.error.envio");
                         }
@@ -174,7 +189,7 @@ public class AsientoRegistralBean implements AsientoRegistralLocal {
         return registroSalida;
     }
 
-    @Async
+    @Asynchronous
     @Override
     public void crearJustificante(UsuarioEntidad usuarioEntidad, IRegistro registro, Long tipoRegistro, String idioma) throws I18NValidationException, I18NException {
 
@@ -184,7 +199,7 @@ public class AsientoRegistralBean implements AsientoRegistralLocal {
 
     }
 
-    @Async
+    @Asynchronous
     @Override
     public void distribuirRegistroEntrada(RegistroEntrada registroEntrada, UsuarioEntidad usuario) throws Exception, I18NException {
 
@@ -192,12 +207,12 @@ public class AsientoRegistralBean implements AsientoRegistralLocal {
 
         //  Comprobamos que el usuario tiene permisos para Distribuir el registro
         if(!permisoOrganismoUsuarioEjb.tienePermiso(usuario.getId(), registroEntrada.getOficina().getOrganismoResponsable().getId(), RegwebConstantes.PERMISO_DISTRIBUCION_REGISTRO, true)){
-            //throw new I18NException("registroEntrada.distribuir.error.permiso");
+            throw new I18NException("registroEntrada.distribuir.error.permiso");
         }
 
         // Comprobamos que el RegistroEntrada se puede Distribuir
         if (!registroEntradaConsultaEjb.isDistribuir(registroEntrada.getId())) {
-            //throw new I18NException("registroEntrada.distribuir.noPermitido");
+            throw new I18NException("registroEntrada.distribuir.noPermitido");
         }
 
         try{
@@ -206,7 +221,7 @@ public class AsientoRegistralBean implements AsientoRegistralLocal {
 
         }catch (Exception | I18NValidationException e){
             e.printStackTrace();
-            //throw new I18NException("registroEntrada.distribuir.error");
+            throw new I18NException("registroEntrada.distribuir.error");
         }
     }
 

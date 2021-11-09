@@ -1401,3 +1401,116 @@ pre {
 .esquerra{
     float: left;
 }
+.disabled_events > a {
+	text-decoration: none;
+	cursor: not-allowed;
+	pointer-events: none;
+	background-color: transparent;
+}
+.info-TITOL {
+	font-size: 13px;
+	font-weight: bold;
+	border-bottom: solid 2px #CCC;
+	margin-bottom: 8px;
+}
+
+.info-SUBTITOL {
+	font-size: 12px;
+	font-weight: bold;
+	border-bottom: solid 1px #CCC;
+	margin-bottom: 6px;
+	padding-left: 5px;
+}
+
+.info-INFO {
+	font-size: 10px;
+	padding-left: 10px;
+}
+
+.info-SUBINFO {
+	font-size: 9px;
+	padding-left: 15px;
+}
+
+.info-TEMPS {
+	font-size: 8px;
+	padding-right: 20px;
+	text-align: right;
+	color: #888;
+}
+
+.info-SEPARADOR {
+	padding-bottom: 10px;
+	border-top: dotted 1px #DDD;
+}
+
+.info-WARNING {
+	font-size: 11px;
+	padding-left: 10px;
+	color: orange;
+}
+
+.info-ERROR {
+	font-size: 11px;
+	padding-left: 10px;
+	color: red;
+}
+
+#resultado {
+	margin: 1%;
+}
+.blinking-cursor {
+	font-weight: 100;
+	font-size: 16px;
+	color: #222;
+	-webkit-animation: 1s blink step-end infinite;
+	-moz-animation: 1s blink step-end infinite;
+	-ms-animation: 1s blink step-end infinite;
+	-o-animation: 1s blink step-end infinite;
+	animation: 1s blink step-end infinite;
+}
+
+@keyframes "blink" {
+  from, to {
+    color: transparent;
+  }
+  50% {
+    color: black;
+  }
+}
+
+@-moz-keyframes blink {
+  from, to {
+    color: transparent;
+  }
+  50% {
+    color: black;
+  }
+}
+
+@-webkit-keyframes "blink" {
+  from, to {
+    color: transparent;
+  }
+  50% {
+    color: black;
+  }
+}
+
+@-ms-keyframes "blink" {
+  from, to {
+    color: transparent;
+  }
+  50% {
+    color: black;
+  }
+}
+
+@-o-keyframes "blink" {
+  from, to {
+    color: transparent;
+  }
+  50% {
+    color: black;
+  }
+}

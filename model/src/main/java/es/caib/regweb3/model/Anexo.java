@@ -246,7 +246,7 @@ public class Anexo implements Serializable {
         this.tamanoFichero = tamanoFichero;
     }
 
-    @ManyToOne()
+    @ManyToOne(fetch=FetchType.EAGER)
     @JoinColumn(name = "TDOCUMENTAL")
     @ForeignKey(name = "RWE_ANEXO_TDOCAL_FK")
     public TipoDocumental getTipoDocumental() {

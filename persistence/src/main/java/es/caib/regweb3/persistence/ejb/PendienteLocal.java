@@ -12,6 +12,7 @@ import java.util.List;
  * @author mgonzalez
  */
 @Local
+@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI","RWE_WS_ENTRADA","RWE_WS_SALIDA", "RWE_WS_CIUDADANO"})
 public interface PendienteLocal extends BaseEjb<Pendiente, Long>  {
 
   /**

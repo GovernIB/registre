@@ -3,6 +3,8 @@ package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.AnexoSir;
 
+import java.util.List;
+
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
 
@@ -13,6 +15,7 @@ import javax.ejb.Local;
  * Date: 16/01/14
  */
 @Local
+@RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI"})
 public interface AnexoSirLocal extends BaseEjb<AnexoSir, Long> {
 
     /**
@@ -30,5 +33,14 @@ public interface AnexoSirLocal extends BaseEjb<AnexoSir, Long> {
      * @throws Exception
      */
     Integer eliminarByEntidad(Long idEntidad) throws Exception;
+    
+   
+    /**
+     * Recupera la firma separada de un documento (detached)
+     * 
+     * @param identificadorDocumento
+     * @return
+     */
+    List<AnexoSir> findByDocumento(AnexoSir anexo);
 }
 

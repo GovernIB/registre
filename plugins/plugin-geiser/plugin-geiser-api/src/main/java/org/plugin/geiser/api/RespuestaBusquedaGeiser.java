@@ -6,10 +6,12 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
-public class RespuestaBusquedaGeiser extends Respuesta {
+public class RespuestaBusquedaGeiser {
 
+	private Respuesta respuesta;
 	private int nuTotalApuntes;
-	private int uidIterator;
+	private String uidIterator;
 	private List<ApunteRegistro> apuntes;
+	private String oficinaDestino;
 	
 }

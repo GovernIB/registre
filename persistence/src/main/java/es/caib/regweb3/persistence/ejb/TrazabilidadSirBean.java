@@ -5,7 +5,6 @@ import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.log4j.Logger;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
-import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -21,7 +20,6 @@ import java.util.List;
 
 @Stateless(name = "TrazabilidadSirEJB")
 @SecurityDomain("seycon")
-@RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI","RWE_WS_ENTRADA","RWE_WS_SALIDA", "RWE_WS_CIUDADANO"})
 public class TrazabilidadSirBean extends BaseEjbJPA<TrazabilidadSir, Long> implements TrazabilidadSirLocal{
 
     protected final Logger log = Logger.getLogger(getClass());
@@ -106,7 +104,7 @@ public class TrazabilidadSirBean extends BaseEjbJPA<TrazabilidadSir, Long> imple
                 "where trazabilidadSir.registroSir.id = :registroSir and trazabilidadSir.tipo = :aceptado");
 
         q.setParameter("registroSir", idRegistroSir);
-        q.setParameter("aceptado", RegwebConstantes.TRAZABILIDAD_SIR_ACEPTADO);
+        q.setParameter("aceptado", RegwebConstantes.TRAZABILIDAD_SIR_CONFIRMADO);
         q.setHint("org.hibernate.readOnly", true);
 
         List<TrazabilidadSir> result = q.getResultList();

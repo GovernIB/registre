@@ -17,6 +17,7 @@ import java.util.List;
  * Date: 06/03/2019
  */
 @Local
+@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI", "RWE_WS_ENTRADA", "RWE_WS_SALIDA"})
 public interface AsientoRegistralLocal {
 
     /**
@@ -43,7 +44,7 @@ public interface AsientoRegistralLocal {
      * @throws I18NValidationException
      */
     RegistroSalida registrarSalida(RegistroSalida registroSalida,
-                                   UsuarioEntidad usuarioEntidad, List<Interesado> interesados, List<AnexoFull> anexos, Boolean validarAnexos)
+                                   UsuarioEntidad usuarioEntidad, List<Interesado> interesados, List<AnexoFull> anexos, Boolean validarAnexos, Boolean enviarGeiser)
             throws Exception, I18NException, I18NValidationException;
 
     /**
@@ -59,7 +60,7 @@ public interface AsientoRegistralLocal {
      * @throws I18NValidationException
      */
     RegistroEntrada registrarEntrada(RegistroEntrada registroEntrada,
-                                     UsuarioEntidad usuarioEntidad, List<Interesado> interesados, List<AnexoFull> anexos, Boolean validarAnexos)
+                                     UsuarioEntidad usuarioEntidad, List<Interesado> interesados, List<AnexoFull> anexos, Boolean validarAnexos, Boolean enviarGeiser)
             throws Exception, I18NException, I18NValidationException;
 
     /**

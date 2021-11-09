@@ -17,7 +17,7 @@ import java.io.Serializable;
 public class InteresadoSir implements Serializable {
 
     private Long id;
-    @JsonIgnore
+//    @JsonIgnore
     private RegistroSir registroSir;
     private String tipoDocumentoIdentificacionInteresado;
     private String documentoIdentificacionInteresado;

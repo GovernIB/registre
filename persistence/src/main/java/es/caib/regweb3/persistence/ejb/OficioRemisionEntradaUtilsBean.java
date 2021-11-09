@@ -18,7 +18,6 @@ import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.hibernate.Session;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
-import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -36,7 +35,6 @@ import java.util.*;
  */
 @Stateless(name = "OficioRemisionEntradaUtilsEJB")
 @SecurityDomain("seycon")
-@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI"})
 public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtilsLocal {
 
     public final Logger log = Logger.getLogger(getClass());
@@ -523,7 +521,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
         // Creamos el OficioRemision
         OficioRemision oficioRemision = new OficioRemision();
         oficioRemision.setSir(true);
-        oficioRemision.setEstado(RegwebConstantes.OFICIO_SIR_ENVIADO);
+        oficioRemision.setEstado(RegwebConstantes.OFICIO_SIR_ENVIO_PROCESO);
         oficioRemision.setFechaEstado(new Date());
         oficioRemision.setOficina(oficinaActiva);
         oficioRemision.setUsuarioResponsable(usuarioEntidad);
@@ -634,7 +632,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
 
             // Registramos el nuevo RegistroEntrada
             synchronized (this) {
-                nuevoRE = registroEntradaEjb.registrarEntrada(nuevoRE, usuario, interesados, anexos, false);
+                nuevoRE = registroEntradaEjb.registrarEntrada(nuevoRE, usuario, interesados, anexos, false, true);
             }
 
             registros.add(nuevoRE);

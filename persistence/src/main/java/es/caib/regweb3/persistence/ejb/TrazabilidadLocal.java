@@ -16,6 +16,7 @@ import java.util.List;
  * Date: 16/01/14
  */
 @Local
+@RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI","RWE_WS_ENTRADA","RWE_WS_SALIDA", "RWE_WS_CIUDADANO"})
 public interface TrazabilidadLocal extends BaseEjb<Trazabilidad, Long> {
 
     List<Trazabilidad> oficiosSinREDestino(Long tipoOficio) throws Exception;
@@ -44,6 +45,14 @@ public interface TrazabilidadLocal extends BaseEjb<Trazabilidad, Long> {
      * @throws Exception
      */
     List<Trazabilidad> getByRegistroEntrada(Long idRegistroEntrada) throws Exception;
+    
+    /**
+     * Obtiene la Trazabilidad de un Registro con el registro de entrada como origen
+     * @param idRegistroEntrada
+     * @return
+     * @throws Exception
+     */
+	List<Trazabilidad> getByRegistroEntradaOrigen(Long idRegistroEntrada) throws Exception;
 
     /**
      * Obtiene las Trazabilidades de un OficioRemision

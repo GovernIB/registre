@@ -167,6 +167,17 @@
                             </div>
                             
                          </div>
+                         
+                         <div class="col-xs-12">
+                           <div class="col-xs-6 espaiLinies">
+                                <div class="col-xs-4 pull-left etiqueta_regweb">
+                                    <label for="pendienteGeiser" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.pendientegeiser.busqueda"/>" data-toggle="popover"><spring:message code="registroEntrada.pendientegeiser"/></label>
+                                </div>
+                                <div class="col-xs-8">
+                                	<form:checkbox path="pendienteGeiser"/>
+                                </div>
+                            </div>
+                         </div>
 
                         <%--Comprueba si debe mostrar las opciones desplegadas o no--%>
                         <c:if test="${empty registroEntradaBusqueda.registroEntrada.registroDetalle.tipoDocumentacionFisica &&
@@ -374,8 +385,18 @@
                                                     <tbody>
                                                         <c:forEach var="registro" items="${paginacion.listado}" varStatus="status">
                                                             <tr>
-                                                                <td>${not empty registro.numeroRegistroFormateado ? registro.numeroRegistroFormateado : '<label>Pendiente</label>'}</td>
-                                                                <td class="center"><c:choose><c:when test="${not empty registro.fecha}"><fmt:formatDate value="${registro.fecha}" pattern="dd/MM/yyyy"/></c:when><c:otherwise><label>Pendiente</label></c:otherwise></c:choose></td>
+                                                            	<td class="center registroPendiente">
+                                                            	<c:choose>
+                                                            		<c:when test="${not empty registro.numeroRegistroFormateado}">${registro.numeroRegistroFormateado}</c:when>
+                                                            		<c:otherwise><span class="label label-danger"><spring:message code="regweb.registre.pendent"/></span></c:otherwise>
+                                                            	</c:choose>
+                                                            	</td>
+                                                                <td class="center registroPendiente">
+                                                                <c:choose>
+                                                                	<c:when test="${not empty registro.fecha}"><fmt:formatDate value="${registro.fecha}" pattern="dd/MM/yyyy"/></c:when>
+                                                                	<c:otherwise><span class="label label-danger"><spring:message code="regweb.registre.pendent"/></span></c:otherwise>
+                                                                </c:choose>
+                                                                </td>
                                                                 <td class="center">${registro.usuario.usuario.identificador}</td>
                                                                 <td class="center"><label class="no-bold" rel="popupAbajo" data-content="${registro.oficina.denominacion}" data-toggle="popover">${registro.oficina.codigo}</label></td>
                                                                 <td>${(empty registro.destino)? registro.destinoExternoDenominacion : registro.destino.denominacion}</td>

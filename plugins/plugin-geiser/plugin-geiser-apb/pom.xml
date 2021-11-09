@@ -12,7 +12,7 @@
   
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <application.context>geiserAppContext.xml</application.context>
+    <!-- <application.context>geiserAppContext.xml</application.context>-->
   </properties>
   
   <dependencies>
@@ -21,11 +21,13 @@
 			<artifactId>plugin-geiser-api</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+		<!-- 
 		<dependency>
 			<groupId>javax.xml.ws</groupId>
 			<artifactId>jaxws-api</artifactId>
 			<version>2.3.1</version>
 		</dependency>
+		-->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
@@ -129,6 +131,13 @@
 	        </exclusion>
 	      </exclusions>
 	    </dependency>
+	    
+	    <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>1.5</version>
+            <scope>provided</scope>
+        </dependency>
 	</dependencies>
 
 	<build>

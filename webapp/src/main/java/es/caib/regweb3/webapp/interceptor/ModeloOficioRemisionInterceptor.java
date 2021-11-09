@@ -1,7 +1,7 @@
 package es.caib.regweb3.webapp.interceptor;
 
 import es.caib.regweb3.model.Rol;
-import es.caib.regweb3.persistence.utils.FileSystemManager;
+import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.security.LoginInfo;
 import es.caib.regweb3.webapp.utils.Mensaje;
@@ -44,7 +44,7 @@ public class ModeloOficioRemisionInterceptor extends HandlerInterceptorAdapter {
             }
 
             //comprobar variable archivos path
-            if(FileSystemManager.getArchivosPath()==null){
+            if(PropiedadGlobalUtil.getArchivosPath()==null){
                 log.info("Error, no esta definida la variable archivos path");
                 Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.archivospath"));
                 response.sendRedirect("/regweb3/aviso");

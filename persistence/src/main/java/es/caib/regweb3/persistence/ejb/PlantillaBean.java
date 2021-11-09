@@ -16,7 +16,6 @@ import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.log4j.Logger;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
-import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -37,7 +36,6 @@ import java.util.Set;
 
 @Stateless(name = "PlantillaEJB")
 @SecurityDomain("seycon")
-@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI"})
 public class PlantillaBean extends BaseEjbJPA<Plantilla, Long> implements PlantillaLocal{
 
     protected final Logger log = Logger.getLogger(getClass());

@@ -14,7 +14,6 @@ import org.hibernate.Hibernate;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
 import javax.annotation.Resource;
-import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -35,7 +34,6 @@ import java.util.*;
 
 @Stateless(name = "OficioRemisionEJB")
 @SecurityDomain("seycon")
-@RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI","RWE_WS_ENTRADA","RWE_WS_SALIDA", "RWE_WS_CIUDADANO"})
 public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> implements OficioRemisionLocal{
 
     protected final Logger log = Logger.getLogger(getClass());
@@ -263,7 +261,9 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
                     registroSalida.setEstado(RegwebConstantes.REGISTRO_DISTRIBUIDO);
 
                     // Registramos la Salida
-                    registroSalida = registroSalidaEjb.registrarSalida(registroSalida, oficioRemision.getUsuarioResponsable(), destinatarios, null, false);
+                    // Enviar a GEISER salida si no es un envio SIR (en caso de envíos SIR la salida se genera automaticamente en GEISER y se recupera el número)
+                    boolean enviarGeiser = (estado == RegwebConstantes.REGISTRO_OFICIO_INTERNO || estado == RegwebConstantes.REGISTRO_OFICIO_EXTERNO) ? true : false; 
+                    registroSalida = registroSalidaEjb.registrarSalida(registroSalida, oficioRemision.getUsuarioResponsable(), destinatarios, null, false, enviarGeiser);
 
                     // CREAMOS LA TRAZABILIDAD
                     Trazabilidad trazabilidad = new Trazabilidad();
@@ -600,10 +600,11 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
     @SuppressWarnings(value = "unchecked")
     public List<OficioRemision> getEnviadosSinAck(Long idEntidad) throws Exception {
 
-        Query q = em.createQuery("Select oficioRemision from OficioRemision as oficioRemision where (oficioRemision.estado = :enviado or oficioRemision.estado = :reenviado) " +
+        Query q = em.createQuery("Select oficioRemision from OficioRemision as oficioRemision where (oficioRemision.estado = :enviado or oficioRemision.estado = :enviado_manual or oficioRemision.estado = :reenviado) " +
                 "and oficioRemision.usuarioResponsable.entidad.id = :idEntidad and oficioRemision.numeroReintentos < :maxReintentos order by id");
 
-        q.setParameter("enviado", RegwebConstantes.OFICIO_SIR_ENVIADO);
+        q.setParameter("enviado", RegwebConstantes.OFICIO_SIR_ENVIADO_PENDIENTE_CONFIRMACION);
+        q.setParameter("enviado_manual", RegwebConstantes.OFICIO_SIR_ENVIADO_PENDIENTE_CONFIRMACION_MANUAL);
         q.setParameter("reenviado", RegwebConstantes.OFICIO_SIR_REENVIADO);
         q.setParameter("idEntidad", idEntidad);
         q.setParameter("maxReintentos", PropiedadGlobalUtil.getMaxReintentosSir(idEntidad));
@@ -612,33 +613,34 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
         return q.getResultList();
     }
 
-    @Override
-    @SuppressWarnings(value = "unchecked")
-    public List<OficioRemision> getEnviadosConError(Long idEntidad) throws Exception {
-
-        Query q = em.createQuery("Select oficioRemision from OficioRemision as oficioRemision where oficioRemision.usuarioResponsable.entidad.id = :idEntidad " +
-                "and (oficioRemision.estado = :enviadoError or oficioRemision.estado = :reenviadoError) " +
-                "and (oficioRemision.codigoError = '0039' or oficioRemision.codigoError = '0046' or oficioRemision.codigoError = '0057' or oficioRemision.codigoError = '0065' " +
-                "or oficioRemision.codigoError = '0063' or oficioRemision.codigoError = '0058' or oficioRemision.codigoError = '0068' or oficioRemision.codigoError = '0043' " +
-                "or oficioRemision.codigoError = '0037' ) and oficioRemision.numeroReintentos < :maxReintentos order by id");
-
-        q.setParameter("enviadoError", RegwebConstantes.OFICIO_SIR_ENVIADO_ERROR);
-        q.setParameter("reenviadoError", RegwebConstantes.OFICIO_SIR_REENVIADO_ERROR);
-        q.setParameter("idEntidad", idEntidad);
-        q.setParameter("maxReintentos", PropiedadGlobalUtil.getMaxReintentosSir(idEntidad));
-        q.setMaxResults(20);
-
-        return q.getResultList();
-    }
+//    @Override
+//    @SuppressWarnings(value = "unchecked")
+//    public List<OficioRemision> getEnviadosConError(Long idEntidad) throws Exception {
+//
+//        Query q = em.createQuery("Select oficioRemision from OficioRemision as oficioRemision where oficioRemision.usuarioResponsable.entidad.id = :idEntidad " +
+//                "and (oficioRemision.estado = :enviadoError or oficioRemision.estado = :reenviadoError) " +
+//                "and (oficioRemision.codigoError = '0039' or oficioRemision.codigoError = '0046' or oficioRemision.codigoError = '0057' or oficioRemision.codigoError = '0065' " +
+//                "or oficioRemision.codigoError = '0063' or oficioRemision.codigoError = '0058' or oficioRemision.codigoError = '0068' or oficioRemision.codigoError = '0043' " +
+//                "or oficioRemision.codigoError = '0037' ) and oficioRemision.numeroReintentos < :maxReintentos order by id");
+//
+//        q.setParameter("enviadoError", RegwebConstantes.OFICIO_SIR_ENVIADO_ERROR);
+//        q.setParameter("reenviadoError", RegwebConstantes.OFICIO_SIR_REENVIADO_ERROR);
+//        q.setParameter("idEntidad", idEntidad);
+//        q.setParameter("maxReintentos", PropiedadGlobalUtil.getMaxReintentosSir(idEntidad));
+//        q.setMaxResults(20);
+//
+//        return q.getResultList();
+//    }
 
     @Override
     @SuppressWarnings(value = "unchecked")
     public List<OficioRemision> getEnviadosSinAckMaxReintentos(Long idEntidad) throws Exception {
 
-        Query q = em.createQuery("Select oficioRemision.fecha, oficioRemision.identificadorIntercambio, oficioRemision.tipoOficioRemision from OficioRemision as oficioRemision where (oficioRemision.estado = :enviado or oficioRemision.estado = :reenviado) " +
+        Query q = em.createQuery("Select oficioRemision.fecha, oficioRemision.identificadorIntercambio, oficioRemision.tipoOficioRemision from OficioRemision as oficioRemision where (oficioRemision.estado = :enviado or oficioRemision.estado = :enviado_manual or oficioRemision.estado = :reenviado) " +
                 "and oficioRemision.usuarioResponsable.entidad.id = :idEntidad and oficioRemision.numeroReintentos = :maxReintentos");
 
-        q.setParameter("enviado", RegwebConstantes.OFICIO_SIR_ENVIADO);
+        q.setParameter("enviado", RegwebConstantes.OFICIO_SIR_ENVIADO_PENDIENTE_CONFIRMACION);
+        q.setParameter("enviado_manual", RegwebConstantes.OFICIO_SIR_ENVIADO_PENDIENTE_CONFIRMACION_MANUAL);
         q.setParameter("reenviado", RegwebConstantes.OFICIO_SIR_REENVIADO);
         q.setParameter("idEntidad", idEntidad);
         q.setParameter("maxReintentos", PropiedadGlobalUtil.getMaxReintentosSir(idEntidad));
@@ -655,42 +657,42 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
         return oficios;
     }
 
-    @Override
-    @SuppressWarnings(value = "unchecked")
-    public List<OficioRemision> getEnviadosErrorMaxReintentos(Long idEntidad) throws Exception {
-
-        Query q = em.createQuery("Select oficioRemision.fecha, oficioRemision.identificadorIntercambio, oficioRemision.tipoOficioRemision from OficioRemision as oficioRemision where (oficioRemision.estado = :enviadoError or oficioRemision.estado = :reenviadoError) " +
-                "and oficioRemision.usuarioResponsable.entidad.id = :idEntidad and oficioRemision.numeroReintentos = :maxReintentos");
-
-        q.setParameter("enviadoError", RegwebConstantes.OFICIO_SIR_ENVIADO_ERROR);
-        q.setParameter("reenviadoError", RegwebConstantes.OFICIO_SIR_REENVIADO_ERROR);
-        q.setParameter("maxReintentos", PropiedadGlobalUtil.getMaxReintentosSir(idEntidad));
-        q.setParameter("idEntidad", idEntidad);
-        q.setMaxResults(7);
-
-        List<OficioRemision> oficios =  new ArrayList<OficioRemision>();
-        List<Object[]> result = q.getResultList();
-
-        for (Object[] object : result){
-            OficioRemision oficio = new OficioRemision((Date)object[0],(String)object[1],(Long)object[2]);
-            oficios.add(oficio);
-        }
-
-        return oficios;
-    }
+//    @Override
+//    @SuppressWarnings(value = "unchecked")
+//    public List<OficioRemision> getEnviadosErrorMaxReintentos(Long idEntidad) throws Exception {
+//
+//        Query q = em.createQuery("Select oficioRemision.fecha, oficioRemision.identificadorIntercambio, oficioRemision.tipoOficioRemision from OficioRemision as oficioRemision where (oficioRemision.estado = :enviadoError or oficioRemision.estado = :reenviadoError) " +
+//                "and oficioRemision.usuarioResponsable.entidad.id = :idEntidad and oficioRemision.numeroReintentos = :maxReintentos");
+//
+//        q.setParameter("enviadoError", RegwebConstantes.OFICIO_SIR_ENVIADO_ERROR);
+//        q.setParameter("reenviadoError", RegwebConstantes.OFICIO_SIR_REENVIADO_ERROR);
+//        q.setParameter("maxReintentos", PropiedadGlobalUtil.getMaxReintentosSir(idEntidad));
+//        q.setParameter("idEntidad", idEntidad);
+//        q.setMaxResults(7);
+//
+//        List<OficioRemision> oficios =  new ArrayList<OficioRemision>();
+//        List<Object[]> result = q.getResultList();
+//
+//        for (Object[] object : result){
+//            OficioRemision oficio = new OficioRemision((Date)object[0],(String)object[1],(Long)object[2]);
+//            oficios.add(oficio);
+//        }
+//
+//        return oficios;
+//    }
 
     @Override
     @SuppressWarnings(value = "unchecked")
     public OficioRemision getByIdentificadorIntercambio(String identificadorIntercambio, String codigoEntidadRegistralDestino) throws Exception{
 
         Query q = em.createQuery("Select oficioRemision from OficioRemision as oficioRemision where oficioRemision.identificadorIntercambio = :identificadorIntercambio and" +
-                " oficioRemision.oficina.codigo = :codigoEntidadRegistralDestino and oficioRemision.estado != :devuelto and oficioRemision.estado != :rechazado");
+                " oficioRemision.oficina.codigo = :codigoEntidadRegistralDestino and oficioRemision.estado != :reenviado_rechazado and oficioRemision.estado != :rechazado");
 
         q.setParameter("identificadorIntercambio", identificadorIntercambio);
         q.setParameter("codigoEntidadRegistralDestino", codigoEntidadRegistralDestino);
-        q.setParameter("devuelto", RegwebConstantes.OFICIO_SIR_DEVUELTO);
-        q.setParameter("rechazado", RegwebConstantes.OFICIO_SIR_RECHAZADO);
-
+//        q.setParameter("devuelto", RegwebConstantes.OFICIO_SIR_DEVUELTO);
+        q.setParameter("rechazado", RegwebConstantes.OFICIO_SIR_ENVIADO_RECHAZADO);
+        q.setParameter("reenviado_rechazado", RegwebConstantes.OFICIO_SIR_REENVIADO_RECHAZADO);
         List<OficioRemision> oficioRemision = q.getResultList();
         if(oficioRemision.size() == 1){
             return oficioRemision.get(0);
@@ -704,11 +706,12 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
     public OficioRemision getBySirRechazado(String identificadorIntercambio, String codigoEntidadRegistralDestino) throws Exception{
 
         Query q = em.createQuery("Select oficioRemision from OficioRemision as oficioRemision where oficioRemision.identificadorIntercambio = :identificadorIntercambio and" +
-                " oficioRemision.oficina.codigo = :codigoEntidadRegistralDestino and oficioRemision.estado = :rechazado");
+                " oficioRemision.oficina.codigo = :codigoEntidadRegistralDestino and (oficioRemision.estado = :rechazado or oficioRemision.estado = :reenviado_rechazado)");
 
         q.setParameter("identificadorIntercambio", identificadorIntercambio);
         q.setParameter("codigoEntidadRegistralDestino", codigoEntidadRegistralDestino);
-        q.setParameter("rechazado", RegwebConstantes.OFICIO_SIR_RECHAZADO);
+        q.setParameter("rechazado", RegwebConstantes.OFICIO_SIR_ENVIADO_RECHAZADO);
+        q.setParameter("reenviado_rechazado", RegwebConstantes.OFICIO_SIR_REENVIADO_RECHAZADO);
 
         List<OficioRemision> oficioRemision = q.getResultList();
         if(oficioRemision.size() > 0){
@@ -743,6 +746,30 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
         q.executeUpdate();
 
     }
+    
+    @Override
+    public void modificarFechaEstado(Long idOficioRemision, Date fechaEstado) throws Exception {
+
+        Query q = em.createQuery("update OficioRemision set fechaEstado=:fechaEstado where id = :idOficioRemision");
+        q.setParameter("fechaEstado", fechaEstado);
+        q.setParameter("idOficioRemision", idOficioRemision);
+        q.executeUpdate();
+
+    }
+    
+	@Override
+	public void actualizarDestinoExterno(Long idOficio, String codEntidadRegistralDest, String descEntidadRegistralDest,
+			String codDestinoExterno, String descDestinoExterno) throws Exception {
+		
+		Query q = em.createQuery("update OficioRemision set codigoEntidadRegistralDestino=:codEntidadRegistralDest, decodificacionEntidadRegistralDestino=:descEntidadRegistralDest"
+				+ ",destinoExternoCodigo=:codDestinoExterno,destinoExternoDenominacion=:descDestinoExterno  where id = :idOficioRemision");
+        q.setParameter("codEntidadRegistralDest", codEntidadRegistralDest);
+        q.setParameter("descEntidadRegistralDest", descEntidadRegistralDest);
+        q.setParameter("codDestinoExterno", codDestinoExterno);
+        q.setParameter("descDestinoExterno", descDestinoExterno);
+        q.setParameter("idOficioRemision", idOficio);
+        q.executeUpdate();
+	}
 
     @Override
     public void reiniciarIntentos(Long idOficioRemision) throws Exception {
@@ -813,6 +840,18 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
         }
 
         return numeros;
+    }
+    
+//	caso GEISER: identificador se obtiene de GEISER
+	@Override
+    @SuppressWarnings(value = "unchecked")
+    public void actualizarIdentificadorIntercambio(Long idOficioRemision, String identificadorIntercambio) throws Exception {
+
+        Query q = em.createQuery("update OficioRemision set identificadorIntercambio=:identificadorIntercambio where id = :idOficioRemision");
+        q.setParameter("identificadorIntercambio", identificadorIntercambio);
+        q.setParameter("idOficioRemision", idOficioRemision);
+        q.executeUpdate();
+
     }
 
     @Override
@@ -907,10 +946,43 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
+    public OficioRemision getByNumeroRegistro(String numeroRegistro, String entidad) throws Exception {
+
+        Query q;
+        RegistroEntrada registroEntrada = registroEntradaConsultaEjb.findByNumeroRegistro(entidad, numeroRegistro);
+        if (registroEntrada == null) {
+            RegistroSalida registroSalida = registroSalidaConsultaEjb.findByNumeroRegistro(entidad, numeroRegistro);
+            if (registroSalida == null) {
+                return null;
+            } else {
+                q = em.createQuery("Select oficioRemision from OficioRemision as oficioRemision where " +
+                   " :registroSalida in elements(oficioRemision.registrosSalida) ");
+                q.setParameter("registroSalida", registroSalida);
+
+            }
+        } else {
+            q = em.createQuery("Select oficioRemision from OficioRemision as oficioRemision where " +
+               " :registroEntrada in elements(oficioRemision.registrosEntrada) ");
+            q.setParameter("registroEntrada", registroEntrada);
+        }
+
+        q.setHint("org.hibernate.readOnly", true);
+
+        List<OficioRemision> oficioRemision = q.getResultList();
+        if (oficioRemision.size() == 1) {
+            return oficioRemision.get(0);
+        } else {
+            return null;
+        }
+
+    }
+    
+    @Override
     public CombineStream generarOficioRemisionRtf(OficioRemision oficioRemision, ModeloOficioRemision modeloOficioRemision, List<String> registrosEntrada, List<String> registrosSalida) throws Exception{
 
-        File archivo = es.caib.regweb3.persistence.utils.FileSystemManager.getArchivo(modeloOficioRemision.getModelo().getId());
-
+//        File archivo = es.caib.regweb3.persistence.utils.FileSystemManager.getArchivo(modeloOficioRemision.getModelo().getId());
+    	File archivo = new File(PropiedadGlobalUtil.getArchivosPath() + "/" + modeloOficioRemision.getModelo().getId());
         // Convertimos el archivo a array de bytes
         byte[] datos = FileUtils.readFileToByteArray(archivo);
         InputStream is = new ByteArrayInputStream(datos);

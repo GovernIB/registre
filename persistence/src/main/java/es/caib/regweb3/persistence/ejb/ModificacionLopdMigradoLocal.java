@@ -13,6 +13,7 @@ import java.util.List;
  * Date: 09/12/14
  */
 @Local
+@RolesAllowed({"RWE_USUARI"})
 public interface ModificacionLopdMigradoLocal extends BaseEjb<ModificacionLopdMigrado, Long> {
 
     /**

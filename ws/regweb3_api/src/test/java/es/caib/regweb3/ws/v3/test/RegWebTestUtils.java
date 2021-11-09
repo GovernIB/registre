@@ -1,5 +1,6 @@
 package es.caib.regweb3.ws.v3.test;
 
+import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.ws.api.v3.AnexoWs;
 import es.caib.regweb3.ws.api.v3.AsientoRegistralWs;
@@ -33,9 +34,11 @@ import java.io.InputStream;
 import java.net.URL;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 
@@ -508,12 +511,12 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
         DatosInteresadoWs personaFisica = new DatosInteresadoWs();
         personaFisica.setTipoInteresado(TIPO_INTERESADO_PERSONA_FISICA);
         personaFisica.setTipoDocumentoIdentificacion("N");
-        personaFisica.setDocumento("44328254D");
-        personaFisica.setEmail("mgonzalez@fundaciobit.org");
-        personaFisica.setNombre("Marilen");
-        personaFisica.setApellido1("González");
-        personaFisica.setCanal((long) 1);
-        personaFisica.setDireccion("Calle Aragón, 24, 5ºD");
+        personaFisica.setDocumento("49031193T");
+        personaFisica.setEmail("limit@limit.es");
+        personaFisica.setNombre("Jamal");
+        personaFisica.setApellido1("Jarradi");
+//        personaFisica.setCanal((long) 1);
+        personaFisica.setDireccion("Calle Aragón, 24");
         personaFisica.setLocalidad((long) 407);
         personaFisica.setPais((long) 724);
         personaFisica.setProvincia((long) 7);
@@ -546,8 +549,8 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
         if(tipoPersona.equals(TIPO_INTERESADO_PERSONA_FISICA)){
             representante.setTipoInteresado(TIPO_INTERESADO_PERSONA_FISICA);
             representante.setTipoDocumentoIdentificacion(String.valueOf(TIPODOCUMENTOID_NIF));
-            representante.setDocumento("33456299Q");
-            representante.setEmail("jdelatorre@gmail.com");
+            representante.setDocumento("90018003M");
+            representante.setEmail("limit@limit.com");
             representante.setNombre("Juanito");
             representante.setApellido1("De la torre");
             representante.setPais((long) 724);
@@ -584,7 +587,7 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
       Define un interesado de tipo administración como administración externa
      */
     public DatosInteresadoWs getAdministracionExterna(){
-        return getAdministracion("Ajuntament d'Escorca","L01070197");
+        return getAdministracion("Organo para Pruebas GEISER","E12345678");
     }
 
 
@@ -824,7 +827,8 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
         System.out.println("Num. Registro: " + asientoRegistralWs.getNumeroRegistro());
         System.out.println("Num. Registro formateado: " + asientoRegistralWs.getNumeroRegistroFormateado());
         System.out.println("Fecha Registro: " + asientoRegistralWs.getFechaRegistro());
-
+        System.out.println("Estado: " + I18NUtils.tradueix(new Locale(Configuracio.getDefaultLanguage()), "registro.estado." + asientoRegistralWs.getEstado()));
+        
         System.out.println("");
     }
 
@@ -839,6 +843,7 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
         System.out.println("Tipo registro: " + asientoRegistralWs.getTipoRegistro());
         System.out.println("Fecha Registro: " + asientoRegistralWs.getFechaRegistro());
         System.out.println("Resumen: " + asientoRegistralWs.getResumen());
+        System.out.println("Estado: " + I18NUtils.tradueix(new Locale(Configuracio.getDefaultLanguage()), "registro.estado." + asientoRegistralWs.getEstado()));
 
         printAnexosWs(asientoRegistralWs.getAnexos());
         printInteresadosWs(asientoRegistralWs.getInteresados());

@@ -52,6 +52,11 @@ public class RegistroSir implements Serializable {
      * Número de registro en la entidad registral origen.
      */
     private String numeroRegistro;
+    
+    /**
+     * Número de registro en la entidad registral origen - envíos recibidos via SIR.
+     */
+    private String numeroRegistroOrigen;
 
     /**
      * Fecha y hora de registro en la entidad registral origen.
@@ -213,13 +218,23 @@ public class RegistroSir implements Serializable {
      * Lista de interesados del RegistroSir.
      */
     private List<InteresadoSir> interesados = null;
+    
+    /**
+     * Documento indentificación usuario
+     */
+    private String documentoUsuario;
 
+    private Date fechaRegistroOrigen;
+
+    
     private Date fechaRecepcion;
     private Date fechaEstado;
     private Integer numeroReintentos = 0;
     private String codigoError;
     private String descripcionError;
-
+    
+    private boolean incluirContenidoAnexo = false;
+    
     public RegistroSir() {
     }
 
@@ -287,6 +302,15 @@ public class RegistroSir implements Serializable {
 
     public void setNumeroRegistro(String numeroRegistro) {
         this.numeroRegistro = numeroRegistro;
+    }
+    
+    @Column(name = "NUMERO_REGISTRO_ORIGEN", length = 20, nullable = true)
+    public String getNumeroRegistroOrigen() {
+        return numeroRegistroOrigen;
+    }
+
+    public void setNumeroRegistroOrigen(String numeroRegistroOrigen) {
+        this.numeroRegistroOrigen = numeroRegistroOrigen;
     }
 
     @Column(name = "FECHAR_EGISTRO", length = 14, nullable = false)
@@ -440,17 +464,26 @@ public class RegistroSir implements Serializable {
     public void setNombreUsuario(String nombreUsuario) {
         this.nombreUsuario = nombreUsuario;
     }
+    
+    @Column(name = "DOCUMENTO_USUARIO", length = 160, nullable = true)
+    public String getDocumentoUsuario() {
+		return documentoUsuario;
+	}
 
+	public void setDocumentoUsuario(String documentoUsuario) {
+		this.documentoUsuario = documentoUsuario;
+	}
+    
     @Column(name = "CONTACTO_USUARIO", length = 160, nullable = true)
     public String getContactoUsuario() {
         return contactoUsuario;
     }
 
-    public void setContactoUsuario(String contactoUsuario) {
+	public void setContactoUsuario(String contactoUsuario) {
         this.contactoUsuario = contactoUsuario;
     }
 
-    @Column(name = "ID_INTERCAMBIO", length = 33, nullable = false)
+    @Column(name = "ID_INTERCAMBIO", length = 33, nullable = true)
     public String getIdentificadorIntercambio() {
         return identificadorIntercambio;
     }
@@ -459,7 +492,7 @@ public class RegistroSir implements Serializable {
         this.identificadorIntercambio = identificadorIntercambio;
     }
 
-    @Column(name = "APLICACION", length = 4, nullable = true)
+    @Column(name = "APLICACION", length = 10, nullable = true)
     public String getAplicacion() {
         return aplicacion;
     }
@@ -672,8 +705,28 @@ public class RegistroSir implements Serializable {
 
         return resumenCorto;
     }
+    
+    
+    @Transient
+    public boolean isIncluirContenidoAnexo() {
+		return incluirContenidoAnexo;
+	}
 
-    @Override
+	public void setIncluirContenidoAnexo(boolean incluirContenidoAnexo) {
+		this.incluirContenidoAnexo = incluirContenidoAnexo;
+	}
+	
+	
+	@Transient
+	public Date getFechaRegistroOrigen() {
+		return fechaRegistroOrigen;
+	}
+
+	public void setFechaRegistroOrigen(Date fechaRegistroOrigen) {
+		this.fechaRegistroOrigen = fechaRegistroOrigen;
+	}
+
+	@Override
     public int hashCode() {
         return id.hashCode();
     }

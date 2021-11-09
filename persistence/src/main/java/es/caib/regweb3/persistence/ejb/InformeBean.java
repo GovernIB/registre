@@ -10,7 +10,6 @@ import es.caib.regweb3.utils.StringUtils;
 import org.apache.log4j.Logger;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
-import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -27,7 +26,6 @@ import java.util.*;
 
 @Stateless(name = "InformeEJB")
 @SecurityDomain("seycon")
-@RolesAllowed({"RWE_ADMIN", "RWE_USUARI"})
 public class InformeBean implements InformeLocal {
 
     protected final Logger log = Logger.getLogger(getClass());

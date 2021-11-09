@@ -36,11 +36,13 @@
                             <colgroup>
                                 <col>
                                 <col>
+                                <%--
                                 <c:if test="${registroSir.estado == 'RECIBIDO'}">
                                     <col>
                                     <col>
                                     <col>
                                 </c:if>
+                                 --%>
                                 <col>
                                 <col>
                             </colgroup>
@@ -49,11 +51,13 @@
                                 <th><spring:message code="anexo.titulo"/></th>
                                 <th><spring:message code="anexo.sir.tipoDocumento"/></th>
                                 <%--<th><spring:message code="anexo.tamano"/></th>--%>
+                                <%--
                                 <c:if test="${registroSir.estado == 'RECIBIDO'}">
                                     <th><spring:message code="anexo.sir.validezDocumento"/></th>
                                     <th><spring:message code="anexo.origen"/></th>
                                     <th><spring:message code="anexo.tipoDocumental"/></th>
                                 </c:if>
+                                --%>
                                 <th class="center">Doc</th>
                                 <th class="center">Firma</th>
                             </tr>
@@ -79,11 +83,13 @@
                                              Es el caso 4: DOCUMENTO CON FIRMA DETACHED y los documentos que son firmas
                                              se marcan como FICHERO INTERNO y los campos NTI solo se aplican al documento que no es la firma
                                         --%>
-
+									<%--
                                     <c:if test="${registroSir.estado == 'RECIBIDO'}">
                                         <c:if test="${empty anexo.documento.validezDocumento}">
                                             <td class="ajustTamanySir">
+                                            --%>
                                                     <%--Si s'ha de posar valor per validez Documento--%>
+                                                    <%--
                                                 <select id="camposNTIs[${status.index}].idValidezDocumento"
                                                         name="camposNTIs[${status.index}].idValidezDocumento"
                                                         class="chosen-select"
@@ -126,7 +132,7 @@
                                             </select>
                                         </td>
                                     </c:if>
-
+									--%>
                                     <c:if test="${not anexo.documento.purgado}">
                                         <td class="center ajustTamanySir">
                                             <a class="btn btn-success btn-sm"

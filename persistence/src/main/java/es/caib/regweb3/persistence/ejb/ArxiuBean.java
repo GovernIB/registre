@@ -12,7 +12,6 @@ import org.fundaciobit.plugins.documentcustody.api.CustodyException;
 import org.fundaciobit.plugins.documentcustody.arxiudigitalcaib.ArxiuDigitalCAIBDocumentCustodyPlugin;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
-import javax.annotation.security.RolesAllowed;
 import javax.annotation.security.RunAs;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -30,7 +29,6 @@ import java.util.List;
 @Stateless(name = "ArxiuEJB")
 @SecurityDomain("seycon")
 @RunAs("RWE_SUPERADMIN")
-@RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI"})
 public class ArxiuBean implements ArxiuLocal{
 
     protected final Logger log = Logger.getLogger(getClass());

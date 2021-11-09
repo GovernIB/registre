@@ -8,29 +8,38 @@ import es.caib.regweb3.model.utils.TipoRegistro;
 import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.persistence.utils.FileSystemManager;
 import es.caib.regweb3.persistence.utils.Paginacion;
+import es.caib.regweb3.persistence.utils.ProgresoActualitzacion;
+import es.caib.regweb3.persistence.utils.ProgresoActualitzacion.ActualitzacionInfo;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.persistence.utils.RegistroUtils;
+import es.caib.regweb3.persistence.utils.Semaforo;
 import es.caib.regweb3.sir.ejb.MensajeLocal;
-import es.caib.regweb3.sir.utils.Sicres3XML;
 import es.caib.regweb3.utils.Dir3CaibUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
-import es.caib.regweb3.utils.TimeUtils;
+import es.caib.regweb3.utils.RegwebUtils;
 import es.caib.regweb3.webapp.controller.BaseController;
 import es.caib.regweb3.webapp.form.*;
 import es.caib.regweb3.webapp.utils.Mensaje;
-import org.dom4j.Document;
+import es.caib.regweb3.webapp.validator.BusquedaRegistrosSirValidator;
+import es.caib.regweb3.webapp.validator.RegistroEntradaWebValidator;
+
 import org.fundaciobit.genapp.common.i18n.I18NException;
+import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
 import java.io.File;
-import java.io.OutputStream;
-import java.nio.charset.Charset;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -62,7 +71,11 @@ public class SirController extends BaseController {
     @EJB(mappedName = "regweb3/MensajeEJB/local")
     private MensajeLocal mensajeEjb;
 
+    @Autowired
+    private BusquedaRegistrosSirValidator busquedaRegistrosSirValidator;
+    
 
+	StringBuilder mensajesSb;
 
     /**
      * Acepta un registro sir, lo distribuye y copia la documentación a una carpeta
@@ -85,36 +98,36 @@ public class SirController extends BaseController {
         return mav;
     }
 
-    /**
-     * Acepta un registro sir, lo distribuye y copia la documentación a una carpeta
-     */
-    @RequestMapping(value = "/aceptarRegistroErte", method = RequestMethod.POST)
-    public ModelAndView aceptarRegistroErte(@ModelAttribute ErteBusquedaForm busqueda, HttpServletRequest request)throws Exception {
-
-        ModelAndView mav = new ModelAndView("sir/aceptarRegistroErte");
-        Entidad entidad = getEntidadActiva(request);
-        UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
-        long inicio = System.currentTimeMillis();
-
-        RegistroSir registroSir = busqueda.getRegistroSir();
-
-        List<Long> registros = registroSirEjb.getUltimosPendientesProcesarERTE(EstadoRegistroSir.RECIBIDO, registroSir.getCodigoEntidadRegistral(), busqueda.getFechaInicio(), busqueda.getFechaFin(), registroSir.getAplicacion(), busqueda.getTotal());
-
-        Oficina oficina = oficinaEjb.findByCodigo(registroSir.getCodigoEntidadRegistral());
-
-        sirEnvioEjb.aceptarRegistrosERTE(registros, busqueda.getDestino(), oficina, getLibroEntidad(request).getId(), usuarioEntidad, entidad.getId());
-
-        Mensaje.saveMessageInfo(request, "Se han procesado "+registros.size()+" registros en " + TimeUtils.formatElapsedTime(System.currentTimeMillis() - inicio));
-
-        mav.addObject("estados", EstadoRegistroSir.values());
-        mav.addObject("tipos", TipoRegistro.values());
-        mav.addObject("registroSirBusqueda", busqueda);
-        mav.addObject("anys", getAnys());
-        mav.addObject("oficinasSir", oficinaEjb.oficinasSIREntidad(entidad.getId()));
-
-        return mav;
-
-    }
+//    /**
+//     * Acepta un registro sir, lo distribuye y copia la documentación a una carpeta
+//     */
+//    @RequestMapping(value = "/aceptarRegistroErte", method = RequestMethod.POST)
+//    public ModelAndView aceptarRegistroErte(@ModelAttribute ErteBusquedaForm busqueda, HttpServletRequest request)throws Exception {
+//
+//        ModelAndView mav = new ModelAndView("sir/aceptarRegistroErte");
+//        Entidad entidad = getEntidadActiva(request);
+//        UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
+//        long inicio = System.currentTimeMillis();
+//
+//        RegistroSir registroSir = busqueda.getRegistroSir();
+//
+//        List<Long> registros = registroSirEjb.getUltimosPendientesProcesarERTE(EstadoRegistroSir.RECIBIDO, registroSir.getCodigoEntidadRegistral(), busqueda.getFechaInicio(), busqueda.getFechaFin(), registroSir.getAplicacion(), busqueda.getTotal());
+//
+//        Oficina oficina = oficinaEjb.findByCodigo(registroSir.getCodigoEntidadRegistral());
+//
+//        sirEnvioEjb.aceptarRegistrosERTE(registros, busqueda.getDestino(), oficina, getLibroEntidad(request).getId(), usuarioEntidad, entidad.getId());
+//
+//        Mensaje.saveMessageInfo(request, "Se han procesado "+registros.size()+" registros en " + TimeUtils.formatElapsedTime(System.currentTimeMillis() - inicio));
+//
+//        mav.addObject("estados", EstadoRegistroSir.values());
+//        mav.addObject("tipos", TipoRegistro.values());
+//        mav.addObject("registroSirBusqueda", busqueda);
+//        mav.addObject("anys", getAnys());
+//        mav.addObject("oficinasSir", oficinaEjb.oficinasSIREntidad(entidad.getId()));
+//
+//        return mav;
+//
+//    }
 
     /**
      * Copia la documentación a una carpeta de un Registroerte aceptado
@@ -137,101 +150,101 @@ public class SirController extends BaseController {
         return mav;
     }
 
-    /**
-     * Copia la documentación a una carpeta de un Registroerte aceptado
-     */
-    @RequestMapping(value = "/copiarDocumentacion", method = RequestMethod.POST)
-    public ModelAndView copiarDocumentacion(@ModelAttribute ErteBusquedaForm busqueda, HttpServletRequest request)throws Exception {
-
-        ModelAndView mav = new ModelAndView("sir/copiarDocumentacion");
-        Entidad entidad = getEntidadActiva(request);
-        long inicio = System.currentTimeMillis();
-
-        RegistroSir registroSir = busqueda.getRegistroSir();
-
-        List<Long> registros = registroSirEjb.getUltimosPendientesProcesarERTE(EstadoRegistroSir.ACEPTADO, registroSir.getCodigoEntidadRegistral(), busqueda.getFechaInicio(), busqueda.getFechaFin(), registroSir.getAplicacion(), busqueda.getTotal());
-
-        sirEnvioEjb.copiarDocumentacionERTE(registros, entidad.getId());
-
-        Mensaje.saveMessageInfo(request, "Se han procesado "+registros.size()+" registros en " + TimeUtils.formatElapsedTime(System.currentTimeMillis() - inicio));
-
-        mav.addObject("estados", EstadoRegistroSir.values());
-        mav.addObject("tipos", TipoRegistro.values());
-        mav.addObject("registroSirBusqueda", busqueda);
-        mav.addObject("anys", getAnys());
-        mav.addObject("oficinasSir", oficinaEjb.oficinasSIREntidad(entidad.getId()));
-
-        return mav;
-
-    }
-
-
-
-    /**
-     * Controller temporal para relacionar un RegistroSir con un RegistroEntrada
-     */
-    @RequestMapping(value = "/{idRegistroSir}/{idRegistroEntrada}/aceptar", method = RequestMethod.GET)
-    public String aceptarRegistroSir(@PathVariable Long idRegistroSir,@PathVariable Long idRegistroEntrada, HttpServletRequest request) throws Exception {
-
-        RegistroSir registroSir = registroSirEjb.findById(idRegistroSir);
-
-        RegistroEntrada registroEntrada = registroEntradaEjb.findById(idRegistroEntrada);
-
-        if(registroSir == null || registroEntrada == null){
-
-            Mensaje.saveMessageError(request,"El RegistroSir o el RegistroEntrada no existen");
-            return "redirect:/inici";
-        }
-
-        try{
-
-            // Creamos la TrazabilidadSir
-            TrazabilidadSir trazabilidadSir = new TrazabilidadSir(RegwebConstantes.TRAZABILIDAD_SIR_ACEPTADO);
-            trazabilidadSir.setFecha(registroEntrada.getFecha());
-            trazabilidadSir.setRegistroSir(registroSir);
-            trazabilidadSir.setRegistroEntrada(registroEntrada);
-            trazabilidadSir.setCodigoEntidadRegistralOrigen(registroSir.getCodigoEntidadRegistralOrigen());
-            trazabilidadSir.setDecodificacionEntidadRegistralOrigen(registroSir.getDecodificacionEntidadRegistralOrigen());
-            trazabilidadSir.setCodigoEntidadRegistralDestino(registroSir.getCodigoEntidadRegistralDestino());
-            trazabilidadSir.setDecodificacionEntidadRegistralDestino(registroSir.getDecodificacionEntidadRegistralDestino());
-            trazabilidadSir.setAplicacion(RegwebConstantes.CODIGO_APLICACION);
-            trazabilidadSir.setNombreUsuario(registroEntrada.getUsuario().getNombreCompleto());
-            trazabilidadSir.setContactoUsuario(registroEntrada.getUsuario().getUsuario().getEmail());
-            trazabilidadSir.setObservaciones(registroSir.getDecodificacionTipoAnotacion());
-            trazabilidadSirEjb.persist(trazabilidadSir);
-
-            // CREAMOS LA TRAZABILIDAD
-            Trazabilidad trazabilidad = new Trazabilidad(RegwebConstantes.TRAZABILIDAD_RECIBIDO_SIR);
-            trazabilidad.setRegistroSir(registroSir);
-            trazabilidad.setRegistroEntradaOrigen(null);
-            trazabilidad.setOficioRemision(null);
-            trazabilidad.setRegistroSalida(null);
-            trazabilidad.setRegistroEntradaDestino(registroEntrada);
-            trazabilidad.setFecha(registroEntrada.getFecha());
-
-            trazabilidadEjb.persist(trazabilidad);
-
-            // Modificamos el estado del RegistroSir
-            registroSirEjb.modificarEstado(registroSir.getId(), EstadoRegistroSir.ACEPTADO);
-
-            // Enviamos el Mensaje de Confirmación
-            MensajeControl confirmacion = mensajeEjb.enviarMensajeConfirmacion(registroSir, registroEntrada.getNumeroRegistroFormateado(), registroEntrada.getFecha());
-
-            // Guardamos el mensaje de confirmación
-            mensajeControlEjb.persist(confirmacion);
-
-            Mensaje.saveMessageInfo(request,"Se ha vuelto a aceptar el RegistroSir y enviado el mensaje de conformación");
-
-            return "redirect:/sir/"+registroSir.getIdentificadorIntercambio()+"/detalle";
+//    /**
+//     * Copia la documentación a una carpeta de un Registroerte aceptado
+//     */
+//    @RequestMapping(value = "/copiarDocumentacion", method = RequestMethod.POST)
+//    public ModelAndView copiarDocumentacion(@ModelAttribute ErteBusquedaForm busqueda, HttpServletRequest request)throws Exception {
+//
+//        ModelAndView mav = new ModelAndView("sir/copiarDocumentacion");
+//        Entidad entidad = getEntidadActiva(request);
+//        long inicio = System.currentTimeMillis();
+//
+//        RegistroSir registroSir = busqueda.getRegistroSir();
+//
+//        List<Long> registros = registroSirEjb.getUltimosPendientesProcesarERTE(EstadoRegistroSir.ACEPTADO, registroSir.getCodigoEntidadRegistral(), busqueda.getFechaInicio(), busqueda.getFechaFin(), registroSir.getAplicacion(), busqueda.getTotal());
+//
+//        sirEnvioEjb.copiarDocumentacionERTE(registros, entidad.getId());
+//
+//        Mensaje.saveMessageInfo(request, "Se han procesado "+registros.size()+" registros en " + TimeUtils.formatElapsedTime(System.currentTimeMillis() - inicio));
+//
+//        mav.addObject("estados", EstadoRegistroSir.values());
+//        mav.addObject("tipos", TipoRegistro.values());
+//        mav.addObject("registroSirBusqueda", busqueda);
+//        mav.addObject("anys", getAnys());
+//        mav.addObject("oficinasSir", oficinaEjb.oficinasSIREntidad(entidad.getId()));
+//
+//        return mav;
+//
+//    }
 
 
-        }catch (Exception e){
-            e.printStackTrace();
-            Mensaje.saveMessageError(request,"Ha ocurrido un error anulando el Oficio: " + e.getMessage());
-        }
 
-        return "redirect:/sir/"+registroSir.getIdentificadorIntercambio()+"/detalle";
-    }
+//    /**
+//     * Controller temporal para relacionar un RegistroSir con un RegistroEntrada
+//     */
+//    @RequestMapping(value = "/{idRegistroSir}/{idRegistroEntrada}/aceptar", method = RequestMethod.GET)
+//    public String aceptarRegistroSir(@PathVariable Long idRegistroSir,@PathVariable Long idRegistroEntrada, HttpServletRequest request) throws Exception {
+//
+//        RegistroSir registroSir = registroSirEjb.findById(idRegistroSir);
+//
+//        RegistroEntrada registroEntrada = registroEntradaEjb.findById(idRegistroEntrada);
+//
+//        if(registroSir == null || registroEntrada == null){
+//
+//            Mensaje.saveMessageError(request,"El RegistroSir o el RegistroEntrada no existen");
+//            return "redirect:/inici";
+//        }
+//
+//        try{
+//
+//            // Creamos la TrazabilidadSir
+//            TrazabilidadSir trazabilidadSir = new TrazabilidadSir(RegwebConstantes.TRAZABILIDAD_SIR_ACEPTADO);
+//            trazabilidadSir.setFecha(registroEntrada.getFecha());
+//            trazabilidadSir.setRegistroSir(registroSir);
+//            trazabilidadSir.setRegistroEntrada(registroEntrada);
+//            trazabilidadSir.setCodigoEntidadRegistralOrigen(registroSir.getCodigoEntidadRegistralOrigen());
+//            trazabilidadSir.setDecodificacionEntidadRegistralOrigen(registroSir.getDecodificacionEntidadRegistralOrigen());
+//            trazabilidadSir.setCodigoEntidadRegistralDestino(registroSir.getCodigoEntidadRegistralDestino());
+//            trazabilidadSir.setDecodificacionEntidadRegistralDestino(registroSir.getDecodificacionEntidadRegistralDestino());
+//            trazabilidadSir.setAplicacion(RegwebConstantes.CODIGO_APLICACION);
+//            trazabilidadSir.setNombreUsuario(registroEntrada.getUsuario().getNombreCompleto());
+//            trazabilidadSir.setContactoUsuario(registroEntrada.getUsuario().getUsuario().getEmail());
+//            trazabilidadSir.setObservaciones(registroSir.getDecodificacionTipoAnotacion());
+//            trazabilidadSirEjb.persist(trazabilidadSir);
+//
+//            // CREAMOS LA TRAZABILIDAD
+//            Trazabilidad trazabilidad = new Trazabilidad(RegwebConstantes.TRAZABILIDAD_RECIBIDO_SIR);
+//            trazabilidad.setRegistroSir(registroSir);
+//            trazabilidad.setRegistroEntradaOrigen(null);
+//            trazabilidad.setOficioRemision(null);
+//            trazabilidad.setRegistroSalida(null);
+//            trazabilidad.setRegistroEntradaDestino(registroEntrada);
+//            trazabilidad.setFecha(registroEntrada.getFecha());
+//
+//            trazabilidadEjb.persist(trazabilidad);
+//
+//            // Modificamos el estado del RegistroSir
+//            registroSirEjb.modificarEstado(registroSir.getId(), EstadoRegistroSir.ACEPTADO);
+//
+//            // Enviamos el Mensaje de Confirmación
+//            MensajeControl confirmacion = mensajeEjb.enviarMensajeConfirmacion(registroSir, registroEntrada.getNumeroRegistroFormateado(), registroEntrada.getFecha());
+//
+//            // Guardamos el mensaje de confirmación
+//            mensajeControlEjb.persist(confirmacion);
+//
+//            Mensaje.saveMessageInfo(request,"Se ha vuelto a aceptar el RegistroSir y enviado el mensaje de conformación");
+//
+//            return "redirect:/sir/"+registroSir.getIdentificadorIntercambio()+"/detalle";
+//
+//
+//        }catch (Exception e){
+//            e.printStackTrace();
+//            Mensaje.saveMessageError(request,"Ha ocurrido un error anulando el Oficio: " + e.getMessage());
+//        }
+//
+//        return "redirect:/sir/"+registroSir.getIdentificadorIntercambio()+"/detalle";
+//    }
 
     /**
      * Controller temporal para anular Oficios enviados a SIR
@@ -243,7 +256,7 @@ public class SirController extends BaseController {
 
         try{
 
-            if((oficioRemision.getEstado() == RegwebConstantes.OFICIO_SIR_ENVIADO || oficioRemision.getEstado() == RegwebConstantes.OFICIO_SIR_ENVIADO_ERROR)
+            if((oficioRemision.getEstado() == RegwebConstantes.OFICIO_SIR_ENVIADO_PENDIENTE_CONFIRMACION || oficioRemision.getEstado() == RegwebConstantes.OFICIO_SIR_ENVIADO_PENDIENTE_CONFIRMACION_MANUAL)
                     && oficioRemision.getSir()){
 
                 oficioRemision.setEstado(RegwebConstantes.OFICIO_ANULADO);
@@ -466,35 +479,36 @@ public class SirController extends BaseController {
 
     }
 
-    /**
-     * Vuelve a enviar un Intercambio, ya enviado previamente
-     * @return
-     * @throws Exception
-     */
-    @RequestMapping(value = "/reenviarIntercambio", method = RequestMethod.GET)
-    @ResponseBody
-    public Boolean reenviarIntercambio(@RequestParam Long idOficioRemision)throws Exception {
-
-        try{
-            OficioRemision oficioRemision = oficioRemisionEjb.findById(idOficioRemision);
-            sirEnvioEjb.reenviarIntercambio(oficioRemision);
-
-            return true;
-
-        }catch (Exception | I18NException e){
-            log.info("Error volviendo a enviar el intercambio..");
-            e.printStackTrace();
-        }
-
-        return false;
-
-    }
+//    /**
+//     * Vuelve a enviar un Intercambio, ya enviado previamente
+//     * @return
+//     * @throws Exception
+//     */
+//    @RequestMapping(value = "/reenviarIntercambio", method = RequestMethod.GET)
+//    @ResponseBody
+//    public Boolean reenviarIntercambio(@RequestParam Long idOficioRemision)throws Exception {
+//
+//        try{
+//            OficioRemision oficioRemision = oficioRemisionEjb.findById(idOficioRemision);
+//            sirEnvioEjb.reenviarIntercambio(oficioRemision);
+//
+//            return true;
+//
+//        }catch (Exception | I18NException e){
+//            log.info("Error volviendo a enviar el intercambio..");
+//            e.printStackTrace();
+//        }
+//
+//        return false;
+//
+//    }
 
     /**
      * Reinicia el contador de reintentos SIR
      * @return
      * @throws Exception
      */
+    /*
     @RequestMapping(value = "/oficio/reiniciar", method = RequestMethod.GET)
     @ResponseBody
     public Boolean reiniciarOficio(@RequestParam Long id, HttpServletRequest request)throws Exception {
@@ -507,7 +521,7 @@ public class SirController extends BaseController {
 
         return true;
     }
-
+     */
     /**
      * Reinicia el contador de reintentos SIR
      * @return
@@ -526,75 +540,77 @@ public class SirController extends BaseController {
         return true;
     }
 
-    /**
-     * Envia un mensaje ACK
-     * @return
-     * @throws Exception
-     */
-    @RequestMapping(value = "/enviarACK", method = RequestMethod.GET)
-    @ResponseBody
-    public Boolean enviarACK(@RequestParam Long idRegistroSir)throws Exception {
+//    /**
+//     * Envia un mensaje ACK
+//     * @return
+//     * @throws Exception
+//     */
+//    @RequestMapping(value = "/enviarACK", method = RequestMethod.GET)
+//    @ResponseBody
+//    public Boolean enviarACK(@RequestParam Long idRegistroSir)throws Exception {
+//
+//        try{
+//            return sirEnvioEjb.enviarACK(idRegistroSir);
+//        }catch (Exception e){
+//            e.printStackTrace();
+//        }
+//
+//        return false;
+//    }
+//
+//    /**
+//     * Envia un mensaje de Confirmación
+//     * @return
+//     * @throws Exception
+//     */
+//    @RequestMapping(value = "/enviarConfirmacion", method = RequestMethod.GET)
+//    @ResponseBody
+//    public Boolean enviarConfirmacion(@RequestParam Long idRegistroSir)throws Exception {
+//
+//        try{
+//            return sirEnvioEjb.enviarConfirmacion(idRegistroSir);
+//        }catch (Exception e){
+//            e.printStackTrace();
+//        }
+//
+//        return false;
+//    }
 
-        try{
-            return sirEnvioEjb.enviarACK(idRegistroSir);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+//    /**
+//     * Eliminar un {@link es.caib.regweb3.model.RegistroSir}
+//     */
+//    @RequestMapping(value = "/registroSir/eliminar", method= RequestMethod.POST)
+//    public String eliminarRegistroSir(@ModelAttribute EliminarForm eliminarForm, HttpServletRequest request) {
+//
+//        try {
+//
+//            UsuarioEntidad usuario = getUsuarioEntidadActivo(request);
+//            RegistroSir registroSir  = registroSirEjb.findById(eliminarForm.getId());
+//
+//            if(EstadoRegistroSir.RECIBIDO_CONFIRMADO.equals(registroSir.getEstado())){
+//                registroSirEjb.marcarEliminado(registroSir, usuario, eliminarForm.getObservaciones());
+//                Mensaje.saveMessageInfo(request, getMessage("registroSir.eliminar.ok"));
+//
+//            }else{
+//                Mensaje.saveMessageError(request, getMessage("registroSir.eliminar.estado"));
+//            }
+//
+//        } catch (Exception e) {
+//            Mensaje.saveMessageError(request, getMessage("registroSir.eliminar.error"));
+//            e.printStackTrace();
+//        }
+//
+//        return "redirect:/sir/monitorRecibidos";
+//    }
 
-        return false;
-    }
-
-    /**
-     * Envia un mensaje de Confirmación
-     * @return
-     * @throws Exception
-     */
-    @RequestMapping(value = "/enviarConfirmacion", method = RequestMethod.GET)
-    @ResponseBody
-    public Boolean enviarConfirmacion(@RequestParam Long idRegistroSir)throws Exception {
-
-        try{
-            return sirEnvioEjb.enviarConfirmacion(idRegistroSir);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-
-        return false;
-    }
-
-    /**
-     * Eliminar un {@link es.caib.regweb3.model.RegistroSir}
-     */
-    @RequestMapping(value = "/registroSir/eliminar", method= RequestMethod.POST)
-    public String eliminarRegistroSir(@ModelAttribute EliminarForm eliminarForm, HttpServletRequest request) {
-
-        try {
-
-            UsuarioEntidad usuario = getUsuarioEntidadActivo(request);
-            RegistroSir registroSir  = registroSirEjb.findById(eliminarForm.getId());
-
-            if(EstadoRegistroSir.RECIBIDO.equals(registroSir.getEstado())){
-                registroSirEjb.marcarEliminado(registroSir, usuario, eliminarForm.getObservaciones());
-                Mensaje.saveMessageInfo(request, getMessage("registroSir.eliminar.ok"));
-
-            }else{
-                Mensaje.saveMessageError(request, getMessage("registroSir.eliminar.estado"));
-            }
-
-        } catch (Exception e) {
-            Mensaje.saveMessageError(request, getMessage("registroSir.eliminar.error"));
-            e.printStackTrace();
-        }
-
-        return "redirect:/sir/monitorRecibidos";
-    }
-
+    
     /**
      * Genera el xml del fichero de intercambio enviado
      * @param idOficioRemision
      * @param request
      * @param response
      */
+    /*
     @RequestMapping(value = "/{idOficioRemision}/ficheroIntercambio", method = RequestMethod.GET)
     public void generarFicheroIntercambio(@PathVariable("idOficioRemision") Long idOficioRemision, HttpServletRequest request, HttpServletResponse response)  {
         RegistroSir registroSir = null;
@@ -639,7 +655,37 @@ public class SirController extends BaseController {
         }
 
     }
+    */
 
+	/**
+	 * Actualiza un {@link es.caib.regweb3.model.RegistroSir}
+	 */
+	@RequestMapping(value = "/oficio/actualizarEstado", method = RequestMethod.GET)
+	@ResponseBody
+	public String actualizarRegistroSir(@RequestParam Long id, HttpServletRequest request) throws Exception {
+		try {
+			OficioRemision oficioRemision = oficioRemisionEjb.findById(id);
+			Entidad entidad = getEntidadActiva(request);
+			UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
+			
+			if (! RegwebUtils.contains(RegwebConstantes.ESTADOS_OFICIO_REMISION_SIR_FINALES, oficioRemision.getEstado()) && oficioRemision.getSir()) {
+
+    			synchronized(Semaforo.getCreacionSemaforo()) {
+    				sirEnvioEjb.actualizarEstadoEnvioSir(entidad, oficioRemision, usuarioEntidad);
+    			}
+				Mensaje.saveMessageInfo(request, "Se ha actualizado el intercambio");
+
+				return "redirect:/sir/monitorRecibidos";
+			
+			}
+
+		} catch (Exception | I18NException e) {
+			e.printStackTrace();
+			Mensaje.saveMessageError(request, "Ha ocurrido un error actualizando el intercambio: " + e.getMessage());
+		}
+		return "redirect:/sir/monitorRecibidos";
+	}
+    
     /**
      * Total Archivos huerfanos
      */
@@ -652,7 +698,7 @@ public class SirController extends BaseController {
         Integer huerfanos = 0;
 
         try {
-            File directorio = FileSystemManager.getArchivosPath();
+            File directorio = PropiedadGlobalUtil.getArchivosPath();
             List<Long> archivos = archivoEjb.getAllLigero();
 
             if(directorio != null){
@@ -699,7 +745,7 @@ public class SirController extends BaseController {
         Integer count = 0;
 
         try {
-            File directorio = FileSystemManager.getArchivosPath();
+            File directorio = PropiedadGlobalUtil.getArchivosPath();
             List<Long> archivos = archivoEjb.getAllLigero();
 
             if(directorio != null){
@@ -757,4 +803,76 @@ public class SirController extends BaseController {
         return "redirect:/inici";
     }
 
+    @RequestMapping(value = "/recuperarRegistrosSirRecibidos/form", method = RequestMethod.GET)
+    public String recuperarRegistrosSirRecibidos(Model model, HttpServletRequest request) throws Exception {
+    	model.addAttribute("rangoFechasBusqueda", new RangoFechasBusqueda());
+        return "sir/busquedaRegistrosSirList";
+    }
+    
+//    
+//    @RequestMapping(value = "/recuperarRegistrosSirRecibidos/form/update", method = RequestMethod.GET)
+//    public String recuperacionRegistrosProgresGet(
+//    		Model model,
+//    		HttpServletRequest request) throws Exception {
+//    	Entidad entidad = getEntidadActiva(request);
+//    	model.addAttribute("isRecoveringRegistros", registroSirEjb.isRecoveringRegistrosSIR(entidad.getId()));
+//    	return "sir/busquedaRegistrosSirForm";
+//    }
+//    
+    @RequestMapping(value = "/recuperarRegistrosSirRecibidos/form", method = RequestMethod.POST)
+    public String recuperacionRegistrosProgresPost(
+    		@ModelAttribute("rangoFechasBusqueda") RangoFechasBusqueda busqueda,
+    		BindingResult result,
+    		HttpServletRequest request) throws Exception {
+    	Entidad entidad = getEntidadActiva(request);
+    	HttpSession session = request.getSession();
+    	Integer total;
+    	busquedaRegistrosSirValidator.validate(busqueda, result);
+    	if (result.hasErrors()) {
+            return "sir/busquedaRegistrosSirList";
+        }
+		try {
+			mensajesSb = new StringBuilder();
+//			synchronized (this) {
+				total = registroSirEjb.recuperarRegistrosSirGEISER(entidad.getId(), busqueda.getFechaInicioImportacion(), busqueda.getFechaFinImportacion());
+//			}
+	        
+			if (total > 0) {
+				Mensaje.saveMessageInfo(request, "Se han recuperado " + total + " registros SIR");
+			} else {
+				Mensaje.saveMessageAviso(request, "No se ha encontrado ningún registro SIR para las fechas introducidas");
+			}
+		} catch (I18NException e) {
+			e.printStackTrace();
+	        Mensaje.saveMessageInfo(request, "Ha habido un error recuperando los registros SIR");
+	        return "redirect:/sir/recuperarRegistrosSirRecibidos/form";
+		}
+		session.setAttribute("resultadoImportacion", mensajesSb);
+        return "redirect:/sir/recuperarRegistrosSirRecibidos/form";
+    }
+    
+    @RequestMapping(value = "/recuperarRegistrosSirRecibidos/form/progres", method = RequestMethod.GET)
+	@ResponseBody
+	public ProgresoActualitzacion getProgresActualitzacio(HttpServletRequest request) {
+    	Entidad entidad = getEntidadActiva(request);
+		ProgresoActualitzacion progreso = registroSirEjb.getProgresoRecuperacionRegistrosSir(entidad.getId());
+		if (progreso != null && progreso.getInfo() != null) {
+			for (ActualitzacionInfo info: progreso.getInfo()) {
+				String cadena = "<p class='info-" + info.getTipo() + "'>" + info.getTexto() + "</p>";
+				if (mensajesSb.indexOf(cadena) == -1)
+					mensajesSb.append(cadena);
+				mensajesSb.append("\n");
+			}
+		}
+		return progreso;
+	}
+    
+    @InitBinder("rangoFechasBusqueda")
+    public void initBinder(WebDataBinder binder) {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        CustomDateEditor dateEditor = new CustomDateEditor(sdf, true);
+        binder.registerCustomEditor(java.util.Date.class, dateEditor);
+
+        binder.setValidator(this.busquedaRegistrosSirValidator);
+    }
 }

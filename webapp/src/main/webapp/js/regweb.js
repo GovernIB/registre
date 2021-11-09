@@ -178,60 +178,139 @@ function confirm(url, mensaje) {
     confirmModal.modal("show");
 }
 
+function confirmEnvioSIR(url, oficinasSirLength, oficinaSIRCodigo, confirmacionTitulo, confirmacionCuerpo, enviando) {
+	var confirmEnvioModal  =
+        $("<div class=\"modal fade\">" +
+            "<div class=\"modal-dialog\">" +
+	            "<div class=\"modal-content\">" +
+		            "<div class=\"modal-header\">" +
+			            "<button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\">&times;</button>" +
+			            "<h4 class=\"modal-title\">" + confirmacionTitulo + "</h4>" +
+		            "</div>" +
+		            "<div class=\"modal-body\">" +
+		            	"<p>" + confirmacionCuerpo + "</p>" +
+		            "</div>" +
+		            "<div class=\"modal-footer\">" +
+			            "<button type=\"button\" class=\"btn btn-danger\" data-dismiss=\"modal\">No seguir</button>" +
+			            "<button type=\"button\" id=\"okButton\" class=\"btn btn-success\">Seguir</button>" +
+		            "</div>" +
+		            "</div>" +
+	            "</div>" +
+            "</div>");
+	// Modal confirmación envío (se quita la página de envioSir)
+	confirmEnvioModal.find("#okButton").click(function(event) {
+		if (oficinasSirLength > 1) {
+			document.location.href=url;
+		} else {
+			realiarEnvioViaAjax(url, oficinaSIRCodigo, enviando);
+		}
+		confirmEnvioModal.modal("hide");
+	});
+	
+	confirmEnvioModal.modal("show");
+}
+
 // Muestra el cuadro de confirmación para enviar un registro SIR sin anexos
-function confirmEnvioSinAnexos(url, mensaje, mensajeTitulo, mensajeEnviar, mensajeCuerpo, mostrarBoton2) {
+function confirmEnvioSinAnexos(url, oficinasSirLength, oficinaSIRCodigo, confirmacionTitulo, confirmacionCuerpo, enviando, mensaje, mensajeTitulo, mensajeEnviar, mensajeCuerpo, mostrarBoton2) {
 
-    var confirmModal;
+	var confirmEnvioModal  =
+		        $("<div class=\"modal fade\">" +
+		            "<div class=\"modal-dialog\">" +
+			            "<div class=\"modal-content\">" +
+				            "<div class=\"modal-header\">" +
+					            "<button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\">&times;</button>" +
+					            "<h4 class=\"modal-title\">" + confirmacionTitulo + "</h4>" +
+				            "</div>" +
+				            "<div class=\"modal-body\">" +
+				            	"<p>" + confirmacionCuerpo + "</p>" +
+				            "</div>" +
+				            "<div class=\"modal-footer\">" +
+					            "<button type=\"button\" class=\"btn btn-danger\" data-dismiss=\"modal\">No seguir</button>" +
+					            "<button type=\"button\" id=\"okButton\" class=\"btn btn-success\">Seguir</button>" +
+				            "</div>" +
+				            "</div>" +
+			            "</div>" +
+		            "</div>");
+	// Modal confirmación envío (se quita la página de envioSir)
+	confirmEnvioModal.find("#okButton").click(function(event) {
+	    var confirmModal;
+	
+	    if(mostrarBoton2) {
+	        confirmModal =
+	            $("<div class=\"modal fade\">" +
+	                "<div class=\"modal-dialog\">" +
+	                "<div class=\"modal-content\">" +
+	                "<div class=\"modal-header\">" +
+	                "<button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\">&times;</button>" +
+	                "<h4 class=\"modal-title\">" + mensajeTitulo + "</h4>" +
+	                "</div>" +
+	
+	                "<div class=\"modal-body\">" +
+	                "<p>" + mensaje + "</p>" +
+	                "</div>" +
+	
+	                "<div class=\"modal-footer\">" +
+	                "<button type=\"button\" class=\"btn btn-danger\" data-dismiss=\"modal\">" + mensajeCuerpo + "</button>" +
+	                "<button type=\"button\" id=\"okButton\" class=\"btn btn-success\">" + mensajeEnviar + "</button>" +
+	                "</div>" +
+	                "</div>" +
+	                "</div>" +
+	                "</div>");
+	    }else{
+	        confirmModal =
+	            $("<div class=\"modal fade\">" +
+	                "<div class=\"modal-dialog\">" +
+	                "<div class=\"modal-content\">" +
+	                "<div class=\"modal-header\">" +
+	                "<button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\">&times;</button>" +
+	                "<h4 class=\"modal-title\">" + mensajeTitulo + "</h4>" +
+	                "</div>" +
+	
+	                "<div class=\"modal-body\">" +
+	                "<p>" + mensaje + "</p>" +
+	                "</div>" +
+	
+	                "<div class=\"modal-footer\">" +
+	                "<button type=\"button\" id=\"okButton\" class=\"btn btn-success\">" + mensajeEnviar + "</button>" +
+	                "</div>" +
+	                "</div>" +
+	                "</div>" +
+	                "</div>");
+	    }
+	    // Modal confirmación envío sin documentación
+	    confirmModal.find("#okButton").click(function(event) {
+	    	if (oficinasSirLength > 1) {
+	    		document.location.href=url;
+	    	} else {
+	    		realiarEnvioViaAjax(url, oficinaSIRCodigo, enviando);
+	    	}
+	        confirmModal.modal("hide");
+	    });
+	
+	    confirmModal.modal("show");
+		
+    	confirmEnvioModal.modal("hide");
+	});
 
-    if(mostrarBoton2) {
-        confirmModal =
-            $("<div class=\"modal fade\">" +
-                "<div class=\"modal-dialog\">" +
-                "<div class=\"modal-content\">" +
-                "<div class=\"modal-header\">" +
-                "<button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\">&times;</button>" +
-                "<h4 class=\"modal-title\">" + mensajeTitulo + "</h4>" +
-                "</div>" +
+	confirmEnvioModal.modal("show");
+}
 
-                "<div class=\"modal-body\">" +
-                "<p>" + mensaje + "</p>" +
-                "</div>" +
-
-                "<div class=\"modal-footer\">" +
-                "<button type=\"button\" class=\"btn btn-danger\" data-dismiss=\"modal\">" + mensajeCuerpo + "</button>" +
-                "<button type=\"button\" id=\"okButton\" class=\"btn btn-success\">" + mensajeEnviar + "</button>" +
-                "</div>" +
-                "</div>" +
-                "</div>" +
-                "</div>");
-    }else{
-        confirmModal =
-            $("<div class=\"modal fade\">" +
-                "<div class=\"modal-dialog\">" +
-                "<div class=\"modal-content\">" +
-                "<div class=\"modal-header\">" +
-                "<button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\">&times;</button>" +
-                "<h4 class=\"modal-title\">" + mensajeTitulo + "</h4>" +
-                "</div>" +
-
-                "<div class=\"modal-body\">" +
-                "<p>" + mensaje + "</p>" +
-                "</div>" +
-
-                "<div class=\"modal-footer\">" +
-                "<button type=\"button\" id=\"okButton\" class=\"btn btn-success\">" + mensajeEnviar + "</button>" +
-                "</div>" +
-                "</div>" +
-                "</div>" +
-                "</div>");
-    }
-
-    confirmModal.find("#okButton").click(function(event) {
-        document.location.href=url;
-        confirmModal.modal("hide");
-    });
-
-    confirmModal.modal("show");
+function realiarEnvioViaAjax(url, oficinaCodigo, enviando) {
+	jQuery.ajax({
+		crossDomain: true,
+        url: url,
+        data: { oficinaSIRCodigo: oficinaCodigo},
+        type: 'POST',
+        beforeSend: function(){
+            waitingDialog.show(enviando, {dialogSize: 'm', progressType: 'primary'});
+        },
+        success: function() {
+        	location.reload(); 
+        },
+        error: function() {
+        	location.reload(); 
+        }
+    }) ;
 }
 
 // Muestra el cuadro de confirmación para realizar una acción sobre un registro
@@ -688,6 +767,42 @@ $(function() {
 
 $(function() {
     $('#fechaOrigen').datetimepicker({
+        language: 'ca',
+        format: 'DD/MM/YYYY HH:mm:ss',
+        pickTime: true,
+        useMinutes: true,
+        useSeconds: true,
+        useCurrent: false,
+        use24hours: true,
+        icons: {
+            time: 'fa fa-clock-o',
+            date: 'fa fa-calendar',
+            up: 'fa fa-chevron-up',
+            down: 'fa fa-chevron-down'
+        }
+    });
+});
+
+$(function() {
+    $('#fechaInicioImportacion').datetimepicker({
+        language: 'ca',
+        format: 'DD/MM/YYYY HH:mm:ss',
+        pickTime: true,
+        useMinutes: true,
+        useSeconds: true,
+        useCurrent: false,
+        use24hours: true,
+        icons: {
+            time: 'fa fa-clock-o',
+            date: 'fa fa-calendar',
+            up: 'fa fa-chevron-up',
+            down: 'fa fa-chevron-down'
+        }
+    });
+});
+
+$(function() {
+    $('#fechaFinImportacion').datetimepicker({
         language: 'ca',
         format: 'DD/MM/YYYY HH:mm:ss',
         pickTime: true,

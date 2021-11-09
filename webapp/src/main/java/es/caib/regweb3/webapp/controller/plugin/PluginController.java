@@ -4,6 +4,7 @@ import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.model.Plugin;
 import es.caib.regweb3.persistence.ejb.BaseEjbJPA;
 import es.caib.regweb3.persistence.ejb.PluginLocal;
+import es.caib.regweb3.persistence.utils.GeiserPluginHelper;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
@@ -11,6 +12,9 @@ import es.caib.regweb3.webapp.controller.BaseController;
 import es.caib.regweb3.webapp.form.PluginForm;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import es.caib.regweb3.webapp.validator.PluginValidator;
+
+import org.fundaciobit.genapp.common.i18n.I18NException;
+import org.plugin.geiser.api.IGeiserPlugin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -43,6 +47,9 @@ public class PluginController extends BaseController {
 
     @EJB(mappedName = "regweb3/PluginEJB/local")
     private PluginLocal pluginEjb;
+    
+    @Autowired
+    private GeiserPluginHelper pluginHelper;
 
 
     /**
@@ -188,7 +195,7 @@ public class PluginController extends BaseController {
     @RequestMapping(value = "/{pluginId}/edit", method = RequestMethod.POST)
     public String editarPlugin(@ModelAttribute @Valid Plugin plugin, BindingResult result,
                                 SessionStatus status, HttpServletRequest request) {
-
+    	Entidad entidadActiva = getEntidadActiva(request);
         pluginValidator.validate(plugin, result);
 
         if (result.hasErrors()) { // Si hay errores volvemos a la vista del formulario
@@ -198,7 +205,6 @@ public class PluginController extends BaseController {
             try {
 
                 pluginEjb.merge(plugin);
-
                 Mensaje.saveMessageInfo(request, getMessage("regweb.actualizar.registro"));
 
             } catch (Exception e) {

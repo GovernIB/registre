@@ -11,7 +11,6 @@ import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
-import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -31,7 +30,6 @@ import java.util.Map;
 
 @Stateless(name = "UsuarioEntidadEJB")
 @SecurityDomain("seycon")
-@RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI","RWE_WS_ENTRADA","RWE_WS_SALIDA", "RWE_WS_CIUDADANO"})
 public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> implements UsuarioEntidadLocal{
 
     protected final Logger log = Logger.getLogger(getClass());
@@ -141,7 +139,7 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
         q.setHint("org.hibernate.readOnly", true);
 
         List<UsuarioEntidad> usuarioEntidad = q.getResultList();
-        if(usuarioEntidad.size() == 1){
+        if(usuarioEntidad.size() > 0){
             return usuarioEntidad.get(0);
         }else{
             return  null;

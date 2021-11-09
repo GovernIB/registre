@@ -7,21 +7,20 @@ import es.caib.dir3caib.ws.api.unidad.UnidadTF;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.persistence.utils.ConversionHelper;
+import es.caib.regweb3.persistence.utils.GeiserPluginHelper;
 import es.caib.regweb3.persistence.utils.I18NLogicUtils;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
-import es.caib.regweb3.persistence.utils.RegistroUtils;
 import es.caib.regweb3.plugins.postproceso.IPostProcesoPlugin;
 import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.Dir3CaibUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
+
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NArgumentCode;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.plugin.geiser.api.GeiserPluginException;
-import org.plugin.geiser.api.IGeiserPlugin;
-import org.plugin.geiser.api.PeticionRegistroGeiser;
 import org.plugin.geiser.api.RespuestaRegistroGeiser;
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
@@ -32,7 +31,6 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
 
 import javax.annotation.Resource;
-import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.interceptor.Interceptors;
@@ -53,7 +51,6 @@ import static es.caib.regweb3.utils.RegwebConstantes.REGISTRO_ENTRADA;
 
 @Stateless(name = "RegistroEntradaEJB")
 @SecurityDomain("seycon")
-@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI","RWE_WS_ENTRADA","RWE_WS_SALIDA", "RWE_WS_CIUDADANO"})
 @Interceptors(SpringBeanAutowiringInterceptor.class)
 /*@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)*/
 public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
@@ -67,9 +64,9 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     @Resource
     private javax.ejb.SessionContext ejbContext;
 
-    @Autowired
-    ConversionHelper conversioHelper;
-    
+    @Autowired ConversionHelper conversioHelper;
+    @Autowired GeiserPluginHelper pluginHelper;
+
     @EJB private LibroLocal libroEjb;
     @EJB private ContadorLocal contadorEjb;
     @EJB private OficinaLocal oficinaEjb;
@@ -80,7 +77,13 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     @EJB private PluginLocal pluginEjb;
     @EJB private OrganismoLocal organismoEjb;
     @EJB private MultiEntidadLocal multiEntidadEjb;
-
+    
+//    @EJB private RegistroSirLocal registroSirEjb;
+    @EJB private InteresadoSirLocal interesadoSirEjb;
+    @EJB private AnexoSirLocal anexoSirEjb;
+    @EJB private ArchivoLocal archivoEjb;
+    @EJB private TrazabilidadSirLocal trazabilidadSirEjb;
+    @EJB private UsuarioEntidadLocal usuarioEntidadEjb;
 
     @Override
     public RegistroEntrada findByIdCompleto(Long id) throws Exception {
@@ -95,30 +98,19 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
     @Override
     public RegistroEntrada registrarEntrada(RegistroEntrada registroEntrada,
-                                            UsuarioEntidad usuarioEntidad, List<Interesado> interesados, List<AnexoFull> anexosFull, Boolean validarAnexos)
+                                            UsuarioEntidad usuarioEntidad, List<Interesado> interesados, List<AnexoFull> anexosFull, Boolean validarAnexos, boolean enviarGeiser)
             throws Exception, I18NException, I18NValidationException {
 
         try {
 
             // Obtenemos el Número de registro
-            Libro libro = libroEjb.findById(registroEntrada.getLibro().getId());
+//            Libro libro = libroEjb.findById(registroEntrada.getLibro().getId());
             //NumeroRegistro numeroRegistro = contadorEjb.incrementarContador(libro.getContadorEntrada().getId());
             //registroEntrada.setNumeroRegistro(numeroRegistro.getNumero());
             //registroEntrada.setFecha(numeroRegistro.getFecha());
 
             // Generamos el Número de registro formateado
 //            registroEntrada.setNumeroRegistroFormateado(RegistroUtils.numeroRegistroFormateado(registroEntrada, libro, usuarioEntidad.getEntidad()));
-
-            // Si no ha introducido ninguna fecha de Origen
-            if (registroEntrada.getRegistroDetalle().getFechaOrigen() == null) {
-                registroEntrada.getRegistroDetalle().setFechaOrigen(registroEntrada.getFecha());
-            }
-
-            //Si no se ha espeficicado un NumeroRegistroOrigen, le asignamos el propio
-            if (StringUtils.isEmpty(registroEntrada.getRegistroDetalle().getNumeroRegistroOrigen())) {
-
-                registroEntrada.getRegistroDetalle().setNumeroRegistroOrigen(registroEntrada.getNumeroRegistroFormateado());
-            }
 
             // Guardar RegistroEntrada
             registroEntrada = persist(registroEntrada);
@@ -166,14 +158,23 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
             postProcesoNuevoRegistro(registroEntrada, usuarioEntidad.getEntidad().getId());
 
             //Envío directo GEISER si el destinatario no está integrado con SIR
-            if (registroEntrada.getEvento() != RegwebConstantes.EVENTO_OFICIO_SIR) {
+            if (registroEntrada.getEvento() != RegwebConstantes.EVENTO_OFICIO_SIR && enviarGeiser) {
 	            try {
 		            //Registro interno en GEISER
-		            RespuestaRegistroGeiser respuesta = postProcesoNuevoRegistroGeiser(registroEntrada, usuarioEntidad);
+		            RespuestaRegistroGeiser respuesta = pluginHelper.postProcesoNuevoRegistroGeiser(registroEntrada, usuarioEntidad);
 		            if (respuesta != null) {
 		            	registroEntrada.setNumeroRegistro(respuesta.getNuRegistro());
+		            	registroEntrada.setNumeroRegistroFormateado(respuesta.getNuRegistro());
 		            	registroEntrada.setFecha(respuesta.getFechaRegistro());
-		            	registroEntrada.setNumeroRegistroFormateado(RegistroUtils.numeroRegistroFormateado(registroEntrada, libro, usuarioEntidad.getEntidad()));
+		            	
+		                // Si no ha introducido ninguna fecha de Origen
+		                if (registroEntrada.getRegistroDetalle().getFechaOrigen() == null)
+		                    registroEntrada.getRegistroDetalle().setFechaOrigen(registroEntrada.getFecha());
+		                
+		                //Si no se ha espeficicado un NumeroRegistroOrigen, le asignamos el propio
+		                if (StringUtils.isEmpty(registroEntrada.getRegistroDetalle().getNumeroRegistroOrigen()))
+		                    registroEntrada.getRegistroDetalle().setNumeroRegistroOrigen(registroEntrada.getNumeroRegistroFormateado());
+		                
 		            } else {
 		                // No s´ha definit cap plugin de Justificant. Consulti amb el seu Administrador.
 		                throw new I18NException("error.plugin.nodefinit", new I18NArgumentCode("plugin.tipo.11"));
@@ -222,6 +223,18 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         postProcesoActualizarRegistro(registroEntrada, usuarioEntidad.getEntidad().getId());
 
         return registroEntrada;
+    }
+    
+    @Override
+    @TransactionTimeout(value = 1200)  // 20 minutos
+    public void actualizarDatosRegistro(Long idRegistroEntrada, String numeroRegistro, String numeroRegistroFormateado, Date fechaRegistro) throws Exception, I18NException {
+
+    	Query q = em.createQuery("update RegistroEntrada set numeroRegistro=:numeroRegistro, numeroRegistroFormateado=:numeroRegistroFormateado, fecha=:fecha where id = :idRegistroEntrada");
+        q.setParameter("numeroRegistro", numeroRegistro);
+        q.setParameter("numeroRegistroFormateado", numeroRegistroFormateado);
+        q.setParameter("fecha", fechaRegistro);
+        q.setParameter("idRegistroEntrada", idRegistroEntrada);
+        q.executeUpdate();
     }
 
     @Override
@@ -664,9 +677,12 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
                     }
                 }
             }
-
+            // Se genera nuevo número al enviar a GEISER el nuevo registro rectificado...
+            registroEntrada.setNumeroRegistro(null);
+            registroEntrada.setNumeroRegistroFormateado(null);
+            registroEntrada.setFecha(null);
             // Registramos el nuevo registro
-            rectificado = registrarEntrada(registroEntrada, usuarioEntidad, interesados, anexos, false);
+            rectificado = registrarEntrada(registroEntrada, usuarioEntidad, interesados, anexos, false, true);
 
             // Moficiamos el estado al registro original
             cambiarEstado(idRegistro, RegwebConstantes.REGISTRO_RECTIFICADO);
@@ -683,7 +699,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
             trazabilidadEjb.persist(trazabilidad);
 
         } catch (I18NException | I18NValidationException e) {
-            log.info("Ha ocurrido un error rectificando el registro");
+            log.info("Ha ocurrido un error rectificando el registro" + (e.getMessage().isEmpty() ? ": " + e.getMessage() : ""));
             e.printStackTrace();
         }
 
@@ -704,6 +720,18 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
     }
 
+    @Override
+    @TransactionTimeout(value = 1200)
+    public void actualizarDestinoExterno(Long idRegistroEntrada, String codDestinoExterno, String descDestinoExterno) throws Exception {
+
+        Query q = em.createQuery("update RegistroEntrada set destextcod = :codDestinoExterno, destextden = :descDestinoExterno where id = :idRegistroEntrada");
+        q.setParameter("idRegistroEntrada", idRegistroEntrada);
+        q.setParameter("codDestinoExterno", codDestinoExterno);
+        q.setParameter("descDestinoExterno", descDestinoExterno);
+        q.executeUpdate();
+
+    }
+    
     @Override
     public RegistroEntrada getConAnexosFull(Long id) throws Exception, I18NException {
 
@@ -780,16 +808,4 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         }
     }
 
-    @Override
-    public RespuestaRegistroGeiser postProcesoNuevoRegistroGeiser(RegistroEntrada re, UsuarioEntidad usuarioEntidad) throws Exception, I18NException {
-    	RespuestaRegistroGeiser respuesta = null;
-    	IGeiserPlugin geiserPlugin = (IGeiserPlugin) pluginEjb.getPlugin(usuarioEntidad.getEntidad().getId(), RegwebConstantes.PLUGIN_GEISER);
-        if (geiserPlugin != null) {
-        	respuesta = geiserPlugin.registrar(
-        			conversioHelper.convertir(
-        					re, 
-        					PeticionRegistroGeiser.class));
-        }
-		return respuesta;
-    }
 }

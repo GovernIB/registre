@@ -57,7 +57,8 @@
                                     <th><spring:message code="anexo.titulo"/></th>
                                     <th><spring:message code="anexo.sir.validezDocumento"/></th>
                                     <th><spring:message code="anexo.tipoDocumento.corto"/></th>
-                                    <c:if test="${registro.estado != RegwebConstantes.REGISTRO_OFICIO_ACEPTADO && !anexosPurgados}">
+                                    <%-- <c:if test="${registro.estado != RegwebConstantes.REGISTRO_OFICIO_ACEPTADO && !anexosPurgados}"> --%>
+                                    <c:if test="${!anexosPurgados}">
                                         <th><spring:message code="anexo.tamano"/></th>
                                     </c:if>
                                     <th class="center"><spring:message code="anexo.anexo"/></th>
@@ -88,7 +89,8 @@
                                         <%--TIPO DOCUMENTO--%>
                                         <td><spring:message code="tipoDocumento.0${anexo.tipoDocumento}"/></td>
                                         <%--TAMAÑO--%>
-                                        <c:if test="${registro.estado != RegwebConstantes.REGISTRO_OFICIO_ACEPTADO && !anexo.purgado}">
+                                        <%-- <c:if test="${registro.estado != RegwebConstantes.REGISTRO_OFICIO_ACEPTADO && !anexosPurgados}"> --%>
+                                        <c:if test="${!anexo.purgado}">
                                             <c:if test="${anexo.modoFirma != RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED && !anexo.confidencial}">
                                                 <c:set var="tamanyAnexo" value="${reg:getSizeOfDocumentCustody(anexo.custodiaID,param.idEntidad)}"/>
                                             </c:if>
@@ -108,7 +110,8 @@
 
                                         <%-- TIPO ANEXO FIRMA DETACHED--%>
                                         <c:if test="${anexo.modoFirma == RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED && !anexo.confidencial}">
-                                            <c:if test="${registro.estado != RegwebConstantes.REGISTRO_OFICIO_ACEPTADO && !anexo.purgado}">
+                                        <%-- <c:if test="${registro.estado != RegwebConstantes.REGISTRO_OFICIO_ACEPTADO && !anexosPurgados}"> --%>
+                                            <c:if test="${!anexo.purgado}">
                                                 <td class="center"> <%--DOCUMENTO--%>
                                                     <a class="btn btn-success btn-default btn-sm" href="<c:url value="/anexo/descargarDocumento/${anexo.id}"/>"
                                                        target="_blank" title="<spring:message code="anexo.descargar"/>">
@@ -137,8 +140,8 @@
                                                     </a>
                                                 </td>
                                             </c:if>
-
-                                            <c:if test="${registro.estado == RegwebConstantes.REGISTRO_OFICIO_ACEPTADO || anexo.purgado}">
+											<%--<c:if test="${registro.estado == RegwebConstantes.REGISTRO_OFICIO_ACEPTADO || anexo.purgado}"> --%>
+                                            <c:if test="${anexo.purgado}">
                                                 <td class="center"> <%--DOCUMENTO--%>
                                                     <a class="btn btn-success btn-default btn-sm disabled" href="<c:url value="/anexo/descargarDocumento/${anexo.id}"/>"
                                                        target="_blank" title="<spring:message code="anexo.eliminado"/>">
@@ -165,7 +168,8 @@
 
                                         <%-- TIPO ANEXO SIN FIRMA--%>
                                         <c:if test="${anexo.modoFirma == RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA && !anexo.confidencial}">
-                                            <c:if test="${registro.estado != RegwebConstantes.REGISTRO_OFICIO_ACEPTADO && !anexo.purgado}">
+                                        <%-- <c:if test="${registro.estado != RegwebConstantes.REGISTRO_OFICIO_ACEPTADO && !anexosPurgados}"> --%>
+                                            <c:if test="${!anexo.purgado}">
                                                 <td class="center">
                                                     <a class="btn btn-success btn-default btn-sm" href="<c:url value="/anexo/descargarDocumento/${anexo.id}"/>"
                                                        target="_blank" title="<spring:message code="anexo.descargar"/>">
@@ -173,7 +177,8 @@
                                                     </a>
                                                 </td>
                                             </c:if>
-                                            <c:if test="${registro.estado == RegwebConstantes.REGISTRO_OFICIO_ACEPTADO || anexo.purgado}">
+                                            <%--<c:if test="${registro.estado == RegwebConstantes.REGISTRO_OFICIO_ACEPTADO || anexo.purgado}"> --%>
+                                            <c:if test="${anexo.purgado}">
                                               <td class="center">
                                                   <a class="btn btn-success btn-default btn-sm disabled" href="<c:url value="/anexo/descargarDocumento/${anexo.id}"/>"
                                                      target="_blank" title="<spring:message code="anexo.eliminado"/>">
@@ -188,14 +193,16 @@
 
                                         <%--TIPO ANEXO FIRMA ATTACHED--%>
                                         <c:if test="${anexo.modoFirma == RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED && !anexo.confidencial}">
-                                            <c:if test="${registro.estado != RegwebConstantes.REGISTRO_OFICIO_ACEPTADO && !anexo.purgado}">
+                                        <%-- <c:if test="${registro.estado != RegwebConstantes.REGISTRO_OFICIO_ACEPTADO && !anexosPurgados}"> --%>
+                                            <c:if test="${!anexo.purgado}">
                                                 <td class="center">
                                                     <a class="btn btn-success btn-default btn-sm" href="<c:url value="/anexo/descargarFirma/${anexo.id}/true"/>"
                                                        target="_blank" title="<spring:message code="anexo.descargar"/>">
                                                         <span class="fa fa-download"></span></a>
                                                 </td>
                                             </c:if>
-                                            <c:if test="${registro.estado == RegwebConstantes.REGISTRO_OFICIO_ACEPTADO || anexo.purgado}">
+                                            <%--<c:if test="${registro.estado == RegwebConstantes.REGISTRO_OFICIO_ACEPTADO || anexo.purgado}"> --%>
+                                            <c:if test="${anexo.purgado}">
                                                 <td class="center">
                                                     <a class="btn btn-success btn-default btn-sm disabled" href="<c:url value="/anexo/descargarFirma/${anexo.id}/true"/>"
                                                        target="_blank" title="<spring:message code="anexo.eliminado"/>">
@@ -250,7 +257,8 @@
                                 </c:if>
                             </c:forEach>
                                 <%-- Fila pel tamany Total dels annexes --%>
-                            <c:if test="${registro.estado != RegwebConstantes.REGISTRO_OFICIO_ACEPTADO && !anexosPurgados}">
+                                <%-- <c:if test="${registro.estado != RegwebConstantes.REGISTRO_OFICIO_ACEPTADO && !anexosPurgados}"> --%>
+                            <c:if test="${!anexosPurgados}">
                                 <tr>
                                     <td class="senseBorder"></td>
                                     <td class="senseBorder"></td>

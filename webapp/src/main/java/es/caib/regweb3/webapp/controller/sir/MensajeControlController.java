@@ -35,70 +35,70 @@ public class MensajeControlController extends BaseController {
      * @return
      * @throws Exception
      */
-    @RequestMapping(value = "/list", method = RequestMethod.GET)
-    public ModelAndView enviados(Model model, HttpServletRequest request) throws Exception {
-
-        ModelAndView mav = new ModelAndView("sir/mensajesControlList");
-
-        MensajeControlBusquedaForm mensajeControlBusquedaForm = new MensajeControlBusquedaForm(new MensajeControl(), 1);
-
-        model.addAttribute("tiposMensajeControl", RegwebConstantes.TIPOS_MENSAJE_CONTROL);
-        model.addAttribute("tiposComunicacion", RegwebConstantes.TIPOS_COMUNICACION_MENSAJE);
-        model.addAttribute("mensajeControlBusqueda", mensajeControlBusquedaForm);
-
-        return mav;
-    }
+//    @RequestMapping(value = "/list", method = RequestMethod.GET)
+//    public ModelAndView enviados(Model model, HttpServletRequest request) throws Exception {
+//
+//        ModelAndView mav = new ModelAndView("sir/mensajesControlList");
+//
+//        MensajeControlBusquedaForm mensajeControlBusquedaForm = new MensajeControlBusquedaForm(new MensajeControl(), 1);
+//
+//        model.addAttribute("tiposMensajeControl", RegwebConstantes.TIPOS_MENSAJE_CONTROL);
+//        model.addAttribute("tiposComunicacion", RegwebConstantes.TIPOS_COMUNICACION_MENSAJE);
+//        model.addAttribute("mensajeControlBusqueda", mensajeControlBusquedaForm);
+//
+//        return mav;
+//    }
 
     /**
      * Realiza la busqueda de {@link es.caib.regweb3.model.sir.MensajeControl} según los parametros del formulario
      */
-    @RequestMapping(value = "/list", method = RequestMethod.POST)
-    public ModelAndView enviados(@ModelAttribute MensajeControlBusquedaForm busqueda, HttpServletRequest request) throws Exception {
-
-        ModelAndView mav = new ModelAndView("sir/mensajesControlList");
-
-        Entidad entidad = getEntidadActiva(request);
-
-        MensajeControl mensajeControl = busqueda.getMensajeControl();
-
-        // Ajustam la dataFi per a que ens trobi els oficis del mateix dia
-        Date dataFi = RegistroUtils.ajustarHoraBusqueda(busqueda.getFechaFin());
-
-        Paginacion paginacion = mensajeControlEjb.busqueda(busqueda.getPageNumber(), busqueda.getFechaInicio(), dataFi,mensajeControl,  entidad);
-
-        busqueda.setPageNumber(1);
-        mav.addObject("paginacion", paginacion);
-        mav.addObject("tiposMensajeControl", RegwebConstantes.TIPOS_MENSAJE_CONTROL);
-        mav.addObject("tiposComunicacion", RegwebConstantes.TIPOS_COMUNICACION_MENSAJE);
-        mav.addObject("mensajeControlBusqueda", busqueda);
-
-        return mav;
-    }
+//    @RequestMapping(value = "/list", method = RequestMethod.POST)
+//    public ModelAndView enviados(@ModelAttribute MensajeControlBusquedaForm busqueda, HttpServletRequest request) throws Exception {
+//
+//        ModelAndView mav = new ModelAndView("sir/mensajesControlList");
+//
+//        Entidad entidad = getEntidadActiva(request);
+//
+//        MensajeControl mensajeControl = busqueda.getMensajeControl();
+//
+//        // Ajustam la dataFi per a que ens trobi els oficis del mateix dia
+//        Date dataFi = RegistroUtils.ajustarHoraBusqueda(busqueda.getFechaFin());
+//
+//        Paginacion paginacion = mensajeControlEjb.busqueda(busqueda.getPageNumber(), busqueda.getFechaInicio(), dataFi,mensajeControl,  entidad);
+//
+//        busqueda.setPageNumber(1);
+//        mav.addObject("paginacion", paginacion);
+//        mav.addObject("tiposMensajeControl", RegwebConstantes.TIPOS_MENSAJE_CONTROL);
+//        mav.addObject("tiposComunicacion", RegwebConstantes.TIPOS_COMUNICACION_MENSAJE);
+//        mav.addObject("mensajeControlBusqueda", busqueda);
+//
+//        return mav;
+//    }
 
     /**
      * Reenvia un mensaje de control
      * @return
      * @throws Exception
      */
-    @RequestMapping(value = "/reenviar", method = RequestMethod.GET)
-    @ResponseBody
-    public Boolean reenviarMensajeControl(@RequestParam Long idMensaje)throws Exception {
-
-        try{
-
-            MensajeControl mensajeControl = mensajeControlEjb.findById(idMensaje);
-
-            if(mensajeControl.getTipoComunicacion().equals(RegwebConstantes.TIPO_COMUNICACION_ENVIADO)){
-                return sirEnvioEjb.reenviarMensaje(mensajeControl);
-            }else{
-                return  false;
-            }
-
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-
-        return false;
-    }
+//    @RequestMapping(value = "/reenviar", method = RequestMethod.GET)
+//    @ResponseBody
+//    public Boolean reenviarMensajeControl(@RequestParam Long idMensaje)throws Exception {
+//
+////        try{
+////
+////            MensajeControl mensajeControl = mensajeControlEjb.findById(idMensaje);
+////
+////            if(mensajeControl.getTipoComunicacion().equals(RegwebConstantes.TIPO_COMUNICACION_ENVIADO)){
+////                return sirEnvioEjb.reenviarMensaje(mensajeControl);
+////            }else{
+////                return  false;
+////            }
+////
+////        }catch (Exception e){
+////            e.printStackTrace();
+////        }
+//
+//        return false;
+//    }
 
 }

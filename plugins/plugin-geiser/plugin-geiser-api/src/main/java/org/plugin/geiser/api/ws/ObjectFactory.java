@@ -10,7 +10,7 @@ import javax.xml.namespace.QName;
 /**
  * This object contains factory methods for each 
  * Java content interface and Java element interface 
- * generated in the org.geiser.api.ws package. 
+ * generated in the org.plugin.geiser.api.ws package. 
  * <p>An ObjectFactory allows you to programatically 
  * construct new instances of the Java representation 
  * for XML content. The Java representation of XML 
@@ -63,7 +63,7 @@ public class ObjectFactory {
     private final static QName _BuscarEstadoTramitacionResponse_QNAME = new QName("http://registro.ws.rgeco.geiser.minhap.gob.es/", "buscarEstadoTramitacionResponse");
 
     /**
-     * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package: org.geiser.api.ws
+     * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package: org.plugin.geiser.api.ws
      * 
      */
     public ObjectFactory() {

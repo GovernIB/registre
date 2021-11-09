@@ -11,7 +11,6 @@ import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.log4j.Logger;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
-import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import java.text.SimpleDateFormat;
@@ -27,50 +26,39 @@ import java.util.TreeMap;
  */
 @Stateless(name = "SincronizadorCatalogoEJB")
 @SecurityDomain("seycon")
-@RolesAllowed({"RWE_SUPERADMIN"})
 public class SincronizadorCatalogoBean implements SincronizadorCatalogoLocal {
 
     protected final Logger log = Logger.getLogger(getClass());
 
 
-//    @EJB(mappedName = "regweb3/CatEstadoEntidadEJB/local")
-    @EJB
-    private CatEstadoEntidadLocal catEstadoEntidadEjb;
+    @EJB(mappedName = "regweb3/CatEstadoEntidadEJB/local")
+    public CatEstadoEntidadLocal catEstadoEntidadEjb;
 
-//    @EJB(mappedName = "regweb3/CatNivelAdministracionEJB/local")
-    @EJB
+    @EJB(mappedName = "regweb3/CatNivelAdministracionEJB/local")
     public CatNivelAdministracionLocal catNivelAdministracionEjb;
 
-//    @EJB(mappedName = "regweb3/CatPaisEJB/local")
-    @EJB
+    @EJB(mappedName = "regweb3/CatPaisEJB/local")
     public CatPaisLocal catPaisEjb;
 
-//    @EJB(mappedName = "regweb3/CatComunidadAutonomaEJB/local")
-    @EJB
+    @EJB(mappedName = "regweb3/CatComunidadAutonomaEJB/local")
     public CatComunidadAutonomaLocal catComunidadAutonomaEjb;
 
-//    @EJB(mappedName = "regweb3/CatProvinciaEJB/local")
-    @EJB
+    @EJB(mappedName = "regweb3/CatProvinciaEJB/local")
     public CatProvinciaLocal catProvinciaEjb;
 
-//    @EJB(mappedName = "regweb3/CatEntidadGeograficaEJB/local")
-    @EJB
+    @EJB(mappedName = "regweb3/CatEntidadGeograficaEJB/local")
     public CatEntidadGeograficaLocal catEntidadGeograficaEjb;
 
-//    @EJB(mappedName = "regweb3/CatLocalidadEJB/local")
-    @EJB
+    @EJB(mappedName = "regweb3/CatLocalidadEJB/local")
     public CatLocalidadLocal catLocalidadEjb;
 
-//    @EJB(mappedName = "regweb3/DescargaEJB/local")
-    @EJB
+    @EJB(mappedName = "regweb3/DescargaEJB/local")
     public DescargaLocal descargaEjb;
 
-//    @EJB(mappedName = "regweb3/CatServicioEJB/local")
-    @EJB
+    @EJB(mappedName = "regweb3/CatServicioEJB/local")
     public CatServicioLocal catServicioEjb;
 
-//    @EJB(mappedName = "regweb3/CatTipoViaEJB/local")
-    @EJB
+    @EJB(mappedName = "regweb3/CatTipoViaEJB/local")
     public CatTipoViaLocal catTipoViaEjb;
 
     SimpleDateFormat formatoFecha = new SimpleDateFormat(RegwebConstantes.FORMATO_FECHA);

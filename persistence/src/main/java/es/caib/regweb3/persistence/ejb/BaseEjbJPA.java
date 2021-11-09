@@ -13,6 +13,7 @@ import java.io.Serializable;
  * @author earrivi
  *         Date: 16/01/14
  */
+@RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI"})
 public abstract class BaseEjbJPA<T extends Serializable, E> implements BaseEjb<T, E> {
 
     public final Logger log = Logger.getLogger(this.getClass());

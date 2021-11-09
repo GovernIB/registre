@@ -3,12 +3,17 @@ package es.caib.regweb3.persistence.ejb;
 import es.caib.dir3caib.ws.api.oficina.OficinaTF;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.AnexoFull;
+import es.caib.regweb3.persistence.utils.ProgresoActualitzacion;
+
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
+import org.plugin.geiser.api.ApunteRegistro;
 import org.plugin.geiser.api.RespuestaRegistroGeiser;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
+
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -19,6 +24,7 @@ import java.util.Set;
  *         Date: 16/01/14
  */
 @Local
+@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI","RWE_WS_ENTRADA","RWE_WS_SALIDA", "RWE_WS_CIUDADANO"})
 public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal {
 
 
@@ -39,7 +45,7 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      * @throws Exception
      */
     RegistroEntrada registrarEntrada(RegistroEntrada registroEntrada,
-                                     UsuarioEntidad usuarioEntidad, List<Interesado> interesados, List<AnexoFull> anexosFull, Boolean validarAnexos)
+                                     UsuarioEntidad usuarioEntidad, List<Interesado> interesados, List<AnexoFull> anexosFull, Boolean validarAnexos, boolean enviarGeiser)
             throws Exception, I18NException, I18NValidationException;
 
     /**
@@ -267,15 +273,14 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      */
     void postProcesoNuevoRegistro(RegistroEntrada re, Long entidadId) throws Exception, I18NException;
 
+	void actualizarDatosRegistro(
+			Long idRegistroEntrada,
+			String numeroRegistro, 
+			String numeroRegistroFormateado, 
+			Date fechaRegistro) throws Exception, I18NException;
 
-    /**
-     * Envia el registro a GEISER
-     * @param re
-     * @param entidadId
-     * @return 
-     * @throws Exception
-     * @throws I18NException
-     */
-	RespuestaRegistroGeiser postProcesoNuevoRegistroGeiser(RegistroEntrada re, UsuarioEntidad usuarioEntidad) throws Exception, I18NException;
+
+	void actualizarDestinoExterno(Long idRegistroEntrada, String codDestinoExterno, String descDestinoExterno)
+			throws Exception;
 
 }

@@ -15,6 +15,7 @@ import java.util.List;
  * Date: 30/10/14
  */
 @Local
+@RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI","RWE_WS_ENTRADA","RWE_WS_SALIDA"})
 public interface HistoricoRegistroSalidaLocal extends BaseEjb<HistoricoRegistroSalida, Long> {
 
     List<HistoricoRegistroSalida> getByRegistroSalida(Long idRegistro) throws Exception;

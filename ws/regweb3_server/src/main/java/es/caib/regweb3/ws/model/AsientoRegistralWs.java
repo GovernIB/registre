@@ -31,7 +31,7 @@ public class AsientoRegistralWs implements Serializable {
     private Long tipoRegistro;
     private Date fechaRegistro;
     private String numeroRegistroFormateado;
-    private String numeroRegistro;
+    private int numeroRegistro;
     private String libroCodigo;
     private String resumen; //extracto
     private Long tipoDocumentacionFisicaCodigo;
@@ -205,11 +205,11 @@ public class AsientoRegistralWs implements Serializable {
         this.numeroRegistroFormateado = numeroRegistroFormateado;
     }
 
-    public String getNumeroRegistro() {
+    public int getNumeroRegistro() {
         return numeroRegistro;
     }
 
-    public void setNumeroRegistro(String numeroRegistro) {
+    public void setNumeroRegistro(int numeroRegistro) {
         this.numeroRegistro = numeroRegistro;
     }
 

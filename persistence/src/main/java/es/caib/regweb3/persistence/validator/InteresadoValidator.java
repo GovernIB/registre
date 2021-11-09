@@ -62,19 +62,33 @@ public class InteresadoValidator<T> extends AbstractRegWebValidator<T> {
                             rejectValue(errors, "nombre", "error.valor.maxlenght");
                         }
                     }
+                    
+                    rejectIfEmptyOrWhitespace(errors, __target__, "tipoDocumentoIdentificacion",
+                            "error.valor.requerido"); //obligatorio por tema de integración con GEISER
+                    rejectIfEmptyOrWhitespace(errors, __target__, "documento",
+                            "error.valor.requerido"); //obligatorio por tema de integración con GEISER
+
+                    if (!hasFieldErrors(errors, "apellido1")) {
+                        if (interesado.getApellido1().length() > 30) {
+                            rejectValue(errors, "apellido1", "error.valor.maxlenght");
+                        }
+                    }
 
                     if (!isNullOrEmpty(interesado.getApellido2())) {
                         if (interesado.getApellido2().length() > 30) {
                             rejectValue(errors, "apellido2", "error.valor.maxlenght");
                         }
                     }
-
                 }
 
                 // Validaciones si es Interesado Jurídica
                 if (interesado.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA)) {
                     rejectIfEmptyOrWhitespace(errors, __target__, "razonSocial",
                             "error.valor.requerido");
+                    rejectIfEmptyOrWhitespace(errors, __target__, "tipoDocumentoIdentificacion",
+                            "error.valor.requerido"); //obligatorio por tema de integración con GEISER
+                    rejectIfEmptyOrWhitespace(errors, __target__, "documento",
+                            "error.valor.requerido"); //obligatorio por tema de integración con GEISER
                 }
 
                 // Validaciones si es ADMINISTRACION
@@ -84,7 +98,7 @@ public class InteresadoValidator<T> extends AbstractRegWebValidator<T> {
                 }
             }
         }
-
+        
         // Gestionamos las validaciones según el Canal escogido
         if (interesado.getCanal() == null) {
             //rejectIfEmptyOrWhitespace(errors, __target__, "canal", "error.valor.requerido","El camp és obligatori");

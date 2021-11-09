@@ -4,12 +4,14 @@ import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.CamposNTI;
 import es.caib.regweb3.model.utils.EstadoRegistroSir;
 import es.caib.regweb3.persistence.utils.Paginacion;
+import es.caib.regweb3.persistence.utils.ProgresoActualitzacion;
 import es.caib.regweb3.sir.core.utils.FicheroIntercambio;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
+
 import java.util.Date;
 import java.util.List;
 
@@ -20,6 +22,7 @@ import java.util.List;
  * Date: 16/06/16
  */
 @Local
+@RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI", "RWE_WS_ENTRADA", "RWE_WS_SALIDA"})
 public interface RegistroSirLocal extends BaseEjb<RegistroSir, Long> {
 
      List<Long> getUltimosPendientesProcesarERTE(EstadoRegistroSir estado, String oficinaSir, Date fechaInicio, Date fechaFin, String aplicacion, Integer total) throws Exception;
@@ -182,4 +185,70 @@ public interface RegistroSirLocal extends BaseEjb<RegistroSir, Long> {
      * @throws I18NValidationException
      */
     RegistroEntrada aceptarRegistroSirEntrada(RegistroSir registroSir, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, List<CamposNTI> camposNTIs, Long idOrganismoDestino) throws Exception, I18NException, I18NValidationException;
+
+    /**
+     * Obtiene los RegistroSir con un estado no final
+     * @param idEntidad
+     * @return
+     * @throws Exception
+     */
+    List<Long> getRegistrosSirPendientes(Long idEntidad) throws Exception;
+
+
+    /**
+     * Actualiza el identificador de intercambio del registro SIR
+     * 
+     * @param idRegistroSir
+     * @param identificadorIntercambio
+     * @throws Exception
+     */
+	void actualizarIdentificadorIntercambio(Long idRegistroSir, String identificadorIntercambio) throws Exception;
+
+	/**
+     * Obtiene un RegistroSir a partir de los parámetros
+     * @param numeroRegistro
+     * @param codigoEntidadRegistralDestino
+     * @return
+     * @throws Exception
+     */
+	Long getRegistroSirByNumeroRegistro(String numeroRegistro, String codigoEntidadRegistralDestino)
+			throws Exception;
+
+
+	String generateIdentificadorFichero(String identificadorIntercambio, int secuencia, String fileName);
+
+	/**
+	 * Recupera registros SIR recibidos en GEISER y los añade a Regweb
+	 * 
+	 * @param entidadId
+	 * @throws Exception
+	 * @throws I18NException 
+	 */
+	Integer recuperarRegistrosSirGEISER(Long entidadId, Date inicio, Date fin) throws Exception, I18NException;
+
+	/**
+	 * Recupera registros SIR recibidos sin identificador de intercambio
+	 * 
+	 * @param idEntidad
+	 * @return
+	 * @throws Exception
+	 */
+	List<Long> getRegistrosSirRecibidosSinId(Long idEntidad) throws Exception;
+
+	/**
+	 * Mira si hay un proceso de recuperación de registros SIR iniciado para la entidad actual
+	 * 
+	 * @param entidadId
+	 * @return
+	 */
+	boolean isRecoveringRegistrosSIR(Long entidadId);
+
+	/**
+	 * Recupera el progreso de la recuperación de los registros SIR
+	 * 
+	 * @param entidadId
+	 * @return
+	 */
+	ProgresoActualitzacion getProgresoRecuperacionRegistrosSir(Long entidadId);
+
 }

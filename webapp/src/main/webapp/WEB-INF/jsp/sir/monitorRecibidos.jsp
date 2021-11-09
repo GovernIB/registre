@@ -249,19 +249,23 @@
                                                             </button>
                                                             <ul class="dropdown-menu dropdown">
                                                                 <li><a href="<c:url value="/registroSir/${registroSir.id}/detalle"/>" target="_blank"><spring:message code="registroSir.detalle"/></a></li>
-                                                                <li><a href="<c:url value="/sir/${registroSir.identificadorIntercambio}/detalle"/>" target="_blank"><spring:message code="idIntercambio.detalle"/></a></li>
+                                                                <c:if test="${not empty registroSir.identificadorIntercambio}">
+                                                                	<li><a href="<c:url value="/sir/${registroSir.identificadorIntercambio}/detalle"/>" target="_blank"><spring:message code="idIntercambio.detalle"/></a></li>
+                                                                </c:if>
+                                                                <%-- 
                                                                 <c:if test="${registroSir.estado == 'RECIBIDO'}">
                                                                     <li><a data-toggle="modal" role="button" href="#eliminarModal" onclick="limpiarModalEliminar(${registroSir.id});"><spring:message code="registroSir.eliminar"/></a></li>
                                                                 </c:if>
                                                                 <li class="divider"></li>
-                                                                <li><a href="javascript:void(0);" onclick='confirm("javascript:enviarACK(${registroSir.id})","<spring:message code="regweb.confirmar.enviarMensaje" htmlEscape="true"/>")'><spring:message code="mensajeControl.enviar.ACK"/></a></li>
-                                                                <c:if test="${registroSir.estado == 'ACEPTADO'}">
+                                                                <li><a href="javascript:void(0);" onclick='confirm("javascript:enviarACK(${registroSir.id})","<spring:message code="regweb.confirmar.enviarMensaje" htmlEscape="true"/>")'><spring:message code="mensajeControl.enviar.ACK"/></a></li>                                                              
+                                                                <c:if test="${registroSir.estado == 'ENVIADO_CONFIRMADO' || registroSir.estado == 'RECIBIDO_CONFIRMADO' || registroSir.estado == 'FINALIZADO'}">
                                                                     <li><a href="javascript:void(0);" onclick='confirm("javascript:enviarConfirmacion(${registroSir.id})","<spring:message code="regweb.confirmar.enviarMensaje" htmlEscape="true"/>")'><spring:message code="mensajeControl.enviar.confirmacion"/></a></li>
                                                                 </c:if>
                                                                 <c:if test="${registroSir.estado != 'ACEPTADO'}">
                                                                     <c:url value="/sir/registroSir/reiniciar" var="urlReiniciar"/>
                                                                     <li><a href="javascript:void(0);" onclick="reiniciarContador('${registroSir.id}','${urlReiniciar}')"><spring:message code="registroSir.reiniciar"/></a></li>
                                                                 </c:if>
+                                                                --%>
                                                             </ul>
                                                         </div>
                                                     </td>

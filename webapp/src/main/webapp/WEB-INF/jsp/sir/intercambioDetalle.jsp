@@ -56,12 +56,14 @@
                             <div class="panel-footer center">
                                 <div class="btn-group"><button type="button" onclick="goToNewPage('<c:url value="/registroSir/${registroSir.id}/detalle"/>')" class="btn btn-primary btn-sm"><spring:message code="registroSir.detalle"/></button></div>
                             </div>
+                             <%--
                             <div class="panel-footer center">
                                 <div class="btn-group"><button type="button" onclick='confirm("javascript:enviarACK(${registroSir.id})","<spring:message code="regweb.confirmar.enviarMensaje" htmlEscape="true"/>")' class="btn btn-info btn-sm"><spring:message code="mensajeControl.enviar.ACK"/></button></div>
                                 <c:if test="${registroSir.estado == 'ACEPTADO'}">
                                     <div class="btn-group"><button type="button" onclick='confirm("javascript:enviarConfirmacion(${registroSir.id})","<spring:message code="regweb.confirmar.enviarMensaje" htmlEscape="true"/>")' class="btn btn-success btn-sm"><spring:message code="mensajeControl.enviar.confirmacion"/></button></div>
                                 </c:if>
                             </div>
+                            --%>
                         </c:if>
 
                         <%--DETALLE REGISTRO ENVIADO SIR--%>
@@ -109,6 +111,7 @@
 
                                 </div>
                                 <%--BOTONERA REINICIAR Y REENVIAR--%>
+                                <%--
                                 <div class="panel-footer center">
                                     <c:if test="${trazabilidades[0].oficioRemision.estado != RegwebConstantes.OFICIO_ACEPTADO && trazabilidades[0].oficioRemision.estado != RegwebConstantes.OFICIO_SIR_RECHAZADO &&
                                                                                   trazabilidades[0].oficioRemision.estado != RegwebConstantes.OFICIO_SIR_DEVUELTO && trazabilidades[0].oficioRemision.estado != RegwebConstantes.OFICIO_SIR_DEVUELTO}">
@@ -121,6 +124,7 @@
                                         <div class="btn-group"><button type="button" onclick='confirm("javascript:reenviarIntercambio(${trazabilidades[0].oficioRemision.id})","<spring:message code="regweb.confirmar.enviarIntercambio" htmlEscape="true"/>")' class="btn btn-warning btn-sm"><spring:message code="intercambio.reenviar"/></button></div>
                                     </c:if>
                                 </div>
+                                --%>
                             </c:if>
 
                             <%--REGISTRO SALIDA--%>
@@ -163,6 +167,7 @@
 
                                 </div>
                                 <%--BOTONERA REINICIAR Y REENVIAR--%>
+                                <%--
                                 <div class="panel-footer center">
                                     <c:if test="${trazabilidades[0].oficioRemision.estado != RegwebConstantes.OFICIO_ACEPTADO && trazabilidades[0].oficioRemision.estado != RegwebConstantes.OFICIO_SIR_RECHAZADO &&
                                                                                   trazabilidades[0].oficioRemision.estado != RegwebConstantes.OFICIO_SIR_DEVUELTO && trazabilidades[0].oficioRemision.estado != RegwebConstantes.OFICIO_SIR_DEVUELTO}">
@@ -175,6 +180,7 @@
                                         <div class="btn-group"><button type="button" onclick='confirm("javascript:reenviarIntercambio(${trazabilidades[0].oficioRemision.id})","<spring:message code="regweb.confirmar.enviarIntercambio" htmlEscape="true"/>")' class="btn btn-warning btn-sm"><spring:message code="intercambio.reenviar"/></button></div>
                                     </c:if>
                                 </div>
+                                --%>
                             </c:if>
                         </c:if>
                    </div>
@@ -266,14 +272,21 @@
                                             <c:if test="${trazabilidad.oficioRemision.estado == RegwebConstantes.OFICIO_INTERNO_ENVIADO}"><span class="label label-warning"><i class="fa fa-check fa-fw"></i></c:if>
                                             <c:if test="${trazabilidad.oficioRemision.estado == RegwebConstantes.OFICIO_EXTERNO_ENVIADO}"><span class="label label-warning"><i class="fa fa-check fa-fw"></i></c:if>
                                             <c:if test="${trazabilidad.oficioRemision.estado == RegwebConstantes.OFICIO_ACEPTADO}"><span class="label label-success" rel="popupAbajo" data-content="<c:out value="${trazabilidad.oficioRemision.numeroRegistroEntradaDestino}" escapeXml="true"/> - <fmt:formatDate value="${trazabilidad.oficioRemision.fechaEntradaDestino}" pattern="dd/MM/yyyy HH:mm:ss"/>" data-toggle="popover"><i class="fa fa-barcode fa-fw"></i></c:if>
-                                            <c:if test="${trazabilidad.oficioRemision.estado == RegwebConstantes.OFICIO_SIR_ENVIADO}"><span class="label label-warning"><i class="fa fa-check fa-fw"></i></c:if>
-                                            <c:if test="${trazabilidad.oficioRemision.estado == RegwebConstantes.OFICIO_SIR_ENVIADO_ACK}"><span class="label label-success"><i class="fa fa-check fa-fw"></i></c:if>
-                                            <c:if test="${trazabilidad.oficioRemision.estado == RegwebConstantes.OFICIO_SIR_ENVIADO_ERROR}"><span class="label label-danger"><i class="fa fa-warning fa-fw"></i></c:if>
-                                            <c:if test="${trazabilidad.oficioRemision.estado == RegwebConstantes.OFICIO_SIR_REENVIADO}"><span class="label label-warning" rel="popupAbajo" data-content="<strong><spring:message code="oficioRemision.destino"/>:</strong> ${trazabilidad.oficioRemision.decodificacionEntidadRegistralDestino} (${trazabilidad.oficioRemision.codigoEntidadRegistralDestino})" data-toggle="popover"><i class="fa fa-check fa-fw"></i></c:if>
-                                            <c:if test="${trazabilidad.oficioRemision.estado == RegwebConstantes.OFICIO_SIR_REENVIADO_ACK}"><span class="label label-success" rel="popupAbajo" data-content="<strong><spring:message code="oficioRemision.destino"/>:</strong> ${trazabilidad.oficioRemision.decodificacionEntidadRegistralDestino} (${trazabilidad.oficioRemision.codigoEntidadRegistralDestino})" data-toggle="popover"><i class="fa fa-check fa-fw"></i></c:if>
-                                            <c:if test="${trazabilidad.oficioRemision.estado == RegwebConstantes.OFICIO_SIR_REENVIADO_ERROR}"><span class="label label-danger" rel="popupAbajo" data-content="<strong>Error:</strong> ${trazabilidad.oficioRemision.codigoError} - ${trazabilidad.oficioRemision.descripcionError}" data-toggle="popover"><i class="fa fa-warning fa-fw"></i></c:if>
-                                            <c:if test="${trazabilidad.oficioRemision.estado == RegwebConstantes.OFICIO_SIR_RECHAZADO}"><span class="label label-danger" rel="popupAbajo" data-content="<c:out value="${trazabilidad.registroEntradaOrigen.registroDetalle.decodificacionTipoAnotacion}" escapeXml="true"/>" data-toggle="popover"><i class="fa fa-warning fa-fw"></i></c:if>
-                                            <c:if test="${trazabilidad.oficioRemision.estado == RegwebConstantes.OFICIO_SIR_DEVUELTO}"><span class="label label-danger"><i class="fa fa-warning fa-fw"></i></c:if>
+                                            
+                                            <c:if test="${trazabilidad.oficioRemision.estado == RegwebConstantes.OFICIO_SIR_SIN_DATOS}"><span class="label label-warning"><i class="fa fa-check fa-fw"></i></span></c:if>
+                                            <c:if test="${trazabilidad.oficioRemision.estado == RegwebConstantes.OFICIO_SIR_PENDIENTE_ENVIO}"><span class="label label-warning"><i class="fa fa-check fa-fw"></i></span></c:if>
+                                            <c:if test="${trazabilidad.oficioRemision.estado == RegwebConstantes.OFICIO_SIR_ENVIADO_PENDIENTE_CONFIRMACION}"><span class="label label-warning"><i class="fa fa-check fa-fw"></i></span></p></c:if>
+                                            <c:if test="${trazabilidad.oficioRemision.estado == RegwebConstantes.OFICIO_SIR_ENVIADO_PENDIENTE_CONFIRMACION_MANUAL}"><span class="label label-warning"><i class="fa fa-check fa-fw"></i></span></c:if>
+                                            <c:if test="${trazabilidad.oficioRemision.estado == RegwebConstantes.OFICIO_SIR_ENVIADO_CONFIRMADO}"><span class="label label-success"><i class="fa fa-check fa-fw"></i></span></c:if>
+                                            <c:if test="${trazabilidad.oficioRemision.estado == RegwebConstantes.OFICIO_SIR_ENVIADO_RECHAZADO}"><span class="label label-danger"><i class="fa fa-check fa-fw"></i></span>></p></c:if>
+                                            <c:if test="${trazabilidad.oficioRemision.estado == RegwebConstantes.OFICIO_SIR_REENVIADO}"><span class="label label-warning"><i class="fa fa-check fa-fw"></i></span></c:if>
+                                            <c:if test="${trazabilidad.oficioRemision.estado == RegwebConstantes.OFICIO_SIR_EN_TRAMITE}"><span class="label label-warning"><i class="fa fa-check fa-fw"></i></span></c:if>
+                                            <c:if test="${trazabilidad.oficioRemision.estado == RegwebConstantes.OFICIO_SIR_ASIGNADO}"><span class="label label-warning"><i class="fa fa-check fa-fw"></i></span></c:if>
+                                            <c:if test="${trazabilidad.oficioRemision.estado == RegwebConstantes.OFICIO_SIR_FINALIZADO}"><span class="label label-success"><i class="fa fa-check fa-fw"></i></span></c:if>
+                                            <c:if test="${trazabilidad.oficioRemision.estado == RegwebConstantes.OFICIO_SIR_RECTIFICADO}"><span class="label label-warning"><i class="fa fa-check fa-fw"></i></span></c:if>
+                                            <c:if test="${trazabilidad.oficioRemision.estado == RegwebConstantes.OFICIO_SIR_ENVIO_PROCESO}"><span class="label label-warning"><i class="fa fa-check fa-fw"></i></span></c:if>
+                                            <c:if test="${trazabilidad.oficioRemision.estado == RegwebConstantes.OFICIO_SIR_ELIMINADO}"><span class="label label-danger"><i class="fa fa-check fa-fw"></i></span></c:if>
+                                                            
                                             <c:if test="${trazabilidad.oficioRemision.estado == RegwebConstantes.OFICIO_ANULADO}"><span class="label label-danger"></c:if>
                                             <spring:message code="oficioRemision.estado.${trazabilidad.oficioRemision.estado}"/></span>
                                             <span class="pull-right text-muted small"><em><fmt:formatDate value="${trazabilidad.oficioRemision.fechaEstado}" pattern="dd/MM/yyyy HH:mm:ss"/></em></span>

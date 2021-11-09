@@ -37,7 +37,7 @@ public class MailUtils {
 
         Context ctx = new InitialContext();
 
-        Session session = (javax.mail.Session) ctx.lookup("java:comp/env/jdbc/es.caib.regweb3.mail");
+        Session session = (javax.mail.Session) ctx.lookup("java:/es.caib.regweb3.mail");
 
         // Creamos el mensaje
         MimeMessage msg = new MimeMessage(session);

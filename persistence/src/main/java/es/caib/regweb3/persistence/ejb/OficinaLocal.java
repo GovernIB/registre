@@ -17,6 +17,7 @@ import java.util.List;
  * Date: 16/01/14
  */
 @Local
+@RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI","RWE_WS_ENTRADA","RWE_WS_SALIDA"})
 public interface OficinaLocal extends BaseEjb<Oficina, Long> {
 
     /**

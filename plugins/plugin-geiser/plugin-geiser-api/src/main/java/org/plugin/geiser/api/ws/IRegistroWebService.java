@@ -28,12 +28,12 @@ public interface IRegistroWebService {
      * @param authentication
      * @param peticion
      * @return
-     *     returns org.geiser.api.ws.ResultadoRegistroType
+     *     returns org.plugin.geiser.api.ws.ResultadoRegistroType
      */
     @WebMethod
     @WebResult(name = "ResultadoRegistroType", targetNamespace = "")
-    @RequestWrapper(localName = "registrarEnviarHastaUnidad", targetNamespace = "http://registro.ws.rgeco.geiser.minhap.gob.es/", className = "org.geiser.api.ws.RegistrarEnviarHastaUnidad")
-    @ResponseWrapper(localName = "registrarEnviarHastaUnidadResponse", targetNamespace = "http://registro.ws.rgeco.geiser.minhap.gob.es/", className = "org.geiser.api.ws.RegistrarEnviarHastaUnidadResponse")
+    @RequestWrapper(localName = "registrarEnviarHastaUnidad", targetNamespace = "http://registro.ws.rgeco.geiser.minhap.gob.es/", className = "org.plugin.geiser.api.ws.RegistrarEnviarHastaUnidad")
+    @ResponseWrapper(localName = "registrarEnviarHastaUnidadResponse", targetNamespace = "http://registro.ws.rgeco.geiser.minhap.gob.es/", className = "org.plugin.geiser.api.ws.RegistrarEnviarHastaUnidadResponse")
     public ResultadoRegistroType registrarEnviarHastaUnidad(
         @WebParam(name = "authentication", targetNamespace = "")
         AuthenticationType authentication,
@@ -45,12 +45,12 @@ public interface IRegistroWebService {
      * @param authentication
      * @param peticion
      * @return
-     *     returns org.geiser.api.ws.ResultadoRegistroType
+     *     returns org.plugin.geiser.api.ws.ResultadoRegistroType
      */
     @WebMethod
     @WebResult(name = "ResultadoRegistroType", targetNamespace = "")
-    @RequestWrapper(localName = "registrar", targetNamespace = "http://registro.ws.rgeco.geiser.minhap.gob.es/", className = "org.geiser.api.ws.Registrar")
-    @ResponseWrapper(localName = "registrarResponse", targetNamespace = "http://registro.ws.rgeco.geiser.minhap.gob.es/", className = "org.geiser.api.ws.RegistrarResponse")
+    @RequestWrapper(localName = "registrar", targetNamespace = "http://registro.ws.rgeco.geiser.minhap.gob.es/", className = "org.plugin.geiser.api.ws.Registrar")
+    @ResponseWrapper(localName = "registrarResponse", targetNamespace = "http://registro.ws.rgeco.geiser.minhap.gob.es/", className = "org.plugin.geiser.api.ws.RegistrarResponse")
     public ResultadoRegistroType registrar(
         @WebParam(name = "authentication", targetNamespace = "")
         AuthenticationType authentication,
@@ -62,12 +62,12 @@ public interface IRegistroWebService {
      * @param authentication
      * @param peticion
      * @return
-     *     returns org.geiser.api.ws.ResultadoCambioEstadoType
+     *     returns org.plugin.geiser.api.ws.ResultadoCambioEstadoType
      */
     @WebMethod
     @WebResult(name = "ResultadoCambioEstadoType", targetNamespace = "")
-    @RequestWrapper(localName = "confirmar", targetNamespace = "http://registro.ws.rgeco.geiser.minhap.gob.es/", className = "org.geiser.api.ws.Confirmar")
-    @ResponseWrapper(localName = "confirmarResponse", targetNamespace = "http://registro.ws.rgeco.geiser.minhap.gob.es/", className = "org.geiser.api.ws.ConfirmarResponse")
+    @RequestWrapper(localName = "confirmar", targetNamespace = "http://registro.ws.rgeco.geiser.minhap.gob.es/", className = "org.plugin.geiser.api.ws.Confirmar")
+    @ResponseWrapper(localName = "confirmarResponse", targetNamespace = "http://registro.ws.rgeco.geiser.minhap.gob.es/", className = "org.plugin.geiser.api.ws.ConfirmarResponse")
     public ResultadoCambioEstadoType confirmar(
         @WebParam(name = "authentication", targetNamespace = "")
         AuthenticationType authentication,
@@ -79,12 +79,12 @@ public interface IRegistroWebService {
      * @param authentication
      * @param peticion
      * @return
-     *     returns org.geiser.api.ws.ResultadoCambioEstadoType
+     *     returns org.plugin.geiser.api.ws.ResultadoCambioEstadoType
      */
     @WebMethod
     @WebResult(name = "ResultadoCambioEstadoType", targetNamespace = "")
-    @RequestWrapper(localName = "rechazar", targetNamespace = "http://registro.ws.rgeco.geiser.minhap.gob.es/", className = "org.geiser.api.ws.Rechazar")
-    @ResponseWrapper(localName = "rechazarResponse", targetNamespace = "http://registro.ws.rgeco.geiser.minhap.gob.es/", className = "org.geiser.api.ws.RechazarResponse")
+    @RequestWrapper(localName = "rechazar", targetNamespace = "http://registro.ws.rgeco.geiser.minhap.gob.es/", className = "org.plugin.geiser.api.ws.Rechazar")
+    @ResponseWrapper(localName = "rechazarResponse", targetNamespace = "http://registro.ws.rgeco.geiser.minhap.gob.es/", className = "org.plugin.geiser.api.ws.RechazarResponse")
     public ResultadoCambioEstadoType rechazar(
         @WebParam(name = "authentication", targetNamespace = "")
         AuthenticationType authentication,
@@ -96,12 +96,12 @@ public interface IRegistroWebService {
      * @param authentication
      * @param uidIterator
      * @return
-     *     returns org.geiser.api.ws.ResultadoBusquedaType
+     *     returns org.plugin.geiser.api.ws.ResultadoBusquedaType
      */
     @WebMethod
     @WebResult(name = "ResultadoBusquedaType", targetNamespace = "")
-    @RequestWrapper(localName = "iterar", targetNamespace = "http://registro.ws.rgeco.geiser.minhap.gob.es/", className = "org.geiser.api.ws.Iterar")
-    @ResponseWrapper(localName = "iterarResponse", targetNamespace = "http://registro.ws.rgeco.geiser.minhap.gob.es/", className = "org.geiser.api.ws.IterarResponse")
+    @RequestWrapper(localName = "iterar", targetNamespace = "http://registro.ws.rgeco.geiser.minhap.gob.es/", className = "org.plugin.geiser.api.ws.Iterar")
+    @ResponseWrapper(localName = "iterarResponse", targetNamespace = "http://registro.ws.rgeco.geiser.minhap.gob.es/", className = "org.plugin.geiser.api.ws.IterarResponse")
     public ResultadoBusquedaType iterar(
         @WebParam(name = "authentication", targetNamespace = "")
         AuthenticationType authentication,
@@ -113,12 +113,12 @@ public interface IRegistroWebService {
      * @param authentication
      * @param peticion
      * @return
-     *     returns org.geiser.api.ws.ResultadoConsultaType
+     *     returns org.plugin.geiser.api.ws.ResultadoConsultaType
      */
     @WebMethod
     @WebResult(name = "ResultadoConsultaType", targetNamespace = "")
-    @RequestWrapper(localName = "consultar", targetNamespace = "http://registro.ws.rgeco.geiser.minhap.gob.es/", className = "org.geiser.api.ws.Consultar")
-    @ResponseWrapper(localName = "consultarResponse", targetNamespace = "http://registro.ws.rgeco.geiser.minhap.gob.es/", className = "org.geiser.api.ws.ConsultarResponse")
+    @RequestWrapper(localName = "consultar", targetNamespace = "http://registro.ws.rgeco.geiser.minhap.gob.es/", className = "org.plugin.geiser.api.ws.Consultar")
+    @ResponseWrapper(localName = "consultarResponse", targetNamespace = "http://registro.ws.rgeco.geiser.minhap.gob.es/", className = "org.plugin.geiser.api.ws.ConsultarResponse")
     public ResultadoConsultaType consultar(
         @WebParam(name = "authentication", targetNamespace = "")
         AuthenticationType authentication,
@@ -130,12 +130,12 @@ public interface IRegistroWebService {
      * @param authentication
      * @param peticion
      * @return
-     *     returns org.geiser.api.ws.ResultadoBusquedaEstadoTramitacionType
+     *     returns org.plugin.geiser.api.ws.ResultadoBusquedaEstadoTramitacionType
      */
     @WebMethod
     @WebResult(name = "ResultadoBusquedaEstadoTramitacionType", targetNamespace = "")
-    @RequestWrapper(localName = "buscarEstadoTramitacion", targetNamespace = "http://registro.ws.rgeco.geiser.minhap.gob.es/", className = "org.geiser.api.ws.BuscarEstadoTramitacion")
-    @ResponseWrapper(localName = "buscarEstadoTramitacionResponse", targetNamespace = "http://registro.ws.rgeco.geiser.minhap.gob.es/", className = "org.geiser.api.ws.BuscarEstadoTramitacionResponse")
+    @RequestWrapper(localName = "buscarEstadoTramitacion", targetNamespace = "http://registro.ws.rgeco.geiser.minhap.gob.es/", className = "org.plugin.geiser.api.ws.BuscarEstadoTramitacion")
+    @ResponseWrapper(localName = "buscarEstadoTramitacionResponse", targetNamespace = "http://registro.ws.rgeco.geiser.minhap.gob.es/", className = "org.plugin.geiser.api.ws.BuscarEstadoTramitacionResponse")
     public ResultadoBusquedaEstadoTramitacionType buscarEstadoTramitacion(
         @WebParam(name = "authentication", targetNamespace = "")
         AuthenticationType authentication,
@@ -147,12 +147,12 @@ public interface IRegistroWebService {
      * @param authentication
      * @param peticion
      * @return
-     *     returns org.geiser.api.ws.ResultadoBusquedaType
+     *     returns org.plugin.geiser.api.ws.ResultadoBusquedaType
      */
     @WebMethod
     @WebResult(name = "ResultadoBusquedaType", targetNamespace = "")
-    @RequestWrapper(localName = "buscar", targetNamespace = "http://registro.ws.rgeco.geiser.minhap.gob.es/", className = "org.geiser.api.ws.Buscar")
-    @ResponseWrapper(localName = "buscarResponse", targetNamespace = "http://registro.ws.rgeco.geiser.minhap.gob.es/", className = "org.geiser.api.ws.BuscarResponse")
+    @RequestWrapper(localName = "buscar", targetNamespace = "http://registro.ws.rgeco.geiser.minhap.gob.es/", className = "org.plugin.geiser.api.ws.Buscar")
+    @ResponseWrapper(localName = "buscarResponse", targetNamespace = "http://registro.ws.rgeco.geiser.minhap.gob.es/", className = "org.plugin.geiser.api.ws.BuscarResponse")
     public ResultadoBusquedaType buscar(
         @WebParam(name = "authentication", targetNamespace = "")
         AuthenticationType authentication,
@@ -164,12 +164,12 @@ public interface IRegistroWebService {
      * @param authentication
      * @param peticion
      * @return
-     *     returns org.geiser.api.ws.ResultadoRegistroType
+     *     returns org.plugin.geiser.api.ws.ResultadoRegistroType
      */
     @WebMethod
     @WebResult(name = "ResultadoRegistroType", targetNamespace = "")
-    @RequestWrapper(localName = "registrarEnviar", targetNamespace = "http://registro.ws.rgeco.geiser.minhap.gob.es/", className = "org.geiser.api.ws.RegistrarEnviar")
-    @ResponseWrapper(localName = "registrarEnviarResponse", targetNamespace = "http://registro.ws.rgeco.geiser.minhap.gob.es/", className = "org.geiser.api.ws.RegistrarEnviarResponse")
+    @RequestWrapper(localName = "registrarEnviar", targetNamespace = "http://registro.ws.rgeco.geiser.minhap.gob.es/", className = "org.plugin.geiser.api.ws.RegistrarEnviar")
+    @ResponseWrapper(localName = "registrarEnviarResponse", targetNamespace = "http://registro.ws.rgeco.geiser.minhap.gob.es/", className = "org.plugin.geiser.api.ws.RegistrarEnviarResponse")
     public ResultadoRegistroType registrarEnviar(
         @WebParam(name = "authentication", targetNamespace = "")
         AuthenticationType authentication,

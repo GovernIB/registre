@@ -186,7 +186,12 @@
                                                 <tr>
                                                     <td>${registroSir.decodificacionEntidadRegistralOrigen}</td>
                                                     <td><fmt:formatDate value="${registroSir.fechaRecepcion}" pattern="dd/MM/yyyy HH:mm:ss"/></td>
-                                                    <td> ${registroSir.identificadorIntercambio}</td>
+                                                    <td>
+                                                    <c:choose>
+                                                    	<c:when test="${not empty registroSir.identificadorIntercambio}">${registroSir.identificadorIntercambio}</c:when>
+                                                        <c:otherwise><span class="label label-danger"><spring:message code="regweb.registre.id.pendent"/></span></c:otherwise>
+													</c:choose>
+                                                    </td>
                                                     <td> ${registroSir.numeroRegistro}</td>
                                                     <td class="center">
                                                         <c:if test="${registroSir.tipoRegistro == 'ENTRADA'}">

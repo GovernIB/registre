@@ -50,7 +50,6 @@
                         <div class="panel-body">
 
                             <form:errors path="entidad.sello" cssClass="has-error help-block" element="span"><span class="help-block-red"><spring:message code="entidad.sello.obligatorio"/></span></form:errors>
-                            <form:errors path="entidad.numRegistro" cssClass="has-error help-block" element="span"><span class="help-block-red"><spring:message code="entidad.numRegistro.obligatorio"/></span></form:errors>
                             <form:errors path="entidad.posXsello" cssClass="has-error help-block" element="span"><span class="help-block-red"><spring:message code="entidad.sello.posicionX.obligatorio"/></span></form:errors>
                             <form:errors path="entidad.posYsello" cssClass="has-error help-block" element="span"><span class="help-block-red"><spring:message code="entidad.sello.posicionY.obligatorio"/></span></form:errors>
                             <c:if test="${loginInfo.rolActivo.nombre == 'RWE_SUPERADMIN'}">
@@ -334,6 +333,7 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                            <!-- 
                                             <div class="col-xs-12">
                                                 <div class="form-group col-xs-12 senseMargeLat">
                                                     <div class="col-xs-2 pull-left etiqueta_regweb control-label textEsq">
@@ -345,6 +345,7 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                             -->
                                             <!--  logo sello -->
                                             <div class="col-xs-12">
                                                 <div class="col-xs-12 senseMargeLat">

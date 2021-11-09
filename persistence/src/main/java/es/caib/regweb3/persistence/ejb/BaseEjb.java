@@ -3,14 +3,11 @@ package es.caib.regweb3.persistence.ejb;
 import java.io.Serializable;
 import java.util.List;
 
-import javax.annotation.security.RolesAllowed;
-
 /**
  * Created by Fundació BIT.
  * @author earrivi
  * Date: 16/01/14
  */
-@RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI"})
 public interface BaseEjb<T extends Serializable, E> {
 
     /**

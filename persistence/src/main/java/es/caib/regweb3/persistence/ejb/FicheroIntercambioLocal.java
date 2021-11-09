@@ -13,6 +13,7 @@ import javax.ejb.Local;
  * Date: 22/06/16
  */
 @Local
+@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI"})
 public interface FicheroIntercambioLocal {
 
     /**

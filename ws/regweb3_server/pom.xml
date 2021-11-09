@@ -204,6 +204,12 @@
       <version>3.4.0.GA</version>
       <scope>provided</scope>
     </dependency>
+    
+     <dependency>
+      <groupId>es.caib.regweb3</groupId>
+      <artifactId>plugin-geiser-api</artifactId>
+      <version>${project.version}</version>
+    </dependency>
 
   </dependencies>
 

@@ -2,6 +2,8 @@ package es.caib.regweb3.persistence.ejb;
 
 import javax.ejb.Local;
 
+import org.fundaciobit.genapp.common.i18n.I18NException;
+
 /**
  * Created by Fundació BIT.
  *
@@ -98,5 +100,41 @@ public interface SchedulerLocal {
      * @throws Exception
      */
     void purgarProcesadosColaDistribucion() throws Exception;
+
+    /**
+     * Actualiza el estado de los envíos SIR con estado no final
+     *
+     * @throws Exception
+     * @throws I18NException 
+     */
+	void actualizarEnviosSIR() throws Exception, I18NException;
+	
+	/**
+	 * Consulta registros SIR recibidos en GEISER y los crea en Regweb
+	 */
+	void consultarICrearRegistrosRecibidos() throws Exception, I18NException;
+
+	/**
+	 * Actualiza el identificador de intercambio de los registros recibidos
+	 * 
+	 * @throws Exception
+	 * @throws I18NException
+	 */
+	void actualizarIdEnviosSirRecibidos() throws Exception, I18NException;
+	
+	/** Tiempo actualización envíos realizados vía SIR **/
+	Long getCronTareaPeriodoActualizacionEnviosSir();
+	
+	Long getCronTareaRetardoActualizacionEnviosSir();
+	
+	/** Tiempo actualización envíos recibidos vía SIR **/
+	Long getCronTareaPeriodoActualizacionEnviosRecibidosSir();
+	
+	Long getCronTareaRetardoActualizacionEnviosRecibidosSir();
+	
+	/** Tiempo actualización id intercambio (no disponible al momento) envíos recibidos vía SIR **/
+	Long getCronTareaPeriodoActualizacionIdEnviosRecibidosSir();
+	
+	Long getCronTareaRetardoActualizacionIdEnviosRecibidosSir();
 }
 

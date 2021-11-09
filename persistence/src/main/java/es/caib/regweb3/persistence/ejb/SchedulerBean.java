@@ -2,6 +2,10 @@ package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
+import es.caib.regweb3.persistence.utils.Semaforo;
+import es.caib.regweb3.persistence.utils.SemaforoSchedulerConsultaEstado;
+import es.caib.regweb3.persistence.utils.SemaforoSchedulerConsultaIdRecibidos;
+import es.caib.regweb3.persistence.utils.SemaforoSchedulerConsultaRecibidos;
 import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
@@ -11,6 +15,7 @@ import org.jboss.ejb3.annotation.TransactionTimeout;
 import javax.annotation.security.RunAs;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+
 import java.util.Date;
 import java.util.List;
 
@@ -40,8 +45,8 @@ public class SchedulerBean implements SchedulerLocal{
     @EJB private SesionLocal sesionEjb;
     @EJB private ColaLocal colaEjb;
     @EJB private CustodiaLocal custodiaEjb;
-
-
+    @EJB private RegistroSirLocal registroSirEjb;
+    
     @Override
     public void purgarIntegraciones() throws Exception{
 
@@ -183,10 +188,10 @@ public class SchedulerBean implements SchedulerLocal{
         List<Entidad> entidades = entidadEjb.getEntidadesSir();
 
         for(Entidad entidad: entidades) {
-            log.info(" ");
-            log.info("------------- SIR: Reintentando intercambios sin ACK de " + entidad.getNombre() + " -------------");
-            log.info(" ");
-            sirEnvioEjb.reintentarIntercambiosSinConfirmacion(entidad);
+//            log.info(" ");
+//            log.info("------------- SIR: Reintentando intercambios sin ACK de " + entidad.getNombre() + " -------------");
+//            log.info(" ");
+//            sirEnvioEjb.reintentarIntercambiosSinConfirmacion(entidad);
         }
     }
 
@@ -199,7 +204,7 @@ public class SchedulerBean implements SchedulerLocal{
             log.info(" ");
             log.info("------------- SIR: Reintentando intercambios con ERROR de " + entidad.getNombre() + " -------------");
             log.info(" ");
-            sirEnvioEjb.reintentarIntercambiosConError(entidad);
+//            sirEnvioEjb.reintentarIntercambiosConError(entidad);
         }
     }
 
@@ -457,4 +462,91 @@ public class SchedulerBean implements SchedulerLocal{
             integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_SCHEDULERS, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - tiempo, entidadActiva.getId(), "");
         }
     }
+    
+    @Override
+    public void actualizarEnviosSIR() throws Exception, I18NException {
+        List<Entidad> entidades = entidadEjb.getEntidadesSir();
+
+        for(Entidad entidad: entidades) {
+            log.info(" ");
+            log.info("------------- SIR: Actualizando estado envios SIR de " + entidad.getNombre() + " -------------");
+            log.info(" ");
+            synchronized (SemaforoSchedulerConsultaEstado.class) {
+            	sirEnvioEjb.actualizarEnviosSir(entidad);
+            }
+        }
+        log.info("------------- SIR: Registros SIR enviados actualizados " + " -------------");
+    }
+
+	@Override
+	public void consultarICrearRegistrosRecibidos() throws Exception, I18NException {
+		List<Entidad> entidades = entidadEjb.getAll();
+		StringBuilder peticion = new StringBuilder();
+        long tiempo = System.currentTimeMillis();
+        String descripcion = "Consultar y crear registros SIR recibidos.";
+        Entidad entidadActiva = null;
+		try {
+			for (Entidad entidad : entidades) {
+				//Integración
+                entidadActiva = entidad;
+                log.info(" ");
+                log.info("------------- SIR: Consultando registros SIR recibidos de " + entidad.getNombre() + " -------------");
+                log.info(" ");
+                synchronized (SemaforoSchedulerConsultaRecibidos.class) {
+                	registroSirEjb.recuperarRegistrosSirGEISER(entidad.getId(), null, null);
+                }
+			}
+			log.info("------------- SIR: Registros SIR recibidos actualizados " + " -------------");
+		} catch (Exception e) {
+			log.error("Error c...", e);
+            integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_SCHEDULERS, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - tiempo, entidadActiva.getId(), "");
+		}
+	}
+	
+	@Override
+	public void actualizarIdEnviosSirRecibidos() throws Exception, I18NException {
+
+		List<Entidad> entidades = entidadEjb.getEntidadesSir();
+
+		for (Entidad entidad : entidades) {
+			log.info(" ");
+			log.info("------------- SIR: Actualizando identificadores intercambio envios SIR de " + entidad.getNombre() + " -------------");
+			log.info(" ");
+			synchronized (SemaforoSchedulerConsultaIdRecibidos.class) {
+				sirEnvioEjb.actualizarIdEnviosSirRecibidos(entidad);
+			}
+		}
+		log.info("------------- SIR: Identificadores intercambio registros SIR recibidos actualizados " + " -------------");
+	}
+	
+	/** Tiempo cron algunas tareas en segundo plano**/
+	@Override
+	public Long getCronTareaPeriodoActualizacionEnviosSir() {
+		return PropiedadGlobalUtil.getCronTareaPeriodoActualizacionEnviosSir();
+	}
+
+	@Override
+	public Long getCronTareaRetardoActualizacionEnviosSir() {
+		return PropiedadGlobalUtil.getCronTareaRetardoActualizacionEnviosSir();
+	}
+
+	@Override
+	public Long getCronTareaPeriodoActualizacionEnviosRecibidosSir() {
+		return PropiedadGlobalUtil.getCronTareaPeriodoActualizacionEnviosRecibidosSir();
+	}
+
+	@Override
+	public Long getCronTareaRetardoActualizacionEnviosRecibidosSir() {
+		return PropiedadGlobalUtil.getCronTareaRetardoActualizacionEnviosRecibidosSir();
+	}
+
+	@Override
+	public Long getCronTareaPeriodoActualizacionIdEnviosRecibidosSir() {
+		return PropiedadGlobalUtil.getCronTareaPeriodoActualizacionIdEnviosRecibidosSir();
+	}
+
+	@Override
+	public Long getCronTareaRetardoActualizacionIdEnviosRecibidosSir() {
+		return PropiedadGlobalUtil.getCronTareaRetardoActualizacionIdEnviosRecibidosSir();
+	}
 }

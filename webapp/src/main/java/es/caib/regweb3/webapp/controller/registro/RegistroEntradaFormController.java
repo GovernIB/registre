@@ -231,10 +231,10 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
                 registroEntrada = procesarRegistroEntrada(registroEntrada, entidad);
 
                 //Guardamos el RegistroEntrada
-                registroEntrada = registroEntradaEjb.registrarEntrada(registroEntrada, usuarioEntidad, interesadosSesion, null, false);
+                registroEntrada = registroEntradaEjb.registrarEntrada(registroEntrada, usuarioEntidad, interesadosSesion, null, false, true);
 
             }catch (Exception e) {
-                Mensaje.saveMessageError(request, getMessage("regweb.error.registro"));
+                Mensaje.saveMessageError(request, getMessage("regweb.error.registro") + (e.getMessage().isEmpty() ? ": " + e.getMessage() : ""));
                 e.printStackTrace();
                 return "redirect:/inici";
             }finally {
@@ -418,19 +418,21 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
 
                     registroEntrada.getRegistroDetalle().setInteresados(interesadoEjb.guardarInteresados(interesadosSesion, registroEntrada.getRegistroDetalle()) );
                 }
-
-                // Calculamos los días transcurridos desde que se Registró para asignarle un Estado
-                Long dias = RegistroUtils.obtenerDiasRegistro(registroEntrada.getFecha());
-
-                if(dias >= entidadActiva.getDiasVisado()){ // Si ha pasado los Dias de Visado establecidos por la entidad.
-
-                    registroEntrada.setEstado(RegwebConstantes.REGISTRO_PENDIENTE_VISAR);
-                }else{ // Si aún no ha pasado los días definidos
-
-                    // Si el Registro de Entrada tiene Estado Pendiente, al editarlo pasa a ser Válido.
-                    if(registroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_RESERVA)){
-                        registroEntrada.setEstado(RegwebConstantes.REGISTRO_VALIDO);
-                    }
+                // Si es una rectificación no hay fecha de registro (pendiente envío GEISER)
+                if (registroEntrada.getFecha() != null) {
+	                // Calculamos los días transcurridos desde que se Registró para asignarle un Estado
+	                Long dias = RegistroUtils.obtenerDiasRegistro(registroEntrada.getFecha());
+	
+	                if(dias >= entidadActiva.getDiasVisado()){ // Si ha pasado los Dias de Visado establecidos por la entidad.
+	
+	                    registroEntrada.setEstado(RegwebConstantes.REGISTRO_PENDIENTE_VISAR);
+	                }else{ // Si aún no ha pasado los días definidos
+	
+	                    // Si el Registro de Entrada tiene Estado Pendiente, al editarlo pasa a ser Válido.
+	                    if(registroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_RESERVA)){
+	                        registroEntrada.setEstado(RegwebConstantes.REGISTRO_VALIDO);
+	                    }
+	                }
                 }
                 // Obtenemos el RE antes de guardarlos, para crear el histórico
                 RegistroEntrada antiguo = registroEntradaEjb.findByIdCompleto(registroEntrada.getId());

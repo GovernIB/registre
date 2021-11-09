@@ -100,7 +100,13 @@ public class AnexoSir implements Serializable {
      * Indica si el Archivo ha sido purgado del sistema
      */
     private Boolean purgado = false;
+    
+    /**
+     * Documento original si es firma dettached
+     */
+    private AnexoSir documento;
 
+    private boolean isAnexoFirma;
 
     public AnexoSir() {
     }
@@ -135,13 +141,21 @@ public class AnexoSir implements Serializable {
     public void setNombreFichero(String nombreFichero) {
         this.nombreFichero = nombreFichero;
     }
-
-    @Column(name = "IDENTIFICADOR_FICHERO", length = 50, nullable = false)
+	@Column(name = "IDENTIFICADOR_FICHERO", length = 50, nullable = false)
     public String getIdentificadorFichero() {
         return identificadorFichero;
     }
+	
+	@Transient
+    public boolean isAnexoFirma() {
+		return isAnexoFirma;
+	}
 
-    public void setIdentificadorFichero(String identificadorFichero) {
+	public void setAnexoFirma(boolean isAnexoFirma) {
+		this.isAnexoFirma = isAnexoFirma;
+	}
+
+	public void setIdentificadorFichero(String identificadorFichero) {
         this.identificadorFichero = identificadorFichero;
     }
 
@@ -260,6 +274,18 @@ public class AnexoSir implements Serializable {
     public void setPurgado(Boolean purgado) {
         this.purgado = purgado;
     }
+    
+    @ManyToOne(cascade=CascadeType.ALL)
+    @JoinColumn (name="DOCUMENTO")
+    @ForeignKey(name="RWE_DOCUMENTOSIR_ANEXO_FK")
+    public AnexoSir getDocumento() {
+		return documento;
+	}
+
+	public void setDocumento(AnexoSir documento) {
+		this.documento = documento;
+	}
+
 
     @Transient
     public byte[] getAnexoData() {
@@ -288,8 +314,8 @@ public class AnexoSir implements Serializable {
         return getAnexo().getTamano()/1000;
 
     }
-
-    @Override
+    
+	@Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;

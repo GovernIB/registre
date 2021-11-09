@@ -56,7 +56,7 @@
 
 
                     <%-- Se muestra la Botonera si el RegistroSir está pendiente de procesar--%>
-                    <c:if test="${registroSir.estado == 'RECIBIDO' && loginInfo.rolActivo.nombre == 'RWE_USUARI'}">
+                    <c:if test="${registroSir.estado != 'RECIBIDO_CONFIRMADO' && registroSir.estado != 'ENVIADO_CONFIRMADO' && registroSir.estado != 'FINALIZADO' && loginInfo.rolActivo.nombre == 'RWE_USUARI'}">
 
                         <%--Formulari per completar dades del registre--%>
                         <div class="panel-footer">

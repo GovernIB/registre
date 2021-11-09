@@ -3,9 +3,7 @@ package es.caib.regweb3.webapp.interceptor;
 import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.model.Usuario;
 import es.caib.regweb3.persistence.ejb.*;
-import es.caib.regweb3.persistence.utils.FileSystemManager;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
-import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.security.LoginInfo;
 import es.caib.regweb3.webapp.utils.LoginService;
@@ -252,18 +250,18 @@ public class InicioInterceptor extends HandlerInterceptorAdapter {
                         }
 
                         //Comprobamos que se haya definido un formato para el número de registro en la Entidad
-                        if(entidadActiva.getNumRegistro() == null || entidadActiva.getNumRegistro().length()==0){
+                        /*if(entidadActiva.getNumRegistro() == null || entidadActiva.getNumRegistro().length()==0){
                             log.info("No hay configurado el formato del numero de registro para la Entidad activa");
                             Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.entidad.formatoRegistro"));
                             entidadEjb.marcarEntidadMantenimiento(entidadActiva.getId(), true);
-                        }
+                        }*/
 
                     break;
 
                     case RegwebConstantes.RWE_SUPERADMIN:
 
                         //Validamos variable es.caib.regweb3.archivos.path
-                        if (request.getRequestURI().equals("/regweb3/configuracion/editar") && FileSystemManager.getArchivosPath() == null) {
+                        if (request.getRequestURI().equals("/regweb3/configuracion/editar") && PropiedadGlobalUtil.getArchivosPath() == null) {
                             log.info("Error, editar entidad");
                             Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.archivospath"));
                             response.sendRedirect("/regweb3/aviso");

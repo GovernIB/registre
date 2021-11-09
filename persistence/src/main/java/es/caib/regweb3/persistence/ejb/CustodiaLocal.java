@@ -11,6 +11,7 @@ import javax.ejb.Local;
  * Date: 04/06/21
  */
 @Local
+@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI"})
 public interface CustodiaLocal {
 
     /**

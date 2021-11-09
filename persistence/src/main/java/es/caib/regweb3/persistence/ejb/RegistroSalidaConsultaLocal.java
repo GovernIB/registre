@@ -19,6 +19,7 @@ import java.util.List;
  * Date: 16/01/14
  */
 @Local
+@RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI","RWE_WS_ENTRADA","RWE_WS_SALIDA", "RWE_WS_CIUDADANO"})
 public interface RegistroSalidaConsultaLocal{
 
     /**
@@ -34,10 +35,11 @@ public interface RegistroSalidaConsultaLocal{
      * Busca los Registros de Salida en función de los parametros
      * @param pageNumber
      * @param registroSalida
+     * @param incluirPendientesGeiser 
      * @return
      * @throws Exception
      */
-    Paginacion busqueda(Integer pageNumber, List<Long> organismos, Date fechaInicio, Date fechaFin, RegistroSalida registroSalida, String interesadoNom, String interesadoDoc, String interesadoLli1, String interesadoLli2, String observaciones, String usuario, Long idEntidad) throws Exception;
+    Paginacion busqueda(Integer pageNumber, List<Long> organismos, Date fechaInicio, Date fechaFin, RegistroSalida registroSalida, String interesadoNom, String interesadoDoc, String interesadoLli1, String interesadoLli2, String observaciones, String usuario, Long idEntidad, boolean incluirPendientesGeiser) throws Exception;
 
     
     /**
@@ -181,5 +183,13 @@ public interface RegistroSalidaConsultaLocal{
      * @throws Exception
      */
     List<Organismo> ultimosOrganismosRegistro(UsuarioEntidad usuarioEntidad) throws Exception;
+    
+    /**
+     * Obtiene el RegistroSalida a partir de su numero de registro formateado y el código de entidad.
+     * @param numeroRegistroFormateado
+     * @return
+     * @throws Exception
+     */
+    public RegistroSalida findByNumeroRegistro(String codigoEntidad, String numeroRegistro) throws Exception;
 
 }

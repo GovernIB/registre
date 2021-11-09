@@ -6,7 +6,6 @@ import es.caib.regweb3.persistence.utils.NumeroRegistro;
 import org.apache.log4j.Logger;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
-import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -26,7 +25,6 @@ import java.util.List;
 @Stateless(name = "ContadorEJB")
 @SecurityDomain("seycon")
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-@RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI","RWE_WS_ENTRADA","RWE_WS_SALIDA"})
 public class ContadorBean extends BaseEjbJPA<Contador, Long> implements ContadorLocal{
 
     protected final Logger log = Logger.getLogger(getClass());

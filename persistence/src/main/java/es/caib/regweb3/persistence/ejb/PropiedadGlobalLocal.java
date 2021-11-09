@@ -13,6 +13,7 @@ import java.util.List;
  *         Date: 05/05/16
  */
 @Local
+@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI","RWE_WS_ENTRADA","RWE_WS_SALIDA","RWE_WS_CIUDADANO"})
 public interface PropiedadGlobalLocal extends BaseEjb<PropiedadGlobal, Long> {
 
     /**
