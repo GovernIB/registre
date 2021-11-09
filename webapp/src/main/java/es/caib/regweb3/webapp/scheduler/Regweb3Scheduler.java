@@ -104,15 +104,15 @@ public class Regweb3Scheduler {
     }
 
     /**
-     * Qué hace: Reintenta enviar los Registros sin confirmación
+     * Qué hace: Reintenta enviar los Intercambios SIR sin confirmación
      * Cuando lo hace: en cada hora, se ejecuta a los 15 minutos despues de iniciada la hora y cada 45 minutos
      * que al coincidir con la hora en punto y tener un desplazamiento de 15 minutos, conseguimos que se ejecute a y 15 en cada hora).
      */
     @Scheduled(cron = "0 15/45 * * * *")
-    public void reintentarEnvioSirSinConfirmacion(){
+    public void reintentarIntercambiosSinConfirmacion(){
 
         try {
-            schedulerEjb.reintentarEnviosSinConfirmacion();
+            schedulerEjb.reintentarIntercambiosSinConfirmacion();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -121,15 +121,15 @@ public class Regweb3Scheduler {
     }
 
     /**
-     * Qué hace: Reintenta enviar los Registros con error
+     * Qué hace: Reintenta enviar los Intercambios SIR con error
      * Cuando lo hace: en cada hora, se ejecuta a los 30 minutos despues de iniciada la hora y cada 60 minutos
      * que al coincidir con la hora en punto y tener un desplazamiento de 30 minutos, conseguimos que se ejecute a y 30 en cada hora).
      */
     @Scheduled(cron = "0 30/60 * * * *")
-    public void reintentarEnvioSirConError(){
+    public void reintentarIntercambiosConError(){
 
         try {
-            schedulerEjb.reintentarEnviosConError();
+            schedulerEjb.reintentarIntercambiosConError();
 
         } catch (Exception e) {
             e.printStackTrace();
