@@ -20,6 +20,7 @@ public interface JustificanteLocal {
     String JNDI_NAME = "java:app/regweb3-persistence/JustificanteEJB";
 
     /**
+     * Crea el Justificante en función del plugin definido
      * @param usuarioEntidad
      * @param registro
      * @param tipoRegistro
@@ -31,6 +32,7 @@ public interface JustificanteLocal {
     AnexoFull crearJustificante(UsuarioEntidad usuarioEntidad, IRegistro registro, Long tipoRegistro, String idioma) throws I18NException, I18NValidationException;
 
     /**
+     * Crea el Justificante en Filesystem si la Custodia en diferido está activa, sino lo hace normalmente
      * @param usuarioEntidad
      * @param registro
      * @param tipoRegistro

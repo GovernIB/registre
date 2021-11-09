@@ -147,15 +147,19 @@ public class AsientoRegistralBean implements AsientoRegistralLocal {
                         registroSalida.setEstado(REGISTRO_OFICIO_EXTERNO);
                         registroSalida.getRegistroDetalle().setIdentificadorIntercambio("-1");
 
-                    } else { //Tiene oficinas en SIR, se envia el registro via SIR.
+                    } else { //Tiene oficinas en SIR, se crear el intercambio
 
                         try {
 
-                            OficioRemision oficioRemision = sirEnvioEjb.enviarIntercambio(REGISTRO_SALIDA, registroSalida.getId(),
-                                    registroSalida.getOficina(), registroSalida.getUsuario(), oficinasSIR.get(0).getCodigo());
+                            // Crear Justificante
+                            crearJustificante(registroSalida.getUsuario(), registroSalida, RegwebConstantes.REGISTRO_SALIDA, RegistroUtils.getIdiomaJustificante(registroSalida));
+
+                            // Crear el intercambio, posteriormente se enviará
+                            registroSalida = sirEnvioEjb.crearIntercambioSalida(registroSalida, registroSalida.getOficina(),
+                                    registroSalida.getUsuario(), oficinasSIR.get(0).getCodigo());
 
                             registroSalida.setEstado(REGISTRO_OFICIO_SIR);
-                            registroSalida.getRegistroDetalle().setIdentificadorIntercambio(oficioRemision.getIdentificadorIntercambio());
+                            registroSalida.getRegistroDetalle().setIdentificadorIntercambio(registroSalida.getRegistroDetalle().getIdentificadorIntercambio());
 
                         } catch (Exception e) {
                             throw new I18NException("registroSir.error.envio");

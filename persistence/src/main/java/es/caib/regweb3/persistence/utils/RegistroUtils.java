@@ -1,5 +1,7 @@
 package es.caib.regweb3.persistence.utils;
 
+import es.caib.dir3caib.ws.api.oficina.ContactoTF;
+import es.caib.dir3caib.ws.api.oficina.OficinaTF;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.PlantillaJson;
 import es.caib.regweb3.utils.Configuracio;
@@ -254,6 +256,24 @@ public class RegistroUtils{
         } else{
             return Configuracio.getDefaultLanguage();
         }
+    }
+
+    /**
+     * Método que obtiene los contactos de la oficina Sir de destino
+     *
+     * @param oficinaSir
+     * @return
+     */
+    public static String getContactosOficinaSir(OficinaTF oficinaSir)  {
+        StringBuilder stb = new StringBuilder();
+        for (ContactoTF contactoTF : oficinaSir.getContactos()) {
+            String scontactoTF = "<b>" + contactoTF.getTipoContacto() + "</b>: " + contactoTF.getValorContacto();
+            stb.append(scontactoTF);
+            stb.append("<br>");
+        }
+
+        return stb.toString();
+
     }
 
 }

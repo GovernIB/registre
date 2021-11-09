@@ -8,6 +8,7 @@ import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.persistence.utils.RegistroUtils;
+import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 import es.caib.regweb3.webapp.form.AnularForm;
@@ -343,7 +344,18 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
 
         try {
 
-            sirEnvioEjb.enviarIntercambio(RegwebConstantes.REGISTRO_SALIDA, idRegistro, getOficinaActiva(request), usuarioEntidad, oficinaSIRCodigo);
+            RegistroSalida registroSalida = registroSalidaEjb.getConAnexosFull(idRegistro);
+
+            // Crear el Justificante
+            if (!registroSalida.getRegistroDetalle().getTieneJustificante()) {
+
+                // Creamos el anexo del justificante y se lo añadimos al registro
+                AnexoFull anexoFull = justificanteEjb.crearJustificante(usuarioEntidad, registroSalida, RegwebConstantes.REGISTRO_SALIDA, Configuracio.getDefaultLanguage());
+                registroSalida.getRegistroDetalle().getAnexosFull().add(anexoFull);
+            }
+
+            sirEnvioEjb.enviarIntercambio(RegwebConstantes.REGISTRO_SALIDA, registroSalida, getOficinaActiva(request), usuarioEntidad, oficinaSIRCodigo);
+
             Mensaje.saveMessageInfo(request, getMessage("registroSalida.envioSir.ok"));
             jsonResponse.setStatus("SUCCESS");
 

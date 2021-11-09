@@ -46,9 +46,6 @@ public class SirController extends BaseController {
     @EJB(mappedName = OficioRemisionLocal.JNDI_NAME)
     private OficioRemisionLocal oficioRemisionEjb;
 
-    @EJB(mappedName = LibroLocal.JNDI_NAME)
-    private LibroLocal libroEjb;
-
     @EJB(mappedName = RegistroSirLocal.JNDI_NAME)
     private RegistroSirLocal registroSirEjb;
 
@@ -329,6 +326,7 @@ public class SirController extends BaseController {
         model.addAttribute("trazabilidades", trazabilidades);
         model.addAttribute("mensajes", mensajes);
         model.addAttribute("idIntercambio", idIntercambio);
+        model.addAttribute("integracion", new BasicForm());
 
         return "sir/intercambioDetalle";
     }

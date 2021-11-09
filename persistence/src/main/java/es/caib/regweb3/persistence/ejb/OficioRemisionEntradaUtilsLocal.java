@@ -1,6 +1,7 @@
 package es.caib.regweb3.persistence.ejb;
 
 
+import es.caib.dir3caib.ws.api.oficina.OficinaTF;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.OficioPendienteLlegada;
 import es.caib.regweb3.persistence.utils.OficiosRemisionOrganismo;
@@ -109,6 +110,20 @@ public interface OficioRemisionEntradaUtilsLocal {
     OficioRemision crearOficioRemisionExterno(List<RegistroEntrada> registrosEntrada,
                                               Oficina oficinaActiva, UsuarioEntidad usuarioEntidad, String organismoExternoCodigo,
                                               String organismoExternoDenominacion, Long idLibro) throws Exception, I18NException, I18NValidationException;
+
+    /**
+     *
+     * @param registroEntrada
+     * @param oficinaActiva
+     * @param usuarioEntidad
+     * @param oficinaSirDestino
+     * @return
+     * @throws Exception
+     * @throws I18NException
+     * @throws I18NValidationException
+     */
+    OficioRemision crearOficioRemisionSIR(RegistroEntrada registroEntrada, Oficina oficinaActiva, UsuarioEntidad usuarioEntidad, OficinaTF oficinaSirDestino )
+            throws Exception, I18NException, I18NValidationException;
 
     /**
      * Genera los Justificantes de todos los registros de un Oficio de Remisión

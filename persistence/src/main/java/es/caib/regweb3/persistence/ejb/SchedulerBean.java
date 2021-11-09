@@ -181,28 +181,28 @@ public class SchedulerBean implements SchedulerLocal {
     }
 
     @Override
-    public void reintentarEnviosSinConfirmacion() throws Exception {
+    public void reintentarIntercambiosSinConfirmacion() throws Exception {
 
         List<Entidad> entidades = entidadEjb.getEntidadesSir();
 
-        for (Entidad entidad : entidades) {
+        for(Entidad entidad: entidades) {
             log.info(" ");
-            log.info("------------- SIR: Reintentando envios sin ACK de " + entidad.getNombre() + " -------------");
+            log.info("------------- SIR: Reintentando intercambios sin ACK de " + entidad.getNombre() + " -------------");
             log.info(" ");
-            sirEnvioEjb.reintentarEnviosSinConfirmacion(entidad);
+            sirEnvioEjb.reintentarIntercambiosSinConfirmacion(entidad);
         }
     }
 
     @Override
-    public void reintentarEnviosConError() throws Exception {
+    public void reintentarIntercambiosConError() throws Exception {
 
         List<Entidad> entidades = entidadEjb.getEntidadesSir();
 
-        for (Entidad entidad : entidades) {
+        for(Entidad entidad: entidades) {
             log.info(" ");
-            log.info("------------- SIR: Reintentando envios con ERROR de " + entidad.getNombre() + " -------------");
+            log.info("------------- SIR: Reintentando intercambios con ERROR de " + entidad.getNombre() + " -------------");
             log.info(" ");
-            sirEnvioEjb.reintentarEnviosConError(entidad);
+            sirEnvioEjb.reintentarIntercambiosConError(entidad);
         }
     }
 
