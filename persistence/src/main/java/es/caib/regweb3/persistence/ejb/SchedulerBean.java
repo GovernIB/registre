@@ -186,7 +186,7 @@ public class SchedulerBean implements SchedulerLocal{
             log.info(" ");
             log.info("------------- SIR: Reintentando intercambios sin ACK de " + entidad.getNombre() + " -------------");
             log.info(" ");
-            sirEnvioEjb.reintentarIntercambiosSinConfirmacion(entidad);
+//            sirEnvioEjb.reintentarIntercambiosSinConfirmacion(entidad);
         }
     }
 
@@ -199,7 +199,7 @@ public class SchedulerBean implements SchedulerLocal{
             log.info(" ");
             log.info("------------- SIR: Reintentando intercambios con ERROR de " + entidad.getNombre() + " -------------");
             log.info(" ");
-            sirEnvioEjb.reintentarIntercambiosConError(entidad);
+//            sirEnvioEjb.reintentarIntercambiosConError(entidad);
         }
     }
 
@@ -456,5 +456,19 @@ public class SchedulerBean implements SchedulerLocal{
             log.error("Error purgando elementos procesados cola ...", e);
             integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_SCHEDULERS, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - tiempo, entidadActiva.getId(), "");
         }
+    }
+    
+    @Override
+    public void actualizarEnviosSIR() throws Exception, I18NException {
+
+        List<Entidad> entidades = entidadEjb.getEntidadesSir();
+
+        for(Entidad entidad: entidades) {
+            log.info(" ");
+            log.info("------------- SIR: Actualizando estado envios SIR de " + entidad.getNombre() + " -------------");
+            log.info(" ");
+            sirEnvioEjb.actualizarEnviosSir(entidad);
+        }
+        System.out.println("Actualizado!!!");
     }
 }

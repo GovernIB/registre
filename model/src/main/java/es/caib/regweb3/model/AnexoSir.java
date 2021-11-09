@@ -100,6 +100,11 @@ public class AnexoSir implements Serializable {
      * Indica si el Archivo ha sido purgado del sistema
      */
     private Boolean purgado = false;
+    
+    /**
+     * Documento original si es firma dettached
+     */
+    private AnexoSir documento;
 
 
     public AnexoSir() {
@@ -260,6 +265,18 @@ public class AnexoSir implements Serializable {
     public void setPurgado(Boolean purgado) {
         this.purgado = purgado;
     }
+    
+    @ManyToOne(cascade=CascadeType.ALL)
+    @JoinColumn (name="DOCUMENTO")
+    @ForeignKey(name="RWE_DOCUMENTOSIR_ANEXO_FK")
+    public AnexoSir getDocumento() {
+		return documento;
+	}
+
+	public void setDocumento(AnexoSir documento) {
+		this.documento = documento;
+	}
+
 
     @Transient
     public byte[] getAnexoData() {
@@ -288,8 +305,8 @@ public class AnexoSir implements Serializable {
         return getAnexo().getTamano()/1000;
 
     }
-
-    @Override
+    
+	@Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;

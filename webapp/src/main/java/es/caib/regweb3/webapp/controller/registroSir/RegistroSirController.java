@@ -12,8 +12,6 @@ import es.caib.regweb3.utils.StringUtils;
 import es.caib.regweb3.webapp.controller.BaseController;
 import es.caib.regweb3.webapp.form.*;
 import es.caib.regweb3.webapp.utils.Mensaje;
-import org.fundaciobit.genapp.common.i18n.I18NException;
-import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -126,9 +124,9 @@ public class RegistroSirController extends BaseController {
 
         ModelAndView mav = new ModelAndView("registroSir/registrosSirEstado");
 
-        Paginacion paginacion = registroSirEjb.getRegistrosEstado(pageNumber,getOficinaActiva(request).getCodigo(), EstadoRegistroSir.RECIBIDO.getValue());
+        Paginacion paginacion = registroSirEjb.getRegistrosEstado(pageNumber,getOficinaActiva(request).getCodigo(), EstadoRegistroSir.ENVIADO_PENDIENTE_CONFIRMACION.getValue());
 
-        mav.addObject("estado", EstadoRegistroSir.RECIBIDO);
+        mav.addObject("estado", EstadoRegistroSir.ENVIADO_PENDIENTE_CONFIRMACION);
         mav.addObject("url", "pendientesProcesar");
         mav.addObject("paginacion", paginacion);
 
@@ -198,7 +196,7 @@ public class RegistroSirController extends BaseController {
         RegistroSir registroSir = registroSirEjb.findById(idRegistroSir);
 
         // Si el registro sir cuyo estado es RECIBIDO
-        if(registroSir.getEstado().equals(EstadoRegistroSir.RECIBIDO) && isOperador(request)){
+        if(registroSir.getEstado().equals(EstadoRegistroSir.ENVIADO_PENDIENTE_CONFIRMACION) && isOperador(request)){
 
             // Tengo permisos para gestionarlo?
             if(getOficinaActiva(request).getCodigo().equals(registroSir.getCodigoEntidadRegistral())){
@@ -222,7 +220,7 @@ public class RegistroSirController extends BaseController {
 
         }
 
-        model.addAttribute("puedeReenviar",  sirEnvioEjb.puedeReenviarRegistroSir(registroSir.getEstado())); // si el estado es RECIBIDO, REENVIADO o REENVIADO_Y_ERROR se puede reenviar
+//        model.addAttribute("puedeReenviar",  sirEnvioEjb.puedeReenviarRegistroSir(registroSir.getEstado())); // si el estado es RECIBIDO, REENVIADO o REENVIADO_Y_ERROR se puede reenviar
         model.addAttribute("trazabilidades", trazabilidadSirEjb.getByRegistroSir(registroSir.getId()));
         model.addAttribute("registroSir",registroSir);
         model.addAttribute("anexosSirFull",componerAnexoSirFull(registroSir.getAnexos()));
@@ -230,126 +228,6 @@ public class RegistroSirController extends BaseController {
         model.addAttribute("reenviarForm", new ReenviarForm());
 
         return "registroSir/registroSirDetalle";
-    }
-
-
-
-    /**
-     * Procesa {@link RegistroSir}, creando un RegistroEntrada
-     */
-    @RequestMapping(value = "/aceptar/{idRegistroSir}", method = RequestMethod.POST)
-    public String confirmarRegistroSir(@PathVariable Long idRegistroSir, @ModelAttribute RegistrarForm registrarForm , HttpServletRequest request)
-            throws Exception, I18NException, I18NValidationException {
-
-        RegistroSir registroSir = registroSirEjb.findById(idRegistroSir);
-        Oficina oficinaActiva = getOficinaActiva(request);
-        UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
-        String variableReturn = "redirect:/registroSir/"+idRegistroSir+"/detalle";
-
-        // Comprobamos si ya ha sido confirmado
-        if(registroSir.getEstado().equals(EstadoRegistroSir.ACEPTADO)){
-            Mensaje.saveMessageError(request, getMessage("registroSir.estado.error"));
-            return variableReturn;
-        }
-
-        // Procesa el RegistroSir
-        try{
-
-            RegistroEntrada registroEntrada = sirEnvioEjb.aceptarRegistroSir(registroSir, usuarioEntidad, oficinaActiva, registrarForm.getIdLibro(), registrarForm.getIdIdioma(), registrarForm.getCamposNTIs(), registrarForm.getIdOrganismoDestino(), registrarForm.getDistribuir());
-
-            variableReturn = "redirect:/registroEntrada/" + registroEntrada.getId() + "/detalle";
-
-            Mensaje.saveMessageInfo(request, getMessage("registroSir.aceptar.ok"));
-
-        }catch (Exception e){
-            Mensaje.saveMessageError(request, getMessage("registroSir.error.aceptar"));
-            e.printStackTrace();
-            return variableReturn;
-        }
-
-        return variableReturn;
-    }
-
-    /**
-     * Rechaza un {@link RegistroSir}
-     */
-    @RequestMapping(value = "/rechazar/{idRegistroSir}", method = RequestMethod.POST)
-    public String rechazarRegistroSir(@PathVariable Long idRegistroSir, @ModelAttribute RechazarForm rechazarForm , HttpServletRequest request)
-            throws Exception, I18NException, I18NValidationException {
-
-        RegistroSir registroSir = registroSirEjb.findById(idRegistroSir);
-        Oficina oficinaActiva = getOficinaActiva(request);
-        UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
-
-        String variableReturn = "redirect:/registroSir/"+idRegistroSir+"/detalle";
-
-        // Comprobamos si ya ha sido confirmado
-        if(registroSir.getEstado().equals(EstadoRegistroSir.RECHAZADO)){
-            Mensaje.saveMessageError(request, getMessage("registroSir.estado.error"));
-            return variableReturn;
-        }
-
-        // Rechaza el RegistroSir
-        try{
-            sirEnvioEjb.rechazarRegistroSir(registroSir, oficinaActiva, usuarioEntidad.getUsuario(), rechazarForm.getObservacionesRechazo());
-
-            Mensaje.saveMessageInfo(request, getMessage("registroSir.rechazo.ok"));
-
-        }catch (Exception e){
-            Mensaje.saveMessageError(request, getMessage("registroSir.error.rechazo"));
-            e.printStackTrace();
-        }
-
-        return "redirect:/registroSir/"+idRegistroSir+"/detalle";
-    }
-
-    @RequestMapping(value = "/{idRegistroSir}/reenviar", method = RequestMethod.GET)
-    public String reenviarRegistroSir(@PathVariable Long idRegistroSir, Model model, HttpServletRequest request) throws Exception {
-
-        model.addAttribute("comunidadesAutonomas", catComunidadAutonomaEjb.getAll());
-        model.addAttribute("nivelesAdministracion", catNivelAdministracionEjb.getAll());
-        model.addAttribute("registroSir", registroSirEjb.findById(idRegistroSir));
-        model.addAttribute("reenviarForm", new ReenviarForm());
-
-        return "registroSir/registroSirReenvio";
-    }
-
-    /**
-     * Reenvia un {@link RegistroSir}
-     */
-    @RequestMapping(value = "/reenviar/{idRegistroSir}", method = RequestMethod.POST)
-    public String reenviarRegistroSir(@PathVariable Long idRegistroSir, @ModelAttribute ReenviarForm reenviarForm , HttpServletRequest request)
-            throws Exception, I18NException, I18NValidationException {
-
-        //Montamos la oficina de reenvio seleccionada por el usuario
-        Oficina oficinaReenvio = reenviarForm.oficinaReenvio();
-        Oficina oficinaActiva = getOficinaActiva(request);
-        UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
-        String variableReturn = "redirect:/registroSir/"+idRegistroSir+"/detalle";
-
-        RegistroSir registroSir  = registroSirEjb.findById(idRegistroSir);
-
-        // Comprobamos si ya ha sido reenviado
-        if(registroSir.getEstado().equals(EstadoRegistroSir.REENVIADO)){
-            Mensaje.saveMessageError(request, getMessage("registroSir.error.reenvio"));
-            return variableReturn;
-        }
-
-        // Reenvia el RegistroSir
-        try{
-            if(oficinaReenvio != null){//Si han seleccionado oficina de reenvio
-                //Reenviamos
-                sirEnvioEjb.reenviarRegistroSir(registroSir, oficinaReenvio, oficinaActiva,usuarioEntidad.getUsuario(),reenviarForm.getObservaciones());
-            }
-
-            Mensaje.saveMessageInfo(request, getMessage("registroSir.reenvio.ok"));
-
-        }catch (Exception e){
-            Mensaje.saveMessageError(request, getMessage("registroSir.error.reenvio"));
-            e.printStackTrace();
-        }
-
-        return "redirect:/registroSir/"+idRegistroSir+"/detalle";
     }
 
     @ModelAttribute("idiomas")

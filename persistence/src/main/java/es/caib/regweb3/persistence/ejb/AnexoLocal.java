@@ -2,6 +2,7 @@ package es.caib.regweb3.persistence.ejb;
 
 
 import es.caib.regweb3.model.Anexo;
+import es.caib.regweb3.model.IRegistro;
 import es.caib.regweb3.model.RegistroEntrada;
 import es.caib.regweb3.model.RegistroSalida;
 import es.caib.regweb3.model.UsuarioEntidad;
@@ -25,6 +26,7 @@ import java.util.List;
  * Date: 6/03/13
  */
 @Local
+@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI", "RWE_WS_ENTRADA", "RWE_WS_SALIDA","RWE_WS_CIUDADANO"})
 public interface AnexoLocal extends BaseEjb<Anexo, Long> {
 
     /**
@@ -261,5 +263,16 @@ public interface AnexoLocal extends BaseEjb<Anexo, Long> {
      * @throws Exception
      */
     AnexoSimple descargarJustificante(Anexo anexo, Long idEntidad) throws I18NException, Exception;
+
+    /**
+     * Actualiza algunos metadatos de los anexos con información que se obtiene de GEISER
+     * 
+     * @param registro
+     * @param usuarioEntidad
+     * @return
+     * @throws I18NException
+     * @throws I18NValidationException
+     */
+	AnexoFull actualizarMetadatosAnexo(IRegistro registro, AnexoFull anexoFull, UsuarioEntidad usuarioEntidad) throws I18NException;
 
 }

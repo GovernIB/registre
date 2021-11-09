@@ -107,7 +107,7 @@ public class ReservaController  extends BaseController {
                 }
 
             }catch (Exception e) {
-                Mensaje.saveMessageError(request, getMessage("regweb.error.registro"));
+                Mensaje.saveMessageError(request, getMessage("regweb.error.registro") + (e.getMessage().isEmpty() ? ": " + e.getMessage() : ""));
                 e.printStackTrace();
             }
 

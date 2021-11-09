@@ -22,6 +22,7 @@ import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.jboss.ejb3.annotation.SecurityDomain;
+import org.jboss.ejb3.annotation.TransactionTimeout;
 import org.plugin.geiser.api.GeiserPluginException;
 import org.plugin.geiser.api.IGeiserPlugin;
 import org.plugin.geiser.api.PeticionRegistroGeiser;
@@ -31,9 +32,10 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
 
 import javax.annotation.Resource;
-import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.interceptor.Interceptors;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -52,7 +54,6 @@ import static es.caib.regweb3.utils.RegwebConstantes.REGISTRO_SALIDA;
 
 @Stateless(name = "RegistroSalidaEJB")
 @SecurityDomain("seycon")
-@RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI","RWE_WS_ENTRADA","RWE_WS_SALIDA", "RWE_WS_CIUDADANO"})
 @Interceptors(SpringBeanAutowiringInterceptor.class)
 /*@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)*/
 public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
@@ -217,6 +218,17 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
         return registroSalida;
     }
 
+    @Override
+    @TransactionTimeout(value = 1200)  // 20 minutos
+    public void actualizarDatosRegistro(Long idRegistroSalida, String numeroRegistro, String numeroRegistroFormateado, Date fechaRegistro) throws Exception, I18NException {
+
+    	Query q = em.createQuery("update RegistroSalida set numeroRegistro=:numeroRegistro, numeroRegistroFormateado=:numeroRegistroFormateado, fecha=:fecha where id = :idRegistroSalida");
+        q.setParameter("numeroRegistro", numeroRegistro);
+        q.setParameter("numeroRegistroFormateado", numeroRegistroFormateado);
+        q.setParameter("fecha", fechaRegistro);
+        q.setParameter("idRegistroSalida", idRegistroSalida);
+        q.executeUpdate();
+    }
 
     @Override
     public Boolean isOficioRemisionInterno(RegistroSalida registroSalida, Set<String> organismos) throws Exception {
@@ -711,6 +723,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
             trazabilidadEjb.persist(trazabilidad);
 
         } catch (I18NException | I18NValidationException e) {
+            log.info("Ha ocurrido un error rectificando el registro" + (e.getMessage().isEmpty() ? ": " + e.getMessage() : ""));
             e.printStackTrace();
         }
 
@@ -781,7 +794,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
     }
     
     @Override
-    public RespuestaRegistroGeiser postProcesoNuevoRegistroGeiser(RegistroSalida rs, UsuarioEntidad usuarioEntidad) throws Exception, I18NException {
+    public RespuestaRegistroGeiser postProcesoNuevoRegistroGeiser(RegistroSalida rs, UsuarioEntidad usuarioEntidad) throws GeiserPluginException, I18NException {
     	RespuestaRegistroGeiser respuesta = null;
     	IGeiserPlugin geiserPlugin = (IGeiserPlugin) pluginEjb.getPlugin(usuarioEntidad.getEntidad().getId(), RegwebConstantes.PLUGIN_GEISER);
         if (geiserPlugin != null) {

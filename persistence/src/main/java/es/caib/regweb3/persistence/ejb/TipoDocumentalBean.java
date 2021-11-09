@@ -5,7 +5,6 @@ import es.caib.regweb3.model.TraduccionTipoDocumental;
 import org.apache.log4j.Logger;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
-import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -21,7 +20,6 @@ import java.util.List;
 
 @Stateless(name = "TipoDocumentalEJB")
 @SecurityDomain("seycon")
-@RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI","RWE_WS_ENTRADA","RWE_WS_SALIDA", "RWE_WS_CIUDADANO"})
 public class TipoDocumentalBean extends BaseEjbJPA<TipoDocumental, Long> implements TipoDocumentalLocal{
 
     protected final Logger log = Logger.getLogger(getClass());

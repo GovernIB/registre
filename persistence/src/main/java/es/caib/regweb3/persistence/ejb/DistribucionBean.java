@@ -16,7 +16,6 @@ import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.jboss.ejb3.annotation.SecurityDomain;
 import org.jboss.ejb3.annotation.TransactionTimeout;
 
-import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -35,7 +34,6 @@ import java.util.Locale;
 @Stateless(name = "DistribucionEJB")
 @SecurityDomain("seycon")
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI", "RWE_WS_ENTRADA", "RWE_WS_SALIDA"})
 public class DistribucionBean implements DistribucionLocal {
 
     protected final Logger log = Logger.getLogger(getClass());

@@ -213,6 +213,11 @@ public class RegistroSir implements Serializable {
      * Lista de interesados del RegistroSir.
      */
     private List<InteresadoSir> interesados = null;
+    
+    /**
+     * Documento indentificación usuario
+     */
+    private String documentoUsuario;
 
     private Date fechaRecepcion;
     private Date fechaEstado;
@@ -440,17 +445,26 @@ public class RegistroSir implements Serializable {
     public void setNombreUsuario(String nombreUsuario) {
         this.nombreUsuario = nombreUsuario;
     }
+    
+    @Column(name = "DOCUMENTO_USUARIO", length = 160, nullable = true)
+    public String getDocumentoUsuario() {
+		return documentoUsuario;
+	}
 
+	public void setDocumentoUsuario(String documentoUsuario) {
+		this.documentoUsuario = documentoUsuario;
+	}
+    
     @Column(name = "CONTACTO_USUARIO", length = 160, nullable = true)
     public String getContactoUsuario() {
         return contactoUsuario;
     }
 
-    public void setContactoUsuario(String contactoUsuario) {
+	public void setContactoUsuario(String contactoUsuario) {
         this.contactoUsuario = contactoUsuario;
     }
 
-    @Column(name = "ID_INTERCAMBIO", length = 33, nullable = false)
+    @Column(name = "ID_INTERCAMBIO", length = 33, nullable = true)
     public String getIdentificadorIntercambio() {
         return identificadorIntercambio;
     }

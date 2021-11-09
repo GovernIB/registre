@@ -19,7 +19,6 @@ import org.fundaciobit.plugins.signatureserver.api.ISignatureServerPlugin;
 import org.fundaciobit.plugins.validatesignature.api.*;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
-import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.xml.ws.WebServiceException;
@@ -33,7 +32,6 @@ import java.util.*;
  */
 @Stateless(name = "SignatureServerEJB")
 @SecurityDomain("seycon")
-@RolesAllowed({"RWE_USUARI","RWE_WS_ENTRADA","RWE_WS_SALIDA", "RWE_WS_CIUDADANO"})
 public class SignatureServerBean implements SignatureServerLocal, ValidateSignatureConstants {
 
     protected final Logger log = Logger.getLogger(getClass());

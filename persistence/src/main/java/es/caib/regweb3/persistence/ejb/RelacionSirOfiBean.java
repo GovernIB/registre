@@ -26,7 +26,7 @@ import java.util.List;
 
 @Stateless(name = "RelacionSirOfiEJB")
 @SecurityDomain("seycon")
-@RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI","RWE_WS_ENTRADA","RWE_WS_SALIDA"})
+@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI"})
 public class RelacionSirOfiBean extends BaseEjbJPA<RelacionSirOfi, RelacionSirOfiPK> implements RelacionSirOfiLocal {
     protected final Logger log = Logger.getLogger(getClass());
 

@@ -13,5 +13,6 @@
   <modules>
   	<module>plugin-geiser-api</module>
   	<module>plugin-geiser-apb</module>
+  	<module>plugin-geiser-mock</module>
   </modules>
 </project>

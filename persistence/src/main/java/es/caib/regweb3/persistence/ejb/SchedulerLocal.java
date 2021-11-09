@@ -2,6 +2,8 @@ package es.caib.regweb3.persistence.ejb;
 
 import javax.ejb.Local;
 
+import org.fundaciobit.genapp.common.i18n.I18NException;
+
 /**
  * Created by Fundació BIT.
  *
@@ -98,5 +100,13 @@ public interface SchedulerLocal {
      * @throws Exception
      */
     void purgarProcesadosColaDistribucion() throws Exception;
+
+    /**
+     * Actualiza el estado de los envíos SIR con estado no final
+     *
+     * @throws Exception
+     * @throws I18NException 
+     */
+	void actualizarEnviosSIR() throws Exception, I18NException;
 }
 

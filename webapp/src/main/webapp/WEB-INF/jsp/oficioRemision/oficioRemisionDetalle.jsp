@@ -137,7 +137,12 @@
                                 </c:if>
                                 <%--Identificador intercambio--%>
                                 <dt><i class="fa fa-qrcode"></i> <spring:message code="registroSir.identificadorIntercambio"/>:</dt>
-                                <dd> ${oficioRemision.identificadorIntercambio}</dd>
+                                <dd>
+                                <c:choose>
+                                	<c:when test="${not empty oficioRemision.identificadorIntercambio}">${oficioRemision.identificadorIntercambio}</c:when>
+                                	<c:otherwise><span class="label label-danger"><spring:message code="regweb.registre.pendent"/></span></c:otherwise>
+                                </c:choose>
+                                </dd>
                             </c:if>
 
                         </dl>
@@ -291,8 +296,18 @@
                                         <tbody>
                                         <c:forEach var="trazabilidad" items="${trazabilidades}" varStatus="status">
                                             <tr>
-                                                <td><fmt:formatDate value="${trazabilidad.registroEntradaOrigen.fecha}" pattern="yyyy"/>/ ${trazabilidad.registroEntradaOrigen.numeroRegistro}</td>
-                                                <td><fmt:formatDate value="${trazabilidad.registroEntradaOrigen.fecha}" pattern="dd/MM/yyyy"/></td>
+                                                <td>
+                                                <c:choose>
+				                                	<c:when test="${not empty trazabilidad.registroEntradaOrigen.fecha}"><fmt:formatDate value="${trazabilidad.registroEntradaOrigen.fecha}" pattern="yyyy"/>/ ${trazabilidad.registroEntradaOrigen.numeroRegistro}</c:when>
+				                                	<c:otherwise><span class="label label-danger"><spring:message code="regweb.registre.pendent"/></span></c:otherwise>
+				                                </c:choose>
+				                                </td>
+                                                <td>
+                                                <c:choose>
+				                                	<c:when test="${not empty trazabilidad.registroEntradaOrigen.fecha}"><fmt:formatDate value="${trazabilidad.registroEntradaOrigen.fecha}" pattern="dd/MM/yyyy"/></c:when>
+				                                	<c:otherwise><span class="label label-danger"><spring:message code="regweb.registre.pendent"/></span></c:otherwise>
+				                                </c:choose>
+				                                </td>
                                                 <td>${trazabilidad.registroEntradaOrigen.oficina.denominacion}</td>
                                                 <td>
                                                     <c:if test="${fn:length(trazabilidad.registroEntradaOrigen.registroDetalle.extracto) <= 40}">

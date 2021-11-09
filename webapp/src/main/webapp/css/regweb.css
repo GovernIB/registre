@@ -1401,3 +1401,9 @@ pre {
 .esquerra{
     float: left;
 }
+.disabled_events > a {
+	text-decoration: none;
+	cursor: not-allowed;
+	pointer-events: none;
+	background-color: transparent;
+}

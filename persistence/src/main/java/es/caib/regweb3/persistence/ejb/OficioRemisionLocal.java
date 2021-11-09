@@ -20,6 +20,7 @@ import java.util.Set;
  * Date: 16/01/14
  */
 @Local
+@RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI","RWE_WS_ENTRADA","RWE_WS_SALIDA", "RWE_WS_CIUDADANO"})
 public interface OficioRemisionLocal extends BaseEjb<OficioRemision, Long> {
 
     /**
@@ -130,13 +131,13 @@ public interface OficioRemisionLocal extends BaseEjb<OficioRemision, Long> {
      */
     List<OficioRemision> getEnviadosSinAck(Long idEntidad) throws Exception;
 
-    /**
-     *
-     * @param idEntidad
-     * @return
-     * @throws Exception
-     */
-    List<OficioRemision> getEnviadosConError(Long idEntidad) throws Exception;
+//    /**
+//     *
+//     * @param idEntidad
+//     * @return
+//     * @throws Exception
+//     */
+//    List<OficioRemision> getEnviadosConError(Long idEntidad) throws Exception;
 
     /**
      * Oficios enviados o reenviados sin ACK y con el máx de reintentos acumulados
@@ -145,14 +146,14 @@ public interface OficioRemisionLocal extends BaseEjb<OficioRemision, Long> {
      * @throws Exception
      */
     List<OficioRemision> getEnviadosSinAckMaxReintentos(Long idEntidad) throws Exception;
-
-    /**
-     * Oficios enviados o reenviados con ERROR y con el máx de reintentos acumulados
-     * @param idEntidad
-     * @return
-     * @throws Exception
-     */
-    List<OficioRemision> getEnviadosErrorMaxReintentos(Long idEntidad) throws Exception;
+//
+//    /**
+//     * Oficios enviados o reenviados con ERROR y con el máx de reintentos acumulados
+//     * @param idEntidad
+//     * @return
+//     * @throws Exception
+//     */
+//    List<OficioRemision> getEnviadosErrorMaxReintentos(Long idEntidad) throws Exception;
 
 
         /**
@@ -253,4 +254,20 @@ public interface OficioRemisionLocal extends BaseEjb<OficioRemision, Long> {
      * @throws Exception
      */
     CombineStream generarOficioRemisionRtf(OficioRemision oficioRemision, ModeloOficioRemision modeloOficioRemision, List<String> registrosEntrada, List<String> registrosSalida) throws Exception;
+
+    /**
+     * Obtiene el oficio de Remisión a partir de un numero de registro
+     * @param numeroRegistroFormateado
+     * @return
+     */
+	OficioRemision getByNumeroRegistro(String numeroRegistro, String entidad) throws Exception;
+
+	/**
+	 * Actualiza el identificador de intercambio del registro SIR
+	 * 
+	 * @param idOficioRemision
+	 * @param identificadorIntercambio
+	 * @throws Exception
+	 */
+	void actualizarIdentificadorIntercambio(Long idOficioRemision, String identificadorIntercambio) throws Exception;
 }

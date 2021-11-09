@@ -20,6 +20,7 @@ import java.util.List;
  * Date: 16/06/16
  */
 @Local
+@RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI", "RWE_WS_ENTRADA", "RWE_WS_SALIDA"})
 public interface RegistroSirLocal extends BaseEjb<RegistroSir, Long> {
 
      List<Long> getUltimosPendientesProcesarERTE(EstadoRegistroSir estado, String oficinaSir, Date fechaInicio, Date fechaFin, String aplicacion, Integer total) throws Exception;
@@ -182,4 +183,35 @@ public interface RegistroSirLocal extends BaseEjb<RegistroSir, Long> {
      * @throws I18NValidationException
      */
     RegistroEntrada aceptarRegistroSirEntrada(RegistroSir registroSir, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, List<CamposNTI> camposNTIs, Long idOrganismoDestino) throws Exception, I18NException, I18NValidationException;
+
+    /**
+     * Obtiene los RegistroSir con un estado no final
+     * @param idEntidad
+     * @return
+     * @throws Exception
+     */
+    List<Long> getRegistrosSirPendientes(Long idEntidad) throws Exception;
+
+
+    /**
+     * Actualiza el identificador de intercambio del registro SIR
+     * 
+     * @param idRegistroSir
+     * @param identificadorIntercambio
+     * @throws Exception
+     */
+	void actualizarIdentificadorIntercambio(Long idRegistroSir, String identificadorIntercambio) throws Exception;
+
+	/**
+     * Obtiene un RegistroSir a partir de los parámetros
+     * @param numeroRegistro
+     * @param codigoEntidadRegistralDestino
+     * @return
+     * @throws Exception
+     */
+	Long getRegistroSirByNumeroRegistro(String numeroRegistro, String codigoEntidadRegistralDestino)
+			throws Exception;
+
+
+	String generateIdentificadorFichero(String identificadorIntercambio, int secuencia, String fileName);
 }

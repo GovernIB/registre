@@ -19,6 +19,7 @@ import java.util.List;
  * Date: 14/05/19
  */
 @Local
+@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI","RWE_WS_ENTRADA","RWE_WS_SALIDA", "RWE_WS_CIUDADANO"})
 public interface RegistroEntradaConsultaLocal {
 
 
@@ -42,7 +43,7 @@ public interface RegistroEntradaConsultaLocal {
      * @return
      * @throws Exception
      */
-    Paginacion busqueda(Integer pageNumber, List<Long> organismos, Date fechaInicio, Date fechaFin, RegistroEntrada registroEntrada, String interesadoNom, String interesadoDoc, String interesadoLli1, String interesadoLli2, String organoDest, String observaciones, String usuario, Long idEntidad) throws Exception;
+    Paginacion busqueda(Integer pageNumber, List<Long> organismos, Date fechaInicio, Date fechaFin, RegistroEntrada registroEntrada, String interesadoNom, String interesadoDoc, String interesadoLli1, String interesadoLli2, String organoDest, String observaciones, String usuario, Long idEntidad, boolean incluirPendientesGeiser) throws Exception;
 
     /**
      * Busca los Registros de Entrada de una OficinaActiva en función de su estado.
@@ -114,6 +115,16 @@ public interface RegistroEntradaConsultaLocal {
      * @throws Exception
      */
     RegistroEntrada findByNumeroRegistroFormateado(String codigoEntidad, String numeroRegistroFormateado) throws Exception;
+    
+
+    /**
+     * Obtiene el RegistroEntrada a partir de su numero de registro y código entidad
+     * @param codigoEntidad
+     * @param numeroRegistroFormateado
+     * @return
+     * @throws Exception
+     */
+	RegistroEntrada findByNumeroRegistro(String codigoEntidad, String numeroRegistro) throws Exception;
 
     /**
      * Obtiene el RegistroEntrada a partir de su numero de registro formateado, entidad y el libro cargando sus anexos.

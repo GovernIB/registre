@@ -345,6 +345,7 @@ public class Interesado implements Serializable {
 
 
     @Column(name = "TIPODOCIDENT")
+    @NotNull
     public Long getTipoDocumentoIdentificacion() {
         return tipoDocumentoIdentificacion;
     }
@@ -354,6 +355,7 @@ public class Interesado implements Serializable {
     }
 
     @Column(name = "DOCUMENTO", length = 17)
+    @NotNull
     public String getDocumento() {
         return documento;
     }

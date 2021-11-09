@@ -124,7 +124,7 @@ public class InicioController extends BaseController{
                 mav.addObject("enviadosSir", oficioRemisionEjb.getEnviadosSinAckMaxReintentos(entidadActiva.getId()));
 
                 // SIR: Envios con estado OFICIO_SIR_ENVIADO o OFICIO_SIR_REENVIADO y 10 reintentos
-                mav.addObject("enviadosErrorSir", oficioRemisionEjb.getEnviadosErrorMaxReintentos(entidadActiva.getId()));
+//                mav.addObject("enviadosErrorSir", oficioRemisionEjb.getEnviadosErrorMaxReintentos(entidadActiva.getId()));
             }
 
             // Elementos de la Cola en estadro Error

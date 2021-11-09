@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 
-import javax.interceptor.Interceptors;
 import javax.xml.namespace.QName;
 import javax.xml.ws.handler.Handler;
 import javax.xml.ws.handler.HandlerResolver;
@@ -108,6 +107,9 @@ public class GeiserApbPlugin extends AbstractPluginProperties implements IGeiser
 			resultado = getRegecoClient().registrarEnviar(
 					authentication, 
 					peticionType);
+			int codigoRespuesta = resultado.getRespuesta().getCodigo();
+			if (codigoRespuesta == 1 || codigoRespuesta == 2 || codigoRespuesta == 3 ||codigoRespuesta == 4 ||codigoRespuesta == 5)
+				throw new GeiserPluginException("[GEISER] Respuesta: " + codigoRespuesta + " - " + resultado.getRespuesta().getMensaje());
 		} catch (Exception ex) {
 			throw new GeiserPluginException("[GEISER] Ha habido un problema realizando el proceso de registro y envío", ex.getCause());
 		}
@@ -130,6 +132,9 @@ public class GeiserApbPlugin extends AbstractPluginProperties implements IGeiser
 			resultado = getRegecoClient().consultar(
 					authentication, 
 					peticionType);
+			int codigoRespuesta = resultado.getRespuesta().getCodigo();
+			if (codigoRespuesta == 1 || codigoRespuesta == 2 || codigoRespuesta == 3 ||codigoRespuesta == 4 ||codigoRespuesta == 5)
+				throw new GeiserPluginException("[GEISER] Respuesta: " + codigoRespuesta + " - " + resultado.getRespuesta().getMensaje());
 		} catch (Exception ex) {
 			throw new GeiserPluginException("[GEISER] Ha habido un problema realizando el proceso de consulta", ex.getCause());
 		}
@@ -152,6 +157,9 @@ public class GeiserApbPlugin extends AbstractPluginProperties implements IGeiser
 			resultado = getRegecoClient().buscar(
 					authentication, 
 					peticionType);
+			int codigoRespuesta = resultado.getRespuesta().getCodigo();
+			if (codigoRespuesta == 1 || codigoRespuesta == 2 || codigoRespuesta == 3 ||codigoRespuesta == 4 ||codigoRespuesta == 5)
+				throw new GeiserPluginException("[GEISER] Respuesta: " + codigoRespuesta + " - " + resultado.getRespuesta().getMensaje());
 		} catch (Exception ex) {
 			throw new GeiserPluginException("[GEISER] Ha habido un problema realizando el proceso de búsqueda", ex.getCause());
 		}
@@ -174,6 +182,9 @@ public class GeiserApbPlugin extends AbstractPluginProperties implements IGeiser
 			resultado = getRegecoClient().buscarEstadoTramitacion(
 					authentication, 
 					peticionType);
+			int codigoRespuesta = resultado.getRespuesta().getCodigo();
+			if (codigoRespuesta == 1 || codigoRespuesta == 2 || codigoRespuesta == 3 ||codigoRespuesta == 4 ||codigoRespuesta == 5)
+				throw new GeiserPluginException("[GEISER] Respuesta: " + codigoRespuesta + " - " + resultado.getRespuesta().getMensaje());
 		} catch (Exception ex) {
 			throw new GeiserPluginException("[GEISER] Ha habido un problema realizando el proceso de búsqueda de estado de tramitación", ex.getCause());
 		}
@@ -187,7 +198,7 @@ public class GeiserApbPlugin extends AbstractPluginProperties implements IGeiser
 		authentication.setAplicacion(getPropertyCode());
 		authentication.setPassword(getPropertyPassword());
 		authentication.setUsuario(usuario);
-		authentication.setCdAmbito(ambito);
+		authentication.setCdAmbito(ambito); 
 		authentication.setVersion(VersionRegeco.V_2);
 		return authentication;
 	}

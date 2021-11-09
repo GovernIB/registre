@@ -4,6 +4,7 @@ package es.caib.regweb3.webapp.scheduler;
 import es.caib.regweb3.persistence.ejb.SchedulerLocal;
 import es.caib.regweb3.utils.Configuracio;
 import org.apache.log4j.Logger;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -254,5 +255,20 @@ public class Regweb3Scheduler {
             e.printStackTrace();
         }
     }
-
+    
+    /**
+     * Qué hace: Actualiza el estado de los envíos SIR con el nuevo estaado de GEISER. Solo actualiza estado envíos con estado no final
+     * Cuando lo hace: en cada minuto (test)
+     */
+    @Scheduled(cron = "0 0/1 * * * *")
+    public void actualizarEstadoEnviosSir(){
+        try {
+            schedulerEjb.actualizarEnviosSIR();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } catch (I18NException e) {
+			e.printStackTrace();
+		}
+    }
+    
 }

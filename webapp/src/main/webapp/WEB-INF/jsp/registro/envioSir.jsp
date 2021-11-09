@@ -71,8 +71,19 @@
                                         <strong><spring:message code="oficina.origen"/>: ${registro.oficina.denominacion}</strong>
                                     </div>
                                     <div class="panel-body">
-                                        <p><strong><i class="fa fa-home"></i> <spring:message code="registroEntrada.numeroRegistro"/>:</strong> ${registro.numeroRegistroFormateado}</p>
-                                        <p><strong><i class="fa fa-clock-o"></i> <spring:message code="regweb.fecha"/>:</strong> <fmt:formatDate value="${registro.fecha}" pattern="dd/MM/yyyy HH:mm:ss"/></p>
+                                        <p>
+                                        <strong><i class="fa fa-home"></i> <spring:message code="registroEntrada.numeroRegistro"/>:</strong>
+                                        <c:choose>
+											<c:when test="${not empty registro.numeroRegistroFormateado}">${registro.numeroRegistroFormateado}</c:when>
+                                           	<c:otherwise><span class="label label-danger"><spring:message code="regweb.registre.pendent"/></span></c:otherwise>
+										</c:choose>
+										</p>
+                                        <p>
+                                        <strong><i class="fa fa-clock-o"></i> <spring:message code="regweb.fecha"/>:</strong> 
+                                        <c:choose>
+											<c:when test="${not empty registro.fecha}"><fmt:formatDate value="${registro.fecha}" pattern="dd/MM/yyyy HH:mm:ss"/></c:when>
+                                           	<c:otherwise><span class="label label-danger"><spring:message code="regweb.registre.pendent"/></span></c:otherwise>
+										</c:choose></p>
                                     </div>
                                 </div>
                             </div>

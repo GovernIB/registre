@@ -12,6 +12,7 @@ import javax.ejb.Local;
  * Date: 09/12/14
  */
 @Local
+@RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI"})
 public interface PreRegistroLocal extends BaseEjb<PreRegistro, Long> {
 
 

@@ -1,11 +1,11 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.*;
-import es.caib.regweb3.model.sir.MensajeControl;
-import es.caib.regweb3.model.utils.CamposNTI;
-import es.caib.regweb3.model.utils.EstadoRegistroSir;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
+import org.plugin.geiser.api.RespuestaBusquedaTramitGeiser;
+import org.plugin.geiser.api.RespuestaConsultaGeiser;
+import org.plugin.geiser.api.RespuestaRegistroGeiser;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
@@ -18,6 +18,7 @@ import java.util.List;
  * Date: 22/06/16
  */
 @Local
+@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI", "RWE_WS_ENTRADA", "RWE_WS_SALIDA"})
 public interface SirEnvioLocal {
 
 
@@ -55,110 +56,77 @@ public interface SirEnvioLocal {
      * @throws Exception
      * @throws I18NException
      */
-    OficioRemision enviarIntercambio(Long tipoRegistro, IRegistro registro, Oficina oficinaActiva, UsuarioEntidad usuario, String codigoOficinaSir)
+    RegistroSir enviarIntercambio(Long tipoRegistro, IRegistro registro, Oficina oficinaActiva, UsuarioEntidad usuario, String codigoOficinaSir)
             throws Exception, I18NException, I18NValidationException;
 
-    /**
-     * Reenvia un intercambio, cuando este ha sido RECHAZADO O REENVIADO
-     * @param tipoRegistro
-     * @param idRegistro
-     * @param oficinaReenvio
-     * @param oficinaActiva
-     * @param usuario
-     * @param observaciones
-     * @throws Exception
-     */
-    void reenviarIntercambio(Long tipoRegistro, Long idRegistro, Oficina oficinaReenvio, Oficina oficinaActiva, UsuarioEntidad usuario, String observaciones) throws Exception, I18NException, I18NValidationException;
-
-    /**
-     * Vuelve a enviar un intercambio que ya había sido enviado previamente
-     * @param oficioRemision
-     * @return
-     * @throws Exception
-     */
-    void reenviarIntercambio(OficioRemision oficioRemision)throws Exception, I18NException;
-
-    /**
-     * Envía un mensaje ACK a partir de los datos de un RegistroSir
-     *
-     * @param idRegistroSir
-     * @throws Exception
-     */
-    Boolean enviarACK(Long idRegistroSir) throws Exception;
-
-    /**
-     * Envía un mensaje de confirmación a partir de los datos de un RegistroSir ACEPTADO
-     *
-     * @param idRegistroSir
-     * @throws Exception
-     */
-    Boolean enviarConfirmacion(Long idRegistroSir) throws Exception;
-
-    /**
-     * Reenvía un mensaje de control que ya ha sido enviado previamente
-     *
-     * @param mensaje
-     * @return
-     * @throws Exception
-     */
-    Boolean reenviarMensaje(MensajeControl mensaje) throws Exception;
-
-    /**
-     * Renintenta los envíos a SIR que pendientes de llegar a destino.
-     *
-     * @param entidad
-     * @throws Exception
-     */
-    void reintentarIntercambiosSinConfirmacion(Entidad entidad) throws Exception;
-
-    /**
-     * Renintenta los envíos con ERROR a SIR que pendientes de llegar a destino.
-     *
-     * @param entidad
-     * @throws Exception
-     */
-    void reintentarIntercambiosConError(Entidad entidad) throws Exception;
-
-    /**
-     * @param registroSir
-     * @param usuario
-     * @param oficinaActiva
-     * @param idLibro
-     * @param idIdioma
-     * @param camposNTIs
-     * @return
-     */
-    RegistroEntrada aceptarRegistroSir(RegistroSir registroSir, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, List<CamposNTI> camposNTIs, Long idOrganismoDestino, Boolean distribuir) throws Exception, I18NException, I18NValidationException;
-
-
-    /**
-     * Reenvio de un Registro SIR
-     *
-     * @param registroSir
-     * @throws Exception
-     */
-    void reenviarRegistroSir(RegistroSir registroSir, Oficina oficinaReenvio, Oficina oficinaActiva, Usuario usuario, String observaciones) throws Exception;
-
-    /**
-     * Método que indica si el RegistroSir puede ser reenviado en función de su estado.
-     *
-     * @param estado del RegistroSir
-     * @return
-     */
-    boolean puedeReenviarRegistroSir(EstadoRegistroSir estado);
-
-    /**
-     * @param registroSir
-     * @param oficinaActiva
-     * @param usuario
-     * @return
-     * @throws Exception
-     */
-    void rechazarRegistroSir(RegistroSir registroSir, Oficina oficinaActiva, Usuario usuario, String observaciones) throws Exception;
-
-    Integer aceptarRegistrosERTE(List<Long> registros, String destino, Oficina oficina,Long idLibro, UsuarioEntidad usuarioEntidad, Long idEntidad) throws Exception;
+//    /**
+//     * Renintenta los envíos con ERROR a SIR que pendientes de llegar a destino.
+//     *
+//     * @param entidad
+//     * @throws Exception
+//     */
+//    void reintentarEnviosConError(Entidad entidad) throws Exception;
 
     Integer copiarDocumentacionERTE(List<Long> registros, Long idEntidad) throws Exception;
+
+    /**
+     * Realiza un nuevo envío SIR a GEISEr
+     * 
+     * @param rsir
+     * @param entidadId
+     * @return
+     * @throws I18NException
+     */
+	RespuestaRegistroGeiser postProcesoNuevoRegistroSirGeiser(RegistroSir rsir, Long entidadId) throws I18NException;
+
+	/**
+	 * Realiza una búsqueda del estado de tramitación de un registro SIR en GEISER
+	 * @param rsir
+	 * @param entidadId
+	 * @return
+	 * @throws I18NException
+	 */
+	RespuestaBusquedaTramitGeiser postProcesoBuscarEstadoTRegistroSirGeiser(RegistroSir rsir, Long entidadId) throws I18NException;
+
+	/**
+	 * Realiza la búsqueda de un registro SIR en GEISER
+	 * 
+	 * @param rsir
+	 * @param entidadId
+	 * @return
+	 * @throws I18NException
+	 */
+	RespuestaConsultaGeiser postProcesoConsultarRegistroSirGeiser(RegistroSir rsir, Long entidadId) throws I18NException;
+
+	/**
+	 * Actualiza el estado de todos los envíos SIR pendientes
+	 * 
+	 * @param id
+	 * @throws Exception
+	 * @throws I18NException
+	 */
+	void actualizarEnviosSir(Entidad entidad) throws Exception, I18NException;
+
+	/**
+	 * Actualiza el estado de los envíos SIR de un oficio de remisión
+	 * 
+	 * @param entidadId
+	 * @param registroSir
+	 * @return
+	 * @throws Exception 
+	 * @throws I18NException 
+	 */
+	List<RegistroSir> actualizarEstadoEnvioSir(Entidad entidad, OficioRemision oficioRemision, UsuarioEntidad usuario) throws Exception, I18NException;
+
+	/**
+	 * Actualiza la información de un registro SIR de Regweb con los datos de GEISER
+	 * 
+	 * @param registroSir
+	 * @param usuarioEntidad
+	 * @throws I18NException 
+	 * @throws Exception 
+	 */
+	void actualizarEnvioSirRealizado(RegistroSir registroSir, UsuarioEntidad usuarioEntidad) throws Exception, I18NException;
 
 }
 

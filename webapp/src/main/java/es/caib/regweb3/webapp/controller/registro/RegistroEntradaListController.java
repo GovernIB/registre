@@ -20,6 +20,7 @@ import es.caib.regweb3.webapp.utils.AnexoUtils;
 import es.caib.regweb3.webapp.utils.JsonResponse;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import es.caib.regweb3.webapp.validator.RegistroEntradaBusquedaValidator;
+
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
@@ -167,7 +168,21 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
             }
 
             //Búsqueda de registros
-            Paginacion paginacion = registroEntradaConsultaEjb.busqueda(busqueda.getPageNumber(), organismos, busqueda.getFechaInicio(), fechaFin, registroEntrada, nombreInteresado, apellido1Interesado, apellido2Interesado, busqueda.getInteressatDoc(), busqueda.getOrganDestinatari(), busqueda.getObservaciones(), busqueda.getUsuario(), entidadActiva.getId());
+            Paginacion paginacion = registroEntradaConsultaEjb.busqueda(
+            		busqueda.getPageNumber(), 
+            		organismos, 
+            		busqueda.getFechaInicio(), 
+            		fechaFin, 
+            		registroEntrada, 
+            		nombreInteresado, 
+            		apellido1Interesado, 
+            		apellido2Interesado, 
+            		busqueda.getInteressatDoc(), 
+            		busqueda.getOrganDestinatari(), 
+            		busqueda.getObservaciones(), 
+            		busqueda.getUsuario(), 
+            		entidadActiva.getId(),
+            		busqueda.isPendienteGeiser());
 
             busqueda.setPageNumber(1);
             mav.addObject("paginacion", paginacion);
@@ -382,21 +397,35 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
 
         try {
             RegistroEntrada registroEntrada = registroEntradaEjb.getConAnexosFull(idRegistro);
-
-            // Crear el Justificante
-            if (!registroEntrada.getRegistroDetalle().getTieneJustificante()) {
-
-                // Creamos el anexo del justificante y se lo añadimos al registro
-                AnexoFull anexoFull = justificanteEjb.crearJustificante(usuarioEntidad, registroEntrada, RegwebConstantes.REGISTRO_ENTRADA, Configuracio.getDefaultLanguage());
-                registroEntrada.getRegistroDetalle().getAnexosFull().add(anexoFull);
-            }
-
             // Enviar el Intercambio
-            sirEnvioEjb.enviarIntercambio(RegwebConstantes.REGISTRO_ENTRADA, registroEntrada, getOficinaActiva(request), usuarioEntidad, oficinaSIRCodigo);
-
-            Mensaje.saveMessageInfo(request, getMessage("registroEntrada.envioSir.ok"));
-            jsonResponse.setStatus("SUCCESS");
-
+            RegistroSir registroSir = sirEnvioEjb.enviarIntercambio(RegwebConstantes.REGISTRO_ENTRADA, registroEntrada, getOficinaActiva(request), usuarioEntidad, oficinaSIRCodigo);
+        	
+            try {
+            	// Actualizar registro sir con info de GEISER
+            	sirEnvioEjb.actualizarEnvioSirRealizado(registroSir, usuarioEntidad);
+                
+                Mensaje.saveMessageInfo(request, getMessage("registroEntrada.envioSir.ok"));
+                jsonResponse.setStatus("SUCCESS");
+                
+                //Ya se genera en enviarIntercambio si todo va ok
+                try {
+    	            // Crear el Justificante
+    	            if (!registroEntrada.getRegistroDetalle().getTieneJustificante() && registroEntrada.getNumeroRegistroFormateado() != null) {
+    	
+    	                // Creamos el anexo del justificante y se lo añadimos al registro
+    	                AnexoFull anexoFull = justificanteEjb.crearJustificante(usuarioEntidad, registroEntrada, RegwebConstantes.REGISTRO_ENTRADA, Configuracio.getDefaultLanguage());
+    	                registroEntrada.getRegistroDetalle().getAnexosFull().add(anexoFull);
+    	            }
+                } catch (Exception e) {
+                	log.info(getMessage("Ha habido un error generando el justificante [numeroRegistro=" + registroEntrada.getNumeroRegistro() + "]"));
+                	e.printStackTrace();
+                }
+            } catch (Exception e) {
+            	log.info(getMessage("registroSir.error.update"));
+                jsonResponse.setStatus("FAIL");
+                jsonResponse.setError(getMessage("registroSir.error.update") + ": " + e.getMessage());
+                e.printStackTrace();
+			}
         } catch (Exception se) {
             log.info(getMessage("registroSir.error.envio"));
             jsonResponse.setStatus("FAIL");
@@ -436,34 +465,34 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         return "registro/reenvioSir";
     }
 
-    /**
-     * Reenvia un {@link RegistroSir}
-     */
-    @RequestMapping(value = "/{idRegistro}/reenviar", method = RequestMethod.POST)
-    public String reenviarRegistroEntrada(@PathVariable Long idRegistro, @ModelAttribute ReenviarForm reenviarForm, HttpServletRequest request)
-            throws Exception, I18NException, I18NValidationException {
-
-        //Montamos la oficina de reenvio seleccionada por el usuario
-        Oficina oficinaReenvio = reenviarForm.oficinaReenvio();
-        Oficina oficinaActiva = getOficinaActiva(request);
-        UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
-
-        // Reenvia el RegistroSir
-        try {
-            if (oficinaReenvio != null) {//Si han seleccionado oficina de reenvio
-                //Reenviamos
-                sirEnvioEjb.reenviarIntercambio(RegwebConstantes.REGISTRO_ENTRADA, idRegistro, oficinaReenvio, oficinaActiva, usuarioEntidad, reenviarForm.getObservaciones());
-            }
-
-            Mensaje.saveMessageInfo(request, getMessage("registroSir.reenvio.ok"));
-
-        } catch (Exception e) {
-            Mensaje.saveMessageError(request, getMessage("registroSir.error.reenvio"));
-            e.printStackTrace();
-        }
-
-        return "redirect:/registroEntrada/" + idRegistro + "/detalle";
-    }
+//    /**
+//     * Reenvia un {@link RegistroSir}
+//     */
+//    @RequestMapping(value = "/{idRegistro}/reenviar", method = RequestMethod.POST)
+//    public String reenviarRegistroEntrada(@PathVariable Long idRegistro, @ModelAttribute ReenviarForm reenviarForm, HttpServletRequest request)
+//            throws Exception, I18NException, I18NValidationException {
+//
+//        //Montamos la oficina de reenvio seleccionada por el usuario
+//        Oficina oficinaReenvio = reenviarForm.oficinaReenvio();
+//        Oficina oficinaActiva = getOficinaActiva(request);
+//        UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
+//
+//        // Reenvia el RegistroSir
+//        try {
+//            if (oficinaReenvio != null) {//Si han seleccionado oficina de reenvio
+//                //Reenviamos
+//                sirEnvioEjb.reenviarIntercambio(RegwebConstantes.REGISTRO_ENTRADA, idRegistro, oficinaReenvio, oficinaActiva, usuarioEntidad, reenviarForm.getObservaciones());
+//            }
+//
+//            Mensaje.saveMessageInfo(request, getMessage("registroSir.reenvio.ok"));
+//
+//        } catch (Exception e) {
+//            Mensaje.saveMessageError(request, getMessage("registroSir.error.reenvio"));
+//            e.printStackTrace();
+//        }
+//
+//        return "redirect:/registroEntrada/" + idRegistro + "/detalle";
+//    }
 
     @RequestMapping(value = "/reservas/list/{pageNumber}")
     public ModelAndView reservas(@PathVariable Integer pageNumber, HttpServletRequest request) throws Exception {

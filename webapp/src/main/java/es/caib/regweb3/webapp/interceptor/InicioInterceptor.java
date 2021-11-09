@@ -263,7 +263,7 @@ public class InicioInterceptor extends HandlerInterceptorAdapter {
                     case RegwebConstantes.RWE_SUPERADMIN:
 
                         //Validamos variable es.caib.regweb3.archivos.path
-                        if (request.getRequestURI().equals("/regweb3/configuracion/editar") && FileSystemManager.getArchivosPath() == null) {
+                        if (request.getRequestURI().equals("/regweb3/configuracion/editar") && PropiedadGlobalUtil.getArchivosPath() == null) {
                             log.info("Error, editar entidad");
                             Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.archivospath"));
                             response.sendRedirect("/regweb3/aviso");

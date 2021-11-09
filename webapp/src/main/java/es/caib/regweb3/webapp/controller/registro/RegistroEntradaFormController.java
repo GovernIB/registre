@@ -234,7 +234,7 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
                 registroEntrada = registroEntradaEjb.registrarEntrada(registroEntrada, usuarioEntidad, interesadosSesion, null, false);
 
             }catch (Exception e) {
-                Mensaje.saveMessageError(request, getMessage("regweb.error.registro"));
+                Mensaje.saveMessageError(request, getMessage("regweb.error.registro") + (e.getMessage().isEmpty() ? ": " + e.getMessage() : ""));
                 e.printStackTrace();
                 return "redirect:/inici";
             }finally {

@@ -32,7 +32,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -61,7 +60,6 @@ import static es.caib.regweb3.utils.RegwebConstantes.*;
 @Stateless(name = "RegistroSirEJB")
 @SecurityDomain("seycon")
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-@RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI", "RWE_WS_ENTRADA", "RWE_WS_SALIDA"})
 public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements RegistroSirLocal {
 
     protected final Logger log = Logger.getLogger(getClass());
@@ -173,6 +171,26 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
             return null;
         }
     }
+    
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public Long getRegistroSirByNumeroRegistro(String numeroRegistro, String codigoEntidadRegistralDestino) throws Exception {
+
+        Query q = em.createQuery("Select registroSir from RegistroSir as registroSir where " +
+                "registroSir.numeroRegistro = :numeroRegistro and registroSir.codigoEntidadRegistral = :codigoEntidadRegistralDestino " +
+                "and registroSir.estado != :eliminado");
+
+        q.setParameter("numeroRegistro",numeroRegistro);
+        q.setParameter("codigoEntidadRegistralDestino",codigoEntidadRegistralDestino);
+        q.setParameter("eliminado",EstadoRegistroSir.ELIMINADO);
+
+        List<RegistroSir> registroSir = q.getResultList();
+        if(registroSir.size() >= 1){
+            return registroSir.get(0).getId();
+        }else{
+            return null;
+        }
+    }
 
     @Override
     public RegistroSir getRegistroSirConAnexos(Long idRegistroSir) throws Exception{
@@ -196,7 +214,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
     public RegistroSir crearRegistroSir(FicheroIntercambio ficheroIntercambio) throws Exception{
 
         RegistroSir registroSir = transformarFicheroIntercambio(ficheroIntercambio);
-        registroSir.setEstado(EstadoRegistroSir.RECIBIDO);
+        registroSir.setEstado(EstadoRegistroSir.ENVIADO_PENDIENTE_CONFIRMACION);
 
         try{
 
@@ -302,7 +320,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         trazabilidadSir.setObservaciones(observaciones);
         trazabilidadSirEjb.persist(trazabilidadSir);
 
-        modificarEstado(registroSir.getId(),EstadoRegistroSir.ELIMINADO);
+//        modificarEstado(registroSir.getId(),EstadoRegistroSir.ELIMINADO);
     }
 
     @Override
@@ -469,7 +487,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
 
         q.setMaxResults(total);
         q.setParameter("oficinaSir", oficinaSir);
-        q.setParameter("idEstado", EstadoRegistroSir.RECIBIDO);
+        q.setParameter("idEstado", EstadoRegistroSir.RECIBIDO_PENDIENTE_CONFIRMACION);
         q.setHint("org.hibernate.readOnly", true);
 
         List<RegistroSir> registros = new ArrayList<RegistroSir>();
@@ -500,7 +518,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
                 "and registroSir.documentacionFisica = :no_acompanya");
 
         q.setParameter("oficinaSir", oficinaSir);
-        q.setParameter("idEstado", EstadoRegistroSir.RECIBIDO);
+        q.setParameter("idEstado", EstadoRegistroSir.RECIBIDO_PENDIENTE_CONFIRMACION);
         q.setParameter("no_acompanya", RegwebConstantes.TIPO_DOCFISICA_NO_ACOMPANYA_DOC.toString());
         q.setHint("org.hibernate.readOnly", true);
 
@@ -843,6 +861,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         //registroSir.setDecodificacionUnidadTramitacionOrigen(registroEntrada.getOficina().getOrganismoResponsable().getDenominacion());
 
         // Segmento De_Destino
+        registroSir.setCodigoEntidadRegistral(registroDetalle.getCodigoEntidadRegistralDestino());
         registroSir.setCodigoEntidadRegistralDestino(registroDetalle.getCodigoEntidadRegistralDestino());
         registroSir.setDecodificacionEntidadRegistralDestino(registroDetalle.getDecodificacionEntidadRegistralDestino());
         registroSir.setCodigoUnidadTramitacionDestino(registroEntrada.getDestinoExternoCodigo());
@@ -918,6 +937,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         registroSir.setDecodificacionUnidadTramitacionOrigen(registroSalida.getOficina().getOrganismoResponsable().getDenominacion());
 
         // Segmento De_Destino
+        registroSir.setCodigoEntidadRegistral(registroDetalle.getCodigoEntidadRegistralDestino());
         registroSir.setCodigoEntidadRegistralDestino(registroDetalle.getCodigoEntidadRegistralDestino());
         registroSir.setDecodificacionEntidadRegistralDestino(registroDetalle.getDecodificacionEntidadRegistralDestino());
         registroSir.setCodigoUnidadTramitacionDestino(obtenerCodigoUnidadTramitacionDestino(registroDetalle));
@@ -981,7 +1001,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
 
         q.setParameter("idEntidad", idEntidad);
         q.setParameter("reenviado", EstadoRegistroSir.REENVIADO);
-        q.setParameter("rechazado", EstadoRegistroSir.RECHAZADO);
+//        q.setParameter("rechazado", EstadoRegistroSir.RECHAZADO);
         q.setParameter("maxReintentos", PropiedadGlobalUtil.getMaxReintentosSir(idEntidad));
         q.setHint("org.hibernate.readOnly", true);
         q.setMaxResults(20);
@@ -1000,8 +1020,8 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
                 "and registroSir.numeroReintentos < :maxReintentos order by id");
 
         q.setParameter("idEntidad", idEntidad);
-        q.setParameter("reenviado", EstadoRegistroSir.REENVIADO_Y_ERROR);
-        q.setParameter("rechazado", EstadoRegistroSir.RECHAZADO_Y_ERROR);
+//        q.setParameter("reenviado", EstadoRegistroSir.REENVIADO_Y_ERROR);
+//        q.setParameter("rechazado", EstadoRegistroSir.RECHAZADO_Y_ERROR);
         q.setParameter("maxReintentos", PropiedadGlobalUtil.getMaxReintentosSir(idEntidad));
         q.setHint("org.hibernate.readOnly", true);
         q.setMaxResults(20);
@@ -1018,7 +1038,35 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         q.executeUpdate();
 
     }
+    
+	@Override
+	@SuppressWarnings(value = "unchecked")
+	public List<Long> getRegistrosSirPendientes(Long idEntidad) throws Exception {
+		Query q = em.createQuery("Select registroSir.id from RegistroSir as registroSir "
+				+ "where registroSir.entidad.id = :idEntidad and registroSir.estado = :pendienteConfirmacion or registroSir.estado = :pendienteConfirmacionManual "
+				+ "or registroSir.estado = :tramite or registroSir.estado = :proceso "
+				+ "or registroSir.estado = :reenviado order by id");
+		q.setParameter("idEntidad", idEntidad);
+		q.setParameter("pendienteConfirmacion", EstadoRegistroSir.ENVIADO_PENDIENTE_CONFIRMACION);
+		q.setParameter("pendienteConfirmacionManual", EstadoRegistroSir.ENVIADO_PENDIENTE_CONFIRMACION_MANUAL);
+		q.setParameter("tramite", EstadoRegistroSir.EN_TRAMITE);
+		q.setParameter("proceso", EstadoRegistroSir.ENVIO_PROCESO);
+		q.setParameter("reenviado", EstadoRegistroSir.REENVIADO);
+		return q.getResultList();
+	}
 
+//	caso GEISER: identificador se obtiene de GEISER
+	@Override
+    @SuppressWarnings(value = "unchecked")
+    public void actualizarIdentificadorIntercambio(Long idRegistroSir, String identificadorIntercambio) throws Exception {
+
+        Query q = em.createQuery("update RegistroSir set identificadorIntercambio=:identificadorIntercambio where id = :idRegistroSir");
+        q.setParameter("identificadorIntercambio", identificadorIntercambio);
+        q.setParameter("idRegistroSir", idRegistroSir);
+        q.executeUpdate();
+
+    }
+	
     /**
      * Transforma una Lista de {@link InteresadoSir} en una Lista de {@link Interesado}
      * @param interesados
@@ -1264,7 +1312,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
                             CODIGO_SICRES_BY_TIPO_DOCUMENTO.get(anexo.getTipoDocumento()),anexo.getCertificado(),
                             anexo.getFirma(),anexo.getTimestamp(), anexo.getValidacionOCSPCertificado(),
                             anexo.getHash(),sc.getMime(),sc.getData(),identificador_fichero,
-                            anexo.getObservaciones());
+                            anexo.getObservaciones(), null);
 
                     anexosSir.add(anexoSir);
 
@@ -1284,7 +1332,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
                             CODIGO_SICRES_BY_TIPO_DOCUMENTO.get(anexo.getTipoDocumento()),anexo.getCertificado(),
                             anexo.getFirma(),anexo.getTimestamp(), anexo.getValidacionOCSPCertificado(),
                             anexo.getHash(),dc.getMime(),dc.getData(),null,
-                            anexo.getObservaciones());
+                            anexo.getObservaciones(), null);
 
                     anexosSir.add(anexoSir);
 
@@ -1300,7 +1348,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
                             CODIGO_SICRES_BY_TIPO_DOCUMENTO.get(TIPO_DOCUMENTO_FICHERO_TECNICO), null,
                             null,anexo.getTimestamp(), null,
                             anexo.getHash(),sc.getMime(),sc.getData(),identificador_fichero,
-                            anexo.getObservaciones());
+                            anexo.getObservaciones(), anexoSir);
 
                     anexosSir.add(anexoSir);
 
@@ -1332,7 +1380,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
      */
     private AnexoSir crearAnexoSir(String nombreFichero, String identificadorFichero, String validezDocumento, String tipoDocumento, byte[] certificado,
                                    String firma, byte[] timeStamp, byte[] validacionOCSPCertificado, byte[] hash, String tipoMime,
-                                   byte[] anexoData, String identificadorDocumentoFirmado, String observaciones){
+                                   byte[] anexoData, String identificadorDocumentoFirmado, String observaciones, AnexoSir documento){
         AnexoSir anexoSir = new AnexoSir();
 
 
@@ -1343,6 +1391,10 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
             String extension = nombreFichero.substring(nombreFichero.lastIndexOf("."), nombreFichero.length());
             nombreFicheroSinExtension = nombreFicheroSinExtension.substring(0, RegwebConstantes.ANEXO_NOMBREFICHERO_MAXLENGTH_SIR-5);
             nombreFichero = nombreFicheroSinExtension + extension;
+        }
+        
+        if (documento != null) {
+        	anexoSir.setDocumento(documento);
         }
         anexoSir.setNombreFichero(es.caib.regweb3.utils.StringUtils.sustituirCaracteresProhibidosSIR(nombreFichero, '_'));
 
@@ -1369,9 +1421,9 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
             if(tipoMime.equals("text/xml")){ //SICRES3 obliga a que el mime de un xml sea application/xml
                 anexoSir.setTipoMIME("application/xml");
             }else{
-                if(tipoMimeAceptadoPorSir(tipoMime)!=null) {
+//                if(tipoMimeAceptadoPorSir(tipoMime)!=null) {
                     anexoSir.setTipoMIME(tipoMime);
-                }
+//                }
             }
         }
         if(anexoData != null){
@@ -1401,13 +1453,19 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
      * @param fileName
      * @return
      */
-    protected String generateIdentificadorFichero(String identificadorIntercambio, int secuencia, String fileName) {
+    @Override
+    public String generateIdentificadorFichero(String identificadorIntercambio, int secuencia, String fileName) {
 
-        return identificadorIntercambio +
+        String identificadorFichero = null;
+        		
+        if (identificadorIntercambio != null) {
+        	identificadorFichero = identificadorIntercambio +
                 "_01_" +
                 StringUtils.leftPad(
                         String.valueOf(secuencia), 4, "0") +
                 "." + getExtension(fileName);
+        }
+        return identificadorFichero;
     }
 
     /**
@@ -1594,7 +1652,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
 
 
         // Creamos la TrazabilidadSir
-        TrazabilidadSir trazabilidadSir = new TrazabilidadSir(RegwebConstantes.TRAZABILIDAD_SIR_ACEPTADO);
+        TrazabilidadSir trazabilidadSir = new TrazabilidadSir(RegwebConstantes.TRAZABILIDAD_SIR_CONFIRMADO);
         trazabilidadSir.setRegistroSir(registroSir);
         trazabilidadSir.setRegistroEntrada(registroEntrada);
         trazabilidadSir.setCodigoEntidadRegistralOrigen(registroSir.getCodigoEntidadRegistralOrigen());
@@ -1618,7 +1676,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         trazabilidadEjb.persist(trazabilidad);
 
         // Modificamos el estado del RegistroSir
-        modificarEstado(registroSir.getId(), EstadoRegistroSir.ACEPTADO);
+//        modificarEstado(registroSir.getId(), EstadoRegistroSir.ACEPTADO);
 
         return registroEntrada;
     }

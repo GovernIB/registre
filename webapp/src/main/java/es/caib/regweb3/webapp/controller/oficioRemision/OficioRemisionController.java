@@ -530,17 +530,22 @@ public class OficioRemisionController extends BaseController {
 
                         RegistroEntrada registroEntrada = registroEntradaEjb.getConAnexosFull(registroEntradaAEnviar.getId());
 
-                        // Crear el Justificante
-                        if (!registroEntrada.getRegistroDetalle().getTieneJustificante()) {
-
-                            // Creamos el anexo del justificante y se lo añadimos al registro
-                            AnexoFull anexoFull = justificanteEjb.crearJustificante(usuarioEntidad, registroEntrada, RegwebConstantes.REGISTRO_ENTRADA, Configuracio.getDefaultLanguage());
-                            registroEntrada.getRegistroDetalle().getAnexosFull().add(anexoFull);
-                        }
-
                         // Enviamos el Fichero de datos de intercambio al nodo SIR
                         sirEnvioEjb.enviarIntercambio(RegwebConstantes.REGISTRO_ENTRADA, registroEntrada, getOficinaActiva(request), usuarioEntidad,
                                 oficioRemisionForm.getOficinaSIRCodigo());
+
+                        try {
+	                        // Crear el Justificante
+	                        if (!registroEntrada.getRegistroDetalle().getTieneJustificante() && registroEntrada.getNumeroRegistroFormateado() != null) {
+	
+	                            // Creamos el anexo del justificante y se lo añadimos al registro
+	                            AnexoFull anexoFull = justificanteEjb.crearJustificante(usuarioEntidad, registroEntrada, RegwebConstantes.REGISTRO_ENTRADA, Configuracio.getDefaultLanguage());
+	                            registroEntrada.getRegistroDetalle().getAnexosFull().add(anexoFull);
+	                        }
+                        } catch (Exception e) {
+                        	log.info(getMessage("Ha habido un error generando el justificante [numeroRegistro=" + registroEntrada.getNumeroRegistro() + "]"));
+                        	e.printStackTrace();
+						}
 
                     }
                 }
@@ -580,18 +585,22 @@ public class OficioRemisionController extends BaseController {
 
                         RegistroSalida registroSalida = registroSalidaEjb.getConAnexosFull(registroSalidaAEnviar.getId());
 
-                        // Crear el Justificante
-                        if (!registroSalida.getRegistroDetalle().getTieneJustificante()) {
-
-                            // Creamos el anexo del justificante y se lo añadimos al registro
-                            AnexoFull anexoFull = justificanteEjb.crearJustificante(usuarioEntidad, registroSalida, RegwebConstantes.REGISTRO_SALIDA, Configuracio.getDefaultLanguage());
-                            registroSalida.getRegistroDetalle().getAnexosFull().add(anexoFull);
-                        }
-
                         // Enviamos el Fichero de datos de intercambio al nodo SIR
                         sirEnvioEjb.enviarIntercambio(RegwebConstantes.REGISTRO_SALIDA, registroSalida, getOficinaActiva(request), usuarioEntidad,
                                 oficioRemisionForm.getOficinaSIRCodigo());
 
+                        try {
+	                        // Crear el Justificante
+	                        if (!registroSalida.getRegistroDetalle().getTieneJustificante() && registroSalida.getNumeroRegistroFormateado() != null) {
+	
+	                        	// Creamos el anexo del justificante y se lo añadimos al registro
+	                            AnexoFull anexoFull = justificanteEjb.crearJustificante(usuarioEntidad, registroSalida, RegwebConstantes.REGISTRO_SALIDA, Configuracio.getDefaultLanguage());
+	                            registroSalida.getRegistroDetalle().getAnexosFull().add(anexoFull);
+	                        }
+                        } catch (Exception e) {
+                        	log.info(getMessage("Ha habido un error generando el justificante [numeroRegistro=" + registroSalida.getNumeroRegistro() + "]"));
+                        	e.printStackTrace();
+						}
                     }
                 }
             }
@@ -794,9 +803,9 @@ public class OficioRemisionController extends BaseController {
 
         if (isOperador(request) && oficinaActiva != null) {
 
-            Paginacion paginacion = oficioRemisionEjb.getByOficinaEstadoPaginado(pageNumber, oficinaActiva.getId(), RegwebConstantes.OFICIO_SIR_RECHAZADO);
+            Paginacion paginacion = oficioRemisionEjb.getByOficinaEstadoPaginado(pageNumber, oficinaActiva.getId(), RegwebConstantes.OFICIO_SIR_ENVIADO_RECHAZADO);
 
-            mav.addObject("estado", RegwebConstantes.OFICIO_SIR_RECHAZADO);
+            mav.addObject("estado", RegwebConstantes.OFICIO_SIR_ENVIADO_RECHAZADO);
             mav.addObject("url", "rechazados");
             mav.addObject("paginacion", paginacion);
 
@@ -810,17 +819,17 @@ public class OficioRemisionController extends BaseController {
 
         ModelAndView mav = new ModelAndView("oficioRemision/oficiosRemisionEstado");
 
-        Oficina oficinaActiva = getOficinaActiva(request);
-
-        if (isOperador(request) && oficinaActiva != null) {
-
-            Paginacion paginacion = oficioRemisionEjb.getByOficinaEstadoPaginado(pageNumber, oficinaActiva.getId(), RegwebConstantes.OFICIO_SIR_DEVUELTO);
-
-            mav.addObject("estado", RegwebConstantes.OFICIO_SIR_DEVUELTO);
-            mav.addObject("url", "devueltos");
-            mav.addObject("paginacion", paginacion);
-
-        }
+//        Oficina oficinaActiva = getOficinaActiva(request);
+//
+//        if (isOperador(request) && oficinaActiva != null) {
+//
+//            Paginacion paginacion = oficioRemisionEjb.getByOficinaEstadoPaginado(pageNumber, oficinaActiva.getId(), RegwebConstantes.OFICIO_SIR_DEVUELTO);
+//
+//            mav.addObject("estado", RegwebConstantes.OFICIO_SIR_DEVUELTO);
+//            mav.addObject("url", "devueltos");
+//            mav.addObject("paginacion", paginacion);
+//
+//        }
 
         return mav;
     }

@@ -27,7 +27,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
 
 import javax.annotation.Resource;
-import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.interceptor.Interceptors;
@@ -53,7 +52,6 @@ import static es.caib.regweb3.utils.RegwebConstantes.REGISTRO_ENTRADA;
 @Stateless(name = "AnexoEJB")
 @SecurityDomain("seycon")
 @Interceptors(SpringBeanAutowiringInterceptor.class)
-@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI", "RWE_WS_ENTRADA", "RWE_WS_SALIDA","RWE_WS_CIUDADANO"})
 public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
     protected final Logger log = Logger.getLogger(getClass());
@@ -651,53 +649,63 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             RegistroEntrada registroEntrada = registroEntradaEjb.findById(registroID);
             Entidad entidadActiva = registroEntrada.getOficina().getOrganismoResponsable().getEntidad();
             // Dias que han pasado desde que se creó el registroEntrada
-            Long dias = RegistroUtils.obtenerDiasRegistro(registroEntrada.getFecha());
-
-            if (isNew) {//NUEVO ANEXO
-                // Si han pasado más de los dias de visado de la entidad se crearan historicos de todos los
-                // cambios y se cambia el estado del registroEntrada a pendiente visar
-                if (dias >= entidadActiva.getDiasVisado()) {
-                    registroEntradaEjb.cambiarEstado(registroID, RegwebConstantes.REGISTRO_PENDIENTE_VISAR);
-
-                    // Creamos el historico de registro de entrada
-                    historicoRegistroEntradaEjb.crearHistoricoRegistroEntrada(registroEntrada, usuarioEntidad, I18NLogicUtils.tradueix(new Locale(Configuracio.getDefaultLanguage()), "registro.modificacion.anexos"), true);
-                }
-
-            } else {// MODIFICACION DE ANEXO
-
-                if (dias >= entidadActiva.getDiasVisado()) { // Si han pasado más de los dias de visado cambiamos estado registro
-                    registroEntradaEjb.cambiarEstado(registroID, RegwebConstantes.REGISTRO_PENDIENTE_VISAR);
-                }
-
-                // Creamos el historico de registro de entrada, siempre creamos histórico independiente de los dias.
-                historicoRegistroEntradaEjb.crearHistoricoRegistroEntrada(registroEntrada, usuarioEntidad, I18NLogicUtils.tradueix(new Locale(Configuracio.getDefaultLanguage()), "registro.modificacion.anexos"), true);
-            }
+            if (registroEntrada.getFecha() != null) { // Pendiente envío GEISER (aún no se considera registrado)
+	            Long dias = RegistroUtils.obtenerDiasRegistro(registroEntrada.getFecha());
+	
+	            if (isNew) {//NUEVO ANEXO
+	                // Si han pasado más de los dias de visado de la entidad se crearan historicos de todos los
+	                // cambios y se cambia el estado del registroEntrada a pendiente visar
+	                if (dias >= entidadActiva.getDiasVisado()) {
+	                    registroEntradaEjb.cambiarEstado(registroID, RegwebConstantes.REGISTRO_PENDIENTE_VISAR);
+	
+	                    // Creamos el historico de registro de entrada
+	                    historicoRegistroEntradaEjb.crearHistoricoRegistroEntrada(registroEntrada, usuarioEntidad, I18NLogicUtils.tradueix(new Locale(Configuracio.getDefaultLanguage()), "registro.modificacion.anexos"), true);
+	                }
+	
+	            } else {// MODIFICACION DE ANEXO
+	
+	                if (dias >= entidadActiva.getDiasVisado()) { // Si han pasado más de los dias de visado cambiamos estado registro
+	                    registroEntradaEjb.cambiarEstado(registroID, RegwebConstantes.REGISTRO_PENDIENTE_VISAR);
+	                }
+	
+	                // Creamos el historico de registro de entrada, siempre creamos histórico independiente de los dias.
+	                historicoRegistroEntradaEjb.crearHistoricoRegistroEntrada(registroEntrada, usuarioEntidad, I18NLogicUtils.tradueix(new Locale(Configuracio.getDefaultLanguage()), "registro.modificacion.anexos"), true);
+	            }
+            } else {
+            	// Creamos el historico de registro de entrada, siempre creamos histórico independiente de los dias.
+	            historicoRegistroEntradaEjb.crearHistoricoRegistroEntrada(registroEntrada, usuarioEntidad, I18NLogicUtils.tradueix(new Locale(Configuracio.getDefaultLanguage()), "registro.modificacion.anexos"), true);
+            }         
             anexoFull.getAnexo().setRegistroDetalle(registroEntrada.getRegistroDetalle());
 
         } else {
             RegistroSalida registroSalida = registroSalidaEjb.findById(registroID);
             Entidad entidadActiva = registroSalida.getOficina().getOrganismoResponsable().getEntidad();
             // Dias que han pasado desde que se creó el registroEntrada
-            Long dias = RegistroUtils.obtenerDiasRegistro(registroSalida.getFecha());
-
-            if (isNew) {//NUEVO ANEXO
-                // Si han pasado más de los dias de visado de la entidad se crearan historicos de todos los
-                // cambios y se cambia el estado del registroEntrada a pendiente visar
-                if (dias >= entidadActiva.getDiasVisado()) {
-                    registroSalidaEjb.cambiarEstado(registroID, RegwebConstantes.REGISTRO_PENDIENTE_VISAR);
-
-                    // Creamos el historico de registro de entrada
-                    historicoRegistroSalidaEjb.crearHistoricoRegistroSalida(registroSalida, usuarioEntidad, I18NLogicUtils.tradueix(new Locale(Configuracio.getDefaultLanguage()), "registro.modificacion.anexos"), true);
-                }
-
-            } else {// MODIFICACION DE ANEXO
-
-                if (dias >= entidadActiva.getDiasVisado()) { // Si han pasado más de los dias de visado cambiamos estado registro
-                    registroSalidaEjb.cambiarEstado(registroID, RegwebConstantes.REGISTRO_PENDIENTE_VISAR);
-                }
-                // Creamos el historico de registro de entrada, siempre creamos histórico independiente de los dias.
-                historicoRegistroSalidaEjb.crearHistoricoRegistroSalida(registroSalida, usuarioEntidad, I18NLogicUtils.tradueix(new Locale(Configuracio.getDefaultLanguage()), "registro.modificacion.anexos"), true);
-            }
+            if (registroSalida.getFecha() != null) { // Pendiente envío GEISER (aún no se considera registrado)
+	            Long dias = RegistroUtils.obtenerDiasRegistro(registroSalida.getFecha());
+	
+	            if (isNew) {//NUEVO ANEXO
+	                // Si han pasado más de los dias de visado de la entidad se crearan historicos de todos los
+	                // cambios y se cambia el estado del registroEntrada a pendiente visar
+	                if (dias >= entidadActiva.getDiasVisado()) {
+	                    registroSalidaEjb.cambiarEstado(registroID, RegwebConstantes.REGISTRO_PENDIENTE_VISAR);
+	
+	                    // Creamos el historico de registro de entrada
+	                    historicoRegistroSalidaEjb.crearHistoricoRegistroSalida(registroSalida, usuarioEntidad, I18NLogicUtils.tradueix(new Locale(Configuracio.getDefaultLanguage()), "registro.modificacion.anexos"), true);
+	                }
+	
+	            } else {// MODIFICACION DE ANEXO
+	
+	                if (dias >= entidadActiva.getDiasVisado()) { // Si han pasado más de los dias de visado cambiamos estado registro
+	                    registroSalidaEjb.cambiarEstado(registroID, RegwebConstantes.REGISTRO_PENDIENTE_VISAR);
+	                }
+	                // Creamos el historico de registro de entrada, siempre creamos histórico independiente de los dias.
+	                historicoRegistroSalidaEjb.crearHistoricoRegistroSalida(registroSalida, usuarioEntidad, I18NLogicUtils.tradueix(new Locale(Configuracio.getDefaultLanguage()), "registro.modificacion.anexos"), true);
+	            }
+            } else {
+            	// Creamos el historico de registro de entrada, siempre creamos histórico independiente de los dias.
+            	historicoRegistroSalidaEjb.crearHistoricoRegistroSalida(registroSalida, usuarioEntidad, I18NLogicUtils.tradueix(new Locale(Configuracio.getDefaultLanguage()), "registro.modificacion.anexos"), true);
+            } 
             anexoFull.getAnexo().setRegistroDetalle(registroSalida.getRegistroDetalle());
         }
     }
@@ -949,14 +957,16 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             }
 
             // Tipo documental
-            if (anexo.getTipoDocumental() != null && anexo.getTipoDocumental().getCodigoNTI() != null) {
-
-                metadades.add(new Metadata(MetadataConstants.ENI_TIPO_DOCUMENTAL, anexo.getTipoDocumental().getCodigoNTI()));
-                metadades.add(new Metadata("anexo.tipoDocumental.codigo", anexo.getTipoDocumental().getCodigoNTI()));
+        	TipoDocumental tipoDocumental = anexo.getTipoDocumental();
+            if (tipoDocumental != null) {
+            	if (tipoDocumental.getCodigoNTI() == null) //TODO: revisar
+            		tipoDocumental = em.getReference(TipoDocumental.class, anexo.getTipoDocumental().getId());
+                metadades.add(new Metadata(MetadataConstants.ENI_TIPO_DOCUMENTAL, tipoDocumental.getCodigoNTI()));
+                metadades.add(new Metadata("anexo.tipoDocumental.codigo", tipoDocumental.getCodigoNTI()));
 
                 try {
                     metadades.add(new Metadata("anexo.tipoDocumental.descripcion",
-                       ((TraduccionTipoDocumental) anexo.getTipoDocumental().getTraduccion(loc.getLanguage())).getNombre()));
+                       ((TraduccionTipoDocumental) tipoDocumental.getTraduccion(loc.getLanguage())).getNombre()));
 
                 } catch (Throwable th) {
                     log.error("Error en la traduccion de tipo documental: " + th.getMessage(), th);
@@ -974,6 +984,47 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
     }
 
+    @Override
+    public AnexoFull actualizarMetadatosAnexo(IRegistro registro, AnexoFull anexoFull, UsuarioEntidad usuarioEntidad)throws I18NException {
+
+        try {
+        	Long tipoRegistro = (registro instanceof RegistroEntrada) ? 1L : 0L;
+            Anexo anexo = anexoFull.getAnexo();
+//            String numeroRegistro = registro.getNumeroRegistro();
+//            Date fechaRegistro = registro.getFecha();
+            List<Metadata> metadades = new ArrayList<Metadata>();
+            
+            //Cargamos el plugin de custodia
+            IDocumentCustodyPlugin custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(usuarioEntidad.getEntidad().getId(), RegwebConstantes.PLUGIN_CUSTODIA_ANEXOS);
+
+            //Actualizamos custodia solo cuando no venimos via web
+            final Map<String, Object> custodyParameters;
+            custodyParameters = getCustodyParameters(registro, anexo, anexoFull, usuarioEntidad);
+
+            final String custodyID = anexo.getCustodiaID();
+            
+//            if (numeroRegistro != null && fechaRegistro != null) {
+//            	metadades.add(new Metadata("anexo.numeroregistro", numeroRegistro));
+//            	metadades.add(new Metadata("anexo.fecharegistro", fechaRegistro));
+//            }
+            // Guardamos los cambios en custodia
+            custody.saveAll(custodyID, custodyParameters, null, null, metadades.toArray(new Metadata[metadades.size()]));
+
+            //Actualizamos los datos de anexo en BBDD
+            anexo = this.merge(anexo);
+            anexoFull.setAnexo(anexo);
+
+            // Crea historico y lo enlaza con el RegistroDetalle
+            crearHistorico(anexoFull, usuarioEntidad, registro.getId(), tipoRegistro, false);
+            return anexoFull;
+        } catch (I18NException i18n) {
+            throw i18n;
+        } catch (Exception e) {
+            log.error("Error actualitzant metadades d'un anexe: " + e.getMessage(), e);
+            throw new I18NException(e, "anexo.error.guardando", new I18NArgumentString(e.getMessage()));
+        }
+
+    }
 
     /**
      * Método que prepara para actualizar los datos de un DocumentCustody

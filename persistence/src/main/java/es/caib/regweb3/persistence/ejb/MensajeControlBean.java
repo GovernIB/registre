@@ -18,7 +18,6 @@ import es.caib.regweb3.utils.StringUtils;
 import org.apache.log4j.Logger;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
-import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -38,7 +37,6 @@ import java.util.*;
 @Stateless(name = "MensajeControlEJB")
 @SecurityDomain("seycon")
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-@RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI"})
 public class MensajeControlBean extends BaseEjbJPA<MensajeControl, Long> implements MensajeControlLocal{
 
     protected final Logger log = Logger.getLogger(getClass());
@@ -286,36 +284,36 @@ public class MensajeControlBean extends BaseEjbJPA<MensajeControl, Long> impleme
      */
     private void procesarMensajeACK(OficioRemision oficioRemision) throws Exception{
 
-        switch (oficioRemision.getEstado()) {
-
-            case RegwebConstantes.OFICIO_SIR_ENVIADO:
-
-                // Actualizamos el OficioRemision
-                oficioRemision.setEstado(RegwebConstantes.OFICIO_SIR_ENVIADO_ACK);
-                oficioRemision.setFechaEstado(new Date());
-                oficioRemisionEjb.merge(oficioRemision);
-                break;
-
-            case RegwebConstantes.OFICIO_SIR_REENVIADO:
-
-                // Actualizamos el OficioRemision
-                oficioRemision.setEstado(RegwebConstantes.OFICIO_SIR_REENVIADO_ACK);
-                oficioRemision.setFechaEstado(new Date());
-                oficioRemisionEjb.merge(oficioRemision);
-
-                break;
-
-            case RegwebConstantes.OFICIO_SIR_ENVIADO_ACK:
-            case RegwebConstantes.OFICIO_SIR_REENVIADO_ACK:
-
-                log.info("Se ha recibido un mensaje ACK duplicado con identificador: " + oficioRemision.getIdentificadorIntercambio());
-
-                break;
-
-            default:
-                log.info("Se ha recibido un mensaje que no tiene el estado adecuado para recibir un ACK");
-                throw new ValidacionException(Errores.ERROR_0037, "Se ha recibido un mensaje que no tiene el estado adecuado para recibir un ACK");
-        }
+//        switch (oficioRemision.getEstado()) {
+//
+//            case RegwebConstantes.OFICIO_SIR_ENVIADO:
+//
+//                // Actualizamos el OficioRemision
+//                oficioRemision.setEstado(RegwebConstantes.OFICIO_SIR_ENVIADO_ACK);
+//                oficioRemision.setFechaEstado(new Date());
+//                oficioRemisionEjb.merge(oficioRemision);
+//                break;
+//
+//            case RegwebConstantes.OFICIO_SIR_REENVIADO:
+//
+//                // Actualizamos el OficioRemision
+//                oficioRemision.setEstado(RegwebConstantes.OFICIO_SIR_REENVIADO_ACK);
+//                oficioRemision.setFechaEstado(new Date());
+//                oficioRemisionEjb.merge(oficioRemision);
+//
+//                break;
+//
+//            case RegwebConstantes.OFICIO_SIR_ENVIADO_ACK:
+//            case RegwebConstantes.OFICIO_SIR_REENVIADO_ACK:
+//
+//                log.info("Se ha recibido un mensaje ACK duplicado con identificador: " + oficioRemision.getIdentificadorIntercambio());
+//
+//                break;
+//
+//            default:
+//                log.info("Se ha recibido un mensaje que no tiene el estado adecuado para recibir un ACK");
+//                throw new ValidacionException(Errores.ERROR_0037, "Se ha recibido un mensaje que no tiene el estado adecuado para recibir un ACK");
+//        }
     }
 
     /**
@@ -325,31 +323,31 @@ public class MensajeControlBean extends BaseEjbJPA<MensajeControl, Long> impleme
      */
     private void procesarMensajeACK(RegistroSir registroSir) throws Exception{
 
-        if (EstadoRegistroSir.REENVIADO.equals(registroSir.getEstado()) ||
-                EstadoRegistroSir.REENVIADO_Y_ERROR.equals(registroSir.getEstado())){
-
-            // Actualizamos el registroSir
-            registroSir.setEstado(EstadoRegistroSir.REENVIADO_Y_ACK);
-            registroSir.setFechaEstado(new Date());
-            registroSirEjb.merge(registroSir);
-
-        } else if (EstadoRegistroSir.RECHAZADO.equals(registroSir.getEstado()) ||
-                EstadoRegistroSir.RECHAZADO_Y_ERROR.equals(registroSir.getEstado())){
-
-            // Actualizamos el registroSir
-            registroSir.setEstado(EstadoRegistroSir.RECHAZADO_Y_ACK);
-            registroSir.setFechaEstado(new Date());
-            registroSirEjb.merge(registroSir);
-
-        } else if (EstadoRegistroSir.REENVIADO_Y_ACK.equals(registroSir.getEstado()) ||
-                EstadoRegistroSir.RECHAZADO_Y_ACK.equals(registroSir.getEstado())){
-
-            log.info("Se ha recibido un mensaje ACK duplicado con identificador: " + registroSir.getIdentificadorIntercambio());
-
-        }else{
-            log.info("Se ha recibido un mensaje que no tiene el estado adecuado para recibir un ACK");
-            throw new ValidacionException(Errores.ERROR_0037, "Se ha recibido un mensaje que no tiene el estado adecuado para recibir un ACK");
-        }
+//        if (EstadoRegistroSir.REENVIADO.equals(registroSir.getEstado()) ||
+//                EstadoRegistroSir.REENVIADO_Y_ERROR.equals(registroSir.getEstado())){
+//
+//            // Actualizamos el registroSir
+//            registroSir.setEstado(EstadoRegistroSir.REENVIADO_Y_ACK);
+//            registroSir.setFechaEstado(new Date());
+//            registroSirEjb.merge(registroSir);
+//
+//        } else if (EstadoRegistroSir.RECHAZADO.equals(registroSir.getEstado()) ||
+//                EstadoRegistroSir.RECHAZADO_Y_ERROR.equals(registroSir.getEstado())){
+//
+//            // Actualizamos el registroSir
+//            registroSir.setEstado(EstadoRegistroSir.RECHAZADO_Y_ACK);
+//            registroSir.setFechaEstado(new Date());
+//            registroSirEjb.merge(registroSir);
+//
+//        } else if (EstadoRegistroSir.REENVIADO_Y_ACK.equals(registroSir.getEstado()) ||
+//                EstadoRegistroSir.RECHAZADO_Y_ACK.equals(registroSir.getEstado())){
+//
+//            log.info("Se ha recibido un mensaje ACK duplicado con identificador: " + registroSir.getIdentificadorIntercambio());
+//
+//        }else{
+//            log.info("Se ha recibido un mensaje que no tiene el estado adecuado para recibir un ACK");
+//            throw new ValidacionException(Errores.ERROR_0037, "Se ha recibido un mensaje que no tiene el estado adecuado para recibir un ACK");
+//        }
     }
 
     /**
@@ -359,44 +357,44 @@ public class MensajeControlBean extends BaseEjbJPA<MensajeControl, Long> impleme
      */
     private void procesarMensajeCONFIRMACION(OficioRemision oficioRemision, MensajeControl mensaje) throws Exception{
 
-        switch (oficioRemision.getEstado()) {
-
-            case RegwebConstantes.OFICIO_SIR_ENVIADO:
-            case RegwebConstantes.OFICIO_SIR_ENVIADO_ACK:
-            case RegwebConstantes.OFICIO_SIR_ENVIADO_ERROR:
-            case RegwebConstantes.OFICIO_SIR_REENVIADO:
-            case RegwebConstantes.OFICIO_SIR_REENVIADO_ACK:
-            case RegwebConstantes.OFICIO_SIR_REENVIADO_ERROR:
-
-                oficioRemision.setCodigoEntidadRegistralProcesado(mensaje.getCodigoEntidadRegistralOrigen());
-                oficioRemision.setDecodificacionEntidadRegistralProcesado(Dir3CaibUtils.denominacion(PropiedadGlobalUtil.getDir3CaibServer(), mensaje.getCodigoEntidadRegistralOrigen(), RegwebConstantes.OFICINA));
-                oficioRemision.setNumeroRegistroEntradaDestino(mensaje.getNumeroRegistroEntradaDestino());
-                oficioRemision.setFechaEntradaDestino(mensaje.getFechaEntradaDestino());
-                oficioRemision.setEstado(RegwebConstantes.OFICIO_ACEPTADO);
-                oficioRemision.setFechaEstado(mensaje.getFechaEntradaDestino());
-                oficioRemisionEjb.merge(oficioRemision);
-
-                // Marcamos el Registro original como ACEPTADO
-                if (oficioRemision.getTipoOficioRemision().equals(RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA)) {
-                    registroEntradaEjb.cambiarEstado(oficioRemision.getRegistrosEntrada().get(0).getId(), RegwebConstantes.REGISTRO_OFICIO_ACEPTADO);
-
-                }else if(oficioRemision.getTipoOficioRemision().equals(RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA)){
-                    registroSalidaEjb.cambiarEstado(oficioRemision.getRegistrosSalida().get(0).getId(),RegwebConstantes.REGISTRO_OFICIO_ACEPTADO);
-
-                }
-
-                break;
-
-            case (RegwebConstantes.OFICIO_ACEPTADO):
-
-                log.info("Se ha recibido un mensaje de confirmación duplicado");
-
-                break;
-
-            default:
-                log.info("El RegistroSir no tiene el estado necesario para ser Confirmado: " + oficioRemision.getIdentificadorIntercambio());
-                throw new ValidacionException(Errores.ERROR_0037, "El RegistroSir no tiene el estado necesario para ser Confirmado: " + oficioRemision.getIdentificadorIntercambio());
-        }
+//        switch (oficioRemision.getEstado()) {
+//
+//            case RegwebConstantes.OFICIO_SIR_ENVIADO:
+//            case RegwebConstantes.OFICIO_SIR_ENVIADO_ACK:
+//            case RegwebConstantes.OFICIO_SIR_ENVIADO_ERROR:
+//            case RegwebConstantes.OFICIO_SIR_REENVIADO:
+//            case RegwebConstantes.OFICIO_SIR_REENVIADO_ACK:
+//            case RegwebConstantes.OFICIO_SIR_REENVIADO_ERROR:
+//
+//                oficioRemision.setCodigoEntidadRegistralProcesado(mensaje.getCodigoEntidadRegistralOrigen());
+//                oficioRemision.setDecodificacionEntidadRegistralProcesado(Dir3CaibUtils.denominacion(PropiedadGlobalUtil.getDir3CaibServer(), mensaje.getCodigoEntidadRegistralOrigen(), RegwebConstantes.OFICINA));
+//                oficioRemision.setNumeroRegistroEntradaDestino(mensaje.getNumeroRegistroEntradaDestino());
+//                oficioRemision.setFechaEntradaDestino(mensaje.getFechaEntradaDestino());
+//                oficioRemision.setEstado(RegwebConstantes.OFICIO_ACEPTADO);
+//                oficioRemision.setFechaEstado(mensaje.getFechaEntradaDestino());
+//                oficioRemisionEjb.merge(oficioRemision);
+//
+//                // Marcamos el Registro original como ACEPTADO
+//                if (oficioRemision.getTipoOficioRemision().equals(RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA)) {
+//                    registroEntradaEjb.cambiarEstado(oficioRemision.getRegistrosEntrada().get(0).getId(), RegwebConstantes.REGISTRO_OFICIO_ACEPTADO);
+//
+//                }else if(oficioRemision.getTipoOficioRemision().equals(RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA)){
+//                    registroSalidaEjb.cambiarEstado(oficioRemision.getRegistrosSalida().get(0).getId(),RegwebConstantes.REGISTRO_OFICIO_ACEPTADO);
+//
+//                }
+//
+//                break;
+//
+//            case (RegwebConstantes.OFICIO_ACEPTADO):
+//
+//                log.info("Se ha recibido un mensaje de confirmación duplicado");
+//
+//                break;
+//
+//            default:
+//                log.info("El RegistroSir no tiene el estado necesario para ser Confirmado: " + oficioRemision.getIdentificadorIntercambio());
+//                throw new ValidacionException(Errores.ERROR_0037, "El RegistroSir no tiene el estado necesario para ser Confirmado: " + oficioRemision.getIdentificadorIntercambio());
+//        }
     }
 
     /**
@@ -407,40 +405,40 @@ public class MensajeControlBean extends BaseEjbJPA<MensajeControl, Long> impleme
      */
     private void procesarMensajeERROR(OficioRemision oficioRemision, MensajeControl mensaje) throws Exception{
 
-        switch (oficioRemision.getEstado()) {
-
-            case (RegwebConstantes.OFICIO_SIR_ENVIADO):
-
-                if(!mensaje.getCodigoError().equals(Errores.ERROR_0039.getValue())){ // Solo modificamos su estado si no es un error 0039
-                    oficioRemision.setEstado(RegwebConstantes.OFICIO_SIR_ENVIADO_ERROR);
-                    oficioRemision.setCodigoError(mensaje.getCodigoError());
-                    oficioRemision.setDescripcionError(mensaje.getDescripcionMensaje());
-                    oficioRemision.setFechaEstado(new Date());
-                    oficioRemisionEjb.merge(oficioRemision);
-                }
-
-                break;
-
-            case (RegwebConstantes.OFICIO_SIR_REENVIADO):
-
-                if(!mensaje.getCodigoError().equals(Errores.ERROR_0039.getValue())){ // Solo modificamos su estado si no es un error 0039
-
-                    oficioRemision.setEstado(RegwebConstantes.OFICIO_SIR_REENVIADO_ERROR);
-                    oficioRemision.setCodigoError(mensaje.getCodigoError());
-                    oficioRemision.setDescripcionError(mensaje.getDescripcionMensaje());
-                    oficioRemision.setFechaEstado(new Date());
-                    oficioRemisionEjb.merge(oficioRemision);
-                }
-
-                break;
-
-            case (RegwebConstantes.OFICIO_SIR_ENVIADO_ERROR):
-            case (RegwebConstantes.OFICIO_SIR_REENVIADO_ERROR):
-
-                log.info("Se ha recibido un mensaje de error duplicado con identificador: " + oficioRemision.getIdentificadorIntercambio());
-                throw new ValidacionException(Errores.ERROR_0037, "Se ha recibido un mensaje de error duplicado con identificador: " + oficioRemision.getIdentificadorIntercambio());
-
-        }
+//        switch (oficioRemision.getEstado()) {
+//
+//            case (RegwebConstantes.OFICIO_SIR_ENVIADO):
+//
+//                if(!mensaje.getCodigoError().equals(Errores.ERROR_0039.getValue())){ // Solo modificamos su estado si no es un error 0039
+//                    oficioRemision.setEstado(RegwebConstantes.OFICIO_SIR_ENVIADO_ERROR);
+//                    oficioRemision.setCodigoError(mensaje.getCodigoError());
+//                    oficioRemision.setDescripcionError(mensaje.getDescripcionMensaje());
+//                    oficioRemision.setFechaEstado(new Date());
+//                    oficioRemisionEjb.merge(oficioRemision);
+//                }
+//
+//                break;
+//
+//            case (RegwebConstantes.OFICIO_SIR_REENVIADO):
+//
+//                if(!mensaje.getCodigoError().equals(Errores.ERROR_0039.getValue())){ // Solo modificamos su estado si no es un error 0039
+//
+//                    oficioRemision.setEstado(RegwebConstantes.OFICIO_SIR_REENVIADO_ERROR);
+//                    oficioRemision.setCodigoError(mensaje.getCodigoError());
+//                    oficioRemision.setDescripcionError(mensaje.getDescripcionMensaje());
+//                    oficioRemision.setFechaEstado(new Date());
+//                    oficioRemisionEjb.merge(oficioRemision);
+//                }
+//
+//                break;
+//
+//            case (RegwebConstantes.OFICIO_SIR_ENVIADO_ERROR):
+//            case (RegwebConstantes.OFICIO_SIR_REENVIADO_ERROR):
+//
+//                log.info("Se ha recibido un mensaje de error duplicado con identificador: " + oficioRemision.getIdentificadorIntercambio());
+//                throw new ValidacionException(Errores.ERROR_0037, "Se ha recibido un mensaje de error duplicado con identificador: " + oficioRemision.getIdentificadorIntercambio());
+//
+//        }
     }
 
     /**
@@ -451,29 +449,29 @@ public class MensajeControlBean extends BaseEjbJPA<MensajeControl, Long> impleme
      */
     private void procesarMensajeERROR(RegistroSir registroSir, MensajeControl mensaje) throws Exception{
 
-        if (EstadoRegistroSir.REENVIADO.equals(registroSir.getEstado())){
-
-            registroSir.setEstado(EstadoRegistroSir.REENVIADO_Y_ERROR);
-            registroSir.setCodigoError(mensaje.getCodigoError());
-            registroSir.setDescripcionError(mensaje.getDescripcionMensaje());
-            registroSir.setFechaEstado(new Date());
-            registroSirEjb.merge(registroSir);
-
-        } else if (EstadoRegistroSir.RECHAZADO.equals(registroSir.getEstado())){
-
-            registroSir.setEstado(EstadoRegistroSir.RECHAZADO_Y_ERROR);
-            registroSir.setCodigoError(mensaje.getCodigoError());
-            registroSir.setDescripcionError(mensaje.getDescripcionMensaje());
-            registroSir.setFechaEstado(new Date());
-            registroSirEjb.merge(registroSir);
-
-        } else if (EstadoRegistroSir.REENVIADO_Y_ERROR.equals(registroSir.getEstado()) ||
-                EstadoRegistroSir.RECHAZADO_Y_ERROR.equals(registroSir.getEstado())){
-
-            log.info("Se ha recibido un mensaje de error duplicado con identificador: " + registroSir.getIdentificadorIntercambio());
-            throw new ValidacionException(Errores.ERROR_0037, "Se ha recibido un mensaje de error duplicado con identificador: " + registroSir.getIdentificadorIntercambio());
-
-        }
+//        if (EstadoRegistroSir.REENVIADO.equals(registroSir.getEstado())){
+//
+//            registroSir.setEstado(EstadoRegistroSir.REENVIADO_Y_ERROR);
+//            registroSir.setCodigoError(mensaje.getCodigoError());
+//            registroSir.setDescripcionError(mensaje.getDescripcionMensaje());
+//            registroSir.setFechaEstado(new Date());
+//            registroSirEjb.merge(registroSir);
+//
+//        } else if (EstadoRegistroSir.RECHAZADO.equals(registroSir.getEstado())){
+//
+//            registroSir.setEstado(EstadoRegistroSir.RECHAZADO_Y_ERROR);
+//            registroSir.setCodigoError(mensaje.getCodigoError());
+//            registroSir.setDescripcionError(mensaje.getDescripcionMensaje());
+//            registroSir.setFechaEstado(new Date());
+//            registroSirEjb.merge(registroSir);
+//
+//        } else if (EstadoRegistroSir.REENVIADO_Y_ERROR.equals(registroSir.getEstado()) ||
+//                EstadoRegistroSir.RECHAZADO_Y_ERROR.equals(registroSir.getEstado())){
+//
+//            log.info("Se ha recibido un mensaje de error duplicado con identificador: " + registroSir.getIdentificadorIntercambio());
+//            throw new ValidacionException(Errores.ERROR_0037, "Se ha recibido un mensaje de error duplicado con identificador: " + registroSir.getIdentificadorIntercambio());
+//
+//        }
     }
 
     /**

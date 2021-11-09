@@ -8,7 +8,6 @@ import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.log4j.Logger;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
-import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -26,7 +25,6 @@ import java.util.*;
 
 @Stateless(name = "LopdEJB")
 @SecurityDomain("seycon")
-@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI","RWE_WS_ENTRADA","RWE_WS_SALIDA", "RWE_WS_CIUDADANO"})
 public class LopdBean extends BaseEjbJPA<Lopd, Long> implements LopdLocal{
 
     protected final Logger log = Logger.getLogger(getClass());

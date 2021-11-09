@@ -9,6 +9,8 @@ import org.plugin.geiser.api.RespuestaRegistroGeiser;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
+
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -19,6 +21,7 @@ import java.util.Set;
  * Date: 16/01/14
  */
 @Local
+@RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI","RWE_WS_ENTRADA","RWE_WS_SALIDA", "RWE_WS_CIUDADANO"})
 public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
 
 
@@ -245,5 +248,11 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
 	RespuestaRegistroGeiser postProcesoNuevoRegistroGeiser(
 			RegistroSalida rs, 
 			UsuarioEntidad usuarioEntidad) throws Exception, I18NException;
+
+	void actualizarDatosRegistro(
+			Long idRegistroSalida,
+			String numeroRegistro, 
+			String numeroRegistroFormateado, 
+			Date fechaRegistro) throws Exception, I18NException;
 
 }

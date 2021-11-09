@@ -13,7 +13,6 @@ import org.fundaciobit.pluginsib.userinformation.RolesInfo;
 import org.fundaciobit.pluginsib.userinformation.UserInfo;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
-import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.naming.InitialContext;
@@ -31,7 +30,6 @@ import java.util.*;
 
 @Stateless(name = "UsuarioEJB")
 @SecurityDomain("seycon")
-@RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI","RWE_WS_ENTRADA","RWE_WS_SALIDA", "RWE_WS_CIUDADANO"})
 public class UsuarioBean extends BaseEjbJPA<Usuario, Long> implements UsuarioLocal{
 
     protected final Logger log = Logger.getLogger(getClass());

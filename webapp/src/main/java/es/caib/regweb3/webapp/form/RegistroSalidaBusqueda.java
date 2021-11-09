@@ -25,7 +25,8 @@ public class RegistroSalidaBusqueda implements Serializable {
     private String organOrigenNom;
     private String observaciones;
     private String usuario;
-
+    private boolean pendienteGeiser = true;
+    
     public RegistroSalidaBusqueda() {}
 
     public RegistroSalidaBusqueda(RegistroSalida registroSalida, Integer pageNumber) {
@@ -128,5 +129,13 @@ public class RegistroSalidaBusqueda implements Serializable {
     public String getUsuario() { return usuario; }
 
     public void setUsuario(String usuario) { this.usuario = usuario; }
+
+	public boolean isPendienteGeiser() {
+		return pendienteGeiser;
+	}
+
+	public void setPendienteGeiser(boolean pendienteGeiser) {
+		this.pendienteGeiser = pendienteGeiser;
+	}
 
 }

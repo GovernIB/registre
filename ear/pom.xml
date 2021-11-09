@@ -559,6 +559,12 @@
       <artifactId>plugin-geiser-apb</artifactId>
       <version>${project.version}</version>
     </dependency>
+    
+    <dependency>
+      <groupId>es.caib.regweb3</groupId>
+      <artifactId>plugin-geiser-mock</artifactId>
+      <version>${project.version}</version>
+    </dependency>
   </dependencies>
 
 

@@ -122,3 +122,28 @@ function reiniciarContador(id, url){
         }
     });
 }
+
+/**
+ * Envia un mensaje ACK
+ * @param id
+ * @param url
+ */
+function actualizarRegistroSir(id, url){
+    //Reiniciamos el contador de reintentos
+    $.ajax({
+        url: url,
+        data: { id: id },
+        type: "GET",
+        dataType: 'json',
+        contentType: 'application/json',
+
+        success: function(result) {
+
+            if(result === true){
+                mensajeSuccess("#mensajes", tradsSir['registroSir.actualizar.ok']);
+            }else{
+                mensajeError("#mensajes", tradsSir['registroSir.actualizar.error']);
+            }
+        }
+    });
+}

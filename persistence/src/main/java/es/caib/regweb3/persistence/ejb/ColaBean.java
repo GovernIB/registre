@@ -12,7 +12,6 @@ import org.apache.commons.lang.time.DateUtils;
 import org.apache.log4j.Logger;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
-import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -28,7 +27,6 @@ import java.util.*;
 @Stateless(name = "ColaEJB")
 @SecurityDomain("seycon")
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-@RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI","RWE_WS_ENTRADA"})
 public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
 
     protected final Logger log = Logger.getLogger(getClass());

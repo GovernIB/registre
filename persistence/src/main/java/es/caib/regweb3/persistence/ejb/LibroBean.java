@@ -5,7 +5,6 @@ import es.caib.regweb3.model.Libro;
 import org.apache.log4j.Logger;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
-import javax.annotation.security.RolesAllowed;
 import javax.annotation.security.RunAs;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -25,7 +24,6 @@ import java.util.List;
 @Stateless(name = "LibroEJB")
 @SecurityDomain("seycon")
 @RunAs("RWE_SUPERADMIN")
-@RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI","RWE_WS_ENTRADA","RWE_WS_SALIDA"})
 public class LibroBean extends BaseEjbJPA<Libro, Long> implements LibroLocal{
 
     protected final Logger log = Logger.getLogger(getClass());

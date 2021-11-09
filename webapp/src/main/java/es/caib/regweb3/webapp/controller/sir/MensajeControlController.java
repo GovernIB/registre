@@ -84,19 +84,19 @@ public class MensajeControlController extends BaseController {
     @ResponseBody
     public Boolean reenviarMensajeControl(@RequestParam Long idMensaje)throws Exception {
 
-        try{
-
-            MensajeControl mensajeControl = mensajeControlEjb.findById(idMensaje);
-
-            if(mensajeControl.getTipoComunicacion().equals(RegwebConstantes.TIPO_COMUNICACION_ENVIADO)){
-                return sirEnvioEjb.reenviarMensaje(mensajeControl);
-            }else{
-                return  false;
-            }
-
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+//        try{
+//
+//            MensajeControl mensajeControl = mensajeControlEjb.findById(idMensaje);
+//
+//            if(mensajeControl.getTipoComunicacion().equals(RegwebConstantes.TIPO_COMUNICACION_ENVIADO)){
+//                return sirEnvioEjb.reenviarMensaje(mensajeControl);
+//            }else{
+//                return  false;
+//            }
+//
+//        }catch (Exception e){
+//            e.printStackTrace();
+//        }
 
         return false;
     }

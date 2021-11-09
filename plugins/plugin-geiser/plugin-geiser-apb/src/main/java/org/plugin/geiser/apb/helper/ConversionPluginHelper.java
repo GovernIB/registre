@@ -5,27 +5,50 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.codec.binary.Base64;
+import org.plugin.geiser.api.AnexoG;
+import org.plugin.geiser.api.ApunteRegistro;
+import org.plugin.geiser.api.DocumentHelper;
+import org.plugin.geiser.api.EstadoRegistro;
+import org.plugin.geiser.api.EstadoTramit;
+import org.plugin.geiser.api.EstadoTramitacion;
 import org.plugin.geiser.api.GeiserPluginException;
 import org.plugin.geiser.api.InteresadoG;
 import org.plugin.geiser.api.PeticionBusquedaGeiser;
 import org.plugin.geiser.api.PeticionBusquedaTramitGeiser;
 import org.plugin.geiser.api.PeticionConsultaGeiser;
+import org.plugin.geiser.api.PeticionRegistroEnvioGeiser;
 import org.plugin.geiser.api.PeticionRegistroGeiser;
+import org.plugin.geiser.api.Respuesta;
+import org.plugin.geiser.api.RespuestaBusquedaTramitGeiser;
+import org.plugin.geiser.api.RespuestaConsultaGeiser;
 import org.plugin.geiser.api.RespuestaRegistroGeiser;
+import org.plugin.geiser.api.TipoAsiento;
 import org.plugin.geiser.api.TipoDocumento;
 import org.plugin.geiser.api.TipoRespuesta;
+import org.plugin.geiser.api.ws.AnexoType;
+import org.plugin.geiser.api.ws.ApunteRegistroType;
 import org.plugin.geiser.api.ws.CanalNotificacionEnum;
 import org.plugin.geiser.api.ws.EstadoAsientoEnum;
+import org.plugin.geiser.api.ws.EstadoTramitacionRegistroType;
 import org.plugin.geiser.api.ws.InteresadoType;
 import org.plugin.geiser.api.ws.PeticionBusquedaEstadoTramitacionType;
 import org.plugin.geiser.api.ws.PeticionBusquedaType;
 import org.plugin.geiser.api.ws.PeticionConsultaType;
+import org.plugin.geiser.api.ws.PeticionRegistroEnvioSimpleType;
 import org.plugin.geiser.api.ws.PeticionRegistroType;
+import org.plugin.geiser.api.ws.RespuestaType;
+import org.plugin.geiser.api.ws.ResultadoBusquedaEstadoTramitacionType;
+import org.plugin.geiser.api.ws.ResultadoConsultaType;
 import org.plugin.geiser.api.ws.ResultadoRegistroType;
 import org.plugin.geiser.api.ws.TipoAsientoEnum;
+import org.plugin.geiser.api.ws.TipoDocAnexoEnum;
 import org.plugin.geiser.api.ws.TipoDocumentacionFisicaEnum;
+import org.plugin.geiser.api.ws.TipoEnvio;
+import org.plugin.geiser.api.ws.TipoFirmaEnum;
 import org.plugin.geiser.api.ws.TipoIdentificacionEnum;
 import org.plugin.geiser.api.ws.TipoTransporteEnum;
+import org.plugin.geiser.api.ws.ValidezDocumentoEnum;
 import org.springframework.stereotype.Component;
 
 import ma.glasnost.orika.CustomConverter;
@@ -61,11 +84,54 @@ public class ConversionPluginHelper {
 						target.setNuTransporte(source.getNuTransporte());
 						target.setObservaciones(source.getObservaciones());
 						target.setCdAsunto(source.getCdAsunto()); //TODO: revisar
-						for (InteresadoG interesado: source.getInteresados()) {
-							target.getInteresados().add(
-									convertir(
-											interesado, 
-											InteresadoType.class));	
+						if (source.getInteresados() != null) {
+							for (InteresadoG interesado: source.getInteresados()) {
+								target.getInteresados().add(
+										convertir(
+												interesado, 
+												InteresadoType.class));	
+							}
+						}
+						return target;
+					}
+				});
+		mapperFactory.getConverterFactory().registerConverter(
+				new CustomConverter<PeticionRegistroEnvioGeiser, PeticionRegistroEnvioSimpleType>() {
+					@Override
+					public PeticionRegistroEnvioSimpleType convert(PeticionRegistroEnvioGeiser source, Type<? extends PeticionRegistroEnvioSimpleType> destinationType) {
+						PeticionRegistroEnvioSimpleType target = new PeticionRegistroEnvioSimpleType();
+						target.setResumen(source.getResumen());
+						if (source.getTipoAsiento() != null)
+							target.setTipoAsiento(TipoAsientoEnum.fromValue(source.getTipoAsiento().name()));
+						if (source.getTipoEnvio() != null)
+							target.setTipoEnvio(TipoEnvio.fromValue(source.getTipoEnvio().name()));
+						if (source.getTipoAsiento() != null && source.getTipoAsiento().equals(TipoAsiento.SALIDA))
+							target.setCdOrganoOrigen(source.getOrganoOrigen());
+						target.setCdOrganoDestino(source.getOrganoDestino());
+						if (source.getDocumentacionFisica() != null)
+							target.setDocumentacionFisica(TipoDocumentacionFisicaEnum.fromValue(source.getDocumentacionFisica().name()));
+						target.setReferenciaExterna(source.getRefExterna());
+						target.setNuExpediente(source.getNuExpediente());
+						if (source.getTipoTransporte() != null)
+							target.setTipoTransporte(TipoTransporteEnum.fromValue(source.getTipoTransporte().name()));
+						target.setNuTransporte(source.getNuTransporte());
+						target.setObservaciones(source.getObservaciones());
+						target.setCdAsunto(source.getCdAsunto()); //TODO: revisar
+						if (source.getInteresados() != null) {
+							for (InteresadoG interesado: source.getInteresados()) {
+								target.getInteresados().add(
+										convertir(
+												interesado, 
+												InteresadoType.class));	
+							}
+						}
+						if (source.getAnexos() != null) {
+							for (AnexoG anexo: source.getAnexos()) {
+								target.getAnexos().add(
+										convertir(
+												anexo, 
+												AnexoType.class));	
+							}
 						}
 						return target;
 					}
@@ -124,6 +190,35 @@ public class ConversionPluginHelper {
 					}
 				});
 		mapperFactory.getConverterFactory().registerConverter(
+				new CustomConverter<AnexoG, AnexoType>() {
+					@Override
+					public AnexoType convert(AnexoG source, Type<? extends AnexoType> destinationType) {
+						AnexoType target = new AnexoType();
+						target.setNombre(source.getTitulo());
+						target.setValidez(ValidezDocumentoEnum.valueOf(source.getValidezDocumento().name()));
+						target.setTipoDocumento(TipoDocAnexoEnum.valueOf(source.getTipoDocumentoAnexo().name()));
+						target.setAnexo(source.getAnexoBase64());
+//						target.setHash(DocumentHelper.getHash512Document(Base64.decodeBase64(source.getAnexoBase64())));
+						if (source.getHash() != null)
+							target.setHash(DocumentHelper.getHash512Document(Base64.decodeBase64(source.getAnexoBase64())));
+						target.setTipoMime(source.getTipoMime());
+						target.setObservaciones(source.getObservaciones());
+						target.setTamanioFichero(source.getTamanioFichero());
+						target.setTipoFirma(TipoFirmaEnum.fromValue(source.getTipoFirma().name()));
+						if (source.getFirmaBase64() != null) {
+							target.setTipoFirma(TipoFirmaEnum.valueOf(source.getTipoFirma().name()));
+							target.setFirma(source.getFirmaBase64());
+//							target.setHashFirma(DocumentHelper.getHash512Document(Base64.decodeBase64(source.getFirmaBase64())));
+							if (source.getHashFirma() != null)
+								target.setHashFirma(DocumentHelper.getHash512Document(Base64.decodeBase64(source.getFirmaBase64())));
+							target.setNombreFirma(source.getNombreFirma());
+							target.setTamanioFicheroFirma(source.getTamanioFicheroFirma());
+							target.setTipoMimeFirma(source.getTipoMimeFirma());
+						}
+						return target;
+					}
+				});
+		mapperFactory.getConverterFactory().registerConverter(
 				new CustomConverter<PeticionConsultaGeiser, PeticionConsultaType>() {
 					@Override
 					public PeticionConsultaType convert(PeticionConsultaGeiser source, Type<? extends PeticionConsultaType> destinationType) {
@@ -148,14 +243,14 @@ public class ConversionPluginHelper {
 					@Override
 					public PeticionBusquedaEstadoTramitacionType convert(PeticionBusquedaTramitGeiser source, Type<? extends PeticionBusquedaEstadoTramitacionType> destinationType) {
 						PeticionBusquedaEstadoTramitacionType target = new PeticionBusquedaEstadoTramitacionType();
-						//TODO: conversión
-						target.setTimestampRegistradoDesde(source.getFechaRegistroInicio().toString());
-						target.setTimestampRegistradoHasta(source.getFechaRegistroFinal().toString());
-						target.setCdOficinaOrigen(source.getOficinaOrigen());
+						target.setNuRegistro(source.getNuRegistro());
 						if (source.getTipoDocumentoInteresadoRepre() != null)
-							target.setTipoIdentificadorInteresadoRepresentante(TipoIdentificacionEnum.fromValue(source.getTipoDocumentoInteresadoRepre().name()));
+							target.setTipoIdentificadorInteresadoRepresentante(convertir(source.getTipoDocumentoInteresadoRepre(), TipoIdentificacionEnum.class));
 						target.setIdentificadorInteresadoRepresentante(source.getDocumentoInteresadoRepre());
 						target.setIncluirEnviadosSIR(source.isIncluirEnviosSir());
+//						target.setTimestampRegistradoDesde(source.getFechaRegistroInicio().toString());
+//						target.setTimestampRegistradoHasta(source.getFechaRegistroFinal().toString());
+//						target.setCdOficinaOrigen(source.getOficinaOrigen());
 						return target;
 					}
 				});
@@ -164,8 +259,7 @@ public class ConversionPluginHelper {
 					@Override
 					public RespuestaRegistroGeiser convert(ResultadoRegistroType source, Type<? extends RespuestaRegistroGeiser> destinationType) {
 						RespuestaRegistroGeiser target = new RespuestaRegistroGeiser();
-						target.setCodigo(source.getRespuesta().getCodigo());
-						target.setTipoRespuesta(TipoRespuesta.valueOf(source.getRespuesta().getTipo().name()));
+						target.setRespuesta(convertir(source.getRespuesta(), Respuesta.class));
 						target.setNuRegistro(source.getApunte().getNuRegistro());
 						try {
 							SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddhhmmss");
@@ -174,7 +268,75 @@ public class ConversionPluginHelper {
 						} catch (ParseException e) {
 							throw new GeiserPluginException("Ha habido un error interpretando la respuesta de GEISER");
 						}
-						target.setMensaje(source.getRespuesta().getMensaje());
+						return target;
+					}
+				});
+		mapperFactory.getConverterFactory().registerConverter(
+				new CustomConverter<ResultadoBusquedaEstadoTramitacionType, RespuestaBusquedaTramitGeiser>() {
+					@Override
+					public RespuestaBusquedaTramitGeiser convert(ResultadoBusquedaEstadoTramitacionType source, Type<? extends RespuestaBusquedaTramitGeiser> destinationType) {
+						RespuestaBusquedaTramitGeiser target = new RespuestaBusquedaTramitGeiser();
+						target.setRespuesta(convertir(source.getRespuesta(), Respuesta.class));
+						target.setEstadosTramitacionRegistro(convertirList(source.getEstadosTramitacion(), EstadoTramitacion.class));
+						target.setNuTotalApuntes(source.getNuTotalAsientos());
+						return target;
+					}
+				});
+		mapperFactory.getConverterFactory().registerConverter(
+				new CustomConverter<EstadoTramitacionRegistroType, EstadoTramitacion>() {
+					@Override
+					public EstadoTramitacion convert(EstadoTramitacionRegistroType source, Type<? extends EstadoTramitacion> destinationType) {
+						EstadoTramitacion target = new EstadoTramitacion();
+						target.setEstado(EstadoTramit.valueOf(source.getEstado().name()));
+						try {
+							SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddhhmmss");
+							if (source.getTimestampConfirmadoRechazado() != null) {
+								Date fechaEstado = sdf.parse(source.getTimestampConfirmadoRechazado());
+								target.setFechaEstado(fechaEstado);
+							}
+							Date fechaRegistro = sdf.parse(source.getTimestampRegistrado());
+							target.setFechaRegistro(fechaRegistro);
+						} catch (ParseException e) {
+							throw new GeiserPluginException("Ha habido un error interpretando la respuesta de GEISER");
+						}
+						target.setIdentificadorIntercambioSIR(source.getIdentificadoresIntercambioSIR());
+						target.setNuRegistro(source.getNuRegistro());
+						target.setNuRegistroInterno(source.getNuRegistroInterno());
+						target.setNuRegistroOrigen(source.getNuRegistroOrigen());
+						target.setTipoAsiento(TipoAsiento.valueOf(source.getTipoAsiento().name()));
+						return target;
+					}
+				});
+		mapperFactory.getConverterFactory().registerConverter(
+				new CustomConverter<ResultadoConsultaType, RespuestaConsultaGeiser>() {
+					@Override
+					public RespuestaConsultaGeiser convert(ResultadoConsultaType source, Type<? extends RespuestaConsultaGeiser> destinationType) {
+						RespuestaConsultaGeiser target = new RespuestaConsultaGeiser();
+						target.setRespuesta(convertir(source.getRespuesta(), Respuesta.class));
+						target.setApuntes(convertirList(source.getApuntes(), ApunteRegistro.class));
+						return target;
+					}
+				});
+		mapperFactory.getConverterFactory().registerConverter(
+				new CustomConverter<ApunteRegistroType, ApunteRegistro>() {
+					@Override
+					public ApunteRegistro convert(ApunteRegistroType source, Type<? extends ApunteRegistro> destinationType) {
+						ApunteRegistro target = new ApunteRegistro();
+						target.setTipoAsiento(TipoAsiento.valueOf(source.getTipoAsiento().name()));
+						target.setNuRegistro(source.getNuRegistro());
+						target.setEstado(EstadoRegistro.valueOf(source.getEstado().name()));
+						//TODO: completar
+						return target;
+					}
+				});
+		mapperFactory.getConverterFactory().registerConverter(
+				new CustomConverter<RespuestaType, Respuesta>() {
+					@Override
+					public Respuesta convert(RespuestaType source, Type<? extends Respuesta> destinationType) {
+						Respuesta target = new Respuesta();
+						target.setCodigo(source.getCodigo());
+						target.setMensaje(source.getMensaje());
+						target.setTipoRespuesta(TipoRespuesta.valueOf(source.getTipo().name()));
 						return target;
 					}
 				});

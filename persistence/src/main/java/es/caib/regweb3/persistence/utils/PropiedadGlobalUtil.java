@@ -6,6 +6,8 @@ import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.log4j.Logger;
 
 import javax.naming.InitialContext;
+
+import java.io.File;
 import java.util.List;
 import java.util.Properties;
 
@@ -347,10 +349,13 @@ public class PropiedadGlobalUtil {
      * @param idEntidad
      * @return
      */
-    public static String getArchivosPath() {
+    public static File getArchivosPath() {
         final String partialPropertyName = "archivos.path";
-
-        return getString(partialPropertyName);
+        if(getString(partialPropertyName) != null) {
+            return new File(getString(partialPropertyName));
+        }else{
+            return null;
+        }
     }
     
     /**
@@ -820,7 +825,7 @@ public class PropiedadGlobalUtil {
 
         if (propiedadGlobalEjb == null) {
             try {
-                propiedadGlobalEjb = (PropiedadGlobalLocal) new InitialContext().lookup("java:comp/env/regweb3/PropiedadGlobalEJB/local");
+                propiedadGlobalEjb = (PropiedadGlobalLocal) new InitialContext().lookup("regweb3/PropiedadGlobalEJB/local");
             } catch (Throwable e) {
                 log.error("No se ha podido instanciar PropiedadGlobalEJB");
                 throw new Exception(e);

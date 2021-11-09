@@ -1,21 +1,20 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<artifactId>plugin-geiser-api</artifactId>
-	<name>geiser-api</name>
-
-	<parent>
-		<groupId>es.caib.regweb3</groupId>
-		<artifactId>plugin-geiser</artifactId>
-		<version>3.2.4</version>
-	</parent>
-	
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-	</properties>
-
-	<dependencies>
+<?xml version="1.0"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>es.caib.regweb3</groupId>
+    <artifactId>plugin-geiser</artifactId>
+    <version>3.2.4</version>
+  </parent>
+  <artifactId>plugin-geiser-api</artifactId>
+  <name>plugin-geiser-api</name>
+  
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+  
+  <dependencies>
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
@@ -23,10 +22,10 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.fundaciobit.pluginsib.core</groupId>
-			<artifactId>pluginsib-core</artifactId>
-			<version>2.0.0</version>
-		</dependency>
+            <groupId>org.fundaciobit.pluginsib.core</groupId>
+            <artifactId>pluginsib-core</artifactId>
+            <version>2.0.0</version>
+        </dependency>
 	</dependencies>
 	<build>
 		<plugins>
@@ -45,7 +44,7 @@
 							<wsdlUrls>
 								<wsdlUrl>${basedir}/wsdl/RegistroWebService.wsdl</wsdlUrl>
 							</wsdlUrls>
-							<packageName>org.geiser.api.ws</packageName>
+							<packageName>org.plugin.geiser.api.ws</packageName>
 							<vmArgs>
 								<vmArg>-Djavax.xml.accessExternalSchema=all -Djavax.net.ssl.trustStore=${basedir}/doc/rgecopruebas.jks -Djavax.net.ssl.trustStorePassword=tecnologies</vmArg>
 							</vmArgs>

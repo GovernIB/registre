@@ -113,8 +113,8 @@ public class FileSystemManager {
      */
     public static File crearArchivo(byte[] archivo, Long dstId) throws Exception {
 
-        log.info("Creamos el archivo: " + getArchivosPath()+dstId.toString());
-        File file = new File(getArchivosPath(), String.valueOf(dstId));
+        log.info("Creamos el archivo: " + PropiedadGlobalUtil.getArchivosPath()+dstId.toString());
+        File file = new File(PropiedadGlobalUtil.getArchivosPath(), String.valueOf(dstId));
         FileOutputStream out = new FileOutputStream(file);
 
         if (!file.exists()) {
