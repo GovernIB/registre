@@ -139,23 +139,8 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
                 anexoFull.setSignatureCustody(custody.getSignatureInfoOnly(custodyID)); //Firma asociada al anexo
                 anexoFull.setSignatureFileDelete(false);
 
-                //Obtenemos las metadatas de escaneo del anexo si no es justificante
-                if(anexo.getScan()) {
-                    List<Metadata> metadataList = new ArrayList<>();
-                    //Profundidad color
-                    Metadata profundidadColor = custody.getOnlyOneMetadata(custodyID, MetadataConstants.EEMGDE_PROFUNDIDAD_COLOR);
-                    if (profundidadColor != null) {
-                        metadataList.add(profundidadColor);
-                    }
-
-                    //Resolución
-                    Metadata resolucion = custody.getOnlyOneMetadata(custodyID, MetadataConstants.EEMGDE_RESOLUCION);
-                    if (resolucion != null) {
-                        metadataList.add(resolucion);
-                    }
-
-                    anexoFull.setMetadatas(metadataList);
-                }
+                //cargamos los metadatos del anexo
+                cargarMetadatasAnexo(anexoFull,custody);
 
             if (log.isDebugEnabled()) {
                 log.debug("SIGNATURE " + custody.getSignatureInfoOnly(custodyID));
@@ -236,24 +221,8 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
                 anexoFull.setSignatureCustody(custody.getSignatureInfo(custodyID));//Firma asociada al anexo
                 anexoFull.setSignatureFileDelete(false);
 
-                //cargamos los metadatos de escaneo
-                if(anexo.getScan()) {
-                    List<Metadata> metadataList = new ArrayList<>();
-
-                    //Profundidad color
-                    Metadata profundidadColor = custody.getOnlyOneMetadata(custodyID, MetadataConstants.EEMGDE_PROFUNDIDAD_COLOR);
-                    if (profundidadColor != null) {
-                        metadataList.add(profundidadColor);
-                    }
-
-                    //Resolución
-                    Metadata resolucion = custody.getOnlyOneMetadata(custodyID, MetadataConstants.EEMGDE_RESOLUCION);
-                    if (resolucion != null) {
-                        metadataList.add(resolucion);
-                    }
-                    anexoFull.setMetadatas(metadataList);
-
-                }
+                //cargamos los metadatos del anexo
+                cargarMetadatasAnexo(anexoFull,custody);
 
             } else if(anexo.getPerfilCustodia().equals(RegwebConstantes.PERFIL_CUSTODIA_ARXIU)){
 
@@ -1682,6 +1651,42 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
     public AnexoSimple descargarJustificante(Anexo anexo, Long idEntidad) throws I18NException, Exception {
 
         return descargarFirmaDesdeUrlValidacion(anexo, idEntidad);
+    }
+
+    private void cargarMetadatasAnexo(AnexoFull anexoFull, IDocumentCustodyPlugin custody  ) throws Exception{
+
+        List<Metadata> metadataList = new ArrayList<>();
+
+        //Obtenemos las metadatas de escaneo del anexo si no es justificante
+        if(anexoFull.getAnexo().getScan()) {
+
+            //Profundidad color
+            Metadata profundidadColor = custody.getOnlyOneMetadata(anexoFull.getAnexo().getCustodiaID(), MetadataConstants.EEMGDE_PROFUNDIDAD_COLOR);
+            if (profundidadColor != null) {
+                metadataList.add(profundidadColor);
+            }
+
+            //Resolución
+            Metadata resolucion = custody.getOnlyOneMetadata(anexoFull.getAnexo().getCustodiaID(), MetadataConstants.EEMGDE_RESOLUCION);
+            if (resolucion != null) {
+                metadataList.add(resolucion);
+            }
+
+            //Idioma
+            Metadata idioma = custody.getOnlyOneMetadata(anexoFull.getAnexo().getCustodiaID(), MetadataConstants.EEMGDE_IDIOMA);
+            if (idioma != null) {
+                metadataList.add(idioma);
+            }
+
+        }
+
+        //Resto de metadatos
+        Metadata metadataDescripcion = custody.getOnlyOneMetadata(anexoFull.getAnexo().getCustodiaID(), MetadataConstants.ENI_DESCRIPCION);
+        if (metadataDescripcion != null) {
+            metadataList.add(metadataDescripcion);
+        }
+
+        anexoFull.setMetadatas(metadataList);
     }
 
 }
