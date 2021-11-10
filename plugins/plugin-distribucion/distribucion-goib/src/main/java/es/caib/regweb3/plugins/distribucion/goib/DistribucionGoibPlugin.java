@@ -382,25 +382,48 @@ public class DistribucionGoibPlugin extends AbstractPluginProperties implements 
 
         //Metadatos de escaneo
         List<Metadata> metadadesAnexo = anexoFull.getMetadatas();
-        // De momento solo se pueden enviar estos 2 metadatos
-        if(metadadesAnexo!= null && anexoFull.getAnexo().getScan()){
-            RegistreAnnex.MetaDades metaDades = new RegistreAnnex.MetaDades();
-            for(Metadata metadata: metadadesAnexo){
-                if(metadata.getKey().equals(MetadataConstants.EEMGDE_RESOLUCION)){
-                    RegistreAnnex.MetaDades.Entry resolucion = new RegistreAnnex.MetaDades.Entry();
-                    resolucion.setKey("eni:resolucion");
-                    resolucion.setValue(metadata.getValue());
-                    metaDades.getEntry().add(resolucion);
+        RegistreAnnex.MetaDades metaDades = new RegistreAnnex.MetaDades();
+
+        if(metadadesAnexo!= null ) {
+            for (Metadata metadata : metadadesAnexo) {
+                if(anexoFull.getAnexo().getScan()) {
+                    if (metadata.getKey().equals(MetadataConstants.EEMGDE_RESOLUCION)) {
+                        RegistreAnnex.MetaDades.Entry resolucion = new RegistreAnnex.MetaDades.Entry();
+                        resolucion.setKey("eni:resolucion");
+                        resolucion.setValue(metadata.getValue());
+                        metaDades.getEntry().add(resolucion);
+                    }
+                    if (metadata.getKey().equals(MetadataConstants.EEMGDE_PROFUNDIDAD_COLOR)) {
+                        RegistreAnnex.MetaDades.Entry profundidadColor = new RegistreAnnex.MetaDades.Entry();
+                        profundidadColor.setKey("eni:profundidad_color");
+                        profundidadColor.setValue(metadata.getValue());
+                        metaDades.getEntry().add(profundidadColor);
+                    }
+                    if (metadata.getKey().equals(MetadataConstants.EEMGDE_IDIOMA)) {
+                        RegistreAnnex.MetaDades.Entry idioma = new RegistreAnnex.MetaDades.Entry();
+                        idioma.setKey("eni:idioma");
+                        idioma.setValue(metadata.getValue());
+                        metaDades.getEntry().add(idioma);
+                    }
                 }
-                if(metadata.getKey().equals(MetadataConstants.EEMGDE_PROFUNDIDAD_COLOR)){
-                    RegistreAnnex.MetaDades.Entry profundidadColor = new RegistreAnnex.MetaDades.Entry();
-                    profundidadColor.setKey("eni:profundidad_color");
-                    profundidadColor.setValue(metadata.getValue());
-                    metaDades.getEntry().add(profundidadColor);
+                if (metadata.getKey().equals(MetadataConstants.ENI_DESCRIPCION)) {
+                    RegistreAnnex.MetaDades.Entry descripcion = new RegistreAnnex.MetaDades.Entry();
+                    descripcion.setKey("eni:descripcion");
+                    descripcion.setValue(metadata.getValue());
+
+                    metaDades.getEntry().add(descripcion);
                 }
+
             }
-            registreAnnex.setMetaDades(metaDades);
+
         }
+        //Metadata CM:TITLE
+        RegistreAnnex.MetaDades.Entry cmtitle = new RegistreAnnex.MetaDades.Entry();
+        cmtitle.setKey("cm:title");
+        cmtitle.setValue(anexoFull.getAnexo().getTitulo());
+        metaDades.getEntry().add(cmtitle);
+
+        registreAnnex.setMetaDades(metaDades);
 
         //Fecha de Captura
         GregorianCalendar c = new GregorianCalendar();
