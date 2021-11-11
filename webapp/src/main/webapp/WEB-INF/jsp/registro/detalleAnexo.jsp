@@ -56,6 +56,13 @@
 
                 <div class="form-group col-xs-6">
                     <div class="col-xs-5 pull-left etiqueta_regweb control-label">
+                        <label><spring:message code="anexo.escaneado"/></label>
+                    </div>
+                    <div class="col-xs-7" id="escaneado"></div>
+                </div>
+
+                <div class="form-group col-xs-6">
+                    <div class="col-xs-5 pull-left etiqueta_regweb control-label">
                         <label><spring:message code="anexo.mime"/></label>
                     </div>
                     <div class="col-xs-7" id="mime"></div>
