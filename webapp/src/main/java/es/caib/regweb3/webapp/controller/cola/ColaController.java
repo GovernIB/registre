@@ -7,6 +7,7 @@ import es.caib.regweb3.persistence.ejb.ColaLocal;
 import es.caib.regweb3.persistence.ejb.CustodiaLocal;
 import es.caib.regweb3.persistence.ejb.DistribucionLocal;
 import es.caib.regweb3.persistence.utils.Paginacion;
+import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.controller.BaseController;
@@ -23,6 +24,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
 
 /**
  * Created by mgonzalez on 19/04/2018.
@@ -222,20 +224,33 @@ public class ColaController extends BaseController {
 
 
     @ModelAttribute("tiposCola")
-    public
-    Long[] tiposCola() {
+    public HashMap<Long, Boolean> tiposCola(HttpServletRequest request) {
+
+        HashMap<Long, Boolean> tiposCola =  new HashMap<>();
+        Entidad entidadActiva = getEntidadActiva(request);
 
         if(Configuracio.isCAIB()){
-            return RegwebConstantes.COLA_TIPOS_CAIB;
-        }else{
-            return RegwebConstantes.COLA_TIPOS;
-        }
+            for(Long tipoCola:RegwebConstantes.COLA_TIPOS_CAIB){
 
+                if(tipoCola.equals(RegwebConstantes.COLA_DISTRIBUCION)){
+                    tiposCola.put(tipoCola, PropiedadGlobalUtil.pararColaDistribucion(entidadActiva.getId()));
+                }
+
+                if(tipoCola.equals(RegwebConstantes.COLA_CUSTODIA)){
+                    tiposCola.put(tipoCola, PropiedadGlobalUtil.pararColaCustodia(entidadActiva.getId()));
+                }
+            }
+
+        }else{
+            for(Long tipoCola:RegwebConstantes.COLA_TIPOS){
+                tiposCola.put(tipoCola, PropiedadGlobalUtil.pararColaDistribucion(entidadActiva.getId()));
+            }
+        }
+        return tiposCola;
     }
 
     @ModelAttribute("estados")
-    public
-    Long[] estados() {
+    public Long[] estados() {
         return RegwebConstantes.COLA_ESTADOS;
     }
 }

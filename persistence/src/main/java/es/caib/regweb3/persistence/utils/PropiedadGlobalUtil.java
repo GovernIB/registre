@@ -622,8 +622,19 @@ public class PropiedadGlobalUtil {
      * @param idEntidad
      * @return
      */
-    public static boolean pararDistribucion(Long idEntidad){
+    public static boolean pararColaDistribucion(Long idEntidad){
         final String partialPropertyName = "cola.parar.distribucion";
+        return getBooleanByEntidad(idEntidad, partialPropertyName);
+    }
+
+    /**
+     * Propiedad que para la cola de Cutodia
+     * Propiedad: es.caib.regweb3.parar.cola.custodia
+     * @param idEntidad
+     * @return
+     */
+    public static boolean pararColaCustodia(Long idEntidad){
+        final String partialPropertyName = "cola.parar.custodia";
         return getBooleanByEntidad(idEntidad, partialPropertyName);
     }
 

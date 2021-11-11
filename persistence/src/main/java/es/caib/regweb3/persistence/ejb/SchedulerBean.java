@@ -247,7 +247,7 @@ public class SchedulerBean implements SchedulerLocal{
 
             for (Entidad entidad : entidades) {
 
-                if(!PropiedadGlobalUtil.pararDistribucion(entidad.getId())) {
+                if(!PropiedadGlobalUtil.pararColaDistribucion(entidad.getId())) {
 
                     distribucionEjb.distribuirRegistrosEnCola(entidad.getId());
 
@@ -272,7 +272,7 @@ public class SchedulerBean implements SchedulerLocal{
 
             for (Entidad entidad : entidades) {
 
-                if(PropiedadGlobalUtil.getCustodiaDiferida(entidad.getId())){
+                if(PropiedadGlobalUtil.pararColaCustodia(entidad.getId())){
 
                     custodiaEjb.custodiarJustificantesEnCola(entidad.getId());
                 }
