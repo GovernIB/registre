@@ -33,7 +33,13 @@
                     <ul class="nav nav-tabs" role="tablist">
 
                         <c:forEach items="${tiposCola}" var="tipoCola">
-                            <li <c:if test="${tipo == tipoCola}">class="active"</c:if>><a href="<c:url value="/cola/list/${tipoCola}"/>"><i class="fa fa-file-o"></i> <spring:message code="cola.tipo.${tipoCola}" /></a></li>
+                            <li <c:if test="${tipo == tipoCola.key}">class="active"</c:if>>
+                                <a href="<c:url value="/cola/list/${tipoCola.key}"/>">
+                                    <i class="fa fa-file-o"></i> <spring:message code="cola.tipo.${tipoCola.key}" />
+                                    <c:if test="${tipoCola.value == true}"><span class="text-vermell">(<spring:message code="cola.parada"/>)</span></c:if>
+                                    <c:if test="${tipoCola.value == false}"><span class="text-verd">(<spring:message code="cola.activa"/>)</span></c:if>
+                                </a>
+                            </li>
                         </c:forEach>
 
                     </ul>
