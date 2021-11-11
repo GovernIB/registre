@@ -2,32 +2,11 @@ package es.caib.regweb3.ws.v3.impl;
 
 import es.caib.dir3caib.ws.api.unidad.Dir3CaibObtenerUnidadesWs;
 import es.caib.dir3caib.ws.api.unidad.UnidadTF;
-import es.caib.regweb3.model.Entidad;
-import es.caib.regweb3.model.Interesado;
-import es.caib.regweb3.model.Libro;
-import es.caib.regweb3.model.ModeloOficioRemision;
-import es.caib.regweb3.model.Oficina;
-import es.caib.regweb3.model.OficioRemision;
-import es.caib.regweb3.model.Organismo;
-import es.caib.regweb3.model.RegistroEntrada;
-import es.caib.regweb3.model.RegistroSalida;
-import es.caib.regweb3.model.Sesion;
-import es.caib.regweb3.model.UsuarioEntidad;
+import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.model.utils.AnexoSimple;
-import es.caib.regweb3.persistence.ejb.AsientoRegistralLocal;
-import es.caib.regweb3.persistence.ejb.DistribucionLocal;
-import es.caib.regweb3.persistence.ejb.ModeloOficioRemisionLocal;
-import es.caib.regweb3.persistence.ejb.MultiEntidadLocal;
-import es.caib.regweb3.persistence.ejb.OficioRemisionLocal;
-import es.caib.regweb3.persistence.ejb.RegistroEntradaConsultaLocal;
-import es.caib.regweb3.persistence.ejb.RegistroSalidaConsultaLocal;
-import es.caib.regweb3.persistence.ejb.SesionLocal;
-import es.caib.regweb3.persistence.utils.JustificanteReferencia;
-import es.caib.regweb3.persistence.utils.Paginacion;
-import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
-import es.caib.regweb3.persistence.utils.RegistroUtils;
-import es.caib.regweb3.persistence.utils.RespuestaDistribucion;
+import es.caib.regweb3.persistence.ejb.*;
+import es.caib.regweb3.persistence.utils.*;
 import es.caib.regweb3.persistence.validator.RegistroEntradaBeanValidator;
 import es.caib.regweb3.persistence.validator.RegistroEntradaValidator;
 import es.caib.regweb3.persistence.validator.RegistroSalidaBeanValidator;
@@ -38,14 +17,7 @@ import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 import es.caib.regweb3.ws.converter.AsientoConverter;
 import es.caib.regweb3.ws.converter.AsientoRegistralConverter;
-import es.caib.regweb3.ws.model.AsientoRegistralSesionWs;
-import es.caib.regweb3.ws.model.AsientoRegistralWs;
-import es.caib.regweb3.ws.model.AsientoWs;
-import es.caib.regweb3.ws.model.FileContentWs;
-import es.caib.regweb3.ws.model.JustificanteReferenciaWs;
-import es.caib.regweb3.ws.model.JustificanteWs;
-import es.caib.regweb3.ws.model.OficioWs;
-import es.caib.regweb3.ws.model.ResultadoBusquedaWs;
+import es.caib.regweb3.ws.model.*;
 import es.caib.regweb3.ws.utils.UsuarioAplicacionCache;
 import org.apache.commons.io.IOUtils;
 import org.fundaciobit.genapp.common.i18n.I18NException;
@@ -69,9 +41,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import static es.caib.regweb3.utils.RegwebConstantes.RWE_WS_CIUDADANO;
-import static es.caib.regweb3.utils.RegwebConstantes.RWE_WS_ENTRADA;
-import static es.caib.regweb3.utils.RegwebConstantes.RWE_WS_SALIDA;
+import static es.caib.regweb3.utils.RegwebConstantes.*;
 
 /**
  *
@@ -207,7 +177,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
         // Definimos la petición que se guardá en el monitor de integración
         Date inicio = new Date();
         StringBuilder peticion = new StringBuilder();
-        long tiempo = System.currentTimeMillis();
+        
         String numRegFormat = "";
 
         peticion.append("usuario: ").append(UsuarioAplicacionCache.get().getUsuario().getNombreIdentificador()).append(System.getProperty("line.separator"));
@@ -352,7 +322,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
                     //Integracion OK
                     peticion.append("oficina: ").append(registroEntrada.getOficina().getDenominacion()).append(System.getProperty("line.separator"));
                     peticion.append("registro: ").append(registroEntrada.getNumeroRegistroFormateado()).append(System.getProperty("line.separator"));
-                    integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(),peticion.toString(), System.currentTimeMillis() - tiempo, entidadActiva.getId(), numRegFormat);
+                    integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(),peticion.toString(), System.currentTimeMillis() - inicio.getTime(), entidadActiva.getId(), numRegFormat);
 
                 }catch (Exception e){
                     e.printStackTrace();
@@ -431,7 +401,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
                     // Integracion OK
                     peticion.append("oficina: ").append(registroSalida.getOficina().getDenominacion()).append(System.getProperty("line.separator"));
                     peticion.append("registro: ").append(registroSalida.getNumeroRegistroFormateado()).append(System.getProperty("line.separator"));
-                    integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), System.currentTimeMillis() - tiempo, entidadActiva.getId(), numRegFormat);
+                    integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), System.currentTimeMillis() - inicio.getTime(), entidadActiva.getId(), numRegFormat);
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -447,7 +417,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
         }catch (I18NException | Exception e){
 
             if(entidadActiva != null){
-                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, null, System.currentTimeMillis() - tiempo, entidadActiva.getId(), numRegFormat);
+                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, null, System.currentTimeMillis() - inicio.getTime(), entidadActiva.getId(), numRegFormat);
             }
 
             // Marcamos la sesión como ERROR
@@ -478,7 +448,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
         // Integraciones
         Date inicio = new Date();
         StringBuilder peticion = new StringBuilder();
-        long tiempo = System.currentTimeMillis();
+        
         peticion.append("usuario: ").append(UsuarioAplicacionCache.get().getUsuario().getNombreIdentificador()).append(System.getProperty("line.separator"));
         peticion.append("registro: ").append(numeroRegistroFormateado).append(System.getProperty("line.separator"));
 
@@ -499,12 +469,12 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
 
         }catch (Exception e){
 
-            integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, null,System.currentTimeMillis() - tiempo, entidadActiva.getId(), numeroRegistroFormateado);
+            integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, null,System.currentTimeMillis() - inicio.getTime(), entidadActiva.getId(), numeroRegistroFormateado);
             throw new I18NException("asientoRegistral.obtener.error", e.getLocalizedMessage());
         }
 
         // Integracion
-        integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(),peticion.toString(), System.currentTimeMillis() - tiempo, entidadActiva.getId(), numeroRegistroFormateado);
+        integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(),peticion.toString(), System.currentTimeMillis() - inicio.getTime(), entidadActiva.getId(), numeroRegistroFormateado);
 
         return asientoRegistralWs;
 
@@ -524,7 +494,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
         // Integraciones
         Date inicio = new Date();
         StringBuilder peticion = new StringBuilder();
-        long tiempo = System.currentTimeMillis();
+        
         peticion.append("usuario: ").append(UsuarioAplicacionCache.get().getUsuario().getNombreIdentificador()).append(System.getProperty("line.separator"));
         peticion.append("registro: ").append(numeroRegistroFormateado).append(System.getProperty("line.separator"));
 
@@ -557,7 +527,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
                         justificante = justificanteEjb.crearJustificanteWS(usuario,registroEntrada,RegwebConstantes.REGISTRO_ENTRADA, RegistroUtils.getIdiomaJustificante(registroEntrada));
                     }catch (I18NException e){
                         log.info("----------------Error generado justificante via WS------------------");
-                        integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, null,System.currentTimeMillis() - tiempo, entidadActiva.getId(), numeroRegistroFormateado);
+                        integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, null,System.currentTimeMillis() - inicio.getTime(), entidadActiva.getId(), numeroRegistroFormateado);
                         throw new I18NException("registro.justificante.error", numeroRegistroFormateado);
                     }
 
@@ -573,13 +543,13 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
                     justificante = anexoEjb.getAnexoFullLigero(anexoEjb.getIdJustificante(registroEntrada.getRegistroDetalle().getId()), entidadActiva.getId());
                     anexoSimple = anexoEjb.descargarJustificante(justificante.getAnexo(), entidadActiva.getId());
                 }catch (Exception e){
-                    integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, null,System.currentTimeMillis() - tiempo, entidadActiva.getId(), numeroRegistroFormateado);
+                    integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, null,System.currentTimeMillis() - inicio.getTime(), entidadActiva.getId(), numeroRegistroFormateado);
                     throw new I18NException("registro.justificante.error", numeroRegistroFormateado);
                 }
             }
 
             // Integracion
-            integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(),peticion.toString(), System.currentTimeMillis() - tiempo, entidadActiva.getId(), numeroRegistroFormateado);
+            integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(),peticion.toString(), System.currentTimeMillis() - inicio.getTime(), entidadActiva.getId(), numeroRegistroFormateado);
 
             // Alta en la tabla de LOPD
             lopdEjb.altaLopd(registroEntrada.getNumeroRegistro(), registroEntrada.getFecha(), registroEntrada.getLibro().getId(), usuario.getId(), RegwebConstantes.REGISTRO_ENTRADA, RegwebConstantes.LOPD_JUSTIFICANTE);
@@ -602,7 +572,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
                     try{
                         justificante = justificanteEjb.crearJustificanteWS(usuario,registroSalida,RegwebConstantes.REGISTRO_SALIDA, RegistroUtils.getIdiomaJustificante(registroSalida));
                     }catch (I18NException e){
-                        integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, null,System.currentTimeMillis() - tiempo, entidadActiva.getId(), numeroRegistroFormateado);
+                        integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, null,System.currentTimeMillis() - inicio.getTime(), entidadActiva.getId(), numeroRegistroFormateado);
                         throw new I18NException("registro.justificante.error", numeroRegistroFormateado);
                     }
 
@@ -618,13 +588,13 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
                     justificante = anexoEjb.getAnexoFullLigero(anexoEjb.getIdJustificante(registroSalida.getRegistroDetalle().getId()), entidadActiva.getId());
                     anexoSimple = anexoEjb.descargarJustificante(justificante.getAnexo(), entidadActiva.getId());
                 }catch (Exception e){
-                    integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, null,System.currentTimeMillis() - tiempo, entidadActiva.getId(), numeroRegistroFormateado);
+                    integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, null,System.currentTimeMillis() - inicio.getTime(), entidadActiva.getId(), numeroRegistroFormateado);
                     throw new I18NException("registro.justificante.error", numeroRegistroFormateado);
                 }
             }
 
             // Integracion
-            integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(),peticion.toString(), System.currentTimeMillis() - tiempo, entidadActiva.getId(), numeroRegistroFormateado);
+            integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(),peticion.toString(), System.currentTimeMillis() - inicio.getTime(), entidadActiva.getId(), numeroRegistroFormateado);
 
             // Alta en la tabla de LOPD
             lopdEjb.altaLopd(registroSalida.getNumeroRegistro(), registroSalida.getFecha(), registroSalida.getLibro().getId(), usuario.getId(), RegwebConstantes.REGISTRO_SALIDA, RegwebConstantes.LOPD_JUSTIFICANTE);
@@ -647,7 +617,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
         // Integraciones
         Date inicio = new Date();
         StringBuilder peticion = new StringBuilder();
-        long tiempo = System.currentTimeMillis();
+        
         peticion.append("usuario: ").append(UsuarioAplicacionCache.get().getUsuario().getNombreIdentificador()).append(System.getProperty("line.separator"));
         peticion.append("registro: ").append(numeroRegistroFormateado).append(System.getProperty("line.separator"));
 
@@ -656,12 +626,12 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
             JustificanteReferencia jref = asientoRegistralEjb.obtenerReferenciaJustificante(numeroRegistroFormateado, entidadActiva);
 
             // Integracion
-            integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(),peticion.toString(), System.currentTimeMillis() - tiempo, entidadActiva.getId(), numeroRegistroFormateado);
+            integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(),peticion.toString(), System.currentTimeMillis() - inicio.getTime(), entidadActiva.getId(), numeroRegistroFormateado);
 
             return new JustificanteReferenciaWs(jref.getCsv(), jref.getUrl());
 
         }catch (Exception e){
-            integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, null,System.currentTimeMillis() - tiempo, entidadActiva.getId(), numeroRegistroFormateado);
+            integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, null,System.currentTimeMillis() - inicio.getTime(), entidadActiva.getId(), numeroRegistroFormateado);
             throw new I18NException(e, "error.ws.general");
         }
 
@@ -775,7 +745,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
         // Definimos la petición que se guardá en el monitor de integración
         Date inicio = new Date();
         StringBuilder peticion = new StringBuilder();
-        long tiempo = System.currentTimeMillis();
+        
         String numRegFormat = "";
 
         peticion.append("usuario: ").append(UsuarioAplicacionCache.get().getUsuario().getNombreIdentificador()).append(System.getProperty("line.separator"));
@@ -822,11 +792,11 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
             resultado.setResults(asientos);
 
             peticion.append("asientos: ").append(asientos.size()).append(System.getProperty("line.separator"));
-            integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(),peticion.toString(), System.currentTimeMillis() - tiempo, entidadActiva.getId(), numRegFormat);
+            integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(),peticion.toString(), System.currentTimeMillis() - inicio.getTime(), entidadActiva.getId(), numRegFormat);
 
         }catch (Exception e){
             e.printStackTrace();
-            integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, null,System.currentTimeMillis() - tiempo, entidadActiva.getId(), numRegFormat);
+            integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, null,System.currentTimeMillis() - inicio.getTime(), entidadActiva.getId(), numRegFormat);
             throw new I18NException(e, "error.ws.general");
         }
 
@@ -841,7 +811,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
         // Definimos la petición que se guardá en el monitor de integración
         Date inicio = new Date();
         StringBuilder peticion = new StringBuilder();
-        long tiempo = System.currentTimeMillis();
+        
         String numRegFormat = "";
 
         peticion.append("usuario: ").append(UsuarioAplicacionCache.get().getUsuario().getNombreIdentificador()).append(System.getProperty("line.separator"));
@@ -876,7 +846,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
             AsientoRegistralWs asiento = AsientoRegistralConverter.transformarRegistro(registroEntrada, REGISTRO_ENTRADA, entidadActiva,
                     UsuarioAplicacionCache.get().getIdioma(),  oficioRemisionEjb);
 
-            integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(),peticion.toString(), System.currentTimeMillis() - tiempo, entidadActiva.getId(), numRegFormat);
+            integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(),peticion.toString(), System.currentTimeMillis() - inicio.getTime(), entidadActiva.getId(), numRegFormat);
 
             lopdEjb.altaLopd(registroEntrada.getNumeroRegistro(), registroEntrada.getFecha(), registroEntrada.getLibro().getId(), usuarioAplicacion.getId(), RegwebConstantes.REGISTRO_ENTRADA, RegwebConstantes.LOPD_CONSULTA);
 
@@ -884,7 +854,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
 
         }catch (Exception e){
             e.printStackTrace();
-            integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, null,System.currentTimeMillis() - tiempo, entidadActiva.getId(), numRegFormat);
+            integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, null,System.currentTimeMillis() - inicio.getTime(), entidadActiva.getId(), numRegFormat);
             throw new I18NException("asientoRegistral.obtener.error", e.getLocalizedMessage());
         }
 
@@ -898,7 +868,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
         // Definimos la petición que se guardá en el monitor de integración
         Date inicio = new Date();
         StringBuilder peticion = new StringBuilder();
-        long tiempo = System.currentTimeMillis();
+        
         String numRegFormat = "";
 
         peticion.append("usuario: ").append(UsuarioAplicacionCache.get().getUsuario().getNombreIdentificador()).append(System.getProperty("line.separator"));
@@ -948,11 +918,11 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
             resultado.setResults(asientos);
 
             peticion.append("asientos: ").append(asientos.size()).append(System.getProperty("line.separator"));
-            integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(),peticion.toString(), System.currentTimeMillis() - tiempo, entidadActiva.getId(), numRegFormat);
+            integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(),peticion.toString(), System.currentTimeMillis() - inicio.getTime(), entidadActiva.getId(), numRegFormat);
 
         }catch (Exception e){
             e.printStackTrace();
-            integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, null,System.currentTimeMillis() - tiempo, entidadActiva.getId(), numRegFormat);
+            integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, null,System.currentTimeMillis() - inicio.getTime(), entidadActiva.getId(), numRegFormat);
             throw new I18NException(e, "error.ws.general");
         }
 
@@ -968,7 +938,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
         // Definimos la petición que se guardá en el monitor de integración
         Date inicio = new Date();
         StringBuilder peticion = new StringBuilder();
-        long tiempo = System.currentTimeMillis();
+        
         String numRegFormat = "";
 
         peticion.append("usuario: ").append(UsuarioAplicacionCache.get().getUsuario().getNombreIdentificador()).append(System.getProperty("line.separator"));
@@ -1007,7 +977,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
 
             AsientoWs asiento = AsientoConverter.transformarRegistro(registroEntrada, REGISTRO_ENTRADA, idioma);
 
-            integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(),peticion.toString(), System.currentTimeMillis() - tiempo, entidadActiva.getId(), numRegFormat);
+            integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(),peticion.toString(), System.currentTimeMillis() - inicio.getTime(), entidadActiva.getId(), numRegFormat);
 
             lopdEjb.altaLopd(registroEntrada.getNumeroRegistro(), registroEntrada.getFecha(), registroEntrada.getLibro().getId(), usuarioAplicacion.getId(), RegwebConstantes.REGISTRO_ENTRADA, RegwebConstantes.LOPD_CONSULTA);
 
@@ -1015,7 +985,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
 
         }catch (Exception e){
             e.printStackTrace();
-            integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, null,System.currentTimeMillis() - tiempo, entidadActiva.getId(), numRegFormat);
+            integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, null,System.currentTimeMillis() - inicio.getTime(), entidadActiva.getId(), numRegFormat);
             throw new I18NException("asientoRegistral.obtener.error", e.getLocalizedMessage());
         }
     }
@@ -1028,7 +998,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
         // Definimos la petición que se guardá en el monitor de integración
         Date inicio = new Date();
         StringBuilder peticion = new StringBuilder();
-        long tiempo = System.currentTimeMillis();
+        
         String numRegFormat = "";
 
         peticion.append("usuario: ").append(UsuarioAplicacionCache.get().getUsuario().getNombreIdentificador()).append(System.getProperty("line.separator"));
@@ -1058,13 +1028,13 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
 
             FileContentWs fileContentWs = AsientoConverter.transformarFileContentWs(anexo, anexoEjb, entidadActiva, idioma);
 
-            integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(),peticion.toString(), System.currentTimeMillis() - tiempo, entidadActiva.getId(), numRegFormat);
+            integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(),peticion.toString(), System.currentTimeMillis() - inicio.getTime(), entidadActiva.getId(), numRegFormat);
 
             return fileContentWs;
 
         }catch (Exception e){
             e.printStackTrace();
-            integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, null,System.currentTimeMillis() - tiempo, entidadActiva.getId(), numRegFormat);
+            integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, null,System.currentTimeMillis() - inicio.getTime(), entidadActiva.getId(), numRegFormat);
             throw new I18NException("asientoRegistral.obtener.error", e.getLocalizedMessage());
         }
 

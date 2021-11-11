@@ -642,7 +642,7 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
         File source = null;
         File destination = null;
         final String username = CONFIG_USERNAME;
-        long tiempo = System.currentTimeMillis();
+        
 
         // Integración
         peticion.append("clase firma: ").append(plugin.getClass().getName()).append(System.getProperty("line.separator"));
@@ -733,7 +733,7 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
                     byte[] firma = FileUtils.readFileToByteArray(destination);
 
                     // Integracion
-                    integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_FIRMA, reason, peticion.toString(), System.currentTimeMillis() - tiempo, idEntidadActiva, numeroRegistro);
+                    integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_FIRMA, reason, peticion.toString(), System.currentTimeMillis() - inicio.getTime(), idEntidadActiva, numeroRegistro);
 
                     return firma;
 
@@ -742,14 +742,14 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
 
         } catch (I18NException i18ne) {
             try {
-                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_FIRMA, reason, peticion.toString(), i18ne, null, System.currentTimeMillis() - tiempo, idEntidadActiva, numeroRegistro);
+                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_FIRMA, reason, peticion.toString(), i18ne, null, System.currentTimeMillis() - inicio.getTime(), idEntidadActiva, numeroRegistro);
             } catch (Exception e) {
                 e.printStackTrace();
             }
             throw i18ne;
         } catch (Exception e) {
             try {
-                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_FIRMA, reason, peticion.toString(), e, null, System.currentTimeMillis() - tiempo, idEntidadActiva, numeroRegistro);
+                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_FIRMA, reason, peticion.toString(), e, null, System.currentTimeMillis() - inicio.getTime(), idEntidadActiva, numeroRegistro);
             } catch (Exception ex) {
                 ex.printStackTrace();
             }

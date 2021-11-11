@@ -149,7 +149,7 @@ public class DistribucionBean implements DistribucionLocal {
         // Integración
         StringBuilder peticion = new StringBuilder();
         Date inicio = new Date();
-        long tiempo = System.currentTimeMillis();
+        
         String descripcion = "Distribución desde Cola";
         String hora = "<b>" + new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(inicio) + "</b>&nbsp;&nbsp;&nbsp;";
 
@@ -180,7 +180,7 @@ public class DistribucionBean implements DistribucionLocal {
             if (distribuido) { //Si la distribución ha ido bien
                 colaEjb.procesarElementoDistribucion(elemento);
                 registroEntradaEjb.marcarDistribuido(registroEntrada);
-                integracionEjb.addIntegracionOk(inicio, tipoIntegracon, descripcion, peticion.toString(), System.currentTimeMillis() - tiempo, registroEntrada.getUsuario().getEntidad().getId(), registroEntrada.getNumeroRegistroFormateado());
+                integracionEjb.addIntegracionOk(inicio, tipoIntegracon, descripcion, peticion.toString(), System.currentTimeMillis() - inicio.getTime(), registroEntrada.getUsuario().getEntidad().getId(), registroEntrada.getNumeroRegistroFormateado());
             }
 
         } catch (Exception | I18NException | I18NValidationException e) {
@@ -189,7 +189,7 @@ public class DistribucionBean implements DistribucionLocal {
             error = hora + e.getMessage();
             colaEjb.actualizarElementoCola(elemento, idEntidad, error);
             // Añadimos el error a la integración
-            integracionEjb.addIntegracionError(tipoIntegracon, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - tiempo, idEntidad, elemento.getDescripcionObjeto());
+            integracionEjb.addIntegracionError(tipoIntegracon, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - inicio.getTime(), idEntidad, elemento.getDescripcionObjeto());
         }
 
         return distribuido;

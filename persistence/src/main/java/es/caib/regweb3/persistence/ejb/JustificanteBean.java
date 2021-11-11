@@ -122,7 +122,7 @@ public class JustificanteBean implements JustificanteLocal {
         String custodyID = null;
         boolean error = false;
         IDocumentCustodyPlugin documentCustodyPlugin = null;
-        long tiempo = System.currentTimeMillis();
+        
         Date inicio = new Date();
         StringBuilder peticion = new StringBuilder();
         String descripcion = "Generar Justificante DocumentCustody";
@@ -224,18 +224,18 @@ public class JustificanteBean implements JustificanteLocal {
             }
 
             log.info("");
-            log.info("Fin Generando Justificante para el registro: " + registro.getNumeroRegistroFormateado() + " en: " + TimeUtils.formatElapsedTime(System.currentTimeMillis() - tiempo));
+            log.info("Fin Generando Justificante para el registro: " + registro.getNumeroRegistroFormateado() + " en: " + TimeUtils.formatElapsedTime(System.currentTimeMillis() - inicio.getTime()));
             log.info("------------------------------------------------------------");
 
             // Integracion
-            integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_JUSTIFICANTE, descripcion, peticion.toString(), System.currentTimeMillis() - tiempo, usuarioEntidad.getEntidad().getId(), numRegFormat);
+            integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_JUSTIFICANTE, descripcion, peticion.toString(), System.currentTimeMillis() - inicio.getTime(), usuarioEntidad.getEntidad().getId(), numRegFormat);
 
             return anexoFull;
 
         } catch (I18NValidationException | I18NException i18nve) {
             error = true;
             try {
-                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_JUSTIFICANTE, descripcion, peticion.toString(), i18nve, null, System.currentTimeMillis() - tiempo, usuarioEntidad.getEntidad().getId(), numRegFormat);
+                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_JUSTIFICANTE, descripcion, peticion.toString(), i18nve, null, System.currentTimeMillis() - inicio.getTime(), usuarioEntidad.getEntidad().getId(), numRegFormat);
             } catch (Exception ex) {
                 //ex.printStackTrace();
             }
@@ -244,7 +244,7 @@ public class JustificanteBean implements JustificanteLocal {
         } catch (Exception e) {
             error = true;
             try {
-                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_JUSTIFICANTE, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - tiempo, usuarioEntidad.getEntidad().getId(), numRegFormat);
+                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_JUSTIFICANTE, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - inicio.getTime(), usuarioEntidad.getEntidad().getId(), numRegFormat);
             } catch (Exception ex) {
                 //ex.printStackTrace();
             }
@@ -281,7 +281,7 @@ public class JustificanteBean implements JustificanteLocal {
         JustificanteArxiu justificanteArxiu = null;
         IArxiuPlugin iArxiuPlugin = null;
         AnexoFull anexoFull = new AnexoFull();
-        long tiempo = System.currentTimeMillis();
+        
         Date inicio = new Date();
         StringBuilder peticion = new StringBuilder();
         String descripcion = "Generar Justificante Api Arxiu";
@@ -347,11 +347,11 @@ public class JustificanteBean implements JustificanteLocal {
             anexoFull.setAnexo(anexo);
 
             log.info("");
-            log.info("Fin Generando Justificante para el registro: " + registro.getNumeroRegistroFormateado() + " en: " + TimeUtils.formatElapsedTime(System.currentTimeMillis() - tiempo));
+            log.info("Fin Generando Justificante para el registro: " + registro.getNumeroRegistroFormateado() + " en: " + TimeUtils.formatElapsedTime(System.currentTimeMillis() - inicio.getTime()));
             log.info("------------------------------------------------------------");
 
             // Integracion
-            integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_JUSTIFICANTE, descripcion, peticion.toString(), System.currentTimeMillis() - tiempo, entidad.getId(), numRegFormat);
+            integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_JUSTIFICANTE, descripcion, peticion.toString(), System.currentTimeMillis() - inicio.getTime(), entidad.getId(), numRegFormat);
 
             return anexoFull;
 
@@ -359,7 +359,7 @@ public class JustificanteBean implements JustificanteLocal {
             //error = true;
 
             try {
-                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_JUSTIFICANTE, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - tiempo, entidad.getId(), numRegFormat);
+                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_JUSTIFICANTE, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - inicio.getTime(), entidad.getId(), numRegFormat);
             } catch (Exception ex) {
                 //ex.printStackTrace();
             }
