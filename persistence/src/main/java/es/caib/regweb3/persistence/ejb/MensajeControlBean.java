@@ -211,7 +211,6 @@ public class MensajeControlBean extends BaseEjbJPA<MensajeControl, Long> impleme
 
         Date inicio = new Date();
         StringBuilder peticion = new StringBuilder();
-        long tiempo = System.currentTimeMillis();
         String descripcion = "Recepción MensajeControl: " + TipoMensaje.getTipoMensaje(mensaje.getTipoMensaje()).getName();
         peticion.append("IdentificadorIntercambio: ").append(mensaje.getIdentificadorIntercambio()).append(System.getProperty("line.separator"));
         peticion.append("Origen: ").append(mensaje.getCodigoEntidadRegistralOrigen()).append(System.getProperty("line.separator"));
@@ -273,7 +272,7 @@ public class MensajeControlBean extends BaseEjbJPA<MensajeControl, Long> impleme
         persist(mensaje);
 
         // Integración
-        integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_SIR, descripcion,peticion.toString(),System.currentTimeMillis() - tiempo, entidad.getId(), mensaje.getIdentificadorIntercambio());
+        integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_SIR, descripcion,peticion.toString(),System.currentTimeMillis() - inicio.getTime(), entidad.getId(), mensaje.getIdentificadorIntercambio());
 
     }
 

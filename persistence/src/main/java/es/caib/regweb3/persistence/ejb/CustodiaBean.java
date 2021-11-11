@@ -56,7 +56,6 @@ public class CustodiaBean implements CustodiaLocal {
         // Integración
         StringBuilder peticion = new StringBuilder();
         Date inicio = new Date();
-        long tiempo = System.currentTimeMillis();
         String descripcion = "Custodiar Justificante en Arxiu-Caib";
         String hora = "<b>" + new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(inicio) + "</b>&nbsp;&nbsp;&nbsp;";
 
@@ -85,7 +84,7 @@ public class CustodiaBean implements CustodiaLocal {
                 peticion.append("csv: ").append(anexo.getCsv()).append(System.getProperty("line.separator"));
             }
 
-            integracionEjb.addIntegracionOk(inicio, tipoIntegracion, descripcion, peticion.toString(), System.currentTimeMillis() - tiempo, idEntidad, elemento.getDescripcionObjeto());
+            integracionEjb.addIntegracionOk(inicio, tipoIntegracion, descripcion, peticion.toString(), System.currentTimeMillis() - inicio.getTime(), idEntidad, elemento.getDescripcionObjeto());
 
             return true;
 
@@ -95,7 +94,7 @@ public class CustodiaBean implements CustodiaLocal {
             error = hora + e.getMessage();
             colaEjb.actualizarElementoCola(elemento, idEntidad, error);
             // Añadimos el error a la integración
-            integracionEjb.addIntegracionError(tipoIntegracion, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - tiempo, idEntidad, elemento.getDescripcionObjeto());
+            integracionEjb.addIntegracionError(tipoIntegracion, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - inicio.getTime(), idEntidad, elemento.getDescripcionObjeto());
         }
 
         return false;
