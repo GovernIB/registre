@@ -66,7 +66,7 @@ public class RecepcionBean implements RecepcionLocal{
         Date inicio = new Date();
         StringBuilder peticion = new StringBuilder();
         String descripcion = "Recepción Intercambio: ";
-        long tiempo = System.currentTimeMillis();
+        
 
         try {
 
@@ -102,7 +102,7 @@ public class RecepcionBean implements RecepcionLocal{
             // Integración
             descripcion = descripcion.concat(TipoAnotacion.getTipoAnotacion(ficheroIntercambio.getTipoAnotacion()).getName());
             datosIntegracion(ficheroIntercambio, peticion);
-            webServicesMethodsEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_SIR, descripcion, peticion.toString(), System.currentTimeMillis() - tiempo, entidad.getId(), ficheroIntercambio.getIdentificadorIntercambio());
+            webServicesMethodsEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_SIR, descripcion, peticion.toString(), System.currentTimeMillis() - inicio.getTime(), entidad.getId(), ficheroIntercambio.getIdentificadorIntercambio());
 
         }catch (ValidacionException e) {
             Errores errorValidacion = e.getErrorValidacion();
@@ -117,7 +117,7 @@ public class RecepcionBean implements RecepcionLocal{
                 if(entidad != null){
                     descripcion = descripcion.concat("Error validación");
                     datosIntegracion(ficheroIntercambio, peticion);
-                    webServicesMethodsEjb.addIntegracionError(RegwebConstantes.INTEGRACION_SIR, descripcion, peticion.toString(), e,descripcionError, System.currentTimeMillis() - tiempo, entidad.getId(), ficheroIntercambio.getIdentificadorIntercambio());
+                    webServicesMethodsEjb.addIntegracionError(RegwebConstantes.INTEGRACION_SIR, descripcion, peticion.toString(), e,descripcionError, System.currentTimeMillis() - inicio.getTime(), entidad.getId(), ficheroIntercambio.getIdentificadorIntercambio());
                 }
 
             // Error de validación en algún campo que complica la creación de un Mensaje de Error
@@ -156,7 +156,7 @@ public class RecepcionBean implements RecepcionLocal{
             if(entidad != null){
                 descripcion = descripcion.concat("Error no gestionado");
                 datosIntegracion(ficheroIntercambio, peticion);
-                webServicesMethodsEjb.addIntegracionError(RegwebConstantes.INTEGRACION_SIR, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - tiempo, entidad.getId(), ficheroIntercambio.getIdentificadorIntercambio());
+                webServicesMethodsEjb.addIntegracionError(RegwebConstantes.INTEGRACION_SIR, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - inicio.getTime(), entidad.getId(), ficheroIntercambio.getIdentificadorIntercambio());
             }
             log.info("");
             log.info("------------------------------------------------------------------------------------------------------------");
