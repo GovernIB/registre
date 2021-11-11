@@ -22,6 +22,11 @@ function obtenerAnexo(idAnexo, idEntidad){
             $('#validezDocumento').html(tradsanexo['tipoValidezDocumento.'+result.anexo.validezDocumento]);
             $('#tipoDocumento').html(tradsanexo['tipoDocumento.0'+result.anexo.tipoDocumento]);
             $('#observacionesAnexo').html(result.anexo.observaciones);
+            if(result.anexo.scan == true){
+                $('#escaneado').html("Si");
+            }else{
+                $('#escaneado').html("No");
+            }
             $('#origen').html(tradsanexo['anexo.origen.'+result.anexo.origenCiudadanoAdmin]);
             obtenerElementoTraducido(urlTipoDocumental, result.anexo.tipoDocumental.id, 'tipoDocumental');
             if(result.anexo.modoFirma == 0 || result.anexo.modoFirma == 2 ){
@@ -54,6 +59,7 @@ function limpiarAnexoDetalle(){
     $('#validezDocumento').html('');
     $('#tipoDocumento').html('');
     $('#observacionesAnexo').html('');
+    $('#escaneado').html('');
     $('#origen').html('');
     $('#mime').html('');
     $('#tipoFirma').html('');
