@@ -235,6 +235,7 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
         // Integracion
         peticion.append("oficina: ").append(registroEntrada.getOficina().getDenominacion()).append(System.getProperty("line.separator"));
         peticion.append("registro: ").append(registroEntrada.getNumeroRegistroFormateado()).append(System.getProperty("line.separator"));
+        peticion.append("extracto: ").append(registroEntrada.getRegistroDetalle().getExtracto()).append(System.getProperty("line.separator"));
         integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(),peticion.toString(), System.currentTimeMillis() - inicio.getTime(), entidadActiva.getId(), numRegFormat);
 
         return identificadorWs;
