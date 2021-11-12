@@ -654,7 +654,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
         q.setParameter("reenviado", RegwebConstantes.OFICIO_SIR_REENVIADO);
         q.setParameter("idEntidad", idEntidad);
         q.setParameter("maxReintentos", PropiedadGlobalUtil.getMaxReintentosSir(idEntidad));
-        q.setMaxResults(7);
+        q.setMaxResults(5);
 
         List<OficioRemision> oficios = new ArrayList<OficioRemision>();
         List<Object[]> result = q.getResultList();
@@ -678,7 +678,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
         q.setParameter("reenviadoError", RegwebConstantes.OFICIO_SIR_REENVIADO_ERROR);
         q.setParameter("maxReintentos", PropiedadGlobalUtil.getMaxReintentosSir(idEntidad));
         q.setParameter("idEntidad", idEntidad);
-        q.setMaxResults(7);
+        q.setMaxResults(5);
 
         List<OficioRemision> oficios = new ArrayList<OficioRemision>();
         List<Object[]> result = q.getResultList();
