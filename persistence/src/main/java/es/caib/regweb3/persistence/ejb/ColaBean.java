@@ -395,7 +395,7 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
 
         q.setParameter("idEntidad", idEntidad);
         q.setParameter("error", RegwebConstantes.COLA_ESTADO_ERROR);
-        q.setMaxResults(7);
+        q.setMaxResults(5);
 
         return q.getResultList();
     }

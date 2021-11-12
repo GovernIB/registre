@@ -204,7 +204,7 @@ public class IntegracionBean extends BaseEjbJPA<Integracion, Long> implements In
         Calendar hoy = Calendar.getInstance(); //obtiene la fecha de hoy
         hoy.add(Calendar.DATE, -2); //el -2 indica que se le restaran 3 dias
         q.setParameter("fecha", hoy.getTime());
-        q.setMaxResults(7);
+        q.setMaxResults(5);
         q.setHint("org.hibernate.readOnly", true);
 
         List<Integracion> integraciones =  new ArrayList<Integracion>();
