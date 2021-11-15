@@ -105,10 +105,9 @@ public class Regweb3Scheduler {
 
     /**
      * Qué hace: Reintenta enviar los Intercambios SIR sin confirmación
-     * Cuando lo hace: en cada hora, se ejecuta a los 15 minutos despues de iniciada la hora y cada 45 minutos
-     * que al coincidir con la hora en punto y tener un desplazamiento de 15 minutos, conseguimos que se ejecute a y 15 en cada hora).
+     * Cuando lo hace: cada 25 minutos
      */
-    @Scheduled(cron = "0 15/45 * * * *")
+    @Scheduled(cron = "0 0/25 * * * *")
     public void reintentarIntercambiosSinConfirmacion(){
 
         try {
