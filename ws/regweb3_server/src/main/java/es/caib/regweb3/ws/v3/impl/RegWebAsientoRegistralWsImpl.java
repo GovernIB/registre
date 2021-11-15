@@ -39,6 +39,7 @@ import javax.jws.soap.SOAPBinding;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import static es.caib.regweb3.utils.RegwebConstantes.*;
 
@@ -83,9 +84,6 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
 
     @EJB(mappedName = "regweb3/ModeloOficioRemisionEJB/local")
     private ModeloOficioRemisionLocal modeloOficioRemisionEjb;
-
-    @EJB(mappedName = "regweb3/MultiEntidadEJB/local")
-    private MultiEntidadLocal multiEntidadEjb;
 
     @EJB(mappedName = "regweb3/SesionEJB/local")
     private SesionLocal sesionEjb;
@@ -216,7 +214,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
 
             // Validar los Interesados
             List<Interesado> interesados;
-            if (asientoRegistral.getInteresados() != null && asientoRegistral.getInteresados().size() > 0) {
+            if (asientoRegistral.getInteresados() != null && !asientoRegistral.getInteresados().isEmpty()) {
 
                 if(TIPO_OPERACION_COMUNICACION.equals(tipoOperacion)) { //Si es una comunicación
 
@@ -233,7 +231,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
 
             // Validar los Anexos
             List<AnexoFull> anexosFull = null;
-            if (asientoRegistral.getAnexos() != null && asientoRegistral.getAnexos().size() > 0) {
+            if (asientoRegistral.getAnexos() != null && !asientoRegistral.getAnexos().isEmpty()) {
                 anexosFull = procesarAnexos(asientoRegistral.getAnexos(), entidadActiva.getId());
                 peticion.append("anexos: ").append(asientoRegistral.getAnexos().size()).append(System.getProperty("line.separator"));
             }
@@ -334,7 +332,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
 
                 peticion.append("tipoRegistro: ").append(REGISTRO_SALIDA_ESCRITO).append(System.getProperty("line.separator"));
                 if(tipoOperacion != null){
-                    peticion.append("tipoOperacion: ").append(tipoOperacion).append(System.getProperty("line.separator"));
+                    peticion.append("tipoOperacion: ").append(I18NLogicUtils.tradueix(new Locale(Configuracio.getDefaultLanguage()), "registroSalida.tipoOperacion." + tipoOperacion)).append(System.getProperty("line.separator"));
                 }
 
                 // Comprobar ROL RWE_WS_SALIDA
