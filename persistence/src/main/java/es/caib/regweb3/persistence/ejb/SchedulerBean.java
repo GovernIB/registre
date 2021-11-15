@@ -277,7 +277,7 @@ public class SchedulerBean implements SchedulerLocal {
 
             for (Entidad entidad : entidades) {
 
-                if(PropiedadGlobalUtil.pararColaCustodia(entidad.getId())){
+                if(!PropiedadGlobalUtil.pararColaCustodia(entidad.getId())){
 
                     custodiaEjb.custodiarJustificantesEnCola(entidad.getId());
                 }
