@@ -17,6 +17,7 @@ import es.caib.regweb3.persistence.integracion.ArxiuCaibUtils;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
+import es.caib.regweb3.utils.RegwebUtils;
 import es.caib.regweb3.webapp.controller.BaseController;
 import es.caib.regweb3.webapp.utils.AnexoUtils;
 import es.caib.regweb3.webapp.utils.Mensaje;
@@ -636,21 +637,24 @@ public class AnexoController extends BaseController {
         // Obtenemos los anexos del registro para validar que no exceda el máximo de MB establecido
         List<AnexoFull> anexosFull = obtenerAnexosFullByRegistro(registroID, tipoRegistro);
 
+
+
         //Se suman las distintas medidas de los anexos que tiene el registro hasta el momento.
         long tamanyoTotalAnexos = AnexoUtils.obtenerTamanoTotalAnexos(anexosFull);
 
+
         Long tamanyoMaximoTotalAnexosSIR = PropiedadGlobalUtil.getTamanoMaxTotalAnexosSir();
-        String maxTotalAnexos = AnexoUtils.bytesToHuman(tamanyoMaximoTotalAnexosSIR);
+        String maxTotalAnexos = RegwebUtils.bytesToHuman(tamanyoMaximoTotalAnexosSIR);
 
         Long tamanoMaximoPorAnexoSIR = PropiedadGlobalUtil.getTamanoMaximoPorAnexoSir();
-        String sTamanoMaximoPorAnexoSIR = AnexoUtils.bytesToHuman(tamanoMaximoPorAnexoSIR);
+        String sTamanoMaximoPorAnexoSIR = RegwebUtils.bytesToHuman(tamanoMaximoPorAnexoSIR);
 
         // Comprobamos que el nuevo anexo no supere el tamaño máximo total ni el maximo por anexo en sir
-        if (docSize != 0) {
-            String tamanoDoc= AnexoUtils.bytesToHuman(docSize);
+        if (docSize > 0 ) {
+            String tamanoDoc= RegwebUtils.bytesToHuman(docSize);
             tamanyoTotalAnexos += docSize;
             if (tamanyoTotalAnexos > tamanyoMaximoTotalAnexosSIR) {
-                String totalAnexos = AnexoUtils.bytesToHuman(tamanyoTotalAnexos );
+                String totalAnexos = RegwebUtils.bytesToHuman(tamanyoTotalAnexos );
                 if (!scan) {
                     result.rejectValue("documentoFile", "tamanymaxtotalsuperat", new Object[]{totalAnexos, maxTotalAnexos}, I18NUtils.tradueix("tamanymaxtotalsuperat", totalAnexos, maxTotalAnexos));
                 } else {
@@ -665,10 +669,10 @@ public class AnexoController extends BaseController {
                 }
             }
         } else {// Solo comprobamos el tamaño en el documento firma en el caso que el documento este vacio, ya que se trata de firma attached
-            String tamanoFirma = AnexoUtils.bytesToHuman(firmaSize);
+            String tamanoFirma = RegwebUtils.bytesToHuman(firmaSize);
             tamanyoTotalAnexos += firmaSize;
             if (tamanyoTotalAnexos > tamanyoMaximoTotalAnexosSIR) {
-                String totalAnexos = AnexoUtils.bytesToHuman(tamanyoTotalAnexos);
+                String totalAnexos = RegwebUtils.bytesToHuman(tamanyoTotalAnexos);
                 if (!scan) {
                     result.rejectValue("firmaFile", "tamanymaxtotalsuperat", new Object[]{totalAnexos, maxTotalAnexos}, I18NUtils.tradueix("tamanymaxtotalsuperat", totalAnexos, maxTotalAnexos));
                 } else {
@@ -682,6 +686,7 @@ public class AnexoController extends BaseController {
                     throw new I18NException("tamanyfitxerpujatsuperat", tamanoFirma, sTamanoMaximoPorAnexoSIR);
                 }
             }
+
         }
 
 

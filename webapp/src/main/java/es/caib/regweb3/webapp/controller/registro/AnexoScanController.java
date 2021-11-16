@@ -9,6 +9,7 @@ import es.caib.regweb3.persistence.ejb.TipoDocumentalLocal;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.persistence.utils.ScanWebConfigRegWeb;
 import es.caib.regweb3.utils.RegwebConstantes;
+import es.caib.regweb3.utils.RegwebUtils;
 import es.caib.regweb3.webapp.utils.AnexoUtils;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import org.fundaciobit.genapp.common.i18n.I18NArgumentString;
@@ -25,6 +26,7 @@ import org.fundaciobit.pluginsib.scanweb.api.ScanWebRequestSignatureInfo;
 import org.fundaciobit.pluginsib.scanweb.api.ScanWebResult;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -128,9 +130,17 @@ public class AnexoScanController extends AnexoController {
                 anexoForm.setNumDocumento(anexoForm.getNumDocumento()+1);
             }
 
+            //Obtenemos tamanyo máximo permitido
+            Long maxUploadSizeInBytes;
+            Long entidadID = getEntidadActiva(request).getId();
+            if(entidadID != null) {
+                maxUploadSizeInBytes = PropiedadGlobalUtil.getMaxUploadSizeInBytes(entidadID);
+            }else {
+                maxUploadSizeInBytes = PropiedadGlobalUtil.getMaxUploadSizeInBytes();
+            }
 
-            //Validamos las condiciones de SIR
-            if (isSIR) {
+            //Si hay tamaño máximo permitido o isSIR hay que comprobar los tamanyos y extensiones
+            if(maxUploadSizeInBytes != null || isSIR){
                 String docExtension = "";
                 String firmaExtension = "";
                 long docSize = -1;
@@ -145,9 +155,19 @@ public class AnexoScanController extends AnexoController {
                     firmaExtension = AnexoUtils.obtenerExtensionAnexo(anexoForm.getSignatureCustody().getName());
                     firmaSize = anexoForm.getSignatureCustody().getLength();
                 }
-                //validamos las limitaciones SIR
-                validarLimitacionesSIRAnexos(anexoForm.getRegistroID(), anexoForm.getTipoRegistro(), docSize, firmaSize, docExtension, firmaExtension, null, true);
+
+                //Validadmos Tamanyo máximo permitido
+                if(maxUploadSizeInBytes !=null) {
+                    validarMaxUploadSize( docSize, firmaSize, maxUploadSizeInBytes);
+                }
+
+                if(isSIR) {
+                    //validamos las limitaciones SIR
+                    validarLimitacionesSIRAnexos(anexoForm.getRegistroID(), anexoForm.getTipoRegistro(), docSize, firmaSize, docExtension, firmaExtension, null, true);
+                }
+
             }
+
 
             //Validamos la firma del anexoForm que nos indican, previo a crear el anexo
             validarAnexoForm(request, anexoForm);
@@ -465,6 +485,27 @@ public class AnexoScanController extends AnexoController {
         }
 
         return docsEscaneados;
+
+    }
+
+    public void validarMaxUploadSize( long docSize, long firmaSize, Long maxUploadSizeInBytes) throws I18NException {
+
+        String sMaxUploadSizeInBytes= RegwebUtils.bytesToHuman(maxUploadSizeInBytes);
+        if(maxUploadSizeInBytes!= null){ // Si no está especificada, se permite cualquier tamaño
+            if(docSize>0) {
+                if (docSize > maxUploadSizeInBytes) {
+                    String tamanoDoc= RegwebUtils.bytesToHuman(docSize);
+                    throw new I18NException("tamanyfitxerpujatsuperat", tamanoDoc, sMaxUploadSizeInBytes);
+
+                }
+            }else {
+                if (firmaSize > maxUploadSizeInBytes) {
+                    String tamanoDoc= RegwebUtils.bytesToHuman(firmaSize);
+                    throw new I18NException("tamanyfitxerpujatsuperat", tamanoDoc, sMaxUploadSizeInBytes);
+
+                }
+            }
+        }
 
     }
 }

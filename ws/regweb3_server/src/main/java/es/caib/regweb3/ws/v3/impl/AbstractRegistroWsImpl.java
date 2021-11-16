@@ -8,6 +8,7 @@ import es.caib.regweb3.persistence.validator.AnexoBeanValidator;
 import es.caib.regweb3.persistence.validator.AnexoValidator;
 import es.caib.regweb3.persistence.validator.InteresadoBeanValidator;
 import es.caib.regweb3.persistence.validator.InteresadoValidator;
+import es.caib.regweb3.utils.RegwebUtils;
 import es.caib.regweb3.utils.StringUtils;
 import es.caib.regweb3.ws.converter.AnexoConverter;
 import es.caib.regweb3.ws.converter.DatosInteresadoConverter;
@@ -15,6 +16,7 @@ import es.caib.regweb3.ws.model.AnexoWs;
 import es.caib.regweb3.ws.model.InteresadoWs;
 import es.caib.regweb3.ws.utils.AuthenticatedBaseWsImpl;
 import es.caib.regweb3.ws.utils.UsuarioAplicacionCache;
+import es.caib.regweb3.ws.utils.WsUtils;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 
@@ -113,22 +115,27 @@ public abstract class AbstractRegistroWsImpl extends AuthenticatedBaseWsImpl {
             AnexoFull anexoFull = AnexoConverter.getAnexoFull(anexoWs, entidadID, tipoDocumentalEjb);
 
             //Controlamos el tamanyo de los ficheros que nos adjuntan.
-            Long maxUploadSizeInBytes = PropiedadGlobalUtil.getMaxUploadSizeInBytes(entidadID);
+            Long maxUploadSizeInBytes;
+            if(entidadID != null) {
+                maxUploadSizeInBytes = PropiedadGlobalUtil.getMaxUploadSizeInBytes(entidadID);
+            }else {
+                maxUploadSizeInBytes = PropiedadGlobalUtil.getMaxUploadSizeInBytes();
+            }
             if(maxUploadSizeInBytes!= null){ // Si no está especificada, se permite cualquier tamaño
                 switch (anexoWs.getModoFirma()){
                     case 0: //SIN FIRMA
                     case 1:{ //ATTACHED
                         if(anexoWs.getFicheroAnexado()!= null && (anexoWs.getFicheroAnexado().length > maxUploadSizeInBytes)) {
-                            throw new I18NException("tamanyfitxerpujatsuperat", Long.toString(anexoWs.getFicheroAnexado().length/(1024*1024)),Long.toString(maxUploadSizeInBytes/(1024*1024)));
+                            throw new I18NException("tamanyfitxerpujatsuperat", RegwebUtils.bytesToHuman(anexoWs.getFicheroAnexado().length),RegwebUtils.bytesToHuman(maxUploadSizeInBytes));
                         }
                         break;
                     }
                     case 2: { //FIRMA DETACHED
                         if(anexoWs.getFicheroAnexado()!= null && anexoWs.getFicheroAnexado().length > maxUploadSizeInBytes) {
-                            throw new I18NException("tamanyfitxerpujatsuperat", Long.toString(anexoWs.getFicheroAnexado().length/(1024*1024)),Long.toString(maxUploadSizeInBytes/(1024*1024)));
+                            throw new I18NException("tamanyfitxerpujatsuperat", RegwebUtils.bytesToHuman(anexoWs.getFicheroAnexado().length),RegwebUtils.bytesToHuman(maxUploadSizeInBytes));
                         }
                         if(anexoWs.getFirmaAnexada()!= null && anexoWs.getFirmaAnexada().length > maxUploadSizeInBytes) {
-                            throw new I18NException("tamanyfitxerpujatsuperat", Long.toString(anexoWs.getFicheroAnexado().length/(1024*1024)),Long.toString(maxUploadSizeInBytes/(1024*1024)));
+                            throw new I18NException("tamanyfitxerpujatsuperat", RegwebUtils.bytesToHuman(anexoWs.getFirmaAnexada().length),RegwebUtils.bytesToHuman(maxUploadSizeInBytes));
                         }
                     }
 
