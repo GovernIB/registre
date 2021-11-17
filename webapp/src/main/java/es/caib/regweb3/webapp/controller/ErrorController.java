@@ -1,5 +1,6 @@
 package es.caib.regweb3.webapp.controller;
 
+import es.caib.regweb3.utils.RegwebUtils;
 import es.caib.regweb3.webapp.controller.registro.ScanRequestServlet;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import es.caib.regweb3.webapp.utils.RegWebMaxUploadSizeExceededException;
@@ -112,59 +113,55 @@ public class ErrorController {
         Exception exception) {
       return resolveFileSizeException(request, exception);
     }
-    
-    
-   
+
+
+
     private ModelAndView resolveFileSizeException(HttpServletRequest request, Exception ex) {
 
-      
-      if (ex instanceof MaxUploadSizeExceededException
-          || ex instanceof RegWebMaxUploadSizeExceededException
-          || ex instanceof SizeLimitExceededException) {
 
-        if (log.isDebugEnabled()) {
-          log.debug("resolveFileSizeException(" + ex.getClass() +")\n" 
-              + ScanRequestServlet.servletRequestInfoToStr(request));
+        if (ex instanceof MaxUploadSizeExceededException
+                || ex instanceof RegWebMaxUploadSizeExceededException
+                || ex instanceof SizeLimitExceededException) {
+
+            if (log.isDebugEnabled()) {
+                log.debug("resolveFileSizeException(" + ex.getClass() +")\n"
+                        + ScanRequestServlet.servletRequestInfoToStr(request));
+            }
+
+            String maxUploadSize = "???";
+            String currentSize = "???";
+            String msgCode;
+            if (ex instanceof MaxUploadSizeExceededException) {
+                MaxUploadSizeExceededException musee = (MaxUploadSizeExceededException) ex;
+                if (musee instanceof RegWebMaxUploadSizeExceededException) {
+                    msgCode = ((RegWebMaxUploadSizeExceededException) musee).getMsgCode();
+                } else {
+                    msgCode = "tamanyfitxerpujatsuperat";
+                }
+
+                // log.error(" YYYYYYYYYYYY  CAUSE: " + musee.getCause());
+                if (musee.getCause() instanceof SizeLimitExceededException) {
+                    SizeLimitExceededException slee = (SizeLimitExceededException) musee.getCause();
+                    maxUploadSize = RegwebUtils.bytesToHuman(slee.getPermittedSize());
+                    currentSize = RegwebUtils.bytesToHuman(slee.getActualSize());
+
+                } else {
+                    // maxUploadSize = String.valueOf(musee.getMaxUploadSize());
+                    maxUploadSize = RegwebUtils.bytesToHuman(musee.getMaxUploadSize());
+                }
+
+            } else {
+                SizeLimitExceededException slee = (SizeLimitExceededException) ex;
+                maxUploadSize = RegwebUtils.bytesToHuman(slee.getPermittedSize());
+                currentSize = RegwebUtils.bytesToHuman(slee.getActualSize());
+                msgCode = "tamanyfitxerpujatsuperat";
+            }
+
+            Mensaje.saveMessageError(request, I18NUtils.tradueix(msgCode, currentSize, maxUploadSize));
+
+            return new ModelAndView(new RedirectView(request.getServletPath(), true));
         }
-         
-        String maxUploadSize = "???";
-        String currentSize = "???";
-        String msgCode;
-        if (ex instanceof MaxUploadSizeExceededException) {
-          MaxUploadSizeExceededException musee = (MaxUploadSizeExceededException) ex;
-          if (musee instanceof RegWebMaxUploadSizeExceededException) {
-            msgCode = ((RegWebMaxUploadSizeExceededException) musee).getMsgCode();
-          } else {
-            msgCode = "tamanyfitxerpujatsuperat";
-          }
-
-          // log.error(" YYYYYYYYYYYY  CAUSE: " + musee.getCause());
-          if (musee.getCause() instanceof SizeLimitExceededException) {
-            SizeLimitExceededException slee = (SizeLimitExceededException) musee.getCause();
-              /* Marilen recalculamos en Mb*/
-              Long ps = slee.getPermittedSize()/(1024*1024);
-              Long cs = slee.getActualSize()/(1024*1024);
-              maxUploadSize = String.valueOf(ps)+" Mb";
-              currentSize = String.valueOf(cs)+" Mb";
-          } else {
-            maxUploadSize = String.valueOf(musee.getMaxUploadSize());
-          }
-
-        } else {
-          SizeLimitExceededException slee = (SizeLimitExceededException) ex;
-            /* marilen recalculamos en Mb*/
-            Long ps = slee.getPermittedSize()/(1024*1024);
-            Long cs = slee.getActualSize()/(1024*1024);
-            maxUploadSize = String.valueOf(ps)+" Mb";
-            currentSize = String.valueOf(cs)+" Mb";
-          msgCode = "tamanyfitxerpujatsuperat";
-        }
-
-        Mensaje.saveMessageError(request, I18NUtils.tradueix(msgCode, currentSize, maxUploadSize));
-
-          return new ModelAndView(new RedirectView(request.getServletPath(), true));
-      }
-      return null;
+        return null;
     }
 
     
