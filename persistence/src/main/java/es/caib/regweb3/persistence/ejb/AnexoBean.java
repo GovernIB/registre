@@ -138,8 +138,10 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
                 anexoFull.setSignatureCustody(custody.getSignatureInfoOnly(custodyID)); //Firma asociada al anexo
                 anexoFull.setSignatureFileDelete(false);
 
-                //cargamos los metadatos del anexo
-                cargarMetadatasAnexo(anexoFull,custody);
+                // Cargamos los metadatos del anexo, si no es un Justificante
+                if (!anexo.isJustificante()) {
+                    cargarMetadatosAnexo(anexoFull, custody);
+                }
 
             if (log.isDebugEnabled()) {
                 log.debug("SIGNATURE " + custody.getSignatureInfoOnly(custodyID));
@@ -220,8 +222,10 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
                 anexoFull.setSignatureCustody(custody.getSignatureInfo(custodyID));//Firma asociada al anexo
                 anexoFull.setSignatureFileDelete(false);
 
-                //cargamos los metadatos del anexo
-                cargarMetadatasAnexo(anexoFull,custody);
+                // Cargamos los metadatos del anexo, si no es un Justificante
+                if (!anexo.isJustificante()) {
+                    cargarMetadatosAnexo(anexoFull, custody);
+                }
 
             } else if(anexo.getPerfilCustodia().equals(RegwebConstantes.PERFIL_CUSTODIA_ARXIU)){
 
@@ -1652,7 +1656,13 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
         return descargarFirmaDesdeUrlValidacion(anexo, idEntidad);
     }
 
-    private void cargarMetadatasAnexo(AnexoFull anexoFull, IDocumentCustodyPlugin custody  ) throws Exception{
+    /**
+     * Carga los metadatos de un anexo
+     * @param anexoFull
+     * @param custody
+     * @throws Exception
+     */
+    private void cargarMetadatosAnexo(AnexoFull anexoFull, IDocumentCustodyPlugin custody  ) throws Exception{
 
         List<Metadata> metadataList = new ArrayList<>();
 
