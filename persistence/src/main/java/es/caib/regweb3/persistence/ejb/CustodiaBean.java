@@ -136,6 +136,11 @@ public class CustodiaBean implements CustodiaLocal {
             registro = registroSalidaEjb.getConAnexosFullLigero(elemento.getIdObjeto());
         }
 
+        // Volvemos a comprobar que el Justificante no esté custodiado (A veces se cuela en la Cola (doble click usuario), el mismo registro dos veces)
+        if(registro.getRegistroDetalle().getTieneJustificanteCustodiado()){
+            return anexoEjb.getAnexoFull(registro.getRegistroDetalle().getJustificante().getId(), idEntidad).getAnexo();
+        }
+
         // Obtenemos el justificante a custodiar
         AnexoFull justificante = anexoEjb.getAnexoFull(registro.getRegistroDetalle().getJustificante().getId(), idEntidad);
         custodyIdFileSystem = justificante.getAnexo().getCustodiaID();
