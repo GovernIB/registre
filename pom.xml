@@ -33,7 +33,7 @@
         <pluginsib-arxiu-caib.version>2.0.14</pluginsib-arxiu-caib.version>
         <documentcustody.api.version>4.0.1</documentcustody.api.version>
         <documentcustody-filesystem.version>4.0.2</documentcustody-filesystem.version>
-        <plugin-documentcustody-arxiudigitalcaib.version>4.0.1</plugin-documentcustody-arxiudigitalcaib.version>
+        <plugin-documentcustody-arxiudigitalcaib.version>4.0.3</plugin-documentcustody-arxiudigitalcaib.version>
         <pluginsib-core.version>2.0.0</pluginsib-core.version>
         <pluginsib-validatesignature-api>2.0.0</pluginsib-validatesignature-api>
         <pluginsib-signatureserver-api>3.1.0-SNAPSHOT</pluginsib-signatureserver-api>
