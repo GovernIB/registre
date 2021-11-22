@@ -26,7 +26,7 @@
     <scanweb.api.version>4.0.0</scanweb.api.version>
     <itext.version>5.4.3</itext.version>
     <bouncycastle.version>1.51</bouncycastle.version>
-    <plugin-documentcustody-arxiudigitalcaib.version>4.0.1</plugin-documentcustody-arxiudigitalcaib.version>
+    <plugin-documentcustody-arxiudigitalcaib.version>4.0.3</plugin-documentcustody-arxiudigitalcaib.version>
     <pluginsib-validatesignature-afirmacxf.version>2.0.5</pluginsib-validatesignature-afirmacxf.version>
     <arxiu.api.version>2.0.14</arxiu.api.version>
     <dir3caib-ws-api.version>1.0.14</dir3caib-ws-api.version>
