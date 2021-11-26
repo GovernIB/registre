@@ -14,13 +14,22 @@
                 <li>
                     <c:set var="oficioRemision" value="${trazabilidad.oficioRemision}" scope="request"/>
                     <c:set var="registroSalida" value="${trazabilidad.registroSalida}" scope="request"/>
-                    <c:set var="decodificacionTipoAnotacion" value="${trazabilidad.registroEntradaOrigen.registroDetalle.decodificacionTipoAnotacion}" scope="request"/>
-                    <c:set var="tipoAnotacion" value="${trazabilidad.registroEntradaOrigen.registroDetalle.tipoAnotacion}" scope="request"/>
+
+                    <%-- Tipo anotación y Decodificación (Posteriormente se añadió esta info en Oficio Remisión, de ahí está comprobación)--%>
+                    <c:if test="${empty trazabilidad.oficioRemision.tipoAnotacion}">
+                        <c:set var="decodificacionTipoAnotacion" value="${trazabilidad.registroEntradaOrigen.registroDetalle.decodificacionTipoAnotacion}" scope="request"/>
+                        <c:set var="tipoAnotacion" value="${trazabilidad.registroEntradaOrigen.registroDetalle.tipoAnotacion}" scope="request"/>
+                    </c:if>
+                    <c:if test="${not empty trazabilidad.oficioRemision.tipoAnotacion}">
+                        <c:set var="decodificacionTipoAnotacion" value="${trazabilidad.oficioRemision.decodificacionTipoAnotacion}" scope="request"/>
+                        <c:set var="tipoAnotacion" value="${trazabilidad.oficioRemision.tipoAnotacion}" scope="request"/>
+                    </c:if>
+
                     <c:set var="maxReintentos" value="${maxReintentos}" scope="request"/>
                     <c:import url="../trazabilidad/oficioRemision.jsp"/>
                 </li>
 
-                <%--OFICIO ACEPTADO O DEVUELTO--%>
+                <%--OFICIO ACEPTADO, REENVIADO O RECHAZADO--%>
                 <c:if test="${trazabilidad.oficioRemision.estado == RegwebConstantes.OFICIO_ACEPTADO || trazabilidad.oficioRemision.estado == RegwebConstantes.OFICIO_SIR_RECHAZADO || trazabilidad.oficioRemision.estado == RegwebConstantes.OFICIO_SIR_DEVUELTO}">
 
                     <li class="timeline-inverted">

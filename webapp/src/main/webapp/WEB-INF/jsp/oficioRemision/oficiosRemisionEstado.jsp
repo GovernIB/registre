@@ -96,12 +96,23 @@
 
                                                 <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_SIR_RECHAZADO || oficioRemision.estado == RegwebConstantes.OFICIO_SIR_DEVUELTO}">
                                                     <td>
+                                                        <%-- Decodificación T. anotación (Posteriormente se añadió esta info en Oficio Remisión, de ahí está comprobación)--%>
                                                         <c:if test="${oficioRemision.tipoOficioRemision == RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA}">
-                                                            ${oficioRemision.registrosEntrada[0].registroDetalle.decodificacionTipoAnotacion}
+                                                            <c:if test="${empty oficioRemision.decodificacionTipoAnotacion}">
+                                                                ${oficioRemision.registrosEntrada[0].registroDetalle.decodificacionTipoAnotacion}
+                                                            </c:if>
+                                                            <c:if test="${not empty oficioRemision.decodificacionTipoAnotacion}">
+                                                                ${oficioRemision.decodificacionTipoAnotacion}
+                                                            </c:if>
                                                         </c:if>
 
                                                         <c:if test="${oficioRemision.tipoOficioRemision == RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA}">
-                                                            ${oficioRemision.registrosSalida[0].registroDetalle.decodificacionTipoAnotacion}
+                                                            <c:if test="${empty oficioRemision.decodificacionTipoAnotacion}">
+                                                                ${oficioRemision.registrosSalida[0].registroDetalle.decodificacionTipoAnotacion}
+                                                            </c:if>
+                                                            <c:if test="${not empty oficioRemision.decodificacionTipoAnotacion}">
+                                                                ${oficioRemision.decodificacionTipoAnotacion}
+                                                            </c:if>
                                                         </c:if>
                                                     </td>
                                                 </c:if>

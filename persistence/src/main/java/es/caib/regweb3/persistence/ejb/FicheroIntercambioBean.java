@@ -189,6 +189,8 @@ public class FicheroIntercambioBean implements FicheroIntercambioLocal {
                     oficioRemision.setDecodificacionEntidadRegistralProcesado(ficheroIntercambio.getDecodificacionEntidadRegistralOrigen());
                     oficioRemision.setEstado(RegwebConstantes.OFICIO_SIR_DEVUELTO);
                     oficioRemision.setFechaEstado(new Date());
+                    oficioRemision.setTipoAnotacion(ficheroIntercambio.getTipoAnotacion());
+                    oficioRemision.setDecodificacionTipoAnotacion(ficheroIntercambio.getDescripcionTipoAnotacion());
                     oficioRemisionEjb.merge(oficioRemision);
 
                     log.info("El oficio de remision existia en el sistema, nos lo han renviado: " + oficioRemision.getIdentificadorIntercambio());
@@ -251,6 +253,8 @@ public class FicheroIntercambioBean implements FicheroIntercambioLocal {
                     oficioRemision.setDecodificacionEntidadRegistralProcesado(ficheroIntercambio.getDecodificacionEntidadRegistralOrigen());
                     oficioRemision.setEstado(RegwebConstantes.OFICIO_SIR_RECHAZADO);
                     oficioRemision.setFechaEstado(new Date());
+                    oficioRemision.setTipoAnotacion(ficheroIntercambio.getTipoAnotacion());
+                    oficioRemision.setDecodificacionTipoAnotacion(ficheroIntercambio.getDescripcionTipoAnotacion());
                     oficioRemisionEjb.merge(oficioRemision);
 
                     log.info("El oficio de remision existia en el sistema, nos lo han rechazado: " + oficioRemision.getIdentificadorIntercambio());

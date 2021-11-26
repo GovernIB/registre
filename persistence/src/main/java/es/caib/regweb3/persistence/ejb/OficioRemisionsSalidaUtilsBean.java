@@ -5,6 +5,7 @@ import es.caib.dir3caib.ws.api.oficina.Dir3CaibObtenerOficinasWs;
 import es.caib.dir3caib.ws.api.oficina.OficinaTF;
 import es.caib.dir3caib.ws.api.unidad.UnidadTF;
 import es.caib.regweb3.model.*;
+import es.caib.regweb3.model.sir.TipoAnotacion;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.model.utils.OficioPendienteLlegada;
 import es.caib.regweb3.persistence.utils.OficiosRemisionOrganismo;
@@ -459,6 +460,8 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
         oficioRemision.setCodigoEntidadRegistralDestino(oficinaSirDestino.getCodigo());
         oficioRemision.setDecodificacionEntidadRegistralDestino(oficinaSirDestino.getDenominacion());
         oficioRemision.setContactosEntidadRegistralDestino(RegistroUtils.getContactosOficinaSir(oficinaSirDestino));
+        oficioRemision.setTipoAnotacion(TipoAnotacion.ENVIO.getValue());
+        oficioRemision.setDecodificacionTipoAnotacion(TipoAnotacion.ENVIO.getName());
 
         // Registramos el Oficio de Remisión SIR
         oficioRemision = oficioRemisionEjb.registrarOficioRemision(oficioRemision, RegwebConstantes.REGISTRO_OFICIO_SIR);
