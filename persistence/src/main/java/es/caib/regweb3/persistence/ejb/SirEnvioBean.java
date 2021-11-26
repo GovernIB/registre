@@ -363,6 +363,8 @@ public class SirEnvioBean implements SirEnvioLocal {
                 oficioRemision.setRegistrosSalida(null);
                 oficioRemision.setCodigoEntidadRegistralDestino(oficinaReenvio.getCodigo());
                 oficioRemision.setDecodificacionEntidadRegistralDestino(oficinaReenvio.getDenominacion());
+                oficioRemision.setTipoAnotacion(TipoAnotacion.REENVIO.getValue());
+                oficioRemision.setDecodificacionTipoAnotacion(observaciones);
 
                 // Transformamos el RegistroEntrada en un RegistroSir
                 registroSir = registroSirEjb.transformarRegistroEntrada(registroEntrada);

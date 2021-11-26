@@ -272,9 +272,19 @@
                                             <c:if test="${trazabilidad.oficioRemision.estado == RegwebConstantes.OFICIO_SIR_REENVIADO}"><span class="label label-warning" rel="popupAbajo" data-content="<strong><spring:message code="oficioRemision.destino"/>:</strong> ${trazabilidad.oficioRemision.decodificacionEntidadRegistralDestino} (${trazabilidad.oficioRemision.codigoEntidadRegistralDestino})" data-toggle="popover"><i class="fa fa-check fa-fw"></i></c:if>
                                             <c:if test="${trazabilidad.oficioRemision.estado == RegwebConstantes.OFICIO_SIR_REENVIADO_ACK}"><span class="label label-success" rel="popupAbajo" data-content="<strong><spring:message code="oficioRemision.destino"/>:</strong> ${trazabilidad.oficioRemision.decodificacionEntidadRegistralDestino} (${trazabilidad.oficioRemision.codigoEntidadRegistralDestino})" data-toggle="popover"><i class="fa fa-check fa-fw"></i></c:if>
                                             <c:if test="${trazabilidad.oficioRemision.estado == RegwebConstantes.OFICIO_SIR_REENVIADO_ERROR}"><span class="label label-danger" rel="popupAbajo" data-content="<strong>Error:</strong> ${trazabilidad.oficioRemision.codigoError} - ${trazabilidad.oficioRemision.descripcionError}" data-toggle="popover"><i class="fa fa-warning fa-fw"></i></c:if>
-                                            <c:if test="${trazabilidad.oficioRemision.estado == RegwebConstantes.OFICIO_SIR_RECHAZADO}"><span class="label label-danger" rel="popupAbajo" data-content="<c:out value="${trazabilidad.registroEntradaOrigen.registroDetalle.decodificacionTipoAnotacion}" escapeXml="true"/>" data-toggle="popover"><i class="fa fa-warning fa-fw"></i></c:if>
                                             <c:if test="${trazabilidad.oficioRemision.estado == RegwebConstantes.OFICIO_SIR_DEVUELTO}"><span class="label label-danger"><i class="fa fa-warning fa-fw"></i></c:if>
                                             <c:if test="${trazabilidad.oficioRemision.estado == RegwebConstantes.OFICIO_ANULADO}"><span class="label label-danger"></c:if>
+                                            <c:if test="${trazabilidad.oficioRemision.estado == RegwebConstantes.OFICIO_SIR_RECHAZADO}">
+                                                <%-- Decodificación T. anotación (Posteriormente se añadió esta info en Oficio Remisión, de ahí está comprobación)--%>
+                                                <c:if test="${empty trazabilidad.oficioRemision.decodificacionTipoAnotacion}">
+                                                    <c:set var="decodificacionTipoAnotacion" value="${trazabilidad.registroEntradaOrigen.registroDetalle.decodificacionTipoAnotacion}" scope="request"/>
+                                                </c:if>
+                                                <c:if test="${not empty trazabilidad.oficioRemision.decodificacionTipoAnotacion}">
+                                                    <c:set var="decodificacionTipoAnotacion" value="${trazabilidad.oficioRemision.decodificacionTipoAnotacion}" scope="request"/>
+                                                </c:if>
+                                                <span class="label label-danger" rel="popupAbajo" data-content="<c:out value="${decodificacionTipoAnotacion}" escapeXml="true"/>" data-toggle="popover"><i class="fa fa-warning fa-fw"></i>
+                                            </c:if>
+
                                             <spring:message code="oficioRemision.estado.${trazabilidad.oficioRemision.estado}"/></span>
                                             <span class="pull-right text-muted small"><em><fmt:formatDate value="${trazabilidad.oficioRemision.fechaEstado}" pattern="dd/MM/yyyy HH:mm:ss"/></em></span>
                                         </a>
