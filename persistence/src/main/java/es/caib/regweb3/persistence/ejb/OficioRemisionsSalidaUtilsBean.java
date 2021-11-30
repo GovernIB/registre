@@ -180,7 +180,7 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
             oficios.setExterno(true);
 
             // Obtenemos el Organismo externo de Dir3Caib
-            UnidadTF unidadTF = organismoEjb.obtenerDestinoExterno(codigoOrganismo);
+            UnidadTF unidadTF = organismoEjb.obtenerDestinoExterno(codigoOrganismo, entidadActiva.getId());
 
 
             if (unidadTF != null) {
@@ -199,7 +199,7 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
                     oficios.setVigente(false);
 
                     //Obtenemos los sustitutos externos
-                    List<UnidadTF> sustitutosExternos = organismoEjb.obtenerSustitutosExternos(organismoExterno.getCodigo());
+                    List<UnidadTF> sustitutosExternos = organismoEjb.obtenerSustitutosExternos(organismoExterno.getCodigo(), entidadActiva.getId());
 
                     //Transformamos a organismo de regweb3
                     List<Organismo> sustitutos = new ArrayList<Organismo>();
@@ -220,7 +220,7 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
                         oficios.setVigente(true);
 
                         //Obtenemos de dir3caib las oficinas SIR del organismo externo
-                        Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService(PropiedadGlobalUtil.getDir3CaibServer(), PropiedadGlobalUtil.getDir3CaibUsername(), PropiedadGlobalUtil.getDir3CaibPassword());
+                        Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService(PropiedadGlobalUtil.getDir3CaibServer(entidadActiva.getId()), PropiedadGlobalUtil.getDir3CaibUsername(entidadActiva.getId()), PropiedadGlobalUtil.getDir3CaibPassword(entidadActiva.getId()));
                         List<OficinaTF> oficinasSIR = oficinasService.obtenerOficinasSIRUnidad(organismoExterno.getCodigo());
                         if (oficinasSIR.size() > 0) {
                             oficios.setSir(true);
@@ -237,12 +237,11 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
                         oficios.setVigente(false);
 
                         // Obtenemos los sustitutos de dir3caib
-                        List<UnidadTF> sustitutosExternos = organismoEjb.obtenerSustitutosExternosSIR(organismoExterno.getCodigo());
-
+                        List<UnidadTF> sustitutosExternos = organismoEjb.obtenerSustitutosExternosSIR(organismoExterno.getCodigo(), entidadActiva.getId());
 
                         //Si solo hay un sustituto, se obtienen sus oficinas SIR y se mandan.
                         if (sustitutosExternos.size() == 1) {
-                            Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService(PropiedadGlobalUtil.getDir3CaibServer(), PropiedadGlobalUtil.getDir3CaibUsername(), PropiedadGlobalUtil.getDir3CaibPassword());
+                            Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService(PropiedadGlobalUtil.getDir3CaibServer(entidadActiva.getId()), PropiedadGlobalUtil.getDir3CaibUsername(entidadActiva.getId()), PropiedadGlobalUtil.getDir3CaibPassword(entidadActiva.getId()));
                             List<OficinaTF> oficinasSIR = oficinasService.obtenerOficinasSIRUnidad(sustitutosExternos.get(0).getCodigo());
                             oficios.setOficinasSIR(oficinasSIR);
                         }

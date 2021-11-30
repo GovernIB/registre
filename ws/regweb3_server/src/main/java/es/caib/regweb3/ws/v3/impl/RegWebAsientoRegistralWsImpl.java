@@ -256,7 +256,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
                 Organismo destinoInterno = organismoEjb.findByCodigoByEntidadMultiEntidad(asientoRegistral.getUnidadTramitacionDestinoCodigo(),entidadActiva.getId());
                 if(destinoInterno == null){ //Externo, lo vamos a buscar a dir3caib
                     // Lo buscamos en DIR3CAIB
-                    Dir3CaibObtenerUnidadesWs unidadesService = Dir3CaibUtils.getObtenerUnidadesService(PropiedadGlobalUtil.getDir3CaibServer(), PropiedadGlobalUtil.getDir3CaibUsername(), PropiedadGlobalUtil.getDir3CaibPassword());
+                    Dir3CaibObtenerUnidadesWs unidadesService = Dir3CaibUtils.getObtenerUnidadesService(PropiedadGlobalUtil.getDir3CaibServer(entidadActiva.getId()), PropiedadGlobalUtil.getDir3CaibUsername(entidadActiva.getId()), PropiedadGlobalUtil.getDir3CaibPassword(entidadActiva.getId()));
                     destinoExterno = unidadesService.obtenerUnidad(asientoRegistral.getUnidadTramitacionDestinoCodigo(), null, null);
 
                     if (destinoExterno == null) { //o no existe o está extinguido

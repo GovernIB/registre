@@ -139,8 +139,7 @@ public class Dir3CaibUtils {
     }
 
 
-    private static void configAddressUserPasswordTimeout(String usr, String pwd, String endpoint, Long timeout,
-                                                         Object api) {
+    private static void configAddressUserPasswordTimeout(String usr, String pwd, String endpoint, Long timeout, Object api) {
 
         Map<String, Object> reqContext = ((BindingProvider) api).getRequestContext();
         reqContext.put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, endpoint);

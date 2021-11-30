@@ -90,7 +90,7 @@ public class FicheroIntercambioBean implements FicheroIntercambioLocal {
             } else {
 
                 // Creamos un nuevo RegistroSir
-                registroSir = registroSirEjb.crearRegistroSir(ficheroIntercambio);
+                registroSir = registroSirEjb.crearRegistroSir(ficheroIntercambio, entidad);
                 log.info("El registroSir no existia en el sistema y se ha creado: " + registroSir.getIdentificadorIntercambio());
             }
 
@@ -203,7 +203,7 @@ public class FicheroIntercambioBean implements FicheroIntercambioLocal {
 
             }else{
                 // Creamos un nuevo RegistroSir
-                registroSir = registroSirEjb.crearRegistroSir(ficheroIntercambio);
+                registroSir = registroSirEjb.crearRegistroSir(ficheroIntercambio, entidad);
                 log.info("El registroSir no existia en el sistema y se ha creado: " + registroSir.getIdentificadorIntercambio());
             }
 

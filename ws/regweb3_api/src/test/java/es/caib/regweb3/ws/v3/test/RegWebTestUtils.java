@@ -1,26 +1,7 @@
 package es.caib.regweb3.ws.v3.test;
 
 import es.caib.regweb3.utils.RegwebConstantes;
-import es.caib.regweb3.ws.api.v3.AnexoWs;
-import es.caib.regweb3.ws.api.v3.AsientoRegistralWs;
-import es.caib.regweb3.ws.api.v3.DatosInteresadoWs;
-import es.caib.regweb3.ws.api.v3.IdentificadorWs;
-import es.caib.regweb3.ws.api.v3.InteresadoWs;
-import es.caib.regweb3.ws.api.v3.RegWebAsientoRegistralWs;
-import es.caib.regweb3.ws.api.v3.RegWebAsientoRegistralWsService;
-import es.caib.regweb3.ws.api.v3.RegWebHelloWorldWithSecurityWs;
-import es.caib.regweb3.ws.api.v3.RegWebHelloWorldWithSecurityWsService;
-import es.caib.regweb3.ws.api.v3.RegWebHelloWorldWs;
-import es.caib.regweb3.ws.api.v3.RegWebHelloWorldWsService;
-import es.caib.regweb3.ws.api.v3.RegWebInfoWs;
-import es.caib.regweb3.ws.api.v3.RegWebInfoWsService;
-import es.caib.regweb3.ws.api.v3.RegWebPersonasWs;
-import es.caib.regweb3.ws.api.v3.RegWebPersonasWsService;
-import es.caib.regweb3.ws.api.v3.RegWebRegistroEntradaWs;
-import es.caib.regweb3.ws.api.v3.RegWebRegistroEntradaWsService;
-import es.caib.regweb3.ws.api.v3.RegWebRegistroSalidaWs;
-import es.caib.regweb3.ws.api.v3.RegWebRegistroSalidaWsService;
-import es.caib.regweb3.ws.api.v3.RegistroEntradaWs;
+import es.caib.regweb3.ws.api.v3.*;
 import es.caib.regweb3.ws.api.v3.utils.I18NUtils;
 import org.apache.commons.io.IOUtils;
 import org.fundaciobit.genapp.common.utils.Utils;
@@ -32,12 +13,7 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.net.URL;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 
 /**
  * @author anadal
@@ -576,7 +552,7 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
       Define un interesado de tipo administración integrado en SIR
      */
     public DatosInteresadoWs getAdministracionSir(){
-        return getAdministracion("Ayuntamiento de Jun","L01181113");
+        return getAdministracion("Unidad Demoorve CCAA 1","A13010361");
     }
 
 
@@ -786,7 +762,7 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
             anexoConfidencial.setNombreFicheroAnexado(fichero);
             anexoConfidencial.setTipoMIMEFicheroAnexado(Utils.getMimeType(fichero));
 
-            anexos.add(anexoConfidencial);
+            //anexos.add(anexoConfidencial);
         }*/
 
         return anexos;

@@ -44,8 +44,7 @@ import static es.caib.regweb3.utils.RegwebConstantes.REGISTRO_SALIDA;
 @Stateless(name = "RegistroSalidaEJB")
 @SecurityDomain("seycon")
 /*@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)*/
-public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
-        implements RegistroSalidaLocal {
+public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean implements RegistroSalidaLocal {
 
     protected final Logger log = Logger.getLogger(getClass());
 
@@ -228,7 +227,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<OficinaTF> isOficioRemisionSir(RegistroSalida registroSalida, Set<String> organismos) throws Exception {
+    public List<OficinaTF> isOficioRemisionSir(RegistroSalida registroSalida, Set<String> organismos, Long idEntidad) throws Exception {
 
         // Obtenemos el organismo destinatario del Registro en el caso de que sea un OficioRemision externo
         String codigoDir3 = RegistroUtils.obtenerCodigoDir3Interesado(registroSalida);
@@ -236,7 +235,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
         // Si se trata de un OficioRemisionExterno, comprobamos si el destino tiene Oficinas Sir
         if (StringUtils.isNotEmpty(codigoDir3) && isOficioRemisionExterno(registroSalida, organismos)) {
 
-            Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService(PropiedadGlobalUtil.getDir3CaibServer(), PropiedadGlobalUtil.getDir3CaibUsername(), PropiedadGlobalUtil.getDir3CaibPassword());
+            Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService(PropiedadGlobalUtil.getDir3CaibServer(idEntidad), PropiedadGlobalUtil.getDir3CaibUsername(idEntidad), PropiedadGlobalUtil.getDir3CaibPassword(idEntidad));
 
             return oficinasService.obtenerOficinasSIRUnidad(codigoDir3);
         }
@@ -247,7 +246,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<OficinaTF> isOficioRemisionSirMultiEntidad(RegistroSalida registroSalida, Set<String> organismos) throws Exception {
+    public List<OficinaTF> isOficioRemisionSirMultiEntidad(RegistroSalida registroSalida, Set<String> organismos, Long idEntidad) throws Exception {
 
         // Obtenemos el organismo destinatario del Registro en el caso de que sea un OficioRemision externo
         String codigoDir3 = RegistroUtils.obtenerCodigoDir3Interesado(registroSalida);
@@ -255,7 +254,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
         // Si se trata de un OficioRemisionExterno, comprobamos si el destino tiene Oficinas Sir
         if (StringUtils.isNotEmpty(codigoDir3) && isOficioRemisionExternoMultiEntidad(registroSalida, organismos)) {
 
-            Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService(PropiedadGlobalUtil.getDir3CaibServer(), PropiedadGlobalUtil.getDir3CaibUsername(), PropiedadGlobalUtil.getDir3CaibPassword());
+            Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService(PropiedadGlobalUtil.getDir3CaibServer(idEntidad), PropiedadGlobalUtil.getDir3CaibUsername(idEntidad), PropiedadGlobalUtil.getDir3CaibPassword(idEntidad));
 
             return oficinasService.obtenerOficinasSIRUnidad(codigoDir3);
         }
@@ -284,7 +283,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
 
                 // Si la entidad está en SIR y la Oficina está activada para Envío Sir
                 if (entidadActiva.getSir() && oficinaEjb.isSIREnvio(registroSalida.getOficina().getId())) {
-                    List<OficinaTF> oficinasSIR = isOficioRemisionSir(registroSalida, organismosCodigo);
+                    List<OficinaTF> oficinasSIR = isOficioRemisionSir(registroSalida, organismosCodigo, entidadActiva.getId());
 
                     if (oficinasSIR != null && !oficinasSIR.isEmpty()) {
                         return RegwebConstantes.EVENTO_OFICIO_SIR;
@@ -320,7 +319,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
 
                 // Si la entidad está en SIR y la Oficina está activada para Envío Sir
                 if (entidadActiva.getSir() && oficinaEjb.isSIREnvio(registroSalida.getOficina().getId())) {
-                    List<OficinaTF> oficinasSIR = isOficioRemisionSirMultiEntidad(registroSalida, organismosCodigo);
+                    List<OficinaTF> oficinasSIR = isOficioRemisionSirMultiEntidad(registroSalida, organismosCodigo, entidadActiva.getId());
 
                     if (oficinasSIR != null && !oficinasSIR.isEmpty()) {
                         return RegwebConstantes.EVENTO_OFICIO_SIR;
@@ -633,12 +632,12 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
 
                 } else {
 
-                    UnidadTF destinoExterno = organismoEjb.obtenerDestinoExterno(interesadoAdministracion.getCodigoDir3());
+                    UnidadTF destinoExterno = organismoEjb.obtenerDestinoExterno(interesadoAdministracion.getCodigoDir3(), usuarioEntidad.getEntidad().getId());
                     //Si está extinguido
                     if (destinoExterno != null && !destinoExterno.getCodigoEstadoEntidad().equals(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE)) {
                         //Si es SIR, obtenemos sus sustitutos y asignamos el primero.
                         if (registroSalida.getEvento().equals(RegwebConstantes.EVENTO_OFICIO_SIR)) {
-                            List<UnidadTF> destinosExternosSIR = organismoEjb.obtenerSustitutosExternosSIR(destinoExterno.getCodigo());
+                            List<UnidadTF> destinosExternosSIR = organismoEjb.obtenerSustitutosExternosSIR(destinoExterno.getCodigo(), usuarioEntidad.getEntidad().getId());
                             if (destinosExternosSIR.size() > 0) {
                                 interesadoAdministracion.setCodigoDir3(destinosExternosSIR.get(0).getCodigo());
                                 interesadoAdministracion.setDocumento(destinosExternosSIR.get(0).getCodigo());
@@ -648,7 +647,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
                             }
 
                         } else { //Si no es SIR, obtenemos sus sustitutos y asignamos el primero.
-                            List<UnidadTF> destinosExternos = organismoEjb.obtenerSustitutosExternos(destinoExterno.getCodigo());
+                            List<UnidadTF> destinosExternos = organismoEjb.obtenerSustitutosExternos(destinoExterno.getCodigo(), usuarioEntidad.getEntidad().getId());
                             if (destinosExternos.size() > 0) {
                                 interesadoAdministracion.setCodigoDir3(destinosExternos.get(0).getCodigo());
                                 interesadoAdministracion.setDocumento(destinosExternos.get(0).getCodigo());

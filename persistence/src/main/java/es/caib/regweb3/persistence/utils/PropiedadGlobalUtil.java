@@ -377,6 +377,43 @@ public class PropiedadGlobalUtil {
     }
 
     /**
+     * Retorna el valor de la propiedad Dir3CaibServer de la entidad indicada.
+     * Propiedad: es.caib.regweb3.dir3caib.server
+     * @param idEntidad
+     * @return
+     */
+    public static String getDir3CaibServer(Long idEntidad) {
+        final String partialPropertyName = "dir3caib.server";
+
+        return getStringByEntidad(idEntidad, partialPropertyName);
+
+    }
+
+    /**
+     * Retorna el valor de la propiedad Dir3CaibUsername de la entidad indicada.
+     * Propiedad: es.caib.regweb3.dir3caib.username
+     * @param idEntidad
+     * @return
+     */
+    public static String getDir3CaibUsername(Long idEntidad) {
+        final String partialPropertyName = "dir3caib.username";
+
+        return getStringByEntidad(idEntidad, partialPropertyName);
+    }
+
+    /**
+     * Retorna el valor de la propiedad Dir3CaibPassword de la entidad indicada.
+     * Propiedad: es.caib.regweb3.dir3caib.password
+     * @param idEntidad
+     * @return
+     */
+    public static String getDir3CaibPassword(Long idEntidad) {
+        final String partialPropertyName = "dir3caib.password";
+
+        return getStringByEntidad(idEntidad, partialPropertyName);
+    }
+
+    /**
      * Retorna el valor de la propiedad SirServerBase de la entidad indicada.
      * Propiedad: es.caib.regweb3.sir.serverbase
      * @param idEntidad

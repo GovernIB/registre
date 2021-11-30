@@ -909,28 +909,28 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
 
 
     @Override
-    public UnidadTF obtenerDestinoExterno(String codigo) throws Exception {
+    public UnidadTF obtenerDestinoExterno(String codigo, Long idEntidad) throws Exception {
 
         //Buscamos el destino externo a partir de su código
-        Dir3CaibObtenerUnidadesWs unidadesService = Dir3CaibUtils.getObtenerUnidadesService(PropiedadGlobalUtil.getDir3CaibServer(), PropiedadGlobalUtil.getDir3CaibUsername(), PropiedadGlobalUtil.getDir3CaibPassword());
+        Dir3CaibObtenerUnidadesWs unidadesService = Dir3CaibUtils.getObtenerUnidadesService(PropiedadGlobalUtil.getDir3CaibServer(idEntidad), PropiedadGlobalUtil.getDir3CaibUsername(idEntidad), PropiedadGlobalUtil.getDir3CaibPassword(idEntidad));
         return unidadesService.buscarUnidad(codigo);
     }
 
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<UnidadTF> obtenerSustitutosExternosSIR(String codigo) throws Exception {
+    public List<UnidadTF> obtenerSustitutosExternosSIR(String codigo, Long idEntidad) throws Exception {
 
-        Dir3CaibObtenerUnidadesWs unidadesService = Dir3CaibUtils.getObtenerUnidadesService(PropiedadGlobalUtil.getDir3CaibServer(), PropiedadGlobalUtil.getDir3CaibUsername(), PropiedadGlobalUtil.getDir3CaibPassword());
+        Dir3CaibObtenerUnidadesWs unidadesService = Dir3CaibUtils.getObtenerUnidadesService(PropiedadGlobalUtil.getDir3CaibServer(idEntidad), PropiedadGlobalUtil.getDir3CaibUsername(idEntidad), PropiedadGlobalUtil.getDir3CaibPassword(idEntidad));
         return unidadesService.obtenerHistoricosFinalesSIR(codigo);
 
     }
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<UnidadTF> obtenerSustitutosExternos(String codigo) throws Exception {
+    public List<UnidadTF> obtenerSustitutosExternos(String codigo, Long idEntidad) throws Exception {
 
-        Dir3CaibObtenerUnidadesWs unidadesService = Dir3CaibUtils.getObtenerUnidadesService(PropiedadGlobalUtil.getDir3CaibServer(), PropiedadGlobalUtil.getDir3CaibUsername(), PropiedadGlobalUtil.getDir3CaibPassword());
+        Dir3CaibObtenerUnidadesWs unidadesService = Dir3CaibUtils.getObtenerUnidadesService(PropiedadGlobalUtil.getDir3CaibServer(idEntidad), PropiedadGlobalUtil.getDir3CaibUsername(idEntidad), PropiedadGlobalUtil.getDir3CaibPassword(idEntidad));
         return unidadesService.obtenerHistoricosFinales(codigo);
 
     }

@@ -338,7 +338,7 @@ public class PlantillaBean extends BaseEjbJPA<Plantilla, Long> implements Planti
 
                 // Comprobamos la unidad destino
                 if(plantillaJson.getDestinoCodigo()!= null && plantillaJson.isDestinoExterno()){ // Preguntamos a DIR3 si está Vigente
-                    Dir3CaibObtenerUnidadesWs unidadesService = Dir3CaibUtils.getObtenerUnidadesService(PropiedadGlobalUtil.getDir3CaibServer(), PropiedadGlobalUtil.getDir3CaibUsername(), PropiedadGlobalUtil.getDir3CaibPassword());
+                    Dir3CaibObtenerUnidadesWs unidadesService = Dir3CaibUtils.getObtenerUnidadesService(PropiedadGlobalUtil.getDir3CaibServer(entidad.getId()), PropiedadGlobalUtil.getDir3CaibUsername(entidad.getId()), PropiedadGlobalUtil.getDir3CaibPassword(entidad.getId()));
                     UnidadTF unidad = unidadesService.obtenerUnidad(plantillaJson.getDestinoCodigo(), null, null);
 
                     if(!unidad.getCodigoEstadoEntidad().equals(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE)){// Ya no es vigente
@@ -369,7 +369,7 @@ public class PlantillaBean extends BaseEjbJPA<Plantilla, Long> implements Planti
 
                 // Comprobamos la unidad origen
                 if(plantillaJson.getOrigenCodigo()!= null && plantillaJson.isOrigenExterno()){ // Preguntamos a DIR3 si está Vigente
-                    Dir3CaibObtenerUnidadesWs unidadesService = Dir3CaibUtils.getObtenerUnidadesService(PropiedadGlobalUtil.getDir3CaibServer(), PropiedadGlobalUtil.getDir3CaibUsername(), PropiedadGlobalUtil.getDir3CaibPassword());
+                    Dir3CaibObtenerUnidadesWs unidadesService = Dir3CaibUtils.getObtenerUnidadesService(PropiedadGlobalUtil.getDir3CaibServer(entidad.getId()), PropiedadGlobalUtil.getDir3CaibUsername(entidad.getId()), PropiedadGlobalUtil.getDir3CaibPassword(entidad.getId()));
                     UnidadTF unidad = unidadesService.obtenerUnidad(plantillaJson.getOrigenCodigo(), null, null);
 
                     if(!unidad.getCodigoEstadoEntidad().equals(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE)){// Ya no es vigente
@@ -402,7 +402,7 @@ public class PlantillaBean extends BaseEjbJPA<Plantilla, Long> implements Planti
 
         // Oficina Origen
         if(plantillaJson.getOficinaCodigo()!= null  && !plantillaJson.getOficinaCodigo().equals("-1") && plantillaJson.isOficinaExterna()){// Preguntamos a DIR3 si está Vigente
-            Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService(PropiedadGlobalUtil.getDir3CaibServer(), PropiedadGlobalUtil.getDir3CaibUsername(), PropiedadGlobalUtil.getDir3CaibPassword());
+            Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService(PropiedadGlobalUtil.getDir3CaibServer(entidad.getId()), PropiedadGlobalUtil.getDir3CaibUsername(entidad.getId()), PropiedadGlobalUtil.getDir3CaibPassword(entidad.getId()));
             OficinaTF oficina = oficinasService.obtenerOficina(plantillaJson.getOficinaCodigo(),null,null);
 
             if(!oficina.getEstado().equals(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE)){// Ya no es vigente

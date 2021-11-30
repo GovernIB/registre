@@ -84,6 +84,7 @@ public class SirEnvioBean implements SirEnvioLocal {
             throws Exception, I18NException, I18NValidationException {
 
         OficioRemision oficioRemision = null;
+        Entidad entidadActiva = usuario.getEntidad();
 
         Date inicio = new Date();
         StringBuilder peticion = new StringBuilder();
@@ -99,12 +100,12 @@ public class SirEnvioBean implements SirEnvioLocal {
         try {
 
             // OficinaSir destino
-            Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService(PropiedadGlobalUtil.getDir3CaibServer(), PropiedadGlobalUtil.getDir3CaibUsername(), PropiedadGlobalUtil.getDir3CaibPassword());
+            Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService(PropiedadGlobalUtil.getDir3CaibServer(entidadActiva.getId()), PropiedadGlobalUtil.getDir3CaibUsername(entidadActiva.getId()), PropiedadGlobalUtil.getDir3CaibPassword(entidadActiva.getId()));
             OficinaTF oficinaSirDestino = oficinasService.obtenerOficina(codigoOficinaSir, null, null);
 
             // Actualizamos el Registro con campos SIR
             registroDetalle.setIndicadorPrueba(IndicadorPrueba.NORMAL);
-            registroDetalle.setIdentificadorIntercambio(generarIdentificadorIntercambio(registroEntrada.getOficina().getCodigo(), usuario.getEntidad()));
+            registroDetalle.setIdentificadorIntercambio(generarIdentificadorIntercambio(registroEntrada.getOficina().getCodigo(), entidadActiva));
             registroDetalle.setCodigoEntidadRegistralDestino(oficinaSirDestino.getCodigo());
             registroDetalle.setDecodificacionEntidadRegistralDestino(oficinaSirDestino.getDenominacion());
             registroDetalle.setTipoAnotacion(TipoAnotacion.ENVIO.getValue());
@@ -128,12 +129,12 @@ public class SirEnvioBean implements SirEnvioLocal {
             peticion.append("Origen: ").append(oficioRemision.getOficina().getDenominacion()).append(System.getProperty("line.separator"));
             peticion.append("Destino: ").append(oficioRemision.getDecodificacionEntidadRegistralDestino()).append(System.getProperty("line.separator"));
 
-            integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_SIR, descripcion, peticion.toString(), System.currentTimeMillis() - inicio.getTime(), usuario.getEntidad().getId(), oficioRemision.getIdentificadorIntercambio());
+            integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_SIR, descripcion, peticion.toString(), System.currentTimeMillis() - inicio.getTime(), entidadActiva.getId(), oficioRemision.getIdentificadorIntercambio());
 
         } catch (I18NValidationException | I18NException | Exception s) {
             s.printStackTrace();
             if (oficioRemision != null) {
-                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_SIR, descripcion, peticion.toString(), s, null, System.currentTimeMillis() - inicio.getTime(), usuario.getEntidad().getId(), oficioRemision.getIdentificadorIntercambio());
+                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_SIR, descripcion, peticion.toString(), s, null, System.currentTimeMillis() - inicio.getTime(), entidadActiva.getId(), oficioRemision.getIdentificadorIntercambio());
             }
             throw s;
         }
@@ -171,7 +172,7 @@ public class SirEnvioBean implements SirEnvioLocal {
         try {
 
             // OficinaSir destino
-            Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService(PropiedadGlobalUtil.getDir3CaibServer(), PropiedadGlobalUtil.getDir3CaibUsername(), PropiedadGlobalUtil.getDir3CaibPassword());
+            Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService(PropiedadGlobalUtil.getDir3CaibServer(usuario.getEntidad().getId()), PropiedadGlobalUtil.getDir3CaibUsername(usuario.getEntidad().getId()), PropiedadGlobalUtil.getDir3CaibPassword(usuario.getEntidad().getId()));
             OficinaTF oficinaSirDestino = oficinasService.obtenerOficina(codigoOficinaSir, null, null);
 
             // Actualizamos el Registro con campos SIR
@@ -227,6 +228,7 @@ public class SirEnvioBean implements SirEnvioLocal {
 
         OficioRemision oficioRemision = null;
         RegistroSir registroSir = null;
+        Entidad entidadActiva = usuario.getEntidad();
 
         Date inicio = new Date();
         StringBuilder peticion = new StringBuilder();
@@ -238,7 +240,7 @@ public class SirEnvioBean implements SirEnvioLocal {
         try {
 
             // OficinaSir destino
-            Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService(PropiedadGlobalUtil.getDir3CaibServer(), PropiedadGlobalUtil.getDir3CaibUsername(), PropiedadGlobalUtil.getDir3CaibPassword());
+            Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService(PropiedadGlobalUtil.getDir3CaibServer(entidadActiva.getId()), PropiedadGlobalUtil.getDir3CaibUsername(entidadActiva.getId()), PropiedadGlobalUtil.getDir3CaibPassword(entidadActiva.getId()));
             OficinaTF oficinaSirDestino = oficinasService.obtenerOficina(codigoOficinaSir, null, null);
 
             log.info("----------------------------------------------------------------------------------------------");
@@ -283,11 +285,11 @@ public class SirEnvioBean implements SirEnvioLocal {
                 emisionEjb.enviarFicheroIntercambio(registroSir);
 
                 // Integración
-                integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_SIR, descripcion, peticion.toString(), System.currentTimeMillis() - inicio.getTime(), registroSir.getEntidad().getId(), registroSir.getIdentificadorIntercambio());
+                integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_SIR, descripcion, peticion.toString(), System.currentTimeMillis() - inicio.getTime(), entidadActiva.getId(), registroSir.getIdentificadorIntercambio());
 
             }catch (Exception e){
                 e.printStackTrace();
-                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_SIR, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - inicio.getTime(), usuario.getEntidad().getId(), registroSir.getIdentificadorIntercambio());
+                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_SIR, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - inicio.getTime(), entidadActiva.getId(), registroSir.getIdentificadorIntercambio());
             }
 
             log.info("");

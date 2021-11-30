@@ -10,8 +10,8 @@ import es.caib.regweb3.persistence.ejb.CodigoAsuntoLocal;
 import es.caib.regweb3.persistence.ejb.InteresadoLocal;
 import es.caib.regweb3.persistence.ejb.MultiEntidadLocal;
 import es.caib.regweb3.persistence.ejb.PlantillaLocal;
-import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.persistence.utils.RegistroUtils;
+import es.caib.regweb3.utils.Dir3Caib;
 import es.caib.regweb3.utils.Dir3CaibUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
@@ -618,6 +618,7 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
      */
     private RegistroEntrada cargarPlantillaRegistroEntrada(Plantilla plantilla, Oficina oficinaActiva, Entidad entidadActiva, LinkedHashSet<Organismo> organismosOficinaActiva, LinkedHashSet<Oficina> oficinasOrigen, HttpServletRequest request) throws Exception{
 
+        Dir3Caib dir3Caib = getLoginInfo(request).getDir3Caib();
         RegistroEntrada registroEntrada = new RegistroEntrada();
         registroEntrada.getRegistroDetalle().setPresencial(true);
 
@@ -683,7 +684,7 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
         // Comprobamos la unidad destino
         // Externa
         if(plantillaJson.getDestinoCodigo()!= null && plantillaJson.isDestinoExterno()){ // Preguntamos a DIR3 si está Vigente
-            Dir3CaibObtenerUnidadesWs unidadesService = Dir3CaibUtils.getObtenerUnidadesService(PropiedadGlobalUtil.getDir3CaibServer(), PropiedadGlobalUtil.getDir3CaibUsername(), PropiedadGlobalUtil.getDir3CaibPassword());
+            Dir3CaibObtenerUnidadesWs unidadesService = Dir3CaibUtils.getObtenerUnidadesService(dir3Caib.getServer(), dir3Caib.getUser(), dir3Caib.getPassword());
             UnidadTF unidad = unidadesService.obtenerUnidad(plantillaJson.getDestinoCodigo(), null, null);
             if(unidad != null) {
                 if (unidad.getCodigoEstadoEntidad().equals(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE)) { //Si está vigente, asignamos la unidad al Registro de entrada
@@ -713,7 +714,7 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
         // Oficina Origen
         // Externa
         if(plantillaJson.getOficinaCodigo()!= null  && !plantillaJson.getOficinaCodigo().equals("-1") && plantillaJson.isOficinaExterna()){// Preguntamos a DIR3 si está Vigente
-            Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService(PropiedadGlobalUtil.getDir3CaibServer(), PropiedadGlobalUtil.getDir3CaibUsername(), PropiedadGlobalUtil.getDir3CaibPassword());
+            Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService(dir3Caib.getServer(), dir3Caib.getUser(), dir3Caib.getPassword());
             OficinaTF oficinaOrigen = oficinasService.obtenerOficina(plantillaJson.getOficinaCodigo(),null,null);
             if(oficinaOrigen != null) {
                 if (oficinaOrigen.getEstado().equals(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE)) { //Si está vigente, asignamos la oficina al Registro de entrada

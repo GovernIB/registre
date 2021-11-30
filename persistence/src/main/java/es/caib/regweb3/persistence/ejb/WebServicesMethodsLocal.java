@@ -52,14 +52,14 @@ public interface WebServicesMethodsLocal {
      * @return
      * @throws Exception
      */
-    Dir3CaibObtenerOficinasWs getObtenerOficinasService() throws Exception;
+    Dir3CaibObtenerOficinasWs getObtenerOficinasService(Long idEntidad) throws Exception;
 
     /**
      *
      * @return
      * @throws Exception
      */
-    Dir3CaibObtenerUnidadesWs getObtenerUnidadesService() throws Exception;
+    Dir3CaibObtenerUnidadesWs getObtenerUnidadesService(Long idEntidad) throws Exception;
 
     /**
      *
