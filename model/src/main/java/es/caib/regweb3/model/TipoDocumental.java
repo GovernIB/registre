@@ -67,7 +67,7 @@ public class TipoDocumental extends Traducible {
         this.codigoNTI = codigoNTI;
     }
 
-    @ManyToOne()
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ENTIDAD", foreignKey = @ForeignKey(name = "RWE_TIPODOCUMENTAL_ENTIDAD_FK"))
     @JsonIgnore
     public Entidad getEntidad() {
