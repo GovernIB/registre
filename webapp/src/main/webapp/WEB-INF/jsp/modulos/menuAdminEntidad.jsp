@@ -28,7 +28,7 @@
 
             <c:if test="${loginInfo.enlaceDir3}">
                 <li class="divider"></li>
-                <li class="submenu-complet"><a href="<c:url value="<%=PropiedadGlobalUtil.getDir3CaibServer()%>"/>" target="_blank"><i class="fa fa-institution"></i> <spring:message code="menu.dir3caib"/></a></li>
+                <li class="submenu-complet"><a href="<c:url value="${loginInfo.dir3Caib.server}"/>" target="_blank"><i class="fa fa-institution"></i> <spring:message code="menu.dir3caib"/></a></li>
             </c:if>
 
             <c:if test="${loginInfo.entidadActiva.configuracionPersona != 1}">

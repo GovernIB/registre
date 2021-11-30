@@ -6,7 +6,7 @@ import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.model.utils.ObjetoBasico;
 import es.caib.regweb3.persistence.ejb.*;
-import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
+import es.caib.regweb3.utils.Dir3Caib;
 import es.caib.regweb3.utils.Dir3CaibUtils;
 import es.caib.regweb3.webapp.utils.LocalidadJson;
 import org.fundaciobit.genapp.common.i18n.I18NException;
@@ -282,10 +282,11 @@ public class RestController extends BaseController {
     @RequestMapping(value = "/obtenerOficinasSIR", method = RequestMethod.GET)
     public
     @ResponseBody
-    List<OficinaTF> obtenerOficinasSIR(@RequestParam String codigoDestinoSIR) throws Exception {
+    List<OficinaTF> obtenerOficinasSIR(@RequestParam String codigoDestinoSIR, HttpServletRequest request) throws Exception {
 
-        log.info("obtenerOficinasSIR");
-        Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService(PropiedadGlobalUtil.getDir3CaibServer(), PropiedadGlobalUtil.getDir3CaibUsername(), PropiedadGlobalUtil.getDir3CaibPassword());
+        Dir3Caib dir3Caib = getLoginInfo(request).getDir3Caib();
+
+        Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService(dir3Caib.getServer(), dir3Caib.getUser(), dir3Caib.getPassword());
         return oficinasService.obtenerOficinasSIRUnidad(codigoDestinoSIR);
     }
 

@@ -1,6 +1,7 @@
 package es.caib.regweb3.webapp.security;
 
 import es.caib.regweb3.model.*;
+import es.caib.regweb3.utils.Dir3Caib;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -47,6 +48,7 @@ public class LoginInfo {
     private Boolean enlaceDir3 = false;
     private Boolean mostrarAvisos;
     private String ayudaUrl = "";
+    private Dir3Caib dir3Caib;
 
     final User springSecurityUser;
     final Collection<GrantedAuthority> springRoles;
@@ -346,6 +348,14 @@ public class LoginInfo {
 
     public void setAyudaUrl(String ayudaUrl) {
         this.ayudaUrl = ayudaUrl;
+    }
+
+    public Dir3Caib getDir3Caib() {
+        return dir3Caib;
+    }
+
+    public void setDir3Caib(Dir3Caib dir3Caib) {
+        this.dir3Caib = dir3Caib;
     }
 
     public static LoginInfo getInstance() throws LoginException {

@@ -4,6 +4,7 @@ import es.caib.dir3caib.ws.api.oficina.OficinaTF;
 import es.caib.regweb3.model.Oficina;
 import es.caib.regweb3.model.Organismo;
 import es.caib.regweb3.persistence.utils.Paginacion;
+import es.caib.regweb3.utils.Dir3Caib;
 
 import javax.ejb.Local;
 import java.util.LinkedHashSet;
@@ -322,8 +323,9 @@ public interface OficinaLocal extends BaseEjb<Oficina, Long> {
      * Obtiene las oficinas SIR desde dir3caib(via WS) de la unidad indicada en el código
      *
      * @param codigo
+     * @param dir3caib
      * @return
      * @throws Exception
      */
-    List<OficinaTF> obtenerOficinasSir(String codigo) throws Exception;
+    List<OficinaTF> obtenerOficinasSir(String codigo, Dir3Caib dir3caib) throws Exception;
 }

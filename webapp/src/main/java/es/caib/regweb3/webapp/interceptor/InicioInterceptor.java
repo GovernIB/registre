@@ -227,19 +227,19 @@ public class InicioInterceptor extends HandlerInterceptorAdapter {
                         }
 
                         // Dir3Caib Server
-                        if (PropiedadGlobalUtil.getDir3CaibServer() == null || PropiedadGlobalUtil.getDir3CaibServer().isEmpty()) {
+                        if (StringUtils.isEmpty(PropiedadGlobalUtil.getDir3CaibServer(entidadActiva.getId()))) {
                             log.info("La propiedad Dir3CaibServer no está definida");
                             Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.propiedad.dir3caibserver"));
                             entidadEjb.marcarEntidadMantenimiento(entidadActiva.getId(), true);
                         }
                         // Dir3Caib Username
-                        if (PropiedadGlobalUtil.getDir3CaibUsername() == null || PropiedadGlobalUtil.getDir3CaibUsername().isEmpty()) {
+                        if (StringUtils.isEmpty(PropiedadGlobalUtil.getDir3CaibUsername(entidadActiva.getId()))) {
                             log.info("La propiedad Dir3CaibUsername no está definida");
                             Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.propiedad.dir3caibusername"));
                             entidadEjb.marcarEntidadMantenimiento(entidadActiva.getId(), true);
                         }
                         // Dir3Caib Password
-                        if (PropiedadGlobalUtil.getDir3CaibPassword() == null || PropiedadGlobalUtil.getDir3CaibPassword().isEmpty()) {
+                        if (StringUtils.isEmpty(PropiedadGlobalUtil.getDir3CaibPassword(entidadActiva.getId()))) {
                             log.info("La propiedad Dir3CaibPassword no está definida");
                             Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.propiedad.dir3caibpassword"));
                             entidadEjb.marcarEntidadMantenimiento(entidadActiva.getId(), true);
@@ -253,7 +253,7 @@ public class InicioInterceptor extends HandlerInterceptorAdapter {
                         }
 
                         //Comprobamos que se haya definido un formato para el número de registro en la Entidad
-                        if(entidadActiva.getNumRegistro() == null || entidadActiva.getNumRegistro().length()==0){
+                        if(StringUtils.isEmpty(entidadActiva.getNumRegistro())){
                             log.info("No hay configurado el formato del numero de registro para la Entidad activa");
                             Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.entidad.formatoRegistro"));
                             entidadEjb.marcarEntidadMantenimiento(entidadActiva.getId(), true);

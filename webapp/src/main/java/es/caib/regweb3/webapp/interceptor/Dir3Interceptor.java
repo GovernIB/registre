@@ -1,8 +1,8 @@
 package es.caib.regweb3.webapp.interceptor;
 
 import es.caib.regweb3.model.Rol;
-import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.utils.RegwebConstantes;
+import es.caib.regweb3.utils.StringUtils;
 import es.caib.regweb3.webapp.security.LoginInfo;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
@@ -48,19 +48,19 @@ public class Dir3Interceptor extends HandlerInterceptorAdapter {
 
             // Validamos las propiedades de dir3 para poder atacar a dir3caib
             if (url.equals("/datosCatalogo")) {
-                if (PropiedadGlobalUtil.getDir3CaibServer() == null || PropiedadGlobalUtil.getDir3CaibServer().isEmpty()) {
+                if (StringUtils.isEmpty(loginInfo.getDir3Caib().getServer())) {
                     log.info("La propiedad Dir3CaibServer no está definida");
                     Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.propiedad.dir3caibserver"));
                     response.sendRedirect("/regweb3/aviso");
                     return false;
                 }
-                if (PropiedadGlobalUtil.getDir3CaibUsername() == null || PropiedadGlobalUtil.getDir3CaibUsername().isEmpty()) {
+                if (StringUtils.isEmpty(loginInfo.getDir3Caib().getUser())) {
                     log.info("La propiedad Dir3CaibUsername no está definida");
                     Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.propiedad.dir3caibusername"));
                     response.sendRedirect("/regweb3/aviso");
                     return false;
                 }
-                if (PropiedadGlobalUtil.getDir3CaibPassword() == null || PropiedadGlobalUtil.getDir3CaibPassword().isEmpty()) {
+                if (StringUtils.isEmpty(loginInfo.getDir3Caib().getPassword())) {
                     log.info("La propiedad Dir3CaibPassword no está definida");
                     Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.propiedad.dir3caibpassword"));
                     response.sendRedirect("/regweb3/aviso");

@@ -322,7 +322,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean implem
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<OficinaTF> isOficioRemisionSir(Long idRegistro) throws Exception {
+    public List<OficinaTF> isOficioRemisionSir(Long idRegistro, Long idEntidad) throws Exception {
 
         Query q;
         q = em.createQuery("Select re.destinoExternoCodigo from RegistroEntrada as re where " +
@@ -338,7 +338,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean implem
         if (result.size() > 0) {
 
             String codigoDir3 = result.get(0);
-            Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService(PropiedadGlobalUtil.getDir3CaibServer(), PropiedadGlobalUtil.getDir3CaibUsername(), PropiedadGlobalUtil.getDir3CaibPassword());
+            Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService(PropiedadGlobalUtil.getDir3CaibServer(idEntidad), PropiedadGlobalUtil.getDir3CaibUsername(idEntidad), PropiedadGlobalUtil.getDir3CaibPassword(idEntidad));
 
             return oficinasService.obtenerOficinasSIRUnidad(codigoDir3);
         }
@@ -349,7 +349,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean implem
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<OficinaTF> isOficioRemisionSirMultiEntidad(Long idRegistro) throws Exception {
+    public List<OficinaTF> isOficioRemisionSirMultiEntidad(Long idRegistro, Long idEntidad) throws Exception {
 
         //Miramos los externos
         Query q;
@@ -375,7 +375,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean implem
 
         if (result.size() > 0) { // Si hay buscamos las oficinas SIR
             String codigoDir3 = result.get(0);
-            Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService(PropiedadGlobalUtil.getDir3CaibServer(), PropiedadGlobalUtil.getDir3CaibUsername(), PropiedadGlobalUtil.getDir3CaibPassword());
+            Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService(PropiedadGlobalUtil.getDir3CaibServer(idEntidad), PropiedadGlobalUtil.getDir3CaibUsername(idEntidad), PropiedadGlobalUtil.getDir3CaibPassword(idEntidad));
 
             return oficinasService.obtenerOficinasSIRUnidad(codigoDir3);
         } else {
@@ -412,7 +412,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean implem
 
             // Si la entidad está en SIR y la Oficina está activada para Envío Sir
             if (entidadActiva.getSir() && oficinaEjb.isSIREnvio(idOficina)) {
-                List<OficinaTF> oficinasSIR = isOficioRemisionSir(registroEntrada.getId());
+                List<OficinaTF> oficinasSIR = isOficioRemisionSir(registroEntrada.getId(), entidadActiva.getId());
 
                 if (oficinasSIR != null && !oficinasSIR.isEmpty()) {
                     return RegwebConstantes.EVENTO_OFICIO_SIR;
@@ -442,7 +442,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean implem
 
             // Si la entidad está en SIR y la Oficina está activada para Envío Sir
             if (entidadActiva.getSir() && oficinaEjb.isSIREnvio(idOficina)) {
-                List<OficinaTF> oficinasSIR = isOficioRemisionSirMultiEntidad(registroEntrada.getId());
+                List<OficinaTF> oficinasSIR = isOficioRemisionSirMultiEntidad(registroEntrada.getId(), entidadActiva.getId());
 
                 if (oficinasSIR != null && !oficinasSIR.isEmpty()) {
                     return RegwebConstantes.EVENTO_OFICIO_SIR;
@@ -608,12 +608,12 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean implem
                 }
             } else { //destino externo
                 //UnidadTF destinoExterno = obtenerDestinoExternoRE(idRegistro);
-                UnidadTF destinoExterno = organismoEjb.obtenerDestinoExterno(registroEntrada.getDestinoExternoCodigo());
+                UnidadTF destinoExterno = organismoEjb.obtenerDestinoExterno(registroEntrada.getDestinoExternoCodigo(), usuarioEntidad.getEntidad().getId());
                 //Si está extinguido
                 if (!destinoExterno.getCodigoEstadoEntidad().equals(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE)) {
                     //Si es SIR, obtenemos sus sustitutos y asignamos el primero.
                     if (registroEntrada.getEvento().equals(RegwebConstantes.EVENTO_OFICIO_SIR)) {
-                        List<UnidadTF> destinosExternosSIR = organismoEjb.obtenerSustitutosExternosSIR(destinoExterno.getCodigo());
+                        List<UnidadTF> destinosExternosSIR = organismoEjb.obtenerSustitutosExternosSIR(destinoExterno.getCodigo(), usuarioEntidad.getEntidad().getId());
                         if (destinosExternosSIR.size() > 0) {
                             registroEntrada.setDestinoExternoCodigo(destinosExternosSIR.get(0).getCodigo());
                             registroEntrada.setDestinoExternoDenominacion(destinosExternosSIR.get(0).getDenominacion());
@@ -622,7 +622,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean implem
                         }
 
                     } else { //Si no es SIR, obtenemos sus sustitutos y asignamos el primero.
-                        List<UnidadTF> destinosExternos = organismoEjb.obtenerSustitutosExternos(destinoExterno.getCodigo());
+                        List<UnidadTF> destinosExternos = organismoEjb.obtenerSustitutosExternos(destinoExterno.getCodigo(), usuarioEntidad.getEntidad().getId());
                         if (destinosExternos.size() > 0) {
                             registroEntrada.setDestinoExternoCodigo(destinosExternos.get(0).getCodigo());
                             registroEntrada.setDestinoExternoDenominacion(destinosExternos.get(0).getDenominacion());
