@@ -3,9 +3,9 @@ package es.caib.regweb3.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.*;
 
-import javax.persistence.*;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.*;
 import javax.xml.bind.annotation.*;
 import java.util.HashMap;
 import java.util.Map;
@@ -74,7 +74,7 @@ public class TipoDocumental extends Traducible {
       this.codigoNTI = codigoNTI;
     }
 
-    @ManyToOne()
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ENTIDAD")
     @ForeignKey(name = "RWE_TIPODOCUMENTAL_ENTIDAD_FK")
     @JsonIgnore
