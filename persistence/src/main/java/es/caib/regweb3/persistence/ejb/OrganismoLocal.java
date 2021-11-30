@@ -346,29 +346,32 @@ public interface OrganismoLocal extends BaseEjb<Organismo, Long> {
      * Obtiene la UnidadTF de dir3caib a partir del código indicado
      *
      * @param codigo
+     * @param idEntidad
      * @return
      * @throws Exception
      */
-    UnidadTF obtenerDestinoExterno(String codigo) throws Exception;
+    UnidadTF obtenerDestinoExterno(String codigo, Long idEntidad) throws Exception;
 
 
     /**
      * Dado un código dir3 obtiene los sustitutos a los que se puede enviar mediante SIR
      *
      * @param codigo
+     * @param idEntidad
      * @return
      * @throws Exception
      */
-    List<UnidadTF> obtenerSustitutosExternosSIR(String codigo) throws Exception;
+    List<UnidadTF> obtenerSustitutosExternosSIR(String codigo, Long idEntidad) throws Exception;
 
     /**
      * Dado un código dir3 obtiene todos sus sustitutos.
      *
      * @param codigo
+     * @param idEntidad
      * @return
      * @throws Exception
      */
-    List<UnidadTF> obtenerSustitutosExternos(String codigo) throws Exception;
+    List<UnidadTF> obtenerSustitutosExternos(String codigo, Long idEntidad) throws Exception;
 
 
 }

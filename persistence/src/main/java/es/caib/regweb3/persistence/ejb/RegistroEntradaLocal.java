@@ -97,22 +97,22 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
 
     /**
      * Comprueba si un RegistroEntrada se considera un OficioRemision SIR o no
-     *
      * @param idRegistro
+     * @param idEntidad
      * @return
      * @throws Exception
      */
-    List<OficinaTF> isOficioRemisionSir(Long idRegistro) throws Exception;
+    List<OficinaTF> isOficioRemisionSir(Long idRegistro, Long idEntidad) throws Exception;
 
 
     /**
      * Comprueba si un RegistroEntrada se considera un OficioRemision SIR o no en un entorno multientidad
-     *
      * @param idRegistro
+     * @param idEntidad
      * @return
      * @throws Exception
      */
-    List<OficinaTF> isOficioRemisionSirMultiEntidad(Long idRegistro) throws Exception;
+    List<OficinaTF> isOficioRemisionSirMultiEntidad(Long idRegistro, Long idEntidad) throws Exception;
 
 
     /**

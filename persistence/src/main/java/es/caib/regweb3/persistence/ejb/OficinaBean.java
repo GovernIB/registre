@@ -6,7 +6,7 @@ import es.caib.regweb3.model.Oficina;
 import es.caib.regweb3.model.Organismo;
 import es.caib.regweb3.persistence.utils.DataBaseUtils;
 import es.caib.regweb3.persistence.utils.Paginacion;
-import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
+import es.caib.regweb3.utils.Dir3Caib;
 import es.caib.regweb3.utils.Dir3CaibUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
@@ -702,8 +702,8 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
      * @return
      * @throws Exception
      */
-    public List<OficinaTF> obtenerOficinasSir(String codigo) throws Exception {
-        Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService(PropiedadGlobalUtil.getDir3CaibServer(), PropiedadGlobalUtil.getDir3CaibUsername(), PropiedadGlobalUtil.getDir3CaibPassword());
+    public List<OficinaTF> obtenerOficinasSir(String codigo, Dir3Caib dir3caib) throws Exception {
+        Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService(dir3caib.getServer(), dir3caib.getUser(), dir3caib.getPassword());
         return oficinasService.obtenerOficinasSIRUnidad(codigo);
 
     }

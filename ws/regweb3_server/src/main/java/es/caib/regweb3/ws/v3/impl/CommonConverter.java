@@ -1,12 +1,8 @@
 package es.caib.regweb3.ws.v3.impl;
 
-import es.caib.dir3caib.ws.api.oficina.Dir3CaibObtenerOficinasWs;
-import es.caib.dir3caib.ws.api.oficina.OficinaTF;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.persistence.ejb.*;
-import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
-import es.caib.regweb3.utils.Dir3CaibUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.ws.converter.AnexoConverter;
 import es.caib.regweb3.ws.converter.DatosInteresadoConverter;
@@ -125,38 +121,6 @@ public class CommonConverter {
             return null;
         }
         return localidad.getEntidadGeografica().getCodigoEntidadGeografica();
-    }
-
-    public static Oficina getOficina(String oficinaCodigoDir3, OficinaLocal oficinaEjb) throws Exception {
-        if (oficinaCodigoDir3 == null) {
-            return null;
-        }
-        //TODO REVISAR CON EDU
-        return oficinaEjb.findByCodigo(oficinaCodigoDir3);
-    }
-
-    public static RegistroDetalle getOficinaOrigen(String oficinaCodigoDir3, OficinaLocal oficinaEjb, RegistroDetalle registroDetalle) throws Exception {
-        if (oficinaCodigoDir3 == null) {
-            return null;
-        }
-
-        Oficina oficinaInterna = oficinaEjb.findByCodigo(oficinaCodigoDir3);
-        OficinaTF oficinaExterna = null;
-
-        if (oficinaInterna == null) { // Comprobamos si se trata de una Oficina externa
-            Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService(PropiedadGlobalUtil.getDir3CaibServer(), PropiedadGlobalUtil.getDir3CaibUsername(), PropiedadGlobalUtil.getDir3CaibPassword());
-            oficinaExterna = oficinasService.obtenerOficina(oficinaCodigoDir3, null, null);
-
-            if (oficinaExterna != null && oficinaExterna.getEstado().equals(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE)) {
-                registroDetalle.setOficinaOrigenExternoCodigo(oficinaExterna.getCodigo());
-                registroDetalle.setOficinaOrigenExternoDenominacion(oficinaExterna.getDenominacion());
-                registroDetalle.setOficinaOrigen(null);
-            }
-        } else if (oficinaInterna.getEstado().getId().equals(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE)) {
-            registroDetalle.setOficinaOrigen(oficinaInterna);
-        }
-
-        return registroDetalle;
     }
 
 

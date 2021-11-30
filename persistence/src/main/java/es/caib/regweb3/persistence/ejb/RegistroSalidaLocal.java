@@ -135,24 +135,23 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
 
     /**
      * Comprueba si un RegistroSalida se considera un OficioRemision SIR o no
-     *
      * @param registroSalida
      * @param organismos
+     * @param idEntidad
      * @return
      * @throws Exception
      */
-    List<OficinaTF> isOficioRemisionSir(RegistroSalida registroSalida, Set<String> organismos) throws Exception;
+    List<OficinaTF> isOficioRemisionSir(RegistroSalida registroSalida, Set<String> organismos, Long idEntidad) throws Exception;
 
 
     /**
      * Comprueba si un RegistroSalida se considera un OficioRemision SIR o no en un entorno multientidad
-     *
      * @param registroSalida
      * @param organismos
      * @return
      * @throws Exception
      */
-    List<OficinaTF> isOficioRemisionSirMultiEntidad(RegistroSalida registroSalida, Set<String> organismos) throws Exception;
+    List<OficinaTF> isOficioRemisionSirMultiEntidad(RegistroSalida registroSalida, Set<String> organismos, Long idEntidad) throws Exception;
 
 
     /**

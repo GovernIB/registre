@@ -8,14 +8,10 @@ import es.caib.regweb3.model.utils.TipoRegistro;
 import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.persistence.utils.FileSystemManager;
 import es.caib.regweb3.persistence.utils.Paginacion;
-import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.persistence.utils.RegistroUtils;
 import es.caib.regweb3.sir.ejb.MensajeLocal;
 import es.caib.regweb3.sir.utils.Sicres3XML;
-import es.caib.regweb3.utils.Configuracio;
-import es.caib.regweb3.utils.Dir3CaibUtils;
-import es.caib.regweb3.utils.RegwebConstantes;
-import es.caib.regweb3.utils.TimeUtils;
+import es.caib.regweb3.utils.*;
 import es.caib.regweb3.webapp.controller.BaseController;
 import es.caib.regweb3.webapp.form.*;
 import es.caib.regweb3.webapp.utils.Mensaje;
@@ -272,10 +268,11 @@ public class SirController extends BaseController {
      * Controller temporal para confirmar Oficios enviados a SIR
      */
     @RequestMapping(value = "/{idIntercambio}/confirmar", method = RequestMethod.GET)
-    public String marcarConformacion(@PathVariable String idIntercambio, HttpServletRequest request) throws Exception {
+    public String marcarConfirmacion(@PathVariable String idIntercambio, HttpServletRequest request) throws Exception {
 
         Entidad entidad = getEntidadActiva(request);
-        
+        Dir3Caib dir3Caib = getLoginInfo(request).getDir3Caib();
+
         OficioRemision oficioRemision = oficioRemisionEjb.getByIdentificadorIntercambio(idIntercambio);
 
         List<MensajeControl> mensajes = mensajeControlEjb.getByIdentificadorIntercambio(idIntercambio, entidad.getId());
@@ -286,7 +283,7 @@ public class SirController extends BaseController {
                 if(mensaje.getTipoMensaje().equals(TipoMensaje.CONFIRMACION.getValue())){
 
                     oficioRemision.setCodigoEntidadRegistralProcesado(mensaje.getCodigoEntidadRegistralOrigen());
-                    oficioRemision.setDecodificacionEntidadRegistralProcesado(Dir3CaibUtils.denominacion(PropiedadGlobalUtil.getDir3CaibServer(), mensaje.getCodigoEntidadRegistralOrigen(), RegwebConstantes.OFICINA));
+                    oficioRemision.setDecodificacionEntidadRegistralProcesado(Dir3CaibUtils.denominacion(dir3Caib.getServer(), mensaje.getCodigoEntidadRegistralOrigen(), RegwebConstantes.OFICINA));
                     oficioRemision.setNumeroRegistroEntradaDestino(mensaje.getNumeroRegistroEntradaDestino());
                     oficioRemision.setFechaEntradaDestino(mensaje.getFechaEntradaDestino());
                     oficioRemision.setEstado(RegwebConstantes.OFICIO_ACEPTADO);

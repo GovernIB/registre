@@ -288,6 +288,7 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
 
         ModelAndView mav = new ModelAndView("registro/envioSir");
         Oficina oficinaActiva = getOficinaActiva(request);
+        Entidad entidadActiva = getEntidadActiva(request);
 
         if (!oficinaActiva.getSirEnvio()) {
             log.info("La oficinaActiva no está integrada en SIR");
@@ -302,19 +303,19 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
 
         //Consultamos el estado del destino externo
         if (codigoDir3 != null) {
-            UnidadTF destino = organismoEjb.obtenerDestinoExterno(codigoDir3);
+            UnidadTF destino = organismoEjb.obtenerDestinoExterno(codigoDir3, entidadActiva.getId());
             mav.addObject("destino", destino);
             List<OficinaTF> oficinasSIR = new ArrayList<OficinaTF>();
             //Si está extinguido obtenemos sus sustitutos(con oficinas SIR) de dir3caib
             if (destino.getCodigoEstadoEntidad().equals(RegwebConstantes.ESTADO_ENTIDAD_EXTINGUIDO)) {
-                List<UnidadTF> sustitutos = organismoEjb.obtenerSustitutosExternosSIR(destino.getCodigo());
+                List<UnidadTF> sustitutos = organismoEjb.obtenerSustitutosExternosSIR(destino.getCodigo(), entidadActiva.getId());
                 if (sustitutos.size() == 1) {
                     //obtenemos sus oficinas SIR
-                    oficinasSIR = oficinaEjb.obtenerOficinasSir(sustitutos.get(0).getCodigo());
+                    oficinasSIR = oficinaEjb.obtenerOficinasSir(sustitutos.get(0).getCodigo(), getLoginInfo(request).getDir3Caib());
                 }
                 mav.addObject("sustitutos", sustitutos);
             } else { //Obtenemos las oficinas SIR desde dir3caib
-                oficinasSIR = oficinaEjb.obtenerOficinasSir(destino.getCodigo());
+                oficinasSIR = oficinaEjb.obtenerOficinasSir(destino.getCodigo(), getLoginInfo(request).getDir3Caib());
                 if (oficinasSIR.isEmpty()) {
                     log.info("Este registro no se puede enviar via SIR, no tiene oficinas");
                     Mensaje.saveMessageError(request, getMessage("registroSir.error.envio.oficinas"));

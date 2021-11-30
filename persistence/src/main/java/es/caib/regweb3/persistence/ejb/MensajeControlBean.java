@@ -365,9 +365,9 @@ public class MensajeControlBean extends BaseEjbJPA<MensajeControl, Long> impleme
      * @param oficioRemision
      * @throws Exception
      */
-    private void procesarMensajeCONFIRMACION(OficioRemision oficioRemision, MensajeControl mensaje) throws Exception {
+    private void procesarMensajeCONFIRMACION(OficioRemision oficio, MensajeControl mensaje) throws Exception{
 
-        switch (oficioRemision.getEstado()) {
+        switch (oficio.getEstado()) {
 
             case RegwebConstantes.OFICIO_SIR_ENVIADO:
             case RegwebConstantes.OFICIO_SIR_ENVIADO_ACK:
@@ -376,20 +376,20 @@ public class MensajeControlBean extends BaseEjbJPA<MensajeControl, Long> impleme
             case RegwebConstantes.OFICIO_SIR_REENVIADO_ACK:
             case RegwebConstantes.OFICIO_SIR_REENVIADO_ERROR:
 
-                oficioRemision.setCodigoEntidadRegistralProcesado(mensaje.getCodigoEntidadRegistralOrigen());
-                oficioRemision.setDecodificacionEntidadRegistralProcesado(Dir3CaibUtils.denominacion(PropiedadGlobalUtil.getDir3CaibServer(), mensaje.getCodigoEntidadRegistralOrigen(), RegwebConstantes.OFICINA));
-                oficioRemision.setNumeroRegistroEntradaDestino(mensaje.getNumeroRegistroEntradaDestino());
-                oficioRemision.setFechaEntradaDestino(mensaje.getFechaEntradaDestino());
-                oficioRemision.setEstado(RegwebConstantes.OFICIO_ACEPTADO);
-                oficioRemision.setFechaEstado(mensaje.getFechaEntradaDestino());
-                oficioRemisionEjb.merge(oficioRemision);
+                oficio.setCodigoEntidadRegistralProcesado(mensaje.getCodigoEntidadRegistralOrigen());
+                oficio.setDecodificacionEntidadRegistralProcesado(Dir3CaibUtils.denominacion(PropiedadGlobalUtil.getDir3CaibServer(oficio.getUsuarioResponsable().getEntidad().getId()), mensaje.getCodigoEntidadRegistralOrigen(), RegwebConstantes.OFICINA));
+                oficio.setNumeroRegistroEntradaDestino(mensaje.getNumeroRegistroEntradaDestino());
+                oficio.setFechaEntradaDestino(mensaje.getFechaEntradaDestino());
+                oficio.setEstado(RegwebConstantes.OFICIO_ACEPTADO);
+                oficio.setFechaEstado(mensaje.getFechaEntradaDestino());
+                oficioRemisionEjb.merge(oficio);
 
                 // Marcamos el Registro original como ACEPTADO
-                if (oficioRemision.getTipoOficioRemision().equals(RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA)) {
-                    registroEntradaEjb.cambiarEstado(oficioRemision.getRegistrosEntrada().get(0).getId(), RegwebConstantes.REGISTRO_OFICIO_ACEPTADO);
+                if (oficio.getTipoOficioRemision().equals(RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA)) {
+                    registroEntradaEjb.cambiarEstado(oficio.getRegistrosEntrada().get(0).getId(), RegwebConstantes.REGISTRO_OFICIO_ACEPTADO);
 
-                } else if (oficioRemision.getTipoOficioRemision().equals(RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA)) {
-                    registroSalidaEjb.cambiarEstado(oficioRemision.getRegistrosSalida().get(0).getId(), RegwebConstantes.REGISTRO_OFICIO_ACEPTADO);
+                }else if(oficio.getTipoOficioRemision().equals(RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA)){
+                    registroSalidaEjb.cambiarEstado(oficio.getRegistrosSalida().get(0).getId(),RegwebConstantes.REGISTRO_OFICIO_ACEPTADO);
 
                 }
 
@@ -402,8 +402,8 @@ public class MensajeControlBean extends BaseEjbJPA<MensajeControl, Long> impleme
                 break;
 
             default:
-                log.info("El RegistroSir no tiene el estado necesario para ser Confirmado: " + oficioRemision.getIdentificadorIntercambio());
-                throw new ValidacionException(Errores.ERROR_0037, "El RegistroSir no tiene el estado necesario para ser Confirmado: " + oficioRemision.getIdentificadorIntercambio());
+                log.info("El RegistroSir no tiene el estado necesario para ser Confirmado: " + oficio.getIdentificadorIntercambio());
+                throw new ValidacionException(Errores.ERROR_0037, "El RegistroSir no tiene el estado necesario para ser Confirmado: " + oficio.getIdentificadorIntercambio());
         }
     }
 

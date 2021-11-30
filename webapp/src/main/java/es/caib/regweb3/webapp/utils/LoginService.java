@@ -5,6 +5,7 @@ import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.persistence.utils.RolUtils;
 import es.caib.regweb3.utils.Configuracio;
+import es.caib.regweb3.utils.Dir3Caib;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.security.LoginInfo;
 import org.fundaciobit.genapp.common.i18n.I18NException;
@@ -165,12 +166,12 @@ public class LoginService {
         switch (rolActivo.getNombre()) {
             case RegwebConstantes.RWE_ADMIN: // Si el RolActivo del usuario autenticado es Administrador de Entidad
 
-                asignarEntidadesAdministradas(loginInfo, loginInfo.getEntidadActiva());
+                asignarEntidadesAdministradas(loginInfo);
             break;
             case RegwebConstantes.RWE_USUARI: // Si RolActivo del usuario autenticado es Operador
 
                 //Asignamos las Entidades donde tiene acceso el usuario operador
-                asignarEntidadesOperador(loginInfo, loginInfo.getEntidadActiva());
+                asignarEntidadesOperador(loginInfo);
 
                 //Asignamos las oficinas donde tiene acceso el usuario operador
                 asignarOficinas(loginInfo);
@@ -180,9 +181,11 @@ public class LoginService {
             break;
             case RegwebConstantes.RWE_SUPERADMIN: // Asigna la Configuración del SuperAdministrador
                 List<Configuracion> configuraciones = configuracionEjb.getAll();
-                if (configuraciones.size() > 0) {
+                if (!configuraciones.isEmpty()) {
                     loginInfo.setConfiguracion(configuraciones.get(0));
                 }
+                loginInfo.setDir3Caib(new Dir3Caib(PropiedadGlobalUtil.getDir3CaibServer(), PropiedadGlobalUtil.getDir3CaibUsername(), PropiedadGlobalUtil.getDir3CaibPassword()));
+
             break;
         }
 
@@ -196,7 +199,9 @@ public class LoginService {
      * @param loginInfo
      * @throws Exception
      */
-    private void asignarEntidadesAdministradas(LoginInfo loginInfo, Entidad entidadActiva) throws Exception {
+    private void asignarEntidadesAdministradas(LoginInfo loginInfo) throws Exception {
+
+        Entidad entidadActiva = null;
 
         // Obtenemos las entidades administradas
         ArrayList<Entidad> entidadesAdministradas = new ArrayList<Entidad>(entidadEjb.getEntidadesAdministrador(loginInfo.getUsuarioAutenticado().getId()));
@@ -209,9 +214,7 @@ public class LoginService {
         loginInfo.getEntidades().addAll(entidadesPropietario);
 
         // Definimos la Entidad Activa
-        if (entidadActiva != null && loginInfo.getEntidades().contains(entidadActiva)) {
-            loginInfo.setEntidadActiva(entidadActiva);
-        } else if (loginInfo.getEntidades().size() > 0) {
+        if (!loginInfo.getEntidades().isEmpty()) {
             entidadActiva = entidadEjb.findByIdLigero(loginInfo.getEntidades().get(0).getId());
             loginInfo.setEntidadActiva(entidadActiva);
         }
@@ -234,20 +237,16 @@ public class LoginService {
      *
      * @throws Exception
      */
-    private UsuarioEntidad asignarEntidadesOperador(LoginInfo loginInfo, Entidad entidadActiva) throws Exception {
+    private UsuarioEntidad asignarEntidadesOperador(LoginInfo loginInfo) throws Exception {
 
         // Obtenemos las entidades a las que el Usuario está asociado
         loginInfo.setEntidades(usuarioEntidadEjb.getEntidadesByUsuario(loginInfo.getUsuarioAutenticado().getId()));
 
         // Si está asociado en alguna Entidad
-        if (loginInfo.getEntidades().size() > 0) {
+        if (!loginInfo.getEntidades().isEmpty()) {
 
             // Entidad Activa
-            if (entidadActiva != null && loginInfo.getEntidades().contains(entidadActiva)) {
-                loginInfo.setEntidadActiva(entidadActiva);
-            } else if (loginInfo.getEntidades().size() > 0) {
-                loginInfo.setEntidadActiva(entidadEjb.findByIdLigero(loginInfo.getEntidades().get(0).getId()));
-            }
+            loginInfo.setEntidadActiva(entidadEjb.findByIdLigero(loginInfo.getEntidades().get(0).getId()));
 
             //UsuarioEntidadActivo
             return setUsuarioEntidadActivo(loginInfo, loginInfo.getEntidadActiva());
@@ -534,6 +533,7 @@ public class LoginService {
         loginInfo.setEnlaceDir3(PropiedadGlobalUtil.getEnlaceDir3(entidad.getId()));
         loginInfo.setMostrarAvisos(PropiedadGlobalUtil.getMostrarAvisos(entidad.getId()));
         loginInfo.setAyudaUrl(PropiedadGlobalUtil.getAyudaUrl(entidad.getId()));
+        loginInfo.setDir3Caib(new Dir3Caib(PropiedadGlobalUtil.getDir3CaibServer(entidad.getId()), PropiedadGlobalUtil.getDir3CaibUsername(entidad.getId()), PropiedadGlobalUtil.getDir3CaibPassword(entidad.getId())));
 
         log.info("Entidad activa usuario: " + entidad.getNombre() + " - " + loginInfo.getUsuarioAutenticado().getNombreCompleto());
 
