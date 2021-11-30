@@ -2,11 +2,7 @@ package es.caib.regweb3.webapp.controller.registro;
 
 import es.caib.plugins.arxiu.api.Document;
 import es.caib.plugins.arxiu.api.IArxiuPlugin;
-import es.caib.regweb3.model.Anexo;
-import es.caib.regweb3.model.Entidad;
-import es.caib.regweb3.model.RegistroDetalle;
-import es.caib.regweb3.model.RegistroEntrada;
-import es.caib.regweb3.model.RegistroSalida;
+import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.model.utils.AnexoSimple;
 import es.caib.regweb3.persistence.ejb.AnexoLocal;
@@ -37,12 +33,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.annotation.*;
 
 import javax.ejb.EJB;
 import javax.naming.InitialContext;
@@ -105,18 +96,18 @@ public class AnexoController extends BaseController {
 
         // Tipos Validez según casuistica
         if(!anexoForm.getAnexo().getScan()){ // Desde archivo
-            log.info("desde archivo");
+
             model.addAttribute("tiposValidezDocumento", RegwebConstantes.TIPOS_VALIDEZDOCUMENTO);
         }else{ // Se trata de un Scan
             if(Configuracio.isCAIB() && getLoginInfo(request).getUsuarioAutenticado().getDib_user()) { //  Tiene el rol DIB_USER activo
-                log.info("desde scan con dib_user");
+
                 model.addAttribute("tiposValidezDocumento", RegwebConstantes.TIPOS_VALIDEZDOCUMENTO_SCAN_ORIGINAL);
 
             }else if(Configuracio.isCAIB() && !getLoginInfo(request).getUsuarioAutenticado().getDib_user()){ // NO tiene el rol DIB_USER activo
-                log.info("desde scan sin dib_user");
+
                 model.addAttribute("tiposValidezDocumento", RegwebConstantes.TIPOS_VALIDEZDOCUMENTO_SCAN);
             } else{
-                log.info("desde scan");
+
                 model.addAttribute("tiposValidezDocumento", RegwebConstantes.TIPOS_VALIDEZDOCUMENTO_SCAN_ORIGINAL);
             }
         }
@@ -129,8 +120,6 @@ public class AnexoController extends BaseController {
     public String crearAnexoPost(@ModelAttribute AnexoForm anexoForm,
                                  BindingResult result, HttpServletRequest request,
                                  HttpServletResponse response, Model model) throws Exception, I18NException {
-
-        log.info(" Passa per crearAnexoPost");
 
         //Validamos el anexo
         anexoValidator.validate(anexoForm.getAnexo(), result);
@@ -190,8 +179,7 @@ public class AnexoController extends BaseController {
     /*
      Prepara los datos de un anexo para su edición
      */
-    @RequestMapping(value = "/editar/{registroDetalleID}/{tipoRegistro}/{registroID}/{anexoID}/{isOficioRemisionSir}",
-            method = RequestMethod.GET)
+    @RequestMapping(value = "/editar/{registroDetalleID}/{tipoRegistro}/{registroID}/{anexoID}/{isOficioRemisionSir}", method = RequestMethod.GET)
     public String editarAnexoGet(HttpServletRequest request,
                                  HttpServletResponse response, @PathVariable Long registroDetalleID,
                                  @PathVariable Long tipoRegistro, @PathVariable Long registroID,
@@ -263,8 +251,6 @@ public class AnexoController extends BaseController {
     public String editarAnexoPost(@ModelAttribute AnexoForm anexoForm,
                                   BindingResult result, HttpServletRequest request,
                                   HttpServletResponse response, Model model) throws Exception, I18NValidationException, I18NException {
-
-        log.info(" Passa per editarAnexoPost");
 
         anexoValidator.validate(anexoForm.getAnexo(), result);
 
@@ -341,7 +327,6 @@ public class AnexoController extends BaseController {
     }
 
 
-
     /**
      * Método que monta la url a donde ir después de eliminar un anexo
      */
@@ -414,13 +399,12 @@ public class AnexoController extends BaseController {
                            HttpServletResponse response) throws Exception, I18NException {
 
         Entidad entidadActiva = getEntidadActiva(request);
-
-
         String languageUI = request.getParameter("lang");
+
         if (languageUI == null) {
             languageUI = I18NUtils.getLocale().getLanguage();
-
         }
+
         ScanWebPlainFile separador = scanWebModuleEjb.obtenerDocumentoSeparador(entidadActiva.getId(), languageUI);
 
         download(separador.getMime(), response, separador.getName(),separador.getData());
@@ -590,7 +574,6 @@ public class AnexoController extends BaseController {
         model.addAttribute("tiposDocumental", tipoDocumentalEjb.getByEntidad(getEntidadActiva(request).getId()));
         model.addAttribute("tiposDocumentoAnexo", RegwebConstantes.TIPOS_DOCUMENTO);
         model.addAttribute("tiposFirma", RegwebConstantes.TIPOS_FIRMA);
-
     }
 
 
@@ -614,7 +597,6 @@ public class AnexoController extends BaseController {
         }
     }
 
-
     /**
      * Método que verifica si el anexo que se está creando no supera el tamano establecido por las propiedades SIR
      * y tiene una extensión de documento dentro de las permitidas
@@ -636,8 +618,6 @@ public class AnexoController extends BaseController {
 
         // Obtenemos los anexos del registro para validar que no exceda el máximo de MB establecido
         List<AnexoFull> anexosFull = obtenerAnexosFullByRegistro(registroID, tipoRegistro);
-
-
 
         //Se suman las distintas medidas de los anexos que tiene el registro hasta el momento.
         long tamanyoTotalAnexos = AnexoUtils.obtenerTamanoTotalAnexos(anexosFull);
@@ -688,7 +668,6 @@ public class AnexoController extends BaseController {
             }
 
         }
-
 
         //Validamos que las extensiones del documento y la firma esten dentro de los formatos permitidos.
         if (!docExtension.isEmpty()) {
@@ -741,8 +720,6 @@ public class AnexoController extends BaseController {
     public void initBinder(WebDataBinder binder) {
         binder.registerCustomEditor(Date.class,
                 new CustomDateEditor(new SimpleDateFormat("dd/MM/yyyy"), true, 10));
-
-
     }
 
 
