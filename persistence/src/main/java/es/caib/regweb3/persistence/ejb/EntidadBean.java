@@ -461,6 +461,9 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
         //Eliminamos todos los datos relacionados con los RegistrosEntradad y RegistrosSalida
         eliminarRegistros(idEntidad);
 
+        // PERMISO LIBRO USUARIO
+        log.info("PermisoLibroUsuarios eliminados: " + permisoLibroUsuarioEjb.eliminarByEntidad(idEntidad));
+
         // PERMISO ORGANISMO USUARIO
         log.info("PermisoOrganismoUsuarios eliminados: " + permisoOrganismoUsuarioEjb.eliminarByEntidad(idEntidad));
 
