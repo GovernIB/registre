@@ -270,12 +270,15 @@ public class LibroBean extends BaseEjbJPA<Libro, Long> implements LibroLocal {
 
         for (Object idLibro : libros) {
             Long id = (Long) idLibro;
-            Libro libro = findById(id);
+
+            libros.remove(findById(id));
+
+            /*Libro libro = findById(id);
             contadorEjb.remove(contadorEjb.findById(libro.getContadorEntrada().getId()));
             contadorEjb.remove(contadorEjb.findById(libro.getContadorSalida().getId()));
             contadorEjb.remove(contadorEjb.findById(libro.getContadorOficioRemision().getId()));
 
-            em.createQuery("delete from Libro where id = :id ").setParameter("id", id).executeUpdate();
+            em.createQuery("delete from Libro where id = :id ").setParameter("id", id).executeUpdate();*/
         }
 
 
