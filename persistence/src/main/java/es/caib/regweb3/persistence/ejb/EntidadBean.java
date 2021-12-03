@@ -49,6 +49,7 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
     @EJB private PlantillaLocal plantillaEjb;
     @EJB private LopdLocal lopdEjb;
     @EJB private PermisoOrganismoUsuarioLocal permisoOrganismoUsuarioEjb;
+    @EJB private PermisoLibroUsuarioLocal permisoLibroUsuarioEjb;
     @EJB private RelacionOrganizativaOfiLocal relacionOrganizativaOfiEjb;
     @EJB private RelacionSirOfiLocal relacionSirOfiEjb;
     @EJB private OficinaLocal oficinaEjb;
@@ -65,6 +66,7 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
     @EJB private ContadorLocal contadorEjb;
     @EJB private IntegracionLocal integracionEjb;
     @EJB private ColaLocal colaEjb;
+    @EJB private NotificacionLocal notificacionEjb;
 
 
     @Override
@@ -478,6 +480,9 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
 
         //Cola Distribucion
         log.info("Cola Distribución: " + colaEjb.eliminarByEntidad(idEntidad));
+
+        // Notificaciones
+        log.info("Notificaciones eliminadas: " + notificacionEjb.eliminarByEntidad(idEntidad));
 
         // USUARIOS ENTIDAD 
         log.info("UsuariosEntidad eliminados: " + usuarioEntidadEjb.eliminarByEntidad(idEntidad));

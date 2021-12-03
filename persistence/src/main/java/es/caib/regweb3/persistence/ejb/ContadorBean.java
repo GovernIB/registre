@@ -101,10 +101,10 @@ public class ContadorBean extends BaseEjbJPA<Contador, Long> implements Contador
     @Override
     public void reiniciarContadoresLibro(Libro libro) throws Exception {
 
-        reiniciarContador(libro.getContadorEntrada().getId());
-        reiniciarContador(libro.getContadorSalida().getId());
-        reiniciarContador(libro.getContadorOficioRemision().getId());
-        reiniciarContador(libro.getContadorSir().getId());
+        if(libro.getContadorEntrada()!=null){reiniciarContador(libro.getContadorEntrada().getId());}
+        if(libro.getContadorSalida()!=null){reiniciarContador(libro.getContadorSalida().getId());}
+        if(libro.getContadorOficioRemision()!=null){reiniciarContador(libro.getContadorOficioRemision().getId());}
+        if(libro.getContadorSir()!=null){reiniciarContador(libro.getContadorSir().getId());}
     }
 
     @Override
