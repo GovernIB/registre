@@ -271,10 +271,10 @@
                                                    title="Eliminar"><span class="fa fa-eraser"></span></a>
                                             </c:if>
 
-                                            <%--Si se trata de una instalación CAIB, comprobamos si el usuario tiene el rol DIB_USER--%>
+                                            <%--Si se trata de una instalación CAIB, comprobamos si el usuario tiene el rol DIB_USER_RW--%>
                                             <c:if test="${isCaib}">
-                                                <%--Si el anexo es copia auténtica y el usuario tiene el rol DIB_USER--%>
-                                                <c:if test="${anexoFull.anexo.validezDocumento == RegwebConstantes.TIPOVALIDEZDOCUMENTO_COPIA_ORIGINAL && loginInfo.usuarioAutenticado.dib_user}">
+                                                <%--Si el anexo es copia auténtica y el usuario tiene el rol DIB_USER_RW--%>
+                                                <c:if test="${anexoFull.anexo.validezDocumento == RegwebConstantes.TIPOVALIDEZDOCUMENTO_COPIA_ORIGINAL && loginInfo.usuarioAutenticado.dib_user_rw}">
                                                     <a class="btn btn-warning btn-sm" data-toggle="modal" data-target="#modalAnexos"
                                                        onclick="editarAnexoFull('${anexoFull.anexo.id}','${registro.id}','${registro.registroDetalle.id}','${param.tipoRegistro}')"
                                                        title="Editar"><span class="fa fa-pencil"></span></a>
@@ -283,8 +283,8 @@
                                                        title="Eliminar"><span class="fa fa-eraser"></span></a>
                                                 </c:if>
 
-                                                <%--Si el anexo es copia auténtica y el usuario NO tiene el rol DIB_USER--%>
-                                                <c:if test="${anexoFull.anexo.validezDocumento == RegwebConstantes.TIPOVALIDEZDOCUMENTO_COPIA_ORIGINAL && !loginInfo.usuarioAutenticado.dib_user}">
+                                                <%--Si el anexo es copia auténtica y el usuario NO tiene el rol DIB_USER_RW--%>
+                                                <c:if test="${anexoFull.anexo.validezDocumento == RegwebConstantes.TIPOVALIDEZDOCUMENTO_COPIA_ORIGINAL && !loginInfo.usuarioAutenticado.dib_user_rw}">
                                                     <a class="btn btn-warning disabled btn-sm" href="javascript:void(0);" title="Editar"><span class="fa fa-pencil"></span></a>
                                                     <a class="btn btn-danger disabled btn-sm" href="javascript:void(0);" title="<spring:message code="regweb.eliminar"/>"><span class="fa fa-eraser"></span></a>
                                                 </c:if>

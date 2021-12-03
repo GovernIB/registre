@@ -45,7 +45,7 @@
                     <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown">
                         <i class="fa fa-user"></i>
                         ${loginInfo.usuarioAutenticado.nombreCompleto}
-                        <c:if test="${loginInfo.usuarioAutenticado.dib_user}">
+                        <c:if test="${loginInfo.usuarioAutenticado.dib_user_rw}">
                             <i class="fa fa-print"></i>
                         </c:if>
                         <i class="fa fa-caret-down"></i>
