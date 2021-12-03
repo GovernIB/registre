@@ -99,11 +99,11 @@ public class AnexoController extends BaseController {
 
             model.addAttribute("tiposValidezDocumento", RegwebConstantes.TIPOS_VALIDEZDOCUMENTO);
         }else{ // Se trata de un Scan
-            if(Configuracio.isCAIB() && getLoginInfo(request).getUsuarioAutenticado().getDib_user()) { //  Tiene el rol DIB_USER activo
+            if(Configuracio.isCAIB() && getLoginInfo(request).getUsuarioAutenticado().getDib_user_rw()) { //  Tiene el rol DIB_USER_RW activo
 
                 model.addAttribute("tiposValidezDocumento", RegwebConstantes.TIPOS_VALIDEZDOCUMENTO_SCAN_ORIGINAL);
 
-            }else if(Configuracio.isCAIB() && !getLoginInfo(request).getUsuarioAutenticado().getDib_user()){ // NO tiene el rol DIB_USER activo
+            }else if(Configuracio.isCAIB() && !getLoginInfo(request).getUsuarioAutenticado().getDib_user_rw()){ // NO tiene el rol DIB_USER_RW activo
 
                 model.addAttribute("tiposValidezDocumento", RegwebConstantes.TIPOS_VALIDEZDOCUMENTO_SCAN);
             } else{
@@ -161,10 +161,10 @@ public class AnexoController extends BaseController {
         if(!anexoForm.getAnexo().getScan()){ // Desde archivo
             model.addAttribute("tiposValidezDocumento", RegwebConstantes.TIPOS_VALIDEZDOCUMENTO);
         }else{ // Se trata de un Scan
-            if(Configuracio.isCAIB() && getLoginInfo(request).getUsuarioAutenticado().getDib_user()) { //  Tiene el rol DIB_USER activo
+            if(Configuracio.isCAIB() && getLoginInfo(request).getUsuarioAutenticado().getDib_user_rw()) { //  Tiene el rol DIB_USER_RW activo
                 model.addAttribute("tiposValidezDocumento", RegwebConstantes.TIPOS_VALIDEZDOCUMENTO_SCAN_ORIGINAL);
 
-            }else if(Configuracio.isCAIB() && !getLoginInfo(request).getUsuarioAutenticado().getDib_user()){ // NO tiene el rol DIB_USER activo
+            }else if(Configuracio.isCAIB() && !getLoginInfo(request).getUsuarioAutenticado().getDib_user_rw()){ // NO tiene el rol DIB_USER_RW activo
                 model.addAttribute("tiposValidezDocumento", RegwebConstantes.TIPOS_VALIDEZDOCUMENTO_SCAN);
             } else{
                 model.addAttribute("tiposValidezDocumento", RegwebConstantes.TIPOS_VALIDEZDOCUMENTO_SCAN_ORIGINAL);
@@ -227,10 +227,10 @@ public class AnexoController extends BaseController {
         if(!anexoForm.getAnexo().getScan()){ // Desde archivo
             model.addAttribute("tiposValidezDocumento", RegwebConstantes.TIPOS_VALIDEZDOCUMENTO);
         }else{ // Se trata de un Scan
-            if(Configuracio.isCAIB() && getLoginInfo(request).getUsuarioAutenticado().getDib_user()) { //  Tiene el rol DIB_USER activo
+            if(Configuracio.isCAIB() && getLoginInfo(request).getUsuarioAutenticado().getDib_user_rw()) { //  Tiene el rol DIB_USER_RW activo
                 model.addAttribute("tiposValidezDocumento", RegwebConstantes.TIPOS_VALIDEZDOCUMENTO_SCAN_ORIGINAL);
 
-            }else if(Configuracio.isCAIB() && !getLoginInfo(request).getUsuarioAutenticado().getDib_user()){ // NO tiene el rol DIB_USER activo
+            }else if(Configuracio.isCAIB() && !getLoginInfo(request).getUsuarioAutenticado().getDib_user_rw()){ // NO tiene el rol DIB_USER_RW activo
                 model.addAttribute("tiposValidezDocumento", RegwebConstantes.TIPOS_VALIDEZDOCUMENTO_SCAN);
             } else{
                 model.addAttribute("tiposValidezDocumento", RegwebConstantes.TIPOS_VALIDEZDOCUMENTO_SCAN_ORIGINAL);
@@ -277,10 +277,10 @@ public class AnexoController extends BaseController {
         if(!anexoForm.getAnexo().getScan()){ // Desde archivo
             model.addAttribute("tiposValidezDocumento", RegwebConstantes.TIPOS_VALIDEZDOCUMENTO);
         }else{ // Se trata de un Scan
-            if(Configuracio.isCAIB() && getLoginInfo(request).getUsuarioAutenticado().getDib_user()) { //  Tiene el rol DIB_USER activo
+            if(Configuracio.isCAIB() && getLoginInfo(request).getUsuarioAutenticado().getDib_user_rw()) { //  Tiene el rol DIB_USER_RW activo
                 model.addAttribute("tiposValidezDocumento", RegwebConstantes.TIPOS_VALIDEZDOCUMENTO_SCAN_ORIGINAL);
 
-            }else if(Configuracio.isCAIB() && !getLoginInfo(request).getUsuarioAutenticado().getDib_user()){ // NO tiene el rol DIB_USER activo
+            }else if(Configuracio.isCAIB() && !getLoginInfo(request).getUsuarioAutenticado().getDib_user_rw()){ // NO tiene el rol DIB_USER_RW activo
                 model.addAttribute("tiposValidezDocumento", RegwebConstantes.TIPOS_VALIDEZDOCUMENTO_SCAN);
             } else{
                 model.addAttribute("tiposValidezDocumento", RegwebConstantes.TIPOS_VALIDEZDOCUMENTO_SCAN_ORIGINAL);

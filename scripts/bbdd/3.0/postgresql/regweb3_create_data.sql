@@ -5,7 +5,7 @@ INSERT INTO RWE_ROL (id,nombre,descripcion,orden) VALUES (3,'RWE_USUARI','Operad
 INSERT INTO RWE_ROL (id,nombre,descripcion,orden) VALUES (4,'RWE_WS_ENTRADA','Usuario WS entrada',4);
 INSERT INTO RWE_ROL (id,nombre,descripcion,orden) VALUES (5,'RWE_WS_SALIDA','Usuario WS salida',5);
 INSERT INTO RWE_ROL (id,nombre,descripcion,orden) VALUES (6,'RWE_WS_CIUDADANO','Usuario WS ciudadano',6);
-INSERT INTO RWE_ROL (id,nombre,descripcion,orden) VALUES (7,'DIB_USER','Copias auténticas',7);
+INSERT INTO RWE_ROL (id,nombre,descripcion,orden) VALUES (7,'DIB_USER_RW','Copias auténticas',7);
 
 --PROPIEDADES GLOBALES
 INSERT INTO RWE_PROPIEDADGLOBAL (id,clave,valor,tipo,descripcion,entidad) VALUES (nextval('RWE_ALL_SEQ'),'es.caib.regweb3.dir3caib.server','url',2,'Url de Dir3Caib',null);
