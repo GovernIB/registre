@@ -844,7 +844,7 @@ create table RWE_USUARIO
     ID               number(19,0) not null,
     APELLIDO1        varchar2(255 char),
     APELLIDO2        varchar2(255 char),
-    DIB_USER         number(1,0) not null,
+    DIB_USER_RW         number(1,0) not null,
     DOCUMENTO        varchar2(255 char),
     EMAIL            varchar2(255 char) not null,
     IDENTIFICADOR    varchar2(255 char) not null,
