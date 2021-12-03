@@ -375,11 +375,6 @@ public class DistribucionGoibPlugin extends AbstractPluginProperties implements 
                         idioma.setValue(metadata.getValue());
                         metaDades.getEntry().add(idioma);
                     }
-
-                    //Fecha de Captura
-                    GregorianCalendar fecha = new GregorianCalendar();
-                    fecha.setTime(anexoFull.getAnexo().getFechaCaptura());
-                    annex.setEniDataCaptura(DatatypeFactory.newInstance().newXMLGregorianCalendar(fecha));
                 }
 
                 if (metadata.getKey().equals(MetadataConstants.ENI_DESCRIPCION)) {
@@ -397,6 +392,11 @@ public class DistribucionGoibPlugin extends AbstractPluginProperties implements 
         cmtitle.setKey("cm:title");
         cmtitle.setValue(anexoFull.getAnexo().getTitulo());
         metaDades.getEntry().add(cmtitle);
+
+        //Fecha de Captura
+        GregorianCalendar fecha = new GregorianCalendar();
+        fecha.setTime(anexoFull.getAnexo().getFechaCaptura());
+        annex.setEniDataCaptura(DatatypeFactory.newInstance().newXMLGregorianCalendar(fecha));
 
         annex.setMetaDades(metaDades);
 
