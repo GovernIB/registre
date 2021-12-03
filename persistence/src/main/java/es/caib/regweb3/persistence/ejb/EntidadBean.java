@@ -5,6 +5,7 @@ import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.jboss.ejb3.annotation.SecurityDomain;
+import org.jboss.ejb3.annotation.TransactionTimeout;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -65,6 +66,7 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
     @EJB private ContadorLocal contadorEjb;
     @EJB private IntegracionLocal integracionEjb;
     @EJB private ColaLocal colaEjb;
+    @EJB private NotificacionLocal notificacionEjb;
 
 
     @Override
@@ -395,6 +397,7 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
 
 
     @Override
+    @TransactionTimeout(value = 1800)  // 30 minutos
     public void eliminarRegistros(Long idEntidad) throws Exception, I18NException {
 
         log.info("Dentro eliminar Registros Entidad");
@@ -478,6 +481,9 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
 
         //Cola Distribucion
         log.info("Cola Distribución: " + colaEjb.eliminarByEntidad(idEntidad));
+
+        // Notificaciones
+        log.info("Notificaciones eliminadas: " + notificacionEjb.eliminarByEntidad(idEntidad));
 
         // USUARIOS ENTIDAD 
         log.info("UsuariosEntidad eliminados: " + usuarioEntidadEjb.eliminarByEntidad(idEntidad));
