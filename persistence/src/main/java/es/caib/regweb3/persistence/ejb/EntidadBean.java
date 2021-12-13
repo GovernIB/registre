@@ -459,6 +459,8 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
     @Override
     public void eliminarEntidad(Long idEntidad) throws Exception, I18NException {
 
+        Entidad entidad = findById(idEntidad);
+
         log.info("Dentro eliminar Entidad");
 
         //Eliminamos todos los datos relacionados con los RegistrosEntradad y RegistrosSalida
@@ -470,8 +472,8 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
         // PERMISO ORGANISMO USUARIO
         log.info("PermisoOrganismoUsuarios eliminados: " + permisoOrganismoUsuarioEjb.eliminarByEntidad(idEntidad));
 
-        // LIBROS 
-        log.info("Libros eliminados: " + libroEjb.eliminarByEntidad(idEntidad));
+        // LIBROS
+        log.info("Libros eliminados: " + libroEjb.eliminarByEntidad(entidad));
 
         // RelacionOrganizativaOfi 
         log.info("RelacionOrganizativaOfi eliminadas: " + relacionOrganizativaOfiEjb.eliminarByEntidad(idEntidad));
@@ -521,8 +523,6 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
 
         // ENTIDAD 
         em.flush();
-
-        //em.createQuery("delete from Entidad where id = :idEntidad ").setParameter("idEntidad", idEntidad).executeUpdate();
 
     }
 
