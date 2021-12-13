@@ -299,7 +299,8 @@ public class LibroBean extends BaseEjbJPA<Libro, Long> implements LibroLocal{
 
         // Eliminamos los contadores
         for(Long idContador:contadores){
-            contadorEjb.remove(contadorEjb.findById(idContador));
+            em.createQuery("delete from Contador where id = :id ").setParameter("id", idContador).executeUpdate();
+
         }
 
         return libros.size();
