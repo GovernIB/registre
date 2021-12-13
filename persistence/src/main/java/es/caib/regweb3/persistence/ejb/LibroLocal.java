@@ -1,5 +1,6 @@
 package es.caib.regweb3.persistence.ejb;
 
+import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.model.Libro;
 
 import javax.ejb.Local;
@@ -121,11 +122,10 @@ public interface LibroLocal extends BaseEjb<Libro, Long> {
 
     /**
      * Elimina los Libros de una Entidad
-     *
-     * @param idEntidad
+     * @param entidad
      * @return
      * @throws Exception
      */
-    Integer eliminarByEntidad(Long idEntidad) throws Exception;
+    Integer eliminarByEntidad(Entidad entidad) throws Exception;
 
 }
