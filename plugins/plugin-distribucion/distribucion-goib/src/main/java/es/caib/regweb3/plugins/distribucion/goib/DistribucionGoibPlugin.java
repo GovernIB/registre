@@ -428,7 +428,7 @@ public class DistribucionGoibPlugin extends AbstractPluginProperties implements 
 
                 annex.getFirmes().add(firma);
             }else{
-                annex.setFitxerContingut(anexoFull.getDocumentoCustody().getData());
+                annex.setFitxerContingut(anexoFull.getSignatureCustody().getData());
             }
         }
 
