@@ -416,14 +416,20 @@ public class DistribucionGoibPlugin extends AbstractPluginProperties implements 
             annex.setFitxerTamany((int) anexoFull.getSignatureCustody().getLength());
             annex.setFitxerTipusMime(anexoFull.getSignatureCustody().getMime());
 
-            Firma firma = new Firma();
-            firma.setFitxerNom(anexoFull.getSignatureCustody().getName());
-            firma.setTipusMime(anexoFull.getSignatureCustody().getMime());
-            firma.setTipus(transformarTipoFirma(anexoFull.getAnexo()));
-            firma.setPerfil(transformarPerfilFirma(anexoFull.getAnexo()));
-            firma.setContingut(anexoFull.getSignatureCustody().getData());
+            // Si tiene información de la firma creamos el objeto Firma (Los XMLResumenSolicitudENI.xml están firmados, pero no disponemos de información de Firma)
+            if(anexoFull.getAnexo().getSignType() != null && anexoFull.getAnexo().getSignProfile() != null){
 
-            annex.getFirmes().add(firma);
+                Firma firma = new Firma();
+                firma.setFitxerNom(anexoFull.getSignatureCustody().getName());
+                firma.setTipusMime(anexoFull.getSignatureCustody().getMime());
+                firma.setTipus(transformarTipoFirma(anexoFull.getAnexo()));
+                firma.setPerfil(transformarPerfilFirma(anexoFull.getAnexo()));
+                firma.setContingut(anexoFull.getSignatureCustody().getData());
+
+                annex.getFirmes().add(firma);
+            }else{
+                annex.setFitxerContingut(anexoFull.getDocumentoCustody().getData());
+            }
         }
 
         //Caso Anexo FIRMA DETACHED
@@ -436,17 +442,20 @@ public class DistribucionGoibPlugin extends AbstractPluginProperties implements 
             annex.setFitxerContingut(anexoFull.getDocumentoCustody().getData());
 
             //en este caso el objeto Firma también incorpora el contenido de la firma
-            Firma firma = new Firma();
-            firma.setFitxerNom(anexoFull.getSignatureCustody().getName());
-            firma.setTipusMime(anexoFull.getSignatureCustody().getMime());
-            //TODO prueba con csv comentado
-            firma.setCsv(anexoFull.getAnexo().getCsv());
-            firma.setCsvRegulacio("Regulació CSV");
-            firma.setContingut(anexoFull.getSignatureCustody().getData());
-            firma.setTipus(transformarTipoFirma(anexoFull.getAnexo()));
-            firma.setPerfil(transformarPerfilFirma(anexoFull.getAnexo()));
+            if(anexoFull.getAnexo().getSignType()!= null && anexoFull.getAnexo().getSignProfile() != null) {
 
-            annex.getFirmes().add(firma);
+                Firma firma = new Firma();
+                firma.setFitxerNom(anexoFull.getSignatureCustody().getName());
+                firma.setTipusMime(anexoFull.getSignatureCustody().getMime());
+                //TODO prueba con csv comentado
+                firma.setCsv(anexoFull.getAnexo().getCsv());
+                firma.setCsvRegulacio("Regulació CSV");
+                firma.setContingut(anexoFull.getSignatureCustody().getData());
+                firma.setTipus(transformarTipoFirma(anexoFull.getAnexo()));
+                firma.setPerfil(transformarPerfilFirma(anexoFull.getAnexo()));
+
+                annex.getFirmes().add(firma);
+            }
 
         }
 
