@@ -170,7 +170,11 @@ public class LoginService {
             case RegwebConstantes.RWE_USUARI: // Si RolActivo del usuario autenticado es Operador
 
                 //Asignamos las Entidades donde tiene acceso el usuario operador
-                asignarEntidadesOperador(loginInfo);
+                UsuarioEntidad usuarioEntidad = asignarEntidadesOperador(loginInfo);
+
+                if(usuarioEntidad == null){
+                    throw new Exception("El usuario no esta relacionado con ninguna Entidad, contacte con el Administrador.");
+                }
 
                 //Asignamos las oficinas donde tiene acceso el usuario operador
                 asignarOficinas(loginInfo);
