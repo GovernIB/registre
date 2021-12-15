@@ -285,8 +285,6 @@ public class InicioInterceptor extends HandlerInterceptorAdapter {
         } catch (I18NException i18ne) {
             throw new Exception(I18NUtils.getMessage(i18ne), i18ne);
 
-        } finally {
-            // log.info("Interceptor Inicio: " + TimeUtils.formatElapsedTime(System.currentTimeMillis() - start));
         }
     }
 
