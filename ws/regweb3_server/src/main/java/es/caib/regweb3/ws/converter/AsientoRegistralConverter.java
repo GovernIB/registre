@@ -302,7 +302,7 @@ public class AsientoRegistralConverter extends CommonConverter {
       asientoRegistral.setEntidadCodigo(entidad.getCodigoDir3());
       asientoRegistral.setEntidadDenominacion(entidad.getNombre());
 
-      if (registro.getNumeroRegistro() != null) { asientoRegistral.setNumeroRegistro(registro.getNumeroRegistro());}
+      if (registro.getNumeroRegistro() != null) { asientoRegistral.setNumeroRegistro(0);}
       if (StringUtils.isNotEmpty(registro.getNumeroRegistroFormateado())) { asientoRegistral.setNumeroRegistroFormateado(registro.getNumeroRegistroFormateado());}
       if (registro.getFecha() != null) { asientoRegistral.setFechaRegistro(registro.getFecha());}
       if (registro.getUsuario() != null) { asientoRegistral.setCodigoUsuario(registro.getUsuario().getUsuario().getIdentificador());}

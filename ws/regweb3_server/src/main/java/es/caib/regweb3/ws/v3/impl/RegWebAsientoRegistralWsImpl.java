@@ -328,7 +328,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
                     registroEntrada = asientoRegistralEjb.registrarEntrada(registroEntrada, usuario, interesados, anexosFull, true);
                     numRegFormat = registroEntrada.getNumeroRegistroFormateado();
 
-                    asiento.setNumeroRegistro(registroEntrada.getNumeroRegistro());
+//                    asiento.setNumeroRegistro(0);
                     asiento.setNumeroRegistroFormateado(registroEntrada.getNumeroRegistroFormateado());
                     asiento.setFechaRegistro(registroEntrada.getFecha());
 
@@ -411,7 +411,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
                     registroSalida = asientoRegistralEjb.registrarSalida(registroSalida, usuario, interesados, anexosFull, true);
                     numRegFormat = registroSalida.getNumeroRegistroFormateado();
 
-                    asiento.setNumeroRegistro(registroSalida.getNumeroRegistro());
+//                    asiento.setNumeroRegistro(0);
                     asiento.setNumeroRegistroFormateado(registroSalida.getNumeroRegistroFormateado());
                     asiento.setFechaRegistro(registroSalida.getFecha());
 

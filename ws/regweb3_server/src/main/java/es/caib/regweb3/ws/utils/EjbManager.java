@@ -28,7 +28,7 @@ public final class EjbManager {
     if (usuariEntitatEjb == null) {
       
         usuariEntitatEjb = (UsuarioEntidadLocal) new InitialContext()
-            .lookup("java:comp/env/regweb3/UsuarioEntidadEJB/local");
+            .lookup("regweb3/UsuarioEntidadEJB/local");
       
     }
     return usuariEntitatEjb;
@@ -40,7 +40,7 @@ public final class EjbManager {
     if (usuariEjb == null) {
       
         usuariEjb = (UsuarioLocal) new InitialContext()
-            .lookup("java:comp/env/regweb3/UsuarioEJB/local");
+            .lookup("regweb3/UsuarioEJB/local");
       
     }
     return usuariEjb;
@@ -52,7 +52,7 @@ public final class EjbManager {
     if (pluginEjb == null) {
 
       pluginEjb = (PluginLocal) new InitialContext()
-            .lookup("java:comp/env/regweb3/PluginEJB/local");
+            .lookup("regweb3/PluginEJB/local");
 
     }
     return pluginEjb;

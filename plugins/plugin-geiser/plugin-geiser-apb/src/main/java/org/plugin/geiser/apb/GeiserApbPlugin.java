@@ -9,6 +9,7 @@ import java.util.Properties;
 import java.util.Set;
 
 import javax.xml.namespace.QName;
+import javax.xml.ws.BindingProvider;
 import javax.xml.ws.handler.Handler;
 import javax.xml.ws.handler.HandlerResolver;
 import javax.xml.ws.handler.MessageContext;
@@ -52,7 +53,8 @@ public class GeiserApbPlugin extends AbstractPluginProperties implements IGeiser
     private static final String APP_CODE = basePluginGeiserApb + "app.code";
     private static final String APP_PASSWORD = basePluginGeiserApb + "app.password";
     private static final String CD_ASUNTO = basePluginGeiserApb + "codigo.asunto";
- 
+    private static final String CD_OFICINA = basePluginGeiserApb + "oficina";
+    private static final String USUARIO = basePluginGeiserApb + "usuario";
     
 	public GeiserApbPlugin() {
         super();
@@ -197,8 +199,8 @@ public class GeiserApbPlugin extends AbstractPluginProperties implements IGeiser
 		AuthenticationType authentication = new AuthenticationType();
 		authentication.setAplicacion(getPropertyCode());
 		authentication.setPassword(getPropertyPassword());
-		authentication.setUsuario(usuario);
-		authentication.setCdAmbito(ambito); 
+		authentication.setUsuario((usuario != null && !usuario.isEmpty()) ? usuario : getProperty(USUARIO));
+		authentication.setCdAmbito((ambito != null && !ambito.isEmpty()) ? ambito : getProperty(CD_OFICINA)); 
 		authentication.setVersion(VersionRegeco.V_2);
 		return authentication;
 	}
@@ -237,10 +239,14 @@ public class GeiserApbPlugin extends AbstractPluginProperties implements IGeiser
     
 	private IRegistroWebService getRegecoClient() throws Exception {
 		URL url;
-		IRegistroWebService registroWebService = null;
+		IRegistroWebService port = null;
 		try {
 			url = new URL(getPropertyUrl() + "?wsdl");
 			RegistroWebService service = new RegistroWebService(url);
+			port = service.getRegistroWebServicePort();
+			BindingProvider bp = (BindingProvider)port;
+			bp.getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, getPropertyUrl());
+			
 			service.setHandlerResolver(new HandlerResolver() {
 
 		        @SuppressWarnings("rawtypes")
@@ -251,14 +257,12 @@ public class GeiserApbPlugin extends AbstractPluginProperties implements IGeiser
 		            return handlerList;
 		        }
 		    });
-			
-			registroWebService = service.getRegistroWebServicePort();
 		} catch (Exception ex) {
 			logger.error("Ha habido un error creando el cliente de registro", ex.getMessage());
 			ex.printStackTrace();
 			throw ex;
  		}
-		return registroWebService;
+		return port;
 	}
 	
 	public class Handler1 implements SOAPHandler<SOAPMessageContext> {
