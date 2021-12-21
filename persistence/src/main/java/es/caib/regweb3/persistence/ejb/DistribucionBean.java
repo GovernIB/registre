@@ -204,7 +204,7 @@ public class DistribucionBean implements DistribucionLocal {
         List<Cola> elementosADistribuir = colaEjb.findByTipoEntidad(RegwebConstantes.COLA_DISTRIBUCION, idEntidad, PropiedadGlobalUtil.getElementosCola(idEntidad));
 
         log.info("");
-        log.info("Hay " + elementosADistribuir.size() + " elementos que se van a distribuir en esta iteracion");
+        log.info("Cola de DISTRIBUCION: Hay " + elementosADistribuir.size() + " elementos que se van a distribuir en esta iteracion");
 
         for (Cola elemento : elementosADistribuir) {
 
