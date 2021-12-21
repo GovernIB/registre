@@ -108,7 +108,7 @@ public class CustodiaBean implements CustodiaLocal {
         List<Cola> elementos = colaEjb.findByTipoEntidad(RegwebConstantes.COLA_CUSTODIA, idEntidad, PropiedadGlobalUtil.getElementosColaCustodia(idEntidad));
 
         log.info("");
-        log.info("Hay " + elementos.size() + " elementos que se van a custodiar en esta iteracion");
+        log.info("Cola de CUSTODIA: Hay " + elementos.size() + " elementos que se van a custodiar en esta iteracion");
 
         for (Cola elemento : elementos) {
 
