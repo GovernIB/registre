@@ -58,6 +58,7 @@ public class SchedulerBean implements SchedulerLocal{
                 //Integración
                 entidadActiva = entidad;
                 Date inicio = new Date();
+                peticion = new StringBuilder();
                 peticion.append("entidad: ").append(entidad.getNombre()).append(System.getProperty("line.separator"));
 
                 integracionEjb.purgarIntegraciones(entidad.getId());
@@ -87,6 +88,7 @@ public class SchedulerBean implements SchedulerLocal{
                 //Integración
                 entidadActiva = entidad;
                 Date inicio = new Date();
+                peticion = new StringBuilder();
                 peticion.append("entidad: ").append(entidad.getNombre()).append(System.getProperty("line.separator"));
 
                 //fijamos un numero máximo de elementos por iteración
@@ -127,6 +129,7 @@ public class SchedulerBean implements SchedulerLocal{
                     //Integración
                     entidadActiva = entidad;
                     Date inicio = new Date();
+                    peticion = new StringBuilder();
                     peticion.append("entidad: ").append(entidad.getNombre()).append(System.getProperty("line.separator"));
 
                     //Purgamos los anexos de registros distribuidos un máximo de numElementos
@@ -161,6 +164,7 @@ public class SchedulerBean implements SchedulerLocal{
                 //Integración
                 entidadActiva = entidad;
                 Date inicio = new Date();
+                peticion = new StringBuilder();
                 peticion.append("entidad: ").append(entidad.getNombre()).append(System.getProperty("line.separator"));
 
                 //fijamos un numero máximo de elementos por iteración
@@ -219,6 +223,7 @@ public class SchedulerBean implements SchedulerLocal{
                 //Integración
                 entidadActiva = entidad;
                 Date inicio = new Date();
+                peticion = new StringBuilder();
                 peticion.append("entidad: ").append(entidad.getNombre()).append(System.getProperty("line.separator"));
 
                 //Reinicia los contadores del Libro único de la entidad
@@ -305,6 +310,7 @@ public class SchedulerBean implements SchedulerLocal{
                     //Integración
                     entidadActiva = entidad;
                     Date inicio = new Date();
+                    peticion = new StringBuilder();
                     peticion.append("entidad: ").append(entidad.getNombre()).append(System.getProperty("line.separator"));
 
                     arxiuEjb.cerrarExpedientesScheduler(entidad.getId(), PropiedadGlobalUtil.getFechaInicioCerrarExpedientes(entidad.getId()));
@@ -336,6 +342,7 @@ public class SchedulerBean implements SchedulerLocal{
                 //Integración
                 entidadActiva = entidad;
                 Date inicio = new Date();
+                peticion = new StringBuilder();
                 peticion.append("entidad: ").append(entidad.getNombre()).append(System.getProperty("line.separator"));
 
                 try{
@@ -377,6 +384,7 @@ public class SchedulerBean implements SchedulerLocal{
                 //Integración
                 entidadActiva = entidad;
                 Date inicio = new Date();
+                peticion = new StringBuilder();
                 peticion.append("entidad: ").append(entidad.getNombre()).append(System.getProperty("line.separator"));
 
                 sesionEjb.purgarSesiones(entidad.getId());
@@ -407,6 +415,7 @@ public class SchedulerBean implements SchedulerLocal{
                 //Integración
                 entidadActiva = entidad;
                 Date inicio = new Date();
+                peticion = new StringBuilder();
                 peticion.append("entidad: ").append(entidad.getNombre()).append(System.getProperty("line.separator"));
 
                 distribucionEjb.enviarEmailErrorDistribucion(entidad);
@@ -443,6 +452,7 @@ public class SchedulerBean implements SchedulerLocal{
                     //Integración
                     entidadActiva = entidad;
                     Date inicio = new Date();
+                    peticion = new StringBuilder();
                     peticion.append("entidad: ").append(entidad.getNombre()).append(System.getProperty("line.separator"));
 
                     // Obtenemos todos los elementos procesados con anterioridad a los meses purgo indicados
