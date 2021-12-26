@@ -73,6 +73,7 @@ public class SchedulerBean implements SchedulerLocal{
     }
 
     @Override
+    @TransactionTimeout(value = 1800)  // 30 minutos
     public void purgarAnexosSir() throws Exception{
 
         List<Entidad> entidades = entidadEjb.getAll();
@@ -108,6 +109,8 @@ public class SchedulerBean implements SchedulerLocal{
      * purgar (anexos marcados como distribuidos hace x meses).
      * @throws Exception
      */
+    @Override
+    @TransactionTimeout(value = 1800)  // 30 minutos
     public void purgarAnexosDistribuidos() throws Exception{
 
         List<Entidad> entidades = entidadEjb.getAll();

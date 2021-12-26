@@ -23,23 +23,6 @@ public class Regweb3Scheduler {
     private SchedulerLocal schedulerEjb;
 
 
-
-    /**
-     * Qué hace: Purga las sesiones ws
-     * Cuando lo hace: cada 60 minutos
-
-    @Scheduled(cron = "0 0 * * * *")
-    public void purgarSesionesWs(){
-
-        try {
-
-            schedulerEjb.purgarSesionesWs();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }*/
-
     /**
      * Qué hace: Realiza tareas administrativas generales de la aplicación
      * Cuando lo hace: Todos días, a las 01:00 h.
@@ -169,9 +152,9 @@ public class Regweb3Scheduler {
 
     /**
      * Qué hace: purga los anexos de los registros distribuidos
-     * Cuando lo hace: Cada 10 minutos a las 00:00, a las 02:00 y a las 03:00
+     * Cuando lo hace: Cada 20 minutos a las 04:00, a las 05:00 y a las 06:00
      */
-    @Scheduled(cron = "0 0/10 0,2,3 * * *") //
+    @Scheduled(cron = "0 0/20 4,5,6 * * *") //
     public void purgarAnexosDistribuidos(){
 
         try {
@@ -181,16 +164,6 @@ public class Regweb3Scheduler {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-    }
-
-
-    /**
-     * Qué hace: purga los anexos de los registros sir que han sido aceptados
-     * Cuando lo hace: Cada 13 minutos a las 05:00, 06:00 y 07:00
-     */
-    @Scheduled(cron = "0 0/13 5,6,7 * * *") //
-    public void purgarAnexosSir(){
 
         try {
 
@@ -205,9 +178,27 @@ public class Regweb3Scheduler {
 
     /**
      * Qué hace: purga los anexos de los registros sir que han sido aceptados
+     * Cuando lo hace: Cada 13 minutos a las 05:00, 06:00 y 07:00
+
+    @Scheduled(cron = "0 0/13 5,6,7 * * *") //
+    public void purgarAnexosSir(){
+
+        try {
+
+            schedulerEjb.purgarAnexosSir();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }*/
+
+
+    /**
+     * Qué hace: purga los anexos de los registros sir que han sido aceptados
      * Cuando lo hace: Cada 25 minutos a las 00:00, 02:00 y 03:00
      */
-    @Scheduled(cron = "0 0/25 0,2,3 * * *") //
+    @Scheduled(cron = "0 0/25 1,2,3 * * *") //
     public void purgarAnexosRegistrosConfirmados(){
 
         try {
@@ -218,38 +209,6 @@ public class Regweb3Scheduler {
             e.printStackTrace();
         }
 
-    }
-
-
-    /**
-     * Qué hace: Cierra los expedientes que están en DM del Arxiu del GOIB
-     * Cuando lo hace: Desde las 00:00 hasta las 07:00 y desde las 15:00 hasta las 00:00 cada 15 minutos
-
-    @Scheduled(cron = "0 0/15 0,1,2,3,4,5,6,7,15,16,17,18,19,20,21,22,23 * * *") // 0 0/30 15-7 * * *   0 0/30 * * * *
-    public void cerrarExpedientes(){
-        try {
-
-            if(Configuracio.isCAIB()){ // Solo si es una instalación GOIB
-                schedulerEjb.cerrarExpedientes();
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }*/
-
-
-    /**
-     * Scheduler para realizar pruebas que se ejecutará cada 60 segundos
-     */
-   // @Scheduled(cron = "*/60 * * * * *") // **60 * * * * * cada 60 secs
-    public void pruebas(){
-        try {
-
-        } catch (Exception e) {
-            log.info("-- Error pruebas --");
-            e.printStackTrace();
-        }
     }
 
 }
