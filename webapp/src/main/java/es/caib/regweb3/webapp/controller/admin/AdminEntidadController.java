@@ -52,9 +52,6 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
     @Autowired
     private RegistroSalidaBusquedaValidator registroSalidaBusquedaValidator;
 
-    @EJB(mappedName = LibroLocal.JNDI_NAME)
-    private LibroLocal libroEjb;
-
     @EJB(mappedName = HistoricoRegistroEntradaLocal.JNDI_NAME)
     private HistoricoRegistroEntradaLocal historicoRegistroEntradaEjb;
 
@@ -75,6 +72,9 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
 
     @EJB(mappedName = MultiEntidadLocal.JNDI_NAME)
     private MultiEntidadLocal multiEntidadEjb;
+
+    @EJB(mappedName = DistribucionLocal.JNDI_NAME)
+    private DistribucionLocal distribucionEjb;
 
 
     /**
@@ -243,6 +243,37 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
         lopdEjb.altaLopd(registro.getNumeroRegistro(), registro.getFecha(), registro.getLibro().getId(), usuarioEntidad.getId(), RegwebConstantes.REGISTRO_ENTRADA, RegwebConstantes.LOPD_CONSULTA);
 
         return "registroEntrada/registroEntradaDetalleAdmin";
+    }
+
+    /**
+     * Método que genera el Justificante en pdf
+     *
+     * @param idRegistro identificador del registro de entrada
+     * @return
+     * @throws Exception
+     */
+    @ResponseBody
+    @RequestMapping(value = "/registroEntrada/{idRegistro}/reDistribuir", method = RequestMethod.POST)
+    public JsonResponse reDistribuir(@PathVariable Long idRegistro, HttpServletRequest request) throws Exception {
+
+        JsonResponse jsonResponse = new JsonResponse();
+
+        try {
+
+            Boolean distribuido = distribucionEjb.reDistribuirRegistro(idRegistro, getEntidadActiva(request).getId());
+
+            if(distribuido){
+                jsonResponse.setStatus("SUCCESS");
+            }else{
+                jsonResponse.setStatus("FAIL");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            jsonResponse.setStatus("FAIL");
+        }
+
+        return jsonResponse;
     }
 
     /**
