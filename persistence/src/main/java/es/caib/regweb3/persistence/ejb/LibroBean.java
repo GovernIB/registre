@@ -304,6 +304,6 @@ public class LibroBean extends BaseEjbJPA<Libro, Long> implements LibroLocal {
         }
 
         return libros.size();
-    }}
+    }
 
 }
