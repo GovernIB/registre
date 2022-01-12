@@ -51,9 +51,6 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
     @Autowired
     private RegistroSalidaBusquedaValidator registroSalidaBusquedaValidator;
 
-    @EJB(mappedName = "regweb3/LibroEJB/local")
-    private LibroLocal libroEjb;
-
     @EJB(mappedName = "regweb3/HistoricoRegistroEntradaEJB/local")
     private HistoricoRegistroEntradaLocal historicoRegistroEntradaEjb;
 
@@ -75,6 +72,9 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
     @EJB(mappedName = "regweb3/MultiEntidadEJB/local")
     private MultiEntidadLocal multiEntidadEjb;
 
+    @EJB(mappedName = "regweb3/DistribucionEJB/local")
+    private DistribucionLocal distribucionEjb;
+
 
     /**
      * Listado de registros de entrada
@@ -93,7 +93,6 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
         model.addAttribute("registroEntradaBusqueda", registroEntradaBusqueda);
         model.addAttribute("organosOrigen", organismoEjb.getPermitirUsuarios(entidadActiva.getId()));
         if(multiEntidadEjb.isMultiEntidad()) {
-            log.info("Entro en multientidad");
             model.addAttribute("organosDestino", organismoEjb.getAllByEntidadMultiEntidad(entidadActiva.getId()));
         }else{
             model.addAttribute("organosDestino", organismoEjb.getAllByEntidad(entidadActiva.getId()));
@@ -242,6 +241,37 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
         lopdEjb.altaLopd(registro.getNumeroRegistro(), registro.getFecha(), registro.getLibro().getId(), usuarioEntidad.getId(), RegwebConstantes.REGISTRO_ENTRADA, RegwebConstantes.LOPD_CONSULTA);
 
         return "registroEntrada/registroEntradaDetalleAdmin";
+    }
+
+    /**
+     * Método que genera el Justificante en pdf
+     *
+     * @param idRegistro identificador del registro de entrada
+     * @return
+     * @throws Exception
+     */
+    @ResponseBody
+    @RequestMapping(value = "/registroEntrada/{idRegistro}/reDistribuir", method = RequestMethod.POST)
+    public JsonResponse reDistribuir(@PathVariable Long idRegistro, HttpServletRequest request) throws Exception {
+
+        JsonResponse jsonResponse = new JsonResponse();
+
+        try {
+
+            Boolean distribuido = distribucionEjb.reDistribuirRegistro(idRegistro, getEntidadActiva(request).getId());
+
+            if(distribuido){
+                jsonResponse.setStatus("SUCCESS");
+            }else{
+                jsonResponse.setStatus("FAIL");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            jsonResponse.setStatus("FAIL");
+        }
+
+        return jsonResponse;
     }
 
     /**
