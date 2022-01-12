@@ -120,6 +120,11 @@
                         <c:if test="${not empty registro.registroDetalle.identificadorIntercambio}">
                             <div class="btn-group"><button type="button" onclick="goToNewPage('<c:url value="/sir/${registro.registroDetalle.identificadorIntercambio}/detalle"/>')" class="btn btn-primary btn-sm"><spring:message code="idIntercambio.detalle"/></button></div>
                         </c:if>
+
+                        <%--Botón Re-Distribuir--%>
+                        <c:if test="${registro.estado == RegwebConstantes.REGISTRO_DISTRIBUIDO && registro.registroDetalle.anexosPurgado == false}">
+                            <div class="btn-group"><button type="button" onclick="reDistribuir('<c:url value="/adminEntidad/registroEntrada/${registro.id}/reDistribuir"/>')" class="btn btn-primary btn-sm"><spring:message code="registroEntrada.redistribuir"/></button></div>
+                        </c:if>
                     </div>
                 </div>
 
@@ -261,6 +266,29 @@
                     mensajeError('#mensajes', respuesta.error);
                     waitingDialog.hide();
                 }
+            }
+        });
+    }
+
+    /**
+     * Vuelve a Distribuir el Registro
+     * @param url
+     */
+    function reDistribuir(url){
+
+        $.ajax({
+            url:url,
+            type:'POST',
+            beforeSend: function(objeto){
+                waitingDialog.show('<spring:message code="registroEntrada.distribuyendo" javaScriptEscape='true'/>', {dialogSize: 'm', progressType: 'info'});
+            },
+            success:function(respuesta){
+                if(respuesta.status == 'SUCCESS'){
+                    mensajeSuccess('#mensajes', '<spring:message code="registroEntrada.distribuir.ok" javaScriptEscape='true'/>');
+                }else if(respuesta.status == 'FAIL') {
+                    mensajeError('#mensajes', respuesta.error);
+                }
+                waitingDialog.hide();
             }
         });
     }

@@ -648,12 +648,12 @@ public class RegistroDetalle implements Serializable {
     }
 
     /**
-     * Devuelve si el registroDetalle tiene los anexos purgados
+     * Comprueba si tiene los anexos purgados
      *
      * @return
      */
     @Transient
-    public boolean isDetallePurgado() {
+    public boolean isAnexosPurgado() {
 
         for (Anexo anexo : anexos) {
             if (anexo.isPurgado() && !anexo.isJustificante()) {

@@ -59,4 +59,13 @@ public interface DistribucionLocal {
      * @throws I18NException
      */
     Boolean distribuirRegistroEnCola(Cola elemento, Long idEntidad, Long tipoIntegracion) throws Exception;
+
+    /**
+     * Vuelve a Distribuir un registro de Entrada ya distribuido previamente
+     * @param idRegistro
+     * @param idEntidad
+     * @return
+     * @throws Exception
+     */
+    Boolean reDistribuirRegistro(Long idRegistro, Long idEntidad) throws Exception;
 }

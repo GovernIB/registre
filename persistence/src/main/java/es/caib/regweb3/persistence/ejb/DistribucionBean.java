@@ -196,6 +196,65 @@ public class DistribucionBean implements DistribucionLocal {
 
     }
 
+    /**
+     * Re-Distribuye un registro de entrada
+     *
+     * @param idRegistro del Registro de Entrada
+     * @param idEntidad
+     * @return
+     * @throws Exception
+     * @throws I18NException
+     */
+    @Override
+    public Boolean reDistribuirRegistro(Long idRegistro, Long idEntidad) throws Exception {
+
+        Boolean distribuido = false;
+        RegistroEntrada registroEntrada = null;
+
+        // Integración
+        StringBuilder peticion = new StringBuilder();
+        Date inicio = new Date();
+        String descripcion = "Re-Distribución";
+
+        try {
+
+            //Obtenermos plugin distribución
+            IDistribucionPlugin distribucionPlugin = (IDistribucionPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_DISTRIBUCION);
+
+            //Obtenemos el registro de entrada que se debe distribuir
+            if(distribucionPlugin.getClass().getName().contains("DistribucionGoibPlugin")){
+                registroEntrada = registroEntradaEjb.getConAnexosFullDistribuir(idRegistro);
+            }else{
+                registroEntrada = registroEntradaEjb.getConAnexosFull(idRegistro);
+            }
+
+            // Se comprueba los anexos ya han sido purgados, en ese caso no se podrá distribuir
+            if (registroEntrada.getRegistroDetalle().isAnexosPurgado()) {
+                return false;
+            }
+
+            // Integración
+            peticion.append("usuario: ").append(registroEntrada.getUsuario().getUsuario().getNombreIdentificador()).append(System.getProperty("line.separator"));
+            peticion.append("registro: ").append(registroEntrada.getNumeroRegistroFormateado()).append(System.getProperty("line.separator"));
+            peticion.append("oficina: ").append(registroEntrada.getOficina().getDenominacion()).append(System.getProperty("line.separator"));
+            peticion.append("clase: ").append(distribucionPlugin.getClass().getName()).append(System.getProperty("line.separator"));
+
+            //Distribuimos el registro de entrada.
+            distribuido = distribuirRegistroEntrada(registroEntrada, distribucionPlugin);
+
+            if (distribuido) { //Si la distribución ha ido bien
+                integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_DISTRIBUCION, descripcion, peticion.toString(), System.currentTimeMillis() - inicio.getTime(), registroEntrada.getUsuario().getEntidad().getId(), registroEntrada.getNumeroRegistroFormateado());
+            }
+
+        } catch (Exception | I18NException | I18NValidationException e) {
+            e.printStackTrace();
+            integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_DISTRIBUCION, descripcion, peticion.toString(), e, null,System.currentTimeMillis() - inicio.getTime(), idEntidad, registroEntrada.getNumeroRegistroFormateado());
+        }
+
+        return distribuido;
+
+    }
+
     @Override
     @TransactionTimeout(value = 1800)  // 30 minutos
     public void distribuirRegistrosEnCola(Long idEntidad) throws Exception {
