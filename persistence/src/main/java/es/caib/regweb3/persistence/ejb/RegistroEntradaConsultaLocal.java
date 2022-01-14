@@ -7,7 +7,6 @@ import es.caib.regweb3.model.utils.RegistroBasico;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 
-import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
 import java.util.Date;
 import java.util.List;
@@ -19,7 +18,6 @@ import java.util.List;
  * Date: 14/05/19
  */
 @Local
-@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI","RWE_WS_ENTRADA","RWE_WS_SALIDA", "RWE_WS_CIUDADANO"})
 public interface RegistroEntradaConsultaLocal {
 
     String JNDI_NAME = "java:app/regweb3-persistence/RegistroEntradaConsultaEJB";
