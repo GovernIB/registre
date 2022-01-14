@@ -22,7 +22,7 @@ public interface AnexoSirLocal extends BaseEjb<AnexoSir, Long> {
      * @param numElementos numero máximo de archivos que se van a purgar en esta iteracion
      * @throws Exception
      */
-    void purgarArchivos(Long idEntidad, Integer numElementos) throws Exception;
+    int purgarArchivos(Long idEntidad, Integer numElementos) throws Exception;
 
     /**
      * Elimina los AnexoSir de una Entidad

@@ -1200,7 +1200,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public void purgarAnexosRegistrosAceptados(Long idEntidad, Integer numElementos) throws Exception, I18NException {
+    public int purgarAnexosRegistrosAceptados(Long idEntidad, Integer numElementos) throws Exception, I18NException {
 
 
         //Obtenemos los anexos de los registros de entrada que han sido aceptados y que no han sido purgados
@@ -1234,10 +1234,12 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             merge(anexo);
         }
 
+        return anexos.size();
+
     }
 
     @Override
-    public void purgarAnexosRegistrosDistribuidos(Long idEntidad, Integer meses, Integer numElementos) throws Exception, I18NException{
+    public int purgarAnexosRegistrosDistribuidos(Long idEntidad, Integer meses, Integer numElementos) throws Exception, I18NException{
 
         List<String> custodyIds = obtenerCustodyIdAnexosDistribuidos(meses, numElementos);
 
@@ -1246,6 +1248,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             purgarAnexo(custodyId, false, idEntidad);
         }
 
+        return custodyIds.size();
     }
 
     @Override
