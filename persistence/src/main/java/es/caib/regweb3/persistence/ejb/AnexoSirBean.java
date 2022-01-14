@@ -72,7 +72,7 @@ public class AnexoSirBean extends BaseEjbJPA<AnexoSir, Long> implements AnexoSir
 
     @Override
     @SuppressWarnings("unchecked")
-    public void purgarArchivos(Long idEntidad, Integer numElementos) throws Exception{
+    public int purgarArchivos(Long idEntidad, Integer numElementos) throws Exception{
 
         Query q = em.createQuery("Select anexoSir from AnexoSir as anexoSir " +
                 "where anexoSir.purgado = false and anexoSir.registroSir.estado = :aceptado");
@@ -93,6 +93,8 @@ public class AnexoSirBean extends BaseEjbJPA<AnexoSir, Long> implements AnexoSir
             anexoSir.setPurgado(true);
             merge(anexoSir);
         }
+
+        return anexos.size();
     }
 
     @Override
