@@ -1,0 +1,524 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="RegWebInfoWsService" targetNamespace="http://impl.v3.ws.regweb3.caib.es/"
+                  xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://impl.v3.ws.regweb3.caib.es/"
+                  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:types>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://impl.v3.ws.regweb3.caib.es/" attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="http://impl.v3.ws.regweb3.caib.es/">
+  <xs:element name="codigoAsuntoWs" type="tns:codigoAsuntoWs"/>
+  <xs:element name="getVersion" type="tns:getVersion"/>
+  <xs:element name="getVersionResponse" type="tns:getVersionResponse"/>
+  <xs:element name="getVersionWs" type="tns:getVersionWs"/>
+  <xs:element name="getVersionWsResponse" type="tns:getVersionWsResponse"/>
+  <xs:element name="libroWs" type="tns:libroWs"/>
+  <xs:element name="listarCodigoAsunto" type="tns:listarCodigoAsunto"/>
+  <xs:element name="listarCodigoAsuntoResponse" type="tns:listarCodigoAsuntoResponse"/>
+  <xs:element name="listarLibroOrganismo" type="tns:listarLibroOrganismo"/>
+  <xs:element name="listarLibroOrganismoResponse" type="tns:listarLibroOrganismoResponse"/>
+  <xs:element name="listarLibros" type="tns:listarLibros"/>
+  <xs:element name="listarLibrosResponse" type="tns:listarLibrosResponse"/>
+  <xs:element name="listarOficinas" type="tns:listarOficinas"/>
+  <xs:element name="listarOficinasResponse" type="tns:listarOficinasResponse"/>
+  <xs:element name="listarOrganismos" type="tns:listarOrganismos"/>
+  <xs:element name="listarOrganismosResponse" type="tns:listarOrganismosResponse"/>
+  <xs:element name="listarTipoAsunto" type="tns:listarTipoAsunto"/>
+  <xs:element name="listarTipoAsuntoResponse" type="tns:listarTipoAsuntoResponse"/>
+  <xs:element name="listarTipoDocumental" type="tns:listarTipoDocumental"/>
+  <xs:element name="listarTipoDocumentalResponse" type="tns:listarTipoDocumentalResponse"/>
+  <xs:element name="obtenerLibrosOficina" type="tns:obtenerLibrosOficina"/>
+  <xs:element name="obtenerLibrosOficinaResponse" type="tns:obtenerLibrosOficinaResponse"/>
+  <xs:element name="obtenerLibrosOficinaUsuario" type="tns:obtenerLibrosOficinaUsuario"/>
+  <xs:element name="obtenerLibrosOficinaUsuarioResponse" type="tns:obtenerLibrosOficinaUsuarioResponse"/>
+  <xs:element name="tipoAsuntoWs" type="tns:tipoAsuntoWs"/>
+  <xs:element name="tipoDocumentalWs" type="tns:tipoDocumentalWs"/>
+  <xs:complexType name="listarLibroOrganismo">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="entidad" type="xs:string"/>
+      <xs:element minOccurs="0" name="organismo" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="listarLibroOrganismoResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:libroWs"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="libroWs">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="codigoLibro" type="xs:string"/>
+      <xs:element minOccurs="0" name="codigoOrganismo" type="xs:string"/>
+      <xs:element minOccurs="0" name="nombreCorto" type="xs:string"/>
+      <xs:element minOccurs="0" name="nombreLargo" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="wsI18NTranslation">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="code" type="xs:string"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="args" type="tns:wsI18NArgument"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="wsI18NArgument">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="value" type="xs:string"/>
+      <xs:element name="translate" type="xs:boolean"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="obtenerLibrosOficinaUsuario">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="entidadCodigoDir3" type="xs:string"/>
+      <xs:element minOccurs="0" name="usuario" type="xs:string"/>
+      <xs:element minOccurs="0" name="tipoRegistro" type="xs:long"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="obtenerLibrosOficinaUsuarioResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:libroOficinaWs"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="libroOficinaWs">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="libroWs" type="tns:libroWs"/>
+      <xs:element minOccurs="0" name="oficinaWs" type="tns:oficinaWs"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="oficinaWs">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="codigo" type="xs:string"/>
+      <xs:element minOccurs="0" name="nombre" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="listarCodigoAsunto">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="entidadCodigoDir3" type="xs:string"/>
+      <xs:element minOccurs="0" name="codigoTipoAsunto" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="listarCodigoAsuntoResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:codigoAsuntoWs"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="codigoAsuntoWs">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="codigo" type="xs:string"/>
+      <xs:element minOccurs="0" name="nombre" type="xs:string"/>
+      <xs:element minOccurs="0" name="tipoAsunto" type="tns:tipoAsuntoWs"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="tipoAsuntoWs">
+    <xs:sequence>
+      <xs:element name="activo" type="xs:boolean"/>
+      <xs:element minOccurs="0" name="codigo" type="xs:string"/>
+      <xs:element minOccurs="0" name="nombre" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getVersion">
+    <xs:sequence/>
+  </xs:complexType>
+  <xs:complexType name="getVersionResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="listarTipoAsunto">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="entidadCodigoDir3" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="listarTipoAsuntoResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:tipoAsuntoWs"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="listarLibros">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="entidadCodigoDir3" type="xs:string"/>
+      <xs:element minOccurs="0" name="oficinaCodigoDir3" type="xs:string"/>
+      <xs:element minOccurs="0" name="autorizacion" type="xs:long"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="listarLibrosResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:libroWs"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="listarOrganismos">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="entidadCodigoDir3" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="listarOrganismosResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:organismoWs"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="organismoWs">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="codigo" type="xs:string"/>
+      <xs:element minOccurs="0" name="nombre" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="listarTipoDocumental">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="entidadCodigoDir3" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="listarTipoDocumentalResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:tipoDocumentalWs"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="tipoDocumentalWs">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="codigoNTI" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getVersionWs">
+    <xs:sequence/>
+  </xs:complexType>
+  <xs:complexType name="getVersionWsResponse">
+    <xs:sequence>
+      <xs:element name="return" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="listarOficinas">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="entidadCodigoDir3" type="xs:string"/>
+      <xs:element minOccurs="0" name="autorizacion" type="xs:long"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="listarOficinasResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:oficinaWs"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="obtenerLibrosOficina">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="entidadCodigoDir3" type="xs:string"/>
+      <xs:element minOccurs="0" name="tipoRegistro" type="xs:long"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="obtenerLibrosOficinaResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:libroOficinaWs"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="WsI18NError" type="tns:WsI18NError"/>
+  <xs:complexType name="WsI18NError">
+    <xs:sequence>
+      <xs:element name="translation" nillable="true" type="tns:wsI18NTranslation"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>
+  </wsdl:types>
+  <wsdl:message name="listarCodigoAsuntoResponse">
+    <wsdl:part name="parameters" element="tns:listarCodigoAsuntoResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="listarLibroOrganismo">
+    <wsdl:part name="parameters" element="tns:listarLibroOrganismo">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="obtenerLibrosOficinaUsuario">
+    <wsdl:part name="parameters" element="tns:obtenerLibrosOficinaUsuario">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="WsI18NException">
+    <wsdl:part name="WsI18NException" element="tns:WsI18NError">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="listarTipoAsuntoResponse">
+    <wsdl:part name="parameters" element="tns:listarTipoAsuntoResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="listarCodigoAsunto">
+    <wsdl:part name="parameters" element="tns:listarCodigoAsunto">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getVersionResponse">
+    <wsdl:part name="parameters" element="tns:getVersionResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="listarTipoDocumental">
+    <wsdl:part name="parameters" element="tns:listarTipoDocumental">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="listarOrganismosResponse">
+    <wsdl:part name="parameters" element="tns:listarOrganismosResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="listarLibrosResponse">
+    <wsdl:part name="parameters" element="tns:listarLibrosResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="obtenerLibrosOficina">
+    <wsdl:part name="parameters" element="tns:obtenerLibrosOficina">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="obtenerLibrosOficinaUsuarioResponse">
+    <wsdl:part name="parameters" element="tns:obtenerLibrosOficinaUsuarioResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="listarLibros">
+    <wsdl:part name="parameters" element="tns:listarLibros">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="listarOficinas">
+    <wsdl:part name="parameters" element="tns:listarOficinas">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="listarOficinasResponse">
+    <wsdl:part name="parameters" element="tns:listarOficinasResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="obtenerLibrosOficinaResponse">
+    <wsdl:part name="parameters" element="tns:obtenerLibrosOficinaResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getVersionWs">
+    <wsdl:part name="parameters" element="tns:getVersionWs">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="listarTipoAsunto">
+    <wsdl:part name="parameters" element="tns:listarTipoAsunto">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getVersion">
+    <wsdl:part name="parameters" element="tns:getVersion">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="listarTipoDocumentalResponse">
+    <wsdl:part name="parameters" element="tns:listarTipoDocumentalResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="listarOrganismos">
+    <wsdl:part name="parameters" element="tns:listarOrganismos">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="listarLibroOrganismoResponse">
+    <wsdl:part name="parameters" element="tns:listarLibroOrganismoResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getVersionWsResponse">
+    <wsdl:part name="parameters" element="tns:getVersionWsResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="RegWebInfoWs">
+    <wsdl:operation name="listarLibroOrganismo">
+      <wsdl:input name="listarLibroOrganismo" message="tns:listarLibroOrganismo">
+    </wsdl:input>
+      <wsdl:output name="listarLibroOrganismoResponse" message="tns:listarLibroOrganismoResponse">
+    </wsdl:output>
+      <wsdl:fault name="WsI18NException" message="tns:WsI18NException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="obtenerLibrosOficinaUsuario">
+      <wsdl:input name="obtenerLibrosOficinaUsuario" message="tns:obtenerLibrosOficinaUsuario">
+    </wsdl:input>
+      <wsdl:output name="obtenerLibrosOficinaUsuarioResponse" message="tns:obtenerLibrosOficinaUsuarioResponse">
+    </wsdl:output>
+      <wsdl:fault name="WsI18NException" message="tns:WsI18NException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="listarCodigoAsunto">
+      <wsdl:input name="listarCodigoAsunto" message="tns:listarCodigoAsunto">
+    </wsdl:input>
+      <wsdl:output name="listarCodigoAsuntoResponse" message="tns:listarCodigoAsuntoResponse">
+    </wsdl:output>
+      <wsdl:fault name="WsI18NException" message="tns:WsI18NException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="getVersion">
+      <wsdl:input name="getVersion" message="tns:getVersion">
+    </wsdl:input>
+      <wsdl:output name="getVersionResponse" message="tns:getVersionResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="listarTipoAsunto">
+      <wsdl:input name="listarTipoAsunto" message="tns:listarTipoAsunto">
+    </wsdl:input>
+      <wsdl:output name="listarTipoAsuntoResponse" message="tns:listarTipoAsuntoResponse">
+    </wsdl:output>
+      <wsdl:fault name="WsI18NException" message="tns:WsI18NException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="listarLibros">
+      <wsdl:input name="listarLibros" message="tns:listarLibros">
+    </wsdl:input>
+      <wsdl:output name="listarLibrosResponse" message="tns:listarLibrosResponse">
+    </wsdl:output>
+      <wsdl:fault name="WsI18NException" message="tns:WsI18NException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="listarOrganismos">
+      <wsdl:input name="listarOrganismos" message="tns:listarOrganismos">
+    </wsdl:input>
+      <wsdl:output name="listarOrganismosResponse" message="tns:listarOrganismosResponse">
+    </wsdl:output>
+      <wsdl:fault name="WsI18NException" message="tns:WsI18NException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="listarTipoDocumental">
+      <wsdl:input name="listarTipoDocumental" message="tns:listarTipoDocumental">
+    </wsdl:input>
+      <wsdl:output name="listarTipoDocumentalResponse" message="tns:listarTipoDocumentalResponse">
+    </wsdl:output>
+      <wsdl:fault name="WsI18NException" message="tns:WsI18NException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="getVersionWs">
+      <wsdl:input name="getVersionWs" message="tns:getVersionWs">
+    </wsdl:input>
+      <wsdl:output name="getVersionWsResponse" message="tns:getVersionWsResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="listarOficinas">
+      <wsdl:input name="listarOficinas" message="tns:listarOficinas">
+    </wsdl:input>
+      <wsdl:output name="listarOficinasResponse" message="tns:listarOficinasResponse">
+    </wsdl:output>
+      <wsdl:fault name="WsI18NException" message="tns:WsI18NException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="obtenerLibrosOficina">
+      <wsdl:input name="obtenerLibrosOficina" message="tns:obtenerLibrosOficina">
+    </wsdl:input>
+      <wsdl:output name="obtenerLibrosOficinaResponse" message="tns:obtenerLibrosOficinaResponse">
+    </wsdl:output>
+      <wsdl:fault name="WsI18NException" message="tns:WsI18NException">
+    </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="RegWebInfoWsServiceSoapBinding" type="tns:RegWebInfoWs">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="listarLibroOrganismo">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="listarLibroOrganismo">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="listarLibroOrganismoResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="WsI18NException">
+        <soap:fault name="WsI18NException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="listarCodigoAsunto">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="listarCodigoAsunto">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="listarCodigoAsuntoResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="WsI18NException">
+        <soap:fault name="WsI18NException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="obtenerLibrosOficinaUsuario">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="obtenerLibrosOficinaUsuario">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="obtenerLibrosOficinaUsuarioResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="WsI18NException">
+        <soap:fault name="WsI18NException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="getVersion">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getVersion">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getVersionResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="listarTipoAsunto">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="listarTipoAsunto">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="listarTipoAsuntoResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="WsI18NException">
+        <soap:fault name="WsI18NException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="listarLibros">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="listarLibros">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="listarLibrosResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="WsI18NException">
+        <soap:fault name="WsI18NException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="listarOrganismos">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="listarOrganismos">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="listarOrganismosResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="WsI18NException">
+        <soap:fault name="WsI18NException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="listarTipoDocumental">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="listarTipoDocumental">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="listarTipoDocumentalResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="WsI18NException">
+        <soap:fault name="WsI18NException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="getVersionWs">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getVersionWs">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getVersionWsResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="listarOficinas">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="listarOficinas">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="listarOficinasResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="WsI18NException">
+        <soap:fault name="WsI18NException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="obtenerLibrosOficina">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="obtenerLibrosOficina">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="obtenerLibrosOficinaResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="WsI18NException">
+        <soap:fault name="WsI18NException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="RegWebInfoWsService">
+    <wsdl:port name="RegWebInfoWs" binding="tns:RegWebInfoWsServiceSoapBinding">
+      <soap:address location="http://localhost:8080/regweb3/ws/v3/RegWebInfo"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
