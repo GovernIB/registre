@@ -39,6 +39,8 @@
         <pluginsib-signatureserver-api>3.1.0-SNAPSHOT</pluginsib-signatureserver-api>
         <pluginsib-signatureserver-miniappletinserver>3.0.0</pluginsib-signatureserver-miniappletinserver>
         <pluginsib-signatureserver-afirmaserver>3.1.0-SNAPSHOT</pluginsib-signatureserver-afirmaserver>
+        <pluginsib.userinformation.version>2.0.0</pluginsib.userinformation.version>
+        <pluginsib.userinformation-keycloak.version>2.0.1</pluginsib.userinformation-keycloak.version>
         <dir3caib-ws-api.version>1.0.14</dir3caib-ws-api.version>
         <scanweb.api.version>4.0.0</scanweb.api.version>
         <cxf.version>3.2.12</cxf.version>

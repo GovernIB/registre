@@ -8,6 +8,16 @@
             <module name="org.apache.xerces" />
             <module name="org.apache.santuario.xmlsec" export="true"/>
             <module name="org.bouncycastle" export="true"/>
+            <module name="org.keycloak.keycloak-core" optional="true"/>
+            <module name="org.keycloak.keycloak-adapter-spi" optional="true"/>
+            <module name="org.keycloak.keycloak-adapter-subsystem" optional="true"/>
+            <module name="org.keycloak.keycloak-authz-client" optional="true"/>
+            <module name="org.keycloak.keycloak-common" optional="true"/>
+            <module name="org.keycloak.keycloak-jboss-adapter-core" optional="true"/>
+            <module name="org.keycloak.keycloak-undertow-adapter" optional="true"/>
+            <module name="org.keycloak.keycloak-wildfly-adapter" optional="true"/>
+            <module name="org.keycloak.keycloak-wildfly-elytron-oidc-adapter" optional="true"/>
+            <module name="org.keycloak.keycloak-wildfly-subsystem" optional="true"/>
         </dependencies>
     </deployment>
 </jboss-deployment-structure>
