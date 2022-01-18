@@ -9,13 +9,6 @@
         <session-timeout>30</session-timeout>
     </session-config>
 
-    <!--  LOAD-ON-STARTUP SERVLET -->
-    <servlet>
-        <servlet-name>InitServlet</servlet-name>
-        <servlet-class>es.caib.regweb3.webapp.utils.InitServlet</servlet-class>
-        <load-on-startup>1</load-on-startup>
-    </servlet>
-
     <servlet>
         <servlet-name>PluginScanWebRequests</servlet-name>
         <servlet-class>es.caib.regweb3.webapp.controller.registro.ScanRequestServlet</servlet-class>
