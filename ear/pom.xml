@@ -141,19 +141,25 @@
         <dependency>
             <groupId>org.fundaciobit.pluginsib.userinformation</groupId>
             <artifactId>pluginsib-userinformation-api</artifactId>
-            <version>2.0.0</version>
+            <version>${pluginsib.userinformation.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.fundaciobit.pluginsib.userinformation</groupId>
             <artifactId>pluginsib-userinformation-ldap</artifactId>
-            <version>2.0.1</version>
+            <version>${pluginsib.userinformation.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.fundaciobit.pluginsib.userinformation</groupId>
             <artifactId>pluginsib-userinformation-database</artifactId>
-            <version>2.0.0</version>
+            <version>${pluginsib.userinformation.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.fundaciobit.pluginsib.userinformation</groupId>
+            <artifactId>pluginsib-userinformation-keycloak</artifactId>
+            <version>${pluginsib.userinformation-keycloak.version}</version>
         </dependency>
 
         <!-- ======== API DE PLUGIN DE SCANWEB =========== -->
@@ -314,12 +320,6 @@
             <artifactId>regweb3-ws</artifactId>
             <type>war</type>
         </dependency>
-
-        <!--<dependency>
-            <groupId>es.caib.regweb3</groupId>
-            <artifactId>regweb3-ws-server</artifactId>
-            <type>ejb</type>
-        </dependency>-->
 
         <!--
         Mòduls que van dins el lib/
