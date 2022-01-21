@@ -12,6 +12,8 @@ import org.jboss.ws.api.annotation.WebContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.security.DeclareRoles;
+import javax.annotation.security.RunAs;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.jws.HandlerChain;
@@ -27,13 +29,10 @@ import javax.jws.soap.SOAPBinding;
  * Created by Fundació BIT.
  * @author earrivi
  */
-/*@DeclareRoles({ "RWE_USUARI" })
-@RunAs("RWE_USUARI")*/
-
+@DeclareRoles({ "RWE_USUARI" })
+@RunAs("RWE_USUARI")
 @Stateless(name = WS_SIR8_BImpl.NAME + "Ejb")
 @SOAPBinding(style = SOAPBinding.Style.DOCUMENT)
-/*@org.apache.cxf.interceptor.InInterceptors(interceptors = {"org.apache.cxf.interceptor.LoggingInInterceptor"})
-@org.apache.cxf.interceptor.InFaultInterceptors(interceptors = {"org.apache.cxf.interceptor.LoggingInInterceptor"})*/
 @WebService(
         name = WS_SIR8_BImpl.NAME_WS,
         portName = WS_SIR8_BImpl.NAME_WS,
