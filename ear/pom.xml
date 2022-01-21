@@ -63,12 +63,6 @@
                             <bundleFileName>regweb3-persistence.jar</bundleFileName>
                         </ejbModule>
 
-                        <!--<ejbModule>
-                            <groupId>es.caib.regweb3</groupId>
-                            <artifactId>regweb3-ws-server</artifactId>
-                            <bundleFileName>regweb3-ws-server.jar</bundleFileName>
-                        </ejbModule>-->
-
                         <ejbModule>
                             <groupId>es.caib.regweb3</groupId>
                             <artifactId>regweb3-sir-ws-server</artifactId>

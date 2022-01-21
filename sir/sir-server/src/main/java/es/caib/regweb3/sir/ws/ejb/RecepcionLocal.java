@@ -8,7 +8,6 @@ import javax.ejb.Local;
  * Created by earrivi on 22/02/2017.
  */
 @Local
-/*@RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI"})*/
 public interface RecepcionLocal {
 
     String JNDI_NAME = "java:app/regweb3-sir-ws-server/RecepcionEJB";
