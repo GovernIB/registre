@@ -36,6 +36,15 @@ public interface ColaLocal extends BaseEjb<Cola, Long> {
     List<Cola> findByTipoEntidad(Long tipo, Long idEntidad, Integer total) throws Exception;
 
     /**
+     * Retorna el total de elementos de la Cola en estado PENDIENTE
+     * @param tipo
+     * @param idEntidad
+     * @return
+     * @throws Exception
+     */
+    Long findPendientesByTipo(Long tipo, Long idEntidad) throws Exception;
+
+    /**
      * Busca un elemento de la cola por IdObjeto y por entidad
      *
      * @param idObjeto
