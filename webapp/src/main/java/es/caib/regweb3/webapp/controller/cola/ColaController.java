@@ -12,6 +12,7 @@ import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.controller.BaseController;
 import es.caib.regweb3.webapp.utils.Mensaje;
+import es.caib.regweb3.webapp.utils.TipoCola;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.springframework.stereotype.Controller;
@@ -24,7 +25,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by mgonzalez on 19/04/2018.
@@ -224,26 +226,26 @@ public class ColaController extends BaseController {
 
 
     @ModelAttribute("tiposCola")
-    public HashMap<Long, Boolean> tiposCola(HttpServletRequest request) {
+    public List<TipoCola> tiposCola(HttpServletRequest request) throws Exception {
 
-        HashMap<Long, Boolean> tiposCola =  new HashMap<>();
+        List<TipoCola> tiposCola =  new ArrayList<>();
         Entidad entidadActiva = getEntidadActiva(request);
 
         if(Configuracio.isCAIB()){
-            for(Long tipoCola:RegwebConstantes.COLA_TIPOS_CAIB){
+            for(Long tipo:RegwebConstantes.COLA_TIPOS_CAIB){
 
-                if(tipoCola.equals(RegwebConstantes.COLA_DISTRIBUCION)){
-                    tiposCola.put(tipoCola, PropiedadGlobalUtil.pararColaDistribucion(entidadActiva.getId()));
+                if(tipo.equals(RegwebConstantes.COLA_DISTRIBUCION)){
+                    tiposCola.add(new TipoCola(tipo, PropiedadGlobalUtil.pararColaDistribucion(entidadActiva.getId()), colaEjb.findPendientesByTipo(tipo, entidadActiva.getId())));
                 }
 
-                if(tipoCola.equals(RegwebConstantes.COLA_CUSTODIA)){
-                    tiposCola.put(tipoCola, PropiedadGlobalUtil.pararColaCustodia(entidadActiva.getId()));
+                if(tipo.equals(RegwebConstantes.COLA_CUSTODIA)){
+                    tiposCola.add(new TipoCola(tipo, PropiedadGlobalUtil.pararColaCustodia(entidadActiva.getId()), colaEjb.findPendientesByTipo(tipo, entidadActiva.getId())));
                 }
             }
 
         }else{
-            for(Long tipoCola:RegwebConstantes.COLA_TIPOS){
-                tiposCola.put(tipoCola, PropiedadGlobalUtil.pararColaDistribucion(entidadActiva.getId()));
+            for(Long tipo:RegwebConstantes.COLA_TIPOS){
+                tiposCola.add(new TipoCola(tipo, PropiedadGlobalUtil.pararColaDistribucion(entidadActiva.getId()), colaEjb.findPendientesByTipo(tipo, entidadActiva.getId())));
             }
         }
         return tiposCola;

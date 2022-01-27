@@ -67,6 +67,18 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
+    public Long findPendientesByTipo(Long tipo, Long idEntidad) throws Exception {
+
+        Query q = em.createQuery( "select count(cola.id) from Cola as cola where cola.tipo=:tipo and cola.usuarioEntidad.entidad.id=:idEntidad and cola.estado =:pendiente");
+        q.setParameter("tipo", tipo);
+        q.setParameter("idEntidad", idEntidad);
+        q.setParameter("pendiente", RegwebConstantes.COLA_ESTADO_PENDIENTE);
+
+        return (Long) q.getSingleResult();
+    }
+
+    @Override
     public Cola findByIdObjeto(Long idObjeto,Long idEntidad) throws Exception{
 
         Query q = em.createQuery( "select cola from Cola as cola where cola.idObjeto=:idObjeto and cola.usuarioEntidad.entidad.id=:idEntidad");
