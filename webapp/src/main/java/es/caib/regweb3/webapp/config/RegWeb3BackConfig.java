@@ -12,6 +12,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.scheduling.TaskScheduler;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -27,6 +30,7 @@ import java.util.Locale;
 
 @EnableWebMvc
 @Configuration
+@EnableScheduling
 @ComponentScan(value = {"es.caib.regweb3.webapp"})
 public class RegWeb3BackConfig extends WebMvcConfigurerAdapter {
 
@@ -146,6 +150,11 @@ public class RegWeb3BackConfig extends WebMvcConfigurerAdapter {
         regWebSessionLocaleResolver.setDefaultLocale(new Locale(RegwebConstantes.IDIOMA_CATALAN_CODIGO));
 
         return regWebSessionLocaleResolver;
+    }
+
+    @Bean
+    public TaskScheduler taskScheduler() {
+        return new ConcurrentTaskScheduler();
     }
 
     @Bean
