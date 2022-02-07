@@ -147,8 +147,25 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
         // Comprobamos si el usuario ha añadido algún interesado
         List<Interesado> interesadosSesion = (List<Interesado>) session.getAttribute(RegwebConstantes.SESSION_INTERESADOS_SALIDA);
         Boolean errorInteresado = true;
+        Boolean errorNotib = false;
+
+        // Interesados obligatorio
         if(interesadosSesion != null && interesadosSesion.size() > 0){
             errorInteresado = false;
+        }
+
+        // Solo se pueden hacer Registros de Salida con documentación electrónica a Administraciones
+        if(registroSalida.getRegistroDetalle().getTipoDocumentacionFisica() != null && !errorInteresado){
+
+            if(registroSalida.getRegistroDetalle().getTipoDocumentacionFisica().equals(RegwebConstantes.TIPO_DOCFISICA_ACOMPANYA_DOC_COMPLEMENTARIA) ||
+                    registroSalida.getRegistroDetalle().getTipoDocumentacionFisica().equals(RegwebConstantes.TIPO_DOCFISICA_NO_ACOMPANYA_DOC)){
+
+                for(Interesado interesado:interesadosSesion){
+                    if(interesado.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_FISICA) || interesado.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA)){
+                        errorNotib = true;
+                    }
+                }
+            }
         }
 
         if (result.hasErrors() || errorInteresado) { // Si hay errores volvemos a la vista del formulario
@@ -156,6 +173,11 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
             // Si no hay ningún interesado, generamos un error.
             if(errorInteresado){
                 model.addAttribute("errorInteresado", errorInteresado);
+            }
+
+            // Si hay error Notib, mostramos error.
+            if(errorNotib){
+                model.addAttribute("errorNotib", errorNotib);
             }
 
             LinkedHashSet<Oficina> oficinasOrigen;
