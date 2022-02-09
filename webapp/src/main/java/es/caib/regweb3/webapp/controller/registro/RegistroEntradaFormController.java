@@ -425,13 +425,12 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
                 if(dias >= entidadActiva.getDiasVisado()){ // Si ha pasado los Dias de Visado establecidos por la entidad.
 
                     registroEntrada.setEstado(RegwebConstantes.REGISTRO_PENDIENTE_VISAR);
-                }else{ // Si aún no ha pasado los días definidos
 
-                    // Si el Registro de Entrada tiene Estado Pendiente, al editarlo pasa a ser Válido.
-                    if(registroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_RESERVA)){
-                        registroEntrada.setEstado(RegwebConstantes.REGISTRO_VALIDO);
-                    }
+                }else if(registroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_RESERVA)){ // Si el Registro de Entrada tiene Estado Pendiente, al editarlo pasa a ser Válido.
+
+                    registroEntrada.setEstado(RegwebConstantes.REGISTRO_VALIDO);
                 }
+
                 // Obtenemos el RE antes de guardarlos, para crear el histórico
                 RegistroEntrada antiguo = registroEntradaEjb.findByIdCompleto(registroEntrada.getId());
 
