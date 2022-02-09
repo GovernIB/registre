@@ -43,12 +43,12 @@
 
             <div class="form-group col-xs-12">
                 <div class="col-xs-2 pull-left etiqueta_regweb control-label">
-                        <c:if test="${param.tipoRegistro == RegwebConstantes.REGISTRO_ENTRADA}">
-                            <label rel="popupAbajo" data-content="<spring:message code="registro.ayuda.tipoInteresado.entrada"/>" data-toggle="popover"><spring:message code="interesado.tipoInteresado"/></label>
-                        </c:if>
-                        <c:if test="${param.tipoRegistro == RegwebConstantes.REGISTRO_SALIDA}">
-                    <label rel="popupAbajo" data-content="<spring:message code="registro.ayuda.tipoInteresado.salida"/>" data-toggle="popover"><spring:message code="interesado.tipoDestinatario"/></label>
-                        </c:if>
+                    <c:if test="${param.tipoRegistro == RegwebConstantes.REGISTRO_ENTRADA}">
+                        <label rel="popupAbajo" data-content="<spring:message code="registro.ayuda.tipoInteresado.entrada"/>" data-toggle="popover"><spring:message code="interesado.tipoInteresado"/></label>
+                    </c:if>
+                    <c:if test="${param.tipoRegistro == RegwebConstantes.REGISTRO_SALIDA}">
+                        <label rel="popupAbajo" data-content="<spring:message code="registro.ayuda.tipoInteresado.salida"/>" data-toggle="popover"><spring:message code="interesado.tipoDestinatario"/></label>
+                    </c:if>
                 </div>
                 <div class="col-xs-10">
                     <c:forEach items="${tiposInteresado}" var="tipoInteresado">
@@ -251,9 +251,10 @@ Mediante el archivo "busquedaorganismo.js" se implementa dicha búsqueda -->
 
         //Gestión de los cambios de tipo documento
         $('#tipoDocumentoIdentificacion').change(
-                function() {actualizarTipoDocumentoIdentificacion();
-                    quitarError('documento');
-                });
+            function() {
+                actualizarTipoDocumentoIdentificacion();
+                quitarError('documento');
+            });
 
     });
 
