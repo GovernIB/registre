@@ -36,19 +36,6 @@
 
             <div id="mensajes"></div>
 
-            <c:if test="${errorNotib}">
-                <div class="alert alert-danger alert-dismissable">
-                    <div class="row vertical-align">
-                        <div class="col-xs-1 text-center">
-                            <i class="fa fa-times-circle fa-2x"></i>
-                        </div>
-                        <div class="col-xs-11">
-                            <spring:message code="registroSalida.notib"/>
-                        </div>
-                    </div>
-                </div>
-            </c:if>
-
             <div class="row">
                 <div class="col-xs-12">
 
