@@ -109,9 +109,8 @@ public class TrazabilidadSirBean extends BaseEjbJPA<TrazabilidadSir, Long> imple
 
         List<TrazabilidadSir> result = q.getResultList();
 
-        if(result.size() == 1){
+        if(result.size() >= 1){
             return (TrazabilidadSir) result.get(0);
-
         }
 
         return null;
