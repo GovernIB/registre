@@ -98,14 +98,21 @@
                                 <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_INTERNO_ENVIADO}"><span class="label label-warning"></c:if>
                                 <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_EXTERNO_ENVIADO}"><span class="label label-warning"></c:if>
                                 <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_ACEPTADO}"><span class="label label-success"></c:if>
-                                <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_SIR_ENVIADO}"><span class="label label-warning"></c:if>
-                                <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_SIR_ENVIADO_ACK}"><span class="label label-success"></c:if>
-                                <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_SIR_ENVIADO_ERROR}"><span class="label label-danger"></c:if>
+                                
+                                <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_SIR_SIN_DATOS}"><span class="label label-warning"></c:if>
+                                <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_SIR_PENDIENTE_ENVIO}"><span class="label label-warning"></c:if>
+                                <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_SIR_ENVIADO_PENDIENTE_CONFIRMACION}"><span class="label label-warning"></p></c:if>
+                                <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_SIR_ENVIADO_PENDIENTE_CONFIRMACION_MANUAL}"><span class="label label-warning"></c:if>
+                                <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_SIR_ENVIADO_CONFIRMADO}"><span class="label label-success"></c:if>
+                                <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_SIR_ENVIADO_RECHAZADO}"><span class="label label-danger"></p></c:if>
                                 <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_SIR_REENVIADO}"><span class="label label-warning"></c:if>
-                                <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_SIR_REENVIADO_ACK}"><span class="label label-success"></c:if>
-                                <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_SIR_REENVIADO_ERROR}"><span class="label label-danger"></c:if>
-                                <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_SIR_RECHAZADO}"><span class="label label-danger"></c:if>
-                                <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_SIR_DEVUELTO}"><span class="label label-danger"></c:if>
+                                <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_SIR_EN_TRAMITE}"><span class="label label-warning"></c:if>
+                                <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_SIR_ASIGNADO}"><span class="label label-warning"></c:if>
+                                <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_SIR_FINALIZADO}"><span class="label label-success"></c:if>
+                                <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_SIR_RECTIFICADO}"><span class="label label-warning"></c:if>
+                                <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_SIR_ENVIO_PROCESO}"><span class="label label-warning"></c:if>
+                                <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_SIR_ELIMINADO}"><span class="label label-danger"></c:if>
+                                                            
                                 <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_ANULADO}"><span class="label label-danger"></c:if>
 
                                 <spring:message code="oficioRemision.estado.${oficioRemision.estado}"/> -
@@ -298,7 +305,9 @@
                                             <tr>
                                                 <td>
                                                 <c:choose>
-				                                	<c:when test="${not empty trazabilidad.registroEntradaOrigen.fecha}"><fmt:formatDate value="${trazabilidad.registroEntradaOrigen.fecha}" pattern="yyyy"/>/ ${trazabilidad.registroEntradaOrigen.numeroRegistro}</c:when>
+
+				                                	<c:when test="${not empty trazabilidad.registroEntradaOrigen.fecha}">${trazabilidad.registroEntradaOrigen.numeroRegistro}</c:when>
+
 				                                	<c:otherwise><span class="label label-danger"><spring:message code="regweb.registre.pendent"/></span></c:otherwise>
 				                                </c:choose>
 				                                </td>
@@ -317,7 +326,7 @@
                                                         <p rel="popupArriba" data-content="<c:out value="${trazabilidad.registroEntradaOrigen.registroDetalle.extracto}" escapeXml="true"/>" data-toggle="popover"><c:out value="${trazabilidad.registroEntradaOrigen.registroDetalle.extractoCorto}" escapeXml="true"/></p>
                                                     </c:if>
                                                 </td>
-                                                <td><fmt:formatDate value="${trazabilidad.registroSalida.fecha}" pattern="yyyy"/>/${trazabilidad.registroSalida.numeroRegistro}</td>
+                                                <td>${trazabilidad.registroSalida.numeroRegistro}</td>
                                                 <td class="center">
                                                     <a class="btn btn-info btn-sm"
                                                        href="<c:url value="/registroEntrada/${trazabilidad.registroEntradaOrigen.id}/detalle"/>"
@@ -357,7 +366,7 @@
                                         <tbody>
                                         <c:forEach var="registroSalida" items="${oficioRemision.registrosSalida}" varStatus="status">
                                             <tr>
-                                                <td><fmt:formatDate value="${registroSalida.fecha}" pattern="yyyy"/>/ ${registroSalida.numeroRegistro}</td>
+                                                <td>${registroSalida.numeroRegistro}</td>
                                                 <td><fmt:formatDate value="${registroSalida.fecha}" pattern="dd/MM/yyyy"/></td>
                                                 <td>${registroSalida.oficina.denominacion}</td>
                                                 <td>

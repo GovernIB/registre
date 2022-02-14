@@ -5,10 +5,11 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.commons.codec.binary.Base64;
 import org.plugin.geiser.api.AnexoG;
 import org.plugin.geiser.api.ApunteRegistro;
+import org.plugin.geiser.api.CanalNotificacion;
 import org.plugin.geiser.api.DocumentHelper;
+import org.plugin.geiser.api.DocumentacionFisica;
 import org.plugin.geiser.api.EstadoRegistro;
 import org.plugin.geiser.api.EstadoTramit;
 import org.plugin.geiser.api.EstadoTramitacion;
@@ -20,15 +21,19 @@ import org.plugin.geiser.api.PeticionConsultaGeiser;
 import org.plugin.geiser.api.PeticionRegistroEnvioGeiser;
 import org.plugin.geiser.api.PeticionRegistroGeiser;
 import org.plugin.geiser.api.Respuesta;
+import org.plugin.geiser.api.RespuestaBusquedaGeiser;
 import org.plugin.geiser.api.RespuestaBusquedaTramitGeiser;
 import org.plugin.geiser.api.RespuestaConsultaGeiser;
 import org.plugin.geiser.api.RespuestaRegistroGeiser;
 import org.plugin.geiser.api.TipoAsiento;
 import org.plugin.geiser.api.TipoDocumento;
+import org.plugin.geiser.api.TipoDocumentoAnexo;
+import org.plugin.geiser.api.TipoFirma;
 import org.plugin.geiser.api.TipoRespuesta;
+import org.plugin.geiser.api.TipoTransporte;
+import org.plugin.geiser.api.ValidezDocumento;
 import org.plugin.geiser.api.ws.AnexoType;
 import org.plugin.geiser.api.ws.ApunteRegistroType;
-import org.plugin.geiser.api.ws.CanalNotificacionEnum;
 import org.plugin.geiser.api.ws.EstadoAsientoEnum;
 import org.plugin.geiser.api.ws.EstadoTramitacionRegistroType;
 import org.plugin.geiser.api.ws.InteresadoType;
@@ -39,6 +44,7 @@ import org.plugin.geiser.api.ws.PeticionRegistroEnvioSimpleType;
 import org.plugin.geiser.api.ws.PeticionRegistroType;
 import org.plugin.geiser.api.ws.RespuestaType;
 import org.plugin.geiser.api.ws.ResultadoBusquedaEstadoTramitacionType;
+import org.plugin.geiser.api.ws.ResultadoBusquedaType;
 import org.plugin.geiser.api.ws.ResultadoConsultaType;
 import org.plugin.geiser.api.ws.ResultadoRegistroType;
 import org.plugin.geiser.api.ws.TipoAsientoEnum;
@@ -69,7 +75,7 @@ public class ConversionPluginHelper {
 					@Override
 					public PeticionRegistroType convert(PeticionRegistroGeiser source, Type<? extends PeticionRegistroType> destinationType) {
 						PeticionRegistroType target = new PeticionRegistroType();
-						target.setResumen(source.getResumen() + " - " + new Date().getTime());
+						target.setResumen(source.getResumen());
 						target.setEstado(EstadoAsientoEnum.FINALIZADO);
 						target.setCdAsunto(source.getCdAsunto());
 						if (source.getTipoAsiento() != null)
@@ -141,50 +147,144 @@ public class ConversionPluginHelper {
 					@Override
 					public InteresadoType convert(InteresadoG source, Type<? extends InteresadoType> destinationType) {
 						InteresadoType target = new InteresadoType();
-						target.setNombreInteresado(source.getNombre());
-						target.setPrimerApellidoInteresado(source.getPrimerApellido());
-						target.setSegundoApellidoInteresado(source.getSegundoApellido());
+						if (source.getPrimerApellido() != null && !source.getPrimerApellido().isEmpty()) { // Notib envia los dos valores siempre...
+							target.setNombreInteresado(source.getNombre());
+							target.setPrimerApellidoInteresado(source.getPrimerApellido());
+							target.setSegundoApellidoInteresado(source.getSegundoApellido());
+						}
 						if (source.getTipoDocumento() != null)
 							target.setTipoIdentificadorInteresado(convertir(source.getTipoDocumento(), TipoIdentificacionEnum.class));
 						target.setIdentificadorInteresado(source.getDocumento());
 						target.setMailInteresado(source.getEmail());
 						target.setTelefonoInteresado(source.getTelefono());
-						if (source.getCanalNotificacion() != null)
-							target.setCanalNotificacionInteresado(CanalNotificacionEnum.fromValue(source.getCanalNotificacion().name()));
-						if (source.getPais() != null)
-							target.setCdPaisInteresado(source.getPais());
-						if (source.getProvincia() != null)
-							target.setCdProvinciaInteresado(source.getProvincia());
-						if (source.getMunicipio() != null)
-							target.setCdMunicipioInteresado(source.getMunicipio());
+//						if (source.getCanalNotificacion() != null)
+//							target.setCanalNotificacionInteresado(CanalNotificacionEnum.fromValue(source.getCanalNotificacion().name()));
+//						target.setDireccionElectronicaInteresado(source.getDireccionElectronica());
+						//Format codigo País [3 dígitos]
+						String pais = source.getPais();
+						if (pais != null) {
+							while (pais.length() != 3) { // Completar hasta llegar a 3 dígitos
+								pais = "0" + pais;
+							}
+							target.setCdPaisInteresado(pais);
+						}
+						//Format codigo Província [2 dígitos]
+						String provincia = source.getProvincia();
+						if (provincia != null) {
+							provincia = provincia.length() == 1 ? "0" + provincia : provincia;
+							target.setCdProvinciaInteresado(provincia.length() == 1 ? "0" + provincia : provincia);
+						}
+						
+						//Format codigo Municipio  [5 dígitos -> provincia + municipio sin DC]
+						String municipio = source.getMunicipio();
+						if (municipio != null) {
+							municipio = municipio.substring(0, municipio.length() - 1);  // Eliminar dígito control
+							while (municipio.length() != 3) { // Completar hasta llegar a 3 dígitos
+								municipio = "0" + municipio;
+							}
+							municipio = provincia + municipio;
+							target.setCdMunicipioInteresado(municipio);
+						}
 						target.setDireccionInteresado(source.getDireccion());
 						target.setCodigoPostalInteresado(source.getCp());
-						target.setRazonSocialInteresado(source.getRazonSocial());
-						target.setDireccionElectronicaInteresado(source.getDireccionElectronica());
+						TipoDocumento tipoDocumento = source.getTipoDocumento();
+						if (tipoDocumento.equals(TipoDocumento.OTROS_ORIGEN_VALUE) || tipoDocumento.equals(TipoDocumento.CIF) || tipoDocumento.equals(TipoDocumento.NIF))
+							target.setRazonSocialInteresado(source.getRazonSocial());
 						target.setObservaciones(source.getObservaciones());
 						InteresadoG sourceRepresentante = source.getRepresentante();
 						if (sourceRepresentante != null) {
-							InteresadoType targetRepresentante = new InteresadoType();
-							targetRepresentante.setNombreRepresentante(sourceRepresentante.getNombre());
-							targetRepresentante.setPrimerApellidoRepresentante(sourceRepresentante.getPrimerApellido());
-							targetRepresentante.setSegundoApellidoRepresentante(sourceRepresentante.getSegundoApellido());
+//							InteresadoType targetRepresentante = new InteresadoType();
+							if (sourceRepresentante.getPrimerApellido() != null && !sourceRepresentante.getPrimerApellido().isEmpty()) {
+								target.setNombreRepresentante(sourceRepresentante.getNombre());
+								target.setPrimerApellidoRepresentante(sourceRepresentante.getPrimerApellido());
+								target.setSegundoApellidoRepresentante(sourceRepresentante.getSegundoApellido());
+							}
 							if (sourceRepresentante.getTipoDocumento() != null)
-								targetRepresentante.setTipoIdentificadorRepresentante(convertir(sourceRepresentante.getTipoDocumento(), TipoIdentificacionEnum.class));
-							targetRepresentante.setIdentificadorRepresentante(sourceRepresentante.getDocumento());
-							targetRepresentante.setMailRepresentante(sourceRepresentante.getEmail());
-							targetRepresentante.setTelefonoRepresentante(sourceRepresentante.getTelefono());
-							if (sourceRepresentante.getCanalNotificacion() != null)
-								targetRepresentante.setCanalNotificacionRepresentante(CanalNotificacionEnum.fromValue(sourceRepresentante.getCanalNotificacion().name()));
-							if (sourceRepresentante.getPais() != null)
-								targetRepresentante.setCdPaisRepresentante(sourceRepresentante.getPais());
-							if (sourceRepresentante.getProvincia() != null)
-								targetRepresentante.setCdProvinciaRepresentante(sourceRepresentante.getProvincia());
-							if (sourceRepresentante.getMunicipio() != null)
-								targetRepresentante.setCdMunicipioRepresentante(sourceRepresentante.getMunicipio());
-							targetRepresentante.setDireccionRepresentante(sourceRepresentante.getDireccion());
-							targetRepresentante.setCodigoPostalRepresentante(sourceRepresentante.getCp());
-							targetRepresentante.setRazonSocialRepresentante(sourceRepresentante.getRazonSocial());
-							targetRepresentante.setDireccionElectronicaRepresentante(sourceRepresentante.getDireccionElectronica());
+								target.setTipoIdentificadorRepresentante(convertir(sourceRepresentante.getTipoDocumento(), TipoIdentificacionEnum.class));
+							target.setIdentificadorRepresentante(sourceRepresentante.getDocumento());
+							target.setMailRepresentante(sourceRepresentante.getEmail());
+							target.setTelefonoRepresentante(sourceRepresentante.getTelefono());
+//							if (sourceRepresentante.getCanalNotificacion() != null)
+//								target.setCanalNotificacionRepresentante(CanalNotificacionEnum.fromValue(sourceRepresentante.getCanalNotificacion().name()));
+//							target.setDireccionElectronicaRepresentante(sourceRepresentante.getDireccionElectronica());
+						
+							//Format codigo País
+							String paisRepres = sourceRepresentante.getPais();
+							if (paisRepres != null) {
+								while (paisRepres.length() != 3) {
+									paisRepres = "0" + paisRepres;
+								}
+								target.setCdPaisRepresentante(paisRepres);
+							}
+							//Format codigo Província
+							String provinciaRepres = sourceRepresentante.getProvincia();
+							if (provinciaRepres != null) {
+								provinciaRepres = provinciaRepres.length() == 1 ? "0" + provinciaRepres : provinciaRepres;
+								target.setCdProvinciaRepresentante(provinciaRepres);
+							}
+							//Format codigo Municipio
+							String municipioRepres = sourceRepresentante.getMunicipio();
+							if (municipioRepres != null) {
+								municipioRepres = municipioRepres.substring(0, municipioRepres.length() - 1);  // Eliminar dígito control
+								while (municipioRepres.length() != 3) {
+									municipioRepres = "0" + municipioRepres;
+								}
+								municipioRepres = provincia + municipioRepres;
+								target.setCdMunicipioRepresentante(municipioRepres);
+							}
+							
+							target.setDireccionRepresentante(sourceRepresentante.getDireccion());
+							target.setCodigoPostalRepresentante(sourceRepresentante.getCp());
+							tipoDocumento = sourceRepresentante.getTipoDocumento();
+							if (tipoDocumento.equals(TipoDocumento.OTROS_ORIGEN_VALUE) || tipoDocumento.equals(TipoDocumento.CIF) || tipoDocumento.equals(TipoDocumento.NIF))
+								target.setRazonSocialRepresentante(sourceRepresentante.getRazonSocial());
+						}
+						return target;
+					}
+				});
+		mapperFactory.getConverterFactory().registerConverter(
+				new CustomConverter<InteresadoType, InteresadoG>() {
+					@Override
+					public InteresadoG convert(InteresadoType source, Type<? extends InteresadoG> destinationType) {
+						InteresadoG target = new InteresadoG();
+						target.setNombre(source.getNombreInteresado());
+						target.setPrimerApellido(source.getPrimerApellidoInteresado());
+						target.setSegundoApellido(source.getSegundoApellidoInteresado());
+						if (source.getTipoIdentificadorInteresado() != null)
+							target.setTipoDocumento(convertir(source.getTipoIdentificadorInteresado(), TipoDocumento.class));
+						target.setEmail(source.getMailInteresado());
+						target.setTelefono(source.getTelefonoInteresado());
+						if (source.getCanalNotificacionInteresado() != null)
+							target.setCanalNotificacion(CanalNotificacion.valueOf(source.getCanalNotificacionInteresado().name()));
+						target.setPais(source.getCdPaisInteresado());
+						target.setProvincia(source.getCdProvinciaInteresado());
+						target.setMunicipio(source.getCdMunicipioInteresado());
+						target.setDireccion(source.getDireccionInteresado());
+						target.setCp(source.getCodigoPostalInteresado());
+						target.setRazonSocial(source.getRazonSocialInteresado());
+						target.setDireccionElectronica(source.getDireccionElectronicaInteresado());
+						target.setObservaciones(source.getObservaciones());
+						target.setDocumento(source.getIdentificadorInteresado());
+						if (source.getTipoIdentificadorRepresentante() != null) {
+							InteresadoG representante = new InteresadoG();
+							representante.setNombre(source.getNombreRepresentante());
+							representante.setPrimerApellido(source.getPrimerApellidoRepresentante());
+							representante.setSegundoApellido(source.getSegundoApellidoRepresentante());
+							if (source.getTipoIdentificadorRepresentante() != null)
+								representante.setTipoDocumento(convertir(source.getTipoIdentificadorRepresentante(), TipoDocumento.class));
+							representante.setEmail(source.getMailRepresentante());
+							representante.setTelefono(source.getTelefonoRepresentante());
+							if (source.getCanalNotificacionRepresentante() != null)
+								representante.setCanalNotificacion(CanalNotificacion.valueOf(source.getCanalNotificacionRepresentante().name()));
+							representante.setPais(source.getCdPaisRepresentante());
+							representante.setProvincia(source.getCdProvinciaRepresentante());
+							representante.setMunicipio(source.getCdMunicipioRepresentante());
+							representante.setDireccion(source.getDireccionRepresentante());
+							representante.setCp(source.getCodigoPostalRepresentante());
+							representante.setRazonSocial(source.getRazonSocialRepresentante());
+							representante.setDireccionElectronica(source.getDireccionElectronicaRepresentante());
+							representante.setDocumento(source.getIdentificadorRepresentante());
+							target.setRepresentante(representante);
 						}
 						return target;
 					}
@@ -195,26 +295,60 @@ public class ConversionPluginHelper {
 					public AnexoType convert(AnexoG source, Type<? extends AnexoType> destinationType) {
 						AnexoType target = new AnexoType();
 						target.setNombre(source.getTitulo());
-						target.setValidez(ValidezDocumentoEnum.valueOf(source.getValidezDocumento().name()));
-						target.setTipoDocumento(TipoDocAnexoEnum.valueOf(source.getTipoDocumentoAnexo().name()));
+						if (source.getValidezDocumento() != null)
+							target.setValidez(ValidezDocumentoEnum.valueOf(source.getValidezDocumento().name()));
+						if (source.getTipoDocumentoAnexo() != null)
+							target.setTipoDocumento(TipoDocAnexoEnum.valueOf(source.getTipoDocumentoAnexo().name()));
 						target.setAnexo(source.getAnexoBase64());
-//						target.setHash(DocumentHelper.getHash512Document(Base64.decodeBase64(source.getAnexoBase64())));
+						target.setHash(DocumentHelper.decodeBase64Hash(source.getHash()));
 						if (source.getHash() != null)
-							target.setHash(DocumentHelper.getHash512Document(Base64.decodeBase64(source.getAnexoBase64())));
+//							target.setHash(DocumentHelper.getHash512Document(Base64.decodeBase64(source.getAnexoBase64())));
 						target.setTipoMime(source.getTipoMime());
 						target.setObservaciones(source.getObservaciones());
 						target.setTamanioFichero(source.getTamanioFichero());
 						target.setTipoFirma(TipoFirmaEnum.fromValue(source.getTipoFirma().name()));
 						if (source.getFirmaBase64() != null) {
-							target.setTipoFirma(TipoFirmaEnum.valueOf(source.getTipoFirma().name()));
+							if (source.getTipoFirma() != null)
+								target.setTipoFirma(TipoFirmaEnum.valueOf(source.getTipoFirma().name()));
 							target.setFirma(source.getFirmaBase64());
-//							target.setHashFirma(DocumentHelper.getHash512Document(Base64.decodeBase64(source.getFirmaBase64())));
+							target.setHashFirma(DocumentHelper.decodeBase64Hash(source.getHashFirma()));
 							if (source.getHashFirma() != null)
-								target.setHashFirma(DocumentHelper.getHash512Document(Base64.decodeBase64(source.getFirmaBase64())));
+//								target.setHashFirma(DocumentHelper.getHash512Document(Base64.decodeBase64(source.getFirmaBase64())));
 							target.setNombreFirma(source.getNombreFirma());
 							target.setTamanioFicheroFirma(source.getTamanioFicheroFirma());
 							target.setTipoMimeFirma(source.getTipoMimeFirma());
 						}
+						return target;
+					}
+				});
+		mapperFactory.getConverterFactory().registerConverter(
+				new CustomConverter<AnexoType, AnexoG>() {
+					@Override
+					public AnexoG convert(AnexoType source, Type<? extends AnexoG> destinationType) {
+						AnexoG target = new AnexoG();
+						target.setTitulo(source.getNombre());
+						if (source.getValidez() != null)
+							target.setValidezDocumento(ValidezDocumento.valueOf(source.getValidez().name()));
+						if (source.getTipoDocumento() != null)
+							target.setTipoDocumentoAnexo(TipoDocumentoAnexo.valueOf(source.getTipoDocumento().name()));
+						target.setAnexoBase64(source.getAnexo());
+//						target.setHash(DocumentHelper.getHash512Document(Base64.decodeBase64(source.getAnexoBase64())));
+						if (source.getHash() != null)
+							target.setHashBase64(source.getHash());
+						target.setTipoMime(source.getTipoMime());
+						target.setObservaciones(source.getObservaciones());
+						target.setTamanioFichero(source.getTamanioFichero());
+						if (source.getTipoFirma() != null)
+							target.setTipoFirma(TipoFirma.valueOf(source.getTipoFirma().name()));
+						if (source.getFirma() != null) {
+							target.setFirmaBase64(source.getFirma());
+							if (source.getHashFirma() != null)
+								target.setHashFirmaBase64(source.getHashFirma());
+							target.setNombreFirma(source.getNombreFirma());
+							target.setTamanioFicheroFirma(source.getTamanioFicheroFirma());
+							target.setTipoMimeFirma(source.getTipoMimeFirma());
+						}
+						target.setIdentificador(source.getIdentificador());
 						return target;
 					}
 				});
@@ -224,6 +358,7 @@ public class ConversionPluginHelper {
 					public PeticionConsultaType convert(PeticionConsultaGeiser source, Type<? extends PeticionConsultaType> destinationType) {
 						PeticionConsultaType target = new PeticionConsultaType();
 						target.setNuRegistro(source.getNuRegistro());
+						target.setIncluirContenidoAnexo(source.isIncluirContenidoAnexo());
 						return target;
 					}
 				});
@@ -232,9 +367,14 @@ public class ConversionPluginHelper {
 					@Override
 					public PeticionBusquedaType convert(PeticionBusquedaGeiser source, Type<? extends PeticionBusquedaType> destinationType) {
 						PeticionBusquedaType target = new PeticionBusquedaType();
-						//TODO: conversión
-						target.setTimestampRegistradoDesde(source.getFechaRegistroInicio().toString());
-						target.setTimestampRegistradoHasta(source.getFechaRegistroFinal().toString());
+						target.setTimestampRegistradoDesde(source.getFechaRegistroInicio());
+						target.setTimestampRegistradoHasta(source.getFechaRegistroFinal());
+						target.setCdOrganoDestino(source.getCdOrganoDestino());
+						if (source.getTipoAsiento() != null)
+							target.setTipoAsiento(TipoAsientoEnum.fromValue(source.getTipoAsiento().name()));
+						if (source.getEstado() != null)
+							target.setEstado(EstadoAsientoEnum.valueOf(source.getEstado().name()));
+						
 						return target;
 					}
 				});
@@ -262,7 +402,7 @@ public class ConversionPluginHelper {
 						target.setRespuesta(convertir(source.getRespuesta(), Respuesta.class));
 						target.setNuRegistro(source.getApunte().getNuRegistro());
 						try {
-							SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddhhmmss");
+							SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
 							Date fechaRegistro = sdf.parse(source.getApunte().getTimestampRegistrado());
 							target.setFechaRegistro(fechaRegistro);
 						} catch (ParseException e) {
@@ -289,7 +429,7 @@ public class ConversionPluginHelper {
 						EstadoTramitacion target = new EstadoTramitacion();
 						target.setEstado(EstadoTramit.valueOf(source.getEstado().name()));
 						try {
-							SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddhhmmss");
+							SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
 							if (source.getTimestampConfirmadoRechazado() != null) {
 								Date fechaEstado = sdf.parse(source.getTimestampConfirmadoRechazado());
 								target.setFechaEstado(fechaEstado);
@@ -324,8 +464,47 @@ public class ConversionPluginHelper {
 						ApunteRegistro target = new ApunteRegistro();
 						target.setTipoAsiento(TipoAsiento.valueOf(source.getTipoAsiento().name()));
 						target.setNuRegistro(source.getNuRegistro());
+						target.setNuRegistroOrigen(source.getNuRegistroOrigen());
 						target.setEstado(EstadoRegistro.valueOf(source.getEstado().name()));
-						//TODO: completar
+						try {
+							SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+							Date fechaRegistro = sdf.parse(source.getTimestampRegistrado());
+							target.setFechaRegistro(fechaRegistro);
+						} catch (ParseException e) {
+							throw new GeiserPluginException("Ha habido un error interpretando la respuesta de GEISER");
+						}
+						target.setTimeStampRegistro(source.getTimestampRegistrado());
+						target.setResumen(source.getResumen());
+						if (source.getDocumentacionFisica() != null)
+							target.setDocumentacionFisica(DocumentacionFisica.valueOf(source.getDocumentacionFisica().name()));
+						target.setCdAmbitoOrigen(source.getCdAmbitoCreacion());
+						target.setNombreAmbitoOrigen(source.getAmbitoCreacion());
+						target.setOrganoOrigen(source.getCdOrganoOrigen());
+						target.setOrganoOrigenDenominacion(source.getOrganoOrigen());
+						target.setCdAmbitoActual(source.getCdAmbitoActual());
+						target.setNombreAmbitoActual(source.getAmbitoActual());
+						target.setCdAmbitoDestino(source.getCdAmbitoActual());
+						target.setNombreAmbitoDestino(source.getAmbitoActual());
+						target.setOrganoDestino(source.getCdOrganoDestino());
+						target.setOrganoDestinoDenominacion(source.getOrganoDestino());
+						
+						target.setCdAsunto(source.getCdAsunto());
+						target.setReferenciaExterna(source.getReferenciaExterna());
+						target.setNuExpediente(source.getNuExpediente());
+						target.setNuTransporte(source.getNuTransporte());
+						target.setNombreUsuario(source.getNombreUsuario());
+						target.setContactoUsuario(source.getContactoUsuario());
+						
+						if (source.getTipoTransporte() != null)
+							target.setTipoTransporte(TipoTransporte.valueOf(source.getTipoTransporte().name()));
+						target.setExpone(source.getExpone());
+						target.setSolicita(source.getSolicita());
+						
+						target.setObservaciones(source.getObservaciones());
+						if (source.getAnexos() != null && !source.getAnexos().isEmpty())
+							target.setAnexos(convertirList(source.getAnexos(), AnexoG.class));
+						if (source.getInteresados() != null && !source.getInteresados().isEmpty())
+							target.setInteresados(convertirList(source.getInteresados(), InteresadoG.class));
 						return target;
 					}
 				});
@@ -337,6 +516,18 @@ public class ConversionPluginHelper {
 						target.setCodigo(source.getCodigo());
 						target.setMensaje(source.getMensaje());
 						target.setTipoRespuesta(TipoRespuesta.valueOf(source.getTipo().name()));
+						return target;
+					}
+				});
+		mapperFactory.getConverterFactory().registerConverter(
+				new CustomConverter<ResultadoBusquedaType, RespuestaBusquedaGeiser>() {
+					@Override
+					public RespuestaBusquedaGeiser convert(ResultadoBusquedaType source, Type<? extends RespuestaBusquedaGeiser> destinationType) {
+						RespuestaBusquedaGeiser target = new RespuestaBusquedaGeiser();
+						target.setRespuesta(convertir(source.getRespuesta(), Respuesta.class));
+						target.setApuntes(convertirList(source.getApuntes(), ApunteRegistro.class));
+						target.setNuTotalApuntes(source.getNuTotalApuntes());
+						target.setUidIterator(source.getUidIterator());
 						return target;
 					}
 				});
@@ -357,6 +548,27 @@ public class ConversionPluginHelper {
 								return TipoIdentificacionEnum.OTROS_PERSONA_FISICA;
 							case PASAPORTE:
 								return TipoIdentificacionEnum.PASAPORTE;
+						}
+						return null;
+					}
+				});
+		mapperFactory.getConverterFactory().registerConverter(
+				new CustomConverter<TipoIdentificacionEnum, TipoDocumento>() {
+					@Override
+					public TipoDocumento convert(TipoIdentificacionEnum source, Type<? extends TipoDocumento> destinationType) {
+						switch (source) {
+							case CIF:
+								return TipoDocumento.CIF;
+							case DOCUMENTO_IDENTIFICACION_EXTRANJEROS:
+								return TipoDocumento.NIE;
+							case NIF:
+								return TipoDocumento.NIF;
+							case CODIGO_DE_ORIGEN:
+								return TipoDocumento.OTROS_ORIGEN_VALUE;
+							case OTROS_PERSONA_FISICA:
+								return TipoDocumento.OTROS_PERSONA_FISICA;
+							case PASAPORTE:
+								return TipoDocumento.PASAPORTE;
 						}
 						return null;
 					}

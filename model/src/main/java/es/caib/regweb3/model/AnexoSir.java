@@ -106,6 +106,7 @@ public class AnexoSir implements Serializable {
      */
     private AnexoSir documento;
 
+    private boolean isAnexoFirma;
 
     public AnexoSir() {
     }
@@ -140,13 +141,21 @@ public class AnexoSir implements Serializable {
     public void setNombreFichero(String nombreFichero) {
         this.nombreFichero = nombreFichero;
     }
-
-    @Column(name = "IDENTIFICADOR_FICHERO", length = 50, nullable = false)
+	@Column(name = "IDENTIFICADOR_FICHERO", length = 50, nullable = false)
     public String getIdentificadorFichero() {
         return identificadorFichero;
     }
+	
+	@Transient
+    public boolean isAnexoFirma() {
+		return isAnexoFirma;
+	}
 
-    public void setIdentificadorFichero(String identificadorFichero) {
+	public void setAnexoFirma(boolean isAnexoFirma) {
+		this.isAnexoFirma = isAnexoFirma;
+	}
+
+	public void setIdentificadorFichero(String identificadorFichero) {
         this.identificadorFichero = identificadorFichero;
     }
 

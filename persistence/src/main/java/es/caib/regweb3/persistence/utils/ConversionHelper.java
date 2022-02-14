@@ -1,13 +1,17 @@
 package es.caib.regweb3.persistence.utils;
 
-import java.util.ArrayList;
-import java.util.List;
+import static es.caib.regweb3.utils.RegwebConstantes.CODIGO_SICRES_BY_TIPO_DOCUMENTO;
+import static es.caib.regweb3.utils.RegwebConstantes.TIPO_DOCUMENTO_FICHERO_TECNICO;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import javax.ejb.EJB;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
 import org.plugin.geiser.api.AnexoG;
+import org.plugin.geiser.api.ApunteRegistro;
 import org.plugin.geiser.api.CanalNotificacion;
 import org.plugin.geiser.api.DocumentacionFisica;
 import org.plugin.geiser.api.InteresadoG;
@@ -24,14 +28,30 @@ import org.plugin.geiser.api.TipoTransporte;
 import org.plugin.geiser.api.ValidezDocumento;
 import org.springframework.stereotype.Component;
 
+import es.caib.dir3caib.ws.api.oficina.Dir3CaibObtenerOficinasWs;
+import es.caib.dir3caib.ws.api.oficina.OficinaTF;
 import es.caib.regweb3.model.AnexoSir;
+import es.caib.regweb3.model.CatLocalidad;
+import es.caib.regweb3.model.CatPais;
+import es.caib.regweb3.model.CatProvincia;
 import es.caib.regweb3.model.Interesado;
 import es.caib.regweb3.model.InteresadoSir;
 import es.caib.regweb3.model.RegistroDetalle;
 import es.caib.regweb3.model.RegistroEntrada;
 import es.caib.regweb3.model.RegistroSalida;
 import es.caib.regweb3.model.RegistroSir;
+import es.caib.regweb3.model.sir.TipoAnotacion;
+import es.caib.regweb3.model.sir.TipoDocumentoIdentificacion;
+import es.caib.regweb3.model.utils.EstadoRegistroSir;
+import es.caib.regweb3.model.utils.IndicadorPrueba;
+import es.caib.regweb3.model.utils.TipoRegistro;
 import es.caib.regweb3.persistence.ejb.AnexoSirLocal;
+import es.caib.regweb3.persistence.ejb.ArchivoLocal;
+import es.caib.regweb3.persistence.ejb.CatLocalidadLocal;
+import es.caib.regweb3.persistence.ejb.CatPaisLocal;
+import es.caib.regweb3.persistence.ejb.CatProvinciaLocal;
+import es.caib.regweb3.utils.Dir3CaibUtils;
+import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.RegwebUtils;
 import ma.glasnost.orika.CustomConverter;
 import ma.glasnost.orika.MapperFacade;
@@ -43,7 +63,15 @@ import ma.glasnost.orika.metadata.Type;
 public class ConversionHelper {
 
 	@EJB(mappedName = "regweb3/AnexoSirEJB/local")
-	AnexoSirLocal anexoSirEjb;
+	private AnexoSirLocal anexoSirEjb;
+	@EJB(mappedName = "regweb3/ArchivoEJB/local")
+	private ArchivoLocal archivoEjb;
+	@EJB(mappedName = "regweb3/CatPaisEJB/local")
+	private CatPaisLocal catPaisEjb;
+	@EJB(mappedName = "regweb3/CatProvinciaEJB/local")
+	private CatProvinciaLocal catProvinciaEjb;
+	@EJB(mappedName = "regweb3/CatLocalidadEJB/local")
+	private CatLocalidadLocal catLocalidadEjb;
 	
 	private MapperFactory mapperFactory;
 	
@@ -166,16 +194,43 @@ public class ConversionHelper {
 						target.setEmail(StringUtils.stripToNull(source.getEmail()));
 						target.setTelefono(StringUtils.stripToNull(source.getTelefono()));
 						target.setCanalNotificacion(CanalNotificacion.getCanalNotificacion(source.getCanal()));
-						if (source.getPais() != null)
-							target.setPais(StringUtils.stripToNull(String.valueOf(source.getPais().getCodigoPais())));
-						if (source.getProvincia() != null)
-							target.setProvincia(StringUtils.stripToNull(String.valueOf(source.getProvincia().getCodigoProvincia())));
-						if (source.getLocalidad() != null)
-							target.setMunicipio(StringUtils.stripToNull(String.valueOf(source.getLocalidad().getCodigoLocalidad())));
+						target.setDireccionElectronica(StringUtils.stripToNull(source.getDireccionElectronica()));
+						CatPais catPais = source.getPais(); 
+						if (catPais != null) {
+							if (catPais.getCodigoPais() == null) { //TODO: perquè no carrega? *revisar si està carregat
+								try {
+									catPais = catPaisEjb.findById(catPais.getId());
+								} catch (Exception e) {
+									e.printStackTrace();
+								}
+							}
+							target.setPais(StringUtils.stripToNull(String.valueOf(catPais.getCodigoPais())));
+						}
+						CatProvincia catProvincia = source.getProvincia();
+						if (catProvincia != null) {
+							if (catProvincia.getCodigoProvincia() == null) { //TODO: perquè no carrega? *revisar si està carregat
+								try {
+									catProvincia = catProvinciaEjb.findById(catProvincia.getId());
+								} catch (Exception e) {
+									e.printStackTrace();
+								}
+							}
+							target.setProvincia(StringUtils.stripToNull(String.valueOf(catProvincia.getCodigoProvincia())));
+						}
+						CatLocalidad catLocalidad = source.getLocalidad();
+						if (catLocalidad != null) {
+							if (catLocalidad.getCodigoLocalidad() == null) { //TODO: perquè no carrega? *revisar si està carregat
+								try {
+									catLocalidad = catLocalidadEjb.findById(catLocalidad.getId());
+								} catch (Exception e) {
+									e.printStackTrace();
+								}
+							}
+							target.setMunicipio(StringUtils.stripToNull(String.valueOf(catLocalidad.getCodigoLocalidad())));
+						}
 						target.setDireccion(StringUtils.stripToNull(source.getDireccion()));
 						target.setCp(StringUtils.stripToNull(source.getCp()));
 						target.setRazonSocial(StringUtils.stripToNull(source.getRazonSocial()));
-						target.setDireccionElectronica(StringUtils.stripToNull(source.getDireccionElectronica()));
 						target.setObservaciones(StringUtils.stripToNull(source.getObservaciones()));
 						if (source.getIsRepresentante()) {
 							target.setRepresentante(
@@ -211,6 +266,7 @@ public class ConversionHelper {
 						target.setDireccionElectronica(StringUtils.stripToNull(source.getDireccionElectronicaHabilitadaInteresado()));
 						target.setObservaciones(StringUtils.stripToNull(source.getObservaciones()));
 						if (source.getRepresentante()) {
+							target.setRepresentante(new InteresadoG());
 							target.getRepresentante().setNombre(StringUtils.stripToNull(source.getNombreInteresado()));
 							target.getRepresentante().setPrimerApellido(StringUtils.stripToNull(source.getPrimerApellidoInteresado()));
 							target.getRepresentante().setSegundoApellido(StringUtils.stripToNull(source.getSegundoApellidoInteresado()));
@@ -231,6 +287,59 @@ public class ConversionHelper {
 							target.getRepresentante().setDireccionElectronica(StringUtils.stripToNull(source.getDireccionElectronicaHabilitadaInteresado()));
 							target.getRepresentante().setObservaciones(StringUtils.stripToNull(source.getObservaciones()));
 						}
+						return target;
+					}
+				});
+		mapperFactory.getConverterFactory().registerConverter(
+				new CustomConverter<InteresadoG, InteresadoSir>() {
+					@Override
+					public InteresadoSir convert(InteresadoG source, Type<? extends InteresadoSir> destinationType) {
+						InteresadoSir target = new InteresadoSir();
+						target.setNombreInteresado(source.getNombre());
+						target.setPrimerApellidoInteresado(source.getPrimerApellido());
+						target.setSegundoApellidoInteresado(source.getSegundoApellido());
+						if (source.getTipoDocumento() != null)
+							target.setTipoDocumentoIdentificacionInteresado(source.getTipoDocumento().getName());
+						target.setDocumentoIdentificacionInteresado(source.getDocumento());
+						target.setCorreoElectronicoInteresado(source.getEmail());
+						target.setTelefonoInteresado(source.getTelefono());
+						if (source.getCanalNotificacion() != null)
+							target.setCanalPreferenteComunicacionInteresado(source.getCanalNotificacion().getName());
+						
+						target.setCodigoPaisInteresado(source.getPais());
+						target.setCodigoProvinciaInteresado(source.getProvincia());
+						target.setCodigoMunicipioInteresado(source.getMunicipio());
+						
+						target.setDireccionInteresado(source.getDireccion());
+						target.setCodigoPostalInteresado(source.getCp());
+						target.setRazonSocialInteresado(source.getRazonSocial());
+						target.setDireccionElectronicaHabilitadaInteresado(source.getDireccionElectronica());
+						target.setObservaciones(source.getObservaciones());
+						
+						if (source.getRepresentante() != null) {
+							InteresadoG representante = source.getRepresentante();
+							target.setNombreRepresentante(representante.getNombre());
+							target.setPrimerApellidoRepresentante(representante.getPrimerApellido());
+							target.setSegundoApellidoRepresentante(representante.getSegundoApellido());
+							if (representante.getTipoDocumento() != null)
+								target.setTipoDocumentoIdentificacionRepresentante(representante.getTipoDocumento().getName());
+							target.setDocumentoIdentificacionRepresentante(representante.getDocumento());
+							target.setCorreoElectronicoRepresentante(representante.getEmail());
+							target.setTelefonoRepresentante(representante.getTelefono());
+							if (representante.getCanalNotificacion() != null)
+								target.setCanalPreferenteComunicacionRepresentante(representante.getCanalNotificacion().getName());
+							
+							target.setCodigoPaisRepresentante(representante.getPais());
+							target.setCodigoProvinciaRepresentante(representante.getProvincia());
+							target.setCodigoMunicipioRepresentante(representante.getMunicipio());
+							
+							target.setDireccionRepresentante(representante.getDireccion());
+							target.setCodigoPostalRepresentante(representante.getCp());
+							target.setRazonSocialRepresentante(representante.getRazonSocial());
+							target.setDireccionElectronicaHabilitadaRepresentante(representante.getDireccionElectronica());
+							target.setObservaciones(representante.getObservaciones());
+						}
+						
 						return target;
 					}
 				});
@@ -278,12 +387,79 @@ public class ConversionHelper {
 					}
 				});
 		mapperFactory.getConverterFactory().registerConverter(
+				new CustomConverter<AnexoG, AnexoSir>() {
+					@Override
+					public AnexoSir convert(AnexoG source, Type<? extends AnexoSir> destinationType) {
+						AnexoSir target = null;
+						// Podria no venir informado el contenido
+						if (source.getAnexoBase64() != null) {
+							// ================= SEGMENTO 1: DOCUMENT ==================
+							target =  new AnexoSir();
+							// Documento
+							target.setNombreFichero(source.getTitulo());
+							target.setIdentificadorFichero(source.getIdentificador());
+							target.setHash(source.getHashBase64());
+
+							ArchivoManager am = null;
+	                        try {
+	                            am = new ArchivoManager(archivoEjb, source.getTitulo(), source.getTipoMime(), Base64.decodeBase64(source.getAnexoBase64()));
+	                            target.setAnexo(am.prePersist());
+	                        } catch (Exception e) {
+	                            e.printStackTrace();
+	                        }
+	                        if (source.getValidezDocumento() != null)
+	                        	target.setValidezDocumento(source.getValidezDocumento().getValue());
+							if (source.getTipoDocumentoAnexo() != null)
+								target.setTipoDocumento(source.getTipoDocumentoAnexo().getValue());
+							target.setTipoMIME(source.getTipoMime());
+							target.setObservaciones(source.getObservaciones());
+							target.setAnexoData(source.getAnexo());
+							
+//							 Firma externa
+							if (source.getTipoFirma().equals(TipoFirma.EXTERNA)) {
+								target.setFirma(source.getFirmaBase64());
+							}
+							if (source.getTipoFirma().equals(TipoFirma.EMBEBIDA)) {
+								target.setIdentificadorDocumentoFirmado(source.getIdentificador());
+							}
+						}
+//						Es una firma dettached
+						if (source.getAnexoBase64() == null && source.getFirmaBase64() != null) {
+							// ================= SEGMENTO 2: FIRMA ==================
+							target =  new AnexoSir();
+							target.setNombreFichero(source.getNombreFirma());
+							target.setIdentificadorFichero(source.getIdentificador());
+							target.setHash(source.getHashFirmaBase64());
+							target.setAnexoFirma(true);
+							ArchivoManager am = null;
+	                        try {
+	                            am = new ArchivoManager(archivoEjb, source.getNombreFirma(), source.getTipoMimeFirma(), Base64.decodeBase64(source.getFirmaBase64()));
+	                            target.setAnexo(am.prePersist());
+	                        } catch (Exception e) {
+	                            e.printStackTrace();
+	                        }
+	                        target.setTipoMIME(source.getTipoMimeFirma());
+	                        target.setObservaciones(source.getObservaciones());
+//	                        target.setFirma(source.getFirmaBase64());
+	                        if (source.getValidezDocumento() != null)
+	                        	target.setValidezDocumento(source.getValidezDocumento().getValue());
+	                        target.setTipoDocumento(CODIGO_SICRES_BY_TIPO_DOCUMENTO.get(TIPO_DOCUMENTO_FICHERO_TECNICO));
+						}
+						return target;
+					}
+				});
+		mapperFactory.getConverterFactory().registerConverter(
 				new CustomConverter<RegistroSir, PeticionBusquedaTramitGeiser>() {
 					@Override
 					public PeticionBusquedaTramitGeiser convert(RegistroSir source, Type<? extends PeticionBusquedaTramitGeiser> destinationType) {
 						PeticionBusquedaTramitGeiser target = new PeticionBusquedaTramitGeiser();
 						InteresadoSir primerInteresado = source.getInteresados().get(0);
-						target.setNuRegistro(source.getNumeroRegistro());
+
+			    		// Consultar con número origen o destino
+						if (source.getNumeroRegistroOrigen() != null)
+							target.setNuRegistro(source.getNumeroRegistroOrigen());
+						else
+							target.setNuRegistro(source.getNumeroRegistro());
 						target.setTipoDocumentoInteresadoRepre(TipoDocumento.getTipoDocumentoName(primerInteresado.getTipoDocumentoIdentificacionInteresado()));
 						target.setDocumentoInteresadoRepre(primerInteresado.getDocumentoIdentificacionInteresado());
 						target.setIncluirEnviosSir(true);
@@ -303,6 +479,173 @@ public class ConversionHelper {
 						target.setNuRegistro(source.getNumeroRegistro());
 						target.setOficinaOrigen(source.getCodigoEntidadRegistralOrigen());
 						target.setUsuario(source.getDocumentoUsuario());
+						target.setIncluirContenidoAnexo(source.isIncluirContenidoAnexo());
+						return target;
+					}
+				});
+		mapperFactory.getConverterFactory().registerConverter(
+				new CustomConverter<ApunteRegistro, RegistroSir>() {
+					@Override
+					public RegistroSir convert(ApunteRegistro source, Type<? extends RegistroSir> destinationType) {
+						RegistroSir target = new RegistroSir();
+						String nombreOficinaOrigen = null, nombreOficinaDestino = null, nombreUnidadOrigen = null, nombreUnidadDestino = null;
+						target.setEstado(EstadoRegistroSir.getEstadoRegistroSirByName(source.getEstado().name()));
+						target.setFechaRecepcion(new Date());
+						target.setNumeroRegistroOrigen(source.getNuRegistroOrigen());
+						
+						// Segmento De_Origen_o_Remitente [OFICNA / ENTIDAD]
+						// Oficina origen
+						String oficinaUnidadOrigen = source.getCdAmbitoOrigen();
+						if (StringUtils.isNotEmpty(oficinaUnidadOrigen) && oficinaUnidadOrigen.startsWith("O")) { // Oficina
+							target.setCodigoEntidadRegistralOrigen(StringUtils.stripToNull(oficinaUnidadOrigen));
+							if (StringUtils.isNotEmpty(source.getNombreAmbitoOrigen())) {
+								target.setDecodificacionEntidadRegistralOrigen(StringUtils.stripToNull(source.getNombreAmbitoOrigen()));
+							} else {
+								nombreOficinaOrigen = Dir3CaibUtils.denominacion(PropiedadGlobalUtil.getDir3CaibServer(), oficinaUnidadOrigen, RegwebConstantes.OFICINA);
+								target.setDecodificacionEntidadRegistralOrigen(nombreOficinaOrigen);
+							}
+						}
+					
+						// Entidad origen
+						if (StringUtils.isNotEmpty(source.getOrganoOrigen())) {
+							target.setCodigoUnidadTramitacionOrigen(source.getOrganoOrigen());
+		                    if (StringUtils.isNotEmpty(source.getOrganoOrigenDenominacion())) {
+		                    	target.setDecodificacionUnidadTramitacionOrigen(StringUtils.stripToNull(source.getOrganoOrigenDenominacion()));
+		                    } else {
+		                    	nombreUnidadOrigen = Dir3CaibUtils.denominacion(PropiedadGlobalUtil.getDir3CaibServer(), source.getOrganoOrigen(), RegwebConstantes.UNIDAD);
+		                    	target.setDecodificacionUnidadTramitacionOrigen(nombreUnidadOrigen);
+		                    }
+		                }
+						
+						target.setNumeroRegistro(StringUtils.stripToNull(source.getNuRegistro()));
+						target.setTimestampRegistro(StringUtils.stripToNull(source.getTimeStampRegistro()));
+						target.setFechaRegistro(source.getFechaRegistro());
+						
+						// Segmento De_Destino [OFICNA / ENTIDAD]
+						// Oficina destino
+						if (StringUtils.isNotEmpty(source.getCdAmbitoActual()) && source.getCdAmbitoActual().startsWith("O"))
+							target.setCodigoEntidadRegistral(StringUtils.stripToNull(source.getCdAmbitoActual()));
+						else
+							target.setCodigoEntidadRegistral(StringUtils.stripToNull(oficinaUnidadOrigen));
+						// Oficina destino interno
+						String oficinaUnidadDestino = source.getCdAmbitoDestino();
+						if (StringUtils.isNotEmpty(oficinaUnidadDestino) && oficinaUnidadDestino.startsWith("O")) {
+							target.setCodigoEntidadRegistralDestino(oficinaUnidadDestino);
+							if (StringUtils.isNotEmpty(source.getNombreAmbitoDestino())) {
+								target.setDecodificacionEntidadRegistralDestino(source.getNombreAmbitoDestino());
+							} else {
+								nombreOficinaDestino = Dir3CaibUtils.denominacion(PropiedadGlobalUtil.getDir3CaibServer(), oficinaUnidadDestino, RegwebConstantes.OFICINA);
+								target.setDecodificacionEntidadRegistralDestino(nombreOficinaDestino);
+							}
+		                } else { // Se ha aceptado en oficina y se ha enviado a la unidad, entidad registral destino = oficina donde se ha aceptado
+		                	target.setCodigoEntidadRegistralDestino(StringUtils.stripToNull(oficinaUnidadOrigen));
+							if (StringUtils.isNotEmpty(source.getNombreAmbitoOrigen())) {
+								target.setDecodificacionEntidadRegistralDestino(StringUtils.stripToNull(source.getNombreAmbitoOrigen()));
+							} else {
+								nombreOficinaOrigen = Dir3CaibUtils.denominacion(PropiedadGlobalUtil.getDir3CaibServer(), oficinaUnidadOrigen, RegwebConstantes.OFICINA);
+								target.setDecodificacionEntidadRegistralDestino(nombreOficinaOrigen);
+							}
+		                }
+						// Entidad destino
+						if (StringUtils.isNotEmpty(source.getOrganoDestino())) {
+							target.setCodigoUnidadTramitacionDestino(source.getOrganoDestino());
+		                    if (StringUtils.isNotEmpty(source.getOrganoDestinoDenominacion())) {
+		                    	target.setDecodificacionUnidadTramitacionDestino(StringUtils.stripToNull(source.getOrganoDestinoDenominacion()));
+		                    } else {
+		                    	nombreUnidadDestino = Dir3CaibUtils.denominacion(PropiedadGlobalUtil.getDir3CaibServer(), source.getOrganoDestino(), RegwebConstantes.UNIDAD);
+		                    	target.setDecodificacionUnidadTramitacionDestino(nombreUnidadDestino);
+		                    }
+		                }
+						
+						// Segmento De_Asunto de_Asunto
+						target.setResumen(source.getResumen());
+						target.setCodigoAsunto(source.getCdAsunto());
+						target.setReferenciaExterna(source.getReferenciaExterna());
+						target.setNumeroExpediente(source.getNuExpediente());
+						
+						// Segmento De_Internos_Control
+						target.setAplicacion("GEISER");
+						target.setTipoAnotacion(TipoAnotacion.ENVIO.getValue());
+						target.setDecodificacionTipoAnotacion(TipoAnotacion.ENVIO.getName());
+						target.setNumeroTransporte(source.getNuTransporte());
+						target.setNombreUsuario(source.getNombreUsuario());
+						target.setContactoUsuario(source.getContactoUsuario());
+						target.setObservacionesApunte(source.getObservaciones());
+						target.setDecodificacionEntidadRegistralInicio(source.getOrganoOrigenDenominacion());
+						
+						// [OFICINA ORIGEN]
+						if (StringUtils.isNotEmpty(oficinaUnidadOrigen) && oficinaUnidadOrigen.startsWith("O")) {
+							target.setCodigoEntidadRegistralInicio(oficinaUnidadOrigen);
+							if (StringUtils.isNotEmpty(source.getNombreAmbitoOrigen())) {
+			                	target.setDecodificacionEntidadRegistralInicio(source.getNombreAmbitoOrigen());
+			                } else {
+			                	target.setDecodificacionEntidadRegistralInicio(nombreOficinaOrigen);
+			                }
+						}
+						// Otros
+						if (source.getTipoTransporte() != null)
+							target.setTipoTransporte(source.getTipoTransporte().getName());
+						if (source.getTipoAsiento() != null)
+							target.setTipoRegistro(TipoRegistro.valueOf(source.getTipoAsiento().name()));
+						if (source.getDocumentacionFisica() != null)
+							target.setDocumentacionFisica(source.getDocumentacionFisica().getName());
+						target.setIndicadorPrueba(IndicadorPrueba.NORMAL);
+						
+						// Formulario
+						target.setExpone(source.getExpone());
+						target.setSolicita(source.getSolicita());
+
+						// Si se trata de una Salida y no tiene Interesados creamos uno a partir de la Entidad destino
+						if (source.getTipoAsiento().equals(TipoAsiento.SALIDA) && (source.getAnexos() == null || source.getAnexos().isEmpty())) {
+							InteresadoSir intresadoSirSalida = new InteresadoSir();
+							if (source.getOrganoDestino() != null) {
+								intresadoSirSalida.setTipoDocumentoIdentificacionInteresado(TipoDocumentoIdentificacion.CODIGO_ORIGEN_VALUE.getValue());
+								intresadoSirSalida.setDocumentoIdentificacionInteresado(source.getOrganoDestino());
+								
+								// [ENTIDAD DESTINO]
+								if (source.getNombreAmbitoDestino() != null) {
+									intresadoSirSalida.setRazonSocialInteresado(source.getOrganoDestinoDenominacion());
+								} else {
+									intresadoSirSalida.setRazonSocialInteresado(nombreUnidadDestino);
+								}
+							} else {
+								try {
+									Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService(PropiedadGlobalUtil.getDir3CaibServer(), PropiedadGlobalUtil.getDir3CaibUsername(), PropiedadGlobalUtil.getDir3CaibPassword());
+
+					                intresadoSirSalida.setTipoDocumentoIdentificacionInteresado(TipoDocumentoIdentificacion.CODIGO_ORIGEN_VALUE.getValue());
+					                
+					                if (StringUtils.isNotEmpty(source.getCdAmbitoOrigen())) {
+										OficinaTF oficinaTF = oficinasService.obtenerOficina(source.getCdAmbitoOrigen(),null,null);
+						                intresadoSirSalida.setDocumentoIdentificacionInteresado(oficinaTF.getCodUoResponsable());
+						                intresadoSirSalida.setRazonSocialInteresado(Dir3CaibUtils.denominacion(PropiedadGlobalUtil.getDir3CaibServer(),oficinaTF.getCodUoResponsable(),RegwebConstantes.UNIDAD));
+					                } else if (StringUtils.isNotEmpty(oficinaUnidadOrigen) && oficinaUnidadOrigen.startsWith("E")){ // Entidad
+					                	intresadoSirSalida.setDocumentoIdentificacionInteresado(oficinaUnidadOrigen);
+						                intresadoSirSalida.setRazonSocialInteresado(source.getNombreAmbitoOrigen());
+					                }
+					            } catch (Exception e) {
+									e.printStackTrace();
+								}
+
+							}
+							
+							target.getInteresados().add(intresadoSirSalida);
+						} else if (source.getInteresados() != null && ! source.getInteresados().isEmpty()) {
+							target.setInteresados(convertirList(source.getInteresados(), InteresadoSir.class));
+						}
+						if (source.getAnexos() != null && ! source.getAnexos().isEmpty()) {
+							List<AnexoSir> anexosSir = new ArrayList<AnexoSir>();
+							for (AnexoG anexoGeiser: source.getAnexos()) {
+								if (anexoGeiser.getAnexoBase64() != null) {
+									anexosSir.add(convertir(anexoGeiser, AnexoSir.class));
+								}
+								if (anexoGeiser.getFirmaBase64() != null) {
+									anexoGeiser.setAnexoBase64(null); // per no crear un altre converter de firmes
+									anexosSir.add(convertir(anexoGeiser, AnexoSir.class));
+								}
+							}
+							target.setAnexos(anexosSir);
+						}
+						
 						return target;
 					}
 				});

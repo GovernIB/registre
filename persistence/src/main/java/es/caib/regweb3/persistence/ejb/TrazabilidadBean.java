@@ -146,6 +146,21 @@ public class TrazabilidadBean extends BaseEjbJPA<Trazabilidad, Long> implements 
 
     @Override
     @SuppressWarnings(value = "unchecked")
+    public List<Trazabilidad> getByRegistroEntradaOrigen(Long idRegistroEntrada) throws Exception {
+
+        Query q = em.createQuery("Select DISTINCT trazabilidad from Trazabilidad as trazabilidad " +
+                "where trazabilidad.registroEntradaOrigen.id = :idRegistroEntrada " +
+                "order by trazabilidad.fecha");
+
+        q.setParameter("idRegistroEntrada", idRegistroEntrada);
+        q.setHint("org.hibernate.readOnly", true);
+
+        return q.getResultList();
+    }
+
+    
+    @Override
+    @SuppressWarnings(value = "unchecked")
     public List<Trazabilidad> getByOficioRemision(Long idOficioRemision) throws Exception {
 
         Query q = em.createQuery("Select DISTINCT trazabilidad from Trazabilidad as trazabilidad " +

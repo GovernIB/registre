@@ -127,9 +127,11 @@
                 <li class="divider"></li>
                 <li class="submenu-complet"><a href="<c:url value="/sir/monitorEnviados"/>"><i class="fa fa-mail-forward"></i> <spring:message code="sir.envios"/></a></li>
                 <li class="submenu-complet"><a href="<c:url value="/sir/monitorRecibidos"/>"><i class="fa fa-mail-reply"></i> <spring:message code="sir.recibidos"/></a></li>
-                <li class="submenu-complet"><a href="<c:url value="/sir/mensajeControl/list"/>"><i class="fa fa-envelope-o"></i> <spring:message code="mensajeControl.mensajesControl"/></a></li>
+                <%--li class="submenu-complet"><a href="<c:url value="/sir/mensajeControl/list"/>"><i class="fa fa-envelope-o"></i> <spring:message code="mensajeControl.mensajesControl"/></a></li> --%>
                 <li class="divider"></li>
                 <li class="submenu-complet"><a href="<c:url value="/sir/pendientesDistribuir/list"/>"><i class="fa fa-sign-out"></i> <spring:message code="menu.pendientesDistribuir"/></a></li>
+                <li class="divider"></li>
+                <li class="submenu-complet"><a href="<c:url value="/sir/recuperarRegistrosSirRecibidos/form"/>"><i class="fa fa-cloud-download"></i> <spring:message code="menu.recuperarRegistros"/></a></li>
             </ul>
 
         </div>

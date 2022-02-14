@@ -6,10 +6,17 @@ import es.caib.regweb3.ws.api.v3.utils.WsClientUtils;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.plugin.geiser.api.GeiserPluginException;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 
 /**
@@ -20,7 +27,6 @@ import java.util.List;
 public class RegWebAsientoRegistralTest extends RegWebTestUtils {
 
     protected static RegWebAsientoRegistralWs asientoRegistralApi;
-
     /**
      * S'executa una vegada abans de l'execució de tots els tests d'aquesta classe
      *
@@ -30,7 +36,7 @@ public class RegWebAsientoRegistralTest extends RegWebTestUtils {
     public static void setUpBeforeClass() throws Exception {
         //setEntorno("_localhost");
         //setEntorno("_registre3");
-        setEntorno("_proves");
+        setEntorno("_localhost");
         asientoRegistralApi = getAsientoRegistralApi();
     }
 
@@ -93,28 +99,56 @@ public class RegWebAsientoRegistralTest extends RegWebTestUtils {
     }
 
     @Test
-    public void crearAsientoEntrada() throws Exception {
+    public void creacionAsientosParalela() throws InterruptedException, ExecutionException {
 
-        for (int i = 0; i < 1; i++) {
-
-            try {
-
-                AsientoRegistralWs asientoRegistralWs = getAsiento_to_PersonaFisica(REGISTRO_ENTRADA, true, true);
-                asientoRegistralWs = asientoRegistralApi.crearAsientoRegistral(null,getTestEntidadCodigoDir3(),asientoRegistralWs,null,false,false);
-
-                printAsientoBasico(asientoRegistralWs);
-
-            } catch (WsI18NException e) {
-                String msg = WsClientUtils.toString(e);
-                System.out.println("Error WsI18NException: " + msg);
-                throw e;
-            } catch (WsValidationException e) {
-                String msg = WsClientUtils.toString(e);
-                System.out.println("Error WsValidationException: " + msg);
-                throw e;
-            }
-        }
+        ExecutorService executor = Executors.newFixedThreadPool(2);
+		Collection<Callable<String>> callables = new ArrayList<>();
+		System.out.println("[MOCK] Construyendo callables para realizar un test múltiple del proceso de registro");
+		
+		for (int i = 1; i < 2; i++) {
+			Callable<String> callable = new Callable<String>() {
+				@Override
+				public String call() throws Exception {
+					return crearAsientoSalida();
+				}
+			};
+			System.out.println("[MOCK] Callable " + i + " preprado");
+			callables.add(callable);
+		}
+		
+		Long t1 = System.currentTimeMillis();
+		System.out.println("[MOCK] Ejecutando callables...");
+		List<Future<String>> result = executor.invokeAll(callables);
+		System.out.println("[MOCK] La ejecución ha tardado: " + (System.currentTimeMillis() - t1));;
+		for (Future f : result) {
+			System.out.println((String) f.get());
+		}
     }
+    
+	public String crearAsientoEntrada() throws Exception {
+		String numeroRegistroFormateado = null;
+		try {
+			AsientoRegistralWs asientoRegistralWs = getAsiento_to_PersonaFisica(REGISTRO_ENTRADA, true, true);
+
+			asientoRegistralWs = asientoRegistralApi.crearAsientoRegistral(null, getTestEntidadCodigoDir3(), asientoRegistralWs, null, false, false);
+
+			printAsientoBasico(asientoRegistralWs);
+			numeroRegistroFormateado = asientoRegistralWs.getNumeroRegistroFormateado();
+		} catch (WsI18NException e) {
+			String msg = WsClientUtils.toString(e);
+			System.out.println("Error WsI18NException: " + msg);
+			throw e;
+		} catch (WsValidationException e) {
+			String msg = WsClientUtils.toString(e);
+			System.out.println("Error WsValidationException: " + msg);
+			throw e;
+		} catch (GeiserPluginException e) {
+			System.out.println("Error GeiserPluginException: " + e.getMessage());
+			throw e;
+		}
+
+		return numeroRegistroFormateado;
+	}
 
     @Test
     public void crearAsientoEntradaConAnexos() throws Exception {
@@ -141,18 +175,18 @@ public class RegWebAsientoRegistralTest extends RegWebTestUtils {
     }
 
 
-    @Test
-    public void crearAsientoSalida() throws Exception {
-
-        for (int i = 0; i < 1; i++) {
+//    @Test
+    public String crearAsientoSalida() throws Exception {
+    	String numeroRegistroFormateado = null;
+//        for (int i = 0; i < 1; i++) {
 
             try {
 
-                AsientoRegistralWs asientoRegistralWs = getAsiento_to_AdministracionExterna(REGISTRO_SALIDA, true);
-                asientoRegistralWs = asientoRegistralApi.crearAsientoRegistral(null,getTestEntidadCodigoDir3(),asientoRegistralWs,null,false,false);
+                AsientoRegistralWs asientoRegistralWs = getAsiento_to_AdministracionExterna(REGISTRO_SALIDA, false);
+                asientoRegistralWs = asientoRegistralApi.crearAsientoRegistral(null,getTestEntidadCodigoDir3(),asientoRegistralWs,TIPO_OPERACION_COMUNICACION,false,false);
 
                 printAsientoBasico(asientoRegistralWs);
-
+                numeroRegistroFormateado = asientoRegistralWs.getNumeroRegistroFormateado();
             } catch (WsI18NException e) {
                 String msg = WsClientUtils.toString(e);
                 System.out.println("Error WsI18NException: " + msg);
@@ -162,7 +196,8 @@ public class RegWebAsientoRegistralTest extends RegWebTestUtils {
                 System.out.println("Error WsValidationException: " + msg);
                 throw e;
             }
-        }
+//        }
+            return numeroRegistroFormateado;
     }
 
 
@@ -254,7 +289,7 @@ public class RegWebAsientoRegistralTest extends RegWebTestUtils {
 
         try {
 
-            AsientoRegistralWs registroEntrada = asientoRegistralApi.obtenerAsientoRegistral(getTestEntidadCodigoDir3(), "GOIB-E-50/2021", RegwebConstantes.REGISTRO_ENTRADA,true);
+            AsientoRegistralWs registroEntrada = asientoRegistralApi.obtenerAsientoRegistral(getTestEntidadCodigoDir3(), "REGAGE22s00000098050", RegwebConstantes.REGISTRO_SALIDA,true);
             Assert.assertNotNull(registroEntrada);
 
             printAsiento(registroEntrada);

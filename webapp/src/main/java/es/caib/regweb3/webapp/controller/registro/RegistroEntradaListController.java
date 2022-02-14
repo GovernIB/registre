@@ -325,6 +325,30 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
             model.addAttribute("posXsello", entidadActiva.getPosXsello());
             model.addAttribute("posYsello", entidadActiva.getPosYsello());
         }
+        
+        String destinoExterno = registro.getDestinoExternoCodigo();
+        if (destinoExterno != null) {
+            UnidadTF destino = organismoEjb.obtenerDestinoExterno(destinoExterno);
+            List<OficinaTF> oficinasSIR = new ArrayList<OficinaTF>();
+            //Si está extinguido obtenemos sus sustitutos(con oficinas SIR) de dir3caib
+            if (destino.getCodigoEstadoEntidad().equals(RegwebConstantes.ESTADO_ENTIDAD_EXTINGUIDO)) {
+                List<UnidadTF> sustitutos = organismoEjb.obtenerSustitutosExternosSIR(destino.getCodigo());
+                if (sustitutos.size() == 1) {
+                    //obtenemos sus oficinas SIR
+                    oficinasSIR = oficinaEjb.obtenerOficinasSir(sustitutos.get(0).getCodigo());
+                }
+            } else { //Obtenemos las oficinas SIR desde dir3caib
+                oficinasSIR = oficinaEjb.obtenerOficinasSir(destino.getCodigo());
+                if (oficinasSIR.isEmpty()) {
+                    Mensaje.saveMessageError(request, getMessage("registroSir.error.envio.oficinas"));
+                    return "registroEntrada/registroEntradaDetalle";
+                }
+            }
+            model.addAttribute("oficinasSIR", oficinasSIR);
+        }
+        
+        if (registro.getNumeroRegistro() == null)
+        	Mensaje.saveMessageAviso(request, getMessage("aviso.registro.sir.pendiente"));
 
         // Alta en tabla LOPD
         lopdEjb.altaLopd(registro.getNumeroRegistro(), registro.getFecha(), registro.getLibro().getId(), usuarioEntidad.getId(), RegwebConstantes.REGISTRO_ENTRADA, RegwebConstantes.LOPD_CONSULTA);
@@ -388,8 +412,10 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
      */
     @RequestMapping(value = "/{idRegistro}/enviarSir", method = RequestMethod.POST)
     @ResponseBody
-    public JsonResponse enviarSir(@ModelAttribute EnvioSirForm envioSirForm, @PathVariable Long idRegistro, String oficinaSIRCodigo,
-                                  HttpServletRequest request) throws Exception {
+    public JsonResponse enviarSir(
+    		@PathVariable Long idRegistro, 
+    		@RequestParam String oficinaSIRCodigo,
+    		HttpServletRequest request) throws Exception {
 
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
 
@@ -400,9 +426,9 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
             // Enviar el Intercambio
             RegistroSir registroSir = sirEnvioEjb.enviarIntercambio(RegwebConstantes.REGISTRO_ENTRADA, registroEntrada, getOficinaActiva(request), usuarioEntidad, oficinaSIRCodigo);
         	
-            try {
+//            try {
             	// Actualizar registro sir con info de GEISER
-            	sirEnvioEjb.actualizarEnvioSirRealizado(registroSir, usuarioEntidad);
+//            	sirEnvioEjb.actualizarEnvioSirRealizado(registroSir, usuarioEntidad);
                 
                 Mensaje.saveMessageInfo(request, getMessage("registroEntrada.envioSir.ok"));
                 jsonResponse.setStatus("SUCCESS");
@@ -420,12 +446,12 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
                 	log.info(getMessage("Ha habido un error generando el justificante [numeroRegistro=" + registroEntrada.getNumeroRegistro() + "]"));
                 	e.printStackTrace();
                 }
-            } catch (Exception e) {
-            	log.info(getMessage("registroSir.error.update"));
-                jsonResponse.setStatus("FAIL");
-                jsonResponse.setError(getMessage("registroSir.error.update") + ": " + e.getMessage());
-                e.printStackTrace();
-			}
+//            } catch (Exception e) {
+//            	log.info(getMessage("registroSir.error.update"));
+//                jsonResponse.setStatus("FAIL");
+//                jsonResponse.setError(getMessage("registroSir.error.update") + ": " + e.getMessage());
+//                e.printStackTrace();
+//			}
         } catch (Exception se) {
             log.info(getMessage("registroSir.error.envio"));
             jsonResponse.setStatus("FAIL");
@@ -847,7 +873,9 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
                 UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
 
                 // Dispone de permisos para Editar el registro
-                if (permisoOrganismoUsuarioEjb.tienePermiso(usuarioEntidad.getId(), registroEntrada.getOficina().getOrganismoResponsable().getId(), RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_ENTRADA, true) && !registroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_ANULADO)) {
+                if (permisoOrganismoUsuarioEjb.tienePermiso(usuarioEntidad.getId(), registroEntrada.getOficina().getOrganismoResponsable().getId(), RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_ENTRADA, true)
+                		&& !registroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_ANULADO)
+                		&& registroEntrada.getNumeroRegistroFormateado() != null) {
 
                     // Creamos el anexo justificante y lo firmamos
                     AnexoFull anexoFull = justificanteEjb.crearJustificante(usuarioEntidad, registroEntrada, RegwebConstantes.REGISTRO_ENTRADA, idioma);

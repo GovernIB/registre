@@ -1,7 +1,9 @@
 package org.plugin.geiser.mock;
 
 import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 
@@ -13,7 +15,6 @@ import javax.xml.ws.handler.soap.SOAPMessageContext;
 import org.fundaciobit.pluginsib.core.utils.AbstractPluginProperties;
 import org.plugin.geiser.api.GeiserPluginException;
 import org.plugin.geiser.api.IGeiserPlugin;
-import org.plugin.geiser.api.PeticionBusquedaGeiser;
 import org.plugin.geiser.api.PeticionBusquedaTramitGeiser;
 import org.plugin.geiser.api.PeticionConsultaGeiser;
 import org.plugin.geiser.api.PeticionRegistroEnvioGeiser;
@@ -128,9 +129,10 @@ public class GeiserMockPlugin extends AbstractPluginProperties implements IGeise
 	}
 
 	@Override
-	public RespuestaBusquedaGeiser buscar(PeticionBusquedaGeiser peticion) throws GeiserPluginException {
-		ResultadoBusquedaType resultado = new ResultadoBusquedaType();
+	public List<RespuestaBusquedaGeiser> buscar(String fechaInicio, String fechaFin) throws GeiserPluginException {
+		 List<RespuestaBusquedaGeiser> resultadosBusqueda = new ArrayList<RespuestaBusquedaGeiser>();
 		try {
+			ResultadoBusquedaType resultado = new ResultadoBusquedaType();
 			RespuestaType respuesta = new RespuestaType();
 			respuesta.setCodigo(0);
 			respuesta.setTipo(TipoRespuestaEnum.OK);
@@ -145,12 +147,15 @@ public class GeiserMockPlugin extends AbstractPluginProperties implements IGeise
 			int codigoRespuesta = resultado.getRespuesta().getCodigo();
 			if (codigoRespuesta == 1 || codigoRespuesta == 2 || codigoRespuesta == 3 ||codigoRespuesta == 4 ||codigoRespuesta == 5)
 				throw new GeiserPluginException("[GEISER] Respuesta: " + codigoRespuesta + " - " + resultado.getRespuesta().getMensaje());
+			
+			RespuestaBusquedaGeiser resultadoConverted = new ConversionPluginHelper().convertir(
+					resultado, 
+					RespuestaBusquedaGeiser.class);
+			resultadosBusqueda.add(resultadoConverted);
 		} catch (Exception ex) {
 			throw new GeiserPluginException("[GEISER] Ha habido un problema realizando el proceso de búsqueda", ex.getCause());
 		}
-		return new ConversionPluginHelper().convertir(
-				resultado, 
-				RespuestaBusquedaGeiser.class);
+		return resultadosBusqueda;
 	}
 
 	@Override
@@ -213,4 +218,10 @@ public class GeiserMockPlugin extends AbstractPluginProperties implements IGeise
 	}
 
 	private static final Logger logger = LoggerFactory.getLogger(GeiserMockPlugin.class);
+
+	@Override
+	public String getUsuariCreacioRegistres() throws GeiserPluginException {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

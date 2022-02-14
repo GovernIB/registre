@@ -5,6 +5,7 @@ import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.model.utils.AnexoSimple;
 import es.caib.regweb3.persistence.ejb.RegistroSalidaConsultaLocal;
 import es.caib.regweb3.persistence.ejb.RegistroSalidaLocal;
+import es.caib.regweb3.persistence.ejb.SirEnvioLocal;
 import es.caib.regweb3.persistence.utils.I18NLogicUtils;
 import es.caib.regweb3.persistence.validator.RegistroSalidaBeanValidator;
 import es.caib.regweb3.persistence.validator.RegistroSalidaValidator;
@@ -70,6 +71,9 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
 
     @EJB(mappedName = "regweb3/RegistroSalidaConsultaEJB/local")
     private RegistroSalidaConsultaLocal registroSalidaConsultaEjb;
+    
+    @EJB(mappedName = "regweb3/SirEnvioEJB/local")
+    private SirEnvioLocal sirEnvioEjb;
 
 
     @Override
@@ -194,7 +198,18 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
 
         // 7.- Creamos el Registro de Salida
         try{
-            registroSalida = registroSalidaEjb.registrarSalida(registroSalida, usuario, interesados, anexosFull, true);
+            registroSalida = registroSalidaEjb.registrarSalida(registroSalida, usuario, interesados, anexosFull, true, true);
+
+			// Envío directo GEISER si el destinatario está integrado con SIR y además viene
+			// de WS (hay que devolver el numero de registro a la aplicación origen)
+			if (registroSalida.getEvento() == RegwebConstantes.EVENTO_OFICIO_SIR) {
+				sirEnvioEjb.enviarIntercambio(
+						REGISTRO_SALIDA, 
+						registroSalida, 
+						registroSalida.getOficina(),
+						usuario, 
+						registroSalida.getOficina().getCodigo());
+			}
 
             numRegFormat = registroSalida.getNumeroRegistroFormateado();
 

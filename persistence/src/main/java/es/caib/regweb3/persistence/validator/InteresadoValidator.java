@@ -79,7 +79,6 @@ public class InteresadoValidator<T> extends AbstractRegWebValidator<T> {
                             rejectValue(errors, "apellido2", "error.valor.maxlenght");
                         }
                     }
-
                 }
 
                 // Validaciones si es Interesado Jurídica
@@ -99,7 +98,7 @@ public class InteresadoValidator<T> extends AbstractRegWebValidator<T> {
                 }
             }
         }
-
+        
         // Gestionamos las validaciones según el Canal escogido
         if (interesado.getCanal() == null) {
             //rejectIfEmptyOrWhitespace(errors, __target__, "canal", "error.valor.requerido","El camp és obligatori");

@@ -26,7 +26,14 @@
             <artifactId>pluginsib-core</artifactId>
             <version>2.0.0</version>
         </dependency>
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>1.5</version>
+            <scope>provided</scope>
+        </dependency>
 	</dependencies>
+	<!--  
 	<build>
 		<plugins>
 			<plugin>
@@ -56,6 +63,7 @@
 			</plugin>
 		</plugins>
 	</build>
+	-->
 	<repositories>
 		<repository>
 			<name>Local Maven repository</name>

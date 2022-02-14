@@ -1,3 +1,66 @@
+var itervalProgres;
+var writtenLines = 0;
+$(document).ready(function() {
+	
+	$('#rangoFechasBusqueda').on("submit", function(){
+		
+		$('#modalImportacioRegistrosSir').modal('show');
+		
+		refreshProgres();
+	});
+});
+
+function refreshProgres() {
+	itervalProgres =  setInterval(getProgres, 350);
+}
+
+function getProgres() {
+	console.log("getProgres");
+	$('.close', parent.document).prop('disabled', true);
+	$.ajax({
+		type: 'GET',
+		url: urlProgreso,
+		success: function(data) {
+			if (data) {
+				writeInfo(data);
+				if (data.progreso != undefined) {
+					$('#bar').css('width', data.progreso + '%');
+					$('#bar').attr('aria-valuenow', data.progreso);
+					$('#bar').html(data.progreso + '%');
+					if (data.progreso == 100) {
+						clearInterval(itervalProgres);
+					}
+				}
+			}
+		},
+		error: function() {
+			console.log("error obtenint progrés...");
+			$('.close', parent.document).prop('disabled', false);
+		}
+	});
+}
+
+function writeInfo(data) {
+	let info = data.info;
+	let index;
+	if (info != undefined) {
+		let scroll = writtenLines < info.length;
+		console.log("Scrol?: ", writtenLines, info.length, scroll);
+		for (index = writtenLines; index < info.length; index++) {
+			$("#bcursor").before("<p class='info-" + info[index].tipo + "'>" + info[index].texto + "</p>");
+		}
+		writtenLines = index;
+		if (data.error) {
+			$("#bcursor").before("<p class='info-ERROR'>" + data.errorMsg + "</p>");
+		}
+		//scroll to the bottom of "#actualitzacioInfo"
+		if (scroll) {
+			var infoDiv = document.getElementById("actualitzacionInfo");
+			infoDiv.scrollTop = infoDiv.scrollHeight;
+		}
+	}
+}
+
 /**
  * Envia un mensaje ACK
  * @param idRegistroSir

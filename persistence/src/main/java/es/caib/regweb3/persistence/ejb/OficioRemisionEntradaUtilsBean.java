@@ -632,7 +632,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
 
             // Registramos el nuevo RegistroEntrada
             synchronized (this) {
-                nuevoRE = registroEntradaEjb.registrarEntrada(nuevoRE, usuario, interesados, anexos, false);
+                nuevoRE = registroEntradaEjb.registrarEntrada(nuevoRE, usuario, interesados, anexos, false, true);
             }
 
             registros.add(nuevoRE);

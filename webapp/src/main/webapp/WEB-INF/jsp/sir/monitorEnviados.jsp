@@ -195,7 +195,7 @@
                                                     <th class="center"><spring:message code="oficioRemision.oficina"/></th>
                                                     <th class="center"><spring:message code="oficioRemision.organismoDestino"/></th>
                                                     <th class="center"><spring:message code="oficioRemision.estado"/></th>
-                                                    <th><spring:message code="oficioRemision.reintentos"/></th>
+                                                    <!--th><spring:message code="oficioRemision.reintentos"/></th-->
                                                     <th class="center"><spring:message code="regweb.acciones"/></th>
                                                 </tr>
                                                 </thead>
@@ -248,7 +248,7 @@
         
                                                             <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_ANULADO}"><span class="label label-danger"><spring:message code="oficioRemision.estado.${oficioRemision.estado}"/></span></c:if>
                                                         </td>
-                                                        <td class="center">${oficioRemision.numeroReintentos}</td>
+                                                        <!-- td class="center">${oficioRemision.numeroReintentos}</td-->
                                                         <td class="center">
                                                             <div class="btn-group pull-right text12">
                                                                 <button type="button" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown">
@@ -258,8 +258,7 @@
                                                                 	<c:choose>
 			                                                            <c:when test="${not empty oficioRemision.identificadorIntercambio}"><li><a href="<c:url value="/sir/${oficioRemision.identificadorIntercambio}/detalle"/>" target="_blank"><spring:message code="idIntercambio.detalle"/></a></li></c:when>
 			                                                            <c:otherwise><li class="disabled_events"><a href="<c:url value="/sir/${oficioRemision.identificadorIntercambio}/detalle"/>" target="_blank"><spring:message code="idIntercambio.detalle"/></a></li></c:otherwise>
-			                                                        </c:choose>
-                                                                    <li><a href="<c:url value="/sir/${oficioRemision.id}/ficheroIntercambio"/>"><spring:message code="registroSir.ficheroIntercambio"/></a></li>
+                                                                    <!--li><a href="<c:url value="/sir/${oficioRemision.id}/ficheroIntercambio"/>"><spring:message code="registroSir.ficheroIntercambio"/></a></li -->
                                                                     <c:if test="${oficioRemision.estado != RegwebConstantes.OFICIO_ACEPTADO && oficioRemision.estado != RegwebConstantes.OFICIO_SIR_ENVIADO_CONFIRMADO &&
                                                                                   oficioRemision.estado != RegwebConstantes.OFICIO_SIR_RECIBIDO_CONFIRMADO && oficioRemision.estado != RegwebConstantes.OFICIO_SIR_ENVIADO_RECHAZADO &&
                                                                                   oficioRemision.estado != RegwebConstantes.OFICIO_SIR_RECIBIDO_RECHAZADO && oficioRemision.estado != RegwebConstantes.OFICIO_SIR_FINALIZADO &&
@@ -268,14 +267,14 @@
                                                                         <c:url value="/sir/oficio/actualizarEstado" var="urlActualizar"/>
                                                                     	<li><a href="javascript:void(0);" onclick="actualizarRegistroSir('${oficioRemision.id}','${urlActualizar}')"><spring:message code="registroSir.actualizar"/></a></li>
                                                                         <c:url value="/sir/oficio/reiniciar" var="urlReiniciar"/>
-                                                                        <li><a href="javascript:void(0);" onclick="reiniciarContador('${oficioRemision.id}','${urlReiniciar}')"><spring:message code="registroSir.reiniciar"/></a></li>
+                                                                        <!--li><a href="javascript:void(0);" onclick="reiniciarContador('${oficioRemision.id}','${urlReiniciar}')"><spring:message code="registroSir.reiniciar"/></a></li-->
                                                                     </c:if>
                                                                     <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_SIR_SIN_DATOS || oficioRemision.estado == RegwebConstantes.OFICIO_SIR_PENDIENTE_ENVIO || oficioRemision.estado == RegwebConstantes.OFICIO_SIR_ENVIADO_PENDIENTE_CONFIRMACION
                                                                     || oficioRemision.estado == RegwebConstantes.OFICIO_SIR_ENVIADO_PENDIENTE_CONFIRMACION_MANUAL || oficioRemision.estado == RegwebConstantes.OFICIO_SIR_REENVIADO
                                                                     || oficioRemision.estado == RegwebConstantes.OFICIO_SIR_EN_TRAMITE || oficioRemision.estado == RegwebConstantes.OFICIO_SIR_ASIGNADO
                                                                     || oficioRemision.estado == RegwebConstantes.OFICIO_SIR_RECTIFICADO || oficioRemision.estado == RegwebConstantes.OFICIO_SIR_ENVIO_PROCESO}">
-                                                                        <li class="divider"></li>
-                                                                        <li><a href="javascript:void(0);" onclick='confirm("javascript:reenviarIntercambio(${oficioRemision.id})","<spring:message code="regweb.confirmar.enviarIntercambio" htmlEscape="true"/>")'><spring:message code="intercambio.reenviar"/></a></li>
+                                                                        <!--li class="divider"></li-->
+                                                                        <!--li><a href="javascript:void(0);" onclick='confirm("javascript:reenviarIntercambio(${oficioRemision.id})","<spring:message code="regweb.confirmar.enviarIntercambio" htmlEscape="true"/>")'><spring:message code="intercambio.reenviar"/></a></li-->
                                                                     </c:if>
 
                                                                 </ul>

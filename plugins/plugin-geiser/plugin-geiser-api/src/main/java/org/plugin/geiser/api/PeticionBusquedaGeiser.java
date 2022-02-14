@@ -8,7 +8,10 @@ import lombok.Setter;
 @Getter @Setter
 public class PeticionBusquedaGeiser extends Peticion {
 
-	private Date fechaRegistroInicio;
-	private Date fechaRegistroFinal;
+	private String fechaRegistroInicio;
+	private String fechaRegistroFinal;
+	private EstadoRegistro estado;
+	private TipoAsiento tipoAsiento;
+	private String cdOrganoDestino;
 	
 }

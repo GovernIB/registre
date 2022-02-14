@@ -823,7 +823,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
         boolean updateDate = false;
         final DocumentCustody documentCustody;
-        final SignatureCustody signatureCustody;
+        SignatureCustody signatureCustody = null;
 
         String mimeFinal = null;
         //Actualización o creación de los documentos de los anexos en función del modo de firma
@@ -836,8 +836,14 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
             //Guardamos la signatureCustody
             signatureCustody = anexoFull.getSignatureCustody();
-            mimeFinal = arreglarSignatureCustody(signatureCustody, documentCustody, anexo, mimeFinal);
+//            mimeFinal = arreglarSignatureCustody(signatureCustody, documentCustody, anexo, mimeFinal);
 
+          //**************Guardamos la signatureCustody --> TODO: La firma se guarda como un dato del documento original, no enviar mime...se hacía por CAIB??? **************
+//            if (modoFirma != RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED) {
+//            	signatureCustody = anexoFull.getSignatureCustody();
+//            	mimeFinal = arreglarSignatureCustody(signatureCustody, documentCustody, anexo, mimeFinal);
+//            }
+            
             updateDate = true;
 
         } else { //es modificación Tratamos todos los modos firma como corresponda

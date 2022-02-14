@@ -7,6 +7,7 @@ import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 import es.caib.regweb3.ws.model.AsientoRegistralWs;
 import es.caib.regweb3.ws.model.InteresadoWs;
+import es.caib.regweb3.ws.utils.Utils;
 import es.caib.regweb3.ws.v3.impl.CommonConverter;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 
@@ -104,7 +105,7 @@ public class AsientoRegistralConverter extends CommonConverter {
 
       registroSalida.setOrigen(organismo);
       registroSalida.setOficina(oficina);
-      registroSalida.setFecha(new Date());
+      registroSalida.setFecha(null);
       registroSalida.setUsuario(usuario);
       registroSalida.setEstado(RegwebConstantes.REGISTRO_VALIDO);
       registroSalida.setLibro(libro);
@@ -302,7 +303,7 @@ public class AsientoRegistralConverter extends CommonConverter {
       asientoRegistral.setEntidadCodigo(entidad.getCodigoDir3());
       asientoRegistral.setEntidadDenominacion(entidad.getNombre());
 
-      if (registro.getNumeroRegistro() != null) { asientoRegistral.setNumeroRegistro(0);}
+      if (registro.getNumeroRegistro() != null) { asientoRegistral.setNumeroRegistro(Utils.formatNumeroRegistro(registro.getNumeroRegistro()));}
       if (StringUtils.isNotEmpty(registro.getNumeroRegistroFormateado())) { asientoRegistral.setNumeroRegistroFormateado(registro.getNumeroRegistroFormateado());}
       if (registro.getFecha() != null) { asientoRegistral.setFechaRegistro(registro.getFecha());}
       if (registro.getUsuario() != null) { asientoRegistral.setCodigoUsuario(registro.getUsuario().getUsuario().getIdentificador());}

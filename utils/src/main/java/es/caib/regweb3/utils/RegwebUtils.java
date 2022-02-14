@@ -43,6 +43,26 @@ public class RegwebUtils {
     }
     
     /**
+     * Convierte un hash en string
+     *
+     * @param documentoData
+     * @return
+     * @throws Exception
+     */
+    public static String obtenerStringHash(byte[] hash) throws Exception {
+		// Decodificar el byte array guardado en bbdd
+		hash = Base64.decodeBase64(hash);
+
+		// Forma de pasar el byte array del hash a String
+		StringBuilder hash256 = new StringBuilder();
+		for (int i = 0; i < hash.length; i++) {
+			hash256.append(Integer.toString((hash[i] & 0xff) + 0x100, 16).substring(1));
+		}
+		return hash256.toString();
+
+    }
+    
+    /**
      * Comprueba si un array contiene la llave pasada por parámetro
      * 
      * @param <T>

@@ -219,6 +219,7 @@
         <dd> ${registroSir.numeroReintentos}</dd>
     </c:if>
 
+	<%-- 
     <c:if test="${registroSir.estado == 'REENVIADO_Y_ERROR' || registroSir.estado == 'RECHAZADO_Y_ERROR'}">
         <c:if test="${not empty registroSir.codigoError}">
             <dt><i class="fa fa-bug"></i> <spring:message code="registroSir.codigoError"/>: </dt>
@@ -230,6 +231,6 @@
             <dd> ${registroSir.descripcionError}</dd>
         </c:if>
     </c:if>
-
+	--%>
 
 </dl>

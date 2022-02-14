@@ -10,30 +10,29 @@ import es.caib.regweb3.model.utils.IndicadorPrueba;
 import es.caib.regweb3.persistence.integracion.ArxiuCaibUtils;
 import es.caib.regweb3.persistence.utils.ConversionHelper;
 import es.caib.regweb3.persistence.utils.FileSystemManager;
+import es.caib.regweb3.persistence.utils.GeiserPluginHelper;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
-import es.caib.regweb3.persistence.utils.RegistroUtils;
 import es.caib.regweb3.sir.ejb.EmisionLocal;
 import es.caib.regweb3.sir.ejb.MensajeLocal;
 import es.caib.regweb3.utils.Dir3CaibUtils;
 import es.caib.regweb3.utils.EstadoUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.RegwebUtils;
+import es.caib.regweb3.utils.StringUtils;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NArgumentCode;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.jboss.ejb3.annotation.SecurityDomain;
 import org.jboss.ejb3.annotation.TransactionTimeout;
+import org.plugin.geiser.api.AnexoG;
 import org.plugin.geiser.api.ApunteRegistro;
 import org.plugin.geiser.api.EstadoTramitacion;
 import org.plugin.geiser.api.GeiserPluginException;
-import org.plugin.geiser.api.IGeiserPlugin;
-import org.plugin.geiser.api.PeticionBusquedaTramitGeiser;
-import org.plugin.geiser.api.PeticionConsultaGeiser;
-import org.plugin.geiser.api.PeticionRegistroEnvioGeiser;
 import org.plugin.geiser.api.RespuestaBusquedaTramitGeiser;
 import org.plugin.geiser.api.RespuestaConsultaGeiser;
 import org.plugin.geiser.api.RespuestaRegistroGeiser;
+import org.plugin.geiser.api.TipoAsiento;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
 
@@ -94,8 +93,7 @@ public class SirEnvioBean implements SirEnvioLocal {
     
     @Autowired ArxiuCaibUtils arxiuCaibUtils;
     @Autowired ConversionHelper conversioHelper;
-    
-    private IGeiserPlugin geiserPlugin;
+    @Autowired GeiserPluginHelper pluginHelper;
     
     @Resource
     private javax.ejb.SessionContext ejbContext;
@@ -324,10 +322,39 @@ public class SirEnvioBean implements SirEnvioLocal {
     	        			registroSalida, 
     	        			registroSir, 
     	        			usuario);
-    	        	if (registroEntrada != null)
+    	        	if (registroEntrada != null) {
+        	        	// 1- Recuperar registro salida
+        	        	// 2- Assignar nuRegistro GEISER a registro REGWEB
+        	        	// 3- Actualizar trazabilidad
+        	        	
+        	        	RegistroSir registroSirConsulta = new RegistroSir();
+        	        	registroSirConsulta.setNumeroRegistro(registroEntrada.getNumeroRegistro());
+        	        	registroSirConsulta.setCodigoEntidadRegistralOrigen(registroEntrada.getOficina().getCodigo());
+        	        	RespuestaConsultaGeiser consultaRegistroEntrada = pluginHelper.postProcesoConsultarRegistroSirGeiser(registroSirConsulta, registroSir.getEntidad().getId());
+        	        	if (consultaRegistroEntrada.getApuntes() != null && !consultaRegistroEntrada.getApuntes().isEmpty()) {
+        	        		for (ApunteRegistro apunte: consultaRegistroEntrada.getApuntes()) {
+								if (apunte.getTipoAsiento().equals(TipoAsiento.SALIDA) && apunte.getNuRegistroOrigen().equals(registroEntrada.getNumeroRegistro())) {
+									
+									List<Trazabilidad> trazabilidadesRegistroSir = trazabilidadEjb.getByRegistroEntradaOrigen(registroEntrada.getId());
+									if (trazabilidadesRegistroSir != null && !trazabilidadesRegistroSir.isEmpty()) {
+										Trazabilidad trazabilidadRegistro = trazabilidadesRegistroSir.get(0);
+										if (trazabilidadRegistro.getTipo().equals(RegwebConstantes.TRAZABILIDAD_OFICIO_SIR) || trazabilidadRegistro.getTipo().equals(RegwebConstantes.TRAZABILIDAD_OFICIO)) {
+											RegistroSalida registroSalidaSir = trazabilidadRegistro.getRegistroSalida();
+											registroSalidaSir.setNumeroRegistro(apunte.getNuRegistro());
+											registroSalidaSir.setNumeroRegistroFormateado(apunte.getNuRegistro());
+											registroSalidaSir.setFecha(apunte.getFechaRegistro());
+										}
+									}
+//									trazabilidadEjb.getByOficioRegistroEntrada(ofi, idRegistroEntrada)
+								}
+							}
+        	        	}
     	        		registroEntradaEjb.merge(registroEntrada);
+    	        	}
     	        	if (registroSalida != null)
     	        		registroSalidaEjb.merge(registroSalida);
+    	        	
+    	        	actualizarEnvioSirRealizado(registroSir, usuario);
      	        } catch (GeiserPluginException gpe) {
     	        	log.error("Ha habido un error realizando el registro en GEISER");
     				gpe.printStackTrace();
@@ -373,7 +400,7 @@ public class SirEnvioBean implements SirEnvioLocal {
     			RegistroSir registroSir = registroSirEjb.findById(registroSirId);
 			    if (registroSir != null) {
 			    	descripcion += "\n  [MANUAL] Actualizando estado envío SIR (idEnvioSir=" + registroSir.getId() + ")";
-		    		actualizarEnvioSir(registroSir, entidad, oficioRemision);
+		    		actualizarEnvioSir(registroSir, entidad, oficioRemision, true);
 		    		registroSirActualizados.add(registroSir);
 		    		registroSirEjb.merge(registroSir);
 			    }
@@ -699,46 +726,8 @@ public class SirEnvioBean implements SirEnvioLocal {
         return 0;
 
     }
-    
-    @Override
-    public RespuestaRegistroGeiser postProcesoNuevoRegistroSirGeiser(RegistroSir rsir, Long entidadId) throws GeiserPluginException, I18NException {
-    	RespuestaRegistroGeiser respuesta = null;
-    	IGeiserPlugin geiserPlugin = getIGeiserPlugin(entidadId);
-        if (geiserPlugin != null) {
-        	respuesta = geiserPlugin.registrarEnviar(
-        			conversioHelper.convertir(
-        					rsir, 
-        					PeticionRegistroEnvioGeiser.class));
-        }
-		return respuesta;
-    }
-    
-    @Override
-    public RespuestaConsultaGeiser postProcesoConsultarRegistroSirGeiser(RegistroSir rsir, Long entidadId) throws I18NException {
-    	RespuestaConsultaGeiser respuesta = null;
-    	IGeiserPlugin geiserPlugin = getIGeiserPlugin(entidadId);
-        if (geiserPlugin != null) {
-        	respuesta = geiserPlugin.consulta(
-        			conversioHelper.convertir(
-        					rsir, 
-        					PeticionConsultaGeiser.class));
-        }
-		return respuesta;
-    }
-    
-    @Override
-    public RespuestaBusquedaTramitGeiser postProcesoBuscarEstadoTRegistroSirGeiser(RegistroSir rsir, Long entidadId) throws I18NException {
-    	RespuestaBusquedaTramitGeiser respuesta = null;
-    	IGeiserPlugin geiserPlugin = getIGeiserPlugin(entidadId);
-        if (geiserPlugin != null) {
-        	respuesta = geiserPlugin.buscarEstadoTramitacion(
-        			conversioHelper.convertir(
-        					rsir, 
-        					PeticionBusquedaTramitGeiser.class));
-        }
-		return respuesta;
-    }
-    
+
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     @Override
     public void actualizarEnviosSir(Entidad entidad) throws Exception {
     	StringBuilder peticion = new StringBuilder();
@@ -755,11 +744,12 @@ public class SirEnvioBean implements SirEnvioLocal {
 				            OficioRemision oficioRemision = oficioRemisionEjb.getByNumeroRegistro(
 				            		registroSir.getNumeroRegistro(), 
 				            		entidad.getCodigoDir3());
-							peticion.append("ID Oficio remisión: ").append(oficioRemision.getId()).append(System.getProperty("line.separator"));
-							actualizarEnvioSir(
-				            		registroSir, 
-				            		entidad, 
-				            		oficioRemision);
+				            if (oficioRemision != null) {
+								peticion.append("ID Oficio remisión: ").append(oficioRemision.getId()).append(System.getProperty("line.separator"));
+								actualizarEnvioSir(registroSir, entidad, oficioRemision, true);
+				            } else {
+				            	throw new RuntimeException("No s'ha trobat cap ofici remisió relacionat amb el registre: " + registroSir.getNumeroRegistro());
+				            }
 					} catch (Exception e) {
 						e.printStackTrace();
 						integracionEjb.addIntegracionError(
@@ -789,7 +779,7 @@ public class SirEnvioBean implements SirEnvioLocal {
     		RegistroSir registroSir, 
     		UsuarioEntidad usuario) throws I18NException, I18NValidationException, Exception {
     	Long entidadId = usuario.getEntidad().getId();
-        RespuestaRegistroGeiser respuesta = postProcesoNuevoRegistroSirGeiser(registroSir, entidadId);
+        RespuestaRegistroGeiser respuesta = pluginHelper.postProcesoNuevoRegistroSirGeiser(registroSir, entidadId);
         if (respuesta != null) {
         	registroSir.setNumeroRegistro(respuesta.getNuRegistro());
         	registroSir.setFechaRegistro(respuesta.getFechaRegistro());
@@ -824,7 +814,7 @@ public class SirEnvioBean implements SirEnvioLocal {
 						registroSir.getNumeroRegistro(), 
 						usuario.getEntidad().getCodigoDir3());
 				
-				actualizarEnvioSir(registroSir, usuario.getEntidad(), oficioRemision);
+				actualizarEnvioSir(registroSir, usuario.getEntidad(), oficioRemision, true);
 				
 				if (registroSir.getInteresados() != null) {
 					for (InteresadoSir interesadoSir : registroSir.getInteresados()) {
@@ -848,54 +838,113 @@ public class SirEnvioBean implements SirEnvioLocal {
 			}
 		}
     }
+
+	@Override
+	public void actualizarIdEnviosSirRecibidos(Entidad entidad) throws Exception, I18NException {
+		StringBuilder peticion = new StringBuilder();
+		long tiempo = System.currentTimeMillis();
+		try {
+//          // RegistrosSir con estado no final
+			List<Long> registrosSirIds = registroSirEjb.getRegistrosSirRecibidosSinId(entidad.getId());
+			
+//			synchronized(Semaforo.getCreacionSemaforo()) {
+			for (Long registroSirId : registrosSirIds) {
+				String descripcion = "Actualizando identificador intercambio envío SIR (idEnvioSir=" + registroSirId + ")";
+				try {
+					RegistroSir registroSir = registroSirEjb.findById(registroSirId);
+					peticion.append("Número registro: ")
+							.append(registroSir.getNumeroRegistro())
+							.append(System.getProperty("line.separator"));
+					if (registroSir.getNumeroRegistroOrigen() != null)
+						actualizarEnvioSir(registroSir, entidad, null, false);
+				} catch (Exception e) {
+					e.printStackTrace();
+					integracionEjb.addIntegracionError(
+							RegwebConstantes.INTEGRACION_SIR, 
+							descripcion,
+							peticion.toString(), 
+							e, 
+							null, 
+							System.currentTimeMillis() - tiempo, 
+							entidad.getId(), null);
+				} catch (I18NException e) {
+					e.printStackTrace();
+				}
+			}
+//			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+	}
+    
+	@Override
+	public void forzarGuardado() {
+		em.flush();
+	}
     
     private void actualizarEnvioSir(
     		RegistroSir registroSir, 
     		Entidad entidad, 
-    		OficioRemision oficioRemision) throws I18NException, Exception {
+    		OficioRemision oficioRemision,
+    		boolean actualizarEstado) throws I18NException, Exception {
 
     	  if (registroSir.getIdentificadorIntercambio() == null || (oficioRemision != null && oficioRemision.getIdentificadorIntercambio() == null)) {
-//        	Recupera identificador intercambio sir de GEISER
-    		  RespuestaBusquedaTramitGeiser response = postProcesoBuscarEstadoTRegistroSirGeiser(registroSir, entidad.getId());
+    		  // Recupera identificador intercambio sir de GEISER
+    		  RespuestaBusquedaTramitGeiser response = pluginHelper.postProcesoBuscarEstadoTRegistroSirGeiser(null, registroSir, entidad.getId());
     		  List<EstadoTramitacion> estadoTramitacion = response.getEstadosTramitacionRegistro();
-//        	Identificador intercambio a veces no disponible al momento (consultar con una scheduled)  
+    		  // Identificador intercambio a veces no disponible al momento (consultar con una scheduled)  
     		  if (estadoTramitacion != null && !estadoTramitacion.isEmpty() && !estadoTramitacion.get(0).getIdentificadorIntercambioSIR().isEmpty()) {
     			  String identificadorIntercambio = estadoTramitacion.get(0).getIdentificadorIntercambioSIR().get(0);
     			  registroSirEjb.actualizarIdentificadorIntercambio(registroSir.getId(), identificadorIntercambio);
     			  if (oficioRemision != null)
     				  oficioRemisionEjb.actualizarIdentificadorIntercambio(oficioRemision.getId(), identificadorIntercambio);
-    			  int secuencia = 0;
-    			  for (AnexoSir anexoSir: registroSir.getAnexos()) {
-    				  String identificadorFichero = registroSirEjb.generateIdentificadorFichero(identificadorIntercambio, secuencia, anexoSir.getNombreFichero());
-    				  secuencia++;
-    				  
-    				  anexoSir.setIdentificadorFichero(identificadorFichero);
-    				  
-    				  if (anexoSir.getDocumento() != null) { //firma dettached
-    					  anexoSir.setIdentificadorDocumentoFirmado(identificadorFichero);
-    				  }
-    			  }
+//    			  int secuencia = 0;
+//    			  for (AnexoSir anexoSir: registroSir.getAnexos()) {
+//    				  String identificadorFichero = registroSirEjb.generateIdentificadorFichero(identificadorIntercambio, secuencia, anexoSir.getNombreFichero());
+//    				  secuencia++;
+//    				  
+//    				  anexoSir.setIdentificadorFichero(identificadorFichero);
+//    				  
+//    				  if (anexoSir.getDocumento() != null) { //firma dettached
+//    					  anexoSir.setIdentificadorDocumentoFirmado(identificadorFichero);
+//    				  }
+//    			  }
     		  }
     	  }
-          actualizarEstadoEnvioSir(registroSir, entidad, oficioRemision);
+    	  if (actualizarEstado)
+    		  actualizarEstadoAndIdentificadoresEnvioSir(registroSir, entidad, oficioRemision);
     }
     
 
     private void actualizarMetadatosRegistro(IRegistro registro, RespuestaRegistroGeiser respuesta, UsuarioEntidad usuario) throws Exception, I18NException {
     	if (registro instanceof RegistroEntrada) {
     		RegistroEntrada registroEntrada = (RegistroEntrada) registro;
-    		Libro libro = libroEjb.findById(registroEntrada.getLibro().getId());
     		registroEntrada.setNumeroRegistro(respuesta.getNuRegistro());
+    		registroEntrada.setNumeroRegistroFormateado(respuesta.getNuRegistro());
     		registroEntrada.setFecha(respuesta.getFechaRegistro());
-    		registroEntrada.setNumeroRegistroFormateado(RegistroUtils.numeroRegistroFormateado(registroEntrada, libro, usuario.getEntidad()));
-    		//registroEntradaEjb.actualizarDatosRegistro(registroEntrada.getId(), respuesta.getNuRegistro(), RegistroUtils.numeroRegistroFormateado(registroEntrada, libro, usuario.getEntidad()), respuesta.getFechaRegistro());
+    		
+            // Si no ha introducido ninguna fecha de Origen
+            if (registroEntrada.getRegistroDetalle().getFechaOrigen() == null)
+            	registroEntrada.getRegistroDetalle().setFechaOrigen(registroEntrada.getFecha());
+                
+            //Si no se ha espeficicado un NumeroRegistroOrigen, le asignamos el propio
+            if (StringUtils.isEmpty(registroEntrada.getRegistroDetalle().getNumeroRegistroOrigen()))
+            	registroEntrada.getRegistroDetalle().setNumeroRegistroOrigen(registroEntrada.getNumeroRegistroFormateado());
+            
     	} else {
     		RegistroSalida registroSalida = (RegistroSalida) registro;
-			Libro libro = libroEjb.findById(registroSalida.getLibro().getId());
 			registroSalida.setNumeroRegistro(respuesta.getNuRegistro());
+			registroSalida.setNumeroRegistroFormateado(respuesta.getNuRegistro());
 			registroSalida.setFecha(respuesta.getFechaRegistro());
-			registroSalida.setNumeroRegistroFormateado(RegistroUtils.numeroRegistroFormateado(registroSalida, libro, usuario.getEntidad()));
-			//registroSalidaEjb.actualizarDatosRegistro(registroSalida.getId(), respuesta.getNuRegistro(), RegistroUtils.numeroRegistroFormateado(registroSalida, libro, usuario.getEntidad()), respuesta.getFechaRegistro());
+
+            // Si no ha introducido ninguna fecha de Origen
+            if (registroSalida.getRegistroDetalle().getFechaOrigen() == null)
+                registroSalida.getRegistroDetalle().setFechaOrigen(registroSalida.getFecha());
+                
+            //Si no se ha espeficicado un NumeroRegistroOrigen, le asignamos el propio
+            if (StringUtils.isEmpty(registroSalida.getRegistroDetalle().getNumeroRegistroOrigen())) 
+                registroSalida.getRegistroDetalle().setNumeroRegistroOrigen(registroSalida.getNumeroRegistroFormateado());
     	}
     }
     
@@ -914,7 +963,7 @@ public class SirEnvioBean implements SirEnvioLocal {
 		}
     }
     
-    private void actualizarEstadoEnvioSir(
+    private void actualizarEstadoAndIdentificadoresEnvioSir(
     		RegistroSir registroSir, 
     		Entidad entidad,
     		OficioRemision oficioRemision) throws I18NException, Exception {
@@ -922,57 +971,109 @@ public class SirEnvioBean implements SirEnvioLocal {
     		oficioRemision = oficioRemisionEjb.getByNumeroRegistro(
             		registroSir.getNumeroRegistro(), 
             		entidad.getCodigoDir3());
-    	// Solo revisar estado si estado actual no es FINAL
-    	if (! RegwebUtils.contains(RegwebConstantes.ESTADOS_OFICIO_REMISION_SIR_FINALES, oficioRemision.getEstado())) {
-	        RespuestaConsultaGeiser responseConsulta = postProcesoConsultarRegistroSirGeiser(registroSir, entidad.getId());
+    	boolean existeAnexoSinIdentificador = false;
+    	List<AnexoSir> anexosSir = registroSir.getAnexos();
+    	for (AnexoSir anexoSir : anexosSir) {
+			if (anexoSir.getIdentificadorFichero() == null) {
+				existeAnexoSinIdentificador = true;
+				break;
+			}
+		}
+    	// Solo revisar estado si estado actual si no es FINAL
+    	if (oficioRemision != null && !RegwebUtils.contains(RegwebConstantes.ESTADOS_OFICIO_REMISION_SIR_FINALES, oficioRemision.getEstado()) || existeAnexoSinIdentificador) {
+	        RespuestaConsultaGeiser responseConsulta = pluginHelper.postProcesoConsultarRegistroSirGeiser(registroSir, entidad.getId());
 	        List<ApunteRegistro> apuntes = responseConsulta.getApuntes();
 	        if (apuntes != null && !apuntes.isEmpty()) {
-	        	int estadoSirActual = 0;
+	        	int estadoOficioSirActual = 0;
 	        	for (ApunteRegistro apunteRegistro : apuntes) {
 //	        		apunteRegistro.getTipoAsiento().equals(TipoAsiento.ENTRADA) && 
 	              if (apunteRegistro.getNuRegistro().equals(registroSir.getNumeroRegistro())) {
 					registroSir.setEstado(EstadoRegistroSir.valueOf(apunteRegistro.getEstado().name()));
+					
 					if (registroSir.getId() == null)
 						registroSirEjb.persist(registroSir);
-					estadoSirActual = EstadoUtils.getEstadoOficioRemision(apunteRegistro.getEstado().name());
-					if (oficioRemision != null && oficioRemision.getEstado() != estadoSirActual && estadoSirActual != 0) {
-						oficioRemisionEjb.modificarEstado(oficioRemision.getId(), estadoSirActual);
-						
-						// Trazabilidad al cambiar estado
-//						for (RegistroEntrada registroEntrada: oficioRemision.getRegistrosEntrada()) {
-//							if (oficioRemision.getSir()) {
-								// Creamos la TrazabilidadSir
-//						        TrazabilidadSir trazabilidadSir = new TrazabilidadSir(EstadoUtils.getEstadoTrazabilidad(estadoSirActual));
-//						        trazabilidadSir.setRegistroSir(registroSir);
-//						        trazabilidadSir.setRegistroEntrada(registroEntrada);
-//						        trazabilidadSir.setCodigoEntidadRegistralOrigen(registroSir.getCodigoEntidadRegistralOrigen());
-//						        trazabilidadSir.setDecodificacionEntidadRegistralOrigen(registroSir.getDecodificacionEntidadRegistralOrigen());
-//						        trazabilidadSir.setCodigoEntidadRegistralDestino(registroSir.getCodigoEntidadRegistralDestino());
-//						        trazabilidadSir.setDecodificacionEntidadRegistralDestino(registroSir.getDecodificacionEntidadRegistralDestino());
-//						        trazabilidadSir.setAplicacion(RegwebConstantes.CODIGO_APLICACION);
-//						        trazabilidadSir.setObservaciones(registroSir.getDecodificacionTipoAnotacion());
-//						        trazabilidadSirEjb.persist(trazabilidadSir);
-//							}								
-//						}
+					estadoOficioSirActual = EstadoUtils.getEstadoOficioRemision(apunteRegistro.getEstado().name());
+					if (oficioRemision != null && oficioRemision.getEstado() != estadoOficioSirActual && estadoOficioSirActual != 0) {
+						oficioRemisionEjb.modificarEstado(oficioRemision.getId(), estadoOficioSirActual);
 					}
-	              }	              
+	              }
+	              if (estadoOficioSirActual == RegwebConstantes.OFICIO_SIR_ENVIADO_CONFIRMADO || estadoOficioSirActual == RegwebConstantes.OFICIO_SIR_ENVIADO_RECHAZADO) {
+	            	  RespuestaBusquedaTramitGeiser response = pluginHelper.postProcesoBuscarEstadoTRegistroSirGeiser(null, registroSir, entidad.getId());
+	        		  List<EstadoTramitacion> estadoTramitacion = response.getEstadosTramitacionRegistro();
+	        		  // Identificador intercambio a veces no disponible al momento (consultar con una scheduled)  
+	        		  if (estadoTramitacion != null && !estadoTramitacion.isEmpty() && estadoTramitacion.get(0).getFechaEstado() != null) {
+		        		  Date fechaEstado = estadoTramitacion.get(0).getFechaEstado();
+		        		  oficioRemisionEjb.modificarFechaEstado(oficioRemision.getId(), fechaEstado);
+	        		  } else {
+	        			  oficioRemisionEjb.modificarFechaEstado(oficioRemision.getId(), null); // No mostrar fecha estado si no la devuelve GEISER
+	        		  }
+
+		              // Actualizar destino si este se cambia en GEISER (reenvío)
+		              if (!apunteRegistro.getOrganoDestino().equals(registroSir.getCodigoUnidadTramitacionDestino())) {
+
+		            	  // Si se hace un reenvío el destinatario cambia
+		            	  registroSir.setCodigoEntidadRegistral(apunteRegistro.getCdAmbitoActual());
+		            	  registroSir.setCodigoEntidadRegistralDestino(apunteRegistro.getCdAmbitoActual());
+		            	  registroSir.setDecodificacionEntidadRegistralDestino(apunteRegistro.getNombreAmbitoActual());
+		            	  registroSir.setCodigoUnidadTramitacionDestino(apunteRegistro.getOrganoDestino());
+		            	  registroSir.setDecodificacionUnidadTramitacionDestino(apunteRegistro.getOrganoDestinoDenominacion());
+		            	  // Destino oficio remisión
+		            	  oficioRemisionEjb.actualizarDestinoExterno(
+		            			  oficioRemision.getId(), 
+		            			  apunteRegistro.getCdAmbitoActual(), 
+		            			  apunteRegistro.getNombreAmbitoActual(), 
+		            			  apunteRegistro.getOrganoDestino(),
+		            			  apunteRegistro.getOrganoDestinoDenominacion());
+		            	  for (RegistroEntrada registroEntrada: oficioRemision.getRegistrosEntrada()) {
+		            		  	// Destino registro entrada
+		            		  	RegistroDetalle registroDetalle = registroEntrada.getRegistroDetalle();
+		            		  	registroDetalle.setCodigoEntidadRegistralDestino(apunteRegistro.getCdAmbitoActual());
+		            		  	registroDetalle.setDecodificacionEntidadRegistralDestino(apunteRegistro.getNombreAmbitoActual());
+		            		  	registroEntrada.setRegistroDetalle(registroDetalle); 
+		            		  	registroEntradaEjb.actualizarDestinoExterno(registroEntrada.getId(), apunteRegistro.getOrganoDestino(), apunteRegistro.getOrganoDestinoDenominacion());
+		            	  }
+		            	  for (RegistroSalida registroSalida: oficioRemision.getRegistrosSalida()) {
+		            		  	// Destino registro salida
+		            		  	RegistroDetalle registroDetalle = registroSalida.getRegistroDetalle();
+		            		  	registroDetalle.setCodigoEntidadRegistralDestino(apunteRegistro.getCdAmbitoActual());
+		            		  	registroDetalle.setDecodificacionEntidadRegistralDestino(apunteRegistro.getNombreAmbitoActual());
+		            		  	registroSalida.setRegistroDetalle(registroDetalle); 
+		            		  	registroSalidaEjb.actualizarDestinoExterno(registroSalida.getId(), apunteRegistro.getOrganoDestino(), apunteRegistro.getOrganoDestinoDenominacion());
+		            	  }
+//		            	  registroSirEjb.merge(registroSir);
+		              }
+	              }
+	              // Actualizar anexos sir con identificador fichero de geiser
+	              for (AnexoSir anexoSir: anexosSir) {
+	            	  if (anexoSir.getIdentificadorFichero() == null) {
+	            		  for (AnexoG anexoGeiser: apunteRegistro.getAnexos()) {
+	            			  if (anexoGeiser.getHashBase64().equals(anexoSir.getHash()))
+	            				  anexoSir.setIdentificadorFichero(anexoGeiser.getIdentificador());
+	            		  }
+	            	  }
+	              }
+	              // Actualizar estado registro
+	              if (RegwebUtils.contains(RegwebConstantes.ESTADOS_OFICIO_REMISION_SIR_ENVIADOS_FINALES, estadoOficioSirActual)) {
+						for (RegistroEntrada registroEntrada: oficioRemision.getRegistrosEntrada()) {
+							registroEntradaEjb.cambiarEstado(registroEntrada.getId(), RegwebConstantes.REGISTRO_OFICIO_ACEPTADO);
+						}
+						for (RegistroSalida registroSalida: oficioRemision.getRegistrosSalida()) {
+							registroSalidaEjb.cambiarEstado(registroSalida.getId(), RegwebConstantes.REGISTRO_OFICIO_ACEPTADO);
+						}
+	              }
 	              // Ver si rectificar registro
-		          if (RegwebUtils.contains(RegwebConstantes.ESTADOS_OFICIO_REMISION_SIR_RECTIFICAR, estadoSirActual)) {
-		          // Trazabilidad al cambiar estado
+		          if (RegwebUtils.contains(RegwebConstantes.ESTADOS_OFICIO_REMISION_SIR_RECTIFICAR, estadoOficioSirActual)) {
 					for (RegistroEntrada registroEntrada: oficioRemision.getRegistrosEntrada()) {
-						registroEntrada.setEstado(RegwebConstantes.REGISTRO_RECHAZADO);
-						registroEntradaEjb.merge(registroEntrada);
+						registroEntradaEjb.cambiarEstado(registroEntrada.getId(), RegwebConstantes.REGISTRO_RECHAZADO);
+					}
+					for (RegistroSalida registroSalida: oficioRemision.getRegistrosSalida()) {
+						registroSalidaEjb.cambiarEstado(registroSalida.getId(), RegwebConstantes.REGISTRO_RECHAZADO);
 					}
 		          }
 	        	}
 	        }
+	        em.flush();
     	}	
     }
     
-    private IGeiserPlugin getIGeiserPlugin(Long entidadId) throws I18NException {
-    	if (geiserPlugin == null)
-    		geiserPlugin = (IGeiserPlugin) pluginEjb.getPlugin(entidadId, RegwebConstantes.PLUGIN_GEISER);
-    	return geiserPlugin;
-    }
-
 }

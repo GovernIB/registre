@@ -139,7 +139,7 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
         q.setHint("org.hibernate.readOnly", true);
 
         List<UsuarioEntidad> usuarioEntidad = q.getResultList();
-        if(usuarioEntidad.size() == 1){
+        if(usuarioEntidad.size() > 0){
             return usuarioEntidad.get(0);
         }else{
             return  null;

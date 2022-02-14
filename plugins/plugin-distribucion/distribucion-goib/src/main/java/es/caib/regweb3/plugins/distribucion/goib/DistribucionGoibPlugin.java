@@ -204,12 +204,14 @@ public class DistribucionGoibPlugin extends AbstractPluginProperties implements 
             registreAnotacio.setOficinaOrigenCodi(re.getRegistroDetalle().getOficinaOrigenExternoCodigo());
             registreAnotacio.setOficinaOrigenDescripcio(re.getRegistroDetalle().getOficinaOrigenExternoDenominacion());
         }
-
-        //Numero Registro Origen y Fecha Registro Origen
         GregorianCalendar c = new GregorianCalendar();
-        c.setTime(re.getRegistroDetalle().getFechaOrigen());
-        XMLGregorianCalendar dateOri = DatatypeFactory.newInstance().newXMLGregorianCalendar(c);
-        registreAnotacio.setDataOrigen(dateOri);
+        Date fechaOrigen = re.getRegistroDetalle().getFechaOrigen();
+        //Numero Registro Origen y Fecha Registro Origen
+        if (fechaOrigen != null) {
+	        c.setTime(re.getRegistroDetalle().getFechaOrigen());
+	        XMLGregorianCalendar dateOri = DatatypeFactory.newInstance().newXMLGregorianCalendar(c);
+	        registreAnotacio.setDataOrigen(dateOri);
+        }
         registreAnotacio.setNumeroOrigen(re.getRegistroDetalle().getNumeroRegistroOrigen());
 
         //Identificador

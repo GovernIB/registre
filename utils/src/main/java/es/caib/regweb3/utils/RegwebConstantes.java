@@ -235,6 +235,11 @@ public interface RegwebConstantes {
             = RegwebUtils.invert(CODIGO_NTI_BY_TIPOVALIDEZDOCUMENTO);
 
 
+	
+    Integer ENVIADO_CONFIRMADO = 6;
+    Integer RECIBIDO_CONFIRMADO = 7;
+    Integer FINALIZADO = 14;
+    
     /* -------------- ESTADO REGISTRO --------------*/
     Long REGISTRO_VALIDO = 1L;
     Long REGISTRO_RESERVA = 2L;
@@ -354,6 +359,18 @@ public interface RegwebConstantes {
         	OFICIO_SIR_REENVIADO_RECHAZADO,
         	OFICIO_SIR_RECIBIDO_RECHAZADO_CIUDADANO,
         	OFICIO_SIR_ELIMINADO
+    };
+    
+    Integer[] ESTADOS_REGISTRO_SIR_FINALES = {
+    		ENVIADO_CONFIRMADO,
+    		RECIBIDO_CONFIRMADO,
+    		FINALIZADO
+    };
+    
+    Integer[] ESTADOS_OFICIO_REMISION_SIR_ENVIADOS_FINALES = {
+            OFICIO_SIR_ENVIADO_CONFIRMADO,
+            OFICIO_SIR_RECIBIDO_CONFIRMADO,
+        	OFICIO_SIR_FINALIZADO
     };
     
     Integer[] ESTADOS_OFICIO_REMISION_SIR_RECTIFICAR = {

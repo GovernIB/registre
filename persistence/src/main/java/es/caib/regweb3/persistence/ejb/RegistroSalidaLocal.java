@@ -40,7 +40,7 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
      * @throws Exception
      */
     RegistroSalida registrarSalida(RegistroSalida registroSalida,
-                                   UsuarioEntidad usuarioEntidad, List<Interesado> interesados, List<AnexoFull> anexos, Boolean validarAnexos)
+                                   UsuarioEntidad usuarioEntidad, List<Interesado> interesados, List<AnexoFull> anexos, Boolean validarAnexos, boolean enviarGeiser)
             throws Exception, I18NException, I18NValidationException;
 
     /**
@@ -245,14 +245,12 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
      */
     void postProcesoActualizarRegistro(RegistroSalida rs, Long entidadId) throws Exception, I18NException;
 
-	RespuestaRegistroGeiser postProcesoNuevoRegistroGeiser(
-			RegistroSalida rs, 
-			UsuarioEntidad usuarioEntidad) throws Exception, I18NException;
-
 	void actualizarDatosRegistro(
 			Long idRegistroSalida,
 			String numeroRegistro, 
 			String numeroRegistroFormateado, 
 			Date fechaRegistro) throws Exception, I18NException;
-
+	
+	void actualizarDestinoExterno(Long idRegistroSalida, String codDestinoExterno, String descDestinoExterno)
+			throws Exception;
 }

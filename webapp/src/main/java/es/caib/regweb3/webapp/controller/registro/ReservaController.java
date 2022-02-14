@@ -103,7 +103,7 @@ public class ReservaController  extends BaseController {
 
                 //Guardamos el RegistroEntrada
                 synchronized (this){
-                    registro = registroEntradaEjb.registrarEntrada(registro, usuarioEntidad, null, null, false);
+                    registro = registroEntradaEjb.registrarEntrada(registro, usuarioEntidad, null, null, false, true);
                 }
 
             }catch (Exception e) {

@@ -11,15 +11,19 @@ public class AnexoG {
 	private String tipoDocumental;
 	private ValidezDocumento validezDocumento;
 	private String observaciones;
+	private String hashBase64;
 	private byte[] hash;
 	private String anexoBase64;
 	private String tipoMime;
 	private Long tamanioFichero;
 	private TipoFirma tipoFirma;
 	private String nombreFirma;
+	private String hashFirmaBase64;
 	private byte[] hashFirma;
 	private String tipoMimeFirma;
 	private Long tamanioFicheroFirma;
 	private String firmaBase64;
-	
+	private String identificador;
+	private byte[] anexo;
+	private byte[] firma;
 }

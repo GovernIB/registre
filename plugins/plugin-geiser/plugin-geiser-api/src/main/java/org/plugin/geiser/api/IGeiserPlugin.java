@@ -1,5 +1,8 @@
 package org.plugin.geiser.api;
 
+
+import java.util.List;
+
 import org.fundaciobit.pluginsib.core.IPlugin;
 
 public interface IGeiserPlugin extends IPlugin {
@@ -42,13 +45,15 @@ public interface IGeiserPlugin extends IPlugin {
 	/**
 	 * Operación que permite realizar búsquedas de asientos registrales efectuados.
 	 * 
-	 * @param peticionBusquedaGeiser
-	 * 			Una estructura datos de tipo {@link org.plugin.geiser.api.PeticionBusquedaGeiser}
+	 * @param fechaInicio
+	 * 			Fecha incio búsqueda {yyyyMMddhh24miss}
+	 * @param fechaFin
+	 * 			Fecha fin búsqueda {yyyyMMddhh24miss}
 	 * @return Una estructura datos de tipo @RespuestaBusquedaGeiser
 	 * 
 	 * @throws GeiserPluginException
 	 */
-	public RespuestaBusquedaGeiser buscar(PeticionBusquedaGeiser peticion) throws GeiserPluginException;
+	public List<RespuestaBusquedaGeiser> buscar(String fechaInicio, String fechaFin) throws GeiserPluginException;
 	
 	/**
 	 * Operación que permite consultar el estado de tramitación en el que se encuentran los asientos registrales.
@@ -61,4 +66,10 @@ public interface IGeiserPlugin extends IPlugin {
 	 */
 	public RespuestaBusquedaTramitGeiser buscarEstadoTramitacion(PeticionBusquedaTramitGeiser peticion) throws GeiserPluginException;
 	
+	/**
+	 * Recupera l'usuari responsable de crear registres d'entrada en segon pla
+	 * 
+	 * @throws GeiserPluginException
+	 */
+	public String getUsuariCreacioRegistres() throws GeiserPluginException;
 }

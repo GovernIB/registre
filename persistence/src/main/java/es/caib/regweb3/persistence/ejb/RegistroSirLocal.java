@@ -4,12 +4,14 @@ import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.CamposNTI;
 import es.caib.regweb3.model.utils.EstadoRegistroSir;
 import es.caib.regweb3.persistence.utils.Paginacion;
+import es.caib.regweb3.persistence.utils.ProgresoActualitzacion;
 import es.caib.regweb3.sir.core.utils.FicheroIntercambio;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
+
 import java.util.Date;
 import java.util.List;
 
@@ -214,4 +216,38 @@ public interface RegistroSirLocal extends BaseEjb<RegistroSir, Long> {
 
 
 	String generateIdentificadorFichero(String identificadorIntercambio, int secuencia, String fileName);
+
+	/**
+	 * Recupera registros SIR recibidos en GEISER y los añade a Regweb
+	 * 
+	 * @param entidadId
+	 * @throws Exception
+	 * @throws I18NException 
+	 */
+	Integer recuperarRegistrosSirGEISER(Long entidadId, Date inicio, Date fin) throws Exception, I18NException;
+
+	/**
+	 * Recupera registros SIR recibidos sin identificador de intercambio
+	 * 
+	 * @param idEntidad
+	 * @return
+	 * @throws Exception
+	 */
+	List<Long> getRegistrosSirRecibidosSinId(Long idEntidad) throws Exception;
+
+	/**
+	 * Mira si hay un proceso de recuperación de registros SIR iniciado para la entidad actual
+	 * 
+	 * @param entidadId
+	 * @return
+	 */
+	boolean isRecoveringRegistrosSIR(Long entidadId);
+
+	/**
+	 * Recupera el progreso de la recuperación de los registros SIR
+	 * 
+	 * @param entidadId
+	 * @return
+	 */
+	ProgresoActualitzacion getProgresoRecuperacionRegistrosSir(Long entidadId);
 }

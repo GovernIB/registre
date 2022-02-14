@@ -8,31 +8,36 @@ import es.caib.regweb3.model.utils.TipoRegistro;
 import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.persistence.utils.FileSystemManager;
 import es.caib.regweb3.persistence.utils.Paginacion;
+import es.caib.regweb3.persistence.utils.ProgresoActualitzacion;
+import es.caib.regweb3.persistence.utils.ProgresoActualitzacion.ActualitzacionInfo;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.persistence.utils.RegistroUtils;
 import es.caib.regweb3.persistence.utils.Semaforo;
 import es.caib.regweb3.sir.ejb.MensajeLocal;
-import es.caib.regweb3.sir.utils.Sicres3XML;
 import es.caib.regweb3.utils.Dir3CaibUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.RegwebUtils;
-import es.caib.regweb3.utils.TimeUtils;
 import es.caib.regweb3.webapp.controller.BaseController;
 import es.caib.regweb3.webapp.form.*;
 import es.caib.regweb3.webapp.utils.Mensaje;
-import org.dom4j.Document;
+import es.caib.regweb3.webapp.validator.BusquedaRegistrosSirValidator;
+
 import org.fundaciobit.genapp.common.i18n.I18NException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
 import java.io.File;
-import java.io.OutputStream;
-import java.nio.charset.Charset;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -64,7 +69,11 @@ public class SirController extends BaseController {
     @EJB(mappedName = "regweb3/MensajeEJB/local")
     private MensajeLocal mensajeEjb;
 
+    @Autowired
+    private BusquedaRegistrosSirValidator busquedaRegistrosSirValidator;
+    
 
+	StringBuilder mensajesSb;
 
     /**
      * Acepta un registro sir, lo distribuye y copia la documentación a una carpeta
@@ -497,6 +506,7 @@ public class SirController extends BaseController {
      * @return
      * @throws Exception
      */
+    /*
     @RequestMapping(value = "/oficio/reiniciar", method = RequestMethod.GET)
     @ResponseBody
     public Boolean reiniciarOficio(@RequestParam Long id, HttpServletRequest request)throws Exception {
@@ -509,7 +519,7 @@ public class SirController extends BaseController {
 
         return true;
     }
-
+     */
     /**
      * Reinicia el contador de reintentos SIR
      * @return
@@ -597,6 +607,7 @@ public class SirController extends BaseController {
      * @param request
      * @param response
      */
+    /*
     @RequestMapping(value = "/{idOficioRemision}/ficheroIntercambio", method = RequestMethod.GET)
     public void generarFicheroIntercambio(@PathVariable("idOficioRemision") Long idOficioRemision, HttpServletRequest request, HttpServletResponse response)  {
         RegistroSir registroSir = null;
@@ -641,6 +652,7 @@ public class SirController extends BaseController {
         }
 
     }
+    */
 
 	/**
 	 * Actualiza un {@link es.caib.regweb3.model.RegistroSir}
@@ -788,4 +800,76 @@ public class SirController extends BaseController {
         return "redirect:/inici";
     }
 
+    @RequestMapping(value = "/recuperarRegistrosSirRecibidos/form", method = RequestMethod.GET)
+    public String recuperarRegistrosSirRecibidos(Model model, HttpServletRequest request) throws Exception {
+    	model.addAttribute("rangoFechasBusqueda", new RangoFechasBusqueda());
+        return "sir/busquedaRegistrosSirList";
+    }
+    
+//    
+//    @RequestMapping(value = "/recuperarRegistrosSirRecibidos/form/update", method = RequestMethod.GET)
+//    public String recuperacionRegistrosProgresGet(
+//    		Model model,
+//    		HttpServletRequest request) throws Exception {
+//    	Entidad entidad = getEntidadActiva(request);
+//    	model.addAttribute("isRecoveringRegistros", registroSirEjb.isRecoveringRegistrosSIR(entidad.getId()));
+//    	return "sir/busquedaRegistrosSirForm";
+//    }
+//    
+    @RequestMapping(value = "/recuperarRegistrosSirRecibidos/form", method = RequestMethod.POST)
+    public String recuperacionRegistrosProgresPost(
+    		@ModelAttribute("rangoFechasBusqueda") RangoFechasBusqueda busqueda,
+    		BindingResult result,
+    		HttpServletRequest request) throws Exception {
+    	Entidad entidad = getEntidadActiva(request);
+    	HttpSession session = request.getSession();
+    	Integer total;
+    	busquedaRegistrosSirValidator.validate(busqueda, result);
+    	if (result.hasErrors()) {
+            return "sir/busquedaRegistrosSirList";
+        }
+		try {
+			mensajesSb = new StringBuilder();
+//			synchronized (this) {
+				total = registroSirEjb.recuperarRegistrosSirGEISER(entidad.getId(), busqueda.getFechaInicioImportacion(), busqueda.getFechaFinImportacion());
+//			}
+	        
+			if (total > 0) {
+				Mensaje.saveMessageInfo(request, "Se han recuperado " + total + " registros SIR");
+			} else {
+				Mensaje.saveMessageAviso(request, "No se ha encontrado ningún registro SIR para las fechas introducidas");
+			}
+		} catch (I18NException e) {
+			e.printStackTrace();
+	        Mensaje.saveMessageInfo(request, "Ha habido un error recuperando los registros SIR");
+	        return "redirect:/sir/recuperarRegistrosSirRecibidos/form";
+		}
+		session.setAttribute("resultadoImportacion", mensajesSb);
+        return "redirect:/sir/recuperarRegistrosSirRecibidos/form";
+    }
+    
+    @RequestMapping(value = "/recuperarRegistrosSirRecibidos/form/progres", method = RequestMethod.GET)
+	@ResponseBody
+	public ProgresoActualitzacion getProgresActualitzacio(HttpServletRequest request) {
+    	Entidad entidad = getEntidadActiva(request);
+		ProgresoActualitzacion progreso = registroSirEjb.getProgresoRecuperacionRegistrosSir(entidad.getId());
+		if (progreso != null && progreso.getInfo() != null) {
+			for (ActualitzacionInfo info: progreso.getInfo()) {
+				String cadena = "<p class='info-" + info.getTipo() + "'>" + info.getTexto() + "</p>";
+				if (mensajesSb.indexOf(cadena) == -1)
+					mensajesSb.append(cadena);
+				mensajesSb.append("\n");
+			}
+		}
+		return progreso;
+	}
+    
+    @InitBinder("rangoFechasBusqueda")
+    public void initBinder(WebDataBinder binder) {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        CustomDateEditor dateEditor = new CustomDateEditor(sdf, true);
+        binder.registerCustomEditor(java.util.Date.class, dateEditor);
+
+        binder.setValidator(this.busquedaRegistrosSirValidator);
+    }
 }

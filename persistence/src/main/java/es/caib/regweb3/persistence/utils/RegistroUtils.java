@@ -147,48 +147,48 @@ public class RegistroUtils{
      * @param registroEntrada
      * @return
      */
-    public static  String numeroRegistroFormateado(RegistroEntrada registroEntrada, Libro libro, Entidad entidad) throws Exception{
+//    public static  String numeroRegistroFormateado(RegistroEntrada registroEntrada, Libro libro, Entidad entidad) throws Exception{
+//
+//        String formatNumRegistre = entidad.getNumRegistro();
+//        if(formatNumRegistre != null){
+//            SimpleDateFormat formatYear = new SimpleDateFormat("yyyy");
+//            SimpleDateFormat formatDate = new SimpleDateFormat("dd/MM/yyyy");
+//            formatNumRegistre = formatNumRegistre.replace("${numRegistre}", String.valueOf(registroEntrada.getNumeroRegistro()));
+//            formatNumRegistre = formatNumRegistre.replace("${codiOficina}", registroEntrada.getOficina().getCodigo());
+//            formatNumRegistre = formatNumRegistre.replace("${nomOficina}", registroEntrada.getOficina().getDenominacion());
+//            formatNumRegistre = formatNumRegistre.replace("${tipusRegistre}", "E");
+//            formatNumRegistre = formatNumRegistre.replace("${dataRegistre}", formatDate.format(registroEntrada.getFecha()));
+//            formatNumRegistre = formatNumRegistre.replace("${anyRegistre}", formatYear.format(registroEntrada.getFecha()));
+//            formatNumRegistre = formatNumRegistre.replace("${numLlibre}", libro.getCodigo());
+//            formatNumRegistre = formatNumRegistre.replace("${nomLlibre}", libro.getNombre());
+//        }
+//
+//        return  formatNumRegistre;
+//    }
 
-        String formatNumRegistre = entidad.getNumRegistro();
-        if(formatNumRegistre != null){
-            SimpleDateFormat formatYear = new SimpleDateFormat("yyyy");
-            SimpleDateFormat formatDate = new SimpleDateFormat("dd/MM/yyyy");
-            formatNumRegistre = formatNumRegistre.replace("${numRegistre}", String.valueOf(registroEntrada.getNumeroRegistro()));
-            formatNumRegistre = formatNumRegistre.replace("${codiOficina}", registroEntrada.getOficina().getCodigo());
-            formatNumRegistre = formatNumRegistre.replace("${nomOficina}", registroEntrada.getOficina().getDenominacion());
-            formatNumRegistre = formatNumRegistre.replace("${tipusRegistre}", "E");
-            formatNumRegistre = formatNumRegistre.replace("${dataRegistre}", formatDate.format(registroEntrada.getFecha()));
-            formatNumRegistre = formatNumRegistre.replace("${anyRegistre}", formatYear.format(registroEntrada.getFecha()));
-            formatNumRegistre = formatNumRegistre.replace("${numLlibre}", libro.getCodigo());
-            formatNumRegistre = formatNumRegistre.replace("${nomLlibre}", libro.getNombre());
-        }
-
-        return  formatNumRegistre;
-    }
-
-    /**
-     * Obtiene el Numero de registro Salida formateado según la configuración de la Entidad a la que pertecene
-     * @param registroSalida
-     * @return
-     */
-    public static String numeroRegistroFormateado(RegistroSalida registroSalida, Libro libro, Entidad entidad) throws Exception{
-
-        String formatNumRegistre = entidad.getNumRegistro();
-        if(formatNumRegistre != null){
-            SimpleDateFormat formatYear = new SimpleDateFormat("yyyy");
-            SimpleDateFormat formatDate = new SimpleDateFormat("dd/MM/yyyy");
-            formatNumRegistre = formatNumRegistre.replace("${numRegistre}", String.valueOf(registroSalida.getNumeroRegistro()));
-            formatNumRegistre = formatNumRegistre.replace("${codiOficina}", registroSalida.getOficina().getCodigo());
-            formatNumRegistre = formatNumRegistre.replace("${nomOficina}", registroSalida.getOficina().getDenominacion());
-            formatNumRegistre = formatNumRegistre.replace("${tipusRegistre}", "S");
-            formatNumRegistre = formatNumRegistre.replace("${dataRegistre}", formatDate.format(registroSalida.getFecha()));
-            formatNumRegistre = formatNumRegistre.replace("${anyRegistre}", formatYear.format(registroSalida.getFecha()));
-            formatNumRegistre = formatNumRegistre.replace("${numLlibre}", libro.getCodigo());
-            formatNumRegistre = formatNumRegistre.replace("${nomLlibre}", libro.getNombre());
-        }
-
-        return  formatNumRegistre;
-    }
+//    /**
+//     * Obtiene el Numero de registro Salida formateado según la configuración de la Entidad a la que pertecene
+//     * @param registroSalida
+//     * @return
+//     */
+//    public static String numeroRegistroFormateado(RegistroSalida registroSalida, Libro libro, Entidad entidad) throws Exception{
+//
+//        String formatNumRegistre = entidad.getNumRegistro();
+//        if(formatNumRegistre != null){
+//            SimpleDateFormat formatYear = new SimpleDateFormat("yyyy");
+//            SimpleDateFormat formatDate = new SimpleDateFormat("dd/MM/yyyy");
+//            formatNumRegistre = formatNumRegistre.replace("${numRegistre}", String.valueOf(registroSalida.getNumeroRegistro()));
+//            formatNumRegistre = formatNumRegistre.replace("${codiOficina}", registroSalida.getOficina().getCodigo());
+//            formatNumRegistre = formatNumRegistre.replace("${nomOficina}", registroSalida.getOficina().getDenominacion());
+//            formatNumRegistre = formatNumRegistre.replace("${tipusRegistre}", "S");
+//            formatNumRegistre = formatNumRegistre.replace("${dataRegistre}", formatDate.format(registroSalida.getFecha()));
+//            formatNumRegistre = formatNumRegistre.replace("${anyRegistre}", formatYear.format(registroSalida.getFecha()));
+//            formatNumRegistre = formatNumRegistre.replace("${numLlibre}", libro.getCodigo());
+//            formatNumRegistre = formatNumRegistre.replace("${nomLlibre}", libro.getNombre());
+//        }
+//
+//        return  formatNumRegistre;
+//    }
 
     /**
      * Compone el nombre del fichero del Justificante

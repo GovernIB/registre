@@ -477,7 +477,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
 
         List<RegistroEntrada> registro = q.getResultList();
 
-        if (registro.size() == 1) {
+        if (registro.size() > 0) {
             return registro.get(0);
         } else {
             return null;

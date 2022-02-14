@@ -3,9 +3,6 @@ package es.caib.regweb3.persistence.ejb;
 import es.caib.regweb3.model.*;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
-import org.plugin.geiser.api.RespuestaBusquedaTramitGeiser;
-import org.plugin.geiser.api.RespuestaConsultaGeiser;
-import org.plugin.geiser.api.RespuestaRegistroGeiser;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
@@ -69,34 +66,34 @@ public interface SirEnvioLocal {
 
     Integer copiarDocumentacionERTE(List<Long> registros, Long idEntidad) throws Exception;
 
-    /**
-     * Realiza un nuevo envío SIR a GEISEr
-     * 
-     * @param rsir
-     * @param entidadId
-     * @return
-     * @throws I18NException
-     */
-	RespuestaRegistroGeiser postProcesoNuevoRegistroSirGeiser(RegistroSir rsir, Long entidadId) throws I18NException;
-
-	/**
-	 * Realiza una búsqueda del estado de tramitación de un registro SIR en GEISER
-	 * @param rsir
-	 * @param entidadId
-	 * @return
-	 * @throws I18NException
-	 */
-	RespuestaBusquedaTramitGeiser postProcesoBuscarEstadoTRegistroSirGeiser(RegistroSir rsir, Long entidadId) throws I18NException;
-
-	/**
-	 * Realiza la búsqueda de un registro SIR en GEISER
-	 * 
-	 * @param rsir
-	 * @param entidadId
-	 * @return
-	 * @throws I18NException
-	 */
-	RespuestaConsultaGeiser postProcesoConsultarRegistroSirGeiser(RegistroSir rsir, Long entidadId) throws I18NException;
+//    /**
+//     * Realiza un nuevo envío SIR a GEISEr
+//     * 
+//     * @param rsir
+//     * @param entidadId
+//     * @return
+//     * @throws I18NException
+//     */
+//	RespuestaRegistroGeiser postProcesoNuevoRegistroSirGeiser(RegistroSir rsir, Long entidadId) throws I18NException;
+//
+//	/**
+//	 * Realiza una búsqueda del estado de tramitación de un registro SIR en GEISER
+//	 * @param rsir
+//	 * @param entidadId
+//	 * @return
+//	 * @throws I18NException
+//	 */
+//	RespuestaBusquedaTramitGeiser postProcesoBuscarEstadoTRegistroSirGeiser(RegistroSir rsir, Long entidadId) throws I18NException;
+//
+//	/**
+//	 * Realiza la búsqueda de un registro SIR en GEISER
+//	 * 
+//	 * @param rsir
+//	 * @param entidadId
+//	 * @return
+//	 * @throws I18NException
+//	 */
+//	RespuestaConsultaGeiser postProcesoConsultarRegistroSirGeiser(RegistroSir rsir, Long entidadId) throws I18NException;
 
 	/**
 	 * Actualiza el estado de todos los envíos SIR pendientes
@@ -127,6 +124,17 @@ public interface SirEnvioLocal {
 	 * @throws Exception 
 	 */
 	void actualizarEnvioSirRealizado(RegistroSir registroSir, UsuarioEntidad usuarioEntidad) throws Exception, I18NException;
-
+	
+	
+	/**
+	 * Actualiza el identificador de intercambio de los registros recibidos
+	 * 
+	 * @param id
+	 * @throws Exception
+	 * @throws I18NException
+	 */
+	void actualizarIdEnviosSirRecibidos(Entidad entidad) throws Exception, I18NException;
+	
+	void forzarGuardado();
 }
 

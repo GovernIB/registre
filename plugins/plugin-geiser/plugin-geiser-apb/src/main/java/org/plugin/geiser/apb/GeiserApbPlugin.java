@@ -3,6 +3,7 @@ package org.plugin.geiser.apb;
 import java.io.ByteArrayOutputStream;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
@@ -18,6 +19,8 @@ import javax.xml.ws.handler.soap.SOAPHandler;
 import javax.xml.ws.handler.soap.SOAPMessageContext;
 
 import org.fundaciobit.pluginsib.core.utils.AbstractPluginProperties;
+import org.plugin.geiser.apb.helper.ConversionPluginHelper;
+import org.plugin.geiser.api.EstadoRegistro;
 import org.plugin.geiser.api.GeiserPluginException;
 import org.plugin.geiser.api.IGeiserPlugin;
 import org.plugin.geiser.api.PeticionBusquedaGeiser;
@@ -29,6 +32,7 @@ import org.plugin.geiser.api.RespuestaBusquedaGeiser;
 import org.plugin.geiser.api.RespuestaBusquedaTramitGeiser;
 import org.plugin.geiser.api.RespuestaConsultaGeiser;
 import org.plugin.geiser.api.RespuestaRegistroGeiser;
+import org.plugin.geiser.api.TipoAsiento;
 import org.plugin.geiser.api.ws.AuthenticationType;
 import org.plugin.geiser.api.ws.IRegistroWebService;
 import org.plugin.geiser.api.ws.PeticionBusquedaEstadoTramitacionType;
@@ -42,7 +46,6 @@ import org.plugin.geiser.api.ws.ResultadoBusquedaType;
 import org.plugin.geiser.api.ws.ResultadoConsultaType;
 import org.plugin.geiser.api.ws.ResultadoRegistroType;
 import org.plugin.geiser.api.ws.VersionRegeco;
-import org.plugin.geiser.apb.helper.ConversionPluginHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,8 +56,9 @@ public class GeiserApbPlugin extends AbstractPluginProperties implements IGeiser
     private static final String APP_CODE = basePluginGeiserApb + "app.code";
     private static final String APP_PASSWORD = basePluginGeiserApb + "app.password";
     private static final String CD_ASUNTO = basePluginGeiserApb + "codigo.asunto";
-    private static final String CD_OFICINA = basePluginGeiserApb + "oficina";
-    private static final String USUARIO = basePluginGeiserApb + "usuario";
+    private static final String CD_OFICINAS = basePluginGeiserApb + "oficinas";
+    private static final String USUARIO_GEISER = basePluginGeiserApb + "usuario.geiser";
+    private static final String USUARIO_REGISTRE_ENTRADA = basePluginGeiserApb + "usuario.responsable.registros";
     
 	public GeiserApbPlugin() {
         super();
@@ -85,9 +89,9 @@ public class GeiserApbPlugin extends AbstractPluginProperties implements IGeiser
 					peticionType);
 			int codigoRespuesta = resultado.getRespuesta().getCodigo();
 			if (codigoRespuesta == 1 || codigoRespuesta == 2 || codigoRespuesta == 3 ||codigoRespuesta == 4 ||codigoRespuesta == 5)
-				throw new GeiserPluginException("[GEISER] Respuesta: " + codigoRespuesta + " - " + resultado.getRespuesta().getMensaje());
+				throw new GeiserPluginException("Respuesta: " + codigoRespuesta + " - " + resultado.getRespuesta().getMensaje());
 		} catch (Exception ex) {
-			throw new GeiserPluginException("[GEISER] Ha habido un problema realizando el proceso de registro", ex);
+			throw new GeiserPluginException("[GEISER] Ha habido un problema realizando el proceso de registro. " + ex.getMessage(), ex.getCause());
 		}
 		return new ConversionPluginHelper().convertir(
 				resultado, 
@@ -111,9 +115,9 @@ public class GeiserApbPlugin extends AbstractPluginProperties implements IGeiser
 					peticionType);
 			int codigoRespuesta = resultado.getRespuesta().getCodigo();
 			if (codigoRespuesta == 1 || codigoRespuesta == 2 || codigoRespuesta == 3 ||codigoRespuesta == 4 ||codigoRespuesta == 5)
-				throw new GeiserPluginException("[GEISER] Respuesta: " + codigoRespuesta + " - " + resultado.getRespuesta().getMensaje());
+				throw new GeiserPluginException("Respuesta: " + codigoRespuesta + " - " + resultado.getRespuesta().getMensaje());
 		} catch (Exception ex) {
-			throw new GeiserPluginException("[GEISER] Ha habido un problema realizando el proceso de registro y envío", ex.getCause());
+			throw new GeiserPluginException("[GEISER] Ha habido un problema realizando el proceso de registro y envío. " + ex.getMessage(), ex.getCause());
 		}
 		return new ConversionPluginHelper().convertir(
 				resultado, 
@@ -136,9 +140,9 @@ public class GeiserApbPlugin extends AbstractPluginProperties implements IGeiser
 					peticionType);
 			int codigoRespuesta = resultado.getRespuesta().getCodigo();
 			if (codigoRespuesta == 1 || codigoRespuesta == 2 || codigoRespuesta == 3 ||codigoRespuesta == 4 ||codigoRespuesta == 5)
-				throw new GeiserPluginException("[GEISER] Respuesta: " + codigoRespuesta + " - " + resultado.getRespuesta().getMensaje());
+				throw new GeiserPluginException("Respuesta: " + codigoRespuesta + " - " + resultado.getRespuesta().getMensaje());
 		} catch (Exception ex) {
-			throw new GeiserPluginException("[GEISER] Ha habido un problema realizando el proceso de consulta", ex.getCause());
+			throw new GeiserPluginException("[GEISER] Ha habido un problema realizando el proceso de consulta. " + ex.getMessage(), ex.getCause());
 		}
 		return new ConversionPluginHelper().convertir(
 				resultado, 
@@ -146,28 +150,47 @@ public class GeiserApbPlugin extends AbstractPluginProperties implements IGeiser
 	}
 
 	@Override
-	public RespuestaBusquedaGeiser buscar(PeticionBusquedaGeiser peticion) throws GeiserPluginException {
-		ResultadoBusquedaType resultado = new ResultadoBusquedaType();
+	public List<RespuestaBusquedaGeiser> buscar(String fechaInicio, String fechaFin) throws GeiserPluginException {
+		List<RespuestaBusquedaGeiser> resultadosBusqueda = new ArrayList<RespuestaBusquedaGeiser>();
 		try {
-			AuthenticationType authentication = initAuthentication(
-					peticion.getOficinaOrigen(), 
-					peticion.getUsuario());
-			PeticionBusquedaType peticionType = new ConversionPluginHelper().convertir(
-					peticion, 
-					PeticionBusquedaType.class);
-			
-			resultado = getRegecoClient().buscar(
-					authentication, 
-					peticionType);
-			int codigoRespuesta = resultado.getRespuesta().getCodigo();
-			if (codigoRespuesta == 1 || codigoRespuesta == 2 || codigoRespuesta == 3 ||codigoRespuesta == 4 ||codigoRespuesta == 5)
-				throw new GeiserPluginException("[GEISER] Respuesta: " + codigoRespuesta + " - " + resultado.getRespuesta().getMensaje());
+			String oficinasBusqueda = getProperty(CD_OFICINAS);
+			if (oficinasBusqueda != null && !oficinasBusqueda.isEmpty()) {
+				List<String> oficinas = Arrays.asList(oficinasBusqueda.split(","));
+				for (String cdAmbido: oficinas) {
+					AuthenticationType authentication = initAuthentication(
+							cdAmbido, 
+							null);
+					PeticionBusquedaGeiser peticion = new PeticionBusquedaGeiser();
+					
+		        	peticion.setFechaRegistroInicio(fechaInicio);
+		        	peticion.setFechaRegistroFinal(fechaFin);
+		        	peticion.setEstado(EstadoRegistro.ENVIADO_PENDIENTE_CONFIRMACION);
+		        	peticion.setTipoAsiento(TipoAsiento.ENTRADA);
+		        	
+					PeticionBusquedaType peticionType = new ConversionPluginHelper().convertir(
+							peticion, 
+							PeticionBusquedaType.class);
+					
+					ResultadoBusquedaType resultado = getRegecoClient().buscar(
+							authentication, 
+							peticionType);
+					int codigoRespuesta = resultado.getRespuesta().getCodigo();
+					if (codigoRespuesta == 1 || codigoRespuesta == 2 || codigoRespuesta == 3 ||codigoRespuesta == 4 ||codigoRespuesta == 5)
+						throw new GeiserPluginException("Respuesta: " + codigoRespuesta + " - " + resultado.getRespuesta().getMensaje());
+					
+					RespuestaBusquedaGeiser resultadoConverted = new ConversionPluginHelper().convertir(
+							resultado, 
+							RespuestaBusquedaGeiser.class);
+					resultadoConverted.setOficinaDestino(cdAmbido);
+					resultadosBusqueda.add(resultadoConverted);
+				}
+			} else {
+				throw new GeiserPluginException("No se ha indicado ninguna oficina para realizar una búsqueda de registros");
+			}
 		} catch (Exception ex) {
-			throw new GeiserPluginException("[GEISER] Ha habido un problema realizando el proceso de búsqueda", ex.getCause());
+			throw new GeiserPluginException("[GEISER] Ha habido un problema realizando el proceso de búsqueda. " + ex.getMessage(), ex.getCause());
 		}
-		return new ConversionPluginHelper().convertir(
-				resultado, 
-				RespuestaBusquedaGeiser.class);
+		return resultadosBusqueda;
 	}
 
 	@Override
@@ -186,21 +209,27 @@ public class GeiserApbPlugin extends AbstractPluginProperties implements IGeiser
 					peticionType);
 			int codigoRespuesta = resultado.getRespuesta().getCodigo();
 			if (codigoRespuesta == 1 || codigoRespuesta == 2 || codigoRespuesta == 3 ||codigoRespuesta == 4 ||codigoRespuesta == 5)
-				throw new GeiserPluginException("[GEISER] Respuesta: " + codigoRespuesta + " - " + resultado.getRespuesta().getMensaje());
+				throw new GeiserPluginException("Respuesta: " + codigoRespuesta + " - " + resultado.getRespuesta().getMensaje());
 		} catch (Exception ex) {
-			throw new GeiserPluginException("[GEISER] Ha habido un problema realizando el proceso de búsqueda de estado de tramitación", ex.getCause());
+			throw new GeiserPluginException("[GEISER] Ha habido un problema realizando el proceso de búsqueda de estado de tramitación. " + ex.getMessage(), ex.getCause());
 		}
 		return new ConversionPluginHelper().convertir(
 				resultado, 
 				RespuestaBusquedaTramitGeiser.class);
+	}
+
+	@Override
+	public String getUsuariCreacioRegistres() throws GeiserPluginException {
+		return getProperty(USUARIO_REGISTRE_ENTRADA);
 	}
 	
 	private AuthenticationType initAuthentication(String ambito, String usuario) throws Exception {
 		AuthenticationType authentication = new AuthenticationType();
 		authentication.setAplicacion(getPropertyCode());
 		authentication.setPassword(getPropertyPassword());
-		authentication.setUsuario((usuario != null && !usuario.isEmpty()) ? usuario : getProperty(USUARIO));
-		authentication.setCdAmbito((ambito != null && !ambito.isEmpty()) ? ambito : getProperty(CD_OFICINA)); 
+		authentication.setUsuario((usuario != null && !usuario.isEmpty()) ? usuario : getProperty(USUARIO_GEISER));
+//		authentication.setCdAmbito((ambito != null && !ambito.isEmpty()) ? ambito : getProperty(CD_OFICINA)); 
+		authentication.setCdAmbito(ambito);
 		authentication.setVersion(VersionRegeco.V_2);
 		return authentication;
 	}

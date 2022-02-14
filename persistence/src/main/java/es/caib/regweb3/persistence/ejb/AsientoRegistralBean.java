@@ -51,18 +51,18 @@ public class AsientoRegistralBean implements AsientoRegistralLocal {
 
     @Override
     public RegistroSalida registrarSalida(RegistroSalida registroSalida,
-                                          UsuarioEntidad usuarioEntidad, List<Interesado> interesados, List<AnexoFull> anexos, Boolean validarAnexos)
+                                          UsuarioEntidad usuarioEntidad, List<Interesado> interesados, List<AnexoFull> anexos, Boolean validarAnexos, Boolean enviarGeiser)
             throws Exception, I18NException, I18NValidationException {
 
-        return registroSalidaEjb.registrarSalida(registroSalida, usuarioEntidad, interesados, anexos, validarAnexos);
+        return registroSalidaEjb.registrarSalida(registroSalida, usuarioEntidad, interesados, anexos, validarAnexos, enviarGeiser);
     }
 
     @Override
     public RegistroEntrada registrarEntrada(RegistroEntrada registroEntrada,
-                                            UsuarioEntidad usuarioEntidad, List<Interesado> interesados, List<AnexoFull> anexos, Boolean validarAnexos)
+                                            UsuarioEntidad usuarioEntidad, List<Interesado> interesados, List<AnexoFull> anexos, Boolean validarAnexos, Boolean enviarGeiser)
             throws Exception, I18NException, I18NValidationException {
 
-        return registroEntradaEjb.registrarEntrada(registroEntrada, usuarioEntidad, interesados, anexos, validarAnexos);
+        return registroEntradaEjb.registrarEntrada(registroEntrada, usuarioEntidad, interesados, anexos, validarAnexos, enviarGeiser);
 
     }
 
@@ -149,17 +149,35 @@ public class AsientoRegistralBean implements AsientoRegistralLocal {
                     } else { //Tiene oficinas en SIR, se crear el intercambio
 
                         try {
+                            // Crear el intercambio, posteriormente se enviará
+//                            registroSalida = sirEnvioEjb.crearIntercambioSalida(registroSalida, registroSalida.getOficina(), registroSalida.getUsuario(), oficinasSIR.get(0).getCodigo());
+//
+//                            registroSalida.setEstado(REGISTRO_OFICIO_SIR);
+//                            registroSalida.getRegistroDetalle().setIdentificadorIntercambio(registroSalida.getRegistroDetalle().getIdentificadorIntercambio());
+                            
+                            
+                            // Envío directo GEISER si el destinatario está integrado con SIR y además viene
+                			// de WS (hay que devolver el numero de registro a la aplicación origen)
+                			if (registroSalida.getEvento() == RegwebConstantes.EVENTO_OFICIO_SIR) {
+                				RegistroSir registroSir = sirEnvioEjb.enviarIntercambio(
+                						REGISTRO_SALIDA, 
+                						registroSalida, 
+                						registroSalida.getOficina(),
+                						registroSalida.getUsuario(), 
+                						registroSalida.getOficina().getCodigo());
+                				sirEnvioEjb.forzarGuardado();
+                				// Actualizar registro sir con info de GEISER
+//                            	sirEnvioEjb.actualizarEnvioSirRealizado(registroSir, usuario);
+                				if (registroSir != null) {
+                    				registroSalida.setNumeroRegistro("0");
+                    				registroSalida.setNumeroRegistroFormateado(registroSir.getNumeroRegistro());
+                    				registroSalida.setFecha(registroSir.getFechaRegistro());
+                    				registroSalida.setEstado(REGISTRO_OFICIO_SIR);
+                    			}
+                			}
 
                             // Crear Justificante
                             crearJustificante(registroSalida.getUsuario(), registroSalida, RegwebConstantes.REGISTRO_SALIDA, RegistroUtils.getIdiomaJustificante(registroSalida));
-
-                            // Crear el intercambio, posteriormente se enviará
-                            registroSalida = sirEnvioEjb.crearIntercambioSalida(registroSalida, registroSalida.getOficina(),
-                                    registroSalida.getUsuario(), oficinasSIR.get(0).getCodigo());
-
-                            registroSalida.setEstado(REGISTRO_OFICIO_SIR);
-                            registroSalida.getRegistroDetalle().setIdentificadorIntercambio(registroSalida.getRegistroDetalle().getIdentificadorIntercambio());
-
                         } catch (Exception e) {
                             throw new I18NException("registroSir.error.envio");
                         }

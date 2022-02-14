@@ -13,7 +13,6 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
     <tx:annotation-driven transaction-manager="transactionManager"/>
     <mvc:default-servlet-handler/>
     <mvc:annotation-driven ignoreDefaultModelOnRedirect="true" />
-    <task:annotation-driven/>
 
     <!--Configuración para mejorar el uso de @SessionAttributes, evitando problemas al utilizar varias pestañas en la misma sesión -->
     <bean id="conversationalSessionAttributeStore" class="es.caib.regweb3.webapp.utils.ConversationalSessionAttributeStore">
@@ -277,6 +276,15 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
         <!-- Suport per arxius en els formularis 
      org.springframework.web.multipart.commons.CommonsMultipartResolver
     -->
+    
+    <!-- Execució de tasques periòdiques 
+    
+    <task:annotation-driven/>
+    
+    -->
+	<task:annotation-driven scheduler="taskScheduler"/>
+	<task:scheduler id="taskScheduler" pool-size="10"/>
+	
     <bean id="multipartResolver" class="es.caib.regweb3.webapp.utils.CommonsMultipartResolver">
       <!--    
        <property name="maxUploadSize" value="10000000"/>   

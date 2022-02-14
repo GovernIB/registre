@@ -263,7 +263,9 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
                     registroSalida.setEstado(RegwebConstantes.REGISTRO_DISTRIBUIDO);
 
                     // Registramos la Salida
-                    registroSalida = registroSalidaEjb.registrarSalida(registroSalida, oficioRemision.getUsuarioResponsable(), destinatarios, null, false);
+                    // Enviar a GEISER salida si no es un envio SIR (en caso de envíos SIR la salida se genera automaticamente en GEISER y se recupera el número)
+                    boolean enviarGeiser = (estado == RegwebConstantes.REGISTRO_OFICIO_INTERNO || estado == RegwebConstantes.REGISTRO_OFICIO_EXTERNO) ? true : false; 
+                    registroSalida = registroSalidaEjb.registrarSalida(registroSalida, oficioRemision.getUsuarioResponsable(), destinatarios, null, false, enviarGeiser);
 
                     // CREAMOS LA TRAZABILIDAD
                     Trazabilidad trazabilidad = new Trazabilidad();
@@ -746,6 +748,30 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
         q.executeUpdate();
 
     }
+    
+    @Override
+    public void modificarFechaEstado(Long idOficioRemision, Date fechaEstado) throws Exception {
+
+        Query q = em.createQuery("update OficioRemision set fechaEstado=:fechaEstado where id = :idOficioRemision");
+        q.setParameter("fechaEstado", fechaEstado);
+        q.setParameter("idOficioRemision", idOficioRemision);
+        q.executeUpdate();
+
+    }
+    
+	@Override
+	public void actualizarDestinoExterno(Long idOficio, String codEntidadRegistralDest, String descEntidadRegistralDest,
+			String codDestinoExterno, String descDestinoExterno) throws Exception {
+		
+		Query q = em.createQuery("update OficioRemision set codigoEntidadRegistralDestino=:codEntidadRegistralDest, decodificacionEntidadRegistralDestino=:descEntidadRegistralDest"
+				+ ",destinoExternoCodigo=:codDestinoExterno,destinoExternoDenominacion=:descDestinoExterno  where id = :idOficioRemision");
+        q.setParameter("codEntidadRegistralDest", codEntidadRegistralDest);
+        q.setParameter("descEntidadRegistralDest", descEntidadRegistralDest);
+        q.setParameter("codDestinoExterno", codDestinoExterno);
+        q.setParameter("descDestinoExterno", descDestinoExterno);
+        q.setParameter("idOficioRemision", idOficio);
+        q.executeUpdate();
+	}
 
     @Override
     public void reiniciarIntentos(Long idOficioRemision) throws Exception {

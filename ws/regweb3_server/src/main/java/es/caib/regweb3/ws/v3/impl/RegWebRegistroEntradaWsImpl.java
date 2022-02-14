@@ -8,6 +8,7 @@ import es.caib.regweb3.model.utils.AnexoSimple;
 import es.caib.regweb3.persistence.ejb.DistribucionLocal;
 import es.caib.regweb3.persistence.ejb.RegistroEntradaConsultaLocal;
 import es.caib.regweb3.persistence.ejb.RegistroEntradaLocal;
+import es.caib.regweb3.persistence.ejb.SirEnvioLocal;
 import es.caib.regweb3.persistence.utils.I18NLogicUtils;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.persistence.utils.RespuestaDistribucion;
@@ -39,6 +40,9 @@ import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
+
+import static es.caib.regweb3.utils.RegwebConstantes.REGISTRO_ENTRADA;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -81,6 +85,9 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
 
     @EJB(mappedName = "regweb3/DistribucionEJB/local")
     private DistribucionLocal distribucionEjb;
+    
+    @EJB(mappedName = "regweb3/SirEnvioEJB/local")
+    private SirEnvioLocal sirEnvioEjb;
 
     @Override
     @RolesAllowed({RWE_USUARI})
@@ -219,7 +226,18 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
 
         // 12.- Creamos el Registro de Entrada
         try{
-            registroEntrada = registroEntradaEjb.registrarEntrada(registroEntrada, usuario, interesados, anexosFull, true);
+            registroEntrada = registroEntradaEjb.registrarEntrada(registroEntrada, usuario, interesados, anexosFull, true, true);
+            
+			// Envío directo GEISER si el destinatario está integrado con SIR y además viene
+			// de WS (hay que devolver el numero de registro a la aplicación origen)
+			if (registroEntrada.getEvento() == RegwebConstantes.EVENTO_OFICIO_SIR) {
+				sirEnvioEjb.enviarIntercambio(
+						REGISTRO_ENTRADA, 
+						registroEntrada, 
+						registroEntrada.getOficina(),
+						usuario, 
+						registroEntrada.getOficina().getCodigo());
+			}
             numRegFormat = registroEntrada.getNumeroRegistroFormateado();
 
         }catch (Exception e){

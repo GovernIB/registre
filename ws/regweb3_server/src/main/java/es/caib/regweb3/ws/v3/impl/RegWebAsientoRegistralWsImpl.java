@@ -11,6 +11,7 @@ import es.caib.regweb3.model.OficioRemision;
 import es.caib.regweb3.model.Organismo;
 import es.caib.regweb3.model.RegistroEntrada;
 import es.caib.regweb3.model.RegistroSalida;
+import es.caib.regweb3.model.RegistroSir;
 import es.caib.regweb3.model.Sesion;
 import es.caib.regweb3.model.UsuarioEntidad;
 import es.caib.regweb3.model.utils.AnexoFull;
@@ -23,6 +24,7 @@ import es.caib.regweb3.persistence.ejb.OficioRemisionLocal;
 import es.caib.regweb3.persistence.ejb.RegistroEntradaConsultaLocal;
 import es.caib.regweb3.persistence.ejb.RegistroSalidaConsultaLocal;
 import es.caib.regweb3.persistence.ejb.SesionLocal;
+import es.caib.regweb3.persistence.ejb.SirEnvioLocal;
 import es.caib.regweb3.persistence.utils.JustificanteReferencia;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
@@ -47,6 +49,8 @@ import es.caib.regweb3.ws.model.JustificanteWs;
 import es.caib.regweb3.ws.model.OficioWs;
 import es.caib.regweb3.ws.model.ResultadoBusquedaWs;
 import es.caib.regweb3.ws.utils.UsuarioAplicacionCache;
+import es.caib.regweb3.ws.utils.Utils;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
@@ -120,6 +124,8 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
     @EJB(mappedName = "regweb3/SesionEJB/local")
     private SesionLocal sesionEjb;
 
+    @EJB(mappedName = "regweb3/SirEnvioEJB/local")
+    private SirEnvioLocal sirEnvioEjb;
 
     @RolesAllowed({RWE_WS_ENTRADA, RWE_WS_SALIDA})
     @Override
@@ -325,12 +331,36 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
                         }
                     }
 
-                    registroEntrada = asientoRegistralEjb.registrarEntrada(registroEntrada, usuario, interesados, anexosFull, true);
-                    numRegFormat = registroEntrada.getNumeroRegistroFormateado();
+                    registroEntrada = asientoRegistralEjb.registrarEntrada(registroEntrada, usuario, interesados, anexosFull, true, true);
 
-//                    asiento.setNumeroRegistro(0);
-                    asiento.setNumeroRegistroFormateado(registroEntrada.getNumeroRegistroFormateado());
-                    asiento.setFechaRegistro(registroEntrada.getFecha());
+                    // Envío directo GEISER si el destinatario está integrado con SIR y además viene
+        			// de WS (hay que devolver el numero de registro a la aplicación origen)
+                    RegistroSir registroSir = null;
+        			if (registroEntrada.getEvento() == RegwebConstantes.EVENTO_OFICIO_SIR) {
+        				registroSir = sirEnvioEjb.enviarIntercambio(
+        						REGISTRO_ENTRADA, 
+        						registroEntrada, 
+        						registroEntrada.getOficina(),
+        						usuario, 
+        						registroEntrada.getOficina().getCodigo());
+        				sirEnvioEjb.forzarGuardado();
+        				// Actualizar registro sir con info de GEISER
+//                    	sirEnvioEjb.actualizarEnvioSirRealizado(registroSir, usuario);
+        			}
+        			
+        			if (registroEntrada.getNumeroRegistroFormateado() != null) {
+	                    numRegFormat = registroEntrada.getNumeroRegistroFormateado();
+	        			
+	                    asiento.setNumeroRegistro(Utils.formatNumeroRegistro(registroEntrada.getNumeroRegistro()));
+	                    asiento.setNumeroRegistroFormateado(registroEntrada.getNumeroRegistroFormateado());
+	                    asiento.setFechaRegistro(registroEntrada.getFecha());
+        			} else if (registroSir != null) {
+        				numRegFormat = registroSir.getNumeroRegistro();
+	        			
+	                    asiento.setNumeroRegistro(Utils.formatNumeroRegistro(registroSir.getNumeroRegistro()));
+	                    asiento.setNumeroRegistroFormateado(registroSir.getNumeroRegistro());
+	                    asiento.setFechaRegistro(registroSir.getFechaRegistro());
+        			}
 
                     // Distribuir / Generar justificante
                     if(justificante && distribuir){
@@ -408,16 +438,19 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
                     }
 
                     // Registrar la salida
-                    registroSalida = asientoRegistralEjb.registrarSalida(registroSalida, usuario, interesados, anexosFull, true);
-                    numRegFormat = registroSalida.getNumeroRegistroFormateado();
-
-//                    asiento.setNumeroRegistro(0);
-                    asiento.setNumeroRegistroFormateado(registroSalida.getNumeroRegistroFormateado());
-                    asiento.setFechaRegistro(registroSalida.getFecha());
-
+                    registroSalida = asientoRegistralEjb.registrarSalida(registroSalida, usuario, interesados, anexosFull, true, true);
+        			
                     // Procesar el Registro de Salida según el Tipo Operación
                     registroSalida = asientoRegistralEjb.procesarRegistroSalida(tipoOperacion, registroSalida);
-
+                    
+                    if (registroSalida.getNumeroRegistroFormateado() != null) {
+	                    numRegFormat = registroSalida.getNumeroRegistroFormateado();
+	        			
+	                    asiento.setNumeroRegistro(Utils.formatNumeroRegistro(registroSalida.getNumeroRegistro()));
+	                    asiento.setNumeroRegistroFormateado(registroSalida.getNumeroRegistroFormateado());
+	                    asiento.setFechaRegistro(registroSalida.getFecha());
+        			}
+                    
                     //Actualizamos el AsientoRegistral
                     asiento.setEstado(registroSalida.getEstado());
                     asiento.setIdentificadorIntercambio(registroSalida.getRegistroDetalle().getIdentificadorIntercambio());
@@ -459,8 +492,6 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
 
         return asiento;
     }
-
-
 
     @RolesAllowed({RWE_WS_ENTRADA, RWE_WS_SALIDA})
     @Override
