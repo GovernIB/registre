@@ -607,6 +607,7 @@ create table RWE_REGISTRO_DETALLE
     OFICINAEXTERNO   varchar2(9 char),
     DENOMOFIORIGEXT  varchar2(300 char),
     PRESENCIAL       number(1,0),
+    RECIBIDO_SIR     number(1,0),
     REFEXT           varchar2(16 char),
     RESERVA          varchar2(4000 char),
     SOLICITA         clob,
