@@ -644,6 +644,7 @@ create table RWE_REGISTRO_DETALLE
     OFICINAEXTERNO   varchar(9),
     DENOMOFIORIGEXT  varchar(300),
     PRESENCIAL       bool,
+    RECIBIDO_SIR     bool,
     REFEXT           varchar(16),
     RESERVA          varchar(4000),
     SOLICITA         text,
