@@ -113,7 +113,7 @@ public interface AnexoLocal extends BaseEjb<Anexo, Long> {
      * @return
      * @throws Exception
      */
-    void purgarAnexosRegistrosAceptados(Long idEntidad, Integer numElementos) throws Exception, I18NException;
+    int purgarAnexosRegistrosAceptados(Long idEntidad, Integer numElementos) throws Exception, I18NException;
 
 
     /**
@@ -124,7 +124,7 @@ public interface AnexoLocal extends BaseEjb<Anexo, Long> {
      * @throws Exception
      * @throws I18NException
      */
-    void purgarAnexosRegistrosDistribuidos(Long idEntidad, Integer meses, Integer numElementos) throws Exception, I18NException;
+    int purgarAnexosRegistrosDistribuidos(Long idEntidad, Integer meses, Integer numElementos) throws Exception, I18NException;
 
 
     /**
@@ -262,5 +262,15 @@ public interface AnexoLocal extends BaseEjb<Anexo, Long> {
      * @throws Exception
      */
     AnexoSimple descargarJustificante(Anexo anexo, Long idEntidad) throws I18NException, Exception;
+
+    /**
+     * Actualiza la información de un Anexo-Justificante al ser custodiado en Arxiu
+     * @param expedienteID
+     * @param custodiaID
+     * @param csv
+     * @param idAnexo
+     * @throws Exception
+     */
+    void custodiarJustificanteArxiu(String expedienteID, String custodiaID, String csv, Long idAnexo) throws Exception;
 
 }

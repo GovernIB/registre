@@ -29,6 +29,7 @@ import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
 import javax.annotation.Resource;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
 import javax.interceptor.Interceptors;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -39,6 +40,7 @@ import java.beans.PersistenceDelegate;
 import java.util.*;
 
 import static es.caib.regweb3.utils.RegwebConstantes.REGISTRO_ENTRADA;
+import static javax.ejb.TransactionAttributeType.REQUIRES_NEW;
 
 
 /**
@@ -1199,7 +1201,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public void purgarAnexosRegistrosAceptados(Long idEntidad, Integer numElementos) throws Exception, I18NException {
+    public int purgarAnexosRegistrosAceptados(Long idEntidad, Integer numElementos) throws Exception, I18NException {
 
 
         //Obtenemos los anexos de los registros de entrada que han sido aceptados y que no han sido purgados
@@ -1233,10 +1235,12 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             merge(anexo);
         }
 
+        return anexos.size();
+
     }
 
     @Override
-    public void purgarAnexosRegistrosDistribuidos(Long idEntidad, Integer meses, Integer numElementos) throws Exception, I18NException{
+    public int purgarAnexosRegistrosDistribuidos(Long idEntidad, Integer meses, Integer numElementos) throws Exception, I18NException{
 
         List<String> custodyIds = obtenerCustodyIdAnexosDistribuidos(meses, numElementos);
 
@@ -1245,6 +1249,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             purgarAnexo(custodyId, false, idEntidad);
         }
 
+        return custodyIds.size();
     }
 
     @Override
@@ -1507,6 +1512,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
      * @param idEntidad
      * @return
      */
+    @Override
     public String getUrlValidation(Anexo anexo, Long idEntidad) throws I18NException, Exception {
 
         if (anexo.getCustodiaID() == null) {
@@ -1547,6 +1553,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
      * @param idEntidad
      * @return
      */
+    @Override
     public String getCsvValidationWeb(Anexo anexo, Long idEntidad) throws I18NException, Exception {
 
         if (anexo.getCustodiaID() == null) {
@@ -1592,6 +1599,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
      * @param idEntidad
      * @return AnexoSimple
      */
+    @Override
     public AnexoSimple descargarFirmaDesdeUrlValidacion(Anexo anexo, Long idEntidad) throws I18NException, Exception {
 
         if (anexo.getPerfilCustodia().equals(RegwebConstantes.PERFIL_CUSTODIA_DOCUMENT_CUSTODY)) {
@@ -1650,9 +1658,22 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
      * @throws I18NException
      * @throws Exception
      */
+    @Override
     public AnexoSimple descargarJustificante(Anexo anexo, Long idEntidad) throws I18NException, Exception {
 
         return descargarFirmaDesdeUrlValidacion(anexo, idEntidad);
+    }
+
+    @Override
+    @TransactionAttribute(value=REQUIRES_NEW)
+    public void custodiarJustificanteArxiu(String expedienteID, String custodiaID, String csv, Long idAnexo) throws Exception{
+        Query q = em.createQuery("update Anexo set perfilCustodia=:perfilCustodia, expedienteID = :expedienteID, custodiaID = :custodiaID, csv= :csv, custodiado = true where id = :idAnexo");
+        q.setParameter("perfilCustodia", RegwebConstantes.PERFIL_CUSTODIA_ARXIU);
+        q.setParameter("expedienteID", expedienteID);
+        q.setParameter("custodiaID", custodiaID);
+        q.setParameter("csv", csv);
+        q.setParameter("idAnexo", idAnexo);
+        q.executeUpdate();
     }
 
     /**
