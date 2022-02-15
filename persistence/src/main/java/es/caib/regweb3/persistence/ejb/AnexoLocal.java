@@ -263,4 +263,14 @@ public interface AnexoLocal extends BaseEjb<Anexo, Long> {
      */
     AnexoSimple descargarJustificante(Anexo anexo, Long idEntidad) throws I18NException, Exception;
 
+    /**
+     * Actualiza la información de un Anexo-Justificante al ser custodiado en Arxiu
+     * @param expedienteID
+     * @param custodiaID
+     * @param csv
+     * @param idAnexo
+     * @throws Exception
+     */
+    void custodiarJustificanteArxiu(String expedienteID, String custodiaID, String csv, Long idAnexo) throws Exception;
+
 }
