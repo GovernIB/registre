@@ -207,6 +207,7 @@
                                         <dt><i class="fa fa-home"></i> CustodyId: </dt> <dd> ${registro.registroDetalle.justificante.custodiaID}</dd>
                                         <dt><i class="fa fa-home"></i> Expediente: </dt> <dd> ${registro.registroDetalle.justificante.expedienteID}</dd>
                                     </c:if>
+                                    <dt><i class="fa fa-home"></i> idAnexo: </dt> <dd> ${registro.registroDetalle.justificante.id}</dd>
                                 </dl>
                             </div>
                         </div>
