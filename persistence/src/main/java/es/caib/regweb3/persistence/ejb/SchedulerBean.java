@@ -138,7 +138,7 @@ public class SchedulerBean implements SchedulerLocal{
 
                     //Purgamos los anexos de registros distribuidos un máximo de numElementos
                     int total = anexoEjb.purgarAnexosRegistrosDistribuidos(entidad.getId(), mesesPurgo, numElementos);
-                    peticion.append("total anexos: ").append(total).append(System.getProperty("line.separator"));
+                    peticion.append("total anexos purgados: ").append(total).append(System.getProperty("line.separator"));
 
                     integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_SCHEDULERS, descripcion, peticion.toString(), System.currentTimeMillis() - tiempo, entidad.getId(), "");
                 }

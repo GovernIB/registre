@@ -1242,7 +1242,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
     @Override
     public int purgarAnexosRegistrosDistribuidos(Long idEntidad, Integer meses, Integer numElementos) throws Exception, I18NException{
 
-        List<String> custodyIds = obtenerCustodyIdAnexosDistribuidos(meses, numElementos);
+        List<String> custodyIds = obtenerCustodyIdAnexosDistribuidos(idEntidad, meses, numElementos);
 
         for (String custodyId : custodyIds) {
             //Purgamos anexo a anexo
@@ -1275,23 +1275,26 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
 
     @Override
-    public List<String> obtenerCustodyIdAnexosDistribuidos(Integer meses, Integer numElementos) throws Exception {
-            Date fechaPurgo = DateUtils.addMonths(new Date(), -meses);
+    public List<String> obtenerCustodyIdAnexosDistribuidos(Long idEntidad, Integer meses, Integer numElementos) throws Exception {
 
-            // Obtenemos aquellos anexos que corresponden a registros Distribuidos y la fecha de distribución la cogemos de la trazabilidad.
-            Query q = em.createQuery("select anexo.custodiaID from Anexo as anexo, Trazabilidad  as t " +
-                    "where t.fecha<=:fechaPurgo and t.registroEntradaOrigen.registroDetalle.id = anexo.registroDetalle.id and " +
-                    "t.tipo =:tipoDistribucion and t.registroEntradaOrigen.estado=:distribuido and anexo.justificante = false and anexo.purgado = false");
-            q.setParameter("fechaPurgo", fechaPurgo);
-            q.setParameter("distribuido", RegwebConstantes.REGISTRO_DISTRIBUIDO);
-            q.setParameter("tipoDistribucion", RegwebConstantes.TRAZABILIDAD_DISTRIBUCION);
-            q.setHint("org.hibernate.readOnly", true);
-            if(numElementos!= null) {
-                q.setMaxResults(numElementos);
-            }
+        Date fechaPurgo = DateUtils.addMonths(new Date(), -meses);
 
-            return q.getResultList();
+        // Obtenemos aquellos anexos que corresponden a registros Distribuidos y la fecha de distribución la cogemos de la trazabilidad.
+        Query q = em.createQuery("select anexo.custodiaID from Anexo as anexo, Trazabilidad  as t " +
+                "where t.registroEntradaOrigen.usuario.entidad.id = :idEntidad and t.fecha<=:fechaPurgo and t.registroEntradaOrigen.registroDetalle.id = anexo.registroDetalle.id and " +
+                "t.tipo =:tipoDistribucion and t.registroEntradaOrigen.estado=:distribuido and anexo.justificante = false and anexo.purgado = false and anexo.confidencial = false");
 
+        q.setParameter("idEntidad", idEntidad);
+        q.setParameter("fechaPurgo", fechaPurgo);
+        q.setParameter("distribuido", RegwebConstantes.REGISTRO_DISTRIBUIDO);
+        q.setParameter("tipoDistribucion", RegwebConstantes.TRAZABILIDAD_DISTRIBUCION);
+        q.setHint("org.hibernate.readOnly", true);
+
+        if(numElementos!= null) {
+            q.setMaxResults(numElementos);
+        }
+
+        return q.getResultList();
     }
 
 

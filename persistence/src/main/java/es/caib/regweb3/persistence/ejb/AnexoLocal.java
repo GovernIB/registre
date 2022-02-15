@@ -147,7 +147,7 @@ public interface AnexoLocal extends BaseEjb<Anexo, Long> {
      * @return
      * @throws Exception
      */
-    List<String> obtenerCustodyIdAnexosDistribuidos(Integer meses, Integer numElementos) throws Exception;
+    List<String> obtenerCustodyIdAnexosDistribuidos(Long idEntidad, Integer meses, Integer numElementos) throws Exception;
 
     /**
      * Obtiene el id del Justificante que tiene un registroDetalle
