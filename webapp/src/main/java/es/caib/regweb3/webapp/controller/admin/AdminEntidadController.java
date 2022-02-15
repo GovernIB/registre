@@ -4,6 +4,7 @@ import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.persistence.utils.Paginacion;
+import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.persistence.utils.RegistroUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
@@ -75,6 +76,12 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
 
     @EJB(mappedName = DistribucionLocal.JNDI_NAME)
     private DistribucionLocal distribucionEjb;
+
+    @EJB(mappedName = "regweb3/IntegracionEJB/local")
+    private IntegracionLocal integracionEjb;
+
+    @EJB(mappedName = "regweb3/AnexoSirEJB/local")
+    private AnexoSirLocal anexoSirEjb;
 
 
     /**
@@ -632,6 +639,116 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
 
         } catch (Exception e) {
             Mensaje.saveMessageError(request, "Error al capitalizar interesados");
+            e.printStackTrace();
+        }
+
+        return "redirect:/inici";
+    }
+
+    /**
+     * Purga los anexos distribuidos
+     */
+    @RequestMapping(value = "/purgarAnexosDistribuidos")
+    public String purgarAnexosDistribuidos(HttpServletRequest request) throws Exception{
+
+        Entidad entidad =  getEntidadActiva(request);
+
+        //Integración
+        long tiempo = System.currentTimeMillis();
+        StringBuilder peticion = new StringBuilder();
+        String descripcion = "Purgar Anexos distribuidos";
+        Date inicio = new Date();
+        peticion.append("entidad: ").append(entidad.getNombre()).append(System.getProperty("line.separator"));
+
+
+        try {
+
+            Integer mesesPurgo = PropiedadGlobalUtil.getMesesPurgoAnexos(entidad.getId());
+            Integer numElementos = PropiedadGlobalUtil.getNumElementosPurgoAnexos(entidad.getId());
+
+            //Purgamos los anexos de registros distribuidos un máximo de numElementos
+            int total = anexoEjb.purgarAnexosRegistrosDistribuidos(entidad.getId(), mesesPurgo, numElementos);
+            peticion.append("total anexos purgados: ").append(total).append(System.getProperty("line.separator"));
+
+            integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_SCHEDULERS, descripcion, peticion.toString(), System.currentTimeMillis() - tiempo, entidad.getId(), "");
+
+            Mensaje.saveMessageInfo(request, "Se han purgado " + total + " anexos distribuidos.");
+
+        } catch (Exception | I18NException e) {
+            integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_SCHEDULERS, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - tiempo, entidad.getId(), "");
+            Mensaje.saveMessageError(request, "Error purgando anexos distribuidos");
+            e.printStackTrace();
+        }
+
+        return "redirect:/inici";
+    }
+
+    /**
+     * Purga los anexos sir aceptados
+     */
+    @RequestMapping(value = "/purgarAnexosSir")
+    public String purgarAnexosSir(HttpServletRequest request) throws Exception{
+
+        Entidad entidad =  getEntidadActiva(request);
+
+        //Integración
+        long tiempo = System.currentTimeMillis();
+        StringBuilder peticion = new StringBuilder();
+        String descripcion = "Purgar AnexosSir";
+        peticion.append("entidad: ").append(entidad.getNombre()).append(System.getProperty("line.separator"));
+
+        Date inicio = new Date();
+
+        try {
+
+            Integer numElementos = PropiedadGlobalUtil.getNumElementosPurgoAnexos(entidad.getId());
+
+            //Purgamos los anexos de registros distribuidos un máximo de numElementos
+            int total = anexoSirEjb.purgarArchivos(entidad.getId(),numElementos);
+            peticion.append("total anexos: ").append(total).append(System.getProperty("line.separator"));
+
+            integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_SCHEDULERS, descripcion, peticion.toString(), System.currentTimeMillis() - tiempo, entidad.getId(), "");
+
+            Mensaje.saveMessageInfo(request, "Se han purgado " + total + " anexos sir.");
+
+        } catch (Exception e) {
+            integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_SCHEDULERS, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - tiempo, entidad.getId(), "");
+            Mensaje.saveMessageError(request, "Error purgando anexos sir");
+            e.printStackTrace();
+        }
+
+        return "redirect:/inici";
+    }
+
+    /**
+     * Purga los anexos aceptados en destino SIR
+     */
+    @RequestMapping(value = "/purgarAnexosAceptados")
+    public String purgarAnexosAceptados(HttpServletRequest request) throws Exception{
+
+        Entidad entidad =  getEntidadActiva(request);
+
+        //Integración
+        long tiempo = System.currentTimeMillis();
+        StringBuilder peticion = new StringBuilder();
+        String descripcion = "Purgar Anexos de registros recibidos SIR Confirmados";
+        peticion.append("entidad: ").append(entidad.getNombre()).append(System.getProperty("line.separator"));
+
+        Date inicio = new Date();
+
+        try {
+
+            Integer numElementos = PropiedadGlobalUtil.getNumElementosPurgoAnexos(entidad.getId());
+            int total = anexoEjb.purgarAnexosRegistrosAceptados(entidad.getId(), numElementos);
+            peticion.append("total anexos: ").append(total).append(System.getProperty("line.separator"));
+
+            integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_SCHEDULERS, descripcion, peticion.toString(), System.currentTimeMillis() - tiempo, entidad.getId(), "");
+
+            Mensaje.saveMessageInfo(request, "Se han purgado " + total + " anexos aceptados en destino SIR.");
+
+        } catch (Exception | I18NException e) {
+            integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_SCHEDULERS, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - tiempo, entidad.getId(), "");
+            Mensaje.saveMessageError(request, "Error purgando anexos aceptados en destino SIR");
             e.printStackTrace();
         }
 
