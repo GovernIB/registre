@@ -542,7 +542,14 @@ public class PropiedadGlobalUtil {
      */
     public static Integer getMesesPurgoAnexos(Long idEntidad) {
         final String partialPropertyName = "anexos.purgo.meses";
-        return  getIntegerByEntidad(idEntidad,partialPropertyName);
+        Integer valor = getIntegerByEntidad(idEntidad,partialPropertyName);
+
+        // Valor global si no existeix el de per entitat
+        if (valor == null) {
+            valor = 3;
+        }
+
+        return valor;
 
     }
 
@@ -554,7 +561,14 @@ public class PropiedadGlobalUtil {
      */
     public static Integer getNumElementosPurgoAnexos(Long idEntidad) {
         final String partialPropertyName = "anexos.purgo.numelementos";
-        return  getIntegerByEntidad(idEntidad,partialPropertyName);
+        Integer valor =  getIntegerByEntidad(idEntidad,partialPropertyName);
+
+        // Valor global si no existeix el de per entitat
+        if (valor == null) {
+            valor = 100;
+        }
+
+        return valor;
 
     }
 
