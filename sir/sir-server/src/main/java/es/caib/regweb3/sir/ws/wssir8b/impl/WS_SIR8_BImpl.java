@@ -65,14 +65,13 @@ public class WS_SIR8_BImpl implements WS_SIR8_B_PortType {
     @WebMethod(operationName = "envioFicherosAAplicacion")
     public RespuestaWS envioFicherosAAplicacion(@WebParam(name = "value0") String registro, @WebParam(name = "value1") String firmaRegistro) {
 
-        log.info("-------------------- Recibiendo fichero de intercambio en WS_SIR8_B --------------------");
+        /*log.info("-------------------- Recibiendo fichero de intercambio en WS_SIR8_B --------------------");
         if(registro.contains("<Anexo>")){
             log.info("Fichero de intercambio: " + registro.replace(registro.substring(registro.indexOf("<Anexo>"), registro.lastIndexOf("</Anexo>")), ""));
         }else{
             log.info("Fichero de intercambio: " + registro);
         }
-
-        log.info("------------------------------------------------------------------------------------------");
+        log.info("------------------------------------------------------------------------------------------");*/
 
         RespuestaWS respuestaWS = null;
 

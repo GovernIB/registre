@@ -15,7 +15,6 @@ import es.caib.regweb3.persistence.utils.RegistroUtils;
 import es.caib.regweb3.plugins.justificante.IJustificantePlugin;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.RegwebUtils;
-import es.caib.regweb3.utils.TimeUtils;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NArgumentCode;
 import org.fundaciobit.genapp.common.i18n.I18NArgumentString;
@@ -129,9 +128,9 @@ public class JustificanteBean implements JustificanteLocal {
 
         try {
 
-            log.info("------------------------------------------------------------");
-            log.info("Generando Justificante para el registro: " + registro.getNumeroRegistroFormateado());
-            log.info("");
+            //log.info("------------------------------------------------------------");
+            //log.info("Generando Justificante para el registro: " + registro.getNumeroRegistroFormateado());
+            //log.info("");
 
             // Integración
             peticion.append("usuario: ").append(usuarioEntidad.getUsuario().getNombreIdentificador()).append(System.getProperty("line.separator"));
@@ -220,9 +219,9 @@ public class JustificanteBean implements JustificanteLocal {
                 colaEjb.enviarAColaCustodia(registro, tipoRegistro, usuarioEntidad);
             }
 
-            log.info("");
-            log.info("Fin Generando Justificante para el registro: " + registro.getNumeroRegistroFormateado() + " en: " + TimeUtils.formatElapsedTime(System.currentTimeMillis() - inicio.getTime()));
-            log.info("------------------------------------------------------------");
+            //log.info("");
+            //log.info("Fin Generando Justificante para el registro: " + registro.getNumeroRegistroFormateado() + " en: " + TimeUtils.formatElapsedTime(System.currentTimeMillis() - inicio.getTime()));
+            //log.info("------------------------------------------------------------");
 
             // Integracion
             integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_JUSTIFICANTE, descripcion, peticion.toString(), System.currentTimeMillis() - inicio.getTime(), usuarioEntidad.getEntidad().getId(), numRegFormat);
@@ -287,9 +286,9 @@ public class JustificanteBean implements JustificanteLocal {
 
         try{
 
-            log.info("------------------------------------------------------------");
-            log.info("Generando Justificante para el registro: " + registro.getNumeroRegistroFormateado());
-            log.info("");
+            //log.info("------------------------------------------------------------");
+            //log.info("Generando Justificante para el registro: " + registro.getNumeroRegistroFormateado());
+            //log.info("");
 
             // Integración
             peticion.append("usuario: ").append(usuarioEntidad.getUsuario().getNombreIdentificador()).append(System.getProperty("line.separator"));
@@ -341,9 +340,9 @@ public class JustificanteBean implements JustificanteLocal {
             anexoFull.setDocument(document);
             anexoFull.setAnexo(anexo);
 
-            log.info("");
-            log.info("Fin Generando Justificante para el registro: " + registro.getNumeroRegistroFormateado() + " en: " + TimeUtils.formatElapsedTime(System.currentTimeMillis() - inicio.getTime()));
-            log.info("------------------------------------------------------------");
+            //log.info("");
+            //log.info("Fin Generando Justificante para el registro: " + registro.getNumeroRegistroFormateado() + " en: " + TimeUtils.formatElapsedTime(System.currentTimeMillis() - inicio.getTime()));
+            //log.info("------------------------------------------------------------");
 
             // Integracion
             integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_JUSTIFICANTE, descripcion, peticion.toString(), System.currentTimeMillis() - inicio.getTime(), entidad.getId(), numRegFormat);

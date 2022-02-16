@@ -105,7 +105,7 @@ public class Sicres3XML {
 
         FicheroIntercambio ficheroIntercambio = null;
 
-        log.info("Parseando el XML del fichero de intercambio...");
+        //log.info("Parseando el XML del fichero de intercambio...");
 
         try {
             InputStream is = new ByteArrayInputStream(xml.getBytes("UTF-8"));
@@ -152,7 +152,7 @@ public class Sicres3XML {
      */
     public void validarFicheroIntercambio(FicheroIntercambio fichero, Dir3CaibObtenerOficinasWs oficinasService, Dir3CaibObtenerUnidadesWs unidadesService) {
 
-        log.info("Validando FicheroIntercambio...");
+        //log.info("Validando FicheroIntercambio...");
 
         Assert.notNull(fichero, "El resultado de parsear el xml del 'ficheroIntercambio' no puede ser null");
 
@@ -174,7 +174,7 @@ public class Sicres3XML {
         validarSegmentoAnexos(fichero);
         validarSegmentoFormularioGenerico(fichero);
 
-        log.info("Fichero de intercambio validado");
+        //log.info("Fichero de intercambio validado");
     }
 
     /**
@@ -211,7 +211,7 @@ public class Sicres3XML {
         // Validar que la Fecha de entrada no sea superior a la actual
         Assert.isTrue(fichero.getFechaRegistro().before(new Date()), "El campo 'FechaHoraEntrada' del SegmentoOrigen, es mayor que la fecha actual.");
 
-        log.info("SegmentoOrigen validado!");
+       //log.info("SegmentoOrigen validado!");
     }
 
     /**
@@ -234,7 +234,7 @@ public class Sicres3XML {
                     "El campo 'CodigoUnidadTramitacionDestino' del SegmentoDestino, no es valido o no existe en DIR3.");
         }
 
-        log.info("SegmentoDestino validado!");
+        //log.info("SegmentoDestino validado!");
     }
 
     /**
@@ -401,12 +401,12 @@ public class Sicres3XML {
                     }
                 }
 
-                log.info("Interesado validado!");
+                //log.info("Interesado validado!");
 
             }
         }
 
-        log.info("SegmentoInteresados validado!");
+        //log.info("SegmentoInteresados validado!");
     }
 
     /**
@@ -419,7 +419,7 @@ public class Sicres3XML {
         // Validar que el resumen esté informado
         Assert.hasText(fichero.getResumen(), "El campo 'Resumen' del SegmentoAsunto, no puede estar vacio.");
 
-        log.info("SegmentoAsunto validado!");
+        //log.info("SegmentoAsunto validado!");
     }
 
     /**
@@ -449,7 +449,7 @@ public class Sicres3XML {
 
             }
         }
-        log.info("SegmentoAnexos validado!");
+        //log.info("SegmentoAnexos validado!");
     }
 
     /**
@@ -505,7 +505,7 @@ public class Sicres3XML {
             // Validar el contenido del anexo
             Assert.isTrue(anexo.getAnexo().length > 0, "El campo 'Anexo' del SegmentoAnexos, no puede estar vacio.");
 
-            log.info("Anexo '"+anexo.getNombre_Fichero_Anexado()+"' validado!");
+            //log.info("Anexo '"+anexo.getNombre_Fichero_Anexado()+"' validado!");
         }
     }
 
@@ -576,7 +576,7 @@ public class Sicres3XML {
         // Validar el identificador de intercambio, tiene que realizarse despues de la validacion del código de entidad registral de inicio
         validarIdentificadorIntercambio(fichero);
 
-        log.info("SegmentoControl validado!");
+        //log.info("SegmentoControl validado!");
     }
 
     /**
@@ -616,7 +616,7 @@ public class Sicres3XML {
         Assert.isTrue(StringUtils.length(tokens[2]) == 8, "El campo 'IdentificadorIntercambio' del SegmentoControl, no es valido, la longitud del numero secuencial es mayor de 8 caracteres.");
         Assert.isTrue(StringUtils.isNumeric(tokens[2]), "El valor del campo 'IdentificadorFichero' del SegmentoControl, no es valido, hay un error en el numero secuencial, no es de tipo numerico.");
 
-        log.info("IdentificadorIntercambio validado!");
+        //log.info("IdentificadorIntercambio validado!");
     }
 
     /**
@@ -638,8 +638,7 @@ public class Sicres3XML {
             Assert.hasText(fichero.getSolicita(), "El campo 'solicita' del SegmentoFormularioGenerico, no puedo estar vacio");
         }
 
-
-        log.info("SegmentoFormularioGenerico validado!");
+        //log.info("SegmentoFormularioGenerico validado!");
     }
 
     /**
@@ -1082,7 +1081,7 @@ public class Sicres3XML {
                 elem = rootElement.addElement("Hash");
                 elem.addCDATA(anexoSir.getHash());
             }else{
-                log.info("getHash es null");
+                //log.info("getHash es null");
             }
 
             // Tipo_MIME
@@ -1097,7 +1096,7 @@ public class Sicres3XML {
                 elem = rootElement.addElement("Anexo");
                 elem.addCDATA(getBase64String(anexoSir.getAnexoData()));
             }else{
-                log.info("getAnexoData es null");
+                //log.info("getAnexoData es null");
             }
 
             //Identificador Fichero Firmado
@@ -1322,7 +1321,7 @@ public class Sicres3XML {
             elem.addCDATA(entidad.getNombre());
         }
 
-        log.info("Segmento De_Origen_o_Remitente creado");
+        //log.info("Segmento De_Origen_o_Remitente creado");
 
     }
 
@@ -1362,7 +1361,7 @@ public class Sicres3XML {
             elem.addCDATA(registro.getDestinoExternoDenominacion());
         }
 
-        log.info("Segmento De_Destino creado");
+        //log.info("Segmento De_Destino creado");
 
     }
 
@@ -1560,7 +1559,7 @@ public class Sicres3XML {
             Element rootElement = rootNode.addElement("De_Interesado");
         }
 
-        log.info("Segmento De_Interesado creado");
+        //log.info("Segmento De_Interesado creado");
     }
 
     /**
@@ -1598,7 +1597,7 @@ public class Sicres3XML {
             elem.addCDATA(registroDetalle.getExpediente());
         }
 
-        log.info("Segmento De_Asunto creado");
+        //log.info("Segmento De_Asunto creado");
 
     }
 
@@ -1650,14 +1649,10 @@ public class Sicres3XML {
                             CODIGO_SICRES_BY_TIPO_DOCUMENTO.get(anexo.getTipoDocumento()),anexo.getCertificado(),anexo.getFirma(),anexo.getTimestamp(), anexo.getValidacionOCSPCertificado(),
                             anexo.getHash(),scFirma.getMime(),scFirma.getData(), identificadorFichero, anexo.getObservaciones());
                     break;
-
             }
-
-
         }
 
-        log.info("Segmento De_Anexo creado");
-
+        //log.info("Segmento De_Anexo creado");
     }
 
     private void crearAnexo(Element rootNode, String nombreFichero, String identificadorFichero, String validezDocumento, String tipoDocumento, byte[] certificado,
@@ -1722,7 +1717,7 @@ public class Sicres3XML {
             elem = rootElement.addElement("Hash");
             elem.addCDATA(org.apache.commons.codec.binary.StringUtils.newStringUtf8(hash));
         }else{
-            log.info("hash es null");
+            //log.info("hash es null");
         }
 
         // Tipo_MIME
@@ -1736,7 +1731,7 @@ public class Sicres3XML {
             elem = rootElement.addElement("Anexo");
             elem.addCDATA(getBase64String(anexo));
         }else{
-            log.info("anexo es null");
+            //log.info("anexo es null");
         }
 
         //Identificador Fichero Firmado

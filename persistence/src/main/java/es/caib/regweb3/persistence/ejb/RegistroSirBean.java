@@ -2080,7 +2080,6 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
 
                 // CASO ORVE BASE64 Decodificamos previamente porque vienen las firmas codificadas en base64
                 if (Base64.isBase64(anexoSirData)) {
-                    log.info("Entramos en decodificar caso ORVE");
                     anexoSirData = Base64.decodeBase64(anexoSirData);
                     anexoSir.setAnexoData(anexoSirData);
                 }
@@ -2195,7 +2194,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
 
                 }*/
                 } else {
-                    log.info("Entro en CADES");
+
                     // CADES
 
                     //Caso Firma Detached, caso 4, se guarda 1 anexo, con el doc original en documentCustody y la firma en SignatureCustody
