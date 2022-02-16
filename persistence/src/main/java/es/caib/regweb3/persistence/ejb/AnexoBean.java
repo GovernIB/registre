@@ -1267,14 +1267,14 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
     }
 
     @Override
-    public void purgarAnexo(String custodiaId, boolean isJustificante, Long idEntidad) throws  I18NException {
+    public void purgarAnexo(String custodiaId, Long idEntidad) throws  I18NException {
 
         try {
             Query query = em.createQuery("select anexo from Anexo as anexo where anexo.custodiaID=:custodiaId");
             query.setParameter("custodiaId", custodiaId);
 
             Anexo anexo = (Anexo) query.getSingleResult();
-            if (anexo != null && !isJustificante) {
+            if (anexo != null) {
                 eliminarCustodia(custodiaId, anexo, idEntidad);
                 anexo.setPurgado(true);
                 merge(anexo);
