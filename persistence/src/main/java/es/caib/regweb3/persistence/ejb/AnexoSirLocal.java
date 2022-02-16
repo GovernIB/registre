@@ -19,10 +19,9 @@ public interface AnexoSirLocal extends BaseEjb<AnexoSir, Long> {
     /**
      * Elimina los Archivos del sistema de archivos de los RegistrosSir Aceptados, Rechazados o Reenviados
      * @param idEntidad
-     * @param numElementos numero máximo de archivos que se van a purgar en esta iteracion
      * @throws Exception
      */
-    int purgarArchivos(Long idEntidad, Integer numElementos) throws Exception;
+    int purgarArchivos(Long idEntidad) throws Exception;
 
     /**
      * Elimina los AnexoSir de una Entidad

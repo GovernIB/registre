@@ -578,8 +578,12 @@ public class PropiedadGlobalUtil {
      */
     public static Integer getMesesPurgoProcesadosCola(Long idEntidad) {
         final String partialPropertyName = "cola.procesados.purgo.meses";
-        return  getIntegerByEntidad(idEntidad,partialPropertyName);
+        Integer valor =  getIntegerByEntidad(idEntidad,partialPropertyName);
 
+        if (valor == null) {
+            valor = 2;
+        }
+        return valor;
     }
 
     /**

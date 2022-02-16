@@ -387,9 +387,12 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
     }
 
     @Override
-    public void purgarElementosProcesados(Long idEntidad, Integer meses) throws Exception{
+    public void purgarElementosProcesados(Long idEntidad) throws Exception{
+
+        Integer mesesPurgo = PropiedadGlobalUtil.getMesesPurgoProcesadosCola(idEntidad);
+
         //Obtenemos los elementos que fueron procesados hace meses
-        List<Cola> elementos = obtenerProcesados(idEntidad,meses);
+        List<Cola> elementos = obtenerProcesados(idEntidad, mesesPurgo);
 
         //Eliminamos los elementos de la cola
         for(Cola elemento: elementos){
