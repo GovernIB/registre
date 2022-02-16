@@ -525,8 +525,6 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
      */
     private RegistroEntrada procesarRegistroEntrada(RegistroEntrada registroEntrada, Entidad entidad) throws Exception{
 
-        log.info("Entro en procesar entrada ");
-
         // Organismo destinatario, lo buscamos en función de si es multientidad o no
         Organismo orgDestino = organismoEjb.findByCodigoByEntidadMultiEntidad(registroEntrada.getDestino().getCodigo(),entidad.getId());
 
@@ -548,8 +546,6 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
             registroEntrada.setDestinoExternoCodigo(null);
             registroEntrada.setDestinoExternoDenominacion(null);
         }
-
-
 
         // Oficina origen, determinando si es Interno o Externo
         Oficina oficinaOrigen = registroEntrada.getRegistroDetalle().getOficinaOrigen();
@@ -608,7 +604,6 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
         if( registroEntrada.getRegistroDetalle().getTransporte() == -1){
             registroEntrada.getRegistroDetalle().setTransporte(null);
         }
-
 
         return registroEntrada;
     }

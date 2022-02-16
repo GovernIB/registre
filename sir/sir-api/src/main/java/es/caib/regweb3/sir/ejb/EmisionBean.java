@@ -101,7 +101,7 @@ public class EmisionBean implements EmisionLocal{
 
             if (Errores.OK.getValue().equals(respuesta.getCodigo())) {
 
-                log.info("RegistroSir enviado correctamente: " + respuesta.getCodigo() + " - " + respuesta.getDescripcion());
+                //log.info("RegistroSir enviado correctamente: " + respuesta.getCodigo() + " - " + respuesta.getDescripcion());
             }else{
                 log.error("Errro en el envio: " + respuesta.getCodigo() + " - " + respuesta.getDescripcion());
                 throw new SIRException("Error " + respuesta.getCodigo() + " - " + respuesta.getDescripcion());
