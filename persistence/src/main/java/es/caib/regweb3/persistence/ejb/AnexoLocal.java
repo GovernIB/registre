@@ -128,12 +128,11 @@ public interface AnexoLocal extends BaseEjb<Anexo, Long> {
      * Elimina el archivo físico de custodia pero dejamos la info del anexo en la tabla de anexos y lo marcamos como purgado.
      *
      * @param custodiaId
-     * @param isJustificante
      * @param idEntidad
      * @throws Exception
      * @throws I18NException
      */
-    void purgarAnexo(String custodiaId, boolean isJustificante, Long idEntidad) throws Exception, I18NException;
+    void purgarAnexo(String custodiaId, Long idEntidad) throws Exception, I18NException;
 
 
     /**
