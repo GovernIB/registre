@@ -102,9 +102,7 @@ public class ReservaController  extends BaseController {
                 registro.getRegistroDetalle().setIdioma(null);
 
                 //Guardamos el RegistroEntrada
-                synchronized (this){
-                    registro = registroEntradaEjb.registrarEntrada(registro, usuarioEntidad, null, null, false);
-                }
+                registro = registroEntradaEjb.registrarEntrada(registro, usuarioEntidad, null, null, false);
 
             }catch (Exception e) {
                 Mensaje.saveMessageError(request, getMessage("regweb.error.registro"));

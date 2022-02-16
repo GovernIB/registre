@@ -645,28 +645,25 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
 
         try {
 
-            synchronized (this) {
+            RegistroSalida registroSalida = registroSalidaEjb.getConAnexosFull(idRegistro);
+            UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
 
-                RegistroSalida registroSalida = registroSalidaEjb.getConAnexosFull(idRegistro);
-                UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
+            // Dispone de permisos para Editar el registro
+            if (permisoOrganismoUsuarioEjb.tienePermiso(usuarioEntidad.getId(), registroSalida.getOficina().getOrganismoResponsable().getId(), RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_SALIDA, true) && !registroSalida.getEstado().equals(RegwebConstantes.REGISTRO_ANULADO)) {
 
-                // Dispone de permisos para Editar el registro
-                if (permisoOrganismoUsuarioEjb.tienePermiso(usuarioEntidad.getId(), registroSalida.getOficina().getOrganismoResponsable().getId(), RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_SALIDA, true) && !registroSalida.getEstado().equals(RegwebConstantes.REGISTRO_ANULADO)) {
+                // Creamos el anexo justificante y lo firmamos
+                AnexoFull anexoFull = justificanteEjb.crearJustificante(usuarioEntidad, registroSalida, RegwebConstantes.REGISTRO_SALIDA, idioma);
 
-                    // Creamos el anexo justificante y lo firmamos
-                    AnexoFull anexoFull = justificanteEjb.crearJustificante(usuarioEntidad, registroSalida, RegwebConstantes.REGISTRO_SALIDA, idioma);
-
-                    // Alta en tabla LOPD
-                    if (anexoFull != null) {
-                        lopdEjb.altaLopd(registroSalida.getNumeroRegistro(), registroSalida.getFecha(), registroSalida.getLibro().getId(), usuarioEntidad.getId(), RegwebConstantes.REGISTRO_SALIDA, RegwebConstantes.LOPD_JUSTIFICANTE);
-                    }
-
-                    jsonResponse.setStatus("SUCCESS");
-
-                } else {
-                    jsonResponse.setStatus("FAIL");
-                    jsonResponse.setError(getMessage("aviso.registro.editar"));
+                // Alta en tabla LOPD
+                if (anexoFull != null) {
+                    lopdEjb.altaLopd(registroSalida.getNumeroRegistro(), registroSalida.getFecha(), registroSalida.getLibro().getId(), usuarioEntidad.getId(), RegwebConstantes.REGISTRO_SALIDA, RegwebConstantes.LOPD_JUSTIFICANTE);
                 }
+
+                jsonResponse.setStatus("SUCCESS");
+
+            } else {
+                jsonResponse.setStatus("FAIL");
+                jsonResponse.setError(getMessage("aviso.registro.editar"));
             }
 
         } catch (I18NException e) {
