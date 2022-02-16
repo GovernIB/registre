@@ -89,7 +89,7 @@ public class ArxiuCaibUtils {
 
                 // Creamos el Expediente del Justificante
                 expediente = crearExpediente(registro, tipoRegistro, serieDocumental, codigoProcedimiento);
-                log.info("Expediente creado: " + expediente.getIdentificador());
+
 
                 // Guardamos la referencia del expediente creado
                 registro.getRegistroDetalle().setExpedienteJustificante(expediente.getIdentificador());
@@ -98,12 +98,12 @@ public class ArxiuCaibUtils {
             }else{
                 expediente = new Expedient();
                 expediente.setIdentificador(registro.getRegistroDetalle().getExpedienteJustificante());
-                log.info("Expediente ya existia: " + expediente.getIdentificador());
+
             }
 
             // Creamos el Documento del Justificante
             documento = crearDocumentoJustificante(registro, getTipoRegistroEni(tipoRegistro), serieDocumental, firma, expediente.getIdentificador(), DocumentEstat.DEFINITIU);
-            log.info("Documento creado: " + documento.getIdentificador());
+
 
             //Cerramos el expediente
             if(getPropertyCerrarExpediente()){
@@ -176,12 +176,9 @@ public class ArxiuCaibUtils {
 
             // Creamos el Expediente del Justificante
             expediente = crearExpediente(registro, tipoRegistro, serieDocumental, codigoProcedimiento);
-            log.info("Expediente creado: " + expediente.getIdentificador());
 
             // Creamos el Documento del Justificante
             documento = crearDocumentoJustificante(registro, getTipoRegistroEni(tipoRegistro), serieDocumental, firma, expediente.getIdentificador(), DocumentEstat.ESBORRANY);
-            log.info("Documento creado: " + documento.getIdentificador());
-
 
         }catch (ArxiuException e){
             log.info("Error creando el justificante en Arxiu");
@@ -242,7 +239,7 @@ public class ArxiuCaibUtils {
 
                 expediente = new Expedient();
                 expediente.setIdentificador(anexo.getRegistroDetalle().getExpedienteJustificante());
-                log.info("Expediente ya existia: " + expediente.getIdentificador());
+
             }
 
             // Creamos el Documento nuevo de Arxiu-Caib
