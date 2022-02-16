@@ -469,9 +469,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
         oficioRemision.setLibro(new Libro(idLibro));
         oficioRemision.setOrganismoDestinatario(new Organismo(idOrganismo));
 
-        synchronized (this) {
-            oficioRemision = oficioRemisionEjb.registrarOficioRemision(oficioRemision, RegwebConstantes.REGISTRO_OFICIO_INTERNO);
-        }
+        oficioRemision = oficioRemisionEjb.registrarOficioRemision(oficioRemision, RegwebConstantes.REGISTRO_OFICIO_INTERNO);
 
         return oficioRemision;
 
@@ -507,9 +505,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
         oficioRemision.setDestinoExternoDenominacion(organismoExternoDenominacion);
         oficioRemision.setOrganismoDestinatario(null);
 
-        synchronized (this) {
-            oficioRemision = oficioRemisionEjb.registrarOficioRemision(oficioRemision, RegwebConstantes.REGISTRO_OFICIO_EXTERNO);
-        }
+        oficioRemision = oficioRemisionEjb.registrarOficioRemision(oficioRemision, RegwebConstantes.REGISTRO_OFICIO_EXTERNO);
 
         return oficioRemision;
 
@@ -634,9 +630,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
             nuevoRE.setRegistroDetalle(registroDetalle);
 
             // Registramos el nuevo RegistroEntrada
-            synchronized (this) {
-                nuevoRE = registroEntradaEjb.registrarEntrada(nuevoRE, usuario, interesados, anexos, false);
-            }
+            nuevoRE = registroEntradaEjb.registrarEntrada(nuevoRE, usuario, interesados, anexos, false);
 
             registros.add(nuevoRE);
 

@@ -202,7 +202,7 @@ public class InteresadoController extends BaseController{
      */
     @RequestMapping(value="/gestionar/{tipoRegistro}/nuevo/{idRegistroDetalle}", method= RequestMethod.POST)
     @ResponseBody
-    public synchronized JsonResponse nuevoInteresado(@PathVariable Long tipoRegistro,@PathVariable String idRegistroDetalle, @RequestBody Interesado interesado, HttpServletRequest request, BindingResult result) {
+    public JsonResponse nuevoInteresado(@PathVariable Long tipoRegistro,@PathVariable String idRegistroDetalle, @RequestBody Interesado interesado, HttpServletRequest request, BindingResult result) {
 
         JsonResponse jsonResponse = new JsonResponse();
 
