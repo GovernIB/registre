@@ -156,10 +156,9 @@ public interface ColaLocal extends BaseEjb<Cola, Long> {
      * Método que elimina los elementos que fueron procesados hace x meses
      *
      * @param idEntidad
-     * @param meses
      * @throws Exception
      */
-    void purgarElementosProcesados(Long idEntidad, Integer meses) throws Exception;
+    void purgarElementosProcesados(Long idEntidad) throws Exception;
 
     /**
      * Obtiene los elementos de cualquier cola que estén en estado Error
