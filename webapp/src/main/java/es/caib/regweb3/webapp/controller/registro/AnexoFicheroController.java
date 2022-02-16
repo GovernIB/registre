@@ -66,8 +66,7 @@ public class AnexoFicheroController extends AnexoController {
                               @PathVariable Long tipoRegistro, @PathVariable Long registroID, @PathVariable Boolean isOficioRemisionSir,
                               Model model) throws I18NException, Exception {
 
-        log.info(" Passa per AnexoFicheroController::ficherosGet(" + registroDetalleID
-                + "," + tipoRegistro + ", " + registroID + ")");
+        //log.info(" Passa per AnexoFicheroController::ficherosGet(" + registroDetalleID + "," + tipoRegistro + ", " + registroID + ")");
 
         Entidad entidad = getEntidadActiva(request);
         //Actualiza las variables con la ultima acción y prepara el anexoForm
@@ -86,7 +85,7 @@ public class AnexoFicheroController extends AnexoController {
                                BindingResult result, HttpServletRequest request,
                                HttpServletResponse response, Model model) throws Exception, I18NException {
 
-        log.info(" Passa per ficherosPost");
+        //log.info(" Passa per ficherosPost");
 
         // Validad nombre del fichero
         validadNombreFichero(anexoForm, result);
