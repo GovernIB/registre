@@ -109,22 +109,19 @@ public interface AnexoLocal extends BaseEjb<Anexo, Long> {
      * los que han sido confirmados en destino al enviarlos via SIR.
      *
      * @param idEntidad
-     * @param numElementos
      * @return
      * @throws Exception
      */
-    int purgarAnexosRegistrosAceptados(Long idEntidad, Integer numElementos) throws Exception, I18NException;
+    int purgarAnexosRegistrosAceptados(Long idEntidad) throws Exception, I18NException;
 
 
     /**
      * Método que elimina los anexos asociados a registros que ya se han distribuido.
      * @param idEntidad
-     * @param meses
-     * @param numElementos
      * @throws Exception
      * @throws I18NException
      */
-    int purgarAnexosRegistrosDistribuidos(Long idEntidad, Integer meses, Integer numElementos) throws Exception, I18NException;
+    int purgarAnexosRegistrosDistribuidos(Long idEntidad) throws Exception, I18NException;
 
 
     /**
@@ -138,16 +135,6 @@ public interface AnexoLocal extends BaseEjb<Anexo, Long> {
      */
     void purgarAnexo(String custodiaId, boolean isJustificante, Long idEntidad) throws Exception, I18NException;
 
-
-    /**
-     * Obtiene los anexos distribuidos hace x meses que seran los candidatos a purgar.
-     *
-     * @param meses numero de meses
-     * @param numElementos numero maximo de anexos que se purgaran en la iteración
-     * @return
-     * @throws Exception
-     */
-    List<String> obtenerCustodyIdAnexosDistribuidos(Long idEntidad, Integer meses, Integer numElementos) throws Exception;
 
     /**
      * Obtiene el id del Justificante que tiene un registroDetalle

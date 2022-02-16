@@ -4,7 +4,6 @@ import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.persistence.utils.Paginacion;
-import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.persistence.utils.RegistroUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
@@ -77,10 +76,10 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
     @EJB(mappedName = DistribucionLocal.JNDI_NAME)
     private DistribucionLocal distribucionEjb;
 
-    @EJB(mappedName = "regweb3/IntegracionEJB/local")
+    @EJB(mappedName = IntegracionLocal.JNDI_NAME)
     private IntegracionLocal integracionEjb;
 
-    @EJB(mappedName = "regweb3/AnexoSirEJB/local")
+    @EJB(mappedName = AnexoSirLocal.JNDI_NAME)
     private AnexoSirLocal anexoSirEjb;
 
 
@@ -663,11 +662,8 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
 
         try {
 
-            Integer mesesPurgo = PropiedadGlobalUtil.getMesesPurgoAnexos(entidad.getId());
-            Integer numElementos = PropiedadGlobalUtil.getNumElementosPurgoAnexos(entidad.getId());
-
-            //Purgamos los anexos de registros distribuidos un máximo de numElementos
-            int total = anexoEjb.purgarAnexosRegistrosDistribuidos(entidad.getId(), mesesPurgo, numElementos);
+            //Purgamos los anexos de registros distribuidos
+            int total = anexoEjb.purgarAnexosRegistrosDistribuidos(entidad.getId());
             peticion.append("total anexos purgados: ").append(total).append(System.getProperty("line.separator"));
 
             integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_SCHEDULERS, descripcion, peticion.toString(), System.currentTimeMillis() - tiempo, entidad.getId(), "");
@@ -701,10 +697,8 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
 
         try {
 
-            Integer numElementos = PropiedadGlobalUtil.getNumElementosPurgoAnexos(entidad.getId());
-
-            //Purgamos los anexos de registros distribuidos un máximo de numElementos
-            int total = anexoSirEjb.purgarArchivos(entidad.getId(),numElementos);
+            //Purgamos los anexos de registros distribuidos
+            int total = anexoSirEjb.purgarArchivos(entidad.getId());
             peticion.append("total anexos: ").append(total).append(System.getProperty("line.separator"));
 
             integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_SCHEDULERS, descripcion, peticion.toString(), System.currentTimeMillis() - tiempo, entidad.getId(), "");
@@ -738,8 +732,8 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
 
         try {
 
-            Integer numElementos = PropiedadGlobalUtil.getNumElementosPurgoAnexos(entidad.getId());
-            int total = anexoEjb.purgarAnexosRegistrosAceptados(entidad.getId(), numElementos);
+            //Purgamos los anexos de registros recibidos SIR Confirmados
+            int total = anexoEjb.purgarAnexosRegistrosAceptados(entidad.getId());
             peticion.append("total anexos: ").append(total).append(System.getProperty("line.separator"));
 
             integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_SCHEDULERS, descripcion, peticion.toString(), System.currentTimeMillis() - tiempo, entidad.getId(), "");
