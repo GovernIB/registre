@@ -192,7 +192,7 @@ public class Organismo implements Serializable {
     }
 
 
-    @ManyToOne()
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ENTIDAD")
     @ForeignKey(name = "RWE_ORGANISMO_ENTIDAD_FK")
     @JsonIgnore
