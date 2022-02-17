@@ -158,7 +158,7 @@ public class Libro implements Serializable {
         this.contadorSir = contadorSir;
     }
 
-    @ManyToOne()
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ORGANISMO", foreignKey = @ForeignKey(name = "RWE_LIBRO_ORGANISMO_FK"))
     public Organismo getOrganismo() {
         return organismo;

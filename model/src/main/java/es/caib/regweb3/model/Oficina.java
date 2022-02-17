@@ -247,7 +247,7 @@ public class Oficina implements Serializable {
     }
 
 
-    @ManyToOne()
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "PAIS", foreignKey = @ForeignKey(name = "RWE_OFICINA_PAIS_FK"))
     @JsonIgnore
     public CatPais getCodPais() {
@@ -258,7 +258,7 @@ public class Oficina implements Serializable {
         this.codPais = codPais;
     }
 
-    @ManyToOne()
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "COMUNIDAD", foreignKey = @ForeignKey(name = "RWE_OFICINA_COMUNIDAD_FK"))
     @JsonIgnore
     public CatComunidadAutonoma getCodComunidad() {
@@ -269,7 +269,7 @@ public class Oficina implements Serializable {
         this.codComunidad = codComunidad;
     }
 
-    @ManyToOne()
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "LOCALIDAD", foreignKey = @ForeignKey(name = "RWE_OFICINA_LOCALIDAD_FK"))
     @JsonIgnore
     public CatLocalidad getLocalidad() {
@@ -280,7 +280,7 @@ public class Oficina implements Serializable {
         this.localidad = localidad;
     }
 
-    @ManyToOne()
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "TIPOVIA", foreignKey = @ForeignKey(name = "RWE_OFICINA_TIPOVIA_FK"))
     @JsonIgnore
     public CatTipoVia getTipoVia() {
