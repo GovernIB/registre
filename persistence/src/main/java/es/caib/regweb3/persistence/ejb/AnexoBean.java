@@ -717,7 +717,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
                 } else { // ya tenia, sumamos 1
                     total += 1;
                 }
-                log.info("TOTAL " + total);
+
                 if (total <= 0) {
                     //La combinació elegida deixa aquest annex sense cap fitxer
                     throw new I18NException("anexo.error.quedarsesinfichero");
@@ -733,7 +733,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
                 } else { // si ya tenia, sumamos 1
                     total += 1;
                 }
-                log.info("TOTAL " + total);
+
              /* if (total <= 0) {
                   //La combinació elegida deixa aquest annex sense cap fitxer
                   throw new I18NException("anexo.error.quedarsesinfichero");
@@ -747,7 +747,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
                 } else { // ya tenia, sumamos 1
                     total += 1;
                 }
-                log.info("TOTAL " + total);
+
                 if (total <= 0) {
                     //La combinació elegida deixa aquest annex sense cap fitxer
                     throw new I18NException("anexo.error.quedarsesinfichero");
@@ -772,7 +772,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
                 } else { // si ya tenia, sumamos 1
                     total += 1;
                 }
-                log.info("TOTAL " + total);
+
                 if (total <= 1) {
                     //La combinació elegida deixa aquest annex sense cap fitxer
                     throw new I18NException("anexo.error.faltadocumento");
