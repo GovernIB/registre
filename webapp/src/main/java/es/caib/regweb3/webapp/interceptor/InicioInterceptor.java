@@ -245,13 +245,6 @@ public class InicioInterceptor extends HandlerInterceptorAdapter {
                             entidadEjb.marcarEntidadMantenimiento(entidadActiva.getId(), true);
                         }
 
-                        // Tipo documental existente
-                        if(tipoDocumentalEjb.getByEntidad(entidadActiva.getId()).size()==0){
-                            log.info("Aviso: No hay ningún Tipo Documental para la Entidad Activa");
-                            Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.tipoDocumental"));
-                            entidadEjb.marcarEntidadMantenimiento(entidadActiva.getId(), true);
-                        }
-
                         //Comprobamos que se haya definido un formato para el número de registro en la Entidad
                         if(StringUtils.isEmpty(entidadActiva.getNumRegistro())){
                             log.info("No hay configurado el formato del numero de registro para la Entidad activa");
