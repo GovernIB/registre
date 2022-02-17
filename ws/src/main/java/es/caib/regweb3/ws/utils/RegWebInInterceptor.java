@@ -57,7 +57,7 @@ public class RegWebInInterceptor extends AbstractPhaseInterceptor<Message> {
         String userapp = context.getUserPrincipal().getName();
 
         if (logEnable) {
-            log.info(" ------------------ RegWebWSInInterceptor  --------------");
+            log.debug(" ------------------ RegWebWSInInterceptor  --------------");
 
             try {
 
