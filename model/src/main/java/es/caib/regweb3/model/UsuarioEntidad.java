@@ -95,7 +95,7 @@ public class UsuarioEntidad implements Serializable{
         this.activo = activo;
     }
 
-    @ManyToOne()
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ULTIMAOFICINA", foreignKey = @ForeignKey(name = "RWE_USUENT_OFICINA_FK"))
     @JsonIgnore
     public Oficina getUltimaOficina() {
