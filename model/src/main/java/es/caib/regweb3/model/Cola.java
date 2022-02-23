@@ -1,5 +1,6 @@
 package es.caib.regweb3.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.ForeignKey;
 
 import javax.persistence.*;
@@ -100,6 +101,7 @@ public class Cola implements Serializable{
     @ManyToOne(optional = false,fetch = FetchType.LAZY)
     @JoinColumn(name="USUARIOENTIDAD")
     @ForeignKey(name="RWE_COLA_USUENTI_FK")
+    @JsonIgnore
     public UsuarioEntidad getUsuarioEntidad() {
         return usuarioEntidad;
     }

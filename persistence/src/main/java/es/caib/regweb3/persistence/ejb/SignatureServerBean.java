@@ -165,9 +165,6 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
             SignatureCustody sign = input.getSignatureCustody();
             DocumentCustody doc = input.getDocumentoCustody();
 
-            log.info("checkDocumentAndSignature::Document = " + doc);
-            log.info("checkDocumentAndSignature::Signature = " + sign);
-
             if (sign == null && doc == null) {
                 throw new I18NException("error.checkanexosir.nifirmanidoc");
             }

@@ -19,14 +19,9 @@ import org.fundaciobit.plugins.documentcustody.api.DocumentCustody;
 import org.fundaciobit.plugins.documentcustody.api.SignatureCustody;
 import org.fundaciobit.pluginsib.core.utils.Metadata;
 import org.fundaciobit.pluginsib.core.utils.MetadataConstants;
-import org.fundaciobit.pluginsib.scanweb.api.ScanWebDocument;
-import org.fundaciobit.pluginsib.scanweb.api.ScanWebMode;
-import org.fundaciobit.pluginsib.scanweb.api.ScanWebRequest;
-import org.fundaciobit.pluginsib.scanweb.api.ScanWebRequestSignatureInfo;
-import org.fundaciobit.pluginsib.scanweb.api.ScanWebResult;
+import org.fundaciobit.pluginsib.scanweb.api.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -67,9 +62,6 @@ public class AnexoScanController extends AnexoController {
                                 @PathVariable Long tipoRegistro, @PathVariable Long registroID, @PathVariable Boolean isOficioRemisionSir,
                                 Model model) throws I18NException, Exception {
 
-        log.info(" Passa per AnexoScanController::crearAnexoGet(" + registroDetalleID
-                + "," + tipoRegistro + ", " + registroID + ")");
-
        //Actualiza las variables con la ultima acción y prepara el anexoForm
         AnexoForm anexoForm = prepararAnexoForm(request, registroDetalleID, tipoRegistro, registroID, isOficioRemisionSir, true);
         request.getSession().setAttribute("anexoForm", anexoForm);
@@ -88,9 +80,6 @@ public class AnexoScanController extends AnexoController {
                                 HttpServletResponse response, @PathVariable Long registroDetalleID,
                                 @PathVariable Long tipoRegistro, @PathVariable Long registroID, @PathVariable Boolean isOficioRemisionSir,
                                 Model model) throws I18NException, Exception {
-
-        log.info(" Passa per AnexoScanController::crearAnexoMasivoGet(" + registroDetalleID
-           + "," + tipoRegistro + ", " + registroID + ")");
 
         //Actualiza las variables con la ultima acción y prepara el anexoForm
         AnexoForm anexoForm = prepararAnexoForm(request, registroDetalleID, tipoRegistro, registroID, isOficioRemisionSir, true);
@@ -186,9 +175,7 @@ public class AnexoScanController extends AnexoController {
             Mensaje.saveMessageError(request, e.getMessage());
         }
 
-
-        return "redirect:/anexoScan/new/" + anexoForm.getAnexo().getRegistroDetalle().getId() + "/" + anexoForm.getTipoRegistro() + "/" + anexoForm.getRegistroID() + "/" + isSIR;
-
+        return "redirect:/anexoScan/new/" + anexoForm.getIdRegistroDetalle() + "/" + anexoForm.getTipoRegistro() + "/" + anexoForm.getRegistroID() + "/" + isSIR;
     }
 
 
