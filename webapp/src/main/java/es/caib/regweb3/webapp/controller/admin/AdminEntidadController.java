@@ -100,7 +100,6 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
         model.addAttribute("registroEntradaBusqueda", registroEntradaBusqueda);
         model.addAttribute("organosOrigen", organismoEjb.getPermitirUsuarios(entidadActiva.getId()));
         if(multiEntidadEjb.isMultiEntidad()) {
-
             model.addAttribute("organosDestino", organismoEjb.getAllByEntidadMultiEntidad(entidadActiva.getId()));
         }else{
             model.addAttribute("organosDestino", organismoEjb.getAllByEntidad(entidadActiva.getId()));
@@ -175,12 +174,12 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
             mav.addObject("paginacion", paginacion);
 
             // Alta en tabla LOPD
-            lopdEjb.insertarRegistros(paginacion, usuarioEntidad.getId(), RegwebConstantes.REGISTRO_ENTRADA, RegwebConstantes.LOPD_LISTADO);
+            lopdEjb.insertarRegistros(paginacion, usuarioEntidad,entidadActiva.getLibro(), RegwebConstantes.REGISTRO_ENTRADA, RegwebConstantes.LOPD_LISTADO);
         }
 
         // Comprobamos si el Organismo destinatario es externo, para añadirlo a la lista.
         if (StringUtils.isNotEmpty(busqueda.getOrganDestinatari())) {
-            Organismo org = organismoEjb.findByCodigoByEntidadMultiEntidad(busqueda.getOrganDestinatari(), usuarioEntidad.getEntidad().getId());
+            Organismo org = organismoEjb.findByCodigoByEntidadMultiEntidad(busqueda.getOrganDestinatari(), entidadActiva.getId());
             if(org== null || !organosDestino.contains(org)){ //Es organismo externo, lo añadimos a la lista
                 organosDestino.add(new Organismo(null,busqueda.getOrganDestinatari(),new String(busqueda.getOrganDestinatariNom().getBytes("ISO-8859-1"), "UTF-8") ));
             }
@@ -266,7 +265,7 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
 
         try {
 
-            Boolean distribuido = distribucionEjb.reDistribuirRegistro(idRegistro, getEntidadActiva(request).getId());
+            Boolean distribuido = distribucionEjb.reDistribuirRegistro(idRegistro, getEntidadActiva(request));
 
             if(distribuido){
                 jsonResponse.setStatus("SUCCESS");
@@ -299,13 +298,14 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
         try {
 
             RegistroEntrada registroEntrada = registroEntradaEjb.getConAnexosFull(idRegistro);
+            Entidad entidad = getEntidadActiva(request);
             UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
 
             // Dispone de permisos para Editar el registro
             if (permisoOrganismoUsuarioEjb.tienePermiso(usuarioEntidad.getId(), registroEntrada.getOficina().getOrganismoResponsable().getId(), RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_ENTRADA, true) && !registroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_ANULADO)) {
 
                 // Creamos el anexo justificante y lo firmamos
-                AnexoFull anexoFull = justificanteEjb.crearJustificante(usuarioEntidad, registroEntrada, RegwebConstantes.REGISTRO_ENTRADA, idioma);
+                AnexoFull anexoFull = justificanteEjb.crearJustificante(entidad, usuarioEntidad, registroEntrada, RegwebConstantes.REGISTRO_ENTRADA, idioma);
 
                 // Alta en tabla LOPD
                 if (anexoFull != null) {
@@ -441,7 +441,7 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
             mav.addObject("paginacion", paginacion);
 
             // Alta en tabla LOPD
-            lopdEjb.insertarRegistros(paginacion, usuarioEntidad.getId(), RegwebConstantes.REGISTRO_SALIDA, RegwebConstantes.LOPD_LISTADO);
+            lopdEjb.insertarRegistros(paginacion, usuarioEntidad, entidadActiva.getLibro(), RegwebConstantes.REGISTRO_SALIDA, RegwebConstantes.LOPD_LISTADO);
         }
 
         mav.addObject("organosOrigen",  organosOrigen);
@@ -518,13 +518,14 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
         try {
 
             RegistroSalida registroSalida = registroSalidaEjb.getConAnexosFull(idRegistro);
+            Entidad entidad = getEntidadActiva(request);
             UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
 
             // Dispone de permisos para Editar el registro
             if (permisoOrganismoUsuarioEjb.tienePermiso(usuarioEntidad.getId(), registroSalida.getOficina().getOrganismoResponsable().getId(), RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_SALIDA, true) && !registroSalida.getEstado().equals(RegwebConstantes.REGISTRO_ANULADO)) {
 
                 // Creamos el anexo justificante y lo firmamos
-                AnexoFull anexoFull = justificanteEjb.crearJustificante(usuarioEntidad, registroSalida, RegwebConstantes.REGISTRO_SALIDA, idioma);
+                AnexoFull anexoFull = justificanteEjb.crearJustificante(entidad, usuarioEntidad, registroSalida, RegwebConstantes.REGISTRO_SALIDA, idioma);
 
                 // Alta en tabla LOPD
                 if (anexoFull != null) {
@@ -653,7 +654,6 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
         Date inicio = new Date();
         peticion.append("entidad: ").append(entidad.getNombre()).append(System.getProperty("line.separator"));
 
-
         try {
 
             //Purgamos los anexos de registros distribuidos
@@ -692,7 +692,7 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
         try {
 
             //Purgamos los anexos de registros distribuidos
-            int total = anexoSirEjb.purgarArchivos(entidad.getId());
+            int total = anexoSirEjb.purgarAnexosAceptados(entidad.getId());
             peticion.append("total anexos: ").append(total).append(System.getProperty("line.separator"));
 
             integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_SCHEDULERS, descripcion, peticion.toString(), System.currentTimeMillis() - tiempo, entidad.getId(), "");

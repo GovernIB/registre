@@ -116,7 +116,7 @@ public class AnexoSir implements Serializable {
         this.id = id;
     }
 
-    @ManyToOne()
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "REGISTRO_SIR", foreignKey = @ForeignKey(name = "RWE_ANEXOSIR_REGSIR_FK"))
     public RegistroSir getRegistroSir() {
         return registroSir;

@@ -45,7 +45,7 @@ public class DistribucionController extends BaseController {
         Entidad entidadActiva = getEntidadActiva(request);
         Cola elemento = colaEjb.findById(idCola);
 
-        Boolean distribuido = distribucionEjb.distribuirRegistroEnCola(elemento, entidadActiva.getId(),RegwebConstantes.INTEGRACION_DISTRIBUCION);
+        Boolean distribuido = distribucionEjb.distribuirRegistroEnCola(elemento, entidadActiva,RegwebConstantes.INTEGRACION_DISTRIBUCION);
 
         if(distribuido){
             Mensaje.saveMessageInfo(request, getMessage("registroEntrada.distribuir.ok"));

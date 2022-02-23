@@ -43,7 +43,7 @@ public class SchedulerBean implements SchedulerLocal {
 
 
     @Override
-    public void purgarIntegraciones() throws Exception {
+    public void purgarIntegraciones() throws Exception{
 
         List<Entidad> entidades = entidadEjb.getAll();
         StringBuilder peticion = new StringBuilder();
@@ -51,9 +51,9 @@ public class SchedulerBean implements SchedulerLocal {
         String descripcion = "Purgar Integraciones";
         Entidad entidadActiva = null;
 
-        try {
+        try{
 
-            for (Entidad entidad : entidades) {
+            for(Entidad entidad: entidades) {
 
                 //Integración
                 entidadActiva = entidad;
@@ -66,14 +66,15 @@ public class SchedulerBean implements SchedulerLocal {
                 integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_SCHEDULERS, descripcion, peticion.toString(), System.currentTimeMillis() - tiempo, entidad.getId(), "");
             }
 
-        } catch (Exception e) {
+        }catch (Exception e){
             integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_SCHEDULERS, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - tiempo, entidadActiva.getId(), "");
         }
 
     }
 
     @Override
-    public void purgarAnexosSir() throws Exception {
+    @TransactionTimeout(value = 1800)  // 30 minutos
+    public void purgarAnexosSir() throws Exception{
 
         List<Entidad> entidades = entidadEjb.getAll();
         StringBuilder peticion = new StringBuilder();
@@ -81,9 +82,9 @@ public class SchedulerBean implements SchedulerLocal {
         String descripcion = "Purgar AnexosSir";
         Entidad entidadActiva = null;
 
-        try {
+        try{
 
-            for (Entidad entidad : entidades) {
+            for(Entidad entidad: entidades) {
 
                 //Integración
                 entidadActiva = entidad;
@@ -91,13 +92,13 @@ public class SchedulerBean implements SchedulerLocal {
                 peticion = new StringBuilder();
                 peticion.append("entidad: ").append(entidad.getNombre()).append(System.getProperty("line.separator"));
 
-                int total = anexoSirEjb.purgarArchivos(entidad.getId());
+                int total = anexoSirEjb.purgarAnexosAceptados(entidad.getId());
                 peticion.append("total anexos: ").append(total).append(System.getProperty("line.separator"));
 
                 integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_SCHEDULERS, descripcion, peticion.toString(), System.currentTimeMillis() - tiempo, entidad.getId(), "");
             }
 
-        } catch (Exception e) {
+        }catch (Exception e){
             integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_SCHEDULERS, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - tiempo, entidadActiva.getId(), "");
         }
     }
@@ -105,10 +106,11 @@ public class SchedulerBean implements SchedulerLocal {
     /**
      * Para cada una de las entidades del sistema, purga los anexos candidatos a
      * purgar (anexos marcados como distribuidos hace x meses).
-     *
      * @throws Exception
      */
-    public void purgarAnexosDistribuidos() throws Exception {
+    @Override
+    @TransactionTimeout(value = 1800)  // 30 minutos
+    public void purgarAnexosDistribuidos() throws Exception{
 
         List<Entidad> entidades = entidadEjb.getAll();
         StringBuilder peticion = new StringBuilder();
@@ -141,10 +143,9 @@ public class SchedulerBean implements SchedulerLocal {
 
     /**
      * Método que purga los anexos de los registros que se han enviado via SIR y han sido confirmados en destino.
-     *
      * @throws Exception
      */
-    public void purgarAnexosRegistrosConfirmados() throws Exception {
+    public void purgarAnexosRegistrosConfirmados() throws Exception{
 
         List<Entidad> entidades = entidadEjb.getAll();
         StringBuilder peticion = new StringBuilder();
@@ -154,7 +155,7 @@ public class SchedulerBean implements SchedulerLocal {
 
         try {
 
-            for (Entidad entidad : entidades) {
+            for(Entidad entidad: entidades) {
 
                 //Integración
                 entidadActiva = entidad;
@@ -210,9 +211,9 @@ public class SchedulerBean implements SchedulerLocal {
         String descripcion = "Reiniciar contadores de todas las entidades";
         Entidad entidadActiva = null;
 
-        try {
+        try{
 
-            for (Entidad entidad : entidades) {
+            for(Entidad entidad: entidades) {
 
                 //Integración
                 entidadActiva = entidad;
@@ -235,38 +236,36 @@ public class SchedulerBean implements SchedulerLocal {
 
     /**
      * Inicia la distribución de los registros en cola de cada entidad.
-     *
      * @throws Exception
      */
     @Override
     @TransactionTimeout(value = 1800)  // 30 minutos
-    public void distribuirRegistrosEnCola() throws Exception {
+    public void distribuirRegistrosEnCola() throws Exception{
 
         try {
             List<Entidad> entidades = entidadEjb.getEntidadesActivas();
 
             for (Entidad entidad : entidades) {
 
-                if (!PropiedadGlobalUtil.pararColaDistribucion(entidad.getId())) {
+                if(!PropiedadGlobalUtil.pararColaDistribucion(entidad.getId())) {
 
-                    distribucionEjb.distribuirRegistrosEnCola(entidad.getId());
+                    distribucionEjb.distribuirRegistrosEnCola(entidad);
 
                 }
             }
 
-        } catch (Exception e) {
+        }catch (Exception e){
             log.error("Error distribuyendo registros de la Cola ...", e);
         }
     }
 
     /**
      * Inicia la custodia de Justificantes en cola de cada entidad.
-     *
      * @throws Exception
      */
     @Override
     @TransactionTimeout(value = 1800)  // 30 minutos
-    public void custodiarJustificantesEnCola() throws Exception {
+    public void custodiarJustificantesEnCola() throws Exception{
 
         try {
             List<Entidad> entidades = entidadEjb.getEntidadesActivas();
@@ -279,7 +278,7 @@ public class SchedulerBean implements SchedulerLocal {
                 }
             }
 
-        } catch (Exception e) {
+        }catch (Exception e){
             log.error("Error custodiando justificantes de la Cola ...", e);
         }
 
@@ -299,9 +298,9 @@ public class SchedulerBean implements SchedulerLocal {
 
         try {
 
-            for (Entidad entidad : entidades) {
+            for(Entidad entidad: entidades) {
 
-                if (PropiedadGlobalUtil.getCerrarExpedientes(entidad.getId())) {
+                if(PropiedadGlobalUtil.getCerrarExpedientes(entidad.getId())){
 
                     //Integración
                     entidadActiva = entidad;
@@ -323,7 +322,7 @@ public class SchedulerBean implements SchedulerLocal {
 
 
     @Override
-    public void generarComunicaciones() throws Exception {
+    public void generarComunicaciones() throws Exception{
 
         List<Entidad> entidades = entidadEjb.getAll();
         StringBuilder peticion = new StringBuilder();
@@ -331,9 +330,9 @@ public class SchedulerBean implements SchedulerLocal {
         String descripcion = "Generar comunicaciones automáticas de registros pendientes";
         Entidad entidadActiva = null;
 
-        for (Entidad entidad : entidades) {
+        for(Entidad entidad: entidades) {
 
-            if (PropiedadGlobalUtil.getGenerarComunicaciones(entidad.getId())) {
+            if(PropiedadGlobalUtil.getGenerarComunicaciones(entidad.getId())){
 
                 //Integración
                 entidadActiva = entidad;
@@ -341,22 +340,22 @@ public class SchedulerBean implements SchedulerLocal {
                 peticion = new StringBuilder();
                 peticion.append("entidad: ").append(entidad.getNombre()).append(System.getProperty("line.separator"));
 
-                try {
+                try{
                     peticion.append("tipo: ").append("notificacionesRegistrosSirPendientes").append(System.getProperty("line.separator"));
                     notificacionEjb.notificacionesRegistrosSirPendientes(entidad.getId());
                     integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_SCHEDULERS, descripcion, peticion.toString(), System.currentTimeMillis() - tiempo, entidad.getId(), "");
 
-                } catch (Exception e) {
+                }catch (Exception e){
                     log.error("Error generando notificacionesRegistrosSirPendientes", e);
                     integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_SCHEDULERS, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - tiempo, entidadActiva.getId(), "");
                 }
 
-                try {
+                try{
                     peticion.append("tipo: ").append("notificacionesRechazadosDevueltos").append(System.getProperty("line.separator"));
                     notificacionEjb.notificacionesRechazadosDevueltos(entidad.getId());
                     integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_SCHEDULERS, descripcion, peticion.toString(), System.currentTimeMillis() - tiempo, entidad.getId(), "");
 
-                } catch (Exception e) {
+                }catch (Exception e){
                     log.error("Error generando notificacionesRechazadosDevueltos", e);
                     integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_SCHEDULERS, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - tiempo, entidadActiva.getId(), "");
                 }
@@ -365,7 +364,7 @@ public class SchedulerBean implements SchedulerLocal {
     }
 
     @Override
-    public void purgarSesionesWs() throws Exception {
+    public void purgarSesionesWs() throws Exception{
 
         List<Entidad> entidades = entidadEjb.getAll();
         StringBuilder peticion = new StringBuilder();
@@ -373,9 +372,9 @@ public class SchedulerBean implements SchedulerLocal {
         String descripcion = "Purgar sesiones WS";
         Entidad entidadActiva = null;
 
-        try {
+        try{
 
-            for (Entidad entidad : entidades) {
+            for(Entidad entidad: entidades) {
 
                 //Integración
                 entidadActiva = entidad;
@@ -388,7 +387,7 @@ public class SchedulerBean implements SchedulerLocal {
                 integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_SCHEDULERS, descripcion, peticion.toString(), System.currentTimeMillis() - tiempo, entidad.getId(), "");
             }
 
-        } catch (Exception e) {
+        }catch (Exception e){
             e.printStackTrace();
             integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_SCHEDULERS, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - tiempo, entidadActiva.getId(), "");
         }
@@ -404,7 +403,7 @@ public class SchedulerBean implements SchedulerLocal {
         String descripcion = "Envio email de errores de la cola de distribución";
         Entidad entidadActiva = null;
 
-        try {
+        try{
 
             for (Entidad entidad : entidades) {
 
@@ -419,7 +418,7 @@ public class SchedulerBean implements SchedulerLocal {
                 integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_SCHEDULERS, descripcion, peticion.toString(), System.currentTimeMillis() - tiempo, entidad.getId(), "");
             }
 
-        } catch (Exception e) {
+        }catch (Exception e){
             e.printStackTrace();
             integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_SCHEDULERS, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - tiempo, entidadActiva.getId(), "");
         }
@@ -438,7 +437,7 @@ public class SchedulerBean implements SchedulerLocal {
 
         try {
 
-            for (Entidad entidad : entidades) {
+            for(Entidad entidad: entidades) {
 
                 //Integración
                 entidadActiva = entidad;

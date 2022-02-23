@@ -74,7 +74,7 @@ public class SelloPdfView extends AbstractIText5PdfView {
     
     private ElementSello logoSello = null;
     private Entidad entidad = null;
-    
+
     @Override
     protected void buildPdfDocument(Map<String, Object> model, Document document, PdfWriter writer, HttpServletRequest request, HttpServletResponse response) throws Exception {
 
@@ -120,7 +120,7 @@ public class SelloPdfView extends AbstractIText5PdfView {
             // Obtenemos el registro de entrada
             RegistroEntrada registroEntrada = (RegistroEntrada) model.get("registro");
             // Obtiene la entidad
-            entidad = registroEntrada.getUsuario().getEntidad();
+            entidad = (Entidad) model.get("entidad");
             // Obtiene el formato del sello definido en la entidad
             sello = entidad.getSello();
             // Obtiene los datos del registro
@@ -142,8 +142,8 @@ public class SelloPdfView extends AbstractIText5PdfView {
             tipusRegistreCompletCastella = getMessage("sello.tipoRegistroCompletoCastellano.entrada");
             nomUsuari = registroEntrada.getUsuario().getUsuario().getNombre();
             nomUsuariComplet = registroEntrada.getUsuario().getNombreCompleto();
-            entitat = registroEntrada.getOficina().getOrganismoResponsable().getEntidad().getNombre();
-            decodificacioEntitat = registroEntrada.getOficina().getOrganismoResponsable().getEntidad().getDescripcion();
+            entitat = entidad.getNombre();
+            decodificacioEntitat = entidad.getDescripcion();
             numRegformat = registroEntrada.getNumeroRegistroFormateado();
             llibre = registroEntrada.getLibro().getNombre();
             extracte = registroEntrada.getRegistroDetalle().getExtracto();
@@ -160,7 +160,7 @@ public class SelloPdfView extends AbstractIText5PdfView {
             // Obtenemos el registro de salida
             RegistroSalida registroSalida = (RegistroSalida) model.get("registro");
             // Obtiene la entidad
-            entidad = registroSalida.getUsuario().getEntidad();
+            entidad = (Entidad) model.get("entidad");
             // Obtiene el formato del sello definido en la entidad
             sello = entidad.getSello();
             // Obtiene los datos del registro
@@ -184,8 +184,8 @@ public class SelloPdfView extends AbstractIText5PdfView {
             llibre = registroSalida.getLibro().getNombre();
             nomUsuari = registroSalida.getUsuario().getUsuario().getNombre();
             nomUsuariComplet = registroSalida.getUsuario().getNombreCompleto();
-            entitat = registroSalida.getOficina().getOrganismoResponsable().getEntidad().getNombre();
-            decodificacioEntitat = registroSalida.getOficina().getOrganismoResponsable().getEntidad().getDescripcion();
+            entitat = entidad.getNombre();
+            decodificacioEntitat = entidad.getDescripcion();
             numRegformat = registroSalida.getNumeroRegistroFormateado();
             llibre = registroSalida.getLibro().getNombre();
             extracte = registroSalida.getRegistroDetalle().getExtracto();
@@ -200,51 +200,51 @@ public class SelloPdfView extends AbstractIText5PdfView {
         if(sello != null){
 
             // Guardará el sello en lineas
-        	java.util.List<ElementSello> linies = new ArrayList<ElementSello>();
+            java.util.List<ElementSello> linies = new ArrayList<ElementSello>();
             // Separa cada linea del sello cuando encuentra un Retorno de carro + Salto de linea
-        	String[] liniesSello = sello.split("\\r?\\n");
+            String[] liniesSello = sello.split("\\r?\\n");
             // Recorre cada una de las lineas del sello
-        	for(String liniaSello: liniesSello) {
+            for(String liniaSello: liniesSello) {
                 // Añade cada linea del sello con su valor correspondiente a linies
-        		linies.addAll(processaLinia(liniaSello));
-        	}
+                linies.addAll(processaLinia(liniaSello));
+            }
 
             // Si hay algo que mostrar en el sello
-        	if (!linies.isEmpty()) {
+            if (!linies.isEmpty()) {
 
-	            // Busca la línea más larga para controlar que no salga del pdf
-	        	float max = ElementSello.maxPosx;
-	        	float may = ElementSello.maxPosy;
+                // Busca la línea más larga para controlar que no salga del pdf
+                float max = ElementSello.maxPosx;
+                float may = ElementSello.maxPosy;
 
                 // Realiza el cálculo de las coordenadas para que no salga del pdf
-	        	float fx = calculaOrigenX(x, max, orientacion);
-        		float fy = calculaOrigenY(y, may, orientacion);
+                float fx = calculaOrigenX(x, max, orientacion);
+                float fy = calculaOrigenY(y, may, orientacion);
 
-        		// Si tiene definido LogoSello
-        		if (logoSello != null && entidad.getLogoSello() != null) {
-            		File file = FileSystemManager.getArchivo(entidad.getLogoSello().getId());
-            		Image imatgeSello = Image.getInstance(file.getAbsolutePath());
-            		float heigh = imatgeSello.getHeight();
-            		float width;
-            		if (logoSello.getAmple() != null) {
-            			float proporcio = logoSello.getAmple()/imatgeSello.getWidth();
-            			width = logoSello.getAmple();
-            			heigh *= proporcio;
-            			imatgeSello.scaleToFit(width, heigh);
-            		}
-            		imatgeSello.setAbsolutePosition(fx + logoSello.getPosx(), fy - logoSello.getPosy() - heigh); 
-            		PdfContentByte canvas = writer.getDirectContent();
-            		canvas.addImage(imatgeSello); 
-            	}
+                // Si tiene definido LogoSello
+                if (logoSello != null && entidad.getLogoSello() != null) {
+                    File file = FileSystemManager.getArchivo(entidad.getLogoSello().getId());
+                    Image imatgeSello = Image.getInstance(file.getAbsolutePath());
+                    float heigh = imatgeSello.getHeight();
+                    float width;
+                    if (logoSello.getAmple() != null) {
+                        float proporcio = logoSello.getAmple()/imatgeSello.getWidth();
+                        width = logoSello.getAmple();
+                        heigh *= proporcio;
+                        imatgeSello.scaleToFit(width, heigh);
+                    }
+                    imatgeSello.setAbsolutePosition(fx + logoSello.getPosx(), fy - logoSello.getPosy() - heigh);
+                    PdfContentByte canvas = writer.getDirectContent();
+                    canvas.addImage(imatgeSello);
+                }
 
-        		// Recorre cada una de las lineas de ElementSello
-	            for(ElementSello element: linies) {
-	            	Font font = new Font(element.getBf(), element.getFontSize(), element.getFontStyle(), element.getColor());
-	                Phrase frase = new Phrase(element.getText(), font);
-	                PdfContentByte canvas = writer.getDirectContent();
+                // Recorre cada una de las lineas de ElementSello
+                for(ElementSello element: linies) {
+                    Font font = new Font(element.getBf(), element.getFontSize(), element.getFontStyle(), element.getColor());
+                    Phrase frase = new Phrase(element.getText(), font);
+                    PdfContentByte canvas = writer.getDirectContent();
 
-	                ColumnText.showTextAligned(canvas, element.getAlineacio(), frase, fx + element.getPosx(), fy + element.getPosy(), 0);
-	            }
+                    ColumnText.showTextAligned(canvas, element.getAlineacio(), frase, fx + element.getPosx(), fy + element.getPosy(), 0);
+                }
             }
 
             //Auto-Impresión
@@ -278,18 +278,18 @@ public class SelloPdfView extends AbstractIText5PdfView {
         Float pixelY = Float.valueOf(y);
         Float maxpixelY = orientacion.equals("V") ? 827f : 582f;
         if(pixelY > maxpixelY){
-        	pixelY = maxpixelY;
+            pixelY = maxpixelY;
         }else{
-        	Float segellpixelY = pixelY + max - 15;
+            Float segellpixelY = pixelY + max - 15;
             if(segellpixelY < 0){
-            	pixelY -= segellpixelY;
+                pixelY -= segellpixelY;
                 if(pixelY > maxpixelY){
-                	pixelY = maxpixelY;
+                    pixelY = maxpixelY;
                 }
             }
         }
         return pixelY;
-	}
+    }
 
     /**
      * Calcula el origen de la coordenada X para imprimir el sello, teniendo en cuenta el tamaño del valor del sello y la posición elegida
@@ -299,10 +299,10 @@ public class SelloPdfView extends AbstractIText5PdfView {
      * @param orientacion
      * @return
      */
-	private float calculaOrigenX(String x, float max, String orientacion) {
-		Float pixelX = Float.valueOf(x);
+    private float calculaOrigenX(String x, float max, String orientacion) {
+        Float pixelX = Float.valueOf(x);
         if(pixelX < 15){
-        	pixelX = 15f;
+            pixelX = 15f;
         }else{
             int maxpixelX = orientacion.equals("V") ? 582 : 827;
             Float segellpixelX = max + pixelX;
@@ -310,12 +310,12 @@ public class SelloPdfView extends AbstractIText5PdfView {
                 Float diferenciaX = segellpixelX - maxpixelX;
                 pixelX -= diferenciaX;
                 if(pixelX < 15){
-                	pixelX = 15f;
+                    pixelX = 15f;
                 }
             }
         }
         return pixelX;
-	}
+    }
 
     /**
      * Recorre y Genera una linea del sello sustituyendo el parámetro contenido por su valor
@@ -323,53 +323,53 @@ public class SelloPdfView extends AbstractIText5PdfView {
      * @return
      * @throws Exception
      */
-	private java.util.List<ElementSello> processaLinia(String liniaSello) throws Exception {
+    private java.util.List<ElementSello> processaLinia(String liniaSello) throws Exception {
 
-    	java.util.List<ElementSello> linies = new ArrayList<ElementSello>();
-    	java.util.List<ElementSello> partLinia = new ArrayList<ElementSello>();
-    	
-    	if (StringUtils.isEmpty(liniaSello)) {
-    		partLinia.add(new ElementSello("", false));
-    	} else {
-	    	while (!StringUtils.isEmpty(liniaSello)) {
-	    		if (liniaSello.contains("${")) {
-    				// Texto anterior del primer parámetro
-	    			String preParam = liniaSello.substring(0, liniaSello.indexOf("${"));
-	    			if (!StringUtils.isEmpty(preParam)) {
-	    				partLinia.add(new ElementSello(preParam, false));
-	    			}
-	    			// Substituye el parámetro de la línea del sello por su valor
-	    			String param = liniaSello.substring(liniaSello.indexOf("${") + 2, liniaSello.indexOf("}"));
-	    			ElementSello ls = new ElementSello(param, true);
+        java.util.List<ElementSello> linies = new ArrayList<ElementSello>();
+        java.util.List<ElementSello> partLinia = new ArrayList<ElementSello>();
+
+        if (StringUtils.isEmpty(liniaSello)) {
+            partLinia.add(new ElementSello("", false));
+        } else {
+            while (!StringUtils.isEmpty(liniaSello)) {
+                if (liniaSello.contains("${")) {
+                    // Texto anterior del primer parámetro
+                    String preParam = liniaSello.substring(0, liniaSello.indexOf("${"));
+                    if (!StringUtils.isEmpty(preParam)) {
+                        partLinia.add(new ElementSello(preParam, false));
+                    }
+                    // Substituye el parámetro de la línea del sello por su valor
+                    String param = liniaSello.substring(liniaSello.indexOf("${") + 2, liniaSello.indexOf("}"));
+                    ElementSello ls = new ElementSello(param, true);
                     // Si el parámetro es el logoSello
-	    			if (ls.getParam().equalsIgnoreCase("logoSello")) {
-	    				logoSello = ls;
-	    			} else {  // Si es un parámetro diferente de logoSello
-		    			ls.setText(getParamValue(ls.getParam()));
+                    if (ls.getParam().equalsIgnoreCase("logoSello")) {
+                        logoSello = ls;
+                    } else {  // Si es un parámetro diferente de logoSello
+                        ls.setText(getParamValue(ls.getParam()));
                         // Revisa si cambia la posición Y, y actualiza en este caso
-		    			if (ls.isChangedPosy()) {
-		    				actualitzaPos(partLinia);
-		    				linies.addAll(partLinia);
-		    				partLinia = new ArrayList<ElementSello>();
-		    				partLinia.add(ls);
-		    			} else {
-		    				partLinia.add(ls);
-		    			}
-	    			}
-	    			// Texto posterior al primer paràmetre
-	    			liniaSello = liniaSello.substring(liniaSello.indexOf("}") + 1);
-	    		} else {
-	    			partLinia.add(new ElementSello(liniaSello, false));
+                        if (ls.isChangedPosy()) {
+                            actualitzaPos(partLinia);
+                            linies.addAll(partLinia);
+                            partLinia = new ArrayList<ElementSello>();
+                            partLinia.add(ls);
+                        } else {
+                            partLinia.add(ls);
+                        }
+                    }
+                    // Texto posterior al primer paràmetre
+                    liniaSello = liniaSello.substring(liniaSello.indexOf("}") + 1);
+                } else {
+                    partLinia.add(new ElementSello(liniaSello, false));
                     break;
-	    		}
-    		}
-    	}
+                }
+            }
+        }
 
         // Recalcula la alineación adecuada de la linea
-    	actualitzaPos(partLinia);
-    	linies.addAll(partLinia);
-    	
-		return linies;
+        actualitzaPos(partLinia);
+        linies.addAll(partLinia);
+
+        return linies;
     }
 
     /**
@@ -377,17 +377,17 @@ public class SelloPdfView extends AbstractIText5PdfView {
      * @param linies
      */
     private void actualitzaPos(java.util.List<ElementSello> linies) {
-    	if (!linies.isEmpty()) {
-	    	int alt = 0;
-	    	for (ElementSello linia: linies) {
-	    		alt = Math.max(alt, Math.round(linia.getAltFila()));
-	    	}
-	    	ElementSello.posyRef -= alt;
-	    	for (ElementSello linia: linies) {
-	    		linia.setPosy(ElementSello.posyRef);
-	    	}
-	    	ElementSello.posxRef = ElementSello.posxRefLinia;
-    	}
+        if (!linies.isEmpty()) {
+            int alt = 0;
+            for (ElementSello linia: linies) {
+                alt = Math.max(alt, Math.round(linia.getAltFila()));
+            }
+            ElementSello.posyRef -= alt;
+            for (ElementSello linia: linies) {
+                linia.setPosy(ElementSello.posyRef);
+            }
+            ElementSello.posxRef = ElementSello.posxRefLinia;
+        }
     }
 
     /**
@@ -396,61 +396,61 @@ public class SelloPdfView extends AbstractIText5PdfView {
      * @return
      */
     private String getParamValue(String paramName) {
-    	if ("codiOficina".equalsIgnoreCase(paramName)) {
-    		return codiOficina;
-    	} else if ("nomOficina".equalsIgnoreCase(paramName)) {
-    		return nomOficina;
-    	} else if ("numRegistre".equalsIgnoreCase(paramName)) {
-    		return numRegistre;
-    	} else if ("formatNumRegistre".equalsIgnoreCase(paramName)) {
-    		return numRegformat;
-    	} else if ("dataRegistre".equalsIgnoreCase(paramName)) {
-    		return dataRegistre;
-    	} else if ("dataDiaRegistre".equalsIgnoreCase(paramName)) {
-    		return dataDiaRegistre;
-    	} else if ("dataHoraRegistre".equalsIgnoreCase(paramName)) {
-    		return dataHoraRegistre;
-    	} else if ("anyRegistre".equalsIgnoreCase(paramName)) {
-    		return anyRegistre;
-    	} else if ("mesRegistre".equalsIgnoreCase(paramName)) {
-    		return mesRegistre;
-    	} else if ("nomMesRegistre".equalsIgnoreCase(paramName)) {
-    		return nomMesRegistre;
-    	} else if ("diaRegistre".equalsIgnoreCase(paramName)) {
-    		return diaRegistre;
-    	} else if ("horaRegistre".equalsIgnoreCase(paramName)) {
-    		return horaRegistre;
-    	} else if ("minutRegistre".equalsIgnoreCase(paramName)) {
-    		return minutRegistre;
-    	} else if ("segonRegistre".equalsIgnoreCase(paramName)) {
-    		return segonRegistre;
-    	} else if ("entitat".equalsIgnoreCase(paramName)) {
-    		return entitat;
-    	} else if ("destinatari".equalsIgnoreCase(paramName)) {
+        if ("codiOficina".equalsIgnoreCase(paramName)) {
+            return codiOficina;
+        } else if ("nomOficina".equalsIgnoreCase(paramName)) {
+            return nomOficina;
+        } else if ("numRegistre".equalsIgnoreCase(paramName)) {
+            return numRegistre;
+        } else if ("formatNumRegistre".equalsIgnoreCase(paramName)) {
+            return numRegformat;
+        } else if ("dataRegistre".equalsIgnoreCase(paramName)) {
+            return dataRegistre;
+        } else if ("dataDiaRegistre".equalsIgnoreCase(paramName)) {
+            return dataDiaRegistre;
+        } else if ("dataHoraRegistre".equalsIgnoreCase(paramName)) {
+            return dataHoraRegistre;
+        } else if ("anyRegistre".equalsIgnoreCase(paramName)) {
+            return anyRegistre;
+        } else if ("mesRegistre".equalsIgnoreCase(paramName)) {
+            return mesRegistre;
+        } else if ("nomMesRegistre".equalsIgnoreCase(paramName)) {
+            return nomMesRegistre;
+        } else if ("diaRegistre".equalsIgnoreCase(paramName)) {
+            return diaRegistre;
+        } else if ("horaRegistre".equalsIgnoreCase(paramName)) {
+            return horaRegistre;
+        } else if ("minutRegistre".equalsIgnoreCase(paramName)) {
+            return minutRegistre;
+        } else if ("segonRegistre".equalsIgnoreCase(paramName)) {
+            return segonRegistre;
+        } else if ("entitat".equalsIgnoreCase(paramName)) {
+            return entitat;
+        } else if ("destinatari".equalsIgnoreCase(paramName)) {
             return (!StringUtils.isEmpty(destinatari)) ? destinatari : "";
-    	} else if ("origen".equalsIgnoreCase(paramName)) {
-    		return (!StringUtils.isEmpty(origen)) ? origen : "";
-    	} else if ("tipusRegistre".equalsIgnoreCase(paramName)) {
-    		return tipusRegistre;
-    	} else if ("extracte".equalsIgnoreCase(paramName)) {
-    		return (!StringUtils.isEmpty(extracte)) ? extracte : "";
-    	} else if ("llibre".equalsIgnoreCase(paramName)) {
-    		return llibre;
-    	} else if ("nomUsuari".equalsIgnoreCase(paramName)) {
-    		return nomUsuari;
-    	} else if ("nomUsuariComplet".equalsIgnoreCase(paramName)) {
-    		return nomUsuariComplet;
-    	} else if ("decodificacioEntitat".equalsIgnoreCase(paramName)) {
-    		return decodificacioEntitat;
-    	} else if ("formatNumRegistre".equalsIgnoreCase(paramName)) {
-    		return numRegformat;
-    	} else if ("tipusRegistreComplet".equalsIgnoreCase(paramName)) {
-    		return tipusRegistreComplet;
-    	} else if ("tipusRegistreCompletCatala".equalsIgnoreCase(paramName)) {
+        } else if ("origen".equalsIgnoreCase(paramName)) {
+            return (!StringUtils.isEmpty(origen)) ? origen : "";
+        } else if ("tipusRegistre".equalsIgnoreCase(paramName)) {
+            return tipusRegistre;
+        } else if ("extracte".equalsIgnoreCase(paramName)) {
+            return (!StringUtils.isEmpty(extracte)) ? extracte : "";
+        } else if ("llibre".equalsIgnoreCase(paramName)) {
+            return llibre;
+        } else if ("nomUsuari".equalsIgnoreCase(paramName)) {
+            return nomUsuari;
+        } else if ("nomUsuariComplet".equalsIgnoreCase(paramName)) {
+            return nomUsuariComplet;
+        } else if ("decodificacioEntitat".equalsIgnoreCase(paramName)) {
+            return decodificacioEntitat;
+        } else if ("formatNumRegistre".equalsIgnoreCase(paramName)) {
+            return numRegformat;
+        } else if ("tipusRegistreComplet".equalsIgnoreCase(paramName)) {
+            return tipusRegistreComplet;
+        } else if ("tipusRegistreCompletCatala".equalsIgnoreCase(paramName)) {
             return tipusRegistreCompletCatala;
         } else if ("tipusRegistreCompletCastella".equalsIgnoreCase(paramName)) {
             return tipusRegistreCompletCastella;
         }
-    	return paramName;
+        return paramName;
     }
 }

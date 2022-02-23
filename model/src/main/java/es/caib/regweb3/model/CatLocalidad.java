@@ -88,7 +88,7 @@ public class CatLocalidad implements Serializable {
      * @return the provincia
      */
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "PROVINCIA", foreignKey =@ForeignKey(name = "RWE_CATLOCAL_CATPROVIN_FK"))
     @JsonIgnore
     public CatProvincia getProvincia() {
@@ -120,7 +120,7 @@ public class CatLocalidad implements Serializable {
     /**
      * @return the entidadGeografica
      */
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ENTIDADGEOGRAFICA", foreignKey = @ForeignKey(name = "RWE_CATLOCAL_CATENT_FK"))
     @JsonIgnore
     public CatEntidadGeografica getEntidadGeografica() {

@@ -14,6 +14,7 @@ public class AnexoForm extends AnexoFull {
     private CommonsMultipartFile firmaFile;
     private Long tipoRegistro;
     private Long registroID;
+    private Long idRegistroDetalle;
     private Boolean oficioRemisionSir;
     private Boolean permitirAnexoDetached;
     //propiedades de los anexos escaneados
@@ -72,6 +73,14 @@ public class AnexoForm extends AnexoFull {
 
     public void setRegistroID(Long registroID) {
         this.registroID = registroID;
+    }
+
+    public Long getIdRegistroDetalle() {
+        return idRegistroDetalle;
+    }
+
+    public void setIdRegistroDetalle(Long idRegistroDetalle) {
+        this.idRegistroDetalle = idRegistroDetalle;
     }
 
     public Boolean getOficioRemisionSir() {

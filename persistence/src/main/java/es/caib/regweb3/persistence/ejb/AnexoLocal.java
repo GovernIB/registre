@@ -1,10 +1,7 @@
 package es.caib.regweb3.persistence.ejb;
 
 
-import es.caib.regweb3.model.Anexo;
-import es.caib.regweb3.model.RegistroEntrada;
-import es.caib.regweb3.model.RegistroSalida;
-import es.caib.regweb3.model.UsuarioEntidad;
+import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.model.utils.AnexoSimple;
 import org.fundaciobit.genapp.common.i18n.I18NException;
@@ -39,11 +36,22 @@ public interface AnexoLocal extends BaseEjb<Anexo, Long> {
      * @throws I18NException
      * @throws I18NValidationException
      */
-    AnexoFull crearAnexo(AnexoFull anexoFull, UsuarioEntidad usuarioEntidad,
+    AnexoFull crearAnexo(AnexoFull anexoFull, UsuarioEntidad usuarioEntidad, Entidad entidad,
                          Long registroID, Long tipoRegistro, String custodyID, Boolean validarAnexo) throws I18NException, I18NValidationException;
 
-    AnexoFull crearAnexoConfidencial(AnexoFull anexoFull, UsuarioEntidad usuarioEntidad,
-                                            Long registroID, Long tipoRegistro) throws I18NException, I18NValidationException;
+    /**
+     * Crea un anexo confidencial, es decir, sin datos del fichero anexado.
+     * @param anexoFull
+     * @param usuarioEntidad
+     * @param entidad
+     * @param registroID
+     * @param tipoRegistro
+     * @return
+     * @throws I18NException
+     * @throws I18NValidationException
+     */
+    AnexoFull crearAnexoConfidencial(AnexoFull anexoFull, UsuarioEntidad usuarioEntidad, Entidad entidad,
+                                     Long registroID, Long tipoRegistro) throws I18NException, I18NValidationException;
 
 
     /**
@@ -66,7 +74,7 @@ public interface AnexoLocal extends BaseEjb<Anexo, Long> {
     AnexoFull getAnexoFull(Long anexoID, Long idEntidad) throws I18NException;
 
 
-    AnexoFull actualizarAnexo(AnexoFull anexoFull, UsuarioEntidad usuarioEntidad,
+    AnexoFull actualizarAnexo(AnexoFull anexoFull, UsuarioEntidad usuarioEntidad, Entidad entidad, RegistroDetalle registroDetalle,
                               Long registroID, Long tipoRegistro, boolean isJustificante, boolean noWeb) throws I18NException, I18NValidationException;
 
 
@@ -258,5 +266,4 @@ public interface AnexoLocal extends BaseEjb<Anexo, Long> {
      * @throws Exception
      */
     void custodiarJustificanteArxiu(String expedienteID, String custodiaID, String csv, Long idAnexo) throws Exception;
-
 }

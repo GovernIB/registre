@@ -90,8 +90,7 @@ public interface OficioRemisionEntradaUtilsLocal {
      * @throws I18NException
      * @throws I18NValidationException
      */
-    OficioRemision crearOficioRemisionInterno(List<RegistroEntrada> registrosEntrada,
-                                              Oficina oficinaActiva, UsuarioEntidad usuarioEntidad,
+    OficioRemision crearOficioRemisionInterno(List<RegistroEntrada> registrosEntrada, Entidad entidad, Oficina oficinaActiva, UsuarioEntidad usuarioEntidad,
                                               Long idOrganismo, Long idLibro) throws Exception, I18NException, I18NValidationException;
 
 
@@ -107,7 +106,7 @@ public interface OficioRemisionEntradaUtilsLocal {
      * @throws I18NException
      * @throws I18NValidationException
      */
-    OficioRemision crearOficioRemisionExterno(List<RegistroEntrada> registrosEntrada,
+    OficioRemision crearOficioRemisionExterno(List<RegistroEntrada> registrosEntrada, Entidad entidad,
                                               Oficina oficinaActiva, UsuarioEntidad usuarioEntidad, String organismoExternoCodigo,
                                               String organismoExternoDenominacion, Long idLibro) throws Exception, I18NException, I18NValidationException;
 
@@ -122,7 +121,7 @@ public interface OficioRemisionEntradaUtilsLocal {
      * @throws I18NException
      * @throws I18NValidationException
      */
-    OficioRemision crearOficioRemisionSIR(RegistroEntrada registroEntrada, Oficina oficinaActiva, UsuarioEntidad usuarioEntidad, OficinaTF oficinaSirDestino )
+    OficioRemision crearOficioRemisionSIR(RegistroEntrada registroEntrada, Entidad entidad, Oficina oficinaActiva, UsuarioEntidad usuarioEntidad, OficinaTF oficinaSirDestino )
             throws Exception, I18NException, I18NValidationException;
 
     /**
@@ -134,8 +133,7 @@ public interface OficioRemisionEntradaUtilsLocal {
      * @throws I18NException
      * @throws I18NValidationException
      */
-    List<RegistroEntrada> crearJustificantesRegistros(List<RegistroEntrada> registros, UsuarioEntidad usuario) throws Exception, I18NException, I18NValidationException;
-
+    List<RegistroEntrada> crearJustificantesRegistros(Entidad entidad, List<RegistroEntrada> registros, UsuarioEntidad usuario) throws Exception, I18NException, I18NValidationException;
 
     /**
      * @param oficioRemision
@@ -147,8 +145,7 @@ public interface OficioRemisionEntradaUtilsLocal {
      * @throws I18NException
      * @throws I18NValidationException
      */
-    List<RegistroEntrada> aceptarOficioRemision(OficioRemision oficioRemision,
-                                                UsuarioEntidad usuario, Oficina oficinaActiva,
+    List<RegistroEntrada> aceptarOficioRemision(OficioRemision oficioRemision, Entidad entidad, UsuarioEntidad usuario, Oficina oficinaActiva,
                                                 List<OficioPendienteLlegada> oficios) throws Exception, I18NException, I18NValidationException;
 
 }

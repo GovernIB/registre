@@ -92,13 +92,14 @@ public class InformeController extends AbstractRegistroCommonFormController {
 
         ModelAndView mav = null;
 
+        Entidad entidadActiva = getEntidadActiva(request);
+        UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
+
         if(informeOrganismoBusquedaForm.getFormato().equals("pdf")){
             mav = new ModelAndView("registrosOrganismoPdf");
         }else if(informeOrganismoBusquedaForm.getFormato().equals("excel")){
             mav = new ModelAndView("registrosOrganismoExcel");
         }
-
-        UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
 
         Set<String> campos = informeOrganismoBusquedaForm.getCampos();
 
@@ -330,12 +331,12 @@ public class InformeController extends AbstractRegistroCommonFormController {
             Paginacion paginacionEntrada = new Paginacion(0, 0);
             paginacionEntrada.setListado(new ArrayList<Object>(registrosEntrada));
             start = System.currentTimeMillis();
-            lopdEjb.insertarRegistros(paginacionEntrada, usuarioEntidad.getId(), RegwebConstantes.REGISTRO_ENTRADA, RegwebConstantes.LOPD_LISTADO);
+            lopdEjb.insertarRegistros(paginacionEntrada, usuarioEntidad, entidadActiva.getLibro(), RegwebConstantes.REGISTRO_ENTRADA, RegwebConstantes.LOPD_LISTADO);
 
             mav.addObject("tipo", RegwebConstantes.INFORME_TIPO_REGISTRO_ENTRADA);
 
 
-        // REGISTROS DE SALIDA
+            // REGISTROS DE SALIDA
         }else if(informeOrganismoBusquedaForm.getTipo().equals(RegwebConstantes.REGISTRO_SALIDA)){
 
             List<RegistroSalida> registrosSalida = informeEjb.buscaRegistroSalidasOrganismo(informeOrganismoBusquedaForm.getFechaInicio(),
@@ -527,7 +528,7 @@ public class InformeController extends AbstractRegistroCommonFormController {
             Paginacion paginacionSalida = new Paginacion(0, 0);
             List<Object> salidasList = new ArrayList<Object>(registrosSalida);
             paginacionSalida.setListado(salidasList);
-            lopdEjb.insertarRegistros(paginacionSalida, usuarioEntidad.getId(), RegwebConstantes.REGISTRO_SALIDA, RegwebConstantes.LOPD_LISTADO);
+            lopdEjb.insertarRegistros(paginacionSalida, usuarioEntidad, entidadActiva.getLibro(), RegwebConstantes.REGISTRO_SALIDA, RegwebConstantes.LOPD_LISTADO);
 
             mav.addObject("tipo", RegwebConstantes.INFORME_TIPO_REGISTRO_SALIDA);
         }
@@ -690,7 +691,7 @@ public class InformeController extends AbstractRegistroCommonFormController {
 
 
 
-            break;
+                break;
 
             case 2: //  Salida
                 mav.addObject("tipo", RegwebConstantes.INFORME_TIPO_REGISTRO_SALIDA);
@@ -726,7 +727,7 @@ public class InformeController extends AbstractRegistroCommonFormController {
                 totalRegistresSalidaIdioma(mav,dataInici,dataFi,entidadActiva.getId(),null);
 
 
-            break;
+                break;
         }
 
 
@@ -778,7 +779,7 @@ public class InformeController extends AbstractRegistroCommonFormController {
             if(tipo.equals(RegwebConstantes.REGISTRO_ENTRADA)){
                 // Busca los registros Creados por Usuario de Registro de Entrada entre las fechas
                 if(accion.equals(RegwebConstantes.LOPD_CREACION)) {
-                   paginacion = lopdEjb.buscaEntradaPorUsuarioLibro(busqueda.getPageNumber(), PropiedadGlobalUtil.getResultsPerPageLopd(entidadActiva.getId()), dataInici, dataFi, busqueda.getUsuario(), busqueda.getLibro());
+                    paginacion = lopdEjb.buscaEntradaPorUsuarioLibro(busqueda.getPageNumber(), PropiedadGlobalUtil.getResultsPerPageLopd(entidadActiva.getId()), dataInici, dataFi, busqueda.getUsuario(), busqueda.getLibro());
                 }
                 // Busca los registros Modificados por Usuario de Registro de Entrada entre las fechas
                 if(accion.equals(RegwebConstantes.LOPD_MODIFICACION)) {
@@ -821,7 +822,7 @@ public class InformeController extends AbstractRegistroCommonFormController {
                 }
             }
 
-        // Si no ha elegido ningún libro en la búsqueda también tendrá en cuenta los Registros Migrados
+            // Si no ha elegido ningún libro en la búsqueda también tendrá en cuenta los Registros Migrados
         } else {
 
             List<Libro> libros = null;
@@ -952,7 +953,7 @@ public class InformeController extends AbstractRegistroCommonFormController {
                 busqueda.setPageNumber(1);
                 mav.addObject("paginacion", paginacion);
                 // Alta en tabla LOPD de las entradas del listado
-                lopdEjb.insertarRegistros(paginacion, usuarioEntidad.getId(), RegwebConstantes.REGISTRO_ENTRADA, RegwebConstantes.LOPD_LISTADO);
+                lopdEjb.insertarRegistros(paginacion, usuarioEntidad, entidadActiva.getLibro(), RegwebConstantes.REGISTRO_ENTRADA, RegwebConstantes.LOPD_LISTADO);
                 mav.addObject("entradas", true);
                 mav.addObject("salidas", false);
             }
@@ -961,7 +962,7 @@ public class InformeController extends AbstractRegistroCommonFormController {
                 busqueda.setPageNumber(1);
                 mav.addObject("paginacion", paginacion);
                 // Alta en tabla LOPD de las salidas del listado
-                lopdEjb.insertarRegistros(paginacion, usuarioEntidad.getId(), RegwebConstantes.REGISTRO_SALIDA, RegwebConstantes.LOPD_LISTADO);
+                lopdEjb.insertarRegistros(paginacion, usuarioEntidad, entidadActiva.getLibro(), RegwebConstantes.REGISTRO_SALIDA, RegwebConstantes.LOPD_LISTADO);
                 mav.addObject("entradas", false);
                 mav.addObject("salidas", true);
             }
@@ -1155,7 +1156,7 @@ public class InformeController extends AbstractRegistroCommonFormController {
                 } else if(historicoRegistroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_DISTRIBUIDO)) {
                     registros.get(i).add("TRAMITAT");
                 } else if(historicoRegistroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_ANULADO)) {
-                registros.get(i).add("ANUL·LAT");
+                    registros.get(i).add("ANUL·LAT");
                 } else if(historicoRegistroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_OFICIO_EXTERNO)) {
                     registros.get(i).add("OFICI EXTERN");
                 } else if(historicoRegistroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_OFICIO_INTERNO)) {
@@ -1172,7 +1173,7 @@ public class InformeController extends AbstractRegistroCommonFormController {
             mav.addObject("registros", registros);
 
 
-        //  REGISTRO DE SALIDA
+            //  REGISTRO DE SALIDA
         } else if(tipoRegistro.equals("salida")){
             //todo Joan Pernia, faltan las modificaciones?
 
@@ -1746,7 +1747,7 @@ public class InformeController extends AbstractRegistroCommonFormController {
      */
     private void totalRegistresSalidaTipoAsunto(ModelAndView mav,Date dataInici, Date dataFi,List<TipoAsunto> tiposAsunto, Long idEntidad) throws Exception{
 
-          List<String> salidaAsuntoValor = new ArrayList<String>();
+        List<String> salidaAsuntoValor = new ArrayList<String>();
         List<String> salidaAsuntoNombre = new ArrayList<String>();
 
         for (TipoAsunto tipoAsunto : tiposAsunto) {

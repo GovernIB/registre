@@ -68,7 +68,7 @@ public class CodigoAsunto extends Traducible {
         this.id = id;
     }
 
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "ENTIDAD", foreignKey = @ForeignKey(name = "RWE_CODASUNTO_ENTIDAD_FK"))
     public Entidad getEntidad() {
         return entidad;

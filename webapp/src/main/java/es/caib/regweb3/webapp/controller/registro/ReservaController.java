@@ -72,9 +72,10 @@ public class ReservaController  extends BaseController {
      * Guardar un nuevo {@link es.caib.regweb3.model.RegistroEntrada}
      */
     @RequestMapping(value = "/reserva", method = RequestMethod.POST)
-    public String reserva(@ModelAttribute("registro") RegistroEntrada registro, 
-        BindingResult result, Model model,SessionStatus status,
+    public String reserva(@ModelAttribute("registro") RegistroEntrada registro, BindingResult result, Model model,SessionStatus status,
         HttpServletRequest request) throws Exception, I18NException, I18NValidationException {
+
+        Entidad entidad = getEntidadActiva(request);
 
         reservaValidator.validate(registro, result);
 
@@ -102,7 +103,7 @@ public class ReservaController  extends BaseController {
                 registro.getRegistroDetalle().setIdioma(null);
 
                 //Guardamos el RegistroEntrada
-                registro = registroEntradaEjb.registrarEntrada(registro, usuarioEntidad, null, null, false);
+                registro = registroEntradaEjb.registrarEntrada(registro, entidad, usuarioEntidad, null, null, false);
 
             }catch (Exception e) {
                 Mensaje.saveMessageError(request, getMessage("regweb.error.registro"));

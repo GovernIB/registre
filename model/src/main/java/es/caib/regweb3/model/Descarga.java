@@ -66,7 +66,6 @@ public class Descarga implements Serializable {
     }
 
     @Column(name = "FECHAIMPORTACION")
-    //@Temporal(TemporalType.DATE)
     public Date getFechaImportacion() {
         return fechaImportacion;
     }
@@ -84,7 +83,7 @@ public class Descarga implements Serializable {
         this.tipo = tipo;
     }
 
-    @ManyToOne()
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ENTIDAD", foreignKey =@ForeignKey(name = "RWE_DESCARGA_ENTIDAD_FK"))
     public Entidad getEntidad() {
         return entidad;

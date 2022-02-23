@@ -209,7 +209,7 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
                 registroSalida = procesarRegistroSalida(registroSalida, entidad);
 
                 // Guardamos el RegistroSalida
-                registroSalida = registroSalidaEjb.registrarSalida(registroSalida, usuarioEntidad, interesadosSesion, null, false);
+                registroSalida = registroSalidaEjb.registrarSalida(registroSalida, entidad, usuarioEntidad, interesadosSesion, null, false);
 
 
             }catch (Exception | I18NException e) {
@@ -360,7 +360,7 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
                 RegistroSalida antiguo = registroSalidaEjb.findByIdCompleto(registroSalida.getId());
 
                 // Actualizamos el RegistroSalida
-                registroSalida = registroSalidaEjb.actualizar(antiguo, registroSalida, usuarioEntidad);
+                registroSalida = registroSalidaEjb.actualizar(antiguo, registroSalida, entidad, usuarioEntidad);
 
                 Mensaje.saveMessageInfo(request, getMessage("regweb.actualizar.registro"));
 
@@ -390,6 +390,7 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
     @RequestMapping(value = "/{idRegistro}/rectificar", method=RequestMethod.GET)
     public String rectificar(@PathVariable Long idRegistro, HttpServletRequest request) throws Exception {
 
+        Entidad entidad = getEntidadActiva(request);
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
         RegistroSalida registroSalidaRectificado;
 
@@ -409,7 +410,7 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
             // Si el Registro se puede rectificar y el usuario tiene permisos sobre el libro
             if(isRectificar.contains(registroSalida.getEstado())){
 
-                registroSalidaRectificado = registroSalidaEjb.rectificar(registroSalida, usuarioEntidad);
+                registroSalidaRectificado = registroSalidaEjb.rectificar(entidad, registroSalida, usuarioEntidad);
 
                 Mensaje.saveMessageInfo(request, getMessage("registro.rectificar.ok"));
                 return "redirect:/registroSalida/"+registroSalidaRectificado.getId()+"/detalle";
