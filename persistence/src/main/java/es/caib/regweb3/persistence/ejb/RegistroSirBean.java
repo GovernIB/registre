@@ -426,7 +426,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         List<String> where = new ArrayList<String>();
 
         StringBuilder queryBase = new StringBuilder("Select rs.id, rs.decodificacionEntidadRegistralOrigen, rs.decodificacionEntidadRegistralDestino, rs.fechaRecepcion, rs.identificadorIntercambio, rs.numeroRegistro, " +
-                "rs.resumen, rs.estado, rs.documentacionFisica from RegistroSir as rs ");
+                "rs.resumen, rs.estado, rs.documentacionFisica, rs.tipoRegistro from RegistroSir as rs ");
 
         StringBuilder query = new StringBuilder(queryBase);
 
@@ -452,7 +452,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         q2 = em.createQuery(query.toString().replaceAll(queryBase.toString(), queryCount.toString()));
 
         // añadimos el order by
-        query.append(" order by rs.fechaRecepcion desc");
+        query.append(" order by rs.fechaRecepcion");
         q = em.createQuery(query.toString());
 
         // Mapeamos los parámetros
@@ -491,6 +491,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
             registro.setResumen((String) result[6]);
             registro.setEstado((EstadoRegistroSir) result[7]);
             registro.setDocumentacionFisica((String) result[8]);
+            registro.setTipoRegistro((TipoRegistro) result[9]);
             registros.add(registro);
         }
 
