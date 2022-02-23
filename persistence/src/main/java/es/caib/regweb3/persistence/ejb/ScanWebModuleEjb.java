@@ -42,8 +42,8 @@ public class ScanWebModuleEjb implements ScanWebModuleLocal {
 
         long entitatID = scanWebConfig.getEntitatID();
 
-        log.info("SWM :: scanDocument: entitatID = " + entitatID);
-        log.info("SWM :: scanDocument: scanWebID = " + scanWebID);
+        log.debug("SWM :: scanDocument: entitatID = " + entitatID);
+        log.debug("SWM :: scanDocument: scanWebID = " + scanWebID);
 
         // El plugin existeix?
         IScanWebPlugin scanWebPlugin;

@@ -2118,8 +2118,6 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         if (es.caib.regweb3.utils.StringUtils.isNotEmpty(anexoSir.getIdentificadorDocumentoFirmado()) &&
                 !anexoSir.getIdentificadorDocumentoFirmado().equals(anexoSir.getIdentificadorFichero())) {
 
-            log.info("Firma detached del documento: " + anexoSir.getIdentificadorDocumentoFirmado());
-
             AnexoFull anexoFirmado = anexosProcesados.get(anexoSir.getIdentificadorDocumentoFirmado());//obtenemos el anexo firmado previamente procesado
             if(anexoFirmado.getAnexo().getModoFirma() != MODO_FIRMA_ANEXO_ATTACHED) { // si la firma detached es de un firma attached, la descartamos
 
