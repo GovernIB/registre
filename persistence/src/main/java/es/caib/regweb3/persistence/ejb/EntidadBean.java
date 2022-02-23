@@ -86,7 +86,7 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
     public Entidad findByIdLigero(Long idEntidad) throws Exception {
 
         Query q = em.createQuery("Select entidad.id, entidad.codigoDir3, entidad.nombre, entidad.logoMenu, entidad.logoPie, entidad.configuracionPersona, " +
-                "entidad.sir, entidad.oficioRemision, entidad.mantenimiento, entidad.textoPie, entidad.colorMenu, entidad.numRegistro, entidad.libro, entidad.diasVisado, entidad.oficioRemision, entidad.perfilCustodia from Entidad as entidad LEFT JOIN entidad.logoMenu logoMenu LEFT JOIN entidad.logoPie logoPie where " +
+                "entidad.sir, entidad.oficioRemision, entidad.mantenimiento, entidad.textoPie, entidad.colorMenu, entidad.numRegistro, entidad.libro, entidad.diasVisado, entidad.oficioRemision, entidad.perfilCustodia, entidad.sello from Entidad as entidad LEFT JOIN entidad.logoMenu logoMenu LEFT JOIN entidad.logoPie logoPie where " +
                 "entidad.id = :idEntidad");
 
         q.setParameter("idEntidad", idEntidad);
@@ -112,6 +112,7 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
             entidad.setDiasVisado((Integer) result.get(0)[13]);
             entidad.setOficioRemision((Boolean) result.get(0)[14]);
             entidad.setPerfilCustodia((Long) result.get(0)[15]);
+            entidad.setSello((String) result.get(0)[16]);
 
             return entidad;
         } else {
@@ -347,15 +348,14 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
     }
 
     @Override
-    public Boolean esAdministrador(Long idEntidad, UsuarioEntidad usuarioEntidad) throws Exception {
+    public Boolean esAdministrador(UsuarioEntidad usuarioEntidad) throws Exception {
 
         Query q = em.createQuery("Select entidad.id from Entidad as entidad where entidad.id=:idEntidad and entidad.activo = true and :usuarioEntidad in elements(entidad.administradores) ");
 
-        q.setParameter("idEntidad", idEntidad);
+        q.setParameter("idEntidad", usuarioEntidad.getEntidad().getId());
         q.setParameter("usuarioEntidad", usuarioEntidad);
 
         return q.getResultList().size() > 0;
-
     }
 
     @Override

@@ -403,6 +403,8 @@ public interface RegwebConstantes {
 
     /* -------------- PAIS --------------*/
     Long PAIS_ESPAÑA = 724L;
+    Long nivelAdminAutonomica = 2L; // Administración Autonómica
+    Long comunidadBaleares = 4L; // Illes Balears
 
     /* -------------- ENTIDAD GEOGRÁFICA --------------*/
     String ENTIDAD_GEOGRAFICA_MUNICIPIO = "01";

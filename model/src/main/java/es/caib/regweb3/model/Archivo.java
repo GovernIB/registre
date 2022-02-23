@@ -22,8 +22,10 @@ public class Archivo implements Serializable {
     private Long tamano;
     private boolean borrar = false;
 
-    public Archivo(){
+    public Archivo(){}
 
+    public Archivo(Long id) {
+        this.id = id;
     }
 
     @Id

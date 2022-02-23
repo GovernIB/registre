@@ -110,81 +110,83 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
         Map<String, Object> parametros = new HashMap<String, Object>();
         List<String> where = new ArrayList<String>();
 
-        StringBuilder query = new StringBuilder("Select oficioRemision from OficioRemision as oficioRemision ");
+        StringBuilder queryBase = new StringBuilder("Select o.id, o.numeroOficio, o.fecha, o.identificadorIntercambio, o.oficina, o.organismoDestinatario, o.destinoExternoCodigo, o.destinoExternoDenominacion, " +
+                "o.estado, o.tipoOficioRemision, o.numeroReintentos, o.codigoError, o.descripcionError from OficioRemision as o LEFT JOIN o.organismoDestinatario destino ");
+
+        StringBuilder query = new StringBuilder(queryBase);
 
         // Organismo
         if(idOrganismo != null){
-            where.add(" oficioRemision.oficina.organismoResponsable.id = :idOrganismo ");
+            where.add(" o.oficina.organismoResponsable.id = :idOrganismo ");
             parametros.put("idOrganismo", idOrganismo);
         }
 
         // Oficios Remisión no SIR
-        where.add(" oficioRemision.sir = :sir "); parametros.put("sir",sir);
+        where.add(" o.sir = :sir "); parametros.put("sir",sir);
 
         // Tipo Oficio: Entrada o Salida
         if(tipoOficioRemision != 0){
-            where.add(" oficioRemision.tipoOficioRemision = :tipoOficioRemision "); parametros.put("tipoOficioRemision",tipoOficioRemision);
+            where.add(" o.tipoOficioRemision = :tipoOficioRemision "); parametros.put("tipoOficioRemision",tipoOficioRemision);
         }
 
-        if(oficioRemision.getNumeroOficio()!= null && oficioRemision.getNumeroOficio() > 0){where.add(" oficioRemision.numeroOficio = :numeroOficio"); parametros.put("numeroOficio",oficioRemision.getNumeroOficio());}
+        if(oficioRemision.getNumeroOficio()!= null && oficioRemision.getNumeroOficio() > 0){where.add(" o.numeroOficio = :numeroOficio"); parametros.put("numeroOficio",oficioRemision.getNumeroOficio());}
 
         // Usuario
         if (StringUtils.isNotEmpty(usuario)) {
-            where.add(DataBaseUtils.like("oficioRemision.usuarioResponsable.usuario.identificador", "usuario", parametros, usuario));
+            where.add(DataBaseUtils.like("o.usuarioResponsable.usuario.identificador", "usuario", parametros, usuario));
         }
 
         // Oficio Remisión Interno o Externo
         if (destinoOficioRemision != null) {
             if (destinoOficioRemision.equals(RegwebConstantes.DESTINO_OFICIO_REMISION_INTERNO)) {
-                where.add(" oficioRemision.organismoDestinatario != null");
+                where.add(" o.organismoDestinatario != null");
             } else if (destinoOficioRemision.equals(RegwebConstantes.DESTINO_OFICIO_REMISION_EXTERNO)) {
-                where.add(" oficioRemision.organismoDestinatario is null");
+                where.add(" o.organismoDestinatario is null");
             }
         }
 
         // Estado Oficio Remisión
         if(estadoOficioRemision != null){
-            where.add(" oficioRemision.estado = :estadoOficioRemision");
+            where.add(" o.estado = :estadoOficioRemision");
             parametros.put("estadoOficioRemision",estadoOficioRemision);
         }
 
         // Identificador Intercambio
         if(StringUtils.isNotEmpty(oficioRemision.getIdentificadorIntercambio())){
-            where.add(DataBaseUtils.like("oficioRemision.identificadorIntercambio", "identificadorIntercambio", parametros, oficioRemision.getIdentificadorIntercambio()));
+            where.add(DataBaseUtils.like("o.identificadorIntercambio", "identificadorIntercambio", parametros, oficioRemision.getIdentificadorIntercambio()));
         }
 
         // Intervalo fechas
-        where.add(" (oficioRemision.fecha >= :fechaInicio  "); parametros.put("fechaInicio", fechaInicio);
-        where.add(" oficioRemision.fecha <= :fechaFin) "); parametros.put("fechaFin", fechaFin);
+        where.add(" (o.fecha >= :fechaInicio  "); parametros.put("fechaInicio", fechaInicio);
+        where.add(" o.fecha <= :fechaFin) "); parametros.put("fechaFin", fechaFin);
 
-        // Parametros
-        if (parametros.size() != 0) {
-            query.append("where ");
-            int count = 0;
-            for (String w : where) {
-                if (count != 0) {
-                    query.append(" and ");
-                }
-                query.append(w);
-                count++;
+
+        // Añadimos los parámetros a la query
+        query.append("where ");
+        int count = 0;
+        for (String w : where) {
+            if (count != 0) {
+                query.append(" and ");
             }
-            q2 = em.createQuery(query.toString().replaceAll("Select oficioRemision from OficioRemision as oficioRemision ", "Select count(oficioRemision.id) from OficioRemision as oficioRemision "));
-            query.append(" order by oficioRemision.id desc");
-            q = em.createQuery(query.toString());
-
-            for (Map.Entry<String, Object> param : parametros.entrySet()) {
-
-                q.setParameter(param.getKey(), param.getValue());
-                q2.setParameter(param.getKey(), param.getValue());
-            }
-
-        }else{
-            q2 = em.createQuery(query.toString().replaceAll("Select oficioRemision from OficioRemision as oficioRemision ", "Select count(oficioRemision.id) from OficioRemision as oficioRemision "));
-            query.append("order by oficioRemision.id desc");
-            q = em.createQuery(query.toString());
+            query.append(w);
+            count++;
         }
 
+        // Duplicamos la query solo para obtener los resultados totales
+        StringBuilder queryCount = new StringBuilder("Select count(o.id) from OficioRemision as o ");
+        q2 = em.createQuery(query.toString().replaceAll(queryBase.toString(), queryCount.toString()));
 
+        // añadimos el order by
+        query.append(" order by o.id desc");
+        q = em.createQuery(query.toString());
+
+        // Mapeamos los parámetros
+        for (Map.Entry<String, Object> param : parametros.entrySet()) {
+            q.setParameter(param.getKey(), param.getValue());
+            q2.setParameter(param.getKey(), param.getValue());
+        }
+
+        // Ejecutamos las queries
         Paginacion paginacion;
 
         if(pageNumber != null){ // Comprobamos si es una busqueda paginada o no
@@ -199,7 +201,28 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
             paginacion = new Paginacion(0, 0);
         }
 
-        List<OficioRemision> oficios = q.getResultList();
+        List<Object[]> results = q.getResultList();
+        List<OficioRemision> oficios = new ArrayList<>();
+
+        for (Object[] result : results) {
+            OficioRemision oficio =  new OficioRemision();
+            oficio.setId((Long) result[0]);
+            oficio.setNumeroOficio((Integer) result[1]);
+            oficio.setFecha((Date) result[2]);
+            oficio.setIdentificadorIntercambio((String) result[3]);
+            oficio.setOficina((Oficina) result[4]);
+            oficio.setOrganismoDestinatario((Organismo) result[5]);
+            oficio.setDestinoExternoCodigo((String) result[6]);
+            oficio.setDestinoExternoDenominacion((String) result[7]);
+            oficio.setEstado((int) result[8]);
+            oficio.setTipoOficioRemision((Long) result[9]);
+            oficio.setNumeroReintentos((Integer) result[10]);
+            oficio.setCodigoError((String) result[11]);
+            oficio.setDescripcionError((String) result[12]);
+
+
+            oficios.add(oficio);
+        }
 
         paginacion.setListado(oficios);
 
@@ -208,8 +231,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
 
 
     @Override    
-    public OficioRemision registrarOficioRemision(OficioRemision oficioRemision,
-        Long estado) throws Exception, I18NException, I18NValidationException {
+    public OficioRemision registrarOficioRemision(Entidad entidad, OficioRemision oficioRemision, Long estado) throws Exception, I18NException, I18NValidationException {
 
         try{
 
@@ -261,7 +283,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
                     registroSalida.setEstado(RegwebConstantes.REGISTRO_DISTRIBUIDO);
 
                     // Registramos la Salida
-                    registroSalida = registroSalidaEjb.registrarSalida(registroSalida, oficioRemision.getUsuarioResponsable(), destinatarios, null, false);
+                    registroSalida = registroSalidaEjb.registrarSalida(registroSalida, entidad, oficioRemision.getUsuarioResponsable(), destinatarios, null, false);
 
                     // CREAMOS LA TRAZABILIDAD
                     Trazabilidad trazabilidad = new Trazabilidad();
@@ -363,10 +385,10 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
     @SuppressWarnings(value = "unchecked")
     public List<OficioRemision> oficiosPendientesLlegada(Set<Organismo> organismos, Integer total) throws Exception {
 
-        Query q = em.createQuery("Select oficioRemision from OficioRemision as oficioRemision "
-                + "where oficioRemision.organismoDestinatario in (:organismos) "
-                + " and oficioRemision.estado = " + RegwebConstantes.OFICIO_INTERNO_ENVIADO
-                + " order by oficioRemision.id desc");
+        Query q = em.createQuery("Select o.id, o.fecha, o.oficina, o.organismoDestinatario, o.destinoExternoCodigo, o.destinoExternoDenominacion " +
+                "from OficioRemision as o LEFT JOIN o.organismoDestinatario destino where o.organismoDestinatario in (:organismos) "
+                + " and o.estado = " + RegwebConstantes.OFICIO_INTERNO_ENVIADO
+                + " order by o.id desc");
 
         q.setParameter("organismos",organismos);
         q.setHint("org.hibernate.readOnly", true);
@@ -375,7 +397,22 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
             q.setMaxResults(total);
         }
 
-        return q.getResultList();
+        List<Object[]> results = q.getResultList();
+        List<OficioRemision> oficios = new ArrayList<>();
+
+        for (Object[] result : results) {
+            OficioRemision oficio =  new OficioRemision();
+            oficio.setId((Long) result[0]);
+            oficio.setFecha((Date) result[1]);
+            oficio.setOficina((Oficina) result[2]);
+            oficio.setOrganismoDestinatario((Organismo) result[3]);
+            oficio.setDestinoExternoCodigo((String) result[4]);
+            oficio.setDestinoExternoDenominacion((String) result[5]);
+
+            oficios.add(oficio);
+        }
+
+        return oficios;
     }
 
     @Override
@@ -998,5 +1035,4 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
         return new CombineStream(is, ht);
 
     }
-
 }

@@ -21,7 +21,7 @@ import java.util.List;
 public interface AsientoRegistralLocal {
 
     /**
-     * Cra un neuvo UsuarioEntidad haciendo uso de @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+     * Crea un nuevo UsuarioEntidad haciendo uso de @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
      *
      * @param identificador
      * @param idEntidad
@@ -43,8 +43,7 @@ public interface AsientoRegistralLocal {
      * @throws I18NException
      * @throws I18NValidationException
      */
-    RegistroSalida registrarSalida(RegistroSalida registroSalida,
-                                   UsuarioEntidad usuarioEntidad, List<Interesado> interesados, List<AnexoFull> anexos, Boolean validarAnexos)
+    RegistroSalida registrarSalida(RegistroSalida registroSalida, Entidad entidad, UsuarioEntidad usuarioEntidad, List<Interesado> interesados, List<AnexoFull> anexos, Boolean validarAnexos)
             throws Exception, I18NException, I18NValidationException;
 
     /**
@@ -59,8 +58,7 @@ public interface AsientoRegistralLocal {
      * @throws I18NException
      * @throws I18NValidationException
      */
-    RegistroEntrada registrarEntrada(RegistroEntrada registroEntrada,
-                                     UsuarioEntidad usuarioEntidad, List<Interesado> interesados, List<AnexoFull> anexos, Boolean validarAnexos)
+    RegistroEntrada registrarEntrada(RegistroEntrada registroEntrada, Entidad entidad, UsuarioEntidad usuarioEntidad, List<Interesado> interesados, List<AnexoFull> anexos, Boolean validarAnexos)
             throws Exception, I18NException, I18NValidationException;
 
     /**
@@ -72,7 +70,7 @@ public interface AsientoRegistralLocal {
      * @throws I18NValidationException
      * @throws I18NException
      */
-    void crearJustificante(UsuarioEntidad usuarioEntidad, IRegistro registro, Long tipoRegistro, String idioma) throws I18NValidationException, I18NException;
+    void crearJustificante(Entidad entidad, UsuarioEntidad usuarioEntidad, IRegistro registro, Long tipoRegistro, String idioma) throws I18NValidationException, I18NException;
 
     /**
      * Distribuye un registro de entrada de manera Asincrona
@@ -104,6 +102,6 @@ public interface AsientoRegistralLocal {
      * @throws Exception
      * @throws I18NValidationException
      */
-    RegistroSalida procesarRegistroSalida(Long tipoOperacion, RegistroSalida registroSalida) throws I18NException, Exception, I18NValidationException;
+    RegistroSalida procesarRegistroSalida(Long tipoOperacion, RegistroSalida registroSalida, Entidad entidad) throws I18NException, Exception, I18NValidationException;
 }
 

@@ -288,7 +288,7 @@ public class Organismo implements Serializable {
         this.libros = libros;
     }
 
-    @ManyToOne()
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="NIVELADMINISTRACION")
     @ForeignKey(name="RWE_ORGANISMO_CATNIVELADMIN_FK")
     @JsonIgnore
@@ -301,7 +301,7 @@ public class Organismo implements Serializable {
         this.nivelAdministracion = nivelAdministracion;
     }
 
-    @ManyToOne()
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="CODAMBCOMUNIDAD")
     @ForeignKey(name="RWE_ORGANISMO_CATAMBCOMAUTO_FK")
     @JsonIgnore
@@ -313,7 +313,7 @@ public class Organismo implements Serializable {
         this.codAmbComunidad = codAmbComunidad;
     }
 
-    @ManyToOne()
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="CODAMBPROVINCIA")
     @ForeignKey(name="RWE_ORGANISMO_CATPROVINCIA_FK")
     @JsonIgnore
@@ -326,7 +326,7 @@ public class Organismo implements Serializable {
     }
 
 
-    @ManyToOne()
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "PAIS")
     @ForeignKey(name = "RWE_ORGANISMO_PAIS_FK")
     public CatPais getCodPais() {
@@ -337,7 +337,7 @@ public class Organismo implements Serializable {
         this.codPais = codPais;
     }
 
-    @ManyToOne()
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "LOCALIDAD")
     @ForeignKey(name = "RWE_ORGANISMO_LOCALIDAD_FK")
     public CatLocalidad getLocalidad() {
@@ -348,7 +348,7 @@ public class Organismo implements Serializable {
         this.localidad = localidad;
     }
 
-    @ManyToOne()
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "TIPOVIA")
     @ForeignKey(name = "RWE_ORGANISMO_TIPOVIA_FK")
     public CatTipoVia getTipoVia() {

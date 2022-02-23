@@ -71,9 +71,6 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
     @EJB(mappedName = "regweb3/DistribucionEJB/local")
     private DistribucionLocal distribucionEjb;
 
-    @EJB(mappedName = "regweb3/PluginEJB/local")
-    private PluginLocal pluginEjb;
-
 
     /**
      * Listado de todos los Registros de Entrada
@@ -174,7 +171,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
             mav.addObject("puedeEditar", permisoOrganismoUsuarioEjb.tienePermiso(usuarioEntidad.getId(), busqueda.getIdOrganismo(), RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_ENTRADA, true));
 
             // Alta en tabla LOPD
-            lopdEjb.insertarRegistros(paginacion, usuarioEntidad.getId(), RegwebConstantes.REGISTRO_ENTRADA, RegwebConstantes.LOPD_LISTADO);
+            lopdEjb.insertarRegistros(paginacion, usuarioEntidad, entidadActiva.getLibro(), RegwebConstantes.REGISTRO_ENTRADA, RegwebConstantes.LOPD_LISTADO);
         }
 
         // Comprobamos si el Organismo destinatario es externo, para añadirlo a la lista.
@@ -268,7 +265,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
             if (anexosCompleto) { // Si se muestran los anexos completo
 
                 List<AnexoFull> anexos = anexoEjb.getByRegistroEntrada(registro); //Inicializamos los anexos del registro de entrada.
-                initScanAnexos(entidadActiva, model, request, registro.getId()); // Inicializa los atributos para escanear anexos
+                initScanAnexos(entidadActiva, model); // Inicializa los atributos para escanear anexos
 
                 // Si es SIR, se validan los tamaños y tipos de anexos
                 if (registro.getEvento().equals(RegwebConstantes.EVENTO_OFICIO_SIR)) {
@@ -383,17 +380,18 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
 
         try {
             RegistroEntrada registroEntrada = registroEntradaEjb.getConAnexosFull(idRegistro);
+            Entidad entidad = getEntidadActiva(request);
 
             // Crear el Justificante
             if (!registroEntrada.getRegistroDetalle().getTieneJustificante()) {
 
                 // Creamos el anexo del justificante y se lo añadimos al registro
-                AnexoFull anexoFull = justificanteEjb.crearJustificante(usuarioEntidad, registroEntrada, RegwebConstantes.REGISTRO_ENTRADA, Configuracio.getDefaultLanguage());
+                AnexoFull anexoFull = justificanteEjb.crearJustificante(entidad, usuarioEntidad, registroEntrada, RegwebConstantes.REGISTRO_ENTRADA, Configuracio.getDefaultLanguage());
                 registroEntrada.getRegistroDetalle().getAnexosFull().add(anexoFull);
             }
 
             // Enviar el Intercambio
-            sirEnvioEjb.enviarIntercambio(RegwebConstantes.REGISTRO_ENTRADA, registroEntrada, getOficinaActiva(request), usuarioEntidad, oficinaSIRCodigo);
+            sirEnvioEjb.enviarIntercambio(RegwebConstantes.REGISTRO_ENTRADA, registroEntrada, entidad, getOficinaActiva(request), usuarioEntidad, oficinaSIRCodigo);
 
             Mensaje.saveMessageInfo(request, getMessage("registroEntrada.envioSir.ok"));
             jsonResponse.setStatus("SUCCESS");
@@ -429,8 +427,6 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         }
 
         model.addAttribute("tipoRegistro", RegwebConstantes.REGISTRO_ENTRADA);
-        model.addAttribute("comunidadesAutonomas", catComunidadAutonomaEjb.getAll());
-        model.addAttribute("nivelesAdministracion", catNivelAdministracionEjb.getAll());
         model.addAttribute("registro", registroEntrada);
         model.addAttribute("reenviarForm", new ReenviarForm());
 
@@ -448,12 +444,13 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         Oficina oficinaReenvio = reenviarForm.oficinaReenvio();
         Oficina oficinaActiva = getOficinaActiva(request);
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
+        Entidad entidad = getEntidadActiva(request);
 
         // Reenvia el RegistroSir
         try {
             if (oficinaReenvio != null) {//Si han seleccionado oficina de reenvio
                 //Reenviamos
-                sirEnvioEjb.reenviarIntercambio(RegwebConstantes.REGISTRO_ENTRADA, idRegistro, oficinaReenvio, oficinaActiva, usuarioEntidad, reenviarForm.getObservaciones());
+                sirEnvioEjb.reenviarIntercambio(RegwebConstantes.REGISTRO_ENTRADA, idRegistro, entidad, oficinaReenvio, oficinaActiva, usuarioEntidad, reenviarForm.getObservaciones());
             }
 
             Mensaje.saveMessageInfo(request, getMessage("registroSir.reenvio.ok"));
@@ -670,6 +667,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         try {
 
             RegistroEntrada registroEntrada = registroEntradaEjb.findById(idRegistro);
+            Entidad entidad = getEntidadActiva(request);
             UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
 
             // Comprobamos si el RegistroEntrada tiene el estado Pendiente de Visar
@@ -687,7 +685,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
             }
 
             // Visar el RegistroEntrada
-            registroEntradaEjb.visarRegistroEntrada(registroEntrada, usuarioEntidad);
+            registroEntradaEjb.visarRegistroEntrada(registroEntrada, entidad, usuarioEntidad);
 
             Mensaje.saveMessageInfo(request, getMessage("registroEntrada.visar.ok"));
 
@@ -781,6 +779,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         if (!registroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_ANULADO) &&
                 !registroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_PENDIENTE_VISAR)) {
 
+            mav.addObject("entidad", getEntidadActiva(request));
             mav.addObject("registro", registroEntrada);
             mav.addObject("x", request.getParameter("x"));
             mav.addObject("y", request.getParameter("y"));
@@ -815,12 +814,13 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
 
             RegistroEntrada registroEntrada = registroEntradaEjb.getConAnexosFull(idRegistro);
             UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
+            Entidad entidad = getEntidadActiva(request);
 
             // Dispone de permisos para Editar el registro
             if (permisoOrganismoUsuarioEjb.tienePermiso(usuarioEntidad.getId(), registroEntrada.getOficina().getOrganismoResponsable().getId(), RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_ENTRADA, true) && !registroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_ANULADO)) {
 
                 // Creamos el anexo justificante y lo firmamos
-                AnexoFull anexoFull = justificanteEjb.crearJustificante(usuarioEntidad, registroEntrada, RegwebConstantes.REGISTRO_ENTRADA, idioma);
+                AnexoFull anexoFull = justificanteEjb.crearJustificante(entidad, usuarioEntidad, registroEntrada, RegwebConstantes.REGISTRO_ENTRADA, idioma);
 
                 // Alta en tabla LOPD
                 if (anexoFull != null) {
@@ -854,5 +854,4 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         CustomDateEditor dateEditor = new CustomDateEditor(sdf, true);
         binder.registerCustomEditor(java.util.Date.class, dateEditor);
     }
-
 }

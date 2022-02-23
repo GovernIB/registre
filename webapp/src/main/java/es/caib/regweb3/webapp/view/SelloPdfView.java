@@ -119,7 +119,7 @@ public class SelloPdfView extends AbstractIText5PdfView {
             // Obtenemos el registro de entrada
             RegistroEntrada registroEntrada = (RegistroEntrada) model.get("registro");
             // Obtiene la entidad
-            entidad = registroEntrada.getUsuario().getEntidad();
+            entidad = (Entidad) model.get("entidad");
             // Obtiene el formato del sello definido en la entidad
             sello = entidad.getSello();
             // Obtiene los datos del registro
@@ -141,8 +141,8 @@ public class SelloPdfView extends AbstractIText5PdfView {
             tipusRegistreCompletCastella = getMessage("sello.tipoRegistroCompletoCastellano.entrada");
             nomUsuari = registroEntrada.getUsuario().getUsuario().getNombre();
             nomUsuariComplet = registroEntrada.getUsuario().getNombreCompleto();
-            entitat = registroEntrada.getOficina().getOrganismoResponsable().getEntidad().getNombre();
-            decodificacioEntitat = registroEntrada.getOficina().getOrganismoResponsable().getEntidad().getDescripcion();
+            entitat = entidad.getNombre();
+            decodificacioEntitat = entidad.getDescripcion();
             numRegformat = registroEntrada.getNumeroRegistroFormateado();
             llibre = registroEntrada.getLibro().getNombre();
             extracte = registroEntrada.getRegistroDetalle().getExtracto();
@@ -159,7 +159,7 @@ public class SelloPdfView extends AbstractIText5PdfView {
             // Obtenemos el registro de salida
             RegistroSalida registroSalida = (RegistroSalida) model.get("registro");
             // Obtiene la entidad
-            entidad = registroSalida.getUsuario().getEntidad();
+            entidad = (Entidad) model.get("entidad");
             // Obtiene el formato del sello definido en la entidad
             sello = entidad.getSello();
             // Obtiene los datos del registro
@@ -183,8 +183,8 @@ public class SelloPdfView extends AbstractIText5PdfView {
             llibre = registroSalida.getLibro().getNombre();
             nomUsuari = registroSalida.getUsuario().getUsuario().getNombre();
             nomUsuariComplet = registroSalida.getUsuario().getNombreCompleto();
-            entitat = registroSalida.getOficina().getOrganismoResponsable().getEntidad().getNombre();
-            decodificacioEntitat = registroSalida.getOficina().getOrganismoResponsable().getEntidad().getDescripcion();
+            entitat = entidad.getNombre();
+            decodificacioEntitat = entidad.getDescripcion();
             numRegformat = registroSalida.getNumeroRegistroFormateado();
             llibre = registroSalida.getLibro().getNombre();
             extracte = registroSalida.getRegistroDetalle().getExtracto();

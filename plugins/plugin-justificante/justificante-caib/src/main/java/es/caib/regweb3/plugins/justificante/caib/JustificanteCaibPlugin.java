@@ -144,7 +144,7 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
      * @param locale
      * @throws Exception
      */
-    private void inicializarPropiedades(IRegistro registro, Long tipoRegistro, Locale locale, String url, String specialValue, String csv) throws Exception{
+    private void inicializarPropiedades(IRegistro registro, Long tipoRegistro, Locale locale, String url, String specialValue, String csv, Boolean sir) throws Exception{
 
         // Propiedades configuradas en el plugin
         rutaImatge = this.getProperty(PROPERTY_CAIB_BASE + "logoPath");
@@ -152,7 +152,7 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
         estampat = MessageFormat.format(estampacion, url, specialValue, csv);
 
         // SIR?
-        sir = registro.getOficina().getOrganismoResponsable().getEntidad().getSir();
+        this.sir = sir;
 
         // Inicialitza estils de lletra
         FontFactory.register("img/LegacySanITC-Book.otf", "Legacy");
@@ -191,7 +191,7 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
     }
 
     @Override
-    public byte[] generarJustificanteEntrada(RegistroEntrada registroEntrada, String url, String specialValue, String csv, String idioma) throws Exception{
+    public byte[] generarJustificanteEntrada(RegistroEntrada registroEntrada, String url, String specialValue, String csv, String idioma, Boolean sir) throws Exception{
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream(4096);
 
@@ -199,7 +199,7 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
         Locale locale = new Locale(idioma);
 
         //Inicializamos las propiedades comunes
-        inicializarPropiedades(registroEntrada, RegwebConstantes.REGISTRO_ENTRADA, locale, url, specialValue,csv);
+        inicializarPropiedades(registroEntrada, RegwebConstantes.REGISTRO_ENTRADA, locale, url, specialValue,csv, sir);
 
         // Aplica preferencias
         Document document = new Document(PageSize.A4);
@@ -237,13 +237,13 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
 
 
     @Override
-    public byte[] generarJustificanteSalida(RegistroSalida registroSalida, String url, String specialValue, String csv, String idioma) throws Exception{
+    public byte[] generarJustificanteSalida(RegistroSalida registroSalida, String url, String specialValue, String csv, String idioma, Boolean sir) throws Exception{
 
         // Define idioma para el justificante
         Locale locale = new Locale(idioma);
 
         // Inicializamos las propiedades comunes
-        inicializarPropiedades(registroSalida, RegwebConstantes.REGISTRO_SALIDA, locale, url, specialValue,csv);
+        inicializarPropiedades(registroSalida, RegwebConstantes.REGISTRO_SALIDA, locale, url, specialValue,csv, sir);
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream(4096);
 
@@ -1109,5 +1109,4 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
         }
         return null;
     }
-
 }

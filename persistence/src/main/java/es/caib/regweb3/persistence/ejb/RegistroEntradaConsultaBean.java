@@ -1,10 +1,7 @@
 package es.caib.regweb3.persistence.ejb;
 
 
-import es.caib.regweb3.model.Anexo;
-import es.caib.regweb3.model.Organismo;
-import es.caib.regweb3.model.RegistroEntrada;
-import es.caib.regweb3.model.UsuarioEntidad;
+import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.model.utils.RegistroBasico;
 import es.caib.regweb3.persistence.utils.DataBaseUtils;
@@ -108,59 +105,60 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
         List<String> where = new ArrayList<String>();
         boolean busquedaInteresados = busquedaInteresados(interesadoNom, interesadoLli1, interesadoLli2, interesadoDoc);
 
-        StringBuilder queryBase = new StringBuilder("Select DISTINCT registroEntrada from RegistroEntrada as registroEntrada ");
+        StringBuilder queryBase = new StringBuilder("Select DISTINCT re.id, re.numeroRegistro, re.numeroRegistroFormateado, re.fecha, re.oficina, re.destino, re.destinoExternoCodigo, re.destinoExternoDenominacion, re.estado, re.usuario, " +
+                "re.registroDetalle.extracto, re.registroDetalle.reserva, re.registroDetalle.tipoDocumentacionFisica, re.registroDetalle.decodificacionTipoAnotacion, re.registroDetalle.presencial from RegistroEntrada as re LEFT JOIN re.destino destino ");
 
         // Si la búsqueda incluye referencias al interesado, hacemos la left outer join
         if(busquedaInteresados){
-            queryBase.append("left outer join registroEntrada.registroDetalle.interesados interessat ");
+            queryBase.append("left outer join re.registroDetalle.interesados interessat ");
         }
 
         StringBuilder query = new StringBuilder(queryBase);
 
         // Entidad
-        where.add(" registroEntrada.usuario.entidad.id =:idEntidad  ");
+        where.add(" re.usuario.entidad.id =:idEntidad  ");
         parametros.put("idEntidad", idEntidad);
 
         // Organismo
         if(organismos.size() == 1){
-            where.add(" registroEntrada.oficina.organismoResponsable.id = :idOrganismo ");
+            where.add(" re.oficina.organismoResponsable.id = :idOrganismo ");
             parametros.put("idOrganismo", organismos.get(0));
         }else{
-            where.add(" registroEntrada.oficina.organismoResponsable.id in (:organismos) ");
+            where.add(" re.oficina.organismoResponsable.id in (:organismos) ");
             parametros.put("organismos", organismos);
         }
 
         // Oficina Registro
         if (re.getOficina() != null && (re.getOficina().getId() != null && re.getOficina().getId() > 0)) {
-            where.add(" registroEntrada.oficina.id = :idOficina ");
+            where.add(" re.oficina.id = :idOficina ");
             parametros.put("idOficina", re.getOficina().getId());
         }
 
         // Estado registro
         if (re.getEstado() != null && re.getEstado() > 0) {
-            where.add(" registroEntrada.estado = :idEstadoRegistro ");
+            where.add(" re.estado = :idEstadoRegistro ");
             parametros.put("idEstadoRegistro", re.getEstado());
         }
 
         // Numero registro
         if (StringUtils.isNotEmpty(re.getNumeroRegistroFormateado())) {
-            where.add(" registroEntrada.numeroRegistroFormateado LIKE :numeroRegistroFormateado");
+            where.add(" re.numeroRegistroFormateado LIKE :numeroRegistroFormateado");
             parametros.put("numeroRegistroFormateado", "%" + re.getNumeroRegistroFormateado() + "%");
         }
 
         // Extracto
         if (StringUtils.isNotEmpty(re.getRegistroDetalle().getExtracto())) {
-            where.add(DataBaseUtils.like("registroEntrada.registroDetalle.extracto", "extracto", parametros, new String(re.getRegistroDetalle().getExtracto().getBytes("ISO-8859-1"), "UTF-8")));
+            where.add(DataBaseUtils.like("re.registroDetalle.extracto", "extracto", parametros, new String(re.getRegistroDetalle().getExtracto().getBytes("ISO-8859-1"), "UTF-8")));
         }
 
         // Observaciones
         if (StringUtils.isNotEmpty(observaciones)) {
-            where.add(DataBaseUtils.like("registroEntrada.registroDetalle.observaciones", "observaciones", parametros, observaciones));
+            where.add(DataBaseUtils.like("re.registroDetalle.observaciones", "observaciones", parametros, observaciones));
         }
 
         // Usuario
         if (StringUtils.isNotEmpty(usuario)) {
-            where.add(DataBaseUtils.like("registroEntrada.usuario.usuario.identificador", "usuario", parametros, usuario));
+            where.add(DataBaseUtils.like("re.usuario.usuario.identificador", "usuario", parametros, usuario));
         }
 
         // Nombre interesado
@@ -190,9 +188,9 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
         if (StringUtils.isNotEmpty((organoDest))) {
             Organismo organismo = organismoEjb.findByCodigoMultiEntidad(organoDest);
             if (organismo == null || (!idEntidad.equals(organismo.getEntidad().getId()))) {
-                where.add(" registroEntrada.destinoExternoCodigo = :organoDest ");
+                where.add(" re.destinoExternoCodigo = :organoDest ");
             } else {
-                where.add(" registroEntrada.destino.codigo = :organoDest ");
+                where.add(" re.destino.codigo = :organoDest ");
             }
 
             parametros.put("organoDest", organoDest);
@@ -200,19 +198,19 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
 
         // Tipo documentación física
         if (re.getRegistroDetalle().getTipoDocumentacionFisica() != null && re.getRegistroDetalle().getTipoDocumentacionFisica() > 0) {
-            where.add(" registroEntrada.registroDetalle.tipoDocumentacionFisica = :tipoDocumentacion ");
+            where.add(" re.registroDetalle.tipoDocumentacionFisica = :tipoDocumentacion ");
             parametros.put("tipoDocumentacion", re.getRegistroDetalle().getTipoDocumentacionFisica());
         }
 
         // Intervalo fechas
-        where.add(" (registroEntrada.fecha >= :fechaInicio  ");
+        where.add(" (re.fecha >= :fechaInicio  ");
         parametros.put("fechaInicio", fechaInicio);
-        where.add(" registroEntrada.fecha <= :fechaFin) ");
+        where.add(" re.fecha <= :fechaFin) ");
         parametros.put("fechaFin", fechaFin);
 
         //Presencial
         if(re.getRegistroDetalle().getPresencial() != null){
-            where.add(" registroEntrada.registroDetalle.presencial = :presencial ");
+            where.add(" re.registroDetalle.presencial = :presencial ");
             parametros.put("presencial", re.getRegistroDetalle().getPresencial());
         }
 
@@ -228,14 +226,14 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
         }
 
         // Duplicamos la query solo para obtener los resultados totales
-        StringBuilder queryCount = new StringBuilder("Select count(DISTINCT registroEntrada.id) from RegistroEntrada as registroEntrada ");
+        StringBuilder queryCount = new StringBuilder("Select count(DISTINCT re.id) from RegistroEntrada as re ");
         if(busquedaInteresados){
-            queryCount.append("left outer join registroEntrada.registroDetalle.interesados interessat ");
+            queryCount.append("left outer join re.registroDetalle.interesados interessat ");
         }
         q2 = em.createQuery(query.toString().replaceAll(queryBase.toString(), queryCount.toString()));
 
         // añadimos el order by
-        query.append(" order by registroEntrada.id desc");
+        query.append(" order by re.id desc");
         q = em.createQuery(query.toString());
 
         // Mapeamos los parámetros
@@ -259,7 +257,31 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
             paginacion = new Paginacion(0, 0);
         }
 
-        paginacion.setListado(q.getResultList());
+        List<Object[]> results = q.getResultList();
+        List<RegistroEntrada> registros = new ArrayList<>();
+
+        for (Object[] result : results) {
+            RegistroEntrada registro =  new RegistroEntrada();
+            registro.setId((Long) result[0]);
+            registro.setNumeroRegistro((Integer) result[1]);
+            registro.setNumeroRegistroFormateado((String) result[2]);
+            registro.setFecha((Date) result[3]);
+            registro.setOficina((Oficina)result[4]);
+            registro.setDestino((Organismo) result[5]);
+            registro.setDestinoExternoCodigo((String) result[6]);
+            registro.setDestinoExternoDenominacion((String) result[7]);
+            registro.setEstado((Long) result[8]);
+            registro.setUsuario((UsuarioEntidad) result[9]);
+            registro.getRegistroDetalle().setExtracto((String) result[10]);
+            registro.getRegistroDetalle().setReserva((String) result[11]);
+            registro.getRegistroDetalle().setTipoDocumentacionFisica((Long) result[12]);
+            registro.getRegistroDetalle().setDecodificacionTipoAnotacion((String) result[13]);
+            registro.getRegistroDetalle().setPresencial((Boolean) result[14]);
+
+            registros.add(registro);
+        }
+
+        paginacion.setListado(registros);
 
         return paginacion;
     }
@@ -277,8 +299,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
         }
 
         q = em.createQuery("Select re.id, re.numeroRegistroFormateado, re.fecha, re.libro.nombre, re.usuario.usuario.identificador, " + s +
-                "from RegistroEntrada as re where re.oficina.id = :idOficinaActiva " +
-                "and re.estado = :idEstado order by re.fecha desc");
+                "from RegistroEntrada as re where re.oficina.id = :idOficinaActiva and re.estado = :idEstado order by re.id desc");
 
         q.setHint("org.hibernate.readOnly", true);
         q.setMaxResults(total);
@@ -704,7 +725,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
 
         q = em.createQuery("Select re.id, re.fecha, re.registroDetalle.decodificacionEntidadRegistralDestino," +
                 " re.estado, re.registroDetalle.decodificacionTipoAnotacion from RegistroEntrada as re where re.oficina.id = :idOficinaActiva " +
-                "and (re.estado = :rechazado or re.estado = :reenviado) order by re.fecha desc");
+                "and (re.estado = :rechazado or re.estado = :reenviado) order by re.id desc");
 
         q.setMaxResults(total);
         q.setParameter("idOficinaActiva", idOficina);

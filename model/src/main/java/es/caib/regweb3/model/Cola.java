@@ -97,7 +97,7 @@ public class Cola implements Serializable{
     }
 
 
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false,fetch = FetchType.LAZY)
     @JoinColumn(name="USUARIOENTIDAD")
     @ForeignKey(name="RWE_COLA_USUENTI_FK")
     public UsuarioEntidad getUsuarioEntidad() {

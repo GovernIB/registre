@@ -193,7 +193,7 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
 
         // 7.- Creamos el Registro de Salida
         try{
-            registroSalida = registroSalidaEjb.registrarSalida(registroSalida, usuario, interesados, anexosFull, true);
+            registroSalida = registroSalidaEjb.registrarSalida(registroSalida, entidadActiva, usuario, interesados, anexosFull, true);
 
             numRegFormat = registroSalida.getNumeroRegistroFormateado();
 
@@ -258,7 +258,7 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
             if(registroSalida.getEstado().equals(REGISTRO_VALIDO)) {
 
                 try{
-                    justificante = justificanteEjb.crearJustificanteWS(usuario,registroSalida,RegwebConstantes.REGISTRO_SALIDA,Configuracio.getDefaultLanguage());
+                    justificante = justificanteEjb.crearJustificanteWS(entidadActiva, usuario,registroSalida,RegwebConstantes.REGISTRO_SALIDA,Configuracio.getDefaultLanguage());
                 }catch (I18NException e){
                     integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, null,System.currentTimeMillis() - inicio.getTime(), entidadActiva.getId(), numeroRegistroFormateado);
                     throw new I18NException("registro.justificante.error", numeroRegistroFormateado);

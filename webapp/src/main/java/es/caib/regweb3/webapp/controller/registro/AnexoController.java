@@ -117,10 +117,10 @@ public class AnexoController extends BaseController {
 
 
     @RequestMapping(value = "/nou", method = RequestMethod.POST)
-    public String crearAnexoPost(@ModelAttribute AnexoForm anexoForm,
-                                 BindingResult result, HttpServletRequest request,
+    public String crearAnexoPost(@ModelAttribute AnexoForm anexoForm, BindingResult result, HttpServletRequest request,
                                  HttpServletResponse response, Model model) throws Exception, I18NException {
 
+        Entidad entidad = getEntidadActiva(request);
         //Validamos el anexo
         anexoValidator.validate(anexoForm.getAnexo(), result);
 
@@ -129,7 +129,7 @@ public class AnexoController extends BaseController {
             try {
 
                 //Creamos el anexo
-                anexoEjb.crearAnexo(anexoForm, getUsuarioEntidadActivo(request),
+                anexoEjb.crearAnexo(anexoForm, getUsuarioEntidadActivo(request), entidad,
                         anexoForm.getRegistroID(), anexoForm.getTipoRegistro(), null, false);
 
                 //Actualizamos el contador de anexos creados
@@ -201,6 +201,7 @@ public class AnexoController extends BaseController {
         //Preparamos el formulario con los datos a mostrar
         AnexoForm anexoForm = new AnexoForm(anexoFull2);
         anexoForm.setRegistroID(registroID);
+        anexoForm.setIdRegistroDetalle(registroDetalleID);
         anexoForm.setTipoRegistro(tipoRegistro);
         anexoForm.setOficioRemisionSir(isOficioRemisionSir);
 
@@ -248,16 +249,16 @@ public class AnexoController extends BaseController {
      * Modifica los datos de un anexo
      */
     @RequestMapping(value = "/editar", method = RequestMethod.POST)
-    public String editarAnexoPost(@ModelAttribute AnexoForm anexoForm,
-                                  BindingResult result, HttpServletRequest request,
+    public String editarAnexoPost(@ModelAttribute AnexoForm anexoForm, BindingResult result, HttpServletRequest request,
                                   HttpServletResponse response, Model model) throws Exception, I18NValidationException, I18NException {
 
+        Entidad entidad = getEntidadActiva(request);
         anexoValidator.validate(anexoForm.getAnexo(), result);
 
         if (!result.hasErrors()) { // Si no hay errores
 
             try {
-                anexoEjb.actualizarAnexo(anexoForm, getUsuarioEntidadActivo(request),
+                anexoEjb.actualizarAnexo(anexoForm, getUsuarioEntidadActivo(request), entidad, registroDetalleEjb.getReference(anexoForm.getIdRegistroDetalle()),
                         anexoForm.getRegistroID(), anexoForm.getTipoRegistro(), anexoForm.getAnexo().isJustificante(), false);
 
                 model.addAttribute("closeAndReload", "true");
@@ -395,8 +396,7 @@ public class AnexoController extends BaseController {
      *
      */
     @RequestMapping(value = "/descargarSeparador", method = RequestMethod.GET)
-    public void separador( HttpServletRequest request,
-                           HttpServletResponse response) throws Exception, I18NException {
+    public void separador(HttpServletRequest request, HttpServletResponse response) throws Exception, I18NException {
 
         Entidad entidadActiva = getEntidadActiva(request);
         String languageUI = request.getParameter("lang");
@@ -894,7 +894,7 @@ public class AnexoController extends BaseController {
         AnexoForm anexoForm = new AnexoForm();
         anexoForm.setRegistroID(registroID);
         anexoForm.setTipoRegistro(tipoRegistro);
-        anexoForm.getAnexo().setRegistroDetalle(registroDetalle);
+        anexoForm.setIdRegistroDetalle(registroDetalleID);
         anexoForm.getAnexo().setPerfilCustodia(RegwebConstantes.PERFIL_CUSTODIA_DOCUMENT_CUSTODY);
         anexoForm.getAnexo().setScan(scan);
         anexoForm.setOficioRemisionSir(isOficioRemisionSir);
@@ -915,5 +915,4 @@ public class AnexoController extends BaseController {
 
         return anexoEjbStatic;
     }
-
 }

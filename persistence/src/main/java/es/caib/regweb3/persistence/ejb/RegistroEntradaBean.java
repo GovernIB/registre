@@ -79,8 +79,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean implem
     }
 
     @Override
-    public RegistroEntrada registrarEntrada(RegistroEntrada registroEntrada,
-                                            UsuarioEntidad usuarioEntidad, List<Interesado> interesados, List<AnexoFull> anexosFull, Boolean validarAnexos)
+    public RegistroEntrada registrarEntrada(RegistroEntrada registroEntrada, Entidad entidad, UsuarioEntidad usuarioEntidad, List<Interesado> interesados, List<AnexoFull> anexosFull, Boolean validarAnexos)
             throws Exception, I18NException, I18NValidationException {
 
         try {
@@ -92,7 +91,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean implem
             registroEntrada.setFecha(numeroRegistro.getFecha());
 
             // Generamos el Número de registro formateado
-            registroEntrada.setNumeroRegistroFormateado(RegistroUtils.numeroRegistroFormateado(registroEntrada, libro, usuarioEntidad.getEntidad()));
+            registroEntrada.setNumeroRegistroFormateado(RegistroUtils.numeroRegistroFormateado(registroEntrada, libro, entidad));
 
             // Si no ha introducido ninguna fecha de Origen
             if (registroEntrada.getRegistroDetalle().getFechaOrigen() == null) {
@@ -125,9 +124,9 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean implem
                     anexoFull.getAnexo().setRegistroDetalle(registroEntrada.getRegistroDetalle());
                     AnexoFull anexoFullCreado;
                     if(!anexoFull.getAnexo().getConfidencial()){
-                        anexoFullCreado = anexoEjb.crearAnexo(anexoFull, usuarioEntidad, registroID, REGISTRO_ENTRADA, null, validarAnexos);
+                        anexoFullCreado = anexoEjb.crearAnexo(anexoFull, usuarioEntidad,entidad, registroID, REGISTRO_ENTRADA, null, validarAnexos);
                     }else{
-                        anexoFullCreado = anexoEjb.crearAnexoConfidencial(anexoFull, usuarioEntidad, registroID, REGISTRO_ENTRADA);
+                        anexoFullCreado = anexoEjb.crearAnexoConfidencial(anexoFull, usuarioEntidad, entidad, registroID, REGISTRO_ENTRADA);
                     }
                     registroEntrada.getRegistroDetalle().getAnexos().add(anexoFullCreado.getAnexo());
                 }
@@ -139,16 +138,16 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean implem
             if(!registroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_RESERVA)){
 
                 if(multiEntidadEjb.isMultiEntidad()) {
-                    Long evento = proximoEventoEntradaMultiEntidad(registroEntrada, usuarioEntidad.getEntidad(), registroEntrada.getOficina().getId());
+                    Long evento = proximoEventoEntradaMultiEntidad(registroEntrada, entidad, registroEntrada.getOficina().getId());
                     registroEntrada.setEvento(evento);
                 }else{
-                    Long evento = proximoEventoEntrada(registroEntrada, usuarioEntidad.getEntidad(), registroEntrada.getOficina().getId());
+                    Long evento = proximoEventoEntrada(registroEntrada, entidad, registroEntrada.getOficina().getId());
                     registroEntrada.setEvento(evento);
                 }
             }
 
             //Llamamos al plugin de postproceso
-            postProcesoNuevoRegistro(registroEntrada, usuarioEntidad.getEntidad().getId());
+            postProcesoNuevoRegistro(registroEntrada, entidad.getId());
 
             return registroEntrada;
 
@@ -169,16 +168,16 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean implem
     }
 
     @Override
-    public RegistroEntrada actualizar(RegistroEntrada antiguo, RegistroEntrada registroEntrada, UsuarioEntidad usuarioEntidad) throws Exception, I18NException {
+    public RegistroEntrada actualizar(RegistroEntrada antiguo, RegistroEntrada registroEntrada, Entidad entidad, UsuarioEntidad usuarioEntidad) throws Exception, I18NException {
 
         registroEntrada = merge(registroEntrada);
 
         // Obtenemos el próximo evento del Registro
         if(multiEntidadEjb.isMultiEntidad()) {
-            Long evento = proximoEventoEntradaMultiEntidad(registroEntrada, usuarioEntidad.getEntidad(), registroEntrada.getOficina().getId());
+            Long evento = proximoEventoEntradaMultiEntidad(registroEntrada, entidad, registroEntrada.getOficina().getId());
             registroEntrada.setEvento(evento);
         }else{
-            Long evento = proximoEventoEntrada(registroEntrada, usuarioEntidad.getEntidad(), registroEntrada.getOficina().getId());
+            Long evento = proximoEventoEntrada(registroEntrada, entidad, registroEntrada.getOficina().getId());
             registroEntrada.setEvento(evento);
         }
 
@@ -502,8 +501,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean implem
     }
 
     @Override
-    public void visarRegistroEntrada(RegistroEntrada registroEntrada,
-                                     UsuarioEntidad usuarioEntidad) throws Exception {
+    public void visarRegistroEntrada(RegistroEntrada registroEntrada, Entidad entidad, UsuarioEntidad usuarioEntidad) throws Exception {
 
         // Modificamos el estado del RegistroEntrada
         cambiarEstadoHistorico(registroEntrada, RegwebConstantes.REGISTRO_VALIDO, usuarioEntidad);
@@ -511,10 +509,10 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean implem
         // Asignamos su evento
         if (registroEntrada.getEvento() != null) {
             if(multiEntidadEjb.isMultiEntidad()) {
-                Long evento = proximoEventoEntradaMultiEntidad(registroEntrada, usuarioEntidad.getEntidad(), registroEntrada.getOficina().getId());
+                Long evento = proximoEventoEntradaMultiEntidad(registroEntrada, entidad, registroEntrada.getOficina().getId());
                 registroEntrada.setEvento(evento);
             }else{
-                Long evento = proximoEventoEntrada(registroEntrada, usuarioEntidad.getEntidad(), registroEntrada.getOficina().getId());
+                Long evento = proximoEventoEntrada(registroEntrada, entidad, registroEntrada.getOficina().getId());
                 registroEntrada.setEvento(evento);
             }
             merge(registroEntrada);
@@ -559,7 +557,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean implem
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public RegistroEntrada rectificar(RegistroEntrada registroEntrada, UsuarioEntidad usuarioEntidad) throws Exception, I18NException {
+    public RegistroEntrada rectificar(RegistroEntrada registroEntrada, Entidad entidad, UsuarioEntidad usuarioEntidad) throws Exception, I18NException {
 
         RegistroEntrada rectificado = null;
         Long idRegistro = registroEntrada.getId();
@@ -605,12 +603,12 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean implem
                 }
             } else { //destino externo
                 //UnidadTF destinoExterno = obtenerDestinoExternoRE(idRegistro);
-                UnidadTF destinoExterno = organismoEjb.obtenerDestinoExterno(registroEntrada.getDestinoExternoCodigo(), usuarioEntidad.getEntidad().getId());
+                UnidadTF destinoExterno = organismoEjb.obtenerDestinoExterno(registroEntrada.getDestinoExternoCodigo(), entidad.getId());
                 //Si está extinguido
                 if (!destinoExterno.getCodigoEstadoEntidad().equals(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE)) {
                     //Si es SIR, obtenemos sus sustitutos y asignamos el primero.
                     if (registroEntrada.getEvento().equals(RegwebConstantes.EVENTO_OFICIO_SIR)) {
-                        List<UnidadTF> destinosExternosSIR = organismoEjb.obtenerSustitutosExternosSIR(destinoExterno.getCodigo(), usuarioEntidad.getEntidad().getId());
+                        List<UnidadTF> destinosExternosSIR = organismoEjb.obtenerSustitutosExternosSIR(destinoExterno.getCodigo(), entidad.getId());
                         if (destinosExternosSIR.size() > 0) {
                             registroEntrada.setDestinoExternoCodigo(destinosExternosSIR.get(0).getCodigo());
                             registroEntrada.setDestinoExternoDenominacion(destinosExternosSIR.get(0).getDenominacion());
@@ -619,7 +617,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean implem
                         }
 
                     } else { //Si no es SIR, obtenemos sus sustitutos y asignamos el primero.
-                        List<UnidadTF> destinosExternos = organismoEjb.obtenerSustitutosExternos(destinoExterno.getCodigo(), usuarioEntidad.getEntidad().getId());
+                        List<UnidadTF> destinosExternos = organismoEjb.obtenerSustitutosExternos(destinoExterno.getCodigo(), entidad.getId());
                         if (destinosExternos.size() > 0) {
                             registroEntrada.setDestinoExternoCodigo(destinosExternos.get(0).getCodigo());
                             registroEntrada.setDestinoExternoDenominacion(destinosExternos.get(0).getDenominacion());
@@ -631,7 +629,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean implem
             }
 
             // Registramos el nuevo registro
-            rectificado = registrarEntrada(registroEntrada, usuarioEntidad, interesados, anexos, false);
+            rectificado = registrarEntrada(registroEntrada, entidad, usuarioEntidad, interesados, anexos, false);
 
             // Moficiamos el estado al registro original
             cambiarEstado(idRegistro, RegwebConstantes.REGISTRO_RECTIFICADO);
@@ -744,6 +742,4 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean implem
             postProcesoPlugin.nuevoRegistroEntrada(re);
         }
     }
-
-
 }

@@ -2,6 +2,7 @@ package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.Libro;
 import es.caib.regweb3.model.Lopd;
+import es.caib.regweb3.model.UsuarioEntidad;
 import es.caib.regweb3.persistence.utils.Paginacion;
 
 import javax.annotation.security.RolesAllowed;
@@ -75,10 +76,10 @@ public interface LopdLocal extends BaseEjb<Lopd, Long> {
     /**
      * Inserta la búsqueda de Registros en las tablas de Lopd
      * @param paginacion
-     * @param idUsuarioEntidad
+     * @param usuarioEntidad
      * @throws Exception
      */
-    void insertarRegistros(Paginacion paginacion, Long idUsuarioEntidad, Long tipoRegistro, Long accion) throws Exception;
+    void insertarRegistros(Paginacion paginacion, UsuarioEntidad usuarioEntidad, Libro libro, Long tipoRegistro, Long accion) throws Exception;
 
     /**
      * Comprueba si un usuario tiene Lopd

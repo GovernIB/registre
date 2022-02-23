@@ -91,9 +91,6 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
     @Override
     public AnexoFull getAnexoFullLigero(Long anexoID, Long idEntidad) throws I18NException {
 
-        Date inicio = new Date();
-        StringBuilder peticion = new StringBuilder();
-        String descripcion = "Descarga anexo";
         AnexoFull anexoFull = null;
 
         try {
@@ -123,16 +120,9 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
                     }else{
                         custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE);
                     }
-                    descripcion = "Descarga justificante";
                 } else { //si no, cargamos el plugin de anexos que no son justificantes
                     custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA_ANEXOS);
                 }
-
-                // Integracion
-                peticion.append("clase: ").append(custody.getClass().getName()).append(System.getProperty("line.separator"));
-                peticion.append("custodyID: ").append(custodyID).append(System.getProperty("line.separator"));
-                peticion.append("anexoID: ").append(anexoID).append(System.getProperty("line.separator"));
-                peticion.append("justificante: ").append(anexo.isJustificante()).append(System.getProperty("line.separator"));
 
                 //Obtenemos la información(sin el contenido físico en bytes[]) del anexo guardados en custodia
                 anexoFull.setDocumentoCustody(custody.getDocumentInfoOnly(custodyID)); //Documento asociado al anexo
@@ -163,19 +153,10 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
                 anexoFull.setSignatureFileDelete(false);
             }
 
-            // Integracion
-            integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_CUSTODIA, descripcion, peticion.toString(), System.currentTimeMillis() - inicio.getTime(), idEntidad, "");
-
             return anexoFull;
 
         } catch (Exception e) {
             log.error(e.getMessage(), e);
-
-            try {
-                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_CUSTODIA, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - inicio.getTime(), idEntidad, "");
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
 
             throw new I18NException(e, "anexo.error.obteniendo",
                     new I18NArgumentString(String.valueOf(anexoID)),
@@ -255,7 +236,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
     /**
      * Método que crea un anexo o un justificante a partir de lo que le llega en anexoFull
      */
-    public AnexoFull crearAnexo(AnexoFull anexoFull, UsuarioEntidad usuarioEntidad,
+    public AnexoFull crearAnexo(AnexoFull anexoFull, UsuarioEntidad usuarioEntidad, Entidad entidad,
                                 Long registroID, Long tipoRegistro, String custodyID, Boolean validarAnexo) throws I18NException, I18NValidationException {
 
         IDocumentCustodyPlugin custody = null;
@@ -267,7 +248,6 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
         
         String descripcion = "Nuevo anexo ";
         String numRegFormat = "";
-        Entidad entidad = null;
 
         try {
 
@@ -282,8 +262,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             IRegistro registro = getIRegistro(registroID, tipoRegistro);
             anexo.setRegistroDetalle(registro.getRegistroDetalle());
 
-            //Obtenemos la Entidad
-            entidad = registro.getOficina().getOrganismoResponsable().getEntidad();
+            //Obtenemos el número de registro
             numRegFormat = registro.getNumeroRegistroFormateado();
 
             // Obtenemos el Plugin de Custodia correspondiente
@@ -329,17 +308,6 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
                 anexo.setJustificante(false);
             }
 
-            /*// Revisar si tipusdocumental està carregat
-            Long id = anexo.getTipoDocumental().getId();
-            TipoDocumental td = tipoDocumentalEjb.findById(id);
-            if (td == null) {
-                I18NException i18n = new I18NException("anexo.tipoDocumental.obligatorio");
-                log.error("No trob tipoDocumental amb ID = ]" + id + "[");
-                throw i18n;
-            } else {
-                anexo.setTipoDocumental(td);
-            }*/
-
             // ---------- BBDD -------------
             // Guardamos el anexo per a que tengui ID
             anexo = this.persist(anexo);
@@ -367,7 +335,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
             //Creamos el histórico de las modificaciones del registro debido a los anexos
             if (!anexo.isJustificante()) {
-                crearHistorico(anexoFull, usuarioEntidad, registroID, tipoRegistro, isNew);
+                crearHistorico(anexoFull, usuarioEntidad, entidad, registroID, tipoRegistro, isNew);
             }
 
             // -----------------------------------
@@ -416,7 +384,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
     /**
      * Método que crea un anexo confidencial
      */
-    public AnexoFull crearAnexoConfidencial(AnexoFull anexoFull, UsuarioEntidad usuarioEntidad,
+    public AnexoFull crearAnexoConfidencial(AnexoFull anexoFull, UsuarioEntidad usuarioEntidad, Entidad entidad,
                                 Long registroID, Long tipoRegistro) throws I18NException, I18NValidationException {
 
         final boolean isNew = true;
@@ -426,7 +394,6 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
         
         String descripcion = "Nuevo anexo ";
         String numRegFormat = "";
-        Entidad entidad = null;
 
         try {
 
@@ -436,8 +403,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             IRegistro registro = getIRegistro(registroID, tipoRegistro);
             anexo.setRegistroDetalle(registro.getRegistroDetalle());
 
-            //Obtenemos la Entidad
-            entidad = registro.getOficina().getOrganismoResponsable().getEntidad();
+            //Obtenemos el número de registro
             numRegFormat = registro.getNumeroRegistroFormateado();
 
             // Validador
@@ -465,7 +431,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             anexo = this.persist(anexo);
 
             //Creamos el histórico de las modificaciones del registro debido a los anexos
-            crearHistorico(anexoFull, usuarioEntidad, registroID, tipoRegistro, isNew);
+            crearHistorico(anexoFull, usuarioEntidad, entidad, registroID, tipoRegistro, isNew);
 
             anexoFull.setAnexo(anexo);
 
@@ -520,12 +486,13 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
      * @throws I18NValidationException
      */
     @Override
-    public AnexoFull actualizarAnexo(AnexoFull anexoFull, UsuarioEntidad usuarioEntidad,
+    public AnexoFull actualizarAnexo(AnexoFull anexoFull, UsuarioEntidad usuarioEntidad, Entidad entidad, RegistroDetalle registroDetalle,
                                      Long registroID, Long tipoRegistro, boolean isJustificante, boolean noWeb)
             throws I18NException, I18NValidationException {
 
         try {
             Anexo anexo = anexoFull.getAnexo();
+            anexo.setRegistroDetalle(registroDetalle);
 
             // Validador
             final boolean isNew = false;
@@ -554,8 +521,10 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             anexoFull.setAnexo(anexo);
 
             // Crea historico y lo enlaza con el RegistroDetalle
-            crearHistorico(anexoFull, usuarioEntidad, registroID, tipoRegistro, isNew);
+            crearHistorico(anexoFull, usuarioEntidad, entidad, registroID, tipoRegistro, isNew);
+
             return anexoFull;
+
         } catch (I18NException i18n) {
             ejbContext.setRollbackOnly();
             throw i18n;
@@ -615,19 +584,18 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
      * @throws Exception
      * @throws I18NException
      */
-    protected void crearHistorico(AnexoFull anexoFull, UsuarioEntidad usuarioEntidad,
+    protected void crearHistorico(AnexoFull anexoFull, UsuarioEntidad usuarioEntidad, Entidad entidad,
                                   Long registroID, Long tipoRegistro, boolean isNew) throws Exception, I18NException {
 
         if (tipoRegistro.equals(REGISTRO_ENTRADA)) {
             RegistroEntrada registroEntrada = registroEntradaEjb.findById(registroID);
-            Entidad entidadActiva = registroEntrada.getOficina().getOrganismoResponsable().getEntidad();
             // Dias que han pasado desde que se creó el registroEntrada
             Long dias = RegistroUtils.obtenerDiasRegistro(registroEntrada.getFecha());
 
             if (isNew) {//NUEVO ANEXO
                 // Si han pasado más de los dias de visado de la entidad se crearan historicos de todos los
                 // cambios y se cambia el estado del registroEntrada a pendiente visar
-                if (dias >= entidadActiva.getDiasVisado()) {
+                if (dias >= entidad.getDiasVisado()) {
                     registroEntradaEjb.cambiarEstado(registroID, RegwebConstantes.REGISTRO_PENDIENTE_VISAR);
 
                     // Creamos el historico de registro de entrada
@@ -636,7 +604,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
             } else {// MODIFICACION DE ANEXO
 
-                if (dias >= entidadActiva.getDiasVisado()) { // Si han pasado más de los dias de visado cambiamos estado registro
+                if (dias >= entidad.getDiasVisado()) { // Si han pasado más de los dias de visado cambiamos estado registro
                     registroEntradaEjb.cambiarEstado(registroID, RegwebConstantes.REGISTRO_PENDIENTE_VISAR);
                 }
 
@@ -1707,5 +1675,4 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
         anexoFull.setMetadatas(metadataList);
     }
-
 }

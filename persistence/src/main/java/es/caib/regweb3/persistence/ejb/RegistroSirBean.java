@@ -305,71 +305,74 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         Map<String, Object> parametros = new HashMap<String, Object>();
         List<String> where = new ArrayList<String>();
 
-        StringBuilder query = new StringBuilder("Select registroSir from RegistroSir as registroSir ");
+        StringBuilder queryBase = new StringBuilder("Select rs.id, rs.decodificacionEntidadRegistralOrigen, rs.fechaRecepcion, rs.identificadorIntercambio, rs.numeroRegistro, rs.resumen, " +
+                "rs.estado, rs.tipoRegistro, rs.codigoEntidadRegistralOrigen, rs.decodificacionEntidadRegistralOrigen, rs.codigoEntidadRegistralDestino, rs.decodificacionEntidadRegistralDestino, rs.aplicacion, rs.documentacionFisica, rs.numeroReintentos from RegistroSir as rs ");
+
+        StringBuilder query = new StringBuilder(queryBase);
 
         if(es.caib.regweb3.utils.StringUtils.isNotEmpty(oficinaSir)){
-            where.add(" (registroSir.codigoEntidadRegistral = :oficinaSir) "); parametros.put("oficinaSir",oficinaSir);
+            where.add(" (rs.codigoEntidadRegistral = :oficinaSir) "); parametros.put("oficinaSir",oficinaSir);
         }
 
         if(es.caib.regweb3.utils.StringUtils.isNotEmpty(entidad)){
-            where.add(" (registroSir.entidad.codigoDir3 = :entidad) "); parametros.put("entidad",entidad);
+            where.add(" (rs.entidad.codigoDir3 = :entidad) "); parametros.put("entidad",entidad);
         }
 
         if (registroSir.getResumen() != null && registroSir.getResumen().length() > 0) {
-            where.add(DataBaseUtils.like("registroSir.resumen", "resumen", parametros, registroSir.getResumen()));
+            where.add(DataBaseUtils.like("rs.resumen", "resumen", parametros, registroSir.getResumen()));
         }
 
         if (es.caib.regweb3.utils.StringUtils.isNotEmpty(registroSir.getIdentificadorIntercambio())) {
-            where.add(DataBaseUtils.like("registroSir.identificadorIntercambio", "identificadorIntercambio", parametros, registroSir.getIdentificadorIntercambio()));
+            where.add(DataBaseUtils.like("rs.identificadorIntercambio", "identificadorIntercambio", parametros, registroSir.getIdentificadorIntercambio()));
         }
 
         if (es.caib.regweb3.utils.StringUtils.isNotEmpty(registroSir.getNumeroRegistro())) {
-            where.add(DataBaseUtils.like("registroSir.numeroRegistro", "numeroRegistro", parametros, registroSir.getNumeroRegistro()));
+            where.add(DataBaseUtils.like("rs.numeroRegistro", "numeroRegistro", parametros, registroSir.getNumeroRegistro()));
         }
 
         if (StringUtils.isNotEmpty(estado)) {
-            where.add(" registroSir.estado = :estado "); parametros.put("estado", EstadoRegistroSir.getEstadoRegistroSir(estado));
+            where.add(" rs.estado = :estado "); parametros.put("estado", EstadoRegistroSir.getEstadoRegistroSir(estado));
         }
 
         if (registroSir.getTipoRegistro() != null) {
-            where.add(" registroSir.tipoRegistro = :tipoRegistro "); parametros.put("tipoRegistro", registroSir.getTipoRegistro());
+            where.add(" rs.tipoRegistro = :tipoRegistro "); parametros.put("tipoRegistro", registroSir.getTipoRegistro());
         }
 
         if (es.caib.regweb3.utils.StringUtils.isNotEmpty(registroSir.getAplicacion())) {
-            where.add(DataBaseUtils.like("registroSir.aplicacion", "aplicacion", parametros, registroSir.getAplicacion()));
+            where.add(DataBaseUtils.like("rs.aplicacion", "aplicacion", parametros, registroSir.getAplicacion()));
         }
 
         // Intervalo fechas
-        where.add(" (registroSir.fechaRecepcion >= :fechaInicio  "); parametros.put("fechaInicio", fechaInicio);
-        where.add(" registroSir.fechaRecepcion <= :fechaFin) "); parametros.put("fechaFin", fechaFin);
+        where.add(" (rs.fechaRecepcion >= :fechaInicio  "); parametros.put("fechaInicio", fechaInicio);
+        where.add(" rs.fechaRecepcion <= :fechaFin) "); parametros.put("fechaFin", fechaFin);
 
-        if (parametros.size() != 0) {
-            query.append("where ");
-            int count = 0;
-            for (String w : where) {
-                if (count != 0) {
-                    query.append(" and ");
-                }
-                query.append(w);
-                count++;
+        // Añadimos los parámetros a la query
+        query.append("where ");
+        int count = 0;
+        for (String w : where) {
+            if (count != 0) {
+                query.append(" and ");
             }
-            q2 = em.createQuery(query.toString().replaceAll("Select registroSir from RegistroSir as registroSir ", "Select count(registroSir.id) from RegistroSir as registroSir "));
-            query.append(" order by registroSir.fechaRecepcion desc");
-            q = em.createQuery(query.toString());
-
-            for (Map.Entry<String, Object> param : parametros.entrySet()) {
-
-                q.setParameter(param.getKey(), param.getValue());
-                q2.setParameter(param.getKey(), param.getValue());
-            }
-
-        } else {
-            q2 = em.createQuery(query.toString().replaceAll("Select registroSir from RegistroSir as registroSir ", "Select count(registroSir.id) from RegistroSir as registroSir "));
-            query.append("order by registroSir.fechaRecepcion desc");
-            q = em.createQuery(query.toString());
+            query.append(w);
+            count++;
         }
 
+        // Duplicamos la query solo para obtener los resultados totales
+        StringBuilder queryCount = new StringBuilder("Select count(rs.id) from RegistroSir as rs ");
+        q2 = em.createQuery(query.toString().replaceAll(queryBase.toString(), queryCount.toString()));
 
+        // añadimos el order by
+        query.append(" order by rs.fechaRecepcion desc");
+        q = em.createQuery(query.toString());
+
+        // Mapeamos los parámetros
+        for (Map.Entry<String, Object> param : parametros.entrySet()) {
+
+            q.setParameter(param.getKey(), param.getValue());
+            q2.setParameter(param.getKey(), param.getValue());
+        }
+
+        // Ejecutamos las queries
         Paginacion paginacion;
 
         if (pageNumber != null) { // Comprobamos si es una busqueda paginada o no
@@ -384,7 +387,31 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
             paginacion = new Paginacion(0, 0);
         }
 
-        paginacion.setListado(q.getResultList());
+        List<Object[]> results = q.getResultList();
+        List<RegistroSir> registros = new ArrayList<>();
+
+        for (Object[] result : results) {
+            RegistroSir registro =  new RegistroSir();
+            registro.setId((Long) result[0]);
+            registro.setDecodificacionEntidadRegistralOrigen((String) result[1]);
+            registro.setFechaRecepcion((Date) result[2]);
+            registro.setIdentificadorIntercambio((String) result[3]);
+            registro.setNumeroRegistro((String)result[4]);
+            registro.setResumen((String) result[5]);
+            registro.setEstado((EstadoRegistroSir) result[6]);
+            registro.setTipoRegistro((TipoRegistro) result[7]);
+            registro.setCodigoEntidadRegistralOrigen((String) result[8]);
+            registro.setDecodificacionEntidadRegistralOrigen((String) result[9]);
+            registro.setCodigoEntidadRegistralDestino((String) result[10]);
+            registro.setDecodificacionEntidadRegistralDestino((String) result[11]);
+            registro.setAplicacion((String) result[12]);
+            registro.setDocumentacionFisica((String) result[13]);
+            registro.setNumeroReintentos((Integer) result[14]);
+
+            registros.add(registro);
+        }
+
+        paginacion.setListado(registros);
 
         return paginacion;
     }
@@ -397,41 +424,44 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         Map<String, Object> parametros = new HashMap<String, Object>();
         List<String> where = new ArrayList<String>();
 
-        StringBuilder query = new StringBuilder("Select registroSir from RegistroSir as registroSir ");
+        StringBuilder queryBase = new StringBuilder("Select rs.id, rs.decodificacionEntidadRegistralOrigen, rs.decodificacionEntidadRegistralDestino, rs.fechaRecepcion, rs.identificadorIntercambio, rs.numeroRegistro, " +
+                "rs.resumen, rs.estado, rs.documentacionFisica from RegistroSir as rs ");
 
-        where.add(" (registroSir.codigoEntidadRegistral = :oficinaSir) "); parametros.put("oficinaSir",oficinaSir);
+        StringBuilder query = new StringBuilder(queryBase);
+
+        where.add(" (rs.codigoEntidadRegistral = :oficinaSir) "); parametros.put("oficinaSir",oficinaSir);
 
         if (StringUtils.isNotEmpty(estado)) {
-            where.add(" registroSir.estado = :estado "); parametros.put("estado", EstadoRegistroSir.getEstadoRegistroSir(estado));
+            where.add(" rs.estado = :estado "); parametros.put("estado", EstadoRegistroSir.getEstadoRegistroSir(estado));
         }
 
-        if (parametros.size() != 0) {
-            query.append("where ");
-            int count = 0;
-            for (String w : where) {
-                if (count != 0) {
-                    query.append(" and ");
-                }
-                query.append(w);
-                count++;
+        // Añadimos los parámetros a la query
+        query.append("where ");
+        int count = 0;
+        for (String w : where) {
+            if (count != 0) {
+                query.append(" and ");
             }
-            q2 = em.createQuery(query.toString().replaceAll("Select registroSir from RegistroSir as registroSir ", "Select count(registroSir.id) from RegistroSir as registroSir "));
-            query.append(" order by registroSir.fechaRecepcion");
-            q = em.createQuery(query.toString());
-
-            for (Map.Entry<String, Object> param : parametros.entrySet()) {
-
-                q.setParameter(param.getKey(), param.getValue());
-                q2.setParameter(param.getKey(), param.getValue());
-            }
-
-        } else {
-            q2 = em.createQuery(query.toString().replaceAll("Select registroSir from RegistroSir as registroSir ", "Select count(registroSir.id) from RegistroSir as registroSir "));
-            query.append("order by registroSir.fechaRecepcion");
-            q = em.createQuery(query.toString());
+            query.append(w);
+            count++;
         }
 
+        // Duplicamos la query solo para obtener los resultados totales
+        StringBuilder queryCount = new StringBuilder("Select count(rs.id) from RegistroSir as rs ");
+        q2 = em.createQuery(query.toString().replaceAll(queryBase.toString(), queryCount.toString()));
 
+        // añadimos el order by
+        query.append(" order by rs.fechaRecepcion desc");
+        q = em.createQuery(query.toString());
+
+        // Mapeamos los parámetros
+        for (Map.Entry<String, Object> param : parametros.entrySet()) {
+
+            q.setParameter(param.getKey(), param.getValue());
+            q2.setParameter(param.getKey(), param.getValue());
+        }
+
+        // Ejecutamos las queries
         Paginacion paginacion;
 
         if (pageNumber != null) { // Comprobamos si es una busqueda paginada o no
@@ -446,7 +476,24 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
             paginacion = new Paginacion(0, 0);
         }
 
-        paginacion.setListado(q.getResultList());
+        List<Object[]> results = q.getResultList();
+        List<RegistroSir> registros = new ArrayList<>();
+
+        for (Object[] result : results) {
+            RegistroSir registro =  new RegistroSir();
+            registro.setId((Long) result[0]);
+            registro.setDecodificacionEntidadRegistralOrigen((String) result[1]);
+            registro.setDecodificacionEntidadRegistralDestino((String) result[2]);
+            registro.setFechaRecepcion((Date) result[3]);
+            registro.setIdentificadorIntercambio((String) result[4]);
+            registro.setNumeroRegistro((String)result[5]);
+            registro.setResumen((String) result[6]);
+            registro.setEstado((EstadoRegistroSir) result[7]);
+            registro.setDocumentacionFisica((String) result[8]);
+            registros.add(registro);
+        }
+
+        paginacion.setListado(registros);
 
         return paginacion;
     }
@@ -1554,7 +1601,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
      * @throws I18NValidationException
      */
     @Override
-    public RegistroEntrada aceptarRegistroSirEntrada(RegistroSir registroSir, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, List<CamposNTI> camposNTIs, Long idOrganismoDestino)
+    public RegistroEntrada aceptarRegistroSirEntrada(RegistroSir registroSir, Entidad entidad, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, List<CamposNTI> camposNTIs, Long idOrganismoDestino)
             throws Exception, I18NException, I18NValidationException {
 
         Libro libro = libroEjb.findById(idLibro);
@@ -1582,7 +1629,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         List<AnexoFull> anexosFull = procesarAnexos(registroSir, camposNTIs);
 
         // Registramos el Registro Entrada
-        registroEntrada = registroEntradaEjb.registrarEntrada(registroEntrada, usuario,interesados,anexosFull, true);
+        registroEntrada = registroEntradaEjb.registrarEntrada(registroEntrada, entidad, usuario,interesados,anexosFull, true);
 
 
         // Creamos la TrazabilidadSir

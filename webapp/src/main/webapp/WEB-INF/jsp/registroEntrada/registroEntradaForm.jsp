@@ -89,18 +89,17 @@
 
                            <div class="form-group col-xs-12">
                                <div class="col-xs-2 pull-left etiqueta_regweb control-label textEsq">
-                                   <label for="registroDetalle.extracto" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.extracto.entrada"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="registroEntrada.extracto"/></label>
+                                   <label for="registroDetalle.extracto" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.extracto.entrada"/>" data-toggle="popover"><spring:message code="registroEntrada.extracto"/></label>
                                </div>
                                <div class="col-xs-10">
-                                   <form:textarea path="registroDetalle.extracto" rows="2" cssClass="form-control" maxlength="240"/> <form:errors path="registroDetalle.extracto" cssClass="help-block" element="span"/>
+                                   <form:textarea path="registroDetalle.extracto" rows="3" cssClass="form-control" maxlength="240"/> <form:errors path="registroDetalle.extracto" cssClass="help-block" element="span"/>
                                </div>
                            </div>
-
 
                            <div class="form-group col-xs-12">
 
                                <div class="col-xs-2 pull-left etiqueta_regweb control-label textEsq">
-                                   <label for="destino.codigo" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.destino"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="registroEntrada.organismoDestino"/></label>
+                                   <label for="destino.codigo" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.destino"/>" data-toggle="popover"><spring:message code="registroEntrada.organismoDestino"/></label>
                                </div>
                                <div class="col-xs-8">
                                    <form:select path="destino.codigo" cssClass="chosen-select">
@@ -119,7 +118,7 @@
 
                                <div class="col-xs-2 boto-panel">
                                    <a data-toggle="modal" role="button" href="#modalBuscadorOrganismoDestino"
-                                      onclick="inicializarBuscador('#codNivelAdministracionOrganismoDestino','#codComunidadAutonomaOrganismoDestino','#provinciaOrganismoDestino','#localidadOrganismoDestino','${oficina.organismoResponsable.nivelAdministracion.codigoNivelAdministracion}', '${oficina.organismoResponsable.codAmbComunidad.codigoComunidad}', 'OrganismoDestino' );"
+                                      onclick="inicializarBuscador('#codNivelAdministracionOrganismoDestino','#codComunidadAutonomaOrganismoDestino','#provinciaOrganismoDestino','#localidadOrganismoDestino',${RegwebConstantes.nivelAdminAutonomica}, ${RegwebConstantes.comunidadBaleares}, 'OrganismoDestino' );"
                                       class="btn btn-warning btn-sm"><spring:message code="regweb.buscar"/></a>
                                </div>
 
@@ -131,7 +130,7 @@
 
                            <div class="form-group col-xs-12">
                                <div class="col-xs-2 pull-left etiqueta_regweb control-label textEsq">
-                                   <label for="registroDetalle.idioma" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.idioma"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="registroEntrada.idioma"/></label>
+                                   <label for="registroDetalle.idioma" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.idioma"/>" data-toggle="popover"><spring:message code="registroEntrada.idioma"/></label>
                                </div>
                                <div class="col-xs-10">
                                    <form:select path="registroDetalle.idioma" cssClass="chosen-select">
@@ -145,7 +144,7 @@
 
                            <div class="form-group col-xs-12">
                                <div class="col-xs-2 pull-left etiqueta_regweb control-label textEsq">
-                                   <label for="registroDetalle.tipoDocumentacionFisica" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.docFisica"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="registroEntrada.documentacionFisica"/></label>
+                                   <label for="registroDetalle.tipoDocumentacionFisica" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.docFisica"/>" data-toggle="popover"><spring:message code="registroEntrada.documentacionFisica"/></label>
                                </div>
                                <div class="col-xs-10 radioButton">
                                    <c:forEach items="${tiposDocumentacionFisica}" var="tipoDocFisica">
@@ -266,7 +265,7 @@
 
                                <div class="col-xs-2 boto-panel">
                                    <a data-toggle="modal" role="button" href="#modalBuscadorOficinaOrigen"
-                                      onclick="inicializarBuscador('#codNivelAdministracionOficinaOrigen','#codComunidadAutonomaOficinaOrigen','#provinciaOficinaOrigen','#localidadOficinaOrigen','${oficina.organismoResponsable.nivelAdministracion.codigoNivelAdministracion}', '${oficina.organismoResponsable.codAmbComunidad.codigoComunidad}', 'OficinaOrigen' );"
+                                      onclick="inicializarBuscador('#codNivelAdministracionOficinaOrigen','#codComunidadAutonomaOficinaOrigen','#provinciaOficinaOrigen','#localidadOficinaOrigen',${RegwebConstantes.nivelAdminAutonomica}, ${RegwebConstantes.comunidadBaleares}, 'OficinaOrigen' );"
                                       class="btn btn-warning btn-sm"><spring:message code="regweb.buscar"/></a>
                                </div>
 

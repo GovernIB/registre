@@ -85,7 +85,7 @@
                     <a id="buscarPersonaFisica" data-toggle="modal" href="#modalBuscadorPersonasFisicas" onclick="limpiarBusquedaPersona('Fisicas')" class="btn btn-warning btn-sm"><spring:message code="regweb.buscar"/></a>
                     <a id="buscarPersonaJuridica" data-toggle="modal" href="#modalBuscadorPersonasJuridicas" onclick="limpiarBusquedaPersona('Juridicas')" style="display: none;" class="btn btn-warning btn-sm"><spring:message code="regweb.buscar"/></a>
                     <a id="buscarOrganismo" data-toggle="modal" href="#modalBuscadorOrganismoInteresado"
-                       onclick="inicializarBuscador('#codNivelAdministracionOrganismoInteresado','#codComunidadAutonomaOrganismoInteresado','#provinciaOrganismoInteresado','#localidadOrganismoInteresado','${oficina.organismoResponsable.nivelAdministracion.codigoNivelAdministracion}', '${oficina.organismoResponsable.codAmbComunidad.codigoComunidad}', 'OrganismoInteresado' );"
+                       onclick="inicializarBuscador('#codNivelAdministracionOrganismoInteresado','#codComunidadAutonomaOrganismoInteresado','#provinciaOrganismoInteresado','#localidadOrganismoInteresado',${RegwebConstantes.nivelAdminAutonomica}, ${RegwebConstantes.comunidadBaleares}, 'OrganismoInteresado' );"
                        style="display: none;" class="btn btn-warning btn-sm"><spring:message code="regweb.buscar"/></a>
                 </div>
                 <%--Botones nueva persona--%>

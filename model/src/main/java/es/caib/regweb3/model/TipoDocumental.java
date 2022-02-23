@@ -51,7 +51,7 @@ public class TipoDocumental extends Traducible {
       this.id = td.id;
       this.codigoNTI = td.codigoNTI;
       this.traducciones = new HashMap<String, Traduccion>(td.getTraducciones());
-      this.entidad = td.entidad == null? null : new Entidad(td.entidad);
+      //this.entidad = td.entidad == null? null : new Entidad(td.entidad);
     }
 
     @Id

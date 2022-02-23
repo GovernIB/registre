@@ -244,8 +244,7 @@ public class RestController extends BaseController {
     public @ResponseBody
     AnexoFull obtenerAnexo(@RequestParam Long idAnexo, @RequestParam Long idEntidad ) throws Exception, I18NException {
 
-        AnexoFull anexoFull = anexoEjb.getAnexoFullLigero(idAnexo, idEntidad);
-        return anexoFull;
+        return anexoEjb.getAnexoFullLigero(idAnexo, idEntidad);
     }
 
     /**

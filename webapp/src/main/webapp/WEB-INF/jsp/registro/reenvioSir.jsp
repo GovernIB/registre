@@ -78,7 +78,7 @@
 
                                     <div class="col-xs-3 boto-panel">
                                         <a data-toggle="modal" role="button" href="#modalBuscadorOficinaSir"
-                                           onclick="inicializarBuscador('#codNivelAdministracionOficinaSir','#codComunidadAutonomaOficinaSir','#provinciaOficinaSir','#localidadOficinaSir','${loginInfo.oficinaActiva.organismoResponsable.nivelAdministracion.codigoNivelAdministracion}', '${loginInfo.oficinaActiva.organismoResponsable.codAmbComunidad.codigoComunidad}','OficinaSir' );"
+                                           onclick="inicializarBuscador('#codNivelAdministracionOficinaSir','#codComunidadAutonomaOficinaSir','#provinciaOficinaSir','#localidadOficinaSir',${RegwebConstantes.nivelAdminAutonomica}, ${RegwebConstantes.comunidadBaleares},'OficinaSir' );"
                                            class="btn btn-warning btn-sm"><spring:message code="regweb.buscar"/></a>
                                     </div>
 

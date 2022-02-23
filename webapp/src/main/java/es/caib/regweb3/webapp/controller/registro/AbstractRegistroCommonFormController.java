@@ -23,7 +23,6 @@ import java.util.List;
 @Controller
 public abstract class AbstractRegistroCommonFormController extends BaseController {
 
-
     @EJB(mappedName = "regweb3/CodigoAsuntoEJB/local")
     private CodigoAsuntoLocal codigoAsuntoEjb;
 
@@ -158,20 +157,4 @@ public abstract class AbstractRegistroCommonFormController extends BaseControlle
     public Long[] estados() throws Exception {
         return RegwebConstantes.ESTADOS_REGISTRO;
     }
-
-    /**
-     * Para la busqueda de organismos en interesados
-     * @param request
-     * @return
-     * @throws Exception
-     */
-    /*@ModelAttribute("comunidad")
-    public CatComunidadAutonoma comunidad(HttpServletRequest request) throws Exception {
-        Entidad entidad = getEntidadActiva(request);
-        Organismo organismoRaiz = organismoEjb.findByCodigoEntidadLigero(entidad.getCodigoDir3(), entidad.getId());
-        if ((organismoRaiz != null) && organismoRaiz.getCodAmbComunidad() != null) {
-            return organismoRaiz.getCodAmbComunidad();
-        }
-        return new CatComunidadAutonoma();
-    }*/
 }

@@ -302,6 +302,7 @@ public class OficioRemisionController extends BaseController {
     public String oficioRemisionEntrada(@ModelAttribute OficioRemisionForm oficioRemisionForm, HttpServletRequest request)
             throws Exception {
 
+        Entidad entidad = getEntidadActiva(request);
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
         Boolean interno = oficioRemisionForm.getIdOrganismo() != null;
         List<RegistroEntrada> registrosEntrada = new ArrayList<RegistroEntrada>();
@@ -339,18 +340,18 @@ public class OficioRemisionController extends BaseController {
             }
 
             // Generamos los Justificantes de todos los Registros seleccionados
-            correctos = oficioRemisionEntradaUtilsEjb.crearJustificantesRegistros(registrosEntrada, usuarioEntidad);
+            correctos = oficioRemisionEntradaUtilsEjb.crearJustificantesRegistros(entidad, registrosEntrada, usuarioEntidad);
 
             // Creamos el OficioRemisión con los registros que se ha generado su Justificante
             if (correctos.size() > 0) {
                 if (interno) { //Oficio interno
                     log.info("Nuevo organismos sustituto: " + oficioRemisionForm.getIdOrganismo());
-                    oficioRemision = oficioRemisionEntradaUtilsEjb.crearOficioRemisionInterno(correctos,
+                    oficioRemision = oficioRemisionEntradaUtilsEjb.crearOficioRemisionInterno(correctos, entidad,
                             getOficinaActiva(request), usuarioEntidad, oficioRemisionForm.getIdOrganismo(),
                             getLibroEntidad(request).getId());
 
                 } else {//Oficio externo
-                    oficioRemision = oficioRemisionEntradaUtilsEjb.crearOficioRemisionExterno(correctos,
+                    oficioRemision = oficioRemisionEntradaUtilsEjb.crearOficioRemisionExterno(correctos, entidad,
                             getOficinaActiva(request), usuarioEntidad, oficioRemisionForm.getOrganismoExternoCodigo(),
                             oficioRemisionForm.getOrganismoExternoDenominacion(), getLibroEntidad(request).getId());
                 }
@@ -392,6 +393,7 @@ public class OficioRemisionController extends BaseController {
     public String oficioRemisionSalida(@ModelAttribute OficioRemisionForm oficioRemisionForm, HttpServletRequest request)
             throws Exception, I18NException, I18NValidationException {
 
+        Entidad entidad = getEntidadActiva(request);
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
         Boolean interno = oficioRemisionForm.getIdOrganismo() != null;
         List<RegistroSalida> registrosSalida = new ArrayList<RegistroSalida>();
@@ -430,17 +432,17 @@ public class OficioRemisionController extends BaseController {
             }
 
             // Generamos los Justificantes de todos los Registros seleccionados
-            correctos = oficioRemisionSalidaUtilsEjb.crearJustificantesRegistros(registrosSalida, usuarioEntidad);
+            correctos = oficioRemisionSalidaUtilsEjb.crearJustificantesRegistros(entidad, registrosSalida, usuarioEntidad);
 
             // Creamos el OficioRemisión con los registros que se ha generado su Justificante
             if (correctos.size() > 0) {
                 if (interno) { //Oficio interno
-                    oficioRemision = oficioRemisionSalidaUtilsEjb.crearOficioRemisionInterno(correctos,
+                    oficioRemision = oficioRemisionSalidaUtilsEjb.crearOficioRemisionInterno(correctos, entidad,
                             getOficinaActiva(request), usuarioEntidad, oficioRemisionForm.getIdOrganismo(),
                             getLibroEntidad(request).getId());
 
                 } else {//Oficio externo
-                    oficioRemision = oficioRemisionSalidaUtilsEjb.crearOficioRemisionExterno(correctos,
+                    oficioRemision = oficioRemisionSalidaUtilsEjb.crearOficioRemisionExterno(correctos, entidad,
                             getOficinaActiva(request), usuarioEntidad, oficioRemisionForm.getOrganismoExternoCodigo(),
                             oficioRemisionForm.getOrganismoExternoDenominacion(), getLibroEntidad(request).getId());
                 }
@@ -482,6 +484,7 @@ public class OficioRemisionController extends BaseController {
     @RequestMapping(value = "/sir", method = RequestMethod.POST)
     public ModelAndView oficioRemisionSir(@ModelAttribute OficioRemisionForm oficioRemisionForm, HttpServletRequest request, Model model) throws Exception {
 
+        Entidad entidad = getEntidadActiva(request);
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
         String redirect = "/inici";
 
@@ -534,12 +537,12 @@ public class OficioRemisionController extends BaseController {
                         if (!registroEntrada.getRegistroDetalle().getTieneJustificante()) {
 
                             // Creamos el anexo del justificante y se lo añadimos al registro
-                            AnexoFull anexoFull = justificanteEjb.crearJustificante(usuarioEntidad, registroEntrada, RegwebConstantes.REGISTRO_ENTRADA, Configuracio.getDefaultLanguage());
+                            AnexoFull anexoFull = justificanteEjb.crearJustificante(entidad, usuarioEntidad, registroEntrada, RegwebConstantes.REGISTRO_ENTRADA, Configuracio.getDefaultLanguage());
                             registroEntrada.getRegistroDetalle().getAnexosFull().add(anexoFull);
                         }
 
                         // Enviamos el Fichero de datos de intercambio al nodo SIR
-                        sirEnvioEjb.enviarIntercambio(RegwebConstantes.REGISTRO_ENTRADA, registroEntrada, getOficinaActiva(request), usuarioEntidad,
+                        sirEnvioEjb.enviarIntercambio(RegwebConstantes.REGISTRO_ENTRADA, registroEntrada, entidad, getOficinaActiva(request), usuarioEntidad,
                                 oficioRemisionForm.getOficinaSIRCodigo());
 
                     }
@@ -584,12 +587,12 @@ public class OficioRemisionController extends BaseController {
                         if (!registroSalida.getRegistroDetalle().getTieneJustificante()) {
 
                             // Creamos el anexo del justificante y se lo añadimos al registro
-                            AnexoFull anexoFull = justificanteEjb.crearJustificante(usuarioEntidad, registroSalida, RegwebConstantes.REGISTRO_SALIDA, Configuracio.getDefaultLanguage());
+                            AnexoFull anexoFull = justificanteEjb.crearJustificante(entidad, usuarioEntidad, registroSalida, RegwebConstantes.REGISTRO_SALIDA, Configuracio.getDefaultLanguage());
                             registroSalida.getRegistroDetalle().getAnexosFull().add(anexoFull);
                         }
 
                         // Enviamos el Fichero de datos de intercambio al nodo SIR
-                        sirEnvioEjb.enviarIntercambio(RegwebConstantes.REGISTRO_SALIDA, registroSalida, getOficinaActiva(request), usuarioEntidad,
+                        sirEnvioEjb.enviarIntercambio(RegwebConstantes.REGISTRO_SALIDA, registroSalida, entidad, getOficinaActiva(request), usuarioEntidad,
                                 oficioRemisionForm.getOficinaSIRCodigo());
 
                     }
@@ -877,12 +880,11 @@ public class OficioRemisionController extends BaseController {
      * creando tantos RegistroEntrada como contenga dicho OficioRemision.
      */
     @RequestMapping(value = "/{idOficioRemision}/aceptar", method = RequestMethod.POST)
-    public String procesarOficioRemision(
-            @ModelAttribute OficioPendienteLlegadaForm oficioPendienteLlegadaForm,
-            @PathVariable Long idOficioRemision, Model model, HttpServletRequest request)
+    public String procesarOficioRemision(@ModelAttribute OficioPendienteLlegadaForm oficioPendienteLlegadaForm, @PathVariable Long idOficioRemision, Model model, HttpServletRequest request)
             throws Exception, I18NException, I18NValidationException {
 
         OficioRemision oficioRemision = oficioRemisionEjb.findById(idOficioRemision);
+        Entidad entidad = getEntidadActiva(request);
         Oficina oficinaActiva = getOficinaActiva(request);
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
         List<RegistroEntrada> registrosEntrada = new ArrayList<RegistroEntrada>();
@@ -900,12 +902,12 @@ public class OficioRemisionController extends BaseController {
         try {
             if (RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA.equals(oficioRemision.getTipoOficioRemision())) {
 
-                registrosEntrada = oficioRemisionEntradaUtilsEjb.aceptarOficioRemision(oficioRemision,
+                registrosEntrada = oficioRemisionEntradaUtilsEjb.aceptarOficioRemision(oficioRemision,entidad,
                         usuarioEntidad, oficinaActiva, oficioPendienteLlegadaForm.getOficios());
 
             } else if (RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA.equals(oficioRemision.getTipoOficioRemision())) {
 
-                registrosEntrada = oficioRemisionSalidaUtilsEjb.aceptarOficioRemision(oficioRemision,
+                registrosEntrada = oficioRemisionSalidaUtilsEjb.aceptarOficioRemision(oficioRemision,entidad,
                         usuarioEntidad, oficinaActiva, oficioPendienteLlegadaForm.getOficios());
             }
 
@@ -933,6 +935,5 @@ public class OficioRemisionController extends BaseController {
         binder.registerCustomEditor(java.util.Date.class, new CustomDateEditor(sdf, true));
         binder.setValidator(this.oficioRemisionValidator);
     }
-
 }
 

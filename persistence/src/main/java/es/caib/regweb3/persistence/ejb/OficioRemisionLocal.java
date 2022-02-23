@@ -43,8 +43,7 @@ public interface OficioRemisionLocal extends BaseEjb<OficioRemision, Long> {
      * @return
      * @throws Exception
      */
-    OficioRemision registrarOficioRemision(OficioRemision oficioRemision, Long estado)
-        throws Exception, I18NException, I18NValidationException;
+    OficioRemision registrarOficioRemision(Entidad entidad, OficioRemision oficioRemision, Long estado) throws Exception, I18NException, I18NValidationException;
 
     /**
      * Anula un Oficio de Remisión

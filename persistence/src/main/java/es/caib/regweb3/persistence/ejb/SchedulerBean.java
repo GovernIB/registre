@@ -92,7 +92,7 @@ public class SchedulerBean implements SchedulerLocal{
                 peticion = new StringBuilder();
                 peticion.append("entidad: ").append(entidad.getNombre()).append(System.getProperty("line.separator"));
 
-                int total = anexoSirEjb.purgarArchivos(entidad.getId());
+                int total = anexoSirEjb.purgarAnexosAceptados(entidad.getId());
                 peticion.append("total anexos: ").append(total).append(System.getProperty("line.separator"));
 
                 integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_SCHEDULERS, descripcion, peticion.toString(), System.currentTimeMillis() - tiempo, entidad.getId(), "");
@@ -249,7 +249,7 @@ public class SchedulerBean implements SchedulerLocal{
 
                 if(!PropiedadGlobalUtil.pararColaDistribucion(entidad.getId())) {
 
-                    distribucionEjb.distribuirRegistrosEnCola(entidad.getId());
+                    distribucionEjb.distribuirRegistrosEnCola(entidad);
 
                 }
             }

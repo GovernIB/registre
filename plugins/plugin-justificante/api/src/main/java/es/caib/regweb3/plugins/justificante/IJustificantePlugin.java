@@ -25,7 +25,7 @@ public interface IJustificantePlugin extends IPlugin {
      * @throws Exception
      */
 
-    byte[] generarJustificanteEntrada(RegistroEntrada registroEntrada, String url, String specialValue, String csv, String idioma) throws Exception;
+    byte[] generarJustificanteEntrada(RegistroEntrada registroEntrada, String url, String specialValue, String csv, String idioma, Boolean sir) throws Exception;
 
     /**
      * Metodo que genera el justificante de un registro de entrada.
@@ -37,6 +37,6 @@ public interface IJustificantePlugin extends IPlugin {
      * @return
      * @throws Exception
      */
-    byte[] generarJustificanteSalida(RegistroSalida registroSalida, String url, String specialValue, String csv, String idioma) throws Exception;
+    byte[] generarJustificanteSalida(RegistroSalida registroSalida, String url, String specialValue, String csv, String idioma, Boolean sir) throws Exception;
 
 }

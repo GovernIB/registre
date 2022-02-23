@@ -597,8 +597,8 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
 
         List<Organismo> organismos = q.getResultList();
         for (Organismo org : organismos) {
-            Hibernate.initialize(org.getLibros());
-            Hibernate.initialize(org.getOrganismoRaiz());
+            //Hibernate.initialize(org.getLibros());
+            //Hibernate.initialize(org.getOrganismoRaiz());
             Hibernate.initialize(org.getOrganismoSuperior());
         }
         paginacion.setListado(organismos);

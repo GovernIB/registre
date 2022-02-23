@@ -111,7 +111,7 @@ public class HistoricoRegistroEntrada implements Serializable {
         this.modificacion = modificacion;
     }
 
-    @ManyToOne()
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "USUARIO")
     @ForeignKey(name = "RWE_HISTORICO_USUARIO_FK")
     public UsuarioEntidad getUsuario() {
