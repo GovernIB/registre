@@ -346,9 +346,12 @@ public class DistribucionGoibPlugin extends AbstractPluginProperties implements 
         RegistreAnnex registreAnnex = new RegistreAnnex();
 
         if(anexo.getPerfilCustodia().equals(RegwebConstantes.PERFIL_CUSTODIA_DOCUMENT_CUSTODY)){
-            //PARCHE uuid Anexo, veure si finalment passam numExpediente#numDoc o no
+        	//PARCHE uuid Anexo, veure si finalment passam numExpediente#numDoc o no
             String id = anexo.getCustodiaID();
-            registreAnnex.setFitxerArxiuUuid(id.substring(id.lastIndexOf('#')+1));
+            if (id.contains("#")) {
+            	id = id.substring(0, id.indexOf("#"));      	
+            }
+            registreAnnex.setFitxerArxiuUuid(id);
 
         } else if(anexo.getPerfilCustodia().equals(RegwebConstantes.PERFIL_CUSTODIA_ARXIU)){
             registreAnnex.setFitxerArxiuUuid(anexo.getCustodiaID());
@@ -365,7 +368,7 @@ public class DistribucionGoibPlugin extends AbstractPluginProperties implements 
      */
     public RegistreAnnex transformarARegistreAnnex(AnexoFull anexoFull) throws Exception{
         RegistreAnnex registreAnnex = new RegistreAnnex();
-
+        String custodiaID;
         //Título
         registreAnnex.setTitol(anexoFull.getAnexo().getTitulo());
         //Origen
@@ -380,7 +383,13 @@ public class DistribucionGoibPlugin extends AbstractPluginProperties implements 
         registreAnnex.setObservacions(anexoFull.getAnexo().getObservaciones());
         //Validación OCSP
         registreAnnex.setValidacioOCSP(Base64.encodeBase64String(anexoFull.getAnexo().getValidacionOCSPCertificado()));
-
+        //UID (Afegit per plugin ripea APB)
+        custodiaID = anexoFull.getAnexo().getCustodiaID();
+        
+        if (custodiaID.contains("#")) {
+        	custodiaID = custodiaID.substring(0, custodiaID.indexOf("#"));      	
+        }
+        registreAnnex.setFitxerArxiuUuid(custodiaID);
         //Metadatos de escaneo
         List<Metadata> metadadesAnexo = anexoFull.getMetadatas();
         // De momento solo se pueden enviar estos 2 metadatos

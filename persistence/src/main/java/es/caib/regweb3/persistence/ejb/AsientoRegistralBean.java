@@ -74,10 +74,13 @@ public class AsientoRegistralBean implements AsientoRegistralLocal {
         if (registroEntrada != null) {
 
             if (registroEntrada.getRegistroDetalle().getTieneJustificanteCustodiado()) {
-                String csv = registroEntrada.getRegistroDetalle().getJustificante().getCsv();
-                String url = anexoEjb.getCsvValidationWeb(registroEntrada.getRegistroDetalle().getJustificante(), entidad.getId());
-
-                return new JustificanteReferencia(csv, url);
+            	Anexo justificante = registroEntrada.getRegistroDetalle().getJustificante();
+                if (justificante != null) { // TODO: Revisar: se obtiene de GEISER?
+	                String csv = registroEntrada.getRegistroDetalle().getJustificante().getCsv();
+	                String url = anexoEjb.getCsvValidationWeb(registroEntrada.getRegistroDetalle().getJustificante(), entidad.getId());
+	
+	                return new JustificanteReferencia(csv, url);
+                }
 
             } else if(registroEntrada.getRegistroDetalle().getTieneJustificante()){
                 throw new I18NException("registro.justificante.noCustodiado");
@@ -91,10 +94,13 @@ public class AsientoRegistralBean implements AsientoRegistralLocal {
         if (registroSalida != null) {
 
             if (registroSalida.getRegistroDetalle().getTieneJustificanteCustodiado()) {
-                String csv = registroSalida.getRegistroDetalle().getJustificante().getCsv();
-                String url = anexoEjb.getCsvValidationWeb(registroSalida.getRegistroDetalle().getJustificante(), entidad.getId());
-
-                return new JustificanteReferencia(csv, url);
+            	Anexo justificante = registroEntrada.getRegistroDetalle().getJustificante();
+                if (justificante != null) { // TODO: Revisar: se obtiene de GEISER?
+	                String csv = registroSalida.getRegistroDetalle().getJustificante().getCsv();
+	                String url = anexoEjb.getCsvValidationWeb(registroSalida.getRegistroDetalle().getJustificante(), entidad.getId());
+	
+	                return new JustificanteReferencia(csv, url);
+                }
 
             } else if(registroSalida.getRegistroDetalle().getTieneJustificante()){
                 throw new I18NException("registro.justificante.noCustodiado");
@@ -169,7 +175,7 @@ public class AsientoRegistralBean implements AsientoRegistralLocal {
                 				// Actualizar registro sir con info de GEISER
 //                            	sirEnvioEjb.actualizarEnvioSirRealizado(registroSir, usuario);
                 				if (registroSir != null) {
-                    				registroSalida.setNumeroRegistro("0");
+                    				registroSalida.setNumeroRegistro(registroSir.getNumeroRegistro());
                     				registroSalida.setNumeroRegistroFormateado(registroSir.getNumeroRegistro());
                     				registroSalida.setFecha(registroSir.getFechaRegistro());
                     				registroSalida.setEstado(REGISTRO_OFICIO_SIR);

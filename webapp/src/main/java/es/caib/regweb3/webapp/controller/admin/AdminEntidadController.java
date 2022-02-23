@@ -236,10 +236,11 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
             // Justificante
             if (tieneJustificante) {
                 Anexo justificante = registro.getRegistroDetalle().getJustificante();
-
-                model.addAttribute("idJustificante", justificante.getId());
-                String urlValidacion = anexoEjb.getUrlValidation(justificante,entidadActiva.getId());
-                model.addAttribute("tieneUrlValidacion", StringUtils.isNotEmpty(urlValidacion));
+                if (justificante != null) { // Se obtiene de GEISER
+	                model.addAttribute("idJustificante", justificante.getId());
+	                String urlValidacion = anexoEjb.getUrlValidation(justificante,entidadActiva.getId());
+	                model.addAttribute("tieneUrlValidacion", StringUtils.isNotEmpty(urlValidacion));
+                }
             }
 
             // Historicos
@@ -473,10 +474,11 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
         // Justificante
         if(tieneJustificante){
             Anexo justificante = registro.getRegistroDetalle().getJustificante();
-
-            model.addAttribute("idJustificante", justificante.getId());
-            String urlValidacion = anexoEjb.getUrlValidation(justificante,entidadActiva.getId());
-            model.addAttribute("tieneUrlValidacion", StringUtils.isNotEmpty(urlValidacion));
+            if (justificante != null) { // Se obtiene de GEISER
+	            model.addAttribute("idJustificante", justificante.getId());
+	            String urlValidacion = anexoEjb.getUrlValidation(justificante,entidadActiva.getId());
+	            model.addAttribute("tieneUrlValidacion", StringUtils.isNotEmpty(urlValidacion));
+            }
         }
 
         // Historicos

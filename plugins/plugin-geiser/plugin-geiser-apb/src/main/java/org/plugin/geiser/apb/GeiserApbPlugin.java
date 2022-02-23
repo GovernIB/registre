@@ -18,8 +18,10 @@ import javax.xml.ws.handler.PortInfo;
 import javax.xml.ws.handler.soap.SOAPHandler;
 import javax.xml.ws.handler.soap.SOAPMessageContext;
 
+import org.apache.commons.codec.binary.Base64;
 import org.fundaciobit.pluginsib.core.utils.AbstractPluginProperties;
 import org.plugin.geiser.apb.helper.ConversionPluginHelper;
+import org.plugin.geiser.api.AnexoGSample;
 import org.plugin.geiser.api.EstadoRegistro;
 import org.plugin.geiser.api.GeiserPluginException;
 import org.plugin.geiser.api.IGeiserPlugin;
@@ -33,6 +35,8 @@ import org.plugin.geiser.api.RespuestaBusquedaTramitGeiser;
 import org.plugin.geiser.api.RespuestaConsultaGeiser;
 import org.plugin.geiser.api.RespuestaRegistroGeiser;
 import org.plugin.geiser.api.TipoAsiento;
+import org.plugin.geiser.api.ws.AnexoType;
+import org.plugin.geiser.api.ws.ApunteRegistroType;
 import org.plugin.geiser.api.ws.AuthenticationType;
 import org.plugin.geiser.api.ws.IRegistroWebService;
 import org.plugin.geiser.api.ws.PeticionBusquedaEstadoTramitacionType;
@@ -45,6 +49,7 @@ import org.plugin.geiser.api.ws.ResultadoBusquedaEstadoTramitacionType;
 import org.plugin.geiser.api.ws.ResultadoBusquedaType;
 import org.plugin.geiser.api.ws.ResultadoConsultaType;
 import org.plugin.geiser.api.ws.ResultadoRegistroType;
+import org.plugin.geiser.api.ws.TipoFirmaEnum;
 import org.plugin.geiser.api.ws.VersionRegeco;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -221,6 +226,37 @@ public class GeiserApbPlugin extends AbstractPluginProperties implements IGeiser
 	@Override
 	public String getUsuariCreacioRegistres() throws GeiserPluginException {
 		return getProperty(USUARIO_REGISTRE_ENTRADA);
+	}
+	
+	@Override
+	public AnexoGSample obtenerJustificanteGEISER(PeticionConsultaGeiser peticion) throws GeiserPluginException {
+		AnexoGSample justificante = new AnexoGSample();
+		try {
+			AuthenticationType authentication = initAuthentication(
+					peticion.getOficinaOrigen(), 
+					peticion.getUsuario());
+			PeticionConsultaType peticionType = new ConversionPluginHelper().convertir(
+					peticion, 
+					PeticionConsultaType.class);
+			
+			ResultadoConsultaType resultado = getRegecoClient().consultar(
+					authentication, 
+					peticionType);
+			int codigoRespuesta = resultado.getRespuesta().getCodigo();
+			if (codigoRespuesta == 1 || codigoRespuesta == 2 || codigoRespuesta == 3 ||codigoRespuesta == 4 ||codigoRespuesta == 5)
+				throw new GeiserPluginException("Respuesta: " + codigoRespuesta + " - " + resultado.getRespuesta().getMensaje());
+			
+			for (ApunteRegistroType apunte: resultado.getApuntes()) {
+				if (apunte.getJustificanteFirmado() != null) {
+					justificante.setAnexo(Base64.decodeBase64(apunte.getJustificanteFirmado()));
+					justificante.setMime(apunte.getTipoMimeJustificanteCVS());
+					justificante.setTitulo("Justificante_" + apunte.getNuRegistro() + ".pdf");
+				}
+			}
+		} catch (Exception ex) {
+			throw new GeiserPluginException("[GEISER] Ha habido un problema realizando el proceso de consulta. " + ex.getMessage(), ex.getCause());
+		}
+		return justificante;
 	}
 	
 	private AuthenticationType initAuthentication(String ambito, String usuario) throws Exception {

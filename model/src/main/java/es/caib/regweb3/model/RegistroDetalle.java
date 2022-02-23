@@ -109,6 +109,8 @@ public class RegistroDetalle implements Serializable {
     @XmlTransient
     private Boolean recibidoSir = false;
 
+    @XmlTransient
+    private Boolean justificanteGeiser = false;
 
     public RegistroDetalle() {
     }
@@ -516,7 +518,16 @@ public class RegistroDetalle implements Serializable {
         this.recibidoSir = sir;
     }
 
-    @Transient
+    @Column(name = "JUSTIFICANTE_GEISER")
+    public Boolean getJustificanteGeiser() {
+		return justificanteGeiser;
+	}
+
+	public void setJustificanteGeiser(Boolean justificanteGeiser) {
+		this.justificanteGeiser = justificanteGeiser;
+	}
+
+	@Transient
     public List<AnexoFull> getAnexosFull() {
         return anexosFull;
     }
@@ -574,6 +585,8 @@ public class RegistroDetalle implements Serializable {
                 return true;
             }
         }
+        if (justificanteGeiser)
+        	return true;
         return false;
     }
 
@@ -588,6 +601,8 @@ public class RegistroDetalle implements Serializable {
                 return true;
             }
         }
+        if (justificanteGeiser)
+        	return true;
         return false;
     }
 
@@ -632,8 +647,8 @@ public class RegistroDetalle implements Serializable {
     public boolean getTieneAnexos(){
 
         if(anexos.size()>=1){
-            //Si solo tiene un anexo y es el justificante, no tiene anexos
-            if(anexos.size() == 1 && getTieneJustificante()){
+            //Si solo tiene un anexo y es el justificante de REGWEB, no tiene anexos
+            if(anexos.size() == 1 && (!justificanteGeiser && getTieneJustificante())){
                 return false;
             }
             //Si solo tiene un anexo y no es el justificante, tiene un anexo

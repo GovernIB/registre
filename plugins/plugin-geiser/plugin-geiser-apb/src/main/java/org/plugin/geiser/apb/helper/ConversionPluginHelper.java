@@ -359,6 +359,8 @@ public class ConversionPluginHelper {
 						PeticionConsultaType target = new PeticionConsultaType();
 						target.setNuRegistro(source.getNuRegistro());
 						target.setIncluirContenidoAnexo(source.isIncluirContenidoAnexo());
+						target.setIncluirContenidoAnexoCSV(source.isIncluirContenidoCSV());
+						target.setIncluirJustificante(source.isIncluirJustificante());
 						return target;
 					}
 				});

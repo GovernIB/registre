@@ -69,8 +69,8 @@ import javax.xml.bind.annotation.XmlType;
 })
 @XmlSeeAlso({
     PeticionRegistroEnvioType.class,
-    PeticionRegistroEnvioSimpleType.class,
-    PeticionRegistroType.class
+    PeticionRegistroType.class,
+    PeticionRegistroEnvioSimpleType.class
 })
 public abstract class BasePeticionRegistroType {
 

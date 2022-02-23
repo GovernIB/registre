@@ -42,13 +42,13 @@
                 <%--Tiene Anexos--%>
                 <c:if test="${registro.registroDetalle.tieneAnexos}">
 
-                    <c:if test="${fn:length(registro.registroDetalle.anexos) == 1 && registro.registroDetalle.tieneJustificante}">
+                    <c:if test="${fn:length(registro.registroDetalle.anexos) == 1 && (!registro.registroDetalle.justificanteGeiser && registro.registroDetalle.tieneJustificante)}">
                         <div class="alert alert-grey ">
                             <spring:message code="regweb.listado.vacio"/><strong> <spring:message
                                 code="anexo.anexo"/></strong>
                         </div>
                     </c:if>
-                    <c:if test="${(fn:length(registro.registroDetalle.anexos) == 1 && !registro.registroDetalle.tieneJustificante) ||
+                    <c:if test="${(fn:length(registro.registroDetalle.anexos) == 1 && (registro.registroDetalle.justificanteGeiser || !registro.registroDetalle.tieneJustificante)) ||
                             fn:length(registro.registroDetalle.anexos) > 1 }">
 
                         <table id="anexos" class="table table-bordered table-hover table-striped">

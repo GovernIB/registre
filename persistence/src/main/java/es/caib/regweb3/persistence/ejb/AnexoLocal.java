@@ -274,5 +274,16 @@ public interface AnexoLocal extends BaseEjb<Anexo, Long> {
      * @throws I18NValidationException
      */
 	AnexoFull actualizarMetadatosAnexo(IRegistro registro, AnexoFull anexoFull, UsuarioEntidad usuarioEntidad) throws I18NException;
+	
+    /**
+     * Descarga el justificante del registro de GEISER
+     * 
+     * @param registro
+     * @param usuarioEntidad
+     * @return
+     * @throws I18NException
+     * @throws I18NValidationException
+     */
+	AnexoSimple obtenerJustificanteGEISER(IRegistro registro, UsuarioEntidad usuarioEntidad) throws I18NException;
 
 }

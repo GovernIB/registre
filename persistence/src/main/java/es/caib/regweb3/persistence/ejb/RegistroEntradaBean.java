@@ -178,6 +178,10 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 		                if (StringUtils.isEmpty(registroEntrada.getRegistroDetalle().getNumeroRegistroOrigen()))
 		                    registroEntrada.getRegistroDetalle().setNumeroRegistroOrigen(registroEntrada.getNumeroRegistroFormateado());
 		                
+		                if (registroEntrada.getDestino() == null) {
+		                	// Si es un registro a una adm externa recuperar justifcante de GEISER
+		                    registroEntrada.getRegistroDetalle().setJustificanteGeiser(true);
+		                }
 		            } else {
 		                // No s´ha definit cap plugin de Justificant. Consulti amb el seu Administrador.
 		                throw new I18NException("error.plugin.nodefinit", new I18NArgumentCode("plugin.tipo.11"));
@@ -468,7 +472,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
             }
 
             return RegwebConstantes.EVENTO_OFICIO_EXTERNO;
-
+            
         }
 
         return RegwebConstantes.EVENTO_DISTRIBUIR;

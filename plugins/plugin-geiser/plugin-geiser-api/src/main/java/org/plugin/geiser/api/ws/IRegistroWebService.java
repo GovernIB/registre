@@ -25,8 +25,8 @@ public interface IRegistroWebService {
 
     /**
      * 
-     * @param authentication
      * @param peticion
+     * @param authentication
      * @return
      *     returns org.plugin.geiser.api.ws.ResultadoRegistroType
      */
@@ -42,8 +42,8 @@ public interface IRegistroWebService {
 
     /**
      * 
-     * @param authentication
      * @param peticion
+     * @param authentication
      * @return
      *     returns org.plugin.geiser.api.ws.ResultadoRegistroType
      */
@@ -59,8 +59,8 @@ public interface IRegistroWebService {
 
     /**
      * 
-     * @param authentication
      * @param peticion
+     * @param authentication
      * @return
      *     returns org.plugin.geiser.api.ws.ResultadoCambioEstadoType
      */
@@ -76,8 +76,8 @@ public interface IRegistroWebService {
 
     /**
      * 
-     * @param authentication
      * @param peticion
+     * @param authentication
      * @return
      *     returns org.plugin.geiser.api.ws.ResultadoCambioEstadoType
      */
@@ -93,8 +93,8 @@ public interface IRegistroWebService {
 
     /**
      * 
-     * @param authentication
      * @param uidIterator
+     * @param authentication
      * @return
      *     returns org.plugin.geiser.api.ws.ResultadoBusquedaType
      */
@@ -110,8 +110,8 @@ public interface IRegistroWebService {
 
     /**
      * 
-     * @param authentication
      * @param peticion
+     * @param authentication
      * @return
      *     returns org.plugin.geiser.api.ws.ResultadoConsultaType
      */
@@ -127,8 +127,8 @@ public interface IRegistroWebService {
 
     /**
      * 
-     * @param authentication
      * @param peticion
+     * @param authentication
      * @return
      *     returns org.plugin.geiser.api.ws.ResultadoBusquedaEstadoTramitacionType
      */
@@ -144,8 +144,8 @@ public interface IRegistroWebService {
 
     /**
      * 
-     * @param authentication
      * @param peticion
+     * @param authentication
      * @return
      *     returns org.plugin.geiser.api.ws.ResultadoBusquedaType
      */
@@ -161,8 +161,8 @@ public interface IRegistroWebService {
 
     /**
      * 
-     * @param authentication
      * @param peticion
+     * @param authentication
      * @return
      *     returns org.plugin.geiser.api.ws.ResultadoRegistroType
      */

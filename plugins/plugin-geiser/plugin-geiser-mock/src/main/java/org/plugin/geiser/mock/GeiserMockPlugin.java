@@ -13,6 +13,7 @@ import javax.xml.ws.handler.soap.SOAPHandler;
 import javax.xml.ws.handler.soap.SOAPMessageContext;
 
 import org.fundaciobit.pluginsib.core.utils.AbstractPluginProperties;
+import org.plugin.geiser.api.AnexoGSample;
 import org.plugin.geiser.api.GeiserPluginException;
 import org.plugin.geiser.api.IGeiserPlugin;
 import org.plugin.geiser.api.PeticionBusquedaTramitGeiser;
@@ -221,6 +222,12 @@ public class GeiserMockPlugin extends AbstractPluginProperties implements IGeise
 
 	@Override
 	public String getUsuariCreacioRegistres() throws GeiserPluginException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public AnexoGSample obtenerJustificanteGEISER(PeticionConsultaGeiser peticion) throws GeiserPluginException {
 		// TODO Auto-generated method stub
 		return null;
 	}

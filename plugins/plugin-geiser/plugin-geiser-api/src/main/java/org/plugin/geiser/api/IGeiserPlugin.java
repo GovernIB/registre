@@ -72,4 +72,15 @@ public interface IGeiserPlugin extends IPlugin {
 	 * @throws GeiserPluginException
 	 */
 	public String getUsuariCreacioRegistres() throws GeiserPluginException;
+	
+	/**
+	 * Operación que permite descargar el justificante del registro a partir del número de registro.
+	 * 
+	 * @param peticionConsultaGeiser
+	 * 			Una estructura datos de tipo {@link org.plugin.geiser.api.PeticionConsultaGeiser}
+	 * @return Una estructura datos de tipo @RespuestaConsultaGeiser
+	 * 
+	 * @throws GeiserPluginException
+	 */
+	public AnexoGSample obtenerJustificanteGEISER(PeticionConsultaGeiser peticion) throws GeiserPluginException;
 }

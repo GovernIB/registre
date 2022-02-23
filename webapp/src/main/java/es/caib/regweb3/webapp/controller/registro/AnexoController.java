@@ -4,9 +4,11 @@ import es.caib.plugins.arxiu.api.Document;
 import es.caib.plugins.arxiu.api.IArxiuPlugin;
 import es.caib.regweb3.model.Anexo;
 import es.caib.regweb3.model.Entidad;
+import es.caib.regweb3.model.IRegistro;
 import es.caib.regweb3.model.RegistroDetalle;
 import es.caib.regweb3.model.RegistroEntrada;
 import es.caib.regweb3.model.RegistroSalida;
+import es.caib.regweb3.model.UsuarioEntidad;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.model.utils.AnexoSimple;
 import es.caib.regweb3.persistence.ejb.AnexoLocal;
@@ -431,44 +433,55 @@ public class AnexoController extends BaseController {
      *
      * @param anexoId identificador del anexo
      */
-    @RequestMapping(value = "/descargarJustificante/{anexoId}/{original}", method = RequestMethod.GET)
-    public void descargarJustificante(@PathVariable("anexoId") Long anexoId, @PathVariable("original") Boolean original, HttpServletRequest request,
+    @RequestMapping(value = "/descargarJustificante/{id}/{original}", method = RequestMethod.GET)
+    public void descargarJustificante(@PathVariable("id") Long id, @PathVariable("original") Boolean original, HttpServletRequest request,
                                                HttpServletResponse response) throws Exception, I18NException {
 
         Entidad entidadActiva = getEntidadActiva(request);
-        Anexo anexo = anexoEjb.findById(anexoId);
-
-        if(anexo.getPerfilCustodia().equals(RegwebConstantes.PERFIL_CUSTODIA_ARXIU)){
-            IArxiuPlugin iArxiuPlugin = arxiuCaibUtils.cargarPlugin(entidadActiva.getId());
-
-            // Comprova que existeix el plugin de Arxiu del Justificante
-            if (iArxiuPlugin == null) {
-                throw new I18NException("error.plugin.nodefinit", new I18NArgumentCode("plugin.tipo.10"));
-            }
-
-            Document justificante = arxiuCaibUtils.getDocumento(anexo.getCustodiaID(), null, true, original);
-
-            if(justificante != null){
-                download(justificante.getContingut().getTipusMime(), response, justificante.getNom(),justificante.getContingut().getContingut());
-            }else {
-                Mensaje.saveMessageError(request, getMessage("justificante.noExiste", anexo.getCustodiaID()));
-                response.sendRedirect("/regweb3/inici");
-                log.info("No se ha obtenido el  justificante");
-            }
-
-        }else if(anexo.getPerfilCustodia().equals(RegwebConstantes.PERFIL_CUSTODIA_DOCUMENT_CUSTODY)){
-
-            AnexoFull anexoFull = anexoEjb.getAnexoFullLigero(anexoId, getEntidadActiva(request).getId());
-
-            //Parche para la api de custodia antigua que se guardan los documentos firmados (modofirma == 1 Attached) en DocumentCustody.
-            if (anexoFull.getSignatureCustody() == null) {//Api antigua, hay que descargar el document custody
-                fullDownload(anexoFull.getAnexo(), anexoFull.getDocumentoCustody().getMime(),
-                        false, response, getEntidadActiva(request).getId(), original);
-            } else {
-                fullDownload(anexoFull.getAnexo(), anexoFull.getSignatureCustody().getMime(),
-                        true, response, getEntidadActiva(request).getId(), original);
-            }
-        }
+        if (id != null) {
+	        Anexo anexo = anexoEjb.findById(id);
+	        if (anexo != null) {
+	        	// Se descarga de custodia
+		        if(anexo.getPerfilCustodia().equals(RegwebConstantes.PERFIL_CUSTODIA_ARXIU)){
+		            IArxiuPlugin iArxiuPlugin = arxiuCaibUtils.cargarPlugin(entidadActiva.getId());
+		
+		            // Comprova que existeix el plugin de Arxiu del Justificante
+		            if (iArxiuPlugin == null) {
+		                throw new I18NException("error.plugin.nodefinit", new I18NArgumentCode("plugin.tipo.10"));
+		            }
+		
+		            Document justificante = arxiuCaibUtils.getDocumento(anexo.getCustodiaID(), null, true, original);
+		
+		            if(justificante != null){
+		                download(justificante.getContingut().getTipusMime(), response, justificante.getNom(),justificante.getContingut().getContingut());
+		            }else {
+		                Mensaje.saveMessageError(request, getMessage("justificante.noExiste", anexo.getCustodiaID()));
+		                response.sendRedirect("/regweb3/inici");
+		                log.info("No se ha obtenido el  justificante");
+		            }
+		
+		        }else if(anexo.getPerfilCustodia().equals(RegwebConstantes.PERFIL_CUSTODIA_DOCUMENT_CUSTODY)){
+		
+		            AnexoFull anexoFull = anexoEjb.getAnexoFullLigero(id, getEntidadActiva(request).getId());
+		
+		            //Parche para la api de custodia antigua que se guardan los documentos firmados (modofirma == 1 Attached) en DocumentCustody.
+		            if (anexoFull.getSignatureCustody() == null) {//Api antigua, hay que descargar el document custody
+		                fullDownload(anexoFull.getAnexo(), anexoFull.getDocumentoCustody().getMime(),
+		                        false, response, getEntidadActiva(request).getId(), original);
+		            } else {
+		                fullDownload(anexoFull.getAnexo(), anexoFull.getSignatureCustody().getMime(),
+		                        true, response, getEntidadActiva(request).getId(), original);
+		            }
+		        }
+	        } else {
+	        	// Se descargar de GEISER a oartir del id de registro
+	        	IRegistro registro = registroEntradaEjb.findByIdCompleto(id);
+	            UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
+	            
+	        	AnexoSimple justificante = anexoEjb.obtenerJustificanteGEISER(registro, usuarioEntidad);
+	        	download(justificante.getMimeType(), response, justificante.getFilename(), justificante.getData());
+	        }
+        } 
     }
 
 

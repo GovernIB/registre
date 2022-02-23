@@ -63,9 +63,9 @@ public abstract class AbstractRegistroCommonFormController extends BaseControlle
             Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.registro.modificar"));
             return true;
         }
-
-        // Si tiene Justificante generado, no se puede editar
-        if (registro.getRegistroDetalle().getTieneJustificante()) {
+        RegistroDetalle registroDetalle = registro.getRegistroDetalle();
+        // Si tiene Justificante generado y no se recupera de GEISER, no se puede editar
+        if (registroDetalle.getTieneJustificante()) {
             log.info("Este Registro no se puede modificar, porque ya se ha generado su Justificante");
             Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.registro.modificar.justificante"));
             return true;

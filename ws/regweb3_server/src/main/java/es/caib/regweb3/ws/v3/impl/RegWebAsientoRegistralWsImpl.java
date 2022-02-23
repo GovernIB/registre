@@ -344,8 +344,6 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
         						usuario, 
         						registroEntrada.getOficina().getCodigo());
         				sirEnvioEjb.forzarGuardado();
-        				// Actualizar registro sir con info de GEISER
-//                    	sirEnvioEjb.actualizarEnvioSirRealizado(registroSir, usuario);
         			}
         			
         			if (registroEntrada.getNumeroRegistroFormateado() != null) {
@@ -361,18 +359,17 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
 	                    asiento.setNumeroRegistroFormateado(registroSir.getNumeroRegistro());
 	                    asiento.setFechaRegistro(registroSir.getFechaRegistro());
         			}
-
+                	Boolean isJustificanteGEISER = registroEntrada.getRegistroDetalle().getJustificanteGeiser();
                     // Distribuir / Generar justificante
                     if(justificante && distribuir){
-
-                        if(PropiedadGlobalUtil.getCustodiaDiferida(entidadActiva.getId())){ // Si la Custodia en diferido está activa, generamos el  justificante
+                        if(!isJustificanteGEISER && PropiedadGlobalUtil.getCustodiaDiferida(entidadActiva.getId())){ // Si la Custodia en diferido está activa, generamos el  justificante
                             asientoRegistralEjb.crearJustificante(usuario, registroEntrada, REGISTRO_ENTRADA, RegistroUtils.getIdiomaJustificante(registroEntrada));
                         }
 
                         // Distribuimos, si la Custodia en diferido no está activa, se generará el justificante antes de Distribuir
                         asientoRegistralEjb.distribuirRegistroEntrada(registroEntrada, usuarioAplicacion);
 
-                    }else if(justificante){
+                    }else if(justificante && !isJustificanteGEISER){
                         asientoRegistralEjb.crearJustificante(usuario, registroEntrada, REGISTRO_ENTRADA, RegistroUtils.getIdiomaJustificante(registroEntrada));
                     }else if(distribuir){
                         asientoRegistralEjb.distribuirRegistroEntrada(registroEntrada, usuarioAplicacion);
@@ -596,12 +593,16 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
                     throw new I18NException("registro.justificante.valido");
                 }
 
-            }else{ // Tiene Justificante, lo obtenemos
+            } else { // Tiene Justificante, lo obtenemos
 
                 // Obtenemos el Justificante
                 try{
-                    justificante = anexoEjb.getAnexoFullLigero(anexoEjb.getIdJustificante(registroEntrada.getRegistroDetalle().getId()), entidadActiva.getId());
-                    anexoSimple = anexoEjb.descargarJustificante(justificante.getAnexo(), entidadActiva.getId());
+                	if (!registroEntrada.getRegistroDetalle().getJustificanteGeiser()) {
+                		justificante = anexoEjb.getAnexoFullLigero(anexoEjb.getIdJustificante(registroEntrada.getRegistroDetalle().getId()), entidadActiva.getId());
+                		anexoSimple = anexoEjb.descargarJustificante(justificante.getAnexo(), entidadActiva.getId());
+                	} else {
+                		anexoSimple = anexoEjb.obtenerJustificanteGEISER(registroEntrada, usuario);
+                	}
                 }catch (Exception e){
                     integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, null,System.currentTimeMillis() - tiempo, entidadActiva.getId(), numeroRegistroFormateado);
                     throw new I18NException("registro.justificante.error", numeroRegistroFormateado);
@@ -645,8 +646,12 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
 
                 // Obtenemos el Justificante
                 try{
-                    justificante = anexoEjb.getAnexoFullLigero(anexoEjb.getIdJustificante(registroSalida.getRegistroDetalle().getId()), entidadActiva.getId());
-                    anexoSimple = anexoEjb.descargarJustificante(justificante.getAnexo(), entidadActiva.getId());
+                	if (!registroSalida.getRegistroDetalle().getJustificanteGeiser()) {
+                		justificante = anexoEjb.getAnexoFullLigero(anexoEjb.getIdJustificante(registroSalida.getRegistroDetalle().getId()), entidadActiva.getId());
+                		anexoSimple = anexoEjb.descargarJustificante(justificante.getAnexo(), entidadActiva.getId());
+                	} else {
+                		anexoSimple = anexoEjb.obtenerJustificanteGEISER(registroSalida, usuario);
+                	}
                 }catch (Exception e){
                     integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, null,System.currentTimeMillis() - tiempo, entidadActiva.getId(), numeroRegistroFormateado);
                     throw new I18NException("registro.justificante.error", numeroRegistroFormateado);

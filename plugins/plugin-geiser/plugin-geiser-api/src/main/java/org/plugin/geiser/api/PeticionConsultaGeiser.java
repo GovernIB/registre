@@ -9,4 +9,5 @@ public class PeticionConsultaGeiser extends Peticion {
 	private String nuRegistro;
 	private boolean incluirContenidoAnexo;
 	private boolean incluirContenidoCSV;
+	private boolean incluirJustificante;
 }

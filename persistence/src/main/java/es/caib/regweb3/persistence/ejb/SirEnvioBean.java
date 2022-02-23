@@ -345,7 +345,6 @@ public class SirEnvioBean implements SirEnvioLocal {
 											registroSalidaSir.setFecha(apunte.getFechaRegistro());
 										}
 									}
-//									trazabilidadEjb.getByOficioRegistroEntrada(ofi, idRegistroEntrada)
 								}
 							}
         	        	}
@@ -784,6 +783,10 @@ public class SirEnvioBean implements SirEnvioLocal {
         	registroSir.setNumeroRegistro(respuesta.getNuRegistro());
         	registroSir.setFechaRegistro(respuesta.getFechaRegistro());
         	if (tipoRegistro.equals(1L)) { //ENTRADA
+        		if (registroEntrada.getDestino() == null) {
+                	// Si es un registro a una adm externa recuperar justifcante de GEISER
+                    registroEntrada.getRegistroDetalle().setJustificanteGeiser(true);
+        		}
         		// Actualizamos metadatos registro entrada
         		actualizarMetadatosRegistro(registroEntrada, respuesta, usuario);
         		// Actualizamos metadatos anexos en custodia

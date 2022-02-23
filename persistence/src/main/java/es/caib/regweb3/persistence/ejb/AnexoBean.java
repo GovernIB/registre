@@ -5,6 +5,7 @@ import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.model.utils.AnexoSimple;
 import es.caib.regweb3.persistence.integracion.ArxiuCaibUtils;
+import es.caib.regweb3.persistence.utils.GeiserPluginHelper;
 import es.caib.regweb3.persistence.utils.I18NLogicUtils;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.persistence.utils.RegistroUtils;
@@ -23,6 +24,8 @@ import org.fundaciobit.pluginsib.core.utils.ISO8601;
 import org.fundaciobit.pluginsib.core.utils.Metadata;
 import org.fundaciobit.pluginsib.core.utils.MetadataConstants;
 import org.jboss.ejb3.annotation.SecurityDomain;
+import org.plugin.geiser.api.AnexoGSample;
+import org.plugin.geiser.api.PeticionConsultaGeiser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
 
@@ -69,6 +72,9 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
     @EJB private SignatureServerLocal signatureServerEjb;
     @EJB private PluginLocal pluginEjb;
     @EJB private IntegracionLocal integracionEjb;
+    
+    @Autowired
+    private GeiserPluginHelper pluginHelper;
 
     @EJB(mappedName = "regweb3/RegistroEntradaCambiarEstadoEJB/local")
     private RegistroEntradaCambiarEstadoLocal registroEntradaEjb;
@@ -1032,6 +1038,18 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
     }
 
+	@Override
+	public AnexoSimple obtenerJustificanteGEISER(IRegistro registro, UsuarioEntidad usuarioEntidad) throws I18NException {
+		PeticionConsultaGeiser consulta = new PeticionConsultaGeiser();
+		consulta.setIncluirContenidoAnexo(true);
+		consulta.setNuRegistro(registro.getNumeroRegistro());
+		consulta.setOficinaOrigen(registro.getOficina().getCodigo());
+		consulta.setUsuario(usuarioEntidad.getUsuario().getDocumento());
+		consulta.setIncluirJustificante(true);
+		AnexoGSample justificanteGeiser = pluginHelper.postProcesoObtenerJustificanteGEISER(consulta, usuarioEntidad.getEntidad().getId());
+		return new AnexoSimple(justificanteGeiser.getAnexo(), justificanteGeiser.getTitulo(), justificanteGeiser.getMime());
+	}
+	
     /**
      * Método que prepara para actualizar los datos de un DocumentCustody
      *

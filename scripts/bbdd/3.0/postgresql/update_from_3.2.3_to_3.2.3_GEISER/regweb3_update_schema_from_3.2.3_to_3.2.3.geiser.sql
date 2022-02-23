@@ -78,3 +78,5 @@ INSERT INTO RWE_PROPIEDADGLOBAL (ID, CLAVE, DESCRIPCION, ENTIDAD, TIPO, VALOR) V
 -- Cron modificable
 INSERT INTO RWE_PROPIEDADGLOBAL (ID, CLAVE, DESCRIPCION, ENTIDAD, TIPO, VALOR) VALUES (nextval('RWE_ALL_SEQ'),'es.caib.regweb3.cron.actualizacion.id.envio.recibido.sir.periodo','Tiempo inicial actualización registros enviados vía SIR',null,1,900000); --15min
 INSERT INTO RWE_PROPIEDADGLOBAL (ID, CLAVE, DESCRIPCION, ENTIDAD, TIPO, VALOR) VALUES (nextval('RWE_ALL_SEQ'),'es.caib.regweb3.cron.actualizacion.id.envio.recibido.sir.retardo','Tiempo inicial actualización registros enviados vía SIR',null,1,900000); --15min
+
+ALTER TABLE RWE_REGISTRO_DETALLE ADD JUSTIFICANTE_GEISER BOOL NOT NULL DEFAULT FALSE;

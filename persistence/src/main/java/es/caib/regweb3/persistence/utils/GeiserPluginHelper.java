@@ -7,6 +7,7 @@ import javax.ejb.EJB;
 import javax.interceptor.Interceptors;
 
 import org.fundaciobit.genapp.common.i18n.I18NException;
+import org.plugin.geiser.api.AnexoGSample;
 import org.plugin.geiser.api.GeiserPluginException;
 import org.plugin.geiser.api.IGeiserPlugin;
 import org.plugin.geiser.api.PeticionBusquedaTramitGeiser;
@@ -117,6 +118,15 @@ public class GeiserPluginHelper {
     	IGeiserPlugin geiserPlugin = getIGeiserPlugin(entidadId);
         if (geiserPlugin != null) {
         	respuesta = geiserPlugin.getUsuariCreacioRegistres();
+        }
+		return respuesta;
+    }
+    
+    public AnexoGSample postProcesoObtenerJustificanteGEISER(PeticionConsultaGeiser consulta, Long entidadId) throws I18NException {
+    	AnexoGSample respuesta = null;
+    	IGeiserPlugin geiserPlugin = getIGeiserPlugin(entidadId);
+        if (geiserPlugin != null) {
+        	respuesta = geiserPlugin.obtenerJustificanteGEISER(consulta);
         }
 		return respuesta;
     }
