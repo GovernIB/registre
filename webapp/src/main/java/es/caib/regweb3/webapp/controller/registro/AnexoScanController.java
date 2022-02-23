@@ -62,9 +62,6 @@ public class AnexoScanController extends AnexoController {
                                 @PathVariable Long tipoRegistro, @PathVariable Long registroID, @PathVariable Boolean isOficioRemisionSir,
                                 Model model) throws I18NException, Exception {
 
-        log.info(" Passa per AnexoScanController::crearAnexoGet(" + registroDetalleID
-                + "," + tipoRegistro + ", " + registroID + ")");
-
        //Actualiza las variables con la ultima acción y prepara el anexoForm
         AnexoForm anexoForm = prepararAnexoForm(request, registroDetalleID, tipoRegistro, registroID, isOficioRemisionSir, true);
         request.getSession().setAttribute("anexoForm", anexoForm);
@@ -83,9 +80,6 @@ public class AnexoScanController extends AnexoController {
                                 HttpServletResponse response, @PathVariable Long registroDetalleID,
                                 @PathVariable Long tipoRegistro, @PathVariable Long registroID, @PathVariable Boolean isOficioRemisionSir,
                                 Model model) throws I18NException, Exception {
-
-        log.info(" Passa per AnexoScanController::crearAnexoMasivoGet(" + registroDetalleID
-           + "," + tipoRegistro + ", " + registroID + ")");
 
         //Actualiza las variables con la ultima acción y prepara el anexoForm
         AnexoForm anexoForm = prepararAnexoForm(request, registroDetalleID, tipoRegistro, registroID, isOficioRemisionSir, true);
@@ -182,7 +176,7 @@ public class AnexoScanController extends AnexoController {
         }
 
 
-        return "redirect:/anexoScan/new/" + anexoForm.getAnexo().getRegistroDetalle().getId() + "/" + anexoForm.getTipoRegistro() + "/" + anexoForm.getRegistroID() + "/" + isSIR;
+        return "redirect:/anexoScan/new/" + anexoForm.getIdRegistroDetalle() + "/" + anexoForm.getTipoRegistro() + "/" + anexoForm.getRegistroID() + "/" + isSIR;
 
     }
 
