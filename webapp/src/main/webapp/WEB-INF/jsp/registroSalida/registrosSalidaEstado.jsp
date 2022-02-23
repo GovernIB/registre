@@ -71,7 +71,7 @@
                                             <col>
                                             <col width="80">
                                             <col>
-                                            <col>
+                                            <%--<col>--%>
                                             <col>
                                             <col>
                                             <col width="50">
@@ -82,7 +82,7 @@
                                                 <th class="center"><spring:message code="registroSalida.fecha"/></th>
                                                 <th class="center"><spring:message code="registroSalida.usuario"/></th>
                                                 <th class="center"><spring:message code="registroSalida.oficina"/></th>
-                                                <th class="center"><spring:message code="organismo.destino"/></th>
+                                                <%--<th class="center"><spring:message code="organismo.destino"/></th>--%>
                                                 <th class="center"><spring:message code="registroSalida.extracto"/></th>
                                                 <th class="center"><spring:message code="registroSalida.estado"/></th>
                                                 <th class="center"><spring:message code="regweb.acciones"/></th>
@@ -96,7 +96,7 @@
                                                 <td class="center"><fmt:formatDate value="${registro.fecha}" pattern="dd/MM/yyyy"/></td>
                                                 <td class="center">${registro.usuario.usuario.identificador}</td>
                                                 <td class="center"><label class="no-bold" rel="popupAbajo" data-content="${registro.oficina.codigo}" data-toggle="popover">${registro.oficina.denominacion}</label></td>
-                                                <td>${registro.interesadoDestinoDenominacion}</td>
+                                                <%--<td>${registro.interesadoDestinoDenominacion}</td>--%>
                                                 <td>${registro.registroDetalle.extracto}</td>
                                                 <td class="center">
                                                     <c:import url="../registro/estadosRegistro.jsp">

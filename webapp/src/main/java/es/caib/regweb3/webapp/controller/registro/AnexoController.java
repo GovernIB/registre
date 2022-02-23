@@ -96,18 +96,18 @@ public class AnexoController extends BaseController {
 
         // Tipos Validez según casuistica
         if(!anexoForm.getAnexo().getScan()){ // Desde archivo
-            log.info("desde archivo");
+
             model.addAttribute("tiposValidezDocumento", RegwebConstantes.TIPOS_VALIDEZDOCUMENTO);
         }else{ // Se trata de un Scan
             if(Configuracio.isCAIB() && getLoginInfo(request).getUsuarioAutenticado().getDib_user_rw()) { //  Tiene el rol DIB_USER_RW activo
-               
+
                 model.addAttribute("tiposValidezDocumento", RegwebConstantes.TIPOS_VALIDEZDOCUMENTO_SCAN_ORIGINAL);
 
             }else if(Configuracio.isCAIB() && !getLoginInfo(request).getUsuarioAutenticado().getDib_user_rw()){ // NO tiene el rol DIB_USER_RW activo
-       
+
                 model.addAttribute("tiposValidezDocumento", RegwebConstantes.TIPOS_VALIDEZDOCUMENTO_SCAN);
             } else{
-              
+
                 model.addAttribute("tiposValidezDocumento", RegwebConstantes.TIPOS_VALIDEZDOCUMENTO_SCAN_ORIGINAL);
             }
         }
@@ -117,12 +117,10 @@ public class AnexoController extends BaseController {
 
 
     @RequestMapping(value = "/nou", method = RequestMethod.POST)
-    public String crearAnexoPost(@ModelAttribute AnexoForm anexoForm,
-                                 BindingResult result, HttpServletRequest request,
+    public String crearAnexoPost(@ModelAttribute AnexoForm anexoForm, BindingResult result, HttpServletRequest request,
                                  HttpServletResponse response, Model model) throws Exception, I18NException {
 
-        log.info(" Passa per crearAnexoPost");
-
+        Entidad entidad = getEntidadActiva(request);
         //Validamos el anexo
         anexoValidator.validate(anexoForm.getAnexo(), result);
 
@@ -131,7 +129,7 @@ public class AnexoController extends BaseController {
             try {
 
                 //Creamos el anexo
-                anexoEjb.crearAnexo(anexoForm, getUsuarioEntidadActivo(request),
+                anexoEjb.crearAnexo(anexoForm, getUsuarioEntidadActivo(request), entidad,
                         anexoForm.getRegistroID(), anexoForm.getTipoRegistro(), null, false);
 
                 //Actualizamos el contador de anexos creados
@@ -148,7 +146,7 @@ public class AnexoController extends BaseController {
             } catch (I18NValidationException | Exception i18n) {
                 log.error(i18n.getMessage(), i18n);
                 // TODO
-                 Mensaje.saveMessageError(request, i18n.getMessage());
+                Mensaje.saveMessageError(request, i18n.getMessage());
             } catch (I18NException i18n) {
                 log.debug(i18n.getMessage(), i18n);
                 Mensaje.saveMessageError(request, I18NUtils.tradueix(i18n.getTraduccio()));
@@ -181,8 +179,7 @@ public class AnexoController extends BaseController {
     /*
      Prepara los datos de un anexo para su edición
      */
-    @RequestMapping(value = "/editar/{registroDetalleID}/{tipoRegistro}/{registroID}/{anexoID}/{isOficioRemisionSir}",
-            method = RequestMethod.GET)
+    @RequestMapping(value = "/editar/{registroDetalleID}/{tipoRegistro}/{registroID}/{anexoID}/{isOficioRemisionSir}", method = RequestMethod.GET)
     public String editarAnexoGet(HttpServletRequest request,
                                  HttpServletResponse response, @PathVariable Long registroDetalleID,
                                  @PathVariable Long tipoRegistro, @PathVariable Long registroID,
@@ -204,6 +201,7 @@ public class AnexoController extends BaseController {
         //Preparamos el formulario con los datos a mostrar
         AnexoForm anexoForm = new AnexoForm(anexoFull2);
         anexoForm.setRegistroID(registroID);
+        anexoForm.setIdRegistroDetalle(registroDetalleID);
         anexoForm.setTipoRegistro(tipoRegistro);
         anexoForm.setOficioRemisionSir(isOficioRemisionSir);
 
@@ -251,18 +249,16 @@ public class AnexoController extends BaseController {
      * Modifica los datos de un anexo
      */
     @RequestMapping(value = "/editar", method = RequestMethod.POST)
-    public String editarAnexoPost(@ModelAttribute AnexoForm anexoForm,
-                                  BindingResult result, HttpServletRequest request,
+    public String editarAnexoPost(@ModelAttribute AnexoForm anexoForm, BindingResult result, HttpServletRequest request,
                                   HttpServletResponse response, Model model) throws Exception, I18NValidationException, I18NException {
 
-        log.info(" Passa per editarAnexoPost");
-
+        Entidad entidad = getEntidadActiva(request);
         anexoValidator.validate(anexoForm.getAnexo(), result);
 
         if (!result.hasErrors()) { // Si no hay errores
 
             try {
-                anexoEjb.actualizarAnexo(anexoForm, getUsuarioEntidadActivo(request),
+                anexoEjb.actualizarAnexo(anexoForm, getUsuarioEntidadActivo(request), entidad, registroDetalleEjb.getReference(anexoForm.getIdRegistroDetalle()),
                         anexoForm.getRegistroID(), anexoForm.getTipoRegistro(), anexoForm.getAnexo().isJustificante(), false);
 
                 model.addAttribute("closeAndReload", "true");
@@ -330,7 +326,6 @@ public class AnexoController extends BaseController {
 
         return RegwebConstantes.TIPOS_VALIDEZDOCUMENTO;
     }
-
 
 
     /**
@@ -401,17 +396,15 @@ public class AnexoController extends BaseController {
      *
      */
     @RequestMapping(value = "/descargarSeparador", method = RequestMethod.GET)
-    public void separador( HttpServletRequest request,
-                           HttpServletResponse response) throws Exception, I18NException {
+    public void separador(HttpServletRequest request, HttpServletResponse response) throws Exception, I18NException {
 
         Entidad entidadActiva = getEntidadActiva(request);
-
-
         String languageUI = request.getParameter("lang");
+
         if (languageUI == null) {
             languageUI = I18NUtils.getLocale().getLanguage();
-
         }
+
         ScanWebPlainFile separador = scanWebModuleEjb.obtenerDocumentoSeparador(entidadActiva.getId(), languageUI);
 
         download(separador.getMime(), response, separador.getName(),separador.getData());
@@ -425,7 +418,7 @@ public class AnexoController extends BaseController {
      */
     @RequestMapping(value = "/descargarJustificante/{anexoId}/{original}", method = RequestMethod.GET)
     public void descargarJustificante(@PathVariable("anexoId") Long anexoId, @PathVariable("original") Boolean original, HttpServletRequest request,
-                                               HttpServletResponse response) throws Exception, I18NException {
+                                      HttpServletResponse response) throws Exception, I18NException {
 
         Entidad entidadActiva = getEntidadActiva(request);
         Anexo anexo = anexoEjb.findById(anexoId);
@@ -581,7 +574,6 @@ public class AnexoController extends BaseController {
         model.addAttribute("tiposDocumental", tipoDocumentalEjb.getByEntidad(getEntidadActiva(request).getId()));
         model.addAttribute("tiposDocumentoAnexo", RegwebConstantes.TIPOS_DOCUMENTO);
         model.addAttribute("tiposFirma", RegwebConstantes.TIPOS_FIRMA);
-
     }
 
 
@@ -605,7 +597,6 @@ public class AnexoController extends BaseController {
         }
     }
 
-
     /**
      * Método que verifica si el anexo que se está creando no supera el tamano establecido por las propiedades SIR
      * y tiene una extensión de documento dentro de las permitidas
@@ -627,8 +618,6 @@ public class AnexoController extends BaseController {
 
         // Obtenemos los anexos del registro para validar que no exceda el máximo de MB establecido
         List<AnexoFull> anexosFull = obtenerAnexosFullByRegistro(registroID, tipoRegistro);
-
-
 
         //Se suman las distintas medidas de los anexos que tiene el registro hasta el momento.
         long tamanyoTotalAnexos = AnexoUtils.obtenerTamanoTotalAnexos(anexosFull);
@@ -679,7 +668,6 @@ public class AnexoController extends BaseController {
             }
 
         }
-
 
         //Validamos que las extensiones del documento y la firma esten dentro de los formatos permitidos.
         if (!docExtension.isEmpty()) {
@@ -732,8 +720,6 @@ public class AnexoController extends BaseController {
     public void initBinder(WebDataBinder binder) {
         binder.registerCustomEditor(Date.class,
                 new CustomDateEditor(new SimpleDateFormat("dd/MM/yyyy"), true, 10));
-
-
     }
 
 
@@ -749,7 +735,7 @@ public class AnexoController extends BaseController {
         I18NTranslation i18n;
         if (anexoForm.getAnexo().getModoFirma() != RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA) {// Si no tiene firma no se valida
             i18n = signatureServerEjb.checkDocument(anexoForm, entidad.getId(),
-               I18NUtils.getLocale(), force);
+                    I18NUtils.getLocale(), force);
             if (i18n != null) {
                 Mensaje.saveMessageAviso(request, I18NUtils.tradueix(i18n));
                 Mensaje.saveMessageError(request, I18NUtils.tradueix("error.checkanexosir.avisaradministradors"));
@@ -908,7 +894,7 @@ public class AnexoController extends BaseController {
         AnexoForm anexoForm = new AnexoForm();
         anexoForm.setRegistroID(registroID);
         anexoForm.setTipoRegistro(tipoRegistro);
-        anexoForm.getAnexo().setRegistroDetalle(registroDetalle);
+        anexoForm.setIdRegistroDetalle(registroDetalleID);
         anexoForm.getAnexo().setPerfilCustodia(RegwebConstantes.PERFIL_CUSTODIA_DOCUMENT_CUSTODY);
         anexoForm.getAnexo().setScan(scan);
         anexoForm.setOficioRemisionSir(isOficioRemisionSir);
@@ -922,7 +908,8 @@ public class AnexoController extends BaseController {
 
         if (anexoEjbStatic == null) {
 
-            anexoEjbStatic = (AnexoLocal) new InitialContext().lookup(AnexoLocal.JNDI_NAME);
+            anexoEjbStatic = (AnexoLocal) new InitialContext()
+                    .lookup("regweb3/AnexoEJB/local");
 
         }
 

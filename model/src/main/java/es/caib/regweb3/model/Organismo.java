@@ -279,7 +279,7 @@ public class Organismo implements Serializable {
         this.libros = libros;
     }
 
-    @ManyToOne()
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "NIVELADMINISTRACION", foreignKey = @ForeignKey(name = "RWE_ORGANISMO_CATNIVELADMIN_FK"))
     @JsonIgnore
     public CatNivelAdministracion getNivelAdministracion() {
@@ -291,7 +291,7 @@ public class Organismo implements Serializable {
         this.nivelAdministracion = nivelAdministracion;
     }
 
-    @ManyToOne()
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "CODAMBCOMUNIDAD", foreignKey = @ForeignKey(name = "RWE_ORGANISMO_CATAMBCOMAUTO_FK"))
     @JsonIgnore
     public CatComunidadAutonoma getCodAmbComunidad() {
@@ -302,7 +302,7 @@ public class Organismo implements Serializable {
         this.codAmbComunidad = codAmbComunidad;
     }
 
-    @ManyToOne()
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "CODAMBPROVINCIA", foreignKey = @ForeignKey(name = "RWE_ORGANISMO_CATPROVINCIA_FK"))
     @JsonIgnore
     public CatProvincia getCodAmbProvincia() {
@@ -313,7 +313,7 @@ public class Organismo implements Serializable {
         this.codAmbProvincia = codAmbProvincia;
     }
 
-    @ManyToOne()
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "PAIS", foreignKey = @ForeignKey(name = "RWE_ORGANISMO_PAIS_FK"))
     public CatPais getCodPais() {
         return codPais;
@@ -323,7 +323,7 @@ public class Organismo implements Serializable {
         this.codPais = codPais;
     }
 
-    @ManyToOne()
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "LOCALIDAD", foreignKey =  @ForeignKey(name = "RWE_ORGANISMO_LOCALIDAD_FK"))
     public CatLocalidad getLocalidad() {
         return localidad;
@@ -333,7 +333,7 @@ public class Organismo implements Serializable {
         this.localidad = localidad;
     }
 
-    @ManyToOne()
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "TIPOVIA", foreignKey = @ForeignKey(name = "RWE_ORGANISMO_TIPOVIA_FK"))
     public CatTipoVia getTipoVia() {
         return tipoVia;

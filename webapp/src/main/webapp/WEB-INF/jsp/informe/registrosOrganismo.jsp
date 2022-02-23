@@ -280,13 +280,13 @@
                                             </div>
                                             <div class="col-xs-2 padLateral5" id="busDest" >
                                                 <a data-toggle="modal" role="button" href="#modalBuscadorlistaRegEntrada"
-                                                   onclick="inicializarBuscador('#codNivelAdministracionlistaRegEntrada','#codComunidadAutonomalistaRegEntrada','#provincialistaRegEntrada','#localidadlistaRegEntrada','${loginInfo.oficinaActiva.organismoResponsable.nivelAdministracion.codigoNivelAdministracion}', '${loginInfo.oficinaActiva.organismoResponsable.codAmbComunidad.codigoComunidad}', 'listaRegEntrada' );"
+                                                   onclick="inicializarBuscador('#codNivelAdministracionlistaRegEntrada','#codComunidadAutonomalistaRegEntrada','#provincialistaRegEntrada','#localidadlistaRegEntrada',${RegwebConstantes.nivelAdminAutonomica}, ${RegwebConstantes.comunidadBaleares}, 'listaRegEntrada' );"
                                                    class="btn btn-warning btn-sm"><spring:message code="regweb.buscar"/></a>
                                             </div>
 
                                             <div class="col-xs-2 padLateral5 hidden" id="busOrig">
                                                 <a data-toggle="modal" role="button" href="#modalBuscadorlistaRegEntrada"
-                                                   onclick="inicializarBuscador('#codNivelAdministracionlistaRegEntrada','#codComunidadAutonomalistaRegEntrada','#provincialistaRegEntrada','#localidadlistaRegEntrada','${loginInfo.oficinaActiva.organismoResponsable.nivelAdministracion.codigoNivelAdministracion}', '${loginInfo.oficinaActiva.organismoResponsable.codAmbComunidad.codigoComunidad}', 'listaRegEntrada' );"
+                                                   onclick="inicializarBuscador('#codNivelAdministracionlistaRegEntrada','#codComunidadAutonomalistaRegEntrada','#provincialistaRegEntrada','#localidadlistaRegEntrada',${RegwebConstantes.nivelAdminAutonomica}, ${RegwebConstantes.comunidadBaleares}, 'listaRegEntrada' );"
                                                    class="btn btn-warning btn-sm"><spring:message code="regweb.buscar"/></a>
                                             </div>
                                         </div>

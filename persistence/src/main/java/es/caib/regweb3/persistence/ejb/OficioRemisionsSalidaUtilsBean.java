@@ -374,8 +374,7 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
      * @throws Exception
      */
     @Override
-    public OficioRemision crearOficioRemisionInterno(List<RegistroSalida> registrosSalida,
-                                                     Oficina oficinaActiva, UsuarioEntidad usuarioEntidad, Long idOrganismo, Long idLibro)
+    public OficioRemision crearOficioRemisionInterno(List<RegistroSalida> registrosSalida, Entidad entidad, Oficina oficinaActiva, UsuarioEntidad usuarioEntidad, Long idOrganismo, Long idLibro)
             throws Exception, I18NException, I18NValidationException {
 
         OficioRemision oficioRemision = new OficioRemision();
@@ -389,9 +388,10 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
         oficioRemision.setLibro(new Libro(idLibro));
         oficioRemision.setOrganismoDestinatario(new Organismo(idOrganismo));
 
-        oficioRemision = oficioRemisionEjb.registrarOficioRemision(oficioRemision, RegwebConstantes.REGISTRO_OFICIO_INTERNO);
+        oficioRemision = oficioRemisionEjb.registrarOficioRemision(entidad, oficioRemision, RegwebConstantes.REGISTRO_OFICIO_INTERNO);
 
         return oficioRemision;
+
     }
 
     /**
@@ -406,7 +406,7 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
      * @throws Exception
      */
 
-    public OficioRemision crearOficioRemisionExterno(List<RegistroSalida> registrosSalida,
+    public OficioRemision crearOficioRemisionExterno(List<RegistroSalida> registrosSalida, Entidad entidad,
                                                      Oficina oficinaActiva, UsuarioEntidad usuarioEntidad, String organismoExterno,
                                                      String organismoExternoDenominacion, Long idLibro)
             throws Exception, I18NException, I18NValidationException {
@@ -425,13 +425,14 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
         oficioRemision.setDestinoExternoDenominacion(organismoExternoDenominacion);
         oficioRemision.setOrganismoDestinatario(null);
 
-        oficioRemision = oficioRemisionEjb.registrarOficioRemision(oficioRemision, RegwebConstantes.REGISTRO_OFICIO_EXTERNO);
+        oficioRemision = oficioRemisionEjb.registrarOficioRemision(entidad, oficioRemision, RegwebConstantes.REGISTRO_OFICIO_EXTERNO);
 
         return oficioRemision;
+
     }
 
     @Override
-    public OficioRemision crearOficioRemisionSIR(RegistroSalida registroSalida, Oficina oficinaActiva, UsuarioEntidad usuarioEntidad, OficinaTF oficinaSirDestino)
+    public OficioRemision crearOficioRemisionSIR(RegistroSalida registroSalida, Entidad entidad, Oficina oficinaActiva, UsuarioEntidad usuarioEntidad, OficinaTF oficinaSirDestino)
             throws Exception, I18NException, I18NValidationException {
 
         // Creamos el OficioRemision
@@ -457,13 +458,13 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
         oficioRemision.setDecodificacionTipoAnotacion(TipoAnotacion.ENVIO.getName());
 
         // Registramos el Oficio de Remisión SIR
-        oficioRemision = oficioRemisionEjb.registrarOficioRemision(oficioRemision, RegwebConstantes.REGISTRO_OFICIO_SIR);
+        oficioRemision = oficioRemisionEjb.registrarOficioRemision(entidad, oficioRemision, RegwebConstantes.REGISTRO_OFICIO_SIR);
 
         return oficioRemision;
     }
 
     @Override
-    public List<RegistroSalida> crearJustificantesRegistros(List<RegistroSalida> registros, UsuarioEntidad usuario) throws Exception, I18NException, I18NValidationException {
+    public List<RegistroSalida> crearJustificantesRegistros(Entidad entidad, List<RegistroSalida> registros, UsuarioEntidad usuario) throws Exception, I18NException, I18NValidationException {
 
         List<RegistroSalida> correctos = new ArrayList<RegistroSalida>();
 
@@ -476,7 +477,7 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
 
                 try {
                     // Creamos el anexo del justificante y se lo añadimos al registro
-                    AnexoFull anexoFull = justificanteEjb.crearJustificante(usuario, registroSalida, RegwebConstantes.REGISTRO_SALIDA, Configuracio.getDefaultLanguage());
+                    AnexoFull anexoFull = justificanteEjb.crearJustificante(entidad, usuario, registroSalida, RegwebConstantes.REGISTRO_SALIDA, Configuracio.getDefaultLanguage());
                     registroSalida.getRegistroDetalle().getAnexosFull().add(anexoFull);
                     // Añadimos el Correcto
                     correctos.add(registro);
@@ -502,8 +503,7 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
      * @throws Exception
      */
     @Override
-    public List<RegistroEntrada> aceptarOficioRemision(OficioRemision oficioRemision,
-                                                       UsuarioEntidad usuario, Oficina oficinaActiva,
+    public List<RegistroEntrada> aceptarOficioRemision(OficioRemision oficioRemision, Entidad entidad, UsuarioEntidad usuario, Oficina oficinaActiva,
                                                        List<OficioPendienteLlegada> oficios) throws Exception, I18NException, I18NValidationException {
 
         List<RegistroEntrada> registros = new ArrayList<RegistroEntrada>();
@@ -547,7 +547,7 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
             nuevoRE.setRegistroDetalle(registroDetalle);
 
             // Registramos el nuevo RegistroEntrada
-            nuevoRE = registroEntradaEjb.registrarEntrada(nuevoRE, usuario, interesados, anexos, false);
+            nuevoRE = registroEntradaEjb.registrarEntrada(nuevoRE, entidad, usuario, interesados, anexos, false);
 
             registros.add(nuevoRE);
 
@@ -570,5 +570,4 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
         return registros;
 
     }
-
 }

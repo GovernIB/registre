@@ -82,7 +82,7 @@ public class Integracion implements Serializable {
     }
 
 
-    @ManyToOne()
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ENTIDAD", foreignKey =@ForeignKey(name = "RWE_INT_ENTIDAD_FK"))
     @JsonIgnore
     public Entidad getEntidad() {
@@ -206,8 +206,6 @@ public class Integracion implements Serializable {
 
         Date date = new Date(tiempo);
         return new SimpleDateFormat("mm:ss:SSS").format(date);
-
-        //return TimeUtils.formatElapsedTimeShort(tiempo);
     }
 
     @Transient

@@ -103,7 +103,7 @@ public class SirController extends BaseController {
 
         Oficina oficina = oficinaEjb.findByCodigo(registroSir.getCodigoEntidadRegistral());
 
-        sirEnvioEjb.aceptarRegistrosERTE(registros, busqueda.getDestino(), oficina, getLibroEntidad(request).getId(), usuarioEntidad, entidad.getId());
+        sirEnvioEjb.aceptarRegistrosERTE(registros, entidad, busqueda.getDestino(), oficina, getLibroEntidad(request).getId(), usuarioEntidad);
 
         Mensaje.saveMessageInfo(request, "Se han procesado "+registros.size()+" registros en " + TimeUtils.formatElapsedTime(System.currentTimeMillis() - inicio));
 
@@ -335,7 +335,7 @@ public class SirController extends BaseController {
      * @throws Exception
      */
     @RequestMapping(value = "/monitorEnviados", method = RequestMethod.GET)
-    public ModelAndView enviados(Model model, HttpServletRequest request) throws Exception {
+    public ModelAndView monitorEnviados(Model model, HttpServletRequest request) throws Exception {
 
         ModelAndView mav = new ModelAndView("sir/monitorEnviados");
 
@@ -355,7 +355,7 @@ public class SirController extends BaseController {
      * Realiza la busqueda de {@link es.caib.regweb3.model.RegistroEntrada} según los parametros del formulario
      */
     @RequestMapping(value = "/monitorEnviados", method = RequestMethod.POST)
-    public ModelAndView enviados(@ModelAttribute OficioRemisionBusquedaForm busqueda, HttpServletRequest request) throws Exception {
+    public ModelAndView monitorEnviados(@ModelAttribute OficioRemisionBusquedaForm busqueda, HttpServletRequest request) throws Exception {
 
         ModelAndView mav = new ModelAndView("sir/monitorEnviados");
 
@@ -384,7 +384,7 @@ public class SirController extends BaseController {
      * @throws Exception
      */
     @RequestMapping(value = "/monitorRecibidos", method = RequestMethod.GET)
-    public ModelAndView list(Model model, HttpServletRequest request)throws Exception {
+    public ModelAndView monitorRecibidos(Model model, HttpServletRequest request)throws Exception {
 
         ModelAndView mav = new ModelAndView("sir/monitorRecibidos");
         Entidad entidad = getEntidadActiva(request);
@@ -404,7 +404,7 @@ public class SirController extends BaseController {
      * Realiza la busqueda de {@link RegistroSir} según los parametros del formulario
      */
     @RequestMapping(value = "/monitorRecibidos", method = RequestMethod.POST)
-    public ModelAndView list(@ModelAttribute RegistroSirBusquedaForm busqueda, HttpServletRequest request)throws Exception {
+    public ModelAndView monitorRecibidos(@ModelAttribute RegistroSirBusquedaForm busqueda, HttpServletRequest request)throws Exception {
 
         ModelAndView mav = new ModelAndView("sir/monitorRecibidos");
         Entidad entidad = getEntidadActiva(request);

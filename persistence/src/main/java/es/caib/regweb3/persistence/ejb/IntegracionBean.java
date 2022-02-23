@@ -196,7 +196,7 @@ public class IntegracionBean extends BaseEjbJPA<Integracion, Long> implements In
 
         Query q = em.createQuery("Select i.fecha, i.tipo, i.numRegFormat, i.descripcion from Integracion as i where " +
                 "i.entidad.id = :idEntidad and i.estado =:estado and i.tipo = :tipo and " +
-                "i.fecha >= :fecha order by i.fecha desc");
+                "i.fecha >= :fecha order by i.id desc");
 
         q.setParameter("idEntidad", idEntidad);
         q.setParameter("estado", RegwebConstantes.INTEGRACION_ESTADO_ERROR);

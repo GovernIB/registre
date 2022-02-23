@@ -221,26 +221,6 @@ public class BaseController {
         return getLoginInfo(request).getEntidadActiva().getLibro();
     }
 
-    /**
-     * Retorna los Organismos a las que el Usuario autenticado puede registrar entradas
-     * @param request
-     * @return
-     * @throws Exception
-     */
-    protected List<Organismo> getOrganismosRegistroEntrada(HttpServletRequest request) throws Exception {
-        return getLoginInfo(request).getOrganismosRegistroEntrada();
-    }
-
-    /**
-     * Retorna los Organismos a las que el Usuario autenticado puede registrar salidas
-     * @param request
-     * @return
-     * @throws Exception
-     */
-    protected List<Organismo> getOrganismosRegistroSalida(HttpServletRequest request) throws Exception {
-        return getLoginInfo(request).getOrganismosRegistroSalida();
-    }
-
 
     /**
      * Retorna las Oficinas a las que el Usuario autenticado tiene acceso

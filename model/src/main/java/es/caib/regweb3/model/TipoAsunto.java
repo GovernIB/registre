@@ -59,7 +59,7 @@ public class TipoAsunto extends Traducible {
         this.id = id;
     }
 
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "ENTIDAD", foreignKey = @ForeignKey(name = "RWE_TIPOASUNTO_ENTIDAD_FK"))
     public Entidad getEntidad() {
         return entidad;
@@ -88,7 +88,7 @@ public class TipoAsunto extends Traducible {
         this.activo = activo;
     }
 
-    @ElementCollection(targetClass = TraduccionTipoAsunto.class, fetch = FetchType.EAGER)
+    @ElementCollection(targetClass = TraduccionTipoAsunto.class, fetch = FetchType.LAZY)
     @CollectionTable(name = "RWE_TRA_TIPOASUNTO", foreignKey = @ForeignKey(name="RWE_TASUNTO_TRATASUNTO_FK"), joinColumns = @JoinColumn(name = "IDTIPOASUNTO"))
     @MapKeyColumn(name = "LANG", length = 2)
     @Override

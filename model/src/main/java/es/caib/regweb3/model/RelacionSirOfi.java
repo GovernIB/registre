@@ -41,7 +41,7 @@ public class RelacionSirOfi implements Serializable {
 
 
     @Id
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "IDORGANISMO", foreignKey = @ForeignKey(name = "RWE_RELSIROFI_ORGANISMO_FK"))
     public Organismo getOrganismo() {
         return organismo;

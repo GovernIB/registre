@@ -199,7 +199,6 @@ public class LoginService {
     /**
      * Asigna las Entidades de las que el Usuario AdministradorEntidad es propietario o administrador.
      *
-     * @param entidadActiva
      * @param loginInfo
      * @throws Exception
      */
@@ -272,14 +271,12 @@ public class LoginService {
         List<Organismo> organismosRegistroEntrada = permisoOrganismoUsuarioEjb.getOrganismosPermiso(loginInfo.getUsuarioEntidadActivo().getId(), RegwebConstantes.PERMISO_REGISTRO_ENTRADA);
         LinkedHashSet<Oficina> oficinasRegistroEntrada = oficinaEjb.oficinasServicio(organismosRegistroEntrada, false);
 
-        loginInfo.setOrganismosRegistroEntrada(organismosRegistroEntrada);
         loginInfo.setOficinasRegistroEntrada(oficinasRegistroEntrada);
 
         // Obtenemos los Organismos donde el usuario puede Registrar salidas y de ahí las oficinas que dan servicio
         List<Organismo> organismosRegistroSalida = permisoOrganismoUsuarioEjb.getOrganismosPermiso(loginInfo.getUsuarioEntidadActivo().getId(), RegwebConstantes.PERMISO_REGISTRO_SALIDA);
         LinkedHashSet<Oficina> oficinasRegistroSalida = oficinaEjb.oficinasServicio(organismosRegistroSalida, false);
 
-        loginInfo.setOrganismosRegistroSalida(organismosRegistroSalida);
         loginInfo.setOficinasRegistroSalida(oficinasRegistroSalida);
 
         // Obtenemos los Organismos donde el usuario puede consultar entradas y de ahí las oficinas que dan servicio

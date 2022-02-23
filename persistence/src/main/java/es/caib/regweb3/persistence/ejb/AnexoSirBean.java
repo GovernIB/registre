@@ -1,18 +1,19 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.AnexoSir;
+import es.caib.regweb3.model.Archivo;
 import es.caib.regweb3.model.utils.EstadoRegistroSir;
 import es.caib.regweb3.persistence.utils.FileSystemManager;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.utils.RegwebConstantes;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.log4j.Logger;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -26,7 +27,7 @@ import java.util.List;
 @RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI"})
 public class AnexoSirBean extends BaseEjbJPA<AnexoSir, Long> implements AnexoSirLocal{
 
-    protected final Logger log = LoggerFactory.getLogger(getClass());
+    protected final org.apache.log4j.Logger log = Logger.getLogger(getClass());
 
     @PersistenceContext(unitName="regweb3")
     private EntityManager em;
@@ -73,28 +74,35 @@ public class AnexoSirBean extends BaseEjbJPA<AnexoSir, Long> implements AnexoSir
 
     @Override
     @SuppressWarnings("unchecked")
-    public int purgarArchivos(Long idEntidad) throws Exception{
+    public int purgarAnexosAceptados(Long idEntidad) throws Exception{
 
         Integer numElementos = PropiedadGlobalUtil.getNumElementosPurgoAnexos(idEntidad);
 
-        Query q = em.createQuery("Select anexoSir from AnexoSir as anexoSir where anexoSir.registroSir.entidad.id = :idEntidad and " +
-                "anexoSir.purgado = false and anexoSir.registroSir.estado = :aceptado");
+        Query q = em.createQuery("Select anexoSir.id, anexoSir.anexo.id from AnexoSir as anexoSir where anexoSir.registroSir.entidad.id = :idEntidad and " +
+                "anexoSir.purgado = false and anexoSir.registroSir.estado = :aceptado order by anexoSir.id");
 
         q.setParameter("idEntidad", idEntidad);
         q.setParameter("aceptado", EstadoRegistroSir.ACEPTADO);
-
+        //q.setFirstResult(0);
         q.setMaxResults(numElementos);
 
         //q.setParameter("reenviado", EstadoRegistroSir.REENVIADO_Y_ACK);
         //q.setParameter("rechazado", EstadoRegistroSir.RECHAZADO_Y_ACK);
+        List<Object[]> result = q.getResultList();
+        List<AnexoSir> anexos = new ArrayList<>();
 
-        List<AnexoSir> anexos = q.getResultList();
+        for (Object[] object : result) {
+            AnexoSir anexoSir = new AnexoSir();
+            anexoSir.setId((Long) object[0]);
+            anexoSir.setAnexo(new Archivo((Long) object[1]));
+
+            anexos.add(anexoSir);
+        }
 
         // Eliminamos los Archivos del RegistroSir
         for (AnexoSir anexoSir: anexos) {
             FileSystemManager.eliminarArchivo(anexoSir.getAnexo().getId());
-            anexoSir.setPurgado(true);
-            merge(anexoSir);
+            em.createQuery("update from AnexoSir set purgado=true where id=:idAnexoSir").setParameter("idAnexoSir", anexoSir.getId()).executeUpdate();
         }
 
         return anexos.size();

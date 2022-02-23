@@ -17,11 +17,11 @@ public interface AnexoSirLocal extends BaseEjb<AnexoSir, Long> {
     String JNDI_NAME = "java:app/regweb3-persistence/AnexoSirEJB";
 
     /**
-     * Elimina los Archivos del sistema de archivos de los RegistrosSir Aceptados, Rechazados o Reenviados
+     * Elimina los Archivos del sistema de archivos de los RegistrosSir Aceptados
      * @param idEntidad
      * @throws Exception
      */
-    int purgarArchivos(Long idEntidad) throws Exception;
+    int purgarAnexosAceptados(Long idEntidad) throws Exception;
 
     /**
      * Elimina los AnexoSir de una Entidad

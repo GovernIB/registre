@@ -49,7 +49,7 @@ public class ModeloRecibo extends Traducible {
         this.nombre = nombre;
     }
 
-    @ManyToOne()
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ENTIDAD", foreignKey =@ForeignKey(name = "RWE_MODELRECIBO_ENTIDAD_FK"))
     public Entidad getEntidad() {
         return entidad;

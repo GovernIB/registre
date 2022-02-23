@@ -29,8 +29,6 @@ public class LoginInfo {
     private Entidad entidadActiva;
     private UsuarioEntidad usuarioEntidadActivo;
     private Boolean registrosMigrados;
-    private List<Organismo> organismosRegistroEntrada;
-    private List<Organismo> organismosRegistroSalida;
     private List<Organismo> organismosConsultaEntrada;
     private List<Organismo> organismosConsultaSalida;
     private List<Organismo> organismosResponsable;
@@ -59,8 +57,6 @@ public class LoginInfo {
         this.springSecurityUser = springSecurityUser;
         this.springRoles = springRoles;
         entidades = new ArrayList<Entidad>();
-        organismosRegistroEntrada = new ArrayList<Organismo>();
-        organismosRegistroSalida = new ArrayList<Organismo>();
         organismosConsultaEntrada = new ArrayList<Organismo>();
         organismosConsultaSalida = new ArrayList<Organismo>();
         organismosResponsable = new ArrayList<Organismo>();
@@ -200,22 +196,6 @@ public class LoginInfo {
 
     public void setRegistrosMigrados(Boolean registrosMigrados) {
         this.registrosMigrados = registrosMigrados;
-    }
-
-    public List<Organismo> getOrganismosRegistroEntrada() {
-        return organismosRegistroEntrada;
-    }
-
-    public void setOrganismosRegistroEntrada(List<Organismo> organismosRegistroEntrada) {
-        this.organismosRegistroEntrada = organismosRegistroEntrada;
-    }
-
-    public List<Organismo> getOrganismosRegistroSalida() {
-        return organismosRegistroSalida;
-    }
-
-    public void setOrganismosRegistroSalida(List<Organismo> organismosRegistroSalida) {
-        this.organismosRegistroSalida = organismosRegistroSalida;
     }
 
     public List<Organismo> getOrganismosConsultaEntrada() {
@@ -391,8 +371,6 @@ public class LoginInfo {
         this.entidades = new ArrayList<Entidad>();
         this.entidadActiva = null;
         this.registrosMigrados = null;
-        this.organismosRegistroEntrada =  new ArrayList<Organismo>();
-        this.organismosRegistroSalida =  new ArrayList<Organismo>();
         this.organismosConsultaEntrada =  new ArrayList<Organismo>();
         this.organismosConsultaSalida =  new ArrayList<Organismo>();
         this.organismosResponsable =  new ArrayList<Organismo>();
@@ -415,8 +393,6 @@ public class LoginInfo {
      * Resetea los datos para del usuario autenticado
      */
     public void resetOficinas(){
-        this.organismosRegistroEntrada =  new ArrayList<Organismo>();
-        this.organismosRegistroSalida =  new ArrayList<Organismo>();
         this.organismosConsultaEntrada =  new ArrayList<Organismo>();
         this.organismosConsultaSalida =  new ArrayList<Organismo>();
         this.organismosResponsable =  new ArrayList<Organismo>();

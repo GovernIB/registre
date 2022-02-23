@@ -32,7 +32,7 @@ public class ModificacionLopdMigrado implements Serializable {
         this.id = id;
     }
 
-    @ManyToOne()
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "REGMIG", foreignKey = @ForeignKey(name = "RWE_MODLOPDMIG_REGMIG_FK"))
     public RegistroMigrado getRegistroMigrado() {
         return registroMigrado;

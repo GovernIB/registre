@@ -2,7 +2,6 @@ package es.caib.regweb3.model.sir;
 
 import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.model.utils.IndicadorPrueba;
-import org.hibernate.annotations.ForeignKey;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -104,9 +103,8 @@ public class MensajeControl implements Serializable {
         this.id = id;
     }
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "ENTIDAD")
-    @ForeignKey(name = "RWE_MC_ENTIDAD_FK")
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(name = "ENTIDAD", foreignKey = @javax.persistence.ForeignKey(name = "RWE_MC_ENTIDAD_FK"))
     public Entidad getEntidad() {
         return entidad;
     }

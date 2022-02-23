@@ -109,7 +109,7 @@
                                 </div>
                                 <div class="col-xs-2 boto-mesOpcions">
                                     <a data-toggle="modal" role="button" href="#modalBuscadorlistaRegEntrada"
-                                       onclick="inicializarBuscador('#codNivelAdministracionlistaRegEntrada','#codComunidadAutonomalistaRegEntrada','#provincialistaRegEntrada','#localidadlistaRegEntrada','${loginInfo.oficinaActiva.organismoResponsable.nivelAdministracion.codigoNivelAdministracion}', '${loginInfo.oficinaActiva.organismoResponsable.codAmbComunidad.codigoComunidad}', 'listaRegEntrada' );"
+                                       onclick="inicializarBuscador('#codNivelAdministracionlistaRegEntrada','#codComunidadAutonomalistaRegEntrada','#provincialistaRegEntrada','#localidadlistaRegEntrada',${RegwebConstantes.nivelAdminAutonomica}, ${RegwebConstantes.comunidadBaleares}, 'listaRegEntrada' );"
                                        class="btn btn-info btn-sm"><spring:message code="regweb.buscar"/></a>
                                 </div>
                             </div>

@@ -24,7 +24,7 @@ public interface DistribucionLocal {
     /**
      * Método que envía a la cola de Distribución el Registro indicado
      *
-     * @param re             registro de entrada a distribuir
+     * @param re registro de entrada a distribuir
      * @param usuarioEntidad
      * @return
      * @throws Exception
@@ -35,14 +35,13 @@ public interface DistribucionLocal {
     /**
      * Procesar los registros(varios) que estan en la cola
      *
-     * @param idEntidad
+     * @param entidad
      * @throws Exception
      */
-    void distribuirRegistrosEnCola(Long idEntidad) throws Exception;
+    void distribuirRegistrosEnCola(Entidad entidad) throws Exception;
 
     /**
      * Envia un email con los errores de la cola de distribución a los Administradores de la Entidad
-     *
      * @param entidad
      * @throws Exception
      */
@@ -53,19 +52,19 @@ public interface DistribucionLocal {
      * Procesa un registro de la cola de manera individual
      *
      * @param elemento
-     * @param idEntidad
+     * @param entidad
      * @return
      * @throws Exception
      * @throws I18NException
      */
-    Boolean distribuirRegistroEnCola(Cola elemento, Long idEntidad, Long tipoIntegracion) throws Exception;
+    Boolean distribuirRegistroEnCola(Cola elemento, Entidad entidad, Long tipoIntegracion) throws Exception;
 
     /**
      * Vuelve a Distribuir un registro de Entrada ya distribuido previamente
      * @param idRegistro
-     * @param idEntidad
+     * @param entidad
      * @return
      * @throws Exception
      */
-    Boolean reDistribuirRegistro(Long idRegistro, Long idEntidad) throws Exception;
+    Boolean reDistribuirRegistro(Long idRegistro, Entidad entidad) throws Exception;
 }

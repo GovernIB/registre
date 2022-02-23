@@ -189,7 +189,7 @@ public class Oficina implements Serializable {
         this.organismoResponsable = organismoResponsable;
     }
 
-    @ManyToOne()
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "OFICINARESPONSABLE", foreignKey = @ForeignKey(name = "RWE_OFICINA_OFICINA_FK"))
     @JsonIgnore
     public Oficina getOficinaResponsable() {
@@ -204,7 +204,7 @@ public class Oficina implements Serializable {
     /**
      * @return the organizativasOfi
      */
-    @OneToMany(mappedBy = "oficina")
+    @OneToMany(mappedBy = "oficina",fetch = FetchType.LAZY)
     /*@ForeignKey(name = "RWE_OFICINA_RELORGOFI_FK")*/
     @JsonIgnore
     public Set<RelacionOrganizativaOfi> getOrganizativasOfi() {

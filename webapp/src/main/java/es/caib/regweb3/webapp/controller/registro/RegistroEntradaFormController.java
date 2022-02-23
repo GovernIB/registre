@@ -231,7 +231,7 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
                 registroEntrada = procesarRegistroEntrada(registroEntrada, entidad);
 
                 //Guardamos el RegistroEntrada
-                registroEntrada = registroEntradaEjb.registrarEntrada(registroEntrada, usuarioEntidad, interesadosSesion, null, false);
+                registroEntrada = registroEntradaEjb.registrarEntrada(registroEntrada, entidad, usuarioEntidad, interesadosSesion, null, false);
 
             }catch (Exception e) {
                 Mensaje.saveMessageError(request, getMessage("regweb.error.registro"));
@@ -439,9 +439,10 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
                 RegistroEntrada antiguo = registroEntradaEjb.findByIdCompleto(registroEntrada.getId());
 
                 // Actualizamos el RegistroEntrada
-                registroEntrada = registroEntradaEjb.actualizar(antiguo, registroEntrada, usuarioEntidad);
+                registroEntrada = registroEntradaEjb.actualizar(antiguo, registroEntrada, entidad, usuarioEntidad);
 
                 Mensaje.saveMessageInfo(request, getMessage("regweb.actualizar.registro"));
+
             } catch(I18NException i18ne) {
               log.error(I18NUtils.getMessage(i18ne), i18ne);
               Mensaje.saveMessageError(request, getMessage("regweb.error.registro"));
@@ -474,6 +475,7 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
     @RequestMapping(value = "/{idRegistro}/rectificar", method=RequestMethod.GET)
     public String rectificar(@PathVariable Long idRegistro, HttpServletRequest request) throws Exception {
 
+        Entidad entidad = getEntidadActiva(request);
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
         RegistroEntrada registroEntradaRectificado;
 
@@ -487,14 +489,13 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
                 return "redirect:/registroEntrada/"+idRegistro+"/detalle";
             }
 
-
             List<Long> isRectificar = new ArrayList<Long>();
             Collections.addAll(isRectificar, RegwebConstantes.REGISTRO_RECHAZADO, RegwebConstantes.REGISTRO_ANULADO);
 
             // Si el Registro se puede rectificar y el usuario tiene permisos sobre el libro
             if(isRectificar.contains(registroEntrada.getEstado())){
 
-                registroEntradaRectificado = registroEntradaEjb.rectificar(registroEntrada, usuarioEntidad);
+                registroEntradaRectificado = registroEntradaEjb.rectificar(registroEntrada,entidad, usuarioEntidad);
 
                 Mensaje.saveMessageInfo(request, getMessage("registro.rectificar.ok"));
                 return "redirect:/registroEntrada/"+registroEntradaRectificado.getId()+"/detalle";
@@ -502,11 +503,7 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
 
                 Mensaje.saveMessageError(request, getMessage("registro.rectificar.no"));
             }
-        }catch (I18NException e){
-            log.info("Error al rectificar el registro");
-            e.printStackTrace();
-            Mensaje.saveMessageError(request, getMessage("registro.rectificar.error"));
-        }catch (Exception e){
+        }catch (I18NException | Exception e){
             log.info("Error al rectificar el registro");
             e.printStackTrace();
             Mensaje.saveMessageError(request, getMessage("registro.rectificar.error"));

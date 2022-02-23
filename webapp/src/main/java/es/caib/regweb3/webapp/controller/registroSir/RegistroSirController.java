@@ -184,9 +184,7 @@ public class RegistroSirController extends BaseController {
         mav.addObject("oficioRemisionBusqueda", busqueda);
 
         return mav;
-
     }
-
 
 
     /**
@@ -222,6 +220,9 @@ public class RegistroSirController extends BaseController {
 
         }
 
+        model.addAttribute("idiomas", RegwebConstantes.IDIOMAS_REGISTRO);
+        model.addAttribute("tiposValidezDocumento",RegwebConstantes.TIPOS_VALIDEZDOCUMENTO);
+        model.addAttribute("tiposDocumentales",tipoDocumentalEjb.getByEntidad(getEntidadActiva(request).getId()));
         model.addAttribute("puedeReenviar",  sirEnvioEjb.puedeReenviarRegistroSir(registroSir.getEstado())); // si el estado es RECIBIDO, REENVIADO o REENVIADO_Y_ERROR se puede reenviar
         model.addAttribute("trazabilidades", trazabilidadSirEjb.getByRegistroSir(registroSir.getId()));
         model.addAttribute("registroSir",registroSir);
@@ -242,6 +243,8 @@ public class RegistroSirController extends BaseController {
             throws Exception, I18NException, I18NValidationException {
 
         RegistroSir registroSir = registroSirEjb.findById(idRegistroSir);
+
+        Entidad entidad = getEntidadActiva(request);
         Oficina oficinaActiva = getOficinaActiva(request);
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
         String variableReturn = "redirect:/registroSir/"+idRegistroSir+"/detalle";
@@ -255,7 +258,7 @@ public class RegistroSirController extends BaseController {
         // Procesa el RegistroSir
         try{
 
-            RegistroEntrada registroEntrada = sirEnvioEjb.aceptarRegistroSir(registroSir, usuarioEntidad, oficinaActiva, registrarForm.getIdLibro(), registrarForm.getIdIdioma(), registrarForm.getCamposNTIs(), registrarForm.getIdOrganismoDestino(), registrarForm.getDistribuir());
+            RegistroEntrada registroEntrada = sirEnvioEjb.aceptarRegistroSir(registroSir, entidad, usuarioEntidad, oficinaActiva, registrarForm.getIdLibro(), registrarForm.getIdIdioma(), registrarForm.getCamposNTIs(), registrarForm.getIdOrganismoDestino(), registrarForm.getDistribuir());
 
             variableReturn = "redirect:/registroEntrada/" + registroEntrada.getId() + "/detalle";
 
@@ -352,23 +355,6 @@ public class RegistroSirController extends BaseController {
         return "redirect:/registroSir/"+idRegistroSir+"/detalle";
     }
 
-    @ModelAttribute("idiomas")
-    public Long[] idiomas() throws Exception {
-        return RegwebConstantes.IDIOMAS_REGISTRO;
-    }
-
-    @ModelAttribute("tiposValidezDocumento")
-    public Long[] validezDocumento() throws Exception {
-
-        return RegwebConstantes.TIPOS_VALIDEZDOCUMENTO;
-    }
-
-    @ModelAttribute("tiposDocumentales")
-    public List<TipoDocumental> tiposDocumentales(HttpServletRequest request) throws Exception {
-        Entidad entidadActiva = getEntidadActiva(request);
-        return tipoDocumentalEjb.getByEntidad(getEntidadActiva(request).getId());
-    }
-
 
     /**
      * compone los anexos sir recibidos en una lista de anexosSirFull
@@ -380,37 +366,36 @@ public class RegistroSirController extends BaseController {
 
         List<AnexoSirFull> anexosSirFull = new ArrayList<AnexoSirFull>();
 
-
         for (AnexoSir anexo : anexos) {
 
-                AnexoSirFull anexoSirFull = new AnexoSirFull();
-                // Detached
-                if (StringUtils.isNotEmpty(anexo.getIdentificadorFichero()) && StringUtils.isNotEmpty(anexo.getIdentificadorDocumentoFirmado()) &&
-                        !anexo.getIdentificadorFichero().equals(anexo.getIdentificadorDocumentoFirmado())) {
-                    AnexoSir documento = buscarAnexoSir(anexo.getIdentificadorDocumentoFirmado(), anexos);
-                    anexoSirFull.setDocumento(documento);
-                    anexoSirFull.setFirma(anexo);
-                    anexosSirFull.add(anexoSirFull);
+            AnexoSirFull anexoSirFull = new AnexoSirFull();
+            // Detached
+            if (StringUtils.isNotEmpty(anexo.getIdentificadorFichero()) && StringUtils.isNotEmpty(anexo.getIdentificadorDocumentoFirmado()) &&
+                    !anexo.getIdentificadorFichero().equals(anexo.getIdentificadorDocumentoFirmado())) {
+                AnexoSir documento = buscarAnexoSir(anexo.getIdentificadorDocumentoFirmado(), anexos);
+                anexoSirFull.setDocumento(documento);
+                anexoSirFull.setFirma(anexo);
+                anexosSirFull.add(anexoSirFull);
 
-                }
+            }
 
-                // Attached
-                if (StringUtils.isNotEmpty(anexo.getIdentificadorFichero()) && StringUtils.isNotEmpty(anexo.getIdentificadorDocumentoFirmado()) &&
-                        anexo.getIdentificadorFichero().equals(anexo.getIdentificadorDocumentoFirmado())) {
-                    anexoSirFull.setDocumento(anexo);
-                    anexoSirFull.setFirma(null);
-                    anexosSirFull.add(anexoSirFull);
-                    anexoSirFull.setTieneFirma(true);
-                }
+            // Attached
+            if (StringUtils.isNotEmpty(anexo.getIdentificadorFichero()) && StringUtils.isNotEmpty(anexo.getIdentificadorDocumentoFirmado()) &&
+                    anexo.getIdentificadorFichero().equals(anexo.getIdentificadorDocumentoFirmado())) {
+                anexoSirFull.setDocumento(anexo);
+                anexoSirFull.setFirma(null);
+                anexosSirFull.add(anexoSirFull);
+                anexoSirFull.setTieneFirma(true);
+            }
 
-                // Documento sin Firma
-                if (StringUtils.isEmpty(anexo.getIdentificadorDocumentoFirmado()) &&
-                        buscarAnexoSirConFirma(anexo.getIdentificadorFichero(), anexos) == null) {
-                    anexoSirFull.setDocumento(anexo);
-                    anexoSirFull.setFirma(null);
-                    anexosSirFull.add(anexoSirFull);
-                    anexoSirFull.setTieneFirma(false);
-                }
+            // Documento sin Firma
+            if (StringUtils.isEmpty(anexo.getIdentificadorDocumentoFirmado()) &&
+                    buscarAnexoSirConFirma(anexo.getIdentificadorFichero(), anexos) == null) {
+                anexoSirFull.setDocumento(anexo);
+                anexoSirFull.setFirma(null);
+                anexosSirFull.add(anexoSirFull);
+                anexoSirFull.setTieneFirma(false);
+            }
 
         }
 

@@ -27,10 +27,8 @@ que se le indica -->
                     <div class="modal-body">
 
                         <form id="organismoREBusquedaForm${param.tipo}" class="form-horizontal" action="" method="post">
-                            <input id="nivelAdministracion" type="hidden"
-                                   value="${oficina.organismoResponsable.nivelAdministracion.codigoNivelAdministracion}"/>
-                            <input id="comunidadAutonoma" type="hidden"
-                                   value="${oficina.organismoResponsable.codAmbComunidad.codigoComunidad}"/>
+                            <input id="nivelAdministracion" type="hidden" value="${RegwebConstantes.nivelAdminAutonomica}"/>
+                            <input id="comunidadAutonoma" type="hidden" value="${RegwebConstantes.comunidadBaleares}"/>
 
                             <div class="form-group col-xs-12 senseMargeLat">
                                 <div class="col-xs-6">

@@ -93,7 +93,7 @@ public class CatProvincia implements Serializable {
     /**
      * @return the codigoComunidad
      */
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "COMUNIDADAUTONOMA", foreignKey = @ForeignKey(name = "RWE_CATPROVINC_CATCOMUNAUTO_FK"))
     @JsonIgnore
     public CatComunidadAutonoma getComunidadAutonoma() {
