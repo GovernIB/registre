@@ -167,8 +167,8 @@ public class FicheroIntercambioBean implements FicheroIntercambioLocal {
                         // Actualizamos el registro de entrada
                         registroEntrada.setEstado(RegwebConstantes.REGISTRO_REENVIADO);
                         registroEntrada.getRegistroDetalle().setAplicacion(ficheroIntercambio.getAplicacionEmisora());
-                        registroEntrada.getRegistroDetalle().setObservaciones(ficheroIntercambio.getObservacionesApunte());
-                        registroEntrada.getRegistroDetalle().setTipoAnotacion(ficheroIntercambio.getTipoAnotacion());
+                        //registroEntrada.getRegistroDetalle().setObservaciones(ficheroIntercambio.getObservacionesApunte());
+                        //registroEntrada.getRegistroDetalle().setTipoAnotacion(ficheroIntercambio.getTipoAnotacion());
                         registroEntrada.getRegistroDetalle().setDecodificacionTipoAnotacion(ficheroIntercambio.getDescripcionTipoAnotacion());
                         registroEntradaEjb.merge(registroEntrada);
 
@@ -178,8 +178,8 @@ public class FicheroIntercambioBean implements FicheroIntercambioLocal {
                         // Actualizamos el registro de salida
                         registroSalida.setEstado(RegwebConstantes.REGISTRO_REENVIADO);
                         registroSalida.getRegistroDetalle().setAplicacion(ficheroIntercambio.getAplicacionEmisora());
-                        registroSalida.getRegistroDetalle().setObservaciones(ficheroIntercambio.getObservacionesApunte());
-                        registroSalida.getRegistroDetalle().setTipoAnotacion(ficheroIntercambio.getTipoAnotacion());
+                        //registroSalida.getRegistroDetalle().setObservaciones(ficheroIntercambio.getObservacionesApunte());
+                        //registroSalida.getRegistroDetalle().setTipoAnotacion(ficheroIntercambio.getTipoAnotacion());
                         registroSalida.getRegistroDetalle().setDecodificacionTipoAnotacion(ficheroIntercambio.getDescripcionTipoAnotacion());
                         registroSalidaEjb.merge(registroSalida);
                     }
