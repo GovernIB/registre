@@ -332,8 +332,13 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
 
         RegistroEntrada registroEntrada = registroEntradaEjb.findById(idRegistro);
 
+        if (!registroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO)) {
+            log.info("El registro de entrada no tiene el estado valido necesario para enviar a SIR");
+            Mensaje.saveMessageError(request, getMessage("aviso.registro.envioSir"));
+            return new ModelAndView("redirect:/registroEntrada/" + idRegistro + "/detalle");
+        }
+
         //Obtenemos el destino externo de dir3caib que nos han indicado para ver si está extinguido
-        //String destinoExterno = registroEntradaEjb.obtenerDestinoExternoRE(idRegistro);
         String destinoExterno = registroEntrada.getDestinoExternoCodigo();
 
         if (destinoExterno != null) {
