@@ -146,20 +146,11 @@ public class ModeloOficioRemisionController extends BaseController {
         ModeloOficioRemisionForm modeloOficioRemisionForm= new ModeloOficioRemisionForm();
 
         try {
-            Entidad entidadActiva = getEntidadActiva(request);
-
             ModeloOficioRemision modeloOficioRemision = modeloOficioRemisionEjb.findById(modeloOficioRemisionId);
 
             // Comprueba que el Modelo OficioRemision existe
             if(modeloOficioRemision == null) {
                 log.info("No existe este Modelo OficioRemision");
-                Mensaje.saveMessageError(request, getMessage("aviso.modeloOficioRemision.edit"));
-                return "redirect:/modeloOficioRemision/list/";
-            }
-
-            // Mira si el Modelo OficioRemision pertenece a la Entidad Activa
-            if(!modeloOficioRemision.getEntidad().equals(entidadActiva)) {
-                log.info("Error en Modelo OficioRemision");
                 Mensaje.saveMessageError(request, getMessage("aviso.modeloOficioRemision.edit"));
                 return "redirect:/modeloOficioRemision/list/";
             }
