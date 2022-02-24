@@ -105,20 +105,35 @@ public interface SirEnvioLocal {
     Boolean reenviarMensaje(MensajeControl mensaje) throws Exception;
 
     /**
-     * Renintenta los envíos a SIR que pendientes de llegar a destino.
+     * Renintenta los envíos a SIR sin ACK.
      *
      * @param entidad
      * @throws Exception
      */
-    void reintentarIntercambiosSinConfirmacion(Entidad entidad) throws Exception;
+    void reintentarIntercambiosSinAck(Entidad entidad) throws Exception;
 
     /**
-     * Renintenta los envíos con ERROR a SIR que pendientes de llegar a destino.
+     * Reintenta los Reenvios/Rechazos sin ACK
+     * @param entidad
+     * @throws Exception
+     */
+    void reintentarReenviosRechazosSinAck(Entidad entidad) throws Exception;
+
+    /**
+     * Renintenta los intercambios con ERROR a SIR sin ACK
      *
      * @param entidad
      * @throws Exception
      */
     void reintentarIntercambiosConError(Entidad entidad) throws Exception;
+
+    /**
+     * Renintenta los Reenvios/Rechazos con ERROR a SIR sin ACK
+     *
+     * @param entidad
+     * @throws Exception
+     */
+    void reintentarReenviosRechazosConError(Entidad entidad) throws Exception;
 
     /**
      * @param registroSir

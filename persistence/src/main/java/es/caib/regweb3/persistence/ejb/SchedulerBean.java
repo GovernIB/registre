@@ -177,7 +177,7 @@ public class SchedulerBean implements SchedulerLocal{
     }
 
     @Override
-    public void reintentarIntercambiosSinConfirmacion() throws Exception {
+    public void reintentarIntercambiosSinAck() throws Exception {
 
         List<Entidad> entidades = entidadEjb.getEntidadesSir();
 
@@ -185,7 +185,20 @@ public class SchedulerBean implements SchedulerLocal{
             log.info(" ");
             log.info("------------- SIR: Reintentando intercambios sin ACK de " + entidad.getNombre() + " -------------");
             log.info(" ");
-            sirEnvioEjb.reintentarIntercambiosSinConfirmacion(entidad);
+            sirEnvioEjb.reintentarIntercambiosSinAck(entidad);
+        }
+    }
+
+    @Override
+    public void reintentarReenviosRechazosSinAck() throws Exception {
+
+        List<Entidad> entidades = entidadEjb.getEntidadesSir();
+
+        for(Entidad entidad: entidades) {
+            log.info(" ");
+            log.info("------------- SIR: Reintentando reenvios/rechazos sin ACK de " + entidad.getNombre() + " -------------");
+            log.info(" ");
+            sirEnvioEjb.reintentarReenviosRechazosSinAck(entidad);
         }
     }
 
@@ -199,6 +212,19 @@ public class SchedulerBean implements SchedulerLocal{
             log.info("------------- SIR: Reintentando intercambios con ERROR de " + entidad.getNombre() + " -------------");
             log.info(" ");
             sirEnvioEjb.reintentarIntercambiosConError(entidad);
+        }
+    }
+
+    @Override
+    public void reintentarReenviosRechazosConError() throws Exception {
+
+        List<Entidad> entidades = entidadEjb.getEntidadesSir();
+
+        for(Entidad entidad: entidades) {
+            log.info(" ");
+            log.info("------------- SIR: Reintentando reenvios/rechazos con ERROR de " + entidad.getNombre() + " -------------");
+            log.info(" ");
+            sirEnvioEjb.reintentarReenviosRechazosConError(entidad);
         }
     }
 
