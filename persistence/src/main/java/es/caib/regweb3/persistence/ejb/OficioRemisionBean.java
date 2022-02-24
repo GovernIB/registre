@@ -53,6 +53,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
     @EJB private TrazabilidadLocal trazabilidadEjb;
     @EJB private ContadorLocal contadorEjb;
     @EJB private OrganismoLocal organismoEjb;
+    @EJB private OficinaLocal oficinaEjb;
     @EJB private InteresadoLocal interesadoEjb;
     @EJB private MultiEntidadLocal multiEntidadEjb;
 
@@ -946,6 +947,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
     public CombineStream generarOficioRemisionRtf(OficioRemision oficioRemision, ModeloOficioRemision modeloOficioRemision, List<String> registrosEntrada, List<String> registrosSalida) throws Exception{
 
         File archivo = es.caib.regweb3.persistence.utils.FileSystemManager.getArchivo(modeloOficioRemision.getModelo().getId());
+        Oficina oficina = oficinaEjb.findById(oficioRemision.getOficina().getId());
 
         // Convertimos el archivo a array de bytes
         byte[] datos = FileUtils.readFileToByteArray(archivo);
@@ -955,7 +957,6 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
         // Extraemos año de la fecha del registro
         SimpleDateFormat formatYear = new SimpleDateFormat("yyyy");
         String anoOficio = formatYear.format(oficioRemision.getFecha());
-
 
         // Fecha según el idioma y mes
         Date dataActual = new Date();
@@ -996,7 +997,6 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
             }
         }
 
-
         // Mapeamos los campos del rtf con los del registro
         if(oficioRemision.getOrganismoDestinatario() != null) {
             ht.put("(organismoDestinatario)", ConvertirTexto.toCp1252(oficioRemision.getOrganismoDestinatario().getDenominacion()));
@@ -1021,8 +1021,8 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
         ht.put("(numeroOficio)", ConvertirTexto.toCp1252(oficioRemision.getNumeroOficio().toString()));
         ht.put("(anoOficio)", ConvertirTexto.toCp1252(anoOficio));
         ht.put("(oficina)", ConvertirTexto.toCp1252(oficioRemision.getOficina().getDenominacion()));
-        if(oficioRemision.getOficina().getLocalidad() != null){
-            ht.put("(localidadOficina)", ConvertirTexto.toCp1252(oficioRemision.getOficina().getLocalidad().getNombre()));
+        if(oficina.getLocalidad() != null){
+            ht.put("(localidadOficina)", ConvertirTexto.toCp1252(oficina.getLocalidad().getNombre()));
         }else{
             ht.put("(localidadOficina)", "");
         }
