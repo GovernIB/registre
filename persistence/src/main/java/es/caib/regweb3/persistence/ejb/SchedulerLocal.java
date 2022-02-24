@@ -30,13 +30,25 @@ public interface SchedulerLocal {
      *
      * @throws Exception
      */
-    void reintentarIntercambiosSinConfirmacion() throws Exception;
+    void reintentarIntercambiosSinAck() throws Exception;
+
+    /**
+     *
+     * @throws Exception
+     */
+    void reintentarReenviosRechazosSinAck() throws Exception;
 
     /**
      *
      * @throws Exception
      */
     void reintentarIntercambiosConError() throws Exception;
+
+    /**
+     *
+     * @throws Exception
+     */
+    void reintentarReenviosRechazosConError() throws Exception;
 
     /**
      *
