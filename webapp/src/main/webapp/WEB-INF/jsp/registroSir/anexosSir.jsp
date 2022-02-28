@@ -52,13 +52,14 @@
                                 <th><spring:message code="anexo.titulo"/></th>
                                 <th><spring:message code="anexo.sir.tipoDocumento"/></th>
                                 <%--<th><spring:message code="anexo.tamano"/></th>--%>
-                                <%----%>
+                                
                                 <c:if test="${registroSir.estado == 'RECIBIDO_CONFIRMADO'}">
                                     <th><spring:message code="anexo.sir.validezDocumento"/></th>
+                                    <%--
                                     <th><spring:message code="anexo.origen"/></th>
                                     <th><spring:message code="anexo.tipoDocumental"/></th>
+                                	--%>
                                 </c:if>
-                                
                                 <th class="center">Doc</th>
                                 <th class="center">Firma</th>
                                 <th></th>
@@ -87,7 +88,7 @@
                                              Es el caso 4: DOCUMENTO CON FIRMA DETACHED y los documentos que son firmas
                                              se marcan como FICHERO INTERNO y los campos NTI solo se aplican al documento que no es la firma
                                         --%>
-									<%-- --%>
+									
                                     <c:if test="${registroSir.estado == 'RECIBIDO_CONFIRMADO'}">
                                         <c:if test="${empty anexo.documento.validezDocumento}">
                                             <td class="ajustTamanySir">
@@ -111,7 +112,7 @@
                                             <td class="ajustTamanySir"><spring:message code="tipoValidezDocumento.${RegwebConstantes.TIPOVALIDEZDOCUMENTO_BY_CODIGO_SICRES[anexo.documento.validezDocumento]}"/></td>
                                         </c:if>
 
-
+										<%-- 
                                         <td class="ajustTamanySir">
                                             <select id="camposNTIs[${status.index}].idOrigen"
                                                     name="camposNTIs[${status.index}].idOrigen" class="chosen-select"
@@ -135,7 +136,9 @@
                                                 </c:forEach>
                                             </select>
                                         </td>
+                                         --%>
                                     </c:if>
+                                   
 									<%-- --%>
                                     <c:if test="${not anexo.documento.purgado}">
                                         <td class="center ajustTamanySir">
