@@ -10,11 +10,13 @@ import es.caib.regweb3.persistence.ejb.CodigoAsuntoLocal;
 import es.caib.regweb3.persistence.ejb.InteresadoLocal;
 import es.caib.regweb3.persistence.ejb.MultiEntidadLocal;
 import es.caib.regweb3.persistence.ejb.PlantillaLocal;
+import es.caib.regweb3.persistence.ejb.RegistroSirHelperLocal;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.persistence.utils.RegistroUtils;
 import es.caib.regweb3.utils.Dir3CaibUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
+import es.caib.regweb3.webapp.form.RegistrarForm;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import es.caib.regweb3.webapp.validator.RegistroEntradaWebValidator;
 import org.fundaciobit.genapp.common.i18n.I18NException;
@@ -61,6 +63,8 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
     @EJB(mappedName = "regweb3/MultiEntidadEJB/local")
     private MultiEntidadLocal multiEntidadEjb;
 
+    @EJB(mappedName = "regweb3/RegistroSirHelperEJB/local")
+    private RegistroSirHelperLocal registroSirHelperEjb;
 
     /**
      * Carga el formulario para un nuevo {@link es.caib.regweb3.model.RegistroEntrada} a partir de una {@link Plantilla}
@@ -513,6 +517,30 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
 
         return "redirect:/registroEntrada/"+idRegistro+"/detalle";
 
+    }
+    
+
+    /**
+     * Realiza la busqueda de {@link es.caib.regweb3.model.RegistroEntrada} según los parametros del formulario
+     */
+    @RequestMapping(value = "/{idRegistro}/{anexoId}/actualizar", method = RequestMethod.POST)
+    public String enviados(
+    		@PathVariable Long idRegistro, 
+    		@PathVariable Long anexoId, 
+    		@ModelAttribute RegistrarForm registrarForm, 
+    		HttpServletRequest request) throws Exception {
+    	RegistroEntrada registroEntrada = registroEntradaEjb.findByIdCompleto(idRegistro);
+        UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
+        Entidad entidadActiva = getEntidadActiva(request);
+        
+        registroSirHelperEjb.actualizarMetadatosRegistro(
+        		anexoId, 
+        		entidadActiva.getCodigoDir3(), 
+        		registroEntrada, 
+        		usuarioEntidad, 
+        		registrarForm.getCamposNTIs());
+    	
+        return "redirect:/registroEntrada/"+ idRegistro + "/detalle";
     }
 
 

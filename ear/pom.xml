@@ -307,7 +307,7 @@
     <dependency>
         <groupId>es.caib.regweb3</groupId>
         <artifactId>plugin-justificante-apb</artifactId>
-        <version>3.1.2</version>
+        <version>3.2.4</version>
     </dependency>
 
     <!-- ================================================= -->

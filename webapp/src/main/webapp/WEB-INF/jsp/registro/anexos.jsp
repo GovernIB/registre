@@ -91,6 +91,7 @@
 
                 <c:if test="${not empty anexos}">
 
+                    <c:set var="trobat" value="false"></c:set>
                     <table id="anexos" class="table table-bordered table-hover table-striped" style="margin-bottom: 5px;">
                         <thead>
                             <tr>
@@ -101,6 +102,12 @@
                                 <th class="center"><spring:message code="anexo.anexo"/></th>
                                 <th class="center">Firma</th>
                                 <th class="center"><spring:message code="regweb.acciones"/></th>
+                                <c:forEach var="anexoFull" items="${anexos}">
+                                	<c:if test="${(empty anexoFull.anexo.origenCiudadanoAdmin || empty anexoFull.anexo.tipoDocumental) && !trobat}">
+                                		<th></th>
+                                		<c:set var="trobat" value="true"></c:set>
+                                	</c:if>
+                                </c:forEach>
                             </tr>
                         </thead>
 
@@ -109,6 +116,10 @@
                         <c:forEach var="anexoFull" items="${anexos}">
 
                             <c:if test="${anexoFull.anexo.titulo != RegwebConstantes.FICHERO_REGISTROELECTRONICO}">
+                            <%-- 
+                            <c:url value="/registroSir/${registro.id}/${anexoFull.anexo.id}/actualizar" var="urlAceptar" scope="request"/>
+                    		<form:form modelAttribute="registrarForm" action="${urlAceptar}" method="post" cssClass="form-horizontal">
+                    		--%>
                             <tr id="anexo${anexoFull.anexo.id}">
 
                                 <%--TÍTULO--%>
@@ -126,7 +137,31 @@
 
                                 <%--TIPO DOCUMENTO--%>
                                 <td><spring:message code="tipoDocumento.0${anexoFull.anexo.tipoDocumento}"/></td>
-
+								<%--
+								<c:if test="${empty anexoFull.anexo.origenCiudadanoAdmin && puedeEditar}">
+									<select id="camposNTIs[${status.index}].idOrigen"
+                                                 name="camposNTIs[${status.index}].idOrigen" class="chosen-select"
+                                                    <c:if test="${anexoFull.anexo.documento.tipoDocumento == RegwebConstantes.CODIGO_SICRES_BY_TIPO_DOCUMENTO[RegwebConstantes.TIPO_DOCUMENTO_FICHERO_TECNICO] }">disabled</c:if>>
+                                            <option value="0"><spring:message
+                                                    code="anexo.origen.ciudadano"/></option>
+                                            <option value="1" selected="selected"><spring:message
+                                                    code="anexo.origen.administracion"/></option>
+                                     </select>
+								</c:if>
+								
+								<c:if test="${empty anexoFull.anexo.tipoDocumental && puedeEditar}">
+                                     <select id="camposNTIs[${status.index}].idTipoDocumental"
+                                               name="camposNTIs[${status.index}].idTipoDocumental"
+                                               class="chosen-select"
+                                               <c:if test="${anexoFull.anexo.documento.tipoDocumento == RegwebConstantes.CODIGO_SICRES_BY_TIPO_DOCUMENTO[RegwebConstantes.TIPO_DOCUMENTO_FICHERO_TECNICO] }">disabled</c:if>>
+                                           <option value="">...</option>
+                                           <c:forEach items="${tiposDocumentales}" var="tipoDocumental">
+                                               <option value="${tipoDocumental.codigoNTI}"><i:trad
+                                                      value="${tipoDocumental}" property="nombre"/></option>
+                                           </c:forEach>
+                                     </select>									
+								</c:if>
+								--%>
                                 <%--TAMAÑO--%>
                                 <td class="text-right">
                                     <c:if test="${anexoFull.anexo.modoFirma != RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED && !anexoFull.anexo.confidencial}">
@@ -305,13 +340,27 @@
                                         </c:if>
                                     </c:if>
                                 </td>
+                                <c:if test="${empty anexoFull.anexo.origenCiudadanoAdmin || empty anexoFull.anexo.tipoDocumental}">
+	                                <td>
+	                                	<span title="<spring:message code="anexo.alerta.metadades"/>" class="fa fa-exclamation-triangle" style="color:#d72c2c"></span>
+	                                </td>
+                                </c:if>
                             </tr>
+                            <%--
+                            </form:form>
+                             --%>
                             </c:if>
                         </c:forEach>
                             <%-- Fila pel tamany Total dels annexes --%>
                         <tr>
                             <td class="senseBorder"></td>
                             <td class="senseBorder"></td>
+                            <%--
+                            <c:if test="${puedeEditar}">
+                            <td class="senseBorder"></td>
+                            <td class="senseBorder"></td>
+                            </c:if>
+                             --%>
                             <td class="senseBorder text-right" colspan="2"><spring:message code="anexo.sumatotaltamany"/>:
                                 <b>${totalA} KB</b></td>
                             <td class="senseBorder"></td>

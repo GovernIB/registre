@@ -36,13 +36,14 @@
                             <colgroup>
                                 <col>
                                 <col>
-                                <%--
-                                <c:if test="${registroSir.estado == 'RECIBIDO'}">
+                                <%----%>
+                                <c:if test="${registroSir.estado == 'RECIBIDO_CONFIRMADO'}">
                                     <col>
                                     <col>
                                     <col>
                                 </c:if>
-                                 --%>
+                                 
+                                <col>
                                 <col>
                                 <col>
                             </colgroup>
@@ -51,21 +52,24 @@
                                 <th><spring:message code="anexo.titulo"/></th>
                                 <th><spring:message code="anexo.sir.tipoDocumento"/></th>
                                 <%--<th><spring:message code="anexo.tamano"/></th>--%>
-                                <%--
-                                <c:if test="${registroSir.estado == 'RECIBIDO'}">
+                                <%----%>
+                                <c:if test="${registroSir.estado == 'RECIBIDO_CONFIRMADO'}">
                                     <th><spring:message code="anexo.sir.validezDocumento"/></th>
                                     <th><spring:message code="anexo.origen"/></th>
                                     <th><spring:message code="anexo.tipoDocumental"/></th>
                                 </c:if>
-                                --%>
+                                
                                 <th class="center">Doc</th>
                                 <th class="center">Firma</th>
+                                <th></th>
                             </tr>
                             </thead>
 
                             <tbody>
 
                             <c:forEach var="anexo" items="${anexosSirFull}" varStatus="status">
+                            	<c:url value="/registroSir/${registroSir.id}/${anexo.documento.id}/actualizar" var="urlAceptar" scope="request"/>
+                    			<form:form modelAttribute="registrarForm" action="${urlAceptar}" method="post" cssClass="form-horizontal">
                                 <tr id="anexo${anexo.documento.id}">
                                     <td class="ajustTamanySir">
                                         <c:if test="${anexo.documento.nombreFichero != anexo.documento.nombreFicheroCorto}">
@@ -83,13 +87,13 @@
                                              Es el caso 4: DOCUMENTO CON FIRMA DETACHED y los documentos que son firmas
                                              se marcan como FICHERO INTERNO y los campos NTI solo se aplican al documento que no es la firma
                                         --%>
-									<%--
-                                    <c:if test="${registroSir.estado == 'RECIBIDO'}">
+									<%-- --%>
+                                    <c:if test="${registroSir.estado == 'RECIBIDO_CONFIRMADO'}">
                                         <c:if test="${empty anexo.documento.validezDocumento}">
                                             <td class="ajustTamanySir">
-                                            --%>
+                                           
                                                     <%--Si s'ha de posar valor per validez Documento--%>
-                                                    <%--
+                                                    <%----%>
                                                 <select id="camposNTIs[${status.index}].idValidezDocumento"
                                                         name="camposNTIs[${status.index}].idValidezDocumento"
                                                         class="chosen-select"
@@ -132,7 +136,7 @@
                                             </select>
                                         </td>
                                     </c:if>
-									--%>
+									<%-- --%>
                                     <c:if test="${not anexo.documento.purgado}">
                                         <td class="center ajustTamanySir">
                                             <a class="btn btn-success btn-sm"
@@ -171,13 +175,15 @@
                                             <span class="label label-danger">No</span>
                                         </c:if>
                                     </td>
-
+									<c:if test="${registroSir.estado == 'RECIBIDO_CONFIRMADO'}">
+										<input type="submit" value="<spring:message code="registroSir.aceptar"/>" class="btn btn-success btn-sm">
+									</c:if>
                                     <input type="hidden"
                                            id="camposNTIs[${status.index}].id"
                                            name="camposNTIs[${status.index}].id"
                                            value="${anexo.documento.id}"/>
                                 </tr>
-
+								</form:form>
                             </c:forEach>
 
                             </tbody>

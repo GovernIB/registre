@@ -581,6 +581,10 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
                 //Guardamos los cambios en custodia
                 updateCustodyInfoOfAnexo(anexoFull, custody, custodyParameters, custodyID, registro, isNew);
             }
+            //Actualizamos solo metadatos nti
+            if (!noWeb) {
+            	actualizarMetadatosAnexo(registro, anexoFull, usuarioEntidad);
+            }
 
             //Actualizamos los datos de anexo en BBDD
             anexo = this.merge(anexo);
@@ -1001,6 +1005,9 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
         try {
         	Long tipoRegistro = (registro instanceof RegistroEntrada) ? 1L : 0L;
+        	// Actualitzar Metadades
+            final String lang = Configuracio.getDefaultLanguage();
+            final Locale loc = new Locale(lang);
             Anexo anexo = anexoFull.getAnexo();
 //            String numeroRegistro = registro.getNumeroRegistro();
 //            Date fechaRegistro = registro.getFecha();
@@ -1014,11 +1021,27 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             custodyParameters = getCustodyParameters(registro, anexo, anexoFull, usuarioEntidad);
 
             final String custodyID = anexo.getCustodiaID();
-            
-//            if (numeroRegistro != null && fechaRegistro != null) {
-//            	metadades.add(new Metadata("anexo.numeroregistro", numeroRegistro));
-//            	metadades.add(new Metadata("anexo.fecharegistro", fechaRegistro));
-//            }
+ 
+            // Origen
+            if (anexo.getOrigenCiudadanoAdmin() != null) {
+                metadades.add(new Metadata("anexo.origen", I18NLogicUtils.tradueix(loc, "anexo.origen." + anexo.getOrigenCiudadanoAdmin())));
+                metadades.add(new Metadata(MetadataConstants.ENI_ORIGEN, anexo.getOrigenCiudadanoAdmin()));
+            }
+            // Tipo documental
+        	TipoDocumental tipoDocumental = anexo.getTipoDocumental();
+            if (tipoDocumental != null) {
+            	tipoDocumental = em.getReference(TipoDocumental.class, anexo.getTipoDocumental().getId());
+                metadades.add(new Metadata(MetadataConstants.ENI_TIPO_DOCUMENTAL, tipoDocumental.getCodigoNTI()));
+                metadades.add(new Metadata("anexo.tipoDocumental.codigo", tipoDocumental.getCodigoNTI()));
+
+                try {
+                    metadades.add(new Metadata("anexo.tipoDocumental.descripcion",
+                       ((TraduccionTipoDocumental) tipoDocumental.getTraduccion(loc.getLanguage())).getNombre()));
+
+                } catch (Throwable th) {
+                    log.error("Error en la traduccion de tipo documental: " + th.getMessage(), th);
+                }
+            }
             // Guardamos los cambios en custodia
             custody.saveAll(custodyID, custodyParameters, null, null, metadades.toArray(new Metadata[metadades.size()]));
 

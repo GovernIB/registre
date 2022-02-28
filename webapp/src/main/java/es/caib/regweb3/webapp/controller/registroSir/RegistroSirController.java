@@ -56,8 +56,6 @@ public class RegistroSirController extends BaseController {
     @EJB(mappedName = "regweb3/TrazabilidadSirEJB/local")
     private TrazabilidadSirLocal trazabilidadSirEjb;
 
-
-
     /**
      * Listado de todos los RegistroSirs
      */
@@ -184,8 +182,6 @@ public class RegistroSirController extends BaseController {
         return mav;
 
     }
-
-
 
     /**
      * Carga el formulario para ver el detalle de un {@link RegistroSir}

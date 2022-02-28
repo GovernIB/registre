@@ -951,7 +951,7 @@ public class SirEnvioBean implements SirEnvioLocal {
     	}
     }
     
-    private void actualizarMetadatosAnexosArxiu(IRegistro registro, UsuarioEntidad usuario) throws I18NException {	
+    public void actualizarMetadatosAnexosArxiu(IRegistro registro, UsuarioEntidad usuario) throws I18NException {	
     	// Actualizar información anexos SGD
     	try {
     		for (AnexoFull anexoFull: registro.getRegistroDetalle().getAnexosFull()) {

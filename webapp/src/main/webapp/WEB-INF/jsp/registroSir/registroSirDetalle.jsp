@@ -51,10 +51,6 @@
 
                     </div>
 
-                    <form:form modelAttribute="registrarForm" action="${urlAceptar}" method="post" cssClass="form-horizontal">
-
-
-
                     <%-- Se muestra la Botonera si el RegistroSir está pendiente de procesar--%>
                     <c:if test="${registroSir.estado != 'RECIBIDO_CONFIRMADO' && registroSir.estado != 'ENVIADO_CONFIRMADO' && registroSir.estado != 'FINALIZADO' && loginInfo.rolActivo.nombre == 'RWE_USUARI'}">
 
@@ -203,7 +199,7 @@
                         <%--INTERESADOS--%>
                         <c:import url="interesadosSir.jsp"/>
 
-                        </form:form>
+                        <%--</form:form>--%>
 
                         <%--EXPONE - SOLICITA--%>
                         <c:if test="${not empty registroSir.expone || not empty registroSir.solicita}">
