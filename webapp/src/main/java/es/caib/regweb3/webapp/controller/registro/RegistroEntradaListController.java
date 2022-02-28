@@ -15,6 +15,7 @@ import es.caib.regweb3.utils.StringUtils;
 import es.caib.regweb3.webapp.form.AnularForm;
 import es.caib.regweb3.webapp.form.EnvioSirForm;
 import es.caib.regweb3.webapp.form.ReenviarForm;
+import es.caib.regweb3.webapp.form.RegistrarForm;
 import es.caib.regweb3.webapp.form.RegistroEntradaBusqueda;
 import es.caib.regweb3.webapp.utils.AnexoUtils;
 import es.caib.regweb3.webapp.utils.JsonResponse;
@@ -247,7 +248,8 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         model.addAttribute("puedeDistribuir", permisoOrganismoUsuarioEjb.tienePermiso(usuarioEntidad.getId(), registro.getOficina().getOrganismoResponsable().getId(), RegwebConstantes.PERMISO_DISTRIBUCION_REGISTRO, true));
         model.addAttribute("tieneJustificante", tieneJustificante);
         model.addAttribute("maxReintentos", PropiedadGlobalUtil.getMaxReintentosSir(entidadActiva.getId()));
-
+        model.addAttribute("registrarForm", new RegistrarForm());
+        
         // Solo si no es una reserva de número
         if (!registro.getEstado().equals(RegwebConstantes.REGISTRO_RESERVA)) {
 
@@ -714,29 +716,45 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         RespuestaDistribucion respuesta = new RespuestaDistribucion();
         JsonResponse response = new JsonResponse();
 
-        registroEntrada = registroEntradaEjb.findById(idRegistro);
+        registroEntrada = registroEntradaEjb.findByIdCompleto(idRegistro);
 
         try {
+        	boolean anexosValidos = true;
+        	// Controlar que todos los anexos disponen de los metadatos NTI (recibidos de GEISER)
+            List<Anexo> anexos = registroEntrada.getRegistroDetalle().getAnexos();
+            for (Anexo anexo : anexos) {
+            	Integer origen = anexo.getOrigenCiudadanoAdmin();
+            	TipoDocumental tipoDocumental = anexo.getTipoDocumental();
+            	// Si faltan metadatos de alguno de los anexos
+				if (origen == null || tipoDocumental == null) {
+					anexosValidos = false;
+					break;
+				}
+			}
             //Distribuimos el registro
-            respuesta = distribucionEjb.distribuir(registroEntrada, usuarioEntidad);
+            if (anexosValidos) {
+            	respuesta = distribucionEjb.distribuir(registroEntrada, usuarioEntidad);
 
-            if (respuesta.getHayPlugin()) {//
-                if (respuesta.getEnviadoCola()) { //Si se ha enviado a la cola
-                    response.setStatus("ENVIADO_COLA");
-                    Mensaje.saveMessageInfo(request, getMessage("registroEntrada.enviocola"));
-                } else if ((respuesta.getHayPlugin() && respuesta.getEnviado())) { //Cuando se ha distribuido correctamente
-                    Mensaje.saveMessageInfo(request, getMessage("registroEntrada.distribuir.ok"));
-                    response.setStatus("SUCCESS");
-                } else if (respuesta.getHayPlugin() && !respuesta.getEnviado()) { //Cuando no se ha distribuido correctamente
-                    response.setStatus("FAIL");
-                    response.setError(getMessage("registroEntrada.distribuir.error.noEnviado"));
-                }
+	            if (respuesta.getHayPlugin()) {//
+	                if (respuesta.getEnviadoCola()) { //Si se ha enviado a la cola
+	                    response.setStatus("ENVIADO_COLA");
+	                    Mensaje.saveMessageInfo(request, getMessage("registroEntrada.enviocola"));
+	                } else if ((respuesta.getHayPlugin() && respuesta.getEnviado())) { //Cuando se ha distribuido correctamente
+	                    Mensaje.saveMessageInfo(request, getMessage("registroEntrada.distribuir.ok"));
+	                    response.setStatus("SUCCESS");
+	                } else if (respuesta.getHayPlugin() && !respuesta.getEnviado()) { //Cuando no se ha distribuido correctamente
+	                    response.setStatus("FAIL");
+	                    response.setError(getMessage("registroEntrada.distribuir.error.noEnviado"));
+	                }
+	            } else {
+	
+	                Mensaje.saveMessageInfo(request, getMessage("registroEntrada.distribuir.ok"));
+	                response.setStatus("SUCCESS");
+	            }
             } else {
-
-                Mensaje.saveMessageInfo(request, getMessage("registroEntrada.distribuir.ok"));
-                response.setStatus("SUCCESS");
+            	response.setStatus("FAIL");
+                response.setError(getMessage("aviso.registro.editar.metadatos"));
             }
-
             response.setResult(respuesta);
 
         } catch (I18NValidationException e) {
@@ -810,14 +828,26 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         try {
 
             synchronized (this) {
-
+            	boolean anexosValidos = true;
                 RegistroEntrada registroEntrada = registroEntradaEjb.getConAnexosFull(idRegistro);
                 UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
-
+                
+                // Controlar que todos los anexos disponen de los metadatos NTI (recibidos de GEISER)
+                List<Anexo> anexos = registroEntrada.getRegistroDetalle().getAnexos();
+                for (Anexo anexo : anexos) {
+                	Integer origen = anexo.getOrigenCiudadanoAdmin();
+                	TipoDocumental tipoDocumental = anexo.getTipoDocumental();
+                	// Si faltan metadatos de alguno de los anexos
+					if (origen == null || tipoDocumental == null) {
+						anexosValidos = false;
+						break;
+					}
+				}
                 // Dispone de permisos para Editar el registro
                 if (permisoOrganismoUsuarioEjb.tienePermiso(usuarioEntidad.getId(), registroEntrada.getOficina().getOrganismoResponsable().getId(), RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_ENTRADA, true)
                 		&& !registroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_ANULADO)
-                		&& registroEntrada.getNumeroRegistroFormateado() != null) {
+                		&& registroEntrada.getNumeroRegistroFormateado() != null
+                		&& anexosValidos) {
 
                     // Creamos el anexo justificante y lo firmamos
                     AnexoFull anexoFull = justificanteEjb.crearJustificante(usuarioEntidad, registroEntrada, RegwebConstantes.REGISTRO_ENTRADA, idioma);
@@ -831,7 +861,10 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
 
                 } else {
                     jsonResponse.setStatus("FAIL");
-                    jsonResponse.setError(getMessage("aviso.registro.editar"));
+                    if (anexosValidos)
+                    	jsonResponse.setError(getMessage("aviso.registro.editar"));
+                    else
+                    	jsonResponse.setError(getMessage("aviso.registro.editar.metadatos"));
                 }
             }
 

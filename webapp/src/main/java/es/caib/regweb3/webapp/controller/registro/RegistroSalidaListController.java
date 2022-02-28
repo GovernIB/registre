@@ -641,14 +641,26 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
         try {
 
             synchronized (this) {
-
+            	boolean anexosValidos = true;
                 RegistroSalida registroSalida = registroSalidaEjb.getConAnexosFull(idRegistro);
                 UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
 
+                // Controlar que todos los anexos disponen de los metadatos NTI (recibidos de GEISER)
+                List<Anexo> anexos = registroSalida.getRegistroDetalle().getAnexos();
+                for (Anexo anexo : anexos) {
+                	Integer origen = anexo.getOrigenCiudadanoAdmin();
+                	TipoDocumental tipoDocumental = anexo.getTipoDocumental();
+                	// Si faltan metadatos de alguno de los anexos
+					if (origen == null || tipoDocumental == null) {
+						anexosValidos = false;
+						break;
+					}
+				}
                 // Dispone de permisos para Editar el registro
                 if (permisoOrganismoUsuarioEjb.tienePermiso(usuarioEntidad.getId(), registroSalida.getOficina().getOrganismoResponsable().getId(), RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_SALIDA, true)
                 		&& !registroSalida.getEstado().equals(RegwebConstantes.REGISTRO_ANULADO)
-                		&& registroSalida.getNumeroRegistroFormateado() != null) {
+                		&& registroSalida.getNumeroRegistroFormateado() != null
+                		&& anexosValidos) {
 
                     // Creamos el anexo justificante y lo firmamos
                     AnexoFull anexoFull = justificanteEjb.crearJustificante(usuarioEntidad, registroSalida, RegwebConstantes.REGISTRO_SALIDA, idioma);
@@ -662,7 +674,10 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
 
                 } else {
                     jsonResponse.setStatus("FAIL");
-                    jsonResponse.setError(getMessage("aviso.registro.editar"));
+                    if (anexosValidos)
+                    	jsonResponse.setError(getMessage("aviso.registro.editar"));
+                    else
+                    	jsonResponse.setError(getMessage("aviso.registro.editar.metadatos"));
                 }
             }
 

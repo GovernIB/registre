@@ -27,8 +27,8 @@
   $('#targetiframe').height('');
   $('#modalAnexos').find('.modal-content').css('height', '');
   //parent.parent.window.location.href=parent.parent.window.location.href;
-  top.window.location.href=top.window.location.href;
-
+  //top.window.location.href=top.window.location.href;
+	top.document.location.href = top.document.location.href;
 </script>
 
 
@@ -77,6 +77,7 @@
                             </div>
                             <div class="col-xs-9">
                                 <form:select path="anexo.origenCiudadanoAdmin" class="chosen-select">
+                                	<form:option value=""></form:option>
                                     <form:option value="0"><spring:message code="anexo.origen.ciudadano"/></form:option>
                                     <form:option value="1"><spring:message code="anexo.origen.administracion"/></form:option>
                                 </form:select>
@@ -108,6 +109,7 @@
                           </div>
                           <div class="col-xs-9">
                               <form:select path="anexo.tipoDocumental.id" class="chosen-select">
+                                   	 <form:option value=""></form:option>
                                  <c:forEach items="${tiposDocumental}" var="tipoDocumental">
                                      <form:option value="${tipoDocumental.id}"><i:trad value="${tipoDocumental}" property="nombre"/></form:option>
                                  </c:forEach>

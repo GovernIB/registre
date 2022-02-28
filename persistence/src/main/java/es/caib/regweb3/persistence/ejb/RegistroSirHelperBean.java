@@ -49,6 +49,7 @@ import org.w3c.dom.NodeList;
 import es.caib.regweb3.model.Anexo;
 import es.caib.regweb3.model.AnexoSir;
 import es.caib.regweb3.model.Entidad;
+import es.caib.regweb3.model.IRegistro;
 import es.caib.regweb3.model.Interesado;
 import es.caib.regweb3.model.InteresadoSir;
 import es.caib.regweb3.model.Libro;
@@ -70,7 +71,6 @@ import es.caib.regweb3.persistence.utils.GeiserPluginHelper;
 import es.caib.regweb3.persistence.utils.ProgresoActualitzacion;
 import es.caib.regweb3.persistence.utils.ProgresoActualitzacion.TipoInfo;
 import es.caib.regweb3.utils.RegwebConstantes;
-import es.caib.regweb3.utils.RegwebUtils;
 import net.java.xades.security.xml.XMLSignatureElement;
 
 /**
@@ -91,6 +91,7 @@ public class RegistroSirHelperBean extends BaseEjbJPA<RegistroSir, Long> impleme
     private EntityManager em;
 
     @EJB private InteresadoSirLocal interesadoSirEjb;
+    @EJB private AnexoLocal anexoEjb;
     @EJB private AnexoSirLocal anexoSirEjb;
     @EJB private RegistroEntradaLocal registroEntradaEjb;
     @EJB private RegistroSalidaLocal registroSalidaEjb;
@@ -142,6 +143,7 @@ public class RegistroSirHelperBean extends BaseEjbJPA<RegistroSir, Long> impleme
 				
 				try {
 					progreso.addInfo(TipoInfo.INFO, "Consultando ámbito creación a partir del registro origen [numeroRegistro=" + apunteRegistroBusquedaFiltrado.getNuRegistro() + ", numeroRegistroOrigen=" + apunteRegistroBusquedaFiltrado.getNuRegistroOrigen() + "]");
+					String usuariResponsable = null;
 					// Consulta ámbito creación registro entidad externa (origen registro)
 					RegistroSir registroGeiserConsultaOrigen = new RegistroSir();
 					registroGeiserConsultaOrigen.setNumeroRegistro(apunteRegistroBusquedaFiltrado.getNuRegistroOrigen());
@@ -156,6 +158,8 @@ public class RegistroSirHelperBean extends BaseEjbJPA<RegistroSir, Long> impleme
 								registroSir.setCodigoEntidadRegistralOrigen(apunteRegistroEntExterna.getCdAmbitoOrigen());
 								registroSir.setDecodificacionEntidadRegistralOrigen(apunteRegistroEntExterna.getNombreAmbitoOrigen());
 								registroSir.setFechaRegistroOrigen(apunteRegistroEntExterna.getFechaRegistro());
+								usuariResponsable = apunteRegistroEntExterna.getNombreUsuario();
+								registroSir.setNombreUsuario(usuariResponsable);
 							}
 						}
 					}
@@ -226,8 +230,9 @@ public class RegistroSirHelperBean extends BaseEjbJPA<RegistroSir, Long> impleme
 							progreso.addInfo(TipoInfo.INFO, "Creando registro de entrada... [numeroRegistro=" + apunteRegistroBusquedaFiltrado.getNuRegistro() + "]");
 							Organismo organismoDestino = organismoEjb.findByCodigoEntidad(registroSir.getCodigoUnidadTramitacionDestino(), entidadId);
 							Oficina oficinaDestino = oficinaEjb.findByCodigoEntidad(registroSir.getCodigoEntidadRegistralDestino(), entidadId);
-							String usuario = pluginHelper.getUsuarioResponsableCreacionRegistros(entidadId);
-							UsuarioEntidad usuarioEntidad = usuarioEntidadEjb.findByIdentificador(usuario);
+							
+							String usuari = pluginHelper.getUsuarioResponsableCreacionRegistros(entidadId);
+							UsuarioEntidad usuarioEntidad = usuarioEntidadEjb.findByIdentificador(usuari);
 							generarRegistroEntradaRegistroSirGeiser(
 									registroSir, 
 									usuarioEntidad,
@@ -269,6 +274,32 @@ public class RegistroSirHelperBean extends BaseEjbJPA<RegistroSir, Long> impleme
 		progreso.incrementRegistrosRecuperados();
 	}
 
+    @Override
+    public IRegistro actualizarMetadatosRegistro(
+    		Long anexoId,
+    		String codigoEntidad,
+    		IRegistro registro, 
+    		UsuarioEntidad usuario, 
+    		List<CamposNTI> camposNTIs) {
+		try {
+			Entidad entidad = usuario.getEntidad();
+			Anexo anexo = anexoEjb.findById(anexoId);
+			// Solo actualizar anexo seleccionado
+			for (CamposNTI camposNTI : camposNTIs) {
+				anexo.setOrigenCiudadanoAdmin(camposNTI.getIdOrigen().intValue());
+				anexo.setTipoDocumental(tipoDocumentalEjb.findByCodigoEntidad(camposNTI.getIdTipoDocumental(),entidad.getId()));
+
+				// Actualizar en custodia
+				AnexoFull anexoFull = new AnexoFull();
+				anexoFull.setAnexo(anexo);
+				anexoEjb.actualizarMetadatosAnexo(registro, anexoFull, usuario);
+			}
+		} catch (Exception | I18NException e) {
+			log.error("Error actualizando el anexo:" + anexoId);
+            e.printStackTrace();
+		}
+		return registro;
+    }
     
     private RegistroEntrada generarRegistroEntradaRegistroSirGeiser(
     		RegistroSir registroSir, 
@@ -310,21 +341,6 @@ public class RegistroSirHelperBean extends BaseEjbJPA<RegistroSir, Long> impleme
         // Registramos el Registro Entrada
         registroEntrada = registroEntradaEjb.registrarEntrada(registroEntrada, usuario,interesados,anexosFull, true, false);
 
-        /*
-        // Creamos la TrazabilidadSir
-        TrazabilidadSir trazabilidadSir = new TrazabilidadSir(RegwebConstantes.TRAZABILIDAD_SIR_CONFIRMADO);
-        trazabilidadSir.setRegistroSir(registroSir);
-        trazabilidadSir.setRegistroEntrada(registroEntrada);
-        trazabilidadSir.setCodigoEntidadRegistralOrigen(registroSir.getCodigoEntidadRegistralOrigen());
-        trazabilidadSir.setDecodificacionEntidadRegistralOrigen(registroSir.getDecodificacionEntidadRegistralOrigen());
-        trazabilidadSir.setCodigoEntidadRegistralDestino(registroSir.getCodigoEntidadRegistralDestino());
-        trazabilidadSir.setDecodificacionEntidadRegistralDestino(registroSir.getDecodificacionEntidadRegistralDestino());
-        trazabilidadSir.setAplicacion(RegwebConstantes.CODIGO_APLICACION);
-        trazabilidadSir.setNombreUsuario(usuario.getNombreCompleto());
-        trazabilidadSir.setContactoUsuario(usuario.getUsuario().getEmail());
-        trazabilidadSir.setObservaciones(registroSir.getDecodificacionTipoAnotacion());
-        trazabilidadSirEjb.persist(trazabilidadSir);
-        */
         // CREAMOS LA TRAZABILIDAD
         Trazabilidad trazabilidad = new Trazabilidad(RegwebConstantes.TRAZABILIDAD_RECIBIDO_SIR);
         trazabilidad.setRegistroSir(registroSir);
@@ -335,9 +351,9 @@ public class RegistroSirHelperBean extends BaseEjbJPA<RegistroSir, Long> impleme
         trazabilidad.setFecha(new Date());
         trazabilidadEjb.persist(trazabilidad);
 //      Si es estado final actualiza el registro con el estado aceptado (aceptado en geiser)
-		if (RegwebUtils.contains(RegwebConstantes.ESTADOS_REGISTRO_SIR_FINALES, Integer.valueOf(registroSir.getEstado().getValue()))) {
-			registroEntradaEjb.cambiarEstado(registroEntrada.getId(), RegwebConstantes.REGISTRO_OFICIO_SIR); // Revisar por parte del dep. de registro y distribuir
-		}
+//		if (RegwebUtils.contains(RegwebConstantes.ESTADOS_REGISTRO_SIR_FINALES, Integer.valueOf(registroSir.getEstado().getValue()))) {
+//			registroEntradaEjb.cambiarEstado(registroEntrada.getId(), RegwebConstantes.REGISTRO_OFICIO_SIR); // Revisar por parte del dep. de registro y distribuir
+//		}
         // Modificamos el estado del RegistroSir
 //      modificarEstado(registroSir.getId(), EstadoRegistroSir.ACEPTADO);
         return registroEntrada;
@@ -620,7 +636,7 @@ public class RegistroSirHelperBean extends BaseEjbJPA<RegistroSir, Long> impleme
        	// Los registros se aceptan en GEISER, el usuario no puede indicar los metadatos NTI
        	CamposNTI campoNti = new CamposNTI();
        	campoNti.setId(anexoSir.getId());
-       	campoNti.setIdOrigen(ANEXO_ORIGEN_ADMINISTRACION.longValue());
+       	campoNti.setIdOrigen(null);
        	campoNti.setIdTipoDocumental(null); // Otros
        	campoNti.setIdValidezDocumento(anexoSir.getValidezDocumento());
        	camposNTIs.add(campoNti);
@@ -702,13 +718,13 @@ public class RegistroSirHelperBean extends BaseEjbJPA<RegistroSir, Long> impleme
            if (camposNTI.getIdOrigen() != null) {
                anexo.setOrigenCiudadanoAdmin(camposNTI.getIdOrigen().intValue());
 
-           }else{ // Si no está informado, por defecto Ciudadano
-               anexo.setOrigenCiudadanoAdmin(ANEXO_ORIGEN_CIUDADANO);
+           }else{ // Si no está informado, se informa por parte de un usuario de registro al formulario del anexo
+//               anexo.setOrigenCiudadanoAdmin(ANEXO_ORIGEN_CIUDADANO);
            }
 
-           // Si el usuario no especifica el tipo Documental, por defecto se pone TD99 - Otros
+           // // Si no está informado, se informa por parte de un usuario de registro al formulario del anexo
            if (camposNTI.getIdTipoDocumental() == null || camposNTI.getIdTipoDocumental().equals("")) {
-               anexo.setTipoDocumental(tipoDocumentalEjb.findByCodigoEntidad("TD99", idEntidad));
+//               anexo.setTipoDocumental(tipoDocumentalEjb.findByCodigoEntidad("TD99", idEntidad));
            }else{
                anexo.setTipoDocumental(tipoDocumentalEjb.findByCodigoEntidad(camposNTI.getIdTipoDocumental(), idEntidad));
            }
