@@ -47,7 +47,7 @@ public class ModeloOficioRemisionInterceptor extends HandlerInterceptorAdapter {
             }
 
             //comprobar variable archivos path
-            if(StringUtils.isNotEmpty(Configuracio.getArchivosPath())){
+            if(StringUtils.isEmpty(Configuracio.getArchivosPath())){
                 log.info("Error, no esta definida la variable archivos path");
                 Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.archivospath"));
                 response.sendRedirect("/regweb3/aviso");
