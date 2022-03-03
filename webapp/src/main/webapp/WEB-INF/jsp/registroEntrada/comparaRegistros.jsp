@@ -69,7 +69,7 @@
                                        </div>
                                        <div class="col-xs-8">
                                            <c:if test="${not empty registro.registroDetalle.tipoAsunto}">
-                                               <i:trad value="${registro.registroDetalle.tipoAsunto}" property="nombre"/>
+                                               <td>${registro.registroDetalle.tipoAsunto.traducciones[pageContext.response.locale.language].nombre}</td>
                                            </c:if>
                                        </div>
                                    </div>
@@ -92,7 +92,7 @@
                                           <label><spring:message code="registroEntrada.codigoAsunto"/></label>
                                       </div>
                                       <div class="col-xs-8">
-                                            <i:trad value="${registro.registroDetalle.codigoAsunto}" property="nombre"/>
+                                              ${registro.registroDetalle.codigoAsunto.traducciones[pageContext.response.locale.language].nombre}
                                       </div>
                                   </div>
                                </c:if>

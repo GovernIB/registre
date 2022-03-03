@@ -120,8 +120,7 @@
                                                     <c:if test="${anexo.documento.tipoDocumento == RegwebConstantes.CODIGO_SICRES_BY_TIPO_DOCUMENTO[RegwebConstantes.TIPO_DOCUMENTO_FICHERO_TECNICO] }">disabled</c:if>>
                                                 <option value="">...</option>
                                                 <c:forEach items="${tiposDocumentales}" var="tipoDocumental">
-                                                    <option value="${tipoDocumental.codigoNTI}"><i:trad
-                                                            value="${tipoDocumental}" property="nombre"/></option>
+                                                    <option value="${tipoDocumental.codigoNTI}">${tipoDocumental.traducciones[pageContext.response.locale.language].nombre}</option>
                                                 </c:forEach>
                                             </select>
                                         </td>
