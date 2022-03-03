@@ -265,7 +265,7 @@
 
                                <div class="col-xs-2 boto-panel">
                                    <a data-toggle="modal" role="button" href="#modalBuscadorOficinaOrigen"
-                                      onclick="inicializarBuscador('#codNivelAdministracionOficinaOrigen','#codComunidadAutonomaOficinaOrigen','#provinciaOficinaOrigen','#localidadOficinaOrigen','${oficina.organismoResponsable.nivelAdministracion.codigoNivelAdministracion}', '${oficina.organismoResponsable.codAmbComunidad.codigoComunidad}', 'OficinaOrigen' );"
+                                      onclick="inicializarBuscador('#codNivelAdministracionOficinaOrigen','#codComunidadAutonomaOficinaOrigen','#provinciaOficinaOrigen','#localidadOficinaOrigen',${RegwebConstantes.nivelAdminAutonomica}, ${RegwebConstantes.comunidadBaleares}, 'OficinaOrigen' );"
                                       class="btn btn-warning btn-sm"><spring:message code="regweb.buscar"/></a>
                                </div>
 
