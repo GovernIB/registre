@@ -436,19 +436,6 @@ public class PropiedadGlobalUtil {
 
         return getString(partialPropertyName);
     }
-
-    /**
-     * Retorna el valor de la propiedad CronExpression para los envios Sir pendientes.
-     * Si no está definida devuelve la expresión por defecto
-     * Propiedad: es.caib.regweb3.sir.cronExpression.enviosSirPendientes
-     * @return
-     */
-    public static String getEnviosSirPendientesCronExpression() {
-        final String partialPropertyName = "sir.cronExpression.enviosSirPendientes";
-        String valor = getString( partialPropertyName);
-
-        return valor != null ? valor : RegwebConstantes.CRON_ENVIOS_SIR_PENDIENTES;
-    }
     
     /**
      * Els ApACHes de la CAIB usen la IP de destí enlloc de la URL de cridada, d'aqui
