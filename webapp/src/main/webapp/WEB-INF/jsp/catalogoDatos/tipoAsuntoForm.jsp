@@ -150,7 +150,7 @@
                                     <c:set var="index" value="1"/>
                                     <c:forEach var="codigoAsunto" items="${tipoAsunto.codigosAsunto}">
                                         <tr>
-                                            <td><i:trad value="${codigoAsunto}" property="nombre"/></td>
+                                            <td>${codigoAsunto.traducciones[pageContext.response.locale.language].nombre}</td>
                                             <td>${codigoAsunto.codigo}</td>
                                             <c:if test="${codigoAsunto.activo}"><td><span class="label label-success"><spring:message code="regweb.si"/></span></td></c:if>
                                             <c:if test="${not codigoAsunto.activo}"><td><span class="label label-danger"><spring:message code="regweb.no"/></span></td></c:if>

@@ -348,12 +348,6 @@
             <scope>provided</scope>
         </dependency>
 
-        <!--iTaglib-spring iBit-->
-        <dependency>
-            <groupId>org.ibit.itaglib-spring</groupId>
-            <artifactId>itaglib-spring</artifactId>
-            <version>1.0</version>
-        </dependency>
         <!--   TESTS  -->
         <dependency>
             <groupId>junit</groupId>

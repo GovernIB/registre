@@ -109,7 +109,7 @@
           <div class="col-xs-9">
               <form:select path="anexo.tipoDocumental.id" class="chosen-select">
                  <c:forEach items="${tiposDocumental}" var="tipoDocumental">
-                     <form:option value="${tipoDocumental.id}"><i:trad value="${tipoDocumental}" property="nombre"/></form:option>
+                     <form:option value="${tipoDocumental.id}">${tipoDocumental.traducciones[pageContext.response.locale.language].nombre}</form:option>
                  </c:forEach>
               </form:select>
               <form:errors path="anexo.tipoDocumental" cssClass="label label-danger"/>

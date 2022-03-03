@@ -78,7 +78,7 @@
                                    <tbody>
                                        <c:forEach var="tipoAsunto" items="${listado}">
                                            <tr>
-                                               <td><i:trad value="${tipoAsunto}" property="nombre"/></td>
+                                               <td>${tipoAsunto.traducciones[pageContext.response.locale.language].nombre}</td>
                                                <td>${tipoAsunto.codigo}</td>
                                                <c:if test="${tipoAsunto.activo}"><td><span class="label label-success"><spring:message code="regweb.si"/></span></td></c:if>
                                                <c:if test="${not tipoAsunto.activo}"><td><span class="label label-danger"><spring:message code="regweb.no"/></span></td></c:if>
