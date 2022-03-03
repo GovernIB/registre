@@ -121,17 +121,10 @@ public class CodigoAsuntoController extends BaseController {
         CodigoAsunto codigoAsunto = null;
         try {
 
-            Entidad entidadActiva = getEntidadActiva(request);
             codigoAsunto = codigoAsuntoEjb.findById(codigoAsuntoId);
 
             // Comprueba que  existe
             if(codigoAsunto == null) {
-                Mensaje.saveMessageError(request, getMessage("aviso.codigoAsunto.edit"));
-                return "redirect:/codigoAsunto/list";
-            }
-
-            // Mira si el Codigo Asunto pertenece a la Entidad Activa
-            if(!codigoAsunto.getEntidad().equals(entidadActiva)) {
                 Mensaje.saveMessageError(request, getMessage("aviso.codigoAsunto.edit"));
                 return "redirect:/codigoAsunto/list";
             }

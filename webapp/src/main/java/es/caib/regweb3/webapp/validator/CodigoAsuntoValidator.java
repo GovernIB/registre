@@ -3,13 +3,18 @@ package es.caib.regweb3.webapp.validator;
 import es.caib.regweb3.model.CodigoAsunto;
 import es.caib.regweb3.persistence.ejb.CodigoAsuntoLocal;
 import es.caib.regweb3.utils.RegwebConstantes;
+import es.caib.regweb3.webapp.security.LoginInfo;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.ejb.EJB;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 /**
  * Created by Fundació BIT.
@@ -44,17 +49,23 @@ public class CodigoAsuntoValidator implements Validator {
 
         // Identificador único
         try {
+            HttpServletRequest request =
+                    ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
+
+            HttpSession session = request.getSession();
+            LoginInfo loginInfo = (LoginInfo) session.getAttribute(RegwebConstantes.SESSION_LOGIN_INFO);
+
             if (codigoAsunto.getCodigo() != null && codigoAsunto.getCodigo().length() > 0) {
 
                 if (codigoAsunto.getId() != null) {  // Se trata de una modificación
 
-                    if (codigoAsuntoEjb.existeCodigoEdit(codigoAsunto.getCodigo(), codigoAsunto.getId(),codigoAsunto.getEntidad().getId())) {
+                    if (codigoAsuntoEjb.existeCodigoEdit(codigoAsunto.getCodigo(), codigoAsunto.getId(), loginInfo.getEntidadActiva().getId())) {
                         errors.rejectValue("codigo", "error.identificador.existe", "L'identificador ja existeix");
                     }
 
                 } else {
 
-                    if (codigoAsuntoEjb.findByCodigoEntidad(codigoAsunto.getCodigo(),codigoAsunto.getEntidad().getId()) != null) {
+                    if (codigoAsuntoEjb.findByCodigoEntidad(codigoAsunto.getCodigo(), loginInfo.getEntidadActiva().getId()) != null) {
                         errors.rejectValue("codigo", "error.identificador.existe", "L'identificador ja existeix");
                     }
                 }
