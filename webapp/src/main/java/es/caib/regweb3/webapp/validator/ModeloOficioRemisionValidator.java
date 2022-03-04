@@ -29,13 +29,9 @@ public class ModeloOficioRemisionValidator implements Validator {
         ModeloOficioRemisionForm modeloOficioRemisionForm = (ModeloOficioRemisionForm) o;
 
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "modeloOficioRemision.nombre", "error.valor.requerido", "El camp és obligatori");
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "modeloOficioRemision.entidad", "error.valor.requerido", "El camp és obligatori");
 
         if(modeloOficioRemisionForm.getModeloOficioRemision().getId()==null) {
             ValidationUtils.rejectIfEmptyOrWhitespace(errors, "modelo", "error.valor.requerido", "El camp és obligatori");
         }
-
     }
-
-
 }
