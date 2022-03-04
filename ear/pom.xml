@@ -413,6 +413,13 @@
             <version>${itext.version}</version>
         </dependency>
 
+        <!-- Apache Commons -->
+        <dependency>
+            <groupId>commons-fileupload</groupId>
+            <artifactId>commons-fileupload</artifactId>
+            <version>1.2.2</version>
+        </dependency>
+
     </dependencies>
 
 
