@@ -157,7 +157,7 @@ public class RegWeb3BackConfig extends WebMvcConfigurerAdapter {
         return new ConcurrentTaskScheduler();
     }
 
-    @Bean
+    @Bean(name = "multipartResolver")
     public CommonsMultipartResolver commonsMultipartResolver() {
         return new CommonsMultipartResolver();
     }
