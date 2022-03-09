@@ -606,7 +606,7 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
         parametros.put("idEntidad", idEntidad);
 
         // Estado de la Oficina
-        where.add(" oficina.estado.id = :idCatEstadoEntidad");
+        where.add(" oficina.estado.id = :idCatEstadoEntidad ");
         parametros.put("idCatEstadoEntidad", idCatEstadoEntidad);
 
 
