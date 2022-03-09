@@ -54,11 +54,11 @@ public class BaseController {
     @EJB(mappedName = RegistroSalidaConsultaLocal.JNDI_NAME)
     public RegistroSalidaConsultaLocal registroSalidaConsultaEjb;
 
-    @EJB(mappedName = NotificacionLocal.JNDI_NAME)
-    public NotificacionLocal notificacionEjb;
-
     @EJB(mappedName = OrganismoLocal.JNDI_NAME)
     public OrganismoLocal organismoEjb;
+
+    @EJB(mappedName = NotificacionLocal.JNDI_NAME)
+    public NotificacionLocal notificacionEjb;
 
 
     /**
