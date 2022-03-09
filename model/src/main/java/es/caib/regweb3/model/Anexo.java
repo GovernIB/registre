@@ -326,6 +326,7 @@ public class Anexo implements Serializable {
 
 
     @Column(name = "CERTIFICADO", nullable = true, length = 2000)
+    @Type(type = "org.hibernate.type.BinaryType")
     public byte[] getCertificado() {
         return certificado;
     }
@@ -346,6 +347,7 @@ public class Anexo implements Serializable {
     }
 
     @Column(name = "TIMESTAMP", nullable = true, length = 2000)
+    @Type(type = "org.hibernate.type.BinaryType")
     public byte[] getTimestamp() {
         return timestamp;
     }
@@ -355,6 +357,7 @@ public class Anexo implements Serializable {
     }
 
     @Column(name = "VAL_OCSP_CERTIFICADO", nullable = true, length = 2000)
+    @Type(type = "org.hibernate.type.BinaryType")
     public byte[] getValidacionOCSPCertificado() {
         return validacionOCSPCertificado;
     }
@@ -364,6 +367,7 @@ public class Anexo implements Serializable {
     }
 
     @Column(name = "HASH", length = 2000)
+    @Type(type = "org.hibernate.type.BinaryType")
     public byte[] getHash() {
         return hash;
     }
