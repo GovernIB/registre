@@ -908,8 +908,7 @@ public class AnexoController extends BaseController {
 
         if (anexoEjbStatic == null) {
 
-            anexoEjbStatic = (AnexoLocal) new InitialContext()
-                    .lookup("regweb3/AnexoEJB/local");
+            anexoEjbStatic = (AnexoLocal) new InitialContext().lookup(AnexoLocal.JNDI_NAME);
 
         }
 
