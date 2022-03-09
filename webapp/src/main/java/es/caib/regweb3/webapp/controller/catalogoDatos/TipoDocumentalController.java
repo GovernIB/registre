@@ -131,13 +131,6 @@ public class TipoDocumentalController extends BaseController {
                 return "redirect:/tipoDocumental/list";
             }
 
-            // Mira si el Tipo Documental pertenece a la Entidad Activa
-            if(!tipoDocumental.getEntidad().equals(entidadActiva)) {
-                log.info("Error en Tipo Documental");
-                Mensaje.saveMessageError(request, getMessage("aviso.tipoDocumental.edit"));
-                return "redirect:/tipoDocumental/list";
-            }
-
         }catch (Exception e) {
             e.printStackTrace();
         }
