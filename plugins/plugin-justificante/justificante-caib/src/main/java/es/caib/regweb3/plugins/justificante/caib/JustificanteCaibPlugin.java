@@ -1014,8 +1014,8 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
     protected String tradueixMissatge(Locale locale, String missatge) throws Exception {
 
         try {
-            ResourceBundle justificantemissatges = ResourceBundle.getBundle("justificantemissatges", locale);
-            return new String(justificantemissatges.getString(missatge).getBytes("ISO-8859-1"), "UTF-8");
+            ResourceBundle justificantemissatges = ResourceBundle.getBundle("justificante_caib_missatges", locale, UTF8CONTROL);
+            return justificantemissatges.getString(missatge);
         }catch (Exception e) {
             try{
                 ResourceBundle logicmissatges = ResourceBundle.getBundle("logicmissatges", locale, UTF8CONTROL);
