@@ -458,6 +458,12 @@
                     <groupId>org.fundaciobit.pluginsib.scanweb</groupId>
                     <artifactId>pluginsib-scanweb-digitalib</artifactId>
                     <version>4.0.1</version>
+                    <exclusions>
+                        <exclusion>
+                            <groupId>com.sun.jersey</groupId>
+                            <artifactId>jersey-json</artifactId>
+                        </exclusion>
+                    </exclusions>
                 </dependency>
                 <!-- incluimos la dependencia jersey porque si no da un error de json -->
                 <dependency>
@@ -492,7 +498,6 @@
                 <dependency>
                     <groupId>org.codehaus.jackson</groupId>
                     <artifactId>jackson-xc</artifactId>
-                    <version>1.9.9</version>
                 </dependency>
             </dependencies>
         </profile>
@@ -505,6 +510,12 @@
                     <groupId>org.fundaciobit.pluginsib.scanweb</groupId>
                     <artifactId>pluginsib-scanweb-digitalibmassive</artifactId>
                     <version>4.0.0</version>
+                    <exclusions>
+                        <exclusion>
+                            <groupId>com.sun.jersey</groupId>
+                            <artifactId>jersey-json</artifactId>
+                        </exclusion>
+                    </exclusions>
                 </dependency>
                 <!-- incluimos la dependencia jersey porque si no da un error de json -->
                 <dependency>
@@ -533,12 +544,10 @@
                 <dependency>
                     <groupId>org.codehaus.jackson</groupId>
                     <artifactId>jackson-jaxrs</artifactId>
-                    <version>1.9.9</version>
                 </dependency>
                 <dependency>
                     <groupId>org.codehaus.jackson</groupId>
                     <artifactId>jackson-xc</artifactId>
-                    <version>1.9.9</version>
                 </dependency>
             </dependencies>
         </profile>
