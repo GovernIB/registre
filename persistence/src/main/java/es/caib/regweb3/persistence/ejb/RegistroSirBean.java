@@ -1102,7 +1102,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         }
 
         if (StringUtils.isNotEmpty(interesado.getRazonSocial())) {
-            interesadoSir.setRazonSocialInteresado(interesado.getRazonSocial());
+            interesadoSir.setRazonSocialInteresado(es.caib.regweb3.utils.StringUtils.recortarCadena(interesado.getRazonSocial(),80));
         }
 
         if (StringUtils.isNotEmpty(interesado.getNombre())) {
