@@ -734,7 +734,7 @@ public class SirEnvioBean implements SirEnvioLocal {
             peticion.append("entidad: ").append(entidad.getNombre()).append(System.getProperty("line.separator"));
 
             // OficiosRemision pendientes de volver a intentar su envío
-            List<OficioRemision> oficios = oficioRemisionEjb.getEnviadosSinAck(entidad.getId());
+            List<Long> oficios = oficioRemisionEjb.getEnviadosSinAck(entidad.getId());
 
             peticion.append("total oficios: ").append(oficios.size()).append(System.getProperty("line.separator"));
 
@@ -743,8 +743,8 @@ public class SirEnvioBean implements SirEnvioLocal {
                 log.info("Hay " + oficios.size() + " Oficios de Remision pendientes de volver a enviar al nodo CIR");
 
                 // Volvemos a enviar los OficiosRemision
-                for (OficioRemision oficio : oficios) {
-
+                for (Long idOficio : oficios) {
+                    OficioRemision oficio = oficioRemisionEjb.findById(idOficio);
                     reintentarEnvioOficioRemision(oficio, RegwebConstantes.INTEGRACION_SCHEDULERS);
                 }
 
@@ -813,7 +813,7 @@ public class SirEnvioBean implements SirEnvioLocal {
         try {
 
             // OficiosRemision enviados con errores
-            List<OficioRemision> oficios = oficioRemisionEjb.getEnviadosConError(entidad.getId());
+            List<Long> oficios = oficioRemisionEjb.getEnviadosConError(entidad.getId());
 
             peticion.append("total oficios: ").append(oficios.size()).append(System.getProperty("line.separator"));
 
@@ -822,8 +822,8 @@ public class SirEnvioBean implements SirEnvioLocal {
                 log.info("Hay " + oficios.size() + " Oficios de Remision enviados con errores, pendientes de volver a enviar al nodo CIR");
 
                 // Volvemos a enviar los OficiosRemision
-                for (OficioRemision oficio : oficios) {
-
+                for (Long idOficio : oficios) {
+                    OficioRemision oficio = oficioRemisionEjb.findById(idOficio);
                     reintentarEnvioOficioRemision(oficio, RegwebConstantes.INTEGRACION_SCHEDULERS);
                 }
             } else {
