@@ -24,6 +24,7 @@ public class RegwebInfoTest extends RegWebTestUtils {
      */
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
+        setEntorno("_proves_PRO");
         infoApi = getInfoApi();
     }
 
@@ -188,7 +189,7 @@ public class RegwebInfoTest extends RegWebTestUtils {
         String codigoEntidadDir3 = getTestEntidadCodigoDir3();
 
         try {
-            LibroWs libro = infoApi.listarLibroOrganismo(codigoEntidadDir3, "A04032198");
+            LibroWs libro = infoApi.listarLibroOrganismo(codigoEntidadDir3, "A04027007");
 
             if(libro != null){
                 System.out.println("Libro: " + libro.getCodigoLibro());
