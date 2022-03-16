@@ -5,13 +5,13 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>regweb3-sir-api</artifactId>
-    <version>3.2.4</version>
+    <version>3.2.5</version>
     <packaging>jar</packaging>
 
     <parent>
         <groupId>es.caib.regweb3</groupId>
         <artifactId>regweb3-sir</artifactId>
-        <version>3.2.4</version>
+        <version>3.2.5</version>
     </parent>
 
     <name>RegWeb3 - SIR - API</name>

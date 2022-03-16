@@ -4,13 +4,13 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>regweb3-sir</artifactId>
-    <version>3.2.4</version>
+    <version>3.2.5</version>
     <packaging>pom</packaging>
 
     <parent>
         <artifactId>regweb3</artifactId>
         <groupId>es.caib.regweb3</groupId>
-        <version>3.2.4</version>
+        <version>3.2.5</version>
     </parent>
 
     <name>RegWeb3 - SIR</name>
