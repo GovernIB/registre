@@ -182,7 +182,7 @@ public class Regweb3Scheduler {
      * Qué hace: purga los anexos de los registros distribuidos
      * Cuando lo hace: Cada 20 minutos a las 00:00, a las 01:00 y a las 02:00
      */
-    /*@Scheduled(cron = "0 0/20 0,1,2 * * *") //
+    @Scheduled(cron = "0 0/20 0,1,2 * * *") //
     public void purgarAnexosDistribuidos(){
 
         try {
@@ -193,14 +193,14 @@ public class Regweb3Scheduler {
             e.printStackTrace();
         }
 
-    }*/
+    }
 
 
     /**
      * Qué hace: purga los anexos de los registros sir que han sido aceptados
      * Cuando lo hace: Cada 20 minutos a las 03:00, 04:00 y 05:00
     */
-    /*@Scheduled(cron = "0 0/20 3,4,5 * * *") //
+    @Scheduled(cron = "0 0/20 3,4,5 * * *") //
     public void purgarAnexosSir(){
 
         try {
@@ -210,14 +210,14 @@ public class Regweb3Scheduler {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }*/
+    }
 
 
     /**
      * Qué hace: purga los anexos de los registros sir que han sido aceptados
      * Cuando lo hace: Cada 20 minutos a las 00:00, 02:00 y 03:00
      */
-    /*@Scheduled(cron = "0 0/20 6,7,8 * * *") //
+    @Scheduled(cron = "0 0/20 6,7,8 * * *") //
     public void purgarAnexosRegistrosConfirmados(){
 
         try {
@@ -227,5 +227,5 @@ public class Regweb3Scheduler {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }*/
+    }
 }
