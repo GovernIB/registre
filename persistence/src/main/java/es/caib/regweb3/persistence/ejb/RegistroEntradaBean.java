@@ -33,11 +33,8 @@ import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
 import javax.annotation.Resource;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
 import javax.interceptor.Interceptors;
 import javax.persistence.EntityManager;
-import javax.persistence.FlushModeType;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.util.*;
@@ -643,7 +640,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
                 anexo.getAnexo().setJustificante(false);
             }
             registroEntrada.getRegistroDetalle().setAnexos(new ArrayList<Anexo>());
-
+            registroEntrada.getRegistroDetalle().setJustificanteGeiser(false);
             registroEntrada.getRegistroDetalle().setObservaciones("Rectificación del registro " + registroEntrada.getNumeroRegistroFormateado());
 
             //Gestión Organo destino extinguido

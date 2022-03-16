@@ -408,7 +408,7 @@
     /* SI HI HA L'OPCIO DE DOCUMENT AMB FIRMA SEPARADA*/
     if(${anexoDetachedPermitido}) {
         tamModalAnexo = 340;
-        tamModalFitxer = 560;
+        tamModalFitxer = 650;
     } else{   /* SI NO HI HA L'OPCIO DE DOCUMENT AMB FIRMA SEPARADA*/
         tamModalAnexo = 260;
         tamModalFitxer = 560;

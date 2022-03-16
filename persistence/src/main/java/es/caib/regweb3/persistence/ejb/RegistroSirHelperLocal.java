@@ -9,7 +9,6 @@ import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.plugin.geiser.api.ApunteRegistro;
 
 import es.caib.regweb3.model.IRegistro;
-import es.caib.regweb3.model.RegistroEntrada;
 import es.caib.regweb3.model.RegistroSir;
 import es.caib.regweb3.model.UsuarioEntidad;
 import es.caib.regweb3.model.utils.CamposNTI;

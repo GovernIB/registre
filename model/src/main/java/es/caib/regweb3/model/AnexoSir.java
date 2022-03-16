@@ -141,7 +141,7 @@ public class AnexoSir implements Serializable {
     public void setNombreFichero(String nombreFichero) {
         this.nombreFichero = nombreFichero;
     }
-	@Column(name = "IDENTIFICADOR_FICHERO", length = 50, nullable = false)
+	@Column(name = "IDENTIFICADOR_FICHERO", length = 50)
     public String getIdentificadorFichero() {
         return identificadorFichero;
     }

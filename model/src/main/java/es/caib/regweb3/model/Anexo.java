@@ -94,7 +94,8 @@ public class Anexo implements Serializable {
     private String nombreFichero;
     @XmlTransient
     private Integer tamanoFichero;
-
+    
+    private Boolean validarNtiOrigen = true; //Crear registro entrada sin tipo documental/origen. Se indican por el usuario modificando los anexos (comportamiento GEISER).
 
     public Anexo() {
     }
@@ -491,8 +492,17 @@ public class Anexo implements Serializable {
 
         return null;
     }
+    
+    @Transient
+    public Boolean getValidarNtiOrigen() {
+		return validarNtiOrigen;
+	}
 
-    @Override
+	public void setValidarNtiOrigen(Boolean validarNtiOrigen) {
+		this.validarNtiOrigen = validarNtiOrigen;
+	}
+
+	@Override
     public boolean equals(Object o) {
       if (this == o) return true;
       if (o == null || getClass() != o.getClass()) return false;

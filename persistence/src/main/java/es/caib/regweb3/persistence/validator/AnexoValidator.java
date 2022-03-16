@@ -45,20 +45,23 @@ public class AnexoValidator<T> extends AbstractRegWebValidator<T> {
             rejectValue(errors, "tipoDocumento", "error.valor.requerido"); // , "El camp és obligatori"
         }
 
-        if (anexo.getTipoDocumental() == null) {
-            rejectValue(errors, "tipoDocumental", "error.valor.requerido");
-        } else {
-            if (anexo.getTipoDocumental().getId() == -1) {
-                rejectValue(errors, "tipoDocumental", "error.valor.requerido");
-            }
+        if (anexo.getValidarNtiOrigen()) {
+	        if (anexo.getTipoDocumental() == null || anexo.getTipoDocumental().getId() == null ) {
+	            rejectValue(errors, "tipoDocumental", "error.valor.requerido");
+	        } else {
+	            if (anexo.getTipoDocumental().getId() == -1) {
+	                rejectValue(errors, "tipoDocumental", "error.valor.requerido");
+	            }
+	        }
+	
+	        if (anexo.getOrigenCiudadanoAdmin() == null) {
+	            rejectValue(errors, "origenCiudadanoAdmin", "error.valor.requerido");
+	        } else if (anexo.getOrigenCiudadanoAdmin() != 0 && anexo.getOrigenCiudadanoAdmin() != 1) {
+	            rejectValue(errors, "origenCiudadanoAdmin", "error.valor.inesperado.origen");
+	        }
         }
 
 
-        if (anexo.getOrigenCiudadanoAdmin() == null) {
-            rejectValue(errors, "origenCiudadanoAdmin", "error.valor.requerido");
-        } else if (anexo.getOrigenCiudadanoAdmin() != 0 && anexo.getOrigenCiudadanoAdmin() != 1) {
-            rejectValue(errors, "origenCiudadanoAdmin", "error.valor.inesperado.origen");
-        }
 
 
         rejectIfEmptyOrWhitespace(errors, __target__, "titulo", "error.valor.requerido");

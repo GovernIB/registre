@@ -11,7 +11,6 @@
   <modelVersion>4.0.0</modelVersion>
 
   <artifactId>regweb3-ear</artifactId>
-  <version>3.2.4</version>
   <packaging>ear</packaging>
 
   <name>RegWeb3 - Ear</name>

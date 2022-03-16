@@ -178,9 +178,11 @@
                                             <span class="label label-danger">No</span>
                                         </c:if>
                                     </td>
+                                    <%--
 									<c:if test="${registroSir.estado == 'RECIBIDO_CONFIRMADO'}">
 										<input type="submit" value="<spring:message code="registroSir.aceptar"/>" class="btn btn-success btn-sm">
 									</c:if>
+									--%>
                                     <input type="hidden"
                                            id="camposNTIs[${status.index}].id"
                                            name="camposNTIs[${status.index}].id"

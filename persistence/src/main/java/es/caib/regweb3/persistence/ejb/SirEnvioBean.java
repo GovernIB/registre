@@ -900,19 +900,18 @@ public class SirEnvioBean implements SirEnvioLocal {
     		  if (estadoTramitacion != null && !estadoTramitacion.isEmpty() && !estadoTramitacion.get(0).getIdentificadorIntercambioSIR().isEmpty()) {
     			  String identificadorIntercambio = estadoTramitacion.get(0).getIdentificadorIntercambioSIR().get(0);
     			  registroSirEjb.actualizarIdentificadorIntercambio(registroSir.getId(), identificadorIntercambio);
-    			  if (oficioRemision != null)
+    			  if (oficioRemision != null) {
     				  oficioRemisionEjb.actualizarIdentificadorIntercambio(oficioRemision.getId(), identificadorIntercambio);
-//    			  int secuencia = 0;
-//    			  for (AnexoSir anexoSir: registroSir.getAnexos()) {
-//    				  String identificadorFichero = registroSirEjb.generateIdentificadorFichero(identificadorIntercambio, secuencia, anexoSir.getNombreFichero());
-//    				  secuencia++;
-//    				  
-//    				  anexoSir.setIdentificadorFichero(identificadorFichero);
-//    				  
-//    				  if (anexoSir.getDocumento() != null) { //firma dettached
-//    					  anexoSir.setIdentificadorDocumentoFirmado(identificadorFichero);
-//    				  }
-//    			  }
+    				  
+    				  for (RegistroEntrada registroEntrada: oficioRemision.getRegistrosEntrada()) {
+    					  if (registroEntrada.getNumeroRegistro().equals(registroSir.getNumeroRegistro()))
+    						  registroEntrada.getRegistroDetalle().setIdentificadorIntercambio(identificadorIntercambio);
+    				  }
+    				  for (RegistroSalida registroSalida: oficioRemision.getRegistrosSalida()) {
+    					  if (registroSalida.getNumeroRegistro().equals(registroSir.getNumeroRegistro()))
+    						  registroSalida.getRegistroDetalle().setIdentificadorIntercambio(identificadorIntercambio);
+    				  }
+    			  }
     		  }
     	  }
     	  if (actualizarEstado)
@@ -1010,7 +1009,12 @@ public class SirEnvioBean implements SirEnvioLocal {
 	        		  } else {
 	        			  oficioRemisionEjb.modificarFechaEstado(oficioRemision.getId(), null); // No mostrar fecha estado si no la devuelve GEISER
 	        		  }
-
+	        		  oficioRemisionEjb.actualizarEntradaDestino(
+	        				  oficioRemision.getId(), 
+	        				  apunteRegistro.getNuRegistro(), 
+	        				  apunteRegistro.getFechaRegistro(), 
+	        				  apunteRegistro.getCdAmbitoActual(),
+	        				  apunteRegistro.getNombreAmbitoActual());
 		              // Actualizar destino si este se cambia en GEISER (reenvío)
 		              if (!apunteRegistro.getOrganoDestino().equals(registroSir.getCodigoUnidadTramitacionDestino())) {
 

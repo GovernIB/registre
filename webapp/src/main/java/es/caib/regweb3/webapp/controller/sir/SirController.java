@@ -841,7 +841,7 @@ public class SirController extends BaseController {
 			}
 		} catch (I18NException e) {
 			e.printStackTrace();
-	        Mensaje.saveMessageInfo(request, "Ha habido un error recuperando los registros SIR");
+	        Mensaje.saveMessageError(request, "Ha habido un error recuperando los registros SIR");
 	        return "redirect:/sir/recuperarRegistrosSirRecibidos/form";
 		}
 		session.setAttribute("resultadoImportacion", mensajesSb);

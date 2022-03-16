@@ -294,16 +294,21 @@ public class ConversionPluginHelper {
 					@Override
 					public AnexoType convert(AnexoG source, Type<? extends AnexoType> destinationType) {
 						AnexoType target = new AnexoType();
-						target.setNombre(source.getTitulo());
+						String titulo = source.getTitulo();
+						target.setNombre(titulo);
 						if (source.getValidezDocumento() != null)
 							target.setValidez(ValidezDocumentoEnum.valueOf(source.getValidezDocumento().name()));
 						if (source.getTipoDocumentoAnexo() != null)
 							target.setTipoDocumento(TipoDocAnexoEnum.valueOf(source.getTipoDocumentoAnexo().name()));
 						target.setAnexo(source.getAnexoBase64());
 						target.setHash(DocumentHelper.decodeBase64Hash(source.getHash()));
-						if (source.getHash() != null)
+//						if (source.getHash() != null)
 //							target.setHash(DocumentHelper.getHash512Document(Base64.decodeBase64(source.getAnexoBase64())));
-						target.setTipoMime(source.getTipoMime());
+						String tipoMime = source.getTipoMime();
+						target.setTipoMime(tipoMime);
+						
+						if (tipoMime.equals("application/octet-stream") && titulo.endsWith(".pdf"))
+							target.setTipoMime("application/pdf");
 						target.setObservaciones(source.getObservaciones());
 						target.setTamanioFichero(source.getTamanioFichero());
 						target.setTipoFirma(TipoFirmaEnum.fromValue(source.getTipoFirma().name()));
@@ -312,7 +317,7 @@ public class ConversionPluginHelper {
 								target.setTipoFirma(TipoFirmaEnum.valueOf(source.getTipoFirma().name()));
 							target.setFirma(source.getFirmaBase64());
 							target.setHashFirma(DocumentHelper.decodeBase64Hash(source.getHashFirma()));
-							if (source.getHashFirma() != null)
+//							if (source.getHashFirma() != null)
 //								target.setHashFirma(DocumentHelper.getHash512Document(Base64.decodeBase64(source.getFirmaBase64())));
 							target.setNombreFirma(source.getNombreFirma());
 							target.setTamanioFicheroFirma(source.getTamanioFicheroFirma());

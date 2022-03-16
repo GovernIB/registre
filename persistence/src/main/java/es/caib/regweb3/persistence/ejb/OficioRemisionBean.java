@@ -16,8 +16,6 @@ import org.jboss.ejb3.annotation.SecurityDomain;
 import javax.annotation.Resource;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
@@ -773,6 +771,20 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
         q.executeUpdate();
 	}
 
+	@Override
+	public void actualizarEntradaDestino(Long idOficio, String numeroRegistroEntradaDestino, Date fechaEntradaDestino, 
+			String codigoEntidadRegistralProcesado, String decodificacionEntidadRegistralProcesado) throws Exception {
+		
+		Query q = em.createQuery("update OficioRemision set numeroRegistroEntradaDestino=:numeroRegistroEntradaDestino, fechaEntradaDestino=:fechaEntradaDestino"
+				+ ",codigoEntidadRegistralProcesado=:codigoEntidadRegistralProcesado,decodificacionEntidadRegistralProcesado=:decodificacionEntidadRegistralProcesado  where id = :idOficioRemision");
+        q.setParameter("numeroRegistroEntradaDestino", numeroRegistroEntradaDestino);
+        q.setParameter("fechaEntradaDestino", fechaEntradaDestino);
+        q.setParameter("codigoEntidadRegistralProcesado", codigoEntidadRegistralProcesado);
+        q.setParameter("decodificacionEntidadRegistralProcesado", decodificacionEntidadRegistralProcesado);
+        q.setParameter("idOficioRemision", idOficio);
+        q.executeUpdate();
+	}
+	
     @Override
     public void reiniciarIntentos(Long idOficioRemision) throws Exception {
 

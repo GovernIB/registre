@@ -1,7 +1,5 @@
 package es.caib.regweb3.persistence.ejb;
 
-import static es.caib.regweb3.utils.RegwebConstantes.ANEXO_ORIGEN_ADMINISTRACION;
-import static es.caib.regweb3.utils.RegwebConstantes.ANEXO_ORIGEN_CIUDADANO;
 import static es.caib.regweb3.utils.RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED;
 import static es.caib.regweb3.utils.RegwebConstantes.TIPOVALIDEZDOCUMENTO_COPIA;
 import static es.caib.regweb3.utils.RegwebConstantes.TIPOVALIDEZDOCUMENTO_COPIA_COMPULSADA;
@@ -338,6 +336,13 @@ public class RegistroSirHelperBean extends BaseEjbJPA<RegistroSir, Long> impleme
         // Anexos
         List<AnexoFull> anexosFull = procesarAnexos(registroSir, camposNTIs);
 
+        // No validar metadatos tipo documental y origen si viene de GEISER
+        for (AnexoFull anexoFull : anexosFull) {
+			Anexo anexo = anexoFull.getAnexo();
+			if (anexo != null) {
+				anexo.setValidarNtiOrigen(false);
+			}
+		}
         // Registramos el Registro Entrada
         registroEntrada = registroEntradaEjb.registrarEntrada(registroEntrada, usuario,interesados,anexosFull, true, false);
 
