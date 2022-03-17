@@ -276,7 +276,7 @@ public class Anexo implements Serializable {
       this.tipoDocumento = tipoDocumento;
     }
 
-    @ManyToOne()
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "REGISTRODETALLE")
     @ForeignKey(name = "RWE_ANEXO_REGDET_FK")
     @JsonIgnore

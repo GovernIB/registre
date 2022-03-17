@@ -1,6 +1,7 @@
 package es.caib.regweb3.persistence.ejb;
 
 
+import es.caib.dir3caib.ws.api.oficina.OficinaTF;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.OficioPendienteLlegada;
 import es.caib.regweb3.persistence.utils.OficiosRemisionOrganismo;
@@ -65,7 +66,7 @@ public interface OficioRemisionSalidaUtilsLocal {
      * @param idLibro
      * @return
      */
-    OficioRemision crearOficioRemisionInterno(List<RegistroSalida> registrosSalida, Oficina oficinaActiva, UsuarioEntidad usuarioEntidad, Long idOrganismo, Long idLibro) throws Exception, I18NException, I18NValidationException;
+    OficioRemision crearOficioRemisionInterno(List<RegistroSalida> registrosSalida, Entidad entidad, Oficina oficinaActiva, UsuarioEntidad usuarioEntidad, Long idOrganismo, Long idLibro) throws Exception, I18NException, I18NValidationException;
 
     /**
      * @param registrosSalida
@@ -76,7 +77,21 @@ public interface OficioRemisionSalidaUtilsLocal {
      * @param idLibro
      * @return
      */
-    OficioRemision crearOficioRemisionExterno(List<RegistroSalida> registrosSalida, Oficina oficinaActiva, UsuarioEntidad usuarioEntidad, String organismoExterno, String organismoExternoDenominacion, Long idLibro) throws Exception, I18NException, I18NValidationException;
+    OficioRemision crearOficioRemisionExterno(List<RegistroSalida> registrosSalida, Entidad entidad, Oficina oficinaActiva, UsuarioEntidad usuarioEntidad, String organismoExterno, String organismoExternoDenominacion, Long idLibro) throws Exception, I18NException, I18NValidationException;
+
+    /**
+     *
+     * @param registroSalida
+     * @param oficinaActiva
+     * @param usuarioEntidad
+     * @param oficinaSirDestino
+     * @return
+     * @throws Exception
+     * @throws I18NException
+     * @throws I18NValidationException
+     */
+    OficioRemision crearOficioRemisionSIR(RegistroSalida registroSalida,Entidad entidad, Oficina oficinaActiva, UsuarioEntidad usuarioEntidad, OficinaTF oficinaSirDestino)
+            throws Exception, I18NException, I18NValidationException;
 
     /**
      * Genera los Justificantes de todos los registros de un Oficio de Remisión
@@ -86,7 +101,7 @@ public interface OficioRemisionSalidaUtilsLocal {
      * @throws I18NException
      * @throws I18NValidationException
      */
-    public List<RegistroSalida> crearJustificantesRegistros(List<RegistroSalida> registros, UsuarioEntidad usuario) throws Exception, I18NException, I18NValidationException;
+    List<RegistroSalida> crearJustificantesRegistros(Entidad entidad, List<RegistroSalida> registros, UsuarioEntidad usuario) throws Exception, I18NException, I18NValidationException;
 
     /**
      * @param oficioRemision
@@ -98,9 +113,7 @@ public interface OficioRemisionSalidaUtilsLocal {
      * @throws I18NException
      * @throws I18NValidationException
      */
-    List<RegistroEntrada> aceptarOficioRemision(OficioRemision oficioRemision,
-                                                UsuarioEntidad usuario, Oficina oficinaActiva,
+    List<RegistroEntrada> aceptarOficioRemision(OficioRemision oficioRemision, Entidad entidad, UsuarioEntidad usuario, Oficina oficinaActiva,
                                                 List<OficioPendienteLlegada> oficios) throws Exception, I18NException, I18NValidationException;
-
 
 }

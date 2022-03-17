@@ -35,6 +35,15 @@ public interface ColaLocal extends BaseEjb<Cola, Long> {
     List<Cola> findByTipoEntidad(Long tipo, Long idEntidad,Integer total) throws Exception;
 
     /**
+     * Retorna el total de elementos de la Cola en estado PENDIENTE
+     * @param tipo
+     * @param idEntidad
+     * @return
+     * @throws Exception
+     */
+    Long findPendientesByTipo(Long tipo, Long idEntidad) throws Exception;
+
+    /**
      * Busca un elemento de la cola por IdObjeto y por entidad
      * @param idObjeto
      * @param idEntidad
@@ -129,12 +138,17 @@ public interface ColaLocal extends BaseEjb<Cola, Long> {
     void procesarElemento(Cola elemento) throws Exception;
 
     /**
+     * Marca como procesado un elemento de tipo Distribución de la Cola y cambia el estado del RegistroEntrada
+     * @param elemento
+     */
+    void procesarElementoDistribucion(Cola elemento) throws Exception;
+
+    /**
      * Método que elimina los elementos que fueron procesados hace x meses
      * @param idEntidad
-     * @param meses
      * @throws Exception
      */
-    void purgarElementosProcesados(Long idEntidad, Integer meses) throws Exception;
+    void purgarElementosProcesados(Long idEntidad) throws Exception;
 
     /**
      * Obtiene los elementos de cualquier cola que estén en estado Error

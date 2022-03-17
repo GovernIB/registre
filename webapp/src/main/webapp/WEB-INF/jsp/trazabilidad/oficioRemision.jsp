@@ -59,6 +59,20 @@
                 </c:if>
             </c:if>
 
+            <%--Identificador intercambio--%>
+            <c:if test="${loginInfo.rolActivo.nombre == 'RWE_ADMIN'}">
+                <p>
+                    <small><i class="fa fa-qrcode"></i> <strong><spring:message code="registroSir.identificadorIntercambio"/>:</strong>
+                        <a target="_blank" href="<c:url value="/sir/${oficioRemision.identificadorIntercambio}/detalle"/>">${oficioRemision.identificadorIntercambio}</a>
+                    </small>
+                </p>
+            </c:if>
+            <c:if test="${loginInfo.rolActivo.nombre == 'RWE_USUARI'}">
+                <p>
+                    <small><i class="fa fa-qrcode"></i> <strong><spring:message code="registroSir.identificadorIntercambio"/>:</strong> ${oficioRemision.identificadorIntercambio}</small>
+                </p>
+            </c:if>
+
             <%--Tipo intercambio (Tipo anotación)  {Envío, Reenvío, Rechazo} --%>
             <p>
                 <small><i class="fa fa-send"></i> <strong><spring:message code="registroSir.tipoIntercambio"/>: <spring:message code="registroSir.tipoAnotacion.${tipoAnotacion}"/></strong></small>
@@ -70,11 +84,6 @@
                     <small><i class="fa fa-file-text-o"></i> <strong><spring:message code="registroSir.motivo"/>:</strong> ${decodificacionTipoAnotacion}</small>
                 </p>
             </c:if>
-
-            <%--Identificador intercambio--%>
-            <p>
-                <small><i class="fa fa-qrcode"></i> <strong><spring:message code="registroSir.identificadorIntercambio"/>:</strong> ${oficioRemision.identificadorIntercambio}</small>
-            </p>
 
             <%--Estado --%>
             <p>

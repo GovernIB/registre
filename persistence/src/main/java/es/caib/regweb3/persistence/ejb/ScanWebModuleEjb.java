@@ -21,264 +21,259 @@ import java.util.Map.Entry;
 
 
 /**
- *
  * @author anadal migracio a ScanWebApi 2.0.0 (06/07/2016)
- *
  */
 @Stateless(name = "ScanWebModuleEJB")
 @SecurityDomain("seycon")
-@RunAs("RWE_ADMIN") 
+@RunAs("RWE_ADMIN")
 //@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI"})
 public class ScanWebModuleEjb implements ScanWebModuleLocal {
 
-  protected Logger log = Logger.getLogger(this.getClass());
-  
-  @EJB(mappedName = "regweb3/PluginEJB/local")
-  private PluginLocal pluginEjb;
+    protected Logger log = Logger.getLogger(this.getClass());
+
+    @EJB(mappedName = "regweb3/PluginEJB/local")
+    private PluginLocal pluginEjb;
 
 
-  @Override
-  public String scanDocument(HttpServletRequest request, String absolutePluginRequestPath,
-      String relativePluginRequestPath, String scanWebID) throws Exception, I18NException {
+    @Override
+    public String scanDocument(HttpServletRequest request, String absolutePluginRequestPath,
+                               String relativePluginRequestPath, String scanWebID) throws Exception, I18NException {
 
-    ScanWebConfigRegWeb scanWebConfig = getScanWebConfig(request, scanWebID);
+        ScanWebConfigRegWeb scanWebConfig = getScanWebConfig(request, scanWebID);
 
-    long entitatID = scanWebConfig.getEntitatID();
+        long entitatID = scanWebConfig.getEntitatID();
 
-    log.info("SWM :: scanDocument: entitatID = " + entitatID);
-    log.info("SWM :: scanDocument: scanWebID = " + scanWebID);
+        log.debug("SWM :: scanDocument: entitatID = " + entitatID);
+        log.debug("SWM :: scanDocument: scanWebID = " + scanWebID);
 
-    // El plugin existeix?
-    IScanWebPlugin scanWebPlugin;
+        // El plugin existeix?
+        IScanWebPlugin scanWebPlugin;
 
-    scanWebPlugin = getInstanceByEntitatID(entitatID);
-
-    if (scanWebPlugin == null) {
-      throw new I18NException("error.plugin.scanweb.noexist", String.valueOf(entitatID));
-    }
-
-    String urlToPluginWebPage;
-    urlToPluginWebPage = scanWebPlugin.startScanWebTransaction(absolutePluginRequestPath,
-        relativePluginRequestPath, request, scanWebConfig.getScanWebRequest());
-    scanWebConfig.setScanWebResult(scanWebPlugin.getScanWebResult(scanWebConfig.getScanWebRequest().getScanWebID()));
-
-    return urlToPluginWebPage;
-
-  }
-
-  /**
-   * 
-   */
-  public void requestPlugin(HttpServletRequest request, HttpServletResponse response,
-      String absoluteRequestPluginBasePath, String relativeRequestPluginBasePath,
-                            String scanWebID, String query, boolean isPost) throws Exception, I18NException {
-
-    ScanWebConfigRegWeb ss = getScanWebConfig(request, scanWebID);
-    
-    if (ss == null) {
-      response.sendRedirect("/index.jsp");
-      return;
-    }
-    
-
-    long entitatID = ss.getEntitatID();
-
-    // log.info(" TesterScanWebConfig ss = " + ss);
-    // log.info(" ScanWebConfig pluginID = ss.getPluginID(); =>  " + pluginID);
-
-    IScanWebPlugin scanWebPlugin;
-    try {
-      scanWebPlugin = getInstanceByEntitatID(entitatID);
-    } catch (Exception e) {
-      throw new I18NException(e, "error.plugin.scanweb.noexist", new I18NArgumentString(String.valueOf(entitatID)));
-    }
-    if (scanWebPlugin == null) {
-      throw new I18NException("error.plugin.scanweb.noexist", String.valueOf(entitatID));
-    }
-
-    if (isPost) {
-      scanWebPlugin.requestPOST(absoluteRequestPluginBasePath, relativeRequestPluginBasePath,
-          scanWebID, query, request, response);
-    } else {
-      scanWebPlugin.requestGET(absoluteRequestPluginBasePath, relativeRequestPluginBasePath,
-          scanWebID, query, request, response);
-    }
-
-  }
-
-  // -------------------------------------------------------------------------
-  // -------------------------------------------------------------------------
-  // ----------------------------- U T I L I T A T S ----------------------
-  // -------------------------------------------------------------------------
-  // -------------------------------------------------------------------------
-
-  @Override
-  public void closeScanWebProcess(HttpServletRequest request, String scanWebID) {
-
-    ScanWebConfigRegWeb pss = getScanWebConfig(request, scanWebID);
-
-    if (pss == null) {
-      log.warn("NO Existeix scanWebID igual a " + scanWebID);
-      return;
-    }
-
-    closeScanWebProcess(request, scanWebID, pss);
-  }
-
-  private void closeScanWebProcess(HttpServletRequest request, String scanWebID,
-      ScanWebConfigRegWeb pss) {
-
-    Long entitatID = pss.getEntitatID();
-
-    // final String scanWebID = pss.getscanWebID();
-    if (entitatID == null) {
-      // Encara no s'ha asignat plugin al proces d'escaneig
-    } else {
-
-      IScanWebPlugin scanWebPlugin = null;
-      try {
         scanWebPlugin = getInstanceByEntitatID(entitatID);
-      } catch (I18NException e) {
-        log.error(I18NCommonUtils.tradueix(new Locale("ca"), 
-            "error.plugin.scanweb.noexist", String.valueOf(entitatID)), e);
-      }
-      if (scanWebPlugin == null) {
-        log.error(I18NCommonUtils.tradueix(new Locale("ca"), 
-            "error.plugin.scanweb.noexist", String.valueOf(entitatID)));
-      }
 
-      try {
-        scanWebPlugin.endScanWebTransaction(scanWebID, request);
-      } catch (Exception e) {
-        log.error(
-            "Error borrant dades d'un Proces d'escaneig " + scanWebID + ": " + e.getMessage(),
-            e);
-      }
-    }
-    scanWebConfigMap.remove(scanWebID);
-  }
-
-  private static final Map<String, ScanWebConfigRegWeb> scanWebConfigMap = new HashMap<String, ScanWebConfigRegWeb>();
-
-  private static long lastCheckScanProcessCaducades = 0;
-
-  /**
-   * Fa neteja
-   * 
-   * @param scanWebID
-   * @return
-   */
-  public ScanWebConfigRegWeb getScanWebConfig(HttpServletRequest request, String scanWebID) {
-    // Fer net peticions caducades
-    // Check si existeix algun proces de escaneig caducat s'ha d'esborrar
-    // Com a mínim cada minut es revisa si hi ha caducats
-    Long now = System.currentTimeMillis();
-
-    final long un_minut_en_ms = 60 * 60 * 1000;
-
-    if (now + un_minut_en_ms > lastCheckScanProcessCaducades) {
-      lastCheckScanProcessCaducades = now;
-      Map<String, ScanWebConfigRegWeb> keysToDelete = new HashMap<String, ScanWebConfigRegWeb>();
-
-      Set<String> ids = scanWebConfigMap.keySet();
-      for (String id : ids) {
-        ScanWebConfigRegWeb ss = scanWebConfigMap.get(id);
-        if (now > ss.getExpiryTransaction()) {
-          keysToDelete.put(id, ss);
-          SimpleDateFormat sdf = new SimpleDateFormat();
-          log.info("Tancant ScanWebConfig amb ID = " + id + " a causa de que està caducat "
-              + "( ARA: " + sdf.format(new Date(now)) + " | CADUCITAT: "
-              + sdf.format(new Date(ss.getExpiryTransaction())) + ")");
+        if (scanWebPlugin == null) {
+            throw new I18NException("error.plugin.scanweb.noexist", String.valueOf(entitatID));
         }
-      }
 
-      if (keysToDelete.size() != 0) {
+        String urlToPluginWebPage;
+        urlToPluginWebPage = scanWebPlugin.startScanWebTransaction(absolutePluginRequestPath,
+                relativePluginRequestPath, request, scanWebConfig.getScanWebRequest());
+        scanWebConfig.setScanWebResult(scanWebPlugin.getScanWebResult(scanWebConfig.getScanWebRequest().getScanWebID()));
+
+        return urlToPluginWebPage;
+
+    }
+
+    /**
+     *
+     */
+    public void requestPlugin(HttpServletRequest request, HttpServletResponse response,
+                              String absoluteRequestPluginBasePath, String relativeRequestPluginBasePath,
+                              String scanWebID, String query, boolean isPost) throws Exception, I18NException {
+
+        ScanWebConfigRegWeb ss = getScanWebConfig(request, scanWebID);
+
+        if (ss == null) {
+            response.sendRedirect("/index.jsp");
+            return;
+        }
+
+
+        long entitatID = ss.getEntitatID();
+
+        // log.info(" TesterScanWebConfig ss = " + ss);
+        // log.info(" ScanWebConfig pluginID = ss.getPluginID(); =>  " + pluginID);
+
+        IScanWebPlugin scanWebPlugin;
+        try {
+            scanWebPlugin = getInstanceByEntitatID(entitatID);
+        } catch (Exception e) {
+            throw new I18NException(e, "error.plugin.scanweb.noexist", new I18NArgumentString(String.valueOf(entitatID)));
+        }
+        if (scanWebPlugin == null) {
+            throw new I18NException("error.plugin.scanweb.noexist", String.valueOf(entitatID));
+        }
+
+        if (isPost) {
+            scanWebPlugin.requestPOST(absoluteRequestPluginBasePath, relativeRequestPluginBasePath,
+                    scanWebID, query, request, response);
+        } else {
+            scanWebPlugin.requestGET(absoluteRequestPluginBasePath, relativeRequestPluginBasePath,
+                    scanWebID, query, request, response);
+        }
+
+    }
+
+    // -------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+    // ----------------------------- U T I L I T A T S ----------------------
+    // -------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+
+    @Override
+    public void closeScanWebProcess(HttpServletRequest request, String scanWebID) {
+
+        ScanWebConfigRegWeb pss = getScanWebConfig(request, scanWebID);
+
+        if (pss == null) {
+            log.warn("NO Existeix scanWebID igual a " + scanWebID);
+            return;
+        }
+
+        closeScanWebProcess(request, scanWebID, pss);
+    }
+
+    private void closeScanWebProcess(HttpServletRequest request, String scanWebID,
+                                     ScanWebConfigRegWeb pss) {
+
+        Long entitatID = pss.getEntitatID();
+
+        // final String scanWebID = pss.getscanWebID();
+        if (entitatID == null) {
+            // Encara no s'ha asignat plugin al proces d'escaneig
+        } else {
+
+            IScanWebPlugin scanWebPlugin = null;
+            try {
+                scanWebPlugin = getInstanceByEntitatID(entitatID);
+            } catch (I18NException e) {
+                log.error(I18NCommonUtils.tradueix(new Locale("ca"),
+                        "error.plugin.scanweb.noexist", String.valueOf(entitatID)), e);
+            }
+            if (scanWebPlugin == null) {
+                log.error(I18NCommonUtils.tradueix(new Locale("ca"),
+                        "error.plugin.scanweb.noexist", String.valueOf(entitatID)));
+            }
+
+            try {
+                scanWebPlugin.endScanWebTransaction(scanWebID, request);
+            } catch (Exception e) {
+                log.error(
+                        "Error borrant dades d'un Proces d'escaneig " + scanWebID + ": " + e.getMessage(),
+                        e);
+            }
+        }
+        scanWebConfigMap.remove(scanWebID);
+    }
+
+    private static final Map<String, ScanWebConfigRegWeb> scanWebConfigMap = new HashMap<String, ScanWebConfigRegWeb>();
+
+    private static long lastCheckScanProcessCaducades = 0;
+
+    /**
+     * Fa neteja
+     *
+     * @param scanWebID
+     * @return
+     */
+    public ScanWebConfigRegWeb getScanWebConfig(HttpServletRequest request, String scanWebID) {
+        // Fer net peticions caducades
+        // Check si existeix algun proces de escaneig caducat s'ha d'esborrar
+        // Com a mínim cada minut es revisa si hi ha caducats
+        Long now = System.currentTimeMillis();
+
+        final long un_minut_en_ms = 60 * 60 * 1000;
+
+        if (now + un_minut_en_ms > lastCheckScanProcessCaducades) {
+            lastCheckScanProcessCaducades = now;
+            Map<String, ScanWebConfigRegWeb> keysToDelete = new HashMap<String, ScanWebConfigRegWeb>();
+
+            Set<String> ids = scanWebConfigMap.keySet();
+            for (String id : ids) {
+                ScanWebConfigRegWeb ss = scanWebConfigMap.get(id);
+                if (now > ss.getExpiryTransaction()) {
+                    keysToDelete.put(id, ss);
+                    SimpleDateFormat sdf = new SimpleDateFormat();
+                    log.info("Tancant ScanWebConfig amb ID = " + id + " a causa de que està caducat "
+                            + "( ARA: " + sdf.format(new Date(now)) + " | CADUCITAT: "
+                            + sdf.format(new Date(ss.getExpiryTransaction())) + ")");
+                }
+            }
+
+            if (keysToDelete.size() != 0) {
+                synchronized (scanWebConfigMap) {
+
+                    for (Entry<String, ScanWebConfigRegWeb> pss : keysToDelete.entrySet()) {
+                        closeScanWebProcess(request, pss.getKey(), pss.getValue());
+                    }
+                }
+            }
+        }
+
+        return scanWebConfigMap.get(scanWebID);
+    }
+
+    @Override
+    public void registerScanWebProcess(HttpServletRequest request, ScanWebConfigRegWeb scanWebConfig) {
+        final String scanWebID = scanWebConfig.getScanWebRequest().getScanWebID();
+
+        ScanWebConfigRegWeb tmp = getScanWebConfig(request, scanWebID);
+        if (tmp != null) {
+            closeScanWebProcess(request, scanWebID);
+        }
+
         synchronized (scanWebConfigMap) {
-
-          for (Entry<String, ScanWebConfigRegWeb> pss : keysToDelete.entrySet()) {
-            closeScanWebProcess(request, pss.getKey(), pss.getValue());
-          }
+            scanWebConfigMap.put(scanWebID, scanWebConfig);
         }
-      }
+
     }
 
-    return scanWebConfigMap.get(scanWebID);
-  }
 
-  @Override
-  public void registerScanWebProcess(HttpServletRequest request, ScanWebConfigRegWeb scanWebConfig) {
-    final String scanWebID = scanWebConfig.getScanWebRequest().getScanWebID();
-    
-    ScanWebConfigRegWeb tmp = getScanWebConfig(request, scanWebID);
-    if (tmp != null) {
-      closeScanWebProcess(request, scanWebID);
-    }
-    
-    synchronized (scanWebConfigMap) {
-      scanWebConfigMap.put(scanWebID, scanWebConfig);
-    }
+    @Override
+    public Set<String> getDefaultFlags(ScanWebConfigRegWeb ss) throws Exception, I18NException {
 
-  }
-  
-  
-  @Override
-  public Set<String> getDefaultFlags(ScanWebConfigRegWeb ss) throws Exception, I18NException  {
-    
-    IScanWebPlugin scanWebPlugin =
-        (IScanWebPlugin)pluginEjb.getPlugin(ss.getEntitatID(), RegwebConstantes.PLUGIN_SCAN);
+        IScanWebPlugin scanWebPlugin =
+                (IScanWebPlugin) pluginEjb.getPlugin(ss.getEntitatID(), RegwebConstantes.PLUGIN_SCAN);
 
-    if (scanWebPlugin == null) {
-      
-      throw new I18NException("error.plugin.scanweb.noexist", String.valueOf(ss.getEntitatID()));
+        if (scanWebPlugin == null) {
+
+            throw new I18NException("error.plugin.scanweb.noexist", String.valueOf(ss.getEntitatID()));
+        }
+
+        Set<String> supFlags = scanWebPlugin.getSupportedFlagsByScanType(ss.getScanWebRequest().getScanType());
+
+        return supFlags;
+
     }
 
-    Set<String> supFlags = scanWebPlugin.getSupportedFlagsByScanType(ss.getScanWebRequest().getScanType());
-    
-    return supFlags;
-    
-  }
 
-  
-  
-  
+    protected static Map<Long, IScanWebPlugin> pluginsByEntitat = new HashMap<Long, IScanWebPlugin>();
 
+    @Override
+    public IScanWebPlugin getInstanceByEntitatID(long entitatID) throws I18NException {
 
-  protected static Map<Long, IScanWebPlugin> pluginsByEntitat = new HashMap<Long, IScanWebPlugin>();
-  
-  @Override
-  public IScanWebPlugin getInstanceByEntitatID(long entitatID) throws I18NException {
-    
-    IScanWebPlugin p = pluginsByEntitat.get(entitatID);
-    
-    if (p == null) {
-     //Object obj = pluginEjb.getPlugin(entitatID, RegwebConstantes.PLUGIN_SCAN);
-      Object obj = pluginEjb.getPlugin(entitatID, RegwebConstantes.PLUGIN_SCAN);
+        IScanWebPlugin p = pluginsByEntitat.get(entitatID);
 
-      if (obj == null) {
-        // No te cap plugin definit
-        return null;
-      }
+        if (p == null) {
+            //Object obj = pluginEjb.getPlugin(entitatID, RegwebConstantes.PLUGIN_SCAN);
+            Object obj = pluginEjb.getPlugin(entitatID, RegwebConstantes.PLUGIN_SCAN);
 
-     // AbstractScanWebPlugin plugin = (AbstractScanWebPlugin)obj;
-      //log.info("XYZ PROPERTYBASE " + plugin.getPropertyKeyBase());
-      pluginsByEntitat.put(entitatID, (IScanWebPlugin) obj);
-      p =  pluginsByEntitat.get(entitatID);
-    }      
+            if (obj == null) {
+                // No te cap plugin definit
+                return null;
+            }
 
-    return p; 
-  }
-  
-  /**
-   * Comprueba si la entidad tiene definido un tipo de escaneo vàlido
-   * @param entitatID
-   * @return
-   */
-  @Override
-  public boolean entitatTeScan(long entitatID) throws I18NException {
-    
-    IScanWebPlugin plugin = getInstanceByEntitatID(entitatID);
-    
-    return plugin != null;
+            // AbstractScanWebPlugin plugin = (AbstractScanWebPlugin)obj;
+            //log.info("XYZ PROPERTYBASE " + plugin.getPropertyKeyBase());
+            pluginsByEntitat.put(entitatID, (IScanWebPlugin) obj);
+            p = pluginsByEntitat.get(entitatID);
+        }
+
+        return p;
+    }
+
+    /**
+     * Comprueba si la entidad tiene definido un tipo de escaneo vàlido
+     *
+     * @param entitatID
+     * @return
+     */
+    @Override
+    public boolean entitatTeScan(long entitatID) throws I18NException {
+
+        IScanWebPlugin plugin = getInstanceByEntitatID(entitatID);
+
+        return plugin != null;
     
     /*
     Long count = pluginEjb.getTotalByEntidad(entitatID, RegwebConstantes.PLUGIN_SCAN);
@@ -289,46 +284,48 @@ public class ScanWebModuleEjb implements ScanWebModuleLocal {
       return true;
     }
     */
-  }
-
-
-  /**
-   * Comprueba si el plugin de scan permite escaneo masivo
-   * @param entitatID
-   * @return
-   */
-  @Override
-  public boolean entitatPermetScanMasiu(long entitatID) throws I18NException {
-
-    IScanWebPlugin plugin = getInstanceByEntitatID(entitatID);
-
-    return plugin != null && plugin.isMassiveScanAllowed();
-
-  }
-
-  /**
-   * Obtiene el documento separador para la digitalización masiva
-   * @param entitatID
-   * @return
-   */
-  @Override
-  public ScanWebPlainFile obtenerDocumentoSeparador(long entitatID, String languageUI) throws I18NException {
-
-    IScanWebPlugin plugin = getInstanceByEntitatID(entitatID);
-    try{
-    if(entitatPermetScanMasiu(entitatID)){
-
-      return plugin.getSeparatorForMassiveScan(languageUI);
-
-    }else{
-      return null;
     }
-    }catch (Exception e){
-       throw new I18NException("error.plugin.scanweb.noseparador");
+
+
+    /**
+     * Comprueba si el plugin de scan permite escaneo masivo
+     *
+     * @param entitatID
+     * @return
+     */
+    @Override
+    public boolean entitatPermetScanMasiu(long entitatID) throws I18NException {
+
+        IScanWebPlugin plugin = getInstanceByEntitatID(entitatID);
+
+        return plugin != null && plugin.isMassiveScanAllowed();
 
     }
 
-  }
+    /**
+     * Obtiene el documento separador para la digitalización masiva
+     *
+     * @param entitatID
+     * @return
+     */
+    @Override
+    public ScanWebPlainFile obtenerDocumentoSeparador(long entitatID, String languageUI) throws I18NException {
 
-  
+        IScanWebPlugin plugin = getInstanceByEntitatID(entitatID);
+        try {
+            if (entitatPermetScanMasiu(entitatID)) {
+
+                return plugin.getSeparatorForMassiveScan(languageUI);
+
+            } else {
+                return null;
+            }
+        } catch (Exception e) {
+            throw new I18NException("error.plugin.scanweb.noseparador");
+
+        }
+
+    }
+
+
 }

@@ -54,7 +54,7 @@ public class Notificacion implements Serializable {
         this.id = id;
     }
 
-    @ManyToOne()
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="REMITENTE")
     @ForeignKey(name="RWE_NOTIF_REMIT_FK")
     public UsuarioEntidad getRemitente() {

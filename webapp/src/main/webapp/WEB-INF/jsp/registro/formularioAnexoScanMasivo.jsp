@@ -34,10 +34,13 @@ parent.closeAndReload();
         <ul>
             <li><spring:message code="anexo.escaneomasivo.separador.obligatorio"/></li>
             <li><spring:message code="anexo.escaneomasivo.numeroseparadores"/></li>
-            <li><spring:message code="anexo.escaneomasivo.mumeromaximo.ficheros"/></li>
-            <li><spring:message code="anexo.escaneomasivo.ejemplo"/></li>
-
+            <li><spring:message code="anexo.escaneomasivo.numeromaximo.ficheros"/></li>
+            <ul>
+                <li><spring:message code="anexo.escaneomasivo.nummaxenviossir"/></li>
+                <li><spring:message code="anexo.escaneomasivo.sinlimite"/></li>
+            </ul>
         </ul>
+        <p><spring:message code="anexo.escaneomasivo.ejemplo"/></p>
         <div class="center">
             <img src="<c:url value="/img/separador.png"/>" width="200" height="160"/>
         </div>

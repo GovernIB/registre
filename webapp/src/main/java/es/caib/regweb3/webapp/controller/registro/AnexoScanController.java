@@ -1,6 +1,7 @@
 package es.caib.regweb3.webapp.controller.registro;
 
 import es.caib.regweb3.model.Entidad;
+import es.caib.regweb3.model.Oficina;
 import es.caib.regweb3.model.UsuarioEntidad;
 import es.caib.regweb3.persistence.ejb.RegistroDetalleLocal;
 import es.caib.regweb3.persistence.ejb.ScanWebModuleLocal;
@@ -8,6 +9,7 @@ import es.caib.regweb3.persistence.ejb.TipoDocumentalLocal;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.persistence.utils.ScanWebConfigRegWeb;
 import es.caib.regweb3.utils.RegwebConstantes;
+import es.caib.regweb3.utils.RegwebUtils;
 import es.caib.regweb3.webapp.utils.AnexoUtils;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import org.fundaciobit.genapp.common.i18n.I18NArgumentString;
@@ -17,11 +19,7 @@ import org.fundaciobit.plugins.documentcustody.api.DocumentCustody;
 import org.fundaciobit.plugins.documentcustody.api.SignatureCustody;
 import org.fundaciobit.pluginsib.core.utils.Metadata;
 import org.fundaciobit.pluginsib.core.utils.MetadataConstants;
-import org.fundaciobit.pluginsib.scanweb.api.ScanWebDocument;
-import org.fundaciobit.pluginsib.scanweb.api.ScanWebMode;
-import org.fundaciobit.pluginsib.scanweb.api.ScanWebRequest;
-import org.fundaciobit.pluginsib.scanweb.api.ScanWebRequestSignatureInfo;
-import org.fundaciobit.pluginsib.scanweb.api.ScanWebResult;
+import org.fundaciobit.pluginsib.scanweb.api.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,6 +32,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+
+import static es.caib.regweb3.utils.StringUtils.sustituirCaracteresProhibidosArxiu;
 
 /**
  * Created by mgonzalez on 04/05/2017.
@@ -62,9 +62,6 @@ public class AnexoScanController extends AnexoController {
                                 @PathVariable Long tipoRegistro, @PathVariable Long registroID, @PathVariable Boolean isOficioRemisionSir,
                                 Model model) throws I18NException, Exception {
 
-        log.info(" Passa per AnexoScanController::crearAnexoGet(" + registroDetalleID
-                + "," + tipoRegistro + ", " + registroID + ")");
-
        //Actualiza las variables con la ultima acción y prepara el anexoForm
         AnexoForm anexoForm = prepararAnexoForm(request, registroDetalleID, tipoRegistro, registroID, isOficioRemisionSir, true);
         request.getSession().setAttribute("anexoForm", anexoForm);
@@ -83,9 +80,6 @@ public class AnexoScanController extends AnexoController {
                                 HttpServletResponse response, @PathVariable Long registroDetalleID,
                                 @PathVariable Long tipoRegistro, @PathVariable Long registroID, @PathVariable Boolean isOficioRemisionSir,
                                 Model model) throws I18NException, Exception {
-
-        log.info(" Passa per AnexoScanController::crearAnexoMasivoGet(" + registroDetalleID
-           + "," + tipoRegistro + ", " + registroID + ")");
 
         //Actualiza las variables con la ultima acción y prepara el anexoForm
         AnexoForm anexoForm = prepararAnexoForm(request, registroDetalleID, tipoRegistro, registroID, isOficioRemisionSir, true);
@@ -125,9 +119,17 @@ public class AnexoScanController extends AnexoController {
                 anexoForm.setNumDocumento(anexoForm.getNumDocumento()+1);
             }
 
+            //Obtenemos tamanyo máximo permitido
+            Long maxUploadSizeInBytes;
+            Long entidadID = getEntidadActiva(request).getId();
+            if(entidadID != null) {
+                maxUploadSizeInBytes = PropiedadGlobalUtil.getMaxUploadSizeInBytes(entidadID);
+            }else {
+                maxUploadSizeInBytes = PropiedadGlobalUtil.getMaxUploadSizeInBytes();
+            }
 
-            //Validamos las condiciones de SIR
-            if (isSIR) {
+            //Si hay tamaño máximo permitido o isSIR hay que comprobar los tamanyos y extensiones
+            if(maxUploadSizeInBytes != null || isSIR){
                 String docExtension = "";
                 String firmaExtension = "";
                 long docSize = -1;
@@ -142,9 +144,19 @@ public class AnexoScanController extends AnexoController {
                     firmaExtension = AnexoUtils.obtenerExtensionAnexo(anexoForm.getSignatureCustody().getName());
                     firmaSize = anexoForm.getSignatureCustody().getLength();
                 }
-                //validamos las limitaciones SIR
-                validarLimitacionesSIRAnexos(anexoForm.getRegistroID(), anexoForm.getTipoRegistro(), docSize, firmaSize, docExtension, firmaExtension, null, true);
+
+                //Validadmos Tamanyo máximo permitido
+                if(maxUploadSizeInBytes !=null) {
+                    validarMaxUploadSize( docSize, firmaSize, maxUploadSizeInBytes);
+                }
+
+                if(isSIR) {
+                    //validamos las limitaciones SIR
+                    validarLimitacionesSIRAnexos(anexoForm.getRegistroID(), anexoForm.getTipoRegistro(), docSize, firmaSize, docExtension, firmaExtension, null, true);
+                }
+
             }
+
 
             //Validamos la firma del anexoForm que nos indican, previo a crear el anexo
             validarAnexoForm(request, anexoForm);
@@ -163,9 +175,7 @@ public class AnexoScanController extends AnexoController {
             Mensaje.saveMessageError(request, e.getMessage());
         }
 
-
-        return "redirect:/anexoScan/new/" + anexoForm.getAnexo().getRegistroDetalle().getId() + "/" + anexoForm.getTipoRegistro() + "/" + anexoForm.getRegistroID() + "/" + isSIR;
-
+        return "redirect:/anexoScan/new/" + anexoForm.getIdRegistroDetalle() + "/" + anexoForm.getTipoRegistro() + "/" + anexoForm.getRegistroID() + "/" + isSIR;
     }
 
 
@@ -257,6 +267,7 @@ public class AnexoScanController extends AnexoController {
 
         //  Pasamos los datos del funcionario que realiza el escaneo en el list de metadades
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
+        Oficina oficinaActiva = getOficinaActiva(request);
 
 
         final  String scanType = ScanWebDocument.SCANTYPE_MIME_PDF;
@@ -283,7 +294,7 @@ public class AnexoScanController extends AnexoController {
 
         long expiryTransaction = caducitat.getTimeInMillis();
         String transactionName = scanWebID;
-        ScanWebRequestSignatureInfo signatureInfo = new ScanWebRequestSignatureInfo(usuarioEntidad.getNombreCompleto(),  usuarioEntidad.getUsuario().getDocumento(),  usuarioEntidad.getEntidad().getCodigoDir3());
+        ScanWebRequestSignatureInfo signatureInfo = new ScanWebRequestSignatureInfo(usuarioEntidad.getNombreCompleto(),  usuarioEntidad.getUsuario().getDocumento(),  oficinaActiva.getOrganismoResponsable().getCodigo());
         ScanWebRequest scanWebRequest = new ScanWebRequest( scanWebID, transactionName,  scanType,  flag,  mode,  languageUI,  usuarioEntidad.getUsuario().getIdentificador(),  urlFinal,  metadades, signatureInfo);
 
         ScanWebConfigRegWeb ss = new ScanWebConfigRegWeb(scanWebRequest,expiryTransaction);
@@ -334,6 +345,8 @@ public class AnexoScanController extends AnexoController {
         if (sc != null) {
             log.info(sc.getName());
         }
+
+        anexoForm.getAnexo().setScan(true);
 
         //Fijamos el MODO DE FIRMA
         final int modoFirma;
@@ -404,11 +417,7 @@ public class AnexoScanController extends AnexoController {
         anexoForm.setMetadatas(metadatasScan);
 
         //TODO Metadades del funcionari
-
-        //Titol de l'annexe (eliminam caracters no vàlids i afegim sufixe "doc")
-        StringBuilder titulo = new StringBuilder().append("doc");
-        titulo.append(documento.getTransactionName().replace("/" , " de "));
-        anexoForm.getAnexo().setTitulo(titulo.toString());
+        anexoForm.getAnexo().setTitulo(sustituirCaracteresProhibidosArxiu(documento.getTransactionName(), '_'));
 
 
         //Asignamos los valores de documentCustody y SignatureCustody en función de lo obtenido anteriormente.
@@ -463,6 +472,27 @@ public class AnexoScanController extends AnexoController {
         }
 
         return docsEscaneados;
+
+    }
+
+    public void validarMaxUploadSize( long docSize, long firmaSize, Long maxUploadSizeInBytes) throws I18NException {
+
+        String sMaxUploadSizeInBytes= RegwebUtils.bytesToHuman(maxUploadSizeInBytes);
+        if(maxUploadSizeInBytes!= null){ // Si no está especificada, se permite cualquier tamaño
+            if(docSize>0) {
+                if (docSize > maxUploadSizeInBytes) {
+                    String tamanoDoc= RegwebUtils.bytesToHuman(docSize);
+                    throw new I18NException("tamanyfitxerpujatsuperat", tamanoDoc, sMaxUploadSizeInBytes);
+
+                }
+            }else {
+                if (firmaSize > maxUploadSizeInBytes) {
+                    String tamanoDoc= RegwebUtils.bytesToHuman(firmaSize);
+                    throw new I18NException("tamanyfitxerpujatsuperat", tamanoDoc, sMaxUploadSizeInBytes);
+
+                }
+            }
+        }
 
     }
 }

@@ -91,21 +91,34 @@
 
                                     </dl>
                                 </div>
-                                <%--BOTONERA DETALLE--%>
+                                <%--BOTONERA DETALLE E INTEGRACIONES--%>
                                 <div class="panel-footer center">
+
+                                    <form:form modelAttribute="integracion" action="${pageContext.request.contextPath}/integracion/busqueda" method="post" cssClass="form-horizontal" target="_blank">
+                                        <form:hidden path="texto"/>
+                                    </form:form>
+
+                                    <%--Botón integraciones--%>
+                                    <div class="btn-group">
+                                        <button type="button" onclick="buscarIntegraciones('${idIntercambio}')" class="btn btn-warning btn-sm btn-block">
+                                            <spring:message code="integracion.integraciones"/>
+                                        </button>
+                                    </div>
+
                                     <div class="btn-group"><button type="button" onclick="goToNewPage('<c:url value="/adminEntidad/registroEntrada/${registro.id}/detalle"/>')" class="btn btn-info btn-sm"><spring:message code="registroEntrada.detalle"/></button></div>
+
                                 </div>
                                 <%--BOTONERA REINICIAR Y REENVIAR--%>
                                 <div class="panel-footer center">
                                     <c:if test="${trazabilidades[0].oficioRemision.estado != RegwebConstantes.OFICIO_ACEPTADO && trazabilidades[0].oficioRemision.estado != RegwebConstantes.OFICIO_SIR_RECHAZADO &&
                                                                                   trazabilidades[0].oficioRemision.estado != RegwebConstantes.OFICIO_SIR_DEVUELTO && trazabilidades[0].oficioRemision.estado != RegwebConstantes.OFICIO_SIR_DEVUELTO}">
                                         <c:url value="/sir/oficio/reiniciar" var="urlReiniciar"/>
-                                        <div class="btn-group"><button type="button" onclick="reiniciarContador('${trazabilidades[0].oficioRemision.id}','${urlReiniciar}')" class="btn btn-info btn-sm"><spring:message code="registroSir.reiniciar"/></button></div>
+                                        <div class="btn-group"><button type="button" onclick="reiniciarContador('${trazabilidades[0].oficioRemision.id}','${urlReiniciar}')" class="btn btn-warning btn-sm"><spring:message code="registroSir.reiniciar"/></button></div>
                                     </c:if>
 
                                     <c:if test="${trazabilidades[0].oficioRemision.estado == RegwebConstantes.OFICIO_SIR_ENVIADO || trazabilidades[0].oficioRemision.estado == RegwebConstantes.OFICIO_SIR_ENVIADO_ACK || trazabilidades[0].oficioRemision.estado == RegwebConstantes.OFICIO_SIR_RECHAZADO
                                                                     || trazabilidades[0].oficioRemision.estado == RegwebConstantes.OFICIO_SIR_REENVIADO || trazabilidades[0].oficioRemision.estado == RegwebConstantes.OFICIO_SIR_REENVIADO_ACK}">
-                                        <div class="btn-group"><button type="button" onclick='confirm("javascript:reenviarIntercambio(${trazabilidades[0].oficioRemision.id})","<spring:message code="regweb.confirmar.enviarIntercambio" htmlEscape="true"/>")' class="btn btn-success btn-sm"><spring:message code="intercambio.reenviar"/></button></div>
+                                        <div class="btn-group"><button type="button" onclick='confirm("javascript:reenviarIntercambio(${trazabilidades[0].oficioRemision.id})","<spring:message code="regweb.confirmar.enviarIntercambio" htmlEscape="true"/>")' class="btn btn-warning btn-sm"><spring:message code="intercambio.reenviar"/></button></div>
                                     </c:if>
                                 </div>
                             </c:if>
@@ -133,21 +146,33 @@
                                         </c:if>
                                     </dl>
                                 </div>
-                                <%--BOTONERA--%>
+                                <%--BOTONERA DETALLE E INTEGRACIONES--%>
                                 <div class="panel-footer center">
+                                    <form:form modelAttribute="integracion" action="${pageContext.request.contextPath}/integracion/busqueda" method="post" cssClass="form-horizontal" target="_blank">
+                                        <form:hidden path="texto"/>
+                                    </form:form>
+
+                                    <%--Botón integraciones--%>
+                                    <div class="btn-group">
+                                        <button type="button" onclick="buscarIntegraciones('${idIntercambio}')" class="btn btn-warning btn-sm btn-block">
+                                            <spring:message code="integracion.integraciones"/>
+                                        </button>
+                                    </div>
+
                                     <div class="btn-group"><button type="button" onclick="goToNewPage('<c:url value="/adminEntidad/registroSalida/${registro.id}/detalle"/>')" class="btn btn-danger btn-sm"><spring:message code="registroSalida.detalle"/></button></div>
+
                                 </div>
                                 <%--BOTONERA REINICIAR Y REENVIAR--%>
                                 <div class="panel-footer center">
                                     <c:if test="${trazabilidades[0].oficioRemision.estado != RegwebConstantes.OFICIO_ACEPTADO && trazabilidades[0].oficioRemision.estado != RegwebConstantes.OFICIO_SIR_RECHAZADO &&
                                                                                   trazabilidades[0].oficioRemision.estado != RegwebConstantes.OFICIO_SIR_DEVUELTO && trazabilidades[0].oficioRemision.estado != RegwebConstantes.OFICIO_SIR_DEVUELTO}">
                                         <c:url value="/sir/oficio/reiniciar" var="urlReiniciar"/>
-                                        <div class="btn-group"><button type="button" onclick="reiniciarContador('${trazabilidades[0].oficioRemision.id}','${urlReiniciar}')" class="btn btn-info btn-sm"><spring:message code="registroSir.reiniciar"/></button></div>
+                                        <div class="btn-group"><button type="button" onclick="reiniciarContador('${trazabilidades[0].oficioRemision.id}','${urlReiniciar}')" class="btn btn-warning btn-sm"><spring:message code="registroSir.reiniciar"/></button></div>
                                     </c:if>
 
                                     <c:if test="${trazabilidades[0].oficioRemision.estado == RegwebConstantes.OFICIO_SIR_ENVIADO || trazabilidades[0].oficioRemision.estado == RegwebConstantes.OFICIO_SIR_ENVIADO_ACK || trazabilidades[0].oficioRemision.estado == RegwebConstantes.OFICIO_SIR_RECHAZADO
                                                                     || trazabilidades[0].oficioRemision.estado == RegwebConstantes.OFICIO_SIR_REENVIADO || trazabilidades[0].oficioRemision.estado == RegwebConstantes.OFICIO_SIR_REENVIADO_ACK}">
-                                        <div class="btn-group"><button type="button" onclick='confirm("javascript:reenviarIntercambio(${trazabilidades[0].oficioRemision.id})","<spring:message code="regweb.confirmar.enviarIntercambio" htmlEscape="true"/>")' class="btn btn-success btn-sm"><spring:message code="intercambio.reenviar"/></button></div>
+                                        <div class="btn-group"><button type="button" onclick='confirm("javascript:reenviarIntercambio(${trazabilidades[0].oficioRemision.id})","<spring:message code="regweb.confirmar.enviarIntercambio" htmlEscape="true"/>")' class="btn btn-warning btn-sm"><spring:message code="intercambio.reenviar"/></button></div>
                                     </c:if>
                                 </div>
                             </c:if>
@@ -247,9 +272,19 @@
                                             <c:if test="${trazabilidad.oficioRemision.estado == RegwebConstantes.OFICIO_SIR_REENVIADO}"><span class="label label-warning" rel="popupAbajo" data-content="<strong><spring:message code="oficioRemision.destino"/>:</strong> ${trazabilidad.oficioRemision.decodificacionEntidadRegistralDestino} (${trazabilidad.oficioRemision.codigoEntidadRegistralDestino})" data-toggle="popover"><i class="fa fa-check fa-fw"></i></c:if>
                                             <c:if test="${trazabilidad.oficioRemision.estado == RegwebConstantes.OFICIO_SIR_REENVIADO_ACK}"><span class="label label-success" rel="popupAbajo" data-content="<strong><spring:message code="oficioRemision.destino"/>:</strong> ${trazabilidad.oficioRemision.decodificacionEntidadRegistralDestino} (${trazabilidad.oficioRemision.codigoEntidadRegistralDestino})" data-toggle="popover"><i class="fa fa-check fa-fw"></i></c:if>
                                             <c:if test="${trazabilidad.oficioRemision.estado == RegwebConstantes.OFICIO_SIR_REENVIADO_ERROR}"><span class="label label-danger" rel="popupAbajo" data-content="<strong>Error:</strong> ${trazabilidad.oficioRemision.codigoError} - ${trazabilidad.oficioRemision.descripcionError}" data-toggle="popover"><i class="fa fa-warning fa-fw"></i></c:if>
-                                            <c:if test="${trazabilidad.oficioRemision.estado == RegwebConstantes.OFICIO_SIR_RECHAZADO}"><span class="label label-danger" rel="popupAbajo" data-content="<c:out value="${trazabilidad.registroEntradaOrigen.registroDetalle.decodificacionTipoAnotacion}" escapeXml="true"/>" data-toggle="popover"><i class="fa fa-warning fa-fw"></i></c:if>
                                             <c:if test="${trazabilidad.oficioRemision.estado == RegwebConstantes.OFICIO_SIR_DEVUELTO}"><span class="label label-danger"><i class="fa fa-warning fa-fw"></i></c:if>
                                             <c:if test="${trazabilidad.oficioRemision.estado == RegwebConstantes.OFICIO_ANULADO}"><span class="label label-danger"></c:if>
+                                            <c:if test="${trazabilidad.oficioRemision.estado == RegwebConstantes.OFICIO_SIR_RECHAZADO}">
+                                                <%-- Decodificación T. anotación (Posteriormente se añadió esta info en Oficio Remisión, de ahí está comprobación)--%>
+                                                <c:if test="${empty trazabilidad.oficioRemision.decodificacionTipoAnotacion}">
+                                                    <c:set var="decodificacionTipoAnotacion" value="${trazabilidad.registroEntradaOrigen.registroDetalle.decodificacionTipoAnotacion}" scope="request"/>
+                                                </c:if>
+                                                <c:if test="${not empty trazabilidad.oficioRemision.decodificacionTipoAnotacion}">
+                                                    <c:set var="decodificacionTipoAnotacion" value="${trazabilidad.oficioRemision.decodificacionTipoAnotacion}" scope="request"/>
+                                                </c:if>
+                                                <span class="label label-danger" rel="popupAbajo" data-content="<c:out value="${decodificacionTipoAnotacion}" escapeXml="true"/>" data-toggle="popover"><i class="fa fa-warning fa-fw"></i>
+                                            </c:if>
+
                                             <spring:message code="oficioRemision.estado.${trazabilidad.oficioRemision.estado}"/></span>
                                             <span class="pull-right text-muted small"><em><fmt:formatDate value="${trazabilidad.oficioRemision.fechaEstado}" pattern="dd/MM/yyyy HH:mm:ss"/></em></span>
                                         </a>
@@ -324,6 +359,8 @@
     </div> <!-- /container -->
 
     <c:import url="../modulos/pie.jsp"/>
+
+    <script type="text/javascript" src="<c:url value="/js/integracion.js"/>"></script>
 
     <script type="text/javascript">
 

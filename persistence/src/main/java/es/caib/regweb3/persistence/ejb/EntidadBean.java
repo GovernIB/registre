@@ -5,6 +5,7 @@ import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.jboss.ejb3.annotation.SecurityDomain;
+import org.jboss.ejb3.annotation.TransactionTimeout;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -24,11 +25,11 @@ import java.util.Set;
 
 @Stateless(name = "EntidadEJB")
 @SecurityDomain("seycon")
-public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLocal{
+public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLocal {
 
     protected final Logger log = Logger.getLogger(getClass());
 
-    @PersistenceContext(unitName="regweb3")
+    @PersistenceContext(unitName = "regweb3")
     private EntityManager em;
 
     @EJB private RegistroDetalleLocal registroDetalleEjb;
@@ -48,6 +49,7 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
     @EJB private PlantillaLocal plantillaEjb;
     @EJB private LopdLocal lopdEjb;
     @EJB private PermisoOrganismoUsuarioLocal permisoOrganismoUsuarioEjb;
+    @EJB private PermisoLibroUsuarioLocal permisoLibroUsuarioEjb;
     @EJB private RelacionOrganizativaOfiLocal relacionOrganizativaOfiEjb;
     @EJB private RelacionSirOfiLocal relacionSirOfiEjb;
     @EJB private OficinaLocal oficinaEjb;
@@ -64,6 +66,7 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
     @EJB private ContadorLocal contadorEjb;
     @EJB private IntegracionLocal integracionEjb;
     @EJB private ColaLocal colaEjb;
+    @EJB private NotificacionLocal notificacionEjb;
 
 
     @Override
@@ -83,7 +86,7 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
     public Entidad findByIdLigero(Long idEntidad) throws Exception {
 
         Query q = em.createQuery("Select entidad.id, entidad.codigoDir3, entidad.nombre, entidad.logoMenu, entidad.logoPie, entidad.configuracionPersona, " +
-                "entidad.sir, entidad.oficioRemision, entidad.mantenimiento, entidad.textoPie, entidad.colorMenu, entidad.numRegistro, entidad.libro, entidad.diasVisado, entidad.oficioRemision, entidad.perfilCustodia from Entidad as entidad LEFT JOIN entidad.logoMenu logoMenu LEFT JOIN entidad.logoPie logoPie where " +
+                "entidad.sir, entidad.oficioRemision, entidad.mantenimiento, entidad.textoPie, entidad.colorMenu, entidad.numRegistro, entidad.libro, entidad.diasVisado, entidad.oficioRemision, entidad.perfilCustodia, entidad.sello from Entidad as entidad LEFT JOIN entidad.logoMenu logoMenu LEFT JOIN entidad.logoPie logoPie where " +
                 "entidad.id = :idEntidad");
 
         q.setParameter("idEntidad", idEntidad);
@@ -102,13 +105,14 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
             entidad.setSir((Boolean) result.get(0)[6]);
             entidad.setOficioRemision((Boolean) result.get(0)[7]);
             entidad.setMantenimiento((Boolean) result.get(0)[8]);
-            entidad.setTextoPie((String)result.get(0)[9]);
-            entidad.setColorMenu((String)result.get(0)[10]);
-            entidad.setNumRegistro((String)result.get(0)[11]);
+            entidad.setTextoPie((String) result.get(0)[9]);
+            entidad.setColorMenu((String) result.get(0)[10]);
+            entidad.setNumRegistro((String) result.get(0)[11]);
             entidad.setLibro((Libro) result.get(0)[12]);
             entidad.setDiasVisado((Integer) result.get(0)[13]);
             entidad.setOficioRemision((Boolean) result.get(0)[14]);
             entidad.setPerfilCustodia((Long) result.get(0)[15]);
+            entidad.setSello((String) result.get(0)[16]);
 
             return entidad;
         } else {
@@ -120,7 +124,7 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
     @SuppressWarnings(value = "unchecked")
     public List<Entidad> getAll() throws Exception {
 
-        return  em.createQuery("Select entidad from Entidad as entidad order by entidad.id").getResultList();
+        return em.createQuery("Select entidad from Entidad as entidad order by entidad.id").getResultList();
     }
 
     @Override
@@ -144,7 +148,7 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
     }
 
     @Override
-    public Entidad nuevaEntidad(Entidad entidad) throws Exception{
+    public Entidad nuevaEntidad(Entidad entidad) throws Exception {
 
         // Libro único
         Libro libro = new Libro();
@@ -152,10 +156,13 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
         libro.setNombre(entidad.getLibro().getNombre());
         entidad.setLibro(libroEjb.crearLibro(libro));
 
+        // Perfil custodia por defecto
+        entidad.setPerfilCustodia(RegwebConstantes.PERFIL_CUSTODIA_DOCUMENT_CUSTODY);
+
         entidad = persist(entidad);
 
         // Creamos el UsuarioEntidad del propietario
-        usuarioEntidadEjb.persist(new UsuarioEntidad(null,entidad.getPropietario(),entidad.getId()));
+        usuarioEntidadEjb.persist(new UsuarioEntidad(null, entidad.getPropietario(), entidad.getId()));
 
         // Creamos los TipoDocumental definidos por la Norma Técnica de Interoperabilidad de Documento Electrónico
         tipoDocumentalEjb.nuevoTraduccion("TD01", entidad.getId(), "Resolució", "Resolución");
@@ -178,28 +185,47 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
         tipoDocumentalEjb.nuevoTraduccion("TD18", entidad.getId(), "Comunicació ciutadà", "Comunicación ciudadano");
         tipoDocumentalEjb.nuevoTraduccion("TD19", entidad.getId(), "Factura", "Factura");
         tipoDocumentalEjb.nuevoTraduccion("TD20", entidad.getId(), "Altres confiscats", "Otros incautados");
+        tipoDocumentalEjb.nuevoTraduccion("TD51", entidad.getId(), "Llei", "Ley");
+        tipoDocumentalEjb.nuevoTraduccion("TD52", entidad.getId(), "Moció", "Moción");
+        tipoDocumentalEjb.nuevoTraduccion("TD53", entidad.getId(), "Instrucció", "Instrucción");
+        tipoDocumentalEjb.nuevoTraduccion("TD54", entidad.getId(), "Convocatòria", "Convocatoria");
+        tipoDocumentalEjb.nuevoTraduccion("TD55", entidad.getId(), "Ordre del dia", "Orden del día");
+        tipoDocumentalEjb.nuevoTraduccion("TD56", entidad.getId(), "Informe de Ponència", "Informe de Ponencia");
+        tipoDocumentalEjb.nuevoTraduccion("TD57", entidad.getId(), "Dictamen de Comissió", "Dictamen de Comisión");
+        tipoDocumentalEjb.nuevoTraduccion("TD58", entidad.getId(), "Iniciativa legislativa", "Iniciativa legislativa");
+        tipoDocumentalEjb.nuevoTraduccion("TD59", entidad.getId(), "Pregunta", "Pregunta");
+        tipoDocumentalEjb.nuevoTraduccion("TD60", entidad.getId(), "Interpel·lació", "Interpelación");
+        tipoDocumentalEjb.nuevoTraduccion("TD61", entidad.getId(), "Resposta", "Respuesta");
+        tipoDocumentalEjb.nuevoTraduccion("TD62", entidad.getId(), "Proposició no de llei", "Proposición no de ley");
+        tipoDocumentalEjb.nuevoTraduccion("TD63", entidad.getId(), "Esmena", "Enmienda");
+        tipoDocumentalEjb.nuevoTraduccion("TD64", entidad.getId(), "Proposta de resolució", "Propuesta de resolución");
+        tipoDocumentalEjb.nuevoTraduccion("TD65", entidad.getId(), "Compareixença", "Comparecencia");
+        tipoDocumentalEjb.nuevoTraduccion("TD66", entidad.getId(), "Sol·licitud d'informació", "Solicitud de información");
+        tipoDocumentalEjb.nuevoTraduccion("TD67", entidad.getId(), "Escrit", "Escrito");
+        tipoDocumentalEjb.nuevoTraduccion("TD68", entidad.getId(), "Iniciativa legislativa", "Iniciativa legislativa");
+        tipoDocumentalEjb.nuevoTraduccion("TD69", entidad.getId(), "Petició", "Petición");
         tipoDocumentalEjb.nuevoTraduccion("TD99", entidad.getId(), "Altres", "Otros");
 
         // Creamos las propiedades globales por defecto
-        propiedadGlobalEjb.persist(new PropiedadGlobal(RegwebConstantes.REGWEB3_PROPERTY_BASE+"resultsperpage.oficios","20","Resultados por página en los Oficios pendientes de remisión", entidad.getId(), RegwebConstantes.TIPO_PROPIEDAD_GENERAL));
-        propiedadGlobalEjb.persist(new PropiedadGlobal(RegwebConstantes.REGWEB3_PROPERTY_BASE+"resultsperpage.lopd","20","Resultados por página en los informes LOPD", entidad.getId(), RegwebConstantes.TIPO_PROPIEDAD_GENERAL));
-        propiedadGlobalEjb.persist(new PropiedadGlobal(RegwebConstantes.REGWEB3_PROPERTY_BASE+"maxuploadsizeinbytes","10485760","Tamaño máximo permitido por anexo en bytes", entidad.getId(), RegwebConstantes.TIPO_PROPIEDAD_SIR));
-        propiedadGlobalEjb.persist(new PropiedadGlobal(RegwebConstantes.REGWEB3_PROPERTY_BASE+"sir.reintentos","10","Número máximo de reintentos para los envios SIR", entidad.getId(), RegwebConstantes.TIPO_PROPIEDAD_SIR));
-        propiedadGlobalEjb.persist(new PropiedadGlobal(RegwebConstantes.REGWEB3_PROPERTY_BASE+"enlaceDir3","true","Permite mostrar un enlace en le menú a la instalación de DIR3CAIB", entidad.getId(), RegwebConstantes.TIPO_PROPIEDAD_GENERAL));
-        propiedadGlobalEjb.persist(new PropiedadGlobal(RegwebConstantes.REGWEB3_PROPERTY_BASE+"avisos","false","Muestra o no los avisos pendientes", entidad.getId(), RegwebConstantes.TIPO_PROPIEDAD_GENERAL));
-        propiedadGlobalEjb.persist(new PropiedadGlobal(RegwebConstantes.REGWEB3_PROPERTY_BASE+"comunicaciones.generar","true","Permite generar comunicaciones automáticas a los usuarios de las oficinas con mayor carga de trabajo pendiente.", entidad.getId(), RegwebConstantes.TIPO_PROPIEDAD_GENERAL));
-        propiedadGlobalEjb.persist(new PropiedadGlobal(RegwebConstantes.REGWEB3_PROPERTY_BASE+"cola.elementos","15","Número de elementos de cada iteración en la Cola.", entidad.getId(), RegwebConstantes.TIPO_PROPIEDAD_DISTRIBUCION));
-        propiedadGlobalEjb.persist(new PropiedadGlobal(RegwebConstantes.REGWEB3_PROPERTY_BASE+"cola.maxReintentos","4","Número máximo de reintentos de los elementos de la Cola.", entidad.getId(), RegwebConstantes.TIPO_PROPIEDAD_DISTRIBUCION));
-        propiedadGlobalEjb.persist(new PropiedadGlobal(RegwebConstantes.REGWEB3_PROPERTY_BASE+"cola.parar.distribucion","false","Indica si queremos detener la cola de distribución", entidad.getId(), RegwebConstantes.TIPO_PROPIEDAD_DISTRIBUCION));
+        propiedadGlobalEjb.persist(new PropiedadGlobal(RegwebConstantes.REGWEB3_PROPERTY_BASE + "resultsperpage.oficios", "20", "Resultados por página en los Oficios pendientes de remisión", entidad.getId(), RegwebConstantes.TIPO_PROPIEDAD_GENERAL));
+        propiedadGlobalEjb.persist(new PropiedadGlobal(RegwebConstantes.REGWEB3_PROPERTY_BASE + "resultsperpage.lopd", "20", "Resultados por página en los informes LOPD", entidad.getId(), RegwebConstantes.TIPO_PROPIEDAD_GENERAL));
+        propiedadGlobalEjb.persist(new PropiedadGlobal(RegwebConstantes.REGWEB3_PROPERTY_BASE + "maxuploadsizeinbytes", "10485760", "Tamaño máximo permitido por anexo en bytes", entidad.getId(), RegwebConstantes.TIPO_PROPIEDAD_SIR));
+        propiedadGlobalEjb.persist(new PropiedadGlobal(RegwebConstantes.REGWEB3_PROPERTY_BASE + "sir.reintentos", "10", "Número máximo de reintentos para los envios SIR", entidad.getId(), RegwebConstantes.TIPO_PROPIEDAD_SIR));
+        propiedadGlobalEjb.persist(new PropiedadGlobal(RegwebConstantes.REGWEB3_PROPERTY_BASE + "enlaceDir3", "true", "Permite mostrar un enlace en le menú a la instalación de DIR3CAIB", entidad.getId(), RegwebConstantes.TIPO_PROPIEDAD_GENERAL));
+        propiedadGlobalEjb.persist(new PropiedadGlobal(RegwebConstantes.REGWEB3_PROPERTY_BASE + "avisos", "false", "Muestra o no los avisos pendientes", entidad.getId(), RegwebConstantes.TIPO_PROPIEDAD_GENERAL));
+        propiedadGlobalEjb.persist(new PropiedadGlobal(RegwebConstantes.REGWEB3_PROPERTY_BASE + "comunicaciones.generar", "true", "Permite generar comunicaciones automáticas a los usuarios de las oficinas con mayor carga de trabajo pendiente.", entidad.getId(), RegwebConstantes.TIPO_PROPIEDAD_GENERAL));
+        propiedadGlobalEjb.persist(new PropiedadGlobal(RegwebConstantes.REGWEB3_PROPERTY_BASE + "cola.elementos", "15", "Número de elementos de cada iteración en la Cola.", entidad.getId(), RegwebConstantes.TIPO_PROPIEDAD_DISTRIBUCION));
+        propiedadGlobalEjb.persist(new PropiedadGlobal(RegwebConstantes.REGWEB3_PROPERTY_BASE + "cola.maxReintentos", "4", "Número máximo de reintentos de los elementos de la Cola.", entidad.getId(), RegwebConstantes.TIPO_PROPIEDAD_DISTRIBUCION));
+        propiedadGlobalEjb.persist(new PropiedadGlobal(RegwebConstantes.REGWEB3_PROPERTY_BASE + "cola.parar.distribucion", "false", "Indica si queremos detener la cola de distribución", entidad.getId(), RegwebConstantes.TIPO_PROPIEDAD_DISTRIBUCION));
 
         // Creamos los Plugins
-        pluginEjb.persist(new Plugin("Custodia","Custodia de anexos","org.fundaciobit.plugins.documentcustody.filesystem.FileSystemDocumentCustodyPlugin",true,entidad.getId(),RegwebConstantes.PLUGIN_CUSTODIA_ANEXOS,null,"es.caib.regweb3.plugins.documentcustody.filesystem.prefix=ANNEX_\n" +
+        pluginEjb.persist(new Plugin("Custodia", "Custodia de anexos", "org.fundaciobit.plugins.documentcustody.filesystem.FileSystemDocumentCustodyPlugin", true, entidad.getId(), RegwebConstantes.PLUGIN_CUSTODIA_ANEXOS, null, "es.caib.regweb3.plugins.documentcustody.filesystem.prefix=ANNEX_\n" +
                 "es.caib.regweb3.plugins.documentcustody.filesystem.basedir=C:/xxxx/Anexos/"));
 
-        pluginEjb.persist(new Plugin("Custodia-Justificante","Custodia de justificantes","org.fundaciobit.plugins.documentcustody.filesystem.FileSystemDocumentCustodyPlugin",true,entidad.getId(),RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE,null,"es.caib.regweb3.plugins.documentcustody.filesystem.prefix=JUST_\n" +
+        pluginEjb.persist(new Plugin("Custodia-Justificante", "Custodia de justificantes", "org.fundaciobit.plugins.documentcustody.filesystem.FileSystemDocumentCustodyPlugin", true, entidad.getId(), RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE, null, "es.caib.regweb3.plugins.documentcustody.filesystem.prefix=JUST_\n" +
                 "es.caib.regweb3.plugins.documentcustody.filesystem.basedir=C:/xxxx/Justificantes/"));
 
-        pluginEjb.persist(new Plugin("Justificante","Genera el justificante de los registros","es.caib.regweb3.plugins.justificante.mock.JustificanteMockPlugin",true,entidad.getId(),RegwebConstantes.PLUGIN_JUSTIFICANTE,null,"" +
+        pluginEjb.persist(new Plugin("Justificante", "Genera el justificante de los registros", "es.caib.regweb3.plugins.justificante.mock.JustificanteMockPlugin", true, entidad.getId(), RegwebConstantes.PLUGIN_JUSTIFICANTE, null, "" +
                 "# Mensaje para la declaración en el justificante\n" +
                 "es.caib.regweb3.plugins.justificante.mock.declaracion.es=declara que las imágenes electrónicas adjuntas son imagen fiel e íntegra de los documentos en soporte físico origen, en el marco de la normativa vigente.\n" +
                 "es.caib.regweb3.plugins.justificante.mock.declaracion.ca=declara que les imatges electròniques adjuntes són imatge feel i íntegra dels documents en soport físic origen, en el marc de la normativa vigent.\n" +
@@ -212,10 +238,10 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
                 "# Path para el logo de la Entidad\n" +
                 "es.caib.regweb3.plugins.justificante.mock.logoPath=xxxx/logo_entitat.jpg"));
 
-        pluginEjb.persist(new Plugin("Distribución","Implementación base del plugin, cambia el estado de un Registro a Distribuido","es.caib.regweb3.plugins.distribucion.mock.DistribucionMockPlugin",true,entidad.getId(),RegwebConstantes.PLUGIN_DISTRIBUCION,null,null));
+        pluginEjb.persist(new Plugin("Distribución", "Implementación base del plugin, cambia el estado de un Registro a Distribuido", "es.caib.regweb3.plugins.distribucion.mock.DistribucionMockPlugin", true, entidad.getId(), RegwebConstantes.PLUGIN_DISTRIBUCION, null, null));
 
 
-        pluginEjb.persist(new Plugin("Firma en servidor","Firma en servidor mediante el MiniApplet","org.fundaciobit.plugins.signatureserver.miniappletinserver.MiniAppletInServerSignatureServerPlugin",true,entidad.getId(),RegwebConstantes.PLUGIN_FIRMA_SERVIDOR,null,"# Base del Plugin de signature server\n" +
+        pluginEjb.persist(new Plugin("Firma en servidor", "Firma en servidor mediante el MiniApplet", "org.fundaciobit.plugins.signatureserver.miniappletinserver.MiniAppletInServerSignatureServerPlugin", true, entidad.getId(), RegwebConstantes.PLUGIN_FIRMA_SERVIDOR, null, "# Base del Plugin de signature server\n" +
                 "es.caib.regweb3.plugins.signatureserver.miniappletinserver.base_dir=xxxxxxxx/\n" +
                 "# Si signaturesSet.getCommonInfoSignature().getUsername() es null, llavors\n" +
                 "# s´utilitza aquest valor com a sistema de selecció del certificat amb el que firmar\n" +
@@ -233,22 +259,22 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
 
         q.setParameter("codigo", codigo);
 
-        List<Entidad> entidad =  q.getResultList();
+        List<Entidad> entidad = q.getResultList();
 
-        if(entidad.size() == 1){
+        if (entidad.size() == 1) {
             return entidad.get(0);
-        }else{
-            return  null;
+        } else {
+            return null;
         }
 
     }
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Boolean tieneOrganismos(Long idEntidad) throws Exception{
+    public Boolean tieneOrganismos(Long idEntidad) throws Exception {
         Query q = em.createQuery("Select organismo.id from Organismo as organismo where organismo.entidad.id = :idEntidad");
 
-        q.setParameter("idEntidad",idEntidad);
+        q.setParameter("idEntidad", idEntidad);
         q.setHint("org.hibernate.readOnly", true);
 
         List<Long> organismos = q.getResultList();
@@ -258,20 +284,20 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Entidad> getEntidadesAdministrador(Long idUsuario) throws Exception{
+    public List<Entidad> getEntidadesAdministrador(Long idUsuario) throws Exception {
 
         Query q = em.createQuery("Select entidad.id, entidad.nombre, entidad.oficioRemision from Entidad as entidad, UsuarioEntidad as usuarioEntidad where usuarioEntidad in elements(entidad.administradores) " +
                 "and usuarioEntidad.usuario.id = :idUsuario and entidad.activo = true order by entidad.id");
 
-        q.setParameter("idUsuario",idUsuario);
+        q.setParameter("idUsuario", idUsuario);
         q.setHint("org.hibernate.readOnly", true);
 
-        List<Entidad> entidades =  new ArrayList<Entidad>();
+        List<Entidad> entidades = new ArrayList<Entidad>();
 
         List<Object[]> result = q.getResultList();
 
-        for (Object[] object : result){
-            Entidad entidad = new Entidad((Long)object[0],(String)object[1], (Boolean) object[2]);
+        for (Object[] object : result) {
+            Entidad entidad = new Entidad((Long) object[0], (String) object[1], (Boolean) object[2]);
 
             entidades.add(entidad);
         }
@@ -286,15 +312,15 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
         Query q = em.createQuery("Select entidad.id, entidad.nombre, entidad.oficioRemision from Entidad as entidad where entidad.propietario.id = :idUsuario " +
                 "and entidad.activo = true order by entidad.id");
 
-        q.setParameter("idUsuario",idUsuario);
+        q.setParameter("idUsuario", idUsuario);
         q.setHint("org.hibernate.readOnly", true);
 
-        List<Entidad> entidades =  new ArrayList<Entidad>();
+        List<Entidad> entidades = new ArrayList<Entidad>();
 
         List<Object[]> result = q.getResultList();
 
-        for (Object[] object : result){
-            Entidad entidad = new Entidad((Long)object[0],(String)object[1], (Boolean) object[2]);
+        for (Object[] object : result) {
+            Entidad entidad = new Entidad((Long) object[0], (String) object[1], (Boolean) object[2]);
 
             entidades.add(entidad);
         }
@@ -303,9 +329,9 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
     }
 
     @Override
-    public List<Entidad> getEntidadesActivas() throws Exception{
+    public List<Entidad> getEntidadesActivas() throws Exception {
 
-        return  em.createQuery("Select entidad from Entidad as entidad where entidad.activo = true order by entidad.id").getResultList();
+        return em.createQuery("Select entidad from Entidad as entidad where entidad.activo = true order by entidad.id").getResultList();
     }
 
     @Override
@@ -314,23 +340,22 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
         Query q = em.createQuery("Select entidad.id from Entidad as entidad where " +
                 "entidad.id != :idEntidad and entidad.codigoDir3 = :codigo");
 
-        q.setParameter("codigo",codigo);
-        q.setParameter("idEntidad",idEntidad);
+        q.setParameter("codigo", codigo);
+        q.setParameter("idEntidad", idEntidad);
         q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList().size() > 0;
     }
 
     @Override
-    public Boolean esAdministrador(Long idEntidad, UsuarioEntidad usuarioEntidad) throws Exception {
+    public Boolean esAdministrador(UsuarioEntidad usuarioEntidad) throws Exception {
 
         Query q = em.createQuery("Select entidad.id from Entidad as entidad where entidad.id=:idEntidad and entidad.activo = true and :usuarioEntidad in elements(entidad.administradores) ");
 
-        q.setParameter("idEntidad",idEntidad);
+        q.setParameter("idEntidad", usuarioEntidad.getEntidad().getId());
         q.setParameter("usuarioEntidad", usuarioEntidad);
 
         return q.getResultList().size() > 0;
-
     }
 
     @Override
@@ -338,19 +363,19 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
 
         Query q = em.createQuery("Select entidad.id from Entidad as entidad, UsuarioEntidad as usuarioEntidad where (entidad.propietario.id = :idUsuario or usuarioEntidad in elements(entidad.administradores) ) and entidad.id=:idEntidad");
 
-        q.setParameter("idUsuario",idUsuario);
-        q.setParameter("idEntidad",idEntidad);
+        q.setParameter("idUsuario", idUsuario);
+        q.setParameter("idEntidad", idEntidad);
 
         return q.getResultList().size() > 0;
 
     }
 
     @Override
-    public Boolean isSir(Long idEntidad) throws Exception{
+    public Boolean isSir(Long idEntidad) throws Exception {
 
         Query q = em.createQuery("Select entidad.sir from Entidad as entidad where entidad.id = :idEntidad");
 
-        q.setParameter("idEntidad",idEntidad);
+        q.setParameter("idEntidad", idEntidad);
 
         return (Boolean) q.getSingleResult();
     }
@@ -359,31 +384,32 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
     @SuppressWarnings(value = "unchecked")
     public List<Entidad> getEntidadesSir() throws Exception {
 
-        return  em.createQuery("Select entidad from Entidad as entidad where entidad.sir = true order by entidad.id").getResultList();
+        return em.createQuery("Select entidad from Entidad as entidad where entidad.sir = true order by entidad.id").getResultList();
     }
 
     @Override
     public Boolean puedoEliminarlo(Long idUsuarioEntidad) throws Exception {
 
         return !registroEntradaConsultaEjb.obtenerPorUsuario(idUsuarioEntidad) && !registroSalidaConsultaEjb.obtenerPorUsuario(idUsuarioEntidad)
-           && !historicoRegistroEntradaEjb.obtenerPorUsuario(idUsuarioEntidad) && !historicoRegistroSalidaEjb.obtenerPorUsuario(idUsuarioEntidad)
-           && !plantillaEjb.obtenerPorUsuario(idUsuarioEntidad) && !lopdEjb.obtenerPorUsuario(idUsuarioEntidad);
+                && !historicoRegistroEntradaEjb.obtenerPorUsuario(idUsuarioEntidad) && !historicoRegistroSalidaEjb.obtenerPorUsuario(idUsuarioEntidad)
+                && !plantillaEjb.obtenerPorUsuario(idUsuarioEntidad) && !lopdEjb.obtenerPorUsuario(idUsuarioEntidad);
     }
 
 
     @Override
+    @TransactionTimeout(value = 1800)  // 30 minutos
     public void eliminarRegistros(Long idEntidad) throws Exception, I18NException {
 
         log.info("Dentro eliminar Registros Entidad");
 
         // TRAZABILIDAD 
-        log.info("Trazabilidades eliminadas: " +trazabilidadEjb.eliminarByEntidad(idEntidad));
+        log.info("Trazabilidades eliminadas: " + trazabilidadEjb.eliminarByEntidad(idEntidad));
 
         // TRAZABILIDAD SIR 
         log.info("TrazabilidadSir eliminados: " + trazabilidadSirEjb.eliminarByEntidad(idEntidad));
 
         // OFICIOS REMISIÓN 
-        log.info("OficiosRemision eliminados: " +oficioRemisionEjb.eliminarByEntidad(idEntidad));
+        log.info("OficiosRemision eliminados: " + oficioRemisionEjb.eliminarByEntidad(idEntidad));
 
         // PERSONAS 
         log.info("Personas eliminadas: " + personaEjb.eliminarByEntidad(idEntidad));
@@ -395,9 +421,9 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
         log.info("HistoricosEntrada eliminados: " + historicoRegistroEntradaEjb.eliminarByEntidad(idEntidad));
 
         // RegistroEntrada
-        Set<Long> registrosDetalle =  registroDetalleEjb.getRegistrosDetalle(idEntidad);
+        Set<Long> registrosDetalle = registroDetalleEjb.getRegistrosDetalle(idEntidad);
 
-        log.info("RegistrosEntrada eliminados: " +registroEntradaEjb.eliminarByEntidad(idEntidad));
+        log.info("RegistrosEntrada eliminados: " + registroEntradaEjb.eliminarByEntidad(idEntidad));
 
         // REGISTROS SALIDA 
 
@@ -405,14 +431,14 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
         log.info("HistoricosSalida eliminados: " + historicoRegistroSalidaEjb.eliminarByEntidad(idEntidad));
 
         // RegistroSalida
-        log.info("RegistrosSalida eliminados: " +registroSalidaEjb.eliminarByEntidad(idEntidad));
+        log.info("RegistrosSalida eliminados: " + registroSalidaEjb.eliminarByEntidad(idEntidad));
 
 
         // REGISTROS DETALLE
-        log.info("RegistrosDetalle eliminados: " +registroDetalleEjb.eliminar(registrosDetalle, idEntidad));
+        log.info("RegistrosDetalle eliminados: " + registroDetalleEjb.eliminar(registrosDetalle, idEntidad));
 
         // PLANTILLAS
-        log.info("Plantillas eliminadas: " +plantillaEjb.eliminarByEntidad(idEntidad));
+        log.info("Plantillas eliminadas: " + plantillaEjb.eliminarByEntidad(idEntidad));
 
         // LOPD 
         log.info("Lopds eliminados: " + lopdEjb.eliminarByEntidad(idEntidad));
@@ -431,18 +457,23 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
     }
 
     @Override
-    public void eliminarEntidad(Long idEntidad)throws Exception , I18NException{
+    public void eliminarEntidad(Long idEntidad) throws Exception, I18NException {
+
+        Entidad entidad = findById(idEntidad);
 
         log.info("Dentro eliminar Entidad");
 
         //Eliminamos todos los datos relacionados con los RegistrosEntradad y RegistrosSalida
         eliminarRegistros(idEntidad);
 
+        // PERMISO LIBRO USUARIO
+        log.info("PermisoLibroUsuarios eliminados: " + permisoLibroUsuarioEjb.eliminarByEntidad(idEntidad));
+
         // PERMISO ORGANISMO USUARIO
         log.info("PermisoOrganismoUsuarios eliminados: " + permisoOrganismoUsuarioEjb.eliminarByEntidad(idEntidad));
 
-        // LIBROS 
-        log.info("Libros eliminados: " + libroEjb.eliminarByEntidad(idEntidad));
+        // LIBROS
+        log.info("Libros eliminados: " + libroEjb.eliminarByEntidad(entidad));
 
         // RelacionOrganizativaOfi 
         log.info("RelacionOrganizativaOfi eliminadas: " + relacionOrganizativaOfiEjb.eliminarByEntidad(idEntidad));
@@ -452,6 +483,9 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
 
         //Cola Distribucion
         log.info("Cola Distribución: " + colaEjb.eliminarByEntidad(idEntidad));
+
+        // Notificaciones
+        log.info("Notificaciones eliminadas: " + notificacionEjb.eliminarByEntidad(idEntidad));
 
         // USUARIOS ENTIDAD 
         log.info("UsuariosEntidad eliminados: " + usuarioEntidadEjb.eliminarByEntidad(idEntidad));
@@ -490,16 +524,18 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
         // ENTIDAD 
         em.flush();
 
-        //em.createQuery("delete from Entidad where id = :idEntidad ").setParameter("idEntidad", idEntidad).executeUpdate();
+    }
+
+    @Override
+    public void marcarEntidadMantenimiento(Long idEntidad, Boolean mantenimiento) throws Exception {
+
+        em.createQuery("update from Entidad set mantenimiento =:mantenimiento where id =:idEntidad").setParameter("idEntidad", idEntidad).setParameter("mantenimiento", mantenimiento).executeUpdate();
 
     }
 
     @Override
-    public void marcarEntidadMantenimiento(Long idEntidad, Boolean mantenimiento) throws Exception{
-
-        em.createQuery("update from Entidad set mantenimiento =:mantenimiento where id =:idEntidad").setParameter("idEntidad", idEntidad).setParameter("mantenimiento",mantenimiento).executeUpdate();
-
+    public boolean isMultiEntidad() throws Exception {
+        return em.createQuery("Select entidad.id from Entidad as entidad where entidad.sir = true order by entidad.id").getResultList().size() > 1;
     }
-
 
 }

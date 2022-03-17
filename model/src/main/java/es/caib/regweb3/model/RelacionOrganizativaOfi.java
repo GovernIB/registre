@@ -45,7 +45,7 @@ public class RelacionOrganizativaOfi implements Serializable {
 
 
     @Id
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false,fetch = FetchType.LAZY)
     @JoinColumn (name="IDORGANISMO")
     @ForeignKey(name="RWE_RELORGOFI_ORGANISMO_FK")
     public Organismo getOrganismo() {

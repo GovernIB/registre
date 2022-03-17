@@ -10,6 +10,7 @@ import es.caib.regweb3.utils.StringUtils;
 import es.caib.regweb3.utils.TimeUtils;
 import es.caib.regweb3.webapp.controller.registro.AbstractRegistroCommonListController;
 import es.caib.regweb3.webapp.form.AnularForm;
+import es.caib.regweb3.webapp.form.BasicForm;
 import es.caib.regweb3.webapp.form.RegistroEntradaBusqueda;
 import es.caib.regweb3.webapp.form.RegistroSalidaBusqueda;
 import es.caib.regweb3.webapp.utils.JsonResponse;
@@ -50,9 +51,6 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
     @Autowired
     private RegistroSalidaBusquedaValidator registroSalidaBusquedaValidator;
 
-    @EJB(mappedName = "regweb3/LibroEJB/local")
-    private LibroLocal libroEjb;
-
     @EJB(mappedName = "regweb3/HistoricoRegistroEntradaEJB/local")
     private HistoricoRegistroEntradaLocal historicoRegistroEntradaEjb;
 
@@ -71,6 +69,19 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
     @EJB(mappedName = "regweb3/InteresadoEJB/local")
     private InteresadoLocal interesadoEjb;
 
+    @EJB(mappedName = "regweb3/MultiEntidadEJB/local")
+    private MultiEntidadLocal multiEntidadEjb;
+
+    @EJB(mappedName = "regweb3/DistribucionEJB/local")
+    private DistribucionLocal distribucionEjb;
+
+    @EJB(mappedName = "regweb3/IntegracionEJB/local")
+    private IntegracionLocal integracionEjb;
+
+    @EJB(mappedName = "regweb3/AnexoSirEJB/local")
+    private AnexoSirLocal anexoSirEjb;
+
+
 
     /**
      * Listado de registros de entrada
@@ -88,7 +99,11 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
 
         model.addAttribute("registroEntradaBusqueda", registroEntradaBusqueda);
         model.addAttribute("organosOrigen", organismoEjb.getPermitirUsuarios(entidadActiva.getId()));
-        model.addAttribute("organosDestino", organismoEjb.getAllByEntidad(entidadActiva.getId()));
+        if(multiEntidadEjb.isMultiEntidad()) {
+            model.addAttribute("organosDestino", organismoEjb.getAllByEntidadMultiEntidad(entidadActiva.getId()));
+        }else{
+            model.addAttribute("organosDestino", organismoEjb.getAllByEntidad(entidadActiva.getId()));
+        }
         model.addAttribute("oficinasRegistro",  oficinaEjb.findByEntidadByEstado(entidadActiva.getId(), RegwebConstantes.ESTADO_ENTIDAD_VIGENTE));
 
         // Obtenemos los usuarios de la Entidad
@@ -108,7 +123,13 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
         Entidad entidadActiva = getEntidadActiva(request);
 
         List<Organismo> organosOrigen = organismoEjb.getPermitirUsuarios(entidadActiva.getId());
-        List<Organismo> organosDestino = organismoEjb.getAllByEntidad(entidadActiva.getId());
+        List<Organismo> organosDestino;
+        if(multiEntidadEjb.isMultiEntidad()) {
+
+            organosDestino = organismoEjb.getAllByEntidadMultiEntidad(entidadActiva.getId());
+        }else{
+            organosDestino = organismoEjb.getAllByEntidad(entidadActiva.getId());
+        }
         List<Oficina> oficinasRegistro = oficinaEjb.findByEntidadByEstado(entidadActiva.getId(),RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
         List<UsuarioEntidad> usuariosEntidad = usuarioEntidadEjb.findByEntidad(entidadActiva.getId());
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
@@ -153,12 +174,12 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
             mav.addObject("paginacion", paginacion);
 
             // Alta en tabla LOPD
-            lopdEjb.insertarRegistros(paginacion, usuarioEntidad.getId(), RegwebConstantes.REGISTRO_ENTRADA, RegwebConstantes.LOPD_LISTADO);
+            lopdEjb.insertarRegistros(paginacion, usuarioEntidad,entidadActiva.getLibro(), RegwebConstantes.REGISTRO_ENTRADA, RegwebConstantes.LOPD_LISTADO);
         }
 
         // Comprobamos si el Organismo destinatario es externo, para añadirlo a la lista.
         if (StringUtils.isNotEmpty(busqueda.getOrganDestinatari())) {
-            Organismo org = organismoEjb.findByCodigoEntidadLigero(busqueda.getOrganDestinatari(), usuarioEntidad.getEntidad().getId());
+            Organismo org = organismoEjb.findByCodigoByEntidadMultiEntidad(busqueda.getOrganDestinatari(), entidadActiva.getId());
             if(org== null || !organosDestino.contains(org)){ //Es organismo externo, lo añadimos a la lista
                 organosDestino.add(new Organismo(null,busqueda.getOrganDestinatari(),new String(busqueda.getOrganDestinatariNom().getBytes("ISO-8859-1"), "UTF-8") ));
             }
@@ -195,6 +216,7 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
         model.addAttribute("registro",registro);
         model.addAttribute("entidadActiva", entidadActiva);
         model.addAttribute("anularForm", new AnularForm());
+        model.addAttribute("integracion", new BasicForm());
 
         // Permisos
         Boolean tieneJustificante = registro.getRegistroDetalle().getTieneJustificante();
@@ -236,6 +258,37 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
      * @throws Exception
      */
     @ResponseBody
+    @RequestMapping(value = "/registroEntrada/{idRegistro}/reDistribuir", method = RequestMethod.POST)
+    public JsonResponse reDistribuir(@PathVariable Long idRegistro, HttpServletRequest request) throws Exception {
+
+        JsonResponse jsonResponse = new JsonResponse();
+
+        try {
+
+            Boolean distribuido = distribucionEjb.reDistribuirRegistro(idRegistro, getEntidadActiva(request));
+
+            if(distribuido){
+                jsonResponse.setStatus("SUCCESS");
+            }else{
+                jsonResponse.setStatus("FAIL");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            jsonResponse.setStatus("FAIL");
+        }
+
+        return jsonResponse;
+    }
+
+    /**
+     * Método que genera el Justificante en pdf
+     *
+     * @param idRegistro identificador del registro de entrada
+     * @return
+     * @throws Exception
+     */
+    @ResponseBody
     @RequestMapping(value = "/registroEntrada/{idRegistro}/justificante/{idioma}", method = RequestMethod.POST)
     public JsonResponse justificanteEntrada(@PathVariable Long idRegistro, @PathVariable String idioma, HttpServletRequest request)
             throws Exception {
@@ -244,28 +297,26 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
 
         try {
 
-            synchronized (this) {
+            RegistroEntrada registroEntrada = registroEntradaEjb.getConAnexosFull(idRegistro);
+            Entidad entidad = getEntidadActiva(request);
+            UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
 
-                RegistroEntrada registroEntrada = registroEntradaEjb.getConAnexosFull(idRegistro);
-                UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
+            // Dispone de permisos para Editar el registro
+            if (permisoOrganismoUsuarioEjb.tienePermiso(usuarioEntidad.getId(), registroEntrada.getOficina().getOrganismoResponsable().getId(), RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_ENTRADA, true) && !registroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_ANULADO)) {
 
-                // Dispone de permisos para Editar el registro
-                if (permisoOrganismoUsuarioEjb.tienePermiso(usuarioEntidad.getId(), registroEntrada.getOficina().getOrganismoResponsable().getId(), RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_ENTRADA, true) && !registroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_ANULADO)) {
+                // Creamos el anexo justificante y lo firmamos
+                AnexoFull anexoFull = justificanteEjb.crearJustificante(entidad, usuarioEntidad, registroEntrada, RegwebConstantes.REGISTRO_ENTRADA, idioma);
 
-                    // Creamos el anexo justificante y lo firmamos
-                    AnexoFull anexoFull = justificanteEjb.crearJustificante(usuarioEntidad, registroEntrada, RegwebConstantes.REGISTRO_ENTRADA, idioma);
-
-                    // Alta en tabla LOPD
-                    if (anexoFull != null) {
-                        lopdEjb.altaLopd(registroEntrada.getNumeroRegistro(), registroEntrada.getFecha(), registroEntrada.getLibro().getId(), usuarioEntidad.getId(), RegwebConstantes.REGISTRO_ENTRADA, RegwebConstantes.LOPD_JUSTIFICANTE);
-                    }
-
-                    jsonResponse.setStatus("SUCCESS");
-
-                } else {
-                    jsonResponse.setStatus("FAIL");
-                    jsonResponse.setError(getMessage("aviso.registro.editar"));
+                // Alta en tabla LOPD
+                if (anexoFull != null) {
+                    lopdEjb.altaLopd(registroEntrada.getNumeroRegistro(), registroEntrada.getFecha(), registroEntrada.getLibro().getId(), usuarioEntidad.getId(), RegwebConstantes.REGISTRO_ENTRADA, RegwebConstantes.LOPD_JUSTIFICANTE);
                 }
+
+                jsonResponse.setStatus("SUCCESS");
+
+            } else {
+                jsonResponse.setStatus("FAIL");
+                jsonResponse.setError(getMessage("aviso.registro.editar"));
             }
 
         } catch (I18NException e) {
@@ -280,6 +331,36 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
 
         return jsonResponse;
 
+    }
+
+    /**
+     * Anular un {@link es.caib.regweb3.model.RegistroEntrada}
+     */
+    @RequestMapping(value = "/registroEntrada/anular", method = RequestMethod.POST)
+    public String anularRegistroEntrada(@ModelAttribute AnularForm anularForm, HttpServletRequest request) {
+
+        try {
+
+            RegistroEntrada registroEntrada = registroEntradaEjb.findById(anularForm.getIdAnular());
+            UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
+
+            // Anulamos el RegistroEntrada
+            String motivoAnulacion;
+            if (StringUtils.isEmpty(anularForm.getObservacionesAnulacion())) {
+                motivoAnulacion = getMessage("registro.modificacion.anulacion");
+            } else {
+                motivoAnulacion = getMessage("registro.modificacion.anulacion") + ": " + anularForm.getObservacionesAnulacion();
+            }
+            registroEntradaEjb.anularRegistroEntrada(registroEntrada, usuarioEntidad, motivoAnulacion);
+
+            Mensaje.saveMessageInfo(request, getMessage("registroEntrada.anular"));
+
+        } catch (Exception e) {
+            Mensaje.saveMessageError(request, getMessage("regweb.error.registro"));
+            e.printStackTrace();
+        }
+
+        return "redirect:/adminEntidad/registroEntrada/" + anularForm.getIdAnular() + "/detalle";
     }
 
     /**
@@ -360,7 +441,7 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
             mav.addObject("paginacion", paginacion);
 
             // Alta en tabla LOPD
-            lopdEjb.insertarRegistros(paginacion, usuarioEntidad.getId(), RegwebConstantes.REGISTRO_SALIDA, RegwebConstantes.LOPD_LISTADO);
+            lopdEjb.insertarRegistros(paginacion, usuarioEntidad, entidadActiva.getLibro(), RegwebConstantes.REGISTRO_SALIDA, RegwebConstantes.LOPD_LISTADO);
         }
 
         mav.addObject("organosOrigen",  organosOrigen);
@@ -391,6 +472,7 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
         model.addAttribute("registro",registro);
         model.addAttribute("entidadActiva", entidadActiva);
         model.addAttribute("anularForm", new AnularForm());
+        model.addAttribute("integracion", new BasicForm());
 
         // Permisos
         Boolean tieneJustificante = registro.getRegistroDetalle().getTieneJustificante();
@@ -435,28 +517,26 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
 
         try {
 
-            synchronized (this) {
+            RegistroSalida registroSalida = registroSalidaEjb.getConAnexosFull(idRegistro);
+            Entidad entidad = getEntidadActiva(request);
+            UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
 
-                RegistroSalida registroSalida = registroSalidaEjb.getConAnexosFull(idRegistro);
-                UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
+            // Dispone de permisos para Editar el registro
+            if (permisoOrganismoUsuarioEjb.tienePermiso(usuarioEntidad.getId(), registroSalida.getOficina().getOrganismoResponsable().getId(), RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_SALIDA, true) && !registroSalida.getEstado().equals(RegwebConstantes.REGISTRO_ANULADO)) {
 
-                // Dispone de permisos para Editar el registro
-                if (permisoOrganismoUsuarioEjb.tienePermiso(usuarioEntidad.getId(), registroSalida.getOficina().getOrganismoResponsable().getId(), RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_SALIDA, true) && !registroSalida.getEstado().equals(RegwebConstantes.REGISTRO_ANULADO)) {
+                // Creamos el anexo justificante y lo firmamos
+                AnexoFull anexoFull = justificanteEjb.crearJustificante(entidad, usuarioEntidad, registroSalida, RegwebConstantes.REGISTRO_SALIDA, idioma);
 
-                    // Creamos el anexo justificante y lo firmamos
-                    AnexoFull anexoFull = justificanteEjb.crearJustificante(usuarioEntidad, registroSalida, RegwebConstantes.REGISTRO_SALIDA, idioma);
-
-                    // Alta en tabla LOPD
-                    if (anexoFull != null) {
-                        lopdEjb.altaLopd(registroSalida.getNumeroRegistro(), registroSalida.getFecha(), registroSalida.getLibro().getId(), usuarioEntidad.getId(), RegwebConstantes.REGISTRO_SALIDA, RegwebConstantes.LOPD_JUSTIFICANTE);
-                    }
-
-                    jsonResponse.setStatus("SUCCESS");
-
-                } else {
-                    jsonResponse.setStatus("FAIL");
-                    jsonResponse.setError(getMessage("aviso.registro.editar"));
+                // Alta en tabla LOPD
+                if (anexoFull != null) {
+                    lopdEjb.altaLopd(registroSalida.getNumeroRegistro(), registroSalida.getFecha(), registroSalida.getLibro().getId(), usuarioEntidad.getId(), RegwebConstantes.REGISTRO_SALIDA, RegwebConstantes.LOPD_JUSTIFICANTE);
                 }
+
+                jsonResponse.setStatus("SUCCESS");
+
+            } else {
+                jsonResponse.setStatus("FAIL");
+                jsonResponse.setError(getMessage("aviso.registro.editar"));
             }
 
         } catch (I18NException e) {
@@ -471,6 +551,36 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
 
         return jsonResponse;
 
+    }
+
+    /**
+     * Anular un {@link es.caib.regweb3.model.RegistroSalida}
+     */
+    @RequestMapping(value = "/registroSalida/anular", method = RequestMethod.POST)
+    public String anularRegistroSalida(@ModelAttribute AnularForm anularForm, HttpServletRequest request) {
+
+        try {
+
+            RegistroSalida registroSalida = registroSalidaEjb.findById(anularForm.getIdAnular());
+            UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
+
+            // Anulamos el RegistroEntrada
+            String motivoAnulacion;
+            if (StringUtils.isEmpty(anularForm.getObservacionesAnulacion())) {
+                motivoAnulacion = getMessage("registro.modificacion.anulacion");
+            } else {
+                motivoAnulacion = getMessage("registro.modificacion.anulacion") + ": " + anularForm.getObservacionesAnulacion();
+            }
+            registroSalidaEjb.anularRegistroSalida(registroSalida, usuarioEntidad, motivoAnulacion);
+
+            Mensaje.saveMessageInfo(request, getMessage("registroSalida.anular"));
+
+        } catch (Exception e) {
+            Mensaje.saveMessageError(request, getMessage("regweb.error.registro"));
+            e.printStackTrace();
+        }
+
+        return "redirect:/adminEntidad/registroSalida/" + anularForm.getIdAnular() + "/detalle";
     }
 
     /**
@@ -523,6 +633,110 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
 
         } catch (Exception e) {
             Mensaje.saveMessageError(request, "Error al capitalizar interesados");
+            e.printStackTrace();
+        }
+
+        return "redirect:/inici";
+    }
+
+    /**
+     * Purga los anexos distribuidos
+     */
+    @RequestMapping(value = "/purgarAnexosDistribuidos")
+    public String purgarAnexosDistribuidos(HttpServletRequest request) throws Exception{
+
+        Entidad entidad =  getEntidadActiva(request);
+
+        //Integración
+        long tiempo = System.currentTimeMillis();
+        StringBuilder peticion = new StringBuilder();
+        String descripcion = "Purgar Anexos distribuidos";
+        Date inicio = new Date();
+        peticion.append("entidad: ").append(entidad.getNombre()).append(System.getProperty("line.separator"));
+
+        try {
+
+            //Purgamos los anexos de registros distribuidos
+            int total = anexoEjb.purgarAnexosRegistrosDistribuidos(entidad.getId());
+            peticion.append("total anexos purgados: ").append(total).append(System.getProperty("line.separator"));
+
+            integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_SCHEDULERS, descripcion, peticion.toString(), System.currentTimeMillis() - tiempo, entidad.getId(), "");
+
+            Mensaje.saveMessageInfo(request, "Se han purgado " + total + " anexos distribuidos.");
+
+        } catch (Exception | I18NException e) {
+            integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_SCHEDULERS, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - tiempo, entidad.getId(), "");
+            Mensaje.saveMessageError(request, "Error purgando anexos distribuidos");
+            e.printStackTrace();
+        }
+
+        return "redirect:/inici";
+    }
+
+    /**
+     * Purga los anexos sir aceptados
+     */
+    @RequestMapping(value = "/purgarAnexosSir")
+    public String purgarAnexosSir(HttpServletRequest request) throws Exception{
+
+        Entidad entidad =  getEntidadActiva(request);
+
+        //Integración
+        long tiempo = System.currentTimeMillis();
+        StringBuilder peticion = new StringBuilder();
+        String descripcion = "Purgar AnexosSir";
+        peticion.append("entidad: ").append(entidad.getNombre()).append(System.getProperty("line.separator"));
+
+        Date inicio = new Date();
+
+        try {
+
+            //Purgamos los anexos de registros distribuidos
+            int total = anexoSirEjb.purgarAnexosAceptados(entidad.getId());
+            peticion.append("total anexos: ").append(total).append(System.getProperty("line.separator"));
+
+            integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_SCHEDULERS, descripcion, peticion.toString(), System.currentTimeMillis() - tiempo, entidad.getId(), "");
+
+            Mensaje.saveMessageInfo(request, "Se han purgado " + total + " anexos sir.");
+
+        } catch (Exception e) {
+            integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_SCHEDULERS, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - tiempo, entidad.getId(), "");
+            Mensaje.saveMessageError(request, "Error purgando anexos sir");
+            e.printStackTrace();
+        }
+
+        return "redirect:/inici";
+    }
+
+    /**
+     * Purga los anexos aceptados en destino SIR
+     */
+    @RequestMapping(value = "/purgarAnexosAceptados")
+    public String purgarAnexosAceptados(HttpServletRequest request) throws Exception{
+
+        Entidad entidad =  getEntidadActiva(request);
+
+        //Integración
+        long tiempo = System.currentTimeMillis();
+        StringBuilder peticion = new StringBuilder();
+        String descripcion = "Purgar Anexos de registros recibidos SIR Confirmados";
+        peticion.append("entidad: ").append(entidad.getNombre()).append(System.getProperty("line.separator"));
+
+        Date inicio = new Date();
+
+        try {
+
+            //Purgamos los anexos de registros recibidos SIR Confirmados
+            int total = anexoEjb.purgarAnexosRegistrosAceptados(entidad.getId());
+            peticion.append("total anexos: ").append(total).append(System.getProperty("line.separator"));
+
+            integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_SCHEDULERS, descripcion, peticion.toString(), System.currentTimeMillis() - tiempo, entidad.getId(), "");
+
+            Mensaje.saveMessageInfo(request, "Se han purgado " + total + " anexos aceptados en destino SIR.");
+
+        } catch (Exception | I18NException e) {
+            integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_SCHEDULERS, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - tiempo, entidad.getId(), "");
+            Mensaje.saveMessageError(request, "Error purgando anexos aceptados en destino SIR");
             e.printStackTrace();
         }
 

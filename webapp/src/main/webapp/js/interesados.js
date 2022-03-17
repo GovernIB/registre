@@ -52,7 +52,7 @@ function restOrganismoInteresado(codigoDir3, denominacion, idRegistroDetalle, ti
 
             if(result.status === 'SUCCESS'){
                 if(tipoRegistro==2){ //Si es una salida eliminamos los anteriores
-                    eliminarTodosInteresados();
+                    eliminarOrganismos();
                 }
                 addOrganismoInteresadoHtml(codigoDir3, denominacion, tipo, idRegistroDetalle, true);
 
@@ -66,7 +66,7 @@ function restOrganismoInteresado(codigoDir3, denominacion, idRegistroDetalle, ti
 }
 
 /**
- * Elimina todos los Organismos de la tabla Interesados
+ * Elimina todos los Interesados de la tabla
  */
 function eliminarTodosInteresados(){
     $('#interesados > tbody  > tr').each(function() {
@@ -74,6 +74,17 @@ function eliminarTodosInteresados(){
             $(this).remove();
         }
         if($(this).attr('id').startsWith("persona")){
+            $(this).remove();
+        }
+    });
+}
+
+/**
+ * Elimina todos los Organismos de la tabla Interesados
+ */
+function eliminarOrganismos(){
+    $('#interesados > tbody  > tr').each(function() {
+        if($(this).attr('id').startsWith("organismo")){
             $(this).remove();
         }
     });

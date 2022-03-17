@@ -41,9 +41,6 @@ public class WebServicesMethodsEJB implements WebServicesMethodsLocal {
     @EJB(mappedName = "regweb3/RegistroSirEJB/local")
     private RegistroSirLocal registroSirEjb;
 
-    @EJB(mappedName = "regweb3/MultiEntidadEJB/local")
-    private MultiEntidadLocal multiEntidadEjb;
-
 
     @Override
     public void procesarMensajeDatosControl(MensajeControl mensaje) throws Exception{
@@ -66,24 +63,19 @@ public class WebServicesMethodsEJB implements WebServicesMethodsLocal {
     }
 
     @Override
-    public Dir3CaibObtenerOficinasWs getObtenerOficinasService() throws Exception {
-        return Dir3CaibUtils.getObtenerOficinasService(PropiedadGlobalUtil.getDir3CaibServer(), PropiedadGlobalUtil.getDir3CaibUsername(), PropiedadGlobalUtil.getDir3CaibPassword());
+    public Dir3CaibObtenerOficinasWs getObtenerOficinasService(Long idEntidad) throws Exception {
+        return Dir3CaibUtils.getObtenerOficinasService(PropiedadGlobalUtil.getDir3CaibServer(idEntidad), PropiedadGlobalUtil.getDir3CaibUsername(idEntidad), PropiedadGlobalUtil.getDir3CaibPassword(idEntidad));
     }
 
     @Override
-    public Dir3CaibObtenerUnidadesWs getObtenerUnidadesService() throws Exception {
-        return Dir3CaibUtils.getObtenerUnidadesService(PropiedadGlobalUtil.getDir3CaibServer(), PropiedadGlobalUtil.getDir3CaibUsername(), PropiedadGlobalUtil.getDir3CaibPassword());
+    public Dir3CaibObtenerUnidadesWs getObtenerUnidadesService(Long idEntidad) throws Exception {
+        return Dir3CaibUtils.getObtenerUnidadesService(PropiedadGlobalUtil.getDir3CaibServer(idEntidad), PropiedadGlobalUtil.getDir3CaibUsername(idEntidad), PropiedadGlobalUtil.getDir3CaibPassword(idEntidad));
     }
 
 
     @Override
     public Oficina obtenerOficina(String codigo) throws Exception {
-
-        if(multiEntidadEjb.isMultiEntidad()){
-            return oficinaEjb.findByCodigoMultientidad(codigo);
-        }else{
-            return oficinaEjb.findByCodigo(codigo);
-        }
+        return oficinaEjb.findByMultiEntidad(codigo);
     }
 
     @Override

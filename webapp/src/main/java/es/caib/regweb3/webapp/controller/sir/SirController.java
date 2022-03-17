@@ -8,10 +8,10 @@ import es.caib.regweb3.model.utils.TipoRegistro;
 import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.persistence.utils.FileSystemManager;
 import es.caib.regweb3.persistence.utils.Paginacion;
-import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.persistence.utils.RegistroUtils;
 import es.caib.regweb3.sir.ejb.MensajeLocal;
 import es.caib.regweb3.sir.utils.Sicres3XML;
+import es.caib.regweb3.utils.Dir3Caib;
 import es.caib.regweb3.utils.Dir3CaibUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.TimeUtils;
@@ -40,9 +40,6 @@ public class SirController extends BaseController {
 
     @EJB(mappedName = "regweb3/OficioRemisionEJB/local")
     private OficioRemisionLocal oficioRemisionEjb;
-
-    @EJB(mappedName = "regweb3/LibroEJB/local")
-    private LibroLocal libroEjb;
 
     @EJB(mappedName = "regweb3/RegistroSirEJB/local")
     private RegistroSirLocal registroSirEjb;
@@ -105,7 +102,7 @@ public class SirController extends BaseController {
 
         Oficina oficina = oficinaEjb.findByCodigo(registroSir.getCodigoEntidadRegistral());
 
-        sirEnvioEjb.aceptarRegistrosERTE(registros, busqueda.getDestino(), oficina, getLibroEntidad(request).getId(), usuarioEntidad, entidad.getId());
+        sirEnvioEjb.aceptarRegistrosERTE(registros, entidad, busqueda.getDestino(), oficina, getLibroEntidad(request).getId(), usuarioEntidad);
 
         Mensaje.saveMessageInfo(request, "Se han procesado "+registros.size()+" registros en " + TimeUtils.formatElapsedTime(System.currentTimeMillis() - inicio));
 
@@ -270,9 +267,10 @@ public class SirController extends BaseController {
      * Controller temporal para confirmar Oficios enviados a SIR
      */
     @RequestMapping(value = "/{idIntercambio}/confirmar", method = RequestMethod.GET)
-    public String marcarConformacion(@PathVariable String idIntercambio, HttpServletRequest request) throws Exception {
+    public String marcarConfirmacion(@PathVariable String idIntercambio, HttpServletRequest request) throws Exception {
 
         Entidad entidad = getEntidadActiva(request);
+        Dir3Caib dir3Caib = getLoginInfo(request).getDir3Caib();
         
         OficioRemision oficioRemision = oficioRemisionEjb.getByIdentificadorIntercambio(idIntercambio);
 
@@ -284,7 +282,7 @@ public class SirController extends BaseController {
                 if(mensaje.getTipoMensaje().equals(TipoMensaje.CONFIRMACION.getValue())){
 
                     oficioRemision.setCodigoEntidadRegistralProcesado(mensaje.getCodigoEntidadRegistralOrigen());
-                    oficioRemision.setDecodificacionEntidadRegistralProcesado(Dir3CaibUtils.denominacion(PropiedadGlobalUtil.getDir3CaibServer(), mensaje.getCodigoEntidadRegistralOrigen(), RegwebConstantes.OFICINA));
+                    oficioRemision.setDecodificacionEntidadRegistralProcesado(Dir3CaibUtils.denominacion(dir3Caib.getServer(), mensaje.getCodigoEntidadRegistralOrigen(), RegwebConstantes.OFICINA));
                     oficioRemision.setNumeroRegistroEntradaDestino(mensaje.getNumeroRegistroEntradaDestino());
                     oficioRemision.setFechaEntradaDestino(mensaje.getFechaEntradaDestino());
                     oficioRemision.setEstado(RegwebConstantes.OFICIO_ACEPTADO);
@@ -324,6 +322,7 @@ public class SirController extends BaseController {
         model.addAttribute("trazabilidades", trazabilidades);
         model.addAttribute("mensajes", mensajes);
         model.addAttribute("idIntercambio", idIntercambio);
+        model.addAttribute("integracion", new BasicForm());
 
         return "sir/intercambioDetalle";
     }
@@ -335,7 +334,7 @@ public class SirController extends BaseController {
      * @throws Exception
      */
     @RequestMapping(value = "/monitorEnviados", method = RequestMethod.GET)
-    public ModelAndView enviados(Model model, HttpServletRequest request) throws Exception {
+    public ModelAndView monitorEnviados(Model model, HttpServletRequest request) throws Exception {
 
         ModelAndView mav = new ModelAndView("sir/monitorEnviados");
 
@@ -355,7 +354,7 @@ public class SirController extends BaseController {
      * Realiza la busqueda de {@link es.caib.regweb3.model.RegistroEntrada} según los parametros del formulario
      */
     @RequestMapping(value = "/monitorEnviados", method = RequestMethod.POST)
-    public ModelAndView enviados(@ModelAttribute OficioRemisionBusquedaForm busqueda, HttpServletRequest request) throws Exception {
+    public ModelAndView monitorEnviados(@ModelAttribute OficioRemisionBusquedaForm busqueda, HttpServletRequest request) throws Exception {
 
         ModelAndView mav = new ModelAndView("sir/monitorEnviados");
 
@@ -384,7 +383,7 @@ public class SirController extends BaseController {
      * @throws Exception
      */
     @RequestMapping(value = "/monitorRecibidos", method = RequestMethod.GET)
-    public ModelAndView list(Model model, HttpServletRequest request)throws Exception {
+    public ModelAndView monitorRecibidos(Model model, HttpServletRequest request)throws Exception {
 
         ModelAndView mav = new ModelAndView("sir/monitorRecibidos");
         Entidad entidad = getEntidadActiva(request);
@@ -404,14 +403,14 @@ public class SirController extends BaseController {
      * Realiza la busqueda de {@link RegistroSir} según los parametros del formulario
      */
     @RequestMapping(value = "/monitorRecibidos", method = RequestMethod.POST)
-    public ModelAndView list(@ModelAttribute RegistroSirBusquedaForm busqueda, HttpServletRequest request)throws Exception {
+    public ModelAndView monitorRecibidos(@ModelAttribute RegistroSirBusquedaForm busqueda, HttpServletRequest request)throws Exception {
 
         ModelAndView mav = new ModelAndView("sir/monitorRecibidos");
         Entidad entidad = getEntidadActiva(request);
 
         RegistroSir registroSir = busqueda.getRegistroSir();
 
-        Paginacion paginacion = registroSirEjb.busqueda(busqueda.getPageNumber(), busqueda.getFechaInicio(), RegistroUtils.ajustarHoraBusqueda(busqueda.getFechaFin()), registroSir, registroSir.getCodigoEntidadRegistral(), busqueda.getEstado());
+        Paginacion paginacion = registroSirEjb.busqueda(busqueda.getPageNumber(), busqueda.getFechaInicio(), RegistroUtils.ajustarHoraBusqueda(busqueda.getFechaFin()), registroSir, registroSir.getCodigoEntidadRegistral(), busqueda.getEstado(),entidad.getCodigoDir3());
 
         busqueda.setPageNumber(1);
 
@@ -478,8 +477,9 @@ public class SirController extends BaseController {
     public Boolean reenviarIntercambio(@RequestParam Long idOficioRemision)throws Exception {
 
         try{
+            OficioRemision oficioRemision = oficioRemisionEjb.findById(idOficioRemision);
+            sirEnvioEjb.reenviarIntercambio(oficioRemision);
 
-            sirEnvioEjb.reenviarIntercambio(idOficioRemision);
             return true;
 
         }catch (Exception | I18NException e){

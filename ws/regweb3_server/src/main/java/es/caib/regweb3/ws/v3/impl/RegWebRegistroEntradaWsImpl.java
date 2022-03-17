@@ -126,7 +126,6 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
         // Integraciones
         Date inicio = new Date();
         StringBuilder peticion = new StringBuilder();
-        long tiempo = System.currentTimeMillis();
         String numRegFormat = "";
 
         peticion.append("usuario: ").append(UsuarioAplicacionCache.get().getUsuario().getNombreIdentificador()).append(System.getProperty("line.separator"));
@@ -135,25 +134,25 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
         Entidad entidadActiva = validarEntidad(entidad);
 
         // 2.- Comprobar que el Organismo destino está vigente
-        Organismo destinoInterno = organismoEjb.findByCodigoEntidadLigero(registroEntradaWs.getDestino(), entidadActiva.getId());
         UnidadTF destinoExterno = null;
-
-        if (destinoInterno == null) { // Se trata de un destino externo
-
+        Organismo destinoInterno = organismoEjb.findByCodigoByEntidadMultiEntidad(registroEntradaWs.getDestino(),entidadActiva.getId());
+        if(destinoInterno == null){ //Externo, lo vamos a buscar a dir3caib
             // Lo buscamos en DIR3CAIB
-            Dir3CaibObtenerUnidadesWs unidadesService = Dir3CaibUtils.getObtenerUnidadesService(PropiedadGlobalUtil.getDir3CaibServer(), PropiedadGlobalUtil.getDir3CaibUsername(), PropiedadGlobalUtil.getDir3CaibPassword());
+            Dir3CaibObtenerUnidadesWs unidadesService = Dir3CaibUtils.getObtenerUnidadesService(PropiedadGlobalUtil.getDir3CaibServer(entidadActiva.getId()), PropiedadGlobalUtil.getDir3CaibUsername(entidadActiva.getId()), PropiedadGlobalUtil.getDir3CaibPassword(entidadActiva.getId()));
             destinoExterno = unidadesService.obtenerUnidad(registroEntradaWs.getDestino(), null, null);
 
-            if (destinoExterno == null) {
+            if (destinoExterno == null) { //o no existe o está extinguido
                 throw new I18NException("registro.organismo.noExiste", registroEntradaWs.getDestino());
-            } else if (!destinoExterno.getCodigoEstadoEntidad().equals(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE)) {
-                throw new I18NException("registro.organismo.extinguido", destinoExterno.getCodigo() + " - " + destinoExterno.getDenominacion());
             }
-
-
+        }else if( !destinoInterno.getEntidad().getId().equals(entidadActiva.getId())){ //No hace falta ir a buscarlo a dir3caib, ya tenemos los datos mínimos.
+            destinoExterno = new UnidadTF();
+            destinoExterno.setCodigo(destinoInterno.getCodigo());
+            destinoExterno.setDenominacion(destinoInterno.getDenominacion());
+            destinoInterno = null;
         } else if (!destinoInterno.getEstado().getCodigoEstadoEntidad().equals(ESTADO_ENTIDAD_VIGENTE)) { //Si está extinguido
             throw new I18NException("registro.organismo.extinguido", destinoInterno.getNombreCompleto());
         }
+
 
         // 3.- Comprobar que la Oficina está vigente
         Oficina oficina = validarOficina(registroEntradaWs.getOficina(), entidadActiva.getId());
@@ -219,11 +218,11 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
 
         // 12.- Creamos el Registro de Entrada
         try{
-            registroEntrada = registroEntradaEjb.registrarEntrada(registroEntrada, usuario, interesados, anexosFull, true);
+            registroEntrada = registroEntradaEjb.registrarEntrada(registroEntrada, entidadActiva, usuario, interesados, anexosFull, true);
             numRegFormat = registroEntrada.getNumeroRegistroFormateado();
 
         }catch (Exception e){
-            integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, null,System.currentTimeMillis() - tiempo, entidadActiva.getId(), numRegFormat);
+            integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, null,System.currentTimeMillis() - inicio.getTime(), entidadActiva.getId(), numRegFormat);
             throw new I18NException("registro.nuevo.error");
         }
 
@@ -236,7 +235,8 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
         // Integracion
         peticion.append("oficina: ").append(registroEntrada.getOficina().getDenominacion()).append(System.getProperty("line.separator"));
         peticion.append("registro: ").append(registroEntrada.getNumeroRegistroFormateado()).append(System.getProperty("line.separator"));
-        integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(),peticion.toString(), System.currentTimeMillis() - tiempo, entidadActiva.getId(), numRegFormat);
+        peticion.append("extracto: ").append(registroEntrada.getRegistroDetalle().getExtracto()).append(System.getProperty("line.separator"));
+        integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(),peticion.toString(), System.currentTimeMillis() - inicio.getTime(), entidadActiva.getId(), numRegFormat);
 
         return identificadorWs;
     }
@@ -254,11 +254,9 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
         // Integraciones
         Date inicio = new Date();
         StringBuilder peticion = new StringBuilder();
-        long tiempo = System.currentTimeMillis();
         peticion.append("usuario: ").append(UsuarioAplicacionCache.get().getUsuario().getNombreIdentificador()).append(System.getProperty("line.separator"));
         peticion.append("registro: ").append(numeroRegistroFormateado).append(System.getProperty("line.separator"));
         peticion.append("tipoRegistro: ").append("entrada").append(System.getProperty("line.separator"));
-
 
         UsuarioEntidad usuario = usuarioEntidadEjb.findByIdentificadorEntidad(UsuarioAplicacionCache.get().getUsuario().getIdentificador(), entidadActiva.getId());
 
@@ -285,10 +283,10 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
             if(registroEntrada.getEstado().equals(REGISTRO_VALIDO)){
 
                 try{
-                    justificante = justificanteEjb.crearJustificanteWS(usuario,registroEntrada,RegwebConstantes.REGISTRO_ENTRADA,Configuracio.getDefaultLanguage());
+                    justificante = justificanteEjb.crearJustificanteWS(entidadActiva, usuario,registroEntrada,RegwebConstantes.REGISTRO_ENTRADA,Configuracio.getDefaultLanguage());
                 }catch (I18NException e){
                     log.info("----------------Error generado justificante via WS------------------");
-                    integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, null,System.currentTimeMillis() - tiempo, entidadActiva.getId(), numeroRegistroFormateado);
+                    integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, null,System.currentTimeMillis() - inicio.getTime(), entidadActiva.getId(), numeroRegistroFormateado);
                     throw new I18NException("registro.justificante.error", numeroRegistroFormateado);
                 }
 
@@ -310,14 +308,14 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
                 justificante = anexoEjb.getAnexoFullLigero(anexoEjb.getIdJustificante(registroEntrada.getRegistroDetalle().getId()), entidadActiva.getId());
                 anexoSimple = anexoEjb.descargarJustificante(justificante.getAnexo(), entidadActiva.getId());
             }catch (Exception e){
-                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, null,System.currentTimeMillis() - tiempo, entidadActiva.getId(), numeroRegistroFormateado);
+                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, null,System.currentTimeMillis() - inicio.getTime(), entidadActiva.getId(), numeroRegistroFormateado);
                 throw new I18NException("registro.justificante.error", numeroRegistroFormateado);
             }
 
         }
 
         // Integracion
-        integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(),peticion.toString(), System.currentTimeMillis() - tiempo, entidadActiva.getId(), numeroRegistroFormateado);
+        integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(),peticion.toString(), System.currentTimeMillis() - inicio.getTime(), entidadActiva.getId(), numeroRegistroFormateado);
 
         // Alta en la tabla de LOPD
         lopdEjb.altaLopd(registroEntrada.getNumeroRegistro(), registroEntrada.getFecha(), registroEntrada.getLibro().getId(), usuario.getId(), RegwebConstantes.REGISTRO_ENTRADA, RegwebConstantes.LOPD_JUSTIFICANTE);
@@ -570,7 +568,7 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
         // Integraciones
         Date inicio = new Date();
         StringBuilder peticion = new StringBuilder();
-        long tiempo = System.currentTimeMillis();
+        
         peticion.append("usuario: ").append(UsuarioAplicacionCache.get().getUsuario().getNombreIdentificador()).append(System.getProperty("line.separator"));
         peticion.append("registro: ").append(numeroRegistroFormateado).append(System.getProperty("line.separator"));
 
@@ -598,7 +596,7 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
             responseWs = RegistroEntradaConverter.getRegistroEntradaResponseWs(registro, UsuarioAplicacionCache.get().getIdioma());
         }catch (Exception e){
 
-            integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, null,System.currentTimeMillis() - tiempo, entidadActiva.getId(), numeroRegistroFormateado);
+            integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, null,System.currentTimeMillis() - inicio.getTime(), entidadActiva.getId(), numeroRegistroFormateado);
             throw new I18NException("registro.obtener.error");
         }
 
@@ -606,7 +604,7 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
         lopdEjb.altaLopd(registro.getNumeroRegistro(), registro.getFecha(), registro.getLibro().getId(), usuarioEntidad.getId(), RegwebConstantes.REGISTRO_ENTRADA, RegwebConstantes.LOPD_CONSULTA);
 
         // Integracion
-        integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(),peticion.toString(), System.currentTimeMillis() - tiempo, entidadActiva.getId(), numeroRegistroFormateado);
+        integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(),peticion.toString(), System.currentTimeMillis() - inicio.getTime(), entidadActiva.getId(), numeroRegistroFormateado);
 
         return responseWs;
 

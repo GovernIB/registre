@@ -1,26 +1,7 @@
 package es.caib.regweb3.ws.v3.test;
 
 import es.caib.regweb3.utils.RegwebConstantes;
-import es.caib.regweb3.ws.api.v3.AnexoWs;
-import es.caib.regweb3.ws.api.v3.AsientoRegistralWs;
-import es.caib.regweb3.ws.api.v3.DatosInteresadoWs;
-import es.caib.regweb3.ws.api.v3.IdentificadorWs;
-import es.caib.regweb3.ws.api.v3.InteresadoWs;
-import es.caib.regweb3.ws.api.v3.RegWebAsientoRegistralWs;
-import es.caib.regweb3.ws.api.v3.RegWebAsientoRegistralWsService;
-import es.caib.regweb3.ws.api.v3.RegWebHelloWorldWithSecurityWs;
-import es.caib.regweb3.ws.api.v3.RegWebHelloWorldWithSecurityWsService;
-import es.caib.regweb3.ws.api.v3.RegWebHelloWorldWs;
-import es.caib.regweb3.ws.api.v3.RegWebHelloWorldWsService;
-import es.caib.regweb3.ws.api.v3.RegWebInfoWs;
-import es.caib.regweb3.ws.api.v3.RegWebInfoWsService;
-import es.caib.regweb3.ws.api.v3.RegWebPersonasWs;
-import es.caib.regweb3.ws.api.v3.RegWebPersonasWsService;
-import es.caib.regweb3.ws.api.v3.RegWebRegistroEntradaWs;
-import es.caib.regweb3.ws.api.v3.RegWebRegistroEntradaWsService;
-import es.caib.regweb3.ws.api.v3.RegWebRegistroSalidaWs;
-import es.caib.regweb3.ws.api.v3.RegWebRegistroSalidaWsService;
-import es.caib.regweb3.ws.api.v3.RegistroEntradaWs;
+import es.caib.regweb3.ws.api.v3.*;
 import es.caib.regweb3.ws.api.v3.utils.I18NUtils;
 import org.apache.commons.io.IOUtils;
 import org.fundaciobit.genapp.common.utils.Utils;
@@ -31,14 +12,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 
 /**
  * @author anadal
@@ -58,7 +33,8 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
     // TODO GEN APP ADD OTHERS
 
     private static Properties testProperties = new Properties();
-    private static String entorno = "_localhost";
+   // private static String entorno = "_localhost";
+    private static String entorno = "_proves";
 
     static {
         // Traduccions
@@ -321,6 +297,9 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
      */
     private AsientoRegistralWs getDatosComunesAsientoDestino(Long tipoRegistro, String destino){
 
+        System.out.println("Destino " + destino);
+        System.out.println("Origen " + getTestOficinaOrigenCodigoDir3());
+
         AsientoRegistralWs asiento = getDatosComunesAsiento(tipoRegistro);
         asiento.setUnidadTramitacionDestinoCodigo(destino);
 
@@ -429,7 +408,7 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
     public AsientoRegistralWs getAsiento_to_PersonaFisicaDestino(Long tipoRegistro, Boolean representante, Boolean anexos, String destino) {
 
         // Datos comunes
-        AsientoRegistralWs asiento = getDatosComunesAsiento(tipoRegistro);
+        AsientoRegistralWs asiento = getDatosComunesAsientoDestino(tipoRegistro, destino);
 
         // Interesados
         InteresadoWs interesadoWs = new InteresadoWs();
@@ -573,7 +552,7 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
       Define un interesado de tipo administración integrado en SIR
      */
     public DatosInteresadoWs getAdministracionSir(){
-        return getAdministracion("Ayuntamiento de Jun","L01181113");
+        return getAdministracion("Unidad Demoorve CCAA 1","A13010361");
     }
 
 
@@ -608,7 +587,7 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
         if("PRO".equals(entorno)){
             return "A04005605";//Fundación Banco de Sangre y Tejidos de Les Illes Balears
         }else{ //PRE
-            return "A04031290";//Servei D'Ocupació de Les Illes Balears
+            return "A04031606";//Servei D'Ocupació de Les Illes Balears
         }
     }
 
@@ -633,9 +612,9 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
     public String getDestinoExternoSir(String entorno){
 
         if("PRO".equals(entorno)){
-            return "L01070027"; //Ajuntament Alaior
+            return "L01070033"; //Ajuntament Alcúdia
         }else{
-            return "L01070027"; //Ajuntament Alaior (tienen el mismo codigo en los 2 entornos)
+            return "L01070033"; //Ajuntament Alcúdia (tienen el mismo codigo en los 2 entornos)
         }
 
     }
@@ -754,7 +733,7 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
         }
 
         //Anexo confidencial
-        {
+        /*{
 
             AnexoWs anexoConfidencial = new AnexoWs();
 
@@ -783,8 +762,8 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
             anexoConfidencial.setNombreFicheroAnexado(fichero);
             anexoConfidencial.setTipoMIMEFicheroAnexado(Utils.getMimeType(fichero));
 
-            anexos.add(anexoConfidencial);
-        }
+            //anexos.add(anexoConfidencial);
+        }*/
 
         return anexos;
     }

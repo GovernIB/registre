@@ -4,12 +4,12 @@
     <parent>
         <groupId>es.caib.regweb3</groupId>
         <artifactId>regweb3</artifactId>
-        <version>3.2.4</version>
+        <version>3.2.5</version>
     </parent>
 
     <groupId>es.caib.regweb3</groupId>
     <artifactId>regweb3-scripts</artifactId>
-    <version>3.2.4</version>
+    <version>3.2.5</version>
     <packaging>pom</packaging>
 	
 	<name>RegWeb3 - Scripts</name>

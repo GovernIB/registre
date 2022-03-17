@@ -13,6 +13,7 @@ import es.caib.regweb3.persistence.integracion.ArxiuCaibUtils;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
+import es.caib.regweb3.utils.RegwebUtils;
 import es.caib.regweb3.webapp.controller.BaseController;
 import es.caib.regweb3.webapp.utils.AnexoUtils;
 import es.caib.regweb3.webapp.utils.Mensaje;
@@ -95,18 +96,18 @@ public class AnexoController extends BaseController {
 
         // Tipos Validez según casuistica
         if(!anexoForm.getAnexo().getScan()){ // Desde archivo
-            log.info("desde archivo");
+
             model.addAttribute("tiposValidezDocumento", RegwebConstantes.TIPOS_VALIDEZDOCUMENTO);
         }else{ // Se trata de un Scan
-            if(Configuracio.isCAIB() && getLoginInfo(request).getUsuarioAutenticado().getDib_user()) { //  Tiene el rol DIB_USER activo
-                log.info("desde scan con dib_user");
+            if(Configuracio.isCAIB() && getLoginInfo(request).getUsuarioAutenticado().getDib_user_rw()) { //  Tiene el rol DIB_USER_RW activo
+
                 model.addAttribute("tiposValidezDocumento", RegwebConstantes.TIPOS_VALIDEZDOCUMENTO_SCAN_ORIGINAL);
 
-            }else if(Configuracio.isCAIB() && !getLoginInfo(request).getUsuarioAutenticado().getDib_user()){ // NO tiene el rol DIB_USER activo
-                log.info("desde scan sin dib_user");
+            }else if(Configuracio.isCAIB() && !getLoginInfo(request).getUsuarioAutenticado().getDib_user_rw()){ // NO tiene el rol DIB_USER_RW activo
+
                 model.addAttribute("tiposValidezDocumento", RegwebConstantes.TIPOS_VALIDEZDOCUMENTO_SCAN);
             } else{
-                log.info("desde scan");
+
                 model.addAttribute("tiposValidezDocumento", RegwebConstantes.TIPOS_VALIDEZDOCUMENTO_SCAN_ORIGINAL);
             }
         }
@@ -116,12 +117,10 @@ public class AnexoController extends BaseController {
 
 
     @RequestMapping(value = "/nou", method = RequestMethod.POST)
-    public String crearAnexoPost(@ModelAttribute AnexoForm anexoForm,
-                                 BindingResult result, HttpServletRequest request,
+    public String crearAnexoPost(@ModelAttribute AnexoForm anexoForm, BindingResult result, HttpServletRequest request,
                                  HttpServletResponse response, Model model) throws Exception, I18NException {
 
-        log.info(" Passa per crearAnexoPost");
-
+        Entidad entidad = getEntidadActiva(request);
         //Validamos el anexo
         anexoValidator.validate(anexoForm.getAnexo(), result);
 
@@ -130,7 +129,7 @@ public class AnexoController extends BaseController {
             try {
 
                 //Creamos el anexo
-                anexoEjb.crearAnexo(anexoForm, getUsuarioEntidadActivo(request),
+                anexoEjb.crearAnexo(anexoForm, getUsuarioEntidadActivo(request), entidad,
                         anexoForm.getRegistroID(), anexoForm.getTipoRegistro(), null, false);
 
                 //Actualizamos el contador de anexos creados
@@ -162,10 +161,10 @@ public class AnexoController extends BaseController {
         if(!anexoForm.getAnexo().getScan()){ // Desde archivo
             model.addAttribute("tiposValidezDocumento", RegwebConstantes.TIPOS_VALIDEZDOCUMENTO);
         }else{ // Se trata de un Scan
-            if(Configuracio.isCAIB() && getLoginInfo(request).getUsuarioAutenticado().getDib_user()) { //  Tiene el rol DIB_USER activo
+            if(Configuracio.isCAIB() && getLoginInfo(request).getUsuarioAutenticado().getDib_user_rw()) { //  Tiene el rol DIB_USER_RW activo
                 model.addAttribute("tiposValidezDocumento", RegwebConstantes.TIPOS_VALIDEZDOCUMENTO_SCAN_ORIGINAL);
 
-            }else if(Configuracio.isCAIB() && !getLoginInfo(request).getUsuarioAutenticado().getDib_user()){ // NO tiene el rol DIB_USER activo
+            }else if(Configuracio.isCAIB() && !getLoginInfo(request).getUsuarioAutenticado().getDib_user_rw()){ // NO tiene el rol DIB_USER_RW activo
                 model.addAttribute("tiposValidezDocumento", RegwebConstantes.TIPOS_VALIDEZDOCUMENTO_SCAN);
             } else{
                 model.addAttribute("tiposValidezDocumento", RegwebConstantes.TIPOS_VALIDEZDOCUMENTO_SCAN_ORIGINAL);
@@ -180,8 +179,7 @@ public class AnexoController extends BaseController {
     /*
      Prepara los datos de un anexo para su edición
      */
-    @RequestMapping(value = "/editar/{registroDetalleID}/{tipoRegistro}/{registroID}/{anexoID}/{isOficioRemisionSir}",
-            method = RequestMethod.GET)
+    @RequestMapping(value = "/editar/{registroDetalleID}/{tipoRegistro}/{registroID}/{anexoID}/{isOficioRemisionSir}", method = RequestMethod.GET)
     public String editarAnexoGet(HttpServletRequest request,
                                  HttpServletResponse response, @PathVariable Long registroDetalleID,
                                  @PathVariable Long tipoRegistro, @PathVariable Long registroID,
@@ -203,6 +201,7 @@ public class AnexoController extends BaseController {
         //Preparamos el formulario con los datos a mostrar
         AnexoForm anexoForm = new AnexoForm(anexoFull2);
         anexoForm.setRegistroID(registroID);
+        anexoForm.setIdRegistroDetalle(registroDetalleID);
         anexoForm.setTipoRegistro(tipoRegistro);
         anexoForm.setOficioRemisionSir(isOficioRemisionSir);
 
@@ -229,10 +228,10 @@ public class AnexoController extends BaseController {
         if(!anexoForm.getAnexo().getScan()){ // Desde archivo
             model.addAttribute("tiposValidezDocumento", RegwebConstantes.TIPOS_VALIDEZDOCUMENTO);
         }else{ // Se trata de un Scan
-            if(Configuracio.isCAIB() && getLoginInfo(request).getUsuarioAutenticado().getDib_user()) { //  Tiene el rol DIB_USER activo
+            if(Configuracio.isCAIB() && getLoginInfo(request).getUsuarioAutenticado().getDib_user_rw()) { //  Tiene el rol DIB_USER_RW activo
                 model.addAttribute("tiposValidezDocumento", RegwebConstantes.TIPOS_VALIDEZDOCUMENTO_SCAN_ORIGINAL);
 
-            }else if(Configuracio.isCAIB() && !getLoginInfo(request).getUsuarioAutenticado().getDib_user()){ // NO tiene el rol DIB_USER activo
+            }else if(Configuracio.isCAIB() && !getLoginInfo(request).getUsuarioAutenticado().getDib_user_rw()){ // NO tiene el rol DIB_USER_RW activo
                 model.addAttribute("tiposValidezDocumento", RegwebConstantes.TIPOS_VALIDEZDOCUMENTO_SCAN);
             } else{
                 model.addAttribute("tiposValidezDocumento", RegwebConstantes.TIPOS_VALIDEZDOCUMENTO_SCAN_ORIGINAL);
@@ -250,18 +249,16 @@ public class AnexoController extends BaseController {
      * Modifica los datos de un anexo
      */
     @RequestMapping(value = "/editar", method = RequestMethod.POST)
-    public String editarAnexoPost(@ModelAttribute AnexoForm anexoForm,
-                                  BindingResult result, HttpServletRequest request,
+    public String editarAnexoPost(@ModelAttribute AnexoForm anexoForm, BindingResult result, HttpServletRequest request,
                                   HttpServletResponse response, Model model) throws Exception, I18NValidationException, I18NException {
 
-        log.info(" Passa per editarAnexoPost");
-
+        Entidad entidad = getEntidadActiva(request);
         anexoValidator.validate(anexoForm.getAnexo(), result);
 
         if (!result.hasErrors()) { // Si no hay errores
 
             try {
-                anexoEjb.actualizarAnexo(anexoForm, getUsuarioEntidadActivo(request),
+                anexoEjb.actualizarAnexo(anexoForm, getUsuarioEntidadActivo(request), entidad, registroDetalleEjb.getReference(anexoForm.getIdRegistroDetalle()),
                         anexoForm.getRegistroID(), anexoForm.getTipoRegistro(), anexoForm.getAnexo().isJustificante(), false);
 
                 model.addAttribute("closeAndReload", "true");
@@ -281,10 +278,10 @@ public class AnexoController extends BaseController {
         if(!anexoForm.getAnexo().getScan()){ // Desde archivo
             model.addAttribute("tiposValidezDocumento", RegwebConstantes.TIPOS_VALIDEZDOCUMENTO);
         }else{ // Se trata de un Scan
-            if(Configuracio.isCAIB() && getLoginInfo(request).getUsuarioAutenticado().getDib_user()) { //  Tiene el rol DIB_USER activo
+            if(Configuracio.isCAIB() && getLoginInfo(request).getUsuarioAutenticado().getDib_user_rw()) { //  Tiene el rol DIB_USER_RW activo
                 model.addAttribute("tiposValidezDocumento", RegwebConstantes.TIPOS_VALIDEZDOCUMENTO_SCAN_ORIGINAL);
 
-            }else if(Configuracio.isCAIB() && !getLoginInfo(request).getUsuarioAutenticado().getDib_user()){ // NO tiene el rol DIB_USER activo
+            }else if(Configuracio.isCAIB() && !getLoginInfo(request).getUsuarioAutenticado().getDib_user_rw()){ // NO tiene el rol DIB_USER_RW activo
                 model.addAttribute("tiposValidezDocumento", RegwebConstantes.TIPOS_VALIDEZDOCUMENTO_SCAN);
             } else{
                 model.addAttribute("tiposValidezDocumento", RegwebConstantes.TIPOS_VALIDEZDOCUMENTO_SCAN_ORIGINAL);
@@ -329,7 +326,6 @@ public class AnexoController extends BaseController {
 
         return RegwebConstantes.TIPOS_VALIDEZDOCUMENTO;
     }
-
 
 
     /**
@@ -400,17 +396,15 @@ public class AnexoController extends BaseController {
      *
      */
     @RequestMapping(value = "/descargarSeparador", method = RequestMethod.GET)
-    public void separador( HttpServletRequest request,
-                           HttpServletResponse response) throws Exception, I18NException {
+    public void separador(HttpServletRequest request, HttpServletResponse response) throws Exception, I18NException {
 
         Entidad entidadActiva = getEntidadActiva(request);
-
-
         String languageUI = request.getParameter("lang");
+
         if (languageUI == null) {
             languageUI = I18NUtils.getLocale().getLanguage();
-
         }
+
         ScanWebPlainFile separador = scanWebModuleEjb.obtenerDocumentoSeparador(entidadActiva.getId(), languageUI);
 
         download(separador.getMime(), response, separador.getName(),separador.getData());
@@ -580,7 +574,6 @@ public class AnexoController extends BaseController {
         model.addAttribute("tiposDocumental", tipoDocumentalEjb.getByEntidad(getEntidadActiva(request).getId()));
         model.addAttribute("tiposDocumentoAnexo", RegwebConstantes.TIPOS_DOCUMENTO);
         model.addAttribute("tiposFirma", RegwebConstantes.TIPOS_FIRMA);
-
     }
 
 
@@ -603,7 +596,6 @@ public class AnexoController extends BaseController {
             return registroSalida.getRegistroDetalle().getAnexosFull();
         }
     }
-
 
     /**
      * Método que verifica si el anexo que se está creando no supera el tamano establecido por las propiedades SIR
@@ -630,32 +622,52 @@ public class AnexoController extends BaseController {
         //Se suman las distintas medidas de los anexos que tiene el registro hasta el momento.
         long tamanyoTotalAnexos = AnexoUtils.obtenerTamanoTotalAnexos(anexosFull);
 
-        // Comprobamos que el nuevo anexo no supere el tamaño máximo.
-        Long tamanyoMaximoTotalAnexos = PropiedadGlobalUtil.getTamanoMaxTotalAnexosSir();
-        if (docSize != 0) {
+
+        Long tamanyoMaximoTotalAnexosSIR = PropiedadGlobalUtil.getTamanoMaxTotalAnexosSir();
+        String maxTotalAnexos = RegwebUtils.bytesToHuman(tamanyoMaximoTotalAnexosSIR);
+
+        Long tamanoMaximoPorAnexoSIR = PropiedadGlobalUtil.getTamanoMaximoPorAnexoSir();
+        String sTamanoMaximoPorAnexoSIR = RegwebUtils.bytesToHuman(tamanoMaximoPorAnexoSIR);
+
+        // Comprobamos que el nuevo anexo no supere el tamaño máximo total ni el maximo por anexo en sir
+        if (docSize > 0 ) {
+            String tamanoDoc= RegwebUtils.bytesToHuman(docSize);
             tamanyoTotalAnexos += docSize;
-            if (tamanyoTotalAnexos > tamanyoMaximoTotalAnexos) {
-                String totalAnexos = tamanyoTotalAnexos / (1024 * 1024) + " Mb";
-                String maxTotalAnexos = tamanyoMaximoTotalAnexos / (1024 * 1024) + " Mb";
+            if (tamanyoTotalAnexos > tamanyoMaximoTotalAnexosSIR) {
+                String totalAnexos = RegwebUtils.bytesToHuman(tamanyoTotalAnexos );
                 if (!scan) {
                     result.rejectValue("documentoFile", "tamanymaxtotalsuperat", new Object[]{totalAnexos, maxTotalAnexos}, I18NUtils.tradueix("tamanymaxtotalsuperat", totalAnexos, maxTotalAnexos));
                 } else {
                     throw new I18NException("tamanymaxtotalsuperat", totalAnexos, maxTotalAnexos);
                 }
             }
+            if (docSize > tamanoMaximoPorAnexoSIR) {
+                if (!scan) {
+                    result.rejectValue("documentoFile", "tamanyfitxerpujatsuperat", new Object[]{tamanoDoc, sTamanoMaximoPorAnexoSIR}, I18NUtils.tradueix("tamanyfitxerpujatsuperat",tamanoDoc, sTamanoMaximoPorAnexoSIR));
+                } else {
+                    throw new I18NException("tamanyfitxerpujatsuperat", tamanoDoc, sTamanoMaximoPorAnexoSIR);
+                }
+            }
         } else {// Solo comprobamos el tamaño en el documento firma en el caso que el documento este vacio, ya que se trata de firma attached
+            String tamanoFirma = RegwebUtils.bytesToHuman(firmaSize);
             tamanyoTotalAnexos += firmaSize;
-            if (tamanyoTotalAnexos > tamanyoMaximoTotalAnexos) {
-                String totalAnexos = tamanyoTotalAnexos / (1024 * 1024) + " Mb";
-                String maxTotalAnexos = tamanyoMaximoTotalAnexos / (1024 * 1024) + " Mb";
+            if (tamanyoTotalAnexos > tamanyoMaximoTotalAnexosSIR) {
+                String totalAnexos = RegwebUtils.bytesToHuman(tamanyoTotalAnexos);
                 if (!scan) {
                     result.rejectValue("firmaFile", "tamanymaxtotalsuperat", new Object[]{totalAnexos, maxTotalAnexos}, I18NUtils.tradueix("tamanymaxtotalsuperat", totalAnexos, maxTotalAnexos));
                 } else {
                     throw new I18NException("tamanymaxtotalsuperat", totalAnexos, maxTotalAnexos);
                 }
             }
-        }
+            if (firmaSize > tamanoMaximoPorAnexoSIR) {
+                if (!scan) {
+                    result.rejectValue("firmaFile", "tamanyfitxerpujatsuperat", new Object[]{tamanoFirma, sTamanoMaximoPorAnexoSIR}, I18NUtils.tradueix("tamanyfitxerpujatsuperat", tamanoFirma, sTamanoMaximoPorAnexoSIR));
+                } else {
+                    throw new I18NException("tamanyfitxerpujatsuperat", tamanoFirma, sTamanoMaximoPorAnexoSIR);
+                }
+            }
 
+        }
 
         //Validamos que las extensiones del documento y la firma esten dentro de los formatos permitidos.
         if (!docExtension.isEmpty()) {
@@ -708,8 +720,6 @@ public class AnexoController extends BaseController {
     public void initBinder(WebDataBinder binder) {
         binder.registerCustomEditor(Date.class,
                 new CustomDateEditor(new SimpleDateFormat("dd/MM/yyyy"), true, 10));
-
-
     }
 
 
@@ -884,7 +894,7 @@ public class AnexoController extends BaseController {
         AnexoForm anexoForm = new AnexoForm();
         anexoForm.setRegistroID(registroID);
         anexoForm.setTipoRegistro(tipoRegistro);
-        anexoForm.getAnexo().setRegistroDetalle(registroDetalle);
+        anexoForm.setIdRegistroDetalle(registroDetalleID);
         anexoForm.getAnexo().setPerfilCustodia(RegwebConstantes.PERFIL_CUSTODIA_DOCUMENT_CUSTODY);
         anexoForm.getAnexo().setScan(scan);
         anexoForm.setOficioRemisionSir(isOficioRemisionSir);
@@ -905,5 +915,4 @@ public class AnexoController extends BaseController {
 
         return anexoEjbStatic;
     }
-
 }

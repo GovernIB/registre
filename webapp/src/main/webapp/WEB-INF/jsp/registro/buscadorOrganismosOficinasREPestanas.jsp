@@ -27,10 +27,8 @@ que se le indica -->
                     <div class="modal-body">
 
                         <form id="organismoREBusquedaForm${param.tipo}" class="form-horizontal" action="" method="post">
-                            <input id="nivelAdministracion" type="hidden"
-                                   value="${oficina.organismoResponsable.nivelAdministracion.codigoNivelAdministracion}"/>
-                            <input id="comunidadAutonoma" type="hidden"
-                                   value="${oficina.organismoResponsable.codAmbComunidad.codigoComunidad}"/>
+                            <input id="nivelAdministracion" type="hidden" value="${RegwebConstantes.nivelAdminAutonomica}"/>
+                            <input id="comunidadAutonoma" type="hidden" value="${RegwebConstantes.comunidadBaleares}"/>
 
                             <div class="form-group col-xs-12 senseMargeLat">
                                 <div class="col-xs-6">
@@ -148,7 +146,7 @@ que se le indica -->
                         </div>
 
                         <input type="button" id="buscarorganimos${param.tipo}"
-                               onclick="organismoBusqueda('${param.tipo}','<%=PropiedadGlobalUtil.getDir3CaibServer()%>','${param.idRegistroDetalle}')"
+                               onclick="organismoBusqueda('${param.tipo}','${loginInfo.dir3Caib.server}','${param.idRegistroDetalle}')"
                                class="btn btn-warning btn-sm" title="<spring:message code="regweb.buscar"/>"
                                value="<spring:message code="regweb.buscar"/>"/>
                         <button class="btn btn-sm" data-dismiss="modal" aria-hidden="true"
@@ -242,7 +240,7 @@ que se le indica -->
     $("#modalBuscador${param.tipo}").keypress(function(e) {
         if ((e.keyCode == 13)) {
             e.preventDefault();
-            organismoBusqueda('${param.tipo}','<%=PropiedadGlobalUtil.getDir3CaibServer()%>','${param.idRegistroDetalle}');
+            organismoBusqueda('${param.tipo}','${loginInfo.dir3Caib.server}','${param.idRegistroDetalle}');
         }
     });
 

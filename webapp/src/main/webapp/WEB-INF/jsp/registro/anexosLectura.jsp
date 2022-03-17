@@ -37,8 +37,8 @@
                             code="anexo.anexo"/></strong>
                     </div>
                 </c:if>
-                <!-- Averiguamos si el registroDetalle tiene los anexos purgados -->
-                <c:set var="anexosPurgados" value="${registro.registroDetalle.detallePurgado}"/>
+                <!-- Averiguamos si el registro tiene los anexos purgados -->
+                <c:set var="anexosPurgados" value="${registro.registroDetalle.anexosPurgado}"/>
                 <%--Tiene Anexos--%>
                 <c:if test="${registro.registroDetalle.tieneAnexos}">
 

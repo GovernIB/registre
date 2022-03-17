@@ -49,6 +49,8 @@ public class OficioRemision implements Serializable {
     private String decodificacionEntidadRegistralProcesado; // Denominacion de la oficina que acepta o rechaza, reenvia (en definitiva que procesa)
     private String codigoError;
     private String descripcionError;
+    private String tipoAnotacion;
+    private String decodificacionTipoAnotacion;
     private Integer numeroReintentos = 0;
 
     private String contactosEntidadRegistralDestino;
@@ -275,6 +277,24 @@ public class OficioRemision implements Serializable {
 
     public void setDescripcionError(String descripcionError) {
         this.descripcionError = descripcionError;
+    }
+
+    @Column(name = "TIPO_ANOTACION", length = 2, nullable = true)
+    public String getTipoAnotacion() {
+        return tipoAnotacion;
+    }
+
+    public void setTipoAnotacion(String tipoAnotacion) {
+        this.tipoAnotacion = tipoAnotacion;
+    }
+
+    @Column(name = "DEC_T_ANOTACION", length = 80, nullable = true)
+    public String getDecodificacionTipoAnotacion() {
+        return decodificacionTipoAnotacion;
+    }
+
+    public void setDecodificacionTipoAnotacion(String decodificacionTipoAnotacion) {
+        this.decodificacionTipoAnotacion = decodificacionTipoAnotacion;
     }
 
     @Column(name = "REINTENTOS", nullable = true)

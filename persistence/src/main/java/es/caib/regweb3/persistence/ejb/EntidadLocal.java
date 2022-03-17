@@ -92,12 +92,11 @@ public interface EntidadLocal extends BaseEjb<Entidad, Long> {
     /**
      * Comprueba si un Usuario es Administrador de la Entidad
      *
-     * @param idEntidad
      * @param usuarioEntidad
      * @return
      * @throws Exception
      */
-    Boolean esAdministrador(Long idEntidad, UsuarioEntidad usuarioEntidad) throws Exception;
+    Boolean esAdministrador(UsuarioEntidad usuarioEntidad) throws Exception;
 
     /**
      * Determina si un usuario es propietario o administrador de esa entidad
@@ -157,5 +156,11 @@ public interface EntidadLocal extends BaseEjb<Entidad, Long> {
      * @throws Exception
      */
     void marcarEntidadMantenimiento(Long idEntidad, Boolean mantenimiento) throws Exception;
+
+    /**
+     * Determina si una implementación es multientidad (más de una entidad con sir activado)
+     * @throws Exception
+     */
+    boolean isMultiEntidad() throws Exception;
 
 }

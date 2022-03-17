@@ -4,14 +4,14 @@
 
     <artifactId>regweb3-sqlgenerator</artifactId>
     <packaging>jar</packaging>
-    <version>3.2.4</version>
+    <version>3.2.5</version>
 
     <name>RegWeb3 - Scripts - SQL Generator</name>
 
     <parent>
         <groupId>es.caib.regweb3</groupId>
         <artifactId>regweb3-scripts</artifactId>
-        <version>3.2.4</version>
+        <version>3.2.5</version>
     </parent>
 
 

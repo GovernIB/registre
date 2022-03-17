@@ -198,7 +198,6 @@
                                                         <tr>
                                                             <th><spring:message code="registroEntrada.numeroRegistro"/></th>
                                                             <th><spring:message code="registroEntrada.anyRegistro"/></th>
-                                                            <th><spring:message code="registroEntrada.libro.corto"/></th>
                                                             <th><spring:message code="registroEntrada.fecha"/></th>
                                                             <th><spring:message code="registroEntrada.oficina"/></th>
                                                         </tr>
@@ -208,7 +207,6 @@
                                                             <tr>
                                                                 <td>${registroEntrada.numeroRegistro}</td>
                                                                 <td><fmt:formatDate value="${registroEntrada.fecha}" pattern="yyyy"/></td>
-                                                                <td>${registroEntrada.libro.nombreCompleto}</td>
                                                                 <td><fmt:formatDate value="${registroEntrada.fecha}" pattern="dd/MM/yyyy HH:mm"/></td>
                                                                 <td>${registroEntrada.oficina.denominacion}</td>
                                                             </tr>
@@ -268,7 +266,6 @@
                                                         <tr>
                                                             <th><spring:message code="registroEntrada.numeroRegistro"/></th>
                                                             <th><spring:message code="registroEntrada.anyRegistro"/></th>
-                                                            <th><spring:message code="registroEntrada.libro.corto"/></th>
                                                             <th><spring:message code="registroEntrada.fecha"/></th>
                                                             <th><spring:message code="regweb.modificacion"/></th>
                                                         </tr>
@@ -279,7 +276,6 @@
                                                             <tr>
                                                                 <td>${historicoRegistroEntrada.registroEntrada.numeroRegistro}</td>
                                                                 <td><fmt:formatDate value="${historicoRegistroEntrada.registroEntrada.fecha}" pattern="yyyy"/></td>
-                                                                <td>${historicoRegistroEntrada.registroEntrada.libro.nombreCompleto}</td>
                                                                 <td><fmt:formatDate value="${historicoRegistroEntrada.fecha}" pattern="dd/MM/yyyy HH:mm"/></td>
                                                                 <td>${historicoRegistroEntrada.modificacion}</td>
                                                             </tr>
@@ -337,7 +333,6 @@
                                                         <tr>
                                                             <th><spring:message code="registroEntrada.numeroRegistro"/></th>
                                                             <th><spring:message code="registroEntrada.anyRegistro"/></th>
-                                                            <th><spring:message code="registroEntrada.libro.corto"/></th>
                                                             <th><spring:message code="registroEntrada.fecha"/></th>
                                                         </tr>
                                                         </thead>
@@ -347,7 +342,6 @@
                                                             <tr>
                                                                 <td>${lopd.numeroRegistro}</td>
                                                                 <td>${lopd.anyoRegistro}</td>
-                                                                <td>${lopd.libro.nombreCompleto}</td>
                                                                 <td><fmt:formatDate value="${lopd.fecha}" pattern="dd/MM/yyyy HH:mm"/></td>
                                                             </tr>
                                                         </c:forEach>
@@ -405,7 +399,6 @@
                                                         <tr>
                                                             <th><spring:message code="registroEntrada.numeroRegistro"/></th>
                                                             <th><spring:message code="registroEntrada.anyRegistro"/></th>
-                                                            <th><spring:message code="registroEntrada.libro.corto"/></th>
                                                             <th><spring:message code="registroEntrada.fecha"/></th>
                                                         </tr>
                                                         </thead>
@@ -415,7 +408,6 @@
                                                             <tr>
                                                                 <td>${lopd.numeroRegistro}</td>
                                                                 <td>${lopd.anyoRegistro}</td>
-                                                                <td>${lopd.libro.nombreCompleto}</td>
                                                                 <td><fmt:formatDate value="${lopd.fecha}" pattern="dd/MM/yyyy HH:mm"/></td>
                                                             </tr>
                                                         </c:forEach>
@@ -473,7 +465,6 @@
                                                         <tr>
                                                             <th><spring:message code="registroEntrada.numeroRegistro"/></th>
                                                             <th><spring:message code="registroEntrada.anyRegistro"/></th>
-                                                            <th><spring:message code="registroEntrada.libro.corto"/></th>
                                                             <th><spring:message code="registroEntrada.fecha"/></th>
                                                         </tr>
                                                         </thead>
@@ -483,7 +474,6 @@
                                                             <tr>
                                                                 <td>${lopd.numeroRegistro}</td>
                                                                 <td>${lopd.anyoRegistro}</td>
-                                                                <td>${lopd.libro.nombreCompleto}</td>
                                                                 <td><fmt:formatDate value="${lopd.fecha}" pattern="dd/MM/yyyy HH:mm"/></td>
                                                             </tr>
                                                         </c:forEach>
@@ -556,7 +546,6 @@
                                                         <tr>
                                                             <th><spring:message code="registroSalida.numeroRegistro"/></th>
                                                             <th><spring:message code="registroSalida.anyRegistro"/></th>
-                                                            <th><spring:message code="registroSalida.libro.corto"/></th>
                                                             <th><spring:message code="registroSalida.fecha"/></th>
                                                             <th><spring:message code="registroSalida.oficina"/></th>
                                                         </tr>
@@ -567,7 +556,6 @@
                                                             <tr>
                                                                 <td>${registroSalida.numeroRegistro}</td>
                                                                 <td><fmt:formatDate value="${registroSalida.fecha}" pattern="yyyy"/></td>
-                                                                <td>${registroSalida.libro.nombreCompleto}</td>
                                                                 <td><fmt:formatDate value="${registroSalida.fecha}" pattern="dd/MM/yyyy HH:mm"/></td>
                                                                 <td>${registroSalida.oficina.denominacion}</td>
                                                             </tr>
@@ -626,7 +614,6 @@
                                                         <tr>
                                                             <th><spring:message code="registroSalida.numeroRegistro"/></th>
                                                             <th><spring:message code="registroSalida.anyRegistro"/></th>
-                                                            <th><spring:message code="registroSalida.libro.corto"/></th>
                                                             <th><spring:message code="registroSalida.fecha"/></th>
                                                             <th><spring:message code="regweb.modificacion"/></th>
                                                         </tr>
@@ -637,7 +624,6 @@
                                                             <tr>
                                                                 <td>${historicoRegistroSalida.registroSalida.numeroRegistro}</td>
                                                                 <td><fmt:formatDate value="${historicoRegistroSalida.registroSalida.fecha}" pattern="yyyy"/></td>
-                                                                <td>${historicoRegistroSalida.registroSalida.libro.nombreCompleto}</td>
                                                                 <td><fmt:formatDate value="${historicoRegistroSalida.fecha}" pattern="dd/MM/yyyy HH:mm"/></td>
                                                                 <td>${historicoRegistroSalida.modificacion}</td>
                                                             </tr>
@@ -695,7 +681,6 @@
                                                         <tr>
                                                             <th><spring:message code="registroSalida.numeroRegistro"/></th>
                                                             <th><spring:message code="registroSalida.anyRegistro"/></th>
-                                                            <th><spring:message code="registroSalida.libro.corto"/></th>
                                                             <th><spring:message code="registroSalida.fecha"/></th>
                                                         </tr>
                                                         </thead>
@@ -705,7 +690,6 @@
                                                             <tr>
                                                                 <td>${lopd.numeroRegistro}</td>
                                                                 <td>${lopd.anyoRegistro}</td>
-                                                                <td>${lopd.libro.nombreCompleto}</td>
                                                                 <td><fmt:formatDate value="${lopd.fecha}" pattern="dd/MM/yyyy HH:mm"/></td>
                                                             </tr>
                                                         </c:forEach>
@@ -762,7 +746,6 @@
                                                         <tr>
                                                             <th><spring:message code="registroSalida.numeroRegistro"/></th>
                                                             <th><spring:message code="registroSalida.anyRegistro"/></th>
-                                                            <th><spring:message code="registroSalida.libro.corto"/></th>
                                                             <th><spring:message code="registroSalida.fecha"/></th>
                                                         </tr>
                                                         </thead>
@@ -772,7 +755,6 @@
                                                             <tr>
                                                                 <td>${lopd.numeroRegistro}</td>
                                                                 <td>${lopd.anyoRegistro}</td>
-                                                                <td>${lopd.libro.nombreCompleto}</td>
                                                                 <td><fmt:formatDate value="${lopd.fecha}" pattern="dd/MM/yyyy HH:mm"/></td>
                                                             </tr>
                                                         </c:forEach>
@@ -830,7 +812,6 @@
                                                             <tr>
                                                                 <th><spring:message code="registroEntrada.numeroRegistro"/></th>
                                                                 <th><spring:message code="registroEntrada.anyRegistro"/></th>
-                                                                <th><spring:message code="registroEntrada.libro.corto"/></th>
                                                                 <th><spring:message code="registroEntrada.fecha"/></th>
                                                             </tr>
                                                             </thead>
@@ -840,7 +821,6 @@
                                                                 <tr>
                                                                     <td>${lopd.numeroRegistro}</td>
                                                                     <td>${lopd.anyoRegistro}</td>
-                                                                    <td>${lopd.libro.nombreCompleto}</td>
                                                                     <td><fmt:formatDate value="${lopd.fecha}" pattern="dd/MM/yyyy HH:mm"/></td>
                                                                 </tr>
                                                             </c:forEach>

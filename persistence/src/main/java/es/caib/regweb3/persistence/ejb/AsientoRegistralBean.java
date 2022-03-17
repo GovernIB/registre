@@ -50,19 +50,17 @@ public class AsientoRegistralBean implements AsientoRegistralLocal {
     }
 
     @Override
-    public RegistroSalida registrarSalida(RegistroSalida registroSalida,
-                                          UsuarioEntidad usuarioEntidad, List<Interesado> interesados, List<AnexoFull> anexos, Boolean validarAnexos)
+    public RegistroSalida registrarSalida(RegistroSalida registroSalida, Entidad entidad, UsuarioEntidad usuarioEntidad, List<Interesado> interesados, List<AnexoFull> anexos, Boolean validarAnexos)
             throws Exception, I18NException, I18NValidationException {
 
-        return registroSalidaEjb.registrarSalida(registroSalida, usuarioEntidad, interesados, anexos, validarAnexos);
+        return registroSalidaEjb.registrarSalida(registroSalida, entidad, usuarioEntidad, interesados, anexos, validarAnexos);
     }
 
     @Override
-    public RegistroEntrada registrarEntrada(RegistroEntrada registroEntrada,
-                                            UsuarioEntidad usuarioEntidad, List<Interesado> interesados, List<AnexoFull> anexos, Boolean validarAnexos)
+    public RegistroEntrada registrarEntrada(RegistroEntrada registroEntrada, Entidad entidad, UsuarioEntidad usuarioEntidad, List<Interesado> interesados, List<AnexoFull> anexos, Boolean validarAnexos)
             throws Exception, I18NException, I18NValidationException {
 
-        return registroEntradaEjb.registrarEntrada(registroEntrada, usuarioEntidad, interesados, anexos, validarAnexos);
+        return registroEntradaEjb.registrarEntrada(registroEntrada, entidad, usuarioEntidad, interesados, anexos, validarAnexos);
 
     }
 
@@ -107,12 +105,12 @@ public class AsientoRegistralBean implements AsientoRegistralLocal {
     }
 
     @Override
-    public RegistroSalida procesarRegistroSalida(Long tipoOperacion, RegistroSalida registroSalida) throws I18NException, Exception, I18NValidationException {
+    public RegistroSalida procesarRegistroSalida(Long tipoOperacion, RegistroSalida registroSalida, Entidad entidad) throws I18NException, Exception, I18NValidationException {
 
         // Es una Notificación
         if (tipoOperacion != null && tipoOperacion.equals(TIPO_OPERACION_NOTIFICACION)) {
             //Creamos el justificante del registroSalida y lo marcamos como REGISTRO_ENVIADO_NOTIFICAR
-            crearJustificanteCambioEstado(registroSalida, REGISTRO_ENVIADO_NOTIFICAR);
+            crearJustificanteCambioEstado(entidad, registroSalida, REGISTRO_ENVIADO_NOTIFICAR);
             registroSalida.setEstado(REGISTRO_ENVIADO_NOTIFICAR);
 
             // Es una Comunicación
@@ -122,11 +120,10 @@ public class AsientoRegistralBean implements AsientoRegistralLocal {
             for (Interesado interesado : registroSalida.getRegistroDetalle().getInteresados()) {
 
                 //Interesado es una persona física o jurídica es como el caso de notificación
-                if (TIPO_INTERESADO_PERSONA_FISICA.equals(interesado.getTipo())
-                        || TIPO_INTERESADO_PERSONA_JURIDICA.equals(interesado.getTipo())) {
+                if (TIPO_INTERESADO_PERSONA_FISICA.equals(interesado.getTipo()) || TIPO_INTERESADO_PERSONA_JURIDICA.equals(interesado.getTipo())) {
                     //Creamos el justificante del registroSalida y lo marcamos como REGISTRO_VALIDO
-                    crearJustificanteCambioEstado(registroSalida, REGISTRO_VALIDO);
-                    registroSalida.setEstado(REGISTRO_VALIDO);
+                    crearJustificanteCambioEstado(entidad, registroSalida, REGISTRO_ENVIADO_NOTIFICAR);
+                    registroSalida.setEstado(REGISTRO_ENVIADO_NOTIFICAR);
 
                     // Interesado es una administración
                 } else if (TIPO_INTERESADO_ADMINISTRACION.equals(interesado.getTipo())) {
@@ -134,28 +131,33 @@ public class AsientoRegistralBean implements AsientoRegistralLocal {
                     //Obtenemos las oficinas SIR a las que va dirigido el registro de Salida
                     List<OficinaTF> oficinasSIR;
                     if(multiEntidadEjb.isMultiEntidad()) {
-                        oficinasSIR = registroSalidaEjb.isOficioRemisionSirMultiEntidad(registroSalida, getOrganismosOficioRemisionSalida(organismoEjb.getByOficinaActiva(registroSalida.getOficina(), RegwebConstantes.ESTADO_ENTIDAD_VIGENTE)));
+                        oficinasSIR = registroSalidaEjb.isOficioRemisionSirMultiEntidad(registroSalida, getOrganismosOficioRemisionSalida(organismoEjb.getByOficinaActiva(registroSalida.getOficina(), RegwebConstantes.ESTADO_ENTIDAD_VIGENTE)),
+                                registroSalida.getUsuario().getEntidad().getId());
                     }else{
-                        oficinasSIR = registroSalidaEjb.isOficioRemisionSir(registroSalida, getOrganismosOficioRemisionSalida(organismoEjb.getByOficinaActiva(registroSalida.getOficina(), RegwebConstantes.ESTADO_ENTIDAD_VIGENTE)));
+                        oficinasSIR = registroSalidaEjb.isOficioRemisionSir(registroSalida, getOrganismosOficioRemisionSalida(organismoEjb.getByOficinaActiva(registroSalida.getOficina(), RegwebConstantes.ESTADO_ENTIDAD_VIGENTE)),
+                                registroSalida.getUsuario().getEntidad().getId());
                     }
 
                     //No tiene oficinas en SIR
                     if (oficinasSIR.isEmpty()) {
                         //TODO hay que crear el oficio externo???
                         //Creamos el justificante del registroSalida y lo marcamos como REGISTRO_OFICIO_EXTERNO
-                        crearJustificanteCambioEstado(registroSalida, REGISTRO_OFICIO_EXTERNO);
+                        crearJustificanteCambioEstado(entidad, registroSalida, REGISTRO_OFICIO_EXTERNO);
                         registroSalida.setEstado(REGISTRO_OFICIO_EXTERNO);
-                        registroSalida.getRegistroDetalle().setIdentificadorIntercambio("-1");
 
-                    } else { //Tiene oficinas en SIR, se envia el registro via SIR.
+                    } else { //Tiene oficinas en SIR, se crear el intercambio
 
                         try {
 
-                            OficioRemision oficioRemision = sirEnvioEjb.enviarIntercambio(REGISTRO_SALIDA, registroSalida.getId(),
-                                    registroSalida.getOficina(), registroSalida.getUsuario(), oficinasSIR.get(0).getCodigo());
+                            // Crear Justificante
+                            crearJustificante(entidad, registroSalida.getUsuario(), registroSalida, RegwebConstantes.REGISTRO_SALIDA, RegistroUtils.getIdiomaJustificante(registroSalida));
+
+                            // Crear el intercambio, posteriormente se enviará
+                            registroSalida = sirEnvioEjb.crearIntercambioSalida(registroSalida, entidad, registroSalida.getOficina(),
+                                    registroSalida.getUsuario(), oficinasSIR.get(0).getCodigo());
 
                             registroSalida.setEstado(REGISTRO_OFICIO_SIR);
-                            registroSalida.getRegistroDetalle().setIdentificadorIntercambio(oficioRemision.getIdentificadorIntercambio());
+                            registroSalida.getRegistroDetalle().setIdentificadorIntercambio(registroSalida.getRegistroDetalle().getIdentificadorIntercambio());
 
                         } catch (Exception e) {
                             throw new I18NException("registroSir.error.envio");
@@ -170,11 +172,11 @@ public class AsientoRegistralBean implements AsientoRegistralLocal {
 
     @Asynchronous
     @Override
-    public void crearJustificante(UsuarioEntidad usuarioEntidad, IRegistro registro, Long tipoRegistro, String idioma) throws I18NValidationException, I18NException {
+    public void crearJustificante(Entidad entidad, UsuarioEntidad usuarioEntidad, IRegistro registro, Long tipoRegistro, String idioma) throws I18NValidationException, I18NException {
 
         //Llamada asincrona al método para generar el justficante dle regitro
         JustificanteLocal asynchJustificante = AsyncUtils.mixinAsync(justificanteEjb);
-        asynchJustificante.crearJustificanteWS(usuarioEntidad, registro, tipoRegistro, idioma);
+        asynchJustificante.crearJustificanteWS(entidad, usuarioEntidad, registro, tipoRegistro, idioma);
 
     }
 
@@ -225,9 +227,9 @@ public class AsientoRegistralBean implements AsientoRegistralLocal {
     /**
      * Método que crea el justiifcante del registro de salida y actualiza su estado
      */
-    private void crearJustificanteCambioEstado(RegistroSalida registroSalida, Long estado) throws Exception, I18NValidationException, I18NException {
+    private void crearJustificanteCambioEstado(Entidad entidad, RegistroSalida registroSalida, Long estado) throws Exception, I18NValidationException, I18NException {
         //Crear Justificante
-        crearJustificante(registroSalida.getUsuario(), registroSalida, RegwebConstantes.REGISTRO_SALIDA, RegistroUtils.getIdiomaJustificante(registroSalida));
+        crearJustificante(entidad, registroSalida.getUsuario(), registroSalida, RegwebConstantes.REGISTRO_SALIDA, RegistroUtils.getIdiomaJustificante(registroSalida));
 
         //Cambiar estado
         registroSalidaEjb.cambiarEstado(registroSalida.getId(), estado);

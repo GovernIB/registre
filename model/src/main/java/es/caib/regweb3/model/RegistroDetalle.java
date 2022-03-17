@@ -106,6 +106,9 @@ public class RegistroDetalle implements Serializable {
     private String tipoEnvioDocumentacion;
     // Fin Metadatos nueva arquitectura SIR
 
+    @XmlTransient
+    private Boolean recibidoSir = false;
+
 
     public RegistroDetalle() {
     }
@@ -504,6 +507,15 @@ public class RegistroDetalle implements Serializable {
         this.tipoEnvioDocumentacion = tipoEnvioDocumentacion;
     }
 
+    @Column(name = "RECIBIDO_SIR")
+    public Boolean getRecibidoSir() {
+        return recibidoSir;
+    }
+
+    public void setRecibidoSir(Boolean sir) {
+        this.recibidoSir = sir;
+    }
+
     @Transient
     public List<AnexoFull> getAnexosFull() {
         return anexosFull;
@@ -634,11 +646,11 @@ public class RegistroDetalle implements Serializable {
     }
 
     /**
-     * Devuelve si el registroDetalle tiene los anexos purgados
+     * Comprueba si tiene los anexos purgados
      * @return
      */
     @Transient
-    public boolean isDetallePurgado(){
+    public boolean isAnexosPurgado(){
 
         for(Anexo anexo: anexos){
             if(anexo.isPurgado() && !anexo.isJustificante()){

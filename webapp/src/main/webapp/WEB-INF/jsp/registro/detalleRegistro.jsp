@@ -45,7 +45,7 @@
 
 
             $(document).ready(function(){
-                var urlCompleta= '<%=PropiedadGlobalUtil.getDir3CaibServer()%>'+ '/rest/GET/unidad/estado';
+                var urlCompleta= '${loginInfo.dir3Caib.server}'+ '/rest/GET/unidad/estado';
                 obtenerEstadoOrganismoExterno(urlCompleta, '${registro.destinoExternoCodigo}','estadoExterno');
             });
         </script>

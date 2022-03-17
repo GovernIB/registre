@@ -39,6 +39,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
 
     @EJB private CatEstadoEntidadLocal catEstadoEntidadEjb;
     @EJB private LibroLocal libroEjb;
+    @EJB private MultiEntidadLocal multiEntidadEjb;
 
 
     @Override
@@ -129,11 +130,11 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
         q.setParameter("entidad", entidad);
         q.setHint("org.hibernate.readOnly", true);
 
-        List<Organismo> organismos =  new ArrayList<Organismo>();
+        List<Organismo> organismos = new ArrayList<Organismo>();
         List<Object[]> result = q.getResultList();
 
-        for (Object[] object : result){
-            Organismo organismo = new Organismo((Long)object[0],(String)object[1],(String)object[2]);
+        for (Object[] object : result) {
+            Organismo organismo = new Organismo((Long) object[0], (String) object[1], (String) object[2]);
             organismos.add(organismo);
         }
 
@@ -210,7 +211,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
     @SuppressWarnings(value = "unchecked")
     public Organismo findByCodigoEntidadLigero(String codigo, Long idEntidad) throws Exception {
 
-        Query q = em.createQuery("Select organismo.id,organismo.codigo, organismo.denominacion, organismo.codAmbComunidad.id, organismo.estado.id from Organismo as organismo where " +
+        Query q = em.createQuery("Select organismo.id,organismo.codigo, organismo.denominacion, organismo.codAmbComunidad.id, organismo.estado.id, organismo.entidad.id from Organismo as organismo where " +
                 "organismo.codigo = :codigo and organismo.entidad.id = :idEntidad and organismo.estado.codigoEstadoEntidad=:vigente");
 
         q.setParameter("codigo", codigo);
@@ -223,6 +224,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
             Organismo organismo = new Organismo((Long) result.get(0)[0], (String) result.get(0)[1], (String) result.get(0)[2]);
             organismo.setCodAmbComunidad(new CatComunidadAutonoma((Long) result.get(0)[3]));
             organismo.setEstado(catEstadoEntidadEjb.findById((Long) result.get(0)[4]));
+            organismo.setEntidad(new Entidad ((Long) result.get(0)[5]));
             return organismo;
         } else {
             return null;
@@ -253,7 +255,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
     @SuppressWarnings(value = "unchecked")
     public Organismo findByCodigoEntidadSinEstadoLigero(String codigo, Long idEntidad) throws Exception {
 
-        Query q = em.createQuery("Select organismo.id,organismo.codigo, organismo.denominacion, organismo.codAmbComunidad.id, organismo.estado, organismo.edp from Organismo as organismo where " +
+        Query q = em.createQuery("Select organismo.id,organismo.codigo, organismo.denominacion, organismo.codAmbComunidad.id, organismo.estado, organismo.edp, organismo.entidad.id from Organismo as organismo where " +
                 "organismo.codigo = :codigo and organismo.entidad.id = :idEntidad ");
 
         q.setParameter("codigo", codigo);
@@ -266,6 +268,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
             organismo.setCodAmbComunidad(new CatComunidadAutonoma((Long) result.get(0)[3]));
             organismo.setEstado((CatEstadoEntidad) result.get(0)[4]);
             organismo.setEdp((Boolean) result.get(0)[5]);
+            organismo.setEntidad(new Entidad((Long)result.get(0)[6]));
             return organismo;
         } else {
             return null;
@@ -363,34 +366,76 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
     }
 
     @Override
-    public Organismo findByCodigoMultientidad(String codigo) throws Exception {
+    @SuppressWarnings(value = "unchecked")
+    public Organismo findByCodigoMultiEntidad(String codigo) throws Exception {
 
-        Query q = em.createQuery("Select organismo from Organismo as organismo where " +
-           "organismo.codigo = :codigo order by organismo.id asc");
+        Query q = em.createQuery("Select organismo.id, organismo.codigo, organismo.denominacion, organismo.codAmbComunidad.id, organismo.estado.id, organismo.entidad.id from Organismo as organismo where organismo.codigo = :codigo order by organismo.id asc");
 
         q.setParameter("codigo", codigo);
 
-        List<Organismo> organismos = q.getResultList();
+        List<Object[]> result = q.getResultList();
 
-        if(organismos.size() == 1){
-            return organismos.get(0);
-        }else if(organismos.size()>1 ){ //Caso multientidad ( encuentra 2)
-            for(Organismo organismo: organismos){
-                    Organismo raiz = getOrganismoRaiz(organismo.getId());
-                    /* La condición que determina cual es el organismo que tiene una entidad que le da soporte es que su raiz sea null
-                        eso quiere decir que realmente es un organismo que depende de otro, pero que está creado como entidad
-                        y por eso su raiz es null, porque al importar los datos de dir3caib,
-                        la raiz a la que pertenece no existe en el organigrama, porque no la trae
-                     */
-                    if(raiz == null){
-                        return organismo;
-                    }
+        if (result.size() == 1) {
+
+            Organismo organismo = new Organismo((Long) result.get(0)[0], (String) result.get(0)[1], (String) result.get(0)[2]);
+            organismo.setCodAmbComunidad(new CatComunidadAutonoma((Long) result.get(0)[3]));
+            organismo.setEstado(catEstadoEntidadEjb.findById((Long) result.get(0)[4]));
+            organismo.setEntidad(new Entidad ((Long) result.get(0)[5]));
+            return organismo;
+        } else if (result.size() > 1) { //Caso multientidad ( encuentra 2)
+            for (Object[] object : result) {
+                Organismo raiz = getOrganismoRaiz((Long) object[0]);
+                /* La condición que determina cual es el organismo que tiene una entidad que le da soporte es que su raiz sea null
+                    eso quiere decir que realmente es un organismo que depende de otro, pero que está creado como entidad
+                    y por eso su raiz es null, porque al importar los datos de dir3caib,
+                    la raiz a la que pertenece no existe en el organigrama, porque no la trae
+                 */
+                if (raiz == null) {
+                    Organismo organismo = new Organismo((Long) object[0], (String) object[1], (String) object[2]);
+                    organismo.setCodAmbComunidad(new CatComunidadAutonoma((Long) object[3]));
+                    organismo.setEstado(catEstadoEntidadEjb.findById((Long) object[4]));
+                    organismo.setEntidad(new Entidad ((Long) object[5]));
+                    return organismo;
+                }
             }
-            return null;
+        }
 
-        }else {
+        return null;
+    }
 
-            return  null;
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public List<Organismo> getAllByEntidadMultiEntidad(Long idEntidad) throws Exception{
+
+        List<Organismo> organismos= getAllByEntidad(idEntidad);
+        List<Organismo> organismosAEliminar = new ArrayList<>();
+
+        for(Organismo organismo: organismos){
+            Organismo organismo1= findByCodigoMultiEntidad(organismo.getCodigo());
+            if(organismo1 != null) {// Multientidad o interno
+                Organismo raiz = getOrganismoRaiz(organismo1.getId());
+                //Si la raiz es null(es parte de otra entidad) y la entidad del organismo no es igual
+                // a la entidad en la que estamos se debe eliminar el organismo porque significa que hay otra entidad
+                // que le da servicio
+                if(raiz == null && !idEntidad.equals(organismo1.getEntidad().getId())){
+                    organismosAEliminar.add(organismo);
+                }
+            }
+        }
+        organismos.removeAll(organismosAEliminar);
+        return organismos;
+    }
+
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public Organismo findByCodigoByEntidadMultiEntidad(String codigo, Long idEntidad) throws Exception{
+
+        if (multiEntidadEjb.isMultiEntidad()) {
+            return findByCodigoMultiEntidad(codigo);
+        } else {
+            return findByCodigoEntidadLigero(codigo, idEntidad);
         }
 
     }
@@ -402,13 +447,13 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
 
         Organismo organismo = findByCodigoEntidad(codigo, idEntidad);
 
-        if(organismo == null){
+        if (organismo == null) {
             return false;
         }
 
-        if(!organismo.getEdp()){ // Si no es EDP
+        if (!organismo.getEdp()) { // Si no es EDP
             return true;
-        }else{
+        } else {
             return organismo.getPermiteUsuarios() || organismo.getEdpPrincipal().getPermiteUsuarios();
         }
     }
@@ -552,8 +597,8 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
 
         List<Organismo> organismos = q.getResultList();
         for (Organismo org : organismos) {
-            Hibernate.initialize(org.getLibros());
-            Hibernate.initialize(org.getOrganismoRaiz());
+            //Hibernate.initialize(org.getLibros());
+            //Hibernate.initialize(org.getOrganismoRaiz());
             Hibernate.initialize(org.getOrganismoSuperior());
         }
         paginacion.setListado(organismos);
@@ -571,14 +616,14 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
      * @throws Exception
      */
     @Override
-    public LinkedHashSet<Organismo> getByOficinaActiva(Oficina oficinaActiva,String estado) throws Exception {
+    public LinkedHashSet<Organismo> getByOficinaActiva(Oficina oficinaActiva, String estado) throws Exception {
 
         // Añadimos los organismos a los que da servicio la Oficina (Directos y Funcionales)
         LinkedHashSet<Organismo> organismos = oficinaActiva.getOrganismosFuncionales(estado);
 
         // Añadimos todos los hijos de los Organismos obtenidos anteriormetne
         LinkedHashSet<Organismo> hijosTotales = new LinkedHashSet<Organismo>();
-        obtenerHijosOrganismos(organismos, hijosTotales,estado);
+        obtenerHijosOrganismos(organismos, hijosTotales, estado);
         organismos.addAll(hijosTotales);
 
         return organismos;
@@ -628,9 +673,9 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
             q.setParameter("estado", estado);
 
             // Si el organismo padre es EDP, buscamos sus hijos EDP
-            if(org.getEdp()){
+            if (org.getEdp()) {
                 q.setParameter("edp", true);
-            }else{
+            } else {
                 q.setParameter("edp", false);
             }
 
@@ -648,7 +693,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
             totales.addAll(hijos);
 
             // Hijos de cada organismo
-            obtenerHijosOrganismos(hijos, totales,estado);
+            obtenerHijosOrganismos(hijos, totales, estado);
 
 
         }
@@ -684,6 +729,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
 
     /**
      * Activa la opción de permitir usuarios de un Organismo
+     *
      * @param idOrganismo
      * @throws Exception
      */
@@ -695,6 +741,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
 
     /**
      * Desactiva la opción de permitir usuarios de un Organismo
+     *
      * @param idOrganismo
      * @throws Exception
      */
@@ -716,11 +763,11 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
         q.setParameter("vigente", RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
         q.setHint("org.hibernate.readOnly", true);
 
-        List<Organismo> organismos =  new ArrayList<Organismo>();
+        List<Organismo> organismos = new ArrayList<Organismo>();
         List<Object[]> result = q.getResultList();
 
-        for (Object[] object : result){
-            Organismo organismo = new Organismo((Long)object[0],(String)object[1],(String)object[2]);
+        for (Object[] object : result) {
+            Organismo organismo = new Organismo((Long) object[0], (String) object[1], (String) object[2]);
             organismos.add(organismo);
         }
 
@@ -762,8 +809,8 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
     @Override
     public Organismo getOrganismoRaiz(Long idOrganismo) throws Exception {
 
-        Query q = em.createQuery("Select organismo.organismoRaiz.id, organismoRaiz.codigo from Organismo as organismo where " +
-           "organismo.id = :idOrganismo");
+        Query q = em.createQuery("Select organismo.organismoRaiz.id, organismo.organismoRaiz.codigo, organismo.organismoRaiz.denominacion from Organismo as organismo where " +
+                "organismo.id = :idOrganismo");
 
         q.setParameter("idOrganismo", idOrganismo);
         q.setHint("org.hibernate.readOnly", true);
@@ -771,7 +818,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
 
         List<Object[]> result = q.getResultList();
         if (result.size() == 1) {
-            Organismo organismo = new Organismo((Long) result.get(0)[0], (String) result.get(0)[1], null);
+            Organismo organismo = new Organismo((Long) result.get(0)[0], (String) result.get(0)[1], (String) result.get(0)[2]);
             return organismo;
         } else {
             return null;
@@ -822,65 +869,68 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
     }
 
     @Override
-    public Boolean isEdpConLibro(Long idOrganismo) throws Exception{
+    public Boolean isEdpConLibro(Long idOrganismo) throws Exception {
 
         Organismo organismo = findByIdCompleto(idOrganismo);
 
-        if(organismo.getEdpPrincipal() == null){
+        if (organismo.getEdpPrincipal() == null) {
 
             return libroEjb.tieneLibro(organismo.getId());
 
-        }else if(libroEjb.tieneLibro(idOrganismo)){
+        } else if (libroEjb.tieneLibro(idOrganismo)) {
 
             return true;
 
-        }else{
-            return isEdpConLibro(organismo.getOrganismoSuperior().getId());
+        } else {
+            if(organismo.getOrganismoSuperior()!=null) {
+                return isEdpConLibro(organismo.getOrganismoSuperior().getId());
+            }else{
+                return false;
+            }
         }
 
     }
 
     @Override
-    public Libro obtenerLibroRegistro(Long idOrganismo) throws Exception{
+    public Libro obtenerLibroRegistro(Long idOrganismo) throws Exception {
 
         Organismo organismo = findById(idOrganismo);
 
         if (organismo.getLibros() != null && organismo.getLibros().size() > 0) {
             return organismo.getLibros().get(0);
 
-        }else if(organismo.getOrganismoSuperior() == null){
+        } else if (organismo.getOrganismoSuperior() == null) {
             return null;
 
-        }else{
+        } else {
             return obtenerLibroRegistro(organismo.getOrganismoSuperior().getId());
         }
     }
 
 
-
     @Override
-    public UnidadTF obtenerDestinoExterno(String codigo) throws Exception{
+    public UnidadTF obtenerDestinoExterno(String codigo, Long idEntidad) throws Exception {
 
         //Buscamos el destino externo a partir de su código
-        Dir3CaibObtenerUnidadesWs unidadesService = Dir3CaibUtils.getObtenerUnidadesService(PropiedadGlobalUtil.getDir3CaibServer(), PropiedadGlobalUtil.getDir3CaibUsername(), PropiedadGlobalUtil.getDir3CaibPassword());
+        Dir3CaibObtenerUnidadesWs unidadesService = Dir3CaibUtils.getObtenerUnidadesService(PropiedadGlobalUtil.getDir3CaibServer(idEntidad), PropiedadGlobalUtil.getDir3CaibUsername(idEntidad), PropiedadGlobalUtil.getDir3CaibPassword(idEntidad));
         return unidadesService.buscarUnidad(codigo);
     }
 
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<UnidadTF> obtenerSustitutosExternosSIR(String codigo) throws Exception {
+    public List<UnidadTF> obtenerSustitutosExternosSIR(String codigo, Long idEntidad) throws Exception {
 
-        Dir3CaibObtenerUnidadesWs unidadesService = Dir3CaibUtils.getObtenerUnidadesService(PropiedadGlobalUtil.getDir3CaibServer(), PropiedadGlobalUtil.getDir3CaibUsername(), PropiedadGlobalUtil.getDir3CaibPassword());
+        Dir3CaibObtenerUnidadesWs unidadesService = Dir3CaibUtils.getObtenerUnidadesService(PropiedadGlobalUtil.getDir3CaibServer(idEntidad), PropiedadGlobalUtil.getDir3CaibUsername(idEntidad), PropiedadGlobalUtil.getDir3CaibPassword(idEntidad));
         return unidadesService.obtenerHistoricosFinalesSIR(codigo);
 
     }
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<UnidadTF> obtenerSustitutosExternos(String codigo) throws Exception {
+    public List<UnidadTF> obtenerSustitutosExternos(String codigo, Long idEntidad) throws Exception {
 
-        Dir3CaibObtenerUnidadesWs unidadesService = Dir3CaibUtils.getObtenerUnidadesService(PropiedadGlobalUtil.getDir3CaibServer(), PropiedadGlobalUtil.getDir3CaibUsername(), PropiedadGlobalUtil.getDir3CaibPassword());
+        Dir3CaibObtenerUnidadesWs unidadesService = Dir3CaibUtils.getObtenerUnidadesService(PropiedadGlobalUtil.getDir3CaibServer(idEntidad), PropiedadGlobalUtil.getDir3CaibUsername(idEntidad), PropiedadGlobalUtil.getDir3CaibPassword(idEntidad));
         return unidadesService.obtenerHistoricosFinales(codigo);
 
     }

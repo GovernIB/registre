@@ -220,26 +220,6 @@ public class BaseController {
         return getLoginInfo(request).getEntidadActiva().getLibro();
     }
 
-    /**
-     * Retorna los Organismos a las que el Usuario autenticado puede registrar entradas
-     * @param request
-     * @return
-     * @throws Exception
-     */
-    protected List<Organismo> getOrganismosRegistroEntrada(HttpServletRequest request) throws Exception {
-        return getLoginInfo(request).getOrganismosRegistroEntrada();
-    }
-
-    /**
-     * Retorna los Organismos a las que el Usuario autenticado puede registrar salidas
-     * @param request
-     * @return
-     * @throws Exception
-     */
-    protected List<Organismo> getOrganismosRegistroSalida(HttpServletRequest request) throws Exception {
-        return getLoginInfo(request).getOrganismosRegistroSalida();
-    }
-
 
     /**
      * Retorna las Oficinas a las que el Usuario autenticado tiene acceso
@@ -414,6 +394,18 @@ public class BaseController {
     public Set<Oficina> getOficinasOrigen(HttpServletRequest request ) throws  Exception {
 
         return new HashSet<Oficina>(oficinaEjb.findByEntidadByEstado(getEntidadActiva(request).getId(), RegwebConstantes.ESTADO_ENTIDAD_VIGENTE));
+    }
+
+
+    /**
+     *  Obtiene todas las oficinas de la entidad activa vigentes
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    public Set<Oficina> getOficinasOrigenMultiEntidad(HttpServletRequest request ) throws  Exception {
+
+        return new HashSet<Oficina>(oficinaEjb.findByEntidadByEstadoMultiEntidad(getEntidadActiva(request).getId(), RegwebConstantes.ESTADO_ENTIDAD_VIGENTE));
     }
 
     /**

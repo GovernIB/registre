@@ -28,7 +28,7 @@
 
             <c:if test="${loginInfo.enlaceDir3}">
                 <li class="divider"></li>
-                <li class="submenu-complet"><a href="<c:url value="<%=PropiedadGlobalUtil.getDir3CaibServer()%>"/>" target="_blank"><i class="fa fa-institution"></i> <spring:message code="menu.dir3caib"/></a></li>
+                <li class="submenu-complet"><a href="<c:url value="${loginInfo.dir3Caib.server}"/>" target="_blank"><i class="fa fa-institution"></i> <spring:message code="menu.dir3caib"/></a></li>
             </c:if>
 
             <c:if test="${loginInfo.entidadActiva.configuracionPersona != 1}">
@@ -109,6 +109,15 @@
                     <li><a href="<c:url value="/informe/registroLopd"/>"><i class="fa fa-eye"></i> <spring:message code="informe.registroLopd"/></a></li>
                 </ul>
             </li>
+            <%--<li class="divider"></li>
+            <li class="dropdown-submenu-left toggle-left">
+                <a href="javascript:void(0);"><i class="fa fa-chevron-left"></i> Purgado</a>
+                <ul class="dropdown-menu">
+                    <li><a href="<c:url value="/adminEntidad/purgarAnexosDistribuidos"/>"><i class="fa fa-eraser"></i> <spring:message code="menu.purgar.anexos.distribuidos"/></a></li>
+                    <li><a href="<c:url value="/adminEntidad/purgarAnexosSir"/>"><i class="fa fa-eraser"></i> <spring:message code="menu.purgar.anexos.sir"/></a></li>
+                    <li><a href="<c:url value="/adminEntidad/purgarAnexosAceptados"/>"><i class="fa fa-eraser"></i> <spring:message code="menu.purgar.anexos.aceptados"/></a></li>
+                </ul>
+            </li>--%>
             <li class="divider"></li>
             <li class="submenu-complet"><a href="<c:url value="/persona/personasDuplicadas/"/>"><i class="fa fa-eraser"></i> <spring:message code="persona.buscador.duplicadas"/></a></li>
         </ul>

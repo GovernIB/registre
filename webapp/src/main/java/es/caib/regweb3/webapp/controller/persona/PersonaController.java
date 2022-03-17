@@ -1,7 +1,5 @@
 package es.caib.regweb3.webapp.controller.persona;
 
-import es.caib.regweb3.model.CatPais;
-import es.caib.regweb3.model.CatProvincia;
 import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.model.Persona;
 import es.caib.regweb3.persistence.ejb.CatPaisLocal;
@@ -101,6 +99,12 @@ public class PersonaController extends BaseController {
 
         model.addAttribute(persona);
 
+        model.addAttribute("tiposDocumento", RegwebConstantes.TIPOS_DOCUMENTOID);
+        model.addAttribute("tiposPersona", RegwebConstantes.TIPOS_PERSONA);
+        model.addAttribute("canales", RegwebConstantes.CANALES_NOTIFICACION);
+        model.addAttribute("provincias", catProvinciaEjb.getAll());
+        model.addAttribute("paises", catPaisEjb.getAll());
+
         return "persona/personaForm";
     }
 
@@ -108,14 +112,19 @@ public class PersonaController extends BaseController {
      * Guardar un nuevo {@link es.caib.regweb3.model.Persona}
      */
     @RequestMapping(value = "/new", method = RequestMethod.POST)
-    public String nuevoPersona(@ModelAttribute Persona persona, BindingResult result,
-                               SessionStatus status, HttpServletRequest request) {
+    public String nuevoPersona(@ModelAttribute Persona persona, BindingResult result,Model model,
+                               SessionStatus status, HttpServletRequest request) throws Exception {
 
         cleanEmptyValues(persona);
 
         personaValidator.validate(persona, result);
 
         if (result.hasErrors()) {
+            model.addAttribute("tiposDocumento", RegwebConstantes.TIPOS_DOCUMENTOID);
+            model.addAttribute("tiposPersona", RegwebConstantes.TIPOS_PERSONA);
+            model.addAttribute("canales", RegwebConstantes.CANALES_NOTIFICACION);
+            model.addAttribute("provincias", catProvinciaEjb.getAll());
+            model.addAttribute("paises", catPaisEjb.getAll());
 
             return "persona/personaForm";
         } else { // Si no hay errores guardamos el registro
@@ -145,7 +154,7 @@ public class PersonaController extends BaseController {
      * Carga el formulario para modificar un {@link es.caib.regweb3.model.Persona}
      */
     @RequestMapping(value = "/{personaId}/edit", method = RequestMethod.GET)
-    public String editarPersona(@PathVariable("personaId") Long personaId, Model model, HttpServletRequest request) {
+    public String editarPersona(@PathVariable("personaId") Long personaId, Model model, HttpServletRequest request) throws Exception {
 
         Persona persona = null;
         Entidad entidad = getEntidadActiva(request);
@@ -161,6 +170,12 @@ public class PersonaController extends BaseController {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        model.addAttribute("tiposDocumento", RegwebConstantes.TIPOS_DOCUMENTOID);
+        model.addAttribute("tiposPersona", RegwebConstantes.TIPOS_PERSONA);
+        model.addAttribute("canales", RegwebConstantes.CANALES_NOTIFICACION);
+        model.addAttribute("provincias", catProvinciaEjb.getAll());
+        model.addAttribute("paises", catPaisEjb.getAll());
         model.addAttribute(persona);
         return "persona/personaForm";
     }
@@ -297,33 +312,6 @@ public class PersonaController extends BaseController {
             persona.setProvincia(null);
             persona.setLocalidad(null);
         }
-
-    }
-
-
-    @ModelAttribute("tiposDocumento")
-    public long[] tiposDocumento() throws Exception {
-        return RegwebConstantes.TIPOS_DOCUMENTOID;
-    }
-
-    @ModelAttribute("tiposPersona")
-    public Long[] tiposPersona() throws Exception {
-        return RegwebConstantes.TIPOS_PERSONA;
-    }
-
-    @ModelAttribute("canales")
-    public long[] canales() throws Exception {
-        return RegwebConstantes.CANALES_NOTIFICACION;
-    }
-
-    @ModelAttribute("provincias")
-    public List<CatProvincia> provincias() throws Exception {
-        return catProvinciaEjb.getAll();
-    }
-
-    @ModelAttribute("paises")
-    public List<CatPais> paises() throws Exception {
-        return catPaisEjb.getAll();
     }
 
     @InitBinder("persona")

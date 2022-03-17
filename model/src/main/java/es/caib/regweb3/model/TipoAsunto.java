@@ -17,7 +17,7 @@ import java.util.Map;
  */
 @Entity
 @Table(name = "RWE_TIPOASUNTO")
-@SequenceGenerator(name="generator",sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
+@SequenceGenerator(name = "generator", sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
 @XmlRootElement(name = "tipoAsunto")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class TipoAsunto extends Traducible {
@@ -44,22 +44,21 @@ public class TipoAsunto extends Traducible {
 
 
     /**
-     *
      * @param ta
      */
     public TipoAsunto(TipoAsunto ta) {
-      super();
-      this.id = ta.id;
-      this.entidad = ta.entidad;
-      this.codigo = ta.codigo;
-      // this.codigosAsunto = ta.codigosAsunto;
-      this.activo = ta.activo;
-      this.traducciones = new HashMap<String, Traduccion>(ta.getTraducciones());
+        super();
+        this.id = ta.id;
+        this.entidad = ta.entidad;
+        this.codigo = ta.codigo;
+        // this.codigosAsunto = ta.codigosAsunto;
+        this.activo = ta.activo;
+        this.traducciones = new HashMap<String, Traduccion>(ta.getTraducciones());
     }
 
     @Id
-    @GeneratedValue(strategy=GenerationType.SEQUENCE,generator = "generator")
-    @Column(name="ID")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "generator")
+    @Column(name = "ID")
     public Long getId() {
         return id;
     }
@@ -68,7 +67,7 @@ public class TipoAsunto extends Traducible {
         this.id = id;
     }
 
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "ENTIDAD")
     @ForeignKey(name = "RWE_TIPOASUNTO_ENTIDAD_FK")
     public Entidad getEntidad() {
@@ -89,7 +88,7 @@ public class TipoAsunto extends Traducible {
     }
 
 
-    @Column(name="ACTIVO", nullable= false)
+    @Column(name = "ACTIVO", nullable = false)
     public Boolean getActivo() {
         return activo;
     }
@@ -98,32 +97,32 @@ public class TipoAsunto extends Traducible {
         this.activo = activo;
     }
 
-  @CollectionOfElements(fetch=FetchType.LAZY,targetElement = TraduccionTipoAsunto.class)
-    @Cascade(value=org.hibernate.annotations.CascadeType.ALL)
-    @LazyCollection(value= LazyCollectionOption.FALSE)
-    @JoinTable(name="RWE_TRA_TIPOASUNTO",joinColumns={@JoinColumn(name="IDTIPOASUNTO")})
-    @org.hibernate.annotations.MapKey(columns={@Column(name="LANG",length=2)})
-    @ForeignKey(name="RWE_TASUNTO_TRATASUNTO_FK", inverseName = "RWE_TRATASUNTO_TASUNTO_FK")
+    @CollectionOfElements(fetch = FetchType.LAZY, targetElement = TraduccionTipoAsunto.class)
+    @Cascade(value = org.hibernate.annotations.CascadeType.ALL)
+    @LazyCollection(value = LazyCollectionOption.FALSE)
+    @JoinTable(name = "RWE_TRA_TIPOASUNTO", joinColumns = {@JoinColumn(name = "IDTIPOASUNTO")})
+    @org.hibernate.annotations.MapKey(columns = {@Column(name = "LANG", length = 2)})
+    @ForeignKey(name = "RWE_TASUNTO_TRATASUNTO_FK", inverseName = "RWE_TRATASUNTO_TASUNTO_FK")
     @Override
     @XmlTransient
-    public Map<String,Traduccion> getTraducciones() {
+    public Map<String, Traduccion> getTraducciones() {
         return traducciones;
     }
 
     @Override
     public boolean equals(Object o) {
-      if (this == o) return true;
-      if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
-      TipoAsunto that = (TipoAsunto) o;
+        TipoAsunto that = (TipoAsunto) o;
 
-      if (id != null ? !id.equals(that.id) : that.id != null) return false;
+        if (id != null ? !id.equals(that.id) : that.id != null) return false;
 
-      return true;
+        return true;
     }
 
     @Override
     public int hashCode() {
-      return id != null ? id.hashCode() : 0;
+        return id != null ? id.hashCode() : 0;
     }
 }

@@ -67,7 +67,7 @@ public class PermisoOrganismoUsuario implements Serializable {
       this.permiso = permiso;
     }
 
-    @ManyToOne()
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="ORGANISMO")
     @ForeignKey(name="RWE_POU_ORG_FK")
     public Organismo getOrganismo() {
@@ -78,7 +78,7 @@ public class PermisoOrganismoUsuario implements Serializable {
       this.organismo = organismo;
     }
 
-    @ManyToOne()
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="USUARIO")
     @ForeignKey(name="RWE_POU_USUENT_FK")
     public UsuarioEntidad getUsuario() {

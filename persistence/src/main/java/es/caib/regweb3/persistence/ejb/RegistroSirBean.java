@@ -191,9 +191,9 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
     }
 
     @Override
-    public RegistroSir crearRegistroSir(FicheroIntercambio ficheroIntercambio) throws Exception{
+    public RegistroSir crearRegistroSir(FicheroIntercambio ficheroIntercambio, Entidad entidad) throws Exception{
 
-        RegistroSir registroSir = transformarFicheroIntercambio(ficheroIntercambio);
+        RegistroSir registroSir = transformarFicheroIntercambio(ficheroIntercambio, entidad.getId());
         registroSir.setEstado(EstadoRegistroSir.RECIBIDO);
 
         try{
@@ -201,12 +201,6 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
             // En caso de recepción, le asignamos la entidad a la que va dirigida
             if(registroSir.getEntidad() == null){
 
-                Entidad entidad;
-                if(multiEntidadEjb.isMultiEntidad()) {
-                    entidad = new Entidad(oficinaEjb.obtenerEntidadMultiEntidad(registroSir.getCodigoEntidadRegistral()));
-                }else{
-                    entidad = new Entidad(oficinaEjb.obtenerEntidad(registroSir.getCodigoEntidadRegistral()));
-                }
                 registroSir.setEntidad(entidad);
             }
 
@@ -304,74 +298,81 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
     }
 
     @Override
-    public Paginacion busqueda(Integer pageNumber, Date fechaInicio, Date fechaFin, RegistroSir registroSir, String oficinaSir, String estado) throws Exception{
+    public Paginacion busqueda(Integer pageNumber, Date fechaInicio, Date fechaFin, RegistroSir registroSir, String oficinaSir, String estado, String entidad) throws Exception{
 
         Query q;
         Query q2;
         Map<String, Object> parametros = new HashMap<String, Object>();
         List<String> where = new ArrayList<String>();
 
-        StringBuilder query = new StringBuilder("Select registroSir from RegistroSir as registroSir ");
+        StringBuilder queryBase = new StringBuilder("Select rs.id, rs.decodificacionEntidadRegistralOrigen, rs.fechaRecepcion, rs.identificadorIntercambio, rs.numeroRegistro, rs.resumen, " +
+                "rs.estado, rs.tipoRegistro, rs.codigoEntidadRegistralOrigen, rs.decodificacionEntidadRegistralOrigen, rs.codigoEntidadRegistralDestino, rs.decodificacionEntidadRegistralDestino, rs.aplicacion, rs.documentacionFisica, rs.numeroReintentos from RegistroSir as rs ");
+
+        StringBuilder query = new StringBuilder(queryBase);
 
         if(es.caib.regweb3.utils.StringUtils.isNotEmpty(oficinaSir)){
-            where.add(" (registroSir.codigoEntidadRegistral = :oficinaSir) "); parametros.put("oficinaSir",oficinaSir);
+            where.add(" (rs.codigoEntidadRegistral = :oficinaSir) "); parametros.put("oficinaSir",oficinaSir);
+        }
+
+        if(es.caib.regweb3.utils.StringUtils.isNotEmpty(entidad)){
+            where.add(" (rs.entidad.codigoDir3 = :entidad) "); parametros.put("entidad",entidad);
         }
 
         if (registroSir.getResumen() != null && registroSir.getResumen().length() > 0) {
-            where.add(DataBaseUtils.like("registroSir.resumen", "resumen", parametros, registroSir.getResumen()));
+            where.add(DataBaseUtils.like("rs.resumen", "resumen", parametros, registroSir.getResumen()));
         }
 
         if (es.caib.regweb3.utils.StringUtils.isNotEmpty(registroSir.getIdentificadorIntercambio())) {
-            where.add(DataBaseUtils.like("registroSir.identificadorIntercambio", "identificadorIntercambio", parametros, registroSir.getIdentificadorIntercambio()));
+            where.add(DataBaseUtils.like("rs.identificadorIntercambio", "identificadorIntercambio", parametros, registroSir.getIdentificadorIntercambio()));
         }
 
         if (es.caib.regweb3.utils.StringUtils.isNotEmpty(registroSir.getNumeroRegistro())) {
-            where.add(DataBaseUtils.like("registroSir.numeroRegistro", "numeroRegistro", parametros, registroSir.getNumeroRegistro()));
+            where.add(DataBaseUtils.like("rs.numeroRegistro", "numeroRegistro", parametros, registroSir.getNumeroRegistro()));
         }
 
         if (StringUtils.isNotEmpty(estado)) {
-            where.add(" registroSir.estado = :estado "); parametros.put("estado", EstadoRegistroSir.getEstadoRegistroSir(estado));
+            where.add(" rs.estado = :estado "); parametros.put("estado", EstadoRegistroSir.getEstadoRegistroSir(estado));
         }
 
         if (registroSir.getTipoRegistro() != null) {
-            where.add(" registroSir.tipoRegistro = :tipoRegistro "); parametros.put("tipoRegistro", registroSir.getTipoRegistro());
+            where.add(" rs.tipoRegistro = :tipoRegistro "); parametros.put("tipoRegistro", registroSir.getTipoRegistro());
         }
 
         if (es.caib.regweb3.utils.StringUtils.isNotEmpty(registroSir.getAplicacion())) {
-            where.add(DataBaseUtils.like("registroSir.aplicacion", "aplicacion", parametros, registroSir.getAplicacion()));
+            where.add(DataBaseUtils.like("rs.aplicacion", "aplicacion", parametros, registroSir.getAplicacion()));
         }
 
         // Intervalo fechas
-        where.add(" (registroSir.fechaRecepcion >= :fechaInicio  "); parametros.put("fechaInicio", fechaInicio);
-        where.add(" registroSir.fechaRecepcion <= :fechaFin) "); parametros.put("fechaFin", fechaFin);
+        where.add(" (rs.fechaRecepcion >= :fechaInicio  "); parametros.put("fechaInicio", fechaInicio);
+        where.add(" rs.fechaRecepcion <= :fechaFin) "); parametros.put("fechaFin", fechaFin);
 
-        if (parametros.size() != 0) {
-            query.append("where ");
-            int count = 0;
-            for (String w : where) {
-                if (count != 0) {
-                    query.append(" and ");
-                }
-                query.append(w);
-                count++;
+        // Añadimos los parámetros a la query
+        query.append("where ");
+        int count = 0;
+        for (String w : where) {
+            if (count != 0) {
+                query.append(" and ");
             }
-            q2 = em.createQuery(query.toString().replaceAll("Select registroSir from RegistroSir as registroSir ", "Select count(registroSir.id) from RegistroSir as registroSir "));
-            query.append(" order by registroSir.fechaRecepcion desc");
-            q = em.createQuery(query.toString());
-
-            for (Map.Entry<String, Object> param : parametros.entrySet()) {
-
-                q.setParameter(param.getKey(), param.getValue());
-                q2.setParameter(param.getKey(), param.getValue());
-            }
-
-        } else {
-            q2 = em.createQuery(query.toString().replaceAll("Select registroSir from RegistroSir as registroSir ", "Select count(registroSir.id) from RegistroSir as registroSir "));
-            query.append("order by registroSir.fechaRecepcion desc");
-            q = em.createQuery(query.toString());
+            query.append(w);
+            count++;
         }
 
+        // Duplicamos la query solo para obtener los resultados totales
+        StringBuilder queryCount = new StringBuilder("Select count(rs.id) from RegistroSir as rs ");
+        q2 = em.createQuery(query.toString().replaceAll(queryBase.toString(), queryCount.toString()));
 
+        // añadimos el order by
+        query.append(" order by rs.fechaRecepcion desc");
+        q = em.createQuery(query.toString());
+
+        // Mapeamos los parámetros
+        for (Map.Entry<String, Object> param : parametros.entrySet()) {
+
+            q.setParameter(param.getKey(), param.getValue());
+            q2.setParameter(param.getKey(), param.getValue());
+        }
+
+        // Ejecutamos las queries
         Paginacion paginacion;
 
         if (pageNumber != null) { // Comprobamos si es una busqueda paginada o no
@@ -386,7 +387,31 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
             paginacion = new Paginacion(0, 0);
         }
 
-        paginacion.setListado(q.getResultList());
+        List<Object[]> results = q.getResultList();
+        List<RegistroSir> registros = new ArrayList<>();
+
+        for (Object[] result : results) {
+            RegistroSir registro =  new RegistroSir();
+            registro.setId((Long) result[0]);
+            registro.setDecodificacionEntidadRegistralOrigen((String) result[1]);
+            registro.setFechaRecepcion((Date) result[2]);
+            registro.setIdentificadorIntercambio((String) result[3]);
+            registro.setNumeroRegistro((String)result[4]);
+            registro.setResumen((String) result[5]);
+            registro.setEstado((EstadoRegistroSir) result[6]);
+            registro.setTipoRegistro((TipoRegistro) result[7]);
+            registro.setCodigoEntidadRegistralOrigen((String) result[8]);
+            registro.setDecodificacionEntidadRegistralOrigen((String) result[9]);
+            registro.setCodigoEntidadRegistralDestino((String) result[10]);
+            registro.setDecodificacionEntidadRegistralDestino((String) result[11]);
+            registro.setAplicacion((String) result[12]);
+            registro.setDocumentacionFisica((String) result[13]);
+            registro.setNumeroReintentos((Integer) result[14]);
+
+            registros.add(registro);
+        }
+
+        paginacion.setListado(registros);
 
         return paginacion;
     }
@@ -399,41 +424,44 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         Map<String, Object> parametros = new HashMap<String, Object>();
         List<String> where = new ArrayList<String>();
 
-        StringBuilder query = new StringBuilder("Select registroSir from RegistroSir as registroSir ");
+        StringBuilder queryBase = new StringBuilder("Select rs.id, rs.decodificacionEntidadRegistralOrigen, rs.decodificacionEntidadRegistralDestino, rs.fechaRecepcion, rs.identificadorIntercambio, rs.numeroRegistro, " +
+                "rs.resumen, rs.estado, rs.documentacionFisica, rs.tipoRegistro from RegistroSir as rs ");
 
-        where.add(" (registroSir.codigoEntidadRegistral = :oficinaSir) "); parametros.put("oficinaSir",oficinaSir);
+        StringBuilder query = new StringBuilder(queryBase);
+
+        where.add(" (rs.codigoEntidadRegistral = :oficinaSir) "); parametros.put("oficinaSir",oficinaSir);
 
         if (StringUtils.isNotEmpty(estado)) {
-            where.add(" registroSir.estado = :estado "); parametros.put("estado", EstadoRegistroSir.getEstadoRegistroSir(estado));
+            where.add(" rs.estado = :estado "); parametros.put("estado", EstadoRegistroSir.getEstadoRegistroSir(estado));
         }
 
-        if (parametros.size() != 0) {
-            query.append("where ");
-            int count = 0;
-            for (String w : where) {
-                if (count != 0) {
-                    query.append(" and ");
-                }
-                query.append(w);
-                count++;
+        // Añadimos los parámetros a la query
+        query.append("where ");
+        int count = 0;
+        for (String w : where) {
+            if (count != 0) {
+                query.append(" and ");
             }
-            q2 = em.createQuery(query.toString().replaceAll("Select registroSir from RegistroSir as registroSir ", "Select count(registroSir.id) from RegistroSir as registroSir "));
-            query.append(" order by registroSir.fechaRecepcion");
-            q = em.createQuery(query.toString());
-
-            for (Map.Entry<String, Object> param : parametros.entrySet()) {
-
-                q.setParameter(param.getKey(), param.getValue());
-                q2.setParameter(param.getKey(), param.getValue());
-            }
-
-        } else {
-            q2 = em.createQuery(query.toString().replaceAll("Select registroSir from RegistroSir as registroSir ", "Select count(registroSir.id) from RegistroSir as registroSir "));
-            query.append("order by registroSir.fechaRecepcion");
-            q = em.createQuery(query.toString());
+            query.append(w);
+            count++;
         }
 
+        // Duplicamos la query solo para obtener los resultados totales
+        StringBuilder queryCount = new StringBuilder("Select count(rs.id) from RegistroSir as rs ");
+        q2 = em.createQuery(query.toString().replaceAll(queryBase.toString(), queryCount.toString()));
 
+        // añadimos el order by
+        query.append(" order by rs.fechaRecepcion");
+        q = em.createQuery(query.toString());
+
+        // Mapeamos los parámetros
+        for (Map.Entry<String, Object> param : parametros.entrySet()) {
+
+            q.setParameter(param.getKey(), param.getValue());
+            q2.setParameter(param.getKey(), param.getValue());
+        }
+
+        // Ejecutamos las queries
         Paginacion paginacion;
 
         if (pageNumber != null) { // Comprobamos si es una busqueda paginada o no
@@ -448,7 +476,26 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
             paginacion = new Paginacion(0, 0);
         }
 
-        paginacion.setListado(q.getResultList());
+        List<Object[]> results = q.getResultList();
+        List<RegistroSir> registros = new ArrayList<>();
+
+        for (Object[] result : results) {
+            RegistroSir registro =  new RegistroSir();
+            registro.setId((Long) result[0]);
+            registro.setDecodificacionEntidadRegistralOrigen((String) result[1]);
+            registro.setDecodificacionEntidadRegistralDestino((String) result[2]);
+            registro.setFechaRecepcion((Date) result[3]);
+            registro.setIdentificadorIntercambio((String) result[4]);
+            registro.setNumeroRegistro((String)result[5]);
+            registro.setResumen((String) result[6]);
+            registro.setEstado((EstadoRegistroSir) result[7]);
+            registro.setDocumentacionFisica((String) result[8]);
+            registro.setTipoRegistro((TipoRegistro) result[9]);
+
+            registros.add(registro);
+        }
+
+        paginacion.setListado(registros);
 
         return paginacion;
     }
@@ -539,7 +586,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
      * @return Información del registroSir registral.
      */
     @Override
-    public RegistroSir transformarFicheroIntercambio(FicheroIntercambio ficheroIntercambio)throws Exception{
+    public RegistroSir transformarFicheroIntercambio(FicheroIntercambio ficheroIntercambio, Long idEntidad)throws Exception{
 
         final SimpleDateFormat SDF = new SimpleDateFormat("yyyyMMddHHmmss");
 
@@ -561,7 +608,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
                 if (StringUtils.isNotEmpty(de_Origen_o_Remitente.getDecodificacion_Entidad_Registral_Origen())) {
                     registroSir.setDecodificacionEntidadRegistralOrigen(de_Origen_o_Remitente.getDecodificacion_Entidad_Registral_Origen());
                 } else {
-                    registroSir.setDecodificacionEntidadRegistralOrigen(Dir3CaibUtils.denominacion(PropiedadGlobalUtil.getDir3CaibServer(),de_Origen_o_Remitente.getCodigo_Entidad_Registral_Origen(), RegwebConstantes.OFICINA));
+                    registroSir.setDecodificacionEntidadRegistralOrigen(Dir3CaibUtils.denominacion(PropiedadGlobalUtil.getDir3CaibServer(idEntidad),de_Origen_o_Remitente.getCodigo_Entidad_Registral_Origen(), RegwebConstantes.OFICINA));
                 }
 
                 registroSir.setCodigoUnidadTramitacionOrigen(de_Origen_o_Remitente.getCodigo_Unidad_Tramitacion_Origen());
@@ -569,7 +616,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
                 if (StringUtils.isNotEmpty(de_Origen_o_Remitente.getDecodificacion_Unidad_Tramitacion_Origen())) {
                     registroSir.setDecodificacionUnidadTramitacionOrigen(de_Origen_o_Remitente.getDecodificacion_Unidad_Tramitacion_Origen());
                 } else {
-                    registroSir.setDecodificacionUnidadTramitacionOrigen(Dir3CaibUtils.denominacion(PropiedadGlobalUtil.getDir3CaibServer(),de_Origen_o_Remitente.getCodigo_Unidad_Tramitacion_Origen(), RegwebConstantes.UNIDAD));
+                    registroSir.setDecodificacionUnidadTramitacionOrigen(Dir3CaibUtils.denominacion(PropiedadGlobalUtil.getDir3CaibServer(idEntidad),de_Origen_o_Remitente.getCodigo_Unidad_Tramitacion_Origen(), RegwebConstantes.UNIDAD));
                 }
 
 
@@ -597,7 +644,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
                 if (StringUtils.isNotEmpty(de_Destino.getDecodificacion_Entidad_Registral_Destino())) {
                     registroSir.setDecodificacionEntidadRegistralDestino(de_Destino.getDecodificacion_Entidad_Registral_Destino());
                 } else {
-                    registroSir.setDecodificacionEntidadRegistralDestino(Dir3CaibUtils.denominacion(PropiedadGlobalUtil.getDir3CaibServer(),de_Destino.getCodigo_Entidad_Registral_Destino(), RegwebConstantes.OFICINA));
+                    registroSir.setDecodificacionEntidadRegistralDestino(Dir3CaibUtils.denominacion(PropiedadGlobalUtil.getDir3CaibServer(idEntidad),de_Destino.getCodigo_Entidad_Registral_Destino(), RegwebConstantes.OFICINA));
                 }
 
                 if (StringUtils.isNotEmpty(de_Destino.getCodigo_Unidad_Tramitacion_Destino())) {
@@ -605,7 +652,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
                     if (StringUtils.isNotEmpty(de_Destino.getDecodificacion_Unidad_Tramitacion_Destino())) {
                         registroSir.setDecodificacionUnidadTramitacionDestino(de_Destino.getDecodificacion_Unidad_Tramitacion_Destino());
                     } else {
-                        registroSir.setDecodificacionUnidadTramitacionDestino(Dir3CaibUtils.denominacion(PropiedadGlobalUtil.getDir3CaibServer(),de_Destino.getCodigo_Unidad_Tramitacion_Destino(), RegwebConstantes.UNIDAD));
+                        registroSir.setDecodificacionUnidadTramitacionDestino(Dir3CaibUtils.denominacion(PropiedadGlobalUtil.getDir3CaibServer(idEntidad),de_Destino.getCodigo_Unidad_Tramitacion_Destino(), RegwebConstantes.UNIDAD));
                     }
                 }
 
@@ -637,7 +684,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
                 if (StringUtils.isNotEmpty(de_Internos_Control.getDecodificacion_Entidad_Registral_Inicio())) {
                     registroSir.setDecodificacionEntidadRegistralInicio(de_Internos_Control.getDecodificacion_Entidad_Registral_Inicio());
                 } else {
-                    registroSir.setDecodificacionEntidadRegistralInicio(Dir3CaibUtils.denominacion(PropiedadGlobalUtil.getDir3CaibServer(),de_Internos_Control.getCodigo_Entidad_Registral_Inicio(), RegwebConstantes.OFICINA));
+                    registroSir.setDecodificacionEntidadRegistralInicio(Dir3CaibUtils.denominacion(PropiedadGlobalUtil.getDir3CaibServer(idEntidad),de_Internos_Control.getCodigo_Entidad_Registral_Inicio(), RegwebConstantes.OFICINA));
                 }
 
 
@@ -686,7 +733,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
                                 && (StringUtils.isBlank(de_Interesado.getNombre_Interesado()) && StringUtils.isBlank(de_Interesado.getPrimer_Apellido_Interesado()))){
 
                             // Creamos uno a partir de la Entidad destino
-                            registroSir.getInteresados().add(crearInteresadoJuridico(ficheroIntercambio));
+                            registroSir.getInteresados().add(crearInteresadoJuridico(ficheroIntercambio, idEntidad));
 
                         }else{
 
@@ -971,13 +1018,14 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
 
         Query q = em.createQuery("Select registroSir.id from RegistroSir as registroSir " +
                 "where registroSir.entidad.id = :idEntidad and (registroSir.estado = :reenviado or registroSir.estado = :rechazado) " +
-                "and registroSir.numeroReintentos < :maxReintentos");
+                "and registroSir.numeroReintentos < :maxReintentos order by id");
 
         q.setParameter("idEntidad", idEntidad);
         q.setParameter("reenviado", EstadoRegistroSir.REENVIADO);
         q.setParameter("rechazado", EstadoRegistroSir.RECHAZADO);
         q.setParameter("maxReintentos", PropiedadGlobalUtil.getMaxReintentosSir(idEntidad));
         q.setHint("org.hibernate.readOnly", true);
+        q.setMaxResults(20);
 
         return  q.getResultList();
 
@@ -990,13 +1038,14 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         Query q = em.createQuery("Select registroSir.id from RegistroSir as registroSir " +
                 "where registroSir.entidad.id = :idEntidad and registroSir.estado = :reenviado or registroSir.estado = :rechazado " +
                 "and (registroSir.codigoError = '0039' or registroSir.codigoError = '0046' or registroSir.codigoError = '0057' or  registroSir.codigoError = '0058') " +
-                "and registroSir.numeroReintentos < :maxReintentos");
+                "and registroSir.numeroReintentos < :maxReintentos order by id");
 
         q.setParameter("idEntidad", idEntidad);
         q.setParameter("reenviado", EstadoRegistroSir.REENVIADO_Y_ERROR);
         q.setParameter("rechazado", EstadoRegistroSir.RECHAZADO_Y_ERROR);
         q.setParameter("maxReintentos", PropiedadGlobalUtil.getMaxReintentosSir(idEntidad));
         q.setHint("org.hibernate.readOnly", true);
+        q.setMaxResults(20);
 
         return  q.getResultList();
 
@@ -1053,7 +1102,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         }
 
         if (StringUtils.isNotEmpty(interesado.getRazonSocial())) {
-            interesadoSir.setRazonSocialInteresado(interesado.getRazonSocial());
+            interesadoSir.setRazonSocialInteresado(es.caib.regweb3.utils.StringUtils.recortarCadena(interesado.getRazonSocial(),80));
         }
 
         if (StringUtils.isNotEmpty(interesado.getNombre())) {
@@ -1506,7 +1555,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
      * a partir del Código Entidad Registral de destino
      * @return
      */
-    private InteresadoSir crearInteresadoJuridico(FicheroIntercambio ficheroIntercambio){
+    private InteresadoSir crearInteresadoJuridico(FicheroIntercambio ficheroIntercambio, Long idEntidad){
 
         InteresadoSir interesadoSalida = new InteresadoSir();
 
@@ -1518,20 +1567,20 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
             if(StringUtils.isNotBlank(ficheroIntercambio.getDescripcionUnidadTramitacionDestino())){
                 interesadoSalida.setRazonSocialInteresado(ficheroIntercambio.getDescripcionUnidadTramitacionDestino());
             }else{
-                interesadoSalida.setRazonSocialInteresado(Dir3CaibUtils.denominacion(PropiedadGlobalUtil.getDir3CaibServer(),ficheroIntercambio.getCodigoUnidadTramitacionDestino(),RegwebConstantes.UNIDAD));
+                interesadoSalida.setRazonSocialInteresado(Dir3CaibUtils.denominacion(PropiedadGlobalUtil.getDir3CaibServer(idEntidad),ficheroIntercambio.getCodigoUnidadTramitacionDestino(),RegwebConstantes.UNIDAD));
 
             }
 
 
         }else{
             try {
-                Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService(PropiedadGlobalUtil.getDir3CaibServer(), PropiedadGlobalUtil.getDir3CaibUsername(), PropiedadGlobalUtil.getDir3CaibPassword());
+                Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService(PropiedadGlobalUtil.getDir3CaibServer(idEntidad), PropiedadGlobalUtil.getDir3CaibUsername(idEntidad), PropiedadGlobalUtil.getDir3CaibPassword(idEntidad));
 
                 OficinaTF oficinaTF = oficinasService.obtenerOficina(ficheroIntercambio.getCodigoEntidadRegistralDestino(),null,null);
 
                 interesadoSalida.setTipoDocumentoIdentificacionInteresado(TipoDocumentoIdentificacion.CODIGO_ORIGEN_VALUE.getValue());
                 interesadoSalida.setDocumentoIdentificacionInteresado(oficinaTF.getCodUoResponsable());
-                interesadoSalida.setRazonSocialInteresado(Dir3CaibUtils.denominacion(PropiedadGlobalUtil.getDir3CaibServer(),oficinaTF.getCodUoResponsable(),RegwebConstantes.UNIDAD));
+                interesadoSalida.setRazonSocialInteresado(Dir3CaibUtils.denominacion(PropiedadGlobalUtil.getDir3CaibServer(idEntidad), oficinaTF.getCodUoResponsable(),RegwebConstantes.UNIDAD));
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -1554,7 +1603,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
      * @throws I18NValidationException
      */
     @Override
-    public RegistroEntrada aceptarRegistroSirEntrada(RegistroSir registroSir, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, List<CamposNTI> camposNTIs, Long idOrganismoDestino)
+    public RegistroEntrada aceptarRegistroSirEntrada(RegistroSir registroSir, Entidad entidad, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, List<CamposNTI> camposNTIs, Long idOrganismoDestino)
             throws Exception, I18NException, I18NValidationException {
 
         Libro libro = libroEjb.findById(idLibro);
@@ -1582,7 +1631,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         List<AnexoFull> anexosFull = procesarAnexos(registroSir, camposNTIs);
 
         // Registramos el Registro Entrada
-        registroEntrada = registroEntradaEjb.registrarEntrada(registroEntrada, usuario,interesados,anexosFull, true);
+        registroEntrada = registroEntradaEjb.registrarEntrada(registroEntrada, entidad, usuario,interesados,anexosFull, true);
 
 
         // Creamos la TrazabilidadSir
@@ -1626,6 +1675,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
 
         RegistroDetalle registroDetalle = new RegistroDetalle();
 
+        registroDetalle.setRecibidoSir(true);
         registroDetalle.setPresencial(false);
         registroDetalle.setExtracto(registroSir.getResumen());
         registroDetalle.setTipoDocumentacionFisica(Long.valueOf(registroSir.getDocumentacionFisica()));
@@ -2069,8 +2119,6 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         if (es.caib.regweb3.utils.StringUtils.isNotEmpty(anexoSir.getIdentificadorDocumentoFirmado()) &&
                 !anexoSir.getIdentificadorDocumentoFirmado().equals(anexoSir.getIdentificadorFichero())) {
 
-            log.info("Firma detached del documento: " + anexoSir.getIdentificadorDocumentoFirmado());
-
             AnexoFull anexoFirmado = anexosProcesados.get(anexoSir.getIdentificadorDocumentoFirmado());//obtenemos el anexo firmado previamente procesado
             if(anexoFirmado.getAnexo().getModoFirma() != MODO_FIRMA_ANEXO_ATTACHED) { // si la firma detached es de un firma attached, la descartamos
 
@@ -2079,7 +2127,6 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
 
                 // CASO ORVE BASE64 Decodificamos previamente porque vienen las firmas codificadas en base64
                 if (Base64.isBase64(anexoSirData)) {
-                    log.info("Entramos en decodificar caso ORVE");
                     anexoSirData = Base64.decodeBase64(anexoSirData);
                     anexoSir.setAnexoData(anexoSirData);
                 }
@@ -2194,7 +2241,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
 
                 }*/
                 } else {
-                    log.info("Entro en CADES");
+
                     // CADES
 
                     //Caso Firma Detached, caso 4, se guarda 1 anexo, con el doc original en documentCustody y la firma en SignatureCustody

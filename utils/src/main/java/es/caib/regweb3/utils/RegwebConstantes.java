@@ -96,7 +96,7 @@ public interface RegwebConstantes {
     String RWE_WS_CIUDADANO = "RWE_WS_CIUDADANO"; // Rol para obtener registros de un usuario
     Long RWE_WS_CIUDADANO_ID = 6L;
 
-    String DIB_USER = "DIB_USER"; // Rol para realizar copias auténticas
+    String DIB_USER_RW = "DIB_USER_RW"; // Rol para realizar copias auténticas
     Long DIB_USER_ID = 7L;
 
 
@@ -403,6 +403,8 @@ public interface RegwebConstantes {
 
     /* -------------- PAIS --------------*/
     Long PAIS_ESPAÑA = 724L;
+    Long nivelAdminAutonomica = 2L; // Administración Autonómica
+    Long comunidadBaleares = 4L; // Illes Balears
 
     /* -------------- ENTIDAD GEOGRÁFICA --------------*/
     String ENTIDAD_GEOGRAFICA_MUNICIPIO = "01";

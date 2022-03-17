@@ -43,12 +43,12 @@
 
             <div class="form-group col-xs-12">
                 <div class="col-xs-2 pull-left etiqueta_regweb control-label">
-                        <c:if test="${param.tipoRegistro == RegwebConstantes.REGISTRO_ENTRADA}">
-                            <label rel="popupAbajo" data-content="<spring:message code="registro.ayuda.tipoInteresado.entrada"/>" data-toggle="popover"><spring:message code="interesado.tipoInteresado"/></label>
-                        </c:if>
-                        <c:if test="${param.tipoRegistro == RegwebConstantes.REGISTRO_SALIDA}">
-                    <label rel="popupAbajo" data-content="<spring:message code="registro.ayuda.tipoInteresado.salida"/>" data-toggle="popover"><spring:message code="interesado.tipoDestinatario"/></label>
-                        </c:if>
+                    <c:if test="${param.tipoRegistro == RegwebConstantes.REGISTRO_ENTRADA}">
+                        <label rel="popupAbajo" data-content="<spring:message code="registro.ayuda.tipoInteresado.entrada"/>" data-toggle="popover"><spring:message code="interesado.tipoInteresado"/></label>
+                    </c:if>
+                    <c:if test="${param.tipoRegistro == RegwebConstantes.REGISTRO_SALIDA}">
+                        <label rel="popupAbajo" data-content="<spring:message code="registro.ayuda.tipoInteresado.salida"/>" data-toggle="popover"><spring:message code="interesado.tipoDestinatario"/></label>
+                    </c:if>
                 </div>
                 <div class="col-xs-10">
                     <c:forEach items="${tiposInteresado}" var="tipoInteresado">
@@ -85,7 +85,7 @@
                     <a id="buscarPersonaFisica" data-toggle="modal" href="#modalBuscadorPersonasFisicas" onclick="limpiarBusquedaPersona('Fisicas')" class="btn btn-warning btn-sm"><spring:message code="regweb.buscar"/></a>
                     <a id="buscarPersonaJuridica" data-toggle="modal" href="#modalBuscadorPersonasJuridicas" onclick="limpiarBusquedaPersona('Juridicas')" style="display: none;" class="btn btn-warning btn-sm"><spring:message code="regweb.buscar"/></a>
                     <a id="buscarOrganismo" data-toggle="modal" href="#modalBuscadorOrganismoInteresado"
-                       onclick="inicializarBuscador('#codNivelAdministracionOrganismoInteresado','#codComunidadAutonomaOrganismoInteresado','#provinciaOrganismoInteresado','#localidadOrganismoInteresado','${oficina.organismoResponsable.nivelAdministracion.codigoNivelAdministracion}', '${oficina.organismoResponsable.codAmbComunidad.codigoComunidad}', 'OrganismoInteresado' );"
+                       onclick="inicializarBuscador('#codNivelAdministracionOrganismoInteresado','#codComunidadAutonomaOrganismoInteresado','#provinciaOrganismoInteresado','#localidadOrganismoInteresado',${RegwebConstantes.nivelAdminAutonomica}, ${RegwebConstantes.comunidadBaleares}, 'OrganismoInteresado' );"
                        style="display: none;" class="btn btn-warning btn-sm"><spring:message code="regweb.buscar"/></a>
                 </div>
                 <%--Botones nueva persona--%>
@@ -251,10 +251,10 @@ Mediante el archivo "busquedaorganismo.js" se implementa dicha búsqueda -->
 
         //Gestión de los cambios de tipo documento
         $('#tipoDocumentoIdentificacion').change(
-                function() {actualizarTipoDocumentoIdentificacion();
-                    quitarError('documento');
-                });
-
+            function() {
+                actualizarTipoDocumentoIdentificacion();
+                quitarError('documento');
+            });
     });
 
 

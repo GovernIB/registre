@@ -12,6 +12,8 @@ import org.apache.log4j.Logger;
 import org.dom4j.Document;
 
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import java.net.URL;
 
 /**
@@ -19,6 +21,7 @@ import java.net.URL;
  *
  */
 @Stateless(name = "EmisionEJB")
+@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 public class EmisionBean implements EmisionLocal{
 
     public final Logger log = Logger.getLogger(getClass());
@@ -97,7 +100,7 @@ public class EmisionBean implements EmisionLocal{
 
             if (Errores.OK.getValue().equals(respuesta.getCodigo())) {
 
-                log.info("RegistroSir enviado correctamente: " + respuesta.getCodigo() + " - " + respuesta.getDescripcion());
+                //log.info("RegistroSir enviado correctamente: " + respuesta.getCodigo() + " - " + respuesta.getDescripcion());
             }else{
                 log.error("Errro en el envio: " + respuesta.getCodigo() + " - " + respuesta.getDescripcion());
                 throw new SIRException("Error " + respuesta.getCodigo() + " - " + respuesta.getDescripcion());

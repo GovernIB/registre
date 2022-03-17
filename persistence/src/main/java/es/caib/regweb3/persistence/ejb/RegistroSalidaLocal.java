@@ -36,8 +36,7 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
      * @return
      * @throws Exception
      */
-    RegistroSalida registrarSalida(RegistroSalida registroSalida,
-                                   UsuarioEntidad usuarioEntidad, List<Interesado> interesados, List<AnexoFull> anexos, Boolean validarAnexos)
+    RegistroSalida registrarSalida(RegistroSalida registroSalida,Entidad entidad, UsuarioEntidad usuarioEntidad, List<Interesado> interesados, List<AnexoFull> anexos, Boolean validarAnexos)
             throws Exception, I18NException, I18NValidationException;
 
     /**
@@ -49,7 +48,7 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
      * @throws Exception
      * @throws I18NException
      */
-    RegistroSalida actualizar(RegistroSalida antiguo, RegistroSalida registroSalida, UsuarioEntidad usuarioEntidad) throws Exception, I18NException;
+    RegistroSalida actualizar(RegistroSalida antiguo, RegistroSalida registroSalida, Entidad entidad,UsuarioEntidad usuarioEntidad) throws Exception, I18NException;
 
     /**
      * Obtiene el próximo evento que habrá que realizar con el Registro
@@ -128,10 +127,11 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
      * Comprueba si un RegistroSalida se considera un OficioRemision SIR o no
      * @param registroSalida
      * @param organismos
+     * @param idEntidad
      * @return
      * @throws Exception
      */
-    List<OficinaTF> isOficioRemisionSir(RegistroSalida registroSalida, Set<String> organismos) throws Exception;
+    List<OficinaTF> isOficioRemisionSir(RegistroSalida registroSalida, Set<String> organismos, Long idEntidad) throws Exception;
 
 
     /**
@@ -141,7 +141,7 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
      * @return
      * @throws Exception
      */
-    List<OficinaTF> isOficioRemisionSirMultiEntidad(RegistroSalida registroSalida, Set<String> organismos) throws Exception;
+    List<OficinaTF> isOficioRemisionSirMultiEntidad(RegistroSalida registroSalida, Set<String> organismos, Long idEntidad) throws Exception;
 
 
     /**
@@ -159,7 +159,7 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
      * @param usuarioEntidad
      * @throws Exception
      */
-    void activarRegistroSalida(RegistroSalida registroSalida, UsuarioEntidad usuarioEntidad) throws Exception;
+    void activarRegistroSalida(RegistroSalida registroSalida, Entidad entidad, UsuarioEntidad usuarioEntidad) throws Exception;
 
     /**
      * Visa un RegistroSalida, cambiandole el estado a anulado.
@@ -204,7 +204,7 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
      * @return
      * @throws Exception
      */
-    RegistroSalida rectificar(RegistroSalida registroSalida, UsuarioEntidad usuarioEntidad) throws Exception;
+    RegistroSalida rectificar(Entidad entidad, RegistroSalida registroSalida, UsuarioEntidad usuarioEntidad) throws Exception;
 
 
     /**

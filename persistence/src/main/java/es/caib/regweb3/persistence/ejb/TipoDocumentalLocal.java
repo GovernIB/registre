@@ -13,11 +13,10 @@ import java.util.List;
  * Date: 16/01/14
  */
 @Local
-@RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI","RWE_WS_ENTRADA","RWE_WS_SALIDA", "RWE_WS_CIUDADANO"})
+@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI", "RWE_WS_ENTRADA", "RWE_WS_SALIDA", "RWE_WS_CIUDADANO"})
 public interface TipoDocumentalLocal extends BaseEjb<TipoDocumental, Long> {
 
     /**
-     *
      * @param idEntidad
      * @return
      * @throws Exception
@@ -25,7 +24,6 @@ public interface TipoDocumentalLocal extends BaseEjb<TipoDocumental, Long> {
     Long getTotal(Long idEntidad) throws Exception;
 
     /**
-     *
      * @param inicio
      * @param idEntidad
      * @return
@@ -35,6 +33,7 @@ public interface TipoDocumentalLocal extends BaseEjb<TipoDocumental, Long> {
 
     /**
      * Retorna el {@link es.caib.regweb3.model.TipoDocumental} asociado a un codigo.
+     *
      * @param codigoNTI
      * @param idEntidad
      * @return
@@ -44,6 +43,7 @@ public interface TipoDocumentalLocal extends BaseEjb<TipoDocumental, Long> {
 
     /**
      * Comprueba la existencia del codigo en algún TipoDocumental
+     *
      * @param codigoNTI
      * @param idTipoDocumental
      * @param idEntidad
@@ -52,16 +52,18 @@ public interface TipoDocumentalLocal extends BaseEjb<TipoDocumental, Long> {
      */
     Boolean existeCodigoEdit(String codigoNTI, Long idTipoDocumental, Long idEntidad) throws Exception;
 
-  /**
-   * Obtiene los tipos documentales de una entidad
-   * @param idEntidad
-   * @return
-   * @throws Exception
-   */
-  List<TipoDocumental> getByEntidad(Long idEntidad) throws Exception;
+    /**
+     * Obtiene los tipos documentales de una entidad
+     *
+     * @param idEntidad
+     * @return
+     * @throws Exception
+     */
+    List<TipoDocumental> getByEntidad(Long idEntidad) throws Exception;
 
     /**
      * Elimina los TipoDocumental de una Entidad
+     *
      * @param idEntidad
      * @return
      * @throws Exception
@@ -70,6 +72,7 @@ public interface TipoDocumentalLocal extends BaseEjb<TipoDocumental, Long> {
 
     /**
      * Crea un TipoDocumental con sus traducciones en Catalán y Castellano
+     *
      * @param codigo
      * @param idEntidad
      * @param nombreCa

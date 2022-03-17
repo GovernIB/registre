@@ -45,7 +45,6 @@ public class ArxiuBean implements ArxiuLocal{
 
         Date inicio = new Date();
         StringBuilder peticion = new StringBuilder();
-        long tiempo = System.currentTimeMillis();
         int reintents = 10;
 
         peticion.append("expediente: ").append(expediente.getName()).append(System.getProperty("line.separator"));
@@ -61,7 +60,7 @@ public class ArxiuBean implements ArxiuLocal{
                 this.log.error("Error no controlat al cerrarExpediente()[Miram si podem reintentar...]: " + var23.getMessage(), var23);
                 String error = var23.getMessage();
                 if (reintents <= 0 || error == null || !error.contains("Proxy Error") || !error.contains("/services/closeFile")) {
-                    integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_CERRAR_EXPEDIENTE, "Cerrar expediente", peticion.toString(), var23, null,System.currentTimeMillis() - tiempo, idEntidad, expediente.getName());
+                    integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_CERRAR_EXPEDIENTE, "Cerrar expediente", peticion.toString(), var23, null,System.currentTimeMillis() - inicio.getTime(), idEntidad, expediente.getName());
                     throw var23;
                 }
 
@@ -74,7 +73,7 @@ public class ArxiuBean implements ArxiuLocal{
             if (!this.hiHaError(errorCodi)) {
                 log.info("Se ha cerrado correctamente el Expediente: " +expediente.getName());
                 // Integracion
-                integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_CERRAR_EXPEDIENTE, "Cerrar expediente", peticion.toString(),System.currentTimeMillis() - tiempo, idEntidad, expediente.getName());
+                integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_CERRAR_EXPEDIENTE, "Cerrar expediente", peticion.toString(),System.currentTimeMillis() - inicio.getTime(), idEntidad, expediente.getName());
                 break;
             }
 
@@ -85,14 +84,14 @@ public class ArxiuBean implements ArxiuLocal{
                     this.log.info("S'ha intentat cerrarExpediente() però aquest ja esta a RM. Es dóna per bó.");
                     break;
                 }
-                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_CERRAR_EXPEDIENTE, "Cerrar expediente", peticion.toString(), new CustodyException("No s'ha pogut tancar l'expedient amb uuid " + expediente.getId() + ": " + res.getCodigoResultado() + " - " + res.getMsjResultado()), null,System.currentTimeMillis() - tiempo, idEntidad, expediente.getName());
+                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_CERRAR_EXPEDIENTE, "Cerrar expediente", peticion.toString(), new CustodyException("No s'ha pogut tancar l'expedient amb uuid " + expediente.getId() + ": " + res.getCodigoResultado() + " - " + res.getMsjResultado()), null,System.currentTimeMillis() - inicio.getTime(), idEntidad, expediente.getName());
                 throw new CustodyException("No s'ha pogut tancar l'expedient amb uuid " + expediente.getId() + ": " + res.getCodigoResultado() + " - " + res.getMsjResultado());
             }
 
             this.log.warn("Gestió de reintents de apiArxiu.cerrarExpediente(): reintent compte enrera " + reintents + ". Esperam " + 5000L + " ms");
             Thread.sleep(5000L);
             if (reintents <= 0) {
-                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_CERRAR_EXPEDIENTE, "Cerrar expediente", peticion.toString(), new CustodyException("S'han esgotat els reintents i no s'ha pogut tancar l'expedient amb uuid " + expediente.getId() + ": " + res.getCodigoResultado() + " - " + res.getMsjResultado()), null,System.currentTimeMillis() - tiempo, idEntidad, expediente.getName());
+                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_CERRAR_EXPEDIENTE, "Cerrar expediente", peticion.toString(), new CustodyException("S'han esgotat els reintents i no s'ha pogut tancar l'expedient amb uuid " + expediente.getId() + ": " + res.getCodigoResultado() + " - " + res.getMsjResultado()), null,System.currentTimeMillis() - inicio.getTime(), idEntidad, expediente.getName());
                 throw new CustodyException("S'han esgotat els reintents i no s'ha pogut tancar l'expedient amb uuid " + expediente.getId() + ": " + res.getCodigoResultado() + " - " + res.getMsjResultado());
             }
 
@@ -103,7 +102,6 @@ public class ArxiuBean implements ArxiuLocal{
 
         Date inicio = new Date();
         StringBuilder peticion = new StringBuilder();
-        long tiempo = System.currentTimeMillis();
 
         try {
 
@@ -131,7 +129,7 @@ public class ArxiuBean implements ArxiuLocal{
 
             if (hiHaErrorEnCerca(result.getCodigoResultado())) {
                 log.info("Error en la búsqueda de expedientes: " + result.getCodigoResultado() + "-" + result.getMsjResultado());
-                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_CERRAR_EXPEDIENTE, "Scheduler: Cerrar expedientes", peticion.toString(), new CustodyException("Error en la búsqueda de expedientes: " + result.getCodigoResultado() + "-" + result.getMsjResultado()), null,System.currentTimeMillis() - tiempo, idEntidad, "");
+                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_CERRAR_EXPEDIENTE, "Scheduler: Cerrar expedientes", peticion.toString(), new CustodyException("Error en la búsqueda de expedientes: " + result.getCodigoResultado() + "-" + result.getMsjResultado()), null,System.currentTimeMillis() - inicio.getTime(), idEntidad, "");
                 throw new Exception("Error en la búsqueda de expedientes: " + result.getCodigoResultado() + "-" + result.getMsjResultado());
             }
 
@@ -154,7 +152,7 @@ public class ArxiuBean implements ArxiuLocal{
 
             }
 
-            integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_CERRAR_EXPEDIENTE, "Scheduler: Cerrar expedientes", peticion.toString(),System.currentTimeMillis() - tiempo, idEntidad, "");
+            integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_CERRAR_EXPEDIENTE, "Scheduler: Cerrar expedientes", peticion.toString(),System.currentTimeMillis() - inicio.getTime(), idEntidad, "");
 
         }catch (I18NException e) {
             e.printStackTrace();

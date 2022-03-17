@@ -1,6 +1,8 @@
 package es.caib.regweb3.webapp.controller;
 
+import es.caib.regweb3.utils.RegwebUtils;
 import es.caib.regweb3.webapp.controller.registro.ScanRequestServlet;
+import es.caib.regweb3.webapp.utils.AnexoUtils;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import es.caib.regweb3.webapp.utils.RegWebMaxUploadSizeExceededException;
 import org.apache.commons.fileupload.FileUploadBase.SizeLimitExceededException;
@@ -140,23 +142,19 @@ public class ErrorController {
           // log.error(" YYYYYYYYYYYY  CAUSE: " + musee.getCause());
           if (musee.getCause() instanceof SizeLimitExceededException) {
             SizeLimitExceededException slee = (SizeLimitExceededException) musee.getCause();
-              /* Marilen recalculamos en Mb*/
-              Long ps = slee.getPermittedSize()/(1024*1024);
-              Long cs = slee.getActualSize()/(1024*1024);
-              maxUploadSize = String.valueOf(ps)+" Mb";
-              currentSize = String.valueOf(cs)+" Mb";
+            maxUploadSize = RegwebUtils.bytesToHuman(slee.getPermittedSize());
+            currentSize = RegwebUtils.bytesToHuman(slee.getActualSize());
+
           } else {
-            maxUploadSize = String.valueOf(musee.getMaxUploadSize());
+           // maxUploadSize = String.valueOf(musee.getMaxUploadSize());
+            maxUploadSize = RegwebUtils.bytesToHuman(musee.getMaxUploadSize());
           }
 
         } else {
-          SizeLimitExceededException slee = (SizeLimitExceededException) ex;
-            /* marilen recalculamos en Mb*/
-            Long ps = slee.getPermittedSize()/(1024*1024);
-            Long cs = slee.getActualSize()/(1024*1024);
-            maxUploadSize = String.valueOf(ps)+" Mb";
-            currentSize = String.valueOf(cs)+" Mb";
-          msgCode = "tamanyfitxerpujatsuperat";
+            SizeLimitExceededException slee = (SizeLimitExceededException) ex;
+            maxUploadSize = RegwebUtils.bytesToHuman(slee.getPermittedSize());
+            currentSize = RegwebUtils.bytesToHuman(slee.getActualSize());
+            msgCode = "tamanyfitxerpujatsuperat";
         }
 
         Mensaje.saveMessageError(request, I18NUtils.tradueix(msgCode, currentSize, maxUploadSize));

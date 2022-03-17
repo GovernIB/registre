@@ -67,6 +67,18 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
+    public Long findPendientesByTipo(Long tipo, Long idEntidad) throws Exception {
+
+        Query q = em.createQuery( "select count(cola.id) from Cola as cola where cola.tipo=:tipo and cola.usuarioEntidad.entidad.id=:idEntidad and cola.estado =:pendiente");
+        q.setParameter("tipo", tipo);
+        q.setParameter("idEntidad", idEntidad);
+        q.setParameter("pendiente", RegwebConstantes.COLA_ESTADO_PENDIENTE);
+
+        return (Long) q.getSingleResult();
+    }
+
+    @Override
     public Cola findByIdObjeto(Long idObjeto,Long idEntidad) throws Exception{
 
         Query q = em.createQuery( "select cola from Cola as cola where cola.idObjeto=:idObjeto and cola.usuarioEntidad.entidad.id=:idEntidad");
@@ -236,7 +248,20 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
     }
 
     @Override
-    public synchronized boolean enviarAColaDistribucion(RegistroEntrada re, UsuarioEntidad usuarioEntidad) throws Exception{
+    public void procesarElementoDistribucion(Cola elemento) throws Exception{
+
+        procesarElemento(elemento);
+
+        // Cambiar el estado al RegistroEntrada a DISTRIBIDO
+        Query q = em.createQuery("update RegistroEntrada set estado=:idEstado where id = :idRegistro");
+        q.setParameter("idEstado", RegwebConstantes.REGISTRO_DISTRIBUIDO);
+        q.setParameter("idRegistro", elemento.getIdObjeto());
+        q.executeUpdate();
+    }
+
+
+    @Override
+    public boolean enviarAColaDistribucion(RegistroEntrada re, UsuarioEntidad usuarioEntidad) throws Exception{
 
         try {
 
@@ -252,8 +277,8 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
 
             persist(cola);
 
-            log.info("RegistroEntrada: " + re.getNumeroRegistroFormateado() + " enviado a la Cola de Distribución");
             registroEntradaEjb.cambiarEstado(re.getId(),RegwebConstantes.REGISTRO_DISTRIBUYENDO);
+
             return true;
 
         } catch (Exception e) {
@@ -362,9 +387,12 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
     }
 
     @Override
-    public void purgarElementosProcesados(Long idEntidad, Integer meses) throws Exception{
+    public void purgarElementosProcesados(Long idEntidad) throws Exception{
+
+        Integer mesesPurgo = PropiedadGlobalUtil.getMesesPurgoProcesadosCola(idEntidad);
+
         //Obtenemos los elementos que fueron procesados hace meses
-        List<Cola> elementos = obtenerProcesados(idEntidad,meses);
+        List<Cola> elementos = obtenerProcesados(idEntidad, mesesPurgo);
 
         //Eliminamos los elementos de la cola
         for(Cola elemento: elementos){
@@ -382,7 +410,7 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
 
         q.setParameter("idEntidad", idEntidad);
         q.setParameter("error", RegwebConstantes.COLA_ESTADO_ERROR);
-        q.setMaxResults(7);
+        q.setMaxResults(5);
 
         return q.getResultList();
     }

@@ -22,22 +22,41 @@ import java.util.List;
 public interface SirEnvioLocal {
 
 
-    Integer aceptarRegistrosERTE(List<Long> registros, String destino, Oficina oficina,Long idLibro, UsuarioEntidad usuarioEntidad, Long idEntidad) throws Exception;
-
-    Integer copiarDocumentacionERTE(List<Long> registros, Long idEntidad) throws Exception;
-
     /**
-     * Envia un intercambio a la oficina destino
-     * @param tipoRegistro
-     * @param idRegistro
+     * Crear un intercambio SIR entrada, preparado par enviarse
+     * @param registroEntrada
      * @param oficinaActiva
      * @param usuario
      * @param codigoOficinaSir
      * @throws Exception
      * @throws I18NException
      */
-    OficioRemision enviarIntercambio(Long tipoRegistro, Long idRegistro,
-                                     Oficina oficinaActiva, UsuarioEntidad usuario, String codigoOficinaSir)
+    RegistroEntrada crearIntercambioEntrada(RegistroEntrada registroEntrada, Entidad entidad,Oficina oficinaActiva, UsuarioEntidad usuario, String codigoOficinaSir)
+            throws Exception, I18NException, I18NValidationException;
+
+    /**
+     * Crear un intercambio SIR salida, preparado par enviarse
+     * @param registroSalida
+     * @param oficinaActiva
+     * @param usuario
+     * @param codigoOficinaSir
+     * @throws Exception
+     * @throws I18NException
+     */
+    RegistroSalida crearIntercambioSalida(RegistroSalida registroSalida, Entidad entidad, Oficina oficinaActiva, UsuarioEntidad usuario, String codigoOficinaSir)
+            throws Exception, I18NException, I18NValidationException;
+
+    /**
+     * Envia un intercambio a la oficina destino
+     * @param tipoRegistro
+     * @param registro
+     * @param oficinaActiva
+     * @param usuario
+     * @param codigoOficinaSir
+     * @throws Exception
+     * @throws I18NException
+     */
+    OficioRemision enviarIntercambio(Long tipoRegistro, IRegistro registro, Entidad entidad, Oficina oficinaActiva, UsuarioEntidad usuario, String codigoOficinaSir)
             throws Exception, I18NException, I18NValidationException;
 
     /**
@@ -50,15 +69,15 @@ public interface SirEnvioLocal {
      * @param observaciones
      * @throws Exception
      */
-    void reenviarIntercambio(Long tipoRegistro, Long idRegistro, Oficina oficinaReenvio, Oficina oficinaActiva, UsuarioEntidad usuario, String observaciones) throws Exception, I18NException, I18NValidationException;
+    void reenviarIntercambio(Long tipoRegistro, Long idRegistro, Entidad entidad, Oficina oficinaReenvio, Oficina oficinaActiva, UsuarioEntidad usuario, String observaciones) throws Exception, I18NException, I18NValidationException;
 
     /**
      * Vuelve a enviar un intercambio que ya había sido enviado previamente
-     * @param idOficioRemision
+     * @param oficioRemision
      * @return
      * @throws Exception
      */
-    void reenviarIntercambio(Long idOficioRemision)throws Exception, I18NException;
+    void reenviarIntercambio(OficioRemision oficioRemision)throws Exception, I18NException;
 
     /**
      * Envía un mensaje ACK a partir de los datos de un RegistroSir
@@ -86,20 +105,35 @@ public interface SirEnvioLocal {
     Boolean reenviarMensaje(MensajeControl mensaje) throws Exception;
 
     /**
-     * Renintenta los envíos a SIR que pendientes de llegar a destino.
+     * Renintenta los envíos a SIR sin ACK.
      *
      * @param entidad
      * @throws Exception
      */
-    void reintentarEnviosSinConfirmacion(Entidad entidad) throws Exception;
+    void reintentarIntercambiosSinAck(Entidad entidad) throws Exception;
 
     /**
-     * Renintenta los envíos con ERROR a SIR que pendientes de llegar a destino.
+     * Reintenta los Reenvios/Rechazos sin ACK
+     * @param entidad
+     * @throws Exception
+     */
+    void reintentarReenviosRechazosSinAck(Entidad entidad) throws Exception;
+
+    /**
+     * Renintenta los intercambios con ERROR a SIR sin ACK
      *
      * @param entidad
      * @throws Exception
      */
-    void reintentarEnviosConError(Entidad entidad) throws Exception;
+    void reintentarIntercambiosConError(Entidad entidad) throws Exception;
+
+    /**
+     * Renintenta los Reenvios/Rechazos con ERROR a SIR sin ACK
+     *
+     * @param entidad
+     * @throws Exception
+     */
+    void reintentarReenviosRechazosConError(Entidad entidad) throws Exception;
 
     /**
      * @param registroSir
@@ -110,7 +144,7 @@ public interface SirEnvioLocal {
      * @param camposNTIs
      * @return
      */
-    RegistroEntrada aceptarRegistroSir(RegistroSir registroSir, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, List<CamposNTI> camposNTIs, Long idOrganismoDestino, Boolean distribuir) throws Exception, I18NException, I18NValidationException;
+    RegistroEntrada aceptarRegistroSir(RegistroSir registroSir, Entidad entidad, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, List<CamposNTI> camposNTIs, Long idOrganismoDestino, Boolean distribuir) throws Exception, I18NException, I18NValidationException;
 
 
     /**
@@ -137,6 +171,10 @@ public interface SirEnvioLocal {
      * @throws Exception
      */
     void rechazarRegistroSir(RegistroSir registroSir, Oficina oficinaActiva, Usuario usuario, String observaciones) throws Exception;
+
+    Integer aceptarRegistrosERTE(List<Long> registros, Entidad entidad, String destino, Oficina oficina,Long idLibro, UsuarioEntidad usuarioEntidad) throws Exception;
+
+    Integer copiarDocumentacionERTE(List<Long> registros, Long idEntidad) throws Exception;
 
 }
 

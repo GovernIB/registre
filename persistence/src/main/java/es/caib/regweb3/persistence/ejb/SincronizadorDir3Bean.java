@@ -76,7 +76,7 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
         Entidad entidad = entidadEjb.findByIdLigero(entidadId);
 
         // Obtenemos el Service de los WS de Unidades
-        Dir3CaibObtenerUnidadesWs unidadesService = Dir3CaibUtils.getObtenerUnidadesService(PropiedadGlobalUtil.getDir3CaibServer(), PropiedadGlobalUtil.getDir3CaibUsername(), PropiedadGlobalUtil.getDir3CaibPassword());
+        Dir3CaibObtenerUnidadesWs unidadesService = Dir3CaibUtils.getObtenerUnidadesService(PropiedadGlobalUtil.getDir3CaibServer(entidadId), PropiedadGlobalUtil.getDir3CaibUsername(entidadId), PropiedadGlobalUtil.getDir3CaibPassword(entidadId));
 
         // Obtenemos el arbol de Unidades
         List<UnidadTF> arbol = unidadesService.obtenerArbolUnidades(entidad.getCodigoDir3(), fechaActualizacion, fechaSincronizacion);
@@ -121,7 +121,7 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
         if (arbol.size() > 0 || fechaActualizacion != null) {// obtenemos las oficinas en caso de actualizacion o en caso de sincro sin han venido organismos.
 
             // Obtenemos el Service de los WS de Oficinas
-            Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService(PropiedadGlobalUtil.getDir3CaibServer(), PropiedadGlobalUtil.getDir3CaibUsername(), PropiedadGlobalUtil.getDir3CaibPassword());
+            Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService(PropiedadGlobalUtil.getDir3CaibServer(entidadId), PropiedadGlobalUtil.getDir3CaibUsername(entidadId), PropiedadGlobalUtil.getDir3CaibPassword(entidadId));
 
             // Obtenemos todas las oficinas de la entidad.
             List<OficinaTF> oficinasTF = oficinasService.obtenerArbolOficinas(entidad.getCodigoDir3(), fechaActualizacion, fechaSincronizacion);

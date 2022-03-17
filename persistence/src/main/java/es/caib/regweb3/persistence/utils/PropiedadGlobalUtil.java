@@ -377,6 +377,43 @@ public class PropiedadGlobalUtil {
     }
 
     /**
+     * Retorna el valor de la propiedad Dir3CaibServer de la entidad indicada.
+     * Propiedad: es.caib.regweb3.dir3caib.server
+     * @param idEntidad
+     * @return
+     */
+    public static String getDir3CaibServer(Long idEntidad) {
+        final String partialPropertyName = "dir3caib.server";
+
+        return getStringByEntidad(idEntidad, partialPropertyName);
+
+    }
+
+    /**
+     * Retorna el valor de la propiedad Dir3CaibUsername de la entidad indicada.
+     * Propiedad: es.caib.regweb3.dir3caib.username
+     * @param idEntidad
+     * @return
+     */
+    public static String getDir3CaibUsername(Long idEntidad) {
+        final String partialPropertyName = "dir3caib.username";
+
+        return getStringByEntidad(idEntidad, partialPropertyName);
+    }
+
+    /**
+     * Retorna el valor de la propiedad Dir3CaibPassword de la entidad indicada.
+     * Propiedad: es.caib.regweb3.dir3caib.password
+     * @param idEntidad
+     * @return
+     */
+    public static String getDir3CaibPassword(Long idEntidad) {
+        final String partialPropertyName = "dir3caib.password";
+
+        return getStringByEntidad(idEntidad, partialPropertyName);
+    }
+
+    /**
      * Retorna el valor de la propiedad SirServerBase de la entidad indicada.
      * Propiedad: es.caib.regweb3.sir.serverbase
      * @param idEntidad
@@ -397,19 +434,6 @@ public class PropiedadGlobalUtil {
         final String partialPropertyName = "oficioSalida.fecha";
 
         return getString(partialPropertyName);
-    }
-
-    /**
-     * Retorna el valor de la propiedad CronExpression para los envios Sir pendientes.
-     * Si no está definida devuelve la expresión por defecto
-     * Propiedad: es.caib.regweb3.sir.cronExpression.enviosSirPendientes
-     * @return
-     */
-    public static String getEnviosSirPendientesCronExpression() {
-        final String partialPropertyName = "sir.cronExpression.enviosSirPendientes";
-        String valor = getString( partialPropertyName);
-
-        return valor != null ? valor : RegwebConstantes.CRON_ENVIOS_SIR_PENDIENTES;
     }
     
     /**
@@ -504,8 +528,14 @@ public class PropiedadGlobalUtil {
      */
     public static Integer getMesesPurgoAnexos(Long idEntidad) {
         final String partialPropertyName = "anexos.purgo.meses";
-        return  getIntegerByEntidad(idEntidad,partialPropertyName);
+        Integer valor = getIntegerByEntidad(idEntidad,partialPropertyName);
 
+        // Valor global si no existeix el de per entitat
+        if (valor == null) {
+            valor = 3;
+        }
+
+        return valor;
     }
 
 
@@ -516,8 +546,14 @@ public class PropiedadGlobalUtil {
      */
     public static Integer getNumElementosPurgoAnexos(Long idEntidad) {
         final String partialPropertyName = "anexos.purgo.numelementos";
-        return  getIntegerByEntidad(idEntidad,partialPropertyName);
+        Integer valor =  getIntegerByEntidad(idEntidad,partialPropertyName);
 
+        // Valor global si no existeix el de per entitat
+        if (valor == null) {
+            valor = 100;
+        }
+
+        return valor;
     }
 
 
@@ -529,8 +565,12 @@ public class PropiedadGlobalUtil {
      */
     public static Integer getMesesPurgoProcesadosCola(Long idEntidad) {
         final String partialPropertyName = "cola.procesados.purgo.meses";
-        return  getIntegerByEntidad(idEntidad,partialPropertyName);
+        Integer valor =  getIntegerByEntidad(idEntidad,partialPropertyName);
 
+        if (valor == null) {
+            valor = 2;
+        }
+        return valor;
     }
 
     /**
@@ -622,8 +662,19 @@ public class PropiedadGlobalUtil {
      * @param idEntidad
      * @return
      */
-    public static boolean pararDistribucion(Long idEntidad){
+    public static boolean pararColaDistribucion(Long idEntidad){
         final String partialPropertyName = "cola.parar.distribucion";
+        return getBooleanByEntidad(idEntidad, partialPropertyName);
+    }
+
+    /**
+     * Propiedad que para la cola de Cutodia
+     * Propiedad: es.caib.regweb3.parar.cola.custodia
+     * @param idEntidad
+     * @return
+     */
+    public static boolean pararColaCustodia(Long idEntidad){
+        final String partialPropertyName = "cola.parar.custodia";
         return getBooleanByEntidad(idEntidad, partialPropertyName);
     }
 

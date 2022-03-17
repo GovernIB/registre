@@ -38,9 +38,7 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      * @return
      * @throws Exception
      */
-    RegistroEntrada registrarEntrada(RegistroEntrada registroEntrada,
-                                     UsuarioEntidad usuarioEntidad, List<Interesado> interesados, List<AnexoFull> anexosFull, Boolean validarAnexos)
-            throws Exception, I18NException, I18NValidationException;
+    RegistroEntrada registrarEntrada(RegistroEntrada registroEntrada, Entidad entidad, UsuarioEntidad usuarioEntidad, List<Interesado> interesados, List<AnexoFull> anexosFull, Boolean validarAnexos) throws Exception, I18NException, I18NValidationException;
 
     /**
      * Actualiza un Registro de entrada
@@ -50,7 +48,7 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      * @throws Exception
      * @throws I18NException
      */
-    RegistroEntrada actualizar(RegistroEntrada antiguo, RegistroEntrada registroEntrada, UsuarioEntidad usuarioEntidad) throws Exception, I18NException;
+    RegistroEntrada actualizar(RegistroEntrada antiguo, RegistroEntrada registroEntrada, Entidad entidad, UsuarioEntidad usuarioEntidad) throws Exception, I18NException;
 
     /**
      * Comprueba si un RegistroEntrada se considera un OficioRemision interno o no
@@ -96,19 +94,21 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
     /**
      * Comprueba si un RegistroEntrada se considera un OficioRemision SIR o no
      * @param idRegistro
+     * @param idEntidad
      * @return
      * @throws Exception
      */
-    List<OficinaTF> isOficioRemisionSir(Long idRegistro) throws Exception;
+    List<OficinaTF> isOficioRemisionSir(Long idRegistro, Long idEntidad) throws Exception;
 
 
     /**
      * Comprueba si un RegistroEntrada se considera un OficioRemision SIR o no en un entorno multientidad
      * @param idRegistro
+     * @param idEntidad
      * @return
      * @throws Exception
      */
-    List<OficinaTF> isOficioRemisionSirMultiEntidad(Long idRegistro) throws Exception;
+    List<OficinaTF> isOficioRemisionSirMultiEntidad(Long idRegistro, Long idEntidad) throws Exception;
 
 
     /**
@@ -184,10 +184,10 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      * @param usuarioEntidad
      * @throws Exception
      */
-    void visarRegistroEntrada(RegistroEntrada registroEntrada, UsuarioEntidad usuarioEntidad) throws Exception;
+    void visarRegistroEntrada(RegistroEntrada registroEntrada, Entidad entidad, UsuarioEntidad usuarioEntidad) throws Exception;
 
     /**
-     * Tramita un RegistroEntrada, cambiandole el estado a tramitado.
+     * Tramita un RegistroEntrada, creando el HistoricoEstado y Trazabilidad
      *
      * @param registroEntrada
      * @throws Exception
@@ -212,7 +212,7 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      * @return
      * @throws Exception
      */
-    RegistroEntrada rectificar(RegistroEntrada registroEntrada, UsuarioEntidad usuarioEntidad) throws Exception, I18NException;
+    RegistroEntrada rectificar(RegistroEntrada registroEntrada, Entidad entidad, UsuarioEntidad usuarioEntidad) throws Exception, I18NException;
 
     /**
      * Actualiza el Destino extinguido por el que le sustituye

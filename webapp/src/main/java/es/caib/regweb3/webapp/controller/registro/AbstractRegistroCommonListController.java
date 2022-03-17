@@ -76,31 +76,12 @@ public abstract class AbstractRegistroCommonListController extends BaseControlle
     }
 
     /**
-     * Para la busqueda de organismos en interesados
-     * @param request
-     * @return
-     * @throws Exception
-     */
-    @ModelAttribute("comunidad")
-    public CatComunidadAutonoma comunidad(HttpServletRequest request) throws Exception {
-        Entidad entidad = getEntidadActiva(request);
-        Organismo organismoRaiz = organismoEjb.findByCodigoEntidadLigero(entidad.getCodigoDir3(), entidad.getId());
-        if ((organismoRaiz != null) && organismoRaiz.getCodAmbComunidad() != null) {
-            return organismoRaiz.getCodAmbComunidad();
-        }
-        return new CatComunidadAutonoma();
-    }
-
-    /**
      *  Inicializa los atributos para escanear anexos
      * @param entidad
      * @param model
-     * @param request
-     * @param registroID
      * @throws Exception
      */
-    public void initScanAnexos(Entidad entidad, Model model, HttpServletRequest request,
-        Long registroID) throws I18NException {
+    public void initScanAnexos(Entidad entidad, Model model) throws I18NException {
 
         boolean teScan = scanWebModuleEjb.entitatTeScan(entidad.getId());
         model.addAttribute("teScan", teScan);
@@ -168,8 +149,5 @@ public abstract class AbstractRegistroCommonListController extends BaseControlle
 
         return output;
     }
-  
 
-  
-  
 }

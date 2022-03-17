@@ -104,7 +104,7 @@ public class MensajeControl implements Serializable {
         this.id = id;
     }
 
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "ENTIDAD")
     @ForeignKey(name = "RWE_MC_ENTIDAD_FK")
     public Entidad getEntidad() {

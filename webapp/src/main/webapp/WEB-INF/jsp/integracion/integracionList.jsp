@@ -218,7 +218,7 @@
                         <div class="col-xs-2 pull-left etiqueta_regweb control-label">
                             <label><spring:message code="integracion.descripcion"/>:</label>
                         </div>
-                        <div class="col-xs-10" id="descripcion"></div>
+                        <div class="col-xs-10" id="descripcionIntegracion"></div>
                     </div>
 
                     <div class="form-group col-xs-12">
@@ -289,6 +289,7 @@
     tradsIntegracion['integracion.tipo.4'] = "<spring:message code='integracion.tipo.4' javaScriptEscape='true' />";
     tradsIntegracion['integracion.tipo.5'] = "<spring:message code='integracion.tipo.5' javaScriptEscape='true' />";
     tradsIntegracion['integracion.tipo.6'] = "<spring:message code='integracion.tipo.6' javaScriptEscape='true' />";
+    tradsIntegracion['integracion.tipo.7'] = "<spring:message code='integracion.tipo.7' javaScriptEscape='true' />";
 
 </script>
 

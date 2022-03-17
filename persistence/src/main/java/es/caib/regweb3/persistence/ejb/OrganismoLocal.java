@@ -157,8 +157,31 @@ public interface OrganismoLocal extends BaseEjb<Organismo, Long> {
      */
     List<Organismo> findByEntidadByEstado(Long entidad, String estado) throws Exception;
 
-    /** PROVES MULTIENTITAT */
-    Organismo findByCodigoMultientidad(String codigo) throws Exception;
+    /**
+     * Obtiene un Organismo a partir de su código Dir3, teniendo en cuenta que se trata de una instalación multientidad
+     * @param codigo
+     * @return
+     * @throws Exception
+     */
+    Organismo findByCodigoMultiEntidad(String codigo) throws Exception;
+
+
+    /**
+     * Método que retorna todos los organismos de una entidad menos aquellos que les da soporte otra entidad en un entorno multientidad
+     * @param idEntidad
+     * @return
+     * @throws Exception
+     */
+    List<Organismo> getAllByEntidadMultiEntidad(Long idEntidad) throws Exception;
+
+    /**
+     * Obtiene un organismo distinguiendo que mètodo usar en función de si la instancia es multientidad o no.
+     * @param codigo
+     * @param idEntidad
+     * @return
+     * @throws Exception
+     */
+    Organismo findByCodigoByEntidadMultiEntidad(String codigo, Long idEntidad) throws Exception;
 
     /**
      * Comprueba si el Organismo indicado es gestionado por REGWEB3
@@ -319,10 +342,11 @@ public interface OrganismoLocal extends BaseEjb<Organismo, Long> {
      * Obtiene la UnidadTF de dir3caib a partir del código indicado
      *
      * @param codigo
+     * @param idEntidad
      * @return
      * @throws Exception
      */
-    UnidadTF obtenerDestinoExterno(String codigo) throws Exception;
+    UnidadTF obtenerDestinoExterno(String codigo, Long idEntidad) throws Exception;
 
 
     /**
@@ -332,7 +356,7 @@ public interface OrganismoLocal extends BaseEjb<Organismo, Long> {
      * @return
      * @throws Exception
      */
-    List<UnidadTF> obtenerSustitutosExternosSIR(String codigo) throws Exception;
+    List<UnidadTF> obtenerSustitutosExternosSIR(String codigo, Long idEntidad) throws Exception;
 
     /**
      * Dado un código dir3 obtiene todos sus sustitutos.
@@ -341,7 +365,7 @@ public interface OrganismoLocal extends BaseEjb<Organismo, Long> {
      * @return
      * @throws Exception
      */
-    List<UnidadTF> obtenerSustitutosExternos(String codigo) throws Exception;
+    List<UnidadTF> obtenerSustitutosExternos(String codigo, Long idEntidad) throws Exception;
 
 
 }

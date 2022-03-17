@@ -118,13 +118,16 @@
                             <%--OficioRemision SIR--%>
                             <c:if test="${oficioRemision.sir == true}">
                                 <%--Código y descripción error--%>
-                                <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_SIR_ENVIADO_ERROR ||
-                                          oficioRemision.estado == RegwebConstantes.OFICIO_SIR_REENVIADO_ERROR}">
+                                <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_SIR_ENVIADO_ERROR || oficioRemision.estado == RegwebConstantes.OFICIO_SIR_REENVIADO_ERROR}">
                                     <dt><i class="fa fa-bug"></i> <spring:message code="registroSir.codigoError"/>:</dt>
                                     <dd> ${oficioRemision.codigoError}</dd>
                                     <dt><i class="fa fa-comment"></i> <spring:message code="registroSir.descripcionError"/>:</dt>
                                     <dd> ${oficioRemision.descripcionError}</dd>
-
+                                </c:if>
+                                <%--Motivo rechazo--%>
+                                <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_SIR_RECHAZADO && not empty oficioRemision.decodificacionTipoAnotacion}">
+                                    <dt><i class="fa fa-file-text-o"></i> <spring:message code="registroSir.motivo"/>:</dt>
+                                    <dd> ${oficioRemision.decodificacionTipoAnotacion}</dd>
                                 </c:if>
                                 <%--Reintentos--%>
                                 <c:if test="${oficioRemision.numeroReintentos > 0 && oficioRemision.numeroReintentos < maxReintentos}">

@@ -17,8 +17,8 @@ import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
 import java.text.SimpleDateFormat;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 
 /**
@@ -132,13 +132,13 @@ public class JustificanteMockPlugin extends AbstractPluginProperties implements 
 
 
     @Override
-    public byte[] generarJustificanteEntrada(RegistroEntrada registroEntrada, String url, String specialValue, String csv, String idioma) throws Exception{
+    public byte[] generarJustificanteEntrada(RegistroEntrada registroEntrada, String url, String specialValue, String csv, String idioma, Boolean sir) throws Exception{
 
         // Define idioma para el justificante
         Locale locale = new Locale(idioma);
 
         //Inicializamos las propiedades comunes
-        inicializarPropiedades(locale, registroEntrada.getOficina().getOrganismoResponsable().getEntidad().getSir());
+        inicializarPropiedades(locale, sir);
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream(4096);
 
@@ -239,13 +239,13 @@ public class JustificanteMockPlugin extends AbstractPluginProperties implements 
 
 
     @Override
-   public byte[] generarJustificanteSalida(RegistroSalida registroSalida, String url, String specialValue, String csv, String idioma) throws Exception{
+   public byte[] generarJustificanteSalida(RegistroSalida registroSalida, String url, String specialValue, String csv, String idioma, Boolean sir) throws Exception{
 
         // Define idioma para el justificante
         Locale locale = new Locale(idioma);
 
         //Inicializamos las propiedades comunes
-        inicializarPropiedades(locale, registroSalida.getOficina().getOrganismoResponsable().getEntidad().getSir());
+        inicializarPropiedades(locale, sir);
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream(4096);
 

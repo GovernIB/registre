@@ -49,14 +49,12 @@ public class CustodiaBean implements CustodiaLocal {
     @Autowired ArxiuCaibUtils arxiuCaibUtils;
 
 
-
     @Override
     public Boolean custodiarJustificanteEnCola(Cola elemento, Long idEntidad, Long tipoIntegracion) throws Exception {
 
         // Integración
         StringBuilder peticion = new StringBuilder();
         Date inicio = new Date();
-        long tiempo = System.currentTimeMillis();
         String descripcion = "Custodiar Justificante en Arxiu-Caib";
         String hora = "<b>" + new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(inicio) + "</b>&nbsp;&nbsp;&nbsp;";
 
@@ -78,14 +76,14 @@ public class CustodiaBean implements CustodiaLocal {
             colaEjb.procesarElemento(elemento);
 
             // Integración
-            peticion.append("idAnexo: ").append(anexo.getId()).append(System.getProperty("line.separator"));
             peticion.append("expediente creado: ").append(anexo.getExpedienteID()).append(System.getProperty("line.separator"));
             peticion.append("documento creado: ").append(anexo.getCustodiaID()).append(System.getProperty("line.separator"));
             if(StringUtils.isNotEmpty(anexo.getCsv())){
                 peticion.append("csv: ").append(anexo.getCsv()).append(System.getProperty("line.separator"));
             }
+            peticion.append("idAnexo: ").append(anexo.getId()).append(System.getProperty("line.separator"));
 
-            integracionEjb.addIntegracionOk(inicio, tipoIntegracion, descripcion, peticion.toString(), System.currentTimeMillis() - tiempo, idEntidad, elemento.getDescripcionObjeto());
+            integracionEjb.addIntegracionOk(inicio, tipoIntegracion, descripcion, peticion.toString(), System.currentTimeMillis() - inicio.getTime(), idEntidad, elemento.getDescripcionObjeto());
 
             return true;
 
@@ -95,7 +93,7 @@ public class CustodiaBean implements CustodiaLocal {
             error = hora + e.getMessage();
             colaEjb.actualizarElementoCola(elemento, idEntidad, error);
             // Añadimos el error a la integración
-            integracionEjb.addIntegracionError(tipoIntegracion, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - tiempo, idEntidad, elemento.getDescripcionObjeto());
+            integracionEjb.addIntegracionError(tipoIntegracion, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - inicio.getTime(), idEntidad, elemento.getDescripcionObjeto());
         }
 
         return false;
@@ -109,7 +107,7 @@ public class CustodiaBean implements CustodiaLocal {
         List<Cola> elementos = colaEjb.findByTipoEntidad(RegwebConstantes.COLA_CUSTODIA, idEntidad, PropiedadGlobalUtil.getElementosColaCustodia(idEntidad));
 
         log.info("");
-        log.info("Hay " + elementos.size() + " elementos que se van a custodiar en esta iteracion");
+        log.info("Cola de CUSTODIA: Hay " + elementos.size() + " elementos que se van a custodiar en esta iteracion");
 
         for (Cola elemento : elementos) {
 
@@ -137,6 +135,11 @@ public class CustodiaBean implements CustodiaLocal {
             registro = registroSalidaEjb.getConAnexosFullLigero(elemento.getIdObjeto());
         }
 
+        // Volvemos a comprobar que el Justificante no esté custodiado (A veces se cuela en la Cola (doble click usuario), el mismo registro dos veces)
+        if(registro.getRegistroDetalle().getTieneJustificanteCustodiado()){
+            return anexoEjb.getAnexoFull(registro.getRegistroDetalle().getJustificante().getId(), idEntidad).getAnexo();
+        }
+
         // Obtenemos el justificante a custodiar
         AnexoFull justificante = anexoEjb.getAnexoFull(registro.getRegistroDetalle().getJustificante().getId(), idEntidad);
         custodyIdFileSystem = justificante.getAnexo().getCustodiaID();
@@ -146,7 +149,7 @@ public class CustodiaBean implements CustodiaLocal {
 
         // Custodiamos el Justificante en Arxiu-Caib
         Firma justificanteFirmado = justificante.signatureCustodytoFirma();
-        JustificanteArxiu justificanteArxiuCaib = arxiuCaibUtils.crearJustificanteArxiuCaib(registro, elemento.getTipoRegistro(), justificanteFirmado);
+        JustificanteArxiu justificanteArxiu = arxiuCaibUtils.crearJustificanteArxiuCaib(registro, elemento.getTipoRegistro(), justificanteFirmado);
 
         try{
             // Eliminamos el Justificantre en FileSystem
@@ -158,83 +161,13 @@ public class CustodiaBean implements CustodiaLocal {
 
         // Actualizamos el ExpedienteId, CustodyId y Csv al anexo que vamos a crear
         justificante.getAnexo().setPerfilCustodia(RegwebConstantes.PERFIL_CUSTODIA_ARXIU);
-        justificante.getAnexo().setExpedienteID(justificanteArxiuCaib.getExpediente().getIdentificador());
-        justificante.getAnexo().setCustodiaID(justificanteArxiuCaib.getDocumento().getIdentificador());
-        justificante.getAnexo().setCsv(justificanteArxiuCaib.getDocumento().getDocumentMetadades().getCsv());
+        justificante.getAnexo().setExpedienteID(justificanteArxiu.getExpediente().getIdentificador());
+        justificante.getAnexo().setCustodiaID(justificanteArxiu.getDocumento().getIdentificador());
+        justificante.getAnexo().setCsv(justificanteArxiu.getDocumento().getDocumentMetadades().getCsv());
         justificante.getAnexo().setCustodiado(true);
 
-        return anexoEjb.merge(justificante.getAnexo());
+        anexoEjb.custodiarJustificanteArxiu(justificanteArxiu.getExpediente().getIdentificador(), justificanteArxiu.getDocumento().getIdentificador(), justificanteArxiu.getDocumento().getDocumentMetadades().getCsv(), justificante.getAnexo().getId());
+
+        return justificante.getAnexo();
     }
-
-    /**
-     *
-     * @param elemento
-     * @param idEntidad
-     * @return
-     * @throws Exception
-     * @throws I18NException
-     */
-    /*private Anexo custodiarAnexoArxiuFileSystem(Cola elemento, Long idEntidad) throws Exception, I18NException {
-
-        log.info("Procedemos a custodiar el anexo de ArxiuFileSystem en ArxiuCaib");
-
-        // Obtenemos el registro de entrada que se debe distribuir
-        Anexo anexo = anexoEjb.findById(elemento.getIdObjeto());
-
-        // Cargamos los plugins de Arxiu
-        arxiuCaibUtils.cargarPlugin(idEntidad, true);
-
-        // Obtenemos El Expediente y El Documento del justificante almacenado en Filesystem
-        Expedient expedientFS = arxiuCaibUtils.getExpediente(anexo.getExpedienteID(), null);
-        Document documentFS = arxiuCaibUtils.getDocumento(anexo.getCustodiaID(), null, true, true);
-
-        log.info("Obtenemos el expediente anexo de filesystem: " + expedientFS.getIdentificador());
-        log.info("Obtenemos el documento anexo de filesystem: " + documentFS.getIdentificador());
-
-
-        // Custodiamos el Justificante en Arxiu-Caib
-        arxiuCaibUtils.cargarPlugin(idEntidad, false);
-        JustificanteArxiu justificanteArxiuCaib = arxiuCaibUtils.custodiarJustificante(anexo, expedientFS, documentFS);
-        log.info("");
-        log.info("");
-        log.info("Expediente creado en Arxiu: " + justificanteArxiuCaib.getExpediente().getIdentificador());
-        log.info("Documento creado en Arxiu: " + justificanteArxiuCaib.getDocumento().getIdentificador());
-
-        // Actualizamos el ExpedienteId, CustodyId y Csv al anexo que vamos a crear
-        anexo.setFileSystem(false);
-        anexo.setExpedienteID(justificanteArxiuCaib.getExpediente().getIdentificador());
-        anexo.setCustodiaID(justificanteArxiuCaib.getDocumento().getIdentificador());
-        if(justificanteArxiuCaib.getDocumento().getDocumentMetadades() != null){
-            anexo.setCsv(justificanteArxiuCaib.getDocumento().getDocumentMetadades().getCsv());
-        }
-
-        anexoEjb.merge(anexo);
-
-        // Eliminamos el Expediente y Documento de FileSystem
-        arxiuCaibUtils.cargarPlugin(idEntidad, true);
-
-        int reintentos = 5;
-        boolean result = false;
-        do{
-            --reintentos;
-
-            try{
-                arxiuCaibUtils.eliminarJustificanteFS(expedientFS.getIdentificador(), documentFS.getIdentificador());
-                result = true;
-            }catch (ArxiuException e){
-                e.printStackTrace();
-                log.info("Error al eliminarJustificanteFS, reintentaremos la operacion [(" + reintentos + ")] veces mas: " +  e.getMessage());
-            }
-
-            if(result){ // si ha ido bien, salimos del while
-                break;
-            }
-
-            Thread.sleep(300);
-        }while (reintentos > 0);
-
-        return anexo;
-
-    }*/
-
 }

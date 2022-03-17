@@ -1,6 +1,7 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.Contador;
+import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.model.Libro;
 import org.apache.log4j.Logger;
 import org.jboss.ejb3.annotation.SecurityDomain;
@@ -264,20 +265,43 @@ public class LibroBean extends BaseEjbJPA<Libro, Long> implements LibroLocal{
     }
 
     @Override
-    public Integer eliminarByEntidad(Long idEntidad) throws Exception{
+    public Integer eliminarByEntidad(Entidad entidad) throws Exception{
 
-        List<?> libros = em.createQuery("Select distinct(o.id) from Libro as o where o.organismo.entidad.id =:idEntidad").setParameter("idEntidad",idEntidad).getResultList();
+        List<?> libros = em.createQuery("Select distinct(o.id) from Libro as o where o.organismo.entidad.id =:idEntidad").setParameter("idEntidad", entidad.getId()).getResultList();
+        List<Long> contadores = new ArrayList<>();
 
         for (Object idLibro : libros) {
             Long id = (Long) idLibro;
-            Libro libro = findById(id);
-            contadorEjb.remove(contadorEjb.findById(libro.getContadorEntrada().getId()));
-            contadorEjb.remove(contadorEjb.findById(libro.getContadorSalida().getId()));
-            contadorEjb.remove(contadorEjb.findById(libro.getContadorOficioRemision().getId()));
 
-            em.createQuery("delete from Libro where id = :id ").setParameter("id", id).executeUpdate();
+            Libro libro = findById(id);
+
+            if(!libro.getId().equals(entidad.getLibro().getId())){
+
+                if (libro.getContadorEntrada() != null) {
+                    contadores.add(libro.getContadorEntrada().getId());
+                }
+                if (libro.getContadorSalida() != null) {
+                    contadores.add(libro.getContadorSalida().getId());
+                }
+                if (libro.getContadorOficioRemision() != null) {
+                    contadores.add(libro.getContadorOficioRemision().getId());
+                }
+                if (libro.getContadorSir() != null) {
+                    contadores.add(libro.getContadorSir().getId());
+                }
+
+                em.createQuery("delete from Libro where id = :id ").setParameter("id", id).executeUpdate();
+            }else{
+                em.createQuery("update from Libro set organismo = null where id = :id ").setParameter("id", id).executeUpdate();
+
+            }
         }
 
+        // Eliminamos los contadores
+        for(Long idContador:contadores){
+            em.createQuery("delete from Contador where id = :id ").setParameter("id", idContador).executeUpdate();
+
+        }
 
         return libros.size();
     }

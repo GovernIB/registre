@@ -31,32 +31,30 @@ parent.closeAndReload();
 <%-- Formulario que contiene el resto de campos del anexo. --%>
 <form:form id="anexoForm" action="${pageContext.request.contextPath}/anexoScan/transforma" modelAttribute="anexoForm" method="POST"  enctype="multipart/form-data">
 
-            <form:hidden path="anexo.id" />
-            <form:hidden path="anexo.registroDetalle.id" />
-            <form:hidden path="anexo.custodiaID" />
-            <form:hidden path="anexo.fechaCaptura" />
+    <form:hidden path="anexo.id" />
+    <form:hidden path="idRegistroDetalle" />
+    <form:hidden path="anexo.custodiaID" />
+    <form:hidden path="anexo.fechaCaptura" />
 
-            <form:hidden path="registroID" />
-            <form:hidden path="tipoRegistro" />
-            <form:hidden path="oficioRemisionSir" />
+    <form:hidden path="registroID" />
+    <form:hidden path="tipoRegistro" />
+    <form:hidden path="oficioRemisionSir" />
 
-            <div class="clearfix"></div>
-               
-            <c:if test="${teScan}">
-                <div class="col-xs-12">
-<%--                    <div class="col-xs-11">--%>
-                        <div class="tab-pane" id="scan">
-                            <iframe src="${urlToPluginWebPage}" id="myiframe" scrolling="yes" class="iframeScan">
-                                <div>NO IFRAME</div>
-                            </iframe>
-                        </div>
-<%--                    </div>--%>
-                </div>
-            </c:if>
-                    
-            <div class="hide col-xs-12 text-center centrat" id="reload">
-                <img src="<c:url value="/img/712.GIF"/>" width="20" height="20"/>
+    <div class="clearfix"></div>
+
+    <c:if test="${teScan}">
+        <div class="col-xs-12">
+            <div class="tab-pane" id="scan">
+                <iframe src="${urlToPluginWebPage}" id="myiframe" scrolling="yes" class="iframeScan">
+                    <div>NO IFRAME</div>
+                </iframe>
             </div>
+        </div>
+    </c:if>
+
+    <div class="hide col-xs-12 text-center centrat" id="reload">
+        <img src="<c:url value="/img/712.GIF"/>" width="20" height="20"/>
+    </div>
 
 </form:form>
 

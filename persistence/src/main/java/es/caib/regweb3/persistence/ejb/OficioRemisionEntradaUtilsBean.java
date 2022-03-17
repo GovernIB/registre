@@ -5,12 +5,10 @@ import es.caib.dir3caib.ws.api.oficina.Dir3CaibObtenerOficinasWs;
 import es.caib.dir3caib.ws.api.oficina.OficinaTF;
 import es.caib.dir3caib.ws.api.unidad.UnidadTF;
 import es.caib.regweb3.model.*;
+import es.caib.regweb3.model.sir.TipoAnotacion;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.model.utils.OficioPendienteLlegada;
-import es.caib.regweb3.persistence.utils.Oficio;
-import es.caib.regweb3.persistence.utils.OficiosRemisionOrganismo;
-import es.caib.regweb3.persistence.utils.Paginacion;
-import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
+import es.caib.regweb3.persistence.utils.*;
 import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.Dir3CaibUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
@@ -197,7 +195,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
             oficios.setExterno(true);
 
             // Obtenemos el Organismo externo de Dir3Caib
-            UnidadTF unidadTF = organismoEjb.obtenerDestinoExterno(codigoOrganismo);
+            UnidadTF unidadTF = organismoEjb.obtenerDestinoExterno(codigoOrganismo, entidadActiva.getId());
 
             if (unidadTF != null) {
 
@@ -218,7 +216,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
                         oficios.setVigente(false);
 
                         //Obtenemos los sustitutos de dir3caib del organismo externo indicado
-                        List<UnidadTF> sustitutosExternos = organismoEjb.obtenerSustitutosExternos(organismoExterno.getCodigo());
+                        List<UnidadTF> sustitutosExternos = organismoEjb.obtenerSustitutosExternos(organismoExterno.getCodigo(), entidadActiva.getId());
 
                         //Convertimos los sustitutos a organismos de regweb3
                         List<Organismo> sustitutos = new ArrayList<Organismo>();
@@ -242,7 +240,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
                         oficios.setVigente(true);
 
                         //Obtenemos de dir3caib las oficinas SIR del organismo externo
-                        Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService(PropiedadGlobalUtil.getDir3CaibServer(), PropiedadGlobalUtil.getDir3CaibUsername(), PropiedadGlobalUtil.getDir3CaibPassword());
+                        Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService(PropiedadGlobalUtil.getDir3CaibServer(entidadActiva.getId()), PropiedadGlobalUtil.getDir3CaibUsername(entidadActiva.getId()), PropiedadGlobalUtil.getDir3CaibPassword(entidadActiva.getId()));
                         List<OficinaTF> oficinasSIR = oficinasService.obtenerOficinasSIRUnidad(organismoExterno.getCodigo());
                         if (oficinasSIR.size() > 0) {
                             oficios.setSir(true);
@@ -261,10 +259,10 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
                         oficios.setVigente(false);
 
                         // Obtenemos los sustitutos de dir3caib
-                        List<UnidadTF> sustitutosExternos = organismoEjb.obtenerSustitutosExternosSIR(organismoExterno.getCodigo());
+                        List<UnidadTF> sustitutosExternos = organismoEjb.obtenerSustitutosExternosSIR(organismoExterno.getCodigo(), entidadActiva.getId());
                         //Si solo hay un sustituto, se obtienen sus oficinas SIR y se mandan.
                         if (sustitutosExternos.size() == 1) {
-                            Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService(PropiedadGlobalUtil.getDir3CaibServer(), PropiedadGlobalUtil.getDir3CaibUsername(), PropiedadGlobalUtil.getDir3CaibPassword());
+                            Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService(PropiedadGlobalUtil.getDir3CaibServer(entidadActiva.getId()), PropiedadGlobalUtil.getDir3CaibUsername(entidadActiva.getId()), PropiedadGlobalUtil.getDir3CaibPassword(entidadActiva.getId()));
                             List<OficinaTF> oficinasSIR = oficinasService.obtenerOficinasSIRUnidad(sustitutosExternos.get(0).getCodigo());
                             oficios.setOficinasSIR(oficinasSIR);
                         }
@@ -456,8 +454,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
      * @throws Exception
      */
     @Override
-    public OficioRemision crearOficioRemisionInterno(List<RegistroEntrada> registrosEntrada,
-                                                     Oficina oficinaActiva, UsuarioEntidad usuarioEntidad, Long idOrganismo, Long idLibro)
+    public OficioRemision crearOficioRemisionInterno(List<RegistroEntrada> registrosEntrada, Entidad entidad, Oficina oficinaActiva, UsuarioEntidad usuarioEntidad, Long idOrganismo, Long idLibro)
             throws Exception, I18NException, I18NValidationException {
 
         OficioRemision oficioRemision = new OficioRemision();
@@ -471,9 +468,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
         oficioRemision.setLibro(new Libro(idLibro));
         oficioRemision.setOrganismoDestinatario(new Organismo(idOrganismo));
 
-        synchronized (this) {
-            oficioRemision = oficioRemisionEjb.registrarOficioRemision(oficioRemision, RegwebConstantes.REGISTRO_OFICIO_INTERNO);
-        }
+        oficioRemision = oficioRemisionEjb.registrarOficioRemision(entidad, oficioRemision, RegwebConstantes.REGISTRO_OFICIO_INTERNO);
 
         return oficioRemision;
 
@@ -491,7 +486,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
      * @throws Exception
      */
 
-    public OficioRemision crearOficioRemisionExterno(List<RegistroEntrada> registrosEntrada,
+    public OficioRemision crearOficioRemisionExterno(List<RegistroEntrada> registrosEntrada, Entidad entidad,
                                                      Oficina oficinaActiva, UsuarioEntidad usuarioEntidad, String organismoExternoCodigo,
                                                      String organismoExternoDenominacion, Long idLibro)
             throws Exception, I18NException, I18NValidationException {
@@ -509,16 +504,47 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
         oficioRemision.setDestinoExternoDenominacion(organismoExternoDenominacion);
         oficioRemision.setOrganismoDestinatario(null);
 
-        synchronized (this) {
-            oficioRemision = oficioRemisionEjb.registrarOficioRemision(oficioRemision, RegwebConstantes.REGISTRO_OFICIO_EXTERNO);
-        }
+        oficioRemision = oficioRemisionEjb.registrarOficioRemision(entidad, oficioRemision, RegwebConstantes.REGISTRO_OFICIO_EXTERNO);
 
         return oficioRemision;
 
     }
 
     @Override
-    public List<RegistroEntrada> crearJustificantesRegistros(List<RegistroEntrada> registros, UsuarioEntidad usuario) throws Exception, I18NException, I18NValidationException {
+    public OficioRemision crearOficioRemisionSIR(RegistroEntrada registroEntrada, Entidad entidad, Oficina oficinaActiva, UsuarioEntidad usuarioEntidad, OficinaTF oficinaSirDestino )
+            throws Exception, I18NException, I18NValidationException {
+
+        // Creamos el OficioRemision
+        OficioRemision oficioRemision = new OficioRemision();
+        oficioRemision.setSir(true);
+        oficioRemision.setEstado(RegwebConstantes.OFICIO_SIR_ENVIADO);
+        oficioRemision.setFechaEstado(new Date());
+        oficioRemision.setOficina(oficinaActiva);
+        oficioRemision.setUsuarioResponsable(usuarioEntidad);
+
+        oficioRemision.setLibro(new Libro(registroEntrada.getLibro().getId()));
+        oficioRemision.setIdentificadorIntercambio(registroEntrada.getRegistroDetalle().getIdentificadorIntercambio());
+        oficioRemision.setTipoOficioRemision(RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA);
+        oficioRemision.setDestinoExternoCodigo(registroEntrada.getDestinoExternoCodigo());
+        oficioRemision.setDestinoExternoDenominacion(registroEntrada.getDestinoExternoDenominacion());
+        oficioRemision.setRegistrosEntrada(Collections.singletonList(registroEntrada));
+        oficioRemision.setOrganismoDestinatario(null);
+        oficioRemision.setRegistrosSalida(null);
+        oficioRemision.setCodigoEntidadRegistralDestino(oficinaSirDestino.getCodigo());
+        oficioRemision.setDecodificacionEntidadRegistralDestino(oficinaSirDestino.getDenominacion());
+        oficioRemision.setContactosEntidadRegistralDestino(RegistroUtils.getContactosOficinaSir(oficinaSirDestino));
+        oficioRemision.setTipoAnotacion(TipoAnotacion.ENVIO.getValue());
+        oficioRemision.setDecodificacionTipoAnotacion(TipoAnotacion.ENVIO.getName());
+
+        // Registramos el Oficio de Remisión SIR
+        oficioRemision = oficioRemisionEjb.registrarOficioRemision(entidad, oficioRemision, RegwebConstantes.REGISTRO_OFICIO_SIR);
+
+        return oficioRemision;
+
+    }
+
+    @Override
+    public List<RegistroEntrada> crearJustificantesRegistros(Entidad entidad, List<RegistroEntrada> registros, UsuarioEntidad usuario) throws Exception, I18NException, I18NValidationException {
 
         List<RegistroEntrada> correctos = new ArrayList<RegistroEntrada>();
 
@@ -531,7 +557,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
 
                 try {
                     // Creamos el anexo del justificante y se lo añadimos al registro
-                    AnexoFull anexoFull = justificanteEjb.crearJustificante(usuario, registroEntrada, RegwebConstantes.REGISTRO_ENTRADA, Configuracio.getDefaultLanguage());
+                    AnexoFull anexoFull = justificanteEjb.crearJustificante(entidad, usuario, registroEntrada, RegwebConstantes.REGISTRO_ENTRADA, Configuracio.getDefaultLanguage());
                     registroEntrada.getRegistroDetalle().getAnexosFull().add(anexoFull);
                     // Añadimos el Correcto
                     correctos.add(registro);
@@ -558,8 +584,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
      * @throws Exception
      */
     @Override
-    public List<RegistroEntrada> aceptarOficioRemision(OficioRemision oficioRemision,
-                                                       UsuarioEntidad usuario, Oficina oficinaActiva,
+    public List<RegistroEntrada> aceptarOficioRemision(OficioRemision oficioRemision,Entidad entidad, UsuarioEntidad usuario, Oficina oficinaActiva,
                                                        List<OficioPendienteLlegada> oficios) throws Exception, I18NException, I18NValidationException {
 
         List<RegistroEntrada> registros = new ArrayList<RegistroEntrada>();
@@ -603,9 +628,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
             nuevoRE.setRegistroDetalle(registroDetalle);
 
             // Registramos el nuevo RegistroEntrada
-            synchronized (this) {
-                nuevoRE = registroEntradaEjb.registrarEntrada(nuevoRE, usuario, interesados, anexos, false);
-            }
+            nuevoRE = registroEntradaEjb.registrarEntrada(nuevoRE, entidad, usuario, interesados, anexos, false);
 
             registros.add(nuevoRE);
 

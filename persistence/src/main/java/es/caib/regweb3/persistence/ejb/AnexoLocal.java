@@ -1,10 +1,7 @@
 package es.caib.regweb3.persistence.ejb;
 
 
-import es.caib.regweb3.model.Anexo;
-import es.caib.regweb3.model.RegistroEntrada;
-import es.caib.regweb3.model.RegistroSalida;
-import es.caib.regweb3.model.UsuarioEntidad;
+import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.model.utils.AnexoSimple;
 import org.fundaciobit.genapp.common.i18n.I18NException;
@@ -39,10 +36,21 @@ public interface AnexoLocal extends BaseEjb<Anexo, Long> {
      * @throws I18NException
      * @throws I18NValidationException
      */
-    AnexoFull crearAnexo(AnexoFull anexoFull, UsuarioEntidad usuarioEntidad,
+    AnexoFull crearAnexo(AnexoFull anexoFull, UsuarioEntidad usuarioEntidad, Entidad entidad,
                          Long registroID, Long tipoRegistro, String custodyID, Boolean validarAnexo) throws I18NException, I18NValidationException;
 
-    AnexoFull crearAnexoConfidencial(AnexoFull anexoFull, UsuarioEntidad usuarioEntidad,
+    /**
+     * Crea un anexo confidencial, es decir, sin datos del fichero anexado.
+     * @param anexoFull
+     * @param usuarioEntidad
+     * @param entidad
+     * @param registroID
+     * @param tipoRegistro
+     * @return
+     * @throws I18NException
+     * @throws I18NValidationException
+     */
+    AnexoFull crearAnexoConfidencial(AnexoFull anexoFull, UsuarioEntidad usuarioEntidad, Entidad entidad,
                                             Long registroID, Long tipoRegistro) throws I18NException, I18NValidationException;
 
 
@@ -66,7 +74,7 @@ public interface AnexoLocal extends BaseEjb<Anexo, Long> {
     AnexoFull getAnexoFull(Long anexoID, Long idEntidad) throws I18NException;
 
 
-    AnexoFull actualizarAnexo(AnexoFull anexoFull, UsuarioEntidad usuarioEntidad,
+    AnexoFull actualizarAnexo(AnexoFull anexoFull, UsuarioEntidad usuarioEntidad, Entidad entidad, RegistroDetalle registroDetalle,
                               Long registroID, Long tipoRegistro, boolean isJustificante, boolean noWeb) throws I18NException, I18NValidationException;
 
 
@@ -109,45 +117,31 @@ public interface AnexoLocal extends BaseEjb<Anexo, Long> {
      * los que han sido confirmados en destino al enviarlos via SIR.
      *
      * @param idEntidad
-     * @param numElementos
      * @return
      * @throws Exception
      */
-    void purgarAnexosRegistrosAceptados(Long idEntidad, Integer numElementos) throws Exception, I18NException;
+    int purgarAnexosRegistrosAceptados(Long idEntidad) throws Exception, I18NException;
 
 
     /**
      * Método que elimina los anexos asociados a registros que ya se han distribuido.
      * @param idEntidad
-     * @param meses
-     * @param numElementos
      * @throws Exception
      * @throws I18NException
      */
-    void purgarAnexosRegistrosDistribuidos(Long idEntidad, Integer meses, Integer numElementos) throws Exception, I18NException;
+    int purgarAnexosRegistrosDistribuidos(Long idEntidad) throws Exception, I18NException;
 
 
     /**
      * Elimina el archivo físico de custodia pero dejamos la info del anexo en la tabla de anexos y lo marcamos como purgado.
      *
      * @param custodiaId
-     * @param isJustificante
      * @param idEntidad
      * @throws Exception
      * @throws I18NException
      */
-    void purgarAnexo(String custodiaId, boolean isJustificante, Long idEntidad) throws Exception, I18NException;
+    void purgarAnexo(String custodiaId, Long idEntidad) throws Exception, I18NException;
 
-
-    /**
-     * Obtiene los anexos distribuidos hace x meses que seran los candidatos a purgar.
-     *
-     * @param meses numero de meses
-     * @param numElementos numero maximo de anexos que se purgaran en la iteración
-     * @return
-     * @throws Exception
-     */
-    List<String> obtenerCustodyIdAnexosDistribuidos(Integer meses, Integer numElementos) throws Exception;
 
     /**
      * Obtiene el id del Justificante que tiene un registroDetalle
@@ -262,5 +256,15 @@ public interface AnexoLocal extends BaseEjb<Anexo, Long> {
      * @throws Exception
      */
     AnexoSimple descargarJustificante(Anexo anexo, Long idEntidad) throws I18NException, Exception;
+
+    /**
+     * Actualiza la información de un Anexo-Justificante al ser custodiado en Arxiu
+     * @param expedienteID
+     * @param custodiaID
+     * @param csv
+     * @param idAnexo
+     * @throws Exception
+     */
+    void custodiarJustificanteArxiu(String expedienteID, String custodiaID, String csv, Long idAnexo) throws Exception;
 
 }

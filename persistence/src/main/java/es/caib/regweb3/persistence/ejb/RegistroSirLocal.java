@@ -47,7 +47,7 @@ public interface RegistroSirLocal extends BaseEjb<RegistroSir, Long> {
      * Crea un RegistroSir
      * @throws Exception
      */
-    RegistroSir crearRegistroSir(FicheroIntercambio ficheroIntercambio) throws Exception;
+    RegistroSir crearRegistroSir(FicheroIntercambio ficheroIntercambio, Entidad entidad) throws Exception;
 
     /**
      * Eliminar un RegistroSir y sus trazabilidades
@@ -75,7 +75,7 @@ public interface RegistroSirLocal extends BaseEjb<RegistroSir, Long> {
      * @return
      * @throws Exception
      */
-    Paginacion busqueda(Integer pageNumber, Date fechaInicio, Date fechaFin, RegistroSir registroSir, String oficinaSir, String estado) throws Exception;
+    Paginacion busqueda(Integer pageNumber, Date fechaInicio, Date fechaFin, RegistroSir registroSir, String oficinaSir, String estado,String entidad) throws Exception;
 
     /**
      *
@@ -118,7 +118,7 @@ public interface RegistroSirLocal extends BaseEjb<RegistroSir, Long> {
      * @return
      * @throws Exception
      */
-    RegistroSir transformarFicheroIntercambio(FicheroIntercambio ficheroIntercambio)throws Exception;
+    RegistroSir transformarFicheroIntercambio(FicheroIntercambio ficheroIntercambio, Long idEntidad)throws Exception;
 
 
     /**
@@ -182,5 +182,5 @@ public interface RegistroSirLocal extends BaseEjb<RegistroSir, Long> {
      * @throws I18NException
      * @throws I18NValidationException
      */
-    RegistroEntrada aceptarRegistroSirEntrada(RegistroSir registroSir, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, List<CamposNTI> camposNTIs, Long idOrganismoDestino) throws Exception, I18NException, I18NValidationException;
+    RegistroEntrada aceptarRegistroSirEntrada(RegistroSir registroSir, Entidad entidad, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, List<CamposNTI> camposNTIs, Long idOrganismoDestino) throws Exception, I18NException, I18NValidationException;
 }

@@ -69,7 +69,7 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
 
         // Firmamos el Justificante
         byte[]firma = signFile(fileName, pdfsource, FileInfoSignature.PDF_MIME_TYPE, signType, signMode, epes, signaturePlugin, new Locale(languageUI),
-                reason, idEntidadActiva, new Date(), peticion, numeroRegistro);
+                reason, idEntidadActiva, peticion, numeroRegistro);
 
         // Creamos el SignatureCustody
         return crearSignatureCustody(signType, signMode, firma);
@@ -106,7 +106,7 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
 
         // Firmamos el Justificante
         byte[] firmaJustificante =  signFile(fileName,pdfsource,FileInfoSignature.PDF_MIME_TYPE, signType, signMode, epes, signaturePlugin, new Locale(languageUI),
-                reason, idEntidadActiva, new Date(), peticion, numeroRegistro);
+                reason, idEntidadActiva, peticion, numeroRegistro);
 
         // Creamos la Firma
         Firma firma = new Firma();
@@ -164,9 +164,6 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
 
             SignatureCustody sign = input.getSignatureCustody();
             DocumentCustody doc = input.getDocumentoCustody();
-
-            log.info("checkDocumentAndSignature::Document = " + doc);
-            log.info("checkDocumentAndSignature::Signature = " + sign);
 
             if (sign == null && doc == null) {
                 throw new I18NException("error.checkanexosir.nifirmanidoc");
@@ -489,7 +486,7 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
 
         // Firmamos el fichero
         byte[] firma = signFile(docToSign.getName(), docToSign.getData(), docToSign.getMime(), signType, signMode, epes,
-                signaturePlugin, locale, reason, idEntidad, new Date(), new StringBuilder(), numeroRegistro);
+                signaturePlugin, locale, reason, idEntidad, new StringBuilder(), numeroRegistro);
 
         // Creamos el SignatureCustody
         SignatureCustody sc = crearSignatureCustody(signType, signMode, firma);
@@ -596,7 +593,7 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
 
         // Firmamos el fichero
         byte[] firma = signFile(documentToSign.getName(), documentToSign.getData(), documentToSign.getMime(), signType, signMode, epes,
-                signaturePlugin, locale, reason, idEntidad, new Date(), new StringBuilder(), numeroRegistro);
+                signaturePlugin, locale, reason, idEntidad, new StringBuilder(), numeroRegistro);
 
         // Creamos el SignatureCustody
         SignatureCustody sc = crearSignatureCustody(signType, signMode, firma);
@@ -631,13 +628,13 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
      * @throws I18NException
      */
     protected byte[] signFile(String fileName, byte[] data, String mimeType, String signType,
-                                        int signMode, boolean epes, ISignatureServerPlugin plugin, Locale locale, String reason, Long idEntidadActiva, Date inicio, StringBuilder peticion, String numeroRegistro)
+                                        int signMode, boolean epes, ISignatureServerPlugin plugin, Locale locale, String reason, Long idEntidadActiva, StringBuilder peticion, String numeroRegistro)
             throws I18NException {
 
         File source = null;
         File destination = null;
         final String username = CONFIG_USERNAME;
-        long tiempo = System.currentTimeMillis();
+        Date inicio = new Date();
 
         // Integración
         peticion.append("clase firma: ").append(plugin.getClass().getName()).append(System.getProperty("line.separator"));
@@ -729,7 +726,7 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
                     byte[] firma = FileUtils.readFileToByteArray(destination);
 
                     // Integracion
-                    integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_FIRMA, reason, peticion.toString(), System.currentTimeMillis() - tiempo, idEntidadActiva, numeroRegistro);
+                    integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_FIRMA, reason, peticion.toString(), System.currentTimeMillis() - inicio.getTime(), idEntidadActiva, numeroRegistro);
 
                     return firma;
 
@@ -738,14 +735,14 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
 
         } catch (I18NException i18ne) {
             try {
-                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_FIRMA, reason, peticion.toString(), i18ne, null,System.currentTimeMillis() - tiempo, idEntidadActiva, numeroRegistro);
+                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_FIRMA, reason, peticion.toString(), i18ne, null,System.currentTimeMillis() - inicio.getTime(), idEntidadActiva, numeroRegistro);
             } catch (Exception e) {
                 e.printStackTrace();
             }
             throw i18ne;
         } catch (Exception e) {
             try {
-                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_FIRMA, reason, peticion.toString(), e, null,System.currentTimeMillis() - tiempo, idEntidadActiva, numeroRegistro);
+                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_FIRMA, reason, peticion.toString(), e, null,System.currentTimeMillis() - inicio.getTime(), idEntidadActiva, numeroRegistro);
             } catch (Exception ex) {
                 ex.printStackTrace();
             }

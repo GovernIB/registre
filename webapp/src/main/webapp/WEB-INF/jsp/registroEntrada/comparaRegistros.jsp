@@ -25,13 +25,6 @@
 
                            <div class="panel-body">
 
-                               <div class="form-group  col-xs-12">
-                                   <div class="col-xs-4 pull-left etiqueta_regweb control-label">
-                                       <label><spring:message code="registroEntrada.libro"/></label>
-                                   </div>
-                                   <div class="col-xs-8">${registro.libro.nombre}</div>
-                               </div>
-
                                <div class="form-group col-xs-12">
                                    <div class="col-xs-4 pull-left etiqueta_regweb control-label">
                                        <label><spring:message code="registroEntrada.extracto"/></label>

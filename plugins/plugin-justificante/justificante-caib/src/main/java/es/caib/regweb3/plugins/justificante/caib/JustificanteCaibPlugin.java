@@ -34,11 +34,12 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
 
     protected final Logger log = Logger.getLogger(getClass());
 
+    private final SimpleDateFormat formatDate = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+
+    private String textoLegalValidez;
+    private String textoLegalDocElectronica;
     private String estampat = null;
     private String rutaImatge = null;
-    private String declaracion = null;
-    private String ley = null;
-    private String validez = null;
     private Boolean sir = false;
     private Font lletraGovern8;
     private Font lletraGovern8bold;
@@ -66,8 +67,8 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
                 logoRW.setAlignment(Element.ALIGN_LEFT);
                 logoRW.scaleToFit(100, 110);
                 logoRW.setAbsolutePosition(35f, 790f);
-                Paragraph parrafo;
-                parrafo = new Paragraph("");
+
+                Paragraph parrafo = new Paragraph("");
                 parrafo.setAlignment(Element.ALIGN_LEFT);
                 document.add(parrafo);
                 document.add(logoRW);
@@ -109,7 +110,6 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
             PdfContentByte cb = writer.getDirectContent();
             Phrase p = new Phrase(estampat, font7);
             ColumnText.showTextAligned(cb, Element.ALIGN_MIDDLE, p, 20, 30, 90);
-
         }
 
     }
@@ -140,18 +140,20 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
 
 
     /**
-     * Inicialitza propietats amb strings de les propietats de Plugin de Justificante
+     * Inicialitza propietats generals
      * @param locale
      * @throws Exception
      */
-    private void inicializarPropiedades(Locale locale, String url, String specialValue, String csv, Boolean entidadSir) throws Exception{
+    private void inicializarPropiedades(IRegistro registro, Long tipoRegistro, Locale locale, String url, String specialValue, String csv, Boolean sir) throws Exception{
+
+        // Propiedades configuradas en el plugin
         rutaImatge = this.getProperty(PROPERTY_CAIB_BASE + "logoPath");
-        declaracion = this.getProperty(PROPERTY_CAIB_BASE + "declaracion." + locale);
-        ley = this.getProperty(PROPERTY_CAIB_BASE + "ley." + locale);
-        validez = this.getProperty(PROPERTY_CAIB_BASE + "validez." + locale);
         String estampacion = this.getPropertyRequired(PROPERTY_CAIB_BASE + "estampacion");
         estampat = MessageFormat.format(estampacion, url, specialValue, csv);
-        sir = entidadSir;
+
+        // SIR?
+        this.sir = sir;
+
         // Inicialitza estils de lletra
         FontFactory.register("img/LegacySanITC-Book.otf", "Legacy");
         lletraGovern8 = FontFactory.getFont("Legacy", 8);
@@ -163,18 +165,41 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
         lletraGovern14bold = FontFactory.getFont("Legacy", 14);
         lletraGovern14bold.setColor(BaseColor.BLACK);
         lletraGovern14bold.setStyle(Font.BOLD);
+
+        // Obtenemos el texto legal correspondiente para cada tipo de Registro
+        if(registro.getRegistroDetalle().getRecibidoSir()){ // Recibido por SIR
+            textoLegalDocElectronica = tradueixMissatge(locale,"justificante.texto.documentosElectronicos.sir");
+        }else if(registro.getRegistroDetalle().getPresencial()){ // Presencial
+            textoLegalDocElectronica = tradueixMissatge(locale,"justificante.texto.documentosElectronicos.presencial");
+        }else{ // Telemático
+            textoLegalDocElectronica = tradueixMissatge(locale,"justificante.texto.documentosElectronicos.telematico");
+        }
+
+        // Obtenemos el texto legal correspondiente para cada tipo de Registro
+        if(RegwebConstantes.REGISTRO_SALIDA.equals(tipoRegistro)){ // Registro Salida
+            textoLegalValidez = tradueixMissatge(locale,"justificante.texto.validez.salida");
+        }
+        if(registro.getRegistroDetalle().getRecibidoSir()){ // Recibido por SIR
+            textoLegalValidez = tradueixMissatge(locale,"justificante.texto.validez.sir");
+        }else if(registro.getRegistroDetalle().getPresencial()){ // Presencial
+            textoLegalValidez = tradueixMissatge(locale,"justificante.texto.validez.presencial");
+        }else{ // Telemático
+            textoLegalValidez = tradueixMissatge(locale,"justificante.texto.validez.telematico");
+        }
+
+
     }
 
     @Override
-    public byte[] generarJustificanteEntrada(RegistroEntrada registroEntrada, String url, String specialValue, String csv, String idioma) throws Exception{
+    public byte[] generarJustificanteEntrada(RegistroEntrada registroEntrada, String url, String specialValue, String csv, String idioma, Boolean sir) throws Exception{
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream(4096);
 
         // Define idioma para el justificante
         Locale locale = new Locale(idioma);
 
         //Inicializamos las propiedades comunes
-        inicializarPropiedades(locale, url, specialValue,csv,registroEntrada.getOficina().getOrganismoResponsable().getEntidad().getSir());
-
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(4096);
+        inicializarPropiedades(registroEntrada, RegwebConstantes.REGISTRO_ENTRADA, locale, url, specialValue,csv, sir);
 
         // Aplica preferencias
         Document document = new Document(PageSize.A4);
@@ -190,84 +215,20 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
         // Inicializa Documento
         document = inicialitzaDocument(document);
 
-        // Comienza a crear el Justificante
-        String denominacionOficina = registroEntrada.getOficina().getDenominacion();
-        String codigoOficina = registroEntrada.getOficina().getCodigo();
-        String numeroRegistroFormateado = registroEntrada.getNumeroRegistroFormateado();
-        Long tipoDocumentacionFisica = registroEntrada.getRegistroDetalle().getTipoDocumentacionFisica();
-        String extracte = registroEntrada.getRegistroDetalle().getExtracto();
-        String nomDesti;
-        if(registroEntrada.getDestino()!=null) {
-            nomDesti = registroEntrada.getDestino().getDenominacion() + " - " + registroEntrada.getDestino().getCodigo();
-        }else{
-            nomDesti = registroEntrada.getDestinoExternoDenominacion() + " - " + registroEntrada.getDestinoExternoCodigo();
-        }
-        String expedient = registroEntrada.getRegistroDetalle().getExpediente();
-        Date fechaRegistro = registroEntrada.getFecha();
-        SimpleDateFormat formatDate = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-        String dataRegistre = formatDate.format(fechaRegistro);
+        // Bloque principal información del registro (oficina, número, fecha..)
+        informacioRegistre(registroEntrada, locale, document, RegwebConstantes.REGISTRO_ENTRADA);
 
-        // Altres camps addicionals
-        // Tipus Assumpte
-        String tipoAsunto = null;
-        if(registroEntrada.getRegistroDetalle().getTipoAsunto()!=null) {
-            TraduccionTipoAsunto traduccionTipoAsunto = (TraduccionTipoAsunto) registroEntrada.getRegistroDetalle().getTipoAsunto().getTraduccion(idioma);
-            tipoAsunto = traduccionTipoAsunto.getNombre();
-        }
-        // Codi assumpte
-        String codigoAsunto = null;
-        if(registroEntrada.getRegistroDetalle().getCodigoAsunto()!=null) {
-            TraduccionCodigoAsunto traduccionCodigoAsunto = (TraduccionCodigoAsunto) registroEntrada.getRegistroDetalle().getCodigoAsunto().getTraduccion(idioma);
-            codigoAsunto = traduccionCodigoAsunto.getNombre();
-        }
-        // Idioma
-        String nomIdioma = null;
-        if(registroEntrada.getRegistroDetalle().getIdioma()!=null) {
-            nomIdioma = I18NJustificanteUtils.tradueix(locale, "idioma." + registroEntrada.getRegistroDetalle().getIdioma(), null);
-        }
-        // Referència externa
-        String refExterna = registroEntrada.getRegistroDetalle().getReferenciaExterna();
-        // Transport
-        String transport = null;
-        if(registroEntrada.getRegistroDetalle().getTransporte()!=null) {
-            transport = I18NJustificanteUtils.tradueix(locale, "transporte.0" + registroEntrada.getRegistroDetalle().getTransporte(), null);
-        }
-        // Número transport
-        String numTransport = registroEntrada.getRegistroDetalle().getNumeroTransporte();
-        // Oficina origen, Registre origen i Data origen
-        String oficinaOrigen = null;
-        String numRegOrigen = null;
-        String dataOrigen = null;
-        if(registroEntrada.getRegistroDetalle().getOficinaOrigen()!=null){
-            if(!registroEntrada.getRegistroDetalle().getOficinaOrigen().getCodigo().equals(registroEntrada.getOficina().getCodigo())) {
-                oficinaOrigen = registroEntrada.getRegistroDetalle().getOficinaOrigen().getDenominacion() + " - " + registroEntrada.getRegistroDetalle().getOficinaOrigen().getCodigo();
-                numRegOrigen = registroEntrada.getRegistroDetalle().getNumeroRegistroOrigen();
-                Date fechaOrigen = registroEntrada.getRegistroDetalle().getFechaOrigen();
-                dataOrigen = formatDate.format(fechaOrigen);
-            }
-        }
+        // Bloque de Interesados
+        llistarInteressats(registroEntrada.getRegistroDetalle().getInteresados(), locale, document, false);
 
-        // Observacions
-        String observacions = registroEntrada.getRegistroDetalle().getObservaciones();
-        // Data Actual
-        //String dataActual = formatDate.format(Calendar.getInstance().getTime());  (S'empra al codi de barres)
+        // Bloque de Información adicional del registro (Destino, Idioma, Extracto...)
+        adicionalRegistre(registroEntrada, locale, document, getDestino(registroEntrada), idioma);
 
+        // Bloque de anexos del Registro
+        llistarAnnexes(registroEntrada, RegwebConstantes.REGISTRO_ENTRADA, locale, document);
 
-        // Título e Información Registro
-        informacioRegistre(locale, document, denominacionOficina, codigoOficina, dataRegistre, numeroRegistroFormateado,
-                tipoDocumentacionFisica, registroEntrada.getClass().getSimpleName());
-
-        // Interesados
-        List<Interesado> interesados = registroEntrada.getRegistroDetalle().getInteresados();
-        llistarInteressats(interesados, locale, document, false);
-
-        // Información adicional del Registro
-        adicionalRegistre(locale, document, extracte, nomDesti, expedient, tipoAsunto, codigoAsunto, nomIdioma, refExterna, transport,
-                numTransport, oficinaOrigen, numRegOrigen, dataOrigen, observacions);
-
-        // Anexos del Registro
-        List<AnexoFull> anexos = registroEntrada.getRegistroDetalle().getAnexosFull();
-        llistarAnnexes(anexos, locale, document, denominacionOficina);
+        // Leyes
+        parrafoLeyes(document);
 
         document.close();
 
@@ -276,13 +237,13 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
 
 
     @Override
-    public byte[] generarJustificanteSalida(RegistroSalida registroSalida, String url, String specialValue, String csv, String idioma) throws Exception{
+    public byte[] generarJustificanteSalida(RegistroSalida registroSalida, String url, String specialValue, String csv, String idioma, Boolean sir) throws Exception{
 
         // Define idioma para el justificante
         Locale locale = new Locale(idioma);
 
-        //Inicializamos las propiedades comunes
-        inicializarPropiedades(locale, url, specialValue,csv,registroSalida.getOficina().getOrganismoResponsable().getEntidad().getSir());
+        // Inicializamos las propiedades comunes
+        inicializarPropiedades(registroSalida, RegwebConstantes.REGISTRO_SALIDA, locale, url, specialValue,csv, sir);
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream(4096);
 
@@ -300,93 +261,20 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
         // Inicializa Documento
         document = inicialitzaDocument(document);
 
-        // Comienza a crear el Justificante
-        String denominacionOficina = registroSalida.getOficina().getDenominacion();
-        String codigoOficina = registroSalida.getOficina().getCodigo();
-        String numeroRegistroFormateado = registroSalida.getNumeroRegistroFormateado();
-        Long tipoDocumentacionFisica = registroSalida.getRegistroDetalle().getTipoDocumentacionFisica();
-        String extracte = registroSalida.getRegistroDetalle().getExtracto();
-        String nomOrigen = "";
-        if(registroSalida.getRegistroDetalle().getCodigoEntidadRegistralDestino()!=null){
-            nomOrigen = registroSalida.getRegistroDetalle().getDecodificacionEntidadRegistralDestino() + " - " + registroSalida.getRegistroDetalle().getCodigoEntidadRegistralDestino();
-        }else{
-            List<Interesado> interesadosDestino = registroSalida.getRegistroDetalle().getInteresados();
-            for(Interesado interesado : interesadosDestino) {
-                if(interesado.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION)) {
-                    if(nomOrigen.length()==0) {
-                        nomOrigen = interesado.getNombreCompleto();
-                    }else{
-                        nomOrigen = nomOrigen + ", " + interesado.getNombreCompleto();
-                    }
-                }
-            }
-        }
-        String expedient = registroSalida.getRegistroDetalle().getExpediente();
-        Date fechaRegistro = registroSalida.getFecha();
-        SimpleDateFormat formatDate = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-        String dataRegistre = formatDate.format(fechaRegistro);
+         // Bloque principal información del registro (oficina, número, fecha..)
+        informacioRegistre(registroSalida, locale, document, RegwebConstantes.REGISTRO_SALIDA);
 
-        // Altres camps addicionals
-        // Tipus assumpte
-        String tipoAsunto = null;
-        if(registroSalida.getRegistroDetalle().getTipoAsunto()!=null) {
-            TraduccionTipoAsunto traduccionTipoAsunto = (TraduccionTipoAsunto) registroSalida.getRegistroDetalle().getTipoAsunto().getTraduccion(idioma);
-            tipoAsunto = traduccionTipoAsunto.getNombre();
-        }
-        // Codi assumpte
-        String codigoAsunto = null;
-        if(registroSalida.getRegistroDetalle().getCodigoAsunto()!=null) {
-            TraduccionCodigoAsunto traduccionCodigoAsunto = (TraduccionCodigoAsunto) registroSalida.getRegistroDetalle().getCodigoAsunto().getTraduccion(idioma);
-            codigoAsunto = traduccionCodigoAsunto.getNombre();
-        }
-        // Idioma
-        String nomIdioma = null;
-        if(registroSalida.getRegistroDetalle().getIdioma()!=null) {
-            nomIdioma = I18NJustificanteUtils.tradueix(locale, "idioma." + registroSalida.getRegistroDetalle().getIdioma(), null);
-        }
-        // Referencia externa
-        String refExterna = registroSalida.getRegistroDetalle().getReferenciaExterna();
-        // Transport
-        String transport = null;
-        if(registroSalida.getRegistroDetalle().getTransporte()!=null) {
-            transport = I18NJustificanteUtils.tradueix(locale, "transporte.0" + registroSalida.getRegistroDetalle().getTransporte(), null);
-        }
-        // Número transport
-        String numTransport = registroSalida.getRegistroDetalle().getNumeroTransporte();
-        // Oficina origen, Registre origen i Data origen
-        String oficinaOrigen = null;
-        String numRegOrigen = null;
-        String dataOrigen = null;
-        if(registroSalida.getRegistroDetalle().getOficinaOrigen()!=null){
-            if(!registroSalida.getRegistroDetalle().getOficinaOrigen().getCodigo().equals(registroSalida.getOficina().getCodigo())) {
-                oficinaOrigen = registroSalida.getRegistroDetalle().getOficinaOrigen().getDenominacion() + " - " + registroSalida.getRegistroDetalle().getOficinaOrigen().getCodigo();
-                numRegOrigen = registroSalida.getRegistroDetalle().getNumeroRegistroOrigen();
-                Date fechaOrigen = registroSalida.getRegistroDetalle().getFechaOrigen();
-                dataOrigen = formatDate.format(fechaOrigen);
-            }
-        }
+        // Bloque de Interesados
+        llistarInteressats(registroSalida.getRegistroDetalle().getInteresados(), locale, document, true);
 
-        // Observacions
-        String observacions = registroSalida.getRegistroDetalle().getObservaciones();
-        // Data actual
-        //String dataActual = formatDate.format(Calendar.getInstance().getTime());   (S'empra al Codi de Barres)
-
-
-        // Título e Información Registro
-        informacioRegistre(locale, document, denominacionOficina, codigoOficina, dataRegistre, numeroRegistroFormateado,
-                tipoDocumentacionFisica, registroSalida.getClass().getSimpleName());
-
-        // Interesados
-        List<Interesado> interesados = registroSalida.getRegistroDetalle().getInteresados();
-        llistarInteressats(interesados, locale, document, true);
-
-        // Información adicional del Registro
-        adicionalRegistre(locale, document, extracte, nomOrigen, expedient, tipoAsunto, codigoAsunto, nomIdioma, refExterna, transport,
-                numTransport, oficinaOrigen, numRegOrigen, dataOrigen, observacions);
+        // Bloque de Información adicional del registro (Destino, Idioma, Extracto...)
+        adicionalRegistre(registroSalida, locale, document, getDestinatario(registroSalida), idioma);
 
         // Anexos del Registro
-        List<AnexoFull> anexos = registroSalida.getRegistroDetalle().getAnexosFull();
-        llistarAnnexes(anexos, locale, document, denominacionOficina);
+        llistarAnnexes(registroSalida, RegwebConstantes.REGISTRO_SALIDA, locale, document);
+
+        // Leyes
+        parrafoLeyes(document);
 
         document.close();
 
@@ -407,13 +295,19 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
         document.addCreator("iText library");
 
         return document;
-
     }
 
-    // Lista los anexos tanto para el registro de entrada como el de salida
-    protected void llistarAnnexes(List<AnexoFull> anexos, Locale locale, Document document, String denominacio) throws Exception {
+    /**
+     * Lista los anexos tanto para el registro de entrada como el de salida
+     * @param registro
+     * @param tipoRegistro
+     * @param locale
+     * @param document
+     * @throws Exception
+     */
+    protected void llistarAnnexes(IRegistro registro, Long tipoRegistro, Locale locale, Document document) throws Exception {
 
-        if(anexos.size()>0) {
+        if(!registro.getRegistroDetalle().getAnexosFull().isEmpty()) {
             // Creamos estilo para el título Adjuntos
             PdfPTable titolAnnexe = new PdfPTable(1);
             titolAnnexe.setWidthPercentage(100);
@@ -448,7 +342,7 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
             cellInfoAnnexe2.setBorderWidth(1f);
             cellInfoAnnexe2.setHorizontalAlignment(Element.ALIGN_LEFT);
 
-            for(AnexoFull anexo : anexos) {
+            for(AnexoFull anexo : registro.getRegistroDetalle().getAnexosFull()) {
                 // Variables per calcular i afegeix el tamany del document (Del DocumentCustody i/o del SignatureCustody)
                 String tamanyFitxer = null;
                 String nomFitxer = null;
@@ -471,7 +365,7 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
                     taulaAnnexe.addCell(new PdfPCell(new Paragraph(new String(anexo.getAnexo().getHash()), lletraGovern8)));
                     taulaAnnexe.addCell(new PdfPCell(new Paragraph(anexo.getAnexo().getObservaciones(), lletraGovern8)));
 
-                }else{
+                }else if(!RegwebConstantes.TIPO_DOCUMENTO_FICHERO_TECNICO.equals(anexo.getAnexo().getTipoDocumento())){
 
                     if(anexo.getAnexo().getModoFirma()==RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED){ // És un document amb firma detached
                         cellInfoAnnexe2 = new PdfPCell(new Paragraph(anexo.getAnexo().getTitulo(), lletraGovern8));
@@ -546,37 +440,39 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
                 }
             }
             document.add(taulaAnnexe);
+
+            // Texto legal documentos electrónicos
+            if(RegwebConstantes.REGISTRO_ENTRADA.equals(tipoRegistro)){
+
+                PdfPTable peuAnnexe = new PdfPTable(1);
+                peuAnnexe.setWidthPercentage(100);
+                PdfPCell cellPeuAnnexe = new PdfPCell(new Paragraph(tradueixMissatge(locale,"justificante.la") + " " + registro.getOficina().getDenominacion() + " " + textoLegalDocElectronica, lletraGovern8));
+                cellPeuAnnexe.setBackgroundColor(BaseColor.WHITE);
+                cellPeuAnnexe.setHorizontalAlignment(Element.ALIGN_LEFT);
+                cellPeuAnnexe.setBorder(Rectangle.TOP);
+                cellPeuAnnexe.setBorderColor(BaseColor.BLACK);
+                cellPeuAnnexe.setBorderWidth(1f);
+                peuAnnexe.addCell(cellPeuAnnexe);
+                document.add(peuAnnexe);
+                document.add(new Paragraph(" "));
+                document.add(new Paragraph(" "));
+            }
+
         }
 
-        // Pie de anexo
-        PdfPTable peuAnnexe = new PdfPTable(1);
-        peuAnnexe.setWidthPercentage(100);
-        PdfPCell cellPeuAnnexe = new PdfPCell(new Paragraph(tradueixMissatge(locale,"justificante.la") + " " + denominacio + " " + declaracion, lletraGovern8));
-        cellPeuAnnexe.setBackgroundColor(BaseColor.WHITE);
-        cellPeuAnnexe.setHorizontalAlignment(Element.ALIGN_LEFT);
-        cellPeuAnnexe.setBorder(Rectangle.TOP);
-        cellPeuAnnexe.setBorderColor(BaseColor.BLACK);
-        cellPeuAnnexe.setBorderWidth(1f);
-        peuAnnexe.addCell(cellPeuAnnexe);
-        document.add(peuAnnexe);
-        document.add(new Paragraph(" "));
-        document.add(new Paragraph(" "));
+    }
 
-        // Parágrafo Ley
-        PdfPTable titolLlei = new PdfPTable(1);
-        titolLlei.setWidthPercentage(100);
-        PdfPCell cellLlei = new PdfPCell(new Paragraph(ley, lletraGovern8));
-        cellLlei.setBackgroundColor(BaseColor.WHITE);
-        cellLlei.setHorizontalAlignment(Element.ALIGN_LEFT);
-        cellLlei.setBorderColor(BaseColor.WHITE);
-        cellLlei.setBorderWidth(0f);
-        titolLlei.addCell(cellLlei);
-        document.add(titolLlei);
+    /**
+     *
+     * @param document
+     * @throws Exception
+     */
+    protected void parrafoLeyes(Document document) throws Exception{
 
-        // Parágrafo Plazos
+        // Parágrafo Validez legal
         PdfPTable titolPlazos = new PdfPTable(1);
         titolPlazos.setWidthPercentage(100);
-        PdfPCell cellPlazos = new PdfPCell(new Paragraph(validez, lletraGovern8));
+        PdfPCell cellPlazos = new PdfPCell(new Paragraph(textoLegalValidez, lletraGovern8));
         cellPlazos.setBackgroundColor(BaseColor.WHITE);
         cellPlazos.setHorizontalAlignment(Element.ALIGN_LEFT);
         cellPlazos.setBorderColor(BaseColor.WHITE);
@@ -585,10 +481,16 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
         document.add(titolPlazos);
         document.add(new Paragraph(" "));
         document.add(new Paragraph(" "));
-
     }
 
-    // Lista los Interesados y Representantes tanto para el registro de entrada como el de salida
+    /**
+     * Lista los Interesados y Representantes tanto para el registro de entrada como el de salida
+     * @param interesados
+     * @param locale
+     * @param document
+     * @param isSalida
+     * @throws Exception
+     */
     protected void llistarInteressats(List<Interesado> interesados, Locale locale, Document document, Boolean isSalida) throws Exception {
 
         // Creamos estilo para el título Interesado
@@ -838,15 +740,30 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
         document.add(new Paragraph(" "));
     }
 
-    // Añade el título y la información de registro
-    protected void informacioRegistre(Locale locale, Document document, String denominacionOficina, String codigoOficina,
-                                      String dataRegistre, String numeroRegistroFormateado, Long tipoDocumentacionFisica,
-                                      String tipoRegistro) throws Exception {
+    /**
+     * Añade el título y la información de registro
+     * @param registro
+     * @param locale
+     * @param document
+     * @param tipoRegistro
+     * @throws Exception
+     */
+    protected void informacioRegistre(IRegistro registro, Locale locale, Document document, Long tipoRegistro) throws Exception {
 
         document.addTitle(tradueixMissatge(locale,"justificante.anexo.titulo"));
         PdfPTable titulo = new PdfPTable(1);
         titulo.setWidthPercentage(100);
-        PdfPCell cellTitulo= new PdfPCell(new Paragraph(tradueixMissatge(locale,"justificante.mensaje.titulo"), lletraGovern14bold));
+
+        PdfPCell cellTitulo;
+
+        if(registro.getRegistroDetalle().getRecibidoSir()){ // Recibido via SIR
+            cellTitulo = new PdfPCell(new Paragraph(tradueixMissatge(locale,"justificante.titulo.sir"), lletraGovern14bold));
+        }else if (tipoRegistro.equals(RegwebConstantes.REGISTRO_SALIDA)){
+            cellTitulo = new PdfPCell(new Paragraph(tradueixMissatge(locale,"justificante.titulo.salida"), lletraGovern14bold));
+        }else{
+            cellTitulo = new PdfPCell(new Paragraph(tradueixMissatge(locale,"justificante.titulo.general"), lletraGovern14bold));
+        }
+
         cellTitulo.setBackgroundColor(BaseColor.WHITE);
         cellTitulo.setHorizontalAlignment(Element.ALIGN_CENTER);
         cellTitulo.setBorder(Rectangle.BOTTOM);
@@ -863,20 +780,19 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
         taulaRegistre.getDefaultCell().setBorder(0);
         taulaRegistre.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
         taulaRegistre.addCell(new Paragraph(tradueixMissatge(locale,"justificante.oficina"), lletraGovern8bold));
-        String oficina = denominacionOficina + " - " + codigoOficina;
-        taulaRegistre.addCell(new Paragraph(oficina, lletraGovern8));
+        taulaRegistre.addCell(new Paragraph(registro.getOficina().getDenominacion() + " - " + registro.getOficina().getCodigo(), lletraGovern8));
         taulaRegistre.addCell(new Paragraph(tradueixMissatge(locale,"justificante.fechaPresentacion"), lletraGovern8bold));
-        taulaRegistre.addCell(new Paragraph(dataRegistre, lletraGovern8));
+        taulaRegistre.addCell(new Paragraph(formatDate.format(registro.getFecha()), lletraGovern8));
         taulaRegistre.addCell(new Paragraph(tradueixMissatge(locale,"justificante.numRegistro"), lletraGovern8bold));
-        taulaRegistre.addCell(new Paragraph(numeroRegistroFormateado, lletraGovern8));
+        taulaRegistre.addCell(new Paragraph(registro.getNumeroRegistroFormateado(), lletraGovern8));
         taulaRegistre.addCell(new Paragraph(tradueixMissatge(locale,"justificante.tipusRegistre"), lletraGovern8bold));
-        if(tipoRegistro.equals("RegistroEntrada")) {
+        if(tipoRegistro.equals(RegwebConstantes.REGISTRO_ENTRADA)) {
             taulaRegistre.addCell(new Paragraph(tradueixMissatge(locale,"justificante.entrada"), lletraGovern8));
         }else{
             taulaRegistre.addCell(new Paragraph(tradueixMissatge(locale,"justificante.salida"), lletraGovern8));
         }
         taulaRegistre.addCell(new Paragraph(tradueixMissatge(locale,"justificante.docFisica"), lletraGovern8bold));
-        String docFisica = tradueixMissatge(locale,"tipoDocumentacionFisica." + tipoDocumentacionFisica);
+        String docFisica = tradueixMissatge(locale,"tipoDocumentacionFisica." + registro.getRegistroDetalle().getTipoDocumentacionFisica());
         taulaRegistre.addCell(new Paragraph(docFisica, lletraGovern8));
         document.add(taulaRegistre);
         document.add(new Paragraph(" "));
@@ -884,11 +800,16 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
 
     }
 
-    // Añade más información al registro
-    protected void adicionalRegistre(Locale locale, Document document, String extracte, String nomDesti, String expedient,
-                                     String tipoAsunto, String codigoAsunto, String idioma, String refExterna, String transport,
-                                     String numTransport, String oficinaOrigen, String numRegOrigen, String dataOrigen,
-                                     String observacions) throws Exception {
+    /**
+     * Bloque información adicional del registro
+     * @param registro
+     * @param locale
+     * @param document
+     * @param nomDesti
+     * @param idioma
+     * @throws Exception
+     */
+    protected void adicionalRegistre(IRegistro registro, Locale locale, Document document, String nomDesti, String idioma) throws Exception {
 
         // Creamos estilo para el título Información
         PdfPTable titolInformacio = new PdfPTable(1);
@@ -911,83 +832,88 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
 
         int i = 0;
 
-        // Destí - Centre Directiu
+        // Destí
         if(StringUtils.isNotEmpty(nomDesti)) {
             i += 1;
             taulaInformacio.addCell(new Paragraph(tradueixMissatge(locale, "justificante.unidad"), lletraGovern8bold));
             taulaInformacio.addCell(new Paragraph(nomDesti, lletraGovern8));
         }
         // Extracte
-        if(StringUtils.isNotEmpty(extracte)) {
+        if(StringUtils.isNotEmpty(registro.getRegistroDetalle().getExtracto())) {
             i += 1;
             taulaInformacio.addCell(new Paragraph(tradueixMissatge(locale, "justificante.resumen"), lletraGovern8bold));
-            taulaInformacio.addCell(new Paragraph(extracte, lletraGovern8));
+            taulaInformacio.addCell(new Paragraph(registro.getRegistroDetalle().getExtracto(), lletraGovern8));
         }
         // Tipus assumpte
-        if(StringUtils.isNotEmpty(tipoAsunto)) {
+        if(registro.getRegistroDetalle().getTipoAsunto() != null) {
+            TraduccionTipoAsunto traduccionTipoAsunto = (TraduccionTipoAsunto) registro.getRegistroDetalle().getTipoAsunto().getTraduccion(idioma);
             i += 1;
             taulaInformacio.addCell(new Paragraph(tradueixMissatge(locale, "justificante.tipoAsunto"), lletraGovern8bold));
-            taulaInformacio.addCell(new Paragraph(tipoAsunto, lletraGovern8));
+            taulaInformacio.addCell(new Paragraph(traduccionTipoAsunto.getNombre(), lletraGovern8));
         }
         // Codi assumpte
-        if(StringUtils.isNotEmpty(codigoAsunto)) {
+        if(registro.getRegistroDetalle().getCodigoAsunto()!=null) {
+            TraduccionCodigoAsunto traduccionCodigoAsunto = (TraduccionCodigoAsunto) registro.getRegistroDetalle().getCodigoAsunto().getTraduccion(idioma);
             i += 1;
             taulaInformacio.addCell(new Paragraph(tradueixMissatge(locale, "justificante.codigoAsunto"), lletraGovern8bold));
-            taulaInformacio.addCell(new Paragraph(codigoAsunto, lletraGovern8));
+            taulaInformacio.addCell(new Paragraph(traduccionCodigoAsunto.getNombre(), lletraGovern8));
         }
         // Idioma
-        if(StringUtils.isNotEmpty(idioma)) {
+        if(registro.getRegistroDetalle().getIdioma()!=null) {
             i += 1;
             taulaInformacio.addCell(new Paragraph(tradueixMissatge(locale, "justificante.idioma"), lletraGovern8bold));
-            taulaInformacio.addCell(new Paragraph(idioma, lletraGovern8));
+            taulaInformacio.addCell(new Paragraph(I18NJustificanteUtils.tradueix(locale, "idioma." + registro.getRegistroDetalle().getIdioma(), null), lletraGovern8));
         }
         // Referència externa
-        if(StringUtils.isNotEmpty(refExterna)) {
+        if(StringUtils.isNotEmpty(registro.getRegistroDetalle().getReferenciaExterna())) {
             i += 1;
             taulaInformacio.addCell(new Paragraph(tradueixMissatge(locale, "justificante.refExterna"), lletraGovern8bold));
-            taulaInformacio.addCell(new Paragraph(refExterna, lletraGovern8));
+            taulaInformacio.addCell(new Paragraph(registro.getRegistroDetalle().getReferenciaExterna(), lletraGovern8));
         }
         // Expedient
-        if(StringUtils.isNotEmpty(expedient)) {
+        if(StringUtils.isNotEmpty(registro.getRegistroDetalle().getExpediente())) {
             i += 1;
             taulaInformacio.addCell(new Paragraph(tradueixMissatge(locale, "justificante.expediente"), lletraGovern8bold));
-            taulaInformacio.addCell(new Paragraph(expedient, lletraGovern8));
+            taulaInformacio.addCell(new Paragraph(registro.getRegistroDetalle().getExpediente(), lletraGovern8));
         }
         // Transport
-        if(StringUtils.isNotEmpty(transport)) {
+        if(registro.getRegistroDetalle().getTransporte() != null) {
             i += 1;
             taulaInformacio.addCell(new Paragraph(tradueixMissatge(locale, "justificante.transport"), lletraGovern8bold));
-            taulaInformacio.addCell(new Paragraph(transport, lletraGovern8));
+            taulaInformacio.addCell(new Paragraph(I18NJustificanteUtils.tradueix(locale, "transporte.0" + registro.getRegistroDetalle().getTransporte(), null), lletraGovern8));
         }
         // Número transport
-        if(StringUtils.isNotEmpty(numTransport)) {
+        if(StringUtils.isNotEmpty(registro.getRegistroDetalle().getNumeroTransporte())) {
             i += 1;
             taulaInformacio.addCell(new Paragraph(tradueixMissatge(locale, "justificante.numTransport"), lletraGovern8bold));
-            taulaInformacio.addCell(new Paragraph(numTransport, lletraGovern8));
+            taulaInformacio.addCell(new Paragraph(registro.getRegistroDetalle().getNumeroTransporte(), lletraGovern8));
         }
+
         // Oficina origen
-        if(StringUtils.isNotEmpty(oficinaOrigen)) {
+        if(StringUtils.isNotEmpty(getOficinaOrigenDenominacion(registro))) {
             i += 1;
             taulaInformacio.addCell(new Paragraph(tradueixMissatge(locale, "justificante.oficinaOrigen"), lletraGovern8bold));
-            taulaInformacio.addCell(new Paragraph(oficinaOrigen, lletraGovern8));
+            taulaInformacio.addCell(new Paragraph(getOficinaOrigenDenominacion(registro), lletraGovern8));
+
+            // Número Registre origen
+            if(StringUtils.isNotEmpty(registro.getRegistroDetalle().getNumeroRegistroOrigen())) {
+                i += 1;
+                taulaInformacio.addCell(new Paragraph(tradueixMissatge(locale, "justificante.numRegOrigen"), lletraGovern8bold));
+                taulaInformacio.addCell(new Paragraph(registro.getRegistroDetalle().getNumeroRegistroOrigen(), lletraGovern8));
+            }
+            // Data Registre origen
+            if(registro.getRegistroDetalle().getFechaOrigen() != null) {
+                i += 1;
+                taulaInformacio.addCell(new Paragraph(tradueixMissatge(locale, "justificante.dataOrigen"), lletraGovern8bold));
+                taulaInformacio.addCell(new Paragraph(formatDate.format(registro.getRegistroDetalle().getFechaOrigen()), lletraGovern8));
+            }
         }
-        // Número Registre origen
-        if(StringUtils.isNotEmpty(numRegOrigen)) {
-            i += 1;
-            taulaInformacio.addCell(new Paragraph(tradueixMissatge(locale, "justificante.numRegOrigen"), lletraGovern8bold));
-            taulaInformacio.addCell(new Paragraph(numRegOrigen, lletraGovern8));
-        }
-        // Data Registre origen
-        if(StringUtils.isNotEmpty(dataOrigen)) {
-            i += 1;
-            taulaInformacio.addCell(new Paragraph(tradueixMissatge(locale, "justificante.dataOrigen"), lletraGovern8bold));
-            taulaInformacio.addCell(new Paragraph(dataOrigen, lletraGovern8));
-        }
+
         // Observacions
-        if(StringUtils.isNotEmpty(observacions)) {
+        if(StringUtils.isNotEmpty(registro.getRegistroDetalle().getObservaciones())) {
             i += 1;
             taulaInformacio.addCell(new Paragraph(tradueixMissatge(locale, "justificante.observacions"), lletraGovern8bold));
-            taulaInformacio.addCell(new Paragraph(observacions, lletraGovern8));
+            taulaInformacio.addCell(new Paragraph(registro.getRegistroDetalle().getObservaciones(), lletraGovern8));
         }
         if(!esPar(i)) {
             // Completa la cel·la buida
@@ -1143,4 +1069,44 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
         return numero % 2 == 0;
     }
 
+    /**
+     * Retorna la Oficina Origen, siempre que no sea la misma donde se registró
+     * @param registro
+     * @return
+     */
+    private String getOficinaOrigenDenominacion(IRegistro registro){
+
+        if(registro.getRegistroDetalle().getOficinaOrigen() != null){
+
+            if(!registro.getRegistroDetalle().getOficinaOrigen().getCodigo().equals(registro.getOficina().getCodigo())) { // Solo si no es la misma donde registró
+                return registro.getRegistroDetalle().getOficinaOrigen().getDenominacion() + " - " + registro.getRegistroDetalle().getOficinaOrigen().getCodigo();
+
+            }else{
+                return null;
+            }
+        }else if(StringUtils.isNotEmpty(registro.getRegistroDetalle().getOficinaOrigenExternoCodigo())){
+            return  registro.getRegistroDetalle().getOficinaOrigenExternoDenominacion() + " - " + registro.getRegistroDetalle().getOficinaOrigenExternoCodigo();
+        }
+
+        return null;
+    }
+
+    private String getDestino(RegistroEntrada registroEntrada){
+        if(registroEntrada.getDestino() != null) {
+            return registroEntrada.getDestino().getDenominacion() + " - " + registroEntrada.getDestino().getCodigo();
+        }else{
+            return registroEntrada.getDestinoExternoDenominacion() + " - " + registroEntrada.getDestinoExternoCodigo();
+        }
+    }
+
+    private String getDestinatario(RegistroSalida registroSalida) {
+        List<Interesado> destinatarios = registroSalida.getRegistroDetalle().getInteresados();
+        for(Interesado interesado : destinatarios) {
+            if(interesado.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION)) {
+
+                return interesado.getNombreCompleto();
+            }
+        }
+        return null;
+    }
 }

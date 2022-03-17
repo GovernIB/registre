@@ -195,7 +195,7 @@ public class IntegracionBean extends BaseEjbJPA<Integracion, Long> implements In
 
         Query q = em.createQuery("Select i.fecha, i.tipo, i.numRegFormat, i.descripcion from Integracion as i where " +
                 "i.entidad.id = :idEntidad and i.estado =:estado and i.tipo = :tipo and " +
-                "i.fecha >= :fecha order by i.fecha desc");
+                "i.fecha >= :fecha order by i.id desc");
 
         q.setParameter("idEntidad",idEntidad);
         q.setParameter("estado",RegwebConstantes.INTEGRACION_ESTADO_ERROR);
@@ -204,7 +204,7 @@ public class IntegracionBean extends BaseEjbJPA<Integracion, Long> implements In
         Calendar hoy = Calendar.getInstance(); //obtiene la fecha de hoy
         hoy.add(Calendar.DATE, -2); //el -2 indica que se le restaran 3 dias
         q.setParameter("fecha", hoy.getTime());
-        q.setMaxResults(7);
+        q.setMaxResults(5);
         q.setHint("org.hibernate.readOnly", true);
 
         List<Integracion> integraciones =  new ArrayList<Integracion>();
@@ -228,13 +228,19 @@ public class IntegracionBean extends BaseEjbJPA<Integracion, Long> implements In
     @Override
     public void addIntegracionError(Long tipo, String descripcion, String peticion, Throwable th, String error, Long tiempo, Long idEntidad, String numRegFormat) throws Exception {
 
-        StringWriter sw = new StringWriter();
-        PrintWriter pw = new PrintWriter(sw, true);
-        th.printStackTrace(pw);
-        String exception = sw.getBuffer().toString();
+        String exception = null;
 
-        if (StringUtils.isEmpty(error)){
-            error = th.getMessage();
+        // Obtenemos el mensaje de la Excepción
+        if(th != null){
+
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw, true);
+            th.printStackTrace(pw);
+            exception = sw.getBuffer().toString();
+
+            if (StringUtils.isEmpty(error)){
+                error = th.getMessage();
+            }
         }
 
         persist(new Integracion(tipo, RegwebConstantes.INTEGRACION_ESTADO_ERROR, descripcion, peticion, error, exception,tiempo, idEntidad, numRegFormat));
@@ -244,7 +250,7 @@ public class IntegracionBean extends BaseEjbJPA<Integracion, Long> implements In
     public Integer purgarIntegraciones(Long idEntidad) throws Exception{
 
         Calendar hoy = Calendar.getInstance(); //obtiene la fecha de hoy
-        hoy.add(Calendar.DATE, -10); //el -10 indica que se le restaran 10 dias
+        hoy.add(Calendar.DATE, -20); //el -20 indica que se le restaran 10 dias
 
         List<?> integracion =  em.createQuery("select distinct(i.id) from Integracion as i where i.entidad.id = :idEntidad and i.fecha <= :fecha")
                 .setParameter("idEntidad",idEntidad)

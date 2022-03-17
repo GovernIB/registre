@@ -56,8 +56,7 @@
 
                     </div>
 
-                    <%--BOTONERA--%>
-
+                    <%--BOTONERA JUSTIFICANTE--%>
                     <div class="panel-footer center">
 
                         <c:if test="${registro.estado != RegwebConstantes.REGISTRO_RESERVA}">
@@ -74,7 +73,6 @@
                                     </ul>
                                 </div>
                             </c:if>
-
                         </c:if>
 
                         <%--Si se ha generado el justificante, muestra el boton paras descargarlo --%>
@@ -99,6 +97,33 @@
                             </c:if>
 
                         </c:if>
+
+                        <%--Botón Anular--%>
+                        <c:if test="${registro.estado != RegwebConstantes.REGISTRO_ANULADO && registro.estado != RegwebConstantes.REGISTRO_RECTIFICADO}">
+                            <div class="btn-group">
+                                <a data-toggle="modal" role="button" href="#anularModal" onclick="limpiarModalAnulacion(${registro.id});" class="btn btn-danger btn-sm"><spring:message code="regweb.anular"/></a>
+                            </div>
+                        </c:if>
+                    </div>
+
+                    <%--BOTONERA --%>
+                    <div class="panel-footer center">
+                        <form:form modelAttribute="integracion" action="${pageContext.request.contextPath}/integracion/busqueda" method="post" cssClass="form-horizontal" target="_blank">
+                            <form:hidden path="texto"/>
+                        </form:form>
+
+                        <%--Botón integraciones--%>
+                        <div class="btn-group">
+                            <button type="button" onclick="buscarIntegraciones('${registro.numeroRegistroFormateado}')" class="btn btn-warning btn-sm btn-block">
+                                <spring:message code="integracion.integraciones"/>
+                            </button>
+                        </div>
+
+                        <%--Botón detalle Intercambio SIR--%>
+                        <c:if test="${not empty registro.registroDetalle.identificadorIntercambio}">
+                            <div class="btn-group"><button type="button" onclick="goToNewPage('<c:url value="/sir/${registro.registroDetalle.identificadorIntercambio}/detalle"/>')" class="btn btn-primary btn-sm"><spring:message code="idIntercambio.detalle"/></button></div>
+                        </c:if>
+
                     </div>
                 </div>
             
@@ -171,11 +196,19 @@
                         <div class="tab-pane" id="justificante">
                             <div class="col-xs-12">
                                 <dl class="detalle_registro">
-                                    <dt><i class="fa fa-home"></i> Csv: </dt> <dd> ${registro.registroDetalle.justificante.csv}</dd>
-                                    <dt><i class="fa fa-home"></i> Custodiado: </dt> <dd> ${registro.registroDetalle.justificante.custodiado}</dd>
-                                    <dt><i class="fa fa-home"></i> Perfil custodia: </dt> <dd> ${registro.registroDetalle.justificante.perfilCustodia}</dd>
-                                    <dt><i class="fa fa-home"></i> CustodyId: </dt> <dd> ${registro.registroDetalle.justificante.custodiaID}</dd>
-                                    <dt><i class="fa fa-home"></i> Expediente: </dt> <dd> ${registro.registroDetalle.justificante.expedienteID}</dd>
+                                    <c:if test="${not registro.registroDetalle.justificante.custodiado}">
+                                        <dt><i class="fa fa-home"></i> Custodiado: </dt> <dd> <span class="label label-danger"><spring:message code="regweb.no"/></span></dd>
+                                        <dt><i class="fa fa-home"></i> Perfil custodia: </dt> <dd> <spring:message code="perfilCustodia.${registro.registroDetalle.justificante.perfilCustodia}"/></dd>
+                                        <dt><i class="fa fa-home"></i> CustodyId: </dt> <dd> ${registro.registroDetalle.justificante.custodiaID}</dd>
+                                    </c:if>
+                                    <c:if test="${registro.registroDetalle.justificante.custodiado}">
+                                        <dt><i class="fa fa-home"></i> Custodiado: </dt> <dd> <span class="label label-success"><spring:message code="regweb.si"/></span></dd>
+                                        <dt><i class="fa fa-home"></i> Perfil custodia: </dt> <dd> <spring:message code="perfilCustodia.${registro.registroDetalle.justificante.perfilCustodia}"/></dd>
+                                        <dt><i class="fa fa-home"></i> Csv: </dt> <dd> ${registro.registroDetalle.justificante.csv}</dd>
+                                        <dt><i class="fa fa-home"></i> CustodyId: </dt> <dd> ${registro.registroDetalle.justificante.custodiaID}</dd>
+                                        <dt><i class="fa fa-home"></i> Expediente: </dt> <dd> ${registro.registroDetalle.justificante.expedienteID}</dd>
+                                    </c:if>
+                                    <dt><i class="fa fa-home"></i> idAnexo: </dt> <dd> ${registro.registroDetalle.justificante.id}</dd>
                                 </dl>
                             </div>
                         </div>
@@ -187,10 +220,16 @@
     
     </div>
 
+    <%--Modal ANULAR--%>
+    <c:import url="../registro/anular.jsp">
+        <c:param name="tipoRegistro" value="${RegwebConstantes.REGISTRO_SALIDA}"/>
+    </c:import>
+
 </div>
 
 <c:import url="../modulos/pie.jsp"/>
-<script type="text/javascript" src="<c:url value="/js/plantilla.js"/>"></script>
+
+<script type="text/javascript" src="<c:url value="/js/integracion.js"/>"></script>
 
 <script type="text/javascript">
 

@@ -7,10 +7,12 @@ import es.caib.regweb3.persistence.ejb.ColaLocal;
 import es.caib.regweb3.persistence.ejb.CustodiaLocal;
 import es.caib.regweb3.persistence.ejb.DistribucionLocal;
 import es.caib.regweb3.persistence.utils.Paginacion;
+import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.controller.BaseController;
 import es.caib.regweb3.webapp.utils.Mensaje;
+import es.caib.regweb3.webapp.utils.TipoCola;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.springframework.stereotype.Controller;
@@ -23,6 +25,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by mgonzalez on 19/04/2018.
@@ -152,7 +156,7 @@ public class ColaController extends BaseController {
         Entidad entidadActiva = getEntidadActiva(request);
         Cola elemento = colaEjb.findById(idCola);
 
-        Boolean distribuido = distribucionEjb.distribuirRegistroEnCola(elemento, entidadActiva.getId(),RegwebConstantes.INTEGRACION_DISTRIBUCION);
+        Boolean distribuido = distribucionEjb.distribuirRegistroEnCola(elemento, entidadActiva,RegwebConstantes.INTEGRACION_DISTRIBUCION);
 
         if(distribuido){
             Mensaje.saveMessageInfo(request, getMessage("registroEntrada.distribuir.ok"));
@@ -175,16 +179,18 @@ public class ColaController extends BaseController {
 
             if(elemento.getTipo().equals(RegwebConstantes.COLA_DISTRIBUCION)){
 
+                // Marcamos el elemento como procesado
+                colaEjb.procesarElementoDistribucion(elemento);
+
                 // Marcamos como distribuido el Registro
                 RegistroEntrada registroEntrada = registroEntradaEjb.findById(elemento.getIdObjeto());
                 registroEntradaEjb.marcarDistribuido(registroEntrada);
 
             }else if(elemento.getTipo().equals(RegwebConstantes.COLA_CUSTODIA)){
-                // TODO decidir que hacer aquí
+                // Marcamos el elemento como procesado
+                colaEjb.procesarElemento(elemento);
             }
 
-            // Marcamos el elemento como procesado
-            colaEjb.procesarElemento(elemento);
 
             Mensaje.saveMessageInfo(request, getMessage("cola.procesar.ok"));
 
@@ -220,20 +226,33 @@ public class ColaController extends BaseController {
 
 
     @ModelAttribute("tiposCola")
-    public
-    Long[] tiposCola() {
+    public List<TipoCola> tiposCola(HttpServletRequest request) throws Exception {
+
+        List<TipoCola> tiposCola =  new ArrayList<>();
+        Entidad entidadActiva = getEntidadActiva(request);
 
         if(Configuracio.isCAIB()){
-            return RegwebConstantes.COLA_TIPOS_CAIB;
-        }else{
-            return RegwebConstantes.COLA_TIPOS;
-        }
+            for(Long tipo:RegwebConstantes.COLA_TIPOS_CAIB){
 
+                if(tipo.equals(RegwebConstantes.COLA_DISTRIBUCION)){
+                    tiposCola.add(new TipoCola(tipo, PropiedadGlobalUtil.pararColaDistribucion(entidadActiva.getId()), colaEjb.findPendientesByTipo(tipo, entidadActiva.getId())));
+                }
+
+                if(tipo.equals(RegwebConstantes.COLA_CUSTODIA)){
+                    tiposCola.add(new TipoCola(tipo, PropiedadGlobalUtil.pararColaCustodia(entidadActiva.getId()), colaEjb.findPendientesByTipo(tipo, entidadActiva.getId())));
+                }
+            }
+
+        }else{
+            for(Long tipo:RegwebConstantes.COLA_TIPOS){
+                tiposCola.add(new TipoCola(tipo, PropiedadGlobalUtil.pararColaDistribucion(entidadActiva.getId()), colaEjb.findPendientesByTipo(tipo, entidadActiva.getId())));
+            }
+        }
+        return tiposCola;
     }
 
     @ModelAttribute("estados")
-    public
-    Long[] estados() {
+    public Long[] estados() {
         return RegwebConstantes.COLA_ESTADOS;
     }
 }

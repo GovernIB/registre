@@ -7,6 +7,7 @@ import es.caib.regweb3.persistence.utils.FileSystemManager;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
+import es.caib.regweb3.utils.StringUtils;
 import es.caib.regweb3.webapp.security.LoginInfo;
 import es.caib.regweb3.webapp.utils.LoginService;
 import es.caib.regweb3.webapp.utils.Mensaje;
@@ -226,33 +227,26 @@ public class InicioInterceptor extends HandlerInterceptorAdapter {
                         }
 
                         // Dir3Caib Server
-                        if (PropiedadGlobalUtil.getDir3CaibServer() == null || PropiedadGlobalUtil.getDir3CaibServer().isEmpty()) {
+                        if (StringUtils.isEmpty(PropiedadGlobalUtil.getDir3CaibServer(entidadActiva.getId()))) {
                             log.info("La propiedad Dir3CaibServer no está definida");
                             Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.propiedad.dir3caibserver"));
                             entidadEjb.marcarEntidadMantenimiento(entidadActiva.getId(), true);
                         }
                         // Dir3Caib Username
-                        if (PropiedadGlobalUtil.getDir3CaibUsername() == null || PropiedadGlobalUtil.getDir3CaibUsername().isEmpty()) {
+                        if (StringUtils.isEmpty(PropiedadGlobalUtil.getDir3CaibUsername(entidadActiva.getId()))) {
                             log.info("La propiedad Dir3CaibUsername no está definida");
                             Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.propiedad.dir3caibusername"));
                             entidadEjb.marcarEntidadMantenimiento(entidadActiva.getId(), true);
                         }
                         // Dir3Caib Password
-                        if (PropiedadGlobalUtil.getDir3CaibPassword() == null || PropiedadGlobalUtil.getDir3CaibPassword().isEmpty()) {
+                        if (StringUtils.isEmpty(PropiedadGlobalUtil.getDir3CaibPassword(entidadActiva.getId()))) {
                             log.info("La propiedad Dir3CaibPassword no está definida");
                             Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.propiedad.dir3caibpassword"));
                             entidadEjb.marcarEntidadMantenimiento(entidadActiva.getId(), true);
                         }
 
-                        // Tipo documental existente
-                        if(tipoDocumentalEjb.getByEntidad(entidadActiva.getId()).size()==0){
-                            log.info("Aviso: No hay ningún Tipo Documental para la Entidad Activa");
-                            Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.tipoDocumental"));
-                            entidadEjb.marcarEntidadMantenimiento(entidadActiva.getId(), true);
-                        }
-
                         //Comprobamos que se haya definido un formato para el número de registro en la Entidad
-                        if(entidadActiva.getNumRegistro() == null || entidadActiva.getNumRegistro().length()==0){
+                        if(StringUtils.isEmpty(entidadActiva.getNumRegistro())){
                             log.info("No hay configurado el formato del numero de registro para la Entidad activa");
                             Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.entidad.formatoRegistro"));
                             entidadEjb.marcarEntidadMantenimiento(entidadActiva.getId(), true);
@@ -284,8 +278,6 @@ public class InicioInterceptor extends HandlerInterceptorAdapter {
         } catch (I18NException i18ne) {
             throw new Exception(I18NUtils.getMessage(i18ne), i18ne);
 
-        } finally {
-            // log.info("Interceptor Inicio: " + TimeUtils.formatElapsedTime(System.currentTimeMillis() - start));
         }
     }
 

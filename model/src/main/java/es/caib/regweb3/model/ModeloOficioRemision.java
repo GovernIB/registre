@@ -52,7 +52,7 @@ public class ModeloOficioRemision extends Traducible{
         this.nombre = nombre;
     }
 
-    @ManyToOne()
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ENTIDAD")
     @ForeignKey(name = "RWE_MODELOFREMISION_ENTIDAD_FK")
     public Entidad getEntidad() {
@@ -74,7 +74,5 @@ public class ModeloOficioRemision extends Traducible{
     public void setModelo(Archivo modelo) {
         this.modelo = modelo;
     }
-
-
 
 }

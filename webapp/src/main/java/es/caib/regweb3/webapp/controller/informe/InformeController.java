@@ -92,13 +92,14 @@ public class InformeController extends AbstractRegistroCommonFormController {
 
         ModelAndView mav = null;
 
+        Entidad entidadActiva = getEntidadActiva(request);
+        UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
+
         if(informeOrganismoBusquedaForm.getFormato().equals("pdf")){
             mav = new ModelAndView("registrosOrganismoPdf");
         }else if(informeOrganismoBusquedaForm.getFormato().equals("excel")){
             mav = new ModelAndView("registrosOrganismoExcel");
         }
-
-        UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
 
         Set<String> campos = informeOrganismoBusquedaForm.getCampos();
 
@@ -124,7 +125,7 @@ public class InformeController extends AbstractRegistroCommonFormController {
             if(!informeOrganismoBusquedaForm.getOrganDestinatariNom().equals("")) {
                 nomOrganismeDest = informeOrganismoBusquedaForm.getOrganDestinatariNom();
             } else{
-                nomOrganismeDest = organismoEjb.findByCodigoEntidadLigero(codigoOrganDest, usuarioEntidad.getEntidad().getId()).getDenominacion();
+                nomOrganismeDest = organismoEjb.findByCodigoByEntidadMultiEntidad(codigoOrganDest,usuarioEntidad.getEntidad().getId()).getDenominacion();
             }
         }
 
@@ -330,7 +331,7 @@ public class InformeController extends AbstractRegistroCommonFormController {
             Paginacion paginacionEntrada = new Paginacion(0, 0);
             paginacionEntrada.setListado(new ArrayList<Object>(registrosEntrada));
             start = System.currentTimeMillis();
-            lopdEjb.insertarRegistros(paginacionEntrada, usuarioEntidad.getId(), RegwebConstantes.REGISTRO_ENTRADA, RegwebConstantes.LOPD_LISTADO);
+            lopdEjb.insertarRegistros(paginacionEntrada, usuarioEntidad, entidadActiva.getLibro(), RegwebConstantes.REGISTRO_ENTRADA, RegwebConstantes.LOPD_LISTADO);
 
             mav.addObject("tipo", RegwebConstantes.INFORME_TIPO_REGISTRO_ENTRADA);
 
@@ -527,7 +528,7 @@ public class InformeController extends AbstractRegistroCommonFormController {
             Paginacion paginacionSalida = new Paginacion(0, 0);
             List<Object> salidasList = new ArrayList<Object>(registrosSalida);
             paginacionSalida.setListado(salidasList);
-            lopdEjb.insertarRegistros(paginacionSalida, usuarioEntidad.getId(), RegwebConstantes.REGISTRO_SALIDA, RegwebConstantes.LOPD_LISTADO);
+            lopdEjb.insertarRegistros(paginacionSalida, usuarioEntidad, entidadActiva.getLibro(), RegwebConstantes.REGISTRO_SALIDA, RegwebConstantes.LOPD_LISTADO);
 
             mav.addObject("tipo", RegwebConstantes.INFORME_TIPO_REGISTRO_SALIDA);
         }
@@ -586,7 +587,7 @@ public class InformeController extends AbstractRegistroCommonFormController {
         String formato = informeIndicadoresBusquedaForm.getFormato();
         Long calendario = informeIndicadoresBusquedaForm.getCampoCalendario();
         Integer tipoLibro = informeIndicadoresBusquedaForm.getTipo().intValue();
-        List<Oficina> oficinas = oficinaEjb.findByEntidad(entidadActiva.getId());
+        List<Oficina> oficinas = oficinaEjb.findByEntidadReduce(entidadActiva.getId());
         List<Organismo> organismos = organismoEjb.findByEntidadReduce(entidadActiva.getId());
 
         ModelAndView mav = new ModelAndView();
@@ -952,7 +953,7 @@ public class InformeController extends AbstractRegistroCommonFormController {
                 busqueda.setPageNumber(1);
                 mav.addObject("paginacion", paginacion);
                 // Alta en tabla LOPD de las entradas del listado
-                lopdEjb.insertarRegistros(paginacion, usuarioEntidad.getId(), RegwebConstantes.REGISTRO_ENTRADA, RegwebConstantes.LOPD_LISTADO);
+                lopdEjb.insertarRegistros(paginacion, usuarioEntidad, entidadActiva.getLibro(), RegwebConstantes.REGISTRO_ENTRADA, RegwebConstantes.LOPD_LISTADO);
                 mav.addObject("entradas", true);
                 mav.addObject("salidas", false);
             }
@@ -961,7 +962,7 @@ public class InformeController extends AbstractRegistroCommonFormController {
                 busqueda.setPageNumber(1);
                 mav.addObject("paginacion", paginacion);
                 // Alta en tabla LOPD de las salidas del listado
-                lopdEjb.insertarRegistros(paginacion, usuarioEntidad.getId(), RegwebConstantes.REGISTRO_SALIDA, RegwebConstantes.LOPD_LISTADO);
+                lopdEjb.insertarRegistros(paginacion, usuarioEntidad, entidadActiva.getLibro(), RegwebConstantes.REGISTRO_SALIDA, RegwebConstantes.LOPD_LISTADO);
                 mav.addObject("entradas", false);
                 mav.addObject("salidas", true);
             }

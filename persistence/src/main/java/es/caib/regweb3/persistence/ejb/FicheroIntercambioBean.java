@@ -40,6 +40,7 @@ public class FicheroIntercambioBean implements FicheroIntercambioLocal {
     @EJB private OficinaLocal oficinaEjb;
     @EJB private IntegracionLocal integracionEjb;
     @EJB private MensajeControlLocal mensajeControlEjb;
+    @EJB private MultiEntidadLocal multiEntidadEjb;
 
     /**
      * Recibe un fichero de intercambio en formato SICRES3 desde un nodo distribuido
@@ -89,7 +90,7 @@ public class FicheroIntercambioBean implements FicheroIntercambioLocal {
             } else {
 
                 // Creamos un nuevo RegistroSir
-                registroSir = registroSirEjb.crearRegistroSir(ficheroIntercambio);
+                registroSir = registroSirEjb.crearRegistroSir(ficheroIntercambio, entidad);
                 log.info("El registroSir no existia en el sistema y se ha creado: " + registroSir.getIdentificadorIntercambio());
             }
 
@@ -186,6 +187,8 @@ public class FicheroIntercambioBean implements FicheroIntercambioLocal {
                     oficioRemision.setDecodificacionEntidadRegistralProcesado(ficheroIntercambio.getDecodificacionEntidadRegistralOrigen());
                     oficioRemision.setEstado(RegwebConstantes.OFICIO_SIR_DEVUELTO);
                     oficioRemision.setFechaEstado(new Date());
+                    oficioRemision.setTipoAnotacion(ficheroIntercambio.getTipoAnotacion());
+                    oficioRemision.setDecodificacionTipoAnotacion(ficheroIntercambio.getDescripcionTipoAnotacion());
                     oficioRemisionEjb.merge(oficioRemision);
 
                     log.info("El oficio de remision existia en el sistema, nos lo han renviado: " + oficioRemision.getIdentificadorIntercambio());
@@ -200,7 +203,7 @@ public class FicheroIntercambioBean implements FicheroIntercambioLocal {
 
             }else{
                 // Creamos un nuevo RegistroSir
-                registroSir = registroSirEjb.crearRegistroSir(ficheroIntercambio);
+                registroSir = registroSirEjb.crearRegistroSir(ficheroIntercambio, entidad);
                 log.info("El registroSir no existia en el sistema y se ha creado: " + registroSir.getIdentificadorIntercambio());
             }
 
@@ -226,8 +229,8 @@ public class FicheroIntercambioBean implements FicheroIntercambioLocal {
                         // Actualizamos el registro de entrada
                         registroEntrada.setEstado(RegwebConstantes.REGISTRO_RECHAZADO);
                         registroEntrada.getRegistroDetalle().setAplicacion(ficheroIntercambio.getAplicacionEmisora());
-                        registroEntrada.getRegistroDetalle().setObservaciones(ficheroIntercambio.getObservacionesApunte());
-                        registroEntrada.getRegistroDetalle().setTipoAnotacion(ficheroIntercambio.getTipoAnotacion());
+                        //registroEntrada.getRegistroDetalle().setObservaciones(ficheroIntercambio.getObservacionesApunte());
+                        //registroEntrada.getRegistroDetalle().setTipoAnotacion(ficheroIntercambio.getTipoAnotacion());
                         registroEntrada.getRegistroDetalle().setDecodificacionTipoAnotacion(ficheroIntercambio.getDescripcionTipoAnotacion());
                         registroEntradaEjb.merge(registroEntrada);
 
@@ -237,8 +240,8 @@ public class FicheroIntercambioBean implements FicheroIntercambioLocal {
                         // Actualizamos el registro de salida
                         registroSalida.setEstado(RegwebConstantes.REGISTRO_RECHAZADO);
                         registroSalida.getRegistroDetalle().setAplicacion(ficheroIntercambio.getAplicacionEmisora());
-                        registroSalida.getRegistroDetalle().setObservaciones(ficheroIntercambio.getObservacionesApunte());
-                        registroSalida.getRegistroDetalle().setTipoAnotacion(ficheroIntercambio.getTipoAnotacion());
+                        //registroSalida.getRegistroDetalle().setObservaciones(ficheroIntercambio.getObservacionesApunte());
+                        //registroSalida.getRegistroDetalle().setTipoAnotacion(ficheroIntercambio.getTipoAnotacion());
                         registroSalida.getRegistroDetalle().setDecodificacionTipoAnotacion(ficheroIntercambio.getDescripcionTipoAnotacion());
                         registroSalidaEjb.merge(registroSalida);
                     }
@@ -248,6 +251,8 @@ public class FicheroIntercambioBean implements FicheroIntercambioLocal {
                     oficioRemision.setDecodificacionEntidadRegistralProcesado(ficheroIntercambio.getDecodificacionEntidadRegistralOrigen());
                     oficioRemision.setEstado(RegwebConstantes.OFICIO_SIR_RECHAZADO);
                     oficioRemision.setFechaEstado(new Date());
+                    oficioRemision.setTipoAnotacion(ficheroIntercambio.getTipoAnotacion());
+                    oficioRemision.setDecodificacionTipoAnotacion(ficheroIntercambio.getDescripcionTipoAnotacion());
                     oficioRemisionEjb.merge(oficioRemision);
 
                     log.info("El oficio de remision existia en el sistema, nos lo han rechazado: " + oficioRemision.getIdentificadorIntercambio());
@@ -319,9 +324,9 @@ public class FicheroIntercambioBean implements FicheroIntercambioLocal {
      */
     private Entidad obtenerEntidad(String codigoEntidadRegistralDestino) throws Exception{
 
-        if(codigoEntidadRegistralDestino != null){
+        if(codigoEntidadRegistralDestino != null) {
 
-            Oficina oficina = oficinaEjb.findByCodigo(codigoEntidadRegistralDestino);
+            Oficina oficina = obtenerOficina(codigoEntidadRegistralDestino);
 
             if(oficina != null){
                 return oficina.getOrganismoResponsable().getEntidad();
@@ -330,6 +335,16 @@ public class FicheroIntercambioBean implements FicheroIntercambioLocal {
 
         return null;
 
+    }
+
+
+    private Oficina obtenerOficina(String codigo) throws Exception {
+
+        if(multiEntidadEjb.isMultiEntidad()){
+            return oficinaEjb.findByCodigoMultiEntidad(codigo);
+        }else{
+            return oficinaEjb.findByCodigo(codigo);
+        }
     }
 
 }

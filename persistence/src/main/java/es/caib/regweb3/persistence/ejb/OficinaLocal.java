@@ -4,6 +4,7 @@ import es.caib.dir3caib.ws.api.oficina.OficinaTF;
 import es.caib.regweb3.model.Oficina;
 import es.caib.regweb3.model.Organismo;
 import es.caib.regweb3.persistence.utils.Paginacion;
+import es.caib.regweb3.utils.Dir3Caib;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
@@ -28,8 +29,30 @@ public interface OficinaLocal extends BaseEjb<Oficina, Long> {
      */
     Oficina findByCodigo(String codigo) throws Exception;
 
+    /**
+     * Busca una Oficina a partir de su código, teniendo en cuenta que se trata de una instalación Multientidad
+     * @param codigo
+     * @return
+     * @throws Exception
+     */
+    Oficina findByCodigoMultiEntidad(String codigo) throws Exception;
 
-    Oficina findByCodigoMultientidad(String codigo) throws Exception;
+    /**
+     * Obtiene una oficina teniendo en cuenta la configuración de si es multientidad o no.
+     * @param codigo
+     * @return
+     * @throws Exception
+     */
+    Oficina findByMultiEntidad(String codigo) throws Exception;
+
+    /**
+     * Obtiene una oficina distinguiendo que mètodo usar en función de si la instancia es multientidad o no.
+     * @param codigo
+     * @param idEntidad
+     * @return
+     * @throws Exception
+     */
+    Oficina findByCodigoByEntidadMultiEntidad(String codigo, Long idEntidad) throws Exception;
 
     /**
      * Obtiene la oficina del codigo indicado, la entidad indicada independientemente del estado.
@@ -115,6 +138,14 @@ public interface OficinaLocal extends BaseEjb<Oficina, Long> {
     List<Oficina> findByEntidad(Long idEntidad) throws Exception;
 
     /**
+     * Obtiene todos las oficinas de una entidad solo id y denominacion
+     * @param entidad
+     * @return
+     * @throws Exception
+     */
+    List<Oficina> findByEntidadReduce(Long entidad) throws Exception;
+
+    /**
      * Obtiene las Oficinas cuya Entidad responsable es la indicada y tienen el estado indicado
      * @param idEntidad
      * @param estado
@@ -122,6 +153,17 @@ public interface OficinaLocal extends BaseEjb<Oficina, Long> {
      * @throws Exception
      */
     List<Oficina> findByEntidadByEstado(Long idEntidad, String estado) throws Exception;
+
+
+    /**
+     * Obtiene las Oficinas cuya Entidad responsable es la indicada y tienen el estado indicado y elimina aquellas oficinas
+     * que en un entorno multientidad estan repetidas en la entidad que les da servicio.
+     * @param idEntidad
+     * @param estado
+     * @return
+     * @throws Exception
+     */
+    List<Oficina> findByEntidadByEstadoMultiEntidad(Long idEntidad, String estado) throws Exception;
 
     /**
      * Obtiene las Oficinas responsables cuya Entidad responsable es la indicada
@@ -239,21 +281,12 @@ public interface OficinaLocal extends BaseEjb<Oficina, Long> {
      */
     Long obtenerEntidad(String codigo) throws Exception;
 
-
-
-    /**
-     * Obtiene el id de la Entidad a la que pertenece la Oficina en un entorno multientidad
-     * @param codigo
-     * @return
-     * @throws Exception
-     */
-    Long obtenerEntidadMultiEntidad(String codigo) throws Exception;
-
     /**
      * Obtiene las oficinas SIR desde dir3caib(via WS) de la unidad indicada en el código
      * @param codigo
+     * @param dir3caib
      * @return
      * @throws Exception
      */
-    List<OficinaTF> obtenerOficinasSir(String codigo) throws Exception;
+    List<OficinaTF> obtenerOficinasSir(String codigo, Dir3Caib dir3caib) throws Exception;
 }

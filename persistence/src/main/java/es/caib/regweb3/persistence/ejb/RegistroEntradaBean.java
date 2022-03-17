@@ -45,8 +45,7 @@ import static es.caib.regweb3.utils.RegwebConstantes.REGISTRO_ENTRADA;
 @Stateless(name = "RegistroEntradaEJB")
 @SecurityDomain("seycon")
 /*@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)*/
-public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
-        implements RegistroEntradaLocal {
+public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean implements RegistroEntradaLocal {
 
     protected final Logger log = Logger.getLogger(getClass());
 
@@ -80,8 +79,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     }
 
     @Override
-    public RegistroEntrada registrarEntrada(RegistroEntrada registroEntrada,
-                                            UsuarioEntidad usuarioEntidad, List<Interesado> interesados, List<AnexoFull> anexosFull, Boolean validarAnexos)
+    public RegistroEntrada registrarEntrada(RegistroEntrada registroEntrada, Entidad entidad, UsuarioEntidad usuarioEntidad, List<Interesado> interesados, List<AnexoFull> anexosFull, Boolean validarAnexos)
             throws Exception, I18NException, I18NValidationException {
 
         try {
@@ -93,7 +91,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
             registroEntrada.setFecha(numeroRegistro.getFecha());
 
             // Generamos el Número de registro formateado
-            registroEntrada.setNumeroRegistroFormateado(RegistroUtils.numeroRegistroFormateado(registroEntrada, libro, usuarioEntidad.getEntidad()));
+            registroEntrada.setNumeroRegistroFormateado(RegistroUtils.numeroRegistroFormateado(registroEntrada, libro, entidad));
 
             // Si no ha introducido ninguna fecha de Origen
             if (registroEntrada.getRegistroDetalle().getFechaOrigen() == null) {
@@ -126,9 +124,9 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
                     anexoFull.getAnexo().setRegistroDetalle(registroEntrada.getRegistroDetalle());
                     AnexoFull anexoFullCreado;
                     if(!anexoFull.getAnexo().getConfidencial()){
-                        anexoFullCreado = anexoEjb.crearAnexo(anexoFull, usuarioEntidad, registroID, REGISTRO_ENTRADA, null, validarAnexos);
+                        anexoFullCreado = anexoEjb.crearAnexo(anexoFull, usuarioEntidad,entidad, registroID, REGISTRO_ENTRADA, null, validarAnexos);
                     }else{
-                        anexoFullCreado = anexoEjb.crearAnexoConfidencial(anexoFull, usuarioEntidad, registroID, REGISTRO_ENTRADA);
+                        anexoFullCreado = anexoEjb.crearAnexoConfidencial(anexoFull, usuarioEntidad, entidad, registroID, REGISTRO_ENTRADA);
                     }
                     registroEntrada.getRegistroDetalle().getAnexos().add(anexoFullCreado.getAnexo());
                 }
@@ -140,16 +138,16 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
             if(!registroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_RESERVA)){
 
                 if(multiEntidadEjb.isMultiEntidad()) {
-                    Long evento = proximoEventoEntradaMultiEntidad(registroEntrada, usuarioEntidad.getEntidad(), registroEntrada.getOficina().getId());
+                    Long evento = proximoEventoEntradaMultiEntidad(registroEntrada, entidad, registroEntrada.getOficina().getId());
                     registroEntrada.setEvento(evento);
                 }else{
-                    Long evento = proximoEventoEntrada(registroEntrada, usuarioEntidad.getEntidad(), registroEntrada.getOficina().getId());
+                    Long evento = proximoEventoEntrada(registroEntrada, entidad, registroEntrada.getOficina().getId());
                     registroEntrada.setEvento(evento);
                 }
             }
 
             //Llamamos al plugin de postproceso
-            postProcesoNuevoRegistro(registroEntrada, usuarioEntidad.getEntidad().getId());
+            postProcesoNuevoRegistro(registroEntrada, entidad.getId());
 
             return registroEntrada;
 
@@ -170,16 +168,16 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     }
 
     @Override
-    public RegistroEntrada actualizar(RegistroEntrada antiguo, RegistroEntrada registroEntrada, UsuarioEntidad usuarioEntidad) throws Exception, I18NException {
+    public RegistroEntrada actualizar(RegistroEntrada antiguo, RegistroEntrada registroEntrada, Entidad entidad, UsuarioEntidad usuarioEntidad) throws Exception, I18NException {
 
         registroEntrada = merge(registroEntrada);
 
         // Obtenemos el próximo evento del Registro
         if(multiEntidadEjb.isMultiEntidad()) {
-            Long evento = proximoEventoEntradaMultiEntidad(registroEntrada, usuarioEntidad.getEntidad(), registroEntrada.getOficina().getId());
+            Long evento = proximoEventoEntradaMultiEntidad(registroEntrada, entidad, registroEntrada.getOficina().getId());
             registroEntrada.setEvento(evento);
         }else{
-            Long evento = proximoEventoEntrada(registroEntrada, usuarioEntidad.getEntidad(), registroEntrada.getOficina().getId());
+            Long evento = proximoEventoEntrada(registroEntrada, entidad, registroEntrada.getOficina().getId());
             registroEntrada.setEvento(evento);
         }
 
@@ -320,7 +318,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<OficinaTF> isOficioRemisionSir(Long idRegistro) throws Exception {
+    public List<OficinaTF> isOficioRemisionSir(Long idRegistro, Long idEntidad) throws Exception {
 
         Query q;
         q = em.createQuery("Select re.destinoExternoCodigo from RegistroEntrada as re where " +
@@ -336,7 +334,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         if (result.size() > 0) {
 
             String codigoDir3 = result.get(0);
-            Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService(PropiedadGlobalUtil.getDir3CaibServer(), PropiedadGlobalUtil.getDir3CaibUsername(), PropiedadGlobalUtil.getDir3CaibPassword());
+            Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService(PropiedadGlobalUtil.getDir3CaibServer(idEntidad), PropiedadGlobalUtil.getDir3CaibUsername(idEntidad), PropiedadGlobalUtil.getDir3CaibPassword(idEntidad));
 
             return oficinasService.obtenerOficinasSIRUnidad(codigoDir3);
         }
@@ -347,7 +345,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<OficinaTF> isOficioRemisionSirMultiEntidad(Long idRegistro) throws Exception {
+    public List<OficinaTF> isOficioRemisionSirMultiEntidad(Long idRegistro, Long idEntidad) throws Exception {
 
         //Miramos los externos
         Query q;
@@ -373,7 +371,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
         if(result.size()>0){ // Si hay buscamos las oficinas SIR
             String codigoDir3 = result.get(0);
-            Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService(PropiedadGlobalUtil.getDir3CaibServer(), PropiedadGlobalUtil.getDir3CaibUsername(), PropiedadGlobalUtil.getDir3CaibPassword());
+            Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService(PropiedadGlobalUtil.getDir3CaibServer(idEntidad), PropiedadGlobalUtil.getDir3CaibUsername(idEntidad), PropiedadGlobalUtil.getDir3CaibPassword(idEntidad));
 
             return oficinasService.obtenerOficinasSIRUnidad(codigoDir3);
         }else{
@@ -410,7 +408,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
             // Si la entidad está en SIR y la Oficina está activada para Envío Sir
             if (entidadActiva.getSir() && oficinaEjb.isSIREnvio(idOficina)) {
-                List<OficinaTF> oficinasSIR = isOficioRemisionSir(registroEntrada.getId());
+                List<OficinaTF> oficinasSIR = isOficioRemisionSir(registroEntrada.getId(), entidadActiva.getId());
 
                 if (oficinasSIR != null && !oficinasSIR.isEmpty()) {
                     return RegwebConstantes.EVENTO_OFICIO_SIR;
@@ -432,15 +430,15 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         // en el siguiente if si hay una entidad que le da soporte
         Organismo organismo = null;
         if(registroEntrada.getDestino()!=null) {
-            organismo = organismoEjb.findByCodigoMultientidad(registroEntrada.getDestino().getCodigo());
+            organismo = organismoEjb.findByCodigoMultiEntidad(registroEntrada.getDestino().getCodigo());
 
         }
 
-        if( registroEntrada.getDestino() == null || (organismo!=null &&!organismo.getEntidad().equals(entidadActiva))){ //Externo o multientidad
+        if( registroEntrada.getDestino() == null || (organismo!=null &&!organismo.getEntidad().getId().equals(entidadActiva.getId()))){ //Externo o multientidad
 
             // Si la entidad está en SIR y la Oficina está activada para Envío Sir
             if (entidadActiva.getSir() && oficinaEjb.isSIREnvio(idOficina)) {
-                List<OficinaTF> oficinasSIR = isOficioRemisionSirMultiEntidad(registroEntrada.getId());
+                List<OficinaTF> oficinasSIR = isOficioRemisionSirMultiEntidad(registroEntrada.getId(), entidadActiva.getId());
 
                 if (oficinasSIR != null && !oficinasSIR.isEmpty()) {
                     return RegwebConstantes.EVENTO_OFICIO_SIR;
@@ -503,8 +501,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     }
 
     @Override
-    public void visarRegistroEntrada(RegistroEntrada registroEntrada,
-                                     UsuarioEntidad usuarioEntidad) throws Exception {
+    public void visarRegistroEntrada(RegistroEntrada registroEntrada, Entidad entidad, UsuarioEntidad usuarioEntidad) throws Exception {
 
         // Modificamos el estado del RegistroEntrada
         cambiarEstadoHistorico(registroEntrada, RegwebConstantes.REGISTRO_VALIDO, usuarioEntidad);
@@ -512,10 +509,10 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         // Asignamos su evento
         if (registroEntrada.getEvento() != null) {
             if(multiEntidadEjb.isMultiEntidad()) {
-                Long evento = proximoEventoEntradaMultiEntidad(registroEntrada, usuarioEntidad.getEntidad(), registroEntrada.getOficina().getId());
+                Long evento = proximoEventoEntradaMultiEntidad(registroEntrada, entidad, registroEntrada.getOficina().getId());
                 registroEntrada.setEvento(evento);
             }else{
-                Long evento = proximoEventoEntrada(registroEntrada, usuarioEntidad.getEntidad(), registroEntrada.getOficina().getId());
+                Long evento = proximoEventoEntrada(registroEntrada, entidad, registroEntrada.getOficina().getId());
                 registroEntrada.setEvento(evento);
             }
             merge(registroEntrada);
@@ -536,7 +533,10 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         trazabilidad.setRegistroEntradaDestino(null);
         trazabilidadEjb.persist(trazabilidad);
 
-        cambiarEstadoHistorico(registroEntrada, RegwebConstantes.REGISTRO_DISTRIBUIDO, registroEntrada.getUsuario());
+        // Creamos el HistoricoRegistroEntrada para la distribución
+        registroEntrada.setEstado(RegwebConstantes.REGISTRO_DISTRIBUIDO);
+        historicoRegistroEntradaEjb.crearHistoricoRegistroEntrada(registroEntrada,
+                registroEntrada.getUsuario(), I18NLogicUtils.tradueix(new Locale(Configuracio.getDefaultLanguage()), "registro.modificacion.estado"), false);
 
     }
 
@@ -557,7 +557,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public RegistroEntrada rectificar(RegistroEntrada registroEntrada, UsuarioEntidad usuarioEntidad) throws Exception, I18NException {
+    public RegistroEntrada rectificar(RegistroEntrada registroEntrada, Entidad entidad, UsuarioEntidad usuarioEntidad) throws Exception, I18NException {
 
         RegistroEntrada rectificado = null;
         Long idRegistro = registroEntrada.getId();
@@ -603,12 +603,12 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
                 }
             } else { //destino externo
                 //UnidadTF destinoExterno = obtenerDestinoExternoRE(idRegistro);
-                UnidadTF destinoExterno = organismoEjb.obtenerDestinoExterno(registroEntrada.getDestinoExternoCodigo());
+                UnidadTF destinoExterno = organismoEjb.obtenerDestinoExterno(registroEntrada.getDestinoExternoCodigo(), entidad.getId());
                 //Si está extinguido
                 if (!destinoExterno.getCodigoEstadoEntidad().equals(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE)) {
                     //Si es SIR, obtenemos sus sustitutos y asignamos el primero.
                     if (registroEntrada.getEvento().equals(RegwebConstantes.EVENTO_OFICIO_SIR)) {
-                        List<UnidadTF> destinosExternosSIR = organismoEjb.obtenerSustitutosExternosSIR(destinoExterno.getCodigo());
+                        List<UnidadTF> destinosExternosSIR = organismoEjb.obtenerSustitutosExternosSIR(destinoExterno.getCodigo(), entidad.getId());
                         if (destinosExternosSIR.size() > 0) {
                             registroEntrada.setDestinoExternoCodigo(destinosExternosSIR.get(0).getCodigo());
                             registroEntrada.setDestinoExternoDenominacion(destinosExternosSIR.get(0).getDenominacion());
@@ -617,7 +617,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
                         }
 
                     } else { //Si no es SIR, obtenemos sus sustitutos y asignamos el primero.
-                        List<UnidadTF> destinosExternos = organismoEjb.obtenerSustitutosExternos(destinoExterno.getCodigo());
+                        List<UnidadTF> destinosExternos = organismoEjb.obtenerSustitutosExternos(destinoExterno.getCodigo(), entidad.getId());
                         if (destinosExternos.size() > 0) {
                             registroEntrada.setDestinoExternoCodigo(destinosExternos.get(0).getCodigo());
                             registroEntrada.setDestinoExternoDenominacion(destinosExternos.get(0).getDenominacion());
@@ -629,7 +629,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
             }
 
             // Registramos el nuevo registro
-            rectificado = registrarEntrada(registroEntrada, usuarioEntidad, interesados, anexos, false);
+            rectificado = registrarEntrada(registroEntrada, entidad, usuarioEntidad, interesados, anexos, false);
 
             // Moficiamos el estado al registro original
             cambiarEstado(idRegistro, RegwebConstantes.REGISTRO_RECTIFICADO);
@@ -742,6 +742,4 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
             postProcesoPlugin.nuevoRegistroEntrada(re);
         }
     }
-
-
 }

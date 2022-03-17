@@ -1,8 +1,10 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.AnexoSir;
+import es.caib.regweb3.model.Archivo;
 import es.caib.regweb3.model.utils.EstadoRegistroSir;
 import es.caib.regweb3.persistence.utils.FileSystemManager;
+import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.log4j.Logger;
 import org.jboss.ejb3.annotation.SecurityDomain;
@@ -11,6 +13,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -71,27 +74,38 @@ public class AnexoSirBean extends BaseEjbJPA<AnexoSir, Long> implements AnexoSir
 
     @Override
     @SuppressWarnings("unchecked")
-    public void purgarArchivos(Long idEntidad, Integer numElementos) throws Exception{
+    public int purgarAnexosAceptados(Long idEntidad) throws Exception{
 
-        Query q = em.createQuery("Select anexoSir from AnexoSir as anexoSir " +
-                "where anexoSir.purgado = false and anexoSir.registroSir.estado = :aceptado");
+        Integer numElementos = PropiedadGlobalUtil.getNumElementosPurgoAnexos(idEntidad);
 
+        Query q = em.createQuery("Select anexoSir.id, anexoSir.anexo.id from AnexoSir as anexoSir where anexoSir.registroSir.entidad.id = :idEntidad and " +
+                "anexoSir.purgado = false and anexoSir.registroSir.estado = :aceptado order by anexoSir.id");
 
+        q.setParameter("idEntidad", idEntidad);
         q.setParameter("aceptado", EstadoRegistroSir.ACEPTADO);
-        if(numElementos!= null) {
-            q.setMaxResults(numElementos);
-        }
+        //q.setFirstResult(0);
+        q.setMaxResults(numElementos);
+
         //q.setParameter("reenviado", EstadoRegistroSir.REENVIADO_Y_ACK);
         //q.setParameter("rechazado", EstadoRegistroSir.RECHAZADO_Y_ACK);
+        List<Object[]> result = q.getResultList();
+        List<AnexoSir> anexos = new ArrayList<>();
 
-        List<AnexoSir> anexos = q.getResultList();
+        for (Object[] object : result) {
+            AnexoSir anexoSir = new AnexoSir();
+            anexoSir.setId((Long) object[0]);
+            anexoSir.setAnexo(new Archivo((Long) object[1]));
+
+            anexos.add(anexoSir);
+        }
 
         // Eliminamos los Archivos del RegistroSir
         for (AnexoSir anexoSir: anexos) {
             FileSystemManager.eliminarArchivo(anexoSir.getAnexo().getId());
-            anexoSir.setPurgado(true);
-            merge(anexoSir);
+            em.createQuery("update from AnexoSir set purgado=true where id=:idAnexoSir").setParameter("idAnexoSir", anexoSir.getId()).executeUpdate();
         }
+
+        return anexos.size();
     }
 
     @Override

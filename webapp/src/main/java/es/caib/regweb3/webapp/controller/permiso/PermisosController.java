@@ -191,7 +191,7 @@ public class PermisosController extends BaseController {
         try {
             UsuarioEntidad usuarioEntidad = usuarioEntidadEjb.findById(idUsuarioEntidad);
 
-            if (entidadEjb.esAdministrador(usuarioEntidad.getEntidad().getId(), usuarioEntidad)) {
+            if (entidadEjb.esAdministrador(usuarioEntidad)) {
                 Mensaje.saveMessageError(request, getMessage("usuarioEntidad.administrador"));
                 return "redirect:/entidad/usuarios";
             }

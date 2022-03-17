@@ -204,7 +204,7 @@
                                                             <c:if test="${usuarioEntidad.usuario.rwe_ws_ciudadano}">
                                                                 <span class="label label-success" rel="popupAbajo" data-content="<strong><spring:message code="rol.6.nombre"/>:</strong> <spring:message code="rol.6.descripcion"/>" data-toggle="popover"><i class="fa fa-user"></i></span>
                                                             </c:if>
-                                                            <c:if test="${usuarioEntidad.usuario.dib_user}">
+                                                            <c:if test="${usuarioEntidad.usuario.dib_user_rw}">
                                                                 <span class="label label-success" rel="popupAbajo" data-content="<strong><spring:message code="rol.7.nombre"/>:</strong> <spring:message code="rol.7.descripcion"/>" data-toggle="popover"><i class="fa fa-print"></i></span>
                                                             </c:if>
                                                         </td>
