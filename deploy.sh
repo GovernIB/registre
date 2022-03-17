@@ -2,7 +2,7 @@
 
 cat help.txt
 
-env mvn $@ -DskipTests install
+env mvn $@ -DskipTests clean install
 
 # Perfiles de escaneo
 #env mvn $@ -DskipTests -Dhttps.protocols=TLSv1.2 clean install -Piecisascanweb -Pdwtscanweb -Pdigitalibscanweb -Pdigitalibmassivescanweb
