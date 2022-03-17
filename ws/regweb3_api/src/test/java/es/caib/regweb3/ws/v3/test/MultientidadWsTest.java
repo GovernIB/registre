@@ -66,7 +66,7 @@ public class MultientidadWsTest  extends RegWebTestUtils {
 
 
    /**
-    * Método que crea varios registros de entrada asignandoles el destino pertinente
+    * Método que crea varios registros de entrada asignandoles el destino pertinente en la entidad indicada a (test.properties) PRO
     *
     * @throws Exception
     */
@@ -74,15 +74,18 @@ public class MultientidadWsTest  extends RegWebTestUtils {
    public void crearAsientosEntradaVariosDestinosPRO() throws Exception {
 
       crearAsientoEntradaDestino(getDestinoInterno("PRO"));
-      crearAsientoEntradaDestino(getDestinoSirMultientidad("PRO"));
+      /*crearAsientoEntradaDestino(getDestinoSirMultientidad("PRO"));
       crearAsientoEntradaDestino(getDestinoNoSirMultientidad("PRO"));
       crearAsientoEntradaDestino(getDestinoExternoSir("PRO"));
-      crearAsientoEntradaDestino(getDestinoExternoNoSir("PRO"));
+      crearAsientoEntradaDestino(getDestinoExternoNoSir("PRO"));*/
+      //crearAsientoEntradaDestino("A04003765");
+     // crearAsientoEntradaDestino("A04013625");
+     //crearAsientoEntradaDestino("LA0008194");
    }
 
 
    /**
-    * Método que crea varios registros de entrada asignandoles el destino pertinente
+    * Método que crea varios registros de entrada asignandoles el destino pertinente en la entidad a (test.properties) PRE
     *
     * @throws Exception
     */
@@ -94,6 +97,23 @@ public class MultientidadWsTest  extends RegWebTestUtils {
       crearAsientoEntradaDestino(getDestinoExternoSir("PRE"));
       crearAsientoEntradaDestino(getDestinoExternoNoSir("PRE"));
    }
+
+   /**
+    * Método que crea varios registros de entrada asignandoles el destino pertinente en la entidad ATIB PRO
+    *
+    * @throws Exception
+    */
+   @Test
+   public void crearAsientosEntradaVariosDestinosATIBPRO() throws Exception {
+
+      crearAsientoEntradaDestino("A04013587");
+      //crearAsientoEntradaDestino(getDestinoSirMultientidad("PRO"));
+     /* crearAsientoEntradaDestino(getDestinoNoSirMultientidad("PRO"));
+      crearAsientoEntradaDestino(getDestinoExternoSir("PRO"));
+      crearAsientoEntradaDestino(getDestinoExternoNoSir("PRO"));*/
+   }
+
+
 
 
    /* REGISTROS DE SALIDA */
