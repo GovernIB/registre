@@ -224,7 +224,7 @@
                                                             <span class="label label-danger"><spring:message code="registroSir.salida"/></span>
                                                         </c:if>
                                                     </td>
-                                                    <td><label class="no-bold" rel="popupAbajo" data-content="${registroSir.codigoEntidadRegistralOrigen}" data-toggle="popover">${registroSir.decodificacionEntidadRegistralInicio}</label></td>
+                                                    <td><label class="no-bold" rel="popupAbajo" data-content="${registroSir.codigoEntidadRegistralOrigen}" data-toggle="popover">${registroSir.decodificacionEntidadRegistralOrigen}</label></td>
                                                     <td><label class="no-bold" rel="popupAbajo" data-content="${registroSir.codigoEntidadRegistralDestino}" data-toggle="popover">${registroSir.decodificacionEntidadRegistralDestino}</label></td>
                                                     <td>${registroSir.aplicacion}</td>
                                                     <td class="center">
