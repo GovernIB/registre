@@ -5,6 +5,7 @@ import es.caib.dir3caib.ws.api.oficina.OficinaTF;
 import es.caib.dir3caib.ws.api.unidad.UnidadTF;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.AnexoFull;
+import es.caib.regweb3.model.utils.DocumentacionFisica;
 import es.caib.regweb3.model.utils.RegistroBasico;
 import es.caib.regweb3.persistence.utils.ConversionHelper;
 import es.caib.regweb3.persistence.utils.GeiserPluginHelper;
@@ -33,8 +34,6 @@ import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
 import javax.annotation.Resource;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
 import javax.interceptor.Interceptors;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -42,7 +41,6 @@ import javax.persistence.Query;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import static es.caib.regweb3.utils.RegwebConstantes.REGISTRO_ENTRADA;
 import static es.caib.regweb3.utils.RegwebConstantes.REGISTRO_SALIDA;
 
 /**
@@ -98,15 +96,6 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
             throws Exception, I18NException, I18NValidationException {
 
         try {
-
-            // Obtenemos el Número de registro
-//            Libro libro = libroEjb.findById(registroSalida.getLibro().getId());
-//            NumeroRegistro numeroRegistro = contadorEjb.incrementarContador(libro.getContadorSalida().getId());
-//            registroSalida.setNumeroRegistro(numeroRegistro.getNumero());
-//            registroSalida.setFecha(numeroRegistro.getFecha());
-
-            // Generamos el Número de registro formateado
-//            registroSalida.setNumeroRegistroFormateado(RegistroUtils.numeroRegistroFormateado(registroSalida, libro, usuarioEntidad.getEntidad()));
             // Guardamos el RegistroSalida
             registroSalida = persist(registroSalida);
 
@@ -139,7 +128,10 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
                 Long evento = proximoEventoSalida(registroSalida, usuarioEntidad.getEntidad());
                 registroSalida.setEvento(evento);
             }
-
+            
+            if (registroSalida.getEvento().equals(RegwebConstantes.EVENTO_OFICIO_EXTERNO)) {
+            	registroSalida.getRegistroDetalle().setTipoDocumentacionFisica(Long.valueOf(DocumentacionFisica.DOCUMENTACION_FISICA_REQUERIDA.getValue()));
+            }
 
             //Llamamos al plugin de postproceso
             postProcesoNuevoRegistro(registroSalida, usuarioEntidad.getEntidad().getId());
@@ -642,7 +634,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
                 anexo.getAnexo().setJustificante(false);
             }
             registroSalida.getRegistroDetalle().setAnexos(new ArrayList<Anexo>());
-
+            registroSalida.getRegistroDetalle().setJustificanteGeiser(false);
             registroSalida.getRegistroDetalle().setObservaciones("Rectificación del registro " + registroSalida.getNumeroRegistroFormateado());
 
 
@@ -718,6 +710,10 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
                 }
             }
 
+            // Se genera nuevo número al enviar a GEISER el nuevo registro rectificado...
+            registroSalida.setNumeroRegistro(null);
+            registroSalida.setNumeroRegistroFormateado(null);
+            registroSalida.setFecha(null);
             // Registramos el nuevo registro
             rectificado = registrarSalida(registroSalida, usuarioEntidad, interesados, anexos, false, true);
 

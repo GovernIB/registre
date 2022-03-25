@@ -6,6 +6,7 @@ import es.caib.dir3caib.ws.api.oficina.OficinaTF;
 import es.caib.dir3caib.ws.api.unidad.UnidadTF;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.AnexoFull;
+import es.caib.regweb3.model.utils.DocumentacionFisica;
 import es.caib.regweb3.persistence.utils.ConversionHelper;
 import es.caib.regweb3.persistence.utils.GeiserPluginHelper;
 import es.caib.regweb3.persistence.utils.I18NLogicUtils;
@@ -102,16 +103,6 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
             throws Exception, I18NException, I18NValidationException {
 
         try {
-
-            // Obtenemos el Número de registro
-//            Libro libro = libroEjb.findById(registroEntrada.getLibro().getId());
-            //NumeroRegistro numeroRegistro = contadorEjb.incrementarContador(libro.getContadorEntrada().getId());
-            //registroEntrada.setNumeroRegistro(numeroRegistro.getNumero());
-            //registroEntrada.setFecha(numeroRegistro.getFecha());
-
-            // Generamos el Número de registro formateado
-//            registroEntrada.setNumeroRegistroFormateado(RegistroUtils.numeroRegistroFormateado(registroEntrada, libro, usuarioEntidad.getEntidad()));
-
             // Guardar RegistroEntrada
             registroEntrada = persist(registroEntrada);
 
@@ -153,7 +144,9 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
                     registroEntrada.setEvento(evento);
                 }
             }
-
+            if (registroEntrada.getEvento().equals(RegwebConstantes.EVENTO_OFICIO_EXTERNO)) {
+            	registroEntrada.getRegistroDetalle().setTipoDocumentacionFisica(Long.valueOf(DocumentacionFisica.DOCUMENTACION_FISICA_REQUERIDA.getValue()));
+            }
             //Llamamos al plugin de postproceso
             postProcesoNuevoRegistro(registroEntrada, usuarioEntidad.getEntidad().getId());
 

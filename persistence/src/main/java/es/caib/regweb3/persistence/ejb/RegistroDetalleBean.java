@@ -152,7 +152,7 @@ public class RegistroDetalleBean extends BaseEjbJPA<RegistroDetalle, Long> imple
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public boolean eliminarAnexoRegistroDetalle(Long idAnexo, Long idRegistroDetalle, Long idEntidad) throws Exception, I18NException {
+    public boolean eliminarAnexoRegistroDetalle(Long idAnexo, Long idRegistroDetalle, Long idEntidad, boolean esborrarCustodia) throws Exception, I18NException {
 
         Anexo anexo = anexoEjb.findById(idAnexo);
         RegistroDetalle registroDetalle = findById(idRegistroDetalle);
@@ -163,6 +163,9 @@ public class RegistroDetalleBean extends BaseEjbJPA<RegistroDetalle, Long> imple
             merge(registroDetalle);
             anexoEjb.remove(anexo);
         }
-        return anexoEjb.eliminarCustodia(anexo.getCustodiaID(), anexo, idEntidad);
+        if (esborrarCustodia)
+        	return anexoEjb.eliminarCustodia(anexo.getCustodiaID(), anexo, idEntidad);
+        
+        return true;
     }
 }

@@ -416,9 +416,9 @@ public class ConversionHelper {
 							target.setAnexoData(source.getAnexo());
 							
 //							 Firma externa
-							if (source.getTipoFirma().equals(TipoFirma.EXTERNA)) {
-								target.setFirma(source.getFirmaBase64());
-							}
+//							if (source.getTipoFirma().equals(TipoFirma.EXTERNA)) {
+//								target.setFirma(source.getFirmaBase64());
+//							}
 							if (source.getTipoFirma().equals(TipoFirma.EMBEBIDA)) {
 								target.setIdentificadorDocumentoFirmado(source.getIdentificador());
 							}
@@ -596,7 +596,7 @@ public class ConversionHelper {
 						target.setSolicita(source.getSolicita());
 
 						// Si se trata de una Salida y no tiene Interesados creamos uno a partir de la Entidad destino
-						if (source.getTipoAsiento().equals(TipoAsiento.SALIDA) && (source.getAnexos() == null || source.getAnexos().isEmpty())) {
+						if (source.getInteresados() == null || source.getInteresados().isEmpty()) {
 							InteresadoSir intresadoSirSalida = new InteresadoSir();
 							if (source.getOrganoDestino() != null) {
 								intresadoSirSalida.setTipoDocumentoIdentificacionInteresado(TipoDocumentoIdentificacion.CODIGO_ORIGEN_VALUE.getValue());

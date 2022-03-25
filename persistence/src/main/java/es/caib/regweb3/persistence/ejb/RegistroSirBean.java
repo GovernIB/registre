@@ -306,7 +306,8 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
 											total, 
 											progreso);
 								} catch (Exception e) {
-									e.printStackTrace();
+									log.error("Hi ha hagut un error creant el registre d'entrada del registre rebut: " + apunteRegistroBusquedaFiltrado.getNuRegistro(), e.getCause());
+									progreso.addInfo(TipoInfo.ERROR, "Hi ha hagut un error creant el registre d'entrada del registre rebut: " + apunteRegistroBusquedaFiltrado.getNuRegistro());
 									progreso.incrementRegistrosRecuperados();
 								}
 							} else {

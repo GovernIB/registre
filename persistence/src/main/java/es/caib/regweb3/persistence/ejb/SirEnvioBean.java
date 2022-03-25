@@ -146,8 +146,8 @@ public class SirEnvioBean implements SirEnvioLocal {
             registroDetalle.setOficinaOrigen(registroEntrada.getOficina());
             registroDetalle.setOficinaOrigenExternoCodigo(null);
             registroDetalle.setOficinaOrigenExternoDenominacion(null);
-            registroDetalle.setNumeroRegistroOrigen(registroEntrada.getNumeroRegistroFormateado());
-            registroDetalle.setFechaOrigen(registroEntrada.getFecha());
+//            registroDetalle.setNumeroRegistroOrigen(registroEntrada.getNumeroRegistroFormateado());
+//            registroDetalle.setFechaOrigen(registroEntrada.getFecha());
 
             // Actualizamos el registro
             registroEntrada = registroEntradaEjb.merge(registroEntrada);
@@ -218,8 +218,8 @@ public class SirEnvioBean implements SirEnvioLocal {
 
             // Nos aseguramos que los campos origen sean los del registro, sobreescribiendo los posibles valores de un oficio interno
             registroDetalle.setOficinaOrigen(registroSalida.getOficina());
-            registroDetalle.setNumeroRegistroOrigen(registroSalida.getNumeroRegistroFormateado());
-            registroDetalle.setFechaOrigen(registroSalida.getFecha());
+//            registroDetalle.setNumeroRegistroOrigen(registroSalida.getNumeroRegistroFormateado());
+//            registroDetalle.setFechaOrigen(registroSalida.getFecha());
 
             // Actualizamos el registro
             registroSalida = registroSalidaEjb.merge(registroSalida);
@@ -391,11 +391,24 @@ public class SirEnvioBean implements SirEnvioLocal {
         long tiempo = System.currentTimeMillis();
         List<RegistroSir> registroSirActualizados = new ArrayList<RegistroSir>();
     	try {
-    		List<RegistroEntrada> registrosOficioRemision = oficioRemision.getRegistrosEntrada();
-    		for (RegistroEntrada registroEntrada : registrosOficioRemision) {
+    		List<RegistroEntrada> registrosEntradaOficioRemision = oficioRemision.getRegistrosEntrada();
+    		for (RegistroEntrada registroEntrada : registrosEntradaOficioRemision) {
     			Long registroSirId = registroSirEjb.getRegistroSirByNumeroRegistro(
-		    		registroEntrada.getNumeroRegistro(), 
-		    		oficioRemision.getCodigoEntidadRegistralDestino());
+    					registroEntrada.getNumeroRegistro(), 
+    					oficioRemision.getCodigoEntidadRegistralDestino());
+    			RegistroSir registroSir = registroSirEjb.findById(registroSirId);
+			    if (registroSir != null) {
+			    	descripcion += "\n  [MANUAL] Actualizando estado envío SIR (idEnvioSir=" + registroSir.getId() + ")";
+		    		actualizarEnvioSir(registroSir, entidad, oficioRemision, true);
+		    		registroSirActualizados.add(registroSir);
+		    		registroSirEjb.merge(registroSir);
+			    }
+    		}
+    		List<RegistroSalida> registrosSalidaOficioRemision = oficioRemision.getRegistrosSalida();
+    		for (RegistroSalida registroSalida : registrosSalidaOficioRemision) {
+    			Long registroSirId = registroSirEjb.getRegistroSirByNumeroRegistro(
+    					registroSalida.getNumeroRegistro(), 
+    					oficioRemision.getCodigoEntidadRegistralDestino());
     			RegistroSir registroSir = registroSirEjb.findById(registroSirId);
 			    if (registroSir != null) {
 			    	descripcion += "\n  [MANUAL] Actualizando estado envío SIR (idEnvioSir=" + registroSir.getId() + ")";
@@ -420,246 +433,6 @@ public class SirEnvioBean implements SirEnvioLocal {
 		} 
 		return registroSirActualizados;
     }
-
-//
-//    @Override
-//    public void reintentarIntercambiosConError(Entidad entidad) throws Exception {
-//
-//        StringBuilder peticion = new StringBuilder();
-//        long tiempo = System.currentTimeMillis();
-//        String descripcion = "Reintentar intercambios con Error";
-//        Date inicio = new Date();
-//
-//        try {
-//
-//            peticion.append("entidad: ").append(entidad.getNombre()).append(System.getProperty("line.separator"));
-//
-//            // RegistrosSir enviados con errores
-//            List<Long> registrosSir = registroSirEjb.getEnviadosConError(entidad.getId());
-//
-//            peticion.append("total registrosSir: ").append(registrosSir.size()).append(System.getProperty("line.separator"));
-//
-//            if (!registrosSir.isEmpty()) {
-//
-//                log.info("Hay " + registrosSir.size() + " RegistrosSir enviados con errores, pendientes de volver a enviar al nodo CIR");
-//
-//                // Volvemos a enviar los RegistrosSir
-//                for (Long registroSir : registrosSir) {
-//
-//                    reintentarEnvioRegistroSir(registroSir, entidad);
-//                }
-//            } else {
-//                log.info("No hay RegistrosSir enviados con errores, pendientes de volver a enviar al nodo CIR");
-//            }
-//
-//            // OficiosRemision enviados con errores
-//            List<OficioRemision> oficios = oficioRemisionEjb.getEnviadosConError(entidad.getId());
-//
-//            peticion.append("total oficios: ").append(oficios.size()).append(System.getProperty("line.separator"));
-//
-//            if (!oficios.isEmpty()) {
-//
-//                log.info("Hay " + oficios.size() + " Oficios de Remision enviados con errores, pendientes de volver a enviar al nodo CIR");
-//
-//                // Volvemos a enviar los OficiosRemision
-//                for (OficioRemision oficio : oficios) {
-//
-//                    reintentarEnvioOficioRemision(oficio, RegwebConstantes.INTEGRACION_SCHEDULERS);
-//                }
-//            } else {
-//                log.info("No hay Oficios de Remision enviados con errores, pendientes de volver a enviar al nodo CIR");
-//            }
-//
-//            integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_SCHEDULERS, descripcion, peticion.toString(), System.currentTimeMillis() - tiempo, entidad.getId(), "");
-//
-//
-//        } catch (Exception | I18NException e) {
-//            log.info("Error al reintenar el envio de registros con error");
-//            e.printStackTrace();
-//            integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_SCHEDULERS, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - tiempo, entidad.getId(), "");
-//        }
-//    }
-
-//    /**
-//     * @param idRegistroSir
-//     * @throws Exception
-//     */
-//    private void reintentarEnvioRegistroSir(Long idRegistroSir, Entidad entidad) throws Exception {
-//
-//        StringBuilder peticion = new StringBuilder();
-//        long tiempo = System.currentTimeMillis();
-//        String descripcion = "Reintentar RegistroSir a: ";
-//        Date inicio = new Date();
-//
-//        peticion.append("entidad: ").append(entidad.getNombre()).append(System.getProperty("line.separator"));
-//        peticion.append("idRegistroSir: ").append(idRegistroSir).append(System.getProperty("line.separator"));
-//
-//        try{
-//
-//            RegistroSir registroSir = registroSirEjb.getRegistroSirConAnexos(idRegistroSir);
-//
-//            log.info("Reintentado reenvío/rechazo " + registroSir.getIdentificadorIntercambio() + " a " + registroSir.getDecodificacionEntidadRegistralDestino());
-//
-//            if(registroSir.getEstado().equals(EstadoRegistroSir.REENVIADO)){
-//                descripcion = "Reintentar reenvío a: " + registroSir.getCodigoEntidadRegistralDestino();
-//            }else if(registroSir.getEstado().equals(EstadoRegistroSir.RECHAZADO)){
-//                descripcion = "Reintentar rechazo a: " + registroSir.getCodigoEntidadRegistralDestino();
-//            }
-//
-//            peticion.append("IdentificadorIntercambio: ").append(registroSir.getIdentificadorIntercambio()).append(System.getProperty("line.separator"));
-//            peticion.append("Origen: ").append(registroSir.getDecodificacionEntidadRegistralOrigen()).append(System.getProperty("line.separator"));
-//            peticion.append("Destino: ").append(registroSir.getDecodificacionEntidadRegistralDestino()).append(System.getProperty("line.separator"));
-//
-//            emisionEjb.enviarFicheroIntercambio(registroSir);
-//            registroSir.setNumeroReintentos(registroSir.getNumeroReintentos() + 1);
-//            registroSir.setFechaEstado(new Date());
-//
-//            // Modificamos su estado si estaba marcado con ERROR
-//            if (registroSir.getEstado().equals(EstadoRegistroSir.REENVIADO_Y_ERROR)) {
-//                registroSir.setEstado(EstadoRegistroSir.REENVIADO);
-//            } else if (registroSir.getEstado().equals(EstadoRegistroSir.RECHAZADO_Y_ERROR)) {
-//                registroSir.setEstado(EstadoRegistroSir.RECHAZADO);
-//            }
-//
-//            registroSirEjb.merge(registroSir);
-//
-//            integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_SCHEDULERS, descripcion, peticion.toString(), System.currentTimeMillis() - tiempo, entidad.getId(), registroSir.getIdentificadorIntercambio());
-//
-//        }catch (Exception e){
-//            log.info("Error al reintenar el envio del RegistroSir id: " + idRegistroSir);
-//            e.printStackTrace();
-//            integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_SCHEDULERS, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - tiempo, entidad.getId(), "");
-//        }
-//
-//    }
-//
-//    /**
-//     * @param oficio
-//     * @throws Exception
-//     * @throws I18NException
-//     */
-//    private void reintentarEnvioOficioRemision(OficioRemision oficio, Long tipoIntegracion) throws Exception, I18NException {
-//
-//        Date inicio = new Date();
-//        StringBuilder peticion = new StringBuilder();
-//        long tiempo = System.currentTimeMillis();
-//        String descripcion = "Reintentar envío intercambio a: " + oficio.getCodigoEntidadRegistralDestino();
-//        peticion.append("IdentificadorIntercambio: ").append(oficio.getIdentificadorIntercambio()).append(System.getProperty("line.separator"));
-//        peticion.append("Origen: ").append(oficio.getOficina().getDenominacion()).append(System.getProperty("line.separator"));
-//        peticion.append("Destino: ").append(oficio.getDecodificacionEntidadRegistralDestino()).append(System.getProperty("line.separator"));
-//
-//        if (oficio.getTipoOficioRemision().equals(RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA)) {
-//
-//            try {
-//                log.info("Reintentando intercambio OficioRemisionSir entrada " + oficio.getIdentificadorIntercambio() + " a " + oficio.getDecodificacionEntidadRegistralDestino() + " (" + oficio.getCodigoEntidadRegistralDestino() + ")");
-//
-//                RegistroEntrada registroEntrada = registroEntradaEjb.getConAnexosFull(oficio.getRegistrosEntrada().get(0).getId());
-//
-//                // Si tiene el Justificante generado y custodiado lo reenviamos
-//                if (registroEntrada.getRegistroDetalle().getTieneJustificanteCustodiado()) {
-//
-//                    // Transformamos el RegistroEntrada en un RegistroSir
-//                    RegistroSir registroSir = registroSirEjb.transformarRegistroEntrada(registroEntrada);
-//
-//                    // Enviamos el Registro al Componente CIR
-//                    emisionEjb.enviarFicheroIntercambio(registroSir);
-//
-//                    // Contabilizamos los reintentos
-//                    oficio.setNumeroReintentos(oficio.getNumeroReintentos() + 1);
-//                    oficio.setFechaEstado(new Date());
-//
-//                    // Modificamos su estado si estaba marcado con ERROR
-//                    if (oficio.getEstado() == RegwebConstantes.OFICIO_SIR_ENVIADO_ERROR) {
-//                        oficio.setEstado(RegwebConstantes.OFICIO_SIR_ENVIADO);
-//                    } else if (oficio.getEstado() == RegwebConstantes.OFICIO_SIR_REENVIADO_ERROR) {
-//                        oficio.setEstado(RegwebConstantes.OFICIO_SIR_REENVIADO);
-//                    }
-//
-//                    // Actualizamos el Oficio
-//                    oficioRemisionEjb.merge(oficio);
-//
-//                    //Integración
-//                    integracionEjb.addIntegracionOk(inicio, tipoIntegracion, descripcion, peticion.toString(), System.currentTimeMillis() - tiempo, oficio.getUsuarioResponsable().getEntidad().getId(), oficio.getIdentificadorIntercambio());
-//
-//                }else{
-//                    integracionEjb.addIntegracionError(tipoIntegracion, descripcion, peticion.toString(), null, "No tiene el justificante custodiado", System.currentTimeMillis() - tiempo, oficio.getUsuarioResponsable().getEntidad().getId(), oficio.getIdentificadorIntercambio());
-//                }
-//
-//            }catch (I18NException | Exception e){
-//                e.printStackTrace();
-//                integracionEjb.addIntegracionError(tipoIntegracion, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - tiempo, oficio.getUsuarioResponsable().getEntidad().getId(), oficio.getIdentificadorIntercambio());
-//
-//                // Solo lanzamos la Excepción si no se trata del SCHEDULER
-//                if(tipoIntegracion.equals(RegwebConstantes.INTEGRACION_SIR)){
-//                    throw e;
-//                }
-//            }
-//
-//
-//        } else if (oficio.getTipoOficioRemision().equals(RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA)) {
-//
-//            try {
-//                log.info("Reintentando intercambio OficioRemisionSir salida " + oficio.getIdentificadorIntercambio() + " a " + oficio.getDecodificacionEntidadRegistralDestino() + " (" + oficio.getCodigoEntidadRegistralDestino() + ")");
-//
-//
-//                RegistroSalida registroSalida = registroSalidaEjb.getConAnexosFull(oficio.getRegistrosSalida().get(0).getId());
-//
-//                // Si tiene el Justificante generado y custodiado lo reenviamos
-//                if (registroSalida.getRegistroDetalle().getTieneJustificanteCustodiado()) {
-//
-//                    // Transformamos el RegistroSalida en un RegistroSir
-//                    RegistroSir registroSir = registroSirEjb.transformarRegistroSalida(registroSalida);
-//
-//                    // Enviamos el Registro al Componente CIR
-//                    emisionEjb.enviarFicheroIntercambio(registroSir);
-//
-//                    // Contabilizamos los reintentos
-//                    oficio.setNumeroReintentos(oficio.getNumeroReintentos() + 1);
-//                    oficio.setFechaEstado(new Date());
-//
-//                    // Modificamos su estado si estaba marcado con ERROR
-//                    if (oficio.getEstado() == RegwebConstantes.OFICIO_SIR_ENVIADO_ERROR) {
-//                        oficio.setEstado(RegwebConstantes.OFICIO_SIR_ENVIADO);
-//                    } else if (oficio.getEstado() == RegwebConstantes.OFICIO_SIR_REENVIADO_ERROR) {
-//                        oficio.setEstado(RegwebConstantes.OFICIO_SIR_REENVIADO);
-//                    }
-//
-//                    // Actualizamos el Oficio
-//                    oficioRemisionEjb.merge(oficio);
-//
-//                    //Integración
-//                    integracionEjb.addIntegracionOk(inicio, tipoIntegracion, descripcion, peticion.toString(), System.currentTimeMillis() - tiempo, oficio.getUsuarioResponsable().getEntidad().getId(), oficio.getIdentificadorIntercambio());
-//
-//                }else{
-//
-//                    integracionEjb.addIntegracionError(tipoIntegracion, descripcion, peticion.toString(), null, "No tiene el justificante custodiado", System.currentTimeMillis() - tiempo, oficio.getUsuarioResponsable().getEntidad().getId(), oficio.getIdentificadorIntercambio());
-//                }
-//
-//            }catch (I18NException | Exception e){
-//                e.printStackTrace();
-//                integracionEjb.addIntegracionError(tipoIntegracion, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - tiempo, oficio.getUsuarioResponsable().getEntidad().getId(), oficio.getIdentificadorIntercambio());
-//
-//                // Solo lanzamos la Excepción si no se trata del SCHEDULER
-//                if(tipoIntegracion.equals(RegwebConstantes.INTEGRACION_SIR)){
-//                    throw e;
-//                }
-//            }
-//        }
-//
-//    }
-
-//    /**
-//     * Indica si el RegistroSir  se puede reenviar, en función de su estado
-//     *
-//     * @param estado del registroSir
-//     * @return
-//     */
-//    public boolean puedeReenviarRegistroSir(EstadoRegistroSir estado) {
-//        return estado.equals(EstadoRegistroSir.RECIBIDO) ||
-//                estado.equals(EstadoRegistroSir.REENVIADO) ||
-//                estado.equals(EstadoRegistroSir.REENVIADO_Y_ERROR);
-//
-//    }
 
     @Override
     @TransactionTimeout(value = 3000)  // 50 minutos
@@ -734,37 +507,35 @@ public class SirEnvioBean implements SirEnvioLocal {
 		try {
 //          // RegistrosSir con estado no final
 			List<Long> registrosSirIds = registroSirEjb.getRegistrosSirPendientes(entidad.getId());
-//			synchronized(Semaforo.getCreacionSemaforo()) {
-				for (Long registroSirId : registrosSirIds) {
-			    	String descripcion = "Actualizando estado envío SIR (idEnvioSir=" + registroSirId + ")";
-					try {
-				            RegistroSir registroSir = registroSirEjb.findById(registroSirId);
-				            peticion.append("Número registro: ").append(registroSir.getNumeroRegistro()).append(System.getProperty("line.separator"));
-				            OficioRemision oficioRemision = oficioRemisionEjb.getByNumeroRegistro(
-				            		registroSir.getNumeroRegistro(), 
-				            		entidad.getCodigoDir3());
-				            if (oficioRemision != null) {
-								peticion.append("ID Oficio remisión: ").append(oficioRemision.getId()).append(System.getProperty("line.separator"));
-								actualizarEnvioSir(registroSir, entidad, oficioRemision, true);
-				            } else {
-				            	throw new RuntimeException("No s'ha trobat cap ofici remisió relacionat amb el registre: " + registroSir.getNumeroRegistro());
-				            }
-					} catch (Exception e) {
-						e.printStackTrace();
-						integracionEjb.addIntegracionError(
-								RegwebConstantes.INTEGRACION_SIR, 
-								descripcion, 
-								peticion.toString(), 
-								e, 
-								null, 
-								System.currentTimeMillis() - tiempo, 
-								entidad.getId(), 
-								null);
-					} catch (I18NException e) {
-						e.printStackTrace();
-					}
+			for (Long registroSirId : registrosSirIds) {
+		    	String descripcion = "Actualizando estado envío SIR (idEnvioSir=" + registroSirId + ")";
+				try {
+					RegistroSir registroSir = registroSirEjb.findById(registroSirId);
+			        peticion.append("Número registro: ").append(registroSir.getNumeroRegistro()).append(System.getProperty("line.separator"));
+			        OficioRemision oficioRemision = oficioRemisionEjb.getByNumeroRegistro(
+			        		registroSir.getNumeroRegistro(), 
+			            	entidad.getCodigoDir3());
+			        if (oficioRemision != null) {
+			        	peticion.append("ID Oficio remisión: ").append(oficioRemision.getId()).append(System.getProperty("line.separator"));
+						actualizarEnvioSir(registroSir, entidad, oficioRemision, true);
+			        } else {
+			        	throw new RuntimeException("No s'ha trobat cap ofici remisió relacionat amb el registre: " + registroSir.getNumeroRegistro());
+			        }
+				} catch (Exception e) {
+					e.printStackTrace();
+					integracionEjb.addIntegracionError(
+							RegwebConstantes.INTEGRACION_SIR, 
+							descripcion, 
+							peticion.toString(), 
+							e, 
+							null, 
+							System.currentTimeMillis() - tiempo, 
+							entidad.getId(), 
+							null);
+				} catch (I18NException e) {
+					e.printStackTrace();
 				}
-//			}
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;

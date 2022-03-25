@@ -45,7 +45,7 @@ public class AnexoValidator<T> extends AbstractRegWebValidator<T> {
             rejectValue(errors, "tipoDocumento", "error.valor.requerido"); // , "El camp és obligatori"
         }
 
-        if (anexo.getValidarNtiOrigen()) {
+        if (anexo.getValidarNtiOrigen() && !anexo.getTipoDocumento().equals(RegwebConstantes.TIPO_DOCUMENTO_JUSTIFICANTE)) {
 	        if (anexo.getTipoDocumental() == null || anexo.getTipoDocumental().getId() == null ) {
 	            rejectValue(errors, "tipoDocumental", "error.valor.requerido");
 	        } else {
@@ -60,10 +60,7 @@ public class AnexoValidator<T> extends AbstractRegWebValidator<T> {
 	            rejectValue(errors, "origenCiudadanoAdmin", "error.valor.inesperado.origen");
 	        }
         }
-
-
-
-
+        
         rejectIfEmptyOrWhitespace(errors, __target__, "titulo", "error.valor.requerido");
 
         if (StringUtils.isNotEmpty(anexo.getTitulo())) {

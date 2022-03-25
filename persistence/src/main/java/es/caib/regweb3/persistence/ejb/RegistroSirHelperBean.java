@@ -207,6 +207,7 @@ public class RegistroSirHelperBean extends BaseEjbJPA<RegistroSir, Long> impleme
 				                }
 				                progreso.addInfo(TipoInfo.INFO, "Anexos guardados correctamente [numeroRegistro=" + apunteRegistroBusquedaFiltrado.getNuRegistro() + ", idRegistroSir=" + registroSir.getId() + "]");
 				            }
+//				            em.flush();
 				            
 				            // Creamos la TrazabilidadSir
 				            TrazabilidadSir trazabilidadSir = new TrazabilidadSir(RegwebConstantes.TRAZABILIDAD_SIR_RECEPCION);
@@ -334,7 +335,9 @@ public class RegistroSirHelperBean extends BaseEjbJPA<RegistroSir, Long> impleme
         List<Interesado> interesados = procesarInteresados(registroSir.getInteresados());
 
         // Anexos
-        List<AnexoFull> anexosFull = procesarAnexos(registroSir, camposNTIs);
+        List<AnexoFull> anexosFull = new ArrayList<AnexoFull>();
+        if (!registroSir.getDocumentacionFisica().equals("1")) //DOCUMENTACION_FISICA_REQUERIDA
+        	anexosFull = procesarAnexos(registroSir, camposNTIs);
 
         // No validar metadatos tipo documental y origen si viene de GEISER
         for (AnexoFull anexoFull : anexosFull) {
@@ -656,9 +659,9 @@ public class RegistroSirHelperBean extends BaseEjbJPA<RegistroSir, Long> impleme
        }
 
        // Procesamos las Firma detached
-       for (AnexoSir anexoSir : registroSir.getAnexos()) {
-           transformarAnexoFirmaDetached(anexoSir, anexosProcesados,registroSir.getEntidad().getId(), anexoSir.getRegistroSir().getAplicacion());
-       }
+//       for (AnexoSir anexoSir : registroSir.getAnexos()) {
+//           transformarAnexoFirmaDetached(anexoSir, anexosProcesados,registroSir.getEntidad().getId(), anexoSir.getRegistroSir().getAplicacion());
+//       }
 
        // Eliminam duplicats
        Set<AnexoFull> set = new HashSet<AnexoFull>(anexosProcesados.values());

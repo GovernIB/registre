@@ -1313,6 +1313,7 @@ a.text-gris:focus {
 .campFormText{
     text-align: left;
     padding-top: 6px;
+    word-break: break-all;
 }
 /* FI PER CAMP DE FORMULARI TEXT LECTURA */
 

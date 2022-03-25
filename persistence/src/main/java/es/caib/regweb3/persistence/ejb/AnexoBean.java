@@ -974,7 +974,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
             // Tipo documental
         	TipoDocumental tipoDocumental = anexo.getTipoDocumental();
-            if (tipoDocumental != null) {
+        	 if (tipoDocumental != null && tipoDocumental.getId() != null) {
             	if (tipoDocumental.getCodigoNTI() == null) //TODO: revisar
             		tipoDocumental = em.getReference(TipoDocumental.class, anexo.getTipoDocumental().getId());
                 metadades.add(new Metadata(MetadataConstants.ENI_TIPO_DOCUMENTAL, tipoDocumental.getCodigoNTI()));
@@ -1029,8 +1029,8 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             }
             // Tipo documental
         	TipoDocumental tipoDocumental = anexo.getTipoDocumental();
-            if (tipoDocumental != null) {
-            	tipoDocumental = em.getReference(TipoDocumental.class, anexo.getTipoDocumental().getId());
+            if (tipoDocumental != null && tipoDocumental.getId() != null) {
+            	tipoDocumental = em.getReference(TipoDocumental.class, tipoDocumental.getId());
                 metadades.add(new Metadata(MetadataConstants.ENI_TIPO_DOCUMENTAL, tipoDocumental.getCodigoNTI()));
                 metadades.add(new Metadata("anexo.tipoDocumental.codigo", tipoDocumental.getCodigoNTI()));
 
@@ -1041,6 +1041,8 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
                 } catch (Throwable th) {
                     log.error("Error en la traduccion de tipo documental: " + th.getMessage(), th);
                 }
+            } else {
+            	anexo.setTipoDocumental(null);
             }
             // Guardamos los cambios en custodia
             custody.saveAll(custodyID, custodyParameters, null, null, metadades.toArray(new Metadata[metadades.size()]));

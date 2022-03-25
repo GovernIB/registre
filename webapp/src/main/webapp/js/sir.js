@@ -191,22 +191,28 @@ function reiniciarContador(id, url){
  * @param id
  * @param url
  */
-function actualizarRegistroSir(id, url){
-    //Reiniciamos el contador de reintentos
+function actualizarRegistroSir(id, url, mensaje){
+    //Actualizamos estado registro SIR
     $.ajax({
         url: url,
         data: { id: id },
         type: "GET",
         dataType: 'json',
         contentType: 'application/json',
-
+        beforeSend: function(){
+            waitingDialog.show(mensaje, {dialogSize: 'm', progressType: 'primary'});
+        },
         success: function(result) {
-
             if(result === true){
                 mensajeSuccess("#mensajes", tradsSir['registroSir.actualizar.ok']);
+                window.relaod();
             }else{
                 mensajeError("#mensajes", tradsSir['registroSir.actualizar.error']);
+                window.relaod();
             }
+        },
+        error: function() {
+        	location.reload(); 
         }
     });
 }

@@ -274,7 +274,20 @@ public class AnexoController extends BaseController {
             try {
                 anexoEjb.actualizarAnexo(anexoForm, getUsuarioEntidadActivo(request),
                         anexoForm.getRegistroID(), anexoForm.getTipoRegistro(), anexoForm.getAnexo().isJustificante(), false);
-
+                try {
+              //Borrar si eladjunto es un justificante para no tener dos justificantes (caso GEISER)
+                	Anexo anexo = anexoForm.getAnexo();
+                	if (anexo != null && anexo.getTipoDocumento().equals(RegwebConstantes.TIPO_DOCUMENTO_JUSTIFICANTE)) {
+	                	registroDetalleEjb.eliminarAnexoRegistroDetalle(
+	                			anexo.getId(), 
+	                			anexo.getRegistroDetalle().getId(), 
+	                			getEntidadActiva(request).getId(),
+	                			true);
+                	}
+                } catch (Exception e) {
+                	log.error("Hi ha hagut un error esborrant el justificant entre els annexos", e.getCause());
+					e.printStackTrace();
+				}
                 model.addAttribute("closeAndReload", "true");
                 return "registro/formularioAnexo";
             } catch (I18NException i18n) {
@@ -322,7 +335,7 @@ public class AnexoController extends BaseController {
                                 @PathVariable Long anexoID, HttpServletRequest request) {
 
         try {
-            registroDetalleEjb.eliminarAnexoRegistroDetalle(anexoID, registroDetalleID, getEntidadActiva(request).getId());
+            registroDetalleEjb.eliminarAnexoRegistroDetalle(anexoID, registroDetalleID, getEntidadActiva(request).getId(), true);
         } catch (I18NException i18ne) {
             String msg = I18NUtils.getMessage(i18ne);
             log.error(msg, i18ne);

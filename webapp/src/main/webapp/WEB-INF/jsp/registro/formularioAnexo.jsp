@@ -12,28 +12,43 @@
 </head>
 
 <body style="background-image:none !important;">
-
+<%--
 <c:if test="${not empty closeAndReload}">
-
+--%>
 <script type="text/javascript" >
 
-  //Amb aquest codi funciona tant per si ve d'scan o de fitxer
-  $('#targetiframe').attr('src', '');
-  $('#targetiframe').removeClass('iframeAnexo');
-  $('#targetiframe').removeClass('iframeAnexoFile');
-  $('#targetiframe').removeClass('iframeAnexoGros');
-  $('#targetiframe').removeClass('iframeAnexoFileGros');
-  $('#targetiframe').removeClass('iframeScan');
-  $('#targetiframe').height('');
-  $('#modalAnexos').find('.modal-content').css('height', '');
-  //parent.parent.window.location.href=parent.parent.window.location.href;
-  //top.window.location.href=top.window.location.href;
-	top.document.location.href = top.document.location.href;
+	if ('${closeAndReload}' != '') {
+	  //Amb aquest codi funciona tant per si ve d'scan o de fitxer
+	  $('#targetiframe').attr('src', '');
+	  $('#targetiframe').removeClass('iframeAnexo');
+	  $('#targetiframe').removeClass('iframeAnexoFile');
+	  $('#targetiframe').removeClass('iframeAnexoGros');
+	  $('#targetiframe').removeClass('iframeAnexoFileGros');
+	  $('#targetiframe').removeClass('iframeScan');
+	  $('#targetiframe').height('');
+	  $('#modalAnexos').find('.modal-content').css('height', '');
+	  //parent.parent.window.location.href=parent.parent.window.location.href;
+	  //top.window.location.href=top.window.location.href;
+		top.document.location.href = top.document.location.href;
+	}
+	$(document).ready(function() {
+		$('#anexo\\.tipoDocumento').on('change', function() {
+			if($(this).val() == 4) {
+		    	alert('<spring:message code="anexo.tipoDocumento.avis"/>');
+		    	$('#anexo\\.origenCiudadanoAdmin').prop('disabled', true).trigger("chosen:updated");
+		    	$('#anexo\\.tipoDocumental\\.id').prop('disabled', true).trigger("chosen:updated");
+		    } else {
+		    	$('#anexo\\.origenCiudadanoAdmin').prop('disabled', false).trigger("chosen:updated");
+		    	$('#anexo\\.tipoDocumental\\.id').prop('disabled', false).trigger("chosen:updated");
+		    }
+		});
+		
+		$('#anexo\\.tipoDocumento').trigger('change');
+	});
 </script>
-
-
+<%--
 </c:if>
-
+--%>
 <c:if test="${empty closeAndReload}">
 
 <c:import url="../modulos/mensajes.jsp"/>
@@ -120,9 +135,9 @@
                     </div>
 
 
-                    <div class="form-group col-xs-12">
-                        <div class="col-xs-6">
-                            <div class="col-xs-3 pull-left etiqueta_regweb control-label">
+                    	<div class="form-group col-xs-12">
+                        	<div class="col-xs-6">
+                            	<div class="col-xs-3 pull-left etiqueta_regweb control-label">
                                 <label for="validezDocumento" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.validez"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="anexo.validezDocumento"/></label>
                                 </div>
                                 <div class="col-xs-9 radioButton">

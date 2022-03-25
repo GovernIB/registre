@@ -238,7 +238,9 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
                 registroEntrada = registroEntradaEjb.registrarEntrada(registroEntrada, usuarioEntidad, interesadosSesion, null, false, true);
 
             }catch (Exception e) {
-                Mensaje.saveMessageError(request, getMessage("regweb.error.registro") + (e.getMessage().isEmpty() ? ": " + e.getMessage() : ""));
+            	String eMessage = (!e.getMessage().isEmpty() ? ": " + e.getMessage() : "");
+            	String eCause = (e.getCause() != null ? ": " + e.getCause().getMessage() : "");
+                Mensaje.saveMessageError(request, getMessage("regweb.error.registro") + (eMessage + (!eMessage.isEmpty() ? "" : eCause)));
                 e.printStackTrace();
                 return "redirect:/inici";
             }finally {
@@ -499,7 +501,7 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
 
                 registroEntradaRectificado = registroEntradaEjb.rectificar(registroEntrada, usuarioEntidad);
 
-                Mensaje.saveMessageInfo(request, getMessage("registro.rectificar.ok"));
+//                Mensaje.saveMessageInfo(request, getMessage("registro.rectificar.ok"));
                 return "redirect:/registroEntrada/"+registroEntradaRectificado.getId()+"/detalle";
             }else{
 

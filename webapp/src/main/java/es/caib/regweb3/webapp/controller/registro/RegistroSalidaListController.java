@@ -304,7 +304,7 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
             } else { //Obtenemos las oficinas SIR desde dir3caib
                 oficinasSIR = oficinaEjb.obtenerOficinasSir(destino.getCodigo());
                 if (oficinasSIR.isEmpty()) {
-                    log.info("Este registro no se puede enviar via SIR, no tiene oficinas");
+                    log.info("Este registro no se puede enviar via SIR, no tiene oficinas SIR");
                     Mensaje.saveMessageError(request, getMessage("registroSir.error.envio.oficinas"));
                     return "registroSalida/registroSalidaDetalle";
                 }

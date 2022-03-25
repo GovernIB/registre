@@ -13,6 +13,7 @@ import es.caib.regweb3.persistence.utils.ProgresoActualitzacion.ActualitzacionIn
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.persistence.utils.RegistroUtils;
 import es.caib.regweb3.persistence.utils.Semaforo;
+import es.caib.regweb3.persistence.utils.SemaforoSchedulerConsultaRecibidos;
 import es.caib.regweb3.sir.ejb.MensajeLocal;
 import es.caib.regweb3.utils.Dir3CaibUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
@@ -830,9 +831,9 @@ public class SirController extends BaseController {
         }
 		try {
 			mensajesSb = new StringBuilder();
-//			synchronized (this) {
+			synchronized (SemaforoSchedulerConsultaRecibidos.class) {
 				total = registroSirEjb.recuperarRegistrosSirGEISER(entidad.getId(), busqueda.getFechaInicioImportacion(), busqueda.getFechaFinImportacion());
-//			}
+			}
 	        
 			if (total > 0) {
 				Mensaje.saveMessageInfo(request, "Se han recuperado " + total + " registros SIR");

@@ -58,7 +58,7 @@ public interface RegistroDetalleLocal extends BaseEjb<RegistroDetalle, Long> {
      * @return
      * @throws Exception
      */
-    boolean eliminarAnexoRegistroDetalle(Long idAnexo, Long idRegistroDetalle, Long idEntidad) throws Exception, I18NException;
+    boolean eliminarAnexoRegistroDetalle(Long idAnexo, Long idRegistroDetalle, Long idEntidad, boolean esborrarCustodia) throws Exception, I18NException;
 
     /**
      * Obtiene todos los identificadores de los registros detalle que se han confirmado en destino (aceptado).

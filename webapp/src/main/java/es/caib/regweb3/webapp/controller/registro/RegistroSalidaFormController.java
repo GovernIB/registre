@@ -409,7 +409,7 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
 
                 registroSalidaRectificado = registroSalidaEjb.rectificar(registroSalida, usuarioEntidad);
 
-                Mensaje.saveMessageInfo(request, getMessage("registro.rectificar.ok"));
+//                Mensaje.saveMessageInfo(request, getMessage("registro.rectificar.ok"));
                 return "redirect:/registroSalida/"+registroSalidaRectificado.getId()+"/detalle";
             }else{
 
