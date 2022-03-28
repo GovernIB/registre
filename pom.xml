@@ -18,7 +18,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
         <!-- Versions de JBoss -->
-        <jboss-eap.version>7.2.9.GA</jboss-eap.version>
+        <jboss-eap.version>7.2.0.GA</jboss-eap.version>
         <jboss-javaee.version>1.0.1.Final-redhat-00003</jboss-javaee.version>
 
         <!-- Versions de diferents llibreries emprades dins els mòduls -->
@@ -30,7 +30,7 @@
         <junit.version>4.13.1</junit.version>
         <itext.version>5.4.5</itext.version>
         <dom4j.version>1.6.1</dom4j.version>
-        <pluginsib-arxiu-caib.version>2.0.14</pluginsib-arxiu-caib.version>
+        <pluginsib-arxiu-caib.version>2.0.18</pluginsib-arxiu-caib.version>
         <documentcustody.api.version>4.0.1</documentcustody.api.version>
         <documentcustody-filesystem.version>4.0.2</documentcustody-filesystem.version>
         <plugin-documentcustody-arxiudigitalcaib.version>4.0.3</plugin-documentcustody-arxiudigitalcaib.version>
@@ -39,11 +39,12 @@
         <pluginsib-signatureserver-api>3.1.0-SNAPSHOT</pluginsib-signatureserver-api>
         <pluginsib-signatureserver-miniappletinserver>3.0.0</pluginsib-signatureserver-miniappletinserver>
         <pluginsib-signatureserver-afirmaserver>3.1.0-SNAPSHOT</pluginsib-signatureserver-afirmaserver>
-        <pluginsib.userinformation.version>2.0.0</pluginsib.userinformation.version>
-        <pluginsib.userinformation-keycloak.version>2.0.1</pluginsib.userinformation-keycloak.version>
+        <pluginsib.userinformation.api.version>3.0.0</pluginsib.userinformation.api.version>
+        <pluginsib.userinformation.version>3.0.0-SNAPSHOT</pluginsib.userinformation.version>
+        <pluginsib.userinformation-keycloak.version>3.0.0-SNAPSHOT</pluginsib.userinformation-keycloak.version>
         <dir3caib-ws-api.version>1.0.14</dir3caib-ws-api.version>
         <scanweb.api.version>4.0.0</scanweb.api.version>
-        <cxf.version>3.2.12</cxf.version>
+        <cxf.version>3.2.5</cxf.version>
         <pluginsib-validatesignature-afirmacxf.version>2.0.5</pluginsib-validatesignature-afirmacxf.version>
         <slf4j.version>1.7.22.redhat-2</slf4j.version>
         <jaxws-api.version>2.3.1</jaxws-api.version>
@@ -263,7 +264,11 @@
                 <artifactId>jboss-mdr</artifactId>
                 <version>2.0.0.GA</version>
             </dependency>
-
+            <dependency>
+                <groupId>net.sf.ehcache</groupId>
+                <artifactId>ehcache</artifactId>
+                <version>2.10.6</version>
+            </dependency>
             <dependency>
                 <groupId>xml-apis</groupId>
                 <artifactId>xml-apis</artifactId>
