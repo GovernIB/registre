@@ -438,32 +438,33 @@ create table RWE_OFICINA_SERVICIO
     IDSERVICIO number(19,0) not null
 );
 
-create table RWE_OFICIO_REMISION
-(
-    ID                     number(19,0) not null,
-    COD_ENT_REG_DEST       varchar2(21 char),
-    COD_ENT_REG_PROC       varchar2(21 char),
-    COD_ERROR              varchar2(255 char),
-    CONTACTOSDESTINO       varchar2(2000 char),
-    DEC_ENT_REG_DEST       varchar2(80 char),
-    DEC_ENT_REG_PROC       varchar2(80 char),
-    DESC_ERROR             varchar2(2000 char),
-    DESTINOEXTERNOCODIGO   varchar2(9 char),
-    DESTINOEXTERNODENOMINA varchar2(300 char),
-    ESTADO                 number(10,0) not null,
-    FECHA                  timestamp not null,
-    FECHA_DESTINO          timestamp,
-    FECHA_ESTADO           timestamp,
-    ID_INTERCAMBIO         varchar2(33 char),
-    NUMREGISTRO            number(10,0) not null,
-    NUM_REG_DESTINO        varchar2(255 char),
-    REINTENTOS             number(10,0),
-    SIR                    number(1,0) not null,
-    TIPO_OFICIO            number(19,0) not null,
-    LIBRO                  number(19,0) not null,
-    OFICINA                number(19,0) not null,
-    ORGANISMODEST          number(19,0),
-    USUARIO                number(19,0) not null
+create table RWE_OFICIO_REMISION (
+     ID number(19,0) not null,
+     COD_ENT_REG_DEST varchar2(21 char),
+     COD_ENT_REG_PROC varchar2(21 char),
+     COD_ERROR varchar2(255 char),
+     CONTACTOSDESTINO varchar2(2000 char),
+     DEC_ENT_REG_DEST varchar2(80 char),
+     DEC_ENT_REG_PROC varchar2(80 char),
+     DEC_T_ANOTACION varchar2(80 char),
+     DESC_ERROR varchar2(2000 char),
+     DESTINOEXTERNOCODIGO varchar2(9 char),
+     DESTINOEXTERNODENOMINA varchar2(300 char),
+     ESTADO number(10,0) not null,
+     FECHA timestamp not null,
+     FECHA_DESTINO timestamp,
+     FECHA_ESTADO timestamp,
+     ID_INTERCAMBIO varchar2(33 char),
+     NUMREGISTRO number(10,0) not null,
+     NUM_REG_DESTINO varchar2(255 char),
+     REINTENTOS number(10,0),
+     SIR number(1,0) not null,
+     TIPO_ANOTACION varchar2(2 char),
+     TIPO_OFICIO number(19,0) not null,
+     LIBRO number(19,0) not null,
+     OFICINA number(19,0) not null,
+     ORGANISMODEST number(19,0),
+     USUARIO number(19,0) not null
 );
 
 create table RWE_OFIREM_REGENT
