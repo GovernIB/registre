@@ -776,7 +776,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
     @RequestMapping(value = "/{idRegistro}/sello", method = RequestMethod.POST)
     public ModelAndView sello(@PathVariable Long idRegistro, HttpServletRequest request) throws Exception {
 
-        ModelAndView mav = new ModelAndView("sello");
+        ModelAndView mav = new ModelAndView("selloPdfView");
 
         RegistroEntrada registroEntrada = registroEntradaEjb.findById(idRegistro);
 

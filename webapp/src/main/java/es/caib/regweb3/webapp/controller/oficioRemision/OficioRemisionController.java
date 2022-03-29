@@ -835,7 +835,7 @@ public class OficioRemisionController extends BaseController {
     @RequestMapping(value = "/{idOficioRemision}/imprimir/{idModelo}", method = RequestMethod.GET)
     public ModelAndView imprimirModeloOficio(@PathVariable Long idOficioRemision, @PathVariable Long idModelo, HttpServletRequest request, HttpServletResponse response) throws Exception {
 
-        ModelAndView mav = new ModelAndView("oficioRemision");
+        ModelAndView mav = new ModelAndView("oficioRemisionRtfView");
 
         OficioRemision oficioRemision = oficioRemisionEjb.findById(idOficioRemision);
 
