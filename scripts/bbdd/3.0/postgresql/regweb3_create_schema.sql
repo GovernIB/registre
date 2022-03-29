@@ -465,33 +465,34 @@ create table RWE_OFICINA_SERVICIO
     primary key (IDOFICINA, IDSERVICIO)
 );
 
-create table RWE_OFICIO_REMISION
-(
-    ID                     int8      not null,
-    COD_ENT_REG_DEST       varchar(21),
-    COD_ENT_REG_PROC       varchar(21),
-    COD_ERROR              varchar(255),
-    CONTACTOSDESTINO       varchar(2000),
-    DEC_ENT_REG_DEST       varchar(80),
-    DEC_ENT_REG_PROC       varchar(80),
-    DESC_ERROR             varchar(2000),
-    DESTINOEXTERNOCODIGO   varchar(9),
-    DESTINOEXTERNODENOMINA varchar(300),
-    ESTADO                 int4      not null,
-    FECHA                  timestamp not null,
-    FECHA_DESTINO          timestamp,
-    FECHA_ESTADO           timestamp,
-    ID_INTERCAMBIO         varchar(33),
-    NUMREGISTRO            int4      not null,
-    NUM_REG_DESTINO        varchar(255),
-    REINTENTOS             int4,
-    SIR                    bool      not null,
-    TIPO_OFICIO            int8      not null,
-    LIBRO                  int8      not null,
-    OFICINA                int8      not null,
-    ORGANISMODEST          int8,
-    USUARIO                int8      not null,
-    primary key (ID)
+create table RWE_OFICIO_REMISION (
+     ID int8 not null,
+     COD_ENT_REG_DEST varchar(21),
+     COD_ENT_REG_PROC varchar(21),
+     COD_ERROR varchar(255),
+     CONTACTOSDESTINO varchar(2000),
+     DEC_ENT_REG_DEST varchar(80),
+     DEC_ENT_REG_PROC varchar(80),
+     DEC_T_ANOTACION varchar(80),
+     DESC_ERROR varchar(2000),
+     DESTINOEXTERNOCODIGO varchar(9),
+     DESTINOEXTERNODENOMINA varchar(300),
+     ESTADO int4 not null,
+     FECHA timestamp not null,
+     FECHA_DESTINO timestamp,
+     FECHA_ESTADO timestamp,
+     ID_INTERCAMBIO varchar(33),
+     NUMREGISTRO int4 not null,
+     NUM_REG_DESTINO varchar(255),
+     REINTENTOS int4,
+     SIR bool not null,
+     TIPO_ANOTACION varchar(2),
+     TIPO_OFICIO int8 not null,
+     LIBRO int8 not null,
+     OFICINA int8 not null,
+     ORGANISMODEST int8,
+     USUARIO int8 not null,
+     primary key (ID)
 );
 
 create table RWE_OFIREM_REGENT
