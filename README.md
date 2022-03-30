@@ -1,4 +1,4 @@
-# ![Logo](https://github.com/GovernIB/maven/raw/binaris/registre/projectinfo_Attachments/icon.jpg) Registre
+# ![Logo](https://github.com/GovernIB/maven/raw/binaris/registre/projectinfo_Attachments/icon.jpg)  Registre
 
 ***Versions***
 
