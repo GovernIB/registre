@@ -229,7 +229,7 @@ public class MensajeControlBean extends BaseEjbJPA<MensajeControl, Long> impleme
                 procesarMensajeACK(registroSir);
             }else{
                 log.info("El mensaje de control corresponde a un IdentificadorIntercambio que no existe en el sistema");
-                throw new ValidacionException(Errores.ERROR_0037, "El mensaje de control corresponde a un IdentificadorIntercambio que no existe en el sistema");
+                throw new ValidacionException(Errores.ERROR_0037, "El mensaje de control corresponde a un IdentificadorIntercambio que no existe en el sistema: " + mensaje.getIdentificadorIntercambio());
             }
 
             // Mensaje CONFIRMACIÓN
@@ -240,7 +240,7 @@ public class MensajeControlBean extends BaseEjbJPA<MensajeControl, Long> impleme
             if(oficioRemision != null){
                 procesarMensajeCONFIRMACION(oficioRemision, mensaje);
             }else{
-                log.info("El mensaje de control corresponde a un IdentificadorIntercambio que no existe en el sistema");
+                log.info("El mensaje de control corresponde a un IdentificadorIntercambio que no existe en el sistema: " + mensaje.getIdentificadorIntercambio());
                 throw new ValidacionException(Errores.ERROR_0037, "El mensaje de control corresponde a un IdentificadorIntercambio que no existe en el sistema");
             }
 
@@ -258,7 +258,7 @@ public class MensajeControlBean extends BaseEjbJPA<MensajeControl, Long> impleme
             }else if(registroSir != null){
                 procesarMensajeERROR(registroSir, mensaje);
             }else{
-                log.info("El mensaje de control corresponde a un IdentificadorIntercambio que no existe en el sistema");
+                log.info("El mensaje de control corresponde a un IdentificadorIntercambio que no existe en el sistema: " + mensaje.getIdentificadorIntercambio());
                 throw new ValidacionException(Errores.ERROR_0037, "El mensaje de control corresponde a un IdentificadorIntercambio que no existe en el sistema");
             }
 
@@ -287,20 +287,15 @@ public class MensajeControlBean extends BaseEjbJPA<MensajeControl, Long> impleme
 
             case RegwebConstantes.OFICIO_SIR_ENVIADO:
 
-                // Actualizamos el OficioRemision
-                oficioRemision.setEstado(RegwebConstantes.OFICIO_SIR_ENVIADO_ACK);
-                oficioRemision.setFechaEstado(new Date());
-                oficioRemisionEjb.merge(oficioRemision);
-                break;
+                // Actualizamos el estado del OficioRemision
+                oficioRemisionEjb.modificarEstado(oficioRemision.getId(), RegwebConstantes.OFICIO_SIR_ENVIADO_ACK);
+            break;
 
             case RegwebConstantes.OFICIO_SIR_REENVIADO:
 
-                // Actualizamos el OficioRemision
-                oficioRemision.setEstado(RegwebConstantes.OFICIO_SIR_REENVIADO_ACK);
-                oficioRemision.setFechaEstado(new Date());
-                oficioRemisionEjb.merge(oficioRemision);
-
-                break;
+                // Actualizamos el estado del OficioRemision
+                oficioRemisionEjb.modificarEstado(oficioRemision.getId(), RegwebConstantes.OFICIO_SIR_REENVIADO_ACK);
+            break;
 
             case RegwebConstantes.OFICIO_SIR_ENVIADO_ACK:
             case RegwebConstantes.OFICIO_SIR_REENVIADO_ACK:
@@ -325,18 +320,14 @@ public class MensajeControlBean extends BaseEjbJPA<MensajeControl, Long> impleme
         if (EstadoRegistroSir.REENVIADO.equals(registroSir.getEstado()) ||
                 EstadoRegistroSir.REENVIADO_Y_ERROR.equals(registroSir.getEstado())){
 
-            // Actualizamos el registroSir
-            registroSir.setEstado(EstadoRegistroSir.REENVIADO_Y_ACK);
-            registroSir.setFechaEstado(new Date());
-            registroSirEjb.merge(registroSir);
+            // Actualizamos el estado del registroSir
+            registroSirEjb.modificarEstado(registroSir.getId(), EstadoRegistroSir.REENVIADO_Y_ACK);
 
         } else if (EstadoRegistroSir.RECHAZADO.equals(registroSir.getEstado()) ||
                 EstadoRegistroSir.RECHAZADO_Y_ERROR.equals(registroSir.getEstado())){
 
-            // Actualizamos el registroSir
-            registroSir.setEstado(EstadoRegistroSir.RECHAZADO_Y_ACK);
-            registroSir.setFechaEstado(new Date());
-            registroSirEjb.merge(registroSir);
+            // Actualizamos el estado del registroSir
+            registroSirEjb.modificarEstado(registroSir.getId(), EstadoRegistroSir.RECHAZADO_Y_ACK);
 
         } else if (EstadoRegistroSir.REENVIADO_Y_ACK.equals(registroSir.getEstado()) ||
                 EstadoRegistroSir.RECHAZADO_Y_ACK.equals(registroSir.getEstado())){
@@ -351,7 +342,7 @@ public class MensajeControlBean extends BaseEjbJPA<MensajeControl, Long> impleme
 
     /**
      * Procesa un mensaje de control de tipo CONFIRMACION
-     * @param oficioRemision
+     * @param oficio
      * @throws Exception
      */
     private void procesarMensajeCONFIRMACION(OficioRemision oficio, MensajeControl mensaje) throws Exception{
@@ -379,10 +370,9 @@ public class MensajeControlBean extends BaseEjbJPA<MensajeControl, Long> impleme
 
                 }else if(oficio.getTipoOficioRemision().equals(RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA)){
                     registroSalidaEjb.cambiarEstado(oficio.getRegistrosSalida().get(0).getId(),RegwebConstantes.REGISTRO_OFICIO_ACEPTADO);
-
                 }
 
-                break;
+            break;
 
             case (RegwebConstantes.OFICIO_ACEPTADO):
 
