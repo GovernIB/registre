@@ -17,6 +17,7 @@ import javax.annotation.Resource;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
@@ -25,6 +26,8 @@ import java.io.File;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.*;
+
+import static javax.ejb.TransactionAttributeType.REQUIRES_NEW;
 
 /**
  * Created by Fundació BIT.
@@ -772,10 +775,12 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
     }
 
     @Override
+    @TransactionAttribute(value = REQUIRES_NEW)
     public void modificarEstado(Long idOficioRemision, int estado) throws Exception {
 
-        Query q = em.createQuery("update OficioRemision set estado=:estado where id = :idOficioRemision");
+        Query q = em.createQuery("update OficioRemision set estado=:estado, fechaEstado=:fechaEstado where id = :idOficioRemision");
         q.setParameter("estado", estado);
+        q.setParameter("fechaEstado", new Date());
         q.setParameter("idOficioRemision", idOficioRemision);
         q.executeUpdate();
 

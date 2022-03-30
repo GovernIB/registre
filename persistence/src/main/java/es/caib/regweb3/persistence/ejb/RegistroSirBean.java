@@ -552,8 +552,9 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
     @SuppressWarnings(value = "unchecked")
     public void modificarEstado(Long idRegistroSir, EstadoRegistroSir estado) throws Exception {
 
-        Query q = em.createQuery("update RegistroSir set estado=:estado where id = :idRegistroSir");
+        Query q = em.createQuery("update RegistroSir set estado=:estado, fechaEstado=:fechaEstado where id = :idRegistroSir");
         q.setParameter("estado", estado);
+        q.setParameter("fechaEstado", new Date());
         q.setParameter("idRegistroSir", idRegistroSir);
         q.executeUpdate();
 
