@@ -672,12 +672,23 @@ public class PropiedadGlobalUtil {
 
     /**
      * Propiedad que para la cola de Cutodia
-     * Propiedad: es.caib.regweb3.parar.cola.custodia
+     * Propiedad: es.caib.regweb3.cola.parar.custodia
      * @param idEntidad
      * @return
      */
     public static boolean pararColaCustodia(Long idEntidad){
         final String partialPropertyName = "cola.parar.custodia";
+        return getBooleanByEntidad(idEntidad, partialPropertyName);
+    }
+
+    /**
+     * Propiedad que configura un segundo hilo de procesamiento de la cola de Custodia
+     * Propiedad: es.caib.regweb3.cola.2hilo.custodia
+     * @param idEntidad
+     * @return
+     */
+    public static boolean segundoHiloCustodia(Long idEntidad){
+        final String partialPropertyName = "cola.2hilo.custodia";
         return getBooleanByEntidad(idEntidad, partialPropertyName);
     }
 

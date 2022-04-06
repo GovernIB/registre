@@ -3,6 +3,7 @@ package es.caib.regweb3.persistence.ejb;
 import es.caib.regweb3.model.Cola;
 
 import javax.ejb.Local;
+import java.util.List;
 
 /**
  * @author earrivi
@@ -25,7 +26,7 @@ public interface CustodiaLocal {
      * @param idEntidad
      * @throws Exception
      */
-    void custodiarJustificantesEnCola(Long idEntidad) throws Exception;
+    void custodiarJustificantesEnCola(Long idEntidad, List<Cola> elementos) throws Exception;
 
 }
 

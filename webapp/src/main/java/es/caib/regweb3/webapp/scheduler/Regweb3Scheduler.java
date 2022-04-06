@@ -178,6 +178,23 @@ public class Regweb3Scheduler {
         }
     }
 
+    /**
+     * Qué hace: Custodia los Justificantes que hay en la cola
+     * Cuándo lo hace: cada 20 minutos desde las 15:00 hasta las 07:00
+     * (de 01:00h a 02:00h hay una parada por Backup de Arxiu)
+     */
+    @Scheduled(cron = "0 0/20 15,16,17,18,19,20,21,22,23,0,2,3,4,5,6 * * *")
+    public void custodiarJustificantesEnCola2(){
+
+        try {
+
+            schedulerEjb.custodiarJustificantesEnCola2();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
     /**
      * Qué hace: purga los anexos de los registros distribuidos
