@@ -8,7 +8,6 @@ import es.caib.regweb3.model.IRegistro;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.persistence.integracion.ArxiuCaibUtils;
 import es.caib.regweb3.persistence.integracion.JustificanteArxiu;
-import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 import org.apache.log4j.Logger;
@@ -101,10 +100,7 @@ public class CustodiaBean implements CustodiaLocal {
 
     @Override
     @TransactionTimeout(value = 1800)  // 30 minutos
-    public void custodiarJustificantesEnCola(Long idEntidad) throws Exception {
-
-        // Obtiene un numero de elementos (configurable) pendientes de distribuir que estan en la cola
-        List<Cola> elementos = colaEjb.findByTipoEntidad(RegwebConstantes.COLA_CUSTODIA, idEntidad, PropiedadGlobalUtil.getElementosColaCustodia(idEntidad));
+    public void custodiarJustificantesEnCola(Long idEntidad, List<Cola> elementos) throws Exception {
 
         log.info("");
         log.info("Cola de CUSTODIA: Hay " + elementos.size() + " elementos que se van a custodiar en esta iteracion");

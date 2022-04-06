@@ -4,6 +4,7 @@ import es.caib.regweb3.model.Cola;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
+import java.util.List;
 
 /**
  *
@@ -28,7 +29,7 @@ public interface CustodiaLocal {
      * @param idEntidad
      * @throws Exception
      */
-    void custodiarJustificantesEnCola(Long idEntidad) throws Exception;
+    void custodiarJustificantesEnCola(Long idEntidad, List<Cola> elementos) throws Exception;
 
 }
 

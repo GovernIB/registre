@@ -1,5 +1,6 @@
 package es.caib.regweb3.persistence.ejb;
 
+import es.caib.regweb3.model.Cola;
 import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.utils.RegwebConstantes;
@@ -300,7 +301,40 @@ public class SchedulerBean implements SchedulerLocal{
 
                 if(!PropiedadGlobalUtil.pararColaCustodia(entidad.getId())){
 
-                    custodiaEjb.custodiarJustificantesEnCola(entidad.getId());
+                    // Obtiene un numero de elementos pendientes de distribuir que estan en la cola
+                    List<Cola> elementos = colaEjb.findByTipoEntidad(RegwebConstantes.COLA_CUSTODIA, entidad.getId(), null, PropiedadGlobalUtil.getElementosColaCustodia(entidad.getId()));
+
+                    custodiaEjb.custodiarJustificantesEnCola(entidad.getId(), elementos);
+                }
+            }
+
+        }catch (Exception e){
+            log.error("Error custodiando justificantes de la Cola ...", e);
+        }
+
+    }
+
+    /**
+     * Segundo hilo de custodia de Justificantes en cola de cada entidad.
+     * @throws Exception
+     */
+    @Override
+    @TransactionTimeout(value = 1800)  // 30 minutos
+    public void custodiarJustificantesEnCola2() throws Exception{
+
+        try {
+
+            List<Entidad> entidades = entidadEjb.getEntidadesActivas();
+
+            for (Entidad entidad : entidades) {
+
+                if(!PropiedadGlobalUtil.pararColaCustodia(entidad.getId()) && PropiedadGlobalUtil.segundoHiloCustodia(entidad.getId())){
+
+                    // Obtiene un numero de elementos pendientes de distribuir que estan en la cola
+                    Integer totalElementos = PropiedadGlobalUtil.getElementosColaCustodia(entidad.getId());
+                    List<Cola> elementos = colaEjb.findByTipoEntidad(RegwebConstantes.COLA_CUSTODIA, entidad.getId(), totalElementos, totalElementos);
+
+                    custodiaEjb.custodiarJustificantesEnCola(entidad.getId(), elementos);
                 }
             }
 

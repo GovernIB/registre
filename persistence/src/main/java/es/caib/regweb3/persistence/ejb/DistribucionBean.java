@@ -254,7 +254,7 @@ public class DistribucionBean implements DistribucionLocal {
     public void distribuirRegistrosEnCola(Entidad entidad) throws Exception {
 
         //obtiene un numero de elementos (configurable) pendientes de distribuir que estan en la cola
-        List<Cola> elementosADistribuir = colaEjb.findByTipoEntidad(RegwebConstantes.COLA_DISTRIBUCION, entidad.getId(), PropiedadGlobalUtil.getElementosCola(entidad.getId()));
+        List<Cola> elementosADistribuir = colaEjb.findByTipoEntidad(RegwebConstantes.COLA_DISTRIBUCION, entidad.getId(),null, PropiedadGlobalUtil.getElementosCola(entidad.getId()));
 
         log.info("");
         log.info("Cola de DISTRIBUCION: Hay " + elementosADistribuir.size() + " elementos que se van a distribuir en esta iteracion");
