@@ -14,7 +14,7 @@ import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -153,8 +153,13 @@ public class RegWeb3BackConfig extends WebMvcConfigurerAdapter {
     }
 
     @Bean
-    public TaskScheduler taskScheduler() {
-        return new ConcurrentTaskScheduler();
+    public TaskScheduler threadPoolTaskScheduler() {
+
+        ThreadPoolTaskScheduler threadPoolTaskScheduler = new ThreadPoolTaskScheduler();
+        threadPoolTaskScheduler.setPoolSize(5);
+        threadPoolTaskScheduler.setThreadNamePrefix("RegWeb3ThreadPoolTaskScheduler");
+
+        return threadPoolTaskScheduler;
     }
 
     @Bean(name = "multipartResolver")

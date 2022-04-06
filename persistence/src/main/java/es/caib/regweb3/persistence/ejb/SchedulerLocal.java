@@ -70,6 +70,12 @@ public interface SchedulerLocal {
     void custodiarJustificantesEnCola() throws Exception;
 
     /**
+     * Segundo hilo de custodia de justificantes
+     * @throws Exception
+     */
+    void custodiarJustificantesEnCola2() throws Exception;
+
+    /**
      *
      * @throws Exception
      */
