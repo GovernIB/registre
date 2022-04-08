@@ -83,45 +83,6 @@
                                 </div>
                             </div>
                         </div>
-
-                        <!-- PANEL RESUMEN EXTINGUIDOS SIN SUSTITUTO -->
-
-                        <c:if test="${not empty organismosConError}">
-                            <div class="row">
-                                <div class="col-xs-12">
-                                    <div class="panel panel-success">
-                                        <div class="panel-heading">
-                                            <h3 class="panel-title"><i class="fa fa-file-o"></i> <strong><spring:message code="organismos.extinguidos.error"/></strong></h3>
-                                        </div>
-                                        <div  class="panel-body">
-
-                                            <c:forEach var="organismo" items="${organismosConError}">
-
-                                                <table class="table table-bordered table-hover table-striped">
-                                                    <colgroup>
-                                                        <col>
-                                                    </colgroup>
-                                                    <thead>
-                                                    <tr>
-                                                        <th><spring:message code="organismo.extinguido"/></th>
-                                                    </tr>
-                                                    </thead>
-
-                                                    <tbody>
-                                                    <tr>
-                                                        <td>${organismo.denominacion}</td>
-                                                    </tr>
-
-                                                    </tbody>
-                                                </table>
-                                            </c:forEach>
-
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </c:if>
-
                     </div>
                 </div>
             </div>

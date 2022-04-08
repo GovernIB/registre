@@ -174,15 +174,11 @@
 
                                         </div>
                                     </c:if>
-
                                 </div>
                             </div>
-
                         </c:if>
                     </div>
-
                 </div> <!--/.panel success-->
-
             </div>
         </div> <!-- /.row-->
 
@@ -258,46 +254,19 @@
                                 waitingDialog.hide();
                             }
                         }
-
                     }
-
                 });
-
             });
-
         });
+
         $('#actuali').click(function(){
 
             confirmModal.modal("show");
             confirmModal.find("#okButton").click(function(event) {
                 confirmModal.modal("hide");
 
-                $.ajax({
-                    url:'<c:url value="/entidad/${entidad.id}/actualizar"/>',
-                    type:'GET',
-                    beforeSend: function(objeto){
-                        waitingDialog.show('<spring:message code="organismo.organigrama.sincronizando" javaScriptEscape='true'/>', {dialogSize: 'm', progressType: 'success'});
-                    },
-                    success:function(respuesta){
-
-                        if(respuesta.status == 'SUCCESS'){
-                            goTo('<c:url value="/entidad/pendientesprocesar"/>');
-                        }else{
-                            if(respuesta.status=='NOTALLOWED'){
-                                mostrarMensajeError('#mensajes', respuesta.error);
-                                waitingDialog.hide();
-                            }
-                            if(respuesta.status=='FAIL') {
-                                mostrarMensajeError('#mensajes', respuesta.error);
-                                waitingDialog.hide();
-                            }
-                        }
-
-                    }
-                });
-
+                goTo('<c:url value="/entidad/${entidad.id}/actualizar"/>');
             });
-
         });
     });
 </script>

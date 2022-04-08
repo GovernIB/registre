@@ -128,18 +128,11 @@ public class InicioInterceptor extends HandlerInterceptorAdapter {
 
                 // Rutas que se saltarán las comprobaciones
                 if (request.getRequestURI().startsWith("/regweb3/rol/") || request.getRequestURI().equals("/regweb3/aviso")
-                        || request.getRequestURI().startsWith("/regweb3/cambioEntidad") || request.getRequestURI().startsWith("/regweb3/entidad/pendientesprocesar")
+                        || request.getRequestURI().startsWith("/regweb3/cambioEntidad") || request.getRequestURI().startsWith("/regweb3/entidad/procesarPendientes")
                         || request.getRequestURI().startsWith("/regweb3/entidad/procesarlibroorganismo") || request.getRequestURI().startsWith("/regweb3/error")
                         || request.getRequestURI().contains(".jsp") || request.getRequestURI().startsWith("/regweb3/rest")) {
 
                     return true;
-                }
-
-
-                //Obtenemos si la entidad tiene libros pendientes de procesar
-                boolean tienePendientesDeProcesar = false;
-                if(loginInfo.getEntidadActiva()!=null) {
-                    tienePendientesDeProcesar = pendienteEjb.findPendientesProcesar(loginInfo.getEntidadActiva().getId()).size() > 0;
                 }
 
                 switch (loginInfo.getRolActivo().getNombre()) {
@@ -155,7 +148,7 @@ public class InicioInterceptor extends HandlerInterceptorAdapter {
                         }
 
                         //No permitir que se hagan registros si la entidad está en mantenimiento
-                        if (entidadActiva.getMantenimiento() || tienePendientesDeProcesar) {
+                        if (entidadActiva.getMantenimiento()) {
                             log.info("Tareas de Mantenimiento");
                             Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.tareasmantenimiento"));
                             response.sendRedirect("/regweb3/aviso");
@@ -171,13 +164,6 @@ public class InicioInterceptor extends HandlerInterceptorAdapter {
                         if(entidadActiva == null){
                             Mensaje.saveMessageAviso(request, I18NUtils.tradueix("entidad.acceso.denedado"));
                             response.sendRedirect("/regweb3/aviso");
-                            return false;
-                        }
-
-                        //Si no ha asignado todos los libros le redirige a la pagina de nuevo para procesarlos
-                        if (tienePendientesDeProcesar) {
-                            Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.sincronizacion.librospendientes"));
-                            response.sendRedirect("/regweb3/entidad/pendientesprocesar");
                             return false;
                         }
 
