@@ -57,24 +57,24 @@ public class RegWebInInterceptor extends AbstractPhaseInterceptor<Message> {
         String userapp = context.getUserPrincipal().getName();
 
         if (logEnable) {
-            log.debug(" ------------------ RegWebWSInInterceptor  --------------");
+            log.info(" ------------------ RegWebWSInInterceptor  --------------");
 
             try {
 
                 method = getTargetMethod(message);
 
-                log.debug("  + Method NAME = " + method.getName());
-                log.debug("  + Method CLASS = " + method.getDeclaringClass());
+                log.info("  + Method NAME = " + method.getName());
+                log.info("  + Method CLASS = " + method.getDeclaringClass());
 
                 HttpServletRequest hsr = (HttpServletRequest) message.get("HTTP.REQUEST");
-                log.debug(" USER:  " + hsr.getRemoteUser());
+                log.info(" USER:  " + hsr.getRemoteUser());
 
-                if (hsr.isUserInRole(RegwebConstantes.RWE_SUPERADMIN)) log.debug(" ROLE: RWE_SUPERADMIN");
-                if (hsr.isUserInRole(RegwebConstantes.RWE_ADMIN)) log.debug(" ROLE: RWE_ADMIN ");
-                if (hsr.isUserInRole(RegwebConstantes.RWE_USUARI)) log.debug(" ROLE: RWE_USER ");
-                if (hsr.isUserInRole(RegwebConstantes.RWE_WS_ENTRADA)) log.debug(" ROLE: RWE_WS_ENTRADA ");
-                if (hsr.isUserInRole(RegwebConstantes.RWE_WS_SALIDA)) log.debug(" ROLE: RWE_WS_SALIDA ");
-                if (hsr.isUserInRole(RegwebConstantes.RWE_WS_CIUDADANO)) log.debug(" ROLE: RWE_WS_CIUDADANO ");
+                if (hsr.isUserInRole(RegwebConstantes.RWE_SUPERADMIN)) log.info(" ROLE: RWE_SUPERADMIN");
+                if (hsr.isUserInRole(RegwebConstantes.RWE_ADMIN)) log.info(" ROLE: RWE_ADMIN ");
+                if (hsr.isUserInRole(RegwebConstantes.RWE_USUARI)) log.info(" ROLE: RWE_USER ");
+                if (hsr.isUserInRole(RegwebConstantes.RWE_WS_ENTRADA)) log.info(" ROLE: RWE_WS_ENTRADA ");
+                if (hsr.isUserInRole(RegwebConstantes.RWE_WS_SALIDA)) log.info(" ROLE: RWE_WS_SALIDA ");
+                if (hsr.isUserInRole(RegwebConstantes.RWE_WS_CIUDADANO)) log.info(" ROLE: RWE_WS_CIUDADANO ");
 
             } catch (Exception e) {
                 log.error(e.getMessage());

@@ -591,8 +591,6 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
      * 1- Crea una entrada en la tabla de RWE_PENDIENTE que indica que es un organismo que está pendiente
      * de procesar(reasignar sus libros a los organismos que lo sustituyen). Se crea según el estado del organismo
      * recibido y si tiene libros.
-     * <p>
-     * 2- Reasigna el destino de los Registros de Entrada que estaban dirigidos al organismo extinguido
      *
      * @param organismo organismo a tratar
      * @throws Exception
