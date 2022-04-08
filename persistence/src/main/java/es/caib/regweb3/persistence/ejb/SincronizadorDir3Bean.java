@@ -591,8 +591,6 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
      * de procesar(reasignar sus libros a los organismos que lo sustituyen). Se crea según el estado del organismo
      * recibido y si tiene libros.
      *
-     * 2- Reasigna el destino de los Registros de Entrada que estaban dirigidos al organismo extinguido
-     *
      * @param organismo organismo a tratar
      * @throws Exception
      */

@@ -1,4 +1,4 @@
-package es.caib.regweb3.webapp.controller.oficina;
+package es.caib.regweb3.webapp.controller.admin;
 
 import es.caib.regweb3.model.CatEstadoEntidad;
 import es.caib.regweb3.model.Oficina;

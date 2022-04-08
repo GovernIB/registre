@@ -592,12 +592,10 @@ public class EntidadController extends BaseController {
      * Actualizamos una {@link es.caib.regweb3.model.Entidad} de dir3caib
      */
     @RequestMapping(value = "/{entidadId}/actualizar")
-    @ResponseBody
-    public /*Boolean*/ JsonResponse actualizar(@PathVariable Long entidadId, HttpServletRequest request) throws Exception {
-
-        JsonResponse jsonResponse = new JsonResponse();
+    public String actualizar(@PathVariable Long entidadId, HttpServletRequest request) throws Exception {
 
         try {
+
             //Marcamos la entidad de mantenimiento
             entidadEjb.marcarEntidadMantenimiento(entidadId, true);
 
@@ -618,36 +616,33 @@ public class EntidadController extends BaseController {
             if (actualizados == -1) {
                 entidadEjb.marcarEntidadMantenimiento(entidadId, false);
                 log.info("No se puede actualizar regweb hasta que no se haya actualizado dir3caib previamente");
-                jsonResponse.setError(getMessage("regweb.actualizacion.imposible"));
-                jsonResponse.setStatus("NOTALLOWED");
-                return jsonResponse;
+
+                Mensaje.saveMessageError(request, getMessage("regweb.actualizacion.imposible"));
+                return "redirect:/organismo/list";
             }
 
             // actualizamos nombre y codigo de la entidad, si la unidad raiz a la que representa se ha extinguido.
             actualizarEntidadExtincionUnidadRaiz(entidadId, request);
-            // via ajax s'en va a "entidad/pendientesprocesar"
-            jsonResponse.setStatus("SUCCESS");
 
         } catch (Exception e) {
             log.error("Error actualizacion", e);
-            jsonResponse.setError(getMessage("regweb.actualizacion.nook") + ": " + e.getMessage() + " " + getMessage("regweb.actualizacion.revisar"));
-            jsonResponse.setStatus("FAIL");
+            Mensaje.saveMessageError(request, getMessage("regweb.actualizacion.nook") + ": " + e.getMessage() + " " + getMessage("regweb.actualizacion.revisar"));
+            return "redirect:/organismo/list";
         }
 
-        return jsonResponse;
+        return "redirect:/entidad/procesarPendientes";
     }
 
     /**
      * Sincronizamos una {@link es.caib.regweb3.model.Entidad} de dir3caib
-     * param entidadId
+     * @param entidadId
      *
      * @return
      * @throws Exception
      */
     @ResponseBody
     @RequestMapping(value = "/{entidadId}/sincronizar")
-    public JsonResponse sincronizar(@PathVariable Long entidadId, HttpServletRequest request)
-            throws Exception {
+    public JsonResponse sincronizar(@PathVariable Long entidadId) throws Exception {
 
         JsonResponse jsonResponse = new JsonResponse();
 
@@ -757,8 +752,8 @@ public class EntidadController extends BaseController {
      * Esta función se llama justo después del proceso de sincronización de una entidad desde dir3.
      * En el InicioInterceptor mira si hay organismos pendientes de procesar y si hay viene aquí.
      */
-    @RequestMapping(value = "/pendientesprocesar", method = RequestMethod.GET)
-    public String mostrarPendientesProcesar(HttpServletRequest request, Model model) throws Exception {
+    @RequestMapping(value = "/procesarPendientes", method = RequestMethod.GET)
+    public String procesarPendientes(HttpServletRequest request, Model model) throws Exception {
 
         Entidad entidad = getEntidadActiva(request);
 
@@ -769,9 +764,9 @@ public class EntidadController extends BaseController {
 
             // Para mostrar información al usuario
             Map<String, Organismo> extinguidosAutomaticos = new HashMap<String, Organismo>();// Organismos extinguidos y sustitutos procesados automaticamente
-            List<Organismo> organismosConError = new ArrayList<Organismo>();// Organismos con error pendientes de solucionar (por ejemplo sin oficinas)
 
             for (Pendiente pendiente : pendientesDeProcesar) {
+
                 if (RegwebConstantes.ESTADO_ENTIDAD_EXTINGUIDO.equals(pendiente.getEstado()) || RegwebConstantes.ESTADO_ENTIDAD_TRANSITORIO.equals(pendiente.getEstado()) || RegwebConstantes.ESTADO_ENTIDAD_VIGENTE.equals(pendiente.getEstado())) {
                     // Obtenemos el organismo extinguido
                     Organismo organismoExtinguido = organismoEjb.findByIdLigero(pendiente.getIdOrganismo());
@@ -784,9 +779,9 @@ public class EntidadController extends BaseController {
 
                         Set<Organismo> sustitutosOficina = obtenerSustitutosOficina(organismoExtinguido.getId());
 
-                        if(sustitutosOficina.size() == 0){ // Error, no hay ningún Organismos sustituto
+                        if(sustitutosOficina.size() == 0){ // No hay ningún Organismos sustituto
 
-                            organismosConError.add(organismoExtinguido);
+                            //todo eliminar permisos del Organismo extinguido
 
                         }else { // Se procesa automáticamente
 
@@ -810,24 +805,17 @@ public class EntidadController extends BaseController {
                             Organismo organismoSustituto = new ArrayList<>(sustitutosOficina).get(0);
                             oficioRemisionEjb.actualizarDestinoPendientesLlegada(organismoExtinguido.getId(), organismoSustituto.getId());
 
-                            // Actualizamos el Pendiente
-                            pendiente.setProcesado(true);
-                            pendiente.setFecha(TimeUtils.formateaFecha(new Date(), RegwebConstantes.FORMATO_FECHA_HORA));
-                            pendienteEjb.merge(pendiente);
-
                         }
-
-                    }else{ // Si el organismos no tiene permisos, se marca como procesado
-                        pendiente.setProcesado(true);
-                        pendiente.setFecha(TimeUtils.formateaFecha(new Date(), RegwebConstantes.FORMATO_FECHA_HORA));
-                        pendienteEjb.merge(pendiente);
                     }
 
+                    // Actualizamos el Pendiente
+                    pendiente.setProcesado(true);
+                    pendiente.setFecha(TimeUtils.formateaFecha(new Date(), RegwebConstantes.FORMATO_FECHA_HORA));
+                    pendienteEjb.merge(pendiente);
                 }
             }
 
             model.addAttribute("extinguidosAutomaticos", extinguidosAutomaticos); // organismos que se les ha asignado automaticamente permisos.
-            model.addAttribute("organismosConError", organismosConError); // organismos que no tienen sustituto
 
             // Quitamos el modo mantenimiento de la Entidad
             entidadEjb.marcarEntidadMantenimiento(entidad.getId(), false);
@@ -839,7 +827,6 @@ public class EntidadController extends BaseController {
             Mensaje.saveMessageInfo(request, getMessage("organismo.nopendientesprocesar"));
             return "redirect:/organismo/list";
         }
-
 
         return "organismo/resumenSincronizacion";
     }

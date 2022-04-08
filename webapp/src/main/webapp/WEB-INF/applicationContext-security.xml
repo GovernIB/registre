@@ -29,7 +29,7 @@
         <sec:intercept-url pattern="/entidad/list" access="hasRole('RWE_SUPERADMIN')"/>
         <sec:intercept-url pattern="/entidad/permisos/**" access="hasRole('RWE_ADMIN')"/>
         <sec:intercept-url pattern="/entidad/**/eliminar" access="hasRole('RWE_SUPERADMIN')"/>
-        <sec:intercept-url pattern="/entidad/pendientesprocesar" access="hasRole('RWE_ADMIN')"/>
+        <sec:intercept-url pattern="/entidad/procesarPendientes" access="hasRole('RWE_ADMIN')"/>
         <sec:intercept-url pattern="/entidad/**/edit" access="hasAnyRole('RWE_SUPERADMIN','RWE_ADMIN')"/>
         <sec:intercept-url pattern="/entidad/usuarios" access="hasRole('RWE_ADMIN')"/>
         <sec:intercept-url pattern="/entidad/**/anular" access="hasRole('RWE_SUPERADMIN')"/>

@@ -1,4 +1,4 @@
-package es.caib.regweb3.webapp.controller.admin;
+package es.caib.regweb3.webapp.controller.adminEntidad;
 
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.AnexoFull;
