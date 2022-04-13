@@ -26,7 +26,7 @@ import java.util.*;
  * Created by mgonzalez on 21/03/2018.
  */
 @Stateless(name = "ColaEJB")
-@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI", "RWE_WS_ENTRADA"})
+@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI", "RWE_WS_ENTRADA", "RWE_WS_SALIDA"})
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
 
