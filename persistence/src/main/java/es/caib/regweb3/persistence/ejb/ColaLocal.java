@@ -16,7 +16,7 @@ import java.util.List;
  * Created by mgonzalez on 21/03/2018.
  */
 @Local
-@RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI","RWE_WS_ENTRADA"})
+@RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI","RWE_WS_ENTRADA", "RWE_WS_SALIDA"})
 public interface ColaLocal extends BaseEjb<Cola, Long> {
 
     /**
