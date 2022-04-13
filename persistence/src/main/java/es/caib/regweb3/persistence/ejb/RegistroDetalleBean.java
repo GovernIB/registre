@@ -27,7 +27,7 @@ import java.util.Set;
  */
 
 @Stateless(name = "RegistroDetalleEJB")
-@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI"})
+@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI", "RWE_WS_ENTRADA", "RWE_WS_SALIDA"})
 public class RegistroDetalleBean extends BaseEjbJPA<RegistroDetalle, Long> implements RegistroDetalleLocal {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
