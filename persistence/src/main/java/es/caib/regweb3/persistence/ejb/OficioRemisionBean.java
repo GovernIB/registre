@@ -787,6 +787,16 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
     }
 
     @Override
+    @TransactionAttribute(value = REQUIRES_NEW)
+    public void incrementarReintentos(Long idOficioRemision, Integer reintentos) throws Exception {
+
+        Query q = em.createQuery("update OficioRemision set numeroReintentos=:reintentos where id = :idOficioRemision");
+        q.setParameter("reintentos", reintentos);
+        q.setParameter("idOficioRemision", idOficioRemision);
+        q.executeUpdate();
+    }
+
+    @Override
     public void reiniciarIntentos(Long idOficioRemision) throws Exception {
 
         Query q = em.createQuery("update OficioRemision set numeroReintentos=0 where id = :idOficioRemision");
