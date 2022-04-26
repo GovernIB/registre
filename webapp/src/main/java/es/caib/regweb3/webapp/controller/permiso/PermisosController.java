@@ -57,6 +57,11 @@ public class PermisosController extends BaseController {
         // Actualizamos los Roles
         usuarioEjb.actualizarRoles(usuarioEntidad.getUsuario(), roles);
 
+        if(roles == null){
+            Mensaje.saveMessageError(request, getMessage("usuario.asignar.permisos.denegado"));
+            return "redirect:/entidad/usuarios";
+        }
+
         // Si no dispone de algún ROL, no se le pueden asignar permisos
         if (roles.contains(new Rol("RWE_USUARI")) || roles.contains(new Rol("RWE_WS_SALIDA")) || roles.contains(new Rol("RWE_WS_ENTRADA")) || !usuarioEntidad.getActivo()) {
 

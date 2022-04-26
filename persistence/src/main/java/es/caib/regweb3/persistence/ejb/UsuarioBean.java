@@ -298,14 +298,10 @@ public class UsuarioBean extends BaseEjbJPA<Usuario, Long> implements UsuarioLoc
     @Override
     public void actualizarRoles(Usuario usuario, List<Rol> rolesUsuario) throws Exception, I18NException {
 
-        //List<Rol> rolesUsuario = rolEjb.obtenerRolesUserPlugin(usuario.getIdentificador());
+        // Actualizamos los Roles del usuario según sistema externo
+        usuario.setRoles(rolesUsuario);
+        merge(usuario);
 
-        if(rolesUsuario != null) {
-
-            // Actualizamos los Roles del usuario según sistema externo
-            usuario.setRoles(rolesUsuario);
-            merge(usuario);
-        }
     }
 
     @Override
