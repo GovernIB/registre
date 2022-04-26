@@ -97,7 +97,7 @@ public class TipoAsunto extends Traducible {
         this.activo = activo;
     }
 
-    @CollectionOfElements(fetch = FetchType.LAZY, targetElement = TraduccionTipoAsunto.class)
+    @CollectionOfElements(fetch = FetchType.EAGER, targetElement = TraduccionTipoAsunto.class)
     @Cascade(value = org.hibernate.annotations.CascadeType.ALL)
     @LazyCollection(value = LazyCollectionOption.FALSE)
     @JoinTable(name = "RWE_TRA_TIPOASUNTO", joinColumns = {@JoinColumn(name = "IDTIPOASUNTO")})
