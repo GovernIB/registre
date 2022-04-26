@@ -88,7 +88,7 @@ public class TipoAsunto extends Traducible {
         this.activo = activo;
     }
 
-    @ElementCollection(targetClass = TraduccionTipoAsunto.class, fetch = FetchType.LAZY)
+    @ElementCollection(targetClass = TraduccionTipoAsunto.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "RWE_TRA_TIPOASUNTO", foreignKey = @ForeignKey(name="RWE_TASUNTO_TRATASUNTO_FK"), joinColumns = @JoinColumn(name = "IDTIPOASUNTO"))
     @MapKeyColumn(name = "LANG", length = 2)
     @Override
