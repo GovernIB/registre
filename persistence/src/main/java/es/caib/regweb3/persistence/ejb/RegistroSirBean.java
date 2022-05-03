@@ -50,6 +50,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static es.caib.regweb3.utils.RegwebConstantes.*;
+import static javax.ejb.TransactionAttributeType.REQUIRES_NEW;
 
 /**
  * Created by Fundació BIT.
@@ -558,6 +559,40 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         q.setParameter("idRegistroSir", idRegistroSir);
         q.executeUpdate();
 
+    }
+
+    @Override
+    @TransactionAttribute(value = REQUIRES_NEW)
+    public void modificarEstadoNuevaTransaccion(Long idRegistroSir, EstadoRegistroSir estado) throws Exception {
+
+        Query q = em.createQuery("update RegistroSir set estado=:estado, fechaEstado=:fechaEstado where id = :idRegistroSir");
+        q.setParameter("estado", estado);
+        q.setParameter("fechaEstado", new Date());
+        q.setParameter("idRegistroSir", idRegistroSir);
+        q.executeUpdate();
+    }
+
+    @Override
+    @TransactionAttribute(value = REQUIRES_NEW)
+    public void incrementarReintentos(Long idRegistroSir, Integer reintentos) throws Exception {
+
+        Query q = em.createQuery("update RegistroSir set numeroReintentos=:reintentos where id = :idRegistroSir");
+        q.setParameter("reintentos", reintentos);
+        q.setParameter("idRegistroSir", idRegistroSir);
+        q.executeUpdate();
+    }
+
+    @Override
+    @TransactionAttribute(value = REQUIRES_NEW)
+    public void modificarEstadoError(Long idRegistroSir, EstadoRegistroSir estado, String codigoError, String descripcionError) throws Exception {
+
+        Query q = em.createQuery("update RegistroSir set estado=:estado, codigoError=:codigoError, descripcionError=:descripcionError, fechaEstado=:fechaEstado where id = :idRegistroSir");
+        q.setParameter("estado", estado);
+        q.setParameter("codigoError", codigoError);
+        q.setParameter("descripcionError", descripcionError);
+        q.setParameter("fechaEstado", new Date());
+        q.setParameter("idRegistroSir", idRegistroSir);
+        q.executeUpdate();
     }
 
     @Override

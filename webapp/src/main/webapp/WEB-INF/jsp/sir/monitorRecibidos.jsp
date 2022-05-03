@@ -250,13 +250,16 @@
                                                             <ul class="dropdown-menu dropdown">
                                                                 <li><a href="<c:url value="/registroSir/${registroSir.id}/detalle"/>" target="_blank"><spring:message code="registroSir.detalle"/></a></li>
                                                                 <li><a href="<c:url value="/sir/${registroSir.identificadorIntercambio}/detalle"/>" target="_blank"><spring:message code="idIntercambio.detalle"/></a></li>
-                                                                <c:if test="${registroSir.estado == 'RECIBIDO'}">
+                                                                <c:if test="${registroSir.estado == 'RECIBIDO' || registroSir.estado == 'REENVIADO' || registroSir.estado == 'RECHAZADO'}">
                                                                     <li><a data-toggle="modal" role="button" href="#eliminarModal" onclick="limpiarModalEliminar(${registroSir.id});"><spring:message code="registroSir.eliminar"/></a></li>
                                                                 </c:if>
                                                                 <li class="divider"></li>
                                                                 <li><a href="javascript:void(0);" onclick='confirm("javascript:enviarACK(${registroSir.id})","<spring:message code="regweb.confirmar.enviarMensaje" htmlEscape="true"/>")'><spring:message code="mensajeControl.enviar.ACK"/></a></li>
                                                                 <c:if test="${registroSir.estado == 'ACEPTADO'}">
                                                                     <li><a href="javascript:void(0);" onclick='confirm("javascript:enviarConfirmacion(${registroSir.id})","<spring:message code="regweb.confirmar.enviarMensaje" htmlEscape="true"/>")'><spring:message code="mensajeControl.enviar.confirmacion"/></a></li>
+                                                                </c:if>
+                                                                <c:if test="${registroSir.estado == 'REENVIADO' || registroSir.estado == 'REENVIADO_Y_ERROR' || registroSir.estado == 'RECHAZADO' || registroSir.estado == 'RECHAZADO_Y_ERROR'}">
+                                                                    <li><a href="javascript:void(0);" onclick='confirm("javascript:reintentarEnvioRegistroSir(${registroSir.id})","<spring:message code="regweb.confirmar.enviarIntercambio" htmlEscape="true"/>")'><spring:message code="intercambio.reenviar"/></a></li>
                                                                 </c:if>
                                                                 <c:if test="${registroSir.estado != 'ACEPTADO'}">
                                                                     <c:url value="/sir/registroSir/reiniciar" var="urlReiniciar"/>
@@ -296,6 +299,7 @@
 
     var urlEnviarACK = '<c:url value="/sir/enviarACK"/>';
     var urlEnviarConfirmacion = '<c:url value="/sir/enviarConfirmacion"/>';
+    var urlReintentarEnvioRegistroSir = '<c:url value="/sir/reintentarEnvioRegistroSir"/>';
     var tradsMensajeControl = [];
     var tradsSir = [];
     tradsMensajeControl['mensajeControl.ACK.enviado.ok'] = "<spring:message code='mensajeControl.ACK.enviado.ok' javaScriptEscape='true' />";
@@ -304,6 +308,8 @@
     tradsMensajeControl['mensajeControl.confirmacion.enviado.error'] = "<spring:message code='mensajeControl.confirmacion.enviado.error' javaScriptEscape='true' />";
     tradsSir['registroSir.reiniciar.ok'] = "<spring:message code='registroSir.reiniciar.ok' javaScriptEscape='true' />";
     tradsSir['registroSir.reiniciar.error'] = "<spring:message code='registroSir.reiniciar.error' javaScriptEscape='true' />";
+    tradsSir['intercambio.reenviado.ok'] = "<spring:message code='intercambio.reenviado.ok' javaScriptEscape='true' />";
+    tradsSir['intercambio.reenviado.error'] = "<spring:message code='intercambio.reenviado.error' javaScriptEscape='true' />";
 </script>
 
 <script type="text/javascript" src="<c:url value="/js/sir.js"/>"></script>

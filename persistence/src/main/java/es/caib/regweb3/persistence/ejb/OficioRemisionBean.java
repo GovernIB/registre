@@ -783,7 +783,19 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
         q.setParameter("fechaEstado", new Date());
         q.setParameter("idOficioRemision", idOficioRemision);
         q.executeUpdate();
+    }
 
+    @Override
+    @TransactionAttribute(value = REQUIRES_NEW)
+    public void modificarEstadoError(Long idOficioRemision, int estado, String codigoError, String descripcionError) throws Exception {
+
+        Query q = em.createQuery("update OficioRemision set estado=:estado, codigoError=:codigoError, descripcionError=:descripcionError, fechaEstado=:fechaEstado where id = :idOficioRemision");
+        q.setParameter("estado", estado);
+        q.setParameter("codigoError", codigoError);
+        q.setParameter("descripcionError", descripcionError);
+        q.setParameter("fechaEstado", new Date());
+        q.setParameter("idOficioRemision", idOficioRemision);
+        q.executeUpdate();
     }
 
     @Override
@@ -803,6 +815,23 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
         q.setParameter("idOficioRemision", idOficioRemision);
         q.executeUpdate();
 
+    }
+
+    @Override
+    @TransactionAttribute(value = REQUIRES_NEW)
+    public void aceptarOficioSir(Long idOficioRemision, String codigoEntidadRegistralOrigen, String decodificacionEntidadRegistralOrigen, String numeroRegistroDestino, Date fechaRegistroDestino) throws Exception {
+
+        Query q = em.createQuery("update OficioRemision set estado=:estado, codigoEntidadRegistralProcesado=:codigoEntidadRegistralOrigen, " +
+                "decodificacionEntidadRegistralProcesado=:decodificacionEntidadRegistralOrigen, numeroRegistroEntradaDestino=:numeroRegistroDestino ,fechaEntradaDestino=:fechaRegistroDestino, fechaEstado=:fechaEstado where id = :idOficioRemision");
+
+        q.setParameter("estado", RegwebConstantes.OFICIO_ACEPTADO);
+        q.setParameter("codigoEntidadRegistralOrigen", codigoEntidadRegistralOrigen);
+        q.setParameter("decodificacionEntidadRegistralOrigen", decodificacionEntidadRegistralOrigen);
+        q.setParameter("numeroRegistroDestino", numeroRegistroDestino);
+        q.setParameter("fechaRegistroDestino", fechaRegistroDestino);
+        q.setParameter("fechaEstado", new Date());
+        q.setParameter("idOficioRemision", idOficioRemision);
+        q.executeUpdate();
     }
 
 
