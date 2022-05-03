@@ -321,13 +321,13 @@ public class MensajeControlBean extends BaseEjbJPA<MensajeControl, Long> impleme
                 EstadoRegistroSir.REENVIADO_Y_ERROR.equals(registroSir.getEstado())){
 
             // Actualizamos el estado del registroSir
-            registroSirEjb.modificarEstado(registroSir.getId(), EstadoRegistroSir.REENVIADO_Y_ACK);
+            registroSirEjb.modificarEstadoNuevaTransaccion(registroSir.getId(), EstadoRegistroSir.REENVIADO_Y_ACK);
 
         } else if (EstadoRegistroSir.RECHAZADO.equals(registroSir.getEstado()) ||
                 EstadoRegistroSir.RECHAZADO_Y_ERROR.equals(registroSir.getEstado())){
 
             // Actualizamos el estado del registroSir
-            registroSirEjb.modificarEstado(registroSir.getId(), EstadoRegistroSir.RECHAZADO_Y_ACK);
+            registroSirEjb.modificarEstadoNuevaTransaccion(registroSir.getId(), EstadoRegistroSir.RECHAZADO_Y_ACK);
 
         } else if (EstadoRegistroSir.REENVIADO_Y_ACK.equals(registroSir.getEstado()) ||
                 EstadoRegistroSir.RECHAZADO_Y_ACK.equals(registroSir.getEstado())){
@@ -356,13 +356,8 @@ public class MensajeControlBean extends BaseEjbJPA<MensajeControl, Long> impleme
             case RegwebConstantes.OFICIO_SIR_REENVIADO_ACK:
             case RegwebConstantes.OFICIO_SIR_REENVIADO_ERROR:
 
-                oficio.setCodigoEntidadRegistralProcesado(mensaje.getCodigoEntidadRegistralOrigen());
-                oficio.setDecodificacionEntidadRegistralProcesado(Dir3CaibUtils.denominacion(PropiedadGlobalUtil.getDir3CaibServer(oficio.getUsuarioResponsable().getEntidad().getId()), mensaje.getCodigoEntidadRegistralOrigen(), RegwebConstantes.OFICINA));
-                oficio.setNumeroRegistroEntradaDestino(mensaje.getNumeroRegistroEntradaDestino());
-                oficio.setFechaEntradaDestino(mensaje.getFechaEntradaDestino());
-                oficio.setEstado(RegwebConstantes.OFICIO_ACEPTADO);
-                oficio.setFechaEstado(mensaje.getFechaEntradaDestino());
-                oficioRemisionEjb.merge(oficio);
+                String decodificacionEntidadRegistralOrigen = Dir3CaibUtils.denominacion(PropiedadGlobalUtil.getDir3CaibServer(oficio.getUsuarioResponsable().getEntidad().getId()), mensaje.getCodigoEntidadRegistralOrigen(), RegwebConstantes.OFICINA);
+                oficioRemisionEjb.aceptarOficioSir(oficio.getId(), mensaje.getCodigoEntidadRegistralOrigen(), decodificacionEntidadRegistralOrigen, mensaje.getNumeroRegistroEntradaDestino(), mensaje.getFechaEntradaDestino());
 
                 // Marcamos el Registro original como ACEPTADO
                 if (oficio.getTipoOficioRemision().equals(RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA)) {
@@ -399,11 +394,8 @@ public class MensajeControlBean extends BaseEjbJPA<MensajeControl, Long> impleme
             case (RegwebConstantes.OFICIO_SIR_ENVIADO):
 
                 if(!mensaje.getCodigoError().equals(Errores.ERROR_0039.getValue())){ // Solo modificamos su estado si no es un error 0039
-                    oficioRemision.setEstado(RegwebConstantes.OFICIO_SIR_ENVIADO_ERROR);
-                    oficioRemision.setCodigoError(mensaje.getCodigoError());
-                    oficioRemision.setDescripcionError(mensaje.getDescripcionMensaje());
-                    oficioRemision.setFechaEstado(new Date());
-                    oficioRemisionEjb.merge(oficioRemision);
+
+                    oficioRemisionEjb.modificarEstadoError(oficioRemision.getId(), RegwebConstantes.OFICIO_SIR_ENVIADO_ERROR, mensaje.getCodigoError(), mensaje.getDescripcionMensaje());
                 }
 
                 break;
@@ -412,11 +404,7 @@ public class MensajeControlBean extends BaseEjbJPA<MensajeControl, Long> impleme
 
                 if(!mensaje.getCodigoError().equals(Errores.ERROR_0039.getValue())){ // Solo modificamos su estado si no es un error 0039
 
-                    oficioRemision.setEstado(RegwebConstantes.OFICIO_SIR_REENVIADO_ERROR);
-                    oficioRemision.setCodigoError(mensaje.getCodigoError());
-                    oficioRemision.setDescripcionError(mensaje.getDescripcionMensaje());
-                    oficioRemision.setFechaEstado(new Date());
-                    oficioRemisionEjb.merge(oficioRemision);
+                    oficioRemisionEjb.modificarEstadoError(oficioRemision.getId(), RegwebConstantes.OFICIO_SIR_REENVIADO_ERROR, mensaje.getCodigoError(), mensaje.getDescripcionMensaje());
                 }
 
                 break;
@@ -440,19 +428,11 @@ public class MensajeControlBean extends BaseEjbJPA<MensajeControl, Long> impleme
 
         if (EstadoRegistroSir.REENVIADO.equals(registroSir.getEstado())){
 
-            registroSir.setEstado(EstadoRegistroSir.REENVIADO_Y_ERROR);
-            registroSir.setCodigoError(mensaje.getCodigoError());
-            registroSir.setDescripcionError(mensaje.getDescripcionMensaje());
-            registroSir.setFechaEstado(new Date());
-            registroSirEjb.merge(registroSir);
+            registroSirEjb.modificarEstadoError(registroSir.getId(), EstadoRegistroSir.REENVIADO_Y_ERROR, mensaje.getCodigoError(), mensaje.getDescripcionMensaje());
 
         } else if (EstadoRegistroSir.RECHAZADO.equals(registroSir.getEstado())){
 
-            registroSir.setEstado(EstadoRegistroSir.RECHAZADO_Y_ERROR);
-            registroSir.setCodigoError(mensaje.getCodigoError());
-            registroSir.setDescripcionError(mensaje.getDescripcionMensaje());
-            registroSir.setFechaEstado(new Date());
-            registroSirEjb.merge(registroSir);
+            registroSirEjb.modificarEstadoError(registroSir.getId(), EstadoRegistroSir.RECHAZADO_Y_ERROR, mensaje.getCodigoError(), mensaje.getDescripcionMensaje());
 
         } else if (EstadoRegistroSir.REENVIADO_Y_ERROR.equals(registroSir.getEstado()) ||
                 EstadoRegistroSir.RECHAZADO_Y_ERROR.equals(registroSir.getEstado())){

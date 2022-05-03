@@ -651,6 +651,11 @@ public class SirEnvioBean implements SirEnvioLocal {
     }
 
     @Override
+    public void reenviarRegistroSir(Long idRegistroSir, Entidad entidad) throws Exception{
+        reintentarEnvioRegistroSir(idRegistroSir, entidad);
+    }
+
+    @Override
     @SuppressWarnings(value = "unchecked")
     public Boolean enviarACK(Long idRegistroSir) throws Exception {
 
@@ -904,7 +909,7 @@ public class SirEnvioBean implements SirEnvioLocal {
 
         StringBuilder peticion = new StringBuilder();
         
-        String descripcion = "Reintentar RegistroSir a: ";
+        String descripcion = "";
         Date inicio = new Date();
 
         peticion.append("entidad: ").append(entidad.getNombre()).append(System.getProperty("line.separator"));
@@ -916,28 +921,20 @@ public class SirEnvioBean implements SirEnvioLocal {
 
             log.info("Reintentado reenvío/rechazo " + registroSir.getIdentificadorIntercambio() + " a " + registroSir.getDecodificacionEntidadRegistralDestino());
 
-            if(registroSir.getEstado().equals(EstadoRegistroSir.REENVIADO)){
-                descripcion = "Reintentar reenvío a: " + registroSir.getCodigoEntidadRegistralDestino();
-            }else if(registroSir.getEstado().equals(EstadoRegistroSir.RECHAZADO)){
-                descripcion = "Reintentar rechazo a: " + registroSir.getCodigoEntidadRegistralDestino();
-            }
-
+            descripcion = "Reintentar reenvío/rechazo a: " + registroSir.getCodigoEntidadRegistralDestino();
             peticion.append("IdentificadorIntercambio: ").append(registroSir.getIdentificadorIntercambio()).append(System.getProperty("line.separator"));
             peticion.append("Origen: ").append(registroSir.getDecodificacionEntidadRegistralOrigen()).append(System.getProperty("line.separator"));
             peticion.append("Destino: ").append(registroSir.getDecodificacionEntidadRegistralDestino()).append(System.getProperty("line.separator"));
 
             emisionEjb.enviarFicheroIntercambio(registroSir);
-            registroSir.setNumeroReintentos(registroSir.getNumeroReintentos() + 1);
-            registroSir.setFechaEstado(new Date());
+            registroSirEjb.incrementarReintentos(registroSir.getId(),registroSir.getNumeroReintentos() + 1);
 
             // Modificamos su estado si estaba marcado con ERROR
             if (registroSir.getEstado().equals(EstadoRegistroSir.REENVIADO_Y_ERROR)) {
-                registroSir.setEstado(EstadoRegistroSir.REENVIADO);
+                registroSirEjb.modificarEstadoNuevaTransaccion(registroSir.getId(), EstadoRegistroSir.REENVIADO);
             } else if (registroSir.getEstado().equals(EstadoRegistroSir.RECHAZADO_Y_ERROR)) {
-                registroSir.setEstado(EstadoRegistroSir.RECHAZADO);
+                registroSirEjb.modificarEstadoNuevaTransaccion(registroSir.getId(), EstadoRegistroSir.RECHAZADO);
             }
-
-            registroSirEjb.merge(registroSir);
 
             integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_SCHEDULERS, descripcion, peticion.toString(), System.currentTimeMillis() - inicio.getTime(), entidad.getId(), registroSir.getIdentificadorIntercambio());
 

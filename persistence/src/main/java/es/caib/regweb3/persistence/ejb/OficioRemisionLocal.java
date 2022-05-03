@@ -197,6 +197,16 @@ public interface OficioRemisionLocal extends BaseEjb<OficioRemision, Long> {
     void modificarEstado(Long idOficioRemision, int estado) throws Exception;
 
     /**
+     * Modifica el Estado de un {@link OficioRemision}, a uno con Error, incluyendo código y descripción del Error.
+     * @param idOficioRemision
+     * @param estado
+     * @param codigoError
+     * @param descripcionError
+     * @throws Exception
+     */
+    void modificarEstadoError(Long idOficioRemision, int estado, String codigoError, String descripcionError) throws Exception;
+
+    /**
      * Incrementa el contador de reintentos
      * @param idOficioRemision
      * @param reintentos
@@ -210,6 +220,17 @@ public interface OficioRemisionLocal extends BaseEjb<OficioRemision, Long> {
      * @throws Exception
      */
     void reiniciarIntentos(Long idOficioRemision) throws Exception;
+
+    /**
+     * Acepta un Oficio SIr, procesando el Mensaje de confirmación
+     * @param idOficioRemision
+     * @param codigoEntidadRegistralOrigen
+     * @param decodificacionEntidadRegistralOrigen
+     * @param numeroRegistroDestino
+     * @param fechaRegistroDestino
+     * @throws Exception
+     */
+    void aceptarOficioSir(Long idOficioRemision, String codigoEntidadRegistralOrigen, String decodificacionEntidadRegistralOrigen, String numeroRegistroDestino, Date fechaRegistroDestino) throws Exception;
 
     /**
      * Busca los Números de Registro Formateados de los Registros de Entrada que pertenecen a un OficioRemision

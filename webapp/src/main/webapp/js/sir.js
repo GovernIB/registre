@@ -79,10 +79,35 @@ function reenviarMensaje(idMensaje){
  */
 function reenviarIntercambio(idOficioRemision){
 
-    // Reenviamos el mensaje de control
+    // Reenviamos intercambio
     $.ajax({
         url: urlReenviarIntercambio,
         data: { idOficioRemision: idOficioRemision },
+        type: "GET",
+        dataType: 'json',
+        contentType: 'application/json',
+
+        success: function(result) {
+
+            if(result === true){
+                mensajeSuccess("#mensajes", tradsSir['intercambio.reenviado.ok']);
+            }else{
+                mensajeError("#mensajes", tradsSir['intercambio.reenviado.error']);
+            }
+        }
+    });
+}
+
+/**
+ * Volver a enviar un Registro Sir
+ * @param idRegistroSir
+ */
+function reintentarEnvioRegistroSir(idRegistroSir){
+
+    // Reenviamos Registro Sir
+    $.ajax({
+        url: urlReintentarEnvioRegistroSir,
+        data: { idRegistroSir: idRegistroSir },
         type: "GET",
         dataType: 'json',
         contentType: 'application/json',

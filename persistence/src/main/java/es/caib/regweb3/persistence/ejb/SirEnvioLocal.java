@@ -156,6 +156,14 @@ public interface SirEnvioLocal {
     void reenviarRegistroSir(RegistroSir registroSir, Oficina oficinaReenvio, Oficina oficinaActiva, Usuario usuario, String observaciones) throws Exception;
 
     /**
+     *
+     * @param idRegistroSir
+     * @param entidad
+     * @throws Exception
+     */
+    void reenviarRegistroSir(Long idRegistroSir, Entidad entidad) throws Exception;
+
+    /**
      * Método que indica si el RegistroSir puede ser reenviado en función de su estado.
      *
      * @param estado del RegistroSir
