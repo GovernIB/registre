@@ -65,7 +65,6 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
     @PersistenceContext(unitName = "regweb3")
     private EntityManager em;
 
-    @EJB private TipoDocumentalLocal tipoDocumentalEjb;
     @EJB private HistoricoRegistroEntradaLocal historicoRegistroEntradaEjb;
     @EJB private HistoricoRegistroSalidaLocal historicoRegistroSalidaEjb;
     @EJB private SignatureServerLocal signatureServerEjb;
@@ -615,14 +614,13 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
         } else {
             RegistroSalida registroSalida = registroSalidaEjb.findById(registroID);
-            Entidad entidadActiva = registroSalida.getOficina().getOrganismoResponsable().getEntidad();
             // Dias que han pasado desde que se creó el registroEntrada
             Long dias = RegistroUtils.obtenerDiasRegistro(registroSalida.getFecha());
 
             if (isNew) {//NUEVO ANEXO
                 // Si han pasado más de los dias de visado de la entidad se crearan historicos de todos los
                 // cambios y se cambia el estado del registroEntrada a pendiente visar
-                if (dias >= entidadActiva.getDiasVisado()) {
+                if (dias >= entidad.getDiasVisado()) {
                     registroSalidaEjb.cambiarEstado(registroID, RegwebConstantes.REGISTRO_PENDIENTE_VISAR);
 
                     // Creamos el historico de registro de entrada
@@ -631,7 +629,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
             } else {// MODIFICACION DE ANEXO
 
-                if (dias >= entidadActiva.getDiasVisado()) { // Si han pasado más de los dias de visado cambiamos estado registro
+                if (dias >= entidad.getDiasVisado()) { // Si han pasado más de los dias de visado cambiamos estado registro
                     registroSalidaEjb.cambiarEstado(registroID, RegwebConstantes.REGISTRO_PENDIENTE_VISAR);
                 }
                 // Creamos el historico de registro de entrada, siempre creamos histórico independiente de los dias.
