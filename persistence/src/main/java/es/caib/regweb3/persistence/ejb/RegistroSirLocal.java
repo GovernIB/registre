@@ -132,6 +132,32 @@ public interface RegistroSirLocal extends BaseEjb<RegistroSir, Long> {
     void modificarEstado(Long idRegistroSir, EstadoRegistroSir estado) throws Exception;
 
     /**
+     * Modifica el Estado de un {@link RegistroSir}, utilizando una transacción nueva
+     * @param idRegistroSir
+     * @param estado
+     * @throws Exception
+     */
+    void modificarEstadoNuevaTransaccion(Long idRegistroSir, EstadoRegistroSir estado) throws Exception;
+
+    /**
+     * Modifica el Estado de un {@link RegistroSir}, a uno con Error, incluyendo código y descripción del Error.
+     * @param idRegistroSir
+     * @param estado
+     * @param codigoError
+     * @param descripcionError
+     * @throws Exception
+     */
+    void modificarEstadoError(Long idRegistroSir, EstadoRegistroSir estado, String codigoError, String descripcionError) throws Exception;
+
+    /**
+     * Incrementa los reintentos
+     * @param idRegistroSir
+     * @param reintentos
+     * @throws Exception
+     */
+    void incrementarReintentos(Long idRegistroSir, Integer reintentos) throws Exception;
+
+    /**
      * @param ficheroIntercambio
      * @return
      * @throws Exception

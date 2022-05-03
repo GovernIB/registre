@@ -493,6 +493,29 @@ public class SirController extends BaseController {
     }
 
     /**
+     * Vuelve a enviar un Intercambio, ya enviado previamente
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/reintentarEnvioRegistroSir", method = RequestMethod.GET)
+    @ResponseBody
+    public Boolean reintentarEnvioRegistroSir(@RequestParam Long idRegistroSir, HttpServletRequest request)throws Exception {
+
+        try{
+            sirEnvioEjb.reenviarRegistroSir(idRegistroSir, getEntidadActiva(request));
+
+            return true;
+
+        }catch (Exception e){
+            log.info("Error volviendo a enviar el registro sir..");
+            e.printStackTrace();
+        }
+
+        return false;
+
+    }
+
+    /**
      * Reinicia el contador de reintentos SIR
      * @return
      * @throws Exception
@@ -575,7 +598,8 @@ public class SirController extends BaseController {
             UsuarioEntidad usuario = getUsuarioEntidadActivo(request);
             RegistroSir registroSir  = registroSirEjb.findById(eliminarForm.getId());
 
-            if(EstadoRegistroSir.RECIBIDO.equals(registroSir.getEstado())){
+            if(EstadoRegistroSir.RECIBIDO.equals(registroSir.getEstado()) || EstadoRegistroSir.REENVIADO.equals(registroSir.getEstado())
+                    || EstadoRegistroSir.RECHAZADO.equals(registroSir.getEstado())){
                 registroSirEjb.marcarEliminado(registroSir, usuario, eliminarForm.getObservaciones());
                 Mensaje.saveMessageInfo(request, getMessage("registroSir.eliminar.ok"));
 
