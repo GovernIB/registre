@@ -45,6 +45,18 @@
 
     <hr class="divider-primary">
 
+    <c:if test="${loginInfo.rolActivo.nombre == 'RWE_ADMIN'}">
+        <%--Oficina Donde se recibió el registro originalmente--%>
+        <dt><i class="fa fa-home"></i> <spring:message code="registroSir.oficinaOriginal"/>:
+        </dt>
+        <dd>
+            <c:if test="${not empty registroSir.codigoEntidadRegistral}">
+                ${registroSir.codigoEntidadRegistral} -
+            </c:if>
+        </dd>
+        <hr class="divider-primary">
+    </c:if>
+
     <%--Unidad Tramitación Origen--%>
     <c:if test="${not empty registroSir.codigoUnidadTramitacionOrigen}">
         <dt><i class="fa fa-institution"></i> <spring:message code="registroSir.unidadOrigen"/>:
@@ -109,31 +121,27 @@
         <dd> ${registroSir.identificadorIntercambio}</dd>
     </c:if>
 
-    <%--<c:if test="${not empty registroSir.tipoAnotacion}">
+    <c:if test="${not empty registroSir.tipoAnotacion}">
         <dt><i class="fa fa-map-marker"></i> <spring:message code="registroSir.tipoAnotacion"/>: </dt>
         <dd>
             <c:if test="${registroSir.tipoAnotacion == '01'}">
-                <span class="label label-warning"><spring:message
-                        code="registroSir.tipoAnotacion.${registroSir.tipoAnotacion}"/></span>
+                <span class="label label-warning"><spring:message code="registroSir.tipoAnotacion.${registroSir.tipoAnotacion}"/></span>
             </c:if>
             <c:if test="${registroSir.tipoAnotacion == '02'}">
-                <span class="label label-success"><spring:message
-                        code="registroSir.tipoAnotacion.${registroSir.tipoAnotacion}"/></span>
+                <span class="label label-success"><spring:message code="registroSir.tipoAnotacion.${registroSir.tipoAnotacion}"/></span>
             </c:if>
             <c:if test="${registroSir.tipoAnotacion == '03'}">
-                <span class="label label-info"><spring:message
-                        code="registroSir.tipoAnotacion.${registroSir.tipoAnotacion}"/></span>
+                <span class="label label-info"><spring:message code="registroSir.tipoAnotacion.${registroSir.tipoAnotacion}"/></span>
             </c:if>
             <c:if test="${registroSir.tipoAnotacion == '04'}">
-                <span class="label label-danger"><spring:message
-                        code="registroSir.tipoAnotacion.${registroSir.tipoAnotacion}"/></span>
+                <span class="label label-danger"><spring:message code="registroSir.tipoAnotacion.${registroSir.tipoAnotacion}"/></span>
             </c:if>
         </dd>
     </c:if>
     <c:if test="${not empty registroSir.decodificacionTipoAnotacion}">
         <dt><i class="fa fa-newspaper-o"></i> <spring:message code="registroSir.descripcionTipoAnotacion"/>: </dt>
         <dd> ${registroSir.decodificacionTipoAnotacion}</dd>
-    </c:if>--%>
+    </c:if>
     <%--<c:if test="${not empty registroSir.indicadorPrueba}">
         <dt><i class="fa fa-tag"></i> <spring:message code="registroSir.indicadorPrueba"/>: </dt>
         <dd>
