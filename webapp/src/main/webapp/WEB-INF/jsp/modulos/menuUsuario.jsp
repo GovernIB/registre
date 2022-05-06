@@ -108,7 +108,7 @@
             </c:if>
             <li class="divider"></li>
             <c:if test="${loginInfo.oficinaActiva.sirRecepcion}">
-                <li><a href="<c:url value="/registroSir/pendientesProcesar/list"/>"><i class="fa fa-refresh fa-spin"></i> <spring:message code="registroSir.pendientesProcesar"/></a></li>
+                <li><a href="<c:url value="/registroEntrada/pendientesDistribuirSir/list/1"/>"><i class="fa fa-refresh fa-spin"></i> <spring:message code="registroEntrada.pendientesDistribuir.sir"/></a></li>
             </c:if>
 
             <c:if test="${loginInfo.oficinaActiva.sirEnvio}">

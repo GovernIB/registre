@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.ejb.EJB;
@@ -88,5 +90,15 @@ public class OficinaController extends BaseController {
 
         return "oficina/oficinaDetalle";
 
+    }
+    
+    /**
+     * Carga el formulario para ver el detalle de un {@link es.caib.regweb3.model.RegistroEntrada}
+     */
+    @RequestMapping(value = "/{idOficina}/modificar", method = RequestMethod.GET)
+    @ResponseBody
+    public Boolean modificarOficina(@PathVariable Long idOficina, @RequestParam boolean sir, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception{
+		oficinaEjb.setSIREnvio(idOficina, sir);
+        return true;
     }
 }

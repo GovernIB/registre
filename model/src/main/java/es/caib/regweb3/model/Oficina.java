@@ -65,6 +65,9 @@ public class Oficina implements Serializable{
     private String codPostal;
     @XmlTransient
     private Set<CatServicio> servicios;
+    
+    @XmlTransient
+    private Boolean forzarEnvioSir;
 
     @Transient
     private Boolean isSirRecepcion = false;
@@ -344,7 +347,17 @@ public class Oficina implements Serializable{
     public void setServicios(Set<CatServicio> servicios) {
         this.servicios = servicios;
     }
+    
+    @Column(name = "FORZAR_ENVIO_SIR")
+    @JsonIgnore
+    public Boolean getForzarEnvioSir() {
+        return forzarEnvioSir;
+    }
 
+    public void setForzarEnvioSir(Boolean forzar) {
+        this.forzarEnvioSir = forzar;
+    }
+    
     @Transient
     @JsonIgnore
     public Boolean getSirRecepcion() {
@@ -378,14 +391,16 @@ public class Oficina implements Serializable{
     @Transient
     @JsonIgnore
     public Boolean getOficinaSir() {
-
-        for (CatServicio servicio : servicios) {
-            if(servicio.getCodServicio().equals(RegwebConstantes.OFICINA_INTEGRADA_SIR) ||
-                    servicio.getCodServicio().equals(RegwebConstantes.OFICINA_INTEGRADA_SIR_ENVIO) ||
-                    servicio.getCodServicio().equals(RegwebConstantes.OFICINA_INTEGRADA_SIR_RECEPCION)){
-                return true;
-            }
-        }
+    	if(forzarEnvioSir) {
+    		return true;
+    	}
+//        for (CatServicio servicio : servicios) {
+//            if(servicio.getCodServicio().equals(RegwebConstantes.OFICINA_INTEGRADA_SIR) ||
+//                    servicio.getCodServicio().equals(RegwebConstantes.OFICINA_INTEGRADA_SIR_ENVIO) ||
+//                    servicio.getCodServicio().equals(RegwebConstantes.OFICINA_INTEGRADA_SIR_RECEPCION)){
+//                return true;
+//            }
+//        }
         return false;
     }
 

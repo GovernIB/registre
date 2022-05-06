@@ -79,6 +79,10 @@ INSERT INTO RWE_PROPIEDADGLOBAL (ID, CLAVE, DESCRIPCION, ENTIDAD, TIPO, VALOR) V
 INSERT INTO RWE_PROPIEDADGLOBAL (ID, CLAVE, DESCRIPCION, ENTIDAD, TIPO, VALOR) VALUES (nextval('RWE_ALL_SEQ'),'es.caib.regweb3.cron.actualizacion.id.envio.recibido.sir.periodo','Tiempo inicial actualización registros enviados vía SIR',null,1,900000); --15min
 INSERT INTO RWE_PROPIEDADGLOBAL (ID, CLAVE, DESCRIPCION, ENTIDAD, TIPO, VALOR) VALUES (nextval('RWE_ALL_SEQ'),'es.caib.regweb3.cron.actualizacion.id.envio.recibido.sir.retardo','Tiempo inicial actualización registros enviados vía SIR',null,1,900000); --15min
 
+-- Identificar si descargar justificante GEISER o generar el de REGWEB
 ALTER TABLE RWE_REGISTRO_DETALLE ADD JUSTIFICANTE_GEISER BOOL NOT NULL DEFAULT FALSE;
 
 ALTER TABLE RWE_ANEXO_SIR ALTER COLUMN IDENTIFICADOR_FICHERO DROP NOT NULL;
+
+-- Forzar una oficina para soportar envíos SIR (lógico -> GEISER)
+ALTER TABLE RWE_OFICINA ADD FORZAR_ENVIO_SIR BOOL NOT NULL DEFAULT TRUE;

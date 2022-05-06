@@ -26,7 +26,7 @@
             </div>
         </div>
         <!-- /.row -->
-
+		<div id="mensajes"></div>
         <c:import url="../modulos/mensajes.jsp"/>
 
         <div class="row">
@@ -130,11 +130,19 @@
                                                         <td>${oficina.organismoResponsable.denominacion}</td>
                                                         <td>
                                                             <c:if test="${oficina.oficinaSir}">
+                                                            	<c:url value="/oficina/${oficina.id}/modificar" var="urlModificar"/>
+                                                            	<input class="form-check-input checkOficina" type="checkbox" onchange="habilitarSir('false','${urlModificar}')" checked>
+                                                                <%-- 
                                                                 <span class="label label-success"><spring:message code="regweb.si"/></span>
+                                                                --%>
                                                             </c:if>
 
                                                             <c:if test="${not oficina.oficinaSir}">
+                                                            	<c:url value="/oficina/${oficina.id}/modificar" var="urlModificar"/>
+                                                            	<input class="form-check-input checkOficina" type="checkbox" onchange="habilitarSir('true','${urlModificar}')">
+                                                            	<%-- 
                                                                 <span class="label label-danger"><spring:message code="regweb.no"/></span>
+                                                                --%>
                                                             </c:if>
                                                         </td>
                                                         <td class="center">
@@ -176,6 +184,11 @@
 
 <c:import url="../modulos/pie.jsp"/>
 
+<script type="text/javascript">
 
+var tradsModSir = [];
+tradsModSir['registroSir.modificar.ok'] = "<spring:message code='registroSir.modificar.ok' javaScriptEscape='true' />";
+tradsModSir['registroSir.modificar.ko'] = "<spring:message code='registroSir.modificar.ko' javaScriptEscape='true' />";
+</script>
 </body>
 </html>

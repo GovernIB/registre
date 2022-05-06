@@ -467,11 +467,12 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
 
         Query q = em.createQuery("Select oficina.id from Oficina as oficina where " +
                 "oficina.id =:idOficina and oficina.estado.codigoEstadoEntidad=:vigente and " +
-                ":recepcionSir in elements(oficina.servicios)");
+        		"oficina.forzarEnvioSir = true");
+//                ":recepcionSir in elements(oficina.servicios)");
 
         q.setParameter("idOficina", idOficina);
         q.setParameter("vigente", RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
-        q.setParameter("recepcionSir", catServicioEjb.findByCodigo(RegwebConstantes.OFICINA_INTEGRADA_SIR_RECEPCION));
+//        q.setParameter("recepcionSir", catServicioEjb.findByCodigo(RegwebConstantes.OFICINA_INTEGRADA_SIR_RECEPCION));
         q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList().size() > 0;
@@ -482,11 +483,12 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
 
         Query q = em.createQuery("Select oficina.id from Oficina as oficina where " +
                 "oficina.id =:idOficina and oficina.estado.codigoEstadoEntidad=:vigente and " +
-                ":envioSir in elements(oficina.servicios)");
+                "oficina.forzarEnvioSir = true");
+                //":envioSir in elements(oficina.servicios)");
 
         q.setParameter("idOficina", idOficina);
         q.setParameter("vigente", RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
-        q.setParameter("envioSir", catServicioEjb.findByCodigo(RegwebConstantes.OFICINA_INTEGRADA_SIR_ENVIO));
+        //q.setParameter("envioSir", catServicioEjb.findByCodigo(RegwebConstantes.OFICINA_INTEGRADA_SIR_ENVIO));
         q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList().size() > 0;
@@ -513,13 +515,14 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
 
         Query q = em.createQuery("Select oficina.id from Oficina as oficina where " +
                 "oficina.id =:idOficina and oficina.estado.codigoEstadoEntidad=:vigente and " +
-                "(:sir in elements(oficina.servicios) or :sirEnvio in elements(oficina.servicios) or :sirRecepcion in elements(oficina.servicios)) ");
+        		"oficina.forzarEnvioSir = true");
+//                "(:sir in elements(oficina.servicios) or :sirEnvio in elements(oficina.servicios) or :sirRecepcion in elements(oficina.servicios)) ");
 
         q.setParameter("idOficina", idOficina);
         q.setParameter("vigente", RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
-        q.setParameter("sir", catServicioEjb.findByCodigo(RegwebConstantes.OFICINA_INTEGRADA_SIR));
-        q.setParameter("sirEnvio", catServicioEjb.findByCodigo(RegwebConstantes.OFICINA_INTEGRADA_SIR_ENVIO));
-        q.setParameter("sirRecepcion", catServicioEjb.findByCodigo(RegwebConstantes.OFICINA_INTEGRADA_SIR_RECEPCION));
+//        q.setParameter("sir", catServicioEjb.findByCodigo(RegwebConstantes.OFICINA_INTEGRADA_SIR));
+//        q.setParameter("sirEnvio", catServicioEjb.findByCodigo(RegwebConstantes.OFICINA_INTEGRADA_SIR_ENVIO));
+//        q.setParameter("sirRecepcion", catServicioEjb.findByCodigo(RegwebConstantes.OFICINA_INTEGRADA_SIR_RECEPCION));
         q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList().size() > 0;
@@ -670,6 +673,14 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
 
     }
 
+	@Override
+	public void setSIREnvio(Long idOficina, boolean sirEnvio) throws Exception {
+		Query q = em.createQuery("update Oficina set forzarEnvioSir=:sirEnvio where id = :idOficina");
+        q.setParameter("sirEnvio", sirEnvio);
+        q.setParameter("idOficina", idOficina);
+        q.executeUpdate();
+	}
+	
     /**
      * Obtiene el id de la Entidad a la que pertenece la Oficina
      *

@@ -1136,6 +1136,37 @@ function limpiarAnexoForm(){
     quitarErrorAnexo('#firmaFile\\.errors');
 }
 
+
+/**
+ * Indica si una ofiicina està integrada amb SIR
+ * @param id
+ * @param url
+ */
+function habilitarSir(sir, url) {
+	$('.checkOficina').attr('disabled', true);
+    $.ajax({
+        url: url,
+        data: { sir: sir },
+        type: "GET",
+        dataType: 'json',
+        async: false,
+        contentType: 'application/json',
+        success: function(result) {
+            if(result === true){
+                mensajeSuccess("#mensajes", tradsModSir['registroSir.modificar.ok']);
+            }else{
+                mensajeError("#mensajes", tradsModSir['registroSir.modificar.ko']);
+            }
+        	$('#mensajes').fadeIn('fast');
+        }
+    });
+    
+    setTimeout(function() {
+        $('#mensajes').fadeOut('fast');
+        $('.checkOficina').removeAttr('disabled');
+    }, 1000);
+}
+
 /**
  * Funció per mostrar missatge i barra de "Processar" amb missatge i color propi
  */

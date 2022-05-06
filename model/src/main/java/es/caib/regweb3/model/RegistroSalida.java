@@ -2,6 +2,8 @@ package es.caib.regweb3.model;
 
 import es.caib.regweb3.utils.RegwebConstantes;
 import org.hibernate.annotations.ForeignKey;
+import org.hibernate.proxy.HibernateProxy;
+import org.hibernate.proxy.LazyInitializer;
 
 import javax.persistence.*;
 import javax.xml.bind.annotation.*;
