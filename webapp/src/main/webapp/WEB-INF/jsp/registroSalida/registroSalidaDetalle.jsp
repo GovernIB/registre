@@ -59,7 +59,10 @@
                     <%--BOTONERA--%>
 
                     <%--Botones Justificante y Sello--%>
-                    <c:if test="${registro.estado != RegwebConstantes.REGISTRO_PENDIENTE_VISAR && registro.estado != RegwebConstantes.REGISTRO_ANULADO && not empty registro.numeroRegistroFormateado}">
+                    <c:if test="${registro.estado != RegwebConstantes.REGISTRO_PENDIENTE_VISAR 
+                    					&& registro.estado != RegwebConstantes.REGISTRO_ANULADO 
+                    					&& registro.estado != RegwebConstantes.REGISTRO_RECHAZADO
+                    					&& not empty registro.numeroRegistroFormateado}">
                         <div class="panel-footer center">
 
                             <%--Si no se ha generado el justificante y el registro es VÁLIDO, muestra el boton para generarlo --%>

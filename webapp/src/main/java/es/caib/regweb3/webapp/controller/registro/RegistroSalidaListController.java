@@ -659,6 +659,7 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
                 // Dispone de permisos para Editar el registro
                 if (permisoOrganismoUsuarioEjb.tienePermiso(usuarioEntidad.getId(), registroSalida.getOficina().getOrganismoResponsable().getId(), RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_SALIDA, true)
                 		&& !registroSalida.getEstado().equals(RegwebConstantes.REGISTRO_ANULADO)
+                		&& !registroSalida.getEstado().equals(RegwebConstantes.REGISTRO_RECHAZADO)
                 		&& registroSalida.getNumeroRegistroFormateado() != null
                 		&& anexosValidos) {
 

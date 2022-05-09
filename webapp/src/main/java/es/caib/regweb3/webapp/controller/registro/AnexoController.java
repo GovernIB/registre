@@ -490,9 +490,19 @@ public class AnexoController extends BaseController {
 	        	// Se descargar de GEISER a oartir del id de registro
 	        	IRegistro registro = registroEntradaEjb.findByIdCompleto(id);
 	            UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
-	            
-	        	AnexoSimple justificante = anexoEjb.obtenerJustificanteGEISER(registro, usuarioEntidad);
-	        	download(justificante.getMimeType(), response, justificante.getFilename(), justificante.getData());
+	            if (!registro.getEstado().equals(RegwebConstantes.REGISTRO_PENDIENTE_VISAR) &&
+	            		!registro.getEstado().equals(RegwebConstantes.REGISTRO_ANULADO) &&
+	            		!registro.getEstado().equals(RegwebConstantes.REGISTRO_RECHAZADO) &&
+	            		registro.getNumeroRegistro() != null) {
+	            	AnexoSimple justificante = anexoEjb.obtenerJustificanteGEISER(registro, usuarioEntidad);
+	            	download(justificante.getMimeType(), response, justificante.getFilename(), justificante.getData());
+	            } else {
+	            	Mensaje.saveMessageError(request, getMessage("justificante.descargando.error"));
+	            	String nombreCompleto = (registro instanceof RegistroEntrada) ? "registroEntrada" : "registroSalida";
+	            	log.info("No se ha obtenido el  justificante");
+	                log.info("Estado: " + registro.getEstado() + ",Numero registro: " + registro.getNumeroRegistro());
+	                response.sendRedirect("/regweb3/" + nombreCompleto + "/" + registro.getId() + "/detalle");
+	            }
 	        }
         } 
     }
