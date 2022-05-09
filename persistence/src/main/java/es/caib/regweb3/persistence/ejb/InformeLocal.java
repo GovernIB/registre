@@ -75,6 +75,28 @@ public interface InformeLocal {
      * @throws Exception
      */
     Long buscaIndicadoresEntradaTotal(Date fechaInicio, Date fechaFin, Long idEntidad) throws Exception;
+    
+    /**
+     * Busca los Registros SIR enviados en función de la una fecha inicio, una fecha fin, de una entidad
+     *
+     * @param fechaInicio
+     * @param fechaFin
+     * @param idOficina
+     * @return
+     * @throws Exception
+     */
+    Long buscaIndicadoresSirEnviadosTotal(Date fechaInicio, Date fechaFin, Long idEntidad) throws Exception;
+    
+    /**
+     * Busca los Registros SIR enviados en función de la una fecha inicio, una fecha fin, de una entidad
+     *
+     * @param fechaInicio
+     * @param fechaFin
+     * @param idOficina
+     * @return
+     * @throws Exception
+     */
+    Long buscaIndicadoresSirRecibidosTotal(Date fechaInicio, Date fechaFin, Long idEntidad) throws Exception;
 
     /**
      * Busca los Registros de Salida que no estén anulados ni pendientes en función de la una fecha inicio, una fecha fin, de la Entidad Activa
@@ -108,6 +130,28 @@ public interface InformeLocal {
      * @throws Exception
      */
     Long buscaIndicadoresOficinaTotalSalida(Date fechaInicio, Date fechaFin, Long idOficina) throws Exception;
+    
+    /**
+     * Busca los Registros SIR enviados en función de la una fecha inicio, una fecha fin, de una Oficina
+     *
+     * @param fechaInicio
+     * @param fechaFin
+     * @param idOficina
+     * @return
+     * @throws Exception
+     */
+    Long buscaIndicadoresOficinaTotalSirEnviados(Date fechaInicio, Date fechaFin, String codiOficina) throws Exception;
+    
+    /**
+     * Busca los Registros SIR recibidos en función de la una fecha inicio, una fecha fin, de una Oficina
+     *
+     * @param fechaInicio
+     * @param fechaFin
+     * @param idOficina
+     * @return
+     * @throws Exception
+     */
+    Long buscaIndicadoresOficinaTotalSirRecibidos(Date fechaInicio, Date fechaFin, String codiOficina) throws Exception;
 
     /**
      * Busca los Registros de Entrada que no estén anulados ni pendientes en función de la una fecha inicio, una fecha fin, por Conselleria
@@ -130,6 +174,28 @@ public interface InformeLocal {
      * @throws Exception
      */
     Long buscaSalidaPorConselleria(Date fechaInicio, Date fechaFin, Long conselleria) throws Exception;
+    
+    /**
+     * Busca los Registros SIR enviados en función de la una fecha inicio, una fecha fin, por Conselleria
+     *
+     * @param fechaInicio
+     * @param fechaFin
+     * @param conselleria
+     * @return
+     * @throws Exception
+     */
+    Long buscaSirEnviadosPorConselleria(Date fechaInicio, Date fechaFin, String codConselleria) throws Exception;
+    
+    /**
+     * Busca los Registros SIR recibidos en función de la una fecha inicio, una fecha fin, por Conselleria
+     *
+     * @param fechaInicio
+     * @param fechaFin
+     * @param conselleria
+     * @return
+     * @throws Exception
+     */
+    Long buscaSirRecibidosPorConselleria(Date fechaInicio, Date fechaFin, String codConselleria) throws Exception;
 
     /**
      * Busca los Registros de Entrada que no estén anulados ni pendientes en función de la una fecha inicio, una fecha fin, por Tipos Asunto, de la Entidad Activa

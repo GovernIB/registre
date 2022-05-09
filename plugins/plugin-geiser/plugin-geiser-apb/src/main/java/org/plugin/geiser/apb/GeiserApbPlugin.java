@@ -62,6 +62,7 @@ public class GeiserApbPlugin extends AbstractPluginProperties implements IGeiser
     private static final String CD_OFICINAS = basePluginGeiserApb + "oficinas";
     private static final String USUARIO_GEISER = basePluginGeiserApb + "usuario.geiser";
     private static final String USUARIO_REGISTRE_ENTRADA = basePluginGeiserApb + "usuario.responsable.registros";
+    private static final String CD_AMBITO = basePluginGeiserApb + "codigo.ambito";
     
 	public GeiserApbPlugin() {
         super();
@@ -80,7 +81,7 @@ public class GeiserApbPlugin extends AbstractPluginProperties implements IGeiser
 		ResultadoRegistroType resultado = new ResultadoRegistroType();
 		try {
 			AuthenticationType authentication = initAuthentication(
-					peticion.getOficinaOrigen(), 
+					getPropertyCdAmbito(), 
 					peticion.getUsuario());
 			peticion.setCdAsunto(getPropertyAsunto());
 			PeticionRegistroType peticionType = new ConversionPluginHelper().convertir(
@@ -106,7 +107,7 @@ public class GeiserApbPlugin extends AbstractPluginProperties implements IGeiser
 		ResultadoRegistroType resultado = new ResultadoRegistroType();
 		try {
 			AuthenticationType authentication = initAuthentication(
-					peticion.getOficinaOrigen(), 
+					getPropertyCdAmbito(), 
 					peticion.getUsuario());
 			peticion.setCdAsunto(getPropertyAsunto());
 			PeticionRegistroEnvioSimpleType peticionType = new ConversionPluginHelper().convertir(
@@ -132,7 +133,7 @@ public class GeiserApbPlugin extends AbstractPluginProperties implements IGeiser
 		ResultadoConsultaType resultado = new ResultadoConsultaType();
 		try {
 			AuthenticationType authentication = initAuthentication(
-					peticion.getOficinaOrigen(), 
+					getPropertyCdAmbito(), 
 					peticion.getUsuario());
 			PeticionConsultaType peticionType = new ConversionPluginHelper().convertir(
 					peticion, 
@@ -201,7 +202,7 @@ public class GeiserApbPlugin extends AbstractPluginProperties implements IGeiser
 		ResultadoBusquedaEstadoTramitacionType resultado = new ResultadoBusquedaEstadoTramitacionType();
 		try {
 			AuthenticationType authentication = initAuthentication(
-					peticion.getOficinaOrigen(), 
+					getPropertyCdAmbito(), 
 					peticion.getUsuario());
 			PeticionBusquedaEstadoTramitacionType peticionType = new ConversionPluginHelper().convertir(
 					peticion, 
@@ -231,7 +232,7 @@ public class GeiserApbPlugin extends AbstractPluginProperties implements IGeiser
 		AnexoGSample justificante = new AnexoGSample();
 		try {
 			AuthenticationType authentication = initAuthentication(
-					peticion.getOficinaOrigen(), 
+					getPropertyCdAmbito(), 
 					peticion.getUsuario());
 			PeticionConsultaType peticionType = new ConversionPluginHelper().convertir(
 					peticion, 
@@ -297,6 +298,14 @@ public class GeiserApbPlugin extends AbstractPluginProperties implements IGeiser
     		return getPropertyRequired(CD_ASUNTO);
     	} catch (Exception e) {
 			throw new GeiserPluginException("No s'ha definit la propietat '" + CD_ASUNTO + "'");
+		}
+    }
+    
+    private String getPropertyCdAmbito() {
+    	try {
+    		return getPropertyRequired(CD_AMBITO);
+    	} catch (Exception e) {
+			throw new GeiserPluginException("No s'ha definit la propietat '" + CD_AMBITO + "'");
 		}
     }
     

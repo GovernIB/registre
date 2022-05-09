@@ -41,6 +41,8 @@ public class IndicadoresOficinaExcel extends AbstractExcelView {
         String fechaFin = (String) model.get("fechaFin");
         Integer registrosEntrada = (Integer) model.get("registrosEntrada");
         Integer registrosSalida = (Integer) model.get("registrosSalida");
+        Integer sirEnviats = (Integer) model.get("sirEnviats");
+        Integer sirRebuts = (Integer) model.get("sirRebuts");
         String nombreOficina = (String) model.get("nombreOficina");
         String codigoOficina = (String) model.get("codigoOficina");
         ArrayList<String> entradaAnosValor = (ArrayList<String>) model.get("entradaAnosValor");

@@ -581,6 +581,77 @@ public class InformeBean implements InformeLocal {
 
         return (Long) q.getSingleResult();
     }
+    
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public Long buscaIndicadoresSirEnviadosTotal(Date fechaInicio, Date fechaFin, Long idEntidad) throws Exception {
+
+    	Query q = em.createQuery("Select count(registroSir.id) from RegistroSir as registroSir where " + 
+				"registroSir.fechaRegistro >= :fechaInicio and " + 
+				"registroSir.fechaRegistro <= :fechaFin and " + 
+				"registroSir.fechaRecepcion is null and " + 
+    			"registroSir.entidad.id = :idEntidad ");
+
+        q.setParameter("fechaInicio", fechaInicio);
+        q.setParameter("fechaFin", fechaFin);
+        q.setParameter("idEntidad", idEntidad);
+        q.setHint("org.hibernate.readOnly", true);
+
+        return (Long) q.getSingleResult();
+    }
+    
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public Long buscaIndicadoresSirRecibidosTotal(Date fechaInicio, Date fechaFin, Long idEntidad) throws Exception {
+
+    	Query q = em.createQuery("Select count(registroSir.id) from RegistroSir as registroSir where " + 
+				"registroSir.fechaRegistro >= :fechaInicio and " + 
+				"registroSir.fechaRegistro <= :fechaFin and " + 
+				"registroSir.fechaRecepcion is not null and " + 
+    			"registroSir.entidad.id = :idEntidad ");
+
+        q.setParameter("fechaInicio", fechaInicio);
+        q.setParameter("fechaFin", fechaFin);
+        q.setParameter("idEntidad", idEntidad);
+        q.setHint("org.hibernate.readOnly", true);
+
+        return (Long) q.getSingleResult();
+    }
+    
+    @Override
+    public Long buscaIndicadoresOficinaTotalSirEnviados(Date fechaInicio, Date fechaFin, String codiOficina) throws Exception {
+
+        Query q = em.createQuery("Select count(registroSir.id) from RegistroSir as registroSir where " + 
+        							"registroSir.fechaRegistro >= :fechaInicio and " + 
+        							"registroSir.fechaRegistro <= :fechaFin and " + 
+        							"registroSir.fechaRecepcion is null and " + 
+        							"registroSir.codigoEntidadRegistralOrigen = :codiOficina ");
+
+        q.setParameter("fechaInicio", fechaInicio);
+        q.setParameter("fechaFin", fechaFin);
+        q.setParameter("codiOficina", codiOficina);
+        q.setHint("org.hibernate.readOnly", true);
+
+        return (Long) q.getSingleResult();
+    }
+    
+    @Override
+    public Long buscaIndicadoresOficinaTotalSirRecibidos(Date fechaInicio, Date fechaFin, String codiOficina) throws Exception {
+
+    	Query q = em.createQuery("Select count(registroSir.id) from RegistroSir as registroSir where " + 
+				"registroSir.fechaRegistro >= :fechaInicio and " + 
+				"registroSir.fechaRegistro <= :fechaFin and " + 
+				"registroSir.fechaRecepcion is not null and " + 
+				"registroSir.codigoEntidadRegistralDestino = :codiOficina ");
+
+		q.setParameter("fechaInicio", fechaInicio);
+		q.setParameter("fechaFin", fechaFin);
+		q.setParameter("codiOficina", codiOficina);
+		q.setHint("org.hibernate.readOnly", true);
+		
+		return (Long) q.getSingleResult();
+		
+    }
 
     @Override
     @SuppressWarnings(value = "unchecked")
@@ -615,6 +686,40 @@ public class InformeBean implements InformeLocal {
         q.setParameter("anulado", RegwebConstantes.REGISTRO_ANULADO);
         q.setParameter("reserva", RegwebConstantes.REGISTRO_RESERVA);
         q.setHint("org.hibernate.readOnly", true);
+
+        return (Long) q.getSingleResult();
+    }
+    
+    @Override
+    public Long buscaSirEnviadosPorConselleria(Date fechaInicio, Date fechaFin, String codConselleria) throws Exception {
+        
+        Query q = em.createQuery("Select count(registroSir.id) from RegistroSir as registroSir where " + 
+				"registroSir.fechaRegistro >= :fechaInicio and " + 
+				"registroSir.fechaRegistro <= :fechaFin and " + 
+				"registroSir.fechaRecepcion is null and " + 
+				"registroSir.codigoUnidadTramitacionOrigen = :conselleria ");
+
+		q.setParameter("fechaInicio", fechaInicio);
+		q.setParameter("fechaFin", fechaFin);
+		q.setParameter("conselleria", codConselleria);
+		q.setHint("org.hibernate.readOnly", true);
+
+        return (Long) q.getSingleResult();
+    }
+    
+    @Override
+    public Long buscaSirRecibidosPorConselleria(Date fechaInicio, Date fechaFin, String codConselleria) throws Exception {
+        
+        Query q = em.createQuery("Select count(registroSir.id) from RegistroSir as registroSir where " + 
+				"registroSir.fechaRegistro >= :fechaInicio and " + 
+				"registroSir.fechaRegistro <= :fechaFin and " + 
+				"registroSir.fechaRecepcion is not null and " + 
+				"registroSir.codigoUnidadTramitacionDestino = :conselleria ");
+
+		q.setParameter("fechaInicio", fechaInicio);
+		q.setParameter("fechaFin", fechaFin);
+		q.setParameter("conselleria", codConselleria);
+		q.setHint("org.hibernate.readOnly", true);
 
         return (Long) q.getSingleResult();
     }

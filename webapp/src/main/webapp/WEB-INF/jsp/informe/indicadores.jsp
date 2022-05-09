@@ -49,6 +49,8 @@
                                             <form:option value="0" default="default"><spring:message code="informe.ambosTipos"/></form:option>
                                             <form:option value="1"><spring:message code="informe.entrada"/></form:option>
                                             <form:option value="2"><spring:message code="informe.salida"/></form:option>
+                                            <form:option value="3"><spring:message code="informe.sirEnviado"/></form:option>
+                                            <form:option value="4"><spring:message code="informe.sirRecibido"/></form:option>
                                         </form:select>
                                     </div>
                                 </div>

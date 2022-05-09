@@ -727,6 +727,76 @@ public class InformeController extends AbstractRegistroCommonFormController {
 
 
             break;
+            case 3: //  SIR enviados
+                mav.addObject("tipo", RegwebConstantes.INFORME_TIPO_REGISTRO_SIR_ENVIADO);
+
+                // Busca los registros SIR enviados Totales entre las fechas
+                mav.addObject("sirEnviados", informeEjb.buscaIndicadoresSirEnviadosTotal(dataInici, dataFi, entidadActiva.getId()).intValue());
+
+                // Busca los registros totales según el calendario seleccionado de Salida entre las fechas
+                if(calendario.equals((long) 0)){ // Años y meses
+
+                    totalRegistresSirEnviadosAny(mav,dataInici,dataFi,entidadActiva.getId(),null);
+                    totalRegistresSirEnviadosMes(mav,dataInici,dataFi,entidadActiva.getId(),null);
+
+                }else if(calendario.equals((long) 1)){ // Años
+
+                    totalRegistresSirEnviadosAny(mav,dataInici,dataFi,entidadActiva.getId(),null);
+
+                }else if(calendario.equals((long) 2)){ // Meses
+
+                    totalRegistresSirEnviadosMes(mav,dataInici,dataFi,entidadActiva.getId(),null);
+                }
+
+                // Busca los registros totales por Organismo de Salida entre las fechas
+                totalRegistresSirEnviadosOrganismo(mav,dataInici,dataFi,organismos);
+
+                // Busca los registros totales por Libro de Salida entre las fechas
+//                totalRegistresSalidaLibro(mav,dataInici,dataFi,organismos);
+
+                //Busca los registros totales por Oficina de Registro Salida entre las fechas
+                totalRegistresSirEnviadosOficina(mav,dataInici,dataFi,oficinas);
+
+                // Busca los registros totales por Idiomas de  Salida entre las fechas
+//                totalRegistresSalidaIdioma(mav,dataInici,dataFi,entidadActiva.getId(),null);
+
+
+            break;
+            case 4: //  SIR recibidos
+                mav.addObject("tipo", RegwebConstantes.INFORME_TIPO_REGISTRO_SIR_RECIBIDO);
+
+                // Busca los registros Totales de Salida entre las fechas
+                mav.addObject("sirRecibidos", informeEjb.buscaIndicadoresSirRecibidosTotal(dataInici, dataFi, entidadActiva.getId()).intValue());
+
+                // Busca los registros totales según el calendario seleccionado de Salida entre las fechas
+                if(calendario.equals((long) 0)){ // Años y meses
+
+                	totalRegistresSirRecibidosAny(mav,dataInici,dataFi,entidadActiva.getId(),null);
+                    totalRegistresSirRecibidosMes(mav,dataInici,dataFi,entidadActiva.getId(),null);
+
+                }else if(calendario.equals((long) 1)){ // Años
+
+                    totalRegistresSirRecibidosAny(mav,dataInici,dataFi,entidadActiva.getId(),null);
+
+                }else if(calendario.equals((long) 2)){ // Meses
+
+                    totalRegistresSirRecibidosMes(mav,dataInici,dataFi,entidadActiva.getId(),null);
+                }
+
+                // Busca los registros totales por Organismo de Salida entre las fechas
+                totalRegistresSirRecibidosOrganismo(mav,dataInici,dataFi,organismos);
+
+                // Busca los registros totales por Libro de Salida entre las fechas
+//                totalRegistresSalidaLibro(mav,dataInici,dataFi,organismos);
+
+                //Busca los registros totales por Oficina de Registro Salida entre las fechas
+                totalRegistresSirRecibidosOficina(mav,dataInici,dataFi,oficinas);
+
+                // Busca los registros totales por Idiomas de  Salida entre las fechas
+//                totalRegistresSalidaIdioma(mav,dataInici,dataFi,entidadActiva.getId(),null);
+
+
+            break;
         }
 
 
@@ -1244,14 +1314,20 @@ public class InformeController extends AbstractRegistroCommonFormController {
         // Busca los registros Totales de Entrada y Salida entre las fechas
         mav.addObject("registrosEntrada", informeEjb.buscaIndicadoresOficinaTotalEntrada(dataInici, dataFi, oficina.getId()).intValue());
         mav.addObject("registrosSalida", informeEjb.buscaIndicadoresOficinaTotalSalida(dataInici, dataFi, oficina.getId()).intValue());
+        mav.addObject("sirEnviados", informeEjb.buscaIndicadoresOficinaTotalSirEnviados(dataInici, dataFi, oficina.getCodigo()));
+        mav.addObject("sirRecibidos", informeEjb.buscaIndicadoresOficinaTotalSirRecibidos(dataInici, dataFi, oficina.getCodigo()));
 
         // Busca los registros totales según el calendario seleccionado de Entrada y Salida entre las fechas
         // Años y meses
         totalRegistresEntradaAny(mav,dataInici,dataFi,null,oficina.getId());
         totalRegistresSalidaAny(mav, dataInici, dataFi,null,oficina.getId());
+        totalRegistresSirEnviadosAny(mav,dataInici,dataFi,null,oficina.getCodigo());
+        totalRegistresSirEnviadosMes(mav,dataInici,dataFi,null,oficina.getCodigo());
         totalRegistresEntradaMes(mav, dataInici, dataFi,null,oficina.getId());
         totalRegistresSalidaMes(mav, dataInici, dataFi,null,oficina.getId());
-
+        totalRegistresSirRecibidosAny(mav,dataInici,dataFi,null,oficina.getCodigo());
+        totalRegistresSirRecibidosMes(mav,dataInici,dataFi,null,oficina.getCodigo());
+        
         // Busca los registros totales por Idiomas de Entrada y Salida entre las fechas
         totalRegistresEntradaIdioma(mav,dataInici,dataFi,null,oficina.getId());
         totalRegistresSalidaIdioma(mav,dataInici,dataFi,null,oficina.getId());
@@ -1438,6 +1514,104 @@ public class InformeController extends AbstractRegistroCommonFormController {
         mav.addObject("entradaAnosNombre", entradaAnosNombre);
 
     }
+    
+    /**
+     * Busca los registros SIR enviados totales por Años entre las fechas
+     * @param mav
+     * @param dataInici
+     * @param dataFi
+     * @param idEntidad
+     * @param idOficina
+     * @throws Exception
+     */
+    private void totalRegistresSirEnviadosAny(ModelAndView mav, Date dataInici, Date dataFi, Long idEntidad, String codiOficina) throws Exception{
+
+        List<String> sirEnviadosAnosValor = new ArrayList<String>();
+        List<String> sirEnviadosAnosNombre = new ArrayList<String>();
+
+        while (dataInici.compareTo(dataFi) < 0) {
+            String anyActual = formatYear.format(dataInici);
+            sirEnviadosAnosNombre.add(anyActual);
+            Calendar cal = Calendar.getInstance();
+
+            cal.set(Calendar.MONTH, 11);
+            cal.set(Calendar.DATE, 31);
+            cal.set(Calendar.YEAR, Integer.parseInt(anyActual));
+            cal.set(Calendar.HOUR, 23);
+            cal.set(Calendar.MINUTE, 59);
+            cal.set(Calendar.SECOND, 59);
+            if((idEntidad!=null)&&(codiOficina==null)) {
+                if (cal.getTime().compareTo(dataFi) < 0) {
+                	sirEnviadosAnosValor.add(String.valueOf(informeEjb.buscaIndicadoresSirEnviadosTotal(dataInici, cal.getTime(), idEntidad)));
+                } else {
+                	sirEnviadosAnosValor.add(String.valueOf(informeEjb.buscaIndicadoresSirEnviadosTotal(dataInici, dataFi, idEntidad)));
+                    break;
+                }
+            }
+            if((idEntidad==null)&&(codiOficina!=null)) {
+                if (cal.getTime().compareTo(dataFi) < 0) {
+                	sirEnviadosAnosValor.add(String.valueOf(informeEjb.buscaIndicadoresOficinaTotalSirEnviados(dataInici, cal.getTime(), codiOficina)));
+                } else {
+                	sirEnviadosAnosValor.add(String.valueOf(informeEjb.buscaIndicadoresOficinaTotalSirEnviados(dataInici, dataFi, codiOficina)));
+                    break;
+                }
+            }
+            cal.add(Calendar.DATE, 1);
+            dataInici = cal.getTime();
+        }
+        mav.addObject("sirEnviadosAnosValor", sirEnviadosAnosValor);
+        mav.addObject("sirEnviadosAnosNombre", sirEnviadosAnosNombre);
+
+    }
+
+    /**
+     * Busca los registros SIR recibidos totales por Años entre las fechas
+     * @param mav
+     * @param dataInici
+     * @param dataFi
+     * @param idEntidad
+     * @param idOficina
+     * @throws Exception
+     */
+    private void totalRegistresSirRecibidosAny(ModelAndView mav, Date dataInici, Date dataFi, Long idEntidad, String codiOficina) throws Exception{
+
+        List<String> sirRecibidosAnosValor = new ArrayList<String>();
+        List<String> sirRecibidosAnosNombre = new ArrayList<String>();
+
+        while (dataInici.compareTo(dataFi) < 0) {
+            String anyActual = formatYear.format(dataInici);
+            sirRecibidosAnosNombre.add(anyActual);
+            Calendar cal = Calendar.getInstance();
+
+            cal.set(Calendar.MONTH, 11);
+            cal.set(Calendar.DATE, 31);
+            cal.set(Calendar.YEAR, Integer.parseInt(anyActual));
+            cal.set(Calendar.HOUR, 23);
+            cal.set(Calendar.MINUTE, 59);
+            cal.set(Calendar.SECOND, 59);
+            if((idEntidad!=null)&&(codiOficina==null)) {
+                if (cal.getTime().compareTo(dataFi) < 0) {
+                	sirRecibidosAnosValor.add(String.valueOf(informeEjb.buscaIndicadoresSirRecibidosTotal(dataInici, cal.getTime(), idEntidad)));
+                } else {
+                	sirRecibidosAnosValor.add(String.valueOf(informeEjb.buscaIndicadoresSirRecibidosTotal(dataInici, dataFi, idEntidad)));
+                    break;
+                }
+            }
+            if((idEntidad==null)&&(codiOficina!=null)) {
+                if (cal.getTime().compareTo(dataFi) < 0) {
+                	sirRecibidosAnosValor.add(String.valueOf(informeEjb.buscaIndicadoresOficinaTotalSirRecibidos(dataInici, cal.getTime(), codiOficina)));
+                } else {
+                	sirRecibidosAnosValor.add(String.valueOf(informeEjb.buscaIndicadoresOficinaTotalSirRecibidos(dataInici, dataFi, codiOficina)));
+                    break;
+                }
+            }
+            cal.add(Calendar.DATE, 1);
+            dataInici = cal.getTime();
+        }
+        mav.addObject("sirRecibidosAnosValor", sirRecibidosAnosValor);
+        mav.addObject("sirRecibidosAnosNombre", sirRecibidosAnosNombre);
+
+    }
 
     /**
      * Busca los registros de salida totales por Años entre las fechas
@@ -1571,6 +1745,176 @@ public class InformeController extends AbstractRegistroCommonFormController {
         }
         mav.addObject("entradaMesesValor", entradaMesesValor);
         mav.addObject("entradaMesesNombre", entradaMesesNombre);
+
+    }
+    
+    /**
+     * Busca los registros SIR enviados totales por Meses entre las fechas
+     * @param mav
+     * @param dataInici
+     * @param dataFi
+     * @param idEntidad
+     * @param idOficina
+     * @throws Exception
+     */
+    private void totalRegistresSirEnviadosMes(ModelAndView mav, Date dataInici, Date dataFi, Long idEntidad, String codiOficina) throws Exception{
+
+        List<String> sirEnviadosMesesValor = new ArrayList<String>();
+        List<String> sirEnviadosMesesNombre = new ArrayList<String>();
+
+        // Mientras no hemos llegado a la fecha final
+        while (dataInici.compareTo(dataFi) < 0) {
+            String anyActual = formatYear.format(dataInici);
+            String mesActualNom = formatMes.format(dataInici);
+            String mesActual = formatMonth.format(dataInici);
+            String mesActualCompost = mesActualNom + "/" + anyActual;
+
+            // Añade el mes a la tabla
+            sirEnviadosMesesNombre.add(mesActualCompost);
+            // Empezamos a montar una fecha del mes que se está tratando en este momento
+            Calendar cal = Calendar.getInstance();
+            cal.set(Calendar.MONTH, Integer.parseInt(mesActual) - 1);
+            int mesAra = Integer.parseInt(mesActual);
+            int anyAra = Integer.parseInt(anyActual);
+            // Borramos ponemos a 0 la hora de la fecha que estamos montando
+            cal.clear(Calendar.HOUR_OF_DAY);
+            cal.clear(Calendar.MINUTE);
+            cal.clear(Calendar.SECOND);
+            cal.clear(Calendar.MILLISECOND);
+            // Calculamos el último día del mes para la fecha que montamos
+            if((mesAra == 1)|| (mesAra == 3)|| (mesAra == 5)|| (mesAra == 7)|| (mesAra == 8)|| (mesAra == 10)|| (mesAra == 12)){
+                cal.set(Calendar.DAY_OF_MONTH, 31);
+            } else if((mesAra == 4)|| (mesAra == 6)|| (mesAra == 9)|| (mesAra == 11)){
+                cal.set(Calendar.DAY_OF_MONTH, 30);
+            } else if((anyAra % 4 == 0) && ((anyAra % 100 != 0) || (anyAra % 400 == 0))){
+                cal.set(Calendar.DAY_OF_MONTH, 29);
+            } else{
+                cal.set(Calendar.DAY_OF_MONTH, 28);
+            }
+            // Añadimos las 23:59:59 a la fecha que montamos, que será la fechaFin para la búsqueda (para calcular cada mes por separado)
+            cal.set(Calendar.HOUR_OF_DAY, 23);
+            cal.set(Calendar.MINUTE, 59);
+            cal.set(Calendar.SECOND, 59);
+            cal.set(Calendar.YEAR, Integer.parseInt(anyActual));
+
+            // Miramos si es informe por entidad o por oficina
+            if((idEntidad!=null)&&(codiOficina==null)) {
+                // Es informe por entidad
+                if (cal.getTime().compareTo(dataFi) < 0) {
+                    // Si no estamos en el último mes de la búsqueda, coje la fecha montada como fechaFin
+                	sirEnviadosMesesValor.add(String.valueOf(informeEjb.buscaIndicadoresSirEnviadosTotal(dataInici, cal.getTime(), idEntidad)));
+                } else {
+                    // Si estamos en el último mes de la búsqueda, utiliza la dataFi
+                	sirEnviadosMesesValor.add(String.valueOf(informeEjb.buscaIndicadoresSirEnviadosTotal(dataInici, dataFi, idEntidad)));
+                    break;
+                }
+            }
+            // Miramos si es informe por entidad o por oficina
+            if((idEntidad==null)&&(codiOficina!=null)) {
+                // Es informe por oficina
+                if (cal.getTime().compareTo(dataFi) < 0) {
+                    // Si no estamos en el último mes de la búsqueda, coje la fecha montada como fechaFin
+                	sirEnviadosMesesValor.add(String.valueOf(informeEjb.buscaIndicadoresOficinaTotalSirEnviados(dataInici, cal.getTime(), codiOficina)));
+                } else {
+                    // Si estamos en el último mes de la búsqueda, utiliza la dataFi
+                	sirEnviadosMesesValor.add(String.valueOf(informeEjb.buscaIndicadoresOficinaTotalSirEnviados(dataInici, dataFi, codiOficina)));
+                    break;
+                }
+            }
+            // Montamos la fechaInicio para la búsqueda del próximo mes
+            cal.add(Calendar.DATE, 1);
+            cal.set(Calendar.HOUR_OF_DAY, 0);
+            cal.set(Calendar.MINUTE, 0);
+            cal.set(Calendar.SECOND, 0);
+            dataInici = cal.getTime();
+        }
+        mav.addObject("sirEnviadosMesesValor", sirEnviadosMesesValor);
+        mav.addObject("sirEnviadosMesesNombre", sirEnviadosMesesNombre);
+
+    }
+
+    /**
+     * Busca los registros SIR recibidos totales por Meses entre las fechas
+     * @param mav
+     * @param dataInici
+     * @param dataFi
+     * @param idEntidad
+     * @param idOficina
+     * @throws Exception
+     */
+    private void totalRegistresSirRecibidosMes(ModelAndView mav, Date dataInici, Date dataFi, Long idEntidad, String codiOficina) throws Exception{
+
+        List<String> sirRecibidosMesesValor = new ArrayList<String>();
+        List<String> sirRecibidosMesesNombre = new ArrayList<String>();
+
+        // Mientras no hemos llegado a la fecha final
+        while (dataInici.compareTo(dataFi) < 0) {
+            String anyActual = formatYear.format(dataInici);
+            String mesActualNom = formatMes.format(dataInici);
+            String mesActual = formatMonth.format(dataInici);
+            String mesActualCompost = mesActualNom + "/" + anyActual;
+
+            // Añade el mes a la tabla
+            sirRecibidosMesesNombre.add(mesActualCompost);
+            // Empezamos a montar una fecha del mes que se está tratando en este momento
+            Calendar cal = Calendar.getInstance();
+            cal.set(Calendar.MONTH, Integer.parseInt(mesActual) - 1);
+            int mesAra = Integer.parseInt(mesActual);
+            int anyAra = Integer.parseInt(anyActual);
+            // Borramos ponemos a 0 la hora de la fecha que estamos montando
+            cal.clear(Calendar.HOUR_OF_DAY);
+            cal.clear(Calendar.MINUTE);
+            cal.clear(Calendar.SECOND);
+            cal.clear(Calendar.MILLISECOND);
+            // Calculamos el último día del mes para la fecha que montamos
+            if((mesAra == 1)|| (mesAra == 3)|| (mesAra == 5)|| (mesAra == 7)|| (mesAra == 8)|| (mesAra == 10)|| (mesAra == 12)){
+                cal.set(Calendar.DAY_OF_MONTH, 31);
+            } else if((mesAra == 4)|| (mesAra == 6)|| (mesAra == 9)|| (mesAra == 11)){
+                cal.set(Calendar.DAY_OF_MONTH, 30);
+            } else if((anyAra % 4 == 0) && ((anyAra % 100 != 0) || (anyAra % 400 == 0))){
+                cal.set(Calendar.DAY_OF_MONTH, 29);
+            } else{
+                cal.set(Calendar.DAY_OF_MONTH, 28);
+            }
+            // Añadimos las 23:59:59 a la fecha que montamos, que será la fechaFin para la búsqueda (para calcular cada mes por separado)
+            cal.set(Calendar.HOUR_OF_DAY, 23);
+            cal.set(Calendar.MINUTE, 59);
+            cal.set(Calendar.SECOND, 59);
+            cal.set(Calendar.YEAR, Integer.parseInt(anyActual));
+
+            // Miramos si es informe por entidad o por oficina
+            if((idEntidad!=null)&&(codiOficina==null)) {
+                // Es informe por entidad
+                if (cal.getTime().compareTo(dataFi) < 0) {
+                    // Si no estamos en el último mes de la búsqueda, coje la fecha montada como fechaFin
+                	sirRecibidosMesesValor.add(String.valueOf(informeEjb.buscaIndicadoresSirRecibidosTotal(dataInici, cal.getTime(), idEntidad)));
+                } else {
+                    // Si estamos en el último mes de la búsqueda, utiliza la dataFi
+                	sirRecibidosMesesValor.add(String.valueOf(informeEjb.buscaIndicadoresSirRecibidosTotal(dataInici, dataFi, idEntidad)));
+                    break;
+                }
+            }
+            // Miramos si es informe por entidad o por oficina
+            if((idEntidad==null)&&(codiOficina!=null)) {
+                // Es informe por oficina
+                if (cal.getTime().compareTo(dataFi) < 0) {
+                    // Si no estamos en el último mes de la búsqueda, coje la fecha montada como fechaFin
+                	sirRecibidosMesesValor.add(String.valueOf(informeEjb.buscaIndicadoresOficinaTotalSirRecibidos(dataInici, cal.getTime(), codiOficina)));
+                } else {
+                    // Si estamos en el último mes de la búsqueda, utiliza la dataFi
+                	sirRecibidosMesesValor.add(String.valueOf(informeEjb.buscaIndicadoresOficinaTotalSirRecibidos(dataInici, dataFi, codiOficina)));
+                    break;
+                }
+            }
+            // Montamos la fechaInicio para la búsqueda del próximo mes
+            cal.add(Calendar.DATE, 1);
+            cal.set(Calendar.HOUR_OF_DAY, 0);
+            cal.set(Calendar.MINUTE, 0);
+            cal.set(Calendar.SECOND, 0);
+            dataInici = cal.getTime();
+        }
+        mav.addObject("sirRecibidosMesesValor", sirRecibidosMesesValor);
+        mav.addObject("sirRecibidosMesesNombre", sirRecibidosMesesNombre);
 
     }
 
@@ -1710,6 +2054,58 @@ public class InformeController extends AbstractRegistroCommonFormController {
 
         mav.addObject("salidaConselleriaValor", salidaConselleriaValor);
         mav.addObject("salidaConselleriaNombre", salidaConselleriaNombre);
+    }
+    
+    /**
+     * Busca los registros SIR enviados totales por Organismo entre las fechas
+     * @param mav
+     * @param dataInici
+     * @param dataFi
+     * @param organismos
+     * @throws Exception
+     */
+    private void totalRegistresSirEnviadosOrganismo(ModelAndView mav,Date dataInici, Date dataFi, List<Organismo> organismos) throws Exception{
+
+        List<String> sirEnviadosConselleriaValor = new ArrayList<String>();
+        List<String> sirEnviadosConselleriaNombre = new ArrayList<String>();
+
+        for (Organismo organismo : organismos) {
+            Long total = informeEjb.buscaSirEnviadosPorConselleria(dataInici, dataFi, organismo.getCodigo());
+            if (total > 0) { // Solo lo añadimos al informe si tiene algún registro
+            	sirEnviadosConselleriaNombre.add(organismo.getDenominacion());
+                sirEnviadosConselleriaValor.add(String.valueOf(total));
+            }
+
+        }
+
+        mav.addObject("sirEnviadosConselleriaValor", sirEnviadosConselleriaValor);
+        mav.addObject("sirEnviadosConselleriaNombre", sirEnviadosConselleriaNombre);
+    }
+    
+    /**
+     * Busca los registros SIR recibidos totales por Organismo entre las fechas
+     * @param mav
+     * @param dataInici
+     * @param dataFi
+     * @param organismos
+     * @throws Exception
+     */
+    private void totalRegistresSirRecibidosOrganismo(ModelAndView mav,Date dataInici, Date dataFi, List<Organismo> organismos) throws Exception{
+
+        List<String> sirRecibidosConselleriaValor = new ArrayList<String>();
+        List<String> sirRecibidosConselleriaNombre = new ArrayList<String>();
+
+        for (Organismo organismo : organismos) {
+            Long total = informeEjb.buscaSirRecibidosPorConselleria(dataInici, dataFi, organismo.getCodigo());
+            if (total > 0) { // Solo lo añadimos al informe si tiene algún registro
+            	sirRecibidosConselleriaNombre.add(organismo.getDenominacion());
+            	sirRecibidosConselleriaValor.add(String.valueOf(total));
+            }
+
+        }
+
+        mav.addObject("sirRecibidosConselleriaValor", sirRecibidosConselleriaValor);
+        mav.addObject("sirRecibidosConselleriaNombre", sirRecibidosConselleriaNombre);
     }
 
     /**
@@ -1865,6 +2261,58 @@ public class InformeController extends AbstractRegistroCommonFormController {
         }
         mav.addObject("salidaOficinaValor", salidaOficinaValor);
         mav.addObject("salidaOficinaNombre", salidaOficinaNombre);
+    }
+    
+    /**
+     * Busca los registros SIR enviados totales por Oficina entre las fechas
+     * @param mav
+     * @param dataInici
+     * @param dataFi
+     * @param oficinas
+     * @throws Exception
+     */
+    private void totalRegistresSirEnviadosOficina(ModelAndView mav,Date dataInici, Date dataFi,List<Oficina> oficinas) throws Exception{
+
+        List<String> sirEnviadosOficinaValor = new ArrayList<String>();
+        List<String> sirEnviadosOficinaNombre = new ArrayList<String>();
+
+
+        for (Oficina oficina : oficinas) {
+            Long total = informeEjb.buscaIndicadoresOficinaTotalSirEnviados(dataInici, dataFi, oficina.getCodigo());
+            if (total > 0) { // Solo lo añadimos al informe si tiene algún registro
+            	sirEnviadosOficinaNombre.add(oficina.getDenominacion());
+            	sirEnviadosOficinaValor.add(String.valueOf(total));
+            }
+
+        }
+        mav.addObject("sirEnviadosOficinaValor", sirEnviadosOficinaValor);
+        mav.addObject("sirEnviadosOficinaNombre", sirEnviadosOficinaNombre);
+    }
+    
+    /**
+     * Busca los registros SIR recibidos totales por Oficina entre las fechas
+     * @param mav
+     * @param dataInici
+     * @param dataFi
+     * @param oficinas
+     * @throws Exception
+     */
+    private void totalRegistresSirRecibidosOficina(ModelAndView mav,Date dataInici, Date dataFi,List<Oficina> oficinas) throws Exception{
+
+        List<String> sirRecibidosOficinaValor = new ArrayList<String>();
+        List<String> sirRecibidosOficinaNombre = new ArrayList<String>();
+
+
+        for (Oficina oficina : oficinas) {
+            Long total = informeEjb.buscaIndicadoresOficinaTotalSirRecibidos(dataInici, dataFi, oficina.getCodigo());
+            if (total > 0) { // Solo lo añadimos al informe si tiene algún registro
+            	sirRecibidosOficinaNombre.add(oficina.getDenominacion());
+            	sirRecibidosOficinaValor.add(String.valueOf(total));
+            }
+
+        }
+        mav.addObject("sirRecibidosOficinaValor", sirRecibidosOficinaValor);
+        mav.addObject("sirRecibidosOficinaNombre", sirRecibidosOficinaNombre);
     }
 
     /**

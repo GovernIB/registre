@@ -726,8 +726,8 @@ public interface RegwebConstantes {
     Long INFORME_TIPO_REGISTRO_ENTRADASALIDA = 0L;
     Long INFORME_TIPO_REGISTRO_ENTRADA = 1L;
     Long INFORME_TIPO_REGISTRO_SALIDA = 2L;
-
-
+    Long INFORME_TIPO_REGISTRO_SIR_ENVIADO = 3L;
+    Long INFORME_TIPO_REGISTRO_SIR_RECIBIDO = 4L;
 
     /* -------------- CAT SERVICIOS -------------------------- */
     Long OFICINA_REGISTRO = 1L;

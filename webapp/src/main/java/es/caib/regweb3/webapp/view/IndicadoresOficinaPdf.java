@@ -34,6 +34,16 @@ public class IndicadoresOficinaPdf extends AbstractIText5PdfView{
     private ArrayList<String> entradaIdiomaNombre = new ArrayList<String>();
     private ArrayList<String> salidaIdiomaValor = new ArrayList<String>();
     private ArrayList<String> salidaIdiomaNombre = new ArrayList<String>();
+    
+    private ArrayList<String> sirEnviadosAnosValor = new ArrayList<String>();
+    private ArrayList<String> sirEnviadosAnosNombre = new ArrayList<String>();
+    private ArrayList<String> sirEnviadosMesesValor = new ArrayList<String>();
+    private ArrayList<String> sirEnviadosMesesNombre = new ArrayList<String>();
+    
+    private ArrayList<String> sirRecibidosAnosValor = new ArrayList<String>();
+    private ArrayList<String> sirRecibidosAnosNombre = new ArrayList<String>();
+    private ArrayList<String> sirRecibidosMesesValor = new ArrayList<String>();
+    private ArrayList<String> sirRecibidosMesesNombre = new ArrayList<String>();
     /**
      * Retorna el mensaje traducido según el idioma del usuario
      * @param key
@@ -54,10 +64,14 @@ public class IndicadoresOficinaPdf extends AbstractIText5PdfView{
         Integer registrosEntrada = (Integer) model.get("registrosEntrada");
         Integer registrosSalida = (Integer) model.get("registrosSalida");
         String codigoOficina = (String) model.get("codigoOficina");
+        Long sirEnviados = (Long) model.get("sirEnviados");
+        Long sirRecibidos = (Long) model.get("sirRecibidos");
 
         obtenerValoresEntrada(model);
         obtenerValoresSalida(model);
-
+        obtenerValoresSirEnviados(model);
+        obtenerValoresSirRecibidos(model);
+        
         //Configuraciones generales formato pdf
         document.setPageSize(PageSize.A4);
 
@@ -177,130 +191,6 @@ public class IndicadoresOficinaPdf extends AbstractIText5PdfView{
         tableMesesEntrada.addCell(new Paragraph(registrosEntrada.toString(),font10));
         document.add(tableMesesEntrada);
         document.add(new Paragraph(" "));
-
-//            //Muestra Consellerias
-//            if(entradaConselleriaNombre.size() > 0){
-//                PdfPTable seccion13 = new PdfPTable(1);
-//                seccion13.setWidthPercentage(100);
-//                seccion13.getDefaultCell().setBackgroundColor(BaseColor.WHITE);
-//                seccion13.getDefaultCell().setBorder(0);
-//                seccion13.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
-//                seccion13.addCell(new Paragraph(getMessage("informe.porOrganismos"), font10Bold));
-//                document.add(seccion13);
-//                document.add(new Paragraph(" "));
-//
-//                PdfPTable tableConselleriesEntrada = new PdfPTable(2);
-//                tableConselleriesEntrada.setWidthPercentage(100);
-//
-//                for(int i=0;i<entradaConselleriaNombre.size();i++){
-//                    tableConselleriesEntrada.getDefaultCell().setBackgroundColor(BaseColor.LIGHT_GRAY);
-//                    tableConselleriesEntrada.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
-//                    String nomConsell = entradaConselleriaNombre.get(i);
-//                    tableConselleriesEntrada.addCell(new Paragraph(nomConsell,font10));
-//                    tableConselleriesEntrada.getDefaultCell().setBackgroundColor(BaseColor.WHITE);
-//                    tableConselleriesEntrada.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
-//                    String valorConsell = entradaConselleriaValor.get(i);
-//                    tableConselleriesEntrada.addCell(new Paragraph(valorConsell,font10));
-//                    document.add(tableConselleriesEntrada);
-//                    tableConselleriesEntrada.deleteBodyRows();
-//                }
-//                tableConselleriesEntrada.deleteBodyRows();
-//                tableConselleriesEntrada.getDefaultCell().setBackgroundColor(BaseColor.LIGHT_GRAY);
-//                tableConselleriesEntrada.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
-//                tableConselleriesEntrada.addCell(new Paragraph(getMessage("informe.total"),font10));
-//                tableConselleriesEntrada.getDefaultCell().setBackgroundColor(BaseColor.WHITE);
-//                tableConselleriesEntrada.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
-//                tableConselleriesEntrada.addCell(new Paragraph(registrosEntrada.toString(),font10));
-//                document.add(tableConselleriesEntrada);
-//                document.add(new Paragraph(" "));
-//            }
-//
-//            //Muestra Tipos de Asunto
-//            if(entradaAsuntoNombre.size() > 0){
-//                PdfPTable seccion14 = new PdfPTable(1);
-//                seccion14.setWidthPercentage(100);
-//                seccion14.getDefaultCell().setBackgroundColor(BaseColor.WHITE);
-//                seccion14.getDefaultCell().setBorder(0);
-//                seccion14.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
-//                seccion14.addCell(new Paragraph(getMessage("informe.porTiposAsunto"), font10Bold));
-//                document.add(seccion14);
-//                document.add(new Paragraph(" "));
-//
-//                PdfPTable tableAssumptesEntrada = new PdfPTable(2);
-//                tableAssumptesEntrada.setWidthPercentage(100);
-//
-//                for(int i=0;i<entradaAsuntoNombre.size();i++){
-//                    tableAssumptesEntrada.getDefaultCell().setBackgroundColor(BaseColor.LIGHT_GRAY);
-//                    tableAssumptesEntrada.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
-//                    String nomAsunto = entradaAsuntoNombre.get(i);
-//                    tableAssumptesEntrada.addCell(new Paragraph(nomAsunto,font10));
-//                    tableAssumptesEntrada.getDefaultCell().setBackgroundColor(BaseColor.WHITE);
-//                    tableAssumptesEntrada.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
-//                    String valorAsunto = entradaAsuntoValor.get(i);
-//                    tableAssumptesEntrada.addCell(new Paragraph(valorAsunto,font10));
-//                    document.add(tableAssumptesEntrada);
-//                    tableAssumptesEntrada.deleteBodyRows();
-//                }
-//                document.add(new Paragraph(" "));
-//            }
-//
-//            //Muestra Libros de Registro
-//            if(entradaLibroNombre.size() > 0){
-//                PdfPTable seccion15 = new PdfPTable(1);
-//                seccion15.setWidthPercentage(100);
-//                seccion15.getDefaultCell().setBackgroundColor(BaseColor.WHITE);
-//                seccion15.getDefaultCell().setBorder(0);
-//                seccion15.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
-//                seccion15.addCell(new Paragraph(getMessage("informe.porLibroRegistro"), font10Bold));
-//                document.add(seccion15);
-//                document.add(new Paragraph(" "));
-//
-//                PdfPTable tableLlibresEntrada = new PdfPTable(2);
-//                tableLlibresEntrada.setWidthPercentage(100);
-//
-//                for(int i=0;i<entradaLibroNombre.size();i++){
-//                    tableLlibresEntrada.getDefaultCell().setBackgroundColor(BaseColor.LIGHT_GRAY);
-//                    tableLlibresEntrada.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
-//                    String nomLibro = entradaLibroNombre.get(i);
-//                    tableLlibresEntrada.addCell(new Paragraph(nomLibro,font10));
-//                    tableLlibresEntrada.getDefaultCell().setBackgroundColor(BaseColor.WHITE);
-//                    tableLlibresEntrada.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
-//                    String valorLibro = entradaLibroValor.get(i);
-//                    tableLlibresEntrada.addCell(new Paragraph(valorLibro,font10));
-//                    document.add(tableLlibresEntrada);
-//                    tableLlibresEntrada.deleteBodyRows();
-//                }
-//                document.add(new Paragraph(" "));
-//            }
-
-//        //Muestra Oficinas
-//        if(entradaOficinaNombre.size() > 0){
-//            PdfPTable seccion16 = new PdfPTable(1);
-//            seccion16.setWidthPercentage(100);
-//            seccion16.getDefaultCell().setBackgroundColor(BaseColor.WHITE);
-//            seccion16.getDefaultCell().setBorder(0);
-//            seccion16.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
-//            seccion16.addCell(new Paragraph(getMessage("informe.porOficina"), font10Bold));
-//            document.add(seccion16);
-//            document.add(new Paragraph(" "));
-//
-//            PdfPTable tableOficinesEntrada = new PdfPTable(2);
-//            tableOficinesEntrada.setWidthPercentage(100);
-//
-//            for(int i=0;i<entradaOficinaNombre.size();i++){
-//                tableOficinesEntrada.getDefaultCell().setBackgroundColor(BaseColor.LIGHT_GRAY);
-//                tableOficinesEntrada.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
-//                String nomOficina = entradaOficinaNombre.get(i);
-//                tableOficinesEntrada.addCell(new Paragraph(nomOficina,font10));
-//                tableOficinesEntrada.getDefaultCell().setBackgroundColor(BaseColor.WHITE);
-//                tableOficinesEntrada.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
-//                String valorOficina = entradaOficinaValor.get(i);
-//                tableOficinesEntrada.addCell(new Paragraph(valorOficina,font10));
-//                document.add(tableOficinesEntrada);
-//                tableOficinesEntrada.deleteBodyRows();
-//            }
-//            document.add(new Paragraph(" "));
-//        }
 
         //Muestra Idiomas
         if(entradaIdiomaNombre.size() > 0){
@@ -472,6 +362,8 @@ public class IndicadoresOficinaPdf extends AbstractIText5PdfView{
             document.add(new Paragraph(" "));
         }
 
+        document.add(new Paragraph(" "));
+        document.add(new Paragraph(" "));
 
         // Final Sortides
         if(registrosSalida.equals(0)){
@@ -484,6 +376,219 @@ public class IndicadoresOficinaPdf extends AbstractIText5PdfView{
             document.add(buit);
         }
 
+        // DATOS A MOSTRAR
+        // SIR ENVIADOS
+        
+        PdfPTable seccion3 = new PdfPTable(1);
+        seccion3.setWidthPercentage(100);
+        seccion3.getDefaultCell().setBackgroundColor(BaseColor.WHITE);
+        seccion3.getDefaultCell().setBorder(0);
+        seccion3.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
+        seccion3.addCell(new Paragraph(getMessage("informe.registrosSirEnviados"), font14BoldItalic));
+        document.add(seccion3);
+        document.add(new Paragraph(" "));
+
+        PdfPTable table3 = new PdfPTable(1);
+        table3.setWidthPercentage(100);
+        PdfPCell cell3 = new PdfPCell(new Paragraph(getMessage("informe.registros"),font10Bold));
+        cell3.setBackgroundColor(BaseColor.LIGHT_GRAY);
+        cell3.setHorizontalAlignment(Element.ALIGN_CENTER);
+        table3.addCell(cell3);
+        table3.getDefaultCell().setBackgroundColor(BaseColor.WHITE);
+        table3.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
+        table3.addCell(new Paragraph(sirEnviados.toString(),font10));
+        document.add(table3);
+        document.add(new Paragraph(" "));
+        
+        //Muestra Años
+        PdfPTable seccion31 = new PdfPTable(1);
+        seccion31.setWidthPercentage(100);
+        seccion31.getDefaultCell().setBackgroundColor(BaseColor.WHITE);
+        seccion31.getDefaultCell().setBorder(0);
+        seccion31.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
+        seccion31.addCell(new Paragraph(getMessage("informe.anys"), font10Bold));
+        document.add(seccion31);
+        document.add(new Paragraph(" "));
+
+        PdfPTable tableAnysSirEnviados = new PdfPTable(2);
+        tableAnysSirEnviados.setWidthPercentage(100);
+
+        for(int i=0;i<sirEnviadosAnosNombre.size();i++){
+        	tableAnysSirEnviados.getDefaultCell().setBackgroundColor(BaseColor.LIGHT_GRAY);
+        	tableAnysSirEnviados.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
+            String numAny = sirEnviadosAnosNombre.get(i);
+            tableAnysSirEnviados.addCell(new Paragraph(numAny,font10));
+            tableAnysSirEnviados.getDefaultCell().setBackgroundColor(BaseColor.WHITE);
+            tableAnysSirEnviados.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
+            String valorAny = sirEnviadosAnosValor.get(i);
+            tableAnysSirEnviados.addCell(new Paragraph(valorAny,font10));
+            document.add(tableAnysSirEnviados);
+            tableAnysSirEnviados.deleteBodyRows();
+        }
+        tableAnysSirEnviados.deleteBodyRows();
+        tableAnysSirEnviados.getDefaultCell().setBackgroundColor(BaseColor.LIGHT_GRAY);
+        tableAnysSirEnviados.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
+        tableAnysSirEnviados.addCell(new Paragraph(getMessage("informe.total"),font10));
+        tableAnysSirEnviados.getDefaultCell().setBackgroundColor(BaseColor.WHITE);
+        tableAnysSirEnviados.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
+        tableAnysSirEnviados.addCell(new Paragraph(registrosSalida.toString(),font10));
+        document.add(tableAnysSirEnviados);
+        document.add(new Paragraph(" "));
+
+        //Muestra Meses
+        PdfPTable seccion32 = new PdfPTable(1);
+        seccion32.setWidthPercentage(100);
+        seccion32.getDefaultCell().setBackgroundColor(BaseColor.WHITE);
+        seccion32.getDefaultCell().setBorder(0);
+        seccion32.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
+        seccion32.addCell(new Paragraph(getMessage("informe.mesos"), font10Bold));
+        document.add(seccion32);
+        document.add(new Paragraph(" "));
+
+        PdfPTable tableMesesSirEnviados = new PdfPTable(2);
+        tableMesesSirEnviados.setWidthPercentage(100);
+
+        for(int i=0;i<sirEnviadosMesesNombre.size();i++){
+        	tableMesesSirEnviados.getDefaultCell().setBackgroundColor(BaseColor.LIGHT_GRAY);
+        	tableMesesSirEnviados.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
+            String nomMes = sirEnviadosMesesNombre.get(i);
+            tableMesesSirEnviados.addCell(new Paragraph(nomMes,font10));
+            tableMesesSirEnviados.getDefaultCell().setBackgroundColor(BaseColor.WHITE);
+            tableMesesSirEnviados.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
+            String valorMes = sirEnviadosMesesValor.get(i);
+            tableMesesSirEnviados.addCell(new Paragraph(valorMes,font10));
+            document.add(tableMesesSirEnviados);
+            tableMesesSirEnviados.deleteBodyRows();
+        }
+        tableMesesSirEnviados.deleteBodyRows();
+        tableMesesSirEnviados.getDefaultCell().setBackgroundColor(BaseColor.LIGHT_GRAY);
+        tableMesesSirEnviados.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
+        tableMesesSirEnviados.addCell(new Paragraph(getMessage("informe.total"),font10));
+        tableMesesSirEnviados.getDefaultCell().setBackgroundColor(BaseColor.WHITE);
+        tableMesesSirEnviados.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
+        tableMesesSirEnviados.addCell(new Paragraph(registrosSalida.toString(),font10));
+        document.add(tableMesesSirEnviados);
+        
+        document.add(new Paragraph(" "));
+        document.add(new Paragraph(" "));
+        
+        // Final SIR ENVIADOS
+        if(sirEnviados.equals(0)){
+            PdfPTable buit = new PdfPTable(1);
+            buit.setWidthPercentage(100);
+            buit.getDefaultCell().setBackgroundColor(BaseColor.WHITE);
+            buit.getDefaultCell().setBorder(0);
+            buit.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
+            buit.addCell(new Paragraph(getMessage("informe.registros.vacio"), font10Bold));
+            document.add(buit);
+        }
+        
+        
+        // DATOS A MOSTRAR
+        // SIR RECIBIDOS
+        
+        PdfPTable seccion4 = new PdfPTable(1);
+        seccion4.setWidthPercentage(100);
+        seccion4.getDefaultCell().setBackgroundColor(BaseColor.WHITE);
+        seccion4.getDefaultCell().setBorder(0);
+        seccion4.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
+        seccion4.addCell(new Paragraph(getMessage("informe.registrosSirRecibidos"), font14BoldItalic));
+        document.add(seccion4);
+        document.add(new Paragraph(" "));
+
+        PdfPTable table4 = new PdfPTable(1);
+        table4.setWidthPercentage(100);
+        PdfPCell cell4 = new PdfPCell(new Paragraph(getMessage("informe.registros"),font10Bold));
+        cell4.setBackgroundColor(BaseColor.LIGHT_GRAY);
+        cell4.setHorizontalAlignment(Element.ALIGN_CENTER);
+        table4.addCell(cell4);
+        table4.getDefaultCell().setBackgroundColor(BaseColor.WHITE);
+        table4.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
+        table4.addCell(new Paragraph(sirRecibidos.toString(),font10));
+        document.add(table4);
+        document.add(new Paragraph(" "));
+        
+        //Muestra Años
+        PdfPTable seccion41 = new PdfPTable(1);
+        seccion41.setWidthPercentage(100);
+        seccion41.getDefaultCell().setBackgroundColor(BaseColor.WHITE);
+        seccion41.getDefaultCell().setBorder(0);
+        seccion41.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
+        seccion41.addCell(new Paragraph(getMessage("informe.anys"), font10Bold));
+        document.add(seccion41);
+        document.add(new Paragraph(" "));
+
+        PdfPTable tableAnysSirRecibidos = new PdfPTable(2);
+        tableAnysSirRecibidos.setWidthPercentage(100);
+
+        for(int i=0;i<sirRecibidosAnosNombre.size();i++){
+        	tableAnysSirRecibidos.getDefaultCell().setBackgroundColor(BaseColor.LIGHT_GRAY);
+        	tableAnysSirRecibidos.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
+            String numAny = sirRecibidosAnosNombre.get(i);
+            tableAnysSirRecibidos.addCell(new Paragraph(numAny,font10));
+            tableAnysSirRecibidos.getDefaultCell().setBackgroundColor(BaseColor.WHITE);
+            tableAnysSirRecibidos.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
+            String valorAny = sirRecibidosAnosValor.get(i);
+            tableAnysSirRecibidos.addCell(new Paragraph(valorAny,font10));
+            document.add(tableAnysSirRecibidos);
+            tableAnysSirRecibidos.deleteBodyRows();
+        }
+        tableAnysSirRecibidos.deleteBodyRows();
+        tableAnysSirRecibidos.getDefaultCell().setBackgroundColor(BaseColor.LIGHT_GRAY);
+        tableAnysSirRecibidos.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
+        tableAnysSirRecibidos.addCell(new Paragraph(getMessage("informe.total"),font10));
+        tableAnysSirRecibidos.getDefaultCell().setBackgroundColor(BaseColor.WHITE);
+        tableAnysSirRecibidos.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
+        tableAnysSirRecibidos.addCell(new Paragraph(sirRecibidos.toString(),font10));
+        document.add(tableAnysSirRecibidos);
+        document.add(new Paragraph(" "));
+
+        //Muestra Meses
+        PdfPTable seccion42 = new PdfPTable(1);
+        seccion42.setWidthPercentage(100);
+        seccion42.getDefaultCell().setBackgroundColor(BaseColor.WHITE);
+        seccion42.getDefaultCell().setBorder(0);
+        seccion42.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
+        seccion42.addCell(new Paragraph(getMessage("informe.mesos"), font10Bold));
+        document.add(seccion42);
+        document.add(new Paragraph(" "));
+
+        PdfPTable tableMesesSirRecibidos = new PdfPTable(2);
+        tableMesesSirRecibidos.setWidthPercentage(100);
+
+        for(int i=0;i<sirRecibidosMesesNombre.size();i++){
+        	tableMesesSirRecibidos.getDefaultCell().setBackgroundColor(BaseColor.LIGHT_GRAY);
+        	tableMesesSirRecibidos.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
+            String nomMes = sirRecibidosMesesNombre.get(i);
+            tableMesesSirRecibidos.addCell(new Paragraph(nomMes,font10));
+            tableMesesSirRecibidos.getDefaultCell().setBackgroundColor(BaseColor.WHITE);
+            tableMesesSirRecibidos.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
+            String valorMes = sirRecibidosMesesValor.get(i);
+            tableMesesSirRecibidos.addCell(new Paragraph(valorMes,font10));
+            document.add(tableMesesSirRecibidos);
+            tableMesesSirRecibidos.deleteBodyRows();
+        }
+        tableMesesSirRecibidos.deleteBodyRows();
+        tableMesesSirRecibidos.getDefaultCell().setBackgroundColor(BaseColor.LIGHT_GRAY);
+        tableMesesSirRecibidos.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
+        tableMesesSirRecibidos.addCell(new Paragraph(getMessage("informe.total"),font10));
+        tableMesesSirRecibidos.getDefaultCell().setBackgroundColor(BaseColor.WHITE);
+        tableMesesSirRecibidos.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
+        tableMesesSirRecibidos.addCell(new Paragraph(sirRecibidos.toString(),font10));
+        document.add(tableMesesSirRecibidos);
+        document.add(new Paragraph(" "));
+        
+        // Final SIR ENVIADOS
+        if(sirRecibidos.equals(0)){
+            PdfPTable buit = new PdfPTable(1);
+            buit.setWidthPercentage(100);
+            buit.getDefaultCell().setBackgroundColor(BaseColor.WHITE);
+            buit.getDefaultCell().setBorder(0);
+            buit.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
+            buit.addCell(new Paragraph(getMessage("informe.registros.vacio"), font10Bold));
+            document.add(buit);
+        }
+        
         String nombreFichero = getMessage("informe.nombreFichero.indicadoresOficina")+ codigoOficina + ".pdf";
 
         // Cabeceras Response
@@ -523,5 +628,30 @@ public class IndicadoresOficinaPdf extends AbstractIText5PdfView{
         salidaIdiomaNombre = (ArrayList<String>) model.get("salidaIdiomaNombre");
     }
 
+    /**
+    *
+    * @param model
+    * @throws Exception
+    */
+   @SuppressWarnings("unchecked")
+   private void obtenerValoresSirEnviados(Map<String, Object> model) throws Exception{
+       sirEnviadosAnosValor = (ArrayList<String>) model.get("sirEnviadosAnosValor");
+       sirEnviadosAnosNombre = (ArrayList<String>) model.get("sirEnviadosAnosNombre");
+       sirEnviadosMesesValor = (ArrayList<String>) model.get("sirEnviadosMesesValor");
+       sirEnviadosMesesNombre = (ArrayList<String>) model.get("sirEnviadosMesesNombre");
+   }
+   
+   /**
+   *
+   * @param model
+   * @throws Exception
+   */
+  @SuppressWarnings("unchecked")
+  private void obtenerValoresSirRecibidos(Map<String, Object> model) throws Exception{
+      sirRecibidosAnosValor = (ArrayList<String>) model.get("sirRecibidosAnosValor");
+      sirRecibidosAnosNombre = (ArrayList<String>) model.get("sirRecibidosAnosNombre");
+      sirRecibidosMesesValor = (ArrayList<String>) model.get("sirRecibidosMesesValor");
+      sirRecibidosMesesNombre = (ArrayList<String>) model.get("sirRecibidosMesesNombre");
+  }
 }
 
