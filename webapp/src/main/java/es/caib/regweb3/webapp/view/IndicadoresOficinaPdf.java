@@ -64,8 +64,8 @@ public class IndicadoresOficinaPdf extends AbstractIText5PdfView{
         Integer registrosEntrada = (Integer) model.get("registrosEntrada");
         Integer registrosSalida = (Integer) model.get("registrosSalida");
         String codigoOficina = (String) model.get("codigoOficina");
-        Long sirEnviados = (Long) model.get("sirEnviados");
-        Long sirRecibidos = (Long) model.get("sirRecibidos");
+        Integer sirEnviados = (Integer) model.get("sirEnviados");
+        Integer sirRecibidos = (Integer) model.get("sirRecibidos");
 
         obtenerValoresEntrada(model);
         obtenerValoresSalida(model);

@@ -41,8 +41,8 @@ public class IndicadoresOficinaExcel extends AbstractExcelView {
         String fechaFin = (String) model.get("fechaFin");
         Integer registrosEntrada = (Integer) model.get("registrosEntrada");
         Integer registrosSalida = (Integer) model.get("registrosSalida");
-        Integer sirEnviats = (Integer) model.get("sirEnviats");
-        Integer sirRebuts = (Integer) model.get("sirRebuts");
+        Integer sirEnviados = (Integer) model.get("sirEnviados");
+        Integer sirRecibidos = (Integer) model.get("sirRecibidos");
         String nombreOficina = (String) model.get("nombreOficina");
         String codigoOficina = (String) model.get("codigoOficina");
         ArrayList<String> entradaAnosValor = (ArrayList<String>) model.get("entradaAnosValor");
@@ -58,6 +58,18 @@ public class IndicadoresOficinaExcel extends AbstractExcelView {
         ArrayList<String> salidaIdiomaValor = (ArrayList<String>) model.get("salidaIdiomaValor");
         ArrayList<String> salidaIdiomaNombre = (ArrayList<String>) model.get("salidaIdiomaNombre");
 
+        // SIR ENVIADOS
+        ArrayList<String> sirEnviadosAnosValor = (ArrayList<String>) model.get("sirEnviadosAnosValor");
+        ArrayList<String> sirEnviadosAnosNombre = (ArrayList<String>) model.get("sirEnviadosAnosNombre");
+        ArrayList<String> sirEnviadosMesesValor = (ArrayList<String>) model.get("sirEnviadosMesesValor");
+        ArrayList<String> sirEnviadosMesesNombre = (ArrayList<String>) model.get("sirEnviadosMesesNombre");
+        
+        // SIR RECIBIDOS
+        ArrayList<String> sirRecibidosAnosValor = (ArrayList<String>) model.get("sirRecibidosAnosValor");
+        ArrayList<String> sirRecibidosAnosNombre = (ArrayList<String>) model.get("sirRecibidosAnosNombre");
+        ArrayList<String> sirRecibidosMesesValor = (ArrayList<String>) model.get("sirRecibidosMesesValor");
+        ArrayList<String> sirRecibidosMesesNombre = (ArrayList<String>) model.get("sirRecibidosMesesNombre");
+        
         HSSFSheet sheet = workbook.createSheet("REGWEB3");
         sheet.setFitToPage(true);
 
@@ -400,7 +412,182 @@ public class IndicadoresOficinaExcel extends AbstractExcelView {
                 tamanyMaxColum = salidaIdiomaNombre.size();
             }
         }
+        
+        //Espai buit
+        rowNum = rowNum + 1;
+        
+        // SIR ENVIADOS
+        HSSFRow envRegRow = sheet.createRow(rowNum++);
+        envRegRow.setHeightInPoints(15);
+        HSSFCell envRegCell = envRegRow.createCell(0);
+        sheet.addMergedRegion(CellRangeAddress.valueOf("$A$"+rowNum+":$G$"+rowNum));
+        envRegCell.setCellValue(getMessage("informe.registrosSirEnviados"));
+        envRegCell.setCellStyle(tituloSeccion);
 
+        //Espai buit
+        rowNum = rowNum + 1;
+
+        //Registres totals
+        HSSFRow regEnvNom = sheet.createRow(rowNum++);
+        HSSFCell regEnvNomCol = regEnvNom.createCell(0);
+        regEnvNomCol.setCellValue(getMessage("informe.registros"));
+        regEnvNomCol.setCellStyle(cabecera);
+        HSSFRow registreEnvRow = sheet.createRow(rowNum++);
+        registreEnvRow.createCell(0).setCellValue(sirEnviados.toString());
+        registreEnvRow.getCell(0).setCellStyle(fila);
+
+        //Espai buit
+        rowNum = rowNum + 1;
+
+        //Muestra Años
+		HSSFRow anyEnvRowTitle = sheet.createRow(rowNum++);
+		anyEnvRowTitle.setHeightInPoints(15);
+		HSSFCell anyEnvCell = anyEnvRowTitle.createCell(0);
+		anyEnvCell.setCellValue(getMessage("informe.anys"));
+		anyEnvCell.setCellStyle(tituloSeccion);
+		sheet.addMergedRegion(CellRangeAddress.valueOf("$A$" + rowNum + ":$G$" + rowNum));
+		// Espai buit
+		rowNum = rowNum + 1;
+
+		HSSFRow anyEnvNom = sheet.createRow(rowNum++);
+		for (int i = 0; i < sirEnviadosAnosNombre.size(); i++) {
+			HSSFCell anyEnvNomCol = anyEnvNom.createCell(i);
+			anyEnvNomCol.setCellValue(sirEnviadosAnosNombre.get(i));
+			anyEnvNomCol.setCellStyle(cabecera);
+		}
+		HSSFCell anyEnvNomCol = anyEnvNom.createCell(sirEnviadosAnosNombre.size());
+		anyEnvNomCol.setCellValue(getMessage("informe.total"));
+		anyEnvNomCol.setCellStyle(cabecera);
+		HSSFRow anyEnvValor = sheet.createRow(rowNum++);
+		for (int i = 0; i < sirEnviadosAnosValor.size(); i++) {
+			HSSFCell anyEnvValorCol = anyEnvValor.createCell(i);
+			anyEnvValorCol.setCellValue(sirEnviadosAnosValor.get(i));
+			anyEnvValorCol.setCellStyle(fila);
+		}
+		HSSFCell anyEnvValorCol = anyEnvValor.createCell(sirEnviadosAnosValor.size());
+		anyEnvValorCol.setCellValue(sirEnviados.toString());
+		anyEnvValorCol.setCellStyle(fila);
+
+		if (sirEnviadosAnosNombre.size() > tamanyMaxColum) {
+			tamanyMaxColum = sirEnviadosAnosNombre.size();
+		}
+
+        //Espai buit
+        rowNum = rowNum + 1;
+
+		// Muestra Meses
+		HSSFRow mesEnvRowTitle = sheet.createRow(rowNum++);
+		mesEnvRowTitle.setHeightInPoints(15);
+		HSSFCell mesEnvCell = mesEnvRowTitle.createCell(0);
+		mesEnvCell.setCellValue(getMessage("informe.mesos"));
+		mesEnvCell.setCellStyle(tituloSeccion);
+		sheet.addMergedRegion(CellRangeAddress.valueOf("$A$" + rowNum + ":$G$" + rowNum));
+		// Espai buit
+		rowNum = rowNum + 1;
+
+		HSSFRow mesEnvNom = sheet.createRow(rowNum++);
+		for (int i = 0; i < sirEnviadosMesesNombre.size(); i++) {
+			HSSFCell mesEnvNomCol = mesEnvNom.createCell(i);
+			mesEnvNomCol.setCellValue(sirEnviadosMesesNombre.get(i));
+			mesEnvNomCol.setCellStyle(cabecera);
+		}
+		HSSFRow mesEnvValor = sheet.createRow(rowNum++);
+		for (int i = 0; i < sirEnviadosMesesValor.size(); i++) {
+			HSSFCell mesEnvValorCol = mesEnvValor.createCell(i);
+			mesEnvValorCol.setCellValue(sirEnviadosMesesValor.get(i));
+			mesEnvValorCol.setCellStyle(fila);
+		}
+		if (sirEnviadosMesesNombre.size() > tamanyMaxColum) {
+			tamanyMaxColum = sirEnviadosMesesNombre.size();
+		}
+
+        //Espai buit
+        rowNum = rowNum + 1;
+        
+        // SIR RECIBIDOS
+        HSSFRow recRegRow = sheet.createRow(rowNum++);
+        recRegRow.setHeightInPoints(15);
+        HSSFCell recRegCell = recRegRow.createCell(0);
+        sheet.addMergedRegion(CellRangeAddress.valueOf("$A$"+rowNum+":$G$"+rowNum));
+        recRegCell.setCellValue(getMessage("informe.registrosSirRecibidos"));
+        recRegCell.setCellStyle(tituloSeccion);
+
+        //Espai buit
+        rowNum = rowNum + 1;
+
+        //Registres totals
+        HSSFRow regRecNom = sheet.createRow(rowNum++);
+        HSSFCell regRecNomCol = regRecNom.createCell(0);
+        regRecNomCol.setCellValue(getMessage("informe.registros"));
+        regRecNomCol.setCellStyle(cabecera);
+        HSSFRow registreRecRow = sheet.createRow(rowNum++);
+        registreRecRow.createCell(0).setCellValue(sirRecibidos.toString());
+        registreRecRow.getCell(0).setCellStyle(fila);
+
+        //Espai buit
+        rowNum = rowNum + 1;
+
+        //Muestra Años
+		HSSFRow anyRecRowTitle = sheet.createRow(rowNum++);
+		anyRecRowTitle.setHeightInPoints(15);
+		HSSFCell anyRecCell = anyRecRowTitle.createCell(0);
+		anyRecCell.setCellValue(getMessage("informe.anys"));
+		anyRecCell.setCellStyle(tituloSeccion);
+		sheet.addMergedRegion(CellRangeAddress.valueOf("$A$" + rowNum + ":$G$" + rowNum));
+		// Espai buit
+		rowNum = rowNum + 1;
+
+		HSSFRow anyRecNom = sheet.createRow(rowNum++);
+		for (int i = 0; i < sirRecibidosAnosNombre.size(); i++) {
+			HSSFCell anyRecNomCol = anyRecNom.createCell(i);
+			anyRecNomCol.setCellValue(sirRecibidosAnosNombre.get(i));
+			anyRecNomCol.setCellStyle(cabecera);
+		}
+		HSSFCell anyRecNomCol = anyRecNom.createCell(sirRecibidosAnosNombre.size());
+		anyRecNomCol.setCellValue(getMessage("informe.total"));
+		anyRecNomCol.setCellStyle(cabecera);
+		HSSFRow anyRecValor = sheet.createRow(rowNum++);
+		for (int i = 0; i < sirRecibidosAnosValor.size(); i++) {
+			HSSFCell anyRecValorCol = anyRecValor.createCell(i);
+			anyRecValorCol.setCellValue(sirRecibidosAnosValor.get(i));
+			anyRecValorCol.setCellStyle(fila);
+		}
+		HSSFCell anyRecValorCol = anyRecValor.createCell(sirRecibidosAnosValor.size());
+		anyRecValorCol.setCellValue(sirRecibidos.toString());
+		anyRecValorCol.setCellStyle(fila);
+
+		if (sirRecibidosAnosNombre.size() > tamanyMaxColum) {
+			tamanyMaxColum = sirRecibidosAnosNombre.size();
+		}
+
+        //Espai buit
+        rowNum = rowNum + 1;
+
+        //Muestra Meses
+		HSSFRow mesRecRowTitle = sheet.createRow(rowNum++);
+		mesRecRowTitle.setHeightInPoints(15);
+		HSSFCell mesRecCell = mesRecRowTitle.createCell(0);
+		mesRecCell.setCellValue(getMessage("informe.mesos"));
+		mesRecCell.setCellStyle(tituloSeccion);
+		sheet.addMergedRegion(CellRangeAddress.valueOf("$A$" + rowNum + ":$G$" + rowNum));
+		// Espai buit
+		rowNum = rowNum + 1;
+
+		HSSFRow mesRecNom = sheet.createRow(rowNum++);
+		for (int i = 0; i < sirRecibidosMesesNombre.size(); i++) {
+			HSSFCell mesRecNomCol = mesRecNom.createCell(i);
+			mesRecNomCol.setCellValue(sirRecibidosMesesNombre.get(i));
+			mesRecNomCol.setCellStyle(cabecera);
+		}
+		HSSFRow mesRecValor = sheet.createRow(rowNum++);
+		for (int i = 0; i < sirRecibidosMesesValor.size(); i++) {
+			HSSFCell mesRecValorCol = mesRecValor.createCell(i);
+			mesRecValorCol.setCellValue(sirRecibidosMesesValor.get(i));
+			mesRecValorCol.setCellStyle(fila);
+		}
+		if (sirRecibidosMesesNombre.size() > tamanyMaxColum) {
+			tamanyMaxColum = sirRecibidosMesesNombre.size();
+		}
 
         // Ajustamos el ancho de cada columna a su contenido
         for (int i = 0; i < tamanyMaxColum; i++) {

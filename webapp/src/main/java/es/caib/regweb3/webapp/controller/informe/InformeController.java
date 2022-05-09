@@ -1314,8 +1314,8 @@ public class InformeController extends AbstractRegistroCommonFormController {
         // Busca los registros Totales de Entrada y Salida entre las fechas
         mav.addObject("registrosEntrada", informeEjb.buscaIndicadoresOficinaTotalEntrada(dataInici, dataFi, oficina.getId()).intValue());
         mav.addObject("registrosSalida", informeEjb.buscaIndicadoresOficinaTotalSalida(dataInici, dataFi, oficina.getId()).intValue());
-        mav.addObject("sirEnviados", informeEjb.buscaIndicadoresOficinaTotalSirEnviados(dataInici, dataFi, oficina.getCodigo()));
-        mav.addObject("sirRecibidos", informeEjb.buscaIndicadoresOficinaTotalSirRecibidos(dataInici, dataFi, oficina.getCodigo()));
+        mav.addObject("sirEnviados", informeEjb.buscaIndicadoresOficinaTotalSirEnviados(dataInici, dataFi, oficina.getCodigo()).intValue());
+        mav.addObject("sirRecibidos", informeEjb.buscaIndicadoresOficinaTotalSirRecibidos(dataInici, dataFi, oficina.getCodigo()).intValue());
 
         // Busca los registros totales según el calendario seleccionado de Entrada y Salida entre las fechas
         // Años y meses
