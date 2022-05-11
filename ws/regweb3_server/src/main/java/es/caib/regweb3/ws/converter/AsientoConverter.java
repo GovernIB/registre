@@ -17,6 +17,8 @@ import es.caib.regweb3.ws.model.FileInfoWs;
 import es.caib.regweb3.ws.model.InteresadoWs;
 import es.caib.regweb3.ws.v3.impl.CommonConverter;
 import org.fundaciobit.genapp.common.i18n.I18NException;
+import org.fundaciobit.plugins.documentcustody.api.DocumentCustody;
+import org.fundaciobit.plugins.documentcustody.api.SignatureCustody;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -92,9 +94,8 @@ public class AsientoConverter extends CommonConverter {
         FileContentWs fileContentWs = new FileContentWs(fileInfoWs);
 
         fileContentWs.setFileInfoWs(fileInfoWs);
-
         try {
-
+            byte[] data = null;
             if(!anexoFull.getAnexo().isPurgado()){
 
                 // Obtenemos al url para descargar el documento
@@ -104,17 +105,32 @@ public class AsientoConverter extends CommonConverter {
                    anexoFull.getAnexo().getModoFirma()== RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED) {
 
                     fileContentWs.getFileInfoWs().setFilename(anexoFull.getDocFileName());
-
+                    DocumentCustody document = anexoFull.getDocumentoCustody();
+                    if (document != null && document.getData() != null) {
+                    	data = document.getData();
+                    	fileContentWs.setData(data);
+                    }
                 }else if(anexoFull.getAnexo().getModoFirma()== RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED){
-
+                	
                     fileContentWs.getFileInfoWs().setFilename(anexoFull.getSignFileName());
-
+                    SignatureCustody signature = anexoFull.getSignatureCustody();
+                    if (signature != null && signature.getData() != null) {
+                    	data = signature.getData();
+                    	fileContentWs.setData(data);
+                    } else { // A vegades el document es guarda sense firma a l'arxiu si falla la validació
+	                    DocumentCustody document = anexoFull.getDocumentoCustody();
+	                    if (document != null && document.getData() != null) {
+	                    	data = document.getData();
+	                    	fileContentWs.setData(data);
+	                    }
+                    }
                 }
 
                 if(StringUtils.isNotEmpty(url)){
                     fileContentWs.setUrl(url);
-                }else{
-                    byte[] data = anexoEjb.getArchivoContent(anexoFull.getAnexo(), entidad.getId());
+                } else if (data == null){
+                	//TODO: se recupera el contenido por segunda vez?? (disponible en anexoFull.getDocumentCustody/getSignatureCustody
+                    data = anexoEjb.getArchivoContent(anexoFull.getAnexo(), entidad.getId());
 
                     if(data != null){
                         fileContentWs.setData(data);
