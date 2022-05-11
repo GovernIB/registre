@@ -598,7 +598,19 @@ public class ConversionHelper {
 						// Si se trata de una Salida y no tiene Interesados creamos uno a partir de la Entidad destino
 						if (source.getInteresados() == null || source.getInteresados().isEmpty()) {
 							InteresadoSir intresadoSirSalida = new InteresadoSir();
-							if (source.getOrganoDestino() != null) {
+							// Interesado a partir de origen
+							if (source.getOrganoOrigen() != null) {
+								intresadoSirSalida.setTipoDocumentoIdentificacionInteresado(TipoDocumentoIdentificacion.CODIGO_ORIGEN_VALUE.getValue());
+								intresadoSirSalida.setDocumentoIdentificacionInteresado(source.getOrganoOrigen());
+								
+								// [ENTIDAD DESTINO]
+								if (source.getNombreAmbitoOrigen() != null) {
+									intresadoSirSalida.setRazonSocialInteresado(source.getOrganoOrigenDenominacion());
+								} else {
+									intresadoSirSalida.setRazonSocialInteresado(nombreUnidadOrigen);
+								}
+							// Interesado a partir de destino
+							} else if (source.getOrganoDestino() != null) {
 								intresadoSirSalida.setTipoDocumentoIdentificacionInteresado(TipoDocumentoIdentificacion.CODIGO_ORIGEN_VALUE.getValue());
 								intresadoSirSalida.setDocumentoIdentificacionInteresado(source.getOrganoDestino());
 								
@@ -609,6 +621,7 @@ public class ConversionHelper {
 									intresadoSirSalida.setRazonSocialInteresado(nombreUnidadDestino);
 								}
 							} else {
+								// Interesado a partir del ámbito de creación (oficina)
 								try {
 									Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService(PropiedadGlobalUtil.getDir3CaibServer(), PropiedadGlobalUtil.getDir3CaibUsername(), PropiedadGlobalUtil.getDir3CaibPassword());
 
@@ -625,7 +638,6 @@ public class ConversionHelper {
 					            } catch (Exception e) {
 									e.printStackTrace();
 								}
-
 							}
 							
 							target.getInteresados().add(intresadoSirSalida);

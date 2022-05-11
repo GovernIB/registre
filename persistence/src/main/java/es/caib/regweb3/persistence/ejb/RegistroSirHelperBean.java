@@ -59,6 +59,7 @@ import es.caib.regweb3.model.RegistroSir;
 import es.caib.regweb3.model.Trazabilidad;
 import es.caib.regweb3.model.TrazabilidadSir;
 import es.caib.regweb3.model.UsuarioEntidad;
+import es.caib.regweb3.model.sir.TipoDocumentoIdentificacion;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.model.utils.CamposNTI;
 import es.caib.regweb3.model.utils.EstadoRegistroSir;
@@ -410,11 +411,20 @@ public class RegistroSirHelperBean extends BaseEjbJPA<RegistroSir, Long> impleme
         interesado.setIsRepresentante(false);
 
         // Averiguamos que tipo es el Interesado
-        if (StringUtils.isEmpty(interesadoSir.getRazonSocialInteresado())) {
-            interesado.setTipo(RegwebConstantes.TIPO_INTERESADO_PERSONA_FISICA);
-
+//        if (StringUtils.isEmpty(interesadoSir.getRazonSocialInteresado())) {
+//            interesado.setTipo(RegwebConstantes.TIPO_INTERESADO_PERSONA_FISICA);
+//
+//        } else {
+//            interesado.setTipo(RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA);
+//        }
+        String tipoDocumento = interesadoSir.getTipoDocumentoIdentificacionInteresado();
+        if (tipoDocumento.equals(TipoDocumentoIdentificacion.CODIGO_ORIGEN_VALUE.getValue())) {
+        	interesado.setTipo(RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION);
+        } else if (tipoDocumento.equals(TipoDocumentoIdentificacion.CIF.getValue())
+        			&& !StringUtils.isEmpty(interesadoSir.getRazonSocialInteresado())) {
+        	interesado.setTipo(RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA);
         } else {
-            interesado.setTipo(RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA);
+        	interesado.setTipo(RegwebConstantes.TIPO_INTERESADO_PERSONA_FISICA);
         }
 
         if (StringUtils.isNotEmpty(interesadoSir.getRazonSocialInteresado())) {
@@ -496,11 +506,20 @@ public class RegistroSirHelperBean extends BaseEjbJPA<RegistroSir, Long> impleme
         representante.setIsRepresentante(true);
 
         // Averiguamos que tipo es el Representante
-        if (StringUtils.isEmpty(representanteSir.getRazonSocialRepresentante())) {
-            representante.setTipo(RegwebConstantes.TIPO_INTERESADO_PERSONA_FISICA);
-
+//        if (StringUtils.isEmpty(representanteSir.getRazonSocialRepresentante())) {
+//            representante.setTipo(RegwebConstantes.TIPO_INTERESADO_PERSONA_FISICA);
+//
+//        } else {
+//            representante.setTipo(RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA);
+//        }
+        String tipoDocumento = representanteSir.getTipoDocumentoIdentificacionRepresentante();
+        if (tipoDocumento.equals(TipoDocumentoIdentificacion.CODIGO_ORIGEN_VALUE.name())) {
+        	representante.setTipo(RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION);
+        } else if (tipoDocumento.equals(TipoDocumentoIdentificacion.CIF.getName())
+        			&& !StringUtils.isEmpty(representanteSir.getRazonSocialRepresentante())) {
+        	representante.setTipo(RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA);
         } else {
-            representante.setTipo(RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA);
+        	representante.setTipo(RegwebConstantes.TIPO_INTERESADO_PERSONA_FISICA);
         }
 
         if (StringUtils.isNotEmpty(representanteSir.getRazonSocialRepresentante())) {
