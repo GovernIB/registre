@@ -15,11 +15,14 @@ public class UtilsTest {
 
     @Test
     public void sustituirCaracteres(){
-        String cadena = "taxa_bonif_50_Fam_Num_B1_SET21_Garippa.pdf";
+        String cadena = "IMP_Informe_52_22 agroturisme a la finca s’Horta Nova TM Felanitx.pdf";
 
         System.out.println("Cadena inicial: " + cadena);
 
-        System.out.println("Cadena corregida: " + StringUtils.sustituirCaracteresProhibidosArxiu(cadena,'_'));
+        cadena = StringUtils.sustituirCaracteresProhibidosSIR(cadena, '_');
+
+
+        System.out.println("Cadena corregida: " + StringUtils.eliminarCaracteresProhibidosArxiu(cadena));
     }
 
     @Test

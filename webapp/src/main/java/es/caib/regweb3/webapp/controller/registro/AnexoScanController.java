@@ -3,7 +3,6 @@ package es.caib.regweb3.webapp.controller.registro;
 import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.model.Oficina;
 import es.caib.regweb3.model.UsuarioEntidad;
-import es.caib.regweb3.persistence.ejb.RegistroDetalleLocal;
 import es.caib.regweb3.persistence.ejb.ScanWebModuleLocal;
 import es.caib.regweb3.persistence.ejb.TipoDocumentalLocal;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
@@ -33,7 +32,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import static es.caib.regweb3.utils.StringUtils.sustituirCaracteresProhibidosArxiu;
+import static es.caib.regweb3.utils.StringUtils.eliminarCaracteresProhibidosArxiu;
 
 /**
  * Created by mgonzalez on 04/05/2017.
@@ -46,9 +45,6 @@ public class AnexoScanController extends AnexoController {
 
     @EJB(mappedName = "regweb3/ScanWebModuleEJB/local")
     private ScanWebModuleLocal scanWebModuleEjb;
-
-    @EJB(mappedName = "regweb3/RegistroDetalleEJB/local")
-    private RegistroDetalleLocal registroDetalleEjb;
 
     @EJB(mappedName = "regweb3/TipoDocumentalEJB/local")
     private TipoDocumentalLocal tipoDocumentalEjb;
@@ -417,7 +413,7 @@ public class AnexoScanController extends AnexoController {
         anexoForm.setMetadatas(metadatasScan);
 
         //TODO Metadades del funcionari
-        anexoForm.getAnexo().setTitulo(sustituirCaracteresProhibidosArxiu(documento.getTransactionName(), '_'));
+        anexoForm.getAnexo().setTitulo(eliminarCaracteresProhibidosArxiu(documento.getTransactionName()));
 
 
         //Asignamos los valores de documentCustody y SignatureCustody en función de lo obtenido anteriormente.
