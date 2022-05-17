@@ -22,7 +22,6 @@ import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.jboss.ejb3.annotation.SecurityDomain;
 import org.jboss.ejb3.annotation.TransactionTimeout;
-import org.springframework.context.i18n.LocaleContextHolder;
 
 import javax.annotation.Resource;
 import javax.ejb.EJB;
@@ -182,7 +181,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean implem
         }
 
         // Creamos el Historico RegistroEntrada
-        historicoRegistroEntradaEjb.crearHistoricoRegistroEntrada(antiguo, usuarioEntidad, I18NLogicUtils.tradueix(LocaleContextHolder.getLocale(), "registro.modificacion.datos"), true);
+        historicoRegistroEntradaEjb.crearHistoricoRegistroEntrada(antiguo, usuarioEntidad, I18NLogicUtils.tradueix(new Locale(Configuracio.getDefaultLanguage()), "registro.modificacion.datos"), true);
         postProcesoActualizarRegistro(registroEntrada, usuarioEntidad.getEntidad().getId());
 
         return registroEntrada;

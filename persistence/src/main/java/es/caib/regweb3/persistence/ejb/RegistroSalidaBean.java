@@ -21,7 +21,6 @@ import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.jboss.ejb3.annotation.SecurityDomain;
-import org.springframework.context.i18n.LocaleContextHolder;
 
 import javax.annotation.Resource;
 import javax.ejb.EJB;
@@ -174,7 +173,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean implemen
 
 
         // Creamos el Historico RegistroEntrada
-        historicoRegistroSalidaEjb.crearHistoricoRegistroSalida(antiguo, usuarioEntidad, I18NLogicUtils.tradueix(LocaleContextHolder.getLocale(), "registro.modificacion.datos"), true);
+        historicoRegistroSalidaEjb.crearHistoricoRegistroSalida(antiguo, usuarioEntidad, I18NLogicUtils.tradueix(new Locale(Configuracio.getDefaultLanguage()), "registro.modificacion.datos"), true);
         postProcesoActualizarRegistro(registroSalida, entidad.getId());
 
         return registroSalida;
