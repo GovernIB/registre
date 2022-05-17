@@ -20,6 +20,8 @@ import es.caib.regweb3.ws.converter.AsientoRegistralConverter;
 import es.caib.regweb3.ws.model.*;
 import es.caib.regweb3.ws.utils.UsuarioAplicacionCache;
 import org.apache.commons.io.IOUtils;
+import org.apache.cxf.interceptor.InFaultInterceptors;
+import org.apache.cxf.interceptor.InInterceptors;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.fundaciobit.genapp.common.ws.WsI18NException;
@@ -49,8 +51,8 @@ import static es.caib.regweb3.utils.RegwebConstantes.*;
 @Stateless(name = RegWebAsientoRegistralWsImpl.NAME + "Ejb")
 @RolesAllowed({RWE_WS_ENTRADA, RWE_WS_SALIDA, RWE_WS_CIUDADANO})
 @SOAPBinding(style = SOAPBinding.Style.RPC)
-@org.apache.cxf.interceptor.InInterceptors(interceptors = {"es.caib.regweb3.ws.utils.RegWebInInterceptor"})
-@org.apache.cxf.interceptor.InFaultInterceptors(interceptors = {"es.caib.regweb3.ws.utils.RegWebInInterceptor"})
+@InInterceptors(interceptors = {"es.caib.regweb3.ws.utils.RegWebInInterceptor"})
+@InFaultInterceptors(interceptors = {"es.caib.regweb3.ws.utils.RegWebInInterceptor"})
 @WebService(name = RegWebAsientoRegistralWsImpl.NAME_WS, portName = RegWebAsientoRegistralWsImpl.NAME_WS,
         serviceName = RegWebAsientoRegistralWsImpl.NAME_WS + "Service",
         endpointInterface = "es.caib.regweb3.ws.v3.impl.RegWebAsientoRegistralWs")
@@ -421,7 +423,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
                 sesionEjb.cambiarEstado(idSesion, usuarioAplicacion, RegwebConstantes.SESION_ERROR);
             }
 
-            throw e;
+            throw e.getCause();
         }
 
         return asiento;
