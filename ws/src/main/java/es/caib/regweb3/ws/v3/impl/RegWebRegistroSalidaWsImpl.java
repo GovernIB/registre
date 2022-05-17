@@ -72,7 +72,7 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
 
 
     @Override
-    @RolesAllowed({RWE_USUARI})
+    @RolesAllowed({RWE_USUARI, RWE_WS_SALIDA})
     @WebMethod
     @Deprecated
     public IdentificadorWs altaRegistroSalida(@WebParam(name = "registroSalidaWs") RegistroSalidaWs registroSalidaWs) throws Throwable, WsI18NException, WsValidationException {
@@ -100,7 +100,7 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
     }
 
     @Override
-    @RolesAllowed({RWE_USUARI})
+    @RolesAllowed({RWE_USUARI, RWE_WS_SALIDA})
     @WebMethod
     @Deprecated
     public IdentificadorWs nuevoRegistroSalida(@WebParam(name = "entidad") String entidad, @WebParam(name = "registroSalidaWs") RegistroSalidaWs registroSalidaWs) throws Throwable, WsI18NException, WsValidationException {
@@ -217,7 +217,7 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
         return identificadorWs;
     }
 
-    @RolesAllowed({RWE_USUARI})
+    @RolesAllowed({RWE_USUARI, RWE_WS_SALIDA})
     @WebMethod
     @Override
     @Deprecated
@@ -343,7 +343,7 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
 
     }
 
-    @RolesAllowed({RWE_USUARI})
+    @RolesAllowed({RWE_USUARI, RWE_WS_SALIDA})
     @Override
     @WebMethod
     @Deprecated
@@ -411,7 +411,7 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
      * @throws Throwable
      * @throws WsI18NException
      */
-    @RolesAllowed({RWE_USUARI})
+    @RolesAllowed({RWE_USUARI, RWE_WS_SALIDA})
     @Override
     @WebMethod
     @Deprecated

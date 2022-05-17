@@ -80,7 +80,7 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl implemen
     private DistribucionLocal distribucionEjb;
 
     @Override
-    @RolesAllowed({RWE_USUARI})
+    @RolesAllowed({RWE_USUARI, RWE_WS_ENTRADA})
     @WebMethod
     @Deprecated
     public IdentificadorWs altaRegistroEntrada(@WebParam(name = "registroEntradaWs")
@@ -111,7 +111,7 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl implemen
     }
 
     @Override
-    @RolesAllowed({RWE_USUARI})
+    @RolesAllowed({RWE_USUARI, RWE_WS_ENTRADA})
     @WebMethod
     @Deprecated
     public IdentificadorWs nuevoRegistroEntrada(@WebParam(name = "entidad") String entidad, @WebParam(name = "registroEntradaWs")
@@ -239,7 +239,7 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl implemen
     }
 
 
-    @RolesAllowed({RWE_USUARI})
+    @RolesAllowed({RWE_USUARI, RWE_WS_ENTRADA})
     @WebMethod
     @Override
     @Deprecated
@@ -372,7 +372,7 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl implemen
 
 
 
-    @RolesAllowed({RWE_USUARI})
+    @RolesAllowed({RWE_USUARI, RWE_WS_ENTRADA})
     @Override
     @WebMethod
     @Deprecated
@@ -423,7 +423,7 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl implemen
     }
 
 
-    @RolesAllowed({RWE_USUARI})
+    @RolesAllowed({RWE_USUARI, RWE_WS_ENTRADA})
     @Override
     @WebMethod
     @Deprecated
@@ -485,7 +485,7 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl implemen
      * @throws Throwable
      * @throws WsI18NException
      */
-    @RolesAllowed({RWE_USUARI})
+    @RolesAllowed({RWE_USUARI, RWE_WS_ENTRADA})
     @Override
     @WebMethod
     @Deprecated
@@ -551,7 +551,7 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl implemen
     }
 
 
-    @RolesAllowed({RWE_USUARI})
+    @RolesAllowed({RWE_USUARI, RWE_WS_ENTRADA})
     @Override
     @WebMethod
     @Deprecated
