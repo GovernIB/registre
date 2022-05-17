@@ -19,7 +19,7 @@ public class UtilsTest {
 
         System.out.println("Cadena inicial: " + cadena);
 
-        System.out.println("Cadena corregida: " + StringUtils.sustituirCaracteresProhibidosArxiu(cadena,'_'));
+        System.out.println("Cadena corregida: " + StringUtils.eliminarCaracteresProhibidosArxiu(cadena));
     }
 
     @Test

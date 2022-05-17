@@ -841,7 +841,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
                     if (de_Anexo != null) {
                         AnexoSir anexo = new AnexoSir();
 
-                        anexo.setNombreFichero(es.caib.regweb3.utils.StringUtils.sustituirCaracteresProhibidosArxiu(de_Anexo.getNombre_Fichero_Anexado(),'_'));
+                        anexo.setNombreFichero(es.caib.regweb3.utils.StringUtils.eliminarCaracteresProhibidosArxiu(de_Anexo.getNombre_Fichero_Anexado()));
                         anexo.setIdentificadorFichero(de_Anexo.getIdentificador_Fichero());
                         anexo.setIdentificadorDocumentoFirmado(de_Anexo.getIdentificador_Documento_Firmado());
                         anexo.setCertificado(Base64.encodeBase64String(de_Anexo.getCertificado()));
@@ -1421,7 +1421,10 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
             nombreFicheroSinExtension = nombreFicheroSinExtension.substring(0, RegwebConstantes.ANEXO_NOMBREFICHERO_MAXLENGTH_SIR-5);
             nombreFichero = nombreFicheroSinExtension + extension;
         }
-        anexoSir.setNombreFichero(es.caib.regweb3.utils.StringUtils.sustituirCaracteresProhibidosSIR(nombreFichero, '_'));
+
+        // Eliminamos los caracteres no permitidos en SIR y además los no permitidos en Arxiu, lo hacemos porque algunas aplicaciones no implementan bien las normas SICRES y nos retornan envíos con caracteres permitidos
+        nombreFichero = es.caib.regweb3.utils.StringUtils.sustituirCaracteresProhibidosSIR(nombreFichero, '_');
+        anexoSir.setNombreFichero(es.caib.regweb3.utils.StringUtils.eliminarCaracteresProhibidosArxiu(nombreFichero));
 
         anexoSir.setIdentificadorFichero(identificadorFichero);
 
@@ -2018,7 +2021,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
             Anexo anexo = new Anexo(RegwebConstantes.PERFIL_CUSTODIA_DOCUMENT_CUSTODY);
 
             //TODO Temporal hata que se acepten todos los registros sir pendientes con anexos que tienen caracteres prohibidos
-            anexo.setTitulo(es.caib.regweb3.utils.StringUtils.sustituirCaracteresProhibidosArxiu(anexoSir.getNombreFichero(), '_'));
+            anexo.setTitulo(es.caib.regweb3.utils.StringUtils.eliminarCaracteresProhibidosArxiu(anexoSir.getNombreFichero()));
 
             // Validez Documento
             if (anexoSir.getValidezDocumento() != null) {
