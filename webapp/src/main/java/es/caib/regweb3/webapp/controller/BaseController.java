@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -518,4 +520,32 @@ public class BaseController {
             return RegwebConstantes.INTEGRACION_TIPOS;
         }
     }
+
+    /**
+     * Método que extrae la url Base(protocol+hostname+port) de una url Completa
+     * @param request
+     * @param baseUrlFull
+     * @return
+     */
+    public  String getUrlBaseFromFullUrl(HttpServletRequest request, String baseUrlFull) {
+        URL url;
+        try {
+            url = new URL(baseUrlFull);
+        } catch (MalformedURLException e) {
+            log.error(e.getMessage(),e);
+            return null;
+        }
+
+        String port;
+        if (url.getPort() == -1) {
+            port = "";
+        } else {
+            port = ":" + url.getPort();
+        }
+
+        String baseUrl = url.getProtocol() + "://" + url.getHost() + port
+                + request.getContextPath();
+        return baseUrl;
+    }
+
 }

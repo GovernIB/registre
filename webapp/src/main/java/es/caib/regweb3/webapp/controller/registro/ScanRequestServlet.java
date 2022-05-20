@@ -132,8 +132,10 @@ public class ScanRequestServlet extends HttpServlet {
       String scanWebID, String query, boolean isPost)
       throws Exception, I18NException {
 
+    String scanWebAbsoluteUrl= (String)request.getSession().getAttribute("scanwebAbsoluteurlBase");
+
     String absoluteRequestPluginBasePath = getAbsoluteRequestPluginBasePath(request,
-        CONTEXTWEB, scanWebID);
+            CONTEXTWEB, scanWebID,scanWebAbsoluteUrl);
     String relativeRequestPluginBasePath = getRelativeRequestPluginBasePath(request,
         CONTEXTWEB, scanWebID);
 
@@ -148,9 +150,9 @@ public class ScanRequestServlet extends HttpServlet {
 
 
   public static String getAbsoluteRequestPluginBasePath(HttpServletRequest request,
-      String webContext, String scanWebID) {
-    
-    String absoluteURLBase = PropiedadGlobalUtil.getScanWebAbsoluteURL();
+      String webContext, String scanWebID, String scanWebAbsoluteUrl) {
+
+    String absoluteURLBase = scanWebAbsoluteUrl;
     if (absoluteURLBase==null || absoluteURLBase.trim().isEmpty()) {
       absoluteURLBase =   request.getScheme() + "://" + request.getServerName() + ":"
         + request.getServerPort() + request.getContextPath();
