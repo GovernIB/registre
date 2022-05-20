@@ -58,10 +58,17 @@ public class AnexoScanController extends AnexoController {
                                 @PathVariable Long tipoRegistro, @PathVariable Long registroID, @PathVariable Boolean isOficioRemisionSir,
                                 Model model) throws I18NException, Exception {
 
+        //Obtenemos la url que nos pasa el jsp por parámetro
+        String scanwebAbsoluteurl= request.getParameter("scanweb_absoluteurl");
+        //Cogemos solo hasta el contexto web.
+        String scanwebAbsoluteurlBase = getUrlBaseFromFullUrl(request,scanwebAbsoluteurl);
+        //La guardamos en sessión para que la use ScanRequestServlet
+        request.getSession().setAttribute("scanwebAbsoluteurlBase", scanwebAbsoluteurlBase);
+
        //Actualiza las variables con la ultima acción y prepara el anexoForm
         AnexoForm anexoForm = prepararAnexoForm(request, registroDetalleID, tipoRegistro, registroID, isOficioRemisionSir, true);
         request.getSession().setAttribute("anexoForm", anexoForm);
-        loadCommonAttributesScan(request, model, anexoForm.getRegistroID());
+        loadCommonAttributesScan(request, model, anexoForm.getRegistroID(),scanwebAbsoluteurlBase);
 
         model.addAttribute("tiposValidezDocumento", RegwebConstantes.TIPOS_VALIDEZDOCUMENTO);
         model.addAttribute("anexoForm", anexoForm);
@@ -77,10 +84,18 @@ public class AnexoScanController extends AnexoController {
                                 @PathVariable Long tipoRegistro, @PathVariable Long registroID, @PathVariable Boolean isOficioRemisionSir,
                                 Model model) throws I18NException, Exception {
 
+        //Obtenemos la url que nos pasa el jsp por parámetro.
+        // Esto sustituye a la propiedad global es.caib.regweb3.scanweb.absoluteurl
+        String scanwebAbsoluteurl= request.getParameter("scanweb_absoluteurl");
+        //Cogemos solo hasta el contexto web.
+        String scanwebAbsoluteurlBase = getUrlBaseFromFullUrl(request,scanwebAbsoluteurl);
+        //La guardamos en sessión para que la use ScanRequestServlet
+        request.getSession().setAttribute("scanwebAbsoluteurlBase", scanwebAbsoluteurlBase);
+
         //Actualiza las variables con la ultima acción y prepara el anexoForm
         AnexoForm anexoForm = prepararAnexoForm(request, registroDetalleID, tipoRegistro, registroID, isOficioRemisionSir, true);
         request.getSession().setAttribute("anexoForm", anexoForm);
-        loadCommonAttributesScan(request, model, anexoForm.getRegistroID());
+        loadCommonAttributesScan(request, model, anexoForm.getRegistroID(),scanwebAbsoluteurlBase);
 
         model.addAttribute("tiposValidezDocumento", RegwebConstantes.TIPOS_VALIDEZDOCUMENTO);
         model.addAttribute("anexoForm", anexoForm);
@@ -224,7 +239,7 @@ public class AnexoScanController extends AnexoController {
      * @throws I18NException
      */
     protected void loadCommonAttributesScan(HttpServletRequest request, Model model,
-                                            Long registroID) throws Exception, I18NException {
+                                            Long registroID, String scanwebAbsoluteurlBase) throws Exception, I18NException {
 
         loadCommonAttributes(request, model);
 
@@ -241,7 +256,7 @@ public class AnexoScanController extends AnexoController {
             // Utilitzam l'ID del registre per escanejar
             final String scanWebID = String.valueOf(registroID);
 
-            String urlToPluginWebPage = initializeScan(request, entitatID, scanWebID, languageUI);
+            String urlToPluginWebPage = initializeScan(request, entitatID, scanWebID, languageUI, scanwebAbsoluteurlBase);
             model.addAttribute("urlToPluginWebPage", urlToPluginWebPage);
         }
 
@@ -259,7 +274,7 @@ public class AnexoScanController extends AnexoController {
      * @throws I18NException
      */
     private String initializeScan(HttpServletRequest request, long entitatID, final String scanWebID,
-                                  String languageUI) throws Exception, I18NException {
+                                  String languageUI, String scanwebAbsoluteurlBase) throws Exception, I18NException {
 
         //  Pasamos los datos del funcionario que realiza el escaneo en el list de metadades
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
@@ -277,7 +292,7 @@ public class AnexoScanController extends AnexoController {
         final ScanWebMode mode = ScanWebMode.SYNCHRONOUS;
 
 
-        final String urlFinal = PropiedadGlobalUtil.getScanWebAbsoluteURL() + PublicScanWebController.CONTEXT_WEB + scanWebID;
+        final String urlFinal =  scanwebAbsoluteurlBase + PublicScanWebController.CONTEXT_WEB + scanWebID;
 
 
         //final ScanWebMode mode = ScanWebMode.ASYNCHRONOUS;
@@ -302,7 +317,7 @@ public class AnexoScanController extends AnexoController {
                 ScanRequestServlet.CONTEXTWEB, scanWebID);
 
         String absoluteRequestPluginBasePath = ScanRequestServlet.getAbsoluteRequestPluginBasePath(request,
-                ScanRequestServlet.CONTEXTWEB, scanWebID);
+                ScanRequestServlet.CONTEXTWEB, scanWebID, scanwebAbsoluteurlBase);
 
         scanWebModuleEjb.registerScanWebProcess(request, ss);
 
