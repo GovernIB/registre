@@ -436,18 +436,6 @@ public class PropiedadGlobalUtil {
 
         return getString(partialPropertyName);
     }
-    
-    /**
-     * Els ApACHes de la CAIB usen la IP de destí enlloc de la URL de cridada, d'aqui
-     * que s'hagi de sobreescriure a mà la URL real.
-     * Propiedad: es.caib.regweb3.scanweb.absoluteurl
-     * @return
-     */
-    public static String getScanWebAbsoluteURL() {
-        final String partialPropertyName = "scanweb.absoluteurl";
-
-        return getString( partialPropertyName);
-    }
 
 
     /**
