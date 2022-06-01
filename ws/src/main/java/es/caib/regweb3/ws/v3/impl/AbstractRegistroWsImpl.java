@@ -88,9 +88,6 @@ public abstract class AbstractRegistroWsImpl extends AuthenticatedBaseWsImpl {
     @EJB(mappedName = LopdLocal.JNDI_NAME)
     public LopdLocal lopdEjb;
 
-    @EJB(mappedName = NotificacionLocal.JNDI_NAME)
-    public NotificacionLocal notificacionEjb;
-
     public AnexoValidator<Anexo> anexoValidator = new AnexoValidator<Anexo>();
 
     InteresadoValidator<Interesado> interesadoValidator = new InteresadoValidator<Interesado>();
@@ -182,8 +179,7 @@ public abstract class AbstractRegistroWsImpl extends AuthenticatedBaseWsImpl {
 
         for (InteresadoWs interesadoWs : interesadosWs) {
 
-            Interesado interesado = DatosInteresadoConverter.getInteresado(
-                    interesadoWs.getInteresado(),
+            Interesado interesado = DatosInteresadoConverter.getInteresado(interesadoWs.getInteresado(),
                     catPaisEjb, catProvinciaEjb, catLocalidadEjb);
 
             // Validar Interesado
