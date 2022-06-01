@@ -8,8 +8,6 @@ import org.fundaciobit.genapp.common.validation.IValidatorResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Arrays;
-
 
 /**
  * Created by Fundació BIT.
@@ -66,7 +64,7 @@ public class AnexoValidator<T> extends AbstractRegWebValidator<T> {
 
         if (StringUtils.isNotEmpty(anexo.getTitulo())) {
             if (StringUtils.indexOfAny(anexo.getTitulo(), RegwebConstantes.CARACTERES_NO_PERMITIDOS_ARXIU) != -1) {
-                rejectValue(errors, "titulo", "error.caracteres.noPermitidos", new I18NArgumentString(Arrays.toString(RegwebConstantes.CARACTERES_NO_PERMITIDOS_ARXIU)));
+                rejectValue(errors, "titulo", "error.caracteres.noPermitidos", new I18NArgumentString(anexo.getTitulo()));
             }
         }
 

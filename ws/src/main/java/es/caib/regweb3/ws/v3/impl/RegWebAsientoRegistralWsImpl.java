@@ -412,7 +412,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
                 sesionEjb.finalizarSesion(idSesion, usuarioAplicacion, asientoRegistral.getTipoRegistro(), asiento.getNumeroRegistroFormateado());
             }
 
-        }catch (I18NException | Exception e){
+        }catch (I18NException | Exception | I18NValidationException e){
 
             if(entidadActiva != null){
                 integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, null, System.currentTimeMillis() - inicio.getTime(), entidadActiva.getId(), numRegFormat);
