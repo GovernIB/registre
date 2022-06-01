@@ -45,6 +45,11 @@
                             </c:if>
                         </div>
 
+                        <%--Formulario oculto integraciones--%>
+                        <form:form modelAttribute="integracion" action="${pageContext.request.contextPath}/integracion/busqueda" method="post" cssClass="form-horizontal" target="_blank">
+                            <form:hidden path="texto"/>
+                        </form:form>
+
                         <%--DETALLE REGISTRO RECIBIDO SIR--%>
                         <c:if test="${not empty trazabilidadesSir}">
 
@@ -58,6 +63,12 @@
                             </div>
                             <div class="panel-footer center">
                                 <div class="btn-group"><button type="button" onclick='confirm("javascript:enviarACK(${registroSir.id})","<spring:message code="regweb.confirmar.enviarMensaje" htmlEscape="true"/>")' class="btn btn-info btn-sm"><spring:message code="mensajeControl.enviar.ACK"/></button></div>
+                                <%--Botón integraciones--%>
+                                <div class="btn-group">
+                                    <button type="button" onclick="buscarIntegraciones('${idIntercambio}')" class="btn btn-warning btn-sm btn-block">
+                                        <spring:message code="integracion.integraciones"/>
+                                    </button>
+                                </div>
                                 <c:if test="${registroSir.estado == 'ACEPTADO'}">
                                     <div class="btn-group"><button type="button" onclick='confirm("javascript:enviarConfirmacion(${registroSir.id})","<spring:message code="regweb.confirmar.enviarMensaje" htmlEscape="true"/>")' class="btn btn-success btn-sm"><spring:message code="mensajeControl.enviar.confirmacion"/></button></div>
                                 </c:if>
@@ -94,11 +105,7 @@
                                 <%--BOTONERA DETALLE E INTEGRACIONES--%>
                                 <div class="panel-footer center">
 
-                                    <form:form modelAttribute="integracion" action="${pageContext.request.contextPath}/integracion/busqueda" method="post" cssClass="form-horizontal" target="_blank">
-                                        <form:hidden path="texto"/>
-                                    </form:form>
-
-                                        <%--Botón integraciones--%>
+                                   <%--Botón integraciones--%>
                                     <div class="btn-group">
                                         <button type="button" onclick="buscarIntegraciones('${idIntercambio}')" class="btn btn-warning btn-sm btn-block">
                                             <spring:message code="integracion.integraciones"/>
@@ -106,7 +113,6 @@
                                     </div>
 
                                     <div class="btn-group"><button type="button" onclick="goToNewPage('<c:url value="/adminEntidad/registroEntrada/${registro.id}/detalle"/>')" class="btn btn-info btn-sm"><spring:message code="registroEntrada.detalle"/></button></div>
-
                                 </div>
                                 <%--BOTONERA REINICIAR Y REENVIAR--%>
                                 <div class="panel-footer center">
