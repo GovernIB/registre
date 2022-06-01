@@ -1,10 +1,16 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.Integracion;
+import es.caib.regweb3.persistence.utils.I18NLogicUtils;
 import es.caib.regweb3.persistence.utils.Paginacion;
+import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 import org.apache.log4j.Logger;
+import org.fundaciobit.genapp.common.i18n.I18NFieldError;
+import org.fundaciobit.genapp.common.i18n.I18NTranslation;
+import org.fundaciobit.genapp.common.i18n.I18NValidationException;
+import org.fundaciobit.genapp.common.query.Field;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
 import javax.annotation.security.RunAs;
@@ -233,6 +239,10 @@ public class IntegracionBean extends BaseEjbJPA<Integracion, Long> implements In
         // Obtenemos el mensaje de la Excepción
         if(th != null){
 
+            if(th instanceof I18NValidationException){
+                error = getErrorFromValidationException((I18NValidationException) th);
+            }
+
             StringWriter sw = new StringWriter();
             PrintWriter pw = new PrintWriter(sw, true);
             th.printStackTrace(pw);
@@ -293,6 +303,27 @@ public class IntegracionBean extends BaseEjbJPA<Integracion, Long> implements In
         }
         return total;
 
+    }
+
+    /**
+     * Obtiene un mensaje de error, a part de una Excepción de validación
+     * @param ve
+     * @return
+     */
+    private String getErrorFromValidationException(I18NValidationException ve) {
+
+        for (I18NFieldError fe : ve.getFieldErrorList()) {
+            I18NTranslation trans = fe.getTranslation();
+            String code = trans.getCode();
+            String[] args = I18NLogicUtils.tradueixArguments(new Locale(Configuracio.getDefaultLanguage()), trans.getArgs());
+            String error = I18NLogicUtils.tradueix(new Locale(Configuracio.getDefaultLanguage()), code, args);
+            Field<?> field = fe.getField();
+            String fieldLabel = I18NLogicUtils.tradueix(new Locale(Configuracio.getDefaultLanguage()), field.fullName);
+
+            return field.codeLabel +": "+ error;
+        }
+
+        return null;
     }
 
 }

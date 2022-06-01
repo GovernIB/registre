@@ -16,7 +16,6 @@ import es.caib.regweb3.ws.model.AnexoWs;
 import es.caib.regweb3.ws.model.InteresadoWs;
 import es.caib.regweb3.ws.utils.AuthenticatedBaseWsImpl;
 import es.caib.regweb3.ws.utils.UsuarioAplicacionCache;
-import es.caib.regweb3.ws.utils.WsUtils;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 
@@ -88,9 +87,6 @@ public abstract class AbstractRegistroWsImpl extends AuthenticatedBaseWsImpl {
 
     @EJB(mappedName = "regweb3/LopdEJB/local")
     public LopdLocal lopdEjb;
-
-    @EJB(mappedName = "regweb3/NotificacionEJB/local")
-    public NotificacionLocal notificacionEjb;
 
     public AnexoValidator<Anexo> anexoValidator = new AnexoValidator<Anexo>();
 
