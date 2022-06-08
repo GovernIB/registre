@@ -14,6 +14,7 @@ import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -99,7 +100,7 @@ public class RestController extends BaseController {
     /**
      * Obtiene el nombre traducido de un Transporte.
      */
-    @RequestMapping(value = "/obtenerTransporte", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
+    @RequestMapping(value = "/obtenerTransporte", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public String obtenerTransporte(@RequestParam Long id) throws Exception {
 
@@ -114,7 +115,7 @@ public class RestController extends BaseController {
     /**
      * Obtiene el nombre traducido de un TipoAsunto.
      */
-    @RequestMapping(value = "/obtenerTipoAsunto", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
+    @RequestMapping(value = "/obtenerTipoAsunto", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public String obtenerTipoAsunto(@RequestParam Long id) throws Exception {
 
@@ -132,7 +133,7 @@ public class RestController extends BaseController {
     /**
      * Obtiene el nombre traducido de un CodigoAsunto.
      */
-    @RequestMapping(value = "/obtenerCodigoAsunto", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
+    @RequestMapping(value = "/obtenerCodigoAsunto", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public String obtenerCodigoAsunto(@RequestParam Long id) throws Exception {
 
@@ -240,7 +241,7 @@ public class RestController extends BaseController {
     /**
      * Obtiene el nombre traducido de un TipoDocumental
      */
-    @RequestMapping(value = "/obtenerTipoDocumental", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
+    @RequestMapping(value = "/obtenerTipoDocumental", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public String obtenerTipoDocumental(@RequestParam Long id) throws Exception {
 
