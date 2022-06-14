@@ -57,11 +57,9 @@
 <div class="col-xs-12 pad-bottom5">
 <button type="button" class="btn-edp btn-xs" style="cursor:default;"><i class="fa fa-globe"></i> <spring:message code="organismo.edp"/></button>
 </div>
-<c:if test="${librosTotal > 0}">
 <div class="col-xs-12 pad-bottom5">
 <button type="button" class="btn-llibre-llegenda btn-xs" style="cursor:default;"><i class="fa fa-book"></i> <spring:message code="libro.libro"/></button>
 </div>
-</c:if>
 <c:if test="${not empty oficinasPrincipales}">
 <div class="col-xs-12 pad-bottom5">
 <button type="button" class="btn-warning-llegenda btn-xs" style="cursor:default;"><i class="fa fa-home"></i> <spring:message code="regweb.oficina.principal"/></button>
@@ -93,6 +91,9 @@
 <li>
 <span class="panel-heading btn-danger vuitanta-percent" id="entidad" onclick="copyToClipboard(this)" style="cursor:copy"><i class=""></i> ${entidad.codigoDir3} - ${entidad.nombre}</span>
 <ul>
+    <li>
+        <a href="javascript:void(0);"><span class="panel-heading btn-llibre vuitanta-percent" style="cursor:copy" onclick="copyToClipboard(this)"><i class="fa fa-book"></i> ${entidad.libro.nombre}</span></a>
+    </li>
 <c:set var="contadorPrimer" value="0"></c:set>
 <c:set var="contadorSegon" value="0"></c:set>
 <c:set var="contadorTercer" value="0"></c:set>
@@ -108,19 +109,6 @@
 <span class="panel-heading btn-edp vuitanta-percent" id="govern" style="cursor:copy" onclick="copyToClipboard(this)"><i class=""></i> ${organismo1.codigo} - ${organismo1.denominacion}</span>
 </c:if>
 <ul>
-<!-- **** Entra si algún Organismo de primer nivel tiene libros ***-->
-<c:forEach var="libroOrganismo" items="${librosOrganismoPrimerNivel}">
-<c:if test="${libroOrganismo.value == organismo1.id}">
-<li>
-<c:if test="${libroOrganismo.key.activo}">
-<a href="javascript:void(0);"><span class="panel-heading btn-llibre vuitanta-percent" style="cursor:copy" onclick="copyToClipboard(this)"><i class="fa fa-book"></i> ${libroOrganismo.key.codigoNombre}</span></a>
-</c:if>
-<c:if test="${not libroOrganismo.key.activo}">
-<a href="javascript:void(0);"><span class="panel-heading btn-llibre vuitanta-percent" style="cursor:copy" onclick="copyToClipboard(this)"><i class="fa fa-book"></i> ${libroOrganismo.key.codigoNombre} </span></a><strong class="text-vermell">&nbsp;<spring:message code="libro.libro.inactivo"/></strong>
-</c:if>
-</li>
-</c:if>
-</c:forEach>
 <!-- **** Oficinas ***-->
 <c:forEach var="oficinaPrincipal" items="${oficinasPrincipales}">
 <c:if test="${oficinaPrincipal.organismoResponsable.id == organismo1.id}">
@@ -205,19 +193,6 @@ class=""></i> ${organismo2.codigo} - ${organismo2.denominacion}</span>
 </c:if>
 <c:set var="contadorPrimer" value="${contadorPrimer+1}"></c:set>
 <ul>
-<!-- **** Entra si algún Organismo de segundo nivel tiene libros ***-->
-<c:forEach var="libroOrganismo" items="${librosOrganismoSegundoNivel}">
-<c:if test="${libroOrganismo.value == organismo2.id}">
-<li>
-<c:if test="${libroOrganismo.key.activo}">
-<a href="javascript:void(0);"><span class="panel-heading btn-llibre vuitanta-percent" style="cursor:copy" onclick="copyToClipboard(this)"><i class="fa fa-book"></i> ${libroOrganismo.key.codigoNombre}</span></a>
-</c:if>
-<c:if test="${not libroOrganismo.key.activo}">
-<a href="javascript:void(0);"><span class="panel-heading btn-llibre vuitanta-percent" style="cursor:copy" onclick="copyToClipboard(this)"><i class="fa fa-book"></i> ${libroOrganismo.key.codigoNombre} </span></a><strong class="text-vermell">&nbsp;<spring:message code="libro.libro.inactivo"/></strong>
-</c:if>
-</li>
-</c:if>
-</c:forEach>
 <!-- **** Oficinas ***-->
 <c:forEach var="oficinaPrincipal" items="${oficinasPrincipales}">
 <c:if test="${oficinaPrincipal.organismoResponsable.id == organismo2.id}">
@@ -304,19 +279,6 @@ class=""></i> ${organismo3.codigo} - ${organismo3.denominacion}</span>
 </c:if>
 <c:set var="contadorSegon" value="${contadorSegon+1}"></c:set>
 <ul>
-<!-- **** Entra si algún Organismo de tercer nivel tiene libros ***-->
-<c:forEach var="libroOrganismo" items="${librosOrganismoTercerNivel}">
-<c:if test="${libroOrganismo.value == organismo3.id}">
-<li>
-<c:if test="${libroOrganismo.key.activo}">
-<a href="javascript:void(0);"><span class="panel-heading btn-llibre vuitanta-percent" style="cursor:copy" onclick="copyToClipboard(this)"><i class="fa fa-book"></i> ${libroOrganismo.key.codigoNombre}</span></a>
-</c:if>
-<c:if test="${not libroOrganismo.key.activo}">
-<a href="javascript:void(0);"><span class="panel-heading btn-llibre vuitanta-percent" style="cursor:copy" onclick="copyToClipboard(this)"><i class="fa fa-book"></i> ${libroOrganismo.key.codigoNombre} </span></a><strong class="text-vermell">&nbsp;<spring:message code="libro.libro.inactivo"/></strong>
-</c:if>
-</li>
-</c:if>
-</c:forEach>
 <!-- **** Oficinas ***-->
 <c:forEach var="oficinaPrincipal" items="${oficinasPrincipales}">
 <c:if test="${oficinaPrincipal.organismoResponsable.id == organismo3.id}">
@@ -403,19 +365,6 @@ class=""></i> ${organismo4.codigo} - ${organismo4.denominacion}</span>
 </c:if>
 <c:set var="contadorTercer" value="${contadorTercer+1}"></c:set>
 <ul>
-<!-- **** Entra si algún Organismo de cuarto nivel tiene libros ***-->
-<c:forEach var="libroOrganismo" items="${librosOrganismoCuartoNivel}">
-<c:if test="${libroOrganismo.value == organismo4.id}">
-<li>
-<c:if test="${libroOrganismo.key.activo}">
-<a href="javascript:void(0);"><span class="panel-heading btn-llibre vuitanta-percent" style="cursor:copy" onclick="copyToClipboard(this)"><i class="fa fa-book"></i> ${libroOrganismo.key.codigoNombre}</span></a>
-</c:if>
-<c:if test="${not libroOrganismo.key.activo}">
-<a href="javascript:void(0);"><span class="panel-heading btn-llibre vuitanta-percent" style="cursor:copy" onclick="copyToClipboard(this)"><i class="fa fa-book"></i> ${libroOrganismo.key.codigoNombre} </span></a><strong class="text-vermell">&nbsp;<spring:message code="libro.libro.inactivo"/></strong>
-</c:if>
-</li>
-</c:if>
-</c:forEach>
 <!-- **** Oficinas ***-->
 <c:forEach var="oficinaPrincipal" items="${oficinasPrincipales}">
 <c:if test="${oficinaPrincipal.organismoResponsable.id == organismo4.id}">
@@ -477,19 +426,6 @@ style="cursor:copy"><img src="<c:url value="/img/logo-SIR.png"/>" width="20" alt
 </c:if>
 <c:set var="contadorQuart" value="${contadorQuart+1}"></c:set>
 <ul>
-<!-- **** Entra si algún Organismo de quinto nivel tiene libros ***-->
-<c:forEach var="libroOrganismo" items="${librosOrganismoQuintoNivel}">
-<c:if test="${libroOrganismo.value == organismo5.id}">
-<li>
-<c:if test="${libroOrganismo.key.activo}">
-<a href="javascript:void(0);"><span class="panel-heading btn-llibre vuitanta-percent" style="cursor:copy" onclick="copyToClipboard(this)"><i class="fa fa-book"></i> ${libroOrganismo.key.codigoNombre}</span></a>
-</c:if>
-<c:if test="${not libroOrganismo.key.activo}">
-<a href="javascript:void(0);"><span class="panel-heading btn-llibre vuitanta-percent" style="cursor:copy" onclick="copyToClipboard(this)"><i class="fa fa-book"></i> ${libroOrganismo.key.codigoNombre} </span></a><strong class="text-vermell">&nbsp;<spring:message code="libro.libro.inactivo"/></strong>
-</c:if>
-</li>
-</c:if>
-</c:forEach>
 <!-- **** Oficinas ***-->
 <c:forEach var="oficinaPrincipal" items="${oficinasPrincipales}">
 <c:if test="${oficinaPrincipal.organismoResponsable.id == organismo5.id}">
@@ -573,19 +509,6 @@ class=""></i> ${organismo6.codigo} - ${organismo6.denominacion}</span>
 </c:if>
 <c:set var="contadorCinque" value="${contadorCinque+1}"></c:set>
 <ul>
-<!-- **** Entra si algún Organismo de sexto nivel tiene libros ***-->
-<c:forEach var="libroOrganismo" items="${librosOrganismoSextoNivel}">
-<c:if test="${libroOrganismo.value == organismo6.id}">
-<li>
-<c:if test="${libroOrganismo.key.activo}">
-<a href="javascript:void(0);"><span class="panel-heading btn-llibre vuitanta-percent" style="cursor:copy" onclick="copyToClipboard(this)"><i class="fa fa-book"></i> ${libroOrganismo.key.codigoNombre}</span></a>
-</c:if>
-<c:if test="${not libroOrganismo.key.activo}">
-<a href="javascript:void(0);"><span class="panel-heading btn-llibre vuitanta-percent" style="cursor:copy" onclick="copyToClipboard(this)"><i class="fa fa-book"></i> ${libroOrganismo.key.codigoNombre} </span></a><strong class="text-vermell">&nbsp;<spring:message code="libro.libro.inactivo"/></strong>
-</c:if>
-</li>
-</c:if>
-</c:forEach>
 <!-- **** Oficinas ***-->
 <c:forEach var="oficinaPrincipal" items="${oficinasPrincipales}">
 <c:if test="${oficinaPrincipal.organismoResponsable.id == organismo6.id}">
@@ -671,19 +594,6 @@ class=""></i> ${organismo7.codigo} - ${organismo7.denominacion}</span>
 </c:if>
 <c:set var="contadorSise" value="${contadorSise+1}"></c:set>
 <ul>
-<!-- **** Entra si algún Organismo de septimo nivel tiene libros ***-->
-<c:forEach var="libroOrganismo" items="${librosOrganismoSeptimoNivel}">
-<c:if test="${libroOrganismo.value == organismo7.id}">
-<li>
-<c:if test="${libroOrganismo.key.activo}">
-<a href="javascript:void(0);"><span class="panel-heading btn-llibre vuitanta-percent" style="cursor:copy" onclick="copyToClipboard(this)"><i class="fa fa-book"></i> ${libroOrganismo.key.codigoNombre}</span></a>
-</c:if>
-<c:if test="${not libroOrganismo.key.activo}">
-<a href="javascript:void(0);"><span class="panel-heading btn-llibre vuitanta-percent" style="cursor:copy" onclick="copyToClipboard(this)"><i class="fa fa-book"></i> ${libroOrganismo.key.codigoNombre} </span></a><strong class="text-vermell">&nbsp;<spring:message code="libro.libro.inactivo"/></strong>
-</c:if>
-</li>
-</c:if>
-</c:forEach>
 <!-- **** Oficinas ***-->
 <c:forEach var="oficinaPrincipal" items="${oficinasPrincipales}">
 <c:if test="${oficinaPrincipal.organismoResponsable.id == organismo7.id}">
