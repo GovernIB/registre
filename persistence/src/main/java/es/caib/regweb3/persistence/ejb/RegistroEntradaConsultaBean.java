@@ -116,7 +116,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
         StringBuilder query = new StringBuilder(queryBase);
 
         // Entidad
-        where.add(" re.usuario.entidad.id =:idEntidad  ");
+        where.add(" re.entidad.id =:idEntidad  ");
         parametros.put("idEntidad", idEntidad);
 
         // Organismo
@@ -776,9 +776,10 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
      * @throws I18NException
      */
     private RegistroEntrada cargarAnexosFull(RegistroEntrada registroEntrada) throws Exception, I18NException {
-        Long idEntidad = registroEntrada.getOficina().getOrganismoResponsable().getEntidad().getId();
 
+        Long idEntidad = registroEntrada.getEntidad().getId();
         List<Anexo> anexos = registroEntrada.getRegistroDetalle().getAnexos();
+
         List<AnexoFull> anexosFull = new ArrayList<AnexoFull>();
         for (Anexo anexo : anexos) {
             AnexoFull anexoFull = anexoEjb.getAnexoFull(anexo.getId(), idEntidad);
@@ -797,9 +798,10 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
      * @throws I18NException
      */
     private RegistroEntrada cargarAnexosLigero(RegistroEntrada registroEntrada) throws Exception, I18NException {
-        Long idEntidad = registroEntrada.getOficina().getOrganismoResponsable().getEntidad().getId();
 
+        Long idEntidad = registroEntrada.getEntidad().getId();
         Hibernate.initialize(registroEntrada.getRegistroDetalle().getAnexos());
+
         List<Anexo> anexos = registroEntrada.getRegistroDetalle().getAnexos();
 
         List<AnexoFull> anexosFull = new ArrayList<AnexoFull>();
@@ -821,7 +823,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
         Query q;
         q = em.createQuery("Select DISTINCT re.id, re.numeroRegistroFormateado, re.fecha, re.registroDetalle.extracto, re.destino, re.destinoExternoCodigo, re.destinoExternoDenominacion " +
                 "from RegistroEntrada as re left outer join re.registroDetalle.interesados interessat LEFT JOIN re.destino destino " +
-                "where (UPPER(interessat.documento) LIKE UPPER(:documento)) and re.usuario.entidad.id = :idEntidad and re.estado != :anulado order by re.fecha desc");
+                "where (UPPER(interessat.documento) LIKE UPPER(:documento)) and re.entidad.id = :idEntidad and re.estado != :anulado order by re.fecha desc");
 
         q.setParameter("idEntidad", idEntidad);
         q.setParameter("documento", documento.trim());
@@ -867,7 +869,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
         parametros.put("documento", "%" + documento + "%");
 
         //Entidad
-        where.add(" re.usuario.entidad.id = :idEntidad ");
+        where.add(" re.entidad.id = :idEntidad ");
         parametros.put("idEntidad" , idEntidad);
 
         //Estado Anulado
@@ -998,7 +1000,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
 
         Query q = em.createQuery("Select re from RegistroEntrada as re left outer join re.registroDetalle.interesados interessat " +
                 "where UPPER(interessat.documento)=UPPER(:documento) and re.numeroRegistroFormateado = :numeroRegistroFormateado " +
-                "and re.usuario.entidad.id = :idEntidad");
+                "and re.entidad.id = :idEntidad");
 
         q.setParameter("documento", documento);
         q.setParameter("numeroRegistroFormateado", numeroRegistroFormateado);

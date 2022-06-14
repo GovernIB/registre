@@ -23,6 +23,8 @@ public class RegistroSalida implements IRegistro {
 
     @XmlAttribute
     private Long id;
+    @XmlTransient
+    private Entidad entidad;
     private Long evento;
     @XmlElement
     private UsuarioEntidad usuario;
@@ -121,6 +123,17 @@ public class RegistroSalida implements IRegistro {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ENTIDAD")
+    @ForeignKey(name = "RWE_REGSAL_ENTIDAD_FK")
+    public Entidad getEntidad() {
+        return entidad;
+    }
+
+    public void setEntidad(Entidad entidad) {
+        this.entidad = entidad;
     }
 
     @Column(name="EVENTO")

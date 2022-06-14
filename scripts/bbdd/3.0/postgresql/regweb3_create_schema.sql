@@ -30,6 +30,7 @@ create table RWE_ANEXO
     TITULO               varchar(200) not null,
     VAL_OCSP_CERTIFICADO bytea,
     TVALDOC              int8,
+    ENTIDAD              int8,
     REGISTRODETALLE      int8,
     TAMANO_FICHERO        int4,
     TDOCUMENTAL          int8,
@@ -53,6 +54,7 @@ create table RWE_ANEXO_SIR
     VAL_OCSP_CE           text,
     VALIDEZ_DOCUMENTO     varchar(2),
     ANEXO                 int8,
+    ENTIDAD               int8,
     REGISTRO_SIR          int8,
     primary key (ID)
 );
@@ -488,6 +490,7 @@ create table RWE_OFICIO_REMISION (
      SIR bool not null,
      TIPO_ANOTACION varchar(2),
      TIPO_OFICIO int8 not null,
+     ENTIDAD int8,
      LIBRO int8 not null,
      OFICINA int8 not null,
      ORGANISMODEST int8,
@@ -671,6 +674,7 @@ create table RWE_REGISTRO_ENTRADA
     NUMREGISTRO      int4         not null,
     NUMREGFORMAT     varchar(255) not null,
     DESTINO          int8,
+    ENTIDAD          int8,
     LIBRO            int8         not null,
     OFICINA          int8         not null,
     REGISTRO_DETALLE int8,
@@ -727,6 +731,7 @@ create table RWE_REGISTRO_SALIDA
     NUMREGFORMAT     varchar(255) not null,
     DESTEXTCOD       varchar(9),
     DESTEXTDEN       varchar(300),
+    ENTIDAD          int8,
     LIBRO            int8         not null,
     OFICINA          int8         not null,
     ORIGEN           int8,
@@ -942,6 +947,11 @@ index RWE_ANEXO_REGDET_FK_I on RWE_ANEXO (REGISTRODETALLE);
 index RWE_ANEXO_TDOCAL_FK_I on RWE_ANEXO (TDOCUMENTAL);
 
 alter table RWE_ANEXO
+    add constraint RWE_ANEXO_ENTIDAD_FK
+        foreign key (ENTIDAD)
+            references RWE_ENTIDAD;
+
+alter table RWE_ANEXO
     add constraint RWE_ANEXO_REGDET_FK
         foreign key (REGISTRODETALLE)
             references RWE_REGISTRO_DETALLE;
@@ -950,6 +960,11 @@ alter table RWE_ANEXO
     add constraint RWE_ANEXO_TDOCAL_FK
         foreign key (TDOCUMENTAL)
             references RWE_TIPODOCUMENTAL;
+
+alter table RWE_ANEXO_SIR
+    add constraint RWE_ANEXOSIR_ENTIDAD_FK
+        foreign key (ENTIDAD)
+            references RWE_ENTIDAD;
 
 alter table RWE_ANEXO_SIR
     add constraint RWE_ANEXOSIR_ANEXO_FK
@@ -1345,6 +1360,11 @@ index RWE_OFIREM_LIBRO_FK_I on RWE_OFICIO_REMISION (LIBRO);
 index RWE_OFIREM_USUARI_FK_I on RWE_OFICIO_REMISION (USUARIO);
 
 alter table RWE_OFICIO_REMISION
+    add constraint RWE_OFIREM_ENTIDAD_FK
+        foreign key (ENTIDAD)
+            references RWE_ENTIDAD;
+
+alter table RWE_OFICIO_REMISION
     add constraint RWE_OFIREM_USUORM_FK
         foreign key (USUARIO)
             references RWE_USUARIO_ENTIDAD;
@@ -1551,6 +1571,11 @@ alter table RWE_REGISTRO_DETALLE
             references RWE_TIPOASUNTO;
 
 alter table RWE_REGISTRO_ENTRADA
+    add constraint RWE_REGENT_ENTIDAD_FK
+        foreign key (ENTIDAD)
+            references RWE_ENTIDAD;
+
+alter table RWE_REGISTRO_ENTRADA
     add constraint RWE_REGENT_DESTINO_FK
         foreign key (DESTINO)
             references RWE_ORGANISMO;
@@ -1599,6 +1624,11 @@ index RWE_REGMIG_TREG_I on RWE_REGISTRO_MIGRADO (TREGISTRO);
 alter table RWE_REGISTRO_MIGRADO
     add constraint RWE_REGMIG_ENTIDAD_FK
         foreign key (IDENTIDAD)
+            references RWE_ENTIDAD;
+
+alter table RWE_REGISTRO_SALIDA
+    add constraint RWE_REGSAL_ENTIDAD_FK
+        foreign key (ENTIDAD)
             references RWE_ENTIDAD;
 
 alter table RWE_REGISTRO_SALIDA

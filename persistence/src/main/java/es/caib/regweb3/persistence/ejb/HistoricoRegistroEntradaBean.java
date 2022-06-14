@@ -132,7 +132,7 @@ public class HistoricoRegistroEntradaBean extends BaseEjbJPA<HistoricoRegistroEn
     @Override
     public Integer eliminarByEntidad(Long idEntidad) throws Exception{
 
-        List<?> hre = em.createQuery("Select distinct(hre.id) from HistoricoRegistroEntrada as hre where hre.registroEntrada.usuario.entidad.id =:idEntidad").setParameter("idEntidad",idEntidad).getResultList();
+        List<?> hre = em.createQuery("Select distinct(hre.id) from HistoricoRegistroEntrada as hre where hre.registroEntrada.entidad.id =:idEntidad").setParameter("idEntidad",idEntidad).getResultList();
         Integer total = hre.size();
 
         if(hre.size() >0){

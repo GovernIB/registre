@@ -13,69 +13,46 @@ import java.io.Serializable;
 @SequenceGenerator(name="generator",sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
 public class AnexoSir implements Serializable {
 
-    /**
-     * Id del anexo
-     */
+    // Id del anexo
     private Long id;
 
-    /**
-     * Id del RegistroSir al que pertenece
-     */
+    // Id del RegistroSir al que pertenece
     private RegistroSir registroSir;
 
-    /**
-     * Nombre del fichero original.
-     */
+    // Entidad
+    private Entidad entidad;
+
+    // Nombre del fichero original.
     private String nombreFichero;
 
-    /**
-     * Identificador del fichero intercambiado.
-     */
+    // Identificador del fichero intercambiado.
     private String identificadorFichero = null;
 
-    /**
-     * Validez del documento.
-     */
+    // Validez del documento.
     private String validezDocumento;
 
-    /**
-     * Tipo de documento.
-     */
+    // Tipo de documento.
     private String tipoDocumento;
 
-    /**
-     * Certificado público del fichero anexo.
-     */
+    // Certificado público del fichero anexo.
     private String certificado;
 
-    /**
-     * Firma electrónica del fichero anexo.
-     */
+    // Firma electrónica del fichero anexo.
     private String firma;
 
-    /**
-     * Sello de tiempo del fichero anexo.
-     */
+    // Sello de tiempo del fichero anexo.
     private String timestamp;
 
-    /**
-     * Validación OCSP del certificado.
-     */
+    // Validación OCSP del certificado.
     private String validacionOCSPCertificado;
 
-    /**
-     * Huella binaria del fichero anexo.
-     */
+    // Huella binaria del fichero anexo.
     private String hash;
 
-    /**
-     * Tipo MIME del fichero anexo.
-     */
+    // Tipo MIME del fichero anexo.
     private String tipoMIME;
 
-    /**
-     * Archivo Anexo para almacenar en el directorio local
-     */
+    // Archivo Anexo para almacenar en el directorio local
     private Archivo anexo;
 
     /**
@@ -86,19 +63,13 @@ public class AnexoSir implements Serializable {
      */
     private String identificadorDocumentoFirmado;
 
-    /**
-     * Observaciones del fichero adjunto.
-     */
+    // Observaciones del fichero adjunto.
     private String observaciones;
 
-    /**
-     * Fichero Anexo codificado en Base64
-     */
+    // Fichero Anexo codificado en Base64
     private byte[] anexoData;
 
-    /**
-     * Indica si el Archivo ha sido purgado del sistema
-     */
+    // Indica si el Archivo ha sido purgado del sistema
     private Boolean purgado = false;
 
 
@@ -125,6 +96,17 @@ public class AnexoSir implements Serializable {
 
     public void setRegistroSir(RegistroSir registroSir) {
         this.registroSir = registroSir;
+    }
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ENTIDAD")
+    @ForeignKey(name = "RWE_ANEXOSIR_ENTIDAD_FK")
+    public Entidad getEntidad() {
+        return entidad;
+    }
+
+    public void setEntidad(Entidad entidad) {
+        this.entidad = entidad;
     }
 
     @Column(name = "NOMBRE_FICHERO", length = 80, nullable = false)

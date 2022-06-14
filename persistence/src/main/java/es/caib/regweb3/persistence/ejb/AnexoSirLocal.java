@@ -24,6 +24,14 @@ public interface AnexoSirLocal extends BaseEjb<AnexoSir, Long> {
     int purgarAnexosAceptados(Long idEntidad) throws Exception;
 
     /**
+     * Purga los AnexosSir de un RegistroSir aceptado
+     * @param idRegistroSir
+     * @return
+     * @throws Exception
+     */
+    int purgarAnexosRegistroSirAceptado(Long idRegistroSir) throws Exception;
+
+    /**
      * Elimina los AnexoSir de una Entidad
      * @param idEntidad
      * @return

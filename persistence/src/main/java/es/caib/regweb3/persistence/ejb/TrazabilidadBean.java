@@ -107,7 +107,7 @@ public class TrazabilidadBean extends BaseEjbJPA<Trazabilidad, Long> implements 
     public List<Trazabilidad> getByIdIntercambio(String idIntercambio, Long idEntidad) throws Exception {
 
         Query q = em.createQuery("Select DISTINCT t from Trazabilidad as t " +
-                "where t.oficioRemision.identificadorIntercambio = :idIntercambio and t.oficioRemision.usuarioResponsable.entidad.id = :idEntidad order by t.fecha ");
+                "where t.oficioRemision.identificadorIntercambio = :idIntercambio and t.oficioRemision.entidad.id = :idEntidad order by t.fecha ");
 
         q.setParameter("idIntercambio", idIntercambio);
         q.setParameter("idEntidad", idEntidad);
@@ -344,11 +344,11 @@ public class TrazabilidadBean extends BaseEjbJPA<Trazabilidad, Long> implements 
     @Override
     public Integer eliminarByEntidad(Long idEntidad) throws Exception{
 
-        List<?> trazabilidades =  em.createQuery("Select id from Trazabilidad where oficioRemision.usuarioResponsable.entidad.id=:idEntidad").setParameter("idEntidad",idEntidad).getResultList();
+        List<?> trazabilidades =  em.createQuery("Select id from Trazabilidad where oficioRemision.entidad.id=:idEntidad").setParameter("idEntidad",idEntidad).getResultList();
         List<?> trazabilidadesSir =  em.createQuery("Select id from Trazabilidad where registroSir.entidad.id=:idEntidad").setParameter("idEntidad",idEntidad).getResultList();
-        List<?> trazabilidadesDistribuido =  em.createQuery("Select id from Trazabilidad where registroEntradaOrigen.usuario.entidad.id=:idEntidad and tipo = :distribuido").setParameter("idEntidad",idEntidad).setParameter("distribuido",RegwebConstantes.TRAZABILIDAD_DISTRIBUCION).getResultList();
-        List<?> trazabilidadesRectificacionEntrada =  em.createQuery("Select id from Trazabilidad where registroEntradaOrigen.usuario.entidad.id=:idEntidad and tipo = :rectificacion").setParameter("idEntidad",idEntidad).setParameter("rectificacion",RegwebConstantes.TRAZABILIDAD_RECTIFICACION_ENTRADA).getResultList();
-        List<?> trazabilidadesRectificacionSalida =  em.createQuery("Select id from Trazabilidad where registroSalida.usuario.entidad.id=:idEntidad and tipo = :rectificacion").setParameter("idEntidad",idEntidad).setParameter("rectificacion",RegwebConstantes.TRAZABILIDAD_RECTIFICACION_SALIDA).getResultList();
+        List<?> trazabilidadesDistribuido =  em.createQuery("Select id from Trazabilidad where registroEntradaOrigen.entidad.id=:idEntidad and tipo = :distribuido").setParameter("idEntidad",idEntidad).setParameter("distribuido",RegwebConstantes.TRAZABILIDAD_DISTRIBUCION).getResultList();
+        List<?> trazabilidadesRectificacionEntrada =  em.createQuery("Select id from Trazabilidad where registroEntradaOrigen.entidad.id=:idEntidad and tipo = :rectificacion").setParameter("idEntidad",idEntidad).setParameter("rectificacion",RegwebConstantes.TRAZABILIDAD_RECTIFICACION_ENTRADA).getResultList();
+        List<?> trazabilidadesRectificacionSalida =  em.createQuery("Select id from Trazabilidad where registroSalida.entidad.id=:idEntidad and tipo = :rectificacion").setParameter("idEntidad",idEntidad).setParameter("rectificacion",RegwebConstantes.TRAZABILIDAD_RECTIFICACION_SALIDA).getResultList();
         Integer total = trazabilidades.size() + trazabilidadesSir.size();
 
         eliminarTrazabilidades(trazabilidades);
@@ -386,7 +386,7 @@ public class TrazabilidadBean extends BaseEjbJPA<Trazabilidad, Long> implements 
                 "oficioRemision.sir = true " +
                 "and oficioRemision.tipoOficioRemision = :entrada " +
                 "and registroEntradaOrigen.estado = :oficioExterno " +
-                "and oficioRemision.usuarioResponsable.entidad.id = :idEntidad");
+                "and oficioRemision.entidad.id = :idEntidad");
 
         q.setParameter("entrada",RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA);
         q.setParameter("idEntidad",idEntidad);
@@ -421,7 +421,7 @@ public class TrazabilidadBean extends BaseEjbJPA<Trazabilidad, Long> implements 
                 "oficioRemision.sir = true " +
                 "and oficioRemision.tipoOficioRemision = :salida " +
                 "and registroSalida.estado = :oficioExterno " +
-                "and oficioRemision.usuarioResponsable.entidad.id = :idEntidad");
+                "and oficioRemision.entidad.id = :idEntidad");
 
         q1.setParameter("salida",RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA);
         q1.setParameter("idEntidad",idEntidad);

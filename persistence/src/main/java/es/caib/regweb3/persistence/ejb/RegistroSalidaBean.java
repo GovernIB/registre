@@ -81,6 +81,8 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean implemen
             throws Exception, I18NException, I18NValidationException {
 
         try {
+            //Asociamos su entidad
+            registroSalida.setEntidad(entidad);
 
             // Obtenemos el Número de registro
             Libro libro = libroEjb.findById(registroSalida.getLibro().getId());
@@ -186,7 +188,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean implemen
         String codigoDir3 = RegistroUtils.obtenerCodigoDir3Interesado(registroSalida);
 
         if (StringUtils.isNotEmpty(codigoDir3)) {
-            Long idEntidad = registroSalida.getOficina().getOrganismoResponsable().getEntidad().getId();
+            Long idEntidad = registroSalida.getEntidad().getId();
             return organismoEjb.findByCodigoEntidadLigero(codigoDir3, idEntidad) != null;
         }
 
@@ -199,7 +201,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean implemen
         String codigoDir3 = RegistroUtils.obtenerCodigoDir3Interesado(registroSalida);
 
         if (StringUtils.isNotEmpty(codigoDir3)) {
-            Long idEntidad = registroSalida.getOficina().getOrganismoResponsable().getEntidad().getId();
+            Long idEntidad = registroSalida.getEntidad().getId();
             return organismoEjb.findByCodigoEntidadSinEstadoLigero(codigoDir3, idEntidad) == null;
         }
 
@@ -215,7 +217,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean implemen
         if (StringUtils.isNotEmpty(codigoDir3)) {
 
             Organismo organismo = organismoEjb.findByCodigoMultiEntidad(codigoDir3);
-            return organismo == null || !organismo.getEntidad().equals(registroSalida.getOficina().getOrganismoResponsable().getEntidad());
+            return organismo == null || !organismo.getEntidad().equals(registroSalida.getEntidad());
 
         }
 
@@ -511,7 +513,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean implemen
     @SuppressWarnings("unchecked")
     public Integer eliminarByEntidad(Long idEntidad) throws Exception {
 
-        List<Object> registros = em.createQuery("Select distinct(rs.id) from RegistroSalida as rs where rs.usuario.entidad.id = :idEntidad").setParameter("idEntidad", idEntidad).getResultList();
+        List<Object> registros = em.createQuery("Select distinct(rs.id) from RegistroSalida as rs where rs.entidad.id = :idEntidad").setParameter("idEntidad", idEntidad).getResultList();
 
         for (Object id : registros) {
             remove(findById((Long) id));
@@ -690,8 +692,9 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean implemen
     public RegistroSalida getConAnexosFullLigero(Long id) throws Exception, I18NException {
 
         RegistroSalida rs = em.find(RegistroSalida.class, id);
-        Long idEntidad = rs.getOficina().getOrganismoResponsable().getEntidad().getId();
+        Long idEntidad = rs.getEntidad().getId();
         List<Anexo> anexos = rs.getRegistroDetalle().getAnexos();
+
         List<AnexoFull> anexosFull = new ArrayList<AnexoFull>();
         for (Anexo anexo : anexos) {
             AnexoFull anexoFull = anexoEjb.getAnexoFullLigero(anexo.getId(), idEntidad);
@@ -711,9 +714,10 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean implemen
      * @throws I18NException
      */
     private RegistroSalida cargarAnexosFull(RegistroSalida registroSalida) throws Exception, I18NException {
-        Long idEntidad = registroSalida.getOficina().getOrganismoResponsable().getEntidad().getId();
 
+        Long idEntidad = registroSalida.getEntidad().getId();
         List<Anexo> anexos = registroSalida.getRegistroDetalle().getAnexos();
+
         List<AnexoFull> anexosFull = new ArrayList<AnexoFull>();
         for (Anexo anexo : anexos) {
             AnexoFull anexoFull = anexoEjb.getAnexoFull(anexo.getId(), idEntidad);
