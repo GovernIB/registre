@@ -95,7 +95,7 @@ public class RegistroSalidaConsultaBean implements RegistroSalidaConsultaLocal {
         StringBuilder query = new StringBuilder(queryBase);
 
         // Entidad
-        where.add(" rs.usuario.entidad.id =:idEntidad  ");
+        where.add(" rs.entidad.id =:idEntidad  ");
         parametros.put("idEntidad", idEntidad);
 
         // Organismo
@@ -536,7 +536,7 @@ public class RegistroSalidaConsultaBean implements RegistroSalidaConsultaLocal {
         Query q;
 
         q = em.createQuery("Select DISTINCT rs from RegistroSalida as rs left outer join rs.registroDetalle.interesados interessat " +
-                "where (UPPER(interessat.documento) LIKE UPPER(:documento)) and rs.usuario.entidad.id = :idEntidad");
+                "where (UPPER(interessat.documento) LIKE UPPER(:documento)) and rs.entidad.id = :idEntidad");
 
         q.setParameter("idEntidad", idEntidad);
         q.setParameter("documento", documento.trim());
@@ -602,9 +602,10 @@ public class RegistroSalidaConsultaBean implements RegistroSalidaConsultaLocal {
      * @throws I18NException
      */
     private RegistroSalida cargarAnexosFull(RegistroSalida registroSalida) throws Exception, I18NException {
-        Long idEntidad = registroSalida.getOficina().getOrganismoResponsable().getEntidad().getId();
 
+        Long idEntidad = registroSalida.getEntidad().getId();
         List<Anexo> anexos = registroSalida.getRegistroDetalle().getAnexos();
+
         List<AnexoFull> anexosFull = new ArrayList<AnexoFull>();
         for (Anexo anexo : anexos) {
             AnexoFull anexoFull = anexoEjb.getAnexoFull(anexo.getId(), idEntidad);

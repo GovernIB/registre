@@ -31,6 +31,7 @@ create table RWE_ANEXO
     TITULO               varchar2(200 char) not null,
     VAL_OCSP_CERTIFICADO raw(2000),
     TVALDOC              number(19,0),
+    ENTIDAD              number(19,0),
     REGISTRODETALLE      number(19,0),
     TDOCUMENTAL          number(19,0)
 );
@@ -52,6 +53,7 @@ create table RWE_ANEXO_SIR
     VAL_OCSP_CE           clob,
     VALIDEZ_DOCUMENTO     varchar2(2 char),
     ANEXO                 number(19,0),
+    ENTIDAD               number(19,0),
     REGISTRO_SIR          number(19,0)
 );
 
@@ -453,6 +455,7 @@ create table RWE_OFICIO_REMISION (
      SIR number(1,0) not null,
      TIPO_ANOTACION varchar2(2 char),
      TIPO_OFICIO number(19,0) not null,
+     ENTIDAD number(19,0),
      LIBRO number(19,0) not null,
      OFICINA number(19,0) not null,
      ORGANISMODEST number(19,0),
@@ -625,6 +628,7 @@ create table RWE_REGISTRO_ENTRADA
     NUMREGISTRO      number(10,0) not null,
     NUMREGFORMAT     varchar2(255 char) not null,
     DESTINO          number(19,0),
+    ENTIDAD          number(19,0),
     LIBRO            number(19,0) not null,
     OFICINA          number(19,0) not null,
     REGISTRO_DETALLE number(19,0),
@@ -678,6 +682,7 @@ create table RWE_REGISTRO_SALIDA
     NUMREGFORMAT     varchar2(255 char) not null,
     DESTEXTCOD       varchar2(9 char),
     DESTEXTDEN       varchar2(300 char),
+    ENTIDAD          number(19,0),
     LIBRO            number(19,0) not null,
     OFICINA          number(19,0) not null,
     ORIGEN           number(19,0),
@@ -1202,6 +1207,10 @@ alter table RWE_USUARIO_ENTIDAD
 -- FINAL PK's
 
 -- INICI FK's
+alter table RWE_ANEXO
+    add constraint RWE_ANEXO_ENTIDAD_FK
+        foreign key (ENTIDAD)
+            references RWE_ENTIDAD;
 
 alter table RWE_ANEXO
     add constraint RWE_ANEXO_REGDET_FK
@@ -1212,6 +1221,11 @@ alter table RWE_ANEXO
     add constraint RWE_ANEXO_TDOCAL_FK
         foreign key (TDOCUMENTAL)
             references RWE_TIPODOCUMENTAL;
+
+alter table RWE_ANEXO_SIR
+    add constraint RWE_ANEXOSIR_ENTIDAD_FK
+        foreign key (ENTIDAD)
+            references RWE_ENTIDAD;
 
 alter table RWE_ANEXO_SIR
     add constraint RWE_ANEXOSIR_ANEXO_FK
@@ -1499,6 +1513,11 @@ alter table RWE_OFICINA_SERVICIO
             references RWE_CATSERVICIO;
 
 alter table RWE_OFICIO_REMISION
+    add constraint RWE_OFIREM_ENTIDAD_FK
+        foreign key (ENTIDAD)
+            references RWE_ENTIDAD;
+
+alter table RWE_OFICIO_REMISION
     add constraint RWE_OFIREM_USUORM_FK
         foreign key (USUARIO)
             references RWE_USUARIO_ENTIDAD;
@@ -1654,6 +1673,11 @@ alter table RWE_REGISTRO_DETALLE
             references RWE_TIPOASUNTO;
 
 alter table RWE_REGISTRO_ENTRADA
+    add constraint RWE_REGENT_ENTIDAD_FK
+        foreign key (ENTIDAD)
+            references RWE_ENTIDAD;
+
+alter table RWE_REGISTRO_ENTRADA
     add constraint RWE_REGENT_DESTINO_FK
         foreign key (DESTINO)
             references RWE_ORGANISMO;
@@ -1681,6 +1705,11 @@ alter table RWE_REGISTRO_ENTRADA
 alter table RWE_REGISTRO_MIGRADO
     add constraint RWE_REGMIG_ENTIDAD_FK
         foreign key (IDENTIDAD)
+            references RWE_ENTIDAD;
+
+alter table RWE_REGISTRO_SALIDA
+    add constraint RWE_REGSAL_ENTIDAD_FK
+        foreign key (ENTIDAD)
             references RWE_ENTIDAD;
 
 alter table RWE_REGISTRO_SALIDA

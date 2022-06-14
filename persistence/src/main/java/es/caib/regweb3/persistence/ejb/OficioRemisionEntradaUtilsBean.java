@@ -462,6 +462,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
             throws Exception, I18NException, I18NValidationException {
 
         OficioRemision oficioRemision = new OficioRemision();
+        oficioRemision.setEntidad(entidad);
         oficioRemision.setTipoOficioRemision(RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA);
         oficioRemision.setEstado(RegwebConstantes.OFICIO_INTERNO_ENVIADO);
         oficioRemision.setOficina(oficinaActiva);
@@ -496,6 +497,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
             throws Exception, I18NException, I18NValidationException {
 
         OficioRemision oficioRemision = new OficioRemision();
+        oficioRemision.setEntidad(entidad);
         oficioRemision.setTipoOficioRemision(RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA);
         oficioRemision.setEstado(RegwebConstantes.OFICIO_EXTERNO_ENVIADO);
         oficioRemision.setOficina(oficinaActiva);
@@ -520,6 +522,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
 
         // Creamos el OficioRemision
         OficioRemision oficioRemision = new OficioRemision();
+        oficioRemision.setEntidad(entidad);
         oficioRemision.setSir(true);
         oficioRemision.setEstado(RegwebConstantes.OFICIO_SIR_ENVIADO);
         oficioRemision.setFechaEstado(new Date());

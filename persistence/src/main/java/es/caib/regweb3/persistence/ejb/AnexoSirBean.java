@@ -78,7 +78,7 @@ public class AnexoSirBean extends BaseEjbJPA<AnexoSir, Long> implements AnexoSir
 
         Integer numElementos = PropiedadGlobalUtil.getNumElementosPurgoAnexos(idEntidad);
 
-        Query q = em.createQuery("Select anexoSir.id, anexoSir.anexo.id from AnexoSir as anexoSir where anexoSir.registroSir.entidad.id = :idEntidad and " +
+        Query q = em.createQuery("Select anexoSir.id, anexoSir.anexo.id from AnexoSir as anexoSir where anexoSir.entidad.id = :idEntidad and " +
                 "anexoSir.purgado = false and anexoSir.registroSir.estado = :aceptado order by anexoSir.id");
 
         q.setParameter("idEntidad", idEntidad);
@@ -89,6 +89,36 @@ public class AnexoSirBean extends BaseEjbJPA<AnexoSir, Long> implements AnexoSir
         //q.setParameter("reenviado", EstadoRegistroSir.REENVIADO_Y_ACK);
         //q.setParameter("rechazado", EstadoRegistroSir.RECHAZADO_Y_ACK);
         List<Object[]> result = q.getResultList();
+        List<AnexoSir> anexos = new ArrayList<>();
+
+        for (Object[] object : result) {
+            AnexoSir anexoSir = new AnexoSir();
+            anexoSir.setId((Long) object[0]);
+            anexoSir.setAnexo(new Archivo((Long) object[1]));
+
+            anexos.add(anexoSir);
+        }
+
+        // Eliminamos los Archivos del RegistroSir
+        for (AnexoSir anexoSir: anexos) {
+            FileSystemManager.eliminarArchivo(anexoSir.getAnexo().getId());
+            em.createQuery("update from AnexoSir set purgado=true where id=:idAnexoSir").setParameter("idAnexoSir", anexoSir.getId()).executeUpdate();
+        }
+
+        return anexos.size();
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public int purgarAnexosRegistroSirAceptado(Long idRegistroSir) throws Exception{
+
+        Query q = em.createQuery("Select anexoSir.id, anexoSir.anexo.id from AnexoSir as anexoSir where anexoSir.purgado = false and " +
+                "anexoSir.registroSir.id = :idRegistroSir");
+
+        q.setParameter("idRegistroSir", idRegistroSir);
+
+        List<Object[]> result = q.getResultList();
+
         List<AnexoSir> anexos = new ArrayList<>();
 
         for (Object[] object : result) {

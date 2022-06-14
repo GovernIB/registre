@@ -30,6 +30,7 @@ create table RWE_ANEXO
     TITULO               varchar(200) not null,
     VAL_OCSP_CERTIFICADO bytea,
     TVALDOC              int8,
+    ENTIDAD              int8,
     REGISTRODETALLE      int8,
     TAMANO_FICHERO        int4,
     TDOCUMENTAL          int8,
@@ -53,6 +54,7 @@ create table RWE_ANEXO_SIR
     VAL_OCSP_CE           text,
     VALIDEZ_DOCUMENTO     varchar(2),
     ANEXO                 int8,
+    ENTIDAD               int8,
     REGISTRO_SIR          int8,
     primary key (ID)
 );
@@ -466,33 +468,34 @@ create table RWE_OFICINA_SERVICIO
 );
 
 create table RWE_OFICIO_REMISION (
-     ID int8 not null,
-     COD_ENT_REG_DEST varchar(21),
-     COD_ENT_REG_PROC varchar(21),
-     COD_ERROR varchar(255),
-     CONTACTOSDESTINO varchar(2000),
-     DEC_ENT_REG_DEST varchar(80),
-     DEC_ENT_REG_PROC varchar(80),
-     DEC_T_ANOTACION varchar(80),
-     DESC_ERROR varchar(2000),
-     DESTINOEXTERNOCODIGO varchar(9),
-     DESTINOEXTERNODENOMINA varchar(300),
-     ESTADO int4 not null,
-     FECHA timestamp not null,
-     FECHA_DESTINO timestamp,
-     FECHA_ESTADO timestamp,
-     ID_INTERCAMBIO varchar(33),
-     NUMREGISTRO int4 not null,
-     NUM_REG_DESTINO varchar(255),
-     REINTENTOS int4,
-     SIR bool not null,
-     TIPO_ANOTACION varchar(2),
-     TIPO_OFICIO int8 not null,
-     LIBRO int8 not null,
-     OFICINA int8 not null,
-     ORGANISMODEST int8,
-     USUARIO int8 not null,
-     primary key (ID)
+                                     ID int8 not null,
+                                     COD_ENT_REG_DEST varchar(21),
+                                     COD_ENT_REG_PROC varchar(21),
+                                     COD_ERROR varchar(255),
+                                     CONTACTOSDESTINO varchar(2000),
+                                     DEC_ENT_REG_DEST varchar(80),
+                                     DEC_ENT_REG_PROC varchar(80),
+                                     DEC_T_ANOTACION varchar(80),
+                                     DESC_ERROR varchar(2000),
+                                     DESTINOEXTERNOCODIGO varchar(9),
+                                     DESTINOEXTERNODENOMINA varchar(300),
+                                     ESTADO int4 not null,
+                                     FECHA timestamp not null,
+                                     FECHA_DESTINO timestamp,
+                                     FECHA_ESTADO timestamp,
+                                     ID_INTERCAMBIO varchar(33),
+                                     NUMREGISTRO int4 not null,
+                                     NUM_REG_DESTINO varchar(255),
+                                     REINTENTOS int4,
+                                     SIR bool not null,
+                                     TIPO_ANOTACION varchar(2),
+                                     TIPO_OFICIO int8 not null,
+                                     ENTIDAD int8,
+                                     LIBRO int8 not null,
+                                     OFICINA int8 not null,
+                                     ORGANISMODEST int8,
+                                     USUARIO int8 not null,
+                                     primary key (ID)
 );
 
 create table RWE_OFIREM_REGENT
@@ -671,6 +674,7 @@ create table RWE_REGISTRO_ENTRADA
     NUMREGISTRO      int4         not null,
     NUMREGFORMAT     varchar(255) not null,
     DESTINO          int8,
+    ENTIDAD          int8,
     LIBRO            int8         not null,
     OFICINA          int8         not null,
     REGISTRO_DETALLE int8,
@@ -727,6 +731,7 @@ create table RWE_REGISTRO_SALIDA
     NUMREGFORMAT     varchar(255) not null,
     DESTEXTCOD       varchar(9),
     DESTEXTDEN       varchar(300),
+    ENTIDAD          int8,
     LIBRO            int8         not null,
     OFICINA          int8         not null,
     ORIGEN           int8,
@@ -942,6 +947,11 @@ index RWE_ANEXO_REGDET_FK_I on RWE_ANEXO (REGISTRODETALLE);
 index RWE_ANEXO_TDOCAL_FK_I on RWE_ANEXO (TDOCUMENTAL);
 
 alter table RWE_ANEXO
+    add constraint RWE_ANEXO_ENTIDAD_FK
+        foreign key (ENTIDAD)
+            references RWE_ENTIDAD;
+
+alter table RWE_ANEXO
     add constraint RWE_ANEXO_REGDET_FK
         foreign key (REGISTRODETALLE)
             references RWE_REGISTRO_DETALLE;
@@ -950,6 +960,11 @@ alter table RWE_ANEXO
     add constraint RWE_ANEXO_TDOCAL_FK
         foreign key (TDOCUMENTAL)
             references RWE_TIPODOCUMENTAL;
+
+alter table RWE_ANEXO_SIR
+    add constraint RWE_ANEXOSIR_ENTIDAD_FK
+        foreign key (ENTIDAD)
+            references RWE_ENTIDAD;
 
 alter table RWE_ANEXO_SIR
     add constraint RWE_ANEXOSIR_ANEXO_FK
@@ -962,7 +977,7 @@ alter table RWE_ANEXO_SIR
             references RWE_REGISTRO_SIR;
 
 create
-index RWE_CATCOM_CATPAI_FK_I on RWE_CATCOMUNIDADAUTONOMA (PAIS);
+    index RWE_CATCOM_CATPAI_FK_I on RWE_CATCOMUNIDADAUTONOMA (PAIS);
 
 alter table RWE_CATCOMUNIDADAUTONOMA
     add constraint RWE_CATCOMUNAUT_CATPAIS_FK
@@ -970,10 +985,10 @@ alter table RWE_CATCOMUNIDADAUTONOMA
             references RWE_CATPAIS;
 
 create
-index RWE_CATLOC_CATENG_FK_I on RWE_CATLOCALIDAD (ENTIDADGEOGRAFICA);
+    index RWE_CATLOC_CATENG_FK_I on RWE_CATLOCALIDAD (ENTIDADGEOGRAFICA);
 
-    create
-index RWE_CATLOC_CATPRO_FK_I on RWE_CATLOCALIDAD (PROVINCIA);
+create
+    index RWE_CATLOC_CATPRO_FK_I on RWE_CATLOCALIDAD (PROVINCIA);
 
 alter table RWE_CATLOCALIDAD
     add constraint RWE_CATLOCAL_CATPROVIN_FK
@@ -985,8 +1000,7 @@ alter table RWE_CATLOCALIDAD
         foreign key (ENTIDADGEOGRAFICA)
             references RWE_CATENTIDADGEOGRAFICA;
 
-create
-index RWE_CATPRO_CATCAU_FK_I on RWE_CATPROVINCIA (COMUNIDADAUTONOMA);
+create index RWE_CATPRO_CATCAU_FK_I on RWE_CATPROVINCIA (COMUNIDADAUTONOMA);
 
 alter table RWE_CATPROVINCIA
     add constraint RWE_CATPROVINC_CATCOMUNAUTO_FK
@@ -1013,16 +1027,14 @@ alter table RWE_CONFIGURACION
         foreign key (LOGOPIE)
             references RWE_ARCHIVO;
 
-create
-index RWE_DESCAR_ENTIDA_FK_I on RWE_DESCARGA (ENTIDAD);
+create index RWE_DESCAR_ENTIDA_FK_I on RWE_DESCARGA (ENTIDAD);
 
 alter table RWE_DESCARGA
     add constraint RWE_DESCARGA_ENTIDAD_FK
         foreign key (ENTIDAD)
             references RWE_ENTIDAD;
 
-create
-index RWE_ENTIDA_PRO_FK_I on RWE_ENTIDAD (PROPIETARIO);
+create index RWE_ENTIDA_PRO_FK_I on RWE_ENTIDAD (PROPIETARIO);
 
 alter table RWE_ENTIDAD
     add constraint RWE_ENTIDAD_CONT_SIR_FK
@@ -1074,11 +1086,9 @@ alter table RWE_HISTORICOUO
         foreign key (CODULTIMA)
             references RWE_ORGANISMO;
 
-create
-index RWE_HRE_REGENT_FK_I on RWE_HISTORICO_REGISTRO_ENTRADA (REGISTRO_ENTRADA);
+create index RWE_HRE_REGENT_FK_I on RWE_HISTORICO_REGISTRO_ENTRADA (REGISTRO_ENTRADA);
 
-    create
-index RWE_HRE_USUENT_FK_I on RWE_HISTORICO_REGISTRO_ENTRADA (USUARIO);
+create index RWE_HRE_USUENT_FK_I on RWE_HISTORICO_REGISTRO_ENTRADA (USUARIO);
 
 alter table RWE_HISTORICO_REGISTRO_ENTRADA
     add constraint RWE_HISTORICO_USUARIO_FK
@@ -1100,25 +1110,20 @@ alter table RWE_HISTORICO_REGISTRO_SALIDA
         foreign key (USUARIO)
             references RWE_USUARIO_ENTIDAD;
 
-create
-index RWE_INT_ENTIDAD_FK_I on RWE_INTEGRACION (ENTIDAD);
+create index RWE_INT_ENTIDAD_FK_I on RWE_INTEGRACION (ENTIDAD);
 
 alter table RWE_INTEGRACION
     add constraint RWE_INT_ENTIDAD_FK
         foreign key (ENTIDAD)
             references RWE_ENTIDAD;
 
-create
-index RWE_INTERES_CATPAI_FK_I on RWE_INTERESADO (PAIS);
+create index RWE_INTERES_CATPAI_FK_I on RWE_INTERESADO (PAIS);
 
-    create
-index RWE_INTERES_CATLOC_FK_I on RWE_INTERESADO (LOCALIDAD);
+create index RWE_INTERES_CATLOC_FK_I on RWE_INTERESADO (LOCALIDAD);
 
-    create
-index RWE_INTERES_REPADO_FK_I on RWE_INTERESADO (REPRESENTADO);
+create index RWE_INTERES_REPADO_FK_I on RWE_INTERESADO (REPRESENTADO);
 
-    create
-index RWE_INTERES_REPANT_FK_I on RWE_INTERESADO (REPRESENTANTE);
+create index RWE_INTERES_REPANT_FK_I on RWE_INTERESADO (REPRESENTANTE);
 
 alter table RWE_INTERESADO
     add constraint RWE_INTERESADO_REPREANTE_FK
@@ -1155,17 +1160,13 @@ alter table RWE_INTERESADO_SIR
         foreign key (REGISTRO_SIR)
             references RWE_REGISTRO_SIR;
 
-create
-index RWE_LIBRO_CONSAL_FK_I on RWE_LIBRO (CONTADOR_SALIDA);
+create index RWE_LIBRO_CONSAL_FK_I on RWE_LIBRO (CONTADOR_SALIDA);
 
-    create
-index RWE_LIBRO_ORGANI_FK_I on RWE_LIBRO (ORGANISMO);
+create index RWE_LIBRO_ORGANI_FK_I on RWE_LIBRO (ORGANISMO);
 
-    create
-index RWE_LIBRO_CONOFI_FK_I on RWE_LIBRO (CONTADOR_OFICIO_REMISION);
+create index RWE_LIBRO_CONOFI_FK_I on RWE_LIBRO (CONTADOR_OFICIO_REMISION);
 
-    create
-index RWE_LIBRO_CONENT_FK_I on RWE_LIBRO (CONTADOR_ENTRADA);
+create index RWE_LIBRO_CONENT_FK_I on RWE_LIBRO (CONTADOR_ENTRADA);
 
 alter table RWE_LIBRO
     add constraint RWE_LIBRO_CONT_SIR_FK
@@ -1192,11 +1193,9 @@ alter table RWE_LIBRO
         foreign key (CONTADOR_OFICIO_REMISION)
             references RWE_CONTADOR;
 
-create
-index RWE_LOPD_USUENT_FK_I on RWE_LOPD (USUARIO);
+create index RWE_LOPD_USUENT_FK_I on RWE_LOPD (USUARIO);
 
-    create
-index RWE_LOPD_LIBRO_FK_I on RWE_LOPD (LIBRO);
+create index RWE_LOPD_LIBRO_FK_I on RWE_LOPD (LIBRO);
 
 alter table RWE_LOPD
     add constraint RWE_LOPD_USUENT_FK
@@ -1213,11 +1212,9 @@ alter table RWE_MENSAJE_CONTROL
         foreign key (ENTIDAD)
             references RWE_ENTIDAD;
 
-create
-index RWE_MODOFI_ENTIDA_FK_I on RWE_MODELO_OFICIO_REMISION (ENTIDAD);
+create index RWE_MODOFI_ENTIDA_FK_I on RWE_MODELO_OFICIO_REMISION (ENTIDAD);
 
-    create
-index RWE_MODOFI_ARCHIV_FK_I on RWE_MODELO_OFICIO_REMISION (MODELO);
+create index RWE_MODOFI_ARCHIV_FK_I on RWE_MODELO_OFICIO_REMISION (MODELO);
 
 alter table RWE_MODELO_OFICIO_REMISION
     add constraint RWE_MODELOFREMISION_ENTIDAD_FK
@@ -1229,11 +1226,9 @@ alter table RWE_MODELO_OFICIO_REMISION
         foreign key (MODELO)
             references RWE_ARCHIVO;
 
-create
-index RWE_MODREB_ENTIDA_FK_I on RWE_MODELO_RECIBO (ENTIDAD);
+create index RWE_MODREB_ENTIDA_FK_I on RWE_MODELO_RECIBO (ENTIDAD);
 
-    create
-index RWE_MODREB_ARCHIV_FK_I on RWE_MODELO_RECIBO (MODELO);
+create index RWE_MODREB_ARCHIV_FK_I on RWE_MODELO_RECIBO (MODELO);
 
 alter table RWE_MODELO_RECIBO
     add constraint RWE_MODELRECIBO_ENTIDAD_FK
@@ -1250,11 +1245,9 @@ alter table RWE_MODIFICACIONLOPD_MIGRADO
         foreign key (REGMIG)
             references RWE_REGISTRO_MIGRADO;
 
-create
-index RWE_NOTIF_DEST_FK_I on RWE_NOTIFICACION (DESTINATARIO);
+create index RWE_NOTIF_DEST_FK_I on RWE_NOTIFICACION (DESTINATARIO);
 
-    create
-index RWE_NOTIF_REMIT_FK_I on RWE_NOTIFICACION (REMITENTE);
+create index RWE_NOTIF_REMIT_FK_I on RWE_NOTIFICACION (REMITENTE);
 
 alter table RWE_NOTIFICACION
     add constraint RWE_NOTIF_DEST_FK
@@ -1266,26 +1259,19 @@ alter table RWE_NOTIFICACION
         foreign key (REMITENTE)
             references RWE_USUARIO_ENTIDAD;
 
-create
-index RWE_OFICIN_PAIS_FK_I on RWE_OFICINA (PAIS);
+create index RWE_OFICIN_PAIS_FK_I on RWE_OFICINA (PAIS);
 
-    create
-index RWE_OFICIN_ESTENT_FK_I on RWE_OFICINA (ESTADO);
+create index RWE_OFICIN_ESTENT_FK_I on RWE_OFICINA (ESTADO);
 
-    create
-index RWE_OFICIN_COMUNI_FK_I on RWE_OFICINA (COMUNIDAD);
+create index RWE_OFICIN_COMUNI_FK_I on RWE_OFICINA (COMUNIDAD);
 
-    create
-index RWE_OFICIN_TVIA_FK_I on RWE_OFICINA (TIPOVIA);
+create index RWE_OFICIN_TVIA_FK_I on RWE_OFICINA (TIPOVIA);
 
-    create
-index RWE_OFICIN_LOCALI_FK_I on RWE_OFICINA (LOCALIDAD);
+create index RWE_OFICIN_LOCALI_FK_I on RWE_OFICINA (LOCALIDAD);
 
-    create
-index RWE_OFICIN_OFICIN_FK_I on RWE_OFICINA (OFICINARESPONSABLE);
+create index RWE_OFICIN_OFICIN_FK_I on RWE_OFICINA (OFICINARESPONSABLE);
 
-    create
-index RWE_OFICIN_ORGANI_FK_I on RWE_OFICINA (ORGANISMORESPONSABLE);
+create index RWE_OFICIN_ORGANI_FK_I on RWE_OFICINA (ORGANISMORESPONSABLE);
 
 alter table RWE_OFICINA
     add constraint RWE_OFICINA_TIPOVIA_FK
@@ -1332,17 +1318,18 @@ alter table RWE_OFICINA_SERVICIO
         foreign key (IDSERVICIO)
             references RWE_CATSERVICIO;
 
-create
-index RWE_OFIREM_ORGANI_FK_I on RWE_OFICIO_REMISION (ORGANISMODEST);
+create index RWE_OFIREM_ORGANI_FK_I on RWE_OFICIO_REMISION (ORGANISMODEST);
 
-    create
-index RWE_OFIREM_OFICIN_FK_I on RWE_OFICIO_REMISION (OFICINA);
+create index RWE_OFIREM_OFICIN_FK_I on RWE_OFICIO_REMISION (OFICINA);
 
-    create
-index RWE_OFIREM_LIBRO_FK_I on RWE_OFICIO_REMISION (LIBRO);
+create index RWE_OFIREM_LIBRO_FK_I on RWE_OFICIO_REMISION (LIBRO);
 
-    create
-index RWE_OFIREM_USUARI_FK_I on RWE_OFICIO_REMISION (USUARIO);
+create index RWE_OFIREM_USUARI_FK_I on RWE_OFICIO_REMISION (USUARIO);
+
+alter table RWE_OFICIO_REMISION
+    add constraint RWE_OFIREM_ENTIDAD_FK
+        foreign key (ENTIDAD)
+            references RWE_ENTIDAD;
 
 alter table RWE_OFICIO_REMISION
     add constraint RWE_OFIREM_USUORM_FK
@@ -1384,35 +1371,25 @@ alter table RWE_OFIREM_REGSAL
         foreign key (IDREGSAL)
             references RWE_REGISTRO_SALIDA;
 
-create
-index RWE_ORGANI_SUPERI_FK_I on RWE_ORGANISMO (ORGANISMOSUPERIOR);
+create index RWE_ORGANI_SUPERI_FK_I on RWE_ORGANISMO (ORGANISMOSUPERIOR);
 
-    create
-index RWE_ORGANI_TVIA_FK_I on RWE_ORGANISMO (TIPOVIA);
+create index RWE_ORGANI_TVIA_FK_I on RWE_ORGANISMO (TIPOVIA);
 
-    create
-index RWE_ORGANI_LOCALI_FK_I on RWE_ORGANISMO (LOCALIDAD);
+create index RWE_ORGANI_LOCALI_FK_I on RWE_ORGANISMO (LOCALIDAD);
 
-    create
-index RWE_ORGANI_EDP_FK_I on RWE_ORGANISMO (EDPRINCIPAL);
+create index RWE_ORGANI_EDP_FK_I on RWE_ORGANISMO (EDPRINCIPAL);
 
-    create
-index RWE_ORGANI_PROVIN_FK_I on RWE_ORGANISMO (CODAMBPROVINCIA);
+create index RWE_ORGANI_PROVIN_FK_I on RWE_ORGANISMO (CODAMBPROVINCIA);
 
-    create
-index RWE_ORGANI_ESTADO_FK_I on RWE_ORGANISMO (ESTADO);
+create index RWE_ORGANI_ESTADO_FK_I on RWE_ORGANISMO (ESTADO);
 
-    create
-index RWE_ORGANI_ENTIDA_FK_I on RWE_ORGANISMO (ENTIDAD);
+create index RWE_ORGANI_ENTIDA_FK_I on RWE_ORGANISMO (ENTIDAD);
 
-    create
-index RWE_ORGANI_RAIZ_FK_I on RWE_ORGANISMO (ORGANISMORAIZ);
+create index RWE_ORGANI_RAIZ_FK_I on RWE_ORGANISMO (ORGANISMORAIZ);
 
-    create
-index RWE_ORGANI_CAUTON_FK_I on RWE_ORGANISMO (CODAMBCOMUNIDAD);
+create index RWE_ORGANI_CAUTON_FK_I on RWE_ORGANISMO (CODAMBCOMUNIDAD);
 
-    create
-index RWE_ORGANI_PAIS_FK_I on RWE_ORGANISMO (PAIS);
+create index RWE_ORGANI_PAIS_FK_I on RWE_ORGANISMO (PAIS);
 
 alter table RWE_ORGANISMO
     add constraint RWE_ORGANISMO_ORGRAIZ_FK
@@ -1469,11 +1446,9 @@ alter table RWE_ORGANISMO
         foreign key (LOCALIDAD)
             references RWE_CATLOCALIDAD;
 
-create
-index RWE_PELIUS_USUARI_FK_I on RWE_PERMLIBUSU (USUARIO);
+create index RWE_PELIUS_USUARI_FK_I on RWE_PERMLIBUSU (USUARIO);
 
-    create
-index RWE_PELIUS_LIBRO_FK_I on RWE_PERMLIBUSU (LIBRO);
+create index RWE_PELIUS_LIBRO_FK_I on RWE_PERMLIBUSU (LIBRO);
 
 alter table RWE_PERMLIBUSU
     add constraint RWE_PERMLIBUSU_USUENT_FK
@@ -1485,11 +1460,9 @@ alter table RWE_PERMLIBUSU
         foreign key (LIBRO)
             references RWE_LIBRO;
 
-create
-index RWE_POU_ORG_FK_I on RWE_PERMORGUSU (ORGANISMO);
+create index RWE_POU_ORG_FK_I on RWE_PERMORGUSU (ORGANISMO);
 
-    create
-index RWE_POU_USUARI_FK_I on RWE_PERMORGUSU (USUARIO);
+create index RWE_POU_USUARI_FK_I on RWE_PERMORGUSU (USUARIO);
 
 alter table RWE_PERMORGUSU
     add constraint RWE_POU_USUENT_FK
@@ -1501,8 +1474,7 @@ alter table RWE_PERMORGUSU
         foreign key (ORGANISMO)
             references RWE_ORGANISMO;
 
-create
-index RWE_PERSONA_ENTIDAD_FK_I on RWE_PERSONA (ENTIDAD);
+create  index RWE_PERSONA_ENTIDAD_FK_I on RWE_PERSONA (ENTIDAD);
 
 alter table RWE_PERSONA
     add constraint RWE_PERSONA_ENTIDAD_FK
@@ -1524,11 +1496,9 @@ alter table RWE_PERSONA
         foreign key (LOCALIDAD)
             references RWE_CATLOCALIDAD;
 
-create
-index RWE_PLUGI_ENTIDA_FK_I on RWE_PLUGIN (ENTIDAD);
+create index RWE_PLUGI_ENTIDA_FK_I on RWE_PLUGIN (ENTIDAD);
 
-    create
-index RWE_PROPIE_ENTIDA_FK_I on RWE_PROPIEDADGLOBAL (ENTIDAD);
+create index RWE_PROPIE_ENTIDA_FK_I on RWE_PROPIEDADGLOBAL (ENTIDAD);
 
 alter table RWE_REGISTROLOPD_MIGRADO
     add constraint RWE_REGLOPDMIG_REGMIG_FK
@@ -1549,6 +1519,11 @@ alter table RWE_REGISTRO_DETALLE
     add constraint RWE_REGDET_TIPOASUNTO_FK
         foreign key (TIPOASUNTO)
             references RWE_TIPOASUNTO;
+
+alter table RWE_REGISTRO_ENTRADA
+    add constraint RWE_REGENT_ENTIDAD_FK
+        foreign key (ENTIDAD)
+            references RWE_ENTIDAD;
 
 alter table RWE_REGISTRO_ENTRADA
     add constraint RWE_REGENT_DESTINO_FK
@@ -1575,30 +1550,28 @@ alter table RWE_REGISTRO_ENTRADA
         foreign key (LIBRO)
             references RWE_LIBRO;
 
-create
-index RWE_REGMIG_FECREG_I on RWE_REGISTRO_MIGRADO (FECHAREG);
+create index RWE_REGMIG_FECREG_I on RWE_REGISTRO_MIGRADO (FECHAREG);
 
-    create
-index RWE_REGMIG_CODOF_I on RWE_REGISTRO_MIGRADO (CODOFICINA);
+create index RWE_REGMIG_CODOF_I on RWE_REGISTRO_MIGRADO (CODOFICINA);
 
-    create
-index RWE_REGMIG_EXTR_I on RWE_REGISTRO_MIGRADO (EXTRACTO);
+create index RWE_REGMIG_EXTR_I on RWE_REGISTRO_MIGRADO (EXTRACTO);
 
-    create
-index RWE_REGMIG_NUM_I on RWE_REGISTRO_MIGRADO (NUMERO);
+create index RWE_REGMIG_NUM_I on RWE_REGISTRO_MIGRADO (NUMERO);
 
-    create
-index RWE_REGMIG_REMDES_I on RWE_REGISTRO_MIGRADO (DESREMDES);
+create index RWE_REGMIG_REMDES_I on RWE_REGISTRO_MIGRADO (DESREMDES);
 
-    create
-index RWE_REGMIG_ANO_I on RWE_REGISTRO_MIGRADO (ANO);
+create index RWE_REGMIG_ANO_I on RWE_REGISTRO_MIGRADO (ANO);
 
-    create
-index RWE_REGMIG_TREG_I on RWE_REGISTRO_MIGRADO (TREGISTRO);
+create index RWE_REGMIG_TREG_I on RWE_REGISTRO_MIGRADO (TREGISTRO);
 
 alter table RWE_REGISTRO_MIGRADO
     add constraint RWE_REGMIG_ENTIDAD_FK
         foreign key (IDENTIDAD)
+            references RWE_ENTIDAD;
+
+alter table RWE_REGISTRO_SALIDA
+    add constraint RWE_REGSAL_ENTIDAD_FK
+        foreign key (ENTIDAD)
             references RWE_ENTIDAD;
 
 alter table RWE_REGISTRO_SALIDA
@@ -1666,8 +1639,7 @@ alter table RWE_REPRO
         foreign key (USUARIOENTIDAD)
             references RWE_USUARIO_ENTIDAD;
 
-create
-index RWE_SESION_USUENT_FK_I on RWE_SESION (USUARIO);
+create index RWE_SESION_USUENT_FK_I on RWE_SESION (USUARIO);
 
 alter table RWE_SESION
     add constraint RWE_SESION_USUENT_FK

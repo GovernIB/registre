@@ -22,6 +22,7 @@ import java.util.List;
 public class OficioRemision implements Serializable {
 
     private Long id;
+    private Entidad entidad;
     private Organismo organismoDestinatario;
     private String destinoExternoCodigo;
     private String destinoExternoDenominacion;
@@ -70,6 +71,16 @@ public class OficioRemision implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ENTIDAD", foreignKey = @ForeignKey(name = "RWE_OFIREM_ENTIDAD_FK"))
+    public Entidad getEntidad() {
+        return entidad;
+    }
+
+    public void setEntidad(Entidad entidad) {
+        this.entidad = entidad;
     }
 
     @ManyToOne()

@@ -321,6 +321,7 @@ public class SirEnvioBean implements SirEnvioLocal {
 
         // Creamos el OficioRemision
         OficioRemision oficioRemision = new OficioRemision();
+        oficioRemision.setEntidad(entidad);
         oficioRemision.setSir(true);
         oficioRemision.setEstado(RegwebConstantes.OFICIO_EXTERNO_ENVIADO);
         oficioRemision.setFechaEstado(new Date());
