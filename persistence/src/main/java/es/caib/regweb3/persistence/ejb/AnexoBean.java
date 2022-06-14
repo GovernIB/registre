@@ -257,6 +257,9 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
             Anexo anexo = anexoFull.getAnexo();
 
+            // Lo asociamos a la Entidad
+            anexo.setEntidad(entidad);
+
             //Obtenemos el registro con sus anexos, interesados y tipo Asunto
             IRegistro registro = getIRegistro(registroID, tipoRegistro);
             anexo.setRegistroDetalle(registro.getRegistroDetalle());
@@ -398,6 +401,9 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
             Anexo anexo = anexoFull.getAnexo();
 
+            // Lo asociamos a la Entidad
+            anexo.setEntidad(entidad);
+
             //Obtenemos el registro con sus anexos, interesados y tipo Asunto
             IRegistro registro = getIRegistro(registroID, tipoRegistro);
             anexo.setRegistroDetalle(registro.getRegistroDetalle());
@@ -492,6 +498,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
         try {
             Anexo anexo = anexoFull.getAnexo();
             anexo.setRegistroDetalle(registroDetalle);
+            anexo.setEntidad(entidad);
 
             // Validador
             final boolean isNew = false;
@@ -1086,7 +1093,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
     @Override
     public List<AnexoFull> getByRegistroEntrada(RegistroEntrada registroEntrada) throws Exception, I18NException {
 
-        Long idEntidad = registroEntrada.getOficina().getOrganismoResponsable().getEntidad().getId();
+        Long idEntidad = registroEntrada.getEntidad().getId();
 
         List<Anexo> anexos = registroEntrada.getRegistroDetalle().getAnexos();
         List<AnexoFull> anexosSinJustificante = new ArrayList<AnexoFull>();
@@ -1109,7 +1116,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
     @Override
     public List<AnexoFull> getByRegistroSalida(RegistroSalida registroSalida) throws Exception, I18NException {
 
-        Long idEntidad = registroSalida.getOficina().getOrganismoResponsable().getEntidad().getId();
+        Long idEntidad = registroSalida.getEntidad().getId();
 
         List<Anexo> anexos = registroSalida.getRegistroDetalle().getAnexos();
         List<AnexoFull> anexosSinJustificante = new ArrayList<AnexoFull>();
@@ -1172,7 +1179,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
         Integer numElementos = PropiedadGlobalUtil.getNumElementosPurgoAnexos(idEntidad);
 
         //Obtenemos los anexos de los registros de entrada que han sido aceptados y que no han sido purgados
-        Query q = em.createQuery("Select anexos from RegistroEntrada as re left join re.registroDetalle.anexos as anexos where re.estado=:aceptado and  re.usuario.entidad.id=:idEntidad and anexos.purgado =false and anexos.justificante=false");
+        Query q = em.createQuery("Select anexos from RegistroEntrada as re left join re.registroDetalle.anexos as anexos where re.estado=:aceptado and  re.entidad.id=:idEntidad and anexos.purgado =false and anexos.justificante=false");
 
         q.setParameter("aceptado", RegwebConstantes.REGISTRO_OFICIO_ACEPTADO);
         q.setParameter("idEntidad", idEntidad);
@@ -1181,7 +1188,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
         List<Anexo> anexos = q.getResultList();
 
         //Obtenemos los anexos de los registros de salida que han sido aceptados y que no han sido purgados
-        Query qs = em.createQuery("Select anexos from  RegistroSalida as rs left join rs.registroDetalle.anexos as anexos where rs.estado=:aceptado and  rs.usuario.entidad.id=:idEntidad and anexos.purgado =false and anexos.justificante=false");
+        Query qs = em.createQuery("Select anexos from  RegistroSalida as rs left join rs.registroDetalle.anexos as anexos where rs.estado=:aceptado and  rs.entidad.id=:idEntidad and anexos.purgado =false and anexos.justificante=false");
 
         qs.setParameter("aceptado", RegwebConstantes.REGISTRO_OFICIO_ACEPTADO);
         qs.setParameter("idEntidad", idEntidad);

@@ -86,6 +86,8 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean implem
             throws Exception, I18NException, I18NValidationException {
 
         try {
+            //Asociamos su entidad
+            registroEntrada.setEntidad(entidad);
 
             // Obtenemos el Número de registro
             Libro libro = libroEjb.findById(registroEntrada.getLibro().getId());
@@ -547,7 +549,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean implem
     @Override
     public Integer eliminarByEntidad(Long idEntidad) throws Exception {
 
-        List<?> registros = em.createQuery("Select distinct(re.id) from RegistroEntrada as re where re.usuario.entidad.id = :idEntidad").setParameter("idEntidad", idEntidad).getResultList();
+        List<?> registros = em.createQuery("Select distinct(re.id) from RegistroEntrada as re where re.entidad.id = :idEntidad").setParameter("idEntidad", idEntidad).getResultList();
 
         for (Object id : registros) {
             remove(findById((Long) id));
@@ -682,7 +684,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean implem
     public RegistroEntrada getConAnexosFullLigero(Long id) throws Exception, I18NException {
 
         RegistroEntrada re = em.find(RegistroEntrada.class, id);
-        Long idEntidad = re.getOficina().getOrganismoResponsable().getEntidad().getId();
+        Long idEntidad = re.getEntidad().getId();
 
         List<Anexo> anexos = re.getRegistroDetalle().getAnexos();
         List<AnexoFull> anexosFull = new ArrayList<AnexoFull>();
@@ -711,9 +713,10 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean implem
      * @throws I18NException
      */
     private RegistroEntrada cargarAnexosFull(RegistroEntrada registroEntrada, Boolean justificante) throws Exception, I18NException {
-        Long idEntidad = registroEntrada.getOficina().getOrganismoResponsable().getEntidad().getId();
 
+        Long idEntidad = registroEntrada.getEntidad().getId();
         List<Anexo> anexos = registroEntrada.getRegistroDetalle().getAnexos();
+
         List<AnexoFull> anexosFull = new ArrayList<AnexoFull>();
         for (Anexo anexo : anexos) {
             if(!anexo.isJustificante()){ // si no es Justificante, cargamos el AnexoFull

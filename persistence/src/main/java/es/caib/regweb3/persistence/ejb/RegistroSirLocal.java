@@ -162,7 +162,7 @@ public interface RegistroSirLocal extends BaseEjb<RegistroSir, Long> {
      * @return
      * @throws Exception
      */
-    RegistroSir transformarFicheroIntercambio(FicheroIntercambio ficheroIntercambio, Long idEntidad) throws Exception;
+    RegistroSir transformarFicheroIntercambio(FicheroIntercambio ficheroIntercambio, Entidad entidad) throws Exception;
 
 
     /**

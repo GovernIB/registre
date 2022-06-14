@@ -512,7 +512,7 @@ public class InformeBean implements InformeLocal {
 
         q = em.createQuery("Select count(registroEntrada.id) from RegistroEntrada as registroEntrada where registroEntrada.fecha >= :fechaInicio " +
                 "and registroEntrada.fecha <= :fechaFin and registroEntrada.estado != :anulado and registroEntrada.estado != :reserva and " +
-                "registroEntrada.usuario.entidad.id = :idEntidad ");
+                "registroEntrada.entidad.id = :idEntidad ");
 
         q.setParameter("fechaInicio", fechaInicio);
         q.setParameter("fechaFin", fechaFin);
@@ -531,7 +531,7 @@ public class InformeBean implements InformeLocal {
 
         q = em.createQuery("Select count (registroSalida.id) from RegistroSalida as registroSalida where registroSalida.fecha >= :fechaInicio " +
                 "and registroSalida.fecha <= :fechaFin and registroSalida.estado != :anulado and registroSalida.estado != :reserva and " +
-                "registroSalida.usuario.entidad.id = :idEntidad");
+                "registroSalida.entidad.id = :idEntidad");
 
         q.setParameter("fechaInicio", fechaInicio);
         q.setParameter("fechaFin", fechaFin);
@@ -628,7 +628,7 @@ public class InformeBean implements InformeLocal {
 
         q = em.createQuery("Select count(registroEntrada.id) from RegistroEntrada as registroEntrada where registroEntrada.fecha >= :fechaInicio " +
                 "and registroEntrada.fecha <= :fechaFin and registroEntrada.registroDetalle.tipoAsunto.id = :tipoAsunto and " +
-                "registroEntrada.estado != :anulado and registroEntrada.estado != :reserva and registroEntrada.usuario.entidad.id = :idEntidad");
+                "registroEntrada.estado != :anulado and registroEntrada.estado != :reserva and registroEntrada.entidad.id = :idEntidad");
 
         q.setParameter("fechaInicio", fechaInicio);
         q.setParameter("fechaFin", fechaFin);
@@ -648,7 +648,7 @@ public class InformeBean implements InformeLocal {
 
         q = em.createQuery("Select count(registroEntrada.id) from RegistroEntrada as registroEntrada where registroEntrada.fecha >= :fechaInicio " +
                 "and registroEntrada.fecha <= :fechaFin and registroEntrada.registroDetalle.idioma = :idioma and " +
-                "registroEntrada.estado != :anulado and registroEntrada.estado != :reserva and registroEntrada.usuario.entidad.id = :idEntidad");
+                "registroEntrada.estado != :anulado and registroEntrada.estado != :reserva and registroEntrada.entidad.id = :idEntidad");
 
         q.setParameter("fechaInicio", fechaInicio);
         q.setParameter("fechaFin", fechaFin);
@@ -724,7 +724,7 @@ public class InformeBean implements InformeLocal {
 
         q = em.createQuery("Select count(registroSalida.id) from RegistroSalida as registroSalida where registroSalida.fecha >= :fechaInicio " +
                 "and registroSalida.fecha <= :fechaFin and registroSalida.registroDetalle.tipoAsunto.id = :tipoAsunto and " +
-                "registroSalida.estado != :anulado and registroSalida.estado != :reserva and registroSalida.usuario.entidad.id = :idEntidad");
+                "registroSalida.estado != :anulado and registroSalida.estado != :reserva and registroSalida.entidad.id = :idEntidad");
 
         q.setParameter("fechaInicio", fechaInicio);
         q.setParameter("fechaFin", fechaFin);
@@ -744,7 +744,7 @@ public class InformeBean implements InformeLocal {
 
         q = em.createQuery("Select count(registroSalida.id) from RegistroSalida as registroSalida where registroSalida.fecha >= :fechaInicio " +
                 "and registroSalida.fecha <= :fechaFin and registroSalida.registroDetalle.idioma = :idioma and " +
-                "registroSalida.estado != :anulado and registroSalida.estado != :reserva and registroSalida.usuario.entidad.id = :idEntidad");
+                "registroSalida.estado != :anulado and registroSalida.estado != :reserva and registroSalida.entidad.id = :idEntidad");
 
         q.setParameter("fechaInicio", fechaInicio);
         q.setParameter("fechaFin", fechaFin);

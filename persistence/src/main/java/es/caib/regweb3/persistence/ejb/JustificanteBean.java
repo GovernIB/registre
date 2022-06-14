@@ -176,7 +176,7 @@ public class JustificanteBean implements JustificanteLocal {
             }
 
             // Crea el anexo del justificante firmado
-            Anexo anexo = crearAnexoJustificante(RegwebConstantes.PERFIL_CUSTODIA_DOCUMENT_CUSTODY, locale, registro.getRegistroDetalle(), idEntidad);
+            Anexo anexo = crearAnexoJustificante(RegwebConstantes.PERFIL_CUSTODIA_DOCUMENT_CUSTODY, locale, registro.getRegistroDetalle(), entidad);
             AnexoFull anexoFull = new AnexoFull(anexo);
 
             // Generam la Custòdia per tenir el CSV
@@ -309,7 +309,7 @@ public class JustificanteBean implements JustificanteLocal {
             Firma firma = generarFirmarPdfJustificante(entidad, registro, idioma, peticion);
 
             // Crea el anexo del justificante firmado
-            Anexo anexo = crearAnexoJustificante(RegwebConstantes.PERFIL_CUSTODIA_ARXIU, locale, registro.getRegistroDetalle(), entidad.getId());
+            Anexo anexo = crearAnexoJustificante(RegwebConstantes.PERFIL_CUSTODIA_ARXIU, locale, registro.getRegistroDetalle(), entidad);
 
             // Hash
             anexo.setHash(RegwebUtils.obtenerHash(firma.getContingut()));
@@ -449,19 +449,20 @@ public class JustificanteBean implements JustificanteLocal {
      * @param perfilCustodia
      * @param locale
      * @param registroDetalle
-     * @param idEntidad
+     * @param entidad
      * @return
      */
-    private Anexo crearAnexoJustificante(Long perfilCustodia, Locale locale, RegistroDetalle registroDetalle, Long idEntidad) throws Exception {
+    private Anexo crearAnexoJustificante(Long perfilCustodia, Locale locale, RegistroDetalle registroDetalle, Entidad entidad) throws Exception {
 
         Anexo anexo = new Anexo(perfilCustodia);
 
         String tituloAnexo = I18NLogicUtils.tradueix(locale, "justificante.anexo.titulo");
         String observaciones = I18NLogicUtils.tradueix(locale, "justificante.anexo.observaciones");
 
+        anexo.setEntidad(entidad);
         anexo.setTitulo(tituloAnexo);
         anexo.setValidezDocumento(RegwebConstantes.TIPOVALIDEZDOCUMENTO_ORIGINAL);
-        anexo.setTipoDocumental(tipoDocumentalEjb.findByCodigoEntidad("TD99", idEntidad));
+        anexo.setTipoDocumental(tipoDocumentalEjb.findByCodigoEntidad("TD99", entidad.getId()));
         anexo.setTipoDocumento(RegwebConstantes.TIPO_DOCUMENTO_DOC_ADJUNTO);
         anexo.setOrigenCiudadanoAdmin(RegwebConstantes.ANEXO_ORIGEN_ADMINISTRACION);
         anexo.setObservaciones(observaciones);

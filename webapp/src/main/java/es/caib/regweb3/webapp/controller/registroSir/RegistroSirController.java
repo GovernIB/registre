@@ -58,6 +58,9 @@ public class RegistroSirController extends BaseController {
     @EJB(mappedName = TrazabilidadSirLocal.JNDI_NAME)
     private TrazabilidadSirLocal trazabilidadSirEjb;
 
+    @EJB(mappedName = AnexoSirLocal.JNDI_NAME)
+    private AnexoSirLocal anexoSirEjb;
+
 
 
     /**
@@ -261,6 +264,9 @@ public class RegistroSirController extends BaseController {
             RegistroEntrada registroEntrada = sirEnvioEjb.aceptarRegistroSir(registroSir, entidad, usuarioEntidad, oficinaActiva, registrarForm.getIdLibro(), registrarForm.getIdIdioma(), registrarForm.getCamposNTIs(), registrarForm.getIdOrganismoDestino(), registrarForm.getDistribuir());
 
             variableReturn = "redirect:/registroEntrada/" + registroEntrada.getId() + "/detalle";
+
+            // Purgamos los AnexosSir
+            anexoSirEjb.purgarAnexosRegistroSirAceptado(idRegistroSir);
 
             Mensaje.saveMessageInfo(request, getMessage("registroSir.aceptar.ok"));
 

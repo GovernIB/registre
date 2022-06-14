@@ -37,31 +37,31 @@ public class EventoController extends BaseController {
                 registroEntradaConsultaEjb.queryCount("Select count(id) from RegistroEntrada where usuario.entidad.id = "+entidadActiva.getId()));
 
         mav.addObject("totalSalidas",
-                registroEntradaConsultaEjb.queryCount("Select count(id) from RegistroSalida where usuario.entidad.id = "+entidadActiva.getId()));
+                registroEntradaConsultaEjb.queryCount("Select count(id) from RegistroSalida where entidad.id = "+entidadActiva.getId()));
 
         mav.addObject("entradasPendientes",
-                registroEntradaConsultaEjb.queryCount("Select count(id) from RegistroEntrada where evento is null and (estado=1 or estado=3) and usuario.entidad.id = "+entidadActiva.getId()));
+                registroEntradaConsultaEjb.queryCount("Select count(id) from RegistroEntrada where evento is null and (estado=1 or estado=3) and entidad.id = "+entidadActiva.getId()));
 
         mav.addObject("salidasPendientes",
-                registroEntradaConsultaEjb.queryCount("Select count(id) from RegistroSalida where evento is null and (estado=1 or estado=3) and usuario.entidad.id = "+entidadActiva.getId()));
+                registroEntradaConsultaEjb.queryCount("Select count(id) from RegistroSalida where evento is null and (estado=1 or estado=3) and entidad.id = "+entidadActiva.getId()));
 
         mav.addObject("entradasEventoAsignado",
-                registroEntradaConsultaEjb.queryCount("Select count(id) from RegistroEntrada where evento!=0 and evento != null and usuario.entidad.id = "+entidadActiva.getId()));
+                registroEntradaConsultaEjb.queryCount("Select count(id) from RegistroEntrada where evento!=0 and evento != null and entidad.id = "+entidadActiva.getId()));
 
         mav.addObject("salidasEventoAsignado",
-                registroEntradaConsultaEjb.queryCount("Select count(id) from RegistroSalida where evento!=0 and evento != null and usuario.entidad.id = "+entidadActiva.getId()));
+                registroEntradaConsultaEjb.queryCount("Select count(id) from RegistroSalida where evento!=0 and evento != null and entidad.id = "+entidadActiva.getId()));
 
         /*mav.addObject("entradasSinEvento",
-                registroEntradaConsultaEjb.queryCount("Select count(id) from RegistroEntrada where evento is null and (estado!=1 or estado!=3) and usuario.entidad.id = "+entidadActiva.getId()));
+                registroEntradaConsultaEjb.queryCount("Select count(id) from RegistroEntrada where evento is null and (estado!=1 or estado!=3) and entidad.id = "+entidadActiva.getId()));
 
         mav.addObject("salidasSinEvento",
-                registroEntradaConsultaEjb.queryCount("Select count(id) from RegistroSalida where evento is null and (estado!=1 or estado!=3) and usuario.entidad.id = "+entidadActiva.getId()));*/
+                registroEntradaConsultaEjb.queryCount("Select count(id) from RegistroSalida where evento is null and (estado!=1 or estado!=3) and entidad.id = "+entidadActiva.getId()));*/
 
         mav.addObject("entradasEventoProcesado",
-                registroEntradaConsultaEjb.queryCount("Select count(id) from RegistroEntrada where evento=0 and usuario.entidad.id = "+entidadActiva.getId()));
+                registroEntradaConsultaEjb.queryCount("Select count(id) from RegistroEntrada where evento=0 and entidad.id = "+entidadActiva.getId()));
 
         mav.addObject("salidasEventoProcesado",
-                registroEntradaConsultaEjb.queryCount("Select count(id) from RegistroSalida where evento=0 and usuario.entidad.id = "+entidadActiva.getId()));
+                registroEntradaConsultaEjb.queryCount("Select count(id) from RegistroSalida where evento=0 and entidad.id = "+entidadActiva.getId()));
 
 
         mav.addObject("oficinas", oficinaEjb.findByEntidad(entidadActiva.getId()));

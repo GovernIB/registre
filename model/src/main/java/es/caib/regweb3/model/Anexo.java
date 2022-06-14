@@ -40,6 +40,8 @@ public class Anexo implements Serializable {
     @XmlElement
     private Long tipoDocumento;
     @XmlTransient
+    private Entidad entidad;
+    @XmlTransient
     private RegistroDetalle registroDetalle;
     @XmlElement
     private String observaciones;
@@ -284,6 +286,17 @@ public class Anexo implements Serializable {
 
     public void setRegistroDetalle(RegistroDetalle registroDetalle) {
         this.registroDetalle = registroDetalle;
+    }
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ENTIDAD", foreignKey = @ForeignKey(name = "RWE_ANEXO_ENTIDAD_FK"))
+    @JsonIgnore
+    public Entidad getEntidad() {
+        return entidad;
+    }
+
+    public void setEntidad(Entidad entidad) {
+        this.entidad = entidad;
     }
 
     @Column(name = "OBSERVACIONES", length = 50)
