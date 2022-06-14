@@ -194,7 +194,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
     @Override
     public RegistroSir crearRegistroSir(FicheroIntercambio ficheroIntercambio, Entidad entidad) throws Exception{
 
-        RegistroSir registroSir = transformarFicheroIntercambio(ficheroIntercambio, entidad.getId());
+        RegistroSir registroSir = transformarFicheroIntercambio(ficheroIntercambio, entidad);
         registroSir.setEstado(EstadoRegistroSir.RECIBIDO);
 
         try{
@@ -621,7 +621,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
      * @return Información del registroSir registral.
      */
     @Override
-    public RegistroSir transformarFicheroIntercambio(FicheroIntercambio ficheroIntercambio, Long idEntidad)throws Exception{
+    public RegistroSir transformarFicheroIntercambio(FicheroIntercambio ficheroIntercambio, Entidad entidad)throws Exception{
 
         final SimpleDateFormat SDF = new SimpleDateFormat("yyyyMMddHHmmss");
 
@@ -643,7 +643,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
                 if (StringUtils.isNotEmpty(de_Origen_o_Remitente.getDecodificacion_Entidad_Registral_Origen())) {
                     registroSir.setDecodificacionEntidadRegistralOrigen(de_Origen_o_Remitente.getDecodificacion_Entidad_Registral_Origen());
                 } else {
-                    registroSir.setDecodificacionEntidadRegistralOrigen(Dir3CaibUtils.denominacion(PropiedadGlobalUtil.getDir3CaibServer(idEntidad),de_Origen_o_Remitente.getCodigo_Entidad_Registral_Origen(), RegwebConstantes.OFICINA));
+                    registroSir.setDecodificacionEntidadRegistralOrigen(Dir3CaibUtils.denominacion(PropiedadGlobalUtil.getDir3CaibServer(entidad.getId()),de_Origen_o_Remitente.getCodigo_Entidad_Registral_Origen(), RegwebConstantes.OFICINA));
                 }
 
                 registroSir.setCodigoUnidadTramitacionOrigen(de_Origen_o_Remitente.getCodigo_Unidad_Tramitacion_Origen());
@@ -651,7 +651,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
                 if (StringUtils.isNotEmpty(de_Origen_o_Remitente.getDecodificacion_Unidad_Tramitacion_Origen())) {
                     registroSir.setDecodificacionUnidadTramitacionOrigen(de_Origen_o_Remitente.getDecodificacion_Unidad_Tramitacion_Origen());
                 } else {
-                    registroSir.setDecodificacionUnidadTramitacionOrigen(Dir3CaibUtils.denominacion(PropiedadGlobalUtil.getDir3CaibServer(idEntidad),de_Origen_o_Remitente.getCodigo_Unidad_Tramitacion_Origen(), RegwebConstantes.UNIDAD));
+                    registroSir.setDecodificacionUnidadTramitacionOrigen(Dir3CaibUtils.denominacion(PropiedadGlobalUtil.getDir3CaibServer(entidad.getId()),de_Origen_o_Remitente.getCodigo_Unidad_Tramitacion_Origen(), RegwebConstantes.UNIDAD));
                 }
 
 
@@ -679,7 +679,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
                 if (StringUtils.isNotEmpty(de_Destino.getDecodificacion_Entidad_Registral_Destino())) {
                     registroSir.setDecodificacionEntidadRegistralDestino(de_Destino.getDecodificacion_Entidad_Registral_Destino());
                 } else {
-                    registroSir.setDecodificacionEntidadRegistralDestino(Dir3CaibUtils.denominacion(PropiedadGlobalUtil.getDir3CaibServer(idEntidad),de_Destino.getCodigo_Entidad_Registral_Destino(), RegwebConstantes.OFICINA));
+                    registroSir.setDecodificacionEntidadRegistralDestino(Dir3CaibUtils.denominacion(PropiedadGlobalUtil.getDir3CaibServer(entidad.getId()),de_Destino.getCodigo_Entidad_Registral_Destino(), RegwebConstantes.OFICINA));
                 }
 
                 if (StringUtils.isNotEmpty(de_Destino.getCodigo_Unidad_Tramitacion_Destino())) {
@@ -687,7 +687,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
                     if (StringUtils.isNotEmpty(de_Destino.getDecodificacion_Unidad_Tramitacion_Destino())) {
                         registroSir.setDecodificacionUnidadTramitacionDestino(de_Destino.getDecodificacion_Unidad_Tramitacion_Destino());
                     } else {
-                        registroSir.setDecodificacionUnidadTramitacionDestino(Dir3CaibUtils.denominacion(PropiedadGlobalUtil.getDir3CaibServer(idEntidad),de_Destino.getCodigo_Unidad_Tramitacion_Destino(), RegwebConstantes.UNIDAD));
+                        registroSir.setDecodificacionUnidadTramitacionDestino(Dir3CaibUtils.denominacion(PropiedadGlobalUtil.getDir3CaibServer(entidad.getId()),de_Destino.getCodigo_Unidad_Tramitacion_Destino(), RegwebConstantes.UNIDAD));
                     }
                 }
 
@@ -719,9 +719,8 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
                 if (StringUtils.isNotEmpty(de_Internos_Control.getDecodificacion_Entidad_Registral_Inicio())) {
                     registroSir.setDecodificacionEntidadRegistralInicio(de_Internos_Control.getDecodificacion_Entidad_Registral_Inicio());
                 } else {
-                    registroSir.setDecodificacionEntidadRegistralInicio(Dir3CaibUtils.denominacion(PropiedadGlobalUtil.getDir3CaibServer(idEntidad),de_Internos_Control.getCodigo_Entidad_Registral_Inicio(), RegwebConstantes.OFICINA));
+                    registroSir.setDecodificacionEntidadRegistralInicio(Dir3CaibUtils.denominacion(PropiedadGlobalUtil.getDir3CaibServer(entidad.getId()),de_Internos_Control.getCodigo_Entidad_Registral_Inicio(), RegwebConstantes.OFICINA));
                 }
-
 
                 // Tipo de transporte
                 String tipoTransporte = de_Internos_Control.getTipo_Transporte_Entrada();
@@ -768,7 +767,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
                                 && (StringUtils.isBlank(de_Interesado.getNombre_Interesado()) && StringUtils.isBlank(de_Interesado.getPrimer_Apellido_Interesado()))){
 
                             // Creamos uno a partir de la Entidad destino
-                            registroSir.getInteresados().add(crearInteresadoJuridico(ficheroIntercambio, idEntidad));
+                            registroSir.getInteresados().add(crearInteresadoJuridico(ficheroIntercambio, entidad.getId()));
 
                         }else{
 
@@ -840,6 +839,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
                     if (de_Anexo != null) {
                         AnexoSir anexo = new AnexoSir();
 
+                        anexo.setEntidad(entidad);
                         anexo.setNombreFichero(es.caib.regweb3.utils.StringUtils.eliminarCaracteresProhibidosArxiu(de_Anexo.getNombre_Fichero_Anexado()));
                         anexo.setIdentificadorFichero(de_Anexo.getIdentificador_Fichero());
                         anexo.setIdentificadorDocumentoFirmado(de_Anexo.getIdentificador_Documento_Firmado());
@@ -906,7 +906,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         RegistroSir registroSir = new RegistroSir();
 
         registroSir.setIndicadorPrueba(IndicadorPrueba.NORMAL);
-        registroSir.setEntidad(registroEntrada.getOficina().getOrganismoResponsable().getEntidad());
+        registroSir.setEntidad(registroEntrada.getEntidad());
 
         // Segmento De_Origen_O_Remitente
         registroSir.setCodigoEntidadRegistralOrigen(registroEntrada.getOficina().getCodigo());
@@ -983,7 +983,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         RegistroSir registroSir = new RegistroSir();
 
         registroSir.setIndicadorPrueba(IndicadorPrueba.NORMAL); // todo Modificar cuando entremos en Producción
-        registroSir.setEntidad(registroSalida.getOficina().getOrganismoResponsable().getEntidad());
+        registroSir.setEntidad(registroSalida.getEntidad());
 
         // Segmento De_Origen_O_Remitente
         registroSir.setCodigoEntidadRegistralOrigen(registroSalida.getOficina().getCodigo());
@@ -1641,7 +1641,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
      * @throws I18NValidationException
      */
     @Override
-    public RegistroEntrada aceptarRegistroSirEntrada(RegistroSir registroSir, Entidad entidad, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, List<CamposNTI> camposNTIs, Long idOrganismoDestino)
+    public RegistroEntrada aceptarRegistroSirEntrada(RegistroSir registroSir, Entidad entidad, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, List<CamposNTI> camposNTIs, Long idOrganismoDestino, Long codigoSia)
             throws Exception, I18NException, I18NValidationException {
 
         Libro libro = libroEjb.findById(idLibro);
@@ -1660,7 +1660,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         registroEntrada.setDestinoExternoDenominacion(null);
 
         // RegistroDetalle
-        registroEntrada.setRegistroDetalle(getRegistroDetalle(registroSir, idIdioma));
+        registroEntrada.setRegistroDetalle(getRegistroDetalle(registroSir, idIdioma, codigoSia));
 
         // Interesados
         List<Interesado> interesados = procesarInteresados(registroSir.getInteresados());
@@ -1709,7 +1709,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
      * @return
      * @throws Exception
      */
-    private RegistroDetalle getRegistroDetalle(RegistroSir registroSir, Long idIdioma) throws Exception{
+    private RegistroDetalle getRegistroDetalle(RegistroSir registroSir, Long idIdioma, Long codigoSia) throws Exception{
 
         RegistroDetalle registroDetalle = new RegistroDetalle();
 
@@ -1718,6 +1718,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         registroDetalle.setExtracto(registroSir.getResumen());
         registroDetalle.setTipoDocumentacionFisica(Long.valueOf(registroSir.getDocumentacionFisica()));
         registroDetalle.setIdioma(idIdioma);
+        registroDetalle.setCodigoSia(codigoSia);
        // registroDetalle.setTipoAsunto(new TipoAsunto(idTipoAsunto));
         registroDetalle.setCodigoAsunto(null);
 

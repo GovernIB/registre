@@ -119,6 +119,16 @@
                                     </div>
                                 </div>
 
+                                <%--Código SIA--%>
+                                <div class="form-group col-xs-12">
+                                    <div class="col-xs-5 pull-left etiqueta_regweb control-label textEsq">
+                                        <label for="codigoSia" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.codigoSIA"/>" data-toggle="popover"> <spring:message code="registroEntrada.codigoSIA"/></label>
+                                    </div>
+                                    <div class="col-xs-7">
+                                        <form:input path="codigoSia" maxlength="20" cssClass="form-control"/> <form:errors path="codigoSia" cssClass="help-block" element="span"/>
+                                    </div>
+                                </div>
+
                                 <div class="row">
                                     <div class="col-xs-12 list-group-item-heading">
                                         <c:if test="${registroSir.documentacionFisica!=RegwebConstantes.TIPO_DOCFISICA_NO_ACOMPANYA_DOC}">
@@ -303,7 +313,7 @@
 <c:import url="../modulos/pie.jsp"/>
 
 <!-- Importamos el codigo jsp del modal del formulario para realizar la busqueda de organismos Origen
-                 Mediante el archivo "busquedaorganismo.js" se implementa dicha búsqueda -->
+                 Mediante el archivo busquedaorganismo.js se implementa dicha búsqueda -->
 <c:import url="../registro/buscadorOrganismosOficinasREPestanas.jsp">
     <c:param name="tipo" value="OficinaSir"/>
 </c:import>
@@ -316,9 +326,11 @@
         var libro = true;
         var idioma = true;
         var tipoAsunto = true;
+        var codigoSia = true;
         var idLibro = $('#idLibro').val();
         var idIdioma = $('#idIdioma').val();
         var idTipoAsunto = $('#idTipoAsunto').val();
+        var codigoSiaValue = $('#codigoSia').val();
 
         // Valida que haya un libro elegido
         if (!validaCampo(idLibro, 'libro')) {
@@ -332,8 +344,13 @@
         if (!validaSelect(idTipoAsunto, 'tipoAsunto')) {
             tipoAsunto = false;
         }
+        // Valida que el código SIA sea numérico
+        if(!validaEntero(codigoSiaValue, 'codigoSia')){
+            codigoSia = false;
+        }
+
         // Mira si todos los campos son correctos
-        if ((libro) && (idioma) && (tipoAsunto)) {
+        if ((libro) && (idioma) && (tipoAsunto) && (codigoSia)) {
 
             waitingDialog.show('<spring:message code="registroSir.aceptando" javaScriptEscape='true'/>', {dialogSize: 'm', progressType: 'primarycd'});
             doForm('#registrarForm');
