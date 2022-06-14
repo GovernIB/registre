@@ -16,6 +16,7 @@ public class RegistrarForm {
     private List<CamposNTI> camposNTIs;
     private Long idOrganismoDestino;
     private Boolean distribuir;
+    private Long codigoSia;
 
 
     public RegistrarForm() {
@@ -68,5 +69,13 @@ public class RegistrarForm {
 
     public void setDistribuir(Boolean distribuir) {
         this.distribuir = distribuir;
+    }
+
+    public Long getCodigoSia() {
+        return codigoSia;
+    }
+
+    public void setCodigoSia(Long codigoSia) {
+        this.codigoSia = codigoSia;
     }
 }

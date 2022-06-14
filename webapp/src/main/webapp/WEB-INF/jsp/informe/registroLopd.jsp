@@ -336,7 +336,7 @@ function validaFormulario(form) {
         libro = false;
     }
     // Valida que el valor de Número sea un entero
-    if(!validaEntero(form.numeroRegistro, 'numeroRegistro')){
+    if(!validaEntero(form.numeroRegistro.value, 'numeroRegistro')){
         numeroRegistro = false;
     }
     // Si todos los campos son correctos, hace el submit

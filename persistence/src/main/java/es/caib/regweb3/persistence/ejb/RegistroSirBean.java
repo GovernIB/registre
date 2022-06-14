@@ -1642,7 +1642,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
      * @throws I18NValidationException
      */
     @Override
-    public RegistroEntrada aceptarRegistroSirEntrada(RegistroSir registroSir, Entidad entidad, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, List<CamposNTI> camposNTIs, Long idOrganismoDestino)
+    public RegistroEntrada aceptarRegistroSirEntrada(RegistroSir registroSir, Entidad entidad, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, List<CamposNTI> camposNTIs, Long idOrganismoDestino, Long codigoSia)
             throws Exception, I18NException, I18NValidationException {
 
         Libro libro = libroEjb.findById(idLibro);
@@ -1661,7 +1661,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         registroEntrada.setDestinoExternoDenominacion(null);
 
         // RegistroDetalle
-        registroEntrada.setRegistroDetalle(getRegistroDetalle(registroSir, idIdioma));
+        registroEntrada.setRegistroDetalle(getRegistroDetalle(registroSir, idIdioma, codigoSia));
 
         // Interesados
         List<Interesado> interesados = procesarInteresados(registroSir.getInteresados());
@@ -1710,7 +1710,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
      * @return
      * @throws Exception
      */
-    private RegistroDetalle getRegistroDetalle(RegistroSir registroSir, Long idIdioma) throws Exception{
+    private RegistroDetalle getRegistroDetalle(RegistroSir registroSir, Long idIdioma, Long codigoSia) throws Exception{
 
         RegistroDetalle registroDetalle = new RegistroDetalle();
 
@@ -1719,6 +1719,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         registroDetalle.setExtracto(registroSir.getResumen());
         registroDetalle.setTipoDocumentacionFisica(Long.valueOf(registroSir.getDocumentacionFisica()));
         registroDetalle.setIdioma(idIdioma);
+        registroDetalle.setCodigoSia(codigoSia);
         // registroDetalle.setTipoAsunto(new TipoAsunto(idTipoAsunto));
         registroDetalle.setCodigoAsunto(null);
 

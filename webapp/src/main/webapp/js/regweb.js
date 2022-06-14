@@ -928,11 +928,11 @@ function validaFechasConjuntas(fechaInicio, fechaFin, campInicio, campFin){
 function validaEntero(numeroRegistro, campNumeroRegistro){
 
     //Compruebo si es un valor numérico
-    if(numeroRegistro.value.length>0) {
+    if(numeroRegistro.length>0) {
 
-        var contienePunto = numeroRegistro.value.indexOf('.');
+        var contienePunto = numeroRegistro.indexOf('.');
 
-        if ((!isNaN(numeroRegistro.value))&&(contienePunto==-1)) {
+        if ((!isNaN(numeroRegistro))&&(contienePunto==-1)) {
             var variable = "#" + campNumeroRegistro + " span.errors";
             var htmlNormal = "<span id='" + campNumeroRegistro + ".errors'></span>";
             $(variable).html(htmlNormal);
@@ -945,7 +945,7 @@ function validaEntero(numeroRegistro, campNumeroRegistro){
         }
     }
 
-    return !isNaN(numeroRegistro.value);
+    return !isNaN(numeroRegistro);
 }
 
 // Valida que esté selecionado un libro
