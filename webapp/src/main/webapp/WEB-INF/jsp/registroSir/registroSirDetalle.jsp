@@ -124,7 +124,7 @@
                                     <div class="col-xs-5 pull-left etiqueta_regweb control-label textEsq">
                                         <label for="codigoSia" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.codigoSIA"/>" data-toggle="popover"> <spring:message code="registroEntrada.codigoSIA"/></label>
                                     </div>
-                                    <div class="col-xs-7">
+                                    <div class="col-xs-7" id="codigoSia">
                                         <form:input path="codigoSia" maxlength="20" cssClass="form-control"/> <span class="errors"></span>
                                     </div>
                                 </div>
