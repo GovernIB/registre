@@ -277,14 +277,14 @@ public class RegistroSalidaConsultaBean implements RegistroSalidaConsultaLocal {
 
     @Override
     @SuppressWarnings("unchecked")
-    public RegistroSalida findByNumeroRegistroFormateado(String codigoEntidad, String numeroRegistroFormateado) throws Exception {
+    public RegistroSalida findByNumeroRegistroFormateado(Long idEntidad, String numeroRegistroFormateado) throws Exception {
 
 
         Query q = em.createQuery("Select rs from RegistroSalida as rs where rs.numeroRegistroFormateado = :numeroRegistroFormateado " +
-                "and rs.usuario.entidad.codigoDir3 = :codigoEntidad ");
+                "and rs.entidad.id = :idEntidad ");
 
         q.setParameter("numeroRegistroFormateado", numeroRegistroFormateado);
-        q.setParameter("codigoEntidad", codigoEntidad);
+        q.setParameter("idEntidad", idEntidad);
         q.setHint("org.hibernate.readOnly", true);
 
         List<RegistroSalida> registro = q.getResultList();
@@ -297,9 +297,9 @@ public class RegistroSalidaConsultaBean implements RegistroSalidaConsultaLocal {
     }
 
     @Override
-    public RegistroSalida findByNumeroRegistroFormateadoCompleto(String codigoEntidad, String numeroRegistroFormateado) throws Exception, I18NException {
+    public RegistroSalida findByNumeroRegistroFormateadoCompleto(Long idEntidad, String numeroRegistroFormateado) throws Exception, I18NException {
 
-        RegistroSalida registroSalida = findByNumeroRegistroFormateado(codigoEntidad,numeroRegistroFormateado);
+        RegistroSalida registroSalida = findByNumeroRegistroFormateado(idEntidad,numeroRegistroFormateado);
 
         if(registroSalida!= null){
             Hibernate.initialize(registroSalida.getRegistroDetalle().getAnexos());

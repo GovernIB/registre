@@ -145,14 +145,14 @@ public class ArxiuController extends BaseController {
                             expedienteArxiu.setNumeroRegistroFormateado(getNumeroRegistroFormateado(exp));
 
                             if (tipoRegistro.equals(RegwebConstantes.REGISTRO_ENTRADA)) {
-                                RegistroEntrada registroEntrada = registroEntradaConsultaEjb.findByNumeroRegistroFormateado(entidad.getCodigoDir3(), expedienteArxiu.getNumeroRegistroFormateado());
+                                RegistroEntrada registroEntrada = registroEntradaConsultaEjb.findByNumeroRegistroFormateado(entidad.getId(), expedienteArxiu.getNumeroRegistroFormateado());
 
                                 if (registroEntrada != null) {
                                     expedienteArxiu.setJustificante(registroEntrada.getRegistroDetalle().getTieneJustificante());
                                 }
 
                             } else if (tipoRegistro.equals(RegwebConstantes.REGISTRO_SALIDA)) {
-                                RegistroSalida registroSalida = registroSalidaConsultaEjb.findByNumeroRegistroFormateado(entidad.getCodigoDir3(), expedienteArxiu.getNumeroRegistroFormateado());
+                                RegistroSalida registroSalida = registroSalidaConsultaEjb.findByNumeroRegistroFormateado(entidad.getId(), expedienteArxiu.getNumeroRegistroFormateado());
 
                                 if (registroSalida != null) {
                                     expedienteArxiu.setJustificante(registroSalida.getRegistroDetalle().getTieneJustificante());
@@ -239,7 +239,7 @@ public class ArxiuController extends BaseController {
                     if (StringUtils.isNotEmpty(tipoRegistro) && StringUtils.isNotEmpty(codigoLibro)) {
 
                         if (tipoRegistro.equals(RegwebConstantes.REGISTRO_ENTRADA_ESCRITO)) {
-                            registroEntrada = registroEntradaConsultaEjb.findByNumeroRegistroFormateado(entidad.getCodigoDir3(), numeroRegistroFormateado);
+                            registroEntrada = registroEntradaConsultaEjb.findByNumeroRegistroFormateado(entidad.getId(), numeroRegistroFormateado);
 
                             if (registroEntrada != null) {
                                 registroDetalle = registroEntrada.getRegistroDetalle();
@@ -250,7 +250,7 @@ public class ArxiuController extends BaseController {
                             }
 
                         } else {
-                            registroSalida = registroSalidaConsultaEjb.findByNumeroRegistroFormateado(entidad.getCodigoDir3(), numeroRegistroFormateado);
+                            registroSalida = registroSalidaConsultaEjb.findByNumeroRegistroFormateado(entidad.getId(), numeroRegistroFormateado);
 
                             if (registroSalida != null) {
                                 registroDetalle = registroSalida.getRegistroDetalle();
