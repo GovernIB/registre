@@ -443,13 +443,13 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public RegistroEntrada findByNumeroRegistroFormateado(String codigoEntidad, String numeroRegistroFormateado) throws Exception {
+    public RegistroEntrada findByNumeroRegistroFormateado(Long idEntidad, String numeroRegistroFormateado) throws Exception {
 
         Query q = em.createQuery("Select re from RegistroEntrada as re where re.numeroRegistroFormateado = :numeroRegistroFormateado " +
-                "and re.usuario.entidad.codigoDir3 = :codigoEntidad ");
+                "and re.entidad.id = :idEntidad ");
 
         q.setParameter("numeroRegistroFormateado", numeroRegistroFormateado);
-        q.setParameter("codigoEntidad", codigoEntidad);
+        q.setParameter("idEntidad", idEntidad);
         q.setHint("org.hibernate.readOnly", true);
 
         List<RegistroEntrada> registro = q.getResultList();
@@ -464,9 +464,9 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public RegistroEntrada findByNumeroRegistroFormateadoCompleto(String codigoEntidad, String numeroRegistroFormateado) throws Exception, I18NException {
+    public RegistroEntrada findByNumeroRegistroFormateadoCompleto(Long idEntidad, String numeroRegistroFormateado) throws Exception, I18NException {
 
-        RegistroEntrada registroEntrada = findByNumeroRegistroFormateado(codigoEntidad,numeroRegistroFormateado);
+        RegistroEntrada registroEntrada = findByNumeroRegistroFormateado(idEntidad,numeroRegistroFormateado);
 
         if(registroEntrada != null){
             Hibernate.initialize(registroEntrada.getRegistroDetalle().getAnexos());
