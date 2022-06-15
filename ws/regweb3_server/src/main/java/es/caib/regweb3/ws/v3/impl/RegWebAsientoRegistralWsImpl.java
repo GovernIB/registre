@@ -508,7 +508,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
 
         if(REGISTRO_ENTRADA.equals(tipoRegistro)){
             // 4.- Obtenemos el RegistroEntrada
-            RegistroEntrada registroEntrada = registroEntradaConsultaEjb.findByNumeroRegistroFormateadoCompleto(entidad, numeroRegistroFormateado);
+            RegistroEntrada registroEntrada = registroEntradaConsultaEjb.findByNumeroRegistroFormateadoCompleto(entidadActiva.getId(), numeroRegistroFormateado);
 
             if (registroEntrada == null) {
                 throw new I18NException("registroEntrada.noExiste", numeroRegistroFormateado);
@@ -554,7 +554,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
         } else if(REGISTRO_SALIDA.equals(tipoRegistro)){
 
             // 4.- Obtenemos el RegistroSalida
-            RegistroSalida registroSalida = registroSalidaConsultaEjb.findByNumeroRegistroFormateadoCompleto(entidad, numeroRegistroFormateado);
+            RegistroSalida registroSalida = registroSalidaConsultaEjb.findByNumeroRegistroFormateadoCompleto(entidadActiva.getId(), numeroRegistroFormateado);
 
             if (registroSalida == null) {
                 throw new I18NException("registroEntrada.noExiste", numeroRegistroFormateado);
@@ -647,7 +647,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
         UsuarioEntidad usuario = usuarioEntidadEjb.findByIdentificadorEntidad(UsuarioAplicacionCache.get().getUsuario().getIdentificador(), entidadActiva.getId());
 
         // 2.- Obtenemos el RegistroEntrada
-        RegistroEntrada registroEntrada = registroEntradaConsultaEjb.findByNumeroRegistroFormateadoCompleto(entidad, numeroRegistroFormateado);
+        RegistroEntrada registroEntrada = registroEntradaConsultaEjb.findByNumeroRegistroFormateadoCompleto(entidadActiva.getId(), numeroRegistroFormateado);
 
 
         if (registroEntrada == null) {
@@ -699,7 +699,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
         Entidad entidadActiva = validarObligatorios(numeroRegistroFormateado,entidad);
 
         //Averiguamos si existe un oficio de remisión para el número de registro indicado.
-        OficioRemision oficio = oficioRemisionEjb.getByNumeroRegistroFormateado(numeroRegistroFormateado,entidad);
+        OficioRemision oficio = oficioRemisionEjb.getByNumeroRegistroFormateado(numeroRegistroFormateado,entidadActiva.getId());
         if(oficio == null){
             throw new I18NException("oficioRemision.noExiste", numeroRegistroFormateado);
         }

@@ -53,22 +53,23 @@ public interface RegistroSalidaConsultaLocal{
 
     /**
      * Obtiene el RegistroSalida a partir de su numero de registro formateado, la entidad y el libro.
+     * @param idEntidad
      * @param numeroRegistroFormateado
      * @return
      * @throws Exception
      */
-    public RegistroSalida findByNumeroRegistroFormateado(String codigoEntidad, String numeroRegistroFormateado) throws Exception;
+    RegistroSalida findByNumeroRegistroFormateado(Long idEntidad, String numeroRegistroFormateado) throws Exception;
 
 
     /**
      * Obtiene el RegistroSalida a partir de su numero de registro formateado, la entidad y el libro y carga los anexos
-     * @param codigoEntidad
+     * @param idEntidad
      * @param numeroRegistroFormateado
      * @return
      * @throws Exception
      * @throws I18NException
      */
-    public RegistroSalida findByNumeroRegistroFormateadoCompleto(String codigoEntidad, String numeroRegistroFormateado) throws Exception, I18NException;
+    RegistroSalida findByNumeroRegistroFormateadoCompleto(Long idEntidad, String numeroRegistroFormateado) throws Exception, I18NException;
 
 
     /**

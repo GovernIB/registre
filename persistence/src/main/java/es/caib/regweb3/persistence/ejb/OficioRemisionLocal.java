@@ -268,9 +268,10 @@ public interface OficioRemisionLocal extends BaseEjb<OficioRemision, Long> {
     /**
      * Obtiene el oficio de Remisión a partir de un numero de registro formateado
      * @param numeroRegistroFormateado
+     * @param idEntidad
      * @return
      */
-    OficioRemision getByNumeroRegistroFormateado(String numeroRegistroFormateado, String entidad) throws Exception;
+    OficioRemision getByNumeroRegistroFormateado(String numeroRegistroFormateado, Long idEntidad) throws Exception;
 
     /**
      * Genera el pdf del oficio de remisión para obtenerlo via WS

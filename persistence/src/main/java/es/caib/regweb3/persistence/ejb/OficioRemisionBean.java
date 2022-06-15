@@ -953,12 +953,12 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public OficioRemision getByNumeroRegistroFormateado(String numeroRegistroFormateado, String entidad) throws Exception {
+    public OficioRemision getByNumeroRegistroFormateado(String numeroRegistroFormateado, Long idEntidad) throws Exception {
 
         Query q;
-        RegistroEntrada registroEntrada = registroEntradaConsultaEjb.findByNumeroRegistroFormateado(entidad, numeroRegistroFormateado);
+        RegistroEntrada registroEntrada = registroEntradaConsultaEjb.findByNumeroRegistroFormateado(idEntidad, numeroRegistroFormateado);
         if (registroEntrada == null) {
-            RegistroSalida registroSalida = registroSalidaConsultaEjb.findByNumeroRegistroFormateado(entidad, numeroRegistroFormateado);
+            RegistroSalida registroSalida = registroSalidaConsultaEjb.findByNumeroRegistroFormateado(idEntidad, numeroRegistroFormateado);
             if (registroSalida == null) {
                 return null;
             } else {

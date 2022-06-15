@@ -67,7 +67,7 @@ public class AsientoRegistralBean implements AsientoRegistralLocal {
     @Override
     public JustificanteReferencia obtenerReferenciaJustificante(String numeroRegistroformateado, Entidad entidad) throws Exception, I18NException {
 
-        RegistroEntrada registroEntrada = registroEntradaConsultaEjb.findByNumeroRegistroFormateadoCompleto(entidad.getCodigoDir3(), numeroRegistroformateado);
+        RegistroEntrada registroEntrada = registroEntradaConsultaEjb.findByNumeroRegistroFormateadoCompleto(entidad.getId(), numeroRegistroformateado);
 
         if (registroEntrada != null) {
 
@@ -84,7 +84,7 @@ public class AsientoRegistralBean implements AsientoRegistralLocal {
             }
         }
 
-        RegistroSalida registroSalida = registroSalidaConsultaEjb.findByNumeroRegistroFormateadoCompleto(entidad.getCodigoDir3(), numeroRegistroformateado);
+        RegistroSalida registroSalida = registroSalidaConsultaEjb.findByNumeroRegistroFormateadoCompleto(entidad.getId(), numeroRegistroformateado);
 
         if (registroSalida != null) {
 

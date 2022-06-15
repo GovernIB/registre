@@ -236,7 +236,7 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
         UsuarioEntidad usuario = usuarioEntidadEjb.findByIdentificadorEntidad(UsuarioAplicacionCache.get().getUsuario().getIdentificador(), entidadActiva.getId());
 
         // 4.- Obtenemos el RegistroSalida
-        RegistroSalida registroSalida = registroSalidaConsultaEjb.findByNumeroRegistroFormateadoCompleto(entidad, numeroRegistroFormateado);
+        RegistroSalida registroSalida = registroSalidaConsultaEjb.findByNumeroRegistroFormateadoCompleto(entidadActiva.getId(), numeroRegistroFormateado);
 
         if (registroSalida == null) {
             throw new I18NException("registroEntrada.noExiste", numeroRegistroFormateado);
@@ -313,7 +313,7 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
 
 
         // 5.- Obtenemos el RegistroSalida
-        RegistroSalida registroSalida = registroSalidaConsultaEjb.findByNumeroRegistroFormateado(entidad, numeroRegistro);
+        RegistroSalida registroSalida = registroSalidaConsultaEjb.findByNumeroRegistroFormateado(usuarioEntidad.getEntidad().getId(), numeroRegistro);
 
         if (registroSalida == null) {
             throw new I18NException("registroEntrada.noExiste", numeroRegistro);
@@ -366,7 +366,7 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
         }
 
         // 4.- Obtenemos el RegistroSalida
-        RegistroSalida registro = registroSalidaConsultaEjb.findByNumeroRegistroFormateadoCompleto(entidad, numeroRegistro);
+        RegistroSalida registro = registroSalidaConsultaEjb.findByNumeroRegistroFormateadoCompleto(entidadActiva.getId(), numeroRegistro);
 
         if (registro == null) {
             throw new I18NException("registroEntrada.noExiste", numeroRegistro);
