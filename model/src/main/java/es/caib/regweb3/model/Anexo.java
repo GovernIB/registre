@@ -111,6 +111,7 @@ public class Anexo implements Serializable {
     public Anexo(Anexo a) {
       super();
       this.id = a.id;
+      this.entidad = a.entidad;
       this.perfilCustodia = a.perfilCustodia;
       this.titulo = a.titulo;
       this.tipoDocumental = a.tipoDocumental == null? null: new TipoDocumental(a.tipoDocumental);
