@@ -209,6 +209,32 @@ public class OrganismoController extends BaseController {
 
         return "redirect:/organismo/list";
     }
+    
+    /**
+     * Desactiv los usuarios de un {@link es.caib.regweb3.model.Organismo}
+     */
+    @RequestMapping(value = "/comprobarSir", method = RequestMethod.GET)
+    @ResponseBody
+    public boolean isOrganismoSir(@RequestParam String codigoOrganismo, HttpServletRequest request) {
+
+        try {
+        	Entidad entidad = getEntidadActiva(request);
+        	Organismo organismo = organismoEjb.findByCodigoByEntidadMultiEntidad(codigoOrganismo, entidad.getId());
+            boolean integradoConSir = organismoEjb.isDestinoDir3Sir(codigoOrganismo);
+            
+            if (organismo == null && !integradoConSir) {// Si es externo y no integrado con SIR
+            	return false;
+            } else if ((organismo != null) || (organismo == null && integradoConSir)) { // Si es interno o externo integrado con SIR 
+            	return true;
+            }
+            	
+        } catch (Exception e) {
+            Mensaje.saveMessageError(request, getMessage("regweb.error.registro"));
+            e.printStackTrace();
+        }
+
+        return false;
+    }
 
     /**
      * Listado de organismos y oficinas

@@ -823,6 +823,7 @@ public class SirController extends BaseController {
     		BindingResult result,
     		HttpServletRequest request) throws Exception {
     	Entidad entidad = getEntidadActiva(request);
+    	entidad = entidadEjb.findById(entidad.getId());; // con administradores
     	HttpSession session = request.getSession();
     	Integer total;
     	busquedaRegistrosSirValidator.validate(busqueda, result);
@@ -832,7 +833,7 @@ public class SirController extends BaseController {
 		try {
 			mensajesSb = new StringBuilder();
 			synchronized (SemaforoSchedulerConsultaRecibidos.class) {
-				total = registroSirEjb.recuperarRegistrosSirGEISER(entidad.getId(), busqueda.getFechaInicioImportacion(), busqueda.getFechaFinImportacion());
+				total = registroSirEjb.recuperarRegistrosSirGEISER(entidad, busqueda.getFechaInicioImportacion(), busqueda.getFechaFinImportacion());
 			}
 	        
 			if (total > 0) {

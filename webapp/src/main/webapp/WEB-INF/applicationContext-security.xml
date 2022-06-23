@@ -48,7 +48,8 @@
         <!--Dir3-->
         <sec:intercept-url pattern="/dir3/**" access="hasRole('RWE_SUPERADMIN')"/>
         <!--Organismo-->
-        <sec:intercept-url pattern="/organismo/**" access="hasRole('RWE_ADMIN')"/>
+        <sec:intercept-url pattern="/organismo/**" access="hasAnyRole('RWE_ADMIN','RWE_USUARI')"/>
+        
         <!--Informe-->
         <sec:intercept-url pattern="/informe/**" access="hasAnyRole('RWE_ADMIN','RWE_USUARI')"/>
         <!--TipoAsunto-->

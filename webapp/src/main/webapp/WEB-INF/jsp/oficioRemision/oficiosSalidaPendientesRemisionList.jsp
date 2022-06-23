@@ -227,8 +227,16 @@
                                                     <c:forEach var="registroSalida" items="${paginacion.listado}" varStatus="indice">
                                                         <tr>
                                                             <td><form:checkbox id="oficio_id${indice.index}" path="registros[${indice.index}].id" value="${registroSalida.id}"/></td>
-                                                            <td>${registroSalida.numeroRegistroFormateado}</td>
-                                                            <td><fmt:formatDate value="${registroSalida.fecha}" pattern="dd/MM/yyyy"/></td>
+                                                            <td>
+                                                            <c:choose>
+                                                           		<c:when test="${not empty registroSalida.numeroRegistroFormateado}">${registroSalida.numeroRegistroFormateado}</c:when>
+                                                           		<c:otherwise><span class="label label-danger"><spring:message code="regweb.registre.pendent"/></span></c:otherwise>
+                                                           	</c:choose>
+                                                            <td>
+                                                            <c:choose>
+                                                               	<c:when test="${not empty registroSalida.fecha}"><fmt:formatDate value="${registroSalida.fecha}" pattern="dd/MM/yyyy"/></c:when>
+                                                              	<c:otherwise><span class="label label-danger"><spring:message code="regweb.registre.pendent"/></span></c:otherwise>
+                                                            </c:choose>
                                                             <td><label class="no-bold" rel="popupAbajo" data-content="${registroSalida.oficina.codigo}"
                                                                        data-toggle="popover">${registroSalida.oficina.denominacion}</label>
                                                             </td>

@@ -85,14 +85,6 @@ public class ConversionHelper {
 						PeticionRegistroGeiser target = new PeticionRegistroGeiser();
 						target.setResumen(StringUtils.stripToNull(source.getRegistroDetalle().getExtracto()));
 						target.setTipoAsiento(TipoAsiento.ENTRADA);
-//						Informar origen si es administarción
-						if (registroDetalle.getInteresados() != null && registroDetalle.getInteresados().size() > 0) {
-							for (Interesado interesado: registroDetalle.getInteresados()) {
-								if (interesado.getTipo() == 1L) {
-									target.setOrganoOrigen(interesado.getCodigoDir3());
-								}
-							}
-						}
 						String destino = source.getDestino() != null ? source.getDestino().getCodigo() : null;
 						String destinoExterno = source.getDestinoExternoCodigo() != null ? source.getDestinoExternoCodigo() : null;
 						target.setOrganoDestino(StringUtils.stripToNull(destino != null ? destino : destinoExterno));
@@ -103,7 +95,19 @@ public class ConversionHelper {
 						target.setNuTransporte(StringUtils.stripToNull(registroDetalle.getNumeroTransporte()));
 						target.setObservaciones(StringUtils.stripToNull(registroDetalle.getObservaciones()));
 						target.setOficinaOrigen(StringUtils.stripToNull(registroDetalle.getOficinaOrigen().getCodigo()));
-						target.setInteresados(convertirList(registroDetalle.getInteresados(), InteresadoG.class));
+
+//						Informar origen si es administarción
+						if (registroDetalle.getInteresados() != null && registroDetalle.getInteresados().size() > 0) {
+							for (Interesado interesado: registroDetalle.getInteresados()) {
+								if (interesado.getTipo() == 1L) {
+									target.setOrganoOrigen(interesado.getCodigoDir3());
+								} else {
+									target.setInteresados(convertirList(registroDetalle.getInteresados(), InteresadoG.class));
+								}
+							}
+						}
+						
+						
 						if (source.getUsuario() != null)
 							target.setUsuario(StringUtils.stripToNull(source.getUsuario().getUsuario().getDocumento()));
 						return target;
@@ -119,14 +123,6 @@ public class ConversionHelper {
 						target.setResumen(StringUtils.stripToNull(source.getRegistroDetalle().getExtracto()));
 						target.setTipoAsiento(TipoAsiento.SALIDA);
 						target.setOrganoOrigen(source.getOrigen().getCodigo());
-//						Informar destino si es administarción
-						if (registroDetalle.getInteresados() != null && registroDetalle.getInteresados().size() > 0) {
-							for (Interesado interesado: registroDetalle.getInteresados()) {
-								if (interesado.getTipo() == 1L) {
-									target.setOrganoDestino(interesado.getCodigoDir3());
-								}
-							}
-						}
 						target.setDocumentacionFisica(DocumentacionFisica.getDocumentacionFisica(registroDetalle.getTipoDocumentacionFisica()));
 						target.setRefExterna(StringUtils.stripToNull(registroDetalle.getReferenciaExterna()));
 						target.setNuExpediente(StringUtils.stripToNull(registroDetalle.getExpediente()));
@@ -134,7 +130,26 @@ public class ConversionHelper {
 						target.setNuTransporte(StringUtils.stripToNull(registroDetalle.getNumeroTransporte()));
 						target.setObservaciones(StringUtils.stripToNull(registroDetalle.getObservaciones()));
 						target.setOficinaOrigen(StringUtils.stripToNull(registroDetalle.getOficinaOrigen().getCodigo()));
-						target.setInteresados(convertirList(registroDetalle.getInteresados(), InteresadoG.class));
+
+
+						if (registroDetalle.getInteresados() != null && registroDetalle.getInteresados().size() > 0) {
+							for (Interesado interesado: registroDetalle.getInteresados()) {
+								if (interesado.getTipo() == 1L) { // Informar destino si es administarción
+									target.setOrganoDestino(interesado.getCodigoDir3());
+								} else {
+									target.setInteresados(convertirList(registroDetalle.getInteresados(), InteresadoG.class));
+								}
+							}
+						}
+//						if (registroDetalle.getInteresados() != null && registroDetalle.getInteresados().size() > 0) {
+//							for (Interesado interesado: registroDetalle.getInteresados()) {
+//								if (interesado.getTipo() == 1L) {
+//									target.setOrganoDestino(interesado.getCodigoDir3());
+//								} else {
+//									target.setInteresados(convertirList(registroDetalle.getInteresados(), InteresadoG.class));
+//								}
+//							}
+//						}
 						if (source.getUsuario() != null)
 							target.setUsuario(StringUtils.stripToNull(source.getUsuario().getUsuario().getDocumento()));
 						return target;
@@ -148,14 +163,6 @@ public class ConversionHelper {
 						target.setResumen(StringUtils.stripToNull(source.getResumen()));
 						target.setTipoAsiento(TipoAsiento.valueOf(source.getTipoRegistro().name()));
 						target.setTipoEnvio(TipoEnvio.ENVIO_DESTINO);
-////						Informar origen si es administarción
-//						if (source.getInteresados() != null && source.getInteresados().size() > 0) {
-//							for (InteresadoSir interesado: source.getInteresados()) {
-//								if (interesado.getTipoInteresado() == 1L) {
-//									target.setOrganoOrigen(interesado.getDocumentoIdentificacionInteresado());
-//								}
-//							}
-//						}
 						target.setOrganoDestino(StringUtils.stripToNull(source.getCodigoUnidadTramitacionDestino()));
 						target.setOrganoOrigen(source.getCodigoUnidadTramitacionOrigen());
 						target.setOficinaOrigen(StringUtils.stripToNull(source.getCodigoEntidadRegistralOrigen()));
@@ -165,7 +172,30 @@ public class ConversionHelper {
 						target.setTipoTransporte(TipoTransporte.getTipoTransporteName(source.getTipoTransporte()));
 						target.setNuTransporte(StringUtils.stripToNull(source.getNumeroTransporte()));
 						target.setObservaciones(StringUtils.stripToNull(source.getObservacionesApunte()));
-						target.setInteresados(convertirList(source.getInteresados(), InteresadoG.class));
+
+						if (source.getTipoRegistro().equals(TipoRegistro.ENTRADA)) {
+////						Informar origen si es administarción
+							if (source.getInteresados() != null && source.getInteresados().size() > 0) {
+								for (InteresadoSir interesado: source.getInteresados()) {
+									if (interesado.getTipoDocumentoIdentificacionInteresado().equals(String.valueOf(RegwebConstantes.TIPODOCUMENTOID_CODIGO_ORIGEN))) { // Administración
+										target.setOrganoOrigen(interesado.getDocumentoIdentificacionInteresado());
+									} else {
+										target.setInteresados(convertirList(source.getInteresados(), InteresadoG.class));
+									}
+								}
+							}
+						}
+						
+						if (source.getTipoRegistro().equals(TipoRegistro.SALIDA)) {
+							if (source.getInteresados() != null && source.getInteresados().size() > 0) {
+								for (InteresadoSir interesado: source.getInteresados()) {
+									if (!interesado.getTipoDocumentoIdentificacionInteresado().equals(String.valueOf(RegwebConstantes.TIPODOCUMENTOID_CODIGO_ORIGEN))) { // Administración
+										target.setInteresados(convertirList(source.getInteresados(), InteresadoG.class));
+									}
+								}
+							}
+						}
+						
 						if (source.getDocumentoUsuario() != null)
 							target.setUsuario(StringUtils.stripToNull(source.getDocumentoUsuario()));
 						
@@ -230,7 +260,12 @@ public class ConversionHelper {
 						}
 						target.setDireccion(StringUtils.stripToNull(source.getDireccion()));
 						target.setCp(StringUtils.stripToNull(source.getCp()));
-						target.setRazonSocial(StringUtils.stripToNull(source.getRazonSocial()));
+						if (source.getRazonSocial() != null && source.getRazonSocial().length() > 80) {
+							String razonSocialAbr = source.getRazonSocial().substring(0, 76).replaceAll("\\s+$", "") + "...";
+							target.setRazonSocial(StringUtils.stripToNull(razonSocialAbr));
+						} else {
+							target.setRazonSocial(StringUtils.stripToNull(source.getRazonSocial()));
+						}
 						target.setObservaciones(StringUtils.stripToNull(source.getObservaciones()));
 						if (source.getIsRepresentante()) {
 							target.setRepresentante(
@@ -262,7 +297,15 @@ public class ConversionHelper {
 							target.setMunicipio(StringUtils.stripToNull(String.valueOf(source.getCodigoMunicipioInteresado())));
 						target.setDireccion(StringUtils.stripToNull(source.getDireccionInteresado()));
 						target.setCp(StringUtils.stripToNull(source.getCodigoPostalInteresado()));
-						target.setRazonSocial(StringUtils.stripToNull(source.getRazonSocialInteresado()));
+						
+						String razonSocialInteresado = source.getRazonSocialInteresado();
+						if (razonSocialInteresado != null && razonSocialInteresado.length() > 80) {
+							String razonSocialAbr = razonSocialInteresado.substring(0, 76).replaceAll("\\s+$", "") + "...";
+							target.setRazonSocial(StringUtils.stripToNull(razonSocialAbr));
+						} else {
+							target.setRazonSocial(StringUtils.stripToNull(source.getRazonSocialInteresado()));
+						}
+						
 						target.setDireccionElectronica(StringUtils.stripToNull(source.getDireccionElectronicaHabilitadaInteresado()));
 						target.setObservaciones(StringUtils.stripToNull(source.getObservaciones()));
 						if (source.getRepresentante()) {
@@ -283,7 +326,16 @@ public class ConversionHelper {
 								target.getRepresentante().setMunicipio(StringUtils.stripToNull(String.valueOf(source.getCodigoMunicipioInteresado())));
 							target.getRepresentante().setDireccion(StringUtils.stripToNull(source.getDireccionInteresado()));
 							target.getRepresentante().setCp(StringUtils.stripToNull(source.getCodigoPostalInteresado()));
-							target.getRepresentante().setRazonSocial(StringUtils.stripToNull(source.getRazonSocialInteresado()));
+							
+							
+							String razonSocialRepresentante = source.getRazonSocialInteresado();
+							if (razonSocialRepresentante != null && razonSocialRepresentante.length() > 80) {
+								String razonSocialAbr = razonSocialRepresentante.substring(0, 76).replaceAll("\\s+$", "") + "...";
+								target.getRepresentante().setRazonSocial(StringUtils.stripToNull(razonSocialAbr));
+							} else {
+								target.getRepresentante().setRazonSocial(StringUtils.stripToNull(source.getRazonSocialInteresado()));
+							}
+							
 							target.getRepresentante().setDireccionElectronica(StringUtils.stripToNull(source.getDireccionElectronicaHabilitadaInteresado()));
 							target.getRepresentante().setObservaciones(StringUtils.stripToNull(source.getObservaciones()));
 						}
@@ -594,9 +646,21 @@ public class ConversionHelper {
 						// Formulario
 						target.setExpone(source.getExpone());
 						target.setSolicita(source.getSolicita());
-
+						boolean interesadoValido = true;
+						// Comprobamos validez interesado
+						if (source.getInteresados() != null && !source.getInteresados().isEmpty()) {
+							for (InteresadoG interesadoG: source.getInteresados()) {
+								if (interesadoG.getNombre() != null && interesadoG.getTipoDocumento() == null) {
+									interesadoValido = false;
+								}
+								if (interesadoG.getRazonSocial() != null && interesadoG.getTipoDocumento() == null) {
+									interesadoValido = false;
+								}
+							}
+						}
+						
 						// Si se trata de una Salida y no tiene Interesados creamos uno a partir de la Entidad destino
-						if (source.getInteresados() == null || source.getInteresados().isEmpty()) {
+						if ((source.getInteresados() == null || source.getInteresados().isEmpty()) || !interesadoValido) {
 							InteresadoSir intresadoSirSalida = new InteresadoSir();
 							// Interesado a partir de origen
 							if (source.getOrganoOrigen() != null) {

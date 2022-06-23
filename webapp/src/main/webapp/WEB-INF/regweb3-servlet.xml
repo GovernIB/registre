@@ -85,6 +85,7 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
         <!--Interceptor para Organismo-->
         <mvc:interceptor>
             <mvc:mapping path="/organismo/**"/>
+            <mvc:exclude-mapping path="/organismo/comprobarSir**"/>
             <bean class="es.caib.regweb3.webapp.interceptor.OrganismoInterceptor"/>
         </mvc:interceptor>
 

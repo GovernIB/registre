@@ -132,12 +132,12 @@ public class RegistroUtils{
      */
     public static Long obtenerDiasRegistro(Date fechaCreacionRegistro) throws Exception {
 
-
-       final long MILLSECS_PER_DAY = 24 * 60 * 60 * 1000; //Milisegundos al día
-       java.util.Date hoy = new Date(); //Fecha de hoy
-
-       long diferencia = ( hoy.getTime() - fechaCreacionRegistro.getTime() )/MILLSECS_PER_DAY;
-
+    	long diferencia = 0;
+    	final long MILLSECS_PER_DAY = 24 * 60 * 60 * 1000; //Milisegundos al día
+    	java.util.Date hoy = new Date(); //Fecha de hoy
+    	if (fechaCreacionRegistro != null) { // No enviat a GEISER
+    		diferencia = ( hoy.getTime() - fechaCreacionRegistro.getTime() )/MILLSECS_PER_DAY;
+    	}
        return diferencia;
 
     }

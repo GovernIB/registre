@@ -549,7 +549,7 @@
         // Posa el títol al modal
         $('#anexoTitulo').html('<spring:message code="anexo.editar"/>');
         // Afegeix el contingut de formularioAnexoFichero.jsp al modal
-        loadiframe("<c:url value="/anexo/editar/"/>" + idRegistroDetalle + "/" + tipoRegistro + "/" + idRegistro + "/" + idAnexo + "/${registro.evento == RegwebConstantes.EVENTO_OFICIO_SIR}");
+        loadiframe("<c:url value="/anexo/editar/"/>" + idRegistroDetalle + "/" + tipoRegistro + "/" + idRegistro + "/" + idAnexo + "/${registro.evento == RegwebConstantes.EVENTO_OFICIO_SIR}/${registro.registroDetalle.recibidoSir}");
     }
 
 

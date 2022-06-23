@@ -519,34 +519,52 @@ function asignarOrganismo(codigo, denominacion, tipoOrganismo) {
     var idDenominacionExterna = getIdDenominacionExterna(tipoOrganismo);
     var anadir = true;
     var idModal = "#modalBuscador" + tipoOrganismo;
-
-
-    /* Miramos si el organismo ya existe en el select, si existe lo seleccionamos,
-     si no lo indicamos con la variable anadir para añadirlo posteriormente */
-    $(idSelect + " option").each(function () {
-
-        if ($(this).val() == codigo) {
-            anadir = false;
-            $(this).prop("selected", true);
+    var integradoInternOrSir = true;
+    /* Comprobamos que esté integrado con SIR */
+    $.ajax({
+    	async: false,
+        crossDomain: true,
+        url: urlComprobacionSir,
+        data: { codigoOrganismo: codigo },
+        type: "GET",
+        dataType: 'json',
+        contentType: 'application/json',
+        success: function(result) {
+            if(result !== true){
+                alert(tradorganismo['organismo.nosir']);
+                integradoInternOrSir = false;
+            }
         }
-
     });
-    // Si no existe lo añadimos al select
-    if (anadir) {
-        var html = '';
-        var selected = 'selected="selected"';
-        html += '<option ' + selected + ' value="' + codigo + '">'
-            + denominacion + '</option>';
-
-        $(idSelect).append(html);
-        $(idDenominacion).val(denominacion);
-        if (idDenominacionExterna != null) {
-            $(idDenominacionExterna).val(denominacion);
-        }
+    
+    if (integradoInternOrSir) {
+	    /* Miramos si el organismo ya existe en el select, si existe lo seleccionamos,
+	     si no lo indicamos con la variable anadir para añadirlo posteriormente */
+	    $(idSelect + " option").each(function () {
+	
+	        if ($(this).val() == codigo) {
+	            anadir = false;
+	            $(this).prop("selected", true);
+	        }
+	
+	    });
+	    // Si no existe lo añadimos al select
+	    if (anadir) {
+	        var html = '';
+	        var selected = 'selected="selected"';
+	        html += '<option ' + selected + ' value="' + codigo + '">'
+	            + denominacion + '</option>';
+	
+	        $(idSelect).append(html);
+	        $(idDenominacion).val(denominacion);
+	        if (idDenominacionExterna != null) {
+	            $(idDenominacionExterna).val(denominacion);
+	        }
+	    }
+	    $(idSelect).trigger("chosen:updated");
+	    $(idModal).modal('hide');
+	    limpiarFormularioBusqueda(tipoOrganismo);
     }
-    $(idSelect).trigger("chosen:updated");
-    $(idModal).modal('hide');
-    limpiarFormularioBusqueda(tipoOrganismo);
 }
 
 /**
@@ -560,10 +578,32 @@ function asignarOrganismo(codigo, denominacion, tipoOrganismo) {
 function addOrganismoInteresadoModal(codigoDir3, denominacion, tipo, tipoOrganismo, idRegistroDetalle) {
 
     var idModal = "#modalBuscador" + tipoOrganismo;
+    var integradoInternOrSir = true;
+    /* 
+    if (tipoRegistro==2) {
+	    //Comprobamos que esté integrado con SIR 
+	    $.ajax({
+	    	async: false,
+	        crossDomain: true,
+	        url: urlComprobacionSir,
+	        data: { codigoOrganismo: codigoDir3 },
+	        type: "GET",
+	        dataType: 'json',
+	        contentType: 'application/json',
+	        success: function(result) {
+	            if(result !== true){
+	                alert(tradorganismo['organismo.nosir']);
+	                integradoInternOrSir = false;
+	            }
+	        }
+	    });
+    }
+	*/
+    if (integradoInternOrSir) {
+    	restOrganismoInteresado(codigoDir3, denominacion, idRegistroDetalle, tipo);
 
-    restOrganismoInteresado(codigoDir3, denominacion, idRegistroDetalle, tipo);
-
-    $(idModal).modal('hide');
+    	$(idModal).modal('hide');
+    }
 
 }
 

@@ -253,4 +253,6 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
 	
 	void actualizarDestinoExterno(Long idRegistroSalida, String codDestinoExterno, String descDestinoExterno)
 			throws Exception;
+
+	void marcarRectificado(Long idRegistro);
 }

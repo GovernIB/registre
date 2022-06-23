@@ -58,6 +58,12 @@
 <c:if test="${param.tipoRegistro == RegwebConstantes.REGISTRO_SALIDA}">
     <dt><i class="fa fa-institution"></i> <spring:message code="registroSalida.origen"/>: </dt> <dd>${registro.origen.denominacion} - ${registro.origen.codigo} <c:if test="${registro.origen.estado.codigoEstadoEntidad != RegwebConstantes.ESTADO_ENTIDAD_VIGENTE}"><span class="label label-danger"><spring:message code="unidad.estado.${registro.origen.estado.codigoEstadoEntidad}" /></span></c:if></dd>
 </c:if>
+<c:set var="docFisica" value="${registro.registroDetalle.tipoDocumentacionFisica}"/>
+
+<c:if test="${(docFisica==RegwebConstantes.TIPO_DOCFISICA_ACOMPANYA_DOC_REQUERIDA || docFisica==RegwebConstantes.TIPO_DOCFISICA_ACOMPANYA_DOC_COMPLEMENTARIA) && not empty registro.registroDetalle.direccionPostalDestino}">
+<dt><i class="fa fa-address-card"></i> <spring:message code="registroEntrada.organismoDestino.direccion"/>: </dt>
+<dd>${registro.registroDetalle.direccionPostalDestino}</dd>
+</c:if>
 <hr class="${divider}">
 <c:if test="${not empty registro.registroDetalle.extracto}"><dt><i class="fa fa-file-text-o"></i> <spring:message code="registroEntrada.extracto"/>: </dt> <dd> <c:out value="${registro.registroDetalle.extracto}" escapeXml="true"/></dd></c:if>
 <c:if test="${not empty registro.registroDetalle.reserva}"><dt><i class="fa fa-file-text-o"></i> <spring:message code="registroEntrada.reserva"/>: </dt> <dd> ${registro.registroDetalle.reserva}</dd></c:if>

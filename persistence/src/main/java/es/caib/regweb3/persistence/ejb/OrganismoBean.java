@@ -1,5 +1,6 @@
 package es.caib.regweb3.persistence.ejb;
 
+import es.caib.dir3caib.ws.api.oficina.Dir3CaibObtenerOficinasWs;
 import es.caib.dir3caib.ws.api.unidad.Dir3CaibObtenerUnidadesWs;
 import es.caib.dir3caib.ws.api.unidad.UnidadTF;
 import es.caib.regweb3.model.*;
@@ -935,5 +936,11 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
 
     }
 
+    @Override
+    public boolean isDestinoDir3Sir(String codigoDir3) throws Exception {
+    	Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService(PropiedadGlobalUtil.getDir3CaibServer(), PropiedadGlobalUtil.getDir3CaibUsername(), PropiedadGlobalUtil.getDir3CaibPassword());
+
+        return oficinasService.obtenerOficinasSIRUnidad(codigoDir3).isEmpty() ? false : true;
+    }
 
 }

@@ -151,13 +151,19 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
             errorInteresado = false;
         }
 
+        boolean destinoValido = verificarDestinoSeleccionado(interesadosSesion, entidad);
+        
         if (result.hasErrors() || errorInteresado) { // Si hay errores volvemos a la vista del formulario
 
             // Si no hay ningún interesado, generamos un error.
             if(errorInteresado){
                 model.addAttribute("errorInteresado", errorInteresado);
             }
-
+            
+			if (!destinoValido) {
+				model.addAttribute("destinoNoValido", true);
+			}
+            
             LinkedHashSet<Oficina> oficinasOrigen;
             if(multiEntidadEjb.isMultiEntidad()){
                 oficinasOrigen = new LinkedHashSet<>(getOficinasOrigenMultiEntidad(request));
@@ -228,8 +234,36 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
         }
     }
 
-
     /**
+     * Verificar que el destí sea interno o externo integrado con SIR
+     * @param destino
+     * @param entidad
+     */
+    private boolean verificarDestinoSeleccionado(List<Interesado> interesados, Entidad entidad) {
+    	if(interesados != null && interesados.isEmpty()) {
+	    	try {
+	    		for (Interesado interesado : interesados) {
+					if (interesado.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION)) {
+						String codigoDir3 = interesado.getCodigoDir3();
+						
+						Organismo organismo = organismoEjb.findByCodigoByEntidadMultiEntidad(codigoDir3, entidad.getId());
+				        boolean integradoConSir = organismoEjb.isDestinoDir3Sir(codigoDir3);
+				        
+				        if (organismo == null && !integradoConSir) {// Si es externo y no integrado con SIR
+			            	return false;
+			            } else if ((organismo != null) || (organismo == null && integradoConSir)) { // Si es interno o externo integrado con SIR 
+			            	return true;
+			            }
+					}
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+    	}
+		return false;
+	}
+
+	/**
      * Carga el formulario para modificar un {@link es.caib.regweb3.model.RegistroSalida}
      */
     @RequestMapping(value = "/{idRegistro}/edit", method = RequestMethod.GET)
@@ -380,6 +414,18 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
     }
 
     /**
+     * Método que marca un Registro de Entrada como rectificado (manual)
+     * @param idRegistro identificador del registro de entrada
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/{idRegistro}/marcarRectificado", method=RequestMethod.GET)
+    public String marcarRectificado(@PathVariable Long idRegistro, HttpServletRequest request) throws Exception {
+    	registroSalidaEjb.marcarRectificado(idRegistro);
+    	return "redirect:/registroSalida/"+idRegistro+"/detalle";
+    }
+    
+    /**
      * Método que rectifica un Registro de Salida
      * @param idRegistro identificador del registro de salida
      * @return
@@ -392,7 +438,7 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
         RegistroSalida registroSalidaRectificado;
 
         try{
-
+        	boolean desactivatTemporal = true;
             RegistroSalida registroSalida = registroSalidaEjb.getConAnexosFull(idRegistro);
 
             // Comprobamos si el usuario tiene permisos para registrar el registro rectificado
@@ -400,7 +446,10 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
                 Mensaje.saveMessageError(request, I18NUtils.tradueix("aviso.registro.permisos"));
                 return "redirect:/registroSalida/"+idRegistro+"/detalle";
             }
-
+            if (desactivatTemporal) {
+            	Mensaje.saveMessageError(request, I18NUtils.tradueix("aviso.registro.rectifcar.desactivat"));
+                return "redirect:/registroSalida/"+idRegistro+"/detalle";
+            }
             List<Long> isRectificar = new ArrayList<Long>();
             Collections.addAll(isRectificar, RegwebConstantes.REGISTRO_RECHAZADO, RegwebConstantes.REGISTRO_ANULADO);
 

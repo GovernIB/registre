@@ -50,7 +50,7 @@ public class  OrganismoInterceptor extends HandlerInterceptorAdapter {
                     response.sendRedirect("/regweb3/aviso");
                     return false;
                 }
-            }else{
+            }else if (!rolActivo.getNombre().equals(RegwebConstantes.RWE_USUARI)){
                 log.info("Error de rol");
                 Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.rol"));
                 response.sendRedirect("/regweb3/aviso");

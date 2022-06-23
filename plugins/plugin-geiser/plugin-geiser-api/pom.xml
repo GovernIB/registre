@@ -32,8 +32,14 @@
             <version>1.5</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+			<groupId>es.mpt.sgtic.geiser</groupId>
+			<artifactId>GeiserRGECO-client</artifactId>
+			<version>v2.2.6</version>
+		</dependency>
 	</dependencies>
 	<!--  
+	
 	<build>
 		<plugins>
 			<plugin>
@@ -51,9 +57,13 @@
 							<wsdlUrls>
 								<wsdlUrl>${basedir}/wsdl/RegistroWebService.wsdl</wsdlUrl>
 							</wsdlUrls>
+							<xdebug>false</xdebug>
 							<packageName>org.plugin.geiser.api.ws</packageName>
+							<xjcArgs>
+								<xjcArg>-XautoNameResolution</xjcArg>
+							</xjcArgs>
 							<vmArgs>
-								<vmArg>-Djavax.xml.accessExternalSchema=all -Djavax.net.ssl.trustStore=${basedir}/doc/rgecopruebas.jks -Djavax.net.ssl.trustStorePassword=tecnologies</vmArg>
+								<vmArg>-Djavax.xml.accessExternalSchema=all -Djavax.net.ssl.trustStore=${basedir}/doc/rgecopruebas.jks -Djavax.net.ssl.trustStorePassword=tecnologies -Dhttps.proxyHost=127.0.0.1  -Dhttps.proxyPort=3128</vmArg>
 							</vmArgs>
 							<verbose>true</verbose>
 							<sourceDestDir>${basedir}/src/main/java</sourceDestDir>

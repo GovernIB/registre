@@ -35,22 +35,14 @@ import org.plugin.geiser.api.RespuestaBusquedaTramitGeiser;
 import org.plugin.geiser.api.RespuestaConsultaGeiser;
 import org.plugin.geiser.api.RespuestaRegistroGeiser;
 import org.plugin.geiser.api.TipoAsiento;
-import org.plugin.geiser.api.ws.ApunteRegistroType;
-import org.plugin.geiser.api.ws.AuthenticationType;
-import org.plugin.geiser.api.ws.IRegistroWebService;
-import org.plugin.geiser.api.ws.PeticionBusquedaEstadoTramitacionType;
-import org.plugin.geiser.api.ws.PeticionBusquedaType;
-import org.plugin.geiser.api.ws.PeticionConsultaType;
-import org.plugin.geiser.api.ws.PeticionRegistroEnvioSimpleType;
-import org.plugin.geiser.api.ws.PeticionRegistroType;
-import org.plugin.geiser.api.ws.RegistroWebService;
-import org.plugin.geiser.api.ws.ResultadoBusquedaEstadoTramitacionType;
-import org.plugin.geiser.api.ws.ResultadoBusquedaType;
-import org.plugin.geiser.api.ws.ResultadoConsultaType;
-import org.plugin.geiser.api.ws.ResultadoRegistroType;
-import org.plugin.geiser.api.ws.VersionRegeco;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import es.gob.minhap.geiser.rgeco.ws.client.RegistroWebService;
+import es.gob.minhap.geiser.rgeco.ws.client.registro.IRegistroWebService;
+import es.gob.minhap.geiser.rgeco.ws.client.registro.types.*;
+import es.gob.minhap.geiser.rgeco.ws.client.types.AuthenticationType;
+import es.gob.minhap.geiser.rgeco.ws.client.types.VersionRegeco;
 
 public class GeiserApbPlugin extends AbstractPluginProperties implements IGeiserPlugin {
 

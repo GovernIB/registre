@@ -280,4 +280,8 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
 	void actualizarDestinoExterno(Long idRegistroEntrada, String codDestinoExterno, String descDestinoExterno)
 			throws Exception;
 
+
+	void marcarRectificado(Long idRegistro);
+
+
 }

@@ -65,7 +65,7 @@ ALTER TABLE RWE_TRAZABILIDAD_SIR MODIFY APLICACION VARCHAR2(10 CHAR);
 -- Campo necesario para consultar identificador intercambio registros recibidos
 ALTER TABLE RWE_REGISTRO_SIR ADD NUMERO_REGISTRO_ORIGEN VARCHAR2(20 CHAR);
 
-ALTER TABLE RWE_ANEXO_SIR MODIFY TIPO_MIME VARCHAR2(50 CHAR);
+ALTER TABLE RWE_ANEXO_SIR MODIFY TIPO_MIME VARCHAR2(100 CHAR);
 
 -- Cron modificable 
 INSERT INTO RWE_PROPIEDADGLOBAL (ID, CLAVE, DESCRIPCION, ENTIDAD, TIPO, VALOR) VALUES (RWE_ALL_SEQ.nextVal,'es.caib.regweb3.cron.actualizacion.envio.sir.periodo','Tiempo inicial actualización registros enviados vía SIR',null,1,600000); --10min
@@ -86,3 +86,8 @@ ALTER TABLE RWE_ANEXO_SIR MODIFY IDENTIFICADOR_FICHERO NULL;
 
 -- Forzar una oficina para soportar envíos SIR (lógico -> GEISER)
 ALTER TABLE RWE_OFICINA ADD (FORZAR_ENVIO_SIR NUMBER(1,0) DEFAULT 1 NOT NULL);
+
+ALTER TABLE RWE_REGISTRO_DETALLE ADD DIRECCION_POSTAL_DEST VARCHAR2(255 CHAR);
+
+INSERT INTO RWE_PROPIEDADGLOBAL (ID, CLAVE, DESCRIPCION, ENTIDAD, TIPO, VALOR) VALUES (RWE_ALL_SEQ.nextVal,'es.caib.regweb3.cron.actualizacion.envio.sir.reintent','Máximo reintentos consulta estado envío SIR en caso de error',null,1,20); -- 20
+

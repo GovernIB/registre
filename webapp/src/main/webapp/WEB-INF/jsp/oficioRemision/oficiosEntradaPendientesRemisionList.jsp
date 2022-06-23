@@ -244,10 +244,20 @@
                                                         <c:forEach var="registroEntrada" items="${paginacion.listado}" varStatus="indice">
                                                             <tr>
                                                                 <td><form:checkbox id="oficio_id${indice.index}" path="registros[${indice.index}].id"
-                                                                                   value="${registroEntrada.id}"/></td>
-                                                                <td>${registroEntrada.numeroRegistroFormateado}</td>
-                                                                <td><fmt:formatDate value="${registroEntrada.fecha}"
-                                                                                    pattern="dd/MM/yyyy"/></td>
+                                                                                   value="${registroEntrada.id}"/>
+																</td>
+                                                                <td>
+                                                                <c:choose>
+                                                           			<c:when test="${not empty registroEntrada.numeroRegistroFormateado}">${registroEntrada.numeroRegistroFormateado}</c:when>
+                                                           			<c:otherwise><span class="label label-danger"><spring:message code="regweb.registre.pendent"/></span></c:otherwise>
+                                                           		</c:choose>
+                                                            	</td>
+                                                           	 	<td>
+                                                            	<c:choose>
+                                                               		<c:when test="${not empty registroEntrada.fecha}"><fmt:formatDate value="${registroEntrada.fecha}" pattern="dd/MM/yyyy"/></c:when>
+                                                              		<c:otherwise><span class="label label-danger"><spring:message code="regweb.registre.pendent"/></span></c:otherwise>
+                                                            	</c:choose>
+                                                            	</td>
                                                                 <td><label class="no-bold" rel="popupAbajo"
                                                                            data-content="${registroEntrada.oficina.codigo}"
                                                                            data-toggle="popover">${registroEntrada.oficina.denominacion}</label>

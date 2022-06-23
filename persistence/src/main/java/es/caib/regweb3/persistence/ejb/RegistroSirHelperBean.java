@@ -120,7 +120,7 @@ public class RegistroSirHelperBean extends BaseEjbJPA<RegistroSir, Long> impleme
     
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 	@Override
-	public void crearRegistroSirRecibido(
+	public Integer crearRegistroSirRecibido(
 			ApunteRegistro apunteRegistroBusquedaFiltrado, 
 			Long entidadId,
 			Integer total, 
@@ -241,9 +241,6 @@ public class RegistroSirHelperBean extends BaseEjbJPA<RegistroSir, Long> impleme
 									1L,
 									new ArrayList<CamposNTI>(), 
 									organismoDestino.getId());
-							log.info("Registro de entrada " + apunteRegistroBusquedaFiltrado.getNuRegistro() + " creado correctamente");
-							progreso.addInfo(TipoInfo.INFO, "Registro de entrada creado correctamente");
-							progreso.addInfo(TipoInfo.INFO, "-------------------------------------------");
 						} else {
 							throw new RuntimeException("No se ha informado ninguna oficina y entidad destino para el registro recibido");
 						}
@@ -272,6 +269,7 @@ public class RegistroSirHelperBean extends BaseEjbJPA<RegistroSir, Long> impleme
 			}
 		}
 		progreso.incrementRegistrosRecuperados();
+		return total;
 	}
 
     @Override
@@ -729,13 +727,13 @@ public class RegistroSirHelperBean extends BaseEjbJPA<RegistroSir, Long> impleme
                    anexo.setValidezDocumento(TIPOVALIDEZDOCUMENTO_COPIA);
                }
            }
-
+           String tipoDocumento = anexoSir.getTipoDocumento();
            // Tipo Documento
-           if (anexoSir.getTipoDocumento() != null) {
-               anexo.setTipoDocumento(Long.valueOf(anexoSir.getTipoDocumento()));
+           if (tipoDocumento != null) {
+               anexo.setTipoDocumento(Long.valueOf(tipoDocumento));
 
                // Si es un Documento técnico, ponemos el Origen a ADMINSITRACIÓN
-               if(anexoSir.getTipoDocumento().equals(RegwebConstantes.TIPO_DOCUMENTO_FICHERO_TECNICO_SICRES)){
+               if(tipoDocumento.equals(RegwebConstantes.TIPO_DOCUMENTO_FICHERO_TECNICO_SICRES)){
                    anexo.setOrigenCiudadanoAdmin(RegwebConstantes.ANEXO_ORIGEN_ADMINISTRACION);
                }
            }
@@ -745,13 +743,14 @@ public class RegistroSirHelperBean extends BaseEjbJPA<RegistroSir, Long> impleme
            if (camposNTI.getIdOrigen() != null) {
                anexo.setOrigenCiudadanoAdmin(camposNTI.getIdOrigen().intValue());
 
-           }else{ // Si no está informado, se informa por parte de un usuario de registro al formulario del anexo
-//               anexo.setOrigenCiudadanoAdmin(ANEXO_ORIGEN_CIUDADANO);
+           } else if (tipoDocumento != null && Long.valueOf(tipoDocumento).equals(RegwebConstantes.TIPO_DOCUMENTO_FICHERO_TECNICO)){ //Si es fichero técnico
+               anexo.setOrigenCiudadanoAdmin(RegwebConstantes.ANEXO_ORIGEN_CIUDADANO);
            }
 
            // // Si no está informado, se informa por parte de un usuario de registro al formulario del anexo
-           if (camposNTI.getIdTipoDocumental() == null || camposNTI.getIdTipoDocumental().equals("")) {
-//               anexo.setTipoDocumental(tipoDocumentalEjb.findByCodigoEntidad("TD99", idEntidad));
+           if (tipoDocumento != null && Long.valueOf(tipoDocumento).equals(RegwebConstantes.TIPO_DOCUMENTO_FICHERO_TECNICO) && 
+        		   (camposNTI.getIdTipoDocumental() == null || camposNTI.getIdTipoDocumental().equals(""))) {
+               anexo.setTipoDocumental(tipoDocumentalEjb.findByCodigoEntidad("TD99", idEntidad));
            }else{
                anexo.setTipoDocumental(tipoDocumentalEjb.findByCodigoEntidad(camposNTI.getIdTipoDocumental(), idEntidad));
            }

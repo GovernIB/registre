@@ -118,7 +118,7 @@ public class AnexoController extends BaseController {
                 model.addAttribute("tiposValidezDocumento", RegwebConstantes.TIPOS_VALIDEZDOCUMENTO_SCAN);
             } else{
                 log.info("desde scan");
-                model.addAttribute("tiposValidezDocumento", RegwebConstantes.TIPOS_VALIDEZDOCUMENTO_SCAN_ORIGINAL);
+                model.addAttribute("tiposValidezDocumento", RegwebConstantes.TIPOS_VALIDEZDOCUMENTO);
             }
         }
 
@@ -191,12 +191,12 @@ public class AnexoController extends BaseController {
     /*
      Prepara los datos de un anexo para su edición
      */
-    @RequestMapping(value = "/editar/{registroDetalleID}/{tipoRegistro}/{registroID}/{anexoID}/{isOficioRemisionSir}",
+    @RequestMapping(value = "/editar/{registroDetalleID}/{tipoRegistro}/{registroID}/{anexoID}/{isOficioRemisionSir}/{isRecibidoSir}",
             method = RequestMethod.GET)
     public String editarAnexoGet(HttpServletRequest request,
                                  HttpServletResponse response, @PathVariable Long registroDetalleID,
                                  @PathVariable Long tipoRegistro, @PathVariable Long registroID,
-                                 @PathVariable Long anexoID, @PathVariable boolean isOficioRemisionSir, Model model) throws I18NException, Exception {
+                                 @PathVariable Long anexoID, @PathVariable boolean isOficioRemisionSir, @PathVariable boolean isRecibidoSir, Model model) throws I18NException, Exception {
 
         final boolean debug = log.isDebugEnabled();
 
@@ -251,7 +251,8 @@ public class AnexoController extends BaseController {
         }
 
         model.addAttribute("anexoForm", anexoForm);
-
+        model.addAttribute("isRecibidoSir", isRecibidoSir);
+        
         return "registro/formularioAnexo";
 
     }

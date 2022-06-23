@@ -215,7 +215,10 @@ que se le indica -->
     tradorganismo['organismo.estado.transitorio'] = "<spring:message code='unidad.estado.T' javaScriptEscape='true' />";
     tradorganismo['organismo.buscador.error'] = "<spring:message code='organismo.buscador.error' javaScriptEscape='true' />";
     tradorganismo['interesado.administracion'] = "<spring:message code='interesado.administracion' javaScriptEscape='true' />";
-
+    tradorganismo['organismo.nosir'] = "<spring:message code='organismo.no.sir' javaScriptEscape='true' />";
+    
+    var urlComprobacionSir = '<c:url value="/organismo/comprobarSir"/>';
+	
     function actualizarLocalidadDestinatarios(paramTipo) {
 
         <c:url var="obtenerLocalidades" value="/rest/obtenerLocalidadesProvincia" />

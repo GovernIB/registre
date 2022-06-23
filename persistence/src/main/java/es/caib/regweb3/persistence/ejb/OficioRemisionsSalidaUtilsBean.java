@@ -62,18 +62,25 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
     public LinkedHashSet<Organismo> organismosSalidaPendientesRemisionTipo(Long idOficina, Long tipoEvento, Integer total) throws Exception {
 
         String queryFecha = "";
+        String queryFechaOficio = "";
+        
         String fecha = PropiedadGlobalUtil.getFechaOficiosSalida();
 
         if (StringUtils.isNotEmpty(fecha)) {
-            queryFecha = " and rs.fecha >= :fecha";
+            queryFecha = " and (rs.fecha is null or rs.fecha >= :fecha)";
         }
-
+        if (tipoEvento.equals(RegwebConstantes.EVENTO_OFICIO_EXTERNO)) {
+        	queryFechaOficio = "and rs.numeroRegistro is not null";
+        } else if (tipoEvento.equals(RegwebConstantes.EVENTO_OFICIO_SIR)) {
+        	queryFechaOficio = "and rs.numeroRegistro is null";
+        }
         // Obtenemos los Registros de Salida que son Oficio de remisión
         Query q = em.createQuery("Select distinct(rs.registroDetalle.id) from RegistroSalida as rs where " +
-                "rs.estado = :valido and rs.oficina.id = :idOficina and rs.evento = :tipoEvento" + queryFecha + " order by rs.registroDetalle.id desc");
+                "rs.estado = :valido " + queryFechaOficio + " and rs.oficina.id = :idOficina and rs.evento = :tipoEvento" + queryFecha + " order by rs.registroDetalle.id desc");
 
         // Parámetros
         q.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
+//        q.setParameter("oficioSir", RegwebConstantes.REGISTRO_OFICIO_SIR);
         q.setParameter("idOficina", idOficina);
         q.setParameter("tipoEvento", tipoEvento);
         if (StringUtils.isNotEmpty(fecha)) {
@@ -275,21 +282,26 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
 
         String anyWhere = "";
         if (any != null) {
-            anyWhere = "year(rs.fecha) = :any and ";
+            anyWhere = "(rs.fecha is null or year(rs.fecha) = :any) and ";
         }
 
         String queryFecha = "";
+        String queryFechaOficio = "";
         String fecha = PropiedadGlobalUtil.getFechaOficiosSalida();
 
         if (StringUtils.isNotEmpty(fecha)) {
-            queryFecha = " rs.fecha >= :fecha and ";
+            queryFecha = "(rs.fecha is null or rs.fecha >= :fecha) and ";
         }
-
+        if (tipoEvento.equals(RegwebConstantes.EVENTO_OFICIO_EXTERNO)) {
+        	queryFechaOficio = "and rs.numeroRegistro is not null";
+        } else if (tipoEvento.equals(RegwebConstantes.EVENTO_OFICIO_SIR)) {
+        	queryFechaOficio = "and rs.numeroRegistro is null";
+        }
         Query q;
         Query q2;
 
         StringBuilder query = new StringBuilder("Select rs.id, rs.numeroRegistroFormateado, rs.fecha, rs.oficina, rs.origen, rs.registroDetalle.extracto from RegistroSalida as rs where " + anyWhere +
-                " rs.oficina.id = :idOficina and rs.estado = :valido and rs.evento = :tipoEvento and " + queryFecha +
+                " rs.oficina.id = :idOficina and rs.estado = :valido " + queryFechaOficio + " and rs.evento = :tipoEvento and " + queryFecha +
                 " rs.registroDetalle.id in (select i.registroDetalle.id from Interesado as i where i.registroDetalle.id = rs.registroDetalle.id and i.tipo = :administracion and i.codigoDir3 = :codigoOrganismo) ");
 
         q2 = em.createQuery(query.toString().replaceAll("Select rs.id, rs.numeroRegistroFormateado, rs.fecha, rs.oficina, rs.origen, rs.registroDetalle.extracto", "Select count(rs.id)"));
@@ -304,6 +316,8 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
         }
         q.setParameter("idOficina", idOficina);
         q.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
+//        q.setParameter("oficioSir", RegwebConstantes.REGISTRO_OFICIO_SIR);
+        
         q.setParameter("tipoEvento", tipoEvento);
         q.setParameter("administracion", RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION);
         q.setParameter("codigoOrganismo", codigoOrganismo);
@@ -314,6 +328,8 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
 
         q2.setParameter("idOficina", idOficina);
         q2.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
+//        q2.setParameter("oficioSir", RegwebConstantes.REGISTRO_OFICIO_SIR);
+        
         q2.setParameter("tipoEvento", tipoEvento);
         q2.setParameter("administracion", RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION);
         q2.setParameter("codigoOrganismo", codigoOrganismo);

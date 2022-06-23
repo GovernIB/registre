@@ -118,7 +118,7 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
     public String nuevoRegistroEntrada(Model model, HttpServletRequest request) throws Exception {
 
         Oficina oficina = getOficinaActiva(request);
-
+        Entidad entidad = getEntidadActiva(request);
         LinkedHashSet<Oficina> oficinasOrigen;
         if(multiEntidadEjb.isMultiEntidad()){
             oficinasOrigen = new LinkedHashSet<>(getOficinasOrigenMultiEntidad(request));
@@ -130,7 +130,15 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
         registroEntrada.setOficina(oficina);
         registroEntrada.setLibro(getLibroEntidad(request));
         registroEntrada.getRegistroDetalle().setPresencial(true);
-
+        try {
+	        String organoDestinoDefecto = PropiedadGlobalUtil.getOrganoDestinoPorDefecto(entidad.getId());
+	        if (organoDestinoDefecto != null) {
+	        	Organismo organismo = organismoEjb.findByCodigo(organoDestinoDefecto);
+	        	registroEntrada.setDestino(organismo);
+	        }
+        } catch (Exception ex) {
+			log.error("Ha habido un error seleccionando órgano por defecto", ex);
+		}
         //Eliminamos los posibles interesados de la Sesion
         eliminarVariableSesion(request, RegwebConstantes.SESSION_INTERESADOS_ENTRADA);
 
@@ -166,14 +174,20 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
         if(interesadosSesion != null && interesadosSesion.size() > 0){
             errorInteresado = false;
         }
+        
+        boolean destinoValido = verificarDestinoSeleccionado(registroEntrada.getDestino(), entidad);
 
-        if (result.hasErrors() || errorInteresado) { // Si hay errores volvemos a la vista del formulario
+        if (result.hasErrors() || errorInteresado || !destinoValido) { // Si hay errores volvemos a la vista del formulario
 
             // Si no hay ningún interesado, generamos un error.
             if(errorInteresado){
                 model.addAttribute("errorInteresado", errorInteresado);
             }
 
+            if (!destinoValido) {
+            	 model.addAttribute("destinoNoValido", true);
+            }
+            
             LinkedHashSet<Oficina> oficinasOrigen;
             if(multiEntidadEjb.isMultiEntidad()){
                 oficinasOrigen = new LinkedHashSet<>(getOficinasOrigenMultiEntidad(request));
@@ -258,8 +272,30 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
         }
     }
 
-
     /**
+     * Verificar que el destí sea interno o externo integrado con SIR
+     * @param destino
+     * @param entidad
+     */
+    private boolean verificarDestinoSeleccionado(Organismo destino, Entidad entidad) {
+    	if(destino != null) {
+	    	try {
+				Organismo organismo = organismoEjb.findByCodigoByEntidadMultiEntidad(destino.getCodigo(), entidad.getId());
+		        boolean integradoConSir = organismoEjb.isDestinoDir3Sir(destino.getCodigo());
+		        
+		        if (organismo == null && !integradoConSir) {// Si es externo y no integrado con SIR
+	            	return false;
+	            } else if ((organismo != null) || (organismo == null && integradoConSir)) { // Si es interno o externo integrado con SIR 
+	            	return true;
+	            }
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+    	}
+		return false;
+	}
+
+	/**
      * Carga el formulario para modificar un {@link es.caib.regweb3.model.RegistroEntrada}
      */
     @RequestMapping(value = "/{idRegistro}/edit", method = RequestMethod.GET)
@@ -469,6 +505,17 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
         }
     }
 
+    /**
+     * Método que marca un Registro de Entrada como rectificado (manual)
+     * @param idRegistro identificador del registro de entrada
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/{idRegistro}/marcarRectificado", method=RequestMethod.GET)
+    public String marcarRectificado(@PathVariable Long idRegistro, HttpServletRequest request) throws Exception {
+    	registroEntradaEjb.marcarRectificado(idRegistro);
+    	return "redirect:/registroEntrada/"+idRegistro+"/detalle";
+    }
 
     /**
      * Método que rectifica un Registro de Entrada
@@ -483,7 +530,7 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
         RegistroEntrada registroEntradaRectificado;
 
         try{
-
+        	boolean desactivatTemporal = true;
             RegistroEntrada registroEntrada = registroEntradaEjb.getConAnexosFull(idRegistro);
 
             // Comprobamos si el usuario tiene permisos para registrar el registro rectificado
@@ -491,8 +538,10 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
                 Mensaje.saveMessageError(request, I18NUtils.tradueix("aviso.registro.permisos"));
                 return "redirect:/registroEntrada/"+idRegistro+"/detalle";
             }
-
-
+            if (desactivatTemporal) {
+            	Mensaje.saveMessageError(request, I18NUtils.tradueix("aviso.registro.rectifcar.desactivat"));
+                return "redirect:/registroEntrada/"+idRegistro+"/detalle";
+            }
             List<Long> isRectificar = new ArrayList<Long>();
             Collections.addAll(isRectificar, RegwebConstantes.REGISTRO_RECHAZADO, RegwebConstantes.REGISTRO_ANULADO);
 

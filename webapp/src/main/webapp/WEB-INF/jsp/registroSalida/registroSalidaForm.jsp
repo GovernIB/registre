@@ -35,7 +35,11 @@
         </div><!-- Fin miga de pan -->
 
         <div id="mensajes"></div>
-
+		<c:if test="${destinoNoValido}">
+			<div class="alert alert-danger alert-dismissable">
+        		<spring:message code="organismo.no.sir"/>
+            </div>
+		</c:if>
         <div class="row">
             <div class="col-xs-12">
 
@@ -409,6 +413,41 @@
     $('#modalBuscadorOficinaOrigen').on('shown.bs.modal', function () {
         $('#denominacionOficinaOrigen').focus();
     });
+    
+    /* Comprobamos que esté integrado con SIR */
+    var tradorganismodestino = new Array();
+	tradorganismodestino['organismo.nosir'] = "<spring:message code='organismo.no.sir' javaScriptEscape='true' />";
+	var urlComprobacionSir = '<c:url value="/organismo/comprobarSir"/>';
+	/*tradorganismodestino['organismo.verificando'] = "<spring:message code='organismo.verificando' javaScriptEscape='true' />";
+	
+    $('input[name=tipoInteresado]:radio').click(function () {
+        var tipoInteresado = $('input[name=tipoInteresado]:radio:checked').val();
+		//Administración - comprobar destino externo
+        if(tipoInteresado == 1) {
+		    $('#organismoInteresado').on('change', function() {
+		    	var codigoDestino = $(this).val();
+		        $.ajax({
+		            crossDomain: true,
+		            url: urlComprobacionSir,
+		            data: { codigoOrganismo: codigoDestino },
+		            type: "GET",
+		            dataType: 'json',
+		            contentType: 'application/json',
+		            beforeSend: function(){
+		                waitingDialog.show(tradorganismodestino['organismo.verificando'], {dialogSize: 'm', progressType: 'primary'});
+		            },
+		            success: function(result) {
+		                if(result !== true){
+		                    alert(tradorganismodestino['organismo.nosir']);
+		                }
+		                waitingDialog.hide();
+		            }
+		        });
+		    });
+		    
+		    $('#organismoInteresado').trigger('change');
+        }
+    });*/
 
 </script>
 

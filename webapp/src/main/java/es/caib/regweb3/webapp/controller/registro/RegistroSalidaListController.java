@@ -92,7 +92,7 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
         registroSalida.setLibro(getLibroEntidad(request));
 
         RegistroSalidaBusqueda registroSalidaBusqueda = new RegistroSalidaBusqueda(registroSalida, 1);
-        registroSalidaBusqueda.setIdOrganismo(seleccionarOrganismoActivo(request, organismosConsultaSalida));
+//        registroSalidaBusqueda.setIdOrganismo(seleccionarOrganismoActivo(request, organismosConsultaSalida));
         registroSalidaBusqueda.setFechaInicio(new Date());
         registroSalidaBusqueda.setFechaFin(new Date());
 
@@ -215,7 +215,12 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
         Oficina oficinaActiva = getOficinaActiva(request);
         LinkedHashSet<Organismo> organismosOficinaActiva = new LinkedHashSet<Organismo>(getOrganismosOficinaActiva(request));
-
+        RegistroDetalle registroDetalle = registro.getRegistroDetalle();
+        String direccion = registroDetalle.getDireccionPostalDestino();
+        if (direccion != null) {
+        	direccion = direccion.substring(0, 1).toUpperCase() + direccion.substring(1);
+        	registroDetalle.setDireccionPostalDestino(direccion);
+        }
         model.addAttribute("registro", registro);
         model.addAttribute("oficina", oficinaActiva);
         model.addAttribute("entidadActiva", entidadActiva);
@@ -312,7 +317,7 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
             model.addAttribute("oficinasSIR", oficinasSIR);
         }
         
-        if (registro.getNumeroRegistro() == null)
+        if (registro.getNumeroRegistro() == null && !registro.getEstado().equals(RegwebConstantes.REGISTRO_RECTIFICADO))
         	Mensaje.saveMessageAviso(request, getMessage("aviso.registro.sir.pendiente"));
 
         // Alta en tabla LOPD

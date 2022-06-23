@@ -192,7 +192,7 @@ public interface RegistroSirLocal extends BaseEjb<RegistroSir, Long> {
      * @return
      * @throws Exception
      */
-    List<Long> getRegistrosSirPendientes(Long idEntidad) throws Exception;
+    List<Long> getRegistrosSirPendientes(Long idEntidad, int maxReintentos) throws Exception;
 
 
     /**
@@ -220,11 +220,11 @@ public interface RegistroSirLocal extends BaseEjb<RegistroSir, Long> {
 	/**
 	 * Recupera registros SIR recibidos en GEISER y los añade a Regweb
 	 * 
-	 * @param entidadId
+	 * @param entidad
 	 * @throws Exception
 	 * @throws I18NException 
 	 */
-	Integer recuperarRegistrosSirGEISER(Long entidadId, Date inicio, Date fin) throws Exception, I18NException;
+	Integer recuperarRegistrosSirGEISER(Entidad entidad, Date inicio, Date fin) throws Exception, I18NException;
 
 	/**
 	 * Recupera registros SIR recibidos sin identificador de intercambio
@@ -250,4 +250,6 @@ public interface RegistroSirLocal extends BaseEjb<RegistroSir, Long> {
 	 * @return
 	 */
 	ProgresoActualitzacion getProgresoRecuperacionRegistrosSir(Long entidadId);
+	
+	public void actualizarReintentosRegistroSir(Long idRegistroSir) throws Exception;
 }

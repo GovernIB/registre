@@ -875,6 +875,11 @@ public class PropiedadGlobalUtil {
         }
     }
 
+    public static String getOrganoDestinoPorDefecto(Long idEntidad) {
+        final String partialPropertyName = "organo.destino.defecto";
+        return getStringByEntidad(idEntidad, partialPropertyName);
+    }
+    
     /**
      * Retorna el valor de la propiedad fecha.inicio.busqueda.path global.
      * Propiedad: es.caib.regweb3.fecha.inicio.busqueda.path
@@ -916,5 +921,13 @@ public class PropiedadGlobalUtil {
     public static Long getCronTareaRetardoActualizacionIdEnviosRecibidosSir() {
     	final String partialPropertyName =  "cron.actualizacion.id.envio.recibido.sir.retardo";
     	return getLong(partialPropertyName);
+    }
+    public static Integer getMaxReintentActualizacionEnviosSir() {
+    	final String partialPropertyName =  "cron.actualizacion.envio.sir.reintent";
+    	Integer maxReintent = getInteger(partialPropertyName);
+    	if (maxReintent != null)
+    		return maxReintent;
+    	else
+    		return 20;
     }
 }

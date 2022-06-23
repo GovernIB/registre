@@ -38,6 +38,8 @@ import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.interceptor.Interceptors;
+import javax.mail.Message;
+import javax.mail.internet.InternetAddress;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
@@ -238,10 +240,12 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
 	}
     
     @Override
-    public Integer recuperarRegistrosSirGEISER(Long entidadId, Date inicio, Date fin) throws Exception, I18NException {
+    public Integer recuperarRegistrosSirGEISER(Entidad entidad, Date inicio, Date fin) throws Exception, I18NException {
     	String fechaInicio = null;
 		String fechaFin = null;
 		Integer total = 0;
+		Long entidadId = entidad.getId();
+		List<String> registrosSirNoCreados = new ArrayList<String>();
     	try {
     		fechaInicio = (inicio != null) ? sdf.format(inicio) : getFechaInicioProximaBusqueda(entidadId);
     		fechaFin = (fin != null) ? sdf.format(fin) : sdf.format(new Date());
@@ -293,22 +297,26 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
 					
 					if (apuntesBusquedaFiltrados.size() > 0) {
 						for (ApunteRegistro apunteRegistroBusquedaFiltrado : apuntesBusquedaFiltrados) {
-							progreso.addInfo(TipoInfo.INFO, "Realizando proceso registro [numeroRegistro=" + apunteRegistroBusquedaFiltrado.getNuRegistro() + "]");
+							progreso.addInfo(TipoInfo.INFO, "Realizando proceso registro recibido [numeroRegistro=" + apunteRegistroBusquedaFiltrado.getNuRegistro() + "]");
 							Oficina oficinaOrigen = oficinaEjb.findByCodigoEntidad(apunteRegistroBusquedaFiltrado.getOrganoOrigen(), entidadId);
 							RegistroEntrada registroEntradaExistente = registroEntradaConsultaEjb.findByNumeroRegistro(apunteRegistroBusquedaFiltrado.getOrganoDestino(), apunteRegistroBusquedaFiltrado.getNuRegistro());
 							
 							// Solo crear asiento si la oficina no es de la entidad actual y no existe en Regweb
 							if (oficinaOrigen == null && registroEntradaExistente == null) { 
 								try {
-									registroSirHelperEjb.crearRegistroSirRecibido(
+									total = registroSirHelperEjb.crearRegistroSirRecibido(
 											apunteRegistroBusquedaFiltrado, 
 											entidadId, 
 											total, 
 											progreso);
+									log.info("Registro de entrada " + apunteRegistroBusquedaFiltrado.getNuRegistro() + " creado correctamente");
+									progreso.addInfo(TipoInfo.INFO, "Registro de entrada creado correctamente");
+									progreso.addInfo(TipoInfo.INFO, "-------------------------------------------");
 								} catch (Exception e) {
 									log.error("Hi ha hagut un error creant el registre d'entrada del registre rebut: " + apunteRegistroBusquedaFiltrado.getNuRegistro(), e.getCause());
 									progreso.addInfo(TipoInfo.ERROR, "Hi ha hagut un error creant el registre d'entrada del registre rebut: " + apunteRegistroBusquedaFiltrado.getNuRegistro());
 									progreso.incrementRegistrosRecuperados();
+									registrosSirNoCreados.add(apunteRegistroBusquedaFiltrado.getNuRegistro());
 								}
 							} else {
 								log.info("Registro duplicado [numeroRegistro=" + apunteRegistroBusquedaFiltrado.getNuRegistro() + "]");
@@ -332,8 +340,16 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
     		
     		log.error("Error en la búsqueda de registros SIR [fechaInicio=" + fechaInicio + ", fechaFin=" + fechaFin + ", entidadId=" + entidadId + " ]");
     		ex.printStackTrace();
+    		if (registrosSirNoCreados != null && !registrosSirNoCreados.isEmpty()) {
+        		enviarEmailErrorSirRecibido(registrosSirNoCreados, entidad);
+        	} else {
+        		enviarEmailErrorSirRecibidoGeneral(entidad);
+        	}
 			throw ex;
 		}
+    	if (registrosSirNoCreados != null && !registrosSirNoCreados.isEmpty()) {
+    		enviarEmailErrorSirRecibido(registrosSirNoCreados, entidad);
+    	}
     	return total;
     }
     
@@ -984,8 +1000,8 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         registroSir.setFechaRegistro(registroEntrada.getFecha());
         registroSir.setCodigoUnidadTramitacionOrigen(null);
         registroSir.setDecodificacionUnidadTramitacionOrigen(null);
-        //registroSir.setCodigoUnidadTramitacionOrigen(registroEntrada.getOficina().getOrganismoResponsable().getCodigo());
-        //registroSir.setDecodificacionUnidadTramitacionOrigen(registroEntrada.getOficina().getOrganismoResponsable().getDenominacion());
+//        registroSir.setCodigoUnidadTramitacionOrigen(registroEntrada.getOficina().getOrganismoResponsable().getCodigo());
+//        registroSir.setDecodificacionUnidadTramitacionOrigen(registroEntrada.getOficina().getOrganismoResponsable().getDenominacion());
 
         // Segmento De_Destino
         registroSir.setCodigoEntidadRegistral(registroDetalle.getCodigoEntidadRegistralDestino());
@@ -1169,11 +1185,12 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
     
 	@Override
 	@SuppressWarnings(value = "unchecked")
-	public List<Long> getRegistrosSirPendientes(Long idEntidad) throws Exception {
+	public List<Long> getRegistrosSirPendientes(Long idEntidad, int maxReintentos) throws Exception {
 		Query q = em.createQuery("Select registroSir.id from RegistroSir as registroSir "
 				+ "where registroSir.entidad.id = :idEntidad and registroSir.estado = :pendienteEnvio or registroSir.estado = :pendienteConfirmacion or registroSir.estado = :pendienteConfirmacionManual "
 				+ "or registroSir.estado = :tramite or registroSir.estado = :proceso "
-				+ "or registroSir.estado = :reenviado order by id");
+				+ "or registroSir.estado = :reenviado "
+				+ "and registroSir.numeroReintentos < :reintentos order by id");
 		q.setParameter("idEntidad", idEntidad);
 		q.setParameter("pendienteEnvio", EstadoRegistroSir.PENDIENTE_ENVIO);
 		q.setParameter("pendienteConfirmacion", EstadoRegistroSir.ENVIADO_PENDIENTE_CONFIRMACION);
@@ -1181,6 +1198,8 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
 		q.setParameter("tramite", EstadoRegistroSir.EN_TRAMITE);
 		q.setParameter("proceso", EstadoRegistroSir.ENVIO_PROCESO);
 		q.setParameter("reenviado", EstadoRegistroSir.REENVIADO);
+		q.setParameter("reintentos", maxReintentos);
+		
 		return q.getResultList();
 	}
 	
@@ -1198,6 +1217,13 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
 	}
 
 //	caso GEISER: identificador se obtiene de GEISER
+	@Override
+    public void actualizarReintentosRegistroSir(Long idRegistroSir) throws Exception {
+        Query q = em.createQuery("update RegistroSir set numeroReintentos = numeroReintentos+1 where id = :idRegistroSir");
+        q.setParameter("idRegistroSir", idRegistroSir);
+        q.executeUpdate();
+    }
+	
 	@Override
     @SuppressWarnings(value = "unchecked")
     public void actualizarIdentificadorIntercambio(Long idRegistroSir, String identificadorIntercambio) throws Exception {
@@ -1610,6 +1636,84 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
                 "." + getExtension(fileName);
         }
         return identificadorFichero;
+    }
+
+    private void enviarEmailErrorSirRecibido(List<String> registrosSirNoCreados, Entidad entidad) {
+    	Locale locale = new Locale(RegwebConstantes.IDIOMA_CATALAN_CODIGO);
+		// Obtenemos los usuarios a los que hay que enviarles el mail
+        List<Usuario> usuariosANotificar = new ArrayList<Usuario>();
+    	try {
+
+            // Propietario Entidad
+            usuariosANotificar.add(entidad.getPropietario());
+
+            // Administradores Entidad
+            for (UsuarioEntidad usuarioEntidad : entidad.getAdministradores()) {
+                usuariosANotificar.add(usuarioEntidad.getUsuario());
+            }
+
+            // Asunto
+            String asunto = I18NLogicUtils.tradueix(locale, "registro.sir.recibido.error.mail.asunto");
+
+            //Montamos el mensaje del mail con el nombre de la Entidad
+            StringBuilder sb = new StringBuilder();
+            for (String nuRegistroSir: registrosSirNoCreados) {
+            	sb.append(nuRegistroSir);
+            	sb.append(",");
+			}
+            String separatedNuRegistrosSir = sb.toString().substring(0, sb.toString().length() - 1);
+            String[] args = {separatedNuRegistrosSir, entidad.getNombre()};
+            String mensajeTexto = I18NLogicUtils.tradueix(locale, "registro.sir.recibido.error.mail.cuerpo", args);
+
+            //Enviamos el mail a todos los usuarios
+            InternetAddress addressFrom = new InternetAddress(RegwebConstantes.APLICACION_EMAIL, RegwebConstantes.APLICACION_NOMBRE);
+            
+    		for (Usuario usuario : usuariosANotificar) {
+
+                if (StringUtils.isNotEmpty(usuario.getEmail())) {
+                	MailUtils.enviaMail(asunto, mensajeTexto, addressFrom, Message.RecipientType.TO, usuario.getEmail());
+                }
+    		}
+        } catch (Exception e) {
+            log.error("Se ha producido una excepcion enviando email informando de un error recepción SIR");
+            e.printStackTrace();
+        }
+    }
+    
+    private void enviarEmailErrorSirRecibidoGeneral(Entidad entidad) {
+    	Locale locale = new Locale(RegwebConstantes.IDIOMA_CATALAN_CODIGO);
+		// Obtenemos los usuarios a los que hay que enviarles el mail
+        List<Usuario> usuariosANotificar = new ArrayList<Usuario>();
+    	try {
+
+            // Propietario Entidad
+            usuariosANotificar.add(entidad.getPropietario());
+
+            // Administradores Entidad
+            for (UsuarioEntidad usuarioEntidad : entidad.getAdministradores()) {
+                usuariosANotificar.add(usuarioEntidad.getUsuario());
+            }
+
+            // Asunto
+            String asunto = I18NLogicUtils.tradueix(locale, "registro.sierr.proceso.recepcion.ror.mail.asunto");
+
+            //Montamos el mensaje del mail con el nombre de la Entidad
+            String[] args = {entidad.getNombre()};
+            String mensajeTexto = I18NLogicUtils.tradueix(locale, "registro.sierr.proceso.recepcion.ror.mail.cuerpo", args);
+
+            //Enviamos el mail a todos los usuarios
+            InternetAddress addressFrom = new InternetAddress(RegwebConstantes.APLICACION_EMAIL, RegwebConstantes.APLICACION_NOMBRE);
+            
+    		for (Usuario usuario : usuariosANotificar) {
+
+                if (StringUtils.isNotEmpty(usuario.getEmail())) {
+                	MailUtils.enviaMail(asunto, mensajeTexto, addressFrom, Message.RecipientType.TO, usuario.getEmail());
+                }
+    		}
+        } catch (Exception e) {
+            log.error("Se ha producido una excepcion enviando email informando de un error recepción SIR");
+            e.printStackTrace();
+        }
     }
 
     /**

@@ -32,30 +32,11 @@ import org.plugin.geiser.api.TipoFirma;
 import org.plugin.geiser.api.TipoRespuesta;
 import org.plugin.geiser.api.TipoTransporte;
 import org.plugin.geiser.api.ValidezDocumento;
-import org.plugin.geiser.api.ws.AnexoType;
-import org.plugin.geiser.api.ws.ApunteRegistroType;
-import org.plugin.geiser.api.ws.EstadoAsientoEnum;
-import org.plugin.geiser.api.ws.EstadoTramitacionRegistroType;
-import org.plugin.geiser.api.ws.InteresadoType;
-import org.plugin.geiser.api.ws.PeticionBusquedaEstadoTramitacionType;
-import org.plugin.geiser.api.ws.PeticionBusquedaType;
-import org.plugin.geiser.api.ws.PeticionConsultaType;
-import org.plugin.geiser.api.ws.PeticionRegistroEnvioSimpleType;
-import org.plugin.geiser.api.ws.PeticionRegistroType;
-import org.plugin.geiser.api.ws.RespuestaType;
-import org.plugin.geiser.api.ws.ResultadoBusquedaEstadoTramitacionType;
-import org.plugin.geiser.api.ws.ResultadoBusquedaType;
-import org.plugin.geiser.api.ws.ResultadoConsultaType;
-import org.plugin.geiser.api.ws.ResultadoRegistroType;
-import org.plugin.geiser.api.ws.TipoAsientoEnum;
-import org.plugin.geiser.api.ws.TipoDocAnexoEnum;
-import org.plugin.geiser.api.ws.TipoDocumentacionFisicaEnum;
-import org.plugin.geiser.api.ws.TipoEnvio;
-import org.plugin.geiser.api.ws.TipoFirmaEnum;
-import org.plugin.geiser.api.ws.TipoIdentificacionEnum;
-import org.plugin.geiser.api.ws.TipoTransporteEnum;
-import org.plugin.geiser.api.ws.ValidezDocumentoEnum;
+
 import org.springframework.stereotype.Component;
+
+import es.gob.minhap.geiser.rgeco.ws.client.registro.types.*;
+import es.gob.minhap.geiser.rgeco.ws.client.types.RespuestaType;
 
 import ma.glasnost.orika.CustomConverter;
 import ma.glasnost.orika.MapperFacade;
@@ -111,8 +92,8 @@ public class ConversionPluginHelper {
 							target.setTipoAsiento(TipoAsientoEnum.fromValue(source.getTipoAsiento().name()));
 						if (source.getTipoEnvio() != null)
 							target.setTipoEnvio(TipoEnvio.fromValue(source.getTipoEnvio().name()));
-						if (source.getTipoAsiento() != null && source.getTipoAsiento().equals(TipoAsiento.SALIDA))
-							target.setCdOrganoOrigen(source.getOrganoOrigen());
+//						if (source.getTipoAsiento() != null && source.getTipoAsiento().equals(TipoAsiento.SALIDA))
+						target.setCdOrganoOrigen(source.getOrganoOrigen());
 						target.setCdOrganoDestino(source.getOrganoDestino());
 						if (source.getDocumentacionFisica() != null)
 							target.setDocumentacionFisica(TipoDocumentacionFisicaEnum.fromValue(source.getDocumentacionFisica().name()));

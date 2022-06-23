@@ -64,6 +64,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
 
         // Parámetros
         q.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
+//        q.setParameter("oficioSir", RegwebConstantes.REGISTRO_OFICIO_SIR);
         q.setParameter("idOficina", idOficina);
         q.setParameter("libros", libros);
         q.setParameter("oficio_interno", RegwebConstantes.EVENTO_OFICIO_INTERNO);
@@ -92,10 +93,11 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
         // Obtenemos los Organismos destinatarios EXTERNOS que tiene Oficios de Remision pendientes de tramitar
         Query q;
         q = em.createQuery("Select distinct re.destinoExternoCodigo, re.destinoExternoDenominacion from RegistroEntrada as re where " +
-                "re.estado = :valido and re.oficina.id = :idOficina  and re.destino is null and re.evento = :tipoEvento ");
+                "re.estado = :valido and re.numeroRegistro is null and re.oficina.id = :idOficina  and re.destino is null and re.evento = :tipoEvento ");
 
         // Parámetros
         q.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
+//        q.setParameter("oficioSir", RegwebConstantes.REGISTRO_OFICIO_SIR);
         q.setParameter("idOficina", idOficina);
         q.setParameter("tipoEvento", tipoEvento);
         q.setHint("org.hibernate.readOnly", true);
@@ -323,12 +325,14 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
         q.setParameter("idOrganismo", idOrganismo);
         q.setParameter("idOficina", idOficina);
         q.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
+//        q.setParameter("oficioSir", RegwebConstantes.REGISTRO_OFICIO_SIR);
         q.setParameter("eventoInterno", RegwebConstantes.EVENTO_OFICIO_INTERNO);
         q.setHint("org.hibernate.readOnly", true);
 
         q2.setParameter("idOrganismo", idOrganismo);
         q2.setParameter("idOficina", idOficina);
         q2.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
+//        q2.setParameter("oficioSir", RegwebConstantes.REGISTRO_OFICIO_SIR);
         q2.setParameter("eventoInterno", RegwebConstantes.EVENTO_OFICIO_INTERNO);
         q2.setHint("org.hibernate.readOnly", true);
 
@@ -377,7 +381,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
         }
 
         StringBuilder query = new StringBuilder("Select re.id, re.numeroRegistroFormateado, re.fecha, re.oficina, re.destinoExternoCodigo, re.destinoExternoDenominacion, re.registroDetalle.extracto from RegistroEntrada as re where " + anyWhere +
-                " re.oficina.id = :idOficina and re.destino is null and re.destinoExternoCodigo = :codigoOrganismo and re.estado = :valido and re.evento = :tipoEvento");
+                " re.oficina.id = :idOficina and re.destino is null and re.destinoExternoCodigo = :codigoOrganismo and re.estado = :valido and re.numeroRegistro is null and re.evento = :tipoEvento");
 
         Query q;
         Query q2;
@@ -394,12 +398,14 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
         q.setParameter("codigoOrganismo", codigoOrganismo);
         q.setParameter("idOficina", idOficina);
         q.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
+//        q.setParameter("oficioSir", RegwebConstantes.REGISTRO_OFICIO_SIR);
         q.setHint("org.hibernate.readOnly", true);
 
         q.setParameter("tipoEvento", tipoEvento);
         q2.setParameter("codigoOrganismo", codigoOrganismo);
         q2.setParameter("idOficina", idOficina);
         q2.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
+//        q2.setParameter("oficioSir", RegwebConstantes.REGISTRO_OFICIO_SIR);
         q2.setParameter("tipoEvento", tipoEvento);
         q2.setHint("org.hibernate.readOnly", true);
 

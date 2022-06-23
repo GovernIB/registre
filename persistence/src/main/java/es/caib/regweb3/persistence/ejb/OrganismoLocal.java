@@ -366,5 +366,14 @@ public interface OrganismoLocal extends BaseEjb<Organismo, Long> {
      */
     List<UnidadTF> obtenerSustitutosExternos(String codigo) throws Exception;
 
+    /**
+     * Comprueba si un organismo está integrado con SIR
+     * 
+     * @param codigoDir3
+     * @return
+     * @throws Exception
+     */
+	boolean isDestinoDir3Sir(String codigoDir3) throws Exception;
+
 
 }

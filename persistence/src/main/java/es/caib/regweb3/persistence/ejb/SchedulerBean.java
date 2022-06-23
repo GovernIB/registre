@@ -493,7 +493,7 @@ public class SchedulerBean implements SchedulerLocal{
                 log.info("------------- SIR: Consultando registros SIR recibidos de " + entidad.getNombre() + " -------------");
                 log.info(" ");
                 synchronized (SemaforoSchedulerConsultaRecibidos.class) {
-                	registroSirEjb.recuperarRegistrosSirGEISER(entidad.getId(), null, null);
+                	registroSirEjb.recuperarRegistrosSirGEISER(entidad, null, null);
                 }
 			}
 			log.info("------------- SIR: Registros SIR recibidos actualizados " + " -------------");

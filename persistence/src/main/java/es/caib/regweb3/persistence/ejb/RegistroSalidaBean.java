@@ -78,7 +78,8 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
     @EJB private PluginLocal pluginEjb;
     @EJB private OrganismoLocal organismoEjb;
     @EJB private MultiEntidadLocal multiEntidadEjb;
-
+    @EJB private CatTipoViaLocal catTipoViaEjb;
+    
     @Override
     public RegistroSalida findByIdCompleto(Long id) throws Exception {
 
@@ -98,7 +99,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
         try {
             // Guardamos el RegistroSalida
             registroSalida = persist(registroSalida);
-
+        	
             //Guardamos el HistorioRegistroSalida
             historicoRegistroSalidaEjb.crearHistoricoRegistroSalida(registroSalida, usuarioEntidad, I18NLogicUtils.tradueix(new Locale(Configuracio.getDefaultLanguage()), "registro.modificacion.creacion"), false);
 
@@ -107,6 +108,9 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
                 interesadoEjb.guardarInteresados(interesados, registroSalida.getRegistroDetalle());
                 registroSalida.getRegistroDetalle().setInteresados(interesados);
             }
+
+            // Guardar dirección postal en caso de tipodoc documentación física o acompaña documentación física
+        	actualizarDireccionDestino(registroSalida);
 
             // Procesamos los anexos
             if (anexosFull != null && anexosFull.size() != 0) {
@@ -602,6 +606,15 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
 
     }
 
+    @Override
+    public void marcarRectificado(Long idRegistro) {
+        try {
+			cambiarEstado(idRegistro, RegwebConstantes.REGISTRO_RECTIFICADO);
+		} catch (Exception e) {
+			log.info("Ha ocurrido un error rectificando el registro" + (e.getMessage().isEmpty() ? ": " + e.getMessage() : ""));
+			e.printStackTrace();
+		}
+    }
 
     @Override
     @SuppressWarnings(value = "unchecked")
@@ -772,6 +785,40 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
 			log.error("Ha habido un error actualizando los metadatos de registro del anexo.");
 			e.printStackTrace();
 		}
+    }
+
+    private void actualizarDireccionDestino(RegistroSalida registroSalida) throws Exception {
+    	RegistroDetalle registroDetalle = registroSalida.getRegistroDetalle();
+    	Long tipoDocumentacion = registroDetalle.getTipoDocumentacionFisica();   
+//    	Organismo destinoInterno = registroEntrada.getDestino();
+    	// Obtenemos el organismo destinatario del Registro en el caso de que sea un OficioRemision externo
+    	String destinoExterno = RegistroUtils.obtenerCodigoDir3Interesado(registroSalida);
+    	    	
+    	if ((tipoDocumentacion.equals(RegwebConstantes.TIPO_DOCFISICA_ACOMPANYA_DOC_REQUERIDA) || 
+    			tipoDocumentacion.equals(RegwebConstantes.TIPO_DOCFISICA_ACOMPANYA_DOC_COMPLEMENTARIA)) &&
+    			destinoExterno != null) {
+    		Dir3CaibObtenerOficinasWs oficinasService;
+			try {
+				oficinasService = Dir3CaibUtils.getObtenerOficinasService(PropiedadGlobalUtil.getDir3CaibServer(), PropiedadGlobalUtil.getDir3CaibUsername(), PropiedadGlobalUtil.getDir3CaibPassword());
+				List<OficinaTF> oficinas = oficinasService.obtenerOficinasSIRUnidad(destinoExterno);
+				if (oficinas != null && !oficinas.isEmpty()) {
+					OficinaTF oficinaDesti = oficinas.get(0);
+					CatTipoVia tipoVia = catTipoViaEjb.findByCodigo(oficinaDesti.getCodigoTipoVia());
+					String nombreVia = oficinaDesti.getNombreVia();
+					String numeroVia = oficinaDesti.getNumVia();
+					String localidad = oficinaDesti.getDescripcionLocalidad();
+					
+					if (nombreVia != null && numeroVia != null) {
+						String direccioPostal = tipoVia.getDescripcionTipoVia() + " " + nombreVia + ", " + numeroVia + (localidad != null ? ", " + localidad : ""); 
+						registroDetalle.setDireccionPostalDestino(direccioPostal);
+					}
+				}
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+    	}
     }
     
     /**

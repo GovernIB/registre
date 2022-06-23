@@ -9,6 +9,7 @@ import es.caib.regweb3.utils.StringUtils;
 import es.caib.regweb3.ws.model.AnexoWs;
 import es.caib.regweb3.ws.v3.impl.CommonConverter;
 import org.apache.log4j.Logger;
+import org.apache.tika.Tika;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.plugins.documentcustody.api.DocumentCustody;
 import org.fundaciobit.plugins.documentcustody.api.SignatureCustody;
@@ -50,12 +51,13 @@ public class AnexoConverter extends CommonConverter {
 
       final int modoFirma = anexoWs.getModoFirma();
       DocumentCustody doc = null;
-
+      String mimeFicheroAnexado = anexoWs.getTipoMIMEFicheroAnexado();
+      String mimeFirmaAnexada = anexoWs.getTipoMIMEFirmaAnexada();
       //Documento
       if (StringUtils.isNotEmpty(anexoWs.getNombreFicheroAnexado()) && (anexoWs.getFicheroAnexado() != null && anexoWs.getFicheroAnexado().length > 0)) {
          doc = new DocumentCustody();
          doc.setData(anexoWs.getFicheroAnexado());
-         doc.setMime(anexoWs.getTipoMIMEFicheroAnexado());
+         doc.setMime(mimeFicheroAnexado != null ? mimeFicheroAnexado : getMimeType(anexoWs.getFicheroAnexado()));
          doc.setName(anexoWs.getNombreFicheroAnexado());
       }
       anexoFull.setDocumentoCustody(doc);
@@ -67,7 +69,7 @@ public class AnexoConverter extends CommonConverter {
       if (StringUtils.isNotEmpty(anexoWs.getNombreFirmaAnexada()) && (anexoWs.getFirmaAnexada()!=null && anexoWs.getFirmaAnexada().length >0)) {
          sign = new SignatureCustody();
          sign.setData(anexoWs.getFirmaAnexada());
-         sign.setMime(anexoWs.getTipoMIMEFirmaAnexada());
+         sign.setMime(mimeFirmaAnexada != null ? mimeFirmaAnexada : getMimeType(anexoWs.getFirmaAnexada()));
          sign.setName(anexoWs.getNombreFirmaAnexada());
       }
 
@@ -86,12 +88,12 @@ public class AnexoConverter extends CommonConverter {
             anexoFull.setDocumentoCustody(null);
             if(StringUtils.isNotEmpty(anexoWs.getNombreFirmaAnexada()) && (anexoWs.getFirmaAnexada()!=null && anexoWs.getFirmaAnexada().length >0)){
                sign.setData(anexoWs.getFirmaAnexada());
-               sign.setMime(anexoWs.getTipoMIMEFirmaAnexada());
+               sign.setMime(mimeFirmaAnexada != null ? mimeFirmaAnexada : getMimeType(anexoWs.getFirmaAnexada()));
                sign.setName(anexoWs.getNombreFirmaAnexada());
             }else{
                if (StringUtils.isNotEmpty(anexoWs.getNombreFicheroAnexado()) && (anexoWs.getFicheroAnexado()!=null && anexoWs.getFicheroAnexado().length >0)) {
                   sign.setData(anexoWs.getFicheroAnexado());
-                  sign.setMime(anexoWs.getTipoMIMEFicheroAnexado());
+                  sign.setMime(mimeFicheroAnexado != null ? mimeFicheroAnexado : getMimeType(anexoWs.getFicheroAnexado()));
                   sign.setName(anexoWs.getNombreFicheroAnexado());
                } else {
                   throw new Exception("Los campos 'nombreFirmaAnexada' o 'FirmaAnexada y 'nombreFicheroAnexado' o 'ficheroAnexado' no pueden estar vacios caso FIRMA ATTACHED");
@@ -123,6 +125,16 @@ public class AnexoConverter extends CommonConverter {
    }
 
 
+	private static String getMimeType(byte[] content) {
+		try {
+			Tika tika = new Tika();
+			return tika.detect(content);
+		} catch (Exception e) {
+			log.error("Ha habido un error recuperando el mimeType del documento. Le asignamos application/octet-stream por defecto.");
+			return "application/octet-stream";
+		}
+	}
+   
    /**
     * Convierte un {@link es.caib.regweb3.ws.model.AnexoWs } en un {@link es.caib.regweb3.model.Anexo}
     * @param anexoWs

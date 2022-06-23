@@ -504,13 +504,15 @@ public class SirEnvioBean implements SirEnvioLocal {
     public void actualizarEnviosSir(Entidad entidad) throws Exception {
     	StringBuilder peticion = new StringBuilder();
     	long tiempo = System.currentTimeMillis();
+    	String descripcionPar = "";
 		try {
+			descripcionPar = "Recuperando envíos SIR con estado no final...";
 //          // RegistrosSir con estado no final
-			List<Long> registrosSirIds = registroSirEjb.getRegistrosSirPendientes(entidad.getId());
+			List<Long> registrosSirIds = registroSirEjb.getRegistrosSirPendientes(entidad.getId(), PropiedadGlobalUtil.getMaxReintentActualizacionEnviosSir());
 			for (Long registroSirId : registrosSirIds) {
 		    	String descripcion = "Actualizando estado envío SIR (idEnvioSir=" + registroSirId + ")";
+				RegistroSir registroSir = registroSirEjb.findById(registroSirId);
 				try {
-					RegistroSir registroSir = registroSirEjb.findById(registroSirId);
 			        peticion.append("Número registro: ").append(registroSir.getNumeroRegistro()).append(System.getProperty("line.separator"));
 			        OficioRemision oficioRemision = oficioRemisionEjb.getByNumeroRegistro(
 			        		registroSir.getNumeroRegistro(), 
@@ -522,6 +524,7 @@ public class SirEnvioBean implements SirEnvioLocal {
 			        	throw new RuntimeException("No s'ha trobat cap ofici remisió relacionat amb el registre: " + registroSir.getNumeroRegistro());
 			        }
 				} catch (Exception e) {
+					registroSirEjb.actualizarReintentosRegistroSir(registroSirId);
 					e.printStackTrace();
 					integracionEjb.addIntegracionError(
 							RegwebConstantes.INTEGRACION_SIR, 
@@ -538,6 +541,15 @@ public class SirEnvioBean implements SirEnvioLocal {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			integracionEjb.addIntegracionError(
+					RegwebConstantes.INTEGRACION_SIR, 
+					descripcionPar, 
+					peticion.toString(), 
+					e, 
+					null, 
+					System.currentTimeMillis() - tiempo, 
+					entidad.getId(), 
+					null);
 			throw e;
 		}
     }

@@ -85,7 +85,8 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     @EJB private ArchivoLocal archivoEjb;
     @EJB private TrazabilidadSirLocal trazabilidadSirEjb;
     @EJB private UsuarioEntidadLocal usuarioEntidadEjb;
-
+    @EJB private CatTipoViaLocal catTipoViaEjb;
+    
     @Override
     public RegistroEntrada findByIdCompleto(Long id) throws Exception {
 
@@ -96,7 +97,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
         return registroEntrada;
     }
-
+    
     @Override
     public RegistroEntrada registrarEntrada(RegistroEntrada registroEntrada,
                                             UsuarioEntidad usuarioEntidad, List<Interesado> interesados, List<AnexoFull> anexosFull, Boolean validarAnexos, boolean enviarGeiser)
@@ -105,7 +106,10 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         try {
             // Guardar RegistroEntrada
             registroEntrada = persist(registroEntrada);
-
+            
+        	// Guardar dirección postal en caso de tipodoc documentación física o acompaña documentación física
+        	actualizarDireccionDestino(registroEntrada);
+        	
             // Guardar el HistorioRegistroEntrada
             historicoRegistroEntradaEjb.crearHistoricoRegistroEntrada(registroEntrada, usuarioEntidad, I18NLogicUtils.tradueix(new Locale(Configuracio.getDefaultLanguage()), "registro.modificacion.creacion"), false);
 
@@ -167,11 +171,14 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 		                //Si no se ha espeficicado un NumeroRegistroOrigen, le asignamos el propio
 		                if (StringUtils.isEmpty(registroEntrada.getRegistroDetalle().getNumeroRegistroOrigen()))
 		                    registroEntrada.getRegistroDetalle().setNumeroRegistroOrigen(registroEntrada.getNumeroRegistroFormateado());
-		                
+
+	                	// Si es un registro a una adm externa recuperar justifcante de GEISER
 		                if (registroEntrada.getDestino() == null) {
-		                	// Si es un registro a una adm externa recuperar justifcante de GEISER
 		                    registroEntrada.getRegistroDetalle().setJustificanteGeiser(true);
 		                }
+		                
+		                //Actualizar metadatos registro en caso de proceder de una aplicación externa (Notib...)
+		                actualizarMetadatosAnexosArxiu(registroEntrada, usuarioEntidad);
 		            } else {
 		                // No s´ha definit cap plugin de Justificant. Consulti amb el seu Administrador.
 		                throw new I18NException("error.plugin.nodefinit", new I18NArgumentCode("plugin.tipo.11"));
@@ -388,7 +395,6 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         return null;
     }
 
-
     @Override
     @SuppressWarnings(value = "unchecked")
     public List<OficinaTF> isOficioRemisionSirMultiEntidad(Long idRegistro) throws Exception {
@@ -467,7 +473,6 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
         return RegwebConstantes.EVENTO_DISTRIBUIR;
     }
-
 
     @Override
     public Long proximoEventoEntradaMultiEntidad(RegistroEntrada registroEntrada, Entidad entidadActiva, Long idOficina) throws Exception {
@@ -601,7 +606,16 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         return registros.size();
     }
 
-
+    @Override
+    public void marcarRectificado(Long idRegistro) {
+        try {
+			cambiarEstado(idRegistro, RegwebConstantes.REGISTRO_RECTIFICADO);
+		} catch (Exception e) {
+			log.info("Ha ocurrido un error rectificando el registro" + (e.getMessage().isEmpty() ? ": " + e.getMessage() : ""));
+			e.printStackTrace();
+		}
+    }
+    
     @Override
     @SuppressWarnings(value = "unchecked")
     public RegistroEntrada rectificar(RegistroEntrada registroEntrada, UsuarioEntidad usuarioEntidad) throws Exception, I18NException {
@@ -761,6 +775,55 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         return cargarAnexosFull(re, false);
     }
 
+    private void actualizarMetadatosAnexosArxiu(IRegistro registro, UsuarioEntidad usuario) throws I18NException {	
+    	// Actualizar información anexos SGD
+    	try {
+    		for (AnexoFull anexoFull: registro.getRegistroDetalle().getAnexosFull()) {
+        		anexoEjb.actualizarMetadatosAnexo(registro, anexoFull, usuario);
+			}
+    	} catch (I18NException i18n) {
+    		log.error("Ha habido un error actualizando los metadatos de registro del anexo.");
+    		i18n.printStackTrace();
+		} catch (Exception e) {
+			log.error("Ha habido un error actualizando los metadatos de registro del anexo.");
+			e.printStackTrace();
+		}
+    }
+    
+    private void actualizarDireccionDestino(RegistroEntrada registroEntrada) {
+    	RegistroDetalle registroDetalle = registroEntrada.getRegistroDetalle();
+    	Long tipoDocumentacion = registroDetalle.getTipoDocumentacionFisica();   
+//    	Organismo destinoInterno = registroEntrada.getDestino();
+    	String destinoExterno = registroEntrada.getDestinoExternoCodigo();
+    	    	
+    	if (tipoDocumentacion != null &&
+    			(tipoDocumentacion.equals(RegwebConstantes.TIPO_DOCFISICA_ACOMPANYA_DOC_REQUERIDA) || 
+    			tipoDocumentacion.equals(RegwebConstantes.TIPO_DOCFISICA_ACOMPANYA_DOC_COMPLEMENTARIA)) &&
+    			destinoExterno != null) {
+    		Dir3CaibObtenerOficinasWs oficinasService;
+			try {
+				oficinasService = Dir3CaibUtils.getObtenerOficinasService(PropiedadGlobalUtil.getDir3CaibServer(), PropiedadGlobalUtil.getDir3CaibUsername(), PropiedadGlobalUtil.getDir3CaibPassword());
+				List<OficinaTF> oficinas = oficinasService.obtenerOficinasSIRUnidad(destinoExterno);
+				if (oficinas != null && !oficinas.isEmpty()) {
+					OficinaTF oficinaDesti = oficinas.get(0);
+					CatTipoVia tipoVia = catTipoViaEjb.findByCodigo(oficinaDesti.getCodigoTipoVia());
+					String nombreVia = oficinaDesti.getNombreVia();
+					String numeroVia = oficinaDesti.getNumVia();
+					String localidad = oficinaDesti.getDescripcionLocalidad();
+					
+					if (nombreVia != null && numeroVia != null) {
+						String direccioPostal = tipoVia.getDescripcionTipoVia() + " " + nombreVia + ", " + numeroVia + (localidad != null ? ", " + localidad : ""); 
+						registroDetalle.setDireccionPostalDestino(direccioPostal);
+					}
+				}
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+    	}
+    }
+    
     /**
      * Carga los Anexos Completos al RegistroEntrada pasado por parámetro
      *

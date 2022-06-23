@@ -62,6 +62,7 @@
                     <c:if test="${registro.estado != RegwebConstantes.REGISTRO_PENDIENTE_VISAR 
                     					&& registro.estado != RegwebConstantes.REGISTRO_ANULADO
                     					&& registro.estado != RegwebConstantes.REGISTRO_RECHAZADO
+                    					&& registro.estado != RegwebConstantes.REGISTRO_RECTIFICADO
                     					&& not empty registro.numeroRegistroFormateado}">
                         <div class="panel-footer center">
 
@@ -323,10 +324,14 @@
                         </c:if>
 						--%>
                         <%--Botón rectificar--%>
+                        <%--
                         <c:if test="${(registro.estado == RegwebConstantes.REGISTRO_ANULADO || registro.estado == RegwebConstantes.REGISTRO_RECHAZADO) && puedeEditar}">
                             <div class="btn-group"><button type="button" onclick='javascript:confirm("<c:url value="/registroEntrada/${registro.id}/rectificar"/>","<spring:message code="regweb.confirmar.rectificar" htmlEscape="true"/>")' class="btn btn-danger btn-sm"><spring:message code="registro.boton.rectificar"/></button></div>
                         </c:if>
-
+						--%>
+						<c:if test="${(registro.estado == RegwebConstantes.REGISTRO_ANULADO || registro.estado == RegwebConstantes.REGISTRO_RECHAZADO) && puedeEditar}">
+                            <div class="btn-group"><button type="button" onclick='javascript:confirm("<c:url value="/registroEntrada/${registro.id}/marcarRectificado"/>","<spring:message code="regweb.confirmar.rectificat" htmlEscape="true"/>")' class="btn btn-warning btn-sm"><spring:message code="registro.boton.marcar.rectificado"/></button></div>
+                        </c:if>
                     </div>
 
                 </div>

@@ -22,7 +22,7 @@ import es.caib.regweb3.persistence.utils.ProgresoActualitzacion;
 @RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI", "RWE_WS_ENTRADA", "RWE_WS_SALIDA"})
 public interface RegistroSirHelperLocal extends BaseEjb<RegistroSir, Long> {
 
-	void crearRegistroSirRecibido(ApunteRegistro apunteRegistroBusquedaFiltrado, Long entidadId, Integer total,
+	Integer crearRegistroSirRecibido(ApunteRegistro apunteRegistroBusquedaFiltrado, Long entidadId, Integer total,
 			ProgresoActualitzacion progreso) throws Exception, I18NException;
 
 	IRegistro actualizarMetadatosRegistro(Long anexoId, String codigoEntidad, IRegistro registro,

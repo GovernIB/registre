@@ -111,6 +111,9 @@ public class RegistroDetalle implements Serializable {
 
     @XmlTransient
     private Boolean justificanteGeiser = false;
+    
+    @XmlTransient
+    private String direccionPostalDestino;
 
     public RegistroDetalle() {
     }
@@ -525,6 +528,15 @@ public class RegistroDetalle implements Serializable {
 
 	public void setJustificanteGeiser(Boolean justificanteGeiser) {
 		this.justificanteGeiser = justificanteGeiser;
+	}
+
+	@Column(name = "DIRECCION_POSTAL_DEST")
+	public String getDireccionPostalDestino() {
+		return direccionPostalDestino;
+	}
+
+	public void setDireccionPostalDestino(String direccionPostalDestino) {
+		this.direccionPostalDestino = direccionPostalDestino;
 	}
 
 	@Transient

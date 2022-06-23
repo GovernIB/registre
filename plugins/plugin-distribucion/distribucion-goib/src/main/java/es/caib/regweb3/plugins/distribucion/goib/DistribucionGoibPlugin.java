@@ -432,21 +432,28 @@ public class DistribucionGoibPlugin extends AbstractPluginProperties implements 
         //Caso Anexo FIRMA ATTACHED El anexo se obtiene de  signature custody
         if(anexoFull.getAnexo().getModoFirma()== RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED){
             //DISTRIBUCIÓ pide que se envie un registreAnnex con los campos "Fitxer" rellenados y además añadirle un objeto Firma con ciertos valores
-            registreAnnex.setFitxerNom(anexoFull.getSignatureCustody().getName());
-            registreAnnex.setFitxerTamany((int)anexoFull.getSignatureCustody().getLength());
-            registreAnnex.setFitxerTipusMime(anexoFull.getSignatureCustody().getMime());
-            registreAnnex.setFitxerContingut(anexoFull.getSignatureCustody().getData());
-
-            // DISTRIBUCIÓ obliga a indicar un objeto Firma indicando el tipusMime, el perfil y el tipo de firma
-            Firma firma = new Firma();
-            firma.setTipusMime(anexoFull.getSignatureCustody().getMime());
-            firma.setTipus(transformarTipoFirma(anexoFull.getAnexo()));
-            firma.setPerfil(transformarPerfilFirma(anexoFull.getAnexo()));
-            // registreAnnex.getFirmes().add(firma);
-
-            if(anexoFull.getAnexo().getSignType()!= null && anexoFull.getAnexo().getSignProfile() != null) {
-                //Añadimos el objeto firma al registreAnnex.
-                registreAnnex.getFirmes().add(firma);
+        	if (anexoFull.getSignatureCustody() != null) {
+	            registreAnnex.setFitxerNom(anexoFull.getSignatureCustody().getName());
+	            registreAnnex.setFitxerTamany((int)anexoFull.getSignatureCustody().getLength());
+	            registreAnnex.setFitxerTipusMime(anexoFull.getSignatureCustody().getMime());
+	            registreAnnex.setFitxerContingut(anexoFull.getSignatureCustody().getData());
+	
+	            // DISTRIBUCIÓ obliga a indicar un objeto Firma indicando el tipusMime, el perfil y el tipo de firma
+	            Firma firma = new Firma();
+	            firma.setTipusMime(anexoFull.getSignatureCustody().getMime());
+	            firma.setTipus(transformarTipoFirma(anexoFull.getAnexo()));
+	            firma.setPerfil(transformarPerfilFirma(anexoFull.getAnexo()));
+	            // registreAnnex.getFirmes().add(firma);
+	
+	            if(anexoFull.getAnexo().getSignType()!= null && anexoFull.getAnexo().getSignProfile() != null) {
+	                //Añadimos el objeto firma al registreAnnex.
+	                registreAnnex.getFirmes().add(firma);
+	            }
+        	} else if (anexoFull.getDocumentoCustody() != null) {
+            	registreAnnex.setFitxerNom(anexoFull.getDocumentoCustody().getName());
+                registreAnnex.setFitxerTamany((int)anexoFull.getDocumentoCustody().getLength());
+                registreAnnex.setFitxerTipusMime(anexoFull.getDocumentoCustody().getMime());
+                registreAnnex.setFitxerContingut(anexoFull.getDocumentoCustody().getData());
             }
         }
 

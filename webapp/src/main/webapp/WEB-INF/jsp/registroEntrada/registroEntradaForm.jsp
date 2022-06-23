@@ -34,7 +34,11 @@
            </div><!-- Fin miga de pan -->
 
             <div id="mensajes"></div>
-
+			<c:if test="${destinoNoValido}">
+				<div class="alert alert-danger alert-dismissable">
+                    <spring:message code="organismo.no.sir"/>
+                </div>
+			</c:if>
             <div class="row">
                 <div class="col-xs-12">
 
@@ -111,7 +115,7 @@
                                            <c:if test="${registroEntrada.destino.codigo == null}">
                                                <option value="${organismo.codigo}" <c:if test="${registroEntrada.destinoExternoCodigo == organismo.codigo}">selected="selected"</c:if>>${organismo.denominacion}</option>
                                            </c:if>
-
+											
                                        </c:forEach>
                                    </form:select>
                                    <form:errors path="destino.codigo" cssClass="help-block" element="span"/>
@@ -416,7 +420,35 @@
     $('#modalBuscadorOficinaOrigen').on('shown.bs.modal', function () {
         $('#denominacionOficinaOrigen').focus();
     });
-
+    var tradorganismodestino = new Array();
+	tradorganismodestino['organismo.nosir'] = "<spring:message code='organismo.no.sir' javaScriptEscape='true' />";
+	tradorganismodestino['organismo.verificando'] = "<spring:message code='organismo.verificando' javaScriptEscape='true' />";
+	
+    var urlComprobacionSir = '<c:url value="/organismo/comprobarSir"/>';
+    
+    $('#destino\\.codigo').on('change', function() {
+    	var codigoDestino = $(this).val();
+        /* Comprobamos que esté integrado con SIR */
+        $.ajax({
+            crossDomain: true,
+            url: urlComprobacionSir,
+            data: { codigoOrganismo: codigoDestino },
+            type: "GET",
+            dataType: 'json',
+            contentType: 'application/json',
+            beforeSend: function(){
+                waitingDialog.show(tradorganismodestino['organismo.verificando'], {dialogSize: 'm', progressType: 'primary'});
+            },
+            success: function(result) {
+                if(result !== true){
+                    alert(tradorganismodestino['organismo.nosir']);
+                }
+                waitingDialog.hide();
+            }
+        });
+    });
+    
+    $('#destino\\.codigo').trigger('change');
 </script>
 
 <script type="text/javascript" src="<c:url value="/js/plantilla.js"/>"></script>

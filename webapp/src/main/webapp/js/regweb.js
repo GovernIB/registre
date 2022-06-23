@@ -76,7 +76,6 @@
         redirAfter: 1788000,
         countdownBar: true
     });
-
 });
 
 
