@@ -43,7 +43,7 @@ public interface RegistroEntradaConsultaLocal {
      * @return
      * @throws Exception
      */
-    Paginacion busqueda(Integer pageNumber, List<Long> organismos, Date fechaInicio, Date fechaFin, RegistroEntrada registroEntrada, String interesadoNom, String interesadoDoc, String interesadoLli1, String interesadoLli2, String organoDest, String observaciones, String usuario, Long idEntidad) throws Exception;
+    Paginacion busqueda(Integer pageNumber, List<Long> organismos, Date fechaInicio, Date fechaFin, RegistroEntrada registroEntrada, String interesadoNom, String interesadoDoc, String interesadoLli1, String interesadoLli2, String organoDest, String observaciones, Long idUsuario, Long idEntidad) throws Exception;
 
     /**
      * Busca los Registros de Entrada de una OficinaActiva en función de su estado.

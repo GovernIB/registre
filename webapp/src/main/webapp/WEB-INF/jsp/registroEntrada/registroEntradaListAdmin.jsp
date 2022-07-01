@@ -172,14 +172,14 @@
                             empty registroEntradaBusqueda.interessatDoc && empty registroEntradaBusqueda.interessatNom &&
                             empty registroEntradaBusqueda.interessatLli1 && empty registroEntradaBusqueda.interessatLli2 &&
                             empty registroEntradaBusqueda.organDestinatari && empty registroEntradaBusqueda.observaciones &&
-                            empty registroEntradaBusqueda.usuario && !registroEntradaBusqueda.registroEntrada.registroDetalle.presencial}">
+                            empty registroEntradaBusqueda.idUsuario && !registroEntradaBusqueda.registroEntrada.registroDetalle.presencial}">
                             <div id="demo" class="collapse">
                                 </c:if>
                         <c:if test="${not empty registroEntradaBusqueda.registroEntrada.registroDetalle.tipoDocumentacionFisica ||
                             not empty registroEntradaBusqueda.interessatDoc || not empty registroEntradaBusqueda.interessatNom ||
                             not empty registroEntradaBusqueda.interessatLli1 || not empty registroEntradaBusqueda.interessatLli2 ||
                             not empty registroEntradaBusqueda.organDestinatari || not empty registroEntradaBusqueda.observaciones ||
-                            not empty registroEntradaBusqueda.usuario || registroEntradaBusqueda.registroEntrada.registroDetalle.presencial}">
+                            not empty registroEntradaBusqueda.idUsuario || registroEntradaBusqueda.registroEntrada.registroDetalle.presencial}">
                             <div id="demo" class="collapse in">
                         </c:if>
 
@@ -243,13 +243,13 @@
 
                                 <div class="col-xs-6 espaiLinies">
                                     <div class="col-xs-4 pull-left etiqueta_regweb">
-                                        <label for="usuario" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.usuario.busqueda"/>" data-toggle="popover"><spring:message code="usuario.usuario"/></label>
+                                        <label for="idUsuario" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.usuario.busqueda"/>" data-toggle="popover"><spring:message code="usuario.usuario"/></label>
                                     </div>
                                     <div class="col-xs-8">
-                                        <form:select path="usuario" class="chosen-select">
+                                        <form:select path="idUsuario" class="chosen-select">
                                             <form:option value="">...</form:option>
                                             <c:forEach items="${usuariosEntidad}" var="usuarioEntidad">
-                                                <option value="${usuarioEntidad.usuario.identificador}" <c:if test="${registroEntradaBusqueda.usuario == usuarioEntidad.usuario.identificador}">selected="selected"</c:if>>${usuarioEntidad.usuario.identificador}</option>
+                                                <option value="${usuarioEntidad.id}" <c:if test="${registroEntradaBusqueda.idUsuario == usuarioEntidad.id}">selected="selected"</c:if>>${usuarioEntidad.usuario.identificador}</option>
                                             </c:forEach>
                                         </form:select>
                                     </div>
@@ -276,10 +276,10 @@
                         <div class="col-xs-12 pad-bottom15 mesOpcions">
                             <a class="btn btn-info btn-xs pull-right masOpciones-info" data-toggle="collapse" data-target="#demo">
                                 <%--Comprueba si debe mostrar mas opciones o menos--%>
-                                <c:if test="${empty registroEntradaBusqueda.interessatDoc && empty registroEntradaBusqueda.interessatNom && empty registroEntradaBusqueda.organDestinatari && empty registroEntradaBusqueda.usuario && !registroEntradaBusqueda.registroEntrada.registroDetalle.presencial}">
+                                <c:if test="${empty registroEntradaBusqueda.interessatDoc && empty registroEntradaBusqueda.interessatNom && empty registroEntradaBusqueda.organDestinatari && empty registroEntradaBusqueda.idUsuario && !registroEntradaBusqueda.registroEntrada.registroDetalle.presencial}">
                                     <span class="fa fa-plus"></span> <spring:message code="regweb.busquedaAvanzada"/>
                                 </c:if>
-                                <c:if test="${not empty registroEntradaBusqueda.interessatDoc || not empty registroEntradaBusqueda.interessatNom || not empty registroEntradaBusqueda.organDestinatari || not empty registroEntradaBusqueda.usuario || registroEntradaBusqueda.registroEntrada.registroDetalle.presencial}">
+                                <c:if test="${not empty registroEntradaBusqueda.interessatDoc || not empty registroEntradaBusqueda.interessatNom || not empty registroEntradaBusqueda.organDestinatari || not empty registroEntradaBusqueda.idUsuario || registroEntradaBusqueda.registroEntrada.registroDetalle.presencial}">
                                     <span class="fa fa-minus"></span> <spring:message code="regweb.busquedaAvanzada"/>
                                 </c:if>
                             </a>
