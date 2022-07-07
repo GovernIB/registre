@@ -24,7 +24,7 @@ public class RegistroSalidaBusqueda implements Serializable {
     private String organOrigen;
     private String organOrigenNom;
     private String observaciones;
-    private String usuario;
+    private Long idUsuario;
 
     public RegistroSalidaBusqueda() {}
 
@@ -125,8 +125,11 @@ public class RegistroSalidaBusqueda implements Serializable {
 
     public void setObservaciones(String observaciones) { this.observaciones = observaciones; }
 
-    public String getUsuario() { return usuario; }
+    public Long getIdUsuario() {
+        return idUsuario;
+    }
 
-    public void setUsuario(String usuario) { this.usuario = usuario; }
-
+    public void setIdUsuario(Long idUsuario) {
+        this.idUsuario = idUsuario;
+    }
 }
