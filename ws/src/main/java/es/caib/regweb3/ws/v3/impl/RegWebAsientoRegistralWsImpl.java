@@ -423,7 +423,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
                 sesionEjb.cambiarEstado(idSesion, usuarioAplicacion, RegwebConstantes.SESION_ERROR);
             }
 
-            throw e.getCause();
+            throw e;
         }
 
         return asiento;
