@@ -97,7 +97,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Paginacion busqueda(Integer pageNumber, List<Long> organismos, Date fechaInicio, Date fechaFin, RegistroEntrada re, String interesadoNom, String interesadoLli1, String interesadoLli2, String interesadoDoc, String organoDest, String observaciones, String usuario, Long idEntidad) throws Exception {
+    public Paginacion busqueda(Integer pageNumber, List<Long> organismos, Date fechaInicio, Date fechaFin, RegistroEntrada re, String interesadoNom, String interesadoLli1, String interesadoLli2, String interesadoDoc, String organoDest, String observaciones, Long idUsuario, Long idEntidad) throws Exception {
 
         Query q;
         Query q2;
@@ -157,8 +157,9 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
         }
 
         // Usuario
-        if (StringUtils.isNotEmpty(usuario)) {
-            where.add(DataBaseUtils.like("re.usuario.usuario.identificador", "usuario", parametros, usuario));
+        if (idUsuario != null) {
+            where.add(" re.usuario.id = :idUsuario ");
+            parametros.put("idUsuario", idUsuario);
         }
 
         // Nombre interesado
