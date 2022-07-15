@@ -242,7 +242,9 @@ public class ModeloOficioRemisionController extends BaseController {
 
             ModeloOficioRemision modeloOficioRemision = modeloOficioRemisionEjb.findById(modeloOficioRemisionId);
 
-            FileSystemManager.eliminarArchivo(modeloOficioRemision.getModelo().getId());
+            if(modeloOficioRemision.getModelo() != null){
+                FileSystemManager.eliminarArchivo(modeloOficioRemision.getModelo().getId());
+            }
 
             modeloOficioRemisionEjb.remove(modeloOficioRemision);
 
