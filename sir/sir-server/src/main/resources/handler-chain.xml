@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<handler-chains xmlns="http://java.sun.com/xml/ns/javaee">
-<handler-chain>
-    <handler>
-        <handler-class>es.caib.regweb3.sir.ws.utils.RegWeb3SirWSHandler</handler-class>
-    </handler>
-</handler-chain>
-</handler-chains>
