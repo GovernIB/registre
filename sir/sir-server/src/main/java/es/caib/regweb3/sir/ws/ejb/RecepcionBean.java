@@ -21,6 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Node;
 
+import javax.annotation.security.RunAs;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.xml.xpath.XPathConstants;
@@ -33,6 +34,7 @@ import java.util.Date;
  * en formato SICRES3 desde un nodo distribuido
  */
 @Stateless(name = "RecepcionEJB")
+@RunAs("RWE_USUARI")
 public class RecepcionBean implements RecepcionLocal{
 
     private final Logger log = LoggerFactory.getLogger(getClass());

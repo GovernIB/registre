@@ -6,16 +6,14 @@ import es.caib.regweb3.sir.core.excepcion.ServiceException;
 import es.caib.regweb3.sir.ws.ejb.RecepcionLocal;
 import es.caib.regweb3.sir.ws.wssir9.RespuestaWS;
 import es.caib.regweb3.sir.ws.wssir9.WS_SIR9_PortType;
+import org.apache.cxf.interceptor.InInterceptors;
 import org.jboss.ws.api.annotation.TransportGuarantee;
 import org.jboss.ws.api.annotation.WebContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.security.DeclareRoles;
-import javax.annotation.security.RunAs;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
-import javax.jws.HandlerChain;
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebService;
@@ -28,10 +26,9 @@ import javax.jws.soap.SOAPBinding;
  * Created by Fundació BIT.
  * @author earrivi
  */
-@DeclareRoles({ "RWE_USUARI" })
-@RunAs("RWE_USUARI")
 @Stateless(name = WS_SIR9Impl.NAME + "Ejb")
 @SOAPBinding(style = SOAPBinding.Style.DOCUMENT)
+@InInterceptors(interceptors = {"es.caib.regweb3.sir.ws.utils.SirInInterceptor"})
 @WebService(
         name = WS_SIR9Impl.NAME_WS,
         portName = WS_SIR9Impl.NAME_WS,
@@ -41,10 +38,8 @@ import javax.jws.soap.SOAPBinding;
 @WebContext(
         contextRoot = "/regweb3/ws/sir",
         urlPattern = "/v3/" + WS_SIR9Impl.NAME,
-        transportGuarantee = TransportGuarantee.NONE,
-        secureWSDLAccess = false
+        transportGuarantee = TransportGuarantee.NONE
 )
-@HandlerChain(file = "/handler-chain.xml")
 public class WS_SIR9Impl implements WS_SIR9_PortType {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
