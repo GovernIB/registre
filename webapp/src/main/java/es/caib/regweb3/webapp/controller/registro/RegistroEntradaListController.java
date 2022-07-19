@@ -9,13 +9,12 @@ import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.persistence.utils.RegistroUtils;
 import es.caib.regweb3.persistence.utils.RespuestaDistribucion;
+import es.caib.regweb3.plugins.distribucion.IDistribucionPlugin;
+import es.caib.regweb3.plugins.distribucion.email.DistribucionEmailPlugin;
 import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
-import es.caib.regweb3.webapp.form.AnularForm;
-import es.caib.regweb3.webapp.form.EnvioSirForm;
-import es.caib.regweb3.webapp.form.ReenviarForm;
-import es.caib.regweb3.webapp.form.RegistroEntradaBusqueda;
+import es.caib.regweb3.webapp.form.*;
 import es.caib.regweb3.webapp.utils.AnexoUtils;
 import es.caib.regweb3.webapp.utils.JsonResponse;
 import es.caib.regweb3.webapp.utils.Mensaje;
@@ -70,6 +69,9 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
 
     @EJB(mappedName = DistribucionLocal.JNDI_NAME)
     private DistribucionLocal distribucionEjb;
+
+    @EJB(mappedName = "regweb3/PluginEJB/local")
+    private PluginLocal pluginEjb;
 
 
     /**
@@ -704,28 +706,40 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
 
     /**
      * Función que se encarga de obtener los destinatarios a los que se debe distribuir el registro de entrada.
-     * La obtención de esos destinatarios se realiza a través del plugin
+     *
      *
      * @param idRegistro identificador del registro
      * @param request
      * @return
      * @throws Exception
      */
-    @RequestMapping(value = "/{idRegistro}/distribuir", method = RequestMethod.GET)
+    @RequestMapping(value = "/{idRegistro}/distribuir", method = RequestMethod.POST)
     public
     @ResponseBody
-    JsonResponse distribuirRegistroEntrada(@PathVariable Long idRegistro, HttpServletRequest request) throws Exception, I18NException, I18NValidationException {
+    JsonResponse distribuirRegistroEntrada(@PathVariable Long idRegistro, HttpServletRequest request,@RequestBody DistribuirForm distribuirForm) throws Exception {
 
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
         RegistroEntrada registroEntrada;
         RespuestaDistribucion respuesta = new RespuestaDistribucion();
         JsonResponse response = new JsonResponse();
 
-        registroEntrada = registroEntradaEjb.findById(idRegistro);
 
         try {
+            DistribucionEmailPlugin distribucionEmailPlugin = new DistribucionEmailPlugin();
+            IDistribucionPlugin distribucionPlugin = (IDistribucionPlugin) pluginEjb.getPlugin(usuarioEntidad.getEntidad().getId(), RegwebConstantes.PLUGIN_DISTRIBUCION);
+            if(distribucionPlugin.getClass().getName().contains("DistribucionGoibPlugin")){
+                registroEntrada = registroEntradaEjb.getConAnexosFullDistribuir(idRegistro);
+            }else{
+                registroEntrada = registroEntradaEjb.getConAnexosFull(idRegistro);
+                if(distribucionPlugin!=null && distribucionPlugin.getClass().getName().contains("DistribucionEmailPlugin")){
+                    distribucionEmailPlugin = (DistribucionEmailPlugin)distribucionPlugin;
+                    distribucionEmailPlugin.setEmails(distribuirForm.getEmails());
+                    distribucionEmailPlugin.setMotivo(distribuirForm.getMotivo());
+                }
+            }
+
             //Distribuimos el registro
-            respuesta = distribucionEjb.distribuir(registroEntrada, usuarioEntidad);
+            respuesta = distribucionEjb.distribuir(registroEntrada, usuarioEntidad, distribucionEmailPlugin);
 
             if (respuesta.getHayPlugin()) {//
                 if (respuesta.getEnviadoCola()) { //Si se ha enviado a la cola
@@ -734,7 +748,95 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
                 } else if ((respuesta.getHayPlugin() && respuesta.getEnviado())) { //Cuando se ha distribuido correctamente
                     Mensaje.saveMessageInfo(request, getMessage("registroEntrada.distribuir.ok"));
                     response.setStatus("SUCCESS");
-                } else if (respuesta.getHayPlugin() && !respuesta.getEnviado()) { //Cuando no se ha distribuido correctamente
+                } else if(respuesta.getEnvioMail()){
+                    response.setStatus("ENVIO_MAIL");
+                    Mensaje.saveMessageInfo(request, getMessage("registroEntrada.enviomail"));
+                }else if (respuesta.getHayPlugin() && !respuesta.getEnviado()) { //Cuando no se ha distribuido correctamente
+                    response.setStatus("FAIL");
+                    response.setError(getMessage("registroEntrada.distribuir.error.noEnviado"));
+                }
+            } else {
+
+                Mensaje.saveMessageInfo(request, getMessage("registroEntrada.distribuir.ok"));
+                response.setStatus("SUCCESS");
+            }
+
+            response.setResult(respuesta);
+
+        } catch (I18NValidationException e) {
+            e.printStackTrace();
+            response.setStatus("FAIL");
+            response.setError(I18NUtils.getMessage(e));
+            response.setResult(respuesta);
+            return response;
+        } catch (I18NException ie) {
+            ie.printStackTrace();
+            response.setStatus("FAIL");
+            response.setError(I18NUtils.getMessage(ie));
+            response.setResult(respuesta);
+            return response;
+        } catch (Exception ste) {
+            ste.printStackTrace();
+            response.setStatus("FAIL");
+            response.setError(ste.getMessage());
+            response.setResult(respuesta);
+            return response;
+        }
+
+        return response;
+    }
+
+    /**
+     * Función que determina que plugin de distribución está configurado
+     *
+     * @param idRegistro identificador del registro
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/{idRegistro}/determinar/plugin/distribucion", method = RequestMethod.GET)
+    public @ResponseBody JsonResponse determinarPluginDistribuicion(@PathVariable Long idRegistro, HttpServletRequest request) throws Exception {
+
+        UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
+        RegistroEntrada registroEntrada;
+        RespuestaDistribucion respuesta = new RespuestaDistribucion();
+        JsonResponse response = new JsonResponse();
+
+
+        try {
+            //Mirar Plugin distribució
+            IDistribucionPlugin distribucionPlugin = (IDistribucionPlugin)  pluginEjb.getPlugin(usuarioEntidad.getEntidad().getId(), RegwebConstantes.PLUGIN_DISTRIBUCION);
+
+            if (distribucionPlugin != null) {
+
+                if (distribucionPlugin.getClass().getName().contains("DistribucionEmailPlugin")) {
+                    log.info(" Envio MAIL");
+
+                    respuesta.setEnvioMail(true);
+                } else {
+
+                    if(distribucionPlugin.getClass().getName().contains("DistribucionGoibPlugin")){
+                        registroEntrada = registroEntradaEjb.getConAnexosFullDistribuir(idRegistro);
+                    }else{
+                        registroEntrada = registroEntradaEjb.getConAnexosFull(idRegistro);
+                    }
+
+                    respuesta = distribucionEjb.distribuir(registroEntrada, usuarioEntidad, distribucionPlugin);
+
+                }
+                respuesta.setHayPlugin(true);
+            }
+
+            if (respuesta.getHayPlugin()) {//
+                if (respuesta.getEnviadoCola()) { //Si se ha enviado a la cola
+                    response.setStatus("ENVIADO_COLA");
+                    Mensaje.saveMessageInfo(request, getMessage("registroEntrada.enviocola"));
+                } else if ((respuesta.getHayPlugin() && respuesta.getEnviado())) { //Cuando se ha distribuido correctamente
+                    Mensaje.saveMessageInfo(request, getMessage("registroEntrada.distribuir.ok"));
+                    response.setStatus("SUCCESS");
+                } else if(respuesta.getEnvioMail()){
+                    response.setStatus("ENVIO_MAIL");
+                }else if (respuesta.getHayPlugin() && !respuesta.getEnviado()) { //Cuando no se ha distribuido correctamente
                     response.setStatus("FAIL");
                     response.setError(getMessage("registroEntrada.distribuir.error.noEnviado"));
                 }

@@ -24,4 +24,11 @@ public interface IDistribucionPlugin extends IPlugin {
      */
     Boolean distribuir(RegistroEntrada registro, Locale locale) throws Exception;
 
+    /**
+     * Método que indica si se envia el registro a la cola de distribución o no
+     * @return
+     * @throws Exception
+     */
+    Boolean getEnvioCola() throws Exception;
+
 }
