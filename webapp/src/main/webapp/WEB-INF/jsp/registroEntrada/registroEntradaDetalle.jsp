@@ -362,6 +362,10 @@
         <c:param name="tipoRegistro" value="${RegwebConstantes.REGISTRO_ENTRADA}"/>
     </c:import>
 
+    <%--Modal de distribución vial mail --%>
+    <c:import url="../registro/registroDistribuir.jsp">
+    </c:import>
+
 </div>
 
 
@@ -369,7 +373,7 @@
 
 
 <script type="text/javascript">
-    var urlDistribuir = '<c:url value="/registroEntrada/${registro.id}/distribuir"/>';
+    var urlDeterminarPluginDistrib = '<c:url value="/registroEntrada/${registro.id}/determinar/plugin/distribucion"/>';
     var urlDetalle = '<c:url value="/registroEntrada/${registro.id}/detalle" />';
 
     <%-- Traducciones para distribuir.js --%>

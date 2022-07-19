@@ -535,7 +535,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean implem
         trazabilidadEjb.persist(trazabilidad);
 
         // Creamos el HistoricoRegistroEntrada para la distribución
-        registroEntrada.setEstado(RegwebConstantes.REGISTRO_DISTRIBUIDO);
+        cambiarEstado(registroEntrada.getId(),RegwebConstantes.REGISTRO_DISTRIBUIDO);
         historicoRegistroEntradaEjb.crearHistoricoRegistroEntrada(registroEntrada,
                 registroEntrada.getUsuario(), I18NLogicUtils.tradueix(new Locale(Configuracio.getDefaultLanguage()), "registro.modificacion.estado"), false);
 

@@ -250,7 +250,7 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
         asiento.setResumen("Registro de test " + System.currentTimeMillis());
         asiento.setUnidadTramitacionOrigenCodigo(getTestOrigenCodigoDir3());
         asiento.setUnidadTramitacionDestinoCodigo(getTestDestinoCodigoDir3());
-        asiento.setTipoDocumentacionFisicaCodigo(RegwebConstantes.TIPO_DOCFISICA_ACOMPANYA_DOC_REQUERIDA);
+        asiento.setTipoDocumentacionFisicaCodigo(RegwebConstantes.TIPO_DOCFISICA_NO_ACOMPANYA_DOC);
 
         asiento.setReferenciaExterna("FE4567Y");
         asiento.setNumeroExpediente("34567Y/2019");

@@ -6,6 +6,7 @@ import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.model.utils.AnexoSimple;
 import es.caib.regweb3.persistence.ejb.DistribucionLocal;
+import es.caib.regweb3.persistence.ejb.PluginLocal;
 import es.caib.regweb3.persistence.ejb.RegistroEntradaConsultaLocal;
 import es.caib.regweb3.persistence.ejb.RegistroEntradaLocal;
 import es.caib.regweb3.persistence.utils.I18NLogicUtils;
@@ -13,6 +14,7 @@ import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.persistence.utils.RespuestaDistribucion;
 import es.caib.regweb3.persistence.validator.RegistroEntradaBeanValidator;
 import es.caib.regweb3.persistence.validator.RegistroEntradaValidator;
+import es.caib.regweb3.plugins.distribucion.IDistribucionPlugin;
 import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.Dir3CaibUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
@@ -81,6 +83,9 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
 
     @EJB(mappedName = "regweb3/DistribucionEJB/local")
     private DistribucionLocal distribucionEjb;
+
+    @EJB(mappedName = "regweb3/PluginEJB/local")
+    private PluginLocal pluginEjb;
 
     @Override
     @RolesAllowed({RWE_USUARI})
@@ -414,7 +419,8 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
 
         try{
             // Distribuimos el registro de entrada
-            distribucionEjb.distribuir(registroEntrada, usuarioEntidad);
+            IDistribucionPlugin distribucionPlugin = (IDistribucionPlugin)  pluginEjb.getPlugin(usuarioEntidad.getEntidad().getId(), RegwebConstantes.PLUGIN_DISTRIBUCION);
+            distribucionEjb.distribuir(registroEntrada, usuarioEntidad,distribucionPlugin);
 
         }catch (Exception | I18NValidationException e){
             e.printStackTrace();
@@ -455,7 +461,8 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
 
         try{
             // 7.- Distribuimos el registro de entrada
-            RespuestaDistribucion respuestaDistribucion = distribucionEjb.distribuir(registroEntrada, usuario);
+            IDistribucionPlugin distribucionPlugin = (IDistribucionPlugin)  pluginEjb.getPlugin(entidadActiva.getId(), RegwebConstantes.PLUGIN_DISTRIBUCION);
+            RespuestaDistribucion respuestaDistribucion = distribucionEjb.distribuir(registroEntrada, usuario,distribucionPlugin);
 
             // Si el Plugin permite seleccionar Destinatarios, no se puede distribuir automaticamente
             if(respuestaDistribucion.getDestinatarios() != null){

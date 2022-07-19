@@ -5,6 +5,7 @@ import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.persistence.utils.JustificanteReferencia;
 import es.caib.regweb3.persistence.utils.RegistroUtils;
+import es.caib.regweb3.plugins.distribucion.IDistribucionPlugin;
 import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
@@ -43,6 +44,7 @@ public class AsientoRegistralBean implements AsientoRegistralLocal {
     @EJB private PermisoOrganismoUsuarioLocal permisoOrganismoUsuarioEjb;
     @EJB private DistribucionLocal distribucionEjb;
     @EJB private MultiEntidadLocal multiEntidadEjb;
+    @EJB private PluginLocal pluginEjb;
 
     @Override
     public UsuarioEntidad comprobarUsuarioEntidad(String identificador, Long idEntidad) throws Exception, I18NException {
@@ -198,7 +200,8 @@ public class AsientoRegistralBean implements AsientoRegistralLocal {
 
         try{
             // Distribuimos el registro de entrada
-            asynchDistribucion.distribuir(registroEntrada, usuario);
+            IDistribucionPlugin distribucionPlugin = (IDistribucionPlugin)  pluginEjb.getPlugin(usuario.getEntidad().getId(), RegwebConstantes.PLUGIN_DISTRIBUCION);
+            asynchDistribucion.distribuir(registroEntrada, usuario, distribucionPlugin);
 
         }catch (Exception | I18NValidationException e){
             e.printStackTrace();

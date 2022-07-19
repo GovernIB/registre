@@ -269,6 +269,12 @@
             <version>${project.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>es.caib.regweb3</groupId>
+            <artifactId>plugin-distribucion-email</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
         <!--Test-->
         <dependency>
             <groupId>org.slf4j</groupId>
