@@ -46,6 +46,13 @@
             <artifactId>slf4j-api</artifactId>
             <scope>provided</scope>
         </dependency>
+
+        <!-- Dependencia hacia libsir -->
+       <!-- <dependency>
+            <groupId>es.gob.sir</groupId>
+            <artifactId>InterService</artifactId>
+            <version>2.0.6.RELEASE3</version>
+        </dependency>-->
     </dependencies>
 
     <build>

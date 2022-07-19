@@ -43,9 +43,6 @@ function redistribuir(url){
 
 /*
  * Función que permite distribuir el registro a los destinatarios que se le indiquen.
- * Realiza una llamada ajax para obtener los destinatarios
- * si son modificables muestra el pop up para poder modificarlos
- * si no lo son redirecciona directamente a los destinatarios devueltos.
  * si no hay destinatarios se marca el registro como tramitado y listo.
  */
 function distribuir() {
@@ -54,7 +51,7 @@ function distribuir() {
 
     jQuery.ajax({
         async: true,
-        url: urlDistribuir,
+        url: urlDeterminarPluginDistrib,
         type: 'GET',
         dataType: 'json',
         contentType: 'application/json',
@@ -71,9 +68,11 @@ function distribuir() {
                 waitingDialog.hide();
                 return false;
 
+            } else if(respuesta.status ==='ENVIO_MAIL'){
+                waitingDialog.hide();
+                $('#distribuirModal').modal('show');
             }
 
-            waitingDialog.hide();
         }
 
     });

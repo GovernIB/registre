@@ -33,6 +33,7 @@ public class DistribucionGoibPlugin extends AbstractPluginProperties implements 
     private static final String PROPERTY_USUARIO = basePluginDistribucionGoib + "usuario";
     private static final String PROPERTY_PASSWORD = basePluginDistribucionGoib + "password";
     private static final String PROPERTY_ENDPOINT = basePluginDistribucionGoib + "endpoint";
+    private static final String PROPERTY_ENVIOCOLA = basePluginDistribucionGoib + "enviocola";
 
 
     /**
@@ -113,6 +114,17 @@ public class DistribucionGoibPlugin extends AbstractPluginProperties implements 
             throw new Exception(e);
         }
 
+    }
+
+    /** Método que determina si se debe enviar a la cola o no */
+    @Override
+    public Boolean getEnvioCola() throws Exception {
+        //Si no existe la propiedad o es true se envia  a la cola
+        if(getPropertyEnvioCola()== null || Boolean.parseBoolean(getPropertyEnvioCola())){
+            return true;
+        }else{
+            return false;
+        }
     }
 
 
@@ -574,5 +586,9 @@ public class DistribucionGoibPlugin extends AbstractPluginProperties implements 
      */
     private String getPropertyEndPoint() throws Exception {
         return getPropertyRequired(PROPERTY_ENDPOINT);
+    }
+
+    private  String getPropertyEnvioCola()  throws Exception{
+        return getProperty(PROPERTY_ENVIOCOLA);
     }
 }

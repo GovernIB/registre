@@ -11,6 +11,7 @@ import es.caib.regweb3.persistence.validator.RegistroEntradaBeanValidator;
 import es.caib.regweb3.persistence.validator.RegistroEntradaValidator;
 import es.caib.regweb3.persistence.validator.RegistroSalidaBeanValidator;
 import es.caib.regweb3.persistence.validator.RegistroSalidaValidator;
+import es.caib.regweb3.plugins.distribucion.IDistribucionPlugin;
 import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.Dir3CaibUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
@@ -88,6 +89,9 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
 
     @EJB(mappedName = SesionLocal.JNDI_NAME)
     private SesionLocal sesionEjb;
+
+    @EJB(mappedName = PluginLocal.JNDI_NAME)
+    private PluginLocal pluginEjb;
 
 
     @RolesAllowed({RWE_WS_ENTRADA, RWE_WS_SALIDA})
@@ -668,7 +672,8 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
 
         try{
             // 5.- Distribuimos el registro de entrada
-            RespuestaDistribucion respuestaDistribucion = distribucionEjb.distribuir(registroEntrada, usuario);
+            IDistribucionPlugin distribucionPlugin = (IDistribucionPlugin)  pluginEjb.getPlugin(entidadActiva.getId(), RegwebConstantes.PLUGIN_DISTRIBUCION);
+            RespuestaDistribucion respuestaDistribucion = distribucionEjb.distribuir(registroEntrada, usuario,distribucionPlugin);
 
             if(!respuestaDistribucion.getEnviadoCola() && !respuestaDistribucion.getEnviado()){ //Cuando hay plugin y no ha llegado a destino
 

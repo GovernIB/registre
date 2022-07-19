@@ -48,4 +48,9 @@ public class DistribucionMockPlugin extends AbstractPluginProperties implements 
         return true;
 
     }
+
+    @Override
+    public Boolean getEnvioCola() throws Exception {
+        return false;
+    }
 }

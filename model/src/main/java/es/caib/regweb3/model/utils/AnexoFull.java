@@ -304,7 +304,7 @@ public class AnexoFull{
             }
         }
 
-        return null;
+        return "";
     }
 
     @Transient
@@ -396,7 +396,7 @@ public class AnexoFull{
             }
         }
 
-        return null;
+        return "";
     }
 
     @Transient
@@ -417,7 +417,33 @@ public class AnexoFull{
             }
         }
 
-        return null;
+        return "";
+    }
+
+    @Transient
+    public String getFileName() {
+
+        return !this.getDocFileName().isEmpty()?this.getDocFileName():this.getSignFileName();
+    }
+
+
+    @Transient
+    public byte[] getData(){
+        return this.getDocData()!=null?this.getDocData():this.getSignData();
+    }
+
+    @Transient
+    public String getMime(){
+
+        return !this.getDocMime().isEmpty()?this.getDocMime():this.getSignMime();
+
+    }
+
+    @Transient
+    public long getSize(){
+
+        return this.getDocSize()!=-1?this.getDocSize():this.getSignSize();
+
     }
 
 }

@@ -46,10 +46,11 @@ public class DistribucionBean implements DistribucionLocal {
     @EJB private IntegracionLocal integracionEjb;
     @EJB private PluginLocal pluginEjb;
     @EJB private ColaLocal colaEjb;
+    @EJB private EntidadLocal entidadEjb;
 
 
     /**
-     * Método que envía a la cola de Distribución el Registro indicado
+     * Método que envia a distribuir el registro en función del valor de la propiedad envioCola de cada plugin.
      * @param re registro de entrada a distribuir
      * @param usuarioEntidad
      * @return
@@ -57,23 +58,29 @@ public class DistribucionBean implements DistribucionLocal {
      * @throws I18NException
      */
     @Override
-    public RespuestaDistribucion distribuir(RegistroEntrada re, UsuarioEntidad usuarioEntidad) throws Exception, I18NException {
+    public RespuestaDistribucion distribuir(RegistroEntrada re, UsuarioEntidad usuarioEntidad, IDistribucionPlugin plugin) throws Exception, I18NException {
 
         RespuestaDistribucion respuestaDistribucion = new RespuestaDistribucion();
 
+        Boolean distribuido = false;
+
+        StringBuilder peticion = new StringBuilder();
+        Date inicio = new Date();
+        String hora = "<b>" + new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(inicio) + "</b>&nbsp;&nbsp;&nbsp;";
+        String error = "";
+
         try {
-
-            //Obtenemos plugin
-            IDistribucionPlugin distribucionPlugin = (IDistribucionPlugin) pluginEjb.getPlugin(usuarioEntidad.getEntidad().getId(), RegwebConstantes.PLUGIN_DISTRIBUCION);
-
-            if (distribucionPlugin != null) {
-
-                // Enviamos el registro a la Cola de Distribución
-                Boolean encolado = colaEjb.enviarAColaDistribucion(re, usuarioEntidad);
-
-                respuestaDistribucion.setEnviadoCola(encolado);
+            if (plugin != null) {
+                if(plugin.getEnvioCola()){
+                    Boolean encolado = colaEjb.enviarAColaDistribucion(re, usuarioEntidad);
+                    respuestaDistribucion.setEnviadoCola(encolado);
+                }else{
+                    String descripcion = "Distribución Directa de Plugin";
+                    Entidad entidad = entidadEjb.findByIdLigero(usuarioEntidad.getEntidad().getId());
+                    distribuido = distribuirRegistro(entidad, RegwebConstantes.PLUGIN_DISTRIBUCION, descripcion, re, plugin,peticion,inicio);
+                    respuestaDistribucion.setEnviado(distribuido);
+                }
                 respuestaDistribucion.setHayPlugin(true);
-
                 return respuestaDistribucion;
 
             }else{
@@ -81,7 +88,7 @@ public class DistribucionBean implements DistribucionLocal {
                 respuestaDistribucion.setEnviadoCola(false);
             }
 
-        } catch (I18NException | Exception e) {
+        } catch ( Exception  e) {
             e.printStackTrace();
             throw new I18NException("registroEntrada.distribuir.error");
         }
@@ -102,7 +109,7 @@ public class DistribucionBean implements DistribucionLocal {
      */
     private Boolean distribuirRegistroEntrada(Entidad entidad,RegistroEntrada registroEntrada, IDistribucionPlugin distribucionPlugin) throws Exception, I18NValidationException, I18NException {
 
-        Boolean distribuido;
+        Boolean distribuido = false;
 
         log.info("------------------------------------------------------------");
         log.info("Distribuyendo el registro: " + registroEntrada.getNumeroRegistroFormateado());
@@ -123,7 +130,6 @@ public class DistribucionBean implements DistribucionLocal {
         if (distribucionPlugin == null) {
             return true;
         }else{
-
             distribuido = distribucionPlugin.distribuir(registroEntrada, new Locale(RegwebConstantes.IDIOMA_CATALAN_CODIGO));
         }
 
@@ -149,7 +155,6 @@ public class DistribucionBean implements DistribucionLocal {
         Date inicio = new Date();
         String descripcion = "Distribución desde Cola";
         String hora = "<b>" + new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(inicio) + "</b>&nbsp;&nbsp;&nbsp;";
-
         String error = "";
 
         try {
@@ -165,6 +170,45 @@ public class DistribucionBean implements DistribucionLocal {
                 registroEntrada = registroEntradaEjb.getConAnexosFull(elemento.getIdObjeto());
             }
 
+            distribuido = distribuirRegistro(entidad, tipoIntegracon, "Distribución desde Cola", registroEntrada, distribucionPlugin,peticion,inicio);
+
+            if (distribuido) { //Si la distribución ha ido bien
+                colaEjb.procesarElementoDistribucion(elemento);
+            }
+
+        } catch (Exception | I18NException  e) {
+            log.info("Error distribuyendo registro de la Cola: " + elemento.getDescripcionObjeto());
+            e.printStackTrace();
+            error = hora + e.getMessage();
+            colaEjb.actualizarElementoCola(elemento, entidad.getId(), error);
+            // Añadimos el error a la integración
+            integracionEjb.addIntegracionError(tipoIntegracon, descripcion, peticion.toString(), e, null,System.currentTimeMillis() - inicio.getTime(), entidad.getId(), elemento.getDescripcionObjeto());
+        }
+
+        return distribuido;
+
+    }
+
+
+    /**
+     * Método común para distribuir un registro que monta la petición
+     * @param entidad
+     * @param tipoIntegracon
+     * @param descripcion
+     * @param registroEntrada
+     * @param distribucionPlugin
+     * @param peticion
+     * @param inicio
+     * @return
+     * @throws Exception
+     */
+    private Boolean distribuirRegistro( Entidad entidad, Long tipoIntegracon, String descripcion, RegistroEntrada registroEntrada, IDistribucionPlugin distribucionPlugin, StringBuilder peticion, Date inicio) throws Exception {
+
+        Boolean distribuido = false;
+
+
+        try {
+
             //Montamos la petición de la integración
             peticion.append("usuario: ").append(registroEntrada.getUsuario().getUsuario().getNombreIdentificador()).append(System.getProperty("line.separator"));
             peticion.append("registro: ").append(registroEntrada.getNumeroRegistroFormateado()).append(System.getProperty("line.separator"));
@@ -175,18 +219,15 @@ public class DistribucionBean implements DistribucionLocal {
             distribuido = distribuirRegistroEntrada(entidad, registroEntrada, distribucionPlugin);
 
             if (distribuido) { //Si la distribución ha ido bien
-                colaEjb.procesarElementoDistribucion(elemento);
                 registroEntradaEjb.marcarDistribuido(registroEntrada);
                 integracionEjb.addIntegracionOk(inicio, tipoIntegracon, descripcion, peticion.toString(), System.currentTimeMillis() - inicio.getTime(), registroEntrada.getUsuario().getEntidad().getId(), registroEntrada.getNumeroRegistroFormateado());
             }
 
         } catch (Exception | I18NException | I18NValidationException e) {
-            log.info("Error distribuyendo registro de la Cola: " + elemento.getDescripcionObjeto());
+            log.info("Error distribuyendo registro: " + registroEntrada.getNumeroRegistroFormateado());
             e.printStackTrace();
-            error = hora + e.getMessage();
-            colaEjb.actualizarElementoCola(elemento, entidad.getId(), error);
             // Añadimos el error a la integración
-            integracionEjb.addIntegracionError(tipoIntegracon, descripcion, peticion.toString(), e, null,System.currentTimeMillis() - inicio.getTime(), entidad.getId(), elemento.getDescripcionObjeto());
+            integracionEjb.addIntegracionError(tipoIntegracon, descripcion, peticion.toString(), e, null,System.currentTimeMillis() - inicio.getTime(), entidad.getId(), registroEntrada.getNumeroRegistroFormateado());
         }
 
         return distribuido;
@@ -269,6 +310,7 @@ public class DistribucionBean implements DistribucionLocal {
 
     }
 
+    //Este método ya no se usa
     @Override
     public void enviarEmailErrorDistribucion(Entidad entidad) throws Exception {
 
