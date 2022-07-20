@@ -37,15 +37,17 @@ public class SirInInterceptor extends AbstractPhaseInterceptor<Message> {
     @SuppressWarnings("unchecked")
     public void handleMessage(Message message) throws Fault {
 
-        log.info(" ------------------- Dentro SirInInterceptor -------------------");
+        log.debug(" ------------------- Dentro SirInInterceptor -------------------");
 
         boolean isOutbound = false;
         isOutbound = message == message.getExchange().getOutMessage() || message == message.getExchange().getOutFaultMessage();
 
+        //Obtener cabeceras
         Map<String, List<String>> headers = CastUtils.cast((Map)message.get(Message.PROTOCOL_HEADERS));
-        for (Map.Entry<String, List<String>> entry : headers.entrySet()) {
-            log.info(entry.getKey() + ": " + entry.getValue().toString());
-        }
+        // Mostrar cabeceras
+        /*for (Map.Entry<String, List<String>> entry : headers.entrySet()) {
+            log.debug(entry.getKey() + ": " + entry.getValue().toString());
+        }*/
 
         // Eliminamos la cabecera SOAPAction para evitar el error: org.apache.cxf.interceptor.Fault: The given SOAPAction does not match an operation.
         List<String> sa = headers.get("SOAPAction");
