@@ -2,10 +2,11 @@ package es.caib.regweb3.webapp.config;
 
 import es.caib.regweb3.webapp.config.keycloak.PreauthKeycloakUserDetails;
 import org.keycloak.KeycloakPrincipal;
+import org.keycloak.KeycloakSecurityContext;
+import org.keycloak.representations.AccessToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationDetailsSource;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -33,7 +34,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 
-@Configuration
+//@Configuration
 @EnableWebSecurity
 public class RegWeb3SecurityConfig extends WebSecurityConfigurerAdapter {
 
@@ -156,16 +157,30 @@ public class RegWeb3SecurityConfig extends WebSecurityConfigurerAdapter {
             public PreAuthenticatedGrantedAuthoritiesWebAuthenticationDetails buildDetails(HttpServletRequest context) {
                 Collection<String> j2eeUserRoles = getUserRoles(context);
 
-                Collection<? extends GrantedAuthority> userGas = j2eeUserRoles2GrantedAuthoritiesMapper.getGrantedAuthorities(
-                        j2eeUserRoles);
+                Collection<? extends GrantedAuthority> userGas = j2eeUserRoles2GrantedAuthoritiesMapper.getGrantedAuthorities(j2eeUserRoles);
+
                 if (logger.isDebugEnabled()) {
                     logger.debug("J2EE roles [" + j2eeUserRoles + "] mapped to Granted Authorities: [" + userGas + "]");
                 }
+
                 PreAuthenticatedGrantedAuthoritiesWebAuthenticationDetails result;
+
                 if (context.getUserPrincipal() instanceof KeycloakPrincipal) {
-                    KeycloakPrincipal<?> keycloakPrincipal = ((KeycloakPrincipal<?>)context.getUserPrincipal());
+
+                    KeycloakPrincipal keycloakPrincipal=(KeycloakPrincipal)context.getUserPrincipal();
+                    KeycloakSecurityContext session = keycloakPrincipal.getKeycloakSecurityContext();
+                    AccessToken accessToken = session.getToken();
+
+                    log.info("accessToken.getPreferredUsername(): " + accessToken.getPreferredUsername());
+                    log.info("accessToken.getIssuedFor(): " + accessToken.getIssuedFor());
+                    log.info("accessToken.getIssuer(): " + accessToken.getIssuer());
+                    log.info("ROLES: " + accessToken.getRealmAccess().getRoles());
+
+                    Set<String> roles = accessToken.getRealmAccess().getRoles();
+
+                   /* KeycloakPrincipal<?> keycloakPrincipal = ((KeycloakPrincipal<?>)context.getUserPrincipal());
                     Set<String> roles = keycloakPrincipal.getKeycloakSecurityContext().getToken().getResourceAccess(
-                            keycloakPrincipal.getKeycloakSecurityContext().getToken().getIssuedFor()).getRoles();
+                            keycloakPrincipal.getKeycloakSecurityContext().getToken().getIssuedFor()).getRoles();*/
 
                     log.info("roles" + roles.toString());
 
@@ -176,6 +191,7 @@ public class RegWeb3SecurityConfig extends WebSecurityConfigurerAdapter {
                 } else {
                     result = new PreAuthenticatedGrantedAuthoritiesWebAuthenticationDetails(context, userGas);
                 }
+
                 return result;
             }
         };
