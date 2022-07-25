@@ -12,6 +12,7 @@ import es.caib.regweb3.model.utils.IndicadorPrueba;
 import es.caib.regweb3.persistence.integracion.ArxiuCaibUtils;
 import es.caib.regweb3.persistence.utils.FileSystemManager;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
+import es.caib.regweb3.plugins.distribucion.IDistribucionPlugin;
 import es.caib.regweb3.sir.ejb.EmisionLocal;
 import es.caib.regweb3.sir.ejb.MensajeLocal;
 import es.caib.regweb3.utils.Dir3CaibUtils;
@@ -70,6 +71,7 @@ public class SirEnvioBean implements SirEnvioLocal {
     @EJB private IntegracionLocal integracionEjb;
     @EJB private DistribucionLocal distribucionEjb;
     @EJB private OrganismoLocal organismoEjb;
+    @EJB private PluginLocal pluginEjb;
     @Autowired ArxiuCaibUtils arxiuCaibUtils;
 
 
@@ -473,7 +475,8 @@ public class SirEnvioBean implements SirEnvioLocal {
 
             // Distribuimos el Registro de Entrada si así se ha indicado
             if(distribuir){
-                distribucionEjb.distribuir(registroEntrada, usuario);
+                IDistribucionPlugin distribucionPlugin = (IDistribucionPlugin)  pluginEjb.getPlugin(entidad.getId(), RegwebConstantes.PLUGIN_DISTRIBUCION);
+                distribucionEjb.distribuir(registroEntrada, usuario, distribucionPlugin);
             }
 
             // Integracion
@@ -1133,7 +1136,9 @@ public class SirEnvioBean implements SirEnvioLocal {
                         }
                     }
 
-                    distribucionEjb.distribuir(registroEntrada, usuarioEntidad);
+                    IDistribucionPlugin distribucionPlugin = (IDistribucionPlugin)  pluginEjb.getPlugin(entidad.getId(), RegwebConstantes.PLUGIN_DISTRIBUCION);
+                    distribucionEjb.distribuir(registroEntrada, usuarioEntidad, distribucionPlugin);
+
 
                 }catch (Exception e){
                     log.info("Error procesando un registro sir");

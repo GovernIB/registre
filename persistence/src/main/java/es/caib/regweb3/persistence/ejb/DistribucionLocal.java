@@ -5,6 +5,7 @@ import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.model.RegistroEntrada;
 import es.caib.regweb3.model.UsuarioEntidad;
 import es.caib.regweb3.persistence.utils.RespuestaDistribucion;
+import es.caib.regweb3.plugins.distribucion.IDistribucionPlugin;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 
@@ -22,7 +23,7 @@ public interface DistribucionLocal {
     String JNDI_NAME = "java:app/regweb3-persistence/DistribucionEJB";
 
     /**
-     * Método que envía a la cola de Distribución el Registro indicado
+     * Método que envia a distribuir el registro en función del valor de la propiedad envioCola de cada plugin.
      *
      * @param re registro de entrada a distribuir
      * @param usuarioEntidad
@@ -30,7 +31,7 @@ public interface DistribucionLocal {
      * @throws Exception
      * @throws I18NException
      */
-    RespuestaDistribucion distribuir(RegistroEntrada re, UsuarioEntidad usuarioEntidad) throws Exception, I18NException, I18NValidationException;
+    RespuestaDistribucion distribuir(RegistroEntrada re, UsuarioEntidad usuarioEntidad, IDistribucionPlugin plugin) throws Exception, I18NException, I18NValidationException;
 
     /**
      * Procesar los registros(varios) que estan en la cola
