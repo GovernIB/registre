@@ -229,7 +229,7 @@ public class RegistroSir implements Serializable {
     
     private Date fechaRecepcion;
     private Date fechaEstado;
-    private Integer numeroReintentos = 0;
+    private Integer numeroReintentos;
     private String codigoError;
     private String descripcionError;
     
