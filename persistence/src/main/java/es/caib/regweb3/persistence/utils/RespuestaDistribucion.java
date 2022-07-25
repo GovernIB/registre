@@ -15,6 +15,7 @@ public class RespuestaDistribucion {
     private Boolean enviado = false; //true si se ha enviado distribuido bien
     private Boolean enviadoCola = false; //true si se ha enviado a la cola bien
     private Boolean hayPlugin = false; //true si se ha especificado plugin.
+    private Boolean envioMail = false; //envio con plugin de emails
 
 
     public RespuestaDistribucion() {
@@ -50,5 +51,13 @@ public class RespuestaDistribucion {
 
     public void setEnviadoCola(Boolean enviadoCola) {
         this.enviadoCola = enviadoCola;
+    }
+
+    public Boolean getEnvioMail() {
+        return envioMail;
+    }
+
+    public void setEnvioMail(Boolean envioMail) {
+        this.envioMail = envioMail;
     }
 }

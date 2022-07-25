@@ -387,6 +387,12 @@
             <artifactId>httpclient</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>es.caib.regweb3</groupId>
+            <artifactId>plugin-distribucion-email</artifactId>
+            <version>3.2.5</version>
+            <scope>compile</scope>
+        </dependency>
 
     </dependencies>
 
