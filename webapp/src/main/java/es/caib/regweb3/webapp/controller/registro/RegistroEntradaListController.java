@@ -70,7 +70,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
     @EJB(mappedName = DistribucionLocal.JNDI_NAME)
     private DistribucionLocal distribucionEjb;
 
-    @EJB(mappedName = "regweb3/PluginEJB/local")
+    @EJB(mappedName = PluginLocal.JNDI_NAME)
     private PluginLocal pluginEjb;
 
 
