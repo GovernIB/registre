@@ -44,7 +44,7 @@
         <pluginsib.userinformation-keycloak.version>3.0.0-SNAPSHOT</pluginsib.userinformation-keycloak.version>
         <dir3caib-ws-api.version>1.0.14</dir3caib-ws-api.version>
         <scanweb.api.version>4.0.0</scanweb.api.version>
-        <cxf.version>3.2.5</cxf.version>
+        <cxf.version>3.3.0</cxf.version>
         <pluginsib-validatesignature-afirmacxf.version>2.0.5</pluginsib-validatesignature-afirmacxf.version>
         <slf4j.version>1.7.22.redhat-2</slf4j.version>
         <jaxws-api.version>2.3.1</jaxws-api.version>
