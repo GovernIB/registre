@@ -164,6 +164,7 @@
 
         <c:if test="${not empty loginInfo.ayudaUrl}">
             <li class="submenu-complet"><a href="<c:url value="${loginInfo.ayudaUrl}"/>" target="_blank"><i class="fa fa-home"></i> <spring:message code="menu.ayudaUrl"/></a></li>
+            <li class="submenu-complet"><a href="<c:url value="https://www.caib.es/sites/administracioelectronica"/>" target="_blank"><i class="fa fa-desktop"></i> <spring:message code="menu.ayuda.admElectronica"/></a></li>
         </c:if>
 
         <li class="divider"></li>
