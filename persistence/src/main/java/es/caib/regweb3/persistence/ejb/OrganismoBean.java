@@ -445,17 +445,30 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
     @SuppressWarnings(value = "unchecked")
     public Boolean isOrganismoInterno(String codigo, Long idEntidad) throws Exception {
 
-        Organismo organismo = findByCodigoEntidad(codigo, idEntidad);
+
+        Organismo organismo;
+        if (multiEntidadEjb.isMultiEntidad()) {
+            organismo = findByCodigoMultiEntidad(codigo);
+        } else {
+            organismo = findByCodigoEntidadLigero(codigo, idEntidad);
+        }
+
+
 
         if (organismo == null) {
             return false;
+        }else{
+            if(organismo.getEntidad().getId().equals(idEntidad)){
+                if (!organismo.getEdp()) { // Si no es EDP
+                    return true;
+                } else {
+                    return organismo.getPermiteUsuarios() || organismo.getEdpPrincipal().getPermiteUsuarios();
+                }
+            }else{
+                return false;
+            }
         }
 
-        if (!organismo.getEdp()) { // Si no es EDP
-            return true;
-        } else {
-            return organismo.getPermiteUsuarios() || organismo.getEdpPrincipal().getPermiteUsuarios();
-        }
     }
 
     @Override
