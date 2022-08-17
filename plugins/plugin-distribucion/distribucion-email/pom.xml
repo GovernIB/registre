@@ -73,11 +73,12 @@
             <groupId>org.fundaciobit.genapp</groupId>
             <artifactId>genapp-core</artifactId>
             <version>1.0</version>
+            <scope>provided</scope>
         </dependency>
+
         <dependency>
             <groupId>es.caib.regweb3</groupId>
             <artifactId>regweb3-utils</artifactId>
-            <version>3.3.0</version>
             <scope>compile</scope>
         </dependency>
 
