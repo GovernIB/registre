@@ -387,11 +387,11 @@
             <artifactId>httpclient</artifactId>
             <scope>test</scope>
         </dependency>
+
         <dependency>
             <groupId>es.caib.regweb3</groupId>
-            <artifactId>plugin-distribucion-email</artifactId>
-            <version>3.3.0</version>
-            <scope>compile</scope>
+            <artifactId>plugin-distribucion-api</artifactId>
+            <scope>provided</scope>
         </dependency>
 
     </dependencies>

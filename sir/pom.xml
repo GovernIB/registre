@@ -47,12 +47,6 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- Dependencia hacia libsir -->
-       <!-- <dependency>
-            <groupId>es.gob.registros.sir</groupId>
-            <artifactId>interService</artifactId>
-            <version>3.0.0</version>
-        </dependency>-->
     </dependencies>
 
     <build>
