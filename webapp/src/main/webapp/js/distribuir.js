@@ -55,9 +55,6 @@ function distribuir() {
         type: 'GET',
         dataType: 'json',
         contentType: 'application/json',
-        beforeSend: function(objeto){
-            waitingDialog.show(traddistribuir['distribuir.distribuyendo'], {dialogSize: 'm', progressType: 'success'});
-        },
         success:function(respuesta){
 
             if( respuesta.status === 'SUCCESS' || respuesta.status === 'ENVIADO_COLA'){
@@ -65,11 +62,9 @@ function distribuir() {
 
             }else if(respuesta.status === 'FAIL') {//Si ha ocurrido un fallo en el envio
                 mensajeError('#mensajes', respuesta.error);
-                waitingDialog.hide();
                 return false;
 
             } else if(respuesta.status ==='ENVIO_MAIL'){
-                waitingDialog.hide();
                 $('#distribuirModal').modal('show');
             }
 

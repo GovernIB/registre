@@ -107,7 +107,6 @@
                 }else if(respuesta.status === 'FAIL') {//Si ha ocurrido un fallo en el envio
                     mensajeError('#mensajes', respuesta.error);
                     waitingDialog.hide();
-                    goTo(urlDetalle);
                 }
 
                 waitingDialog.hide();
