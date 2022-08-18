@@ -6,6 +6,7 @@ import es.caib.regweb3.persistence.utils.I18NLogicUtils;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.persistence.utils.RespuestaDistribucion;
 import es.caib.regweb3.plugins.distribucion.IDistribucionPlugin;
+import es.caib.regweb3.plugins.distribucion.email.DistribucionEmailPlugin;
 import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.MailUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
@@ -55,7 +56,7 @@ public class DistribucionBean implements DistribucionLocal {
      * @throws I18NException
      */
     @Override
-    public RespuestaDistribucion distribuir(RegistroEntrada re, UsuarioEntidad usuarioEntidad, IDistribucionPlugin plugin) throws Exception, I18NException {
+    public RespuestaDistribucion distribuir(RegistroEntrada re, UsuarioEntidad usuarioEntidad, String emails, String motivo) throws Exception, I18NException  {
 
         RespuestaDistribucion respuestaDistribucion = new RespuestaDistribucion();
 
@@ -67,6 +68,14 @@ public class DistribucionBean implements DistribucionLocal {
         String error = "";
 
         try {
+            //Si es el plugin de email hay que asignar los valores.
+            IDistribucionPlugin plugin = (IDistribucionPlugin) pluginEjb.getPlugin(usuarioEntidad.getEntidad().getId(), RegwebConstantes.PLUGIN_DISTRIBUCION);
+            DistribucionEmailPlugin distribucionEmailPlugin;
+            if(plugin!=null && plugin.getClass().getName().contains("DistribucionEmailPlugin")){
+                distribucionEmailPlugin = (DistribucionEmailPlugin)plugin;
+                distribucionEmailPlugin.setEmails(emails);
+                distribucionEmailPlugin.setMotivo(motivo);
+            }
             if (plugin != null) {
                 if(plugin.getEnvioCola()){
                     Boolean encolado = colaEjb.enviarAColaDistribucion(re, usuarioEntidad);

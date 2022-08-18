@@ -2,11 +2,13 @@ package es.caib.regweb3.utils;
 
 
 import javax.activation.DataHandler;
+import javax.activation.DataSource;
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
+import javax.mail.util.ByteArrayDataSource;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import java.util.Date;
@@ -108,8 +110,9 @@ public class MailUtils {
 
         //Añadimos los adjuntos que nos pasan
         for (Attachment attachment : attachments) {
+            DataSource dataSource = new ByteArrayDataSource(attachment.getData(), attachment.getMime());
             messageBodyPart = new MimeBodyPart();
-            messageBodyPart.setDataHandler(new DataHandler(attachment.getDataSource()));
+            messageBodyPart.setDataHandler(new DataHandler(dataSource));
             messageBodyPart.setFileName(attachment.getFilename());
             multipart.addBodyPart(messageBodyPart);
         }

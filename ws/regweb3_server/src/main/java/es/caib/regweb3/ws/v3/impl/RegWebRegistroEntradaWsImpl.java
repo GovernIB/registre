@@ -419,8 +419,7 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
 
         try{
             // Distribuimos el registro de entrada
-            IDistribucionPlugin distribucionPlugin = (IDistribucionPlugin)  pluginEjb.getPlugin(usuarioEntidad.getEntidad().getId(), RegwebConstantes.PLUGIN_DISTRIBUCION);
-            distribucionEjb.distribuir(registroEntrada, usuarioEntidad,distribucionPlugin);
+            distribucionEjb.distribuir(registroEntrada, usuarioEntidad,null,null);
 
         }catch (Exception | I18NValidationException e){
             e.printStackTrace();
@@ -461,8 +460,7 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
 
         try{
             // 7.- Distribuimos el registro de entrada
-            IDistribucionPlugin distribucionPlugin = (IDistribucionPlugin)  pluginEjb.getPlugin(entidadActiva.getId(), RegwebConstantes.PLUGIN_DISTRIBUCION);
-            RespuestaDistribucion respuestaDistribucion = distribucionEjb.distribuir(registroEntrada, usuario,distribucionPlugin);
+            RespuestaDistribucion respuestaDistribucion = distribucionEjb.distribuir(registroEntrada, usuario,null,null);
 
             // Si el Plugin permite seleccionar Destinatarios, no se puede distribuir automaticamente
             if(respuestaDistribucion.getDestinatarios() != null){

@@ -200,8 +200,7 @@ public class AsientoRegistralBean implements AsientoRegistralLocal {
 
         try{
             // Distribuimos el registro de entrada
-            IDistribucionPlugin distribucionPlugin = (IDistribucionPlugin)  pluginEjb.getPlugin(usuario.getEntidad().getId(), RegwebConstantes.PLUGIN_DISTRIBUCION);
-            asynchDistribucion.distribuir(registroEntrada, usuario, distribucionPlugin);
+            asynchDistribucion.distribuir(registroEntrada, usuario, null,null);
 
         }catch (Exception | I18NValidationException e){
             e.printStackTrace();

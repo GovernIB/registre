@@ -471,8 +471,7 @@ public class SirEnvioBean implements SirEnvioLocal {
             // Distribuimos el Registro de Entrada si así se ha indicado
 
             if(distribuir){
-                IDistribucionPlugin distribucionPlugin = (IDistribucionPlugin)  pluginEjb.getPlugin(entidad.getId(), RegwebConstantes.PLUGIN_DISTRIBUCION);
-                distribucionEjb.distribuir(registroEntrada, usuario, distribucionPlugin);
+                distribucionEjb.distribuir(registroEntrada, usuario,null,null);
             }
 
             // Integracion
@@ -1129,8 +1128,7 @@ public class SirEnvioBean implements SirEnvioLocal {
                             log.info("No encuentra el fichero");
                         }
                     }
-                    IDistribucionPlugin distribucionPlugin = (IDistribucionPlugin)  pluginEjb.getPlugin(entidad.getId(), RegwebConstantes.PLUGIN_DISTRIBUCION);
-                    distribucionEjb.distribuir(registroEntrada, usuarioEntidad, distribucionPlugin);
+                    distribucionEjb.distribuir(registroEntrada, usuarioEntidad,null,null);
 
                 }catch (Exception e){
                     log.info("Error procesando un registro sir");
