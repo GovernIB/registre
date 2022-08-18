@@ -12,9 +12,6 @@ import org.slf4j.LoggerFactory;
 import org.fundaciobit.genapp.common.i18n.I18NCommonUtils;
 import org.fundaciobit.pluginsib.core.utils.AbstractPluginProperties;
 
-import javax.activation.DataSource;
-import javax.mail.util.ByteArrayDataSource;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -110,13 +107,11 @@ public class DistribucionEmailPlugin extends AbstractPluginProperties implements
             for (AnexoFull anexoFull : anexoFulls) {
 
                 Attachment attachment;
-                DataSource dataSource = null;
                 String filename = "";
                 if (!anexoFull.getAnexo().isJustificante()) { //Si no es justificante
+
                     //Datos para montar el attachment
-                    filename = anexoFull.getFileName();
-                    dataSource = new ByteArrayDataSource(anexoFull.getData(), anexoFull.getMime());
-                    attachment = new Attachment(dataSource, filename);
+                     attachment = new Attachment(anexoFull.getFileName(), anexoFull.getData(), anexoFull.getMime());
 
                     //Parte htlm de los
                     long tamanoAnexo = anexoFull.getSize();
@@ -124,9 +119,7 @@ public class DistribucionEmailPlugin extends AbstractPluginProperties implements
                             "<th>Fitxer</th><td>" + filename + "  ( " + tamanoAnexo + " bytes )\n" + "</td></tr>";
 
                 } else { //si es justificante
-                    filename = anexoFull.getSignFileName();
-                    dataSource = new ByteArrayDataSource(anexoFull.getSignData(), anexoFull.getSignMime());
-                    attachment = new Attachment(dataSource, filename);
+                    attachment = new Attachment(anexoFull.getSignFileName(), anexoFull.getData(), anexoFull.getMime());
                 }
                 attachments.add(attachment);
 

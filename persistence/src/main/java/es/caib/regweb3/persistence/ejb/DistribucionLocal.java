@@ -31,7 +31,7 @@ public interface DistribucionLocal {
      * @throws Exception
      * @throws I18NException
      */
-    RespuestaDistribucion distribuir(RegistroEntrada re, UsuarioEntidad usuarioEntidad, IDistribucionPlugin plugin) throws Exception, I18NException, I18NValidationException;
+    RespuestaDistribucion distribuir(RegistroEntrada re, UsuarioEntidad usuarioEntidad,  String emails, String motivo) throws Exception, I18NException, I18NValidationException;
 
     /**
      * Procesar los registros(varios) que estan en la cola
