@@ -14,10 +14,6 @@ public class Attachment {
     private byte[] data;
     private String mime;
 
-    public Attachment(DataSource dataSource, String filename) {
-    //    this.dataSource = dataSource;
-        this.filename = filename;
-    }
 
     public Attachment(String filename, byte[] data, String mime) {
         this.filename = filename;
