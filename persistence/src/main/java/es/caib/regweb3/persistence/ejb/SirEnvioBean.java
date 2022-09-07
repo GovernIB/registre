@@ -12,7 +12,6 @@ import es.caib.regweb3.model.utils.IndicadorPrueba;
 import es.caib.regweb3.persistence.integracion.ArxiuCaibUtils;
 import es.caib.regweb3.persistence.utils.FileSystemManager;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
-import es.caib.regweb3.plugins.distribucion.IDistribucionPlugin;
 import es.caib.regweb3.sir.ejb.EmisionLocal;
 import es.caib.regweb3.sir.ejb.MensajeLocal;
 import es.caib.regweb3.utils.Dir3CaibUtils;
@@ -526,9 +525,12 @@ public class SirEnvioBean implements SirEnvioLocal {
             registroSir.setTipoAnotacion(TipoAnotacion.REENVIO.getValue());
             registroSir.setDecodificacionTipoAnotacion(observaciones);
 
+            // Modificamos el estado del RegistroSir
+            registroSir.setEstado(EstadoRegistroSir.REENVIADO);
+
             // Actualizamos el RegistroSir
             registroSir = registroSirEjb.merge(registroSir);
-            registroSir = registroSirEjb.getRegistroSirConAnexos(registroSir.getId());
+            registroSir.setAnexos(registroSirEjb.getAnexos(registroSir));
 
             // Enviamos el Registro al Componente CIR
             emisionEjb.reenviarFicheroIntercambio(registroSir);
@@ -549,9 +551,6 @@ public class SirEnvioBean implements SirEnvioLocal {
             trazabilidadSir.setContactoUsuario(usuario.getEmail());
             trazabilidadSir.setObservaciones(observaciones);
             trazabilidadSirEjb.persist(trazabilidadSir);
-
-            // Modificamos el estado del RegistroSir
-            registroSirEjb.modificarEstado(registroSir.getId(), EstadoRegistroSir.REENVIADO);
 
             // Integracion
             integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_SIR, descripcion, peticion.toString(), System.currentTimeMillis() - inicio.getTime(), registroSir.getEntidad().getId(), registroSir.getIdentificadorIntercambio());
@@ -611,9 +610,11 @@ public class SirEnvioBean implements SirEnvioLocal {
             registroSir.setTipoAnotacion(TipoAnotacion.RECHAZO.getValue());
             registroSir.setDecodificacionTipoAnotacion(observaciones);
 
-            registroSir = registroSirEjb.merge(registroSir);
+            // Modificamos el estado del RegistroSir
+            registroSir.setEstado(EstadoRegistroSir.RECHAZADO);
 
-            registroSir = registroSirEjb.getRegistroSirConAnexos(registroSir.getId());
+            registroSir = registroSirEjb.merge(registroSir);
+            registroSir.setAnexos(registroSirEjb.getAnexos(registroSir));
 
             // Rechazamos el RegistroSir
             emisionEjb.rechazarFicheroIntercambio(registroSir);
@@ -632,9 +633,6 @@ public class SirEnvioBean implements SirEnvioLocal {
             trazabilidadSir.setContactoUsuario(usuario.getEmail());
             trazabilidadSir.setObservaciones(observaciones);
             trazabilidadSirEjb.persist(trazabilidadSir);
-
-            // Modificamos el estado del RegistroSir
-            registroSirEjb.modificarEstado(registroSir.getId(), EstadoRegistroSir.RECHAZADO);
 
             // Integracion
             integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_SIR, descripcion, peticion.toString(), System.currentTimeMillis() - inicio.getTime(), registroSir.getEntidad().getId(), registroSir.getIdentificadorIntercambio());

@@ -57,6 +57,15 @@ public interface RegistroSirLocal extends BaseEjb<RegistroSir, Long> {
     RegistroSir getRegistroSirConAnexos(Long idRegistroSir) throws Exception;
 
     /**
+     * Obtiene los AnexosSir completos de un RegistroSir
+     * @param registroSir
+     * @return
+     * @throws Exception
+     */
+    List<AnexoSir> getAnexos(RegistroSir registroSir) throws Exception;
+
+
+    /**
      * Crea un RegistroSir
      *
      * @throws Exception
