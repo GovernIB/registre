@@ -72,19 +72,16 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
     @EJB private InteresadoSirLocal interesadoSirEjb;
     @EJB private AnexoSirLocal anexoSirEjb;
     @EJB private RegistroEntradaLocal registroEntradaEjb;
-    @EJB private RegistroSalidaLocal registroSalidaEjb;
     @EJB private ArchivoLocal archivoEjb;
     @EJB private LibroLocal libroEjb;
     @EJB private CatProvinciaLocal catProvinciaEjb;
     @EJB private CatLocalidadLocal catLocalidadEjb;
     @EJB private OrganismoLocal organismoEjb;
-    @EJB private OficinaLocal oficinaEjb;
     @EJB private CatPaisLocal catPaisEjb;
     @EJB private TipoDocumentalLocal tipoDocumentalEjb;
     @EJB private TrazabilidadSirLocal trazabilidadSirEjb;
     @EJB private TrazabilidadLocal trazabilidadEjb;
     @EJB private SignatureServerLocal signatureServerEjb;
-    @EJB private MultiEntidadLocal multiEntidadEjb;
 
 
     @Override
@@ -190,6 +187,19 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
 
         return registroSir;
 
+    }
+
+    @Override
+    public List<AnexoSir> getAnexos(RegistroSir registroSir) throws Exception{
+
+        List<AnexoSir> anexosFull = new ArrayList<AnexoSir>();
+        for (AnexoSir anexoSir : registroSir.getAnexos()) {
+
+            anexoSir.setAnexoData(FileSystemManager.getBytesArchivo(anexoSir.getAnexo().getId()));
+            anexosFull.add(anexoSir);
+        }
+
+        return anexosFull;
     }
 
     @Override
