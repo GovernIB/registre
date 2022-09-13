@@ -38,7 +38,7 @@ public class Regweb3Scheduler {
         }
 
         try {
-            schedulerEjb.purgarProcesadosColaDistribucion();
+            schedulerEjb.purgarProcesadosColas();
 
         } catch (Exception e) {
             e.printStackTrace();
