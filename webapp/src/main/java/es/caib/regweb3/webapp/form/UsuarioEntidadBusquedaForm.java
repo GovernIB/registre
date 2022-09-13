@@ -15,6 +15,7 @@ public class UsuarioEntidadBusquedaForm implements Serializable {
 
     private UsuarioEntidad usuarioEntidad;
     private Organismo organismo;
+    private Long permiso;
     private Integer pageNumber;
 
     public UsuarioEntidadBusquedaForm() {
@@ -39,6 +40,14 @@ public class UsuarioEntidadBusquedaForm implements Serializable {
 
     public void setOrganismo(Organismo organismo) {
         this.organismo = organismo;
+    }
+
+    public Long getPermiso() {
+        return permiso;
+    }
+
+    public void setPermiso(Long permiso) {
+        this.permiso = permiso;
     }
 
     public Integer getPageNumber() {

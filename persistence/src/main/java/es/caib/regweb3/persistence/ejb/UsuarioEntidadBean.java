@@ -342,7 +342,7 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Paginacion busqueda(Integer pageNumber, Long idEntidad, String identificador, String nombre, String apellido1, String apellido2, String documento, Long tipoUsuario, Long idOrganismo) throws Exception {
+    public Paginacion busqueda(Integer pageNumber, Long idEntidad, String identificador, String nombre, String apellido1, String apellido2, String documento, Long tipoUsuario, Long idOrganismo, Long permiso) throws Exception {
 
         Query q;
         Query q2;
@@ -378,11 +378,16 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
             parametros.put("tipoUsuario", tipoUsuario);
         }
 
-        if (idOrganismo != null && idOrganismo > 0) { //Si s'ha triat un llibre a la cerca
+        if (idOrganismo != null && idOrganismo > 0) { //Si s'ha triat un organisme a la cerca
             where.add("usuarioEntidad.id = pou.usuario.id ");
             where.add("pou.organismo.id = :idOrganismo ");
             parametros.put("idOrganismo", idOrganismo);
             where.add("pou.activo = true ");
+        }
+
+        if (permiso != null && idOrganismo != null) { //Si s'ha triat un organisme a la cerca
+            where.add("pou.permiso = :permiso ");
+            parametros.put("permiso", permiso);
         }
 
         where.add("usuarioEntidad.entidad.id = :idEntidad ");

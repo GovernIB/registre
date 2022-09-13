@@ -114,6 +114,20 @@
                                             </form:select>
                                         </div>
                                     </div>
+
+                                    <div class="form-group col-xs-6 espaiLinies senseMargeLat">
+                                        <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                            <label for="permiso"><spring:message code="permisos.permisos"/></label>
+                                        </div>
+                                        <div class="col-xs-8">
+                                            <form:select path="permiso" cssClass="chosen-select" disabled="true">
+                                                <form:option value="">...</form:option>
+                                                <c:forEach items="${permisos}" var="permiso">
+                                                    <form:option value="${permiso}" > <spring:message code="permiso.nombre.${permiso}"/></form:option>
+                                                </c:forEach>
+                                            </form:select>
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <div class="form-group col-xs-12">
@@ -238,16 +252,10 @@
                             </div>
 
                         </c:if>
-
                     </div>
-
                 </div>
             </div>
-
         </div>
-
-
-
 
     </div>
 </div> <!-- /container -->
@@ -255,6 +263,23 @@
 <c:import url="../modulos/pie.jsp"/>
 
 <script type="text/javascript">
+
+    $(document).ready(function () {
+        if ($('#organismo\\.id option:selected').val() > 0) {
+            $('#permiso').removeAttr("disabled","disabled").trigger("chosen:updated");
+        }
+    });
+
+    // Activación del select Permiso en función de los seleccionado en Organismo
+    $('#organismo\\.id').change(function () {
+
+        if ($('#organismo\\.id option:selected').val() > 0) {
+            $('#permiso').removeAttr("disabled","disabled").trigger("chosen:updated");
+        }else{
+            $('#permiso').attr("disabled","disabled").trigger("chosen:updated");
+        }
+    });
+
     /**
      * Script per exportar els usuaris consultats a l'Excel
      * @param url
