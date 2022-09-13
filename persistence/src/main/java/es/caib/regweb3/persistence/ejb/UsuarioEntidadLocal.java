@@ -168,7 +168,7 @@ public interface UsuarioEntidadLocal extends BaseEjb<UsuarioEntidad, Long> {
      * @return
      * @throws Exception
      */
-    Paginacion busqueda(Integer pageNumber, Long idEntidad, String identificador, String nombre, String apellido1, String apellido2, String documento, Long tipoUsuario, Long idOrganismo) throws Exception;
+    Paginacion busqueda(Integer pageNumber, Long idEntidad, String identificador, String nombre, String apellido1, String apellido2, String documento, Long tipoUsuario, Long idOrganismo, Long permiso) throws Exception;
 
     /**
      * Devuelve los usuarios de la Entidad activos que no son el usuario actual y según el tipo de usuario

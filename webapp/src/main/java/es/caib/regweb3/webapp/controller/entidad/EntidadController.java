@@ -162,6 +162,7 @@ public class EntidadController extends BaseController {
         model.addAttribute("usuarioEntidadBusqueda", usuarioEntidadBusqueda);
         model.addAttribute("entidad", entidad);
         model.addAttribute("organismos", organismoEjb.getPermitirUsuarios(entidad.getId()));
+        model.addAttribute("permisos", RegwebConstantes.PERMISOS);
 
         return "entidad/usuariosList";
     }
@@ -174,8 +175,7 @@ public class EntidadController extends BaseController {
      * @throws Exception
      */
     @RequestMapping(value = "/usuarios", method = RequestMethod.POST)
-    public ModelAndView usuariosEntidad(@ModelAttribute UsuarioEntidadBusquedaForm busqueda,
-                                        HttpServletRequest request) throws Exception {
+    public ModelAndView usuariosEntidad(@ModelAttribute UsuarioEntidadBusquedaForm busqueda, HttpServletRequest request) throws Exception {
 
         ModelAndView mav = new ModelAndView("entidad/usuariosList");
         Usuario usuario = busqueda.getUsuarioEntidad().getUsuario();
@@ -185,14 +185,14 @@ public class EntidadController extends BaseController {
         Paginacion paginacion = usuarioEntidadEjb.busqueda(busqueda.getPageNumber(),
                 entidad.getId(), usuario.getIdentificador(), usuario.getNombre(),
                 usuario.getApellido1(), usuario.getApellido2(), usuario.getDocumento(),
-                usuario.getTipoUsuario(), organismo.getId());
+                usuario.getTipoUsuario(), organismo.getId(), busqueda.getPermiso());
 
         busqueda.setPageNumber(1);
         mav.addObject("entidad", entidad);
         mav.addObject("paginacion", paginacion);
         mav.addObject("organismos", organismoEjb.getPermitirUsuarios(entidad.getId()));
         mav.addObject("usuarioEntidadBusqueda", busqueda);
-
+        mav.addObject("permisos", RegwebConstantes.PERMISOS);
 
         return mav;
     }
@@ -592,10 +592,7 @@ public class EntidadController extends BaseController {
      * Actualizamos una {@link es.caib.regweb3.model.Entidad} de dir3caib
      */
     @RequestMapping(value = "/{entidadId}/actualizar")
-    @ResponseBody
     public String actualizar(@PathVariable Long entidadId, HttpServletRequest request) throws Exception {
-
-        JsonResponse jsonResponse = new JsonResponse();
 
         try {
 
