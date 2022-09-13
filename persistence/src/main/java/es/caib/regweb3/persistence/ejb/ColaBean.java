@@ -390,17 +390,33 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
     }
 
     @Override
-    public void purgarElementosProcesados(Long idEntidad) throws Exception {
+    public Integer purgarElementosProcesados(Long idEntidad) throws Exception {
 
         Integer mesesPurgo = PropiedadGlobalUtil.getMesesPurgoProcesadosCola(idEntidad);
 
-        //Obtenemos los elementos que fueron procesados hace meses
-        List<Cola> elementos = obtenerProcesados(idEntidad, mesesPurgo);
+        Date fechaPurgo = DateUtils.addMonths(new Date(), -mesesPurgo);
 
-        //Eliminamos los elementos de la cola
-        for (Cola elemento : elementos) {
-            remove(elemento);
+        List<?> elementos = em.createQuery("select distinct(cola.id) from Cola as cola where cola.estado = :procesado and cola.fecha <= :fechaPurgo and cola.usuarioEntidad.entidad.id =: idEntidad")
+                .setParameter("procesado", RegwebConstantes.COLA_ESTADO_PROCESADO)
+                .setParameter("idEntidad", idEntidad)
+                .setParameter("fechaPurgo", fechaPurgo).getResultList();
+
+        Integer total = elementos.size();
+
+        if (elementos.size() > 0) {
+
+            // Si hay más de 1000 registros, dividimos las queries (ORA-01795).
+            while (elementos.size() > RegwebConstantes.NUMBER_EXPRESSIONS_IN) {
+
+                List<?> subList = elementos.subList(0, RegwebConstantes.NUMBER_EXPRESSIONS_IN);
+                em.createQuery("delete from Cola where id in (:elementos)").setParameter("elementos", subList).executeUpdate();
+                elementos.subList(0, RegwebConstantes.NUMBER_EXPRESSIONS_IN).clear();
+            }
+
+            em.createQuery("delete from Cola where id in (:elementos)").setParameter("elementos", elementos).executeUpdate();
         }
+
+        return total;
 
     }
 
@@ -435,7 +451,6 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
         q.setParameter("fechaPurgo", fechaPurgo);
         q.setParameter("procesado", RegwebConstantes.COLA_ESTADO_PROCESADO);
         q.setParameter("idEntidad", idEntidad);
-        q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList();
     }

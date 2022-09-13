@@ -158,7 +158,7 @@ public interface ColaLocal extends BaseEjb<Cola, Long> {
      * @param idEntidad
      * @throws Exception
      */
-    void purgarElementosProcesados(Long idEntidad) throws Exception;
+    Integer purgarElementosProcesados(Long idEntidad) throws Exception;
 
     /**
      * Obtiene los elementos de cualquier cola que estén en estado Error
