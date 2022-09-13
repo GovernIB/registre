@@ -30,7 +30,7 @@
         <junit.version>4.13.1</junit.version>
         <itext.version>5.4.5</itext.version>
         <dom4j.version>1.6.1</dom4j.version>
-        <pluginsib-arxiu-caib.version>2.0.18</pluginsib-arxiu-caib.version>
+        <pluginsib-arxiu-caib.version>2.0.23</pluginsib-arxiu-caib.version>
         <documentcustody.api.version>4.0.1</documentcustody.api.version>
         <documentcustody-filesystem.version>4.0.2</documentcustody-filesystem.version>
         <plugin-documentcustody-arxiudigitalcaib.version>4.0.3</plugin-documentcustody-arxiudigitalcaib.version>
