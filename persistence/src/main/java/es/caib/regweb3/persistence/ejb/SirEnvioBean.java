@@ -714,9 +714,14 @@ public class SirEnvioBean implements SirEnvioLocal {
             mensaje = mensajeEjb.reenviarMensajeControl(mensaje);
 
             // Volver a guardar el mensaje enviado
-            // Detach de la sesion para poder duplicar el registro
-            Session session = (Session) em.getDelegate();
-            session.evict(mensaje);
+            try{
+                // Detach de la sesion para poder duplicar el registro
+                Session session = (Session) em.getDelegate();
+                session.evict(mensaje);
+            }catch (IllegalArgumentException iae){
+                // No hacemos nada: https://stackoverflow.com/questions/58016010/updating-to-hibernate-5-1-from-3-6-produce-non-entity-object-instance-passed-to
+            }
+
             mensaje.setId(null);
             mensaje.setFecha(new Date());
             mensajeControlEjb.persist(mensaje);

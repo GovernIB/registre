@@ -568,11 +568,15 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean implemen
             List<Interesado> interesados = registroSalida.getRegistroDetalle().getInteresados();
             List<AnexoFull> anexos = registroSalida.getRegistroDetalle().getAnexosFull();
 
-            // Detach de la sesion para poder duplicar el registro
-            Session session = (Session) em.getDelegate();
-            session.evict(registroSalida);
-            session.evict(registroSalida.getRegistroDetalle());
-            session.evict(registroSalida.getRegistroDetalle().getInteresados());
+            try{
+                // Detach de la sesion para poder duplicar el registro
+                Session session = (Session) em.getDelegate();
+                session.evict(registroSalida);
+                session.evict(registroSalida.getRegistroDetalle());
+                session.evict(registroSalida.getRegistroDetalle().getInteresados());
+            }catch (IllegalArgumentException iae){
+                // No hacemos nada: https://stackoverflow.com/questions/58016010/updating-to-hibernate-5-1-from-3-6-produce-non-entity-object-instance-passed-to
+            }
 
             // Nuevas propiedades
             registroSalida.setEstado(RegwebConstantes.REGISTRO_VALIDO);

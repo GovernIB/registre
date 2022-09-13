@@ -520,12 +520,16 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
             List<AnexoFull> anexos = registroSalida.getRegistroDetalle().getAnexosFull();
             Libro libro = libroEjb.findById(usuario.getEntidad().getLibro().getId());
 
-            // Detach de la sesion para poder duplicar el registro
-            Session session = (Session) em.getDelegate();
-            session.evict(registroSalida);
-            session.evict(registroSalida.getRegistroDetalle());
-            session.evict(registroSalida.getRegistroDetalle().getAnexos());
-            session.evict(registroSalida.getRegistroDetalle().getInteresados());
+            try{
+                // Detach de la sesion para poder duplicar el registro
+                Session session = (Session) em.getDelegate();
+                session.evict(registroSalida);
+                session.evict(registroSalida.getRegistroDetalle());
+                session.evict(registroSalida.getRegistroDetalle().getAnexos());
+                session.evict(registroSalida.getRegistroDetalle().getInteresados());
+            }catch (IllegalArgumentException iae){
+                // No hacemos nada: https://stackoverflow.com/questions/58016010/updating-to-hibernate-5-1-from-3-6-produce-non-entity-object-instance-passed-to
+            }
 
             RegistroEntrada nuevoRE = new RegistroEntrada();
             nuevoRE.setUsuario(usuario);
