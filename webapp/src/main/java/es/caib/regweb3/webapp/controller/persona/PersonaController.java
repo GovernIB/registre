@@ -60,6 +60,7 @@ public class PersonaController extends BaseController {
 
         PersonaBusquedaForm personaBusqueda = new PersonaBusquedaForm(new Persona(), 1);
         model.addAttribute("personaBusqueda", personaBusqueda);
+        model.addAttribute("tiposPersona", RegwebConstantes.TIPOS_PERSONA);
 
         return "persona/personaList";
     }
@@ -80,10 +81,9 @@ public class PersonaController extends BaseController {
         busqueda.setPageNumber(1);
         mav.addObject("paginacion", paginacion);
         mav.addObject("personaBusqueda", busqueda);
+        mav.addObject("tiposPersona", RegwebConstantes.TIPOS_PERSONA);
 
         return mav;
-
-
     }
 
     /**
