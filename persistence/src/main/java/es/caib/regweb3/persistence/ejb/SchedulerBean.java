@@ -51,11 +51,11 @@ public class SchedulerBean implements SchedulerLocal {
         long tiempo = System.currentTimeMillis();
         String descripcion = "Purgar Integraciones";
         Entidad entidadActiva = null;
-
+        log.info("------------- Purgando INTEGRACIONES -------------");
         try{
 
             for(Entidad entidad: entidades) {
-
+                log.info("Purgando INTEGRACIONES de " + entidad.getNombre());
                 //Integración
                 entidadActiva = entidad;
                 Date inicio = new Date();
@@ -486,8 +486,7 @@ public class SchedulerBean implements SchedulerLocal {
     }
 
     @Override
-    public void purgarProcesadosColaDistribucion() throws Exception {
-
+    public void purgarProcesadosColas() throws Exception {
 
         List<Entidad> entidades = entidadEjb.getAll();
         StringBuilder peticion = new StringBuilder();
@@ -498,15 +497,16 @@ public class SchedulerBean implements SchedulerLocal {
         try {
 
             for(Entidad entidad: entidades) {
-
                 //Integración
-                entidadActiva = entidad;
                 Date inicio = new Date();
                 peticion = new StringBuilder();
                 peticion.append("entidad: ").append(entidad.getNombre()).append(System.getProperty("line.separator"));
+                entidadActiva = entidad;
 
-                // Obtenemos todos los elementos procesados con anterioridad a los meses purgo indicados
-                colaEjb.purgarElementosProcesados(entidad.getId());
+                // Purgamos los elementos
+                Integer purgados = colaEjb.purgarElementosProcesados(entidad.getId());
+
+                peticion.append("purgados: ").append(purgados).append(System.getProperty("line.separator"));
 
                 integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_SCHEDULERS, descripcion, peticion.toString(), System.currentTimeMillis() - tiempo, entidad.getId(), "");
             }

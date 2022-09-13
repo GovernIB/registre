@@ -113,10 +113,10 @@ public interface SchedulerLocal {
     void enviarEmailErrorDistribucion() throws Exception;
 
     /**
-     * Elimina los registros que están en estado procesado de la cola de distribución que hace más de X meses que se procesaron
+     * Elimina los registros que están en estado procesado de las diferentes COLAS que hace más de X meses que se procesaron
      *
      * @throws Exception
      */
-    void purgarProcesadosColaDistribucion() throws Exception;
+    void purgarProcesadosColas() throws Exception;
 }
 
