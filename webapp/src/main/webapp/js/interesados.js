@@ -1115,7 +1115,7 @@ function actualizarCanalNotificacionInicio() {
 function tiposDocumentoPersonaFisica(){
 
     $('#tipoDocumentoIdentificacion option[value="1"]').removeAttr("disabled");
-    $('#tipoDocumentoIdentificacion option[value="2"]').removeAttr("disabled");
+    $('#tipoDocumentoIdentificacion option[value="2"]').attr("disabled", "disabled");
     $('#tipoDocumentoIdentificacion option[value="3"]').removeAttr("disabled");
     $('#tipoDocumentoIdentificacion option[value="4"]').removeAttr("disabled");
     $('#tipoDocumentoIdentificacion option[value="5"]').removeAttr("disabled");
