@@ -146,13 +146,6 @@ public interface ColaLocal extends BaseEjb<Cola, Long> {
     void procesarElemento(Cola elemento) throws Exception;
 
     /**
-     * Marca como procesado un elemento de tipo Distribución de la Cola y cambia el estado del RegistroEntrada
-     *
-     * @param elemento
-     */
-    void procesarElementoDistribucion(Cola elemento) throws Exception;
-
-    /**
      * Método que elimina los elementos que fueron procesados hace x meses
      *
      * @param idEntidad

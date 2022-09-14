@@ -27,7 +27,7 @@
                                         <label><span class="text-danger"> * </span><spring:message code="registroEntrada.emails.lista"/></label>
                                     </div>
                                     <div class="col-xs-9" id="idEmails">
-                                        <textarea id="emails" name="emails" class="form-control" maxlength="80"></textarea>
+                                        <textarea id="emails" name="emails" class="form-control" maxlength="256"></textarea>
                                         <span class="errors"></span>
                                     </div>
                                 </div>
@@ -87,7 +87,7 @@
 
         $('#distribuirModal').modal('hide');
 
-        var json = { "emails": $('#emails').val(), "motivo": $('#motivo').val()};
+        var json = { "emails": $("#distribuirForm input[name=emails]").val(), "motivo": $("#distribuirForm input[name=motivo]").val()};
 
         jQuery.ajax({
             async: true,
@@ -97,7 +97,7 @@
             dataType: 'json',
             contentType: 'application/json',
             beforeSend: function(objeto){
-                waitingDialog.show(traddistribuir['distribuir.distribuyendo'], {dialogSize: 'm', progressType: 'success'});
+                waitingDialog.show('<spring:message code="registroEntrada.distribuyendo" javaScriptEscape="true"/>', {dialogSize: 'm', progressType: 'success'});
             },
             success:function(respuesta){
 
@@ -118,11 +118,22 @@
     /* Valida els camps del formulari */
     function validarFormEmail() {
 
-        var emails = $('#emails').val();
-        var motivo = $('#motivo').val();
+        var emails = $("#distribuirForm textarea[name=emails]").val();
+        var motivo = $("#distribuirForm textarea[name=motivo]").val();
+
 
         if(validaCampo(emails,'idEmails')&& validaCampo(motivo,'idMotivo')) {
-            distribuirviamail()
+
+            if($("#registrarForm input[name=distribuir]").val() ){
+                $("#registrarForm input[name=emails]").val(emails);
+                $("#registrarForm input[name=motivo]").val(motivo);
+                $('#distribuirModal').modal('hide');
+                waitingDialog.show('<spring:message code="registroEntrada.distribuyendo" javaScriptEscape="true"/>', {dialogSize: 'm', progressType: 'success'});
+                doForm('#registrarForm');
+            }else{
+                distribuirviamail();
+            }
+
         }else{
             return false;
         }

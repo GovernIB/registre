@@ -42,8 +42,7 @@ function redistribuir(url){
 }
 
 /*
- * Función que permite distribuir el registro a los destinatarios que se le indiquen.
- * si no hay destinatarios se marca el registro como tramitado y listo.
+ * Función que permite determinar el plugin de distribución
  */
 function distribuir() {
 

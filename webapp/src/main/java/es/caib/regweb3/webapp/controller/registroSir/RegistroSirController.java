@@ -61,6 +61,9 @@ public class RegistroSirController extends BaseController {
     @EJB(mappedName = AnexoSirLocal.JNDI_NAME)
     private AnexoSirLocal anexoSirEjb;
 
+    @EJB(mappedName = DistribucionLocal.JNDI_NAME)
+    private DistribucionLocal distribucionEjb;
+
 
 
     /**
@@ -194,7 +197,7 @@ public class RegistroSirController extends BaseController {
      * Carga el formulario para ver el detalle de un {@link RegistroSir}
      */
     @RequestMapping(value = "/{idRegistroSir}/detalle", method = RequestMethod.GET)
-    public String detalleRegistroSir(@PathVariable Long idRegistroSir, Model model, HttpServletRequest request) throws Exception {
+    public String detalleRegistroSir(@PathVariable Long idRegistroSir, Model model, HttpServletRequest request) throws Exception, I18NException {
 
         RegistroSir registroSir = registroSirEjb.findById(idRegistroSir);
 
@@ -207,6 +210,7 @@ public class RegistroSirController extends BaseController {
                 model.addAttribute("libro",getLibroEntidad(request)); // Libro único
                 model.addAttribute("organismosOficinaActiva", getOrganismosOficinaActiva(request));
                 model.addAttribute("registrarForm", new RegistrarForm());
+                model.addAttribute("pluginDistribucionEmail", distribucionEjb.isDistribucionPluginEmail(getEntidadActiva(request).getId()));
 
                 // Comprobamos que la unida de tramitación destino está VIGENTE
                 if(registroSir.getCodigoUnidadTramitacionDestino() !=null ){
@@ -261,7 +265,7 @@ public class RegistroSirController extends BaseController {
         // Procesa el RegistroSir
         try{
 
-            RegistroEntrada registroEntrada = sirEnvioEjb.aceptarRegistroSir(registroSir, entidad, usuarioEntidad, oficinaActiva, registrarForm.getIdLibro(), registrarForm.getIdIdioma(), registrarForm.getCamposNTIs(), registrarForm.getIdOrganismoDestino(), registrarForm.getDistribuir(), registrarForm.getCodigoSia());
+            RegistroEntrada registroEntrada = sirEnvioEjb.aceptarRegistroSir(registroSir, entidad, usuarioEntidad, oficinaActiva, registrarForm.getIdLibro(), registrarForm.getIdIdioma(), registrarForm.getCamposNTIs(), registrarForm.getIdOrganismoDestino(), registrarForm.getDistribuir(), registrarForm.getCodigoSia(),registrarForm.getEmails(),registrarForm.getMotivo());
 
             variableReturn = "redirect:/registroEntrada/" + registroEntrada.getId() + "/detalle";
 
