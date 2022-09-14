@@ -51,7 +51,7 @@
 
                     </div>
 
-                    <form:form modelAttribute="registrarForm" action="${urlAceptar}" method="post" cssClass="form-horizontal">
+                    <form:form id="registrarForm" modelAttribute="registrarForm" action="${urlAceptar}" method="post" cssClass="form-horizontal">
 
 
 
@@ -72,6 +72,9 @@
 
                             <%--Distribuir--%>
                             <form:hidden path="distribuir"/>
+                            <form:hidden path="emails"/>
+                            <form:hidden path="motivo"/>
+
 
                             <%--Si hay al menos un Libro, podemos aceptar el RegistroSir--%>
                             <c:if test="${not empty libro}">
@@ -317,6 +320,9 @@
 <c:import url="../registro/buscadorOrganismosOficinasREPestanas.jsp">
     <c:param name="tipo" value="OficinaSir"/>
 </c:import>
+
+<c:import url="../registro/registroDistribuir.jsp">
+</c:import>
 <script type="text/javascript" src="<c:url value="/js/busquedaorganismo.js"/>"></script>
 
 <script type="application/javascript">
@@ -351,10 +357,25 @@
 
         // Mira si todos los campos son correctos
         if ((libro) && (idioma) && (tipoAsunto) && (codigoSia)) {
-
-            waitingDialog.show('<spring:message code="registroSir.aceptando" javaScriptEscape='true'/>', {dialogSize: 'm', progressType: 'primarycd'});
-            doForm('#registrarForm');
-            //return true;
+            if(isDistribuir){
+                if(${pluginDistribucionEmail}){
+                    $('#distribuirModal').modal('show');
+                }else{
+                    waitingDialog.show('<spring:message code="registroSir.aceptando" javaScriptEscape='true'/>', {
+                        dialogSize: 'm',
+                        progressType: 'primarycd'
+                    });
+                    doForm('#registrarForm');
+                    //return true;
+                }
+            }else {
+                waitingDialog.show('<spring:message code="registroSir.aceptando" javaScriptEscape='true'/>', {
+                    dialogSize: 'm',
+                    progressType: 'primarycd'
+                });
+                doForm('#registrarForm');
+                //return true;
+            }
         } else {
             return false;
         }
