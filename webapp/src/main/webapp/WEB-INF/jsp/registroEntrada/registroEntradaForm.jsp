@@ -1,4 +1,3 @@
-<%@ page import="es.caib.regweb3.utils.RegwebConstantes" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/WEB-INF/jsp/modulos/includes.jsp" %>
 
@@ -40,8 +39,8 @@
 
                     <div class="panel panel-info">
                         <div class="panel-heading">
-                            <c:if test="${empty registroEntrada.id}"><a data-toggle="modal" role="button" href="#modalSelectPlantilla" class="btn btn-info btn-xs pull-right margin-left10" onclick="cargarPlantillas('<c:url value="/rest/obtenerPlantillas"/>','${loginInfo.usuarioEntidadActivo.id}','<%=RegwebConstantes.REGISTRO_ENTRADA%>')"><span class="fa fa-refresh"></span> <spring:message code="plantilla.select"/></a></c:if>
-                            <a data-toggle="modal" role="button" href="#modalNewPlantilla" class="btn btn-info btn-xs pull-right" onclick="preparaFormularioPlantilla('<%=RegwebConstantes.REGISTRO_ENTRADA%>')"><span class="fa fa-plus"></span> <spring:message code="plantilla.nuevo"/></a>
+                            <c:if test="${empty registroEntrada.id}"><a data-toggle="modal" role="button" href="#modalSelectPlantilla" class="btn btn-info btn-xs pull-right margin-left10" onclick="cargarPlantillas('<c:url value="/rest/obtenerPlantillas"/>','${loginInfo.usuarioEntidadActivo.id}','${RegwebConstantes.REGISTRO_ENTRADA}')"><span class="fa fa-refresh"></span> <spring:message code="plantilla.select"/></a></c:if>
+                            <a data-toggle="modal" role="button" href="#modalNewPlantilla" class="btn btn-info btn-xs pull-right" onclick="preparaFormularioPlantilla('${RegwebConstantes.REGISTRO_ENTRADA}')"><span class="fa fa-plus"></span> <spring:message code="plantilla.nuevo"/></a>
                             <h3 class="panel-title"><i class="fa fa-file-o"></i>
                                 <strong>
                                     <c:if test="${not empty registroEntrada.id}"><spring:message code="registroEntrada.editar"/> ${registroEntrada.numeroRegistroFormateado}</c:if>
