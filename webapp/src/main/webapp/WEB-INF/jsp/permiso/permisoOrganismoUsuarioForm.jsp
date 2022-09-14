@@ -1,5 +1,4 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="es.caib.regweb3.utils.RegwebConstantes" %>
 <%@ include file="/WEB-INF/jsp/modulos/includes.jsp" %>
 
 <!DOCTYPE html>
@@ -97,7 +96,7 @@
                                             <tbody>
 
                                                 <c:forEach var="organismo" items="${organismos}" varStatus="contador">
-                                                    <c:set var="sizePermisos" value="<%=RegwebConstantes.PERMISOS.length%>"/>
+                                                    <c:set var="sizePermisos" value="${RegwebConstantes.TOTAL_PERMISOS}"/>
                                                     <c:set var="inicio" value="${contador.index * sizePermisos}"/>
                                                     <c:set var="fin" value="${inicio+sizePermisos-1}"/>
                                                     <tr>
@@ -152,7 +151,7 @@
     //Selecciona todos los permisos de una columna (el mismo permiso de todos los libros)
     function seleccionarColumna(columna, filas){
 
-        var totalPermisos = parseInt(<%=RegwebConstantes.PERMISOS.length%>);
+        var totalPermisos = parseInt(${RegwebConstantes.TOTAL_PERMISOS});
         columna = parseInt(columna);
         filas = filas / totalPermisos;
         var len = parseInt(filas);
@@ -180,7 +179,7 @@
     // Selecciona todos los permisos de una fila (todos los permisos de un libro)
     function seleccionarFila(fila){
         fila = parseInt(fila);
-        var totalPermisos = parseInt(<%=RegwebConstantes.PERMISOS.length%>);
+        var totalPermisos = parseInt(${RegwebConstantes.TOTAL_PERMISOS});
         var permiso = fila*totalPermisos;
         var nombre = "#permisoOrganismoUsuarios"+permiso+"\\.activo1";
 

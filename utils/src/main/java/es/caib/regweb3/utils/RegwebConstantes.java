@@ -146,6 +146,8 @@ public interface RegwebConstantes {
             PERMISO_SIR
     };
 
+    Integer TOTAL_PERMISOS = PERMISOS.length;
+
 
     /* -------------- TIPO PERSONA --------------*/
     Long TIPO_PERSONA_FISICA = 2L;
