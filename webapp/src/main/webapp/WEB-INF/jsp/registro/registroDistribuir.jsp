@@ -87,7 +87,7 @@
 
         $('#distribuirModal').modal('hide');
 
-        var json = { "emails": $("#distribuirForm input[name=emails]").val(), "motivo": $("#distribuirForm input[name=motivo]").val()};
+        var json = { "emails": $("#distribuirForm textarea[name=emails]").val(), "motivo": $("#distribuirForm textarea[name=motivo]").val()};
 
         jQuery.ajax({
             async: true,
