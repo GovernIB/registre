@@ -590,7 +590,7 @@ public interface RegwebConstantes {
     int ANEXO_IDENTIFICADOR_MAXLENGTH_SIR = 50;
 
     /* ---------------ANEXO LIMITACIONES SIR ----------*/
-    String[] ANEXO_EXTENSIONES_SIR = new String[]{"jpg", "jpeg", "odt", "odp", "ods", "odg", "docx", "xlsx", "pptx", "pdf", "png", "rtf", "svg", "tiff", "txt", "xml", "xsig"};
+    String[] ANEXO_EXTENSIONES_SIR = new String[]{"jpg", "jpeg", "odt", "odp", "ods", "odg", "docx", "xlsx", "pptx", "pdf", "png", "rtf", "svg", "tiff", "txt", "xml", "csig", "xsig"};
     int    ANEXO_NUMEROMAX_SIR = 5;
     Long   ANEXO_TAMANOMAX_SIR = 10485760L;
     Long   ANEXO_TAMANOMAXTOTAL_SIR = 15728640L;
