@@ -2,6 +2,7 @@ package es.caib.regweb3.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import es.caib.regweb3.utils.RegwebConstantes;
+import org.hibernate.Hibernate;
 
 import javax.persistence.*;
 import javax.xml.bind.annotation.*;
@@ -236,6 +237,7 @@ public class Oficina implements Serializable {
         organismos.add(this.getOrganismoResponsable());
 
         // Añadimos solo los Organismos del estado que nos indican
+        Hibernate.initialize(this.getOrganizativasOfi());
         for (RelacionOrganizativaOfi relacionOrganizativaOfi : this.getOrganizativasOfi()) {
             if (estado.equals(relacionOrganizativaOfi.getEstado().getCodigoEstadoEntidad())) {
                 organismos.add(relacionOrganizativaOfi.getOrganismo());
