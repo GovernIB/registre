@@ -17,6 +17,8 @@ public class RegistrarForm {
     private Long idOrganismoDestino;
     private Boolean distribuir;
     private Long codigoSia;
+    private String emails;
+    private String motivo;
 
 
     public RegistrarForm() {
@@ -77,5 +79,21 @@ public class RegistrarForm {
 
     public void setCodigoSia(Long codigoSia) {
         this.codigoSia = codigoSia;
+    }
+
+    public String getEmails() {
+        return emails;
+    }
+
+    public void setEmails(String emails) {
+        this.emails = emails;
+    }
+
+    public String getMotivo() {
+        return motivo;
+    }
+
+    public void setMotivo(String motivo) {
+        this.motivo = motivo;
     }
 }

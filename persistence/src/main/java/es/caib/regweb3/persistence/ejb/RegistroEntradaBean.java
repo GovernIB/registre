@@ -543,6 +543,11 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean implem
         historicoRegistroEntradaEjb.crearHistoricoRegistroEntrada(registroEntrada,
                 registroEntrada.getUsuario(), I18NLogicUtils.tradueix(new Locale(Configuracio.getDefaultLanguage()), "registro.modificacion.estado"), false);
 
+        Query q = em.createQuery("update RegistroEntrada set estado=:idEstado where id = :idRegistro");
+        q.setParameter("idEstado", RegwebConstantes.REGISTRO_DISTRIBUIDO);
+        q.setParameter("idRegistro", registroEntrada.getId());
+        q.executeUpdate();
+
     }
 
 
