@@ -5,13 +5,13 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>regweb3-ws-api</artifactId>
-    <version>3.3.0</version>
+    <version>4.0.0</version>
     <packaging>jar</packaging>
 
     <parent>
         <groupId>es.caib.regweb3</groupId>
         <artifactId>regweb3-ws-client</artifactId>
-        <version>3.3.0</version>
+        <version>4.0.0</version>
     </parent>
 
     <name>RegWeb3 - WS - API</name>
