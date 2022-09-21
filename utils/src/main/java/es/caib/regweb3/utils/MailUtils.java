@@ -75,7 +75,7 @@ public class MailUtils {
 
     public static void enviarMailConAdjuntos(List<Attachment> attachments, String emailPara, String asunto, String cuerpo) throws Exception{
 
-        InternetAddress addressFrom = new InternetAddress("noresponder@regweb3.com", "REGWEB3");
+        InternetAddress addressFrom = new InternetAddress("noreply@caib.es", "REGWEB3");
 
         Context ctx = new InitialContext();
 

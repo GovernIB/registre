@@ -68,4 +68,12 @@ public interface DistribucionLocal {
      * @throws Exception
      */
     Boolean reDistribuirRegistro(Long idRegistro, Entidad entidad) throws Exception;
+
+    /**
+     * Indica si es el plugin de distribucion email
+     * @param idEntidad
+     * @return
+     * @throws I18NException
+     */
+    Boolean isDistribucionPluginEmail(Long idEntidad) throws I18NException;
 }

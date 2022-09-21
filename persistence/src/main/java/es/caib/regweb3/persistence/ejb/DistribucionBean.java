@@ -176,7 +176,7 @@ public class DistribucionBean implements DistribucionLocal {
             distribuido = distribuirRegistro(entidad, tipoIntegracon, "Distribución desde Cola", registroEntrada, distribucionPlugin,peticion,inicio);
 
             if(distribuido){
-                colaEjb.procesarElementoDistribucion(elemento);
+                colaEjb.procesarElemento(elemento);
             }
 
         }catch (Exception | I18NException  e){
@@ -422,5 +422,19 @@ public class DistribucionBean implements DistribucionLocal {
             }
         }
         return anexosFullADistribuir;
+    }
+
+    @Override
+    public Boolean isDistribucionPluginEmail(Long idEntidad) throws I18NException {
+        try{
+
+            IDistribucionPlugin plugin =  (IDistribucionPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_DISTRIBUCION);
+            return plugin.getClass().getName().contains("DistribucionEmailPlugin");
+
+        }catch (I18NException e){
+            e.printStackTrace();
+            throw new I18NException("registroEntrada.distribuir.error");
+        }
+
     }
 }
