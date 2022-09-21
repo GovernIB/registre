@@ -7,11 +7,11 @@
     <parent>
         <artifactId>regweb3</artifactId>
         <groupId>es.caib.regweb3</groupId>
-        <version>3.3.0</version>
+        <version>4.0.0</version>
     </parent>
 
     <artifactId>regweb3-utils</artifactId>
-    <version>3.3.0</version>
+    <version>4.0.0</version>
     <packaging>jar</packaging>
 
     <name>RegWeb3 - Utils</name>
