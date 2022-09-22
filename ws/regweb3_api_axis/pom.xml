@@ -170,7 +170,7 @@
 							<groupId>javax.mail</groupId>
 							<artifactId>mail</artifactId>
 							<version>1.4.1</version>
-							<scope>provided</scope>
+							<!--<scope>provided</scope>-->
 						</dependency>
 						<dependency>
 							<groupId>javax.activation</groupId>

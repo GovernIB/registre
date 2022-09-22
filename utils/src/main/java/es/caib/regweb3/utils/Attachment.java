@@ -9,20 +9,33 @@ import javax.activation.DataSource;
  */
 public class Attachment {
 
-    private DataSource dataSource;
     private String filename;
 
-    public Attachment(DataSource dataSource, String filename) {
-        this.dataSource = dataSource;
+    private byte[] data;
+    private String mime;
+
+
+    public Attachment(String filename, byte[] data, String mime) {
         this.filename = filename;
+        this.data = data;
+        this.mime = mime;
     }
 
-    public DataSource getDataSource() {
-        return dataSource;
+
+    public byte[] getData() {
+        return data;
     }
 
-    public void setDataSource(DataSource dataSource) {
-        this.dataSource = dataSource;
+    public void setData(byte[] data) {
+        this.data = data;
+    }
+
+    public String getMime() {
+        return mime;
+    }
+
+    public void setMime(String mime) {
+        this.mime = mime;
     }
 
     public String getFilename() {

@@ -443,7 +443,7 @@ public class SirEnvioBean implements SirEnvioLocal {
      * @throws Exception
      */
     @Override
-    public RegistroEntrada aceptarRegistroSir(RegistroSir registroSir, Entidad entidad, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, List<CamposNTI> camposNTIs, Long idOrganismoDestino, Boolean distribuir, Long codigoSia)
+    public RegistroEntrada aceptarRegistroSir(RegistroSir registroSir, Entidad entidad, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, List<CamposNTI> camposNTIs, Long idOrganismoDestino, Boolean distribuir, Long codigoSia,String emails, String motivo)
             throws Exception, I18NException, I18NValidationException {
 
         Date inicio = new Date();
@@ -471,8 +471,7 @@ public class SirEnvioBean implements SirEnvioLocal {
             // Distribuimos el Registro de Entrada si así se ha indicado
 
             if(distribuir){
-                IDistribucionPlugin distribucionPlugin = (IDistribucionPlugin)  pluginEjb.getPlugin(entidad.getId(), RegwebConstantes.PLUGIN_DISTRIBUCION);
-                distribucionEjb.distribuir(registroEntrada, usuario, distribucionPlugin);
+                distribucionEjb.distribuir(registroEntrada, usuario,emails,motivo);
             }
 
             // Integracion
@@ -1108,7 +1107,7 @@ public class SirEnvioBean implements SirEnvioLocal {
                     Organismo organismoDestino = organismoEjb.findByCodigoEntidadLigero(destino, entidad.getId());
 
                     //Aceptar el RegistroSir
-                    RegistroEntrada registroEntrada = aceptarRegistroSir(registroSir, entidad, usuarioEntidad, oficina,idLibro,RegwebConstantes.IDIOMA_CASTELLANO_ID,camposNTIS, organismoDestino.getId(), true, null);
+                    RegistroEntrada registroEntrada = aceptarRegistroSir(registroSir, entidad, usuarioEntidad, oficina,idLibro,RegwebConstantes.IDIOMA_CASTELLANO_ID,camposNTIS, organismoDestino.getId(), true,null,null,null);
 
                     // Copiamos cada anexo en la carpeta creada
                     for(AnexoSir anexoSir:registroSir.getAnexos()){
@@ -1129,8 +1128,7 @@ public class SirEnvioBean implements SirEnvioLocal {
                             log.info("No encuentra el fichero");
                         }
                     }
-                    IDistribucionPlugin distribucionPlugin = (IDistribucionPlugin)  pluginEjb.getPlugin(entidad.getId(), RegwebConstantes.PLUGIN_DISTRIBUCION);
-                    distribucionEjb.distribuir(registroEntrada, usuarioEntidad, distribucionPlugin);
+                    distribucionEjb.distribuir(registroEntrada, usuarioEntidad,null,null);
 
                 }catch (Exception e){
                     log.info("Error procesando un registro sir");

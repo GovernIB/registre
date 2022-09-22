@@ -251,18 +251,6 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
         q.executeUpdate();
     }
 
-    @Override
-    public void procesarElementoDistribucion(Cola elemento) throws Exception{
-
-        procesarElemento(elemento);
-
-        // Cambiar el estado al RegistroEntrada a DISTRIBIDO
-        Query q = em.createQuery("update RegistroEntrada set estado=:idEstado where id = :idRegistro");
-        q.setParameter("idEstado", RegwebConstantes.REGISTRO_DISTRIBUIDO);
-        q.setParameter("idRegistro", elemento.getIdObjeto());
-        q.executeUpdate();
-    }
-
 
     @Override
     public boolean enviarAColaDistribucion(RegistroEntrada re, UsuarioEntidad usuarioEntidad) throws Exception{

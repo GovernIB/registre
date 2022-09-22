@@ -42,8 +42,7 @@ function redistribuir(url){
 }
 
 /*
- * Función que permite distribuir el registro a los destinatarios que se le indiquen.
- * si no hay destinatarios se marca el registro como tramitado y listo.
+ * Función que permite determinar el plugin de distribución
  */
 function distribuir() {
 
@@ -61,14 +60,15 @@ function distribuir() {
         success:function(respuesta){
 
             if( respuesta.status === 'SUCCESS' || respuesta.status === 'ENVIADO_COLA'){
+                waitingDialog.hide();
                 goTo(urlDetalle);
 
             }else if(respuesta.status === 'FAIL') {//Si ha ocurrido un fallo en el envio
-                mensajeError('#mensajes', respuesta.error);
                 waitingDialog.hide();
+                mensajeError('#mensajes', respuesta.error);
                 return false;
 
-            }else if(respuesta.status ==='ENVIO_MAIL'){
+            } else if(respuesta.status ==='ENVIO_MAIL'){
                 waitingDialog.hide();
                 $('#distribuirModal').modal('show');
             }

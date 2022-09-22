@@ -723,21 +723,16 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
 
 
         try {
-            DistribucionEmailPlugin distribucionEmailPlugin = new DistribucionEmailPlugin();
             IDistribucionPlugin distribucionPlugin = (IDistribucionPlugin) pluginEjb.getPlugin(usuarioEntidad.getEntidad().getId(), RegwebConstantes.PLUGIN_DISTRIBUCION);
             if(distribucionPlugin.getClass().getName().contains("DistribucionGoibPlugin")){
                 registroEntrada = registroEntradaEjb.getConAnexosFullDistribuir(idRegistro);
             }else{
                 registroEntrada = registroEntradaEjb.getConAnexosFull(idRegistro);
-                if(distribucionPlugin!=null && distribucionPlugin.getClass().getName().contains("DistribucionEmailPlugin")){
-                    distribucionEmailPlugin = (DistribucionEmailPlugin)distribucionPlugin;
-                    distribucionEmailPlugin.setEmails(distribuirForm.getEmails());
-                    distribucionEmailPlugin.setMotivo(distribuirForm.getMotivo());
-                }
+
             }
 
             //Distribuimos el registro
-            respuesta = distribucionEjb.distribuir(registroEntrada, usuarioEntidad, distribucionEmailPlugin);
+            respuesta = distribucionEjb.distribuir(registroEntrada, usuarioEntidad, distribuirForm.getEmails(), distribuirForm.getMotivo());
 
             if (respuesta.getHayPlugin()) {//
                 if (respuesta.getEnviadoCola()) { //Si se ha enviado a la cola
@@ -818,7 +813,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
                         registroEntrada = registroEntradaEjb.getConAnexosFull(idRegistro);
                     }
 
-                    respuesta = distribucionEjb.distribuir(registroEntrada, usuarioEntidad, distribucionPlugin);
+                    respuesta = distribucionEjb.distribuir(registroEntrada, usuarioEntidad,null,null);
 
                 }
                 respuesta.setHayPlugin(true);
