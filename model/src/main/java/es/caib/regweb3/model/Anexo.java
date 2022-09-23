@@ -231,7 +231,7 @@ public class Anexo implements Serializable {
         this.confidencial = confidencial;
     }
 
-    @Column(name ="NOMBRE_FICHERO", length=200)
+    @Column(name ="NOMBRE_FICHERO", length=255)
     public String getNombreFichero() {
         return nombreFichero;
     }
