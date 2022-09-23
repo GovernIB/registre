@@ -222,7 +222,7 @@ public class Anexo implements Serializable {
         this.scan = scan;
     }
 
-    @Column(name ="CONFIDENCIAL")
+    @Column(name ="CONFIDENCIAL" ,nullable = false)
     public Boolean getConfidencial() {
         return confidencial;
     }
