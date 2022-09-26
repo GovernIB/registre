@@ -1000,7 +1000,7 @@ public class InformeController extends AbstractRegistroCommonFormController {
                 return "redirect:/informe/registroLopd";
             }
             // Comprueba que el registro es de la Entidad Activa
-            if(!registro.getUsuario().getEntidad().equals(entidadActiva)) {
+            if(!Objects.equals(registro.getUsuario().getEntidad().getId(), entidadActiva.getId())) {
                 log.info("No es administrador de este registro");
                 Mensaje.saveMessageError(request, getMessage("aviso.registro.noAdministrador"));
                 return "redirect:/informe/registroLopd";
@@ -1044,7 +1044,7 @@ public class InformeController extends AbstractRegistroCommonFormController {
                 return  "redirect:/informe/registroLopd";
             }
             // Comprueba que el registro es de la Entidad Activa
-            if(!registro.getUsuario().getEntidad().equals(entidadActiva)) {
+            if(!Objects.equals(registro.getUsuario().getEntidad().getId(), entidadActiva.getId())) {
                 log.info("No es administrador de este registro");
                 Mensaje.saveMessageError(request, getMessage("aviso.registro.noAdministrador"));
                 return  "redirect:/informe/registroLopd";
