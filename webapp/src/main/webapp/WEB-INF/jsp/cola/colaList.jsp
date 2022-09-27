@@ -183,6 +183,11 @@
                                                             <a class="btn btn-primary btn-sm" onclick='confirm("<c:url value="/cola/${cola.id}/distribuirRegistro"/>","<spring:message code="registroEntrada.redistribuir" htmlEscape="true"/>")' href="javascript:void(0);" title="<spring:message code="regweb.distribuir"/>"><span class="fa fa-share-square-o"></span></a>
                                                         </c:if>
 
+                                                        <%--Reiniciar elemento Cola Custodia--%>
+                                                        <c:if test="${cola.estado == RegwebConstantes.COLA_ESTADO_PROCESADO && cola.tipo == RegwebConstantes.COLA_CUSTODIA}">
+                                                            <a class="btn btn-success btn-sm" onclick='confirm("<c:url value="/cola/${cola.id}/reiniciar/${tipo}"/>","<spring:message code="cola.reiniciar.elemento" htmlEscape="true"/>")' href="javascript:void(0);" title="<spring:message code="cola.reiniciar.elemento"/>"><span class="fa fa-repeat"></span></a>
+                                                        </c:if>
+
                                                         <%--Botón detalle registro--%>
                                                         <c:if test="${cola.tipoRegistro == RegwebConstantes.REGISTRO_ENTRADA}">
                                                             <a class="btn btn-info btn-sm" href="<c:url value="/adminEntidad/registroEntrada/${cola.idObjeto}/detalle"/>" target="_blank" title="<spring:message code="registroEntrada.detalle"/>"><span class="fa fa-eye"></span></a>
