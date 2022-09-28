@@ -41,6 +41,8 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
     private String textoLegalDocElectronica;
     private String estampat = null;
     private String rutaImatge = null;
+    private Float fitWidth = null;
+    private Float fitHeight = null;
     private Boolean sir = false;
     private Font lletraGovern8;
     private Font lletraGovern8bold;
@@ -77,7 +79,7 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
                 Image logoGovern = Image.getInstance(rutaImatge);
                 if(logoGovern != null) {
                     logoGovern.setAlignment(Element.ALIGN_RIGHT);
-                    logoGovern.scaleToFit(50, 50);
+                    logoGovern.scaleToFit(fitWidth, fitHeight);
                     logoGovern.setAbsolutePosition(160f, 780f);
                     parrafo = new Paragraph("");
                     parrafo.setAlignment(Element.ALIGN_LEFT);
@@ -149,6 +151,9 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
 
         // Propiedades configuradas en el plugin
         rutaImatge = this.getProperty(PROPERTY_CAIB_BASE + "logoPath");
+        fitWidth = Float.parseFloat(this.getProperty(PROPERTY_CAIB_BASE + "fitWidth", "50"));
+        fitHeight= Float.parseFloat(this.getProperty(PROPERTY_CAIB_BASE + "fitHeight", "50"));
+
         String estampacion = this.getPropertyRequired(PROPERTY_CAIB_BASE + "estampacion");
         estampat = MessageFormat.format(estampacion, url, specialValue, csv);
 
