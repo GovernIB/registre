@@ -307,8 +307,14 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
                                      @WebParam(name = "anular") boolean anular)
             throws Throwable, WsI18NException, WsValidationException {
 
+        // Integraciones
+        Date inicio = new Date();
+        StringBuilder peticion = new StringBuilder();
+
+        peticion.append("usuario: ").append(UsuarioAplicacionCache.get().getUsuario().getNombreIdentificador()).append(System.getProperty("line.separator"));
+
         //1.- Validar obligatorios
-        validarObligatorios(numeroRegistro,entidad);
+        Entidad entidadActiva = validarObligatorios(numeroRegistro,entidad);
 
         // 4.- Comprobar que el usuario existe en la Entidad proporcionada
         UsuarioEntidad usuarioEntidad = usuarioEntidadEjb.findByIdentificadorCodigoEntidad( UsuarioAplicacionCache.get().getUsuario().getIdentificador(), entidad);
@@ -337,9 +343,12 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
         }
 
         // 8.- Anulamos el RegistroSalida
-        // TODO Falta Afegir paràmetre
         Locale locale = new Locale(UsuarioAplicacionCache.get().getIdioma());
         registroSalidaEjb.anularRegistroSalida(registroSalida, usuarioEntidad, I18NLogicUtils.tradueix(locale, "registro.anulado.ws"));
+
+        // Integracion
+        peticion.append("registro: ").append(registroSalida.getNumeroRegistroFormateado()).append(System.getProperty("line.separator"));
+        integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(),peticion.toString(), System.currentTimeMillis() - inicio.getTime(), entidadActiva.getId(), numeroRegistro);
 
     }
 
