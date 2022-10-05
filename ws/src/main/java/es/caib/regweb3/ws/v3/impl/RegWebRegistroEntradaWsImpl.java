@@ -6,7 +6,6 @@ import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.model.utils.AnexoSimple;
 import es.caib.regweb3.persistence.ejb.DistribucionLocal;
-import es.caib.regweb3.persistence.ejb.PluginLocal;
 import es.caib.regweb3.persistence.ejb.RegistroEntradaConsultaLocal;
 import es.caib.regweb3.persistence.ejb.RegistroEntradaLocal;
 import es.caib.regweb3.persistence.utils.I18NLogicUtils;
@@ -14,7 +13,6 @@ import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.persistence.utils.RespuestaDistribucion;
 import es.caib.regweb3.persistence.validator.RegistroEntradaBeanValidator;
 import es.caib.regweb3.persistence.validator.RegistroEntradaValidator;
-import es.caib.regweb3.plugins.distribucion.IDistribucionPlugin;
 import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.Dir3CaibUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
@@ -81,8 +79,6 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl implemen
     @EJB(mappedName = DistribucionLocal.JNDI_NAME)
     private DistribucionLocal distribucionEjb;
 
-    @EJB(mappedName = PluginLocal.JNDI_NAME)
-    private PluginLocal pluginEjb;
 
     @Override
     @RolesAllowed({RWE_USUARI, RWE_WS_ENTRADA})
@@ -337,8 +333,14 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl implemen
        @WebParam(name = "anular") boolean anular)
        throws Throwable, WsI18NException, WsValidationException {
 
+        // Integraciones
+        Date inicio = new Date();
+        StringBuilder peticion = new StringBuilder();
+
+        peticion.append("usuario: ").append(UsuarioAplicacionCache.get().getUsuario().getNombreIdentificador()).append(System.getProperty("line.separator"));
+
         //1.- Validar obligatorios
-        validarObligatorios(numeroRegistroFormateado,entidad);
+        Entidad entidadActiva = validarObligatorios(numeroRegistroFormateado,entidad);
 
         //2.- Comprobar que el usuario existe en la Entidad proporcionada
         UsuarioEntidad usuarioEntidad = usuarioEntidadEjb.findByIdentificadorCodigoEntidad( UsuarioAplicacionCache.get().getUsuario().getIdentificador(), entidad);
@@ -370,9 +372,12 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl implemen
         }
 
         // 6.- Anulamos el RegistroEntrada
-        // TODO Falta enviar boolean anular
         Locale locale = new Locale(UsuarioAplicacionCache.get().getIdioma());
         registroEntradaEjb.anularRegistroEntrada(registroEntrada, usuarioEntidad, I18NLogicUtils.tradueix(locale, "registro.anulado.ws"));
+
+        // Integracion
+        peticion.append("registro: ").append(registroEntrada.getNumeroRegistroFormateado()).append(System.getProperty("line.separator"));
+        integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(),peticion.toString(), System.currentTimeMillis() - inicio.getTime(), entidadActiva.getId(), numeroRegistroFormateado);
     }
 
 
