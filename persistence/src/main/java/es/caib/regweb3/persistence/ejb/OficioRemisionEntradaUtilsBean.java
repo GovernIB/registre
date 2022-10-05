@@ -538,7 +538,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
         oficioRemision.setOrganismoDestinatario(null);
         oficioRemision.setRegistrosSalida(null);
         oficioRemision.setCodigoEntidadRegistralDestino(oficinaSirDestino.getCodigo());
-        oficioRemision.setDecodificacionEntidadRegistralDestino(oficinaSirDestino.getDenominacion());
+        oficioRemision.setDecodificacionEntidadRegistralDestino(StringUtils.recortarCadena(oficinaSirDestino.getDenominacion(),80));
         oficioRemision.setContactosEntidadRegistralDestino(RegistroUtils.getContactosOficinaSir(oficinaSirDestino));
         oficioRemision.setTipoAnotacion(TipoAnotacion.ENVIO.getValue());
         oficioRemision.setDecodificacionTipoAnotacion(TipoAnotacion.ENVIO.getName());
