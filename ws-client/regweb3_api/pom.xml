@@ -206,7 +206,7 @@
                             <dependency>
                                 <groupId>org.fundaciobit.genapp</groupId>
                                 <artifactId>genapp-core</artifactId>
-                                <version>1.0</version>
+                                <version>${genapp.version}</version>
                                 <scope>compile</scope>
                             </dependency>
 
@@ -495,7 +495,14 @@
         <dependency>
             <groupId>org.fundaciobit.genapp</groupId>
             <artifactId>genapp-core</artifactId>
-            <version>1.0</version>
+            <version>${genapp.version}</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.fundaciobit.genapp</groupId>
+            <artifactId>genapp-ws</artifactId>
+            <version>${genapp.version}</version>
             <scope>compile</scope>
         </dependency>
 
