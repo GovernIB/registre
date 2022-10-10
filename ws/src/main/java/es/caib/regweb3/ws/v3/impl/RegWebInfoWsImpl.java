@@ -6,7 +6,7 @@ import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 import es.caib.regweb3.ws.model.*;
 import es.caib.regweb3.ws.utils.UsuarioAplicacionCache;
-import org.fundaciobit.genapp.common.i18n.I18NException;
+import es.caib.regweb3.ws.utils.WsUtils;
 import org.fundaciobit.genapp.common.ws.WsI18NException;
 import org.jboss.ws.api.annotation.TransportGuarantee;
 import org.jboss.ws.api.annotation.WebContext;
@@ -147,19 +147,19 @@ public class RegWebInfoWsImpl extends AbstractRegistroWsImpl implements RegWebIn
 
         // 3.- Comprobaciones de parámetros obligatórios
     /*if(StringUtils.isEmpty(codigoTipoAsunto)){
-      throw new I18NException("error.valor.requerido.ws", "codigoTipoAsunto");
+      throw WsUtils.createWsI18NException("error.valor.requerido.ws", "codigoTipoAsunto");
     }
 
     TipoAsunto tipoAsunto = CommonConverter.getTipoAsunto(codigoTipoAsunto, entidad.getId(), tipoAsuntoEjb);
 
     // 4. Comprobación existencia TipoAsunto
     if(tipoAsunto == null){
-      throw new I18NException("error.tipoAsunto.noExiste", codigoTipoAsunto);
+      throw WsUtils.createWsI18NException("error.tipoAsunto.noExiste", codigoTipoAsunto);
     }
 
     // 5. Comprobación TipoAsunto Activo
     if(!tipoAsunto.getActivo()){
-      throw new I18NException("error.tipoAsunto.inactivo", codigoTipoAsunto);
+      throw WsUtils.createWsI18NException("error.tipoAsunto.inactivo", codigoTipoAsunto);
     }*/
 
         List<CodigoAsunto> codigoAsuntos = codigoAsuntoEjb.getActivosEntidad(entidad.getId());
@@ -186,19 +186,19 @@ public class RegWebInfoWsImpl extends AbstractRegistroWsImpl implements RegWebIn
 
         // 2.- Comprobaciones de parámetros obligatórios
         if (tipoRegistro == null) {
-            throw new I18NException("error.valor.requerido.ws", "tipoRegistro");
+            throw WsUtils.createWsI18NException("error.valor.requerido.ws", "tipoRegistro");
         }
 
         // 3.- Comprobaciones de parámetros tipoRegistro
         if (!validarAutorizacion(tipoRegistro)) {
-            throw new I18NException("error.autorizacion");
+            throw WsUtils.createWsI18NException("error.autorizacion");
         }
 
         UsuarioEntidad usuarioEntidad = usuarioEntidadEjb.findByIdentificadorCodigoEntidad(UsuarioAplicacionCache.get().getUsuario().getIdentificador(), entidad.getCodigoDir3());
 
         // 5.- Comprobaciones usuarioEntidad existente
         if (usuarioEntidad == null) {//No existe
-            throw new I18NException("registro.usuario.noExiste", UsuarioAplicacionCache.get().getUsuario().getIdentificador(), entidadCodigoDir3);
+            throw WsUtils.createWsI18NException("registro.usuario.noExiste", UsuarioAplicacionCache.get().getUsuario().getIdentificador(), entidadCodigoDir3);
 
         }
 
@@ -223,19 +223,19 @@ public class RegWebInfoWsImpl extends AbstractRegistroWsImpl implements RegWebIn
 
         // 2.- Comprobaciones de parámetros obligatórios
         if (tipoRegistro == null) {
-            throw new I18NException("error.valor.requerido.ws", "tipoRegistro");
+            throw WsUtils.createWsI18NException("error.valor.requerido.ws", "tipoRegistro");
         }
 
         // 3.- Comprobaciones de parámetros obligatórios
         if (StringUtils.isEmpty(usuario)) {
-            throw new I18NException("error.valor.requerido.ws", "usuario");
+            throw WsUtils.createWsI18NException("error.valor.requerido.ws", "usuario");
         }
 
         UsuarioEntidad usuarioEntidad = usuarioEntidadEjb.findByIdentificadorCodigoEntidad(usuario, entidad.getCodigoDir3());
 
         // 5.- Comprobaciones usuarioEntidad existente
         if (usuarioEntidad == null) {//No existe
-            throw new I18NException("registro.usuario.noExiste", usuario, entidadCodigoDir3);
+            throw WsUtils.createWsI18NException("registro.usuario.noExiste", usuario, entidadCodigoDir3);
 
         }
 
@@ -258,18 +258,18 @@ public class RegWebInfoWsImpl extends AbstractRegistroWsImpl implements RegWebIn
         Entidad entidad = validarEntidad(entidadCodigoDir3);
 
         if (autorizacion == null) {
-            throw new I18NException("error.valor.requerido.ws", "autorizacion");
+            throw WsUtils.createWsI18NException("error.valor.requerido.ws", "autorizacion");
         }
 
         if (!validarAutorizacion(autorizacion)) {
-            throw new I18NException("error.autorizacion");
+            throw WsUtils.createWsI18NException("error.autorizacion");
         }
 
         UsuarioEntidad usuarioEntidad = usuarioEntidadEjb.findByIdentificadorCodigoEntidad(UsuarioAplicacionCache.get().getUsuario().getIdentificador(), entidad.getCodigoDir3());
 
         // 1.- Comprobaciones usuarioEntidad existente
         if (usuarioEntidad == null) {//No existe
-            throw new I18NException("registro.usuario.noExiste", UsuarioAplicacionCache.get().getUsuario().getIdentificador(), entidadCodigoDir3);
+            throw WsUtils.createWsI18NException("registro.usuario.noExiste", UsuarioAplicacionCache.get().getUsuario().getIdentificador(), entidadCodigoDir3);
 
         }
 
@@ -295,22 +295,22 @@ public class RegWebInfoWsImpl extends AbstractRegistroWsImpl implements RegWebIn
         Entidad entidad = validarEntidad(entidadCodigoDir3);
 
         if (StringUtils.isEmpty(oficinaCodigoDir3)) {
-            throw new I18NException("error.valor.requerido.ws", "oficinaCodigoDir3");
+            throw WsUtils.createWsI18NException("error.valor.requerido.ws", "oficinaCodigoDir3");
         }
 
         if (autorizacion == null) {
-            throw new I18NException("error.valor.requerido.ws", "autorizacion");
+            throw WsUtils.createWsI18NException("error.valor.requerido.ws", "autorizacion");
         }
 
         if (!validarAutorizacion(autorizacion)) {
-            throw new I18NException("error.autorizacion");
+            throw WsUtils.createWsI18NException("error.autorizacion");
         }
 
         UsuarioEntidad usuarioEntidad = usuarioEntidadEjb.findByIdentificadorCodigoEntidad(UsuarioAplicacionCache.get().getUsuario().getIdentificador(), entidad.getCodigoDir3());
 
         // 2.- Comprobar que el usuarioEntidad existe
         if (usuarioEntidad == null) {//No existe
-            throw new I18NException("registro.usuario.noExiste", UsuarioAplicacionCache.get().getUsuario().getIdentificador(), entidadCodigoDir3);
+            throw WsUtils.createWsI18NException("registro.usuario.noExiste", UsuarioAplicacionCache.get().getUsuario().getIdentificador(), entidadCodigoDir3);
 
         }
 
@@ -342,14 +342,14 @@ public class RegWebInfoWsImpl extends AbstractRegistroWsImpl implements RegWebIn
         Entidad entidad = validarEntidad(entidadCodigo);
 
         if (StringUtils.isEmpty(organismo)) {
-            throw new I18NException("error.valor.requerido.ws", "organismo");
+            throw WsUtils.createWsI18NException("error.valor.requerido.ws", "organismo");
         }
 
         UsuarioEntidad usuarioEntidad = usuarioEntidadEjb.findByIdentificadorCodigoEntidad(UsuarioAplicacionCache.get().getUsuario().getIdentificador(), entidad.getCodigoDir3());
 
         // 2.- Comprobar que el usuarioEntidad existe
         if (usuarioEntidad == null) {
-            throw new I18NException("registro.usuario.noExiste", UsuarioAplicacionCache.get().getUsuario().getIdentificador(), entidadCodigo);
+            throw WsUtils.createWsI18NException("registro.usuario.noExiste", UsuarioAplicacionCache.get().getUsuario().getIdentificador(), entidadCodigo);
 
         }
 
@@ -357,7 +357,7 @@ public class RegWebInfoWsImpl extends AbstractRegistroWsImpl implements RegWebIn
 
         // 3. Comprobar que el Organismo existe y está vigente
         if (organismoActivo == null) { //No existe
-            throw new I18NException("registro.organismo.noExiste", organismo);
+            throw WsUtils.createWsI18NException("registro.organismo.noExiste", organismo);
         }
 
         // Retornamos el Libro de la entidad
@@ -365,7 +365,7 @@ public class RegWebInfoWsImpl extends AbstractRegistroWsImpl implements RegWebIn
             return CommonConverter.getLibroWs(entidad.getLibro());
         }
 
-        throw new I18NException("organismo.no.libroRegistro", organismoActivo.getNombreCompleto());
+        throw WsUtils.createWsI18NException("organismo.no.libroRegistro", organismoActivo.getNombreCompleto());
     }
 
 
