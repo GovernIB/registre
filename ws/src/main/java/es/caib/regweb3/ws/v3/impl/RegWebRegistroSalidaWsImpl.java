@@ -17,6 +17,7 @@ import es.caib.regweb3.ws.model.JustificanteWs;
 import es.caib.regweb3.ws.model.RegistroSalidaResponseWs;
 import es.caib.regweb3.ws.model.RegistroSalidaWs;
 import es.caib.regweb3.ws.utils.UsuarioAplicacionCache;
+import es.caib.regweb3.ws.utils.WsUtils;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.fundaciobit.genapp.common.ws.WsI18NException;
@@ -96,7 +97,7 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
             return nuevoRegistroSalida(entidad.getCodigoDir3(), registroSalidaWs);
         }
 
-        throw new I18NException("error.valor.requerido.ws", "entidad");
+        throw WsUtils.createWsI18NException("error.valor.requerido.ws", "entidad");
     }
 
     @Override
@@ -122,10 +123,10 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
         Organismo origen = organismoEjb.findByCodigoEntidadLigero(registroSalidaWs.getOrigen(), entidadActiva.getId());
 
         if (origen == null) { //Si no existe todo: Hay que agregar origenes externos?
-            throw new I18NException("registro.organismo.noExiste", registroSalidaWs.getOrigen());
+            throw WsUtils.createWsI18NException("registro.organismo.noExiste", registroSalidaWs.getOrigen());
 
         } else if (!origen.getEstado().getCodigoEstadoEntidad().equals(ESTADO_ENTIDAD_VIGENTE)) { //Si está extinguido
-            throw new I18NException("registro.organismo.extinguido", origen.getNombreCompleto());
+            throw WsUtils.createWsI18NException("registro.organismo.extinguido", origen.getNombreCompleto());
         }
 
         // 3.- Comprobar que la Oficina está vigente
@@ -138,19 +139,19 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
         UsuarioEntidad usuarioAplicacion = usuarioEntidadEjb.findByIdentificadorEntidad(UsuarioAplicacionCache.get().getUsuario().getIdentificador(), entidadActiva.getId());
 
         if (usuarioAplicacion == null) { //No existe
-            throw new I18NException("registro.usuario.noExiste", UsuarioAplicacionCache.get().getUsuario().getIdentificador(), entidadActiva.getNombre());
+            throw WsUtils.createWsI18NException("registro.usuario.noExiste", UsuarioAplicacionCache.get().getUsuario().getIdentificador(), entidadActiva.getNombre());
         }
 
         // 6.- Comprobar que el Usuario Entidad persona existe en el sistema, si no existe, se intenta crear
         UsuarioEntidad usuario = usuarioEntidadEjb.comprobarUsuarioEntidad(registroSalidaWs.getCodigoUsuario(), entidadActiva.getId());
 
         if (usuario == null) {//No existe
-            throw new I18NException("registro.usuario.noExiste", registroSalidaWs.getCodigoUsuario(), entidadActiva.getNombre());
+            throw WsUtils.createWsI18NException("registro.usuario.noExiste", registroSalidaWs.getCodigoUsuario(), entidadActiva.getNombre());
         }
 
         // 7.- Comprobar PERMISO_REGISTRO_ENTRADA de usuario aplicación
         if (!permisoOrganismoUsuarioEjb.tienePermiso(usuarioAplicacion.getId(), oficina.getOrganismoResponsable().getId(), PERMISO_REGISTRO_SALIDA, true)) {
-            throw new I18NException("registro.usuario.permisos", usuarioAplicacion.getNombreCompleto(), libro.getCodigo());
+            throw WsUtils.createWsI18NException("registro.usuario.permisos", usuarioAplicacion.getNombreCompleto(), libro.getCodigo());
         }
 
         // Recuperamos el username correcto
@@ -174,7 +175,7 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
             registroSalida.getRegistroDetalle().setInteresados(null);
 
         } else {
-            throw new I18NException("interesado.registro.obligatorio");
+            throw WsUtils.createWsI18NException("interesado.registro.obligatorio");
         }
 
 
@@ -199,7 +200,7 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
 
         }catch (Exception e){
             integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, null,System.currentTimeMillis() - inicio.getTime(), entidadActiva.getId(), numRegFormat);
-            throw new I18NException("registro.nuevo.error");
+            throw WsUtils.createWsI18NException("registro.nuevo.error");
         }
 
 
@@ -241,7 +242,7 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
         RegistroSalida registroSalida = registroSalidaConsultaEjb.findByNumeroRegistroFormateadoCompleto(entidadActiva.getId(), numeroRegistroFormateado);
 
         if (registroSalida == null) {
-            throw new I18NException("registroEntrada.noExiste", numeroRegistroFormateado);
+            throw WsUtils.createWsI18NException("registroEntrada.noExiste", numeroRegistroFormateado);
         }
 
         // 5.- Generamos o descargamos el Justificante
@@ -253,7 +254,7 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
 
             // Permisos para Modificar el RegistroSalida?
             if (!permisoOrganismoUsuarioEjb.tienePermiso(usuario.getId(), registroSalida.getOficina().getOrganismoResponsable().getId(), PERMISO_MODIFICACION_REGISTRO_SALIDA, true)) {
-                throw new I18NException("registroEntrada.usuario.permisos", usuario.getNombreCompleto());
+                throw WsUtils.createWsI18NException("registroEntrada.usuario.permisos", usuario.getNombreCompleto());
             }
 
             // Solo se puede generar si el registro es Válido
@@ -263,19 +264,19 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
                     justificante = justificanteEjb.crearJustificanteWS(entidadActiva, usuario,registroSalida,RegwebConstantes.REGISTRO_SALIDA,Configuracio.getDefaultLanguage());
                 }catch (I18NException e){
                     integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, null,System.currentTimeMillis() - inicio.getTime(), entidadActiva.getId(), numeroRegistroFormateado);
-                    throw new I18NException("registro.justificante.error", numeroRegistroFormateado);
+                    throw WsUtils.createWsI18NException("registro.justificante.error", numeroRegistroFormateado);
                 }
 
                 anexoSimple = anexoEjb.descargarJustificante(justificante.getAnexo(), entidadActiva.getId());
             }else{
-                throw new I18NException("registro.justificante.valido");
+                throw WsUtils.createWsI18NException("registro.justificante.valido");
             }
 
         }else{ // Tiene Justificante, lo obtenemos
 
             // Permisos para Consultar el RegistroSalida?
             if (!permisoOrganismoUsuarioEjb.tienePermiso(usuario.getId(), registroSalida.getOficina().getOrganismoResponsable().getId(), PERMISO_CONSULTA_REGISTRO_SALIDA, false)) {
-                throw new I18NException("registroEntrada.usuario.permisos", usuario.getNombreCompleto());
+                throw WsUtils.createWsI18NException("registroEntrada.usuario.permisos", usuario.getNombreCompleto());
             }
 
             // Obtenemos el Justificante
@@ -284,7 +285,7 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
                 anexoSimple = anexoEjb.descargarJustificante(justificante.getAnexo(), entidadActiva.getId());
             }catch (Exception e){
                 integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, null,System.currentTimeMillis() - inicio.getTime(), entidadActiva.getId(), numeroRegistroFormateado);
-                throw new I18NException("registro.justificante.error", numeroRegistroFormateado);
+                throw WsUtils.createWsI18NException("registro.justificante.error", numeroRegistroFormateado);
             }
 
         }
@@ -324,7 +325,7 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
         RegistroSalida registroSalida = registroSalidaConsultaEjb.findByNumeroRegistroFormateado(usuarioEntidad.getEntidad().getId(), numeroRegistro);
 
         if (registroSalida == null) {
-            throw new I18NException("registroEntrada.noExiste", numeroRegistro);
+            throw WsUtils.createWsI18NException("registroEntrada.noExiste", numeroRegistro);
         }
 
         // 6.- Comprobamos si el RegistroSalida se puede anular según su estado.
@@ -334,12 +335,12 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
         estados.add(RegwebConstantes.REGISTRO_PENDIENTE_VISAR);
 
         if (!estados.contains(registroSalida.getEstado())) {
-            throw new I18NException("registroSalida.anulado");
+            throw WsUtils.createWsI18NException("registroSalida.anulado");
         }
 
         // 7.- Comprobamos que el usuario tiene permisos de modificación para el RegistroSalida
         if (!permisoOrganismoUsuarioEjb.tienePermiso(usuarioEntidad.getId(), registroSalida.getOficina().getOrganismoResponsable().getId(), PERMISO_MODIFICACION_REGISTRO_SALIDA, true)) {
-            throw new I18NException("registroEntrada.usuario.permisos", usuarioEntidad.getNombreCompleto());
+            throw WsUtils.createWsI18NException("registroEntrada.usuario.permisos", usuarioEntidad.getNombreCompleto());
         }
 
         // 8.- Anulamos el RegistroSalida
@@ -374,19 +375,19 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
         UsuarioEntidad usuarioEntidad = usuarioEntidadEjb.findByIdentificadorCodigoEntidad(UsuarioAplicacionCache.get().getUsuario().getIdentificador(), entidad);
 
         if(usuarioEntidad == null){//No existe
-            throw new I18NException("registroEntrada.usuario.noExiste", UsuarioAplicacionCache.get().getUsuario().getIdentificador(), entidad);
+            throw WsUtils.createWsI18NException("registroEntrada.usuario.noExiste", UsuarioAplicacionCache.get().getUsuario().getIdentificador(), entidad);
         }
 
         // 4.- Obtenemos el RegistroSalida
         RegistroSalida registro = registroSalidaConsultaEjb.findByNumeroRegistroFormateadoCompleto(entidadActiva.getId(), numeroRegistro);
 
         if (registro == null) {
-            throw new I18NException("registroEntrada.noExiste", numeroRegistro);
+            throw WsUtils.createWsI18NException("registroEntrada.noExiste", numeroRegistro);
         }
 
         // 5.- Comprobamos que el usuario tiene permisos de lectura para el RegistroSalida
         if (!permisoOrganismoUsuarioEjb.tienePermiso(usuarioEntidad.getId(), registro.getOficina().getOrganismoResponsable().getId(), PERMISO_CONSULTA_REGISTRO_SALIDA, false)) {
-            throw new I18NException("registroEntrada.usuario.permisos", usuarioEntidad.getUsuario().getNombreCompleto());
+            throw WsUtils.createWsI18NException("registroEntrada.usuario.permisos", usuarioEntidad.getUsuario().getNombreCompleto());
         }
 
         // Retornamos el RegistroSalidaResponseWs
@@ -396,7 +397,7 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
         }catch (Exception e){
 
             integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, null,System.currentTimeMillis() - inicio.getTime(), entidadActiva.getId(), numeroRegistro);
-            throw new I18NException("registro.obtener.error");
+            throw WsUtils.createWsI18NException("registro.obtener.error");
         }
 
         // LOPD
@@ -435,23 +436,23 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
 
         // 1.- Validaciones comunes
         if (anyo <= 0) {
-            throw new I18NException("error.valor.requerido.ws", "anyo");
+            throw WsUtils.createWsI18NException("error.valor.requerido.ws", "anyo");
         }
 
         if (numeroRegistro <= 0) {
-            throw new I18NException("error.valor.requerido.ws", "numeroRegistro");
+            throw WsUtils.createWsI18NException("error.valor.requerido.ws", "numeroRegistro");
         }
 
         if (StringUtils.isEmpty(codigoLibro)) {
-            throw new I18NException("error.valor.requerido.ws", "libro");
+            throw WsUtils.createWsI18NException("error.valor.requerido.ws", "libro");
         }
 
         if (StringUtils.isEmpty(usuario)) {
-            throw new I18NException("error.valor.requerido.ws", "usuario");
+            throw WsUtils.createWsI18NException("error.valor.requerido.ws", "usuario");
         }
 
         if (StringUtils.isEmpty(entidad)) {
-            throw new I18NException("error.valor.requerido.ws", "entidad");
+            throw WsUtils.createWsI18NException("error.valor.requerido.ws", "entidad");
         }
 
 
@@ -459,7 +460,7 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
         UsuarioEntidad usuarioEntidad = usuarioEntidadEjb.findByIdentificadorCodigoEntidad(usuario, entidad);
 
         if (usuarioEntidad == null) {//No existe
-            throw new I18NException("registroEntrada.usuario.noExiste", usuario, entidad);
+            throw WsUtils.createWsI18NException("registroEntrada.usuario.noExiste", usuario, entidad);
         }
 
         // 3.- Existe libro
@@ -469,13 +470,13 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
         RegistroSalida registro;
         registro = registroSalidaConsultaEjb.findByNumeroAnyoLibro(numeroRegistro, anyo, codigoLibro);
         if (registro == null) {
-            throw new I18NException("registroEntrada.noExiste", numeroRegistro
+            throw WsUtils.createWsI18NException("registroEntrada.noExiste", numeroRegistro
                     + "/" + anyo + " (" + codigoLibro + ")");
         }
 
         // 5.- Comprobamos que el usuario tiene permisos de lectura para el RegistroEntrada
         if (!permisoOrganismoUsuarioEjb.tienePermiso(usuarioEntidad.getId(), registro.getOficina().getOrganismoResponsable().getId(), PERMISO_CONSULTA_REGISTRO_SALIDA, false)) {
-            throw new I18NException("registroEntrada.usuario.permisos", usuario);
+            throw WsUtils.createWsI18NException("registroEntrada.usuario.permisos", usuario);
         }
 
         // LOPD
