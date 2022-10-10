@@ -16,6 +16,7 @@ import es.caib.regweb3.ws.model.AnexoWs;
 import es.caib.regweb3.ws.model.InteresadoWs;
 import es.caib.regweb3.ws.utils.AuthenticatedBaseWsImpl;
 import es.caib.regweb3.ws.utils.UsuarioAplicacionCache;
+import es.caib.regweb3.ws.utils.WsUtils;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 
@@ -122,16 +123,16 @@ public abstract class AbstractRegistroWsImpl extends AuthenticatedBaseWsImpl {
                     case 0: //SIN FIRMA
                     case 1:{ //ATTACHED
                         if(anexoWs.getFicheroAnexado()!= null && (anexoWs.getFicheroAnexado().length > maxUploadSizeInBytes)) {
-                            throw new I18NException("tamanyfitxerpujatsuperat", RegwebUtils.bytesToHuman(anexoWs.getFicheroAnexado().length),RegwebUtils.bytesToHuman(maxUploadSizeInBytes));
+                            throw WsUtils.createWsI18NException("tamanyfitxerpujatsuperat", RegwebUtils.bytesToHuman(anexoWs.getFicheroAnexado().length),RegwebUtils.bytesToHuman(maxUploadSizeInBytes));
                         }
                         break;
                     }
                     case 2: { //FIRMA DETACHED
                         if(anexoWs.getFicheroAnexado()!= null && anexoWs.getFicheroAnexado().length > maxUploadSizeInBytes) {
-                            throw new I18NException("tamanyfitxerpujatsuperat", RegwebUtils.bytesToHuman(anexoWs.getFicheroAnexado().length),RegwebUtils.bytesToHuman(maxUploadSizeInBytes));
+                            throw WsUtils.createWsI18NException("tamanyfitxerpujatsuperat", RegwebUtils.bytesToHuman(anexoWs.getFicheroAnexado().length),RegwebUtils.bytesToHuman(maxUploadSizeInBytes));
                         }
                         if(anexoWs.getFirmaAnexada()!= null && anexoWs.getFirmaAnexada().length > maxUploadSizeInBytes) {
-                            throw new I18NException("tamanyfitxerpujatsuperat", RegwebUtils.bytesToHuman(anexoWs.getFirmaAnexada().length),RegwebUtils.bytesToHuman(maxUploadSizeInBytes));
+                            throw WsUtils.createWsI18NException("tamanyfitxerpujatsuperat", RegwebUtils.bytesToHuman(anexoWs.getFirmaAnexada().length),RegwebUtils.bytesToHuman(maxUploadSizeInBytes));
                         }
                     }
 
@@ -243,11 +244,11 @@ public abstract class AbstractRegistroWsImpl extends AuthenticatedBaseWsImpl {
 
         // 1.- Comprobaciones de parámetros obligatórios
         if(StringUtils.isEmpty(entidad)){
-            throw new I18NException("error.valor.requerido.ws", "entidad");
+            throw WsUtils.createWsI18NException("error.valor.requerido.ws", "entidad");
         }
 
         if(StringUtils.isEmpty(numeroRegistro)){
-            throw new I18NException("error.valor.requerido.ws", "numeroRegistro");
+            throw WsUtils.createWsI18NException("error.valor.requerido.ws", "numeroRegistro");
         }
 
         // 2.- Comprobar que la entidad existe y está activa
@@ -260,37 +261,37 @@ public abstract class AbstractRegistroWsImpl extends AuthenticatedBaseWsImpl {
      * @param codigoEntidad
      * @throws org.fundaciobit.genapp.common.i18n.I18NException
      */
-    protected Entidad validarEntidad(String codigoEntidad) throws  I18NException, Exception{
+    protected Entidad validarEntidad(String codigoEntidad) throws Exception {
 
         // 1.- Comprobar que la entidad existe y está activa
         if(StringUtils.isEmpty(codigoEntidad)){
-            throw new I18NException("error.valor.requerido.ws", "entidad");
+            throw WsUtils.createWsI18NException("error.valor.requerido.ws", "entidad");
         }
 
         Entidad entidad = entidadEjb.findByCodigoDir3(codigoEntidad);
 
         if(entidad == null){
             log.info("La entidad "+codigoEntidad+" no existe.");
-            throw new I18NException("registro.entidad.noExiste", codigoEntidad);
+            throw WsUtils.createWsI18NException("registro.entidad.noExiste", codigoEntidad);
         }else if(!entidad.getActivo()){
-            throw new I18NException("registro.entidad.inactiva", entidad.getNombre());
+            throw WsUtils.createWsI18NException("registro.entidad.inactiva", entidad.getNombre());
         }else if(entidad.getMantenimiento()){
-            throw new I18NException("registro.entidad.mantenimiento", entidad.getNombre());
+            throw WsUtils.createWsI18NException("registro.entidad.mantenimiento", entidad.getNombre());
         }else if(entidad.getLibro() == null){
-            throw new I18NException("entidad.libro.null", entidad.getNombre());
+            throw WsUtils.createWsI18NException("entidad.libro.null", entidad.getNombre());
         }else if(!entidad.getLibro().getActivo()){
-            throw new I18NException("entidad.libro.inactivo", entidad.getNombre());
+            throw WsUtils.createWsI18NException("entidad.libro.inactivo", entidad.getNombre());
         }
 
         //Si quedan libros pendientes de procesar no se puede registrar
         if(pendienteEjb.findPendientesProcesar(entidad.getId()).size()>0){
-            throw new I18NException("registro.entidad.mantenimiento", entidad.getNombre());
+            throw WsUtils.createWsI18NException("registro.entidad.mantenimiento", entidad.getNombre());
         }
 
         // 3.- Comprobamos que el Usuario pertenece a la Entidad indicada
         if (!UsuarioAplicacionCache.get().getEntidades().contains(entidad)) {
             log.info("El usuario "+UsuarioAplicacionCache.get().getUsuario().getNombreCompleto()+" no pertenece a la entidad.");
-            throw new I18NException("registro.usuario.entidad",UsuarioAplicacionCache.get().getUsuario().getNombreCompleto(), codigoEntidad);
+            throw WsUtils.createWsI18NException("registro.usuario.entidad",UsuarioAplicacionCache.get().getUsuario().getNombreCompleto(), codigoEntidad);
         }
 
         return entidad;
@@ -309,10 +310,10 @@ public abstract class AbstractRegistroWsImpl extends AuthenticatedBaseWsImpl {
         Libro libro = libroEjb.findByCodigoEntidad(codigoLibro, entidad.getId());
 
         if (libro == null) { //No existe
-            throw new I18NException("registro.libro.noExiste", codigoLibro);
+            throw WsUtils.createWsI18NException("registro.libro.noExiste", codigoLibro);
 
         } else if (!libro.getActivo()) { //Si está inactivo
-            throw new I18NException("registro.libro.inactivo", codigoLibro);
+            throw WsUtils.createWsI18NException("registro.libro.inactivo", codigoLibro);
         }
 
         return libro;
@@ -354,10 +355,10 @@ public abstract class AbstractRegistroWsImpl extends AuthenticatedBaseWsImpl {
         Oficina oficina = oficinaEjb.findByCodigoEntidad(codigoOficina, idEntidad);
 
         if (oficina == null) { //No existe
-            throw new I18NException("registro.oficina.noExiste", codigoOficina);
+            throw WsUtils.createWsI18NException("registro.oficina.noExiste", codigoOficina);
 
         } else if (!oficina.getEstado().getCodigoEstadoEntidad().equals(ESTADO_ENTIDAD_VIGENTE)) { //Si está extinguido
-            throw new I18NException("registro.oficina.extinguido", oficina.getNombreCompleto());
+            throw WsUtils.createWsI18NException("registro.oficina.extinguido", oficina.getNombreCompleto());
         }
 
         return oficina;
