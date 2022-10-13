@@ -55,7 +55,7 @@ public class RegistroDetalle implements Serializable {
     @XmlElement
     private String numeroRegistroOrigen;
     @XmlElement
-    private Date fechaOrigen;
+    private Date fechaOrigen; //FECHA Y HORA
     @XmlElement
     private String expedienteJustificante; // Identificador, de ArxiuCaib, del expediente del Justificante generado
 
@@ -107,6 +107,15 @@ public class RegistroDetalle implements Serializable {
     @XmlTransient
     private Boolean recibidoSir = false;
 
+
+    //SICRES4
+    private  Date fechaPresentacionInteresado; //Coincidirá con la del registro si se registra en el mismo momento que se presenta por el interesado.
+    private String timestampPresentacionInteresado;
+    private List<Metadato> metadatosGenerales;
+    private List<Metadato> metadatosParticulares;
+    private String identificadorIntercambioPrevio;
+    private String codigoUnidadTramitacionInicio;
+    private String decodificacionUnidadTramitacionInicio;
 
     public RegistroDetalle() {
     }
@@ -266,7 +275,8 @@ public class RegistroDetalle implements Serializable {
         this.transporte = transporte;
     }
 
-    @Column(name = "NUMTRANSPORTE", nullable = true, length = 20)
+    //SICRES4
+    @Column(name = "NUMTRANSPORTE", nullable = true, length = 40)
     public String getNumeroTransporte() {
         return numeroTransporte;
     }
@@ -275,7 +285,8 @@ public class RegistroDetalle implements Serializable {
         this.numeroTransporte = numeroTransporte;
     }
 
-    @Column(name = "OBSERVACIONES", nullable = true, length = 50)
+    //SICRES4
+    @Column(name = "OBSERVACIONES", nullable = true, length = 160)
     public String getObservaciones() {
         return observaciones;
     }
@@ -339,7 +350,7 @@ public class RegistroDetalle implements Serializable {
         this.expedienteJustificante = expedienteJustificante;
     }
 
-    @Column(name = "INDICADOR_PRUEBA", length = 1, nullable = true)
+    @Column(name = "INDICADOR_PRUEBA", length = 1/*, nullable = true*/) //SICRES4
     @Enumerated(EnumType.ORDINAL)
     public IndicadorPrueba getIndicadorPrueba() {
         return indicadorPrueba;
@@ -358,7 +369,7 @@ public class RegistroDetalle implements Serializable {
         this.tipoAnotacion = tipoAnotacion;
     }
 
-    @Column(name = "DEC_T_ANOTACION", length = 80, nullable = true)
+    @Column(name = "DEC_T_ANOTACION", length = 160, nullable = true)
     public String getDecodificacionTipoAnotacion() {
         return decodificacionTipoAnotacion;
     }
@@ -376,7 +387,7 @@ public class RegistroDetalle implements Serializable {
         this.codigoEntidadRegistralDestino = codigoEntidadRegistralDestino;
     }
 
-    @Column(name = "DEC_ENT_REG_DEST", length = 80, nullable = true)
+    @Column(name = "DEC_ENT_REG_DEST", length = 120, nullable = true)
     public String getDecodificacionEntidadRegistralDestino() {
         return decodificacionEntidadRegistralDestino;
     }
@@ -475,7 +486,7 @@ public class RegistroDetalle implements Serializable {
         this.version = version;
     }
 
-    @Column(name = "CODIGOSIA")
+    @Column(name = "CODIGOSIA", length=80)
     public Long getCodigoSia() {
         return codigoSia;
     }
@@ -509,6 +520,74 @@ public class RegistroDetalle implements Serializable {
 
     public void setRecibidoSir(Boolean sir) {
         this.recibidoSir = sir;
+    }
+
+
+    //SICRES4
+
+    @Column(name = "FECHA_PRES_INTER", nullable = false)
+    public Date getFechaPresentacionInteresado() {
+        return fechaPresentacionInteresado;
+    }
+
+    public void setFechaPresentacionInteresado(Date fechaPresentacionInteresado) {
+        this.fechaPresentacionInteresado = fechaPresentacionInteresado;
+    }
+
+    @Column(name = "TIMESTAMP_PRES_INTER")
+    public String getTimestampPresentacionInteresado() {
+        return timestampPresentacionInteresado;
+    }
+
+    public void setTimestampPresentacionInteresado(String timestampPresentacionInteresado) {
+        this.timestampPresentacionInteresado = timestampPresentacionInteresado;
+    }
+
+    @OneToMany(cascade = CascadeType.ALL, targetEntity = Metadato.class, mappedBy = "registroDetalleGeneral", fetch = FetchType.LAZY)
+    @OrderBy("campo")
+    public List<Metadato> getMetadatosGenerales() {
+        return metadatosGenerales;
+    }
+
+    public void setMetadatosGenerales(List<Metadato> metadatosGenerales) {
+        this.metadatosGenerales = metadatosGenerales;
+    }
+
+    @OneToMany(cascade = CascadeType.ALL, targetEntity = Metadato.class, mappedBy = "registroDetalleParticular", fetch = FetchType.LAZY)
+    @OrderBy("campo")
+    public List<Metadato> getMetadatosParticulares() {
+        return metadatosParticulares;
+    }
+
+    public void setMetadatosParticulares(List<Metadato> metadatosParticulares) {
+        this.metadatosParticulares = metadatosParticulares;
+    }
+
+    @Column(name = "IDINTERCAMBIO_PREVIO", length=33)
+    public String getIdentificadorIntercambioPrevio() {
+        return identificadorIntercambioPrevio;
+    }
+
+    public void setIdentificadorIntercambioPrevio(String identificadorIntercambioPrevio) {
+        this.identificadorIntercambioPrevio = identificadorIntercambioPrevio;
+    }
+
+    @Column(name = "COD_UNITRAM_INICIO", length=21)
+    public String getCodigoUnidadTramitacionInicio() {
+        return codigoUnidadTramitacionInicio;
+    }
+
+    public void setCodigoUnidadTramitacionInicio(String codigoUnidadTramitacionInicio) {
+        this.codigoUnidadTramitacionInicio = codigoUnidadTramitacionInicio;
+    }
+
+    @Column(name = "DEC_UNITRAM_INICIO", length=120)
+    public String getDecodificacionUnidadTramitacionInicio() {
+        return decodificacionUnidadTramitacionInicio;
+    }
+
+    public void setDecodificacionUnidadTramitacionInicio(String decodificacionUnidadTramitacionInicio) {
+        this.decodificacionUnidadTramitacionInicio = decodificacionUnidadTramitacionInicio;
     }
 
     @Transient

@@ -8,7 +8,11 @@ public enum TipoMensaje {
 
     ACK("01", "ACK"),
     ERROR("02", "ERROR"),
-    CONFIRMACION("03", "CONFIRMACION");
+    CONFIRMACION("03", "CONFIRMACION"),
+    ACK_CONFIRMACION("04", "ACK a CONFIRMACION"),
+    RECHAZO("05", "RECHAZO"),
+    ACK_RECHAZO("06", "ACK a RECHAZO");
+
 
     private final String value;
     private final String name;

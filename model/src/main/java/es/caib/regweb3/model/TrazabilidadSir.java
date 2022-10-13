@@ -87,7 +87,7 @@ public class TrazabilidadSir implements Serializable {
         this.codigoEntidadRegistralOrigen = codigoEntidadRegistralOrigen;
     }
 
-    @Column(name = "DEC_ENT_REG_ORI", length = 80, nullable = true)
+    @Column(name = "DEC_ENT_REG_ORI", length = 120, nullable = true)
     public String getDecodificacionEntidadRegistralOrigen() {
         return decodificacionEntidadRegistralOrigen;
     }
@@ -105,7 +105,7 @@ public class TrazabilidadSir implements Serializable {
         this.codigoEntidadRegistralDestino = codigoEntidadRegistralDestino;
     }
 
-    @Column(name = "DEC_ENT_REG_DEST", length = 80, nullable = true)
+    @Column(name = "DEC_ENT_REG_DEST", length = 120, nullable = true)
     public String getDecodificacionEntidadRegistralDestino() {
         return decodificacionEntidadRegistralDestino;
     }
@@ -123,7 +123,7 @@ public class TrazabilidadSir implements Serializable {
         this.codigoUnidadTramitacionDestino = codigoUnidadTramitacionDestino;
     }
 
-    @Column(name = "DEC_UNI_TRA_DEST", length = 80, nullable = true)
+    @Column(name = "DEC_UNI_TRA_DEST", length = 120, nullable = true)
     public String getDecodificacionUnidadTramitacionDestino() {
         return decodificacionUnidadTramitacionDestino;
     }
@@ -132,7 +132,8 @@ public class TrazabilidadSir implements Serializable {
         this.decodificacionUnidadTramitacionDestino = decodificacionUnidadTramitacionDestino;
     }
 
-    @Column(name = "APLICACION", length = 4, nullable = true)
+    //SICRES4
+    @Column(name = "APLICACION", length = 20, nullable = true)
     public String getAplicacion() {
         return aplicacion;
     }

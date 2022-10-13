@@ -264,17 +264,13 @@ public class RegistroSir implements Serializable {
         this.codigoEntidadRegistralOrigen = codigoEntidadRegistralOrigen;
     }
 
-    @Column(name = "DEC_ENT_REG_ORI", length = 80, nullable = true)
+    @Column(name = "DEC_ENT_REG_ORI", length = 120, nullable = true)
     public String getDecodificacionEntidadRegistralOrigen() {
         return decodificacionEntidadRegistralOrigen;
     }
 
     public void setDecodificacionEntidadRegistralOrigen(String decodificacionEntidadRegistralOrigen) {
-       if(decodificacionEntidadRegistralOrigen != null && decodificacionEntidadRegistralOrigen.length() > 80){
-           this.decodificacionEntidadRegistralOrigen = decodificacionEntidadRegistralOrigen.substring(0,79);
-       }else{
-           this.decodificacionEntidadRegistralOrigen = decodificacionEntidadRegistralOrigen;
-       }
+        this.decodificacionEntidadRegistralOrigen = decodificacionEntidadRegistralOrigen;
     }
 
     @Column(name = "NUMERO_REGISTRO", length = 20, nullable = false)
@@ -315,17 +311,13 @@ public class RegistroSir implements Serializable {
         this.codigoUnidadTramitacionOrigen = codigoUnidadTramitacionOrigen;
     }
 
-    @Column(name = "DEC_UNI_TRA_ORI", length = 80, nullable = true)
+    @Column(name = "DEC_UNI_TRA_ORI", length = 120, nullable = true)
     public String getDecodificacionUnidadTramitacionOrigen() {
         return decodificacionUnidadTramitacionOrigen;
     }
 
     public void setDecodificacionUnidadTramitacionOrigen(String decodificacionUnidadTramitacionOrigen) {
-        if(decodificacionUnidadTramitacionOrigen != null && decodificacionUnidadTramitacionOrigen.length() > 80){
-            this.decodificacionUnidadTramitacionOrigen = decodificacionUnidadTramitacionOrigen.substring(0,79);
-        }else{
-            this.decodificacionUnidadTramitacionOrigen = decodificacionUnidadTramitacionOrigen;
-        }
+        this.decodificacionUnidadTramitacionOrigen = decodificacionUnidadTramitacionOrigen;
     }
 
     @Column(name = "COD_ENT_REG_DEST", length = 21, nullable = false)
@@ -337,17 +329,13 @@ public class RegistroSir implements Serializable {
         this.codigoEntidadRegistralDestino = codigoEntidadRegistralDestino;
     }
 
-    @Column(name = "DEC_ENT_REG_DEST", length = 80, nullable = true)
+    @Column(name = "DEC_ENT_REG_DEST", length = 120, nullable = true)
     public String getDecodificacionEntidadRegistralDestino() {
         return decodificacionEntidadRegistralDestino;
     }
 
     public void setDecodificacionEntidadRegistralDestino(String decodificacionEntidadRegistralDestino) {
-        if(decodificacionEntidadRegistralDestino != null && decodificacionEntidadRegistralDestino.length() > 80){
-            this.decodificacionEntidadRegistralDestino = decodificacionEntidadRegistralDestino.substring(0,79);
-        }else{
-            this.decodificacionEntidadRegistralDestino = decodificacionEntidadRegistralDestino;
-        }
+        this.decodificacionEntidadRegistralDestino = decodificacionEntidadRegistralDestino;
     }
 
     @Column(name = "COD_UNI_TRA_DEST", length = 21, nullable = true)
@@ -359,17 +347,13 @@ public class RegistroSir implements Serializable {
         this.codigoUnidadTramitacionDestino = codigoUnidadTramitacionDestino;
     }
 
-    @Column(name = "DEC_UNI_TRA_DEST", length = 80, nullable = true)
+    @Column(name = "DEC_UNI_TRA_DEST", length = 120, nullable = true)
     public String getDecodificacionUnidadTramitacionDestino() {
         return decodificacionUnidadTramitacionDestino;
     }
 
     public void setDecodificacionUnidadTramitacionDestino(String decodificacionUnidadTramitacionDestino) {
-        if(decodificacionUnidadTramitacionDestino != null && decodificacionUnidadTramitacionDestino.length() > 80){
-            this.decodificacionUnidadTramitacionDestino = decodificacionUnidadTramitacionDestino.substring(0,79);
-        }else{
-            this.decodificacionUnidadTramitacionDestino = decodificacionUnidadTramitacionDestino;
-        }
+        this.decodificacionUnidadTramitacionDestino = decodificacionUnidadTramitacionDestino;
     }
 
     @Column(name = "RESUMEN", length = 240, nullable = false)
@@ -502,7 +486,8 @@ public class RegistroSir implements Serializable {
         this.documentacionFisica = documentacionFisica;
     }
 
-    @Column(name = "OBSERVACIONES", length = 50, nullable = true)
+    //SICRES4
+    @Column(name = "OBSERVACIONES", length = 160, nullable = true)
     public String getObservacionesApunte() {
         return observacionesApunte;
     }
@@ -530,7 +515,7 @@ public class RegistroSir implements Serializable {
         this.codigoEntidadRegistralInicio = codigoEntidadRegistralInicio;
     }
 
-    @Column(name = "DEC_ENT_REG_INI", length = 80, nullable = true)
+    @Column(name = "DEC_ENT_REG_INI", length = 120, nullable = true)
     public String getDecodificacionEntidadRegistralInicio() {
         return decodificacionEntidadRegistralInicio;
     }

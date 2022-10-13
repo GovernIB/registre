@@ -28,33 +28,18 @@ public class AnexoSir implements Serializable {
     // Identificador del fichero intercambiado.
     private String identificadorFichero = null;
 
-    // Validez del documento.
-    private String validezDocumento;
 
     // Tipo de documento.
     private String tipoDocumento;
-
-    // Certificado público del fichero anexo.
-    private String certificado;
-
-    // Firma electrónica del fichero anexo.
-    private String firma;
-
-    // Sello de tiempo del fichero anexo.
-    private String timestamp;
-
-    // Validación OCSP del certificado.
-    private String validacionOCSPCertificado;
-
-    // Huella binaria del fichero anexo.
-    private String hash;
 
     // Tipo MIME del fichero anexo.
     private String tipoMIME;
 
     // Archivo Anexo para almacenar en el directorio local
+    //TODO REVISAR CON REFERENCIAUNICA ESTE CAMPO (SICRES4)
     private Archivo anexo;
 
+    //TODO VER SI SE ELIMINA (SICRES4) DICE QUE SI, pero en AnexoBean de LIBSIR sigue apareciendo
     /**
      * Identificador (identificadorFichero) del documento firmado. Si el anexo es firma de otro
      * documento, se especifica el identificador de del fichero objeto de firma.
@@ -125,15 +110,6 @@ public class AnexoSir implements Serializable {
         this.identificadorFichero = identificadorFichero;
     }
 
-    @Column(name = "VALIDEZ_DOCUMENTO", length = 2)
-    public String getValidezDocumento() {
-        return validezDocumento;
-    }
-
-    public void setValidezDocumento(String validezDocumento) {
-        this.validezDocumento = validezDocumento;
-    }
-
     @Column(name = "TIPO_DOCUMENTO", length = 2, nullable = false)
     public String getTipoDocumento() {
         return tipoDocumento;
@@ -143,60 +119,7 @@ public class AnexoSir implements Serializable {
         this.tipoDocumento = tipoDocumento;
     }
 
-    @Lob
-    @Type(type = "org.hibernate.type.TextType")
-    @Column(name = "CERTIFICADO", length = 2147483647)
-    public String getCertificado() {
-        return certificado;
-    }
 
-    public void setCertificado(String certificado) {
-        this.certificado = certificado;
-    }
-
-    @Lob
-    @Type(type = "org.hibernate.type.TextType")
-    @Column(name = "FIRMA", length = 2147483647)
-    public String getFirma() {
-        return firma;
-    }
-
-    public void setFirma(String firma) {
-        this.firma = firma;
-    }
-
-    @Lob
-    @Type(type = "org.hibernate.type.TextType")
-    @Column(name = "TIMESTAMP", length = 2147483647)
-    public String getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(String timestamp) {
-        this.timestamp = timestamp;
-    }
-
-    @Lob
-    @Type(type = "org.hibernate.type.TextType")
-    @Column(name = "VAL_OCSP_CE", length = 2147483647)
-    public String getValidacionOCSPCertificado() {
-        return validacionOCSPCertificado;
-    }
-
-    public void setValidacionOCSPCertificado(String validacionOCSPCertificado) {
-        this.validacionOCSPCertificado = validacionOCSPCertificado;
-    }
-
-    @Lob
-    @Type(type = "org.hibernate.type.TextType")
-    @Column(name = "HASH", nullable = false, length = 2147483647)
-    public String getHash() {
-        return hash;
-    }
-
-    public void setHash(String hash) {
-        this.hash = hash;
-    }
 
     @Column(name = "TIPO_MIME", length = 20)
     public String getTipoMIME() {
@@ -222,12 +145,12 @@ public class AnexoSir implements Serializable {
         return identificadorDocumentoFirmado;
     }
 
-
     public void setIdentificadorDocumentoFirmado(String identificadorDocumentoFirmado) {
         this.identificadorDocumentoFirmado = identificadorDocumentoFirmado;
     }
 
-    @Column(name = "OBSERVACIONES", length = 50)
+    //SICRES4
+    @Column(name = "OBSERVACIONES", length = 160)
     public String getObservaciones() {
         return observaciones;
     }

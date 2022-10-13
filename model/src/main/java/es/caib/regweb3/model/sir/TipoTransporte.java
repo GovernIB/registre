@@ -12,7 +12,8 @@ public enum TipoTransporte {
     BUROFAX("04", "Burofax"),
     EN_MANO("05", "En mano"),
     FAX("06", "Fax"),
-    OTROS("07", "Otros");
+    OTROS("07", "Otros"),
+    OTROSMEDIOSELECTRONICOS("08", "Otros medios electronicos");
 
     private final String value;
     private final String name;
