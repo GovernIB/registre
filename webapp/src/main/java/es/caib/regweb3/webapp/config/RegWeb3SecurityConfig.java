@@ -88,11 +88,12 @@ public class RegWeb3SecurityConfig extends WebSecurityConfigurerAdapter {
                 /* ----- RWE_SUPERADMIN y RWE_ADMIN ----- */
                 antMatchers("/entidad/**/edit").hasAnyAuthority("RWE_SUPERADMIN","RWE_ADMIN").
                 antMatchers("/usuario/new").hasAnyAuthority("RWE_SUPERADMIN","RWE_ADMIN").
-                antMatchers("/usuario/**/edit").hasAnyAuthority("RWE_SUPERADMIN","RWE_ADMIN").
-                antMatchers("/informe/**").hasAnyAuthority("RWE_SUPERADMIN","RWE_ADMIN").
                 antMatchers("/persona/**").hasAnyAuthority("RWE_SUPERADMIN","RWE_ADMIN").
                 antMatchers("/propiedadGlobal/**").hasAnyAuthority("RWE_SUPERADMIN","RWE_ADMIN").
                 antMatchers("/plugin/**").hasAnyAuthority("RWE_SUPERADMIN","RWE_ADMIN").
+                /* ----- RWE_SUPERADMIN,  RWE_ADMIN y RWE_USUARI ----- */
+                antMatchers("/usuario/**/edit").hasAnyAuthority("RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI").
+                antMatchers("/informe/**").hasAnyAuthority("RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI").
                 /* ----- RWE_USUARI ----- */
                 antMatchers("/registroEntrada/**").hasAuthority("RWE_USUARI").
                 antMatchers("/registroSalida/**").hasAuthority("RWE_USUARI").
