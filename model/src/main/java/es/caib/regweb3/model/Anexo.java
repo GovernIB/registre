@@ -1,6 +1,7 @@
 package es.caib.regweb3.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import es.caib.regweb3.model.utils.ObjetoBasico;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
@@ -36,9 +37,7 @@ public class Anexo implements Serializable {
     @XmlElement
     private TipoDocumental tipoDocumental; // reso, acord, factura, ..
     @XmlElement
-    private Long validezDocumento;
-    @XmlElement
-    private Long tipoDocumento;
+    private Long tipoDocumento; //tipoAnexo SICRES4 ( ha cambiado el nombre del atributo y los valores)
     @XmlTransient
     private Entidad entidad;
     @XmlTransient
@@ -51,16 +50,6 @@ public class Anexo implements Serializable {
     private Date fechaCaptura;
     @XmlElement
     private int modoFirma;
-    @XmlElement
-    private byte[] certificado;
-    @XmlElement
-    private String firma;  //Corresponde al campo Firma del Documento del segmento "De_Anexo"( solo viene informado cuando la firma es CSV)
-    @XmlElement
-    private byte[] validacionOCSPCertificado;
-    @XmlElement
-    private byte[] timestamp;
-    @XmlElement
-    private byte[] hash;
     @XmlTransient
     private String custodiaID; // [DocumentCustody {1} uuid del expediente#documento creado]  [ArxiuCaib {2} uuid del documento creado en Arxiu]
     @XmlTransient
@@ -97,6 +86,17 @@ public class Anexo implements Serializable {
     @XmlTransient
     private Integer tamanoFichero;
 
+    //SICRES4
+    private String resumen;
+    private String codigoFormulario;
+    private List<Metadato> metadatosGenerales;
+    private List<Metadato> metadatosParticulares;
+
+    //Referencia Única
+    private String endpointRFU; //endpoint de INTERDOC
+    private String identificadorRFU; // identificador INTERDOC
+
+
 
     public Anexo() {
     }
@@ -115,7 +115,6 @@ public class Anexo implements Serializable {
         this.perfilCustodia = a.perfilCustodia;
         this.titulo = a.titulo;
         this.tipoDocumental = a.tipoDocumental == null ? null : new TipoDocumental(a.tipoDocumental);
-        this.validezDocumento = a.validezDocumento;
         this.tipoDocumento = a.tipoDocumento;
         this.registroDetalle = a.registroDetalle;
         this.observaciones = a.observaciones;
@@ -123,11 +122,6 @@ public class Anexo implements Serializable {
         this.fechaCaptura = a.fechaCaptura;
         this.modoFirma = a.modoFirma;
         this.custodiaID = a.custodiaID;
-        this.certificado = a.certificado;
-        this.firma = a.firma;
-        this.validacionOCSPCertificado = a.validacionOCSPCertificado;
-        this.hash = a.hash;
-        this.timestamp = a.timestamp;
         this.firmaValida = a.firmaValida;
         this.justificante = a.justificante;
         this.signFormat = a.signFormat;
@@ -260,15 +254,6 @@ public class Anexo implements Serializable {
     }
 
 
-    @Column(name = "TVALDOC")
-    public Long getValidezDocumento() {
-        return validezDocumento;
-    }
-
-    public void setValidezDocumento(Long validezDocumento) {
-        this.validezDocumento = validezDocumento;
-    }
-
     @Column(name = "TIPODOC")
     public Long getTipoDocumento() {
         return tipoDocumento;
@@ -336,58 +321,6 @@ public class Anexo implements Serializable {
 
     public void setModoFirma(int modoFirma) {
         this.modoFirma = modoFirma;
-    }
-
-
-    @Column(name = "CERTIFICADO", nullable = true, length = 2000)
-    @Type(type = "org.hibernate.type.BinaryType")
-    public byte[] getCertificado() {
-        return certificado;
-    }
-
-    public void setCertificado(byte[] certificado) {
-        this.certificado = certificado;
-    }
-
-    @Lob
-    @Type(type = "org.hibernate.type.TextType")
-    @Column(name = "FIRMA", length = 2147483647)
-    public String getFirma() {
-        return firma;
-    }
-
-    public void setFirma(String firmaDocumento) {
-        this.firma = firmaDocumento;
-    }
-
-    @Column(name = "TIMESTAMP", nullable = true, length = 2000)
-    @Type(type = "org.hibernate.type.BinaryType")
-    public byte[] getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(byte[] timestamp) {
-        this.timestamp = timestamp;
-    }
-
-    @Column(name = "VAL_OCSP_CERTIFICADO", nullable = true, length = 2000)
-    @Type(type = "org.hibernate.type.BinaryType")
-    public byte[] getValidacionOCSPCertificado() {
-        return validacionOCSPCertificado;
-    }
-
-    public void setValidacionOCSPCertificado(byte[] validacionOCSPCertificado) {
-        this.validacionOCSPCertificado = validacionOCSPCertificado;
-    }
-
-    @Column(name = "HASH", length = 2000)
-    @Type(type = "org.hibernate.type.BinaryType")
-    public byte[] getHash() {
-        return hash;
-    }
-
-    public void setHash(byte[] hash) {
-        this.hash = hash;
     }
 
 
@@ -479,6 +412,65 @@ public class Anexo implements Serializable {
 
     public void setPurgado(boolean purgado) {
         this.purgado = purgado;
+    }
+
+
+
+    //SICRES4
+
+    @Column(name = "RESUMEN", length = 160)
+    public String getResumen() {
+        return resumen;
+    }
+
+    public void setResumen(String resumen) {
+        this.resumen = resumen;
+    }
+
+    @Column(name = "CODFORMUL", length = 80)
+    public String getCodigoFormulario() {
+        return codigoFormulario;
+    }
+
+    public void setCodigoFormulario(String codigoFormulario) {
+        this.codigoFormulario = codigoFormulario;
+    }
+
+
+    @OneToMany(cascade = CascadeType.ALL, targetEntity = Metadato.class, mappedBy = "anexoGeneral", fetch = FetchType.LAZY)
+    public List<Metadato> getMetadatosGenerales() {
+        return metadatosGenerales;
+    }
+
+    public void setMetadatosGenerales(List<Metadato> metadatosGenerales) {
+        this.metadatosGenerales = metadatosGenerales;
+    }
+
+    @OneToMany(cascade = CascadeType.ALL, targetEntity = Metadato.class, mappedBy = "anexoParticular", fetch = FetchType.LAZY)
+    public List<Metadato> getMetadatosParticulares() {
+        return metadatosParticulares;
+    }
+
+    public void setMetadatosParticulares(List<Metadato> metadatosParticulares) {
+        this.metadatosParticulares = metadatosParticulares;
+    }
+
+    @Column(name = "ENDPOINTRFU")
+    public String getEndpointRFU() {
+        return endpointRFU;
+    }
+
+    public void setEndpointRFU(String endpointRFU) {
+        this.endpointRFU = endpointRFU;
+    }
+
+    @Column(name = "IDENTIFRFU")
+    public String getIdentificadorRFU() {
+        return identificadorRFU;
+    }
+
+    public void setIdentificadorRFU(String identificadorRFU) {
+        this.identificadorRFU = identificadorRFU;
     }
 
     @Transient

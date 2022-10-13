@@ -8,7 +8,7 @@ public enum CanalNotificacion {
 
     DIRECCION_POSTAL("01", "Dirección Postal"),
     DIRECCION_ELECTRONICA_HABILITADA("02", "Dirección electrónica habilitada"),
-    COMPARECENCIA_ELECTRONICA("03", "Comparecencia electrónica");
+    COMPARECENCIA_ELECTRONICA("03", "Dirección electrónica habilitada"); //SICRES4
 
     private final String value;
     private final String name;

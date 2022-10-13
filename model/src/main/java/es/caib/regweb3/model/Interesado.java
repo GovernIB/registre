@@ -62,8 +62,6 @@ public class Interesado implements Serializable {
     @XmlElement
     private String telefono;
     @XmlElement
-    private String direccionElectronica;
-    @XmlElement
     private Long canal;
 
     @XmlTransient
@@ -85,6 +83,13 @@ public class Interesado implements Serializable {
     //Metadatos nueva arquitectura SIR
     @XmlTransient
     private String codigoDire;
+
+    //SICRES4
+    private Boolean receptorNotificaciones = false;
+    private String codDirectoriosUnificados;
+    private String telefonoMovil;
+    private Boolean avisoNotificacionSMS = false;
+    private Boolean avisoCorreoElectronico = false;
 
 
     public Interesado() {
@@ -158,7 +163,6 @@ public class Interesado implements Serializable {
         this.cp = persona.getCp();
         this.email = persona.getEmail();
         this.telefono = persona.getTelefono();
-        this.direccionElectronica = persona.getDireccionElectronica();
         this.canal = persona.getCanal();
         this.observaciones = persona.getObservaciones();
     }
@@ -199,7 +203,6 @@ public class Interesado implements Serializable {
         this.cp = i.cp;
         this.email = i.email;
         this.telefono = i.telefono;
-        this.direccionElectronica = i.direccionElectronica;
         this.canal = i.canal;
         // Comentada la linea porque provocaba una referencia cíclica
         // this.representado = i.representado == null? null : new Interesado(i.representado);
@@ -301,15 +304,6 @@ public class Interesado implements Serializable {
         this.telefono = telefono;
     }
 
-    @Column(name = "DIRELECTRONICA", length = 160)
-    public String getDireccionElectronica() {
-        return direccionElectronica;
-    }
-
-    public void setDireccionElectronica(String direccionElectronica) {
-        this.direccionElectronica = direccionElectronica;
-    }
-
     @Column(name = "TIPOINTERESADO")
     public Long getTipo() {
         return tipo;
@@ -346,7 +340,8 @@ public class Interesado implements Serializable {
         this.tipoDocumentoIdentificacion = tipoDocumentoIdentificacion;
     }
 
-    @Column(name = "DOCUMENTO", length = 17)
+    //SICRES4  aumento de tamaño
+    @Column(name = "DOCUMENTO", length = 256)
     public String getDocumento() {
         return documento;
     }
@@ -456,6 +451,54 @@ public class Interesado implements Serializable {
         this.codigoDire = codigoDire;
     }
 
+
+    //SICRES4
+   //Indica quien es el interesado que recibirá las notificaciones en caso de muchos interesados.
+   @Column(name = "RECEPNOTIF")
+    public Boolean getReceptorNotificaciones() {
+        return receptorNotificaciones;
+    }
+
+    public void setReceptorNotificaciones(Boolean receptorNotificaciones) {
+        this.receptorNotificaciones = receptorNotificaciones;
+    }
+
+    @Column(name = "DIRUNIFICADO", length = 21)
+    public String getCodDirectoriosUnificados() {
+        return codDirectoriosUnificados;
+    }
+
+    public void setCodDirectoriosUnificados(String codDirectoriosUnificados) {
+        this.codDirectoriosUnificados = codDirectoriosUnificados;
+    }
+
+    @Column(name = "TLFMOVIL", length = 20)
+    public String getTelefonoMovil() {
+        return telefonoMovil;
+    }
+
+    public void setTelefonoMovil(String telefonoMovil) {
+        this.telefonoMovil = telefonoMovil;
+    }
+
+    @Column(name = "AVISONOTIFSMS")
+    public Boolean getAvisoNotificacionSMS() {
+        return avisoNotificacionSMS;
+    }
+
+    public void setAvisoNotificacionSMS(Boolean avisoNotificacionSMS) {
+        this.avisoNotificacionSMS = avisoNotificacionSMS;
+    }
+
+    @Column(name = "AVISONOTIFEMAIL")
+    public Boolean getAvisoCorreoElectronico() {
+        return avisoCorreoElectronico;
+    }
+
+    public void setAvisoCorreoElectronico(Boolean avisoCorreoElectronico) {
+        this.avisoCorreoElectronico = avisoCorreoElectronico;
+    }
+
     @Transient
     public String getInformacionHtml() {
         String info = "";
@@ -489,9 +532,6 @@ public class Interesado implements Serializable {
             if (StringUtils.isNotEmpty(getEmail())) {
                 info = info + "Email: " + getEmail() + " <br/>";
             }
-            if (StringUtils.isNotEmpty(getDireccionElectronica())) {
-                info = info + "Dir. elect: " + getEmail() + " <br/>";
-            }
 
         } else if (tipo.equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA)) {
             info = getNombrePersonaJuridica() + " <br/>";
@@ -513,9 +553,7 @@ public class Interesado implements Serializable {
             if (StringUtils.isNotEmpty(getEmail())) {
                 info = info + "Email: " + getEmail() + " <br/>";
             }
-            if (StringUtils.isNotEmpty(getDireccionElectronica())) {
-                info = info + "Dir. elect: " + getEmail() + " <br/>";
-            }
+
         }
 
         return info;

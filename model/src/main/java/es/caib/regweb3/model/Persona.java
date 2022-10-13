@@ -110,7 +110,6 @@ public class Persona implements Serializable {
         this.cp = interesado.getCp();
         this.email = interesado.getEmail();
         this.telefono = interesado.getTelefono();
-        this.direccionElectronica = interesado.getDireccionElectronica();
         this.canal = interesado.getCanal();
         this.observaciones = interesado.getObservaciones();
         this.guardarInteresado = interesado.isGuardarInteresado();
