@@ -17,35 +17,47 @@ ALTER TABLE RWE_ANEXO_SIR DROP COLUMN VALIDEZ_DOCUMENTO CASCADE CONSTRAINT;
 
 --Nueva tabla METADATO
 create table RWE_METADATO (
-      ID number(19,0) not null,
-      CAMPO varchar2(80 char),
-      VALOR varchar2(255 char),
-      ANEXOGENERAL number(19,0),
-      ANEXOPARTICULAR number(19,0),
-      REGDETGEN number(19,0),
-      REGDETPART number(19,0),
-      primary key (ID)
+          ID number(19,0) not null,
+          CAMPO varchar2(80 char),
+          VALOR varchar2(255 char),
+          REGSALPART number(19,0),
+          REGSALGEN number(19,0),
+          REGENTPART number(19,0),
+          REGENTGEN number(19,0),
+          ANEXOPART number(19,0),
+          ANEXOGEN number(19,0),
+          primary key (ID)
 );
 
 alter table RWE_METADATO
-    add constraint RWE_METADATO_ANEXGEN_FK
-        foreign key (ANEXOGENERAL)
+    add constraint RWE_METADPAR_REGENT_FK
+        foreign key (REGSALPART)
+            references RWE_REGISTRO_SALIDA;
+
+alter table RWE_METADATO
+    add constraint RWE_METADGEN_REGENT_FK
+        foreign key (REGSALGEN)
+            references RWE_REGISTRO_SALIDA;
+
+alter table RWE_METADATO
+    add constraint RWE_METADPAR_REGENT_FK
+        foreign key (REGENTPART)
+            references RWE_REGISTRO_ENTRADA;
+
+alter table RWE_METADATO
+    add constraint RWE_METADGEN_REGENT_FK
+        foreign key (REGENTGEN)
+            references RWE_REGISTRO_ENTRADA;
+
+alter table RWE_METADATO
+    add constraint RWE_METADPAR_ANEXO_FK
+        foreign key (ANEXOPART)
             references RWE_ANEXO;
 
 alter table RWE_METADATO
-    add constraint RWE_METADATO_ANEXPART_FK
-        foreign key (ANEXOPARTICULAR)
+    add constraint RWE_METADGEN_ANEXO_FK
+        foreign key (ANEXOGEN)
             references RWE_ANEXO;
-
-alter table RWE_METADATO
-    add constraint RWE_METADATO_REGDETGEN_FK
-        foreign key (REGDETGEN)
-            references RWE_REGISTRO_DETALLE;
-
-alter table RWE_METADATO
-    add constraint RWE_METADATO_REGDETPART_FK
-        foreign key (REGDETPART)
-            references RWE_REGISTRO_DETALLE;
 
 -- Cambios tamanyo RegistroDetalle
 ALTER TABLE RWE_REGISTRO_DETALLE MODIFY NUMTRANSPORTE varchar2(40 char);
