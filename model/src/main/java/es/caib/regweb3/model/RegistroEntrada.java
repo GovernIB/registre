@@ -46,6 +46,10 @@ public class RegistroEntrada implements IRegistro {
     @XmlElement
     private RegistroDetalle registroDetalle;
 
+    //SICRES4
+    private List<Metadato> metadatosGenerales;
+    private List<Metadato> metadatosParticulares;
+
 
     public RegistroEntrada() {
         this.registroDetalle = new RegistroDetalle();
@@ -242,6 +246,29 @@ public class RegistroEntrada implements IRegistro {
 
     public void setRegistroDetalle(RegistroDetalle registroDetalle) {
         this.registroDetalle = registroDetalle;
+    }
+
+
+    @OneToMany(cascade = CascadeType.REMOVE, targetEntity = Metadato.class, fetch = FetchType.LAZY)
+    @JoinColumn(name = "REGENTGEN", foreignKey = @ForeignKey(name = "RWE_METADGEN_REGENT_FK"))
+    @OrderBy("campo")
+    public List<Metadato> getMetadatosGenerales() {
+        return metadatosGenerales;
+    }
+
+    public void setMetadatosGenerales(List<Metadato> metadatosGenerales) {
+        this.metadatosGenerales = metadatosGenerales;
+    }
+
+    @OneToMany(cascade = CascadeType.REMOVE, targetEntity = Metadato.class, fetch = FetchType.LAZY)
+    @JoinColumn(name = "REGENTPART", foreignKey = @ForeignKey(name = "RWE_METADPAR_REGENT_FK"))
+    @OrderBy("campo")
+    public List<Metadato> getMetadatosParticulares() {
+        return metadatosParticulares;
+    }
+
+    public void setMetadatosParticulares(List<Metadato> metadatosParticulares) {
+        this.metadatosParticulares = metadatosParticulares;
     }
 
 

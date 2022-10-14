@@ -111,8 +111,6 @@ public class RegistroDetalle implements Serializable {
     //SICRES4
     private  Date fechaPresentacionInteresado; //Coincidirá con la del registro si se registra en el mismo momento que se presenta por el interesado.
     private String timestampPresentacionInteresado;
-    private List<Metadato> metadatosGenerales;
-    private List<Metadato> metadatosParticulares;
     private String identificadorIntercambioPrevio;
     private String codigoUnidadTramitacionInicio;
     private String decodificacionUnidadTramitacionInicio;
@@ -541,26 +539,6 @@ public class RegistroDetalle implements Serializable {
 
     public void setTimestampPresentacionInteresado(String timestampPresentacionInteresado) {
         this.timestampPresentacionInteresado = timestampPresentacionInteresado;
-    }
-
-    @OneToMany(cascade = CascadeType.ALL, targetEntity = Metadato.class, mappedBy = "registroDetalleGeneral", fetch = FetchType.LAZY)
-    @OrderBy("campo")
-    public List<Metadato> getMetadatosGenerales() {
-        return metadatosGenerales;
-    }
-
-    public void setMetadatosGenerales(List<Metadato> metadatosGenerales) {
-        this.metadatosGenerales = metadatosGenerales;
-    }
-
-    @OneToMany(cascade = CascadeType.ALL, targetEntity = Metadato.class, mappedBy = "registroDetalleParticular", fetch = FetchType.LAZY)
-    @OrderBy("campo")
-    public List<Metadato> getMetadatosParticulares() {
-        return metadatosParticulares;
-    }
-
-    public void setMetadatosParticulares(List<Metadato> metadatosParticulares) {
-        this.metadatosParticulares = metadatosParticulares;
     }
 
     @Column(name = "IDINTERCAMBIO_PREVIO", length=33)
