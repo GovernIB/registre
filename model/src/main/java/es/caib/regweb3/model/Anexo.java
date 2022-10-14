@@ -437,7 +437,9 @@ public class Anexo implements Serializable {
     }
 
 
-    @OneToMany(cascade = CascadeType.ALL, targetEntity = Metadato.class, mappedBy = "anexoGeneral", fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.REMOVE, targetEntity = Metadato.class, fetch = FetchType.LAZY)
+    @JoinColumn(name = "ANEXOGEN", foreignKey = @ForeignKey(name = "RWE_METADGEN_ANEXO_FK"))
+    @OrderBy("campo")
     public List<Metadato> getMetadatosGenerales() {
         return metadatosGenerales;
     }
@@ -446,7 +448,9 @@ public class Anexo implements Serializable {
         this.metadatosGenerales = metadatosGenerales;
     }
 
-    @OneToMany(cascade = CascadeType.ALL, targetEntity = Metadato.class, mappedBy = "anexoParticular", fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.REMOVE, targetEntity = Metadato.class, fetch = FetchType.LAZY)
+    @JoinColumn(name = "ANEXOPART", foreignKey = @ForeignKey(name = "RWE_METADPAR_ANEXO_FK"))
+    @OrderBy("campo")
     public List<Metadato> getMetadatosParticulares() {
         return metadatosParticulares;
     }
