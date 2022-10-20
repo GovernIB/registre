@@ -38,6 +38,8 @@ public class Anexo implements Serializable {
     private TipoDocumental tipoDocumental; // reso, acord, factura, ..
     @XmlElement
     private Long tipoDocumento; //tipoAnexo SICRES4 ( ha cambiado el nombre del atributo y los valores)
+    @XmlElement
+    private Long validezDocumento;
     @XmlTransient
     private Entidad entidad;
     @XmlTransient
@@ -115,6 +117,7 @@ public class Anexo implements Serializable {
         this.perfilCustodia = a.perfilCustodia;
         this.titulo = a.titulo;
         this.tipoDocumental = a.tipoDocumental == null ? null : new TipoDocumental(a.tipoDocumental);
+        this.validezDocumento = a.validezDocumento;
         this.tipoDocumento = a.tipoDocumento;
         this.registroDetalle = a.registroDetalle;
         this.observaciones = a.observaciones;
@@ -251,6 +254,15 @@ public class Anexo implements Serializable {
 
     public void setTipoDocumental(TipoDocumental tipoDocumental) {
         this.tipoDocumental = tipoDocumental;
+    }
+
+    @Column(name = "TVALDOC")
+    public Long getValidezDocumento() {
+        return validezDocumento;
+    }
+
+    public void setValidezDocumento(Long validezDocumento) {
+        this.validezDocumento = validezDocumento;
     }
 
 
