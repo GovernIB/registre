@@ -62,6 +62,8 @@ public class Interesado implements Serializable {
     @XmlElement
     private String telefono;
     @XmlElement
+    private String direccionElectronica;
+    @XmlElement
     private Long canal;
 
     @XmlTransient
@@ -163,6 +165,7 @@ public class Interesado implements Serializable {
         this.cp = persona.getCp();
         this.email = persona.getEmail();
         this.telefono = persona.getTelefono();
+        this.direccionElectronica = persona.getDireccionElectronica();
         this.canal = persona.getCanal();
         this.observaciones = persona.getObservaciones();
     }
@@ -203,6 +206,7 @@ public class Interesado implements Serializable {
         this.cp = i.cp;
         this.email = i.email;
         this.telefono = i.telefono;
+        this.direccionElectronica = i.direccionElectronica;
         this.canal = i.canal;
         // Comentada la linea porque provocaba una referencia cíclica
         // this.representado = i.representado == null? null : new Interesado(i.representado);
@@ -302,6 +306,15 @@ public class Interesado implements Serializable {
 
     public void setTelefono(String telefono) {
         this.telefono = telefono;
+    }
+
+    @Column(name = "DIRELECTRONICA", length = 160)
+    public String getDireccionElectronica() {
+        return direccionElectronica;
+    }
+
+    public void setDireccionElectronica(String direccionElectronica) {
+        this.direccionElectronica = direccionElectronica;
     }
 
     @Column(name = "TIPOINTERESADO")
@@ -532,6 +545,9 @@ public class Interesado implements Serializable {
             if (StringUtils.isNotEmpty(getEmail())) {
                 info = info + "Email: " + getEmail() + " <br/>";
             }
+            if (StringUtils.isNotEmpty(getDireccionElectronica())) {
+                info = info + "Dir. elect: " + getEmail() + " <br/>";
+            }
 
         } else if (tipo.equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA)) {
             info = getNombrePersonaJuridica() + " <br/>";
@@ -552,6 +568,9 @@ public class Interesado implements Serializable {
             }
             if (StringUtils.isNotEmpty(getEmail())) {
                 info = info + "Email: " + getEmail() + " <br/>";
+            }
+            if (StringUtils.isNotEmpty(getDireccionElectronica())) {
+                info = info + "Dir. elect: " + getEmail() + " <br/>";
             }
 
         }
