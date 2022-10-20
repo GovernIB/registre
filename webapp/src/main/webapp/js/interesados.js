@@ -404,7 +404,6 @@ function editarInteresado(id){
             $('#direccion').val(result.direccion);
             $('#razonSocial').val(result.razonSocial);
             $('#codigoDire').val(result.codigoDire);
-            $('#direccionElectronica').val(result.direccionElectronica);
             $('#email').val(result.email);
             $('#cp').val(result.cp);
             $('#telefono').val(result.telefono);
@@ -421,6 +420,12 @@ function editarInteresado(id){
             $('#pais\\.id').trigger("chosen:updated");
             $('#provincia\\.id').trigger("chosen:updated");
             $('#localidad\\.id').trigger("chosen:updated");
+
+            //SICRES4
+            $('#receptorNotificaciones').prop('checked', result.receptorNotificaciones);
+            $('#avisoNotificacionSMS').prop('checked', result.avisoNotificacionSMS);
+            $('#avisoCorreoElectronico').prop('checked', result.avisoCorreoElectronico);
+            $('#telefonoMovil').val(result.telefonoMovil);
 
             $('#formularioInteresado').show();
 
@@ -466,7 +471,8 @@ function procesarInteresado() {
 
     var json = { "id": $('#id').val(), "tipo": $('#tipo').val(), "nombre" : $('#nombre').val(), "apellido1" : $('#apellido1').val(), "apellido2" : $('#apellido2').val(),"tipoDocumentoIdentificacion": $('#tipoDocumentoIdentificacion').val(), "documento" : $('#documento').val(),
         "pais" : $('#pais\\.id').val(),"provincia" : $('#provincia\\.id').val(), "localidad" : $('#localidad\\.id').val(), "direccion" : $('#direccion').val(), "razonSocial": $('#razonSocial').val(),"codigoDire": $('#codigoDire').val(), "email" : $('#email').val(), "cp" : $('#cp').val(), "telefono" : $('#telefono').val(),
-        "direccionElectronica":$('#direccionElectronica').val(),"canal":$('#canal').val(), "observaciones":$('#observaciones').val(), "guardarInteresado":$('#guardarInteresado').prop('checked'), "isRepresentante" : $('#isRepresentante').val()};
+        "canal":$('#canal').val(), "observaciones":$('#observaciones').val(), "guardarInteresado":$('#guardarInteresado').prop('checked'), "isRepresentante" : $('#isRepresentante').val(), "receptorNotificaciones" : $('#receptorNotificaciones').prop('checked'),
+        "telefonoMovil" : $('#telefonoMovil').val(), "avisoNotificacionSMS" : $('#avisoNotificacionSMS').prop('checked'), "avisoCorreoElectronico" : $('#avisoCorreoElectronico').prop('checked')};
 
     if($('#isRepresentante').val() == 'true'){ // Si es un representate, le añadimos a que persona representa
 
@@ -563,6 +569,11 @@ function limpiarInteresado(){
     $('#provincia\\.id').trigger("chosen:updated");
     $('#localidad\\.id').trigger("chosen:updated");
 
+    //SICRES4
+    $('#receptorNotificaciones').val('false');
+    $('#avisoNotificacionSMS').val('false');
+    $('#avisoCorreoElectronico').val('false');
+
 }
 
 /**
@@ -576,13 +587,13 @@ function quitarErroresInteresado(){
     quitarError('email');
     quitarError('documento');
     quitarError('direccion');
-    quitarError('direccionElectronica');
     quitarError('tipoDocumentoIdentificacion');
     quitarError('canalNotificacion');
     quitarError('cp');
     quitarError('provincia\\.id');
     quitarError('localidad\\.id');
     quitarError('pais\\.id');
+    quitarError('telefonoMovil');
 }
 
 /**
@@ -1038,8 +1049,6 @@ function actualizarCanalNotificacion() {
         $('#direccion').attr("disabled","disabled");
         $('#cp').val('');
         $('#cp').attr("disabled","disabled");
-        $('#direccionElectronica').val('');
-        $('#direccionElectronica').attr("disabled","disabled");
         resetPais();
 
     }else if($('#canal option:selected').val() == '1'){
@@ -1048,7 +1057,6 @@ function actualizarCanalNotificacion() {
         $('select[name="pais\\.id"]').find('option:contains("España")').attr("selected", true).trigger("chosen:updated");
         actualizarPais();
         $('#cp').removeAttr("disabled","disabled");
-        $('#direccionElectronica').attr("disabled","disabled");
 
     }else  if($('#canal option:selected').val() == '2'){
         $('#direccion').val('');
@@ -1057,15 +1065,11 @@ function actualizarCanalNotificacion() {
         $('#cp').attr("disabled","disabled");
         resetPais();
 
-        $('#direccionElectronica').removeAttr("disabled","disabled");
-
     }else  if($('#canal option:selected').val() == '3'){
         $('#direccion').val('');
         $('#direccion').attr("disabled","disabled");
         $('#cp').val('');
         $('#cp').attr("disabled","disabled");
-        $('#direccionElectronica').val('');
-        $('#direccionElectronica').attr("disabled","disabled");
         resetPais();
     }
 
@@ -1081,29 +1085,23 @@ function actualizarCanalNotificacionInicio() {
         $('#direccion').attr("disabled","disabled");
         $('#cp').val('');
         $('#cp').attr("disabled","disabled");
-        $('#direccionElectronica').val('');
-        $('#direccionElectronica').attr("disabled","disabled");
 
     }else if($('#canal option:selected').val() == '1'){
         $('#direccion').removeAttr("disabled","disabled");
         $('#pais\\.id').removeAttr("disabled", "disabled");
         $('#cp').removeAttr("disabled","disabled");
-        $('#direccionElectronica').attr("disabled","disabled");
 
     }else  if($('#canal option:selected').val() == '2'){
         $('#direccion').val('');
         $('#direccion').attr("disabled","disabled");
         $('#cp').val('');
         $('#cp').attr("disabled","disabled");
-        $('#direccionElectronica').removeAttr("disabled","disabled");
 
     }else  if($('#canal option:selected').val() == '3'){
         $('#direccion').val('');
         $('#direccion').attr("disabled","disabled");
         $('#cp').val('');
         $('#cp').attr("disabled","disabled");
-        $('#direccionElectronica').val('');
-        $('#direccionElectronica').attr("disabled","disabled");
     }
 
 }
@@ -1186,7 +1184,6 @@ function obtenerInteresado(idInteresado){
             $('#direccion').html(result.direccion);
             $('#razonSocial').html(result.razonSocial);
             $('#codigoDire').html(result.codigoDire);
-            $('#direccionElectronica').html(result.direccionElectronica);
             $('#email').html(result.email);
             $('#cp').html(result.cp);
             $('#telefono').html(result.telefono);
@@ -1194,6 +1191,9 @@ function obtenerInteresado(idInteresado){
                 $("#canal").html(tradsinteresado['canalNotificacion.'+result.canal]);
             }
             $('#observaciones').html(result.observaciones);
+
+            //SICRES4
+            $('#telefonoMovil').html(result.telefonoMovil);
 
         }
     });
@@ -1220,7 +1220,6 @@ function limpiarInteresadoDetalle(){
     $('#cp').html('');
     $('#razonSocial').html('');
     $('#codigoDire').html('');
-    $('#direccionElectronica').html('');
     $('#observaciones').html('');
 }
 

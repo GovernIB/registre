@@ -32,7 +32,9 @@ function gestionarRepresentante(idRepresentante,idRepresentado,urlEditar){
 
         var json = { "id": $('#id').val(), "tipo": $('#tipo').val(), "nombre" : $('#nombre').val(), "apellido1" : $('#apellido1').val(), "apellido2" : $('#apellido2').val(),"tipoDocumentoIdentificacion": $('#tipoDocumentoIdentificacion').val(), "documento" : $('#documento').val(),
             "pais" : $('#pais\\.id').val(),"provincia" : $('#provincia\\.id').val(), "localidad" : $('#localidad\\.id').val(), "direccion" : $('#direccion').val(), "razonSocial": $('#razonSocial').val(), "email" : $('#email').val(), "cp" : $('#cp').val(), "telefono" : $('#telefono').val(),
-            "direccionElectronica":$('#direccionElectronica').val(),"canal":$('#canal').val(), "observaciones":$('#observaciones').val(), "guardarInteresado":$('#guardarInteresado').prop('checked')};
+            "canal":$('#canal').val(), "observaciones":$('#observaciones').val(), "guardarInteresado":$('#guardarInteresado').prop('checked'),"receptorNotificaciones" : $('#receptorNotificaciones').prop('checked'),
+            "telefonoMovil" : $('#telefonoMovil').val(), "avisoNotificacionSMS" : $('#avisoNotificacionSMS').prop('checked'), "avisoCorreoElectronico" : $('#avisoCorreoElectronico').prop('checked')};
+
 
         //Obtenemos los datos del Representante a editar
         $.ajax({
@@ -83,6 +85,12 @@ function gestionarRepresentante(idRepresentante,idRepresentado,urlEditar){
                 $('#pais\\.id').trigger("chosen:updated");
                 $('#provincia\\.id').trigger("chosen:updated");
                 $('#localidad\\.id').trigger("chosen:updated");
+
+                //SICRES4
+                $('#receptorNotificaciones').prop('checked', representante.receptorNotificaciones);
+                $('#avisoNotificacionSMS').prop('checked', representante.avisoNotificacionSMS);
+                $('#avisoCorreoElectronico').prop('checked', representante.avisoCorreoElectronico);
+                $('#telefonoMovil').val(representante.telefonoMovil);
 
                 // Activamos o deshabilitamos campos según el TipoPersona escogido
                 tipoInteresadoRepresentante();

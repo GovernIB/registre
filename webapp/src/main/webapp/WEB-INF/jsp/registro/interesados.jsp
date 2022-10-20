@@ -41,6 +41,18 @@
                 </div>
             </c:if>
 
+            <c:if test="${errorInteresadoNotificaciones && param.tipoRegistro == RegwebConstantes.REGISTRO_ENTRADA}">
+                <div class="alert alert-danger alert-dismissable">
+                    <strong><spring:message code="interesado.interesado"/>.</strong> <spring:message code="interesado.registro.obligatorio.notificacion"/>
+                </div>
+            </c:if>
+
+            <c:if test="${errorInteresadoNotificaciones && param.tipoRegistro == RegwebConstantes.REGISTRO_SALIDA}">
+                <div class="alert alert-danger alert-dismissable">
+                    <strong><spring:message code="registroSalida.destinatario"/>.</strong> <spring:message code="destinatario.registro.obligatorio.notificacion"/>
+                </div>
+            </c:if>
+
             <c:if test="${param.tipoRegistro == RegwebConstantes.REGISTRO_ENTRADA}">
                 <div class="form-group col-xs-12">
                     <div class="col-xs-2 pull-left etiqueta_regweb control-label">
