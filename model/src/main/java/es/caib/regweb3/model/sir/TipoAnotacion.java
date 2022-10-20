@@ -8,8 +8,8 @@ public enum TipoAnotacion {
 
     PENDIENTE("01", "Pendiente"),
     ENVIO("02", "Envío"),
-    REENVIO("03", "Reenvío");
-   // RECHAZO("04", "Rechazo");  //TODO SICRES4
+    REENVIO("03", "Reenvío"),
+    RECHAZO("04", "Rechazo");  //@Deprecated SICRES4
 
     private final String value;
     private final String name;
