@@ -623,13 +623,25 @@ public class InteresadoController extends BaseController{
 
             }else{// Edición de un registro, lo eliminanos de la bbdd
                 RegistroDetalle registroDetalle = registroDetalleEjb.findByIdConInteresados(Long.valueOf(idRegistroDetalle));
+                Interesado interesado = interesadoEjb.findById(id);
                 if(registroDetalle != null && registroDetalle.getInteresados().size()>1 ) { // Si solo hay un Interesado, no permitimos eliminarlo.
+                    Boolean hayNotificaciones = false;
+                    for(Interesado inter: registroDetalle.getInteresados()) {
+                        if (inter.getReceptorNotificaciones() && !inter.getId().equals(id)) {
+                            hayNotificaciones = true;
+                            break;
+                        }
+                    }
+                    if(hayNotificaciones) {
+                        interesadoEjb.eliminarInteresadoRegistroDetalle(id, Long.valueOf(idRegistroDetalle));
 
-                    interesadoEjb.eliminarInteresadoRegistroDetalle(id,Long.valueOf(idRegistroDetalle));
+                        // Plug-in de Post-Proceso
+                        interesadoEjb.postProcesoEliminarInteresado(id, Long.valueOf(idRegistroDetalle), tipoRegistro, getEntidadActiva(request).getId());
+                        return true;
+                    }else{
+                        return false;
+                    }
 
-                    // Plug-in de Post-Proceso
-                    interesadoEjb.postProcesoEliminarInteresado(id,Long.valueOf(idRegistroDetalle),tipoRegistro,getEntidadActiva(request).getId());
-                    return true;
                 }
 
             }
