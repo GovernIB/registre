@@ -882,6 +882,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             }
 
             // Validez documento
+            // SICRES4 @Deprecated
             if (anexo.getValidezDocumento() != null && anexo.getValidezDocumento() != -1) {
                 metadades.add(new Metadata("anexo.validezDocumento", I18NLogicUtils.tradueix(loc, "tipoValidezDocumento." + anexo.getValidezDocumento())));
                 metadades.add(new Metadata(MetadataConstants.ENI_ESTADO_ELABORACION, RegwebConstantes.CODIGO_NTI_BY_TIPOVALIDEZDOCUMENTO.get(anexo.getValidezDocumento())));
@@ -989,6 +990,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             // TODO Fallarà en update
             signature.setAttachedDocument(doc == null ? true : false);
 
+            //@Deprecated SICRES4
             if (doc == null) {
                 anexo.setHash(RegwebUtils.obtenerHash(signature.getData()));
             }

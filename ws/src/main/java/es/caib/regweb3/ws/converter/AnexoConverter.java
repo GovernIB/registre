@@ -148,11 +148,13 @@ public class AnexoConverter extends CommonConverter {
          }
          anexo.setTipoDocumental(td);
       }
+      // SICRES4 deprecated
       if(anexoWs.getValidezDocumento()!= null) {
          anexo.setValidezDocumento(getTipoValidezDocumento(anexoWs.getValidezDocumento()));
       }
       if(anexoWs.getTipoDocumento()!= null) {
-         anexo.setTipoDocumento(RegwebConstantes.TIPO_DOCUMENTO_BY_CODIGO_NTI.get(anexoWs.getTipoDocumento()));
+         //anexo.setTipoDocumento(RegwebConstantes.TIPO_DOCUMENTO_BY_CODIGO_NTI.get(anexoWs.getTipoDocumento()));
+         anexo.setTipoDocumento(RegwebConstantes.TIPO_ANEXO_BY_CODIGO_NTI.get(anexoWs.getTipoDocumento()));
       }
       if(StringUtils.isNotEmpty(anexoWs.getObservaciones())){anexo.setObservaciones(anexoWs.getObservaciones());}
       if(anexoWs.getOrigenCiudadanoAdmin()!=null){anexo.setOrigenCiudadanoAdmin(anexoWs.getOrigenCiudadanoAdmin());}
@@ -176,6 +178,7 @@ public class AnexoConverter extends CommonConverter {
          }else{
             anexo.setNombreFichero(anexoWs.getTitulo());
          }
+         //SICRES4 deprecated
          if(anexoWs.getHash() != null){ anexo.setHash(anexoWs.getHash()); }
          anexo.setTamanoFichero(anexoWs.getTamanoFichero());
       }
@@ -197,11 +200,12 @@ public class AnexoConverter extends CommonConverter {
       if(StringUtils.isNotEmpty(anexo.getTitulo())){anexoWs.setTitulo(anexo.getTitulo());}
 
       if(anexo.getTipoDocumental()!= null){anexoWs.setTipoDocumental(anexo.getTipoDocumental().getCodigoNTI());}
+      // SICRES4 deprecated
       if(anexo.getValidezDocumento()!= null) {
          anexoWs.setValidezDocumento(anexo.getValidezDocumento().toString());
       }
       if(anexo.getTipoDocumento()!= null) {
-         anexoWs.setTipoDocumento(RegwebConstantes.CODIGO_SICRES_BY_TIPO_DOCUMENTO.get(anexo.getTipoDocumento()));
+         anexoWs.setTipoDocumento(RegwebConstantes.CODIGO_SICRES_BY_TIPO_ANEXO.get(anexo.getTipoDocumento()));
       }
       if(StringUtils.isNotEmpty(anexo.getObservaciones())){anexoWs.setObservaciones(anexo.getObservaciones());}
       if(anexo.getOrigenCiudadanoAdmin()!=null){anexoWs.setOrigenCiudadanoAdmin(anexo.getOrigenCiudadanoAdmin());}
@@ -222,6 +226,7 @@ public class AnexoConverter extends CommonConverter {
       if(anexo.getConfidencial()){
          anexoWs.setConfidencial(anexo.getConfidencial());
          if(StringUtils.isNotEmpty(anexo.getNombreFichero())){ anexoWs.setNombreFicheroAnexado(anexo.getNombreFichero());}
+         // SICRES4 Deprecated
          if(anexo.getHash() != null){ anexoWs.setHash(anexo.getHash()); }
          anexoWs.setTamanoFichero(anexo.getTamanoFichero());
       }

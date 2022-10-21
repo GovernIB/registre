@@ -387,7 +387,8 @@ public class AnexoScanController extends AnexoController {
         //Fijamos el tipo de documento como "Documento Adjunto".
         anexoForm.getAnexo().setTipoDocumento(RegwebConstantes.TIPO_DOCUMENTO_DOC_ADJUNTO);
         //Fijamos la validez del documento como "COPIA"
-        anexoForm.getAnexo().setValidezDocumento(RegwebConstantes.TIPOVALIDEZDOCUMENTO_COPIA);
+        //TODO ELIMINAR SICRES4
+       // anexoForm.getAnexo().setValidezDocumento(RegwebConstantes.TIPOVALIDEZDOCUMENTO_COPIA);
         //Fecha de escaneo
         anexoForm.getAnexo().setFechaCaptura(documento.getScanDate());
 

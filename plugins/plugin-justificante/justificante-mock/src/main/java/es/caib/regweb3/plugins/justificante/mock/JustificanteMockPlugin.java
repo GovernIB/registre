@@ -634,11 +634,12 @@ public class JustificanteMockPlugin extends AbstractPluginProperties implements 
                     taulaInteresado.addCell(new Paragraph(canalNotif, font8));
                 }
                 // Direccio Electronica Habilitada
-                if(StringUtils.isNotEmpty(interesado.getDireccionElectronica())) {
+                //SICRES4 @Deprecated
+                /*if(StringUtils.isNotEmpty(interesado.getDireccionElectronica())) {
                     i += 1;
                     taulaInteresado.addCell(new Paragraph(tradueixMissatge(locale, "justificante.deh"), font8Bold));
                     taulaInteresado.addCell(new Paragraph(interesado.getDireccionElectronica(), font8));
-                }
+                }*/
                 // Observacions
                 if(StringUtils.isNotEmpty(interesado.getObservaciones())) {
                     i += 1;
@@ -747,11 +748,12 @@ public class JustificanteMockPlugin extends AbstractPluginProperties implements 
                                 taulaRepresentant.addCell(new Paragraph(canalNotifRep, font8));
                             }
                             // Direccio Electronica Habilitada
-                            if(StringUtils.isNotEmpty(representante.getDireccionElectronica())) {
+                            //SICRES4
+                            /*if(StringUtils.isNotEmpty(representante.getDireccionElectronica())) {
                                 i += 1;
                                 taulaRepresentant.addCell(new Paragraph(tradueixMissatge(locale, "justificante.deh"), font8Bold));
                                 taulaRepresentant.addCell(new Paragraph(representante.getDireccionElectronica(), font8));
-                            }
+                            }*/
                             // Observacions
                             if(StringUtils.isNotEmpty(representante.getObservaciones())) {
                                 i += 1;

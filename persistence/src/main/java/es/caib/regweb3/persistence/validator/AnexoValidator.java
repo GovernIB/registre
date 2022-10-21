@@ -36,10 +36,6 @@ public class AnexoValidator<T> extends AbstractRegWebValidator<T> {
         Anexo anexo = (Anexo) __target__;
 
 
-        if (anexo.getValidezDocumento() == null) {
-            rejectValue(errors, "validezDocumento", "error.valor.requerido"); // , "El camp és obligatori"
-        }
-
         if (anexo.getTipoDocumento() == null || anexo.getTipoDocumento().equals((long) -1)) {
             rejectValue(errors, "tipoDocumento", "error.valor.requerido"); // , "El camp és obligatori"
         }

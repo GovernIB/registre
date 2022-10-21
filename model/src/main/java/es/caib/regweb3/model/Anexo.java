@@ -1,7 +1,6 @@
 package es.caib.regweb3.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import es.caib.regweb3.model.utils.ObjetoBasico;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
@@ -52,6 +51,16 @@ public class Anexo implements Serializable {
     private Date fechaCaptura;
     @XmlElement
     private int modoFirma;
+    @XmlElement
+    private byte[] certificado;
+    @XmlElement
+    private String firma;  //Corresponde al campo Firma del Documento del segmento "De_Anexo"( solo viene informado cuando la firma es CSV)
+    @XmlElement
+    private byte[] validacionOCSPCertificado;
+    @XmlElement
+    private byte[] timestamp;
+    @XmlElement
+    private byte[] hash;
     @XmlTransient
     private String custodiaID; // [DocumentCustody {1} uuid del expediente#documento creado]  [ArxiuCaib {2} uuid del documento creado en Arxiu]
     @XmlTransient
@@ -124,6 +133,11 @@ public class Anexo implements Serializable {
         this.origenCiudadanoAdmin = a.origenCiudadanoAdmin;
         this.fechaCaptura = a.fechaCaptura;
         this.modoFirma = a.modoFirma;
+        this.custodiaID = a.custodiaID;
+        this.certificado = a.certificado;
+        this.firma = a.firma;
+        this.validacionOCSPCertificado = a.validacionOCSPCertificado;
+        this.hash = a.hash;
         this.custodiaID = a.custodiaID;
         this.firmaValida = a.firmaValida;
         this.justificante = a.justificante;
@@ -333,6 +347,57 @@ public class Anexo implements Serializable {
 
     public void setModoFirma(int modoFirma) {
         this.modoFirma = modoFirma;
+    }
+
+    @Column(name = "CERTIFICADO", nullable = true, length = 2000)
+    @Type(type = "org.hibernate.type.BinaryType")
+    public byte[] getCertificado() {
+        return certificado;
+    }
+
+    public void setCertificado(byte[] certificado) {
+        this.certificado = certificado;
+    }
+
+    @Lob
+    @Type(type = "org.hibernate.type.TextType")
+    @Column(name = "FIRMA", length = 2147483647)
+    public String getFirma() {
+        return firma;
+    }
+
+    public void setFirma(String firmaDocumento) {
+        this.firma = firmaDocumento;
+    }
+
+    @Column(name = "TIMESTAMP", nullable = true, length = 2000)
+    @Type(type = "org.hibernate.type.BinaryType")
+    public byte[] getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(byte[] timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    @Column(name = "VAL_OCSP_CERTIFICADO", nullable = true, length = 2000)
+    @Type(type = "org.hibernate.type.BinaryType")
+    public byte[] getValidacionOCSPCertificado() {
+        return validacionOCSPCertificado;
+    }
+
+    public void setValidacionOCSPCertificado(byte[] validacionOCSPCertificado) {
+        this.validacionOCSPCertificado = validacionOCSPCertificado;
+    }
+
+    @Column(name = "HASH", length = 2000)
+    @Type(type = "org.hibernate.type.BinaryType")
+    public byte[] getHash() {
+        return hash;
+    }
+
+    public void setHash(byte[] hash) {
+        this.hash = hash;
     }
 
 

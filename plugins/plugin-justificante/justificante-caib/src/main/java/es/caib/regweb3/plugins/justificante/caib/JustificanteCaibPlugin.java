@@ -603,11 +603,12 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
                     taulaInteresado.addCell(new Paragraph(canalNotif, lletraGovern8));
                 }
                 // Direccio Electronica Habilitada
-                if(StringUtils.isNotEmpty(interesado.getDireccionElectronica())) {
+                //SICRES4 @Deprecated
+               /* if(StringUtils.isNotEmpty(interesado.getDireccionElectronica())) {
                     i += 1;
                     taulaInteresado.addCell(new Paragraph(tradueixMissatge(locale, "justificante.deh"), lletraGovern8bold));
                     taulaInteresado.addCell(new Paragraph(interesado.getDireccionElectronica(), lletraGovern8));
-                }
+                }*/
                 // Observacions
                 if(StringUtils.isNotEmpty(interesado.getObservaciones())) {
                     i += 1;
@@ -716,11 +717,12 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
                                 taulaRepresentant.addCell(new Paragraph(canalNotifRep, lletraGovern8));
                             }
                             // Direccio Electronica Habilitada
-                            if(StringUtils.isNotEmpty(representante.getDireccionElectronica())) {
+                            //SICRES4
+                            /*if(StringUtils.isNotEmpty(representante.getDireccionElectronica())) {
                                 i += 1;
                                 taulaRepresentant.addCell(new Paragraph(tradueixMissatge(locale, "justificante.deh"), lletraGovern8bold));
                                 taulaRepresentant.addCell(new Paragraph(representante.getDireccionElectronica(), lletraGovern8));
-                            }
+                            }*/
                             // Observacions
                             if(StringUtils.isNotEmpty(representante.getObservaciones())) {
                                 i += 1;

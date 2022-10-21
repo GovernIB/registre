@@ -854,11 +854,11 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
                         anexo.setNombreFichero(es.caib.regweb3.utils.StringUtils.eliminarCaracteresProhibidosArxiu(de_Anexo.getNombre_Fichero_Anexado()));
                         anexo.setIdentificadorFichero(de_Anexo.getIdentificador_Fichero());
                         anexo.setIdentificadorDocumentoFirmado(de_Anexo.getIdentificador_Documento_Firmado());
-                       /* anexo.setCertificado(Base64.encodeBase64String(de_Anexo.getCertificado()));
+                        anexo.setCertificado(Base64.encodeBase64String(de_Anexo.getCertificado()));
                         anexo.setFirma(Base64.encodeBase64String(de_Anexo.getFirma_Documento()));
                         anexo.setTimestamp(Base64.encodeBase64String(de_Anexo.getTimeStamp()));
                         anexo.setValidacionOCSPCertificado(Base64.encodeBase64String(de_Anexo.getValidacion_OCSP_Certificado()));
-                        anexo.setHash(Base64.encodeBase64String(de_Anexo.getHash()));*/
+                        anexo.setHash(Base64.encodeBase64String(de_Anexo.getHash()));
                         //Si el tipo mime es null, se obtiene de la extensión del fichero
 //                        if (de_Anexo.getTipo_MIME() == null || de_Anexo.getTipo_MIME().isEmpty()) {
 //                            String mime = MimeTypeUtils.getMimeTypeFileName(de_Anexo.getNombre_Fichero_Anexado());
@@ -882,10 +882,10 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
                         anexo.setObservaciones(de_Anexo.getObservaciones());
 
                         //@Deprecated SICRES4
-                       /* String validezDocumento = de_Anexo.getValidez_Documento();
+                        String validezDocumento = de_Anexo.getValidez_Documento();
                         if (StringUtils.isNotBlank(validezDocumento)) {
                             anexo.setValidezDocumento(ValidezDocumento.getValidezDocumentoValue(validezDocumento));
-                        }*/
+                        }
 
                         String tipoDocumento = de_Anexo.getTipo_Documento();
                         if (StringUtils.isNotBlank(tipoDocumento)) {
