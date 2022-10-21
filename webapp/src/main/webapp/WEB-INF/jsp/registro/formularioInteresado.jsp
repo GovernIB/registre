@@ -118,6 +118,16 @@
 
                         <div class="form-group col-xs-6 senseMargeLat">
                             <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                <label for="telefono" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.telefono.movil.interesado"/>" data-toggle="popover"><spring:message code="persona.movil"/></label>
+                            </div>
+                            <div class="col-xs-8">
+                                <input id="telefonoMovil" name="telefonoMovil" class="form-control" tabindex="8" type="text" value="" maxlength="20"/>
+                                <span id="telefonoMovilError"></span>
+                            </div>
+                        </div>
+
+                       <%-- <div class="form-group col-xs-6 senseMargeLat">
+                            <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
                                 <label for="canal" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.canal.interesado"/>" data-toggle="popover"><spring:message code="persona.canal"/></label>
                             </div>
                             <div class="col-xs-8">
@@ -129,7 +139,7 @@
                                 </select>
                                 <span id="canalNotificacionError"></span>
                             </div>
-                        </div>
+                        </div>--%>
                     </div>
 
                     <div class="col-xs-12">
@@ -197,8 +207,23 @@
                             </div>
                         </div>
 
-
                         <div class="form-group col-xs-6 senseMargeLat">
+                            <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                <label for="canal" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.canal.interesado"/>" data-toggle="popover"><spring:message code="persona.canal"/></label>
+                            </div>
+                            <div class="col-xs-8">
+                                <select id="canal" name="canal" class="chosen-select" tabindex="14">
+                                    <option value="-1">...</option>
+                                    <c:forEach items="${canalesNotificacion}" var="canalNotificacion">
+                                        <option value="${canalNotificacion}"><spring:message code="canalNotificacion.${canalNotificacion}"/></option>
+                                    </c:forEach>
+                                </select>
+                                <span id="canalNotificacionError"></span>
+                            </div>
+                        </div>
+
+
+                       <%-- <div class="form-group col-xs-6 senseMargeLat">
                             <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
                                 <label for="direccionElectronica" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.direccionElectronica.interesado"/>" data-toggle="popover"><spring:message code="persona.direccionElectronica"/></label>
                             </div>
@@ -206,7 +231,7 @@
                                 <input id="direccionElectronica" name="direccionElectronica" class="form-control" tabindex="15" type="text" value="" maxlength="160" disabled="disabled"/>
                                 <span id="direccionElectronicaError"></span>
                             </div>
-                        </div>
+                        </div>--%>
                     </div>
 
                     <div class="col-xs-12">
@@ -239,6 +264,15 @@
                                 <textarea id="observaciones" name="observaciones" class="form-control" tabindex="16" rows="2" maxlength="160"></textarea>
                             </div>
                         </div>
+
+                        <div class="form-group col-xs-6 senseMargeLat">
+                            <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                <label for="receptorNotificaciones" data-content="<spring:message code="registro.ayuda.interesado.receptor"/>"><spring:message code="persona.receptor.notificaciones"/></label>
+                            </div>
+                            <div class="col-xs-8">
+                                <input type="checkbox" id="receptorNotificaciones"  />
+                            </div>
+                        </div>
                     </div>
 
                     <c:if test="${loginInfo.entidadActiva.configuracionPersona == 3}">
@@ -253,6 +287,27 @@
                             </div>
                         </div>
                     </c:if>
+
+                    <div class="col-xs-12">
+                        <div class="form-group col-xs-6 senseMargeLat">
+                            <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                <label for="avisoNotificacionSMS" data-content="<spring:message code="registro.ayuda.interesado.sms"/>"><spring:message code="persona.notificacion.sms"/></label>
+                            </div>
+                            <div class="col-xs-8">
+                                <input type="checkbox" id="avisoNotificacionSMS"  />
+                            </div>
+                        </div>
+
+                        <div class="form-group col-xs-6 senseMargeLat">
+                            <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                <label for="avisoCorreoElectronico" data-content="<spring:message code="registro.ayuda.interesado.email"/>"><spring:message code="persona.notificacion.email"/></label>
+                            </div>
+                            <div class="col-xs-8">
+                                <input type="checkbox" id="avisoCorreoElectronico"  />
+                            </div>
+                        </div>
+                    </div>
+
 
 
                     <div class="clearfix"></div>
