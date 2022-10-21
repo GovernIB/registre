@@ -854,11 +854,11 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
                         anexo.setNombreFichero(es.caib.regweb3.utils.StringUtils.eliminarCaracteresProhibidosArxiu(de_Anexo.getNombre_Fichero_Anexado()));
                         anexo.setIdentificadorFichero(de_Anexo.getIdentificador_Fichero());
                         anexo.setIdentificadorDocumentoFirmado(de_Anexo.getIdentificador_Documento_Firmado());
-                        anexo.setCertificado(Base64.encodeBase64String(de_Anexo.getCertificado()));
+                       /* anexo.setCertificado(Base64.encodeBase64String(de_Anexo.getCertificado()));
                         anexo.setFirma(Base64.encodeBase64String(de_Anexo.getFirma_Documento()));
                         anexo.setTimestamp(Base64.encodeBase64String(de_Anexo.getTimeStamp()));
                         anexo.setValidacionOCSPCertificado(Base64.encodeBase64String(de_Anexo.getValidacion_OCSP_Certificado()));
-                        anexo.setHash(Base64.encodeBase64String(de_Anexo.getHash()));
+                        anexo.setHash(Base64.encodeBase64String(de_Anexo.getHash()));*/
                         //Si el tipo mime es null, se obtiene de la extensión del fichero
 //                        if (de_Anexo.getTipo_MIME() == null || de_Anexo.getTipo_MIME().isEmpty()) {
 //                            String mime = MimeTypeUtils.getMimeTypeFileName(de_Anexo.getNombre_Fichero_Anexado());
@@ -881,10 +881,11 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
 
                         anexo.setObservaciones(de_Anexo.getObservaciones());
 
-                        String validezDocumento = de_Anexo.getValidez_Documento();
+                        //@Deprecated SICRES4
+                       /* String validezDocumento = de_Anexo.getValidez_Documento();
                         if (StringUtils.isNotBlank(validezDocumento)) {
                             anexo.setValidezDocumento(ValidezDocumento.getValidezDocumentoValue(validezDocumento));
-                        }
+                        }*/
 
                         String tipoDocumento = de_Anexo.getTipo_Documento();
                         if (StringUtils.isNotBlank(tipoDocumento)) {
@@ -1214,6 +1215,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
             interesadoSir.setTelefonoInteresado(interesado.getTelefono());
         }
 
+        //SICRES4 @Deprecated
         if (StringUtils.isNotEmpty(interesado.getDireccionElectronica())) {
             interesadoSir.setDireccionElectronicaHabilitadaInteresado(interesado.getDireccionElectronica());
         }
@@ -1306,6 +1308,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
                 interesadoSir.setTelefonoRepresentante(representante.getTelefono());
             }
 
+            //SICRES4 @Deprecated
             if (StringUtils.isNotEmpty(representante.getDireccionElectronica())) {
                 interesadoSir.setDireccionElectronicaHabilitadaRepresentante(representante.getDireccionElectronica());
             }
@@ -1327,6 +1330,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
      * @return
      */
     private List<AnexoSir> transformarAnexosSir(List<AnexoFull> anexosFull, String identificadorIntercambio) throws Exception{
+        //REVISAR crear anexoSir SICRES4
 
         List<AnexoSir> anexosSir = new ArrayList<AnexoSir>();
         int secuencia = 0;
@@ -1346,9 +1350,10 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
                     String identificador_fichero = generateIdentificadorFichero(identificadorIntercambio, secuencia, sc.getName());
                     secuencia++;
 
+                    anexoSir= null;
                     anexoSir = crearAnexoSir(sc.getName(),identificador_fichero,
                             CODIGO_SICRES_BY_TIPOVALIDEZDOCUMENTO.get(anexo.getValidezDocumento()),
-                            CODIGO_SICRES_BY_TIPO_DOCUMENTO.get(anexo.getTipoDocumento()),anexo.getCertificado(),
+                            CODIGO_SICRES_BY_TIPO_ANEXO.get(anexo.getTipoDocumento()),anexo.getCertificado(),
                             anexo.getFirma(),anexo.getTimestamp(), anexo.getValidacionOCSPCertificado(),
                             anexo.getHash(),sc.getMime(),sc.getData(),identificador_fichero,
                             anexo.getObservaciones());
@@ -1366,9 +1371,10 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
                     identificador_fichero = generateIdentificadorFichero(identificadorIntercambio, secuencia, dc.getName());
                     secuencia++;
 
+                    anexoSir= null;
                     anexoSir = crearAnexoSir(dc.getName(),identificador_fichero,
                             CODIGO_SICRES_BY_TIPOVALIDEZDOCUMENTO.get(anexo.getValidezDocumento()),
-                            CODIGO_SICRES_BY_TIPO_DOCUMENTO.get(anexo.getTipoDocumento()),anexo.getCertificado(),
+                            CODIGO_SICRES_BY_TIPO_ANEXO.get(anexo.getTipoDocumento()),anexo.getCertificado(),
                             anexo.getFirma(),anexo.getTimestamp(), anexo.getValidacionOCSPCertificado(),
                             anexo.getHash(),dc.getMime(),dc.getData(),null,
                             anexo.getObservaciones());
@@ -1382,9 +1388,10 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
                     String identificador_fichero_FIRMA = generateIdentificadorFichero(identificadorIntercambio, secuencia, sc.getName());
                     secuencia++;
 
+                    anexoSir=null;
                     anexoSir = crearAnexoSir(sc.getName(),identificador_fichero_FIRMA,
                             CODIGO_SICRES_BY_TIPOVALIDEZDOCUMENTO.get(anexo.getValidezDocumento()),
-                            CODIGO_SICRES_BY_TIPO_DOCUMENTO.get(TIPO_DOCUMENTO_FICHERO_TECNICO), null,
+                            CODIGO_SICRES_BY_TIPO_ANEXO.get(TIPO_DOCUMENTO_FICHERO_TECNICO), null,
                             null,anexo.getTimestamp(), null,
                             anexo.getHash(),sc.getMime(),sc.getData(),identificador_fichero,
                             anexo.getObservaciones());
@@ -1438,11 +1445,13 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
 
         anexoSir.setIdentificadorFichero(identificadorFichero);
 
-        if(validezDocumento != null){
+        //TODO ELIMINAR SICRES4
+       /* if(validezDocumento != null){
             anexoSir.setValidezDocumento(validezDocumento);
-        }
+        }*/
         anexoSir.setTipoDocumento(tipoDocumento);
-        if(certificado != null){
+        //TODO ELIMINAR SICRES4
+        /*if(certificado != null){
             anexoSir.setCertificado(Base64.encodeBase64String(certificado));
         }
         if(firma != null){
@@ -1454,7 +1463,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         if(validacionOCSPCertificado != null){
             anexoSir.setValidacionOCSPCertificado(Base64.encodeBase64String(validacionOCSPCertificado));
         }
-        anexoSir.setHash(Base64.encodeBase64String(hash));
+        anexoSir.setHash(Base64.encodeBase64String(hash));*/
         if(tipoMime != null){
             if(tipoMime.equals("text/xml")){ //SICRES3 obliga a que el mime de un xml sea application/xml
                 anexoSir.setTipoMIME("application/xml");
@@ -1876,9 +1885,10 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         if (StringUtils.isNotEmpty(interesadoSir.getTelefonoInteresado())) {
             interesado.setTelefono(interesadoSir.getTelefonoInteresado());
         }
-        if (StringUtils.isNotEmpty(interesadoSir.getDireccionElectronicaHabilitadaInteresado())) {
+        //SICRES4 TODO ELIMINAR
+       /* if (StringUtils.isNotEmpty(interesadoSir.getDireccionElectronicaHabilitadaInteresado())) {
             interesado.setDireccionElectronica(interesadoSir.getDireccionElectronicaHabilitadaInteresado());
-        }
+        }*/
         if (interesadoSir.getCanalPreferenteComunicacionInteresado() != null) {
             interesado.setCanal(RegwebConstantes.CANALNOTIFICACION_BY_CODIGO.get(interesadoSir.getCanalPreferenteComunicacionInteresado()));
         }
@@ -1961,9 +1971,10 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         if (StringUtils.isNotEmpty(representanteSir.getTelefonoRepresentante())) {
             representante.setTelefono(representanteSir.getTelefonoRepresentante());
         }
-        if (StringUtils.isNotEmpty(representanteSir.getDireccionElectronicaHabilitadaRepresentante())) {
+        //SICRES4 @Deprecated
+        /*if (StringUtils.isNotEmpty(representanteSir.getDireccionElectronicaHabilitadaRepresentante())) {
             representante.setDireccionElectronica(representanteSir.getDireccionElectronicaHabilitadaRepresentante());
-        }
+        }*/
         if (representanteSir.getCanalPreferenteComunicacionRepresentante() != null) {
             representante.setCanal(RegwebConstantes.CANALNOTIFICACION_BY_CODIGO.get(representanteSir.getCanalPreferenteComunicacionRepresentante()));
         }
@@ -2035,7 +2046,8 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
             anexo.setTitulo(es.caib.regweb3.utils.StringUtils.eliminarCaracteresProhibidosArxiu(anexoSir.getNombreFichero()));
 
             // Validez Documento
-            if (anexoSir.getValidezDocumento() != null) {
+            //TODO ELIMINAR SICRES4
+          /*  if (anexoSir.getValidezDocumento() != null) {
                 //Transformamos de copia compulsada a copia_original = autèntica
                 if(Long.valueOf(anexoSir.getValidezDocumento()).equals(TIPOVALIDEZDOCUMENTO_COPIA_COMPULSADA)){
                     anexo.setValidezDocumento(TIPOVALIDEZDOCUMENTO_COPIA_ORIGINAL);
@@ -2049,7 +2061,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
                 }else{ //Si no hay valor, por defecto "Copia"
                     anexo.setValidezDocumento(TIPOVALIDEZDOCUMENTO_COPIA);
                 }
-            }
+            }*/
 
             // Tipo Documento
             if (anexoSir.getTipoDocumento() != null) {
@@ -2077,7 +2089,8 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
                 anexo.setTipoDocumental(tipoDocumentalEjb.findByCodigoEntidad(camposNTI.getIdTipoDocumental(), idEntidad));
             }
 
-            if(anexoSir.getCertificado()!= null) {
+            //TODO ELIMINAR SICRES4
+            /*if(anexoSir.getCertificado()!= null) {
                 anexo.setCertificado(anexoSir.getCertificado().getBytes());
             }
 
@@ -2095,7 +2108,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
 
             if(anexoSir.getHash()!= null){
                 anexo.setHash(anexoSir.getHash().getBytes());
-            }
+            }*/
 
             DocumentCustody dc;
             SignatureCustody sc;
@@ -2130,14 +2143,15 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
 
                 /** PARCHE GREG PROBLEMA: El campo  firma que se informa es más grande que 255 y al intentar hacer el insert peta por superar longitud
                  * De momento cortamos el campo, pero se debe informar a MADRID de este caso concreto */
-                if (anexoSir.getFirma() != null) { // Anexo con Firma CSV
+                //TODO ADAPTAR A SICRES4 LIBSIR
+                /*if (anexoSir.getFirma() != null) { // Anexo con Firma CSV
                     if(anexoSir.getFirma().length() >= 255) {
                         anexo.setCsv(null);
                     }else{
                         anexo.setCsv(anexoSir.getFirma());
                     }
                     //TODO Metadada a custodia pel csv.
-                }
+                }*/
                 dc = getDocumentCustody(anexoSir);
                 anexoFull.setAnexo(anexo);
                 anexoFull.setDocumentoCustody(dc);
