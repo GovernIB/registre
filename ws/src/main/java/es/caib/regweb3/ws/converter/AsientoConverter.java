@@ -168,6 +168,7 @@ public class AsientoConverter extends CommonConverter {
         fileInfo.setFileID(anexoFull.getAnexo().getId());
         fileInfo.setName(anexoFull.getAnexo().getTitulo());
         fileInfo.setConfidencial(anexoFull.getAnexo().getConfidencial());
+        //Deprecated SICRES4
         fileInfo.setHash(anexoFull.getAnexo().getHash());
         if(anexoFull.getAnexo().getValidezDocumento()!=null){
             fileInfo.setValidezDocumento(anexoFull.getAnexo().getValidezDocumento().toString());

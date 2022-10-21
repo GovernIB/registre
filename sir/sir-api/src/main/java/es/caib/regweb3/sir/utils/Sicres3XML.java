@@ -493,6 +493,7 @@ public class Sicres3XML {
             }
 
             // Validar el campo validez de documento
+            //SICRES4 Deprecated
             if (StringUtils.isNotBlank(anexo.getValidez_Documento())) {
                 Assert.notNull(ValidezDocumento.getValidezDocumento(anexo.getValidez_Documento()),
                         "El campo 'ValidezDocumento' del SegmentoAnexos, no es valido [" + anexo.getValidez_Documento() + "]");
@@ -501,6 +502,7 @@ public class Sicres3XML {
             // Validar el hash del documento
             // Nota: no se comprueba el código hash de los documentos porque no
             // se especifica con qué algoritmo está generado.
+            //SICRES4 Deprecated
             Assert.isTrue(!ArrayUtils.isEmpty(anexo.getHash()), "El campo 'Hash' del SegmentoAnexos, no puede estar vacio.");
 
             // Validar el contenido del anexo
@@ -1034,6 +1036,7 @@ public class Sicres3XML {
 
 
             // Validez_Documento
+            //TODO ELIMINAR SICRES4
             elem = rootElement.addElement("Validez_Documento");
             if (anexoSir.getValidezDocumento() == null) {
                 elem.addCDATA(null);
@@ -1049,6 +1052,7 @@ public class Sicres3XML {
                 elem.addCDATA(anexoSir.getTipoDocumento());
             }
 
+            // SICRES4 Deprecated
             // Certificado
             if (anexoSir.getCertificado() != null) {
                 elem = rootElement.addElement("Certificado");
@@ -1098,6 +1102,7 @@ public class Sicres3XML {
 
             //Identificador Fichero Firmado
             elem = rootElement.addElement("Identificador_Documento_Firmado");
+            //TODO REVISAR QUE PASA CON ESTE CAMPO, SICRES4 LO ELIMINA y LIBSIR NO
             elem.addCDATA(anexoSir.getIdentificadorDocumentoFirmado());
 
             // Observaciones
@@ -1448,10 +1453,11 @@ public class Sicres3XML {
                         elem.addCDATA(interesado.getTelefono());
                     }
                     // Direccion_Electronica_Habilitada_Interesado
-                    if (StringUtils.isNotEmpty(interesado.getDireccionElectronica())) {
+                    //SICRES4
+                   /* if (StringUtils.isNotEmpty(interesado.getDireccionElectronica())) {
                         elem = rootElement.addElement("Direccion_Electronica_Habilitada_Interesado");
                         elem.addCDATA(interesado.getDireccionElectronica());
-                    }
+                    }*/
                     // Canal_Preferente_Comunicacion_Interesado
                     if (interesado.getCanal() != null) {
                         elem = rootElement.addElement("Canal_Preferente_Comunicacion_Interesado");
@@ -1531,10 +1537,11 @@ public class Sicres3XML {
                         elem.addCDATA(representante.getTelefono());
                     }
                     // Direccion_Electronica_Habilitada_Representante
-                    if (StringUtils.isNotEmpty(representante.getDireccionElectronica())) {
+                    //SICRES4 //TODO ELIMINAR
+                   /* if (StringUtils.isNotEmpty(representante.getDireccionElectronica())) {
                         elem = rootElement.addElement("Direccion_Electronica_Habilitada_Representante");
                         elem.addCDATA(representante.getDireccionElectronica());
-                    }
+                    }*/
                     // Canal_Preferente_Comunicacion_Representante
                     if (representante.getCanal() != null) {
                         elem = rootElement.addElement("Canal_Preferente_Comunicacion_Representante");
@@ -1621,8 +1628,9 @@ public class Sicres3XML {
                     String identificadorFichero = generateIdentificadorFichero(registroDetalle.getIdentificadorIntercambio(), secuencia, sc.getName());
                     secuencia++;
 
+                    //TODO MODIFICAR ESTE MÉTODO PARA ADAPTARLO A SICRES4
                     crearAnexo(rootNode, sc.getName(),identificadorFichero, CODIGO_SICRES_BY_TIPOVALIDEZDOCUMENTO.get(anexo.getValidezDocumento()),
-                            CODIGO_SICRES_BY_TIPO_DOCUMENTO.get(anexo.getTipoDocumento()),anexo.getCertificado(),anexo.getFirma(),anexo.getTimestamp(), anexo.getValidacionOCSPCertificado(),
+                            CODIGO_SICRES_BY_TIPO_ANEXO.get(anexo.getTipoDocumento()),anexo.getCertificado(),anexo.getFirma(),anexo.getTimestamp(), anexo.getValidacionOCSPCertificado(),
                             anexo.getHash(),sc.getMime(),sc.getData(), identificadorFichero, anexo.getObservaciones());
 
                     break;
@@ -1635,7 +1643,7 @@ public class Sicres3XML {
                     secuencia++;
 
                     crearAnexo(rootNode, dc.getName(),identificadorFichero, CODIGO_SICRES_BY_TIPOVALIDEZDOCUMENTO.get(anexo.getValidezDocumento()),
-                            CODIGO_SICRES_BY_TIPO_DOCUMENTO.get(anexo.getTipoDocumento()),anexo.getCertificado(),anexo.getFirma(),anexo.getTimestamp(), anexo.getValidacionOCSPCertificado(),
+                            CODIGO_SICRES_BY_TIPO_ANEXO.get(anexo.getTipoDocumento()),anexo.getCertificado(),anexo.getFirma(),anexo.getTimestamp(), anexo.getValidacionOCSPCertificado(),
                             anexo.getHash(),dc.getMime(),dc.getData(), null,anexo.getObservaciones());
 
                     SignatureCustody scFirma = anexoFull.getSignatureCustody();
@@ -1643,7 +1651,7 @@ public class Sicres3XML {
                     secuencia++;
 
                     crearAnexo(rootNode, scFirma.getName(),identificadorFicheroFirmado, CODIGO_SICRES_BY_TIPOVALIDEZDOCUMENTO.get(anexo.getValidezDocumento()),
-                            CODIGO_SICRES_BY_TIPO_DOCUMENTO.get(anexo.getTipoDocumento()),anexo.getCertificado(),anexo.getFirma(),anexo.getTimestamp(), anexo.getValidacionOCSPCertificado(),
+                            CODIGO_SICRES_BY_TIPO_ANEXO.get(anexo.getTipoDocumento()),anexo.getCertificado(),anexo.getFirma(),anexo.getTimestamp(), anexo.getValidacionOCSPCertificado(),
                             anexo.getHash(),scFirma.getMime(),scFirma.getData(), identificadorFichero, anexo.getObservaciones());
                     break;
 
@@ -1674,6 +1682,7 @@ public class Sicres3XML {
 
 
         // Validez_Documento
+        //TODO ELIMINAR SICRES4
         elem = rootElement.addElement("Validez_Documento");
         if (validezDocumento == null) {
             elem.addCDATA(null);
@@ -1690,30 +1699,35 @@ public class Sicres3XML {
         }
 
         // Certificado
+        // SICRES4 deprecated
         if (certificado != null) {
             elem = rootElement.addElement("Certificado");
             elem.addCDATA(getBase64String(certificado));
         }
 
         //Firma documento (propiedad Firma Documento del segmento)
+        // SICRES4 deprecated
         if (firma != null) {
             elem = rootElement.addElement("Firma_Documento");
             elem.addCDATA(firma);
         }
 
         // TimeStamp
+        // SICRES4 deprecated
         if (timeStamp != null) {
             elem = rootElement.addElement("TimeStamp");
             elem.addCDATA(getBase64String(timeStamp));
         }
 
         // Validacion_OCSP_Certificado
+        // SICRES4 deprecated
         if (validacionOCSPCertificado != null) {
             elem = rootElement.addElement("Validacion_OCSP_Certificado");
             elem.addCDATA(getBase64String(validacionOCSPCertificado));
         }
 
         // Hash
+        // SICRES4 deprecated
         if (hash != null) {
             elem = rootElement.addElement("Hash");
             elem.addCDATA(org.apache.commons.codec.binary.StringUtils.newStringUtf8(hash));
