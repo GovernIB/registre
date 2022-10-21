@@ -123,9 +123,9 @@ public class PersonaValidator<T> extends AbstractRegWebValidator<T> {
 
                 rejectIfEmptyOrWhitespace(errors, __target__, "direccionElectronica", "error.valor.requerido");
 
-            } else if (persona.getCanal().equals(RegwebConstantes.CANAL_COMPARECENCIA_ELECTRONICA)) {
+            } /*else if (persona.getCanal().equals(RegwebConstantes.CANAL_COMPARECENCIA_ELECTRONICA)) {
 
-            }
+            }*/
 
         }
 

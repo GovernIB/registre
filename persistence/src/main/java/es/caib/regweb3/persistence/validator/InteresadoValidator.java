@@ -91,61 +91,22 @@ public class InteresadoValidator<T> extends AbstractRegWebValidator<T> {
             //rejectIfEmptyOrWhitespace(errors, __target__, "canal", "error.valor.requerido","El camp és obligatori");
         } else {
 
-
             if (interesado.getCanal().equals(RegwebConstantes.CANAL_DIRECCION_POSTAL)) {
-
-                rejectIfEmptyOrWhitespace(errors, __target__, "direccion", "error.valor.requerido");
-
                 if (interesado.getPais() == null || interesado.getPais().getId() == null || interesado.getPais().getId() == -1) {
                     rejectValue(errors, "pais.id", "error.valor.requerido");
-                } else {
-
-                    try {
-                        CatPais pais = catPaisEjb.findById(interesado.getPais().getId());
-
-                        // Validaciones si el país seleccionado es ESPAÑA
-                        if (pais.getCodigoPais().equals(RegwebConstantes.PAIS_ESPAÑA)) {
-
-                            // Si hay Provincia, es obligatoria la Localidad
-                            if (interesado.getProvincia() != null && interesado.getProvincia().getId() != -1) {
-
-                                if (interesado.getLocalidad() == null || interesado.getProvincia().getId() == -1) {
-                                    rejectValue(errors, "localidad.id", "error.valor.requerido");
-                                }
-
-                            } else {
-                                rejectIfEmptyOrWhitespace(errors, __target__, "cp", "error.valor.requerido");
-                            }
-
-                            // Si no hay CP, es obligatoria la Provincia y Municipio
-                            if (StringUtils.isEmpty(interesado.getCp())) {
-
-                                if (interesado.getProvincia() == null || interesado.getProvincia().getId() == -1) {
-                                    rejectValue(errors, "provincia.id", "error.valor.requerido");
-
-                                } else { // Comprobamos la Localidad
-
-                                    if (interesado.getLocalidad() == null || interesado.getProvincia().getId() == -1) {
-                                        rejectValue(errors, "localidad.id", "error.valor.requerido");
-                                    }
-                                }
-                            }
-                        }else{
-                            interesado.setProvincia(null);
-                            interesado.setLocalidad(null);
-                        }
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
                 }
-
-            } else if (interesado.getCanal().equals(RegwebConstantes.CANAL_DIRECCION_ELECTRONICA)) {
-
-                rejectIfEmptyOrWhitespace(errors, __target__, "direccionElectronica", "error.valor.requerido");
-
-            } else if (interesado.getCanal().equals(RegwebConstantes.CANAL_COMPARECENCIA_ELECTRONICA)) {
-
+                if (interesado.getProvincia() == null || interesado.getProvincia().getId() == null || interesado.getProvincia().getId() == -1) {
+                    rejectValue(errors, "provincia.id", "error.valor.requerido");
+                }
+                if (interesado.getLocalidad() == null || interesado.getLocalidad().getId() == null || interesado.getLocalidad().getId() == -1) {
+                    rejectValue(errors, "localidad.id", "error.valor.requerido");
+                }
+                if (StringUtils.isEmpty(interesado.getCp())) {
+                    rejectIfEmptyOrWhitespace(errors, __target__, "cp", "error.valor.requerido");
+                }
+                if (StringUtils.isEmpty(interesado.getDireccion())) {
+                    rejectIfEmptyOrWhitespace(errors, __target__, "direccion", "error.valor.requerido");
+                }
             }
         }
 
@@ -164,29 +125,16 @@ public class InteresadoValidator<T> extends AbstractRegWebValidator<T> {
         }
 
 
-        // DOCUMENTO (DNI, NIE, PASAPORTE)
+        //SICRES4
         Long tipoDocumento = interesado.getTipoDocumentoIdentificacion();
-
-        if(tipoDocumento != null){
-            // Si TipoDocumento = CIF -> RazonSocial obligatoria
+        if(tipoDocumento == null){
+            rejectValue(errors, "tipoDocumentoIdentificacion", "error.valor.requerido");
+        }else{
             if(tipoDocumento == RegwebConstantes.TIPODOCUMENTOID_CIF_ID && isNullOrEmpty(interesado.getRazonSocial())){
                 rejectValue(errors, "razonSocial", "error.valor.requerido");
             }
-
-           /* // Si TipoDocumento = NIF -> Documento es obligatorio
-            if(tipoDocumento == RegwebConstantes.TIPODOCUMENTOID_NIF_ID && isNullOrEmpty(interesado.getDocumento())){
-                rejectValue(errors, "documento", "error.valor.requerido");
-            }*/
-
             rejectIfEmptyOrWhitespace(errors, __target__, "documento", "error.valor.requerido");
-        }/*else{
-            if (interesado.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_FISICA)) {
-                log.info("Entro en tipo persona fisica");
-                rejectValue(errors, "tipoDocumentoIdentificacion", "error.valor.requerido");
-                rejectValue(errors, "documento", "error.valor.requerido");
-            }
-
-        }*/
+        }
 
 
         if(tipoDocumento != null && StringUtils.isNotEmpty(interesado.getDocumento())) {
@@ -242,15 +190,17 @@ public class InteresadoValidator<T> extends AbstractRegWebValidator<T> {
         if (!isNullOrEmpty(interesado.getEmail()) && interesado.getEmail().length() > 160) {
             rejectValue(errors, "email", "error.valor.maxlenght");
         }
+        //SICRES4
+        if(interesado.getAvisoCorreoElectronico() && isNullOrEmpty(interesado.getEmail())){
+            rejectValue(errors, "email", "error.valor.requerido");
+        }
 
         //TELÉFONO
         if (!isNullOrEmpty(interesado.getTelefono()) && interesado.getTelefono().length() > 20) {
             rejectValue(errors, "telefono", "error.valor.maxlenght");
         }
-
-        //DireccionElectronica
-        if (!isNullOrEmpty(interesado.getDireccionElectronica()) && interesado.getDireccionElectronica().length() > 160) {
-            rejectValue(errors, "direccionElectronica", "error.valor.maxlenght");
+        if(interesado.getAvisoNotificacionSMS() && isNullOrEmpty(interesado.getTelefonoMovil())){
+            rejectValue(errors, "telefonoMovil", "error.valor.requerido");
         }
 
         //RAZÓN SOCIAL
