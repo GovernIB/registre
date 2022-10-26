@@ -14,7 +14,7 @@ import java.io.Serializable;
  * 02/09/2022
  */
 @Entity
-@SequenceGenerator(name = "generator", sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
+@SequenceGenerator(name = "generator", sequenceName = "RWE_MTD_SEQ", allocationSize = 1)
 @Table(name = "RWE_METADATO")
 @XmlRootElement(name = "metadato")
 @XmlAccessorType(XmlAccessType.FIELD)
