@@ -632,7 +632,8 @@ public class ArxiuCaibUtils {
         }
 
         // Metadata Estado elaboración
-        switch (anexoFull.getAnexo().getValidezDocumento().intValue()) {
+        //SICRES4 Deprecated
+       /* switch (anexoFull.getAnexo().getValidezDocumento().intValue()) {
 
             case 1: // Tipo Validez Doc: Copia
                 metadades.setEstatElaboracio(DocumentEstatElaboracio.ALTRES);
@@ -646,7 +647,7 @@ public class ArxiuCaibUtils {
             case 4: // Tipo Validez Doc: Original
                 metadades.setEstatElaboracio(DocumentEstatElaboracio.ORIGINAL);
                 break;
-        }
+        }*/
 
         metadades.setTipusDocumental(DocumentTipus.toEnum(anexoFull.getAnexo().getTipoDocumental().getCodigoNTI()));
 

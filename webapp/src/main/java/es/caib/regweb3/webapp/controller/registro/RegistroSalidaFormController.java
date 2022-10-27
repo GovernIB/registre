@@ -147,17 +147,26 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
         // Comprobamos si el usuario ha añadido algún interesado
         List<Interesado> interesadosSesion = (List<Interesado>) session.getAttribute(RegwebConstantes.SESSION_INTERESADOS_SALIDA);
         Boolean errorInteresado = true;
-
-        // Interesados obligatorio
+        Boolean errorInteresadoNotificaciones = true;
         if(interesadosSesion != null && interesadosSesion.size() > 0){
             errorInteresado = false;
+            for(Interesado inter: interesadosSesion){
+                if(inter.getReceptorNotificaciones()){
+                    errorInteresadoNotificaciones = false;
+                    break;
+                }
+            }
         }
 
-        if (result.hasErrors() || errorInteresado) { // Si hay errores volvemos a la vista del formulario
+        if (result.hasErrors() || errorInteresado || errorInteresadoNotificaciones) { // Si hay errores volvemos a la vista del formulario
 
             // Si no hay ningún interesado, generamos un error.
             if(errorInteresado){
                 model.addAttribute("errorInteresado", errorInteresado);
+            }
+
+            if(errorInteresadoNotificaciones){
+                model.addAttribute("errorInteresadoNotificaciones", errorInteresadoNotificaciones);
             }
 
             LinkedHashSet<Oficina> oficinasOrigen;
