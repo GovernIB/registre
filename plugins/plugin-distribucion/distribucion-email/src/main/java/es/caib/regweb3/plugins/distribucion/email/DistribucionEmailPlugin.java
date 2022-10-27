@@ -83,6 +83,7 @@ public class DistribucionEmailPlugin extends AbstractPluginProperties implements
                    String cp = interesado.getCp() != null ? interesado.getCp() : "";
                    String email = interesado.getEmail() != null ? interesado.getEmail() : "";
                    String telefono = interesado.getTelefono() != null ? interesado.getTelefono() : "";
+                   //SICRES4 @Deprecated
                    String direccionElectronica = interesado.getDireccionElectronica() != null ? interesado.getDireccionElectronica() : "";
                    String canal = interesado.getCanal() != null ? interesado.getCanal().toString() : "";
                    String observacionesInteresado = interesado.getObservaciones() != null ? interesado.getObservaciones() : "";
@@ -93,7 +94,7 @@ public class DistribucionEmailPlugin extends AbstractPluginProperties implements
                            "<th>País</th><td>" + pais + "</td></tr><tr><th>Provincia</th><td>" + provincia + "</td></tr><tr><th>Municipi</th><td>" + localidad + "</td></tr>\n" +
                            "<tr><th>Adreça</th><td>" + direccion + "</td></tr><tr><th>Codi postal</th><td>" + cp + "</td>\n" +
                            "</tr><tr><th>Correu electrònic</th>\n" +
-                           "<td>" + email + "</td></tr><tr><th>Telèfon</th><td>" + telefono + "</td></tr><tr><th>Correu electrònic habilitat</th><td>" + direccionElectronica + "</td></tr><tr>\n" +
+                           "<td>" + email + "</td></tr><tr><th>Telèfon</th><td>" + telefono + "</td></tr><tr>\n" +
                            "<th>Canal preferent</th><td>" + canal + "</td></tr><tr><th>Observacions</th><td>" + observacionesInteresado + "</td></tr>";
                }
 

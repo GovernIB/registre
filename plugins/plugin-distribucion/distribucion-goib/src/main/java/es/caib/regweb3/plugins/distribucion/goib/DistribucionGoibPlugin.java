@@ -269,7 +269,8 @@ public class DistribucionGoibPlugin extends AbstractPluginProperties implements 
 
         //Email
         registreInteressat.setEmail(interesado.getEmail());
-        registreInteressat.setEmailHabilitat(interesado.getDireccionElectronica());
+        //SICRES4 @Deprecated
+        //registreInteressat.setEmailHabilitat(interesado.getDireccionElectronica());
 
         //Teléfono
         registreInteressat.setTelefon(interesado.getTelefono());
@@ -353,10 +354,12 @@ public class DistribucionGoibPlugin extends AbstractPluginProperties implements 
 
         annex.setTitol(anexoFull.getAnexo().getTitulo());
         annex.setEniOrigen(anexoFull.getAnexo().getOrigenCiudadanoAdmin().toString());
-        annex.setSicresTipusDocument(RegwebConstantes.CODIGO_SICRES_BY_TIPO_DOCUMENTO.get(anexoFull.getAnexo().getTipoDocumento()));
+        annex.setSicresTipusDocument(RegwebConstantes.CODIGO_SICRES_BY_TIPO_ANEXO.get(anexoFull.getAnexo().getTipoDocumento()));
         annex.setEniTipusDocumental(anexoFull.getAnexo().getTipoDocumental().getCodigoNTI());
+        //@Deprecated SICRES4
         annex.setEniEstatElaboracio((RegwebConstantes.CODIGO_NTI_BY_TIPOVALIDEZDOCUMENTO.get(anexoFull.getAnexo().getValidezDocumento()))); // Validez del Documento(SICRES) = Estado Elaboración (ENI)
         annex.setObservacions(anexoFull.getAnexo().getObservaciones());
+        //@Deprecated SICRES4
         annex.setValidacioOCSP(Base64.encodeBase64String(anexoFull.getAnexo().getValidacionOCSPCertificado()));
 
         //Metadatos
