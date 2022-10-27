@@ -265,7 +265,8 @@ public class ArxiuController extends BaseController {
                         AnexoFull anexoFull = new AnexoFull();
                         Anexo anexo = anexoFull.getAnexo();
                         anexo.setTitulo(I18NLogicUtils.tradueix(new Locale(RegwebConstantes.IDIOMA_CATALAN_CODIGO), "justificante.anexo.titulo"));
-                        anexo.setValidezDocumento(RegwebConstantes.TIPOVALIDEZDOCUMENTO_ORIGINAL);
+                        //TODO ELIMINAR SICRES4
+                       // anexo.setValidezDocumento(RegwebConstantes.TIPOVALIDEZDOCUMENTO_ORIGINAL);
                         anexo.setTipoDocumental(tipoDocumentalEjb.findByCodigoEntidad("TD99", entidad.getId()));
                         anexo.setTipoDocumento(RegwebConstantes.TIPO_DOCUMENTO_DOC_ADJUNTO);
                         anexo.setOrigenCiudadanoAdmin(RegwebConstantes.ANEXO_ORIGEN_ADMINISTRACION);
@@ -281,6 +282,7 @@ public class ArxiuController extends BaseController {
                         String fechaCaptura = custody.getOnlyOneMetadata(custodyId, MetadataConstants.ENI_FECHA_INICIO).getValue();
                         anexo.setFechaCaptura(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(fechaCaptura.substring(0, 10) + " " + fechaCaptura.substring(11, 23)));
 
+                        //TODO ELIMINAR SICRES4
                         anexo.setHash(RegwebUtils.obtenerHash(custody.getSignatureInfo(custodyId).getData()));
                         anexo.setRegistroDetalle(registroDetalle);
                         anexo.setFirmaValida(false);

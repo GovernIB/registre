@@ -159,15 +159,26 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
         // Comprobamos si el usuario ha añadido algún interesado
         List<Interesado> interesadosSesion = (List<Interesado>) session.getAttribute(RegwebConstantes.SESSION_INTERESADOS_ENTRADA);
         Boolean errorInteresado = true;
+        Boolean errorInteresadoNotificaciones = true;
         if(interesadosSesion != null && interesadosSesion.size() > 0){
             errorInteresado = false;
+            for(Interesado inter: interesadosSesion){
+                if(inter.getReceptorNotificaciones()){
+                    errorInteresadoNotificaciones = false;
+                    break;
+                }
+            }
         }
 
-        if (result.hasErrors() || errorInteresado) { // Si hay errores volvemos a la vista del formulario
+        if (result.hasErrors() || errorInteresado || errorInteresadoNotificaciones) { // Si hay errores volvemos a la vista del formulario
 
             // Si no hay ningún interesado, generamos un error.
             if(errorInteresado){
                 model.addAttribute("errorInteresado", errorInteresado);
+            }
+
+           if(errorInteresadoNotificaciones){
+                model.addAttribute("errorInteresadoNotificaciones", errorInteresadoNotificaciones);
             }
 
             LinkedHashSet<Oficina> oficinasOrigen;
@@ -336,7 +347,8 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
         Entidad entidad = getEntidadActiva(request);
 
         // Actualizamos los Interesados modificados, en el caso que de un RE Pendiente.
-        Boolean errorInteresado = false;
+       /* Boolean errorInteresado = false;
+        Boolean errorInteresadoNotificaciones = false;
         List<Interesado> interesadosSesion = null;
 
         if(registroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_RESERVA)){
@@ -346,14 +358,40 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
 
             if(interesadosSesion == null || interesadosSesion.size() == 0){
                 errorInteresado = true;
+                errorInteresadoNotificaciones=true;
+            }
+        }*/
+
+        Boolean errorInteresado = true;
+        Boolean errorInteresadoNotificaciones = true;
+        List<Interesado> interesadosSesion = null;
+
+        if(registroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_RESERVA)){
+            HttpSession session = request.getSession();
+
+            interesadosSesion = (List<Interesado>) session.getAttribute(RegwebConstantes.SESSION_INTERESADOS_ENTRADA);
+
+            if(interesadosSesion != null && interesadosSesion.size() > 0){
+                errorInteresado = false;
+                for(Interesado inter: interesadosSesion){
+                    if(inter.getReceptorNotificaciones()){
+                        errorInteresadoNotificaciones = false;
+                        break;
+                    }
+                }
             }
         }
 
-        if (result.hasErrors() || errorInteresado) { // Si hay errores volvemos a la vista del formulario
+
+        if (result.hasErrors() || errorInteresado || errorInteresadoNotificaciones) { // Si hay errores volvemos a la vista del formulario
 
             // Si no hay ningún interesado, generamos un error.
             if(errorInteresado){
                 model.addAttribute("errorInteresado", errorInteresado);
+            }
+
+            if(errorInteresadoNotificaciones){
+                model.addAttribute("errorInteresadoNotificaciones", errorInteresadoNotificaciones);
             }
 
             model.addAttribute(entidad);
