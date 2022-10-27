@@ -20,8 +20,8 @@ public class MetadatosRegistroSalida extends Metadato {
     public MetadatosRegistroSalida() {
     }
 
-    public MetadatosRegistroSalida(String tpMetadato, String campo, String valor) {
-        super(tpMetadato, campo, valor);
+    public MetadatosRegistroSalida(Long tipo, String campo, String valor) {
+        super(tipo, campo, valor);
     }
 
     @Id
