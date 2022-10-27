@@ -10,7 +10,7 @@ ALTER TABLE RWE_ANEXO_SIR MODIFY OBSERVACIONES varchar2(160 char);
 create table RWE_METADATO_ANEXO (
    ID int8 not null,
     CAMPO varchar(80),
-    TIPO varchar(1),
+    TIPO int8,
     VALOR varchar(4000),
     ANEXO int8 not null,
     primary key (ID)
@@ -19,7 +19,7 @@ create table RWE_METADATO_ANEXO (
 create table RWE_METADATO_REGENT (
    ID int8 not null,
     CAMPO varchar(80),
-    TIPO varchar(1),
+    TIPO int8,
     VALOR varchar(4000),
     REGISTRO_ENTRADA int8 not null,
     primary key (ID)
@@ -28,7 +28,7 @@ create table RWE_METADATO_REGENT (
 create table RWE_METADATO_REGSAL (
    ID int8 not null,
     CAMPO varchar(80),
-    TIPO varchar(1),
+    TIPO int8,
     VALOR varchar(4000),
     REGISTRO_SALIDA int8 not null,
     primary key (ID)
