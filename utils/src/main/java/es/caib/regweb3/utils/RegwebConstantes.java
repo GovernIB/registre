@@ -901,4 +901,7 @@ public interface RegwebConstantes {
             SESION_FINALIZADA,
             SESION_ERROR
     };
+
+    String METADATO_GENERAL= "0";
+    String METADATO_PARTICULAR= "1";
 }

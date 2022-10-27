@@ -107,14 +107,6 @@ public class RegistroDetalle implements Serializable {
     @XmlTransient
     private Boolean recibidoSir = false;
 
-
-    //SICRES4
-    private  Date fechaPresentacionInteresado; //Coincidirá con la del registro si se registra en el mismo momento que se presenta por el interesado.
-    private String timestampPresentacionInteresado;
-    private String identificadorIntercambioPrevio;
-    private String codigoUnidadTramitacionInicio;
-    private String decodificacionUnidadTramitacionInicio;
-
     public RegistroDetalle() {
     }
 
@@ -348,7 +340,7 @@ public class RegistroDetalle implements Serializable {
         this.expedienteJustificante = expedienteJustificante;
     }
 
-    @Column(name = "INDICADOR_PRUEBA", length = 1/*, nullable = true*/) //SICRES4
+    @Column(name = "INDICADOR_PRUEBA", length = 1, nullable = true) //SICRES4
     @Enumerated(EnumType.ORDINAL)
     public IndicadorPrueba getIndicadorPrueba() {
         return indicadorPrueba;
@@ -520,53 +512,6 @@ public class RegistroDetalle implements Serializable {
         this.recibidoSir = sir;
     }
 
-
-    //SICRES4
-
-    @Column(name = "FECHA_PRES_INTER", nullable = false)
-    public Date getFechaPresentacionInteresado() {
-        return fechaPresentacionInteresado;
-    }
-
-    public void setFechaPresentacionInteresado(Date fechaPresentacionInteresado) {
-        this.fechaPresentacionInteresado = fechaPresentacionInteresado;
-    }
-
-    @Column(name = "TIMESTAMP_PRES_INTER")
-    public String getTimestampPresentacionInteresado() {
-        return timestampPresentacionInteresado;
-    }
-
-    public void setTimestampPresentacionInteresado(String timestampPresentacionInteresado) {
-        this.timestampPresentacionInteresado = timestampPresentacionInteresado;
-    }
-
-    @Column(name = "IDINTERCAMBIO_PREVIO", length=33)
-    public String getIdentificadorIntercambioPrevio() {
-        return identificadorIntercambioPrevio;
-    }
-
-    public void setIdentificadorIntercambioPrevio(String identificadorIntercambioPrevio) {
-        this.identificadorIntercambioPrevio = identificadorIntercambioPrevio;
-    }
-
-    @Column(name = "COD_UNITRAM_INICIO", length=21)
-    public String getCodigoUnidadTramitacionInicio() {
-        return codigoUnidadTramitacionInicio;
-    }
-
-    public void setCodigoUnidadTramitacionInicio(String codigoUnidadTramitacionInicio) {
-        this.codigoUnidadTramitacionInicio = codigoUnidadTramitacionInicio;
-    }
-
-    @Column(name = "DEC_UNITRAM_INICIO", length=120)
-    public String getDecodificacionUnidadTramitacionInicio() {
-        return decodificacionUnidadTramitacionInicio;
-    }
-
-    public void setDecodificacionUnidadTramitacionInicio(String decodificacionUnidadTramitacionInicio) {
-        this.decodificacionUnidadTramitacionInicio = decodificacionUnidadTramitacionInicio;
-    }
 
     @Transient
     public List<AnexoFull> getAnexosFull() {

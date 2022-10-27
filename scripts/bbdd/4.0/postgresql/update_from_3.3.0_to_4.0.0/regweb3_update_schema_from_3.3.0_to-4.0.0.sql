@@ -7,49 +7,47 @@ alter table RWE_ANEXO add IDENTIFRFU varchar2(255 char);
 --Cambio tamanyo ANEXOSIR
 ALTER TABLE RWE_ANEXO_SIR MODIFY OBSERVACIONES varchar2(160 char);
 
---Nueva tabla METADATO
-create table RWE_METADATO (
-      ID int8 not null,
-      CAMPO varchar(80),
-      VALOR varchar(255),
-      REGSALPART int8,
-      REGSALGEN int8,
-      REGENTPART int8,
-      REGENTGEN int8,
-      ANEXOPART int8,
-      ANEXOGEN int8,
-      primary key (ID)
+create table RWE_METADATO_ANEXO (
+   ID int8 not null,
+    CAMPO varchar(80),
+    TIPO varchar(1),
+    VALOR varchar(4000),
+    ANEXO int8 not null,
+    primary key (ID)
 );
 
-alter table if exists RWE_METADATO
-    add constraint RWE_METADPAR_REGENT_FK
-    foreign key (REGSALPART)
-    references RWE_REGISTRO_SALIDA;
+create table RWE_METADATO_REGENT (
+   ID int8 not null,
+    CAMPO varchar(80),
+    TIPO varchar(1),
+    VALOR varchar(4000),
+    REGISTRO_ENTRADA int8 not null,
+    primary key (ID)
+);
 
-alter table if exists RWE_METADATO
-    add constraint RWE_METADGEN_REGENT_FK
-    foreign key (REGSALGEN)
-    references RWE_REGISTRO_SALIDA;
+create table RWE_METADATO_REGSAL (
+   ID int8 not null,
+    CAMPO varchar(80),
+    TIPO varchar(1),
+    VALOR varchar(4000),
+    REGISTRO_SALIDA int8 not null,
+    primary key (ID)
+);
 
-alter table if exists RWE_METADATO
-    add constraint RWE_METADPAR_REGENT_FK
-    foreign key (REGENTPART)
-    references RWE_REGISTRO_ENTRADA;
+alter table if exists RWE_METADATO_ANEXO
+   add constraint RWE_METANEX_ANEXO_FK
+   foreign key (ANEXO)
+   references RWE_ANEXO;
 
-alter table if exists RWE_METADATO
-    add constraint RWE_METADGEN_REGENT_FK
-    foreign key (REGENTGEN)
-    references RWE_REGISTRO_ENTRADA;
+alter table if exists RWE_METADATO_REGENT
+   add constraint RWE_METAREN_REGENT_FK
+   foreign key (REGISTRO_ENTRADA)
+   references RWE_REGISTRO_ENTRADA;
 
-alter table if exists RWE_METADATO
-    add constraint RWE_METADPAR_ANEXO_FK
-    foreign key (ANEXOPART)
-    references RWE_ANEXO;
-
-alter table if exists RWE_METADATO
-    add constraint RWE_METADGEN_ANEXO_FK
-    foreign key (ANEXOGEN)
-    references RWE_ANEXO;
+alter table if exists RWE_METADATO_REGSAL
+   add constraint RWE_METRSAL_REGSAL_FK
+   foreign key (REGISTRO_SALIDA)
+   references RWE_REGISTRO_SALIDA;
 
 -- Cambios tamanyo RegistroDetalle
 ALTER TABLE RWE_REGISTRO_DETALLE MODIFY NUMTRANSPORTE varchar2(40 char);

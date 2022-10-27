@@ -4,6 +4,7 @@ import javax.persistence.*;
 import javax.xml.bind.annotation.*;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by Fundació BIT.
@@ -47,8 +48,7 @@ public class RegistroEntrada implements IRegistro {
     private RegistroDetalle registroDetalle;
 
     //SICRES4
-    private List<Metadato> metadatosGenerales;
-    private List<Metadato> metadatosParticulares;
+    private Set<MetadatosRegistroEntrada> metadatosRegistroEntrada;
 
 
     public RegistroEntrada() {
@@ -249,26 +249,18 @@ public class RegistroEntrada implements IRegistro {
     }
 
 
-    @OneToMany(cascade = CascadeType.REMOVE, targetEntity = Metadato.class, fetch = FetchType.LAZY)
-    @JoinColumn(name = "REGENTGEN", foreignKey = @ForeignKey(name = "RWE_METADGEN_REGENT_FK"))
-    @OrderBy("campo")
-    public List<Metadato> getMetadatosGenerales() {
-        return metadatosGenerales;
+    @OneToMany(
+            fetch = FetchType.EAGER,
+            mappedBy = "registroEntrada",
+            cascade = {CascadeType.ALL},
+            targetEntity = MetadatosRegistroEntrada.class
+    )
+    public Set<MetadatosRegistroEntrada> getMetadatosRegistroEntrada() {
+        return metadatosRegistroEntrada;
     }
 
-    public void setMetadatosGenerales(List<Metadato> metadatosGenerales) {
-        this.metadatosGenerales = metadatosGenerales;
-    }
-
-    @OneToMany(cascade = CascadeType.REMOVE, targetEntity = Metadato.class, fetch = FetchType.LAZY)
-    @JoinColumn(name = "REGENTPART", foreignKey = @ForeignKey(name = "RWE_METADPAR_REGENT_FK"))
-    @OrderBy("campo")
-    public List<Metadato> getMetadatosParticulares() {
-        return metadatosParticulares;
-    }
-
-    public void setMetadatosParticulares(List<Metadato> metadatosParticulares) {
-        this.metadatosParticulares = metadatosParticulares;
+    public void setMetadatosRegistroEntrada(Set<MetadatosRegistroEntrada> metadatosRegistroEntrada) {
+        this.metadatosRegistroEntrada = metadatosRegistroEntrada;
     }
 
 

@@ -6,6 +6,7 @@ import javax.persistence.*;
 import javax.xml.bind.annotation.*;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by Fundació BIT.
@@ -48,8 +49,7 @@ public class RegistroSalida implements IRegistro {
     @XmlElement
     private RegistroDetalle registroDetalle;
 
-    private List<Metadato> metadatosGenerales;
-    private List<Metadato> metadatosParticulares;
+    private Set<MetadatosRegistroSalida> metadatosRegistroSalida;
 
 
     public RegistroSalida() {
@@ -247,28 +247,20 @@ public class RegistroSalida implements IRegistro {
         this.registroDetalle = registroDetalle;
     }
 
-    @OneToMany(cascade = CascadeType.REMOVE, targetEntity = Metadato.class, fetch = FetchType.LAZY)
-    @JoinColumn(name = "REGSALGEN", foreignKey = @ForeignKey(name = "RWE_METADGEN_REGENT_FK"))
-    @OrderBy("campo")
-    public List<Metadato> getMetadatosGenerales() {
-        return metadatosGenerales;
+
+    @OneToMany(
+            fetch = FetchType.EAGER,
+            mappedBy = "registroSalida",
+            cascade = {CascadeType.ALL},
+            targetEntity = MetadatosRegistroSalida.class
+    )
+    public Set<MetadatosRegistroSalida> getMetadatosRegistroSalida() {
+        return metadatosRegistroSalida;
     }
 
-    public void setMetadatosGenerales(List<Metadato> metadatosGenerales) {
-        this.metadatosGenerales = metadatosGenerales;
+    public void setMetadatosRegistroSalida(Set<MetadatosRegistroSalida> metadatosRegistroSalida) {
+        this.metadatosRegistroSalida = metadatosRegistroSalida;
     }
-
-    @OneToMany(cascade = CascadeType.REMOVE, targetEntity = Metadato.class, fetch = FetchType.LAZY)
-    @JoinColumn(name = "REGSALPART", foreignKey = @ForeignKey(name = "RWE_METADPAR_REGENT_FK"))
-    @OrderBy("campo")
-    public List<Metadato> getMetadatosParticulares() {
-        return metadatosParticulares;
-    }
-
-    public void setMetadatosParticulares(List<Metadato> metadatosParticulares) {
-        this.metadatosParticulares = metadatosParticulares;
-    }
-
 
     @Transient
     public String interesadoDestinoCodigo() throws Exception {
