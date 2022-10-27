@@ -87,7 +87,7 @@
                                                 <select id="camposNTIs[${status.index}].idValidezDocumento"
                                                         name="camposNTIs[${status.index}].idValidezDocumento"
                                                         class="chosen-select"
-                                                        <c:if test="${anexo.documento.tipoDocumento == RegwebConstantes.CODIGO_SICRES_BY_TIPO_DOCUMENTO[RegwebConstantes.TIPO_DOCUMENTO_FICHERO_TECNICO]}">disabled</c:if> >
+                                                        <c:if test="${anexo.documento.tipoDocumento == RegwebConstantes.CODIGO_SICRES_BY_TIPO_ANEXO[RegwebConstantes.TIPO_DOCUMENTO_FICHERO_TECNICO]}">disabled</c:if> >
                                                         <c:forEach items="${tiposValidezDocumento}" var="validezDocumento">
                                                             <option value="${validezDocumento}"><spring:message
                                                                     code="tipoValidezDocumento.${validezDocumento}"/></option>
@@ -105,7 +105,7 @@
                                         <td class="ajustTamanySir">
                                             <select id="camposNTIs[${status.index}].idOrigen"
                                                     name="camposNTIs[${status.index}].idOrigen" class="chosen-select"
-                                                    <c:if test="${anexo.documento.tipoDocumento == RegwebConstantes.CODIGO_SICRES_BY_TIPO_DOCUMENTO[RegwebConstantes.TIPO_DOCUMENTO_FICHERO_TECNICO] }">disabled</c:if>>
+                                                    <c:if test="${anexo.documento.tipoDocumento == RegwebConstantes.CODIGO_SICRES_BY_TIPO_ANEXO[RegwebConstantes.TIPO_DOCUMENTO_FICHERO_TECNICO] }">disabled</c:if>>
                                                 <option value="0"><spring:message
                                                         code="anexo.origen.ciudadano"/></option>
                                                 <option value="1" selected="selected"><spring:message
@@ -117,7 +117,7 @@
                                             <select id="camposNTIs[${status.index}].idTipoDocumental"
                                                     name="camposNTIs[${status.index}].idTipoDocumental"
                                                     class="chosen-select"
-                                                    <c:if test="${anexo.documento.tipoDocumento == RegwebConstantes.CODIGO_SICRES_BY_TIPO_DOCUMENTO[RegwebConstantes.TIPO_DOCUMENTO_FICHERO_TECNICO] }">disabled</c:if>>
+                                                    <c:if test="${anexo.documento.tipoDocumento == RegwebConstantes.CODIGO_SICRES_BY_TIPO_ANEXO[RegwebConstantes.TIPO_DOCUMENTO_FICHERO_TECNICO] }">disabled</c:if>>
                                                 <option value="">...</option>
                                                 <c:forEach items="${tiposDocumentales}" var="tipoDocumental">
                                                     <option value="${tipoDocumental.codigoNTI}">${tipoDocumental.traducciones[pageContext.response.locale.language].nombre}</option>
