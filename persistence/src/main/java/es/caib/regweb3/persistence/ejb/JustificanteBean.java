@@ -311,6 +311,7 @@ public class JustificanteBean implements JustificanteLocal {
             // Crea el anexo del justificante firmado
             Anexo anexo = crearAnexoJustificante(RegwebConstantes.PERFIL_CUSTODIA_ARXIU, locale, registro.getRegistroDetalle(), entidad);
 
+            //Deprecated SICRES4
             // Hash
             anexo.setHash(RegwebUtils.obtenerHash(firma.getContingut()));
 
@@ -461,6 +462,7 @@ public class JustificanteBean implements JustificanteLocal {
 
         anexo.setEntidad(entidad);
         anexo.setTitulo(tituloAnexo);
+        //@Deprecated SICRES4
         anexo.setValidezDocumento(RegwebConstantes.TIPOVALIDEZDOCUMENTO_ORIGINAL);
         anexo.setTipoDocumental(tipoDocumentalEjb.findByCodigoEntidad("TD99", entidad.getId()));
         anexo.setTipoDocumento(RegwebConstantes.TIPO_DOCUMENTO_DOC_ADJUNTO);

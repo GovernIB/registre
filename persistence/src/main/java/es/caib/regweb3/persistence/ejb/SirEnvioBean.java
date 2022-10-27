@@ -607,7 +607,7 @@ public class SirEnvioBean implements SirEnvioLocal {
             registroSir.setNombreUsuario(usuario.getNombreCompleto());
             registroSir.setContactoUsuario(usuario.getEmail());
 
-            registroSir.setTipoAnotacion(TipoAnotacion.RECHAZO.getValue());
+            //registroSir.setTipoAnotacion(TipoAnotacion.RECHAZO.getValue()); //SICRES4 TODO revisar
             registroSir.setDecodificacionTipoAnotacion(observaciones);
 
             // Modificamos el estado del RegistroSir
