@@ -11,7 +11,7 @@ ALTER TABLE RWE_ANEXO_SIR MODIFY OBSERVACIONES varchar2(160 char);
 create table RWE_METADATO_ANEXO (
    ID number(19,0) not null,
     CAMPO varchar2(80 char),
-    TIPO varchar2(1 char),
+    TIPO number(19,0),
     VALOR varchar2(4000 char),
     ANEXO number(19,0) not null,
     primary key (ID)
@@ -20,7 +20,7 @@ create table RWE_METADATO_ANEXO (
 create table RWE_METADATO_REGENT (
    ID number(19,0) not null,
     CAMPO varchar2(80 char),
-    TIPO varchar2(1 char),
+    TIPO number(19,0),
     VALOR varchar2(4000 char),
     REGISTRO_ENTRADA number(19,0) not null,
     primary key (ID)
@@ -29,7 +29,7 @@ create table RWE_METADATO_REGENT (
 create table RWE_METADATO_REGSAL (
    ID number(19,0) not null,
     CAMPO varchar2(80 char),
-    TIPO varchar2(1 char),
+    TIPO number(19,0),
     VALOR varchar2(4000 char),
     REGISTRO_SALIDA number(19,0) not null,
     primary key (ID)
