@@ -902,6 +902,6 @@ public interface RegwebConstantes {
             SESION_ERROR
     };
 
-    String METADATO_GENERAL= "0";
-    String METADATO_PARTICULAR= "1";
+    Long METADATO_GENERAL= 0L;
+    Long METADATO_PARTICULAR= 1L;
 }

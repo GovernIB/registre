@@ -21,7 +21,7 @@ public class MetadatosRegistroEntrada extends Metadato {
     public MetadatosRegistroEntrada() {
     }
 
-    public MetadatosRegistroEntrada(String tipo, String campo, String valor) {
+    public MetadatosRegistroEntrada(Long tipo, String campo, String valor) {
         super(tipo, campo, valor);
     }
 

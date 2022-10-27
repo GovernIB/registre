@@ -12,7 +12,7 @@ import java.io.Serializable;
 @MappedSuperclass
 public abstract class Metadato implements Serializable {
 
-    protected String tipo;
+    protected Long tipo;
     protected String campo;
     protected String valor;
 
@@ -20,18 +20,18 @@ public abstract class Metadato implements Serializable {
     public Metadato() {
     }
 
-    public Metadato(String tipo, String campo, String valor) {
+    public Metadato(Long tipo, String campo, String valor) {
         this.tipo = tipo;
         this.campo = campo;
         this.valor = valor;
     }
 
     @Column(name = "TIPO", length = 1)
-    public String getTipo() {
+    public Long getTipo() {
         return tipo;
     }
 
-    public void setTipo(String tipo) {
+    public void setTipo(Long tipo) {
         this.tipo = tipo;
     }
 

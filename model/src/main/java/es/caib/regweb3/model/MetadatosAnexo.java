@@ -19,7 +19,7 @@ public class MetadatosAnexo extends Metadato {
     public MetadatosAnexo() {
     }
 
-    public MetadatosAnexo(String tipo, String campo, String valor) {
+    public MetadatosAnexo(Long tipo, String campo, String valor) {
         super(tipo, campo, valor);
     }
 
