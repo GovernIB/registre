@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created 27/05/14 12:59
@@ -100,8 +101,8 @@ public class Anexo implements Serializable {
     //SICRES4
     private String resumen;
     private String codigoFormulario;
-    private List<Metadato> metadatosGenerales;
-    private List<Metadato> metadatosParticulares;
+    private Set<MetadatosAnexo> metadatosAnexos;
+
 
     //Referencia Única
     private String endpointRFU; //endpoint de INTERDOC
@@ -514,26 +515,18 @@ public class Anexo implements Serializable {
     }
 
 
-    @OneToMany(cascade = CascadeType.REMOVE, targetEntity = Metadato.class, fetch = FetchType.LAZY)
-    @JoinColumn(name = "ANEXOGEN", foreignKey = @ForeignKey(name = "RWE_METADGEN_ANEXO_FK"))
-    @OrderBy("campo")
-    public List<Metadato> getMetadatosGenerales() {
-        return metadatosGenerales;
+    @OneToMany(
+            fetch = FetchType.EAGER,
+            mappedBy = "anexo",
+            cascade = {CascadeType.ALL},
+            targetEntity = MetadatosAnexo.class
+    )
+    public Set<MetadatosAnexo> getMetadatosAnexos() {
+        return metadatosAnexos;
     }
 
-    public void setMetadatosGenerales(List<Metadato> metadatosGenerales) {
-        this.metadatosGenerales = metadatosGenerales;
-    }
-
-    @OneToMany(cascade = CascadeType.REMOVE, targetEntity = Metadato.class, fetch = FetchType.LAZY)
-    @JoinColumn(name = "ANEXOPART", foreignKey = @ForeignKey(name = "RWE_METADPAR_ANEXO_FK"))
-    @OrderBy("campo")
-    public List<Metadato> getMetadatosParticulares() {
-        return metadatosParticulares;
-    }
-
-    public void setMetadatosParticulares(List<Metadato> metadatosParticulares) {
-        this.metadatosParticulares = metadatosParticulares;
+    public void setMetadatosAnexos(Set<MetadatosAnexo> metadatosAnexos) {
+        this.metadatosAnexos = metadatosAnexos;
     }
 
     @Column(name = "ENDPOINTRFU")

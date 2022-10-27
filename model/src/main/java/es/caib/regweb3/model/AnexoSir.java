@@ -62,7 +62,7 @@ public class AnexoSir implements Serializable {
     //TODO REVISAR CON REFERENCIAUNICA ESTE CAMPO (SICRES4)
     private Archivo anexo;
 
-    //TODO VER SI SE ELIMINA (SICRES4) DICE QUE SI, pero en AnexoBean de LIBSIR sigue apareciendo
+   //SICRES4 Deprecated
     /**
      * Identificador (identificadorFichero) del documento firmado. Si el anexo es firma de otro
      * documento, se especifica el identificador de del fichero objeto de firma.
@@ -197,7 +197,7 @@ public class AnexoSir implements Serializable {
 
     @Lob
     @Type(type = "org.hibernate.type.TextType")
-    @Column(name = "HASH", nullable = false, length = 2147483647)
+    @Column(name = "HASH", length = 2147483647)
     public String getHash() {
         return hash;
     }

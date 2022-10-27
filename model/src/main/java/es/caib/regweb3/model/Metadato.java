@@ -1,11 +1,6 @@
 package es.caib.regweb3.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import javax.persistence.*;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 
 /**
@@ -13,40 +8,34 @@ import java.io.Serializable;
  * @version 1
  * 02/09/2022
  */
-@Entity
-@SequenceGenerator(name = "generator", sequenceName = "RWE_MTD_SEQ", allocationSize = 1)
-@Table(name = "RWE_METADATO")
-@XmlRootElement(name = "metadato")
-@XmlAccessorType(XmlAccessType.FIELD)
-public class Metadato implements Serializable {
 
+@MappedSuperclass
+public abstract class Metadato implements Serializable {
 
-    private Long id;
-    private String campo;
-    private String valor;
+    protected String tipo;
+    protected String campo;
+    protected String valor;
 
-    public Metadato(String campo, String valor) {
-        this.campo = campo;
-        this.valor = valor;
-    }
-
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "generator")
-    @Column(name = "ID")
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public Metadato() {
     }
 
+    public Metadato(String tipo, String campo, String valor) {
+        this.tipo = tipo;
+        this.campo = campo;
+        this.valor = valor;
+    }
 
-    @Column(name = "CAMPO" , length = 80)
+    @Column(name = "TIPO", length = 1)
+    public String getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
+    }
+
+    @Column(name = "CAMPO", length = 80)
     public String getCampo() {
         return campo;
     }
@@ -55,7 +44,10 @@ public class Metadato implements Serializable {
         this.campo = campo;
     }
 
-    @Column(name = "VALOR")
+    @Column(
+            name = "VALOR",
+            length = 4000
+    )
     public String getValor() {
         return valor;
     }
@@ -63,5 +55,4 @@ public class Metadato implements Serializable {
     public void setValor(String valor) {
         this.valor = valor;
     }
-
 }
