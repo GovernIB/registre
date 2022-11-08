@@ -350,12 +350,12 @@ public class Regweb3Scheduler implements SchedulingConfigurer {
 							PeriodicTrigger trigger = new PeriodicTrigger(periodo, TimeUnit.MILLISECONDS);
 							trigger.setFixedRate(true);
 							// Només la primera vegada que s'executa
-							Long registrarEnviamentsPendentsInitialDelayLong = 0L;
+							Long actualizarEnviosSirInitialDelayLong = 0L;
 							if (primeraVez[0]) {
-								registrarEnviamentsPendentsInitialDelayLong = schedulerEjb.getCronTareaRetardoActualizacionEnviosSir();
+								actualizarEnviosSirInitialDelayLong = schedulerEjb.getCronTareaRetardoActualizacionEnviosSir();
 								primeraVez[0] = false;
 							}
-							trigger.setInitialDelay(registrarEnviamentsPendentsInitialDelayLong);
+							trigger.setInitialDelay(actualizarEnviosSirInitialDelayLong);
 							Date nextExecution = trigger.nextExecutionTime(triggerContext);
 							return nextExecution;
 						}
@@ -386,12 +386,12 @@ public class Regweb3Scheduler implements SchedulingConfigurer {
 							PeriodicTrigger trigger = new PeriodicTrigger(periodo, TimeUnit.MILLISECONDS);
 							trigger.setFixedRate(true);
 							// Només la primera vegada que s'executa
-							Long registrarEnviamentsPendentsInitialDelayLong = 0L;
+							Long registrarEnviosPendientesInitialDelayLong = 0L;
 							if (primeraVez[0]) {
-								registrarEnviamentsPendentsInitialDelayLong = schedulerEjb.getCronTareaRetardoActualizacionEnviosRecibidosSir();
+								registrarEnviosPendientesInitialDelayLong = schedulerEjb.getCronTareaRetardoActualizacionEnviosRecibidosSir();
 								primeraVez[0] = false;
 							}
-							trigger.setInitialDelay(registrarEnviamentsPendentsInitialDelayLong);
+							trigger.setInitialDelay(registrarEnviosPendientesInitialDelayLong);
 							Date nextExecution = trigger.nextExecutionTime(triggerContext);
 							return nextExecution;
 						}
@@ -422,12 +422,49 @@ public class Regweb3Scheduler implements SchedulingConfigurer {
 							PeriodicTrigger trigger = new PeriodicTrigger(periodo, TimeUnit.MILLISECONDS);
 							trigger.setFixedRate(true);
 							// Només la primera vegada que s'executa
-							Long registrarEnviamentsPendentsInitialDelayLong = 0L;
+							Long actualizarIdEnvioSirInitialDelayLong = 0L;
 							if (primeraVez[0]) {
-								registrarEnviamentsPendentsInitialDelayLong = schedulerEjb.getCronTareaRetardoActualizacionIdEnviosRecibidosSir();
+								actualizarIdEnvioSirInitialDelayLong = schedulerEjb.getCronTareaRetardoActualizacionIdEnviosRecibidosSir();
 								primeraVez[0] = false;
 							}
-							trigger.setInitialDelay(registrarEnviamentsPendentsInitialDelayLong);
+							trigger.setInitialDelay(actualizarIdEnvioSirInitialDelayLong);
+							Date nextExecution = trigger.nextExecutionTime(triggerContext);
+							return nextExecution;
+						}
+						return null;
+                    }
+                }
+        );
+        
+        // Consulta anexos pendientes verificación firma electrónica
+        ////////////////////////////////////////////////////////////////
+        taskRegistrar.addTriggerTask(
+                new Runnable() {
+                    @Override
+                    public void run() {
+                    	try {
+                    		schedulerEjb.actualizarAnexosPendientesVerificacionFirma();
+						} catch (Exception e) {
+							e.printStackTrace();
+						} catch (I18NException e) {
+							e.printStackTrace();
+						}
+                    }
+                },
+                new Trigger() {
+                    @Override
+                    public Date nextExecutionTime(TriggerContext triggerContext) {
+						Long periodo = schedulerEjb.getCronTareaPeriodoActualizacionAnexosPendientesVerificacionFirma();
+						if (periodo != null) {
+							PeriodicTrigger trigger = new PeriodicTrigger(periodo, TimeUnit.MILLISECONDS);
+							trigger.setFixedRate(true);
+							// Només la primera vegada que s'executa
+							Long actualizarFirmaAnexosPendientesVerInitialDelayLong = 0L;
+							if (primeraVez[0]) {
+								actualizarFirmaAnexosPendientesVerInitialDelayLong = schedulerEjb.getCronTareaRetardoActualizacionAnexosPendientesVerificacionFirma();
+								primeraVez[0] = false;
+							}
+							trigger.setInitialDelay(actualizarFirmaAnexosPendientesVerInitialDelayLong);
 							Date nextExecution = trigger.nextExecutionTime(triggerContext);
 							return nextExecution;
 						}

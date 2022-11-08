@@ -790,7 +790,7 @@ public class AnexoController extends BaseController {
         I18NTranslation i18n;
         if (anexoForm.getAnexo().getModoFirma() != RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA) {// Si no tiene firma no se valida
             i18n = signatureServerEjb.checkDocument(anexoForm, entidad.getId(),
-               I18NUtils.getLocale(), force);
+               I18NUtils.getLocale(), force, false, true);
             if (i18n != null) {
                 Mensaje.saveMessageAviso(request, I18NUtils.tradueix(i18n));
                 Mensaje.saveMessageError(request, I18NUtils.tradueix("error.checkanexosir.avisaradministradors"));

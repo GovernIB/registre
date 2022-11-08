@@ -261,7 +261,7 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
      * @return
      * @throws I18NException
      */
-    public I18NTranslation checkDocument(AnexoFull input, long idEntidad, Locale locale, boolean force) throws I18NException {
+    public I18NTranslation checkDocument(AnexoFull input, long idEntidad, Locale locale, boolean force, boolean forceValidation, boolean signed) throws I18NException {
 
         SignatureCustody sign = input.getSignatureCustody();
         DocumentCustody doc = input.getDocumentoCustody();
@@ -270,12 +270,16 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
             throw new I18NException("error.checkanexosir.nifirmanidoc");
         }
 
-        if (sign != null) {
+        if (sign != null || forceValidation) {
             // VALIDAR FIRMA
             ValidateSignatureResponse resp = new ValidateSignatureResponse();
             try {
                 resp = callToValidaFirma(locale, sign, doc,idEntidad);
             } catch(I18NException i18ne) {
+            	if (!signed) {
+            		input.getAnexo().setEstadoFirma(RegwebConstantes.ANEXO_FIRMA_NOINFO);
+            		return null;
+            	}
                 input.getAnexo().setEstadoFirma(RegwebConstantes.ANEXO_FIRMA_ERROR);
                 if(i18ne.getCause()!=null) {
                     input.getAnexo().setMotivoNoValidacion(i18ne.getCause().toString());
@@ -302,6 +306,7 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
             anexo.setEstadoFirma(resp.getValidationStatus().getStatus());
             anexo.setFechaValidacion(new Date());
             anexo.setFirmaValida(resp.getValidationStatus().getStatus() == RegwebConstantes.ANEXO_FIRMA_VALIDA);
+            anexo.setFirmaverificada(true);
             if(resp.getValidationStatus().getStatus() == RegwebConstantes.ANEXO_FIRMA_INVALIDA){//Indica que no es valida la firma
                 anexo.setMotivoNoValidacion(resp.getValidationStatus().getErrorMsg());
             }else if(resp.getValidationStatus().getStatus() == RegwebConstantes.ANEXO_FIRMA_ERROR){//Indica que ha habido una excepción en el proceso de validación
@@ -393,9 +398,9 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
 
       ValidateSignatureRequest validationRequest = new ValidateSignatureRequest();
       validationRequest.setLanguage(locale.getLanguage());
-      validationRequest.setSignatureData(sign.getData());
+      validationRequest.setSignatureData(sign == null ? doc.getData() : sign.getData());
       validationRequest.setSignatureRequestedInformation(sri);
-      if (doc != null) {
+      if (doc != null && sign != null) {
         validationRequest.setSignedDocumentData(doc.getData());
       }
 

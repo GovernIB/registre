@@ -7,6 +7,7 @@ import es.caib.regweb3.persistence.ejb.ColaLocal;
 import es.caib.regweb3.persistence.ejb.CustodiaLocal;
 import es.caib.regweb3.persistence.ejb.DistribucionLocal;
 import es.caib.regweb3.persistence.utils.Paginacion;
+import es.caib.regweb3.persistence.utils.VerificacioFirmaException;
 import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.controller.BaseController;
@@ -152,14 +153,17 @@ public class ColaController extends BaseController {
         Entidad entidadActiva = getEntidadActiva(request);
         Cola elemento = colaEjb.findById(idCola);
 
-        Boolean distribuido = distribucionEjb.distribuirRegistroEnCola(elemento, entidadActiva.getId(),RegwebConstantes.INTEGRACION_DISTRIBUCION);
-
-        if(distribuido){
-            Mensaje.saveMessageInfo(request, getMessage("registroEntrada.distribuir.ok"));
-        }else{
-            Mensaje.saveMessageError(request, getMessage("registroEntrada.distribuir.error.noEnviado"));
-        }
-
+        try {
+        	Boolean distribuido = distribucionEjb.distribuirRegistroEnCola(elemento, entidadActiva.getId(),RegwebConstantes.INTEGRACION_DISTRIBUCION);
+        
+	        if(distribuido){
+	            Mensaje.saveMessageInfo(request, getMessage("registroEntrada.distribuir.ok"));
+	        }else{
+	            Mensaje.saveMessageError(request, getMessage("registroEntrada.distribuir.error.noEnviado"));
+	        }
+        } catch (VerificacioFirmaException e) {
+        	Mensaje.saveMessageError(request, getMessage("aviso.registro.verificar.firma"));
+		}
         return "redirect:/cola/list/"+elemento.getTipo();
     }
 

@@ -268,8 +268,8 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
 
             // ANULAR DISTRIBUIR TEMPORAL POR MOTIVO DE FIRMA XSIG NO VALIDABLE
             if (registro.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO)) {
-
                 boolean distribuirRipea = true;
+                
                 if (PropiedadGlobalUtil.getNoDistribuir(entidadActiva.getId())) {
                     for (Anexo anexo : registro.getRegistroDetalle().getAnexos()) {
                         //Solo miramos si la firma es valida si el anexo tiene firma
@@ -282,6 +282,15 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
                     }
                 }
                 model.addAttribute("distribuirRipea", distribuirRipea);
+
+            	boolean anexosVerificados = true;
+                for (Anexo anexo : registro.getRegistroDetalle().getAnexos()) {
+                    if (!anexo.getFirmaverificada()) {
+                    	anexosVerificados = false;
+                    	break;
+                    }
+                }
+                model.addAttribute("anexosVerificados", anexosVerificados);
             }
 
 
@@ -726,19 +735,27 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
 
         try {
         	boolean anexosValidos = true;
+        	boolean firmaAnexosVerificada = true;
         	// Controlar que todos los anexos disponen de los metadatos NTI (recibidos de GEISER)
             List<Anexo> anexos = registroEntrada.getRegistroDetalle().getAnexos();
             for (Anexo anexo : anexos) {
             	Integer origen = anexo.getOrigenCiudadanoAdmin();
             	TipoDocumental tipoDocumental = anexo.getTipoDocumental();
+            	boolean firmaAnexoVerificada = anexo.getFirmaverificada();
+            	
             	// Si faltan metadatos de alguno de los anexos
 				if (origen == null || tipoDocumental == null) {
 					anexosValidos = false;
 					break;
 				}
+				
+				if (!firmaAnexoVerificada) {
+					firmaAnexosVerificada = false;
+					break;
+				}
 			}
             //Distribuimos el registro
-            if (anexosValidos) {
+            if (anexosValidos && firmaAnexosVerificada) {
             	respuesta = distribucionEjb.distribuir(registroEntrada, usuarioEntidad);
 
 	            if (respuesta.getHayPlugin()) {//
@@ -757,9 +774,12 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
 	                Mensaje.saveMessageInfo(request, getMessage("registroEntrada.distribuir.ok"));
 	                response.setStatus("SUCCESS");
 	            }
-            } else {
+            } else if (!anexosValidos) {
             	response.setStatus("FAIL");
                 response.setError(getMessage("aviso.registro.editar.metadatos"));
+            } else if (!firmaAnexosVerificada) {
+            	response.setStatus("FAIL");
+                response.setError(getMessage("aviso.registro.verificar.firma"));
             }
             response.setResult(respuesta);
 

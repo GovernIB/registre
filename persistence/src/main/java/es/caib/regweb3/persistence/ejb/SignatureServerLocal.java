@@ -69,7 +69,7 @@ public interface SignatureServerLocal {
      * @return
      * @throws I18NException
      */
-    I18NTranslation checkDocument(AnexoFull input, long idEntidad, Locale locale, boolean force) throws I18NException;
+    I18NTranslation checkDocument(AnexoFull input, long idEntidad, Locale locale, boolean force, boolean forceValidation, boolean signed) throws I18NException;
 
 
     /**

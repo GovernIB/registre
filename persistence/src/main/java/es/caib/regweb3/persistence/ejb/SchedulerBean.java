@@ -6,6 +6,7 @@ import es.caib.regweb3.persistence.utils.Semaforo;
 import es.caib.regweb3.persistence.utils.SemaforoSchedulerConsultaEstado;
 import es.caib.regweb3.persistence.utils.SemaforoSchedulerConsultaIdRecibidos;
 import es.caib.regweb3.persistence.utils.SemaforoSchedulerConsultaRecibidos;
+import es.caib.regweb3.persistence.utils.SemaforoSchedulerVerificacionFirmaAnexos;
 import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
@@ -518,6 +519,21 @@ public class SchedulerBean implements SchedulerLocal{
 		}
 		log.info("------------- SIR: Identificadores intercambio registros SIR recibidos actualizados " + " -------------");
 	}
+
+	@Override
+	public void actualizarAnexosPendientesVerificacionFirma() throws Exception, I18NException {
+		List<Entidad> entidades = entidadEjb.getAll();
+
+		for (Entidad entidad : entidades) {
+			log.info(" ");
+			log.info("------------- SIR: Actualizando identificadores intercambio envios SIR de " + entidad.getNombre() + " -------------");
+			log.info(" ");
+			synchronized (SemaforoSchedulerVerificacionFirmaAnexos.class) {
+				anexoEjb.actualizarAnexosSistraPendientesVerificacionFirma(entidad.getId());
+			}
+		}
+		log.info("------------- SIR: Identificadores intercambio registros SIR recibidos actualizados " + " -------------");
+	}
 	
 	/** Tiempo cron algunas tareas en segundo plano**/
 	@Override
@@ -549,4 +565,15 @@ public class SchedulerBean implements SchedulerLocal{
 	public Long getCronTareaRetardoActualizacionIdEnviosRecibidosSir() {
 		return PropiedadGlobalUtil.getCronTareaRetardoActualizacionIdEnviosRecibidosSir();
 	}
+	
+	@Override
+	public Long getCronTareaPeriodoActualizacionAnexosPendientesVerificacionFirma() {
+		return PropiedadGlobalUtil.getCronTareaPeriodoActualizacionAnexosPendientesVerificacionFirma();
+	}
+
+	@Override
+	public Long getCronTareaRetardoActualizacionAnexosPendientesVerificacionFirma() {
+		return PropiedadGlobalUtil.getCronTareaRetardoActualizacionAnexosPendientesVerificacionFirma();
+	}
+	
 }

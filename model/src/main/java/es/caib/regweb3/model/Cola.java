@@ -33,6 +33,8 @@ public class Cola implements Serializable{
     private Long tipoRegistro;
     private Date fechaProcesado;
 
+    private Boolean anexosVerificados = true;
+    
     public static final int RESULTADOS_PAGINACION = 20;
 
     public Cola() {
@@ -164,7 +166,16 @@ public class Cola implements Serializable{
         this.fechaProcesado = fechaProcesado;
     }
 
-    @Transient
+    @Column(name = "ANEXOS_VERIFICADOS")
+    public Boolean getAnexosVerificados() {
+		return anexosVerificados;
+	}
+
+	public void setAnexosVerificados(Boolean anexosVerificados) {
+		this.anexosVerificados = anexosVerificados;
+	}
+
+	@Transient
     private Integer pageNumber = 1;
 
     @Transient

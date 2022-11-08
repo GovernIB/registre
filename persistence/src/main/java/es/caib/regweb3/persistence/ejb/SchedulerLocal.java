@@ -122,6 +122,14 @@ public interface SchedulerLocal {
 	 */
 	void actualizarIdEnviosSirRecibidos() throws Exception, I18NException;
 	
+	/**
+	 * Revisa la firma de los anexos procedentes de Sistra, algunos vienen firmados pero con el modoFirma = 0 y se guardan como NO firmados
+	 * 
+	 * @throws Exception
+	 * @throws I18NException
+	 */
+	void actualizarAnexosPendientesVerificacionFirma() throws Exception, I18NException;
+	
 	/** Tiempo actualización envíos realizados vía SIR **/
 	Long getCronTareaPeriodoActualizacionEnviosSir();
 	
@@ -136,5 +144,10 @@ public interface SchedulerLocal {
 	Long getCronTareaPeriodoActualizacionIdEnviosRecibidosSir();
 	
 	Long getCronTareaRetardoActualizacionIdEnviosRecibidosSir();
+
+
+	Long getCronTareaPeriodoActualizacionAnexosPendientesVerificacionFirma();
+
+	Long getCronTareaRetardoActualizacionAnexosPendientesVerificacionFirma();
 }
 

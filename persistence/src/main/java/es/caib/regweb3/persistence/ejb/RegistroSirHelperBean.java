@@ -73,10 +73,8 @@ import es.caib.regweb3.utils.RegwebConstantes;
 import net.java.xades.security.xml.XMLSignatureElement;
 
 /**
- * Created by Fundació BIT.
  *
- * @author earrivi
- * Date: 16/06/16
+ * @author Limit Tecnologies S.A.
  */
 
 @Stateless(name = "RegistroSirHelperEJB")

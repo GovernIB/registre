@@ -90,3 +90,20 @@ ALTER TABLE RWE_OFICINA ADD FORZAR_ENVIO_SIR BOOL NOT NULL DEFAULT TRUE;
 ALTER TABLE RWE_REGISTRO_DETALLE ADD DIRECCION_POSTAL_DEST varchar(256);
 
 INSERT INTO RWE_PROPIEDADGLOBAL (ID, CLAVE, DESCRIPCION, ENTIDAD, TIPO, VALOR) VALUES (nextval('RWE_ALL_SEQ'),'es.caib.regweb3.cron.actualizacion.envio.sir.reintent','Máximo reintentos consulta estado envío SIR en caso de error',null,1,20); -- 20
+
+
+-- Cron modificable
+INSERT INTO RWE_PROPIEDADGLOBAL (ID, CLAVE, DESCRIPCION, ENTIDAD, TIPO, VALOR) VALUES (nextval('RWE_ALL_SEQ'),'es.caib.regweb3.cron.actualizacion.anexos.pendientes.verificacion.firma.periodo','Tiempo inicial verificación firma anexos recibidos por Sistra',null,1,900000); --15min
+INSERT INTO RWE_PROPIEDADGLOBAL (ID, CLAVE, DESCRIPCION, ENTIDAD, TIPO, VALOR) VALUES (nextval('RWE_ALL_SEQ'),'es.caib.regweb3.cron.actualizacion.anexos.pendientes.verificacion.firma.retardo','Retardo entre cada verificación de firma de los anexos recibidos por Sistra',null,1,900000); --15min
+
+-- Identificar con una posible firma sin verificar (anexos ya comprobados)
+ALTER TABLE RWE_ANEXO ADD FIRMA_VERIFICADA BOOL DEFAULT TRUE;
+UPDATE RWE_ANEXO SET FIRMA_VERIFICADA = TRUE;
+
+ALTER TABLE RWE_INTEGRACION MODIFY PETICION VARCHAR2(4000);
+
+-- Permitir enviar correo al producirse un error de comunicación con GEISER
+INSERT INTO RWE_PROPIEDADGLOBAL (ID, CLAVE, DESCRIPCION, ENTIDAD, TIPO, VALOR) VALUES (nextval('RWE_ALL_SEQ'),'es.caib.regweb3.enviar.mail.error.geiser','Permitir enviar correo al producirse un error de comunicación con GEISER',null,1,0); -- false
+INSERT INTO RWE_PROPIEDADGLOBAL (ID, CLAVE, DESCRIPCION, ENTIDAD, TIPO, VALOR) VALUES (nextval('RWE_ALL_SEQ'),'es.caib.regweb3.entorno','Indicar entorno para el envío de correos',null,1,'PRE');
+
+ALTER TABLE RWE_COLA ADD ANEXOS_VERIFICADOS BOOL DEFAULT TRUE;

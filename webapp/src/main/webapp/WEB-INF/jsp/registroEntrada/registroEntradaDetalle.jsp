@@ -113,31 +113,37 @@
                     <c:if test="${registro.estado == RegwebConstantes.REGISTRO_VALIDO && puedeEditar}">
 
                         <%--ES UNA DISTRIBUCIÓN--%>
-                        <c:if test="${(registro.evento == RegwebConstantes.EVENTO_DISTRIBUIR && puedeDistribuir && not empty registro.registroDetalle.interesados)}">
                             <div class="panel-footer center">
 
-                                <c:if test="${distribuirRipea}">
+		                        <c:choose>
+		                        <c:when test="${(registro.evento == RegwebConstantes.EVENTO_DISTRIBUIR && puedeDistribuir && not empty registro.registroDetalle.interesados && anexosVerificados)}">
+		                        
+	                                <c:if test="${distribuirRipea}">
+	
+	                                    <c:if test="${(registro.registroDetalle.tipoDocumentacionFisica == RegwebConstantes.TIPO_DOCFISICA_NO_ACOMPANYA_DOC || registro.registroDetalle.tipoDocumentacionFisica == RegwebConstantes.TIPO_DOCFISICA_ACOMPANYA_DOC_COMPLEMENTARIA)
+	                                      && fn:length(registro.registroDetalle.anexos) == 0}">
+	                                        <button type="button" onclick='mensajeInformativo("<spring:message code="distribuir.advertencia" htmlEscape="true"/>","<spring:message code="distribuir.tipoDoc.anexos" htmlEscape="true"/>")'
+	                                                class="btn btn-success btn-sm btn-block"><spring:message code="regweb.distribuir"/></button>
+	                                    </c:if>
+	
+	                                    <c:if test="${registro.registroDetalle.tipoDocumentacionFisica == RegwebConstantes.TIPO_DOCFISICA_ACOMPANYA_DOC_REQUERIDA || fn:length(registro.registroDetalle.anexos) > 0}">
+	                                        <button type="button" onclick='confirmDistribuir("<spring:message code="regweb.confirmar.distribuir" htmlEscape="true"/>")'
+	                                                class="btn btn-success btn-sm btn-block"><spring:message code="regweb.distribuir"/></button>
+	                                    </c:if>
+	
+	                                </c:if>
+	
+	                                <c:if test="${not distribuirRipea}">
+	                                    <button type="button" onclick='mensajeInformativo("<spring:message code="distribuir.advertencia" htmlEscape="true"/>","<spring:message code="distribuir.manualmente" htmlEscape="true"/>")'
+	                                            class="btn btn-success btn-sm btn-block"><spring:message code="regweb.distribuir"/></button>
+	                                </c:if>
 
-                                    <c:if test="${(registro.registroDetalle.tipoDocumentacionFisica == RegwebConstantes.TIPO_DOCFISICA_NO_ACOMPANYA_DOC || registro.registroDetalle.tipoDocumentacionFisica == RegwebConstantes.TIPO_DOCFISICA_ACOMPANYA_DOC_COMPLEMENTARIA)
-                                      && fn:length(registro.registroDetalle.anexos) == 0}">
-                                        <button type="button" onclick='mensajeInformativo("<spring:message code="distribuir.advertencia" htmlEscape="true"/>","<spring:message code="distribuir.tipoDoc.anexos" htmlEscape="true"/>")'
-                                                class="btn btn-success btn-sm btn-block"><spring:message code="regweb.distribuir"/></button>
-                                    </c:if>
-
-                                    <c:if test="${registro.registroDetalle.tipoDocumentacionFisica == RegwebConstantes.TIPO_DOCFISICA_ACOMPANYA_DOC_REQUERIDA || fn:length(registro.registroDetalle.anexos) > 0}">
-                                        <button type="button" onclick='confirmDistribuir("<spring:message code="regweb.confirmar.distribuir" htmlEscape="true"/>")'
-                                                class="btn btn-success btn-sm btn-block"><spring:message code="regweb.distribuir"/></button>
-                                    </c:if>
-
-                                </c:if>
-
-                                <c:if test="${not distribuirRipea}">
-                                    <button type="button" onclick='mensajeInformativo("<spring:message code="distribuir.advertencia" htmlEscape="true"/>","<spring:message code="distribuir.manualmente" htmlEscape="true"/>")'
-                                            class="btn btn-success btn-sm btn-block"><spring:message code="regweb.distribuir"/></button>
-                                </c:if>
-
+		                        </c:when>
+		                        <c:when test="${(registro.evento == RegwebConstantes.EVENTO_DISTRIBUIR && puedeDistribuir && not empty registro.registroDetalle.interesados && !anexosVerificados)}">
+		                        	<button type="button" class="btn btn-success btn-sm btn-block" title="<spring:message code="anexos.estado.pendiente"/>" disabled="true"><spring:message code="regweb.distribuir"/></button>
+		                        </c:when>
+		                        </c:choose>
                             </div>
-                        </c:if>
 
                         <%--ES UN OFICIO DE REMISIÓN--%>
                         <c:if test="${registro.evento != RegwebConstantes.EVENTO_DISTRIBUIR}">

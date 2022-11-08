@@ -1,5 +1,6 @@
 package es.caib.regweb3.persistence.ejb;
 
+import es.caib.regweb3.model.Anexo;
 import es.caib.regweb3.model.Cola;
 import es.caib.regweb3.model.IRegistro;
 import es.caib.regweb3.model.RegistroEntrada;
@@ -53,7 +54,7 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
     @SuppressWarnings(value = "unchecked")
     public List<Cola> findByTipoEntidad(Long tipo, Long idEntidad, Integer total) throws Exception {
 
-        Query q = em.createQuery( "select cola from Cola as cola where cola.tipo=:tipo and cola.usuarioEntidad.entidad.id=:idEntidad  and cola.numeroReintentos < :maxReintentos and cola.estado != :procesado order by cola.fecha asc ");
+        Query q = em.createQuery( "select cola from Cola as cola where cola.tipo=:tipo and cola.usuarioEntidad.entidad.id=:idEntidad  and cola.numeroReintentos < :maxReintentos and cola.estado != :procesado and cola.anexosVerificados = true order by cola.fecha asc ");
         q.setParameter("tipo", tipo);
         q.setParameter("idEntidad", idEntidad);
         q.setParameter("maxReintentos", PropiedadGlobalUtil.getMaxReintentosCola(idEntidad));
@@ -262,7 +263,16 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
             cola.setUsuarioEntidad(usuarioEntidad);
             cola.setDenominacionOficina(re.getOficina().getDenominacion());
             cola.setEstado(RegwebConstantes.COLA_ESTADO_PENDIENTE);
-
+            
+            boolean anexosVerificados = true;
+            for (Anexo anexo: re.getRegistroDetalle().getAnexos()) {
+				if (!anexo.getFirmaverificada()) {
+					anexosVerificados = false;
+					break;
+				}
+			}
+            cola.setAnexosVerificados(anexosVerificados);
+            
             persist(cola);
 
             log.info("RegistroEntrada: " + re.getNumeroRegistroFormateado() + " enviado a la Cola de Distribución");
@@ -400,6 +410,13 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
         return q.getResultList();
     }
 
+    @Override
+    public void actualizarAnexosVerificados(Long idCola) throws Exception {
+        Query q = em.createQuery("update Cola set anexosVerificados = true where id = :idCola");
+        q.setParameter("idCola", idCola);
+        q.executeUpdate();
+    }
+    
     /**
      * Obtiene los elementos procesados de la Cola de una antiguedad determinada
      * @param idEntidad

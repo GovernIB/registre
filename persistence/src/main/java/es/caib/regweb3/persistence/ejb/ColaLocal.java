@@ -149,4 +149,10 @@ public interface ColaLocal extends BaseEjb<Cola, Long> {
      * @throws Exception
      */
     List<Cola> getElementosError( Long idEntidad) throws Exception;
+    
+    /**
+     * Actualizar anexos verificados
+     * @param elemento
+     */
+    void actualizarAnexosVerificados(Long elemento) throws Exception;
 }

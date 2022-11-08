@@ -97,6 +97,10 @@ public class Anexo implements Serializable {
     
     private Boolean validarNtiOrigen = true; //Crear registro entrada sin tipo documental/origen. Se indican por el usuario modificando los anexos (comportamiento GEISER).
     
+    private Boolean firmaverificada = true;
+    
+    public static final int RESULTADOS_PAGINACION = 20;
+    
     public Anexo() {
     }
 
@@ -464,8 +468,17 @@ public class Anexo implements Serializable {
     public void setPurgado(boolean purgado) {
         this.purgado = purgado;
     }
+    
+    @Column(name = "FIRMA_VERIFICADA")
+    public Boolean getFirmaverificada() {
+		return firmaverificada;
+	}
 
-    @Transient
+    public void setFirmaverificada(boolean firmaverificada) {
+        this.firmaverificada = firmaverificada;;
+    }
+    
+	@Transient
     public String getTituloCorto(){
 
         String tituloCorto = getTitulo();
@@ -500,6 +513,19 @@ public class Anexo implements Serializable {
 
 	public void setValidarNtiOrigen(Boolean validarNtiOrigen) {
 		this.validarNtiOrigen = validarNtiOrigen;
+	}
+
+	@Transient
+	private Integer pageNumber = 1;
+
+	@Transient
+	public Integer getPageNumber() {
+		return pageNumber;
+	}
+
+	@Transient
+	public void setPageNumber(Integer pageNumber) {
+		this.pageNumber = pageNumber;
 	}
 
 	@Override

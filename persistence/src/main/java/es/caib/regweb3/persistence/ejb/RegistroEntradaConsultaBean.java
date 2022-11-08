@@ -509,6 +509,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
         }
     }
 
+    @Override
     public String findNumeroRegistroFormateadoByRegistroDetalle(Long idRegistroDetalle) throws Exception {
 
         Query q = em.createQuery("Select registroEntrada.numeroRegistroFormateado "
@@ -528,6 +529,25 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
         }
     }
 
+    @Override
+    public Long findIdByRegistroDetalle(Long idRegistroDetalle) throws Exception {
+
+        Query q = em.createQuery("Select registroEntrada.id "
+                + " from RegistroEntrada as registroEntrada"
+                + " where registroEntrada.registroDetalle.id = :idRegistroDetalle "
+              );
+
+        q.setParameter("idRegistroDetalle", idRegistroDetalle);
+        q.setHint("org.hibernate.readOnly", true);
+
+        List<Long> registro = q.getResultList();
+
+        if (registro.size() == 1) {
+            return registro.get(0);
+        } else {
+            return null;
+        }
+    }
 
     @Override
     @SuppressWarnings(value = "unchecked")

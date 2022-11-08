@@ -881,6 +881,17 @@ public class PropiedadGlobalUtil {
     }
     
     /**
+     * Devuelve el entorno actual
+     * Propiedad: es.caib.regweb3.entorno
+     * @param idEntidad
+     * @return
+     */
+    public static String getEntorno() {
+        final String partialPropertyName = "entorno";
+        return getString(partialPropertyName);
+    }
+    
+    /**
      * Retorna el valor de la propiedad fecha.inicio.busqueda.path global.
      * Propiedad: es.caib.regweb3.fecha.inicio.busqueda.path
      * @param idEntidad
@@ -891,6 +902,10 @@ public class PropiedadGlobalUtil {
         return getStringByEntidad(idEntidad, partialPropertyName);
     }
     
+    public static boolean getEnvioEmailErrorGeiser() {
+        final String partialPropertyName = "enviar.mail.error.geiser";
+        return getBoolean(partialPropertyName);
+    }
     
     /** Tiempo cron algunas tareas en segundo plano**/
     public static Long getCronTareaPeriodoActualizacionEnviosSir() {
@@ -930,4 +945,14 @@ public class PropiedadGlobalUtil {
     	else
     		return 20;
     }
+
+	public static Long getCronTareaPeriodoActualizacionAnexosPendientesVerificacionFirma() {
+		final String partialPropertyName =  "cron.actualizacion.anexos.pendientes.verificacion.firma.periodo";
+    	return getLong(partialPropertyName);
+	}
+
+	public static Long getCronTareaRetardoActualizacionAnexosPendientesVerificacionFirma() {
+		final String partialPropertyName =  "cron.actualizacion.anexos.pendientes.verificacion.firma.retardo";
+    	return getLong(partialPropertyName);
+	}
 }

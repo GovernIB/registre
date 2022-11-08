@@ -6,6 +6,7 @@ import es.caib.regweb3.persistence.utils.I18NLogicUtils;
 import es.caib.regweb3.persistence.utils.MailUtils;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.persistence.utils.RespuestaDistribucion;
+import es.caib.regweb3.persistence.utils.VerificacioFirmaException;
 import es.caib.regweb3.plugins.distribucion.IDistribucionPlugin;
 import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
@@ -163,6 +164,12 @@ public class DistribucionBean implements DistribucionLocal {
                 registroEntrada = registroEntradaEjb.getConAnexosFull(elemento.getIdObjeto());
             }
 
+            List<Anexo> anexos = registroEntrada.getRegistroDetalle().getAnexos();
+            for (Anexo anexo : anexos) {
+            	if (!anexo.getFirmaverificada()) {
+            		throw new VerificacioFirmaException("La firma de algunos anexos no está verificada");
+            	}
+            }
             //Montamos la petición de la integración
             peticion.append("usuario: ").append(registroEntrada.getUsuario().getUsuario().getNombreIdentificador()).append(System.getProperty("line.separator"));
             peticion.append("registro: ").append(registroEntrada.getNumeroRegistroFormateado()).append(System.getProperty("line.separator"));
@@ -216,7 +223,8 @@ public class DistribucionBean implements DistribucionLocal {
 
         //Obtenemos el numero de registros que han alcanzado el máximo de reintentos
         int numRegistrosMaxReintentos = colaEjb.findByTipoMaxReintentos(RegwebConstantes.COLA_DISTRIBUCION, entidad.getId(), maxReintentos).size();
-
+        String entorno = PropiedadGlobalUtil.getEntorno();
+        
         if (numRegistrosMaxReintentos > 0) {
 
 
@@ -232,7 +240,8 @@ public class DistribucionBean implements DistribucionLocal {
             }
 
             // Asunto
-            String asunto = I18NLogicUtils.tradueix(locale, "cola.mail.asunto");
+            String[] argsEntorno = {entorno != null ? entorno : "PRO"};
+            String asunto = I18NLogicUtils.tradueix(locale, "cola.mail.asunto", argsEntorno);
 
             //Montamos el mensaje del mail con el nombre de la Entidad
             String[] args = {Integer.toString(numRegistrosMaxReintentos),entidad.getNombre()};

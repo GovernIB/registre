@@ -99,6 +99,13 @@
             </li>
             <li class="divider"></li>
             <li class="dropdown-submenu-left toggle-left">
+                <a href="javascript:void(0);"><i class="fa fa-chevron-left"></i> <spring:message code="menu.anexos"/></a>
+                <ul class="dropdown-menu">
+                    <li><a href="<c:url value="/adminEntidad/anexosfirma/list"/>"><i class="fa fa-search"></i> <spring:message code="submenu.anexos"/></a></li>
+                </ul>
+            </li>
+            <li class="divider"></li>
+            <li class="dropdown-submenu-left toggle-left">
                 <a href="javascript:void(0);"><i class="fa fa-chevron-left"></i> <spring:message code="menu.estadisticas"/></a>
                 <ul class="dropdown-menu">
                     <li><a href="<c:url value="/informe/indicadores"/>"><i class="fa fa-bar-chart"></i> <spring:message code="informe.indicadores"/></a></li>

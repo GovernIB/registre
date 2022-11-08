@@ -1647,6 +1647,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
     	Locale locale = new Locale(RegwebConstantes.IDIOMA_CATALAN_CODIGO);
 		// Obtenemos los usuarios a los que hay que enviarles el mail
         List<Usuario> usuariosANotificar = new ArrayList<Usuario>();
+        String entorno = PropiedadGlobalUtil.getEntorno();
     	try {
 
             // Propietario Entidad
@@ -1658,7 +1659,8 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
             }
 
             // Asunto
-            String asunto = I18NLogicUtils.tradueix(locale, "registro.sir.recibido.error.mail.asunto");
+            String[] argsEntorno = {entorno != null ? entorno : "PRO"};
+            String asunto = I18NLogicUtils.tradueix(locale, "registro.sir.recibido.error.mail.asunto", argsEntorno);
 
             String[] args = {numeroRegistro, entidad.getNombre()};
             String mensajeTexto = I18NLogicUtils.tradueix(locale, "registro.sir.recibido.error.mail.cuerpo", args);
@@ -1668,7 +1670,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
             
     		for (Usuario usuario : usuariosANotificar) {
 
-                if (StringUtils.isNotEmpty(usuario.getEmail())) {
+                if (StringUtils.isNotEmpty(usuario.getEmail()) && isEnvioEmailErrorGeiserEnabled()) {
                 	MailUtils.enviaMail(asunto, mensajeTexto, addressFrom, Message.RecipientType.TO, usuario.getEmail());
                 }
     		}
@@ -1682,6 +1684,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
     	Locale locale = new Locale(RegwebConstantes.IDIOMA_CATALAN_CODIGO);
 		// Obtenemos los usuarios a los que hay que enviarles el mail
         List<Usuario> usuariosANotificar = new ArrayList<Usuario>();
+        String entorno = PropiedadGlobalUtil.getEntorno();
     	try {
 
             // Propietario Entidad
@@ -1693,18 +1696,19 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
             }
 
             // Asunto
-            String asunto = I18NLogicUtils.tradueix(locale, "registro.sierr.proceso.recepcion.ror.mail.asunto");
+            String[] argsEntorno = {entorno != null ? entorno : "PRO"};
+            String asunto = I18NLogicUtils.tradueix(locale, "registro.sir.recibido.error.mail.asunto", argsEntorno);
 
             //Montamos el mensaje del mail con el nombre de la Entidad
             String[] args = {entidad.getNombre()};
-            String mensajeTexto = I18NLogicUtils.tradueix(locale, "registro.sierr.proceso.recepcion.ror.mail.cuerpo", args);
+            String mensajeTexto = I18NLogicUtils.tradueix(locale, "registro.sir.recibido.error.mail.cuerpo", args);
 
             //Enviamos el mail a todos los usuarios
             InternetAddress addressFrom = new InternetAddress(RegwebConstantes.APLICACION_EMAIL, RegwebConstantes.APLICACION_NOMBRE);
             
     		for (Usuario usuario : usuariosANotificar) {
 
-                if (StringUtils.isNotEmpty(usuario.getEmail())) {
+                if (StringUtils.isNotEmpty(usuario.getEmail()) && isEnvioEmailErrorGeiserEnabled()) {
                 	MailUtils.enviaMail(asunto, mensajeTexto, addressFrom, Message.RecipientType.TO, usuario.getEmail());
                 }
     		}
@@ -1981,5 +1985,9 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
 			log.error("Error a la hora de escribir el fichero config", ex);
 			ex.printStackTrace();
 		}
+    }
+    
+    private boolean isEnvioEmailErrorGeiserEnabled() {
+    	return PropiedadGlobalUtil.getEnvioEmailErrorGeiser();
     }
 }

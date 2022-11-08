@@ -5,10 +5,13 @@ import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.model.utils.AnexoSimple;
 import es.caib.regweb3.persistence.integracion.ArxiuCaibUtils;
+import es.caib.regweb3.persistence.utils.AnexoHelper;
 import es.caib.regweb3.persistence.utils.GeiserPluginHelper;
 import es.caib.regweb3.persistence.utils.I18NLogicUtils;
+import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.persistence.utils.RegistroUtils;
+import es.caib.regweb3.persistence.utils.SemaforoSchedulerVerificacionFirmaAnexos;
 import es.caib.regweb3.persistence.validator.AnexoBeanValidator;
 import es.caib.regweb3.persistence.validator.AnexoValidator;
 import es.caib.regweb3.utils.*;
@@ -17,12 +20,15 @@ import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NArgumentString;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
+import org.fundaciobit.plugins.documentcustody.api.CustodyException;
 import org.fundaciobit.plugins.documentcustody.api.DocumentCustody;
 import org.fundaciobit.plugins.documentcustody.api.IDocumentCustodyPlugin;
+import org.fundaciobit.plugins.documentcustody.api.NotSupportedCustodyException;
 import org.fundaciobit.plugins.documentcustody.api.SignatureCustody;
 import org.fundaciobit.pluginsib.core.utils.ISO8601;
 import org.fundaciobit.pluginsib.core.utils.Metadata;
 import org.fundaciobit.pluginsib.core.utils.MetadataConstants;
+import org.fundaciobit.pluginsib.core.utils.MetadataFormatException;
 import org.jboss.ejb3.annotation.SecurityDomain;
 import org.plugin.geiser.api.AnexoGSample;
 import org.plugin.geiser.api.PeticionConsultaGeiser;
@@ -75,7 +81,9 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
     
     @Autowired
     private GeiserPluginHelper pluginHelper;
-
+    @Autowired
+    private AnexoHelper anexoHelper;
+    
     @EJB(mappedName = "regweb3/RegistroEntradaCambiarEstadoEJB/local")
     private RegistroEntradaCambiarEstadoLocal registroEntradaEjb;
 
@@ -349,7 +357,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             if (!anexo.isJustificante() && validarAnexo && !RegwebConstantes.TIPO_DOCUMENTO_FICHERO_TECNICO.equals(anexo.getTipoDocumento())) {
                 final boolean force = false; //Indica si queremos forzar la excepción.
                 if (anexo.getModoFirma() != RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA) { // Si no tiene firma no se valida
-                    signatureServerEjb.checkDocument(anexoFull, entidad.getId(), new Locale("es"), force);
+                    signatureServerEjb.checkDocument(anexoFull, entidad.getId(), new Locale("es"), force, false, true);
                 }
             }
 
@@ -1638,6 +1646,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
      * @param idEntidad
      * @return
      */
+    @Override
     public String getUrlValidation(Anexo anexo, Long idEntidad) throws I18NException, Exception {
 
         if (anexo.getCustodiaID() == null) {
@@ -1678,6 +1687,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
      * @param idEntidad
      * @return
      */
+    @Override
     public String getCsvValidationWeb(Anexo anexo, Long idEntidad) throws I18NException, Exception {
 
         if (anexo.getCustodiaID() == null) {
@@ -1723,6 +1733,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
      * @param idEntidad
      * @return AnexoSimple
      */
+    @Override
     public AnexoSimple descargarFirmaDesdeUrlValidacion(Anexo anexo, Long idEntidad) throws I18NException, Exception {
 
         if (anexo.getPerfilCustodia().equals(RegwebConstantes.PERFIL_CUSTODIA_DOCUMENT_CUSTODY)) {
@@ -1773,17 +1784,65 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
         return null;
     }
 
-    /**
-     * Descarga un Justificante desde la url de validación, si no está custodiado, descarga el original.
-     * @param anexo
-     * @param idEntidad
-     * @return
-     * @throws I18NException
-     * @throws Exception
-     */
+    @Override
     public AnexoSimple descargarJustificante(Anexo anexo, Long idEntidad) throws I18NException, Exception {
 
         return descargarFirmaDesdeUrlValidacion(anexo, idEntidad);
     }
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public void actualizarAnexosSistraPendientesVerificacionFirma(Long idEntidad) throws I18NException, CustodyException, NotSupportedCustodyException, MetadataFormatException {
+		// Recuperar anexos recibidos de Sistra y sin verificar si viene firmado (firmaverificada = false)	
+		Query qs = em.createQuery("Select anexo from Anexo as anexo where anexo.firmaverificada = false and modoFirma = :modofirma order by anexo.id");
+        qs.setParameter("modofirma", RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA);
+		List<Anexo> anexos = qs.getResultList();
+		
+		log.info("------------------------------------------------------------");
+		for (Anexo anexo : anexos) {
+			log.info("=====Verificación automática de la firma del anexo " + anexo.getId() + " iniciada");
+			anexoHelper.actualizarAnexoSistraPendienteVerificacionFirma(anexo, idEntidad);
+			log.info("=====Ha finalizado la verificación automática de la firma del anexo " + anexo.getId());
+		}
+		log.info("------------------------------------------------------------");
+		log.info("");
+		
+	}
+
+	@Override
+	public void actualizarAnexoSistraPendienteVerificacionFirmaManual(Long idEntidad, Long idAnexo) throws I18NException, CustodyException, NotSupportedCustodyException, MetadataFormatException {
+		Anexo anexo = em.find(Anexo.class, idAnexo);
+		log.info("------------------------------------------------------------");
+		synchronized (SemaforoSchedulerVerificacionFirmaAnexos.class) {
+			log.info("=====Verificación manual de la firma del anexo con id=" + idAnexo + " iniciada");
+			anexoHelper.actualizarAnexoSistraPendienteVerificacionFirma(anexo, idEntidad);
+			log.info("=====Ha finalizado la verificación manual de la firma del anexo " + idAnexo);
+		}
+		log.info("------------------------------------------------------------");
+	}
+	
+	@Override
+	public Paginacion getPendientesVerificacionFirma(Anexo busqueda, Long idEntidad) {
+		// Recuperar anexos recibidos de Sistra y sin verificar si viene firmado (firmaverificada = false)	
+		Query q = em.createQuery("Select re.numeroRegistro, anexos, re.id from RegistroEntrada as re left join re.registroDetalle.anexos as anexos where anexos.firmaverificada = false and anexos.modoFirma = :modofirma and re.usuario.entidad.id=:idEntidad");
+		q.setParameter("idEntidad", idEntidad);
+		q.setParameter("modofirma", RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA);
+		
+		Paginacion paginacion;		
+		if (busqueda.getPageNumber() != null) { // Comprobamos si es una busqueda paginada o no
+            q.setHint("org.hibernate.readOnly", true);
+            int total = q.getResultList().isEmpty() ? 0 : (int)q.getResultList().size();
+            paginacion = new Paginacion(total, busqueda.getPageNumber(),Anexo.RESULTADOS_PAGINACION);
+            int inicio = (busqueda.getPageNumber() - 1) * Anexo.RESULTADOS_PAGINACION;
+            q.setFirstResult(inicio);
+            q.setMaxResults(Anexo.RESULTADOS_PAGINACION);
+            q.setHint("org.hibernate.readOnly", true);
+
+        } else {
+            paginacion = new Paginacion(0, 0);
+        }
+		
+		paginacion.setListado(q.getResultList());
+		return paginacion;
+	}	
 }

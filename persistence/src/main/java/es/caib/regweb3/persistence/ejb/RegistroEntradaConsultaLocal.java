@@ -158,6 +158,15 @@ public interface RegistroEntradaConsultaLocal {
      */
     String findNumeroRegistroFormateadoByRegistroDetalle(Long idRegistroDetalle) throws Exception;
 
+    /**
+     * Devuelve el id del registro de entrada a partir de un registro detalle.
+     *
+     * @param idRegistroDetalle
+     * @return
+     * @throws Exception
+     */
+    Long findIdByRegistroDetalle(Long idRegistroDetalle) throws Exception;
+    
 
     /**
      * Retorna el identificador del Libro al que pertenece el RegistroEntrada

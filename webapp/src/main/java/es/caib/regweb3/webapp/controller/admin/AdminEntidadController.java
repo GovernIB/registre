@@ -649,7 +649,62 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
         }
     }
 
+    /**
+     * Listado de registros de entrada
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/anexosfirma/list", method = RequestMethod.GET)
+    public String listAnnexos(Model model, HttpServletRequest request)throws Exception {
 
+        Entidad entidadActiva = getEntidadActiva(request);
+        Anexo busqueda = new Anexo();
+        
+        Paginacion paginacion = anexoEjb.getPendientesVerificacionFirma(busqueda, entidadActiva.getId());
+        model.addAttribute("paginacion", paginacion);
+        model.addAttribute("anexoBusqueda", busqueda);
+        
+        return "anexo/anexoPendienteVerificacionListAdmin";
+    }
+
+    /**
+     * Listado de todos las {@link Cola}
+     */
+    @RequestMapping(value = "/anexosfirma/list", method = RequestMethod.POST)
+    public ModelAndView listAnnexos(@ModelAttribute Anexo busqueda, HttpServletRequest request) throws Exception {
+
+
+        ModelAndView mav = new ModelAndView("anexo/anexoPendienteVerificacionListAdmin");
+
+        Entidad entidadActiva = getEntidadActiva(request);
+
+        Paginacion paginacion = anexoEjb.getPendientesVerificacionFirma(busqueda, entidadActiva.getId());
+        mav.addObject("paginacion", paginacion);
+        mav.addObject("anexoBusqueda", busqueda);
+
+        return mav;
+    }
+    
+    @RequestMapping(value = "/anexosfirma/{anexoId}")
+    public String verificarFirmaAnexo(@PathVariable Long anexoId, HttpServletRequest request) {
+        try {
+            long inicio = System.currentTimeMillis();
+            
+            Entidad entidadActiva = getEntidadActiva(request);
+            anexoEjb.actualizarAnexoSistraPendienteVerificacionFirmaManual(entidadActiva.getId(), anexoId);
+            
+            Mensaje.saveMessageInfo(request, "Se ha actualizado el anexo correctamente en " + TimeUtils.formatElapsedTime(System.currentTimeMillis() - inicio));
+        } catch (Exception e) {
+            Mensaje.saveMessageError(request, "Error al verificar firmas anexo");
+            e.printStackTrace();
+        } catch (I18NException e) {
+        	Mensaje.saveMessageError(request, "Error al verificar firmas anexo");
+			e.printStackTrace();
+		}
+        return "redirect:/adminEntidad/anexosfirma/list";
+    }
+
+    
     /**
      * Retorna una lista con los id's de un List<Organismo>
      * @param organosDestino

@@ -8,10 +8,15 @@ import es.caib.regweb3.model.RegistroSalida;
 import es.caib.regweb3.model.UsuarioEntidad;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.model.utils.AnexoSimple;
+import es.caib.regweb3.persistence.utils.Paginacion;
+
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
+import org.fundaciobit.plugins.documentcustody.api.CustodyException;
 import org.fundaciobit.plugins.documentcustody.api.DocumentCustody;
+import org.fundaciobit.plugins.documentcustody.api.NotSupportedCustodyException;
 import org.fundaciobit.plugins.documentcustody.api.SignatureCustody;
+import org.fundaciobit.pluginsib.core.utils.MetadataFormatException;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
@@ -255,7 +260,7 @@ public interface AnexoLocal extends BaseEjb<Anexo, Long> {
     AnexoSimple descargarFirmaDesdeUrlValidacion(Anexo anexo, Long idEntidad) throws I18NException, Exception;
 
     /**
-     * Descarga un Justificante
+     * Descarga un Justificante desde la url de validación, si no está custodiado, descarga el original.
      * @param anexo
      * @param idEntidad
      * @return
@@ -286,4 +291,34 @@ public interface AnexoLocal extends BaseEjb<Anexo, Long> {
      */
 	AnexoSimple obtenerJustificanteGEISER(IRegistro registro, UsuarioEntidad usuarioEntidad) throws I18NException;
 
+	/**
+	 * Revisa la firma de los anexos procedentes de Sistra, algunos vienen firmados pero con el modoFirma = 0 y se guardan como NO firmados
+	 * 
+	 * @throws Exception
+	 * @throws I18NException
+	 * @throws MetadataFormatException 
+	 * @throws NotSupportedCustodyException 
+	 * @throws CustodyException 
+	 */
+	void actualizarAnexosSistraPendientesVerificacionFirma(Long idEntidad) throws I18NException, CustodyException, NotSupportedCustodyException, MetadataFormatException;
+
+	/**
+	 * Recupera anexos con una posible firma sin validar
+	 * @param busqueda 
+	 * @param idEntidad
+	 * 
+	 */
+	Paginacion getPendientesVerificacionFirma(Anexo busqueda, Long idEntidad);
+
+	/**
+	 * Verifica y corrige la firma de un anexo
+	 * 
+	 * @throws Exception
+	 * @throws I18NException
+	 * @throws MetadataFormatException 
+	 * @throws NotSupportedCustodyException 
+	 * @throws CustodyException 
+	 */
+	void actualizarAnexoSistraPendienteVerificacionFirmaManual(Long idEntidad, Long idAnexo)
+			throws I18NException, CustodyException, NotSupportedCustodyException, MetadataFormatException;
 }

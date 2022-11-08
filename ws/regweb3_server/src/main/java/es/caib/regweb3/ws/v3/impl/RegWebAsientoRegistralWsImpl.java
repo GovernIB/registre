@@ -1,5 +1,7 @@
 package es.caib.regweb3.ws.v3.impl;
 
+import es.caib.dir3caib.ws.api.oficina.Dir3CaibObtenerOficinasWs;
+import es.caib.dir3caib.ws.api.oficina.OficinaTF;
 import es.caib.dir3caib.ws.api.unidad.Dir3CaibObtenerUnidadesWs;
 import es.caib.dir3caib.ws.api.unidad.UnidadTF;
 import es.caib.regweb3.model.Entidad;
@@ -44,6 +46,7 @@ import es.caib.regweb3.ws.model.AsientoRegistralSesionWs;
 import es.caib.regweb3.ws.model.AsientoRegistralWs;
 import es.caib.regweb3.ws.model.AsientoWs;
 import es.caib.regweb3.ws.model.FileContentWs;
+import es.caib.regweb3.ws.model.InteresadoWs;
 import es.caib.regweb3.ws.model.JustificanteReferenciaWs;
 import es.caib.regweb3.ws.model.JustificanteWs;
 import es.caib.regweb3.ws.model.OficioWs;
@@ -51,6 +54,7 @@ import es.caib.regweb3.ws.model.ResultadoBusquedaWs;
 import es.caib.regweb3.ws.utils.UsuarioAplicacionCache;
 import es.caib.regweb3.ws.utils.Utils;
 
+import org.apache.bcel.generic.AASTORE;
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
@@ -266,11 +270,13 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
             }else{
                 throw new I18NException("interesado.registro.obligatorio");
             }
-
+            
+            boolean isComunicacionSir = isComunicacionSIR(asientoRegistral, tipoOperacion, entidadActiva, oficina);
+            
             // Validar los Anexos
             List<AnexoFull> anexosFull = null;
             if (asientoRegistral.getAnexos() != null && asientoRegistral.getAnexos().size() > 0) {
-                anexosFull = procesarAnexos(asientoRegistral.getAnexos(), entidadActiva.getId());
+                anexosFull = procesarAnexos(asientoRegistral.getAnexos(), entidadActiva.getId(), isComunicacionSir);
                 peticion.append("anexos: ").append(asientoRegistral.getAnexos().size()).append(System.getProperty("line.separator"));
             }
 
@@ -1125,5 +1131,32 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
         rsbv.throwValidationExceptionIfErrors(registroSalida, true);
     }
 
+	private boolean isComunicacionSIR(AsientoRegistralWs asientoRegistral, Long tipoOperacion, Entidad entidadActiva,
+			Oficina oficina) throws Exception {
+		InteresadoWs interesasdoWs = asientoRegistral.getInteresados().get(0);
+		Long tipoInteresado = interesasdoWs.getInteresado().getTipoInteresado();
+		String codigoDir3 = interesasdoWs.getInteresado().getDocumento();
+		// Comunicación a una administración
+		if (REGISTRO_SALIDA.equals(asientoRegistral.getTipoRegistro())
+				&& TIPO_OPERACION_COMUNICACION.equals(tipoOperacion)
+				&& tipoInteresado.equals(TIPO_INTERESADO_ADMINISTRACION)) {
+			boolean destinoExterno = organismoEjb.findByCodigoEntidadSinEstadoLigero(codigoDir3, entidadActiva.getId()) == null;
+			// Administración externa y SIR
+			if (destinoExterno && entidadActiva.getSir() && oficinaEjb.isSIREnvio(oficina.getId())) {
+				List<OficinaTF> oficinasSIR = obtenerOficinasSir(codigoDir3);
+
+				if (oficinasSIR != null && !oficinasSIR.isEmpty()) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+    
+    private List<OficinaTF> obtenerOficinasSir(String codigoDir3) throws Exception {
+    	Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService(PropiedadGlobalUtil.getDir3CaibServer(), PropiedadGlobalUtil.getDir3CaibUsername(), PropiedadGlobalUtil.getDir3CaibPassword());
+
+        return oficinasService.obtenerOficinasSIRUnidad(codigoDir3);
+    }
 
 }

@@ -8,6 +8,7 @@ import es.caib.regweb3.persistence.validator.AnexoBeanValidator;
 import es.caib.regweb3.persistence.validator.AnexoValidator;
 import es.caib.regweb3.persistence.validator.InteresadoBeanValidator;
 import es.caib.regweb3.persistence.validator.InteresadoValidator;
+import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 import es.caib.regweb3.ws.converter.AnexoConverter;
 import es.caib.regweb3.ws.converter.DatosInteresadoConverter;
@@ -17,6 +18,9 @@ import es.caib.regweb3.ws.utils.AuthenticatedBaseWsImpl;
 import es.caib.regweb3.ws.utils.UsuarioAplicacionCache;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
+
+import com.itextpdf.text.pdf.AcroFields;
+import com.itextpdf.text.pdf.PdfReader;
 
 import javax.ejb.EJB;
 import java.util.ArrayList;
@@ -98,25 +102,35 @@ public abstract class AbstractRegistroWsImpl extends AuthenticatedBaseWsImpl {
      * Procesa los Anexos recibidos
      *
      * @param anexosWs
+     * @param tipoOperacion 
      * @return
      * @throws Exception
      * @throws I18NValidationException
      * @throws I18NException
      */
-    protected List<AnexoFull> procesarAnexos(List<AnexoWs> anexosWs, Long entidadID) throws Exception, I18NValidationException, I18NException {
+    protected List<AnexoFull> procesarAnexos(List<AnexoWs> anexosWs, Long entidadID, Boolean isComunicacionSir) throws Exception, I18NValidationException, I18NException {
 
         List<AnexoFull> anexos = new ArrayList<AnexoFull>();
 
         for (AnexoWs anexoWs : anexosWs) {
             //Convertimos a anexo
 
+            //El modo firma puede no coincidir con el contenido (versión imprimible)
+            if(isComunicacionSir && anexoWs.getFicheroAnexado() != null) {
+            	boolean signed = isAnexoSigned(anexoWs.getFicheroAnexado());
+            	if (!signed)
+            		anexoWs.setModoFirma(RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA);
+            }
+            
             AnexoFull anexoFull = AnexoConverter.getAnexoFull(anexoWs, entidadID, tipoDocumentalEjb);
-
+            
             //Controlamos el tamanyo de los ficheros que nos adjuntan.
             Long maxUploadSizeInBytes = PropiedadGlobalUtil.getMaxUploadSizeInBytes(entidadID);
             if(maxUploadSizeInBytes!= null){ // Si no está especificada, se permite cualquier tamaño
                 switch (anexoWs.getModoFirma()){
                     case 0: //SIN FIRMA
+                    	anexoFull.getAnexo().setFirmaverificada(false); //Los usuarios pueden adjuntar documentos firmados sin indicar que lo están
+                    	break;
                     case 1:{ //ATTACHED
                         if(anexoWs.getFicheroAnexado()!= null && (anexoWs.getFicheroAnexado().length > maxUploadSizeInBytes)) {
                             throw new I18NException("tamanyfitxerpujatsuperat", Long.toString(anexoWs.getFicheroAnexado().length/(1024*1024)),Long.toString(maxUploadSizeInBytes/(1024*1024)));
@@ -136,7 +150,7 @@ public abstract class AbstractRegistroWsImpl extends AuthenticatedBaseWsImpl {
             }
 
             validateAnexo(anexoFull.getAnexo(),true);
-
+            
             anexos.add(anexoFull);
         }
 
@@ -144,6 +158,22 @@ public abstract class AbstractRegistroWsImpl extends AuthenticatedBaseWsImpl {
 
     }
 
+	private boolean isAnexoSigned(byte[] contingut) {
+		PdfReader reader;
+		try {
+			reader = new PdfReader(contingut);
+			AcroFields acroFields = reader.getAcroFields();
+			List<String> signatureNames = acroFields.getSignatureNames();
+			if (signatureNames != null && !signatureNames.isEmpty()) {
+				return true;
+			} else {
+				return false;
+			}
+		} catch (Exception e) {
+			log.error("No se ha podido determinar si el anexo está firmado");
+		}
+		return false;
+	}
 
     /**
      * @param anexo
