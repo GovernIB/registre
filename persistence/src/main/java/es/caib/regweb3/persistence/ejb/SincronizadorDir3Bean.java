@@ -13,6 +13,7 @@ import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 import es.caib.regweb3.utils.TimeUtils;
 import org.hibernate.Hibernate;
+import org.jboss.ejb3.annotation.TransactionTimeout;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -72,6 +73,7 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
      * @throws Exception
      */
     @Override
+    @TransactionTimeout(value = 1800)  // 30 minutos
     public int sincronizarActualizar(Long entidadId, Timestamp fechaActualizacion, Timestamp fechaSincronizacion) throws Exception {
 
         Entidad entidad = entidadEjb.findByIdLigero(entidadId);
