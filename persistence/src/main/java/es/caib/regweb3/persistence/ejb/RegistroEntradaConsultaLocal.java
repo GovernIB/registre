@@ -63,17 +63,18 @@ public interface RegistroEntradaConsultaLocal {
      * @return
      * @throws Exception
      */
-    Paginacion getByOficinaEstadoPaginado(Integer pageNumber, Long idOficinaActiva, Long idEstado) throws Exception;
+    Paginacion getByOficinaEstadoPaginado(Integer pageNumber, Long idEntidad, Long idOficinaActiva, Long idEstado) throws Exception;
 
     /**
      * Registros pendientes de distribuir
      * @param pageNumber
+     * @param idEntidad
      * @param idOficinaActiva
 
      * @return
      * @throws Exception
      */
-    Paginacion pendientesDistribuir(Integer pageNumber, Long idOficinaActiva) throws Exception;
+    Paginacion pendientesDistribuir(Integer pageNumber, Long idEntidad, Long idOficinaActiva) throws Exception;
 
     /**
      * Busca los Registros de Entrada de una OficinaActiva en función de su estado.
@@ -224,11 +225,12 @@ public interface RegistroEntradaConsultaLocal {
     /**
      *
      * @param pageNumber
+     * @param idEntidad
      * @param idOficina
      * @return
      * @throws Exception
      */
-    Paginacion getSirRechazadosReenviadosPaginado(Integer pageNumber, Long idOficina) throws Exception;
+    Paginacion getSirRechazadosReenviadosPaginado(Integer pageNumber, Long idEntidad, Long idOficina) throws Exception;
 
     /**
      * Busca los Registros de Entrada de una OficinaActiva Rechazados o Reenviados por SIR
@@ -237,7 +239,7 @@ public interface RegistroEntradaConsultaLocal {
      * @return
      * @throws Exception
      */
-    List<RegistroEntrada> getSirRechazadosReenviados(Long idOficina, Integer total) throws Exception;
+    List<RegistroEntrada> getSirRechazadosReenviados(Long idEntidad, Long idOficina, Integer total) throws Exception;
 
     /**
      * Total de Registros de Entrada de una OficinaActiva Rechazados o Reenviados por SIR

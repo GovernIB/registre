@@ -474,11 +474,12 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
 
         ModelAndView mav = new ModelAndView("registroEntrada/registrosEntradaEstado");
 
+        Entidad entidad = getEntidadActiva(request);
         Oficina oficinaActiva = getOficinaActiva(request);
 
         if (isOperador(request) && oficinaActiva != null) {
 
-            Paginacion paginacion = registroEntradaConsultaEjb.getByOficinaEstadoPaginado(pageNumber, oficinaActiva.getId(), RegwebConstantes.REGISTRO_RESERVA);
+            Paginacion paginacion = registroEntradaConsultaEjb.getByOficinaEstadoPaginado(pageNumber, entidad.getId(), oficinaActiva.getId(), RegwebConstantes.REGISTRO_RESERVA);
 
             mav.addObject("titulo", getMessage("registroEntrada.listado.reservas"));
             mav.addObject("url", "reservas");
@@ -494,11 +495,12 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
 
         ModelAndView mav = new ModelAndView("registroEntrada/registrosEntradaEstado");
 
+        Entidad entidad = getEntidadActiva(request);
         Oficina oficinaActiva = getOficinaActiva(request);
 
         if (isOperador(request) && oficinaActiva != null) {
 
-            Paginacion paginacion = registroEntradaConsultaEjb.pendientesDistribuir(pageNumber, oficinaActiva.getId());
+            Paginacion paginacion = registroEntradaConsultaEjb.pendientesDistribuir(pageNumber, entidad.getId(), oficinaActiva.getId());
 
             mav.addObject("titulo", getMessage("registroEntrada.listado.pendientesDistribuir"));
             mav.addObject("url", "pendientesDistribuir");
@@ -514,11 +516,12 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
 
         ModelAndView mav = new ModelAndView("registroEntrada/registrosEntradaEstado");
 
+        Entidad entidad = getEntidadActiva(request);
         Oficina oficinaActiva = getOficinaActiva(request);
 
         if (isOperador(request) && oficinaActiva != null) {
 
-            Paginacion paginacion = registroEntradaConsultaEjb.getSirRechazadosReenviadosPaginado(pageNumber, oficinaActiva.getId());
+            Paginacion paginacion = registroEntradaConsultaEjb.getSirRechazadosReenviadosPaginado(pageNumber, entidad.getId(), oficinaActiva.getId());
 
             mav.addObject("titulo", getMessage("registroEntrada.listado.pendientesSir"));
             mav.addObject("url", "pendientesSir");

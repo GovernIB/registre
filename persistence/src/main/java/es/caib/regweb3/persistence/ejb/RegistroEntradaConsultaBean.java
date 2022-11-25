@@ -313,20 +313,22 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Paginacion getByOficinaEstadoPaginado(Integer pageNumber, Long idOficinaActiva, Long idEstado) throws Exception {
+    public Paginacion getByOficinaEstadoPaginado(Integer pageNumber, Long idEntidad, Long idOficinaActiva, Long idEstado) throws Exception {
 
         Query q;
         Query q2;
 
-        q = em.createQuery("Select re from RegistroEntrada as re where re.oficina.id = :idOficinaActiva " +
+        q = em.createQuery("Select re from RegistroEntrada as re where re.entidad.id = :idEntidad and re.oficina.id = :idOficinaActiva " +
                 "and re.estado = :idEstado order by re.fecha desc");
 
+        q.setParameter("idEntidad", idEntidad);
         q.setParameter("idOficinaActiva", idOficinaActiva);
         q.setParameter("idEstado", idEstado);
 
-        q2 = em.createQuery("Select count(re.id) from RegistroEntrada as re where re.oficina.id = :idOficinaActiva " +
+        q2 = em.createQuery("Select count(re.id) from RegistroEntrada as re where re.entidad.id = :idEntidad and re.oficina.id = :idOficinaActiva " +
                 "and re.estado = :idEstado");
 
+        q2.setParameter("idEntidad", idEntidad);
         q2.setParameter("idOficinaActiva", idOficinaActiva);
         q2.setParameter("idEstado", idEstado);
 
@@ -352,21 +354,23 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Paginacion pendientesDistribuir(Integer pageNumber, Long idOficinaActiva) throws Exception{
+    public Paginacion pendientesDistribuir(Integer pageNumber, Long idEntidad, Long idOficinaActiva) throws Exception{
 
         Query q;
         Query q2;
 
-        q = em.createQuery("Select re from RegistroEntrada as re where re.oficina.id = :idOficinaActiva " +
+        q = em.createQuery("Select re from RegistroEntrada as re where re.entidad.id = :idEntidad and re.oficina.id = :idOficinaActiva " +
                 "and re.estado = :idEstado and re.evento = :distribuir order by re.fecha desc");
 
+        q.setParameter("idEntidad", idEntidad);
         q.setParameter("idOficinaActiva", idOficinaActiva);
         q.setParameter("idEstado", RegwebConstantes.REGISTRO_VALIDO);
         q.setParameter("distribuir", RegwebConstantes.EVENTO_DISTRIBUIR);
 
-        q2 = em.createQuery("Select count(re.id) from RegistroEntrada as re where re.oficina.id = :idOficinaActiva " +
+        q2 = em.createQuery("Select count(re.id) from RegistroEntrada as re where re.entidad.id = :idEntidad and re.oficina.id = :idOficinaActiva " +
                 "and re.estado = :idEstado and re.evento = :distribuir");
 
+        q2.setParameter("idEntidad", idEntidad);
         q2.setParameter("idOficinaActiva", idOficinaActiva);
         q2.setParameter("idEstado", RegwebConstantes.REGISTRO_VALIDO);
         q2.setParameter("distribuir", RegwebConstantes.EVENTO_DISTRIBUIR);
@@ -679,21 +683,23 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Paginacion getSirRechazadosReenviadosPaginado(Integer pageNumber,Long idOficina) throws Exception {
+    public Paginacion getSirRechazadosReenviadosPaginado(Integer pageNumber ,Long idEntidad, Long idOficina) throws Exception {
 
         Query q;
         Query q2;
 
-        q = em.createQuery("Select re from RegistroEntrada as re where re.oficina.id = :idOficina " +
+        q = em.createQuery("Select re from RegistroEntrada as re where re.entidad.id = :idEntidad and re.oficina.id = :idOficina " +
                 "and re.estado = :rechazado or re.estado = :reenviado order by re.fecha desc");
 
+        q.setParameter("idEntidad", idEntidad);
         q.setParameter("idOficina", idOficina);
         q.setParameter("rechazado", RegwebConstantes.REGISTRO_RECHAZADO);
         q.setParameter("reenviado", RegwebConstantes.REGISTRO_REENVIADO);
 
-        q2 = em.createQuery("Select count(re.id) from RegistroEntrada as re where re.oficina.id = :idOficina " +
+        q2 = em.createQuery("Select count(re.id) from RegistroEntrada as re where re.entidad.id = :idEntidad and re.oficina.id = :idOficina " +
                 "and re.estado = :rechazado or re.estado = :reenviado");
 
+        q2.setParameter("idEntidad", idEntidad);
         q2.setParameter("idOficina", idOficina);
         q2.setParameter("rechazado", RegwebConstantes.REGISTRO_RECHAZADO);
         q2.setParameter("reenviado", RegwebConstantes.REGISTRO_REENVIADO);
@@ -720,15 +726,16 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<RegistroEntrada> getSirRechazadosReenviados(Long idOficina, Integer total) throws Exception {
+    public List<RegistroEntrada> getSirRechazadosReenviados(Long idEntidad, Long idOficina, Integer total) throws Exception {
 
         Query q;
 
         q = em.createQuery("Select re.id, re.fecha, re.registroDetalle.decodificacionEntidadRegistralDestino," +
-                " re.estado, re.registroDetalle.decodificacionTipoAnotacion from RegistroEntrada as re where re.oficina.id = :idOficinaActiva " +
+                " re.estado, re.registroDetalle.decodificacionTipoAnotacion from RegistroEntrada as re where re.entidad.id = :idEntidad and re.oficina.id = :idOficinaActiva " +
                 "and (re.estado = :rechazado or re.estado = :reenviado) order by re.id desc");
 
         q.setMaxResults(total);
+        q.setParameter("idEntidad", idEntidad);
         q.setParameter("idOficinaActiva", idOficina);
         q.setParameter("rechazado", RegwebConstantes.REGISTRO_RECHAZADO);
         q.setParameter("reenviado", RegwebConstantes.REGISTRO_REENVIADO);

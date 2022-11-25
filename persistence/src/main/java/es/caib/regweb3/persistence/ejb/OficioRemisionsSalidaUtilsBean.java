@@ -64,7 +64,7 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public LinkedHashSet<Organismo> organismosSalidaPendientesRemisionTipo(Long idOficina, Long tipoEvento, Integer total) throws Exception {
+    public LinkedHashSet<Organismo> organismosSalidaPendientesRemisionTipo(Long idEntidad, Long idOficina, Long tipoEvento, Integer total) throws Exception {
 
         String queryFecha = "";
         String fecha = PropiedadGlobalUtil.getFechaOficiosSalida();
@@ -75,10 +75,11 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
 
         // Obtenemos los Registros de Salida que son Oficio de remisión
         Query q = em.createQuery("Select distinct(rs.registroDetalle.id) from RegistroSalida as rs where " +
-                "rs.estado = :valido and rs.oficina.id = :idOficina and rs.evento = :tipoEvento" + queryFecha + " order by rs.registroDetalle.id desc");
+                "rs.entidad.id = :idEntidad and rs.estado = :valido and rs.oficina.id = :idOficina and rs.evento = :tipoEvento" + queryFecha + " order by rs.registroDetalle.id desc");
 
         // Parámetros
         q.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
+        q.setParameter("idEntidad", idEntidad);
         q.setParameter("idOficina", idOficina);
         q.setParameter("tipoEvento", tipoEvento);
         if (StringUtils.isNotEmpty(fecha)) {
@@ -268,14 +269,14 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
         }
 
         //Buscamos los Registros de Salida, pendientes de tramitar mediante un Oficio de Remision
-        oficios.setPaginacion(oficiosSalidaByOrganismo(pageNumber, codigoOrganismo, any, oficinaActiva.getId(), tipoEvento));
+        oficios.setPaginacion(oficiosSalidaByOrganismo(pageNumber, entidadActiva.getId(), codigoOrganismo, any, oficinaActiva.getId(), tipoEvento));
 
         return oficios;
 
     }
 
     @SuppressWarnings(value = "unchecked")
-    private Paginacion oficiosSalidaByOrganismo(Integer pageNumber, String codigoOrganismo, Integer any, Long idOficina, Long tipoEvento) throws Exception {
+    private Paginacion oficiosSalidaByOrganismo(Integer pageNumber, Long idEntidad, String codigoOrganismo, Integer any, Long idOficina, Long tipoEvento) throws Exception {
 
         String anyWhere = "";
         if (any != null) {
@@ -293,7 +294,7 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
         Query q2;
 
         StringBuilder query = new StringBuilder("Select rs.id, rs.numeroRegistroFormateado, rs.fecha, rs.oficina, rs.origen, rs.registroDetalle.extracto from RegistroSalida as rs where " + anyWhere +
-                " rs.oficina.id = :idOficina and rs.estado = :valido and rs.evento = :tipoEvento and " + queryFecha +
+                " rs.entidad.id = :idEntidad and rs.oficina.id = :idOficina and rs.estado = :valido and rs.evento = :tipoEvento and " + queryFecha +
                 " rs.registroDetalle.id in (select i.registroDetalle.id from Interesado as i where i.registroDetalle.id = rs.registroDetalle.id and i.tipo = :administracion and i.codigoDir3 = :codigoOrganismo) ");
 
         q2 = em.createQuery(query.toString().replaceAll("Select rs.id, rs.numeroRegistroFormateado, rs.fecha, rs.oficina, rs.origen, rs.registroDetalle.extracto", "Select count(rs.id)"));
@@ -306,6 +307,7 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
             q.setParameter("any", any);
             q2.setParameter("any", any);
         }
+        q.setParameter("idEntidad", idEntidad);
         q.setParameter("idOficina", idOficina);
         q.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
         q.setParameter("tipoEvento", tipoEvento);
@@ -316,6 +318,7 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
             q.setParameter("fecha", sdf.parse(fecha));
         }
 
+        q2.setParameter("idEntidad", idEntidad);
         q2.setParameter("idOficina", idOficina);
         q2.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
         q2.setParameter("tipoEvento", tipoEvento);

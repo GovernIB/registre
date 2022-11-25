@@ -146,11 +146,12 @@ public interface RegistroSalidaConsultaLocal {
 
     /**
      * @param pageNumber
+     * @param idEntidad
      * @param idOficina
      * @return
      * @throws Exception
      */
-    Paginacion getSirRechazadosReenviadosPaginado(Integer pageNumber, Long idOficina) throws Exception;
+    Paginacion getSirRechazadosReenviadosPaginado(Integer pageNumber, Long idEntidad, Long idOficina) throws Exception;
 
     /**
      * Busca los Registros de Salida de una OficinaActiva Rechazados o Reenviados por SIR
@@ -160,7 +161,7 @@ public interface RegistroSalidaConsultaLocal {
      * @return
      * @throws Exception
      */
-    List<RegistroSalida> getSirRechazadosReenviados(Long idOficina, Integer total) throws Exception;
+    List<RegistroSalida> getSirRechazadosReenviados(Long idEntidad, Long idOficina, Integer total) throws Exception;
 
     /**
      * Total de Registros de Salida de una OficinaActiva Rechazados o Reenviados por SIR
