@@ -203,6 +203,7 @@ public class OficioRemisionController extends BaseController {
     public ModelAndView entradasPendientesRemision(@PathVariable Long tipoEvento, Model model, HttpServletRequest request) throws Exception {
 
         ModelAndView mav = new ModelAndView("oficioRemision/oficiosEntradaPendientesRemisionList");
+        Entidad entidad = getEntidadActiva(request);
         Oficina oficinaActiva = getOficinaActiva(request);
 
         // Fijamos la oficina activa como la seleccionada por defecto
@@ -211,7 +212,7 @@ public class OficioRemisionController extends BaseController {
 
         OficioPendienteBusquedaForm oficioPendienteBusquedaForm = new OficioPendienteBusquedaForm(registroEntrada, 1);
 
-        model.addAttribute("organismosDestino", oficioRemisionEntradaUtilsEjb.organismosEntradaPendientesRemisionExternosTipo(oficinaActiva.getId(), tipoEvento, null));
+        model.addAttribute("organismosDestino", oficioRemisionEntradaUtilsEjb.organismosEntradaPendientesRemisionExternosTipo(entidad.getId(), oficinaActiva.getId(), tipoEvento, null));
         model.addAttribute("registroEntradaBusqueda", oficioPendienteBusquedaForm);
         model.addAttribute("anys", getAnys());
 
@@ -236,7 +237,7 @@ public class OficioRemisionController extends BaseController {
         busqueda.setPageNumber(1);
         mav.addObject("oficiosRemisionOrganismo", oficiosRemisionOrganismo);
         mav.addObject("paginacion", oficiosRemisionOrganismo.getPaginacion());
-        mav.addObject("organismosDestino", oficioRemisionEntradaUtilsEjb.organismosEntradaPendientesRemisionExternosTipo(oficinaActiva.getId(), tipoEvento, null));
+        mav.addObject("organismosDestino", oficioRemisionEntradaUtilsEjb.organismosEntradaPendientesRemisionExternosTipo(entidadActiva.getId(), oficinaActiva.getId(), tipoEvento, null));
         mav.addObject("registroEntradaBusqueda", busqueda);
         mav.addObject("oficioRemisionForm", new OficioRemisionForm(RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA));
         mav.addObject("anys", getAnys());
@@ -254,13 +255,14 @@ public class OficioRemisionController extends BaseController {
     public ModelAndView oficiosSalidaPendientesRemision(@PathVariable Long tipoEvento, Model model, HttpServletRequest request) throws Exception {
 
         ModelAndView mav = new ModelAndView("oficioRemision/oficiosSalidaPendientesRemisionList");
+        Entidad entidadActiva = getEntidadActiva(request);
         Oficina oficinaActiva = getOficinaActiva(request);
 
         // Fijamos la oficina activa como la seleccionada por defecto
         RegistroSalida registroSalida = new RegistroSalida();
         registroSalida.setOficina(oficinaActiva);
 
-        model.addAttribute("organismosDestino", oficioRemisionSalidaUtilsEjb.organismosSalidaPendientesRemisionTipo(oficinaActiva.getId(), tipoEvento, null));
+        model.addAttribute("organismosDestino", oficioRemisionSalidaUtilsEjb.organismosSalidaPendientesRemisionTipo(entidadActiva.getId(), oficinaActiva.getId(), tipoEvento, null));
         model.addAttribute("registroSalidaBusqueda", new OficioSalidaPendienteBusquedaForm(registroSalida, 1));
         model.addAttribute("anys", getAnys());
 
@@ -286,7 +288,7 @@ public class OficioRemisionController extends BaseController {
         busqueda.setPageNumber(1);
         mav.addObject("oficiosRemisionOrganismo", oficiosRemisionOrganismo);
         mav.addObject("paginacion", oficiosRemisionOrganismo.getPaginacion());
-        mav.addObject("organismosDestino", oficioRemisionSalidaUtilsEjb.organismosSalidaPendientesRemisionTipo(oficinaActiva.getId(), tipoEvento, null));
+        mav.addObject("organismosDestino", oficioRemisionSalidaUtilsEjb.organismosSalidaPendientesRemisionTipo(entidadActiva.getId(), oficinaActiva.getId(), tipoEvento, null));
         mav.addObject("registroSalidaBusqueda", busqueda);
         mav.addObject("oficioRemisionForm", new OficioRemisionForm(RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA));
         mav.addObject("anys", getAnys());

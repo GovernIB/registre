@@ -41,7 +41,7 @@ public interface OficioRemisionEntradaUtilsLocal {
      * @return
      * @throws Exception
      */
-    List<Organismo> organismosEntradaPendientesRemisionExternosTipo(Long idOficina, Long tipoEvento, Integer total) throws Exception;
+    List<Organismo> organismosEntradaPendientesRemisionExternosTipo(Long idEntidad, Long idOficina, Long tipoEvento, Integer total) throws Exception;
 
 
     /**
@@ -58,7 +58,6 @@ public interface OficioRemisionEntradaUtilsLocal {
      * Obtiene el total de Registros de Entrada que están considerados Oficios de Remisión externos
      *
      * @param idOficina
-     * @param libros
      * @return
      * @throws Exception
      */
