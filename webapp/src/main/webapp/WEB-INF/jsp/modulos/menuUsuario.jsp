@@ -39,7 +39,8 @@
         <spring:eval expression="@environment.getProperty('es.caib.regweb3.iscaib')" var="isCaib"/>
         <c:if test="${isCaib}">
             <li class="divider"></li>
-            <li class="submenu-complet"><a href="<spring:eval expression="@environment.getProperty('es.caib.regweb3.preregistre')" var="urlPreregistre"/>" target="_blank"><i class="fa fa-external-link"></i> <spring:message code="regweb.preregistro.caib"/></a></li>
+            <spring:eval expression="@environment.getProperty('es.caib.regweb3.preregistre')" var="urlPreregistre"/>
+            <li class="submenu-complet"><a href="${urlPreregistre}" target="_blank"><i class="fa fa-external-link"></i> <spring:message code="regweb.preregistro.caib"/></a></li>
         </c:if>
 
     </ul>
