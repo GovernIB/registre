@@ -441,11 +441,12 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
 
         ModelAndView mav = new ModelAndView("registroSalida/registrosSalidaEstado");
 
+        Entidad entidad = getEntidadActiva(request);
         Oficina oficinaActiva = getOficinaActiva(request);
 
         if (isOperador(request) && oficinaActiva != null) {
 
-            Paginacion paginacion = registroSalidaConsultaEjb.getSirRechazadosReenviadosPaginado(pageNumber, oficinaActiva.getId());
+            Paginacion paginacion = registroSalidaConsultaEjb.getSirRechazadosReenviadosPaginado(pageNumber, entidad.getId(), oficinaActiva.getId());
 
             mav.addObject("titulo", getMessage("registroSalida.listado.pendientesSir"));
             mav.addObject("url", "pendientesSir");
