@@ -99,6 +99,12 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
         // 1.-Validar la entidad y el usuario que realiza la petición
         Entidad entidadActiva = validarEntidad(entidad);
 
+        // Integraciones
+        Date inicio = new Date();
+        StringBuilder peticion = new StringBuilder();
+
+        peticion.append("usuario: ").append(UsuarioAplicacionCache.get().getUsuario().getNombreIdentificador()).append(System.getProperty("line.separator"));
+
         // 2.- Obtener el usuario aplicación que ha realizado la petición
         UsuarioEntidad usuarioAplicacion = usuarioEntidadEjb.findByIdentificadorEntidad(UsuarioAplicacionCache.get().getUsuario().getIdentificador(), entidadActiva.getId());
 
@@ -106,13 +112,19 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
             throw WsUtils.createWsI18NException("registro.usuario.noExiste", UsuarioAplicacionCache.get().getUsuario().getIdentificador(), entidadActiva.getNombre());
         }
 
-        // 3.- Crear la nueva Sesion
-        Sesion sesion = sesionEjb.nuevaSesion(usuarioAplicacion);
+        try{
+            // 3.- Crear la nueva Sesion
+            Sesion sesion = sesionEjb.nuevaSesion(usuarioAplicacion);
 
-        if(sesion != null){
+            peticion.append("idSesion: ").append(sesion.getIdSesion()).append(System.getProperty("line.separator"));
+            // Integracion
+            integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(),peticion.toString(), System.currentTimeMillis() - inicio.getTime(), entidadActiva.getId(), "");
+
             return sesion.getIdSesion();
-        }else{
-            throw WsUtils.createWsI18NException("error.ws.general");
+
+        }catch (Exception e){
+            integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, null,System.currentTimeMillis() - inicio.getTime(), entidadActiva.getId(), "");
+            throw WsUtils.createWsI18NException(e, "error.ws.general");
         }
 
     }
