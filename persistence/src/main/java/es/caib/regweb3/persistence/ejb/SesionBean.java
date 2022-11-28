@@ -79,12 +79,9 @@ public class SesionBean extends BaseEjbJPA<Sesion, Long> implements SesionLocal 
     public Sesion nuevaSesion(UsuarioEntidad usuario) throws Exception {
 
         // Creamos un nuevo token
-        SecureRandom secureRandom = new SecureRandom();
-        Long idSesion = secureRandom.nextLong();
+        Long idSesion = new SecureRandom().nextLong();
 
         Sesion sesion = new Sesion(idSesion, usuario, RegwebConstantes.SESION_NO_INICIADA);
-
-        log.info("idSesion: " + idSesion);
 
         return persist(sesion);
     }
