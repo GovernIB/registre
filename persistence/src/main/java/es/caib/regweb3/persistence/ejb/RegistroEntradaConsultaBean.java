@@ -689,7 +689,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
         Query q2;
 
         q = em.createQuery("Select re from RegistroEntrada as re where re.entidad.id = :idEntidad and re.oficina.id = :idOficina " +
-                "and re.estado = :rechazado or re.estado = :reenviado order by re.fecha desc");
+                "and (re.estado = :rechazado or re.estado = :reenviado) order by re.fecha desc");
 
         q.setParameter("idEntidad", idEntidad);
         q.setParameter("idOficina", idOficina);
@@ -697,7 +697,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
         q.setParameter("reenviado", RegwebConstantes.REGISTRO_REENVIADO);
 
         q2 = em.createQuery("Select count(re.id) from RegistroEntrada as re where re.entidad.id = :idEntidad and re.oficina.id = :idOficina " +
-                "and re.estado = :rechazado or re.estado = :reenviado");
+                "and (re.estado = :rechazado or re.estado = :reenviado)");
 
         q2.setParameter("idEntidad", idEntidad);
         q2.setParameter("idOficina", idOficina);
