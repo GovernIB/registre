@@ -34,7 +34,7 @@ public class EventoController extends BaseController {
         Entidad entidadActiva = getEntidadActiva(request);
 
         mav.addObject("totalEntradas",
-                registroEntradaConsultaEjb.queryCount("Select count(id) from RegistroEntrada where usuario.entidad.id = "+entidadActiva.getId()));
+                registroEntradaConsultaEjb.queryCount("Select count(id) from RegistroEntrada where entidad.id = "+entidadActiva.getId()));
 
         mav.addObject("totalSalidas",
                 registroEntradaConsultaEjb.queryCount("Select count(id) from RegistroSalida where entidad.id = "+entidadActiva.getId()));
