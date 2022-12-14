@@ -172,10 +172,10 @@ public class RegWeb3SecurityConfig extends WebSecurityConfigurerAdapter {
                     KeycloakSecurityContext session = keycloakPrincipal.getKeycloakSecurityContext();
                     AccessToken accessToken = session.getToken();
 
-                    log.info("accessToken.getPreferredUsername(): " + accessToken.getPreferredUsername());
-                    log.info("accessToken.getIssuedFor(): " + accessToken.getIssuedFor());
-                    log.info("accessToken.getIssuer(): " + accessToken.getIssuer());
-                    log.info("ROLES: " + accessToken.getRealmAccess().getRoles());
+                    log.debug("accessToken.getPreferredUsername(): " + accessToken.getPreferredUsername());
+                    log.debug("accessToken.getIssuedFor(): " + accessToken.getIssuedFor());
+                    log.debug("accessToken.getIssuer(): " + accessToken.getIssuer());
+                    log.debug("ROLES: " + accessToken.getRealmAccess().getRoles());
 
                     Set<String> roles = accessToken.getRealmAccess().getRoles();
 

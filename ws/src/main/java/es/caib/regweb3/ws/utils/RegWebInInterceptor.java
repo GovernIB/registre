@@ -24,6 +24,7 @@ import org.slf4j.LoggerFactory;
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
 import java.lang.reflect.UndeclaredThrowableException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -63,25 +64,25 @@ public class RegWebInInterceptor extends AbstractPhaseInterceptor<Message> {
 
                 method = getTargetMethod(message);
 
-                log.info("  + Method NAME = " + method.getName());
-                log.info("  + Method CLASS = " + method.getDeclaringClass());
+                log.info("  + Method NAME = " + method.getName() + " --  Method CLASS = " + method.getDeclaringClass());
 
                 HttpServletRequest hsr = (HttpServletRequest) message.get("HTTP.REQUEST");
-                log.info(" USER:  " + hsr.getRemoteUser());
 
-                if (hsr.isUserInRole(RegwebConstantes.RWE_SUPERADMIN)) log.info(" ROLE: RWE_SUPERADMIN");
-                if (hsr.isUserInRole(RegwebConstantes.RWE_ADMIN)) log.info(" ROLE: RWE_ADMIN ");
-                if (hsr.isUserInRole(RegwebConstantes.RWE_USUARI)) log.info(" ROLE: RWE_USER ");
-                if (hsr.isUserInRole(RegwebConstantes.RWE_WS_ENTRADA)) log.info(" ROLE: RWE_WS_ENTRADA ");
-                if (hsr.isUserInRole(RegwebConstantes.RWE_WS_SALIDA)) log.info(" ROLE: RWE_WS_SALIDA ");
-                if (hsr.isUserInRole(RegwebConstantes.RWE_WS_CIUDADANO)) log.info(" ROLE: RWE_WS_CIUDADANO ");
+                List<String> roles =  new ArrayList<>();
+                if (hsr.isUserInRole(RegwebConstantes.RWE_SUPERADMIN)) roles.add(RegwebConstantes.RWE_SUPERADMIN);
+                if (hsr.isUserInRole(RegwebConstantes.RWE_ADMIN)) roles.add(RegwebConstantes.RWE_ADMIN);
+                if (hsr.isUserInRole(RegwebConstantes.RWE_USUARI)) roles.add(RegwebConstantes.RWE_USUARI);
+                if (hsr.isUserInRole(RegwebConstantes.RWE_WS_ENTRADA)) roles.add(RegwebConstantes.RWE_WS_ENTRADA);
+                if (hsr.isUserInRole(RegwebConstantes.RWE_WS_SALIDA)) roles.add(RegwebConstantes.RWE_WS_SALIDA);
+                if (hsr.isUserInRole(RegwebConstantes.RWE_WS_CIUDADANO)) roles.add(RegwebConstantes.RWE_WS_CIUDADANO);
+
+                log.info("USER:  " + hsr.getRemoteUser());
+                log.info("ROLES: " + roles);
 
             } catch (Exception e) {
                 log.error(e.getMessage());
             }
-
         }
-
 
         Usuario usuariAplicacio;
         try {
