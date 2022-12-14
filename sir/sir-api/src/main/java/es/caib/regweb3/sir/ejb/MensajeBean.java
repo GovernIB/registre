@@ -120,31 +120,28 @@ public class MensajeBean implements MensajeLocal {
         // Crear el XML del mensaje en formato SICRES 3.0
         String xml = sicres3XML.createXMLMensaje(mensaje);
 
-        //log.info("Mensaje a ws_sir7: " + xml);
-
         try {
             WS_SIR7_PortType ws_sir7 = getWS_SIR7();
 
             respuesta = ws_sir7.recepcionMensajeDatosControlDeAplicacion(xml);
 
         } catch (Exception e) {
-            log.info("Error al enviar el mensaje " + mensaje.getDescripcionMensaje());
+            log.info("Error al enviar el mensaje (" + mensaje.getIdentificadorIntercambio()+ ") - (" + mensaje.getDescripcionMensaje()+ ")");
             e.printStackTrace();
             throw new SIRException("Error en la llamada al servicio de recepción de mensaje de datos de control (WS_SIR7)");
         }
 
         if (respuesta != null) {
 
-            log.info("Respuesta ws_sir7: " + respuesta.getCodigo() + " - " + respuesta.getDescripcion());
+            //log.info("Respuesta ws_sir7: " + respuesta.getCodigo() + " - " + respuesta.getDescripcion());
 
             if (!Errores.OK.getValue().equals(respuesta.getCodigo())) {
                 log.info("La respuesta de WS_SIR7 no es correcta");
                 throw new SIRException("Error en la respuesta del servicio de recepción de mensaje de datos de control (WS_SIR7)");
             }
-
         }
 
-        log.info("Mensaje de control (" + mensaje.getDescripcionMensaje()+ ") enviado correctamente");
+        //log.info("Mensaje de control (" + mensaje.getDescripcionMensaje()+ ") enviado correctamente");
 
         return mensaje;
     }

@@ -135,7 +135,6 @@ public class RecepcionBean implements RecepcionLocal{
         } catch (RuntimeException e) {
 
             log.info("-------- Error inesperado (RuntimeException) recibiendo el Fichero de Intercambio, enviamos un mensaje de control de error --------", e);
-            log.info("");
 
             if(ficheroIntercambio != null){
                 mensajeError = crearMensajeError(ficheroIntercambio, errorGenerico, e.getMessage(), entidad);
@@ -160,8 +159,6 @@ public class RecepcionBean implements RecepcionLocal{
                 datosIntegracion(ficheroIntercambio, peticion);
                 webServicesMethodsEjb.addIntegracionError(RegwebConstantes.INTEGRACION_SIR, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - inicio.getTime(), entidad.getId(), ficheroIntercambio.getIdentificadorIntercambio());
             }
-            log.info("");
-            log.info("------------------------------------------------------------------------------------------------------------");
 
             throw e;
         }

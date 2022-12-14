@@ -120,9 +120,7 @@ public class DistribucionBean implements DistribucionLocal {
 
         Boolean distribuido = false;
 
-        log.info("------------------------------------------------------------");
-        log.info("Distribuyendo el registro: " + registroEntrada.getNumeroRegistroFormateado());
-        log.info("");
+        log.info("------- Distribuyendo el registro: " + registroEntrada.getNumeroRegistroFormateado() + " -------");
 
         // Si no tiene Justificante, lo creamos
         if (!registroEntrada.getRegistroDetalle().getTieneJustificante()) {
