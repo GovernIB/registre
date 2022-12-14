@@ -75,6 +75,9 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
     @EJB(mappedName = RegistroSalidaConsultaLocal.JNDI_NAME)
     private RegistroSalidaConsultaLocal registroSalidaConsultaEjb;
 
+    @EJB(mappedName = RegistroSalidaLocal.JNDI_NAME)
+    private RegistroSalidaLocal registroSalidaEjb;
+
     @EJB(mappedName = DistribucionLocal.JNDI_NAME)
     private DistribucionLocal distribucionEjb;
 
@@ -338,7 +341,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
 
                 }catch (Exception e){
                     e.printStackTrace();
-                    throw WsUtils.createWsI18NException(e, "registro.nuevo.error");
+                    throw WsUtils.createWsI18NException(e, "registroEntrada.nuevo.error");
                 }
 
              // Se trata a de un Registro de Salida
@@ -415,8 +418,11 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
                     integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), System.currentTimeMillis() - inicio.getTime(), entidadActiva.getId(), numRegFormat);
 
                 } catch (Exception e) {
+                    if(registroSalida.getId() != null){
+                        registroSalidaEjb.anularRegistroSalida(registroSalida, usuarioAplicacion, "Anulación automática tras error al procesar la salida.");
+                    }
                     e.printStackTrace();
-                    throw WsUtils.createWsI18NException(e, "registro.nuevo.error");
+                    throw WsUtils.createWsI18NException(e, "registroSalida.nuevo.error");
                 }
             }
 

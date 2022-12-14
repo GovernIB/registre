@@ -222,7 +222,7 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl implemen
 
         }catch (Exception e){
             integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, null,System.currentTimeMillis() - inicio.getTime(), entidadActiva.getId(), numRegFormat);
-            throw WsUtils.createWsI18NException("registro.nuevo.error");
+            throw WsUtils.createWsI18NException("registroEntrada.nuevo.error");
         }
 
         if (registroEntrada.getId() != null) {
