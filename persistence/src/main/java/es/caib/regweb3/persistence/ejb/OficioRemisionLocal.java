@@ -243,14 +243,14 @@ public interface OficioRemisionLocal extends BaseEjb<OficioRemision, Long> {
 
     /**
      * Acepta un Oficio SIr, procesando el Mensaje de confirmación
-     * @param idOficioRemision
+     * @param oficio
      * @param codigoEntidadRegistralOrigen
      * @param decodificacionEntidadRegistralOrigen
      * @param numeroRegistroDestino
      * @param fechaRegistroDestino
      * @throws Exception
      */
-    void aceptarOficioSir(Long idOficioRemision, String codigoEntidadRegistralOrigen, String decodificacionEntidadRegistralOrigen, String numeroRegistroDestino, Date fechaRegistroDestino) throws Exception;
+    void aceptarOficioSir(OficioRemision oficio, String codigoEntidadRegistralOrigen, String decodificacionEntidadRegistralOrigen, String numeroRegistroDestino, Date fechaRegistroDestino) throws Exception;
 
     /**
      * Busca los Números de Registro Formateados de los Registros de Entrada que pertenecen a un OficioRemision

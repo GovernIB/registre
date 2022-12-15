@@ -122,6 +122,15 @@ public interface AnexoLocal extends BaseEjb<Anexo, Long> {
      */
     int purgarAnexosRegistrosAceptados(Long idEntidad) throws Exception, I18NException;
 
+    /**
+     * Elimina los anexos de los registros(E/S) que han sido enviados via SIR y confirmados en destino.
+     * @param idRegistro
+     * @param tipoRegistro
+     * @param idEntidad
+     * @throws Exception
+     * @throws I18NException
+     */
+    void purgarAnexosRegistroAceptado(Long idRegistro, Long tipoRegistro, Long idEntidad) throws Exception;
 
     /**
      * Método que elimina los anexos asociados a registros que ya se han distribuido.
