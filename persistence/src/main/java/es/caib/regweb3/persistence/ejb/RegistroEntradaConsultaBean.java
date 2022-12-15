@@ -360,7 +360,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
         Query q2;
 
         q = em.createQuery("Select re from RegistroEntrada as re where re.entidad.id = :idEntidad and re.oficina.id = :idOficinaActiva " +
-                "and re.estado = :idEstado and re.evento = :distribuir order by re.fecha desc");
+                "and re.estado = :idEstado and re.evento = :distribuir and re.registroDetalle.presencial = true order by re.fecha desc");
 
         q.setParameter("idEntidad", idEntidad);
         q.setParameter("idOficinaActiva", idOficinaActiva);
@@ -368,7 +368,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
         q.setParameter("distribuir", RegwebConstantes.EVENTO_DISTRIBUIR);
 
         q2 = em.createQuery("Select count(re.id) from RegistroEntrada as re where re.entidad.id = :idEntidad and re.oficina.id = :idOficinaActiva " +
-                "and re.estado = :idEstado and re.evento = :distribuir");
+                "and re.estado = :idEstado and re.evento = :distribuir and re.registroDetalle.presencial = true");
 
         q2.setParameter("idEntidad", idEntidad);
         q2.setParameter("idOficinaActiva", idOficinaActiva);
