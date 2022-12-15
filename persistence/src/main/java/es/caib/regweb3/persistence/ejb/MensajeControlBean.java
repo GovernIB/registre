@@ -368,17 +368,10 @@ public class MensajeControlBean extends BaseEjbJPA<MensajeControl, Long> impleme
             case RegwebConstantes.OFICIO_SIR_REENVIADO_ERROR:
 
                 String decodificacionEntidadRegistralOrigen = Dir3CaibUtils.denominacion(PropiedadGlobalUtil.getDir3CaibServer(oficio.getUsuarioResponsable().getEntidad().getId()), mensaje.getCodigoEntidadRegistralOrigen(), RegwebConstantes.OFICINA);
-                oficioRemisionEjb.aceptarOficioSir(oficio.getId(), mensaje.getCodigoEntidadRegistralOrigen(), decodificacionEntidadRegistralOrigen, mensaje.getNumeroRegistroEntradaDestino(), mensaje.getFechaEntradaDestino());
 
-                // Marcamos el Registro original como ACEPTADO
-                if (oficio.getTipoOficioRemision().equals(RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA)) {
-                    registroEntradaEjb.cambiarEstado(oficio.getRegistrosEntrada().get(0).getId(), RegwebConstantes.REGISTRO_OFICIO_ACEPTADO);
+                oficioRemisionEjb.aceptarOficioSir(oficio, mensaje.getCodigoEntidadRegistralOrigen(), decodificacionEntidadRegistralOrigen, mensaje.getNumeroRegistroEntradaDestino(), mensaje.getFechaEntradaDestino());
 
-                }else if(oficio.getTipoOficioRemision().equals(RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA)){
-                    registroSalidaEjb.cambiarEstado(oficio.getRegistrosSalida().get(0).getId(),RegwebConstantes.REGISTRO_OFICIO_ACEPTADO);
-                }
-
-                break;
+            break;
 
             case (RegwebConstantes.OFICIO_ACEPTADO):
 

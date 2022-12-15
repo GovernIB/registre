@@ -53,6 +53,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
     @EJB private RegistroSalidaConsultaLocal registroSalidaConsultaEjb;
     @EJB private RegistroEntradaLocal registroEntradaEjb;
     @EJB private RegistroEntradaConsultaLocal registroEntradaConsultaEjb;
+    @EJB private AnexoLocal anexoEjb;
     @EJB private TrazabilidadLocal trazabilidadEjb;
     @EJB private ContadorLocal contadorEjb;
     @EJB private OrganismoLocal organismoEjb;
@@ -819,8 +820,9 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
 
     @Override
     @TransactionAttribute(value = REQUIRES_NEW)
-    public void aceptarOficioSir(Long idOficioRemision, String codigoEntidadRegistralOrigen, String decodificacionEntidadRegistralOrigen, String numeroRegistroDestino, Date fechaRegistroDestino) throws Exception {
+    public void aceptarOficioSir(OficioRemision oficio, String codigoEntidadRegistralOrigen, String decodificacionEntidadRegistralOrigen, String numeroRegistroDestino, Date fechaRegistroDestino) throws Exception {
 
+        // Actualizamos el Oficio con los datos de la confirmación
         Query q = em.createQuery("update OficioRemision set estado=:estado, codigoEntidadRegistralProcesado=:codigoEntidadRegistralOrigen, " +
                 "decodificacionEntidadRegistralProcesado=:decodificacionEntidadRegistralOrigen, numeroRegistroEntradaDestino=:numeroRegistroDestino ,fechaEntradaDestino=:fechaRegistroDestino, fechaEstado=:fechaEstado where id = :idOficioRemision");
 
@@ -830,8 +832,20 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
         q.setParameter("numeroRegistroDestino", numeroRegistroDestino);
         q.setParameter("fechaRegistroDestino", fechaRegistroDestino);
         q.setParameter("fechaEstado", new Date());
-        q.setParameter("idOficioRemision", idOficioRemision);
+        q.setParameter("idOficioRemision", oficio.getId());
         q.executeUpdate();
+
+        // Marcamos el Registro original como ACEPTADO y purgamos sus anexos
+        if (oficio.getTipoOficioRemision().equals(RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA)) {
+            registroEntradaEjb.cambiarEstado(oficio.getRegistrosEntrada().get(0).getId(), RegwebConstantes.REGISTRO_OFICIO_ACEPTADO);
+            anexoEjb.purgarAnexosRegistroAceptado(oficio.getRegistrosEntrada().get(0).getId(), RegwebConstantes.REGISTRO_ENTRADA, oficio.getEntidad().getId());
+
+        }else if(oficio.getTipoOficioRemision().equals(RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA)){
+            registroSalidaEjb.cambiarEstado(oficio.getRegistrosSalida().get(0).getId(),RegwebConstantes.REGISTRO_OFICIO_ACEPTADO);
+            anexoEjb.purgarAnexosRegistroAceptado(oficio.getRegistrosSalida().get(0).getId(), RegwebConstantes.REGISTRO_SALIDA, oficio.getEntidad().getId());
+
+        }
+
     }
 
 
