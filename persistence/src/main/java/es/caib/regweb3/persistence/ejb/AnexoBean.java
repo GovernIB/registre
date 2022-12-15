@@ -41,6 +41,7 @@ import java.beans.PersistenceDelegate;
 import java.util.*;
 
 import static es.caib.regweb3.utils.RegwebConstantes.REGISTRO_ENTRADA;
+import static es.caib.regweb3.utils.RegwebConstantes.REGISTRO_SALIDA;
 import static javax.ejb.TransactionAttributeType.REQUIRES_NEW;
 
 
@@ -1208,6 +1209,39 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
         return anexos.size();
 
+    }
+
+    @Override
+    public void purgarAnexosRegistroAceptado(Long idRegistro, Long tipoRegistro, Long idEntidad) throws Exception {
+
+        Query q = null;
+
+        if(REGISTRO_ENTRADA.equals(tipoRegistro)){
+            // Obtenemos los anexos del registro, excepto el justificante
+            q = em.createQuery("Select anexos from RegistroEntrada as re left join re.registroDetalle.anexos as anexos where re.id=:idRegistroEntrada and anexos.purgado = false and anexos.justificante=false");
+            q.setParameter("idRegistroEntrada", idRegistro);
+
+
+        }else if(REGISTRO_SALIDA.equals(tipoRegistro)){
+            // Obtenemos los anexos del registro, excepto el justificante
+            q = em.createQuery("Select anexos from  RegistroSalida as rs left join rs.registroDetalle.anexos as anexos where rs.id=:idRegistroSalida and anexos.purgado = false and anexos.justificante=false");
+            q.setParameter("idRegistroSalida", idRegistro);
+        }
+
+        List<Anexo> anexos = q.getResultList();
+
+        try {
+            for (Anexo anexo : anexos) {
+                //Eliminamos de custodia los archivos asociados al anexo
+                eliminarCustodia(anexo.getCustodiaID(), anexo, idEntidad);
+                //Marcamos el anexo como purgado
+                anexo.setPurgado(true);
+                merge(anexo);
+            }
+        } catch (I18NException | Exception e) {
+            log.info("S'ha produit un error eliminant la custodia de l'annex");
+            e.printStackTrace();
+        }
     }
 
     @Override
