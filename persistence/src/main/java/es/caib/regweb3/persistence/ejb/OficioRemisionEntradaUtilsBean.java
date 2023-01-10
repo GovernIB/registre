@@ -403,10 +403,10 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
         q.setParameter("codigoOrganismo", codigoOrganismo);
         q.setParameter("idOficina", idOficina);
         q.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
+        q.setParameter("tipoEvento", tipoEvento);
         q.setHint("org.hibernate.readOnly", true);
 
-        q.setParameter("idEntidad", idEntidad);
-        q.setParameter("tipoEvento", tipoEvento);
+        q2.setParameter("idEntidad", idEntidad);
         q2.setParameter("codigoOrganismo", codigoOrganismo);
         q2.setParameter("idOficina", idOficina);
         q2.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);

@@ -483,8 +483,8 @@
         $('#anexoTitulo').html('<spring:message code="anexo.scan.masivo"/>');
         // Afegeix el contingut de formularioAnexoFichero.jsp al modal
         url = "?scanweb_absoluteurl=" + encodeURIComponent(window.location.href);
-        loadiframe("<c:url value="/anexoScan/new/masivo/${registro.registroDetalle.id}/${param.tipoRegistro}/${registro.id}/${registro.evento == RegwebConstantes.EVENTO_OFICIO_SIR}" />"+url);
-
+        loadiframe("<c:url value="/anexoScan/new/masivo/${registro.registroDetalle.id}/${param.tipoRegistro}/${registro.id}/${registro.evento == RegwebConstantes.EVENTO_OFICIO_SIR}" />" +url);
+    }
 
 
     // Quan s'espitja botó d'Editar Annexe
