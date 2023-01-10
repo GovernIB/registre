@@ -203,6 +203,7 @@ public class AnexoScanController extends AnexoController {
     public String crearAnexo2Post(HttpServletRequest request) throws Exception, I18NException {
 
         AnexoForm anexoForm = (AnexoForm) request.getSession().getAttribute("anexoForm");
+        boolean isSIR = anexoForm.getOficioRemisionSir();
         try {
             //Documentos obtenidos del scan
             List<ScanWebDocument> documentosEscaneados = obtenerDocumentosEscaneados(request, anexoForm.getRegistroID());
@@ -216,20 +217,21 @@ public class AnexoScanController extends AnexoController {
             anexoForm.setNumDocumento(0);
 
             request.getSession().setAttribute("documentosEscaneados", documentosEscaneados);
+            return "redirect:/anexoScan/transforma";
 
 
         } catch (I18NException i18n) {
             String msg = I18NUtils.tradueix(i18n.getTraduccio());
             log.error(msg, i18n);
             Mensaje.saveMessageError(request, msg);
-
+            return "redirect:/anexoScan/new/" + anexoForm.getIdRegistroDetalle() + "/" + anexoForm.getTipoRegistro() + "/" + anexoForm.getRegistroID() + "/" + isSIR+"?scanweb_absoluteurl="+request.getSession().getAttribute("scanwebAbsoluteurlBase");
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             Mensaje.saveMessageError(request, e.getMessage());
+            return "redirect:/anexoScan/new/" + anexoForm.getIdRegistroDetalle() + "/" + anexoForm.getTipoRegistro() + "/" + anexoForm.getRegistroID() + "/" + isSIR+"?scanweb_absoluteurl="+request.getSession().getAttribute("scanwebAbsoluteurlBase");
         }
 
-        return "redirect:/anexoScan/transforma";
-}
+    }
 
     /**
      * Método que carga una serie de atributos comunes del scan
