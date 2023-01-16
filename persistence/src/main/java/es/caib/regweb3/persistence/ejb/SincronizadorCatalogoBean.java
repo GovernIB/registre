@@ -4,6 +4,7 @@ import es.caib.dir3caib.ws.api.catalogo.CatEstadoEntidad;
 import es.caib.dir3caib.ws.api.catalogo.CatTipoVia;
 import es.caib.dir3caib.ws.api.catalogo.*;
 import es.caib.regweb3.model.CatPais;
+import es.caib.regweb3.model.CatServicio;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.utils.Dir3CaibUtils;
