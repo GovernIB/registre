@@ -39,19 +39,19 @@ public class RegistroDetalleBean extends BaseEjbJPA<RegistroDetalle, Long> imple
 
 
     @Override
-    public RegistroDetalle getReference(Long id) throws Exception {
+    public RegistroDetalle getReference(Long id) throws I18NException {
 
         return em.getReference(RegistroDetalle.class, id);
     }
 
     @Override
-    public RegistroDetalle findById(Long id) throws Exception {
+    public RegistroDetalle findById(Long id) throws I18NException {
 
         return em.find(RegistroDetalle.class, id);
     }
 
     @Override
-    public RegistroDetalle findByIdConInteresados(Long id) throws Exception {
+    public RegistroDetalle findByIdConInteresados(Long id) throws I18NException {
 
         RegistroDetalle registroDetalle = findById(id);
 
@@ -62,13 +62,13 @@ public class RegistroDetalleBean extends BaseEjbJPA<RegistroDetalle, Long> imple
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<RegistroDetalle> getAll() throws Exception {
+    public List<RegistroDetalle> getAll() throws I18NException {
 
         return em.createQuery("Select registroDetalle from RegistroDetalle as registroDetalle order by registroDetalle.id").getResultList();
     }
 
     @Override
-    public Long getTotal() throws Exception {
+    public Long getTotal() throws I18NException {
 
         Query q = em.createQuery("Select count(registroDetalle.id) from RegistroDetalle as registroDetalle");
 
@@ -78,7 +78,7 @@ public class RegistroDetalleBean extends BaseEjbJPA<RegistroDetalle, Long> imple
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<RegistroDetalle> getPagination(int inicio) throws Exception {
+    public List<RegistroDetalle> getPagination(int inicio) throws I18NException {
 
         Query q = em.createQuery("Select registroDetalle from RegistroDetalle as registroDetalle order by registroDetalle.id");
         q.setFirstResult(inicio);
@@ -88,7 +88,7 @@ public class RegistroDetalleBean extends BaseEjbJPA<RegistroDetalle, Long> imple
     }
 
     @Override
-    public RegistroDetalle findByRegistroEntrada(Long idRegistroEntrada) throws Exception {
+    public RegistroDetalle findByRegistroEntrada(Long idRegistroEntrada) throws I18NException {
 
         Query q = em.createQuery("Select re.registroDetalle from RegistroEntrada as re where re.id = :idRegistroEntrada");
         q.setParameter("idRegistroEntrada", idRegistroEntrada);
@@ -97,7 +97,7 @@ public class RegistroDetalleBean extends BaseEjbJPA<RegistroDetalle, Long> imple
     }
 
     @Override
-    public Integer eliminar(Set<Long> ids, Long idEntidad) throws Exception, I18NException {
+    public Integer eliminar(Set<Long> ids, Long idEntidad) throws I18NException {
 
         for (Object id : ids) {
 
@@ -117,7 +117,7 @@ public class RegistroDetalleBean extends BaseEjbJPA<RegistroDetalle, Long> imple
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Set<Long> getRegistrosDetalle(Long idEntidad) throws Exception {
+    public Set<Long> getRegistrosDetalle(Long idEntidad) throws I18NException {
         Set<Long> registrosDetalle = new HashSet<Long>();
 
         registrosDetalle.addAll(em.createQuery("Select distinct(registroDetalle.id) from RegistroEntrada where entidad.id = :idEntidad").setParameter("idEntidad", idEntidad).getResultList());
@@ -129,7 +129,7 @@ public class RegistroDetalleBean extends BaseEjbJPA<RegistroDetalle, Long> imple
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Set<Long> getRegistrosDetalleConfirmados(Long idEntidad, Date fecha) throws Exception {
+    public Set<Long> getRegistrosDetalleConfirmados(Long idEntidad, Date fecha) throws I18NException {
         Set<Long> registrosDetalle = new HashSet<Long>();
         //Obtenemos los registros detalle de los registros de entrada que se han aceptado
         Query query = em.createQuery("Select distinct(registroDetalle.id) from RegistroEntrada where entidad.id = :idEntidad and estado =:aceptado");
@@ -151,7 +151,7 @@ public class RegistroDetalleBean extends BaseEjbJPA<RegistroDetalle, Long> imple
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public boolean eliminarAnexoRegistroDetalle(Long idAnexo, Long idRegistroDetalle, Long idEntidad) throws Exception, I18NException {
+    public boolean eliminarAnexoRegistroDetalle(Long idAnexo, Long idRegistroDetalle, Long idEntidad) throws I18NException {
 
         Anexo anexo = anexoEjb.findById(idAnexo);
         RegistroDetalle registroDetalle = findById(idRegistroDetalle);

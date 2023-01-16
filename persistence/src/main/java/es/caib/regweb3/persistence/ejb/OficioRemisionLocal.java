@@ -34,9 +34,9 @@ public interface OficioRemisionLocal extends BaseEjb<OficioRemision, Long> {
      * @param oficioRemision
      * @param tipoOficioRemision
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Paginacion busqueda(Integer pageNumber, Long idOrganismo, Date fechaInicio, Date fechaFin, String usuario, OficioRemision oficioRemision, Long tipoOficioRemision, Integer estadoOficioRemision, Long tipoRegistro, Boolean sir) throws Exception;
+    Paginacion busqueda(Integer pageNumber, Long idOrganismo, Date fechaInicio, Date fechaFin, String usuario, OficioRemision oficioRemision, Long tipoOficioRemision, Integer estadoOficioRemision, Long tipoRegistro, Boolean sir) throws I18NException;
 
     /**
      * Registra un OficioRemision asignandole número
@@ -44,36 +44,36 @@ public interface OficioRemisionLocal extends BaseEjb<OficioRemision, Long> {
      * @param oficioRemision
      * @param estado
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    OficioRemision registrarOficioRemision(Entidad entidad, OficioRemision oficioRemision, Long estado) throws Exception, I18NException, I18NValidationException;
+    OficioRemision registrarOficioRemision(Entidad entidad, OficioRemision oficioRemision, Long estado) throws I18NException, I18NValidationException;
 
     /**
      * Anula un Oficio de Remisión
      *
      * @param idOficioRemision
      * @param usuarioEntidad
-     * @throws Exception
+     * @throws I18NException
      */
-    void anularOficioRemision(Long idOficioRemision, UsuarioEntidad usuarioEntidad) throws Exception;
+    void anularOficioRemision(Long idOficioRemision, UsuarioEntidad usuarioEntidad) throws I18NException;
 
     /**
      * Devuelve los Oficios de Remisión pendientes de procesar de los organismos seleccionados
      *
      * @param organismos
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    List<OficioRemision> oficiosPendientesLlegada(Set<Organismo> organismos, Integer total) throws Exception;
+    List<OficioRemision> oficiosPendientesLlegada(Set<Organismo> organismos, Integer total) throws I18NException;
 
     /**
      * Actualiza el destino extinguido de los Oficios pendientes de llegada por el Organismo que le sustituye
      *
      * @param idOrganismoExtinguido
      * @param idOrganismoSustituto
-     * @throws Exception
+     * @throws I18NException
      */
-    void actualizarDestinoPendientesLlegada(Long idOrganismoExtinguido, Long idOrganismoSustituto) throws Exception;
+    void actualizarDestinoPendientesLlegada(Long idOrganismoExtinguido, Long idOrganismoSustituto) throws I18NException;
 
     /**
      * Devuelve los Oficios de Remisión de los organismos seleccionados según su estado
@@ -81,27 +81,27 @@ public interface OficioRemisionLocal extends BaseEjb<OficioRemision, Long> {
      * @param organismos
      * @param oficioRemision
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Paginacion oficiosBusqueda(Set<Organismo> organismos, Integer pageNumber, OficioRemision oficioRemision, Long tipoOficioRemision, int estado) throws Exception;
+    Paginacion oficiosBusqueda(Set<Organismo> organismos, Integer pageNumber, OficioRemision oficioRemision, Long tipoOficioRemision, int estado) throws I18NException;
 
     /**
      * Devuelve los Oficios de Remisión pendientes de procesar de los organismos seleccionados
      *
      * @param organismos
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Long oficiosPendientesLlegadaCount(Set<Organismo> organismos) throws Exception;
+    Long oficiosPendientesLlegadaCount(Set<Organismo> organismos) throws I18NException;
 
     /**
      * Busca Registros de Entrada que pertenecen a un OficioRemision
      *
      * @param idOficioRemision
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    List<RegistroEntrada> getEntradasByOficioRemision(Long idOficioRemision) throws Exception;
+    List<RegistroEntrada> getEntradasByOficioRemision(Long idOficioRemision) throws I18NException;
 
     /**
      * Obtiene los Oficios de Remisión de un determinado Estado y Entidad
@@ -109,9 +109,9 @@ public interface OficioRemisionLocal extends BaseEjb<OficioRemision, Long> {
      * @param idEstado
      * @param idOficina
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    List<OficioRemision> getByOficinaEstado(Long idOficina, int idEstado, int total) throws Exception;
+    List<OficioRemision> getByOficinaEstado(Long idOficina, int idEstado, int total) throws I18NException;
 
     /**
      * Obtiene los Oficios de Remisión de un determinado Estado y Entidad
@@ -119,9 +119,9 @@ public interface OficioRemisionLocal extends BaseEjb<OficioRemision, Long> {
      * @param idEstado
      * @param idOficina
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Long getByOficinaEstadoCount(Long idOficina, int idEstado) throws Exception;
+    Long getByOficinaEstadoCount(Long idOficina, int idEstado) throws I18NException;
 
     /**
      * Busca los Oficios de Remisión según su oficia origen y estado
@@ -130,43 +130,43 @@ public interface OficioRemisionLocal extends BaseEjb<OficioRemision, Long> {
      * @param idOficinaActiva
      * @param idEstado
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Paginacion getByOficinaEstadoPaginado(Integer pageNumber, Long idOficinaActiva, Integer idEstado) throws Exception;
+    Paginacion getByOficinaEstadoPaginado(Integer pageNumber, Long idOficinaActiva, Integer idEstado) throws I18NException;
 
     /**
      * Obtiene los Oficios de Remisión que han de reintentar su envío al componente CIR
      *
      * @param idEntidad
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    List<Long> getEnviadosSinAck(Long idEntidad) throws Exception;
+    List<Long> getEnviadosSinAck(Long idEntidad) throws I18NException;
 
     /**
      * @param idEntidad
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    List<Long> getEnviadosConError(Long idEntidad) throws Exception;
+    List<Long> getEnviadosConError(Long idEntidad) throws I18NException;
 
     /**
      * Oficios enviados o reenviados sin ACK y con el máx de reintentos acumulados
      *
      * @param idEntidad
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    List<OficioRemision> getEnviadosSinAckMaxReintentos(Long idEntidad) throws Exception;
+    List<OficioRemision> getEnviadosSinAckMaxReintentos(Long idEntidad) throws I18NException;
 
     /**
      * Oficios enviados o reenviados con ERROR y con el máx de reintentos acumulados
      *
      * @param idEntidad
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    List<OficioRemision> getEnviadosErrorMaxReintentos(Long idEntidad) throws Exception;
+    List<OficioRemision> getEnviadosErrorMaxReintentos(Long idEntidad) throws I18NException;
 
 
     /**
@@ -174,18 +174,18 @@ public interface OficioRemisionLocal extends BaseEjb<OficioRemision, Long> {
      *
      * @param idOficioRemision
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    List<RegistroSalida> getSalidasByOficioRemision(Long idOficioRemision) throws Exception;
+    List<RegistroSalida> getSalidasByOficioRemision(Long idOficioRemision) throws I18NException;
 
     /**
      * Obtiene un OficioRemisionSir a partir del identificadorIntercambio del envío
      *
      * @param identificadorIntercambio
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    OficioRemision getByIdentificadorIntercambio(String identificadorIntercambio, String codigoEntidadRegistralDestino) throws Exception;
+    OficioRemision getByIdentificadorIntercambio(String identificadorIntercambio, String codigoEntidadRegistralDestino) throws I18NException;
 
     /**
      * Obtiene un OficioRemisionSir a partir del identificadorIntercambio del envío en estado RECHAZADO
@@ -193,27 +193,27 @@ public interface OficioRemisionLocal extends BaseEjb<OficioRemision, Long> {
      * @param identificadorIntercambio
      * @param codigoEntidadRegistralDestino
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    OficioRemision getBySirRechazado(String identificadorIntercambio, String codigoEntidadRegistralDestino) throws Exception;
+    OficioRemision getBySirRechazado(String identificadorIntercambio, String codigoEntidadRegistralDestino) throws I18NException;
 
     /**
      * Obtiene un OficioRemisionSir a partir del identificadorIntercambio del envío
      *
      * @param identificadorIntercambio
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    OficioRemision getByIdentificadorIntercambio(String identificadorIntercambio) throws Exception;
+    OficioRemision getByIdentificadorIntercambio(String identificadorIntercambio) throws I18NException;
 
     /**
      * Modifica el Estado de un OficioRemision
      *
      * @param idOficioRemision
      * @param estado
-     * @throws Exception
+     * @throws I18NException
      */
-    void modificarEstado(Long idOficioRemision, int estado) throws Exception;
+    void modificarEstado(Long idOficioRemision, int estado) throws I18NException;
 
     /**
      * Modifica el Estado de un {@link OficioRemision}, a uno con Error, incluyendo código y descripción del Error.
@@ -221,25 +221,25 @@ public interface OficioRemisionLocal extends BaseEjb<OficioRemision, Long> {
      * @param estado
      * @param codigoError
      * @param descripcionError
-     * @throws Exception
+     * @throws I18NException
      */
-    void modificarEstadoError(Long idOficioRemision, int estado, String codigoError, String descripcionError) throws Exception;
+    void modificarEstadoError(Long idOficioRemision, int estado, String codigoError, String descripcionError) throws I18NException;
 
     /**
      * Incrementa el contador de reintentos
      * @param idOficioRemision
      * @param reintentos
-     * @throws Exception
+     * @throws I18NException
      */
-    void incrementarReintentos(Long idOficioRemision, Integer reintentos) throws Exception;
+    void incrementarReintentos(Long idOficioRemision, Integer reintentos) throws I18NException;
 
     /**
      * Reinicia el contador de reintentos SIR
      *
      * @param idOficioRemision
-     * @throws Exception
+     * @throws I18NException
      */
-    void reiniciarIntentos(Long idOficioRemision) throws Exception;
+    void reiniciarIntentos(Long idOficioRemision) throws I18NException;
 
     /**
      * Acepta un Oficio SIr, procesando el Mensaje de confirmación
@@ -248,44 +248,44 @@ public interface OficioRemisionLocal extends BaseEjb<OficioRemision, Long> {
      * @param decodificacionEntidadRegistralOrigen
      * @param numeroRegistroDestino
      * @param fechaRegistroDestino
-     * @throws Exception
+     * @throws I18NException
      */
-    void aceptarOficioSir(OficioRemision oficio, String codigoEntidadRegistralOrigen, String decodificacionEntidadRegistralOrigen, String numeroRegistroDestino, Date fechaRegistroDestino) throws Exception;
+    void aceptarOficioSir(OficioRemision oficio, String codigoEntidadRegistralOrigen, String decodificacionEntidadRegistralOrigen, String numeroRegistroDestino, Date fechaRegistroDestino) throws I18NException;
 
     /**
      * Busca los Números de Registro Formateados de los Registros de Entrada que pertenecen a un OficioRemision
      *
      * @param idOficioRemision
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    List<String> getNumerosRegistroEntradaFormateadoByOficioRemision(Long idOficioRemision) throws Exception;
+    List<String> getNumerosRegistroEntradaFormateadoByOficioRemision(Long idOficioRemision) throws I18NException;
 
     /**
      * Busca los Números de Registro Formateados de los Registros de Salida que pertenecen a un OficioRemision
      *
      * @param idOficioRemision
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    List<String> getNumerosRegistroSalidaFormateadoByOficioRemision(Long idOficioRemision) throws Exception;
+    List<String> getNumerosRegistroSalidaFormateadoByOficioRemision(Long idOficioRemision) throws I18NException;
 
     /**
      * @param codigoOrganismo
      * @param idEntidad
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Oficio obtenerTipoOficio(String codigoOrganismo, Long idEntidad) throws Exception;
+    Oficio obtenerTipoOficio(String codigoOrganismo, Long idEntidad) throws I18NException;
 
     /**
      * Elimina los Oficios de remisión de una Entidad
      *
      * @param idEntidad
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Integer eliminarByEntidad(Long idEntidad) throws Exception;
+    Integer eliminarByEntidad(Long idEntidad) throws I18NException;
 
     /**
      * Obtiene el oficio de Remisión a partir de un numero de registro formateado
@@ -294,7 +294,7 @@ public interface OficioRemisionLocal extends BaseEjb<OficioRemision, Long> {
      * @param idEntidad
      * @return
      */
-    OficioRemision getByNumeroRegistroFormateado(String numeroRegistroFormateado, Long idEntidad) throws Exception;
+    OficioRemision getByNumeroRegistroFormateado(String numeroRegistroFormateado, Long idEntidad) throws I18NException;
 
     /**
      * Genera el pdf del oficio de remisión para obtenerlo via WS
@@ -304,7 +304,7 @@ public interface OficioRemisionLocal extends BaseEjb<OficioRemision, Long> {
      * @param registrosEntrada
      * @param registrosSalida
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    CombineStream generarOficioRemisionRtf(OficioRemision oficioRemision, ModeloOficioRemision modeloOficioRemision, List<String> registrosEntrada, List<String> registrosSalida) throws Exception;
+    CombineStream generarOficioRemisionRtf(OficioRemision oficioRemision, ModeloOficioRemision modeloOficioRemision, List<String> registrosEntrada, List<String> registrosSalida) throws I18NException;
 }

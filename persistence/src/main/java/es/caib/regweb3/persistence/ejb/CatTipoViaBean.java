@@ -1,6 +1,7 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.CatTipoVia;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,26 +30,26 @@ public class CatTipoViaBean extends BaseEjbJPA<CatTipoVia, Long> implements CatT
 
 
     @Override
-    public CatTipoVia getReference(Long id) throws Exception {
+    public CatTipoVia getReference(Long id) throws I18NException {
 
         return em.getReference(CatTipoVia.class, id);
     }
 
     @Override
-    public CatTipoVia findById(Long id) throws Exception {
+    public CatTipoVia findById(Long id) throws I18NException {
 
         return em.find(CatTipoVia.class, id);
     }
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<CatTipoVia> getAll() throws Exception {
+    public List<CatTipoVia> getAll() throws I18NException {
 
         return em.createQuery("Select catTipoVia from CatTipoVia as catTipoVia order by catTipoVia.codigoTipoVia").getResultList();
     }
 
     @Override
-    public Long getTotal() throws Exception {
+    public Long getTotal() throws I18NException {
 
         Query q = em.createQuery("Select count(catTipoVia.id) from CatTipoVia as catTipoVia");
 
@@ -58,7 +59,7 @@ public class CatTipoViaBean extends BaseEjbJPA<CatTipoVia, Long> implements CatT
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<CatTipoVia> getPagination(int inicio) throws Exception {
+    public List<CatTipoVia> getPagination(int inicio) throws I18NException {
 
         Query q = em.createQuery("Select catTipoVia from CatTipoVia as catTipoVia order by catTipoVia.id");
         q.setFirstResult(inicio);
@@ -70,7 +71,7 @@ public class CatTipoViaBean extends BaseEjbJPA<CatTipoVia, Long> implements CatT
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public CatTipoVia findByCodigo(Long codigo) throws Exception {
+    public CatTipoVia findByCodigo(Long codigo) throws I18NException {
 
         Query q = em.createQuery("Select catTipoVia from CatTipoVia as catTipoVia where catTipoVia.codigoTipoVia = :codigo");
 
@@ -88,7 +89,7 @@ public class CatTipoViaBean extends BaseEjbJPA<CatTipoVia, Long> implements CatT
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public CatTipoVia findByDescripcion(String descripcion) throws Exception {
+    public CatTipoVia findByDescripcion(String descripcion) throws I18NException {
 
         Query q = em.createQuery("Select catTipoVia from CatTipoVia as catTipoVia where catTipoVia.descripcionTipoVia = :descripcion");
 

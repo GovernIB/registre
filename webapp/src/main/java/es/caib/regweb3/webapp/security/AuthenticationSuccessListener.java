@@ -6,7 +6,6 @@ import es.caib.regweb3.persistence.ejb.RolLocal;
 import es.caib.regweb3.persistence.ejb.UsuarioLocal;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.utils.LoginService;
-import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -107,8 +106,6 @@ public class AuthenticationSuccessListener implements
             try {
                 nuevoUsuario = loginService.crearUsuario(identificador);
             } catch (Exception e) {
-                throw new LoginException("Ha ocurrido un error configurando el acceso a REGWEB3: " + e.getMessage());
-            } catch (I18NException e) {
                 throw new LoginException("Ha ocurrido un error configurando el acceso a REGWEB3: " + e.getMessage());
             }
 

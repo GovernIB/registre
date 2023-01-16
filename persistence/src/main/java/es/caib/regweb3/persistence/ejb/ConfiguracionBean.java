@@ -1,6 +1,7 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.Configuracion;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,26 +31,26 @@ public class ConfiguracionBean extends BaseEjbJPA<Configuracion, Long> implement
 
 
     @Override
-    public Configuracion getReference(Long id) throws Exception {
+    public Configuracion getReference(Long id) throws I18NException {
 
         return em.getReference(Configuracion.class, id);
     }
 
     @Override
-    public Configuracion findById(Long id) throws Exception {
+    public Configuracion findById(Long id) throws I18NException {
 
         return em.find(Configuracion.class, id);
     }
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Configuracion> getAll() throws Exception {
+    public List<Configuracion> getAll() throws I18NException {
 
         return em.createQuery("Select configuracion from Configuracion as configuracion order by configuracion.id").getResultList();
     }
 
     @Override
-    public Long getTotal() throws Exception {
+    public Long getTotal() throws I18NException {
 
         Query q = em.createQuery("Select count(configuracion.id) from Configuracion as configuracion");
 
@@ -58,7 +59,7 @@ public class ConfiguracionBean extends BaseEjbJPA<Configuracion, Long> implement
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Configuracion> getPagination(int inicio) throws Exception {
+    public List<Configuracion> getPagination(int inicio) throws I18NException {
 
         Query q = em.createQuery("Select configuracion from Configuracion as configuracion order by configuracion.id");
         q.setFirstResult(inicio);

@@ -24,46 +24,46 @@ public interface PluginLocal extends BaseEjb<Plugin, Long> {
      *
      * @param idEntidad
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    List<Plugin> findByEntidadTipo(Long idEntidad, Long tipo) throws Exception;
+    List<Plugin> findByEntidadTipo(Long idEntidad, Long tipo) throws I18NException;
 
     /**
      * @param idEntidad
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Long getTotalByEntidad(Long idEntidad, Long tipo) throws Exception;
+    Long getTotalByEntidad(Long idEntidad, Long tipo) throws I18NException;
 
     /**
      * @param inicio
      * @param idEntidad
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    List<Plugin> getPaginationByEntidad(int inicio, Long idEntidad, Long tipo) throws Exception;
+    List<Plugin> getPaginationByEntidad(int inicio, Long idEntidad, Long tipo) throws I18NException;
 
     /**
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Long getTotalREGWEB3(Long tipo) throws Exception;
+    Long getTotalREGWEB3(Long tipo) throws I18NException;
 
     /**
      * @param inicio
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    List<Plugin> getPaginationREGWEB3(int inicio, Long tipo) throws Exception;
+    List<Plugin> getPaginationREGWEB3(int inicio, Long tipo) throws I18NException;
 
     /**
      * Elimina los {@link Plugin} de una {@link es.caib.regweb3.model.Entidad}
      *
      * @param idEntidad
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Integer eliminarByEntidad(Long idEntidad) throws Exception;
+    Integer eliminarByEntidad(Long idEntidad) throws I18NException;
 
     /**
      * Obtiene en plugin determinado
@@ -71,7 +71,7 @@ public interface PluginLocal extends BaseEjb<Plugin, Long> {
      * @param idEntidad
      * @param tipoPlugin
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
     Object getPlugin(Long idEntidad, Long tipoPlugin) throws I18NException;
 
@@ -81,7 +81,7 @@ public interface PluginLocal extends BaseEjb<Plugin, Long> {
      * @param idEntidad
      * @param tipoPlugin
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
     Properties getPropertiesPlugin(Long idEntidad, Long tipoPlugin) throws I18NException;
 
@@ -102,8 +102,8 @@ public interface PluginLocal extends BaseEjb<Plugin, Long> {
      * @param idEntidad
      * @param tipoPlugin
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    List<Object> getPlugins(Long idEntidad, Long tipoPlugin) throws Exception;
+    List<Object> getPlugins(Long idEntidad, Long tipoPlugin) throws I18NException;
 
 }

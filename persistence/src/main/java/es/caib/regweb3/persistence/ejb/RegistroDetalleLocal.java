@@ -24,36 +24,36 @@ public interface RegistroDetalleLocal extends BaseEjb<RegistroDetalle, Long> {
      *
      * @param id
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    RegistroDetalle findByIdConInteresados(Long id) throws Exception;
+    RegistroDetalle findByIdConInteresados(Long id) throws I18NException;
 
     /**
      * Obtiene el RegistroDetalle de un RegistroEntrada
      *
      * @param idRegistroEntrada
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    RegistroDetalle findByRegistroEntrada(Long idRegistroEntrada) throws Exception;
+    RegistroDetalle findByRegistroEntrada(Long idRegistroEntrada) throws I18NException;
 
     /**
      * Elimina los RegistroDetalle
      *
      * @param ids
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Integer eliminar(Set<Long> ids, Long idEntidad) throws Exception, I18NException;
+    Integer eliminar(Set<Long> ids, Long idEntidad) throws I18NException;
 
     /**
      * Obtiene todos los RegistroDetalle de una Entidad
      *
      * @param idEntidad
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Set<Long> getRegistrosDetalle(Long idEntidad) throws Exception;
+    Set<Long> getRegistrosDetalle(Long idEntidad) throws I18NException;
 
     /**
      * Elimina un anexo de un registroDetalle. Puesto aqui por referencias cruzadas
@@ -61,16 +61,16 @@ public interface RegistroDetalleLocal extends BaseEjb<RegistroDetalle, Long> {
      * @param idAnexo
      * @param idRegistroDetalle
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    boolean eliminarAnexoRegistroDetalle(Long idAnexo, Long idRegistroDetalle, Long idEntidad) throws Exception, I18NException;
+    boolean eliminarAnexoRegistroDetalle(Long idAnexo, Long idRegistroDetalle, Long idEntidad) throws I18NException;
 
     /**
      * Obtiene todos los identificadores de los registros detalle que se han confirmado en destino (aceptado).
      *
      * @param idEntidad
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Set<Long> getRegistrosDetalleConfirmados(Long idEntidad, Date fecha) throws Exception;
+    Set<Long> getRegistrosDetalleConfirmados(Long idEntidad, Date fecha) throws I18NException;
 }

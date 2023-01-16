@@ -1,6 +1,7 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.CatPais;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,26 +30,26 @@ public class CatPaisBean extends BaseEjbJPA<CatPais, Long> implements CatPaisLoc
 
 
     @Override
-    public CatPais getReference(Long id) throws Exception {
+    public CatPais getReference(Long id) throws I18NException {
 
         return em.getReference(CatPais.class, id);
     }
 
     @Override
-    public CatPais findById(Long id) throws Exception {
+    public CatPais findById(Long id) throws I18NException {
 
         return em.find(CatPais.class, id);
     }
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<CatPais> getAll() throws Exception {
+    public List<CatPais> getAll() throws I18NException {
 
         return  em.createQuery("Select catPais from CatPais as catPais order by catPais.descripcionPais").getResultList();
     }
 
     @Override
-    public Long getTotal() throws Exception {
+    public Long getTotal() throws I18NException {
 
         Query q = em.createQuery("Select count(catPais.id) from CatPais as catPais");
 
@@ -58,7 +59,7 @@ public class CatPaisBean extends BaseEjbJPA<CatPais, Long> implements CatPaisLoc
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<CatPais> getPagination(int inicio) throws Exception {
+    public List<CatPais> getPagination(int inicio) throws I18NException {
 
         Query q = em.createQuery("Select catPais from CatPais as catPais order by catPais.id");
         q.setFirstResult(inicio);
@@ -70,7 +71,7 @@ public class CatPaisBean extends BaseEjbJPA<CatPais, Long> implements CatPaisLoc
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public CatPais findByCodigo(Long codigo) throws Exception {
+    public CatPais findByCodigo(Long codigo) throws I18NException {
         Query q = em.createQuery("Select catPais from CatPais as catPais where catPais.codigoPais = :codigo");
 
         q.setParameter("codigo",codigo);

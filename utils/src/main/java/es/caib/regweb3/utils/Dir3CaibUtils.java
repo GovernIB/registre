@@ -6,11 +6,13 @@ import es.caib.dir3caib.ws.api.oficina.Dir3CaibObtenerOficinasWs;
 import es.caib.dir3caib.ws.api.oficina.Dir3CaibObtenerOficinasWsService;
 import es.caib.dir3caib.ws.api.unidad.Dir3CaibObtenerUnidadesWs;
 import es.caib.dir3caib.ws.api.unidad.Dir3CaibObtenerUnidadesWsService;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.client.RestTemplate;
 
 import javax.xml.ws.BindingProvider;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
 
@@ -34,11 +36,16 @@ public class Dir3CaibUtils {
     /**
      * @return
      */
-    public static Dir3CaibObtenerUnidadesWs getObtenerUnidadesService(String server, String username, String password) throws Exception {
+    public static Dir3CaibObtenerUnidadesWs getObtenerUnidadesService(String server, String username, String password) throws I18NException {
 
         final String endpoint = server + OBTENER_UNIDADES;
 
-        URL wsdlLocation = new URL(endpoint + "?wsdl");
+        URL wsdlLocation = null;
+        try {
+            wsdlLocation = new URL(endpoint + "?wsdl");
+        } catch (MalformedURLException e) {
+            throw new I18NException("Error generando la url del servicio de Dir3Caib");
+        }
 
         Dir3CaibObtenerUnidadesWsService service = new Dir3CaibObtenerUnidadesWsService(wsdlLocation);
 
@@ -53,11 +60,16 @@ public class Dir3CaibUtils {
     /**
      * @return
      */
-    public static Dir3CaibObtenerCatalogosWs getObtenerCatalogosService(String server, String username, String password) throws Exception {
+    public static Dir3CaibObtenerCatalogosWs getObtenerCatalogosService(String server, String username, String password) throws I18NException {
 
         final String endpoint = server + OBTENER_CATALOGOS;
 
-        URL wsdlLocation = new URL(endpoint + "?wsdl");
+        URL wsdlLocation = null;
+        try {
+            wsdlLocation = new URL(endpoint + "?wsdl");
+        } catch (MalformedURLException e) {
+            throw new I18NException("Error generando la url del servicio de Dir3Caib");
+        }
 
         Dir3CaibObtenerCatalogosWsService service = new Dir3CaibObtenerCatalogosWsService(wsdlLocation);
 
@@ -72,11 +84,16 @@ public class Dir3CaibUtils {
     /**
      * @return
      */
-    public static Dir3CaibObtenerOficinasWs getObtenerOficinasService(String server, String username, String password) throws Exception {
+    public static Dir3CaibObtenerOficinasWs getObtenerOficinasService(String server, String username, String password) throws I18NException {
 
         final String endpoint = server + OBTENER_OFICINAS;
 
-        URL wsdlLocation = new URL(endpoint + "?wsdl");
+        URL wsdlLocation = null;
+        try {
+            wsdlLocation = new URL(endpoint + "?wsdl");
+        } catch (MalformedURLException e) {
+            throw new I18NException("Error generando la url del servicio de Dir3Caib");
+        }
 
         Dir3CaibObtenerOficinasWsService service = new Dir3CaibObtenerOficinasWsService(wsdlLocation);
 

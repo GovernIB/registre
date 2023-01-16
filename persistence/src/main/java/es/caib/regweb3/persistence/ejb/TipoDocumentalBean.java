@@ -2,6 +2,7 @@ package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.TipoDocumental;
 import es.caib.regweb3.model.TraduccionTipoDocumental;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,26 +31,26 @@ public class TipoDocumentalBean extends BaseEjbJPA<TipoDocumental, Long> impleme
 
 
     @Override
-    public TipoDocumental getReference(Long id) throws Exception {
+    public TipoDocumental getReference(Long id) throws I18NException {
 
         return em.getReference(TipoDocumental.class, id);
     }
 
     @Override
-    public TipoDocumental findById(Long id) throws Exception {
+    public TipoDocumental findById(Long id) throws I18NException {
 
         return em.find(TipoDocumental.class, id);
     }
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<TipoDocumental> getAll() throws Exception {
+    public List<TipoDocumental> getAll() throws I18NException {
 
         return em.createQuery("Select tipoDocumental from TipoDocumental as tipoDocumental order by tipoDocumental.id").getResultList();
     }
 
     @Override
-    public Long getTotal() throws Exception {
+    public Long getTotal() throws I18NException {
 
         Query q = em.createQuery("Select count(tipoDocumental.id) from TipoDocumental as tipoDocumental");
 
@@ -57,7 +58,7 @@ public class TipoDocumentalBean extends BaseEjbJPA<TipoDocumental, Long> impleme
     }
 
     @Override
-    public Long getTotal(Long idEntidad) throws Exception {
+    public Long getTotal(Long idEntidad) throws I18NException {
 
         Query q = em.createQuery("Select count(tipoDocumental.id) from TipoDocumental as tipoDocumental where tipoDocumental.entidad.id = :idEntidad");
         q.setParameter("idEntidad", idEntidad);
@@ -68,7 +69,7 @@ public class TipoDocumentalBean extends BaseEjbJPA<TipoDocumental, Long> impleme
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<TipoDocumental> getPagination(int inicio) throws Exception {
+    public List<TipoDocumental> getPagination(int inicio) throws I18NException {
 
         Query q = em.createQuery("Select tipoDocumental from TipoDocumental as tipoDocumental order by tipoDocumental.id");
         q.setFirstResult(inicio);
@@ -80,7 +81,7 @@ public class TipoDocumentalBean extends BaseEjbJPA<TipoDocumental, Long> impleme
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<TipoDocumental> getPagination(int inicio, Long idEntidad) throws Exception {
+    public List<TipoDocumental> getPagination(int inicio, Long idEntidad) throws I18NException {
 
         Query q = em.createQuery("Select tipoDocumental from TipoDocumental as tipoDocumental where tipoDocumental.entidad.id = :idEntidad order by tipoDocumental.id");
         q.setParameter("idEntidad", idEntidad);
@@ -93,7 +94,7 @@ public class TipoDocumentalBean extends BaseEjbJPA<TipoDocumental, Long> impleme
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public TipoDocumental findByCodigoEntidad(String codigoNTI, Long idEntidad) throws Exception {
+    public TipoDocumental findByCodigoEntidad(String codigoNTI, Long idEntidad) throws I18NException {
 
         Query q = em.createQuery("Select tipoDocumental from TipoDocumental as tipoDocumental where tipoDocumental.codigoNTI = :codigoNTI " +
                 "and tipoDocumental.entidad.id = :idEntidad");
@@ -112,7 +113,7 @@ public class TipoDocumentalBean extends BaseEjbJPA<TipoDocumental, Long> impleme
     }
 
     @Override
-    public Boolean existeCodigoEdit(String codigoNTI, Long idTipoDocumental, Long idEntidad) throws Exception {
+    public Boolean existeCodigoEdit(String codigoNTI, Long idTipoDocumental, Long idEntidad) throws I18NException {
 
         Query q = em.createQuery("Select tipoDocumental.id from TipoDocumental as tipoDocumental where " +
                 "tipoDocumental.id != :idTipoDocumental and tipoDocumental.codigoNTI = :codigoNTI and tipoDocumental.entidad.id = :idEntidad");
@@ -128,7 +129,7 @@ public class TipoDocumentalBean extends BaseEjbJPA<TipoDocumental, Long> impleme
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<TipoDocumental> getByEntidad(Long idEntidad) throws Exception {
+    public List<TipoDocumental> getByEntidad(Long idEntidad) throws I18NException {
 
         Query q = em.createQuery("Select tipoDocumental from TipoDocumental as tipoDocumental where tipoDocumental.entidad.id = :idEntidad");
         q.setParameter("idEntidad", idEntidad);
@@ -138,7 +139,7 @@ public class TipoDocumentalBean extends BaseEjbJPA<TipoDocumental, Long> impleme
     }
 
     @Override
-    public Integer eliminarByEntidad(Long idEntidad) throws Exception {
+    public Integer eliminarByEntidad(Long idEntidad) throws I18NException {
 
         List<?> tipos = em.createQuery("Select distinct(id) from TipoDocumental where entidad.id =:idEntidad").setParameter("idEntidad", idEntidad).getResultList();
 
@@ -150,7 +151,7 @@ public class TipoDocumentalBean extends BaseEjbJPA<TipoDocumental, Long> impleme
     }
 
     @Override
-    public TipoDocumental nuevoTraduccion(String codigo, Long idEntidad, String nombreCa, String nombreES) throws Exception {
+    public TipoDocumental nuevoTraduccion(String codigo, Long idEntidad, String nombreCa, String nombreES) throws I18NException {
 
         TipoDocumental tipoDocumental = new TipoDocumental(codigo, idEntidad);
         TraduccionTipoDocumental tra1 = new TraduccionTipoDocumental(nombreCa);

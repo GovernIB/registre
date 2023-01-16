@@ -9,6 +9,7 @@ import es.caib.regweb3.sir.ws.api.wssir6b.WS_SIR6_BServiceLocator;
 import es.caib.regweb3.sir.ws.api.wssir6b.WS_SIR6_B_PortType;
 import es.caib.regweb3.utils.Configuracio;
 import org.dom4j.Document;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,7 +37,7 @@ public class EmisionBean implements EmisionLocal{
 
      * @return
      */
-    public void enviarFicheroIntercambio(RegistroSir registroSir)throws Exception{
+    public void enviarFicheroIntercambio(RegistroSir registroSir) throws I18NException {
 
         try {
             log.info("Enviando el Registro " + registroSir.getIdentificadorIntercambio()+ " al nodo distribuido: " + registroSir.getCodigoEntidadRegistralDestino() +" - " + registroSir.getDecodificacionEntidadRegistralDestino());
@@ -57,7 +58,7 @@ public class EmisionBean implements EmisionLocal{
      * Reenvío de un RegistroSir en formato SICRES3 a un nodo distribuido
      * @param registroSir
      */
-    public void reenviarFicheroIntercambio(RegistroSir registroSir)  throws Exception {
+    public void reenviarFicheroIntercambio(RegistroSir registroSir)  throws I18NException {
 
         log.info("Reenviando el Registro " + registroSir.getIdentificadorIntercambio()+ " al nodo distribuido: " + registroSir.getCodigoEntidadRegistralDestino() +" - " + registroSir.getDecodificacionEntidadRegistralDestino());
 
@@ -70,7 +71,7 @@ public class EmisionBean implements EmisionLocal{
      * Rechazo de un RegistroSir en formato SICRES3 a un nodo distribuido
      * @param registroSir
      */
-    public void rechazarFicheroIntercambio(RegistroSir registroSir) throws Exception{
+    public void rechazarFicheroIntercambio(RegistroSir registroSir) throws I18NException{
 
         log.info("Rechazando el Registro " + registroSir.getIdentificadorIntercambio()+ " al nodo distribuido: " + registroSir.getCodigoEntidadRegistralDestino() +" - " + registroSir.getDecodificacionEntidadRegistralDestino());
 

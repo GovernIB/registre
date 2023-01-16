@@ -5,6 +5,7 @@ import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.security.LoginInfo;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -101,7 +102,7 @@ public class BaseController {
      * @param request
      * @return
      */
-    protected UsuarioEntidad getUsuarioEntidadActivo(HttpServletRequest request) throws Exception{
+    protected UsuarioEntidad getUsuarioEntidadActivo(HttpServletRequest request) throws I18NException {
 
         return getLoginInfo(request).getUsuarioEntidadActivo();
     }

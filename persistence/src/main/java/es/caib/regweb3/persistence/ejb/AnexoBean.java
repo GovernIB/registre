@@ -15,12 +15,11 @@ import org.apache.commons.lang.time.DateUtils;
 import org.fundaciobit.genapp.common.i18n.I18NArgumentString;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
-import org.fundaciobit.plugins.documentcustody.api.DocumentCustody;
-import org.fundaciobit.plugins.documentcustody.api.IDocumentCustodyPlugin;
-import org.fundaciobit.plugins.documentcustody.api.SignatureCustody;
+import org.fundaciobit.plugins.documentcustody.api.*;
 import org.fundaciobit.pluginsib.core.utils.ISO8601;
 import org.fundaciobit.pluginsib.core.utils.Metadata;
 import org.fundaciobit.pluginsib.core.utils.MetadataConstants;
+import org.fundaciobit.pluginsib.core.utils.MetadataFormatException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,7 +82,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
 
     @Override
-    public Anexo getReference(Long id) throws Exception {
+    public Anexo getReference(Long id) throws I18NException {
 
         return em.getReference(Anexo.class, id);
     }
@@ -549,9 +548,9 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
      * @param registroID
      * @param tipoRegistro
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    protected IRegistro getIRegistro(Long registroID, Long tipoRegistro) throws Exception {
+    protected IRegistro getIRegistro(Long registroID, Long tipoRegistro) throws I18NException {
         IRegistro registro;
         IRegistro cloneRegistro;
         //Recuperamos el registro de la BD
@@ -588,11 +587,11 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
      * @param registroID
      * @param tipoRegistro
      * @param isNew
-     * @throws Exception
+     * @throws I18NException
      * @throws I18NException
      */
     protected void crearHistorico(AnexoFull anexoFull, UsuarioEntidad usuarioEntidad, Entidad entidad,
-                                  Long registroID, Long tipoRegistro, boolean isNew) throws Exception, I18NException {
+                                  Long registroID, Long tipoRegistro, boolean isNew) throws I18NException {
 
         if (tipoRegistro.equals(REGISTRO_ENTRADA)) {
             RegistroEntrada registroEntrada = registroEntradaEjb.findById(registroID);
@@ -656,265 +655,272 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
      * @param custodyID
      * @param registro
      * @param isNou
-     * @throws Exception
+     * @throws I18NException
      * @throws I18NException
      */
     protected void updateCustodyInfoOfAnexo(AnexoFull anexoFull, IDocumentCustodyPlugin custody2,
                                             final Map<String, Object> custodyParameters, final String custodyID,
-                                            IRegistro registro, boolean isNou) throws Exception, I18NException {
+                                            IRegistro registro, boolean isNou) throws I18NException {
 
-        // Validador: Sempre amb algun arxiu
-        int modoFirma = anexoFull.getAnexo().getModoFirma();
-        if (isNou) { //Creación
-            if (anexoFull.getDocumentoCustody() == null && anexoFull.getSignatureCustody() == null) {
-                //"No ha definit cap fitxer en aquest annex"
-                throw new I18NException("anexo.error.sinfichero");
-            }
-            if (modoFirma == RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED && anexoFull.getSignatureCustody() == null) {
-                //Si la firma es adjunta, el documento con su firma adjunta debe venir en SignatureCustody
-                throw new I18NException("anexo.error.sinfichero");
-            }
-            if (modoFirma == RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED && (anexoFull.getDocumentoCustody() == null || anexoFull.getSignatureCustody() == null)) {
-                //Si la firma es por separado, se esperan dos documentos (el original + la firma)
-                throw new I18NException("anexo.error.faltadocumento");
-            }
-        } else {//Actualización
-            //Controlamos que el anexo no quede sin archivo, hay que controlar con modofirma
-            int total = 0;
-            //Si no tenia documento, pero ahora envian uno nuevo, sumamos 1
-            if (modoFirma == RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA) {
-                if (custody2.getDocumentInfoOnly(custodyID) == null) {
-                    // Afegim un
-                    if (anexoFull.getDocumentoCustody() != null) {
-                        total += 1;
-                    }
-                } else { // ya tenia, sumamos 1
-                    total += 1;
-                }
+        try{
 
-                if (total <= 0) {
-                    //La combinació elegida deixa aquest annex sense cap fitxer
-                    throw new I18NException("anexo.error.quedarsesinfichero");
+            // Validador: Sempre amb algun arxiu
+            int modoFirma = anexoFull.getAnexo().getModoFirma();
+            if (isNou) { //Creación
+                if (anexoFull.getDocumentoCustody() == null && anexoFull.getSignatureCustody() == null) {
+                    //"No ha definit cap fitxer en aquest annex"
+                    throw new I18NException("anexo.error.sinfichero");
                 }
-            }
-            if (modoFirma == RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED) {
-                //Si no tenia firma, pero envian 1 nueva, sumamos 1
-                if (custody2.getSignatureInfoOnly(custodyID) == null) {
-                    // Afegim un
-                    if (anexoFull.getSignatureCustody() != null) {
-                        total += 1;
-                    }
-                } else { // si ya tenia, sumamos 1
-                    total += 1;
+                if (modoFirma == RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED && anexoFull.getSignatureCustody() == null) {
+                    //Si la firma es adjunta, el documento con su firma adjunta debe venir en SignatureCustody
+                    throw new I18NException("anexo.error.sinfichero");
                 }
-
-             /* if (total <= 0) {
-                  //La combinació elegida deixa aquest annex sense cap fitxer
-                  throw new I18NException("anexo.error.quedarsesinfichero");
-              }*/
-                //PARCHE API ANTIGUA
-                if (custody2.getDocumentInfoOnly(custodyID) == null) {
-                    // Afegim un
-                    if (anexoFull.getDocumentoCustody() != null) {
-                        total += 1;
-                    }
-                } else { // ya tenia, sumamos 1
-                    total += 1;
-                }
-
-                if (total <= 0) {
-                    //La combinació elegida deixa aquest annex sense cap fitxer
-                    throw new I18NException("anexo.error.quedarsesinfichero");
-                }
-            }
-            if (modoFirma == RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED) {
-                if (custody2.getDocumentInfoOnly(custodyID) == null) {
-                    // Afegim un
-                    if (anexoFull.getDocumentoCustody() != null) {
-                        total += 1;
-                    }
-                } else { // ya tenia, sumamos 1
-                    total += 1;
-                }
-
-                //Si no tenia firma, pero envian 1 nueva, sumamos 1
-                if (custody2.getSignatureInfoOnly(custodyID) == null) {
-                    // Afegim un
-                    if (anexoFull.getSignatureCustody() != null) {
-                        total += 1;
-                    }
-                } else { // si ya tenia, sumamos 1
-                    total += 1;
-                }
-
-                if (total <= 1) {
-                    //La combinació elegida deixa aquest annex sense cap fitxer
+                if (modoFirma == RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED && (anexoFull.getDocumentoCustody() == null || anexoFull.getSignatureCustody() == null)) {
+                    //Si la firma es por separado, se esperan dos documentos (el original + la firma)
                     throw new I18NException("anexo.error.faltadocumento");
                 }
+            } else {//Actualización
+                //Controlamos que el anexo no quede sin archivo, hay que controlar con modofirma
+                int total = 0;
+                //Si no tenia documento, pero ahora envian uno nuevo, sumamos 1
+                if (modoFirma == RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA) {
+                    if (custody2.getDocumentInfoOnly(custodyID) == null) {
+                        // Afegim un
+                        if (anexoFull.getDocumentoCustody() != null) {
+                            total += 1;
+                        }
+                    } else { // ya tenia, sumamos 1
+                        total += 1;
+                    }
+
+                    if (total <= 0) {
+                        //La combinació elegida deixa aquest annex sense cap fitxer
+                        throw new I18NException("anexo.error.quedarsesinfichero");
+                    }
+                }
+                if (modoFirma == RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED) {
+                    //Si no tenia firma, pero envian 1 nueva, sumamos 1
+                    if (custody2.getSignatureInfoOnly(custodyID) == null) {
+                        // Afegim un
+                        if (anexoFull.getSignatureCustody() != null) {
+                            total += 1;
+                        }
+                    } else { // si ya tenia, sumamos 1
+                        total += 1;
+                    }
+
+                 /* if (total <= 0) {
+                      //La combinació elegida deixa aquest annex sense cap fitxer
+                      throw new I18NException("anexo.error.quedarsesinfichero");
+                  }*/
+                    //PARCHE API ANTIGUA
+                    if (custody2.getDocumentInfoOnly(custodyID) == null) {
+                        // Afegim un
+                        if (anexoFull.getDocumentoCustody() != null) {
+                            total += 1;
+                        }
+                    } else { // ya tenia, sumamos 1
+                        total += 1;
+                    }
+
+                    if (total <= 0) {
+                        //La combinació elegida deixa aquest annex sense cap fitxer
+                        throw new I18NException("anexo.error.quedarsesinfichero");
+                    }
+                }
+                if (modoFirma == RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED) {
+                    if (custody2.getDocumentInfoOnly(custodyID) == null) {
+                        // Afegim un
+                        if (anexoFull.getDocumentoCustody() != null) {
+                            total += 1;
+                        }
+                    } else { // ya tenia, sumamos 1
+                        total += 1;
+                    }
+
+                    //Si no tenia firma, pero envian 1 nueva, sumamos 1
+                    if (custody2.getSignatureInfoOnly(custodyID) == null) {
+                        // Afegim un
+                        if (anexoFull.getSignatureCustody() != null) {
+                            total += 1;
+                        }
+                    } else { // si ya tenia, sumamos 1
+                        total += 1;
+                    }
+
+                    if (total <= 1) {
+                        //La combinació elegida deixa aquest annex sense cap fitxer
+                        throw new I18NException("anexo.error.faltadocumento");
+                    }
+                }
+
             }
 
-        }
+            // TODO Falta Check DOC
+            Anexo anexo = anexoFull.getAnexo();
 
-        // TODO Falta Check DOC
-        Anexo anexo = anexoFull.getAnexo();
+            boolean updateDate = false;
+            final DocumentCustody documentCustody;
+            final SignatureCustody signatureCustody;
 
-        boolean updateDate = false;
-        final DocumentCustody documentCustody;
-        final SignatureCustody signatureCustody;
-
-        String mimeFinal = null;
-        //Actualización o creación de los documentos de los anexos en función del modo de firma
-        //Si el anexo es nuevo o el modo de firma es detached, el comportamiento es el mismo
-        if (isNou || modoFirma == RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED) {
-
-            //Guardamos el documentCustody
-            documentCustody = anexoFull.getDocumentoCustody();
-            mimeFinal = arreglarDocumentCustody(documentCustody, anexo, mimeFinal);
-
-            //Guardamos la signatureCustody
-            signatureCustody = anexoFull.getSignatureCustody();
-            mimeFinal = arreglarSignatureCustody(signatureCustody, documentCustody, anexo, mimeFinal);
-
-            updateDate = true;
-
-        } else { //es modificación Tratamos todos los modos firma como corresponda
-            DocumentCustody doc = anexoFull.getDocumentoCustody();
-            if (modoFirma == RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA) {
+            String mimeFinal = null;
+            //Actualización o creación de los documentos de los anexos en función del modo de firma
+            //Si el anexo es nuevo o el modo de firma es detached, el comportamiento es el mismo
+            if (isNou || modoFirma == RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED) {
 
                 //Guardamos el documentCustody
                 documentCustody = anexoFull.getDocumentoCustody();
                 mimeFinal = arreglarDocumentCustody(documentCustody, anexo, mimeFinal);
 
-                //Borrar lo que haya en signature custody
-                signatureCustody = null;
+                //Guardamos la signatureCustody
+                signatureCustody = anexoFull.getSignatureCustody();
+                mimeFinal = arreglarSignatureCustody(signatureCustody, documentCustody, anexo, mimeFinal);
 
                 updateDate = true;
-            } else if (modoFirma == RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED) {
-                //obtenemos el document custody para crear bien el documento
 
-                if (doc == null) {//CASO API NUEVA
+            } else { //es modificación Tratamos todos los modos firma como corresponda
+                DocumentCustody doc = anexoFull.getDocumentoCustody();
+                if (modoFirma == RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA) {
 
-                    documentCustody = null;
-                    //Guardamos la signatureCustody. Los documentos con firma attached se guardan en SignatureCustody.
-
-                    signatureCustody = anexoFull.getSignatureCustody();
-                    mimeFinal = arreglarSignatureCustody(signatureCustody, documentCustody, anexo, mimeFinal);
-
-                    updateDate = true;
-                } else { //PARCHE PARA API ANTIGUA
-                    documentCustody = doc;
+                    //Guardamos el documentCustody
+                    documentCustody = anexoFull.getDocumentoCustody();
                     mimeFinal = arreglarDocumentCustody(documentCustody, anexo, mimeFinal);
 
+                    //Borrar lo que haya en signature custody
                     signatureCustody = null;
 
                     updateDate = true;
-                }
+                } else if (modoFirma == RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED) {
+                    //obtenemos el document custody para crear bien el documento
 
-            } else {
-                //el caso de modoFirma detached es igual que si fuese nuevo.
+                    if (doc == null) {//CASO API NUEVA
 
-                // CASO:  no tocam res
-                documentCustody = null;
-                signatureCustody = null;
-            }
-        }
+                        documentCustody = null;
+                        //Guardamos la signatureCustody. Los documentos con firma attached se guardan en SignatureCustody.
 
-        // Metadades
-        if (documentCustody != null || signatureCustody != null) {
+                        signatureCustody = anexoFull.getSignatureCustody();
+                        mimeFinal = arreglarSignatureCustody(signatureCustody, documentCustody, anexo, mimeFinal);
 
-            // Actualitzar Metadades
-            final String lang = Configuracio.getDefaultLanguage();
-            final Locale loc = new Locale(lang);
-            List<Metadata> metadades = new ArrayList<Metadata>();
+                        updateDate = true;
+                    } else { //PARCHE PARA API ANTIGUA
+                        documentCustody = doc;
+                        mimeFinal = arreglarDocumentCustody(documentCustody, anexo, mimeFinal);
 
-            // Metadades que venen de Scan
-            List<Metadata> metasScan = anexoFull.getMetadatas();
+                        signatureCustody = null;
 
-            final boolean debug = log.isDebugEnabled();
+                        updateDate = true;
+                    }
 
-            if (metasScan != null && metasScan.size() != 0) {
+                } else {
+                    //el caso de modoFirma detached es igual que si fuese nuevo.
 
-                if (debug) {
-                    log.info("MESTAS SCAN = " + metasScan);
-                    log.info("MESTAS SCAN SIZE = " + metasScan.size());
-                    log.info("MESTAS ORIG SIZE PRE = " + metadades.size());
-                }
-
-                metadades.addAll(metasScan);
-
-                //Convertim les dades rebudes de l'Scan al format antic
-                /*TODO s'hauria de canvia també la versió del plugin de DocumentCustody per evitar emplear la classe antiga de Metadata.
-                org.fundaciobit.plugins.utils.Metadata s'hauria d'apuntar a pluginsIB*/
-
-                if (debug) {
-                    log.info("MESTAS ORIG SIZE POST = " + metadades.size());
-                }
-
-            }
-            //TODO REVISAR METADATAS
-
-            // fechaDeEntradaEnElSistema
-            if (updateDate) {
-                metadades.add(new Metadata("anexo.fechaCaptura", anexo.getFechaCaptura()));
-                metadades.add(new Metadata(MetadataConstants.ENI_FECHA_INICIO, ISO8601.dateToISO8601(anexo.getFechaCaptura())));
-            }
-
-            // String tipoDeDocumento; //  varchar(100)
-            if (anexo.getTitulo() != null) {
-                metadades.add(new Metadata("anexo.titulo", anexo.getTitulo()));
-                metadades.add(new Metadata(MetadataConstants.ENI_DESCRIPCION, anexo.getTitulo()));
-            }
-
-            //  String tipoDeDocumento; //  varchar(100)
-            if (anexo.getTipoDocumento() != null) {
-                metadades.add(new Metadata("anexo.tipoDocumento", I18NLogicUtils.tradueix(loc, "tipoDocumento.0" + anexo.getTipoDocumento())));
-            }
-
-            // Oficina
-            if (registro.getOficina() != null && registro.getOficina().getNombreCompleto() != null) {
-                metadades.add(new Metadata("oficina", registro.getOficina().getNombreCompleto()));
-                metadades.add(new Metadata(MetadataConstants.ENI_CODIGO_OFICINA_REGISTRO, registro.getOficina().getCodigo()));
-            }
-
-            // Origen
-            if (anexo.getOrigenCiudadanoAdmin() != null) {
-                metadades.add(new Metadata("anexo.origen", I18NLogicUtils.tradueix(loc, "anexo.origen." + anexo.getOrigenCiudadanoAdmin())));
-                metadades.add(new Metadata(MetadataConstants.ENI_ORIGEN, anexo.getOrigenCiudadanoAdmin()));
-            }
-
-            // Validez documento
-            if (anexo.getValidezDocumento() != null && anexo.getValidezDocumento() != -1) {
-                metadades.add(new Metadata("anexo.validezDocumento", I18NLogicUtils.tradueix(loc, "tipoValidezDocumento." + anexo.getValidezDocumento())));
-                metadades.add(new Metadata(MetadataConstants.ENI_ESTADO_ELABORACION, RegwebConstantes.CODIGO_NTI_BY_TIPOVALIDEZDOCUMENTO.get(anexo.getValidezDocumento())));
-            }
-
-            // Tipo mime
-            if (mimeFinal != null) {
-                metadades.add(new Metadata("anexo.formato", mimeFinal));
-            }
-
-            // Tipo documental
-            if (anexo.getTipoDocumental() != null && anexo.getTipoDocumental().getCodigoNTI() != null) {
-
-                metadades.add(new Metadata(MetadataConstants.ENI_TIPO_DOCUMENTAL, anexo.getTipoDocumental().getCodigoNTI()));
-                metadades.add(new Metadata("anexo.tipoDocumental.codigo", anexo.getTipoDocumental().getCodigoNTI()));
-
-                try {
-                    metadades.add(new Metadata("anexo.tipoDocumental.descripcion",
-                            ((TraduccionTipoDocumental) anexo.getTipoDocumental().getTraduccion(loc.getLanguage())).getNombre()));
-
-                } catch (Throwable th) {
-                    log.error("Error en la traduccion de tipo documental: " + th.getMessage(), th);
+                    // CASO:  no tocam res
+                    documentCustody = null;
+                    signatureCustody = null;
                 }
             }
 
-            // Observaciones
-            if (anexo.getObservaciones() != null) {
-                metadades.add(new Metadata("anexo.observaciones", anexo.getObservaciones()));
+            // Metadades
+            if (documentCustody != null || signatureCustody != null) {
+
+                // Actualitzar Metadades
+                final String lang = Configuracio.getDefaultLanguage();
+                final Locale loc = new Locale(lang);
+                List<Metadata> metadades = new ArrayList<Metadata>();
+
+                // Metadades que venen de Scan
+                List<Metadata> metasScan = anexoFull.getMetadatas();
+
+                final boolean debug = log.isDebugEnabled();
+
+                if (metasScan != null && metasScan.size() != 0) {
+
+                    if (debug) {
+                        log.info("MESTAS SCAN = " + metasScan);
+                        log.info("MESTAS SCAN SIZE = " + metasScan.size());
+                        log.info("MESTAS ORIG SIZE PRE = " + metadades.size());
+                    }
+
+                    metadades.addAll(metasScan);
+
+                    //Convertim les dades rebudes de l'Scan al format antic
+                    /*TODO s'hauria de canvia també la versió del plugin de DocumentCustody per evitar emplear la classe antiga de Metadata.
+                    org.fundaciobit.plugins.utils.Metadata s'hauria d'apuntar a pluginsIB*/
+
+                    if (debug) {
+                        log.info("MESTAS ORIG SIZE POST = " + metadades.size());
+                    }
+
+                }
+                //TODO REVISAR METADATAS
+
+                // fechaDeEntradaEnElSistema
+                if (updateDate) {
+                    metadades.add(new Metadata("anexo.fechaCaptura", anexo.getFechaCaptura()));
+                    metadades.add(new Metadata(MetadataConstants.ENI_FECHA_INICIO, ISO8601.dateToISO8601(anexo.getFechaCaptura())));
+                }
+
+                // String tipoDeDocumento; //  varchar(100)
+                if (anexo.getTitulo() != null) {
+                    metadades.add(new Metadata("anexo.titulo", anexo.getTitulo()));
+                    metadades.add(new Metadata(MetadataConstants.ENI_DESCRIPCION, anexo.getTitulo()));
+                }
+
+                //  String tipoDeDocumento; //  varchar(100)
+                if (anexo.getTipoDocumento() != null) {
+                    metadades.add(new Metadata("anexo.tipoDocumento", I18NLogicUtils.tradueix(loc, "tipoDocumento.0" + anexo.getTipoDocumento())));
+                }
+
+                // Oficina
+                if (registro.getOficina() != null && registro.getOficina().getNombreCompleto() != null) {
+                    metadades.add(new Metadata("oficina", registro.getOficina().getNombreCompleto()));
+                    metadades.add(new Metadata(MetadataConstants.ENI_CODIGO_OFICINA_REGISTRO, registro.getOficina().getCodigo()));
+                }
+
+                // Origen
+                if (anexo.getOrigenCiudadanoAdmin() != null) {
+                    metadades.add(new Metadata("anexo.origen", I18NLogicUtils.tradueix(loc, "anexo.origen." + anexo.getOrigenCiudadanoAdmin())));
+                    metadades.add(new Metadata(MetadataConstants.ENI_ORIGEN, anexo.getOrigenCiudadanoAdmin()));
+                }
+
+                // Validez documento
+                if (anexo.getValidezDocumento() != null && anexo.getValidezDocumento() != -1) {
+                    metadades.add(new Metadata("anexo.validezDocumento", I18NLogicUtils.tradueix(loc, "tipoValidezDocumento." + anexo.getValidezDocumento())));
+                    metadades.add(new Metadata(MetadataConstants.ENI_ESTADO_ELABORACION, RegwebConstantes.CODIGO_NTI_BY_TIPOVALIDEZDOCUMENTO.get(anexo.getValidezDocumento())));
+                }
+
+                // Tipo mime
+                if (mimeFinal != null) {
+                    metadades.add(new Metadata("anexo.formato", mimeFinal));
+                }
+
+                // Tipo documental
+                if (anexo.getTipoDocumental() != null && anexo.getTipoDocumental().getCodigoNTI() != null) {
+
+                    metadades.add(new Metadata(MetadataConstants.ENI_TIPO_DOCUMENTAL, anexo.getTipoDocumental().getCodigoNTI()));
+                    metadades.add(new Metadata("anexo.tipoDocumental.codigo", anexo.getTipoDocumental().getCodigoNTI()));
+
+                    try {
+                        metadades.add(new Metadata("anexo.tipoDocumental.descripcion",
+                                ((TraduccionTipoDocumental) anexo.getTipoDocumental().getTraduccion(loc.getLanguage())).getNombre()));
+
+                    } catch (Throwable th) {
+                        log.error("Error en la traduccion de tipo documental: " + th.getMessage(), th);
+                    }
+                }
+
+                // Observaciones
+                if (anexo.getObservaciones() != null) {
+                    metadades.add(new Metadata("anexo.observaciones", anexo.getObservaciones()));
+                }
+
+                // Guardamos
+                custody2.saveAll(custodyID, custodyParameters, documentCustody, signatureCustody, metadades.toArray(new Metadata[metadades.size()]));
             }
 
-            // Guardamos
-            custody2.saveAll(custodyID, custodyParameters, documentCustody, signatureCustody, metadades.toArray(new Metadata[metadades.size()]));
+        }catch (CustodyException | MetadataFormatException | NotSupportedCustodyException c){
+            log.info("Error custodiando un anexo (CustodyException): " + c.getMessage());
+            throw new I18NException("Ha ocurrido un errro custodianto un anexo");
         }
 
     }
@@ -927,10 +933,10 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
      * @param anexo
      * @param mimeFinal
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
     public String arreglarDocumentCustody(DocumentCustody doc,
-                                          Anexo anexo, String mimeFinal) throws Exception {
+                                          Anexo anexo, String mimeFinal) throws I18NException {
 
         if (doc != null && doc.getData() != null) {// si nos envian documento
 
@@ -960,10 +966,10 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
      * @param anexo
      * @param mimeFinal
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
     private String arreglarSignatureCustody(SignatureCustody signature,
-                                            DocumentCustody doc, Anexo anexo, String mimeFinal) throws Exception {
+                                            DocumentCustody doc, Anexo anexo, String mimeFinal) throws I18NException {
 
         if (signature != null && signature.getData() != null) {//Si nos envian firma
 
@@ -1006,9 +1012,9 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
      * @param name
      * @param defaultName
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    protected String checkFileName(String name, String defaultName) throws Exception {
+    protected String checkFileName(String name, String defaultName)  {
         if (name == null || name.trim().length() == 0) {
             return defaultName;
         } else { //Si no, lo recorta
@@ -1050,21 +1056,21 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
 
     @Override
-    public Anexo findById(Long id) throws Exception {
+    public Anexo findById(Long id) throws I18NException {
 
         return em.find(Anexo.class, id);
     }
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Anexo> getAll() throws Exception {
+    public List<Anexo> getAll() throws I18NException {
 
         return em.createQuery("Select anexo from Anexo as anexo order by anexo.id").getResultList();
     }
 
 
     @Override
-    public Long getTotal() throws Exception {
+    public Long getTotal() throws I18NException {
 
         Query q = em.createQuery("Select count(anexo.id) from Anexo as anexo");
 
@@ -1073,7 +1079,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Anexo> getPagination(int inicio) throws Exception {
+    public List<Anexo> getPagination(int inicio) throws I18NException {
 
         Query q = em.createQuery("Select anexo from Anexo as anexo order by anexo.id");
 
@@ -1089,10 +1095,10 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
      *
      * @param registroEntrada
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
     @Override
-    public List<AnexoFull> getByRegistroEntrada(RegistroEntrada registroEntrada) throws Exception, I18NException {
+    public List<AnexoFull> getByRegistroEntrada(RegistroEntrada registroEntrada) throws I18NException {
 
         Long idEntidad = registroEntrada.getEntidad().getId();
 
@@ -1112,10 +1118,10 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
      *
      * @param registroSalida
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
     @Override
-    public List<AnexoFull> getByRegistroSalida(RegistroSalida registroSalida) throws Exception, I18NException {
+    public List<AnexoFull> getByRegistroSalida(RegistroSalida registroSalida) throws I18NException {
 
         Long idEntidad = registroSalida.getEntidad().getId();
 
@@ -1133,7 +1139,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Anexo> getByRegistroDetalle(Long idRegistroDetalle) throws Exception {
+    public List<Anexo> getByRegistroDetalle(Long idRegistroDetalle) throws I18NException {
         Query query = em.createQuery("Select anexo from Anexo as anexo where anexo.registroDetalle.id=:idRegistroDetalle order by anexo.id");
         query.setParameter("idRegistroDetalle", idRegistroDetalle);
         return query.getResultList();
@@ -1142,7 +1148,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Anexo> getByRegistroDetalleLectura(Long idRegistroDetalle) throws Exception {
+    public List<Anexo> getByRegistroDetalleLectura(Long idRegistroDetalle) throws I18NException {
         Query query = em.createQuery("Select anexo.titulo, anexo.tipoDocumento from Anexo as anexo where anexo.registroDetalle.id=:idRegistroDetalle");
         query.setParameter("idRegistroDetalle", idRegistroDetalle);
 
@@ -1157,7 +1163,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Long getIdJustificante(Long idRegistroDetalle) throws Exception {
+    public Long getIdJustificante(Long idRegistroDetalle) throws I18NException {
         Query q = em.createQuery("Select anexo.id from Anexo as anexo where anexo.registroDetalle.id=:idRegistroDetalle and " +
                 "anexo.justificante = true order by anexo.id");
         q.setParameter("idRegistroDetalle", idRegistroDetalle);
@@ -1175,7 +1181,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public int purgarAnexosRegistrosAceptados(Long idEntidad) throws Exception, I18NException {
+    public int purgarAnexosRegistrosAceptados(Long idEntidad) throws I18NException {
 
         Integer numElementos = PropiedadGlobalUtil.getNumElementosPurgoAnexos(idEntidad);
 
@@ -1210,7 +1216,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
     }
 
     @Override
-    public void purgarAnexosRegistroAceptado(Long idRegistro, Long tipoRegistro, Long idEntidad) throws Exception {
+    public void purgarAnexosRegistroAceptado(Long idRegistro, Long tipoRegistro, Long idEntidad) throws I18NException {
 
         Query q = null;
 
@@ -1236,14 +1242,14 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
                 anexo.setPurgado(true);
                 merge(anexo);
             }
-        } catch (I18NException | Exception e) {
+        } catch (I18NException e) {
             log.info("S'ha produit un error eliminant la custodia de l'annex");
             e.printStackTrace();
         }
     }
 
     @Override
-    public int purgarAnexosRegistrosDistribuidos(Long idEntidad) throws Exception, I18NException{
+    public int purgarAnexosRegistrosDistribuidos(Long idEntidad) throws I18NException{
 
         Integer mesesPurgo = PropiedadGlobalUtil.getMesesPurgoAnexos(idEntidad);
         Integer numElementos = PropiedadGlobalUtil.getNumElementosPurgoAnexos(idEntidad);
@@ -1284,7 +1290,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
                 merge(anexo);
             }
 
-        } catch (I18NException | Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             throw new I18NException("S'ha produit un error eliminant la custodia de l'annex");
         }
@@ -1299,7 +1305,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
      * @return
      */
     @Override
-    public DocumentCustody getArchivo(Anexo anexo, Long idEntidad) throws I18NException, Exception {
+    public DocumentCustody getArchivo(Anexo anexo, Long idEntidad) throws I18NException {
 
         if (anexo.getCustodiaID() == null) {
             log.warn("getArchivo :: CustodiaID vale null !!!!!", new Exception());
@@ -1310,12 +1316,22 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
             IDocumentCustodyPlugin custody = null;
 
-            if (anexo.isJustificante()) {
-                custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE);
-            } else {
-                custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA_ANEXOS);
+            try{
+
+
+
+                if (anexo.isJustificante()) {
+                    custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE);
+                } else {
+                    custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA_ANEXOS);
+                }
+
+                return custody.getDocumentInfo(anexo.getCustodiaID());
+
+            }catch (CustodyException c){
+                log.info("Error obteniendo el anexo: " + c.getMessage());
+                throw new I18NException("Error obteniendo el anexo");
             }
-            return custody.getDocumentInfo(anexo.getCustodiaID());
 
         } else if (anexo.getPerfilCustodia().equals(RegwebConstantes.PERFIL_CUSTODIA_ARXIU)) {
 
@@ -1338,47 +1354,54 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
      * @return
      */
     @Override
-    public byte[] getArchivoContent(Anexo anexo, Long idEntidad) throws I18NException, Exception {
+    public byte[] getArchivoContent(Anexo anexo, Long idEntidad) throws I18NException {
 
         if (anexo.getCustodiaID() == null) {
             log.warn("getArchivo :: CustodiaID vale null !!!!!", new Exception());
             return null;
         }
 
-        if (anexo.getPerfilCustodia().equals(RegwebConstantes.PERFIL_CUSTODIA_DOCUMENT_CUSTODY)) {
+        try{
 
-            IDocumentCustodyPlugin custody = null;
+            if (anexo.getPerfilCustodia().equals(RegwebConstantes.PERFIL_CUSTODIA_DOCUMENT_CUSTODY)) {
 
-            if (anexo.isJustificante()) {
+                IDocumentCustodyPlugin custody = null;
 
-                if(PropiedadGlobalUtil.getCustodiaDiferida(idEntidad) && !anexo.getCustodiado()){ // Si no está custodiado, está guardado en FileSystem
-                    custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA_FS_JUSTIFICANTE);
-                }else{
-                    custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE);
+                if (anexo.isJustificante()) {
+
+                    if(PropiedadGlobalUtil.getCustodiaDiferida(idEntidad) && !anexo.getCustodiado()){ // Si no está custodiado, está guardado en FileSystem
+                        custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA_FS_JUSTIFICANTE);
+                    }else{
+                        custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE);
+                    }
+                } else {
+                    custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA_ANEXOS);
                 }
-            } else {
-                custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA_ANEXOS);
+
+                if(anexo.getModoFirma() == RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA ||
+                        anexo.getModoFirma()== RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED) {
+
+                    return custody.getDocument(anexo.getCustodiaID());
+
+                }else if(anexo.getModoFirma()== RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED){
+
+                    return custody.getSignature(anexo.getCustodiaID());
+
+                }
+
+            } else if (anexo.getPerfilCustodia().equals(RegwebConstantes.PERFIL_CUSTODIA_ARXIU)) {
+
+                // Cargamos el plugin de Arxiu
+                arxiuCaibUtils.cargarPlugin(idEntidad);
+
+                Document document = arxiuCaibUtils.getDocumento(anexo.getCustodiaID(), RegwebConstantes.ARXIU_VERSION_DOC, true, true);
+
+                return document.getContingut().getContingut();
             }
 
-            if(anexo.getModoFirma() == RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA ||
-                    anexo.getModoFirma()== RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED) {
-
-                return custody.getDocument(anexo.getCustodiaID());
-
-            }else if(anexo.getModoFirma()== RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED){
-
-                return custody.getSignature(anexo.getCustodiaID());
-
-            }
-
-        } else if (anexo.getPerfilCustodia().equals(RegwebConstantes.PERFIL_CUSTODIA_ARXIU)) {
-
-            // Cargamos el plugin de Arxiu
-            arxiuCaibUtils.cargarPlugin(idEntidad);
-
-            Document document = arxiuCaibUtils.getDocumento(anexo.getCustodiaID(), RegwebConstantes.ARXIU_VERSION_DOC, true, true);
-
-            return document.getContingut().getContingut();
+        }catch (CustodyException c){
+            log.info("Error obteniendo el anexo: " + c.getMessage());
+            throw new I18NException("Error obteniendo el anexo");
         }
 
         return null;
@@ -1391,13 +1414,21 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
      *
      * @param custodiaID
      * @return
-     * @throws Exception
+     * @throws I18NException
      * @throws I18NException
      */
     @Override
-    public DocumentCustody getDocumentInfoOnly(String custodiaID, Long idEntidad) throws Exception, I18NException {
-        IDocumentCustodyPlugin custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA_ANEXOS);
-        return custody.getDocumentInfoOnly(custodiaID);
+    public DocumentCustody getDocumentInfoOnly(String custodiaID, Long idEntidad) throws I18NException {
+        try{
+
+            IDocumentCustodyPlugin custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA_ANEXOS);
+            return custody.getDocumentInfoOnly(custodiaID);
+
+        }catch (CustodyException c){
+            log.info("Error obteniendo la informacion del documento: " + c.getMessage());
+            throw new I18NException("Error obteniendo la informacion del documento");
+        }
+
     }
 
     /**
@@ -1405,17 +1436,23 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
      *
      * @param custodiaID
      * @return
-     * @throws Exception
+     * @throws I18NException
      * @throws I18NException
      */
     @Override
-    public SignatureCustody getSignatureInfoOnly(String custodiaID, Long idEntidad) throws Exception, I18NException {
-        IDocumentCustodyPlugin custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA_ANEXOS);
-        return custody.getSignatureInfoOnly(custodiaID);
+    public SignatureCustody getSignatureInfoOnly(String custodiaID, Long idEntidad) throws I18NException {
+        try{
+
+            IDocumentCustodyPlugin custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA_ANEXOS);
+            return custody.getSignatureInfoOnly(custodiaID);
+        }catch (CustodyException c){
+            log.info("Error obteniendo la informacion de la firma: " + c.getMessage());
+            throw new I18NException("Error obteniendo la informacion de la firma");
+        }
     }
 
     @Override
-    public SignatureCustody getSignatureInfoOnly(Anexo anexo, Long idEntidad) throws I18NException, Exception {
+    public SignatureCustody getSignatureInfoOnly(Anexo anexo, Long idEntidad) throws I18NException {
 
         IDocumentCustodyPlugin custody = null;
 
@@ -1423,18 +1460,26 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             log.warn("getSignatureInfoOnly :: CustodiaID vale null !!!!!", new Exception());
             return null;
         }
-        if (anexo.isJustificante()) {
-            if(PropiedadGlobalUtil.getCustodiaDiferida(idEntidad) && !anexo.getCustodiado()){ // Si no está custodiado, está guardado en FileSystem
-                custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA_FS_JUSTIFICANTE);
-            }else{
-                custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE);
+
+        try{
+
+            if (anexo.isJustificante()) {
+                if(PropiedadGlobalUtil.getCustodiaDiferida(idEntidad) && !anexo.getCustodiado()){ // Si no está custodiado, está guardado en FileSystem
+                    custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA_FS_JUSTIFICANTE);
+                }else{
+                    custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE);
+                }
+
+            } else {
+                custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA_ANEXOS);
             }
 
-        } else {
-            custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA_ANEXOS);
-        }
+            return custody.getSignatureInfoOnly(anexo.getCustodiaID());
 
-        return custody.getSignatureInfoOnly(anexo.getCustodiaID());
+        }catch (CustodyException c){
+            log.info("Error obteniendo la informacion de la firma: " + c.getMessage());
+            throw new I18NException("Error obteniendo la informacion de la firma");
+        }
     }
 
     /**
@@ -1445,7 +1490,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
      * @return
      */
     @Override
-    public SignatureCustody getFirma(Anexo anexo, Long idEntidad) throws I18NException, Exception {
+    public SignatureCustody getFirma(Anexo anexo, Long idEntidad) throws I18NException {
 
         IDocumentCustodyPlugin custody;
 
@@ -1454,18 +1499,25 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             return null;
         }
 
-        if (anexo.isJustificante()) {
-            if(PropiedadGlobalUtil.getCustodiaDiferida(idEntidad) && !anexo.getCustodiado()){ // Si no está custodiado, está guardado en FileSystem
-                custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA_FS_JUSTIFICANTE);
-            }else{
-                custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE);
+        try{
+
+            if (anexo.isJustificante()) {
+                if(PropiedadGlobalUtil.getCustodiaDiferida(idEntidad) && !anexo.getCustodiado()){ // Si no está custodiado, está guardado en FileSystem
+                    custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA_FS_JUSTIFICANTE);
+                }else{
+                    custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE);
+                }
+
+            } else {
+                custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA_ANEXOS);
             }
 
-        } else {
-            custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA_ANEXOS);
-        }
+            return custody.getSignatureInfo(anexo.getCustodiaID());
 
-        return custody.getSignatureInfo(anexo.getCustodiaID());
+        }catch (CustodyException c){
+            log.info("Error obteniendo la firma del documento: " + c.getMessage());
+            throw new I18NException("Error obteniendo la firma del documento");
+        }
     }
 
 
@@ -1477,27 +1529,36 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
      * casos.
      */
     @Override
-    public boolean eliminarCustodia(String custodiaID, Anexo anexo, Long idEntidad) throws Exception, I18NException {
+    public boolean eliminarCustodia(String custodiaID, Anexo anexo, Long idEntidad) throws I18NException {
 
         if (custodiaID == null) {
             log.warn("eliminarCustodia :: CustodiaID vale null !!!!!", new Exception());
             return false;
         } else {
-            IDocumentCustodyPlugin custody;
-            if (anexo.isJustificante()) {
 
-                if(PropiedadGlobalUtil.getCustodiaDiferida(idEntidad) && !anexo.getCustodiado()){ // Si no está custodiado, está guardado en FileSystem
-                    custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA_FS_JUSTIFICANTE);
-                }else{
-                    custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE);
+            try{
+
+
+                IDocumentCustodyPlugin custody;
+                if (anexo.isJustificante()) {
+
+                    if(PropiedadGlobalUtil.getCustodiaDiferida(idEntidad) && !anexo.getCustodiado()){ // Si no está custodiado, está guardado en FileSystem
+                        custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA_FS_JUSTIFICANTE);
+                    }else{
+                        custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE);
+                    }
+                } else {
+                    custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA_ANEXOS);
                 }
-            } else {
-                custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA_ANEXOS);
+
+                custody.deleteCustody(custodiaID);
+
+                return true;
+
+            }catch (CustodyException | NotSupportedCustodyException c){
+                log.info("Error eliminando el anexo: " + c.getMessage());
+                throw new I18NException("Error eliminando el anexo");
             }
-
-            custody.deleteCustody(custodiaID);
-            return true;
-
         }
 
     }
@@ -1510,7 +1571,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
      * @return
      */
     @Override
-    public String getUrlValidation(Anexo anexo, Long idEntidad) throws I18NException, Exception {
+    public String getUrlValidation(Anexo anexo, Long idEntidad) throws I18NException {
 
         if (anexo.getCustodiaID() == null) {
             log.warn("getUrlValidation :: CustodiaID vale null !!!!!", new Exception());
@@ -1521,16 +1582,24 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
             IDocumentCustodyPlugin custody = null;
 
-            if (anexo.isJustificante()) {
-                if(PropiedadGlobalUtil.getCustodiaDiferida(idEntidad) && !anexo.getCustodiado()){ // Si no está custodiado, está guardado en FileSystem
-                    custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA_FS_JUSTIFICANTE);
-                }else{
-                    custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE);
+            try{
+
+                if (anexo.isJustificante()) {
+                    if(PropiedadGlobalUtil.getCustodiaDiferida(idEntidad) && !anexo.getCustodiado()){ // Si no está custodiado, está guardado en FileSystem
+                        custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA_FS_JUSTIFICANTE);
+                    }else{
+                        custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE);
+                    }
+                } else {
+                    custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA_ANEXOS);
                 }
-            } else {
-                custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA_ANEXOS);
+
+                return custody.getOriginalFileUrl(anexo.getCustodiaID(), new HashMap<String, Object>());
+
+            }catch (CustodyException c){
+                log.info("Error obteniendo la url de validacion del anexo: " + c.getMessage());
+                throw new I18NException("Error obteniendo la url de validacion del anexo");
             }
-            return custody.getOriginalFileUrl(anexo.getCustodiaID(), new HashMap<String, Object>());
 
         } else if (anexo.getPerfilCustodia().equals(RegwebConstantes.PERFIL_CUSTODIA_ARXIU)) {
 
@@ -1551,7 +1620,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
      * @return
      */
     @Override
-    public String getCsvValidationWeb(Anexo anexo, Long idEntidad) throws I18NException, Exception {
+    public String getCsvValidationWeb(Anexo anexo, Long idEntidad) throws I18NException {
 
         if (anexo.getCustodiaID() == null) {
             log.warn("getUrlValidation :: CustodiaID vale null !!!!!", new Exception());
@@ -1562,20 +1631,27 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
             IDocumentCustodyPlugin custody = null;
 
-            if (anexo.isJustificante()) {
-                if(PropiedadGlobalUtil.getCustodiaDiferida(idEntidad) && !anexo.getCustodiado()){ // Si no está custodiado, está guardado en FileSystem
-                    custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA_FS_JUSTIFICANTE);
-                }else{
-                    custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE);
+            try{
+
+                if (anexo.isJustificante()) {
+                    if(PropiedadGlobalUtil.getCustodiaDiferida(idEntidad) && !anexo.getCustodiado()){ // Si no está custodiado, está guardado en FileSystem
+                        custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA_FS_JUSTIFICANTE);
+                    }else{
+                        custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE);
+                    }
+                } else {
+                    custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA_ANEXOS);
                 }
-            } else {
-                custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA_ANEXOS);
+
+                Map<String, Object> params = new HashMap<String, Object>();
+                params.put("csv", anexo.getCsv());
+
+                return custody.getCsvValidationWeb(anexo.getCustodiaID(), params);
+
+            }catch (CustodyException c){
+                log.info("Error obteniendo la url de validacion web del anexo: " + c.getMessage());
+                throw new I18NException("Error obteniendo la url de validacion web del anexo");
             }
-
-            Map<String, Object> params = new HashMap<String, Object>();
-            params.put("csv", anexo.getCsv());
-
-            return custody.getCsvValidationWeb(anexo.getCustodiaID(), params);
 
         } else if (anexo.getPerfilCustodia().equals(RegwebConstantes.PERFIL_CUSTODIA_ARXIU)) {
 
@@ -1597,7 +1673,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
      * @return AnexoSimple
      */
     @Override
-    public AnexoSimple descargarFirmaDesdeUrlValidacion(Anexo anexo, Long idEntidad) throws I18NException, Exception {
+    public AnexoSimple descargarFirmaDesdeUrlValidacion(Anexo anexo, Long idEntidad) throws I18NException {
 
         if (anexo.getPerfilCustodia().equals(RegwebConstantes.PERFIL_CUSTODIA_DOCUMENT_CUSTODY)) {
 
@@ -1653,17 +1729,17 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
      * @param idEntidad
      * @return
      * @throws I18NException
-     * @throws Exception
+     * @throws I18NException
      */
     @Override
-    public AnexoSimple descargarJustificante(Anexo anexo, Long idEntidad) throws I18NException, Exception {
+    public AnexoSimple descargarJustificante(Anexo anexo, Long idEntidad) throws I18NException {
 
         return descargarFirmaDesdeUrlValidacion(anexo, idEntidad);
     }
 
     @Override
     @TransactionAttribute(value=REQUIRES_NEW)
-    public void custodiarJustificanteArxiu(String expedienteID, String custodiaID, String csv, Long idAnexo) throws Exception{
+    public void custodiarJustificanteArxiu(String expedienteID, String custodiaID, String csv, Long idAnexo) throws I18NException{
         Query q = em.createQuery("update Anexo set perfilCustodia=:perfilCustodia, expedienteID = :expedienteID, custodiaID = :custodiaID, csv= :csv, custodiado = true where id = :idAnexo");
         q.setParameter("perfilCustodia", RegwebConstantes.PERFIL_CUSTODIA_ARXIU);
         q.setParameter("expedienteID", expedienteID);
@@ -1677,42 +1753,50 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
      * Carga los metadatos de un anexo
      * @param anexoFull
      * @param custody
-     * @throws Exception
+     * @throws I18NException
      */
-    private void cargarMetadatosAnexo(AnexoFull anexoFull, IDocumentCustodyPlugin custody  ) throws Exception{
+    private void cargarMetadatosAnexo(AnexoFull anexoFull, IDocumentCustodyPlugin custody  ) throws I18NException{
 
         List<Metadata> metadataList = new ArrayList<>();
 
-        //Obtenemos las metadatas de escaneo del anexo si no es justificante
-        if(anexoFull.getAnexo().getScan()) {
+        try{
 
-            //Profundidad color
-            Metadata profundidadColor = custody.getOnlyOneMetadata(anexoFull.getAnexo().getCustodiaID(), MetadataConstants.EEMGDE_PROFUNDIDAD_COLOR);
-            if (profundidadColor != null) {
-                metadataList.add(profundidadColor);
+            //Obtenemos las metadatas de escaneo del anexo si no es justificante
+            if(anexoFull.getAnexo().getScan()) {
+
+                //Profundidad color
+                Metadata profundidadColor = custody.getOnlyOneMetadata(anexoFull.getAnexo().getCustodiaID(), MetadataConstants.EEMGDE_PROFUNDIDAD_COLOR);
+                if (profundidadColor != null) {
+                    metadataList.add(profundidadColor);
+                }
+
+                //Resolución
+                Metadata resolucion = custody.getOnlyOneMetadata(anexoFull.getAnexo().getCustodiaID(), MetadataConstants.EEMGDE_RESOLUCION);
+                if (resolucion != null) {
+                    metadataList.add(resolucion);
+                }
+
+                //Idioma
+                Metadata idioma = custody.getOnlyOneMetadata(anexoFull.getAnexo().getCustodiaID(), MetadataConstants.EEMGDE_IDIOMA);
+                if (idioma != null) {
+                    metadataList.add(idioma);
+                }
+
             }
 
-            //Resolución
-            Metadata resolucion = custody.getOnlyOneMetadata(anexoFull.getAnexo().getCustodiaID(), MetadataConstants.EEMGDE_RESOLUCION);
-            if (resolucion != null) {
-                metadataList.add(resolucion);
+            //Resto de metadatos
+            Metadata metadataDescripcion = custody.getOnlyOneMetadata(anexoFull.getAnexo().getCustodiaID(), MetadataConstants.ENI_DESCRIPCION);
+            if (metadataDescripcion != null) {
+                metadataList.add(metadataDescripcion);
             }
 
-            //Idioma
-            Metadata idioma = custody.getOnlyOneMetadata(anexoFull.getAnexo().getCustodiaID(), MetadataConstants.EEMGDE_IDIOMA);
-            if (idioma != null) {
-                metadataList.add(idioma);
-            }
+            anexoFull.setMetadatas(metadataList);
 
+        }catch (CustodyException | NotSupportedCustodyException c){
+            log.info("Error obteniendo metadatos del anexo: " + c.getMessage());
+            throw new I18NException("Error obteniendo metadatos del anexo");
         }
 
-        //Resto de metadatos
-        Metadata metadataDescripcion = custody.getOnlyOneMetadata(anexoFull.getAnexo().getCustodiaID(), MetadataConstants.ENI_DESCRIPCION);
-        if (metadataDescripcion != null) {
-            metadataList.add(metadataDescripcion);
-        }
-
-        anexoFull.setMetadatas(metadataList);
     }
 
 }

@@ -4,6 +4,7 @@ import es.caib.regweb3.model.Sesion;
 import es.caib.regweb3.model.UsuarioEntidad;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.utils.RegwebConstantes;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,26 +38,26 @@ public class SesionBean extends BaseEjbJPA<Sesion, Long> implements SesionLocal 
 
 
     @Override
-    public Sesion getReference(Long id) throws Exception {
+    public Sesion getReference(Long id) throws I18NException {
 
         return em.getReference(Sesion.class, id);
     }
 
     @Override
-    public Sesion findById(Long id) throws Exception {
+    public Sesion findById(Long id) throws I18NException {
 
         return em.find(Sesion.class, id);
     }
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Sesion> getAll() throws Exception {
+    public List<Sesion> getAll() throws I18NException {
 
         return em.createQuery("Select sesion from Sesion as sesion order by sesion.id").getResultList();
     }
 
     @Override
-    public Long getTotal() throws Exception {
+    public Long getTotal() throws I18NException {
 
         Query q = em.createQuery("Select count(sesion.id) from Sesion as sesion");
 
@@ -66,7 +67,7 @@ public class SesionBean extends BaseEjbJPA<Sesion, Long> implements SesionLocal 
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Sesion> getPagination(int inicio) throws Exception {
+    public List<Sesion> getPagination(int inicio) throws I18NException {
 
         Query q = em.createQuery("Select sesion from Sesion as sesion order by sesion.id");
         q.setFirstResult(inicio);
@@ -76,7 +77,7 @@ public class SesionBean extends BaseEjbJPA<Sesion, Long> implements SesionLocal 
     }
 
     @Override
-    public Sesion nuevaSesion(UsuarioEntidad usuario) throws Exception {
+    public Sesion nuevaSesion(UsuarioEntidad usuario) throws I18NException {
 
         // Creamos un nuevo token
         Long idSesion = new SecureRandom().nextLong();
@@ -123,7 +124,7 @@ public class SesionBean extends BaseEjbJPA<Sesion, Long> implements SesionLocal 
     }
 
     @Override
-    public void cambiarEstado(Long idSesion, UsuarioEntidad usuario, Long estado) throws Exception {
+    public void cambiarEstado(Long idSesion, UsuarioEntidad usuario, Long estado) throws I18NException {
 
         Sesion sesion = findByIdSesionUsuario(idSesion, usuario);
 
@@ -133,7 +134,7 @@ public class SesionBean extends BaseEjbJPA<Sesion, Long> implements SesionLocal 
     }
 
     @Override
-    public void iniciarSesion(Long idSesion, UsuarioEntidad usuario) throws Exception {
+    public void iniciarSesion(Long idSesion, UsuarioEntidad usuario) throws I18NException {
 
         Sesion sesion;
 
@@ -154,12 +155,12 @@ public class SesionBean extends BaseEjbJPA<Sesion, Long> implements SesionLocal 
             merge(sesion);
 
         } else {
-            throw new Exception("El idSesion no existe en el sistema");
+            throw new I18NException("El idSesion no existe en el sistema");
         }
     }
 
     @Override
-    public void finalizarSesion(Long idSesion, UsuarioEntidad usuario, Long tipoRegistro, String numeroRegistro) throws Exception {
+    public void finalizarSesion(Long idSesion, UsuarioEntidad usuario, Long tipoRegistro, String numeroRegistro) throws I18NException {
 
         Sesion sesion = findByIdSesionUsuario(idSesion, usuario);
 
@@ -171,7 +172,7 @@ public class SesionBean extends BaseEjbJPA<Sesion, Long> implements SesionLocal 
     }
 
     @Override
-    public void purgarSesiones(Long idEntidad) throws Exception {
+    public void purgarSesiones(Long idEntidad) throws I18NException {
 
         purgarSesionesIniciadas(idEntidad);
         purgarSesionesErrorFinalidadas(idEntidad);
@@ -179,7 +180,7 @@ public class SesionBean extends BaseEjbJPA<Sesion, Long> implements SesionLocal 
 
     }
 
-    private void purgarSesionesIniciadas(Long idEntidad) throws Exception {
+    private void purgarSesionesIniciadas(Long idEntidad) throws I18NException {
 
         Calendar hoy = Calendar.getInstance(); //obtiene la fecha de hoy
         hoy.add(Calendar.MINUTE, -PropiedadGlobalUtil.getSesionMinutosPurgadoIniciadas(idEntidad)); //el -X indica que se le restaran X minutos
@@ -193,7 +194,7 @@ public class SesionBean extends BaseEjbJPA<Sesion, Long> implements SesionLocal 
 
     }
 
-    private void purgarSesionesNoIniciadas(Long idEntidad) throws Exception {
+    private void purgarSesionesNoIniciadas(Long idEntidad) throws I18NException {
 
         Calendar hoy = Calendar.getInstance(); //obtiene la fecha de hoy
         hoy.add(Calendar.MINUTE, -PropiedadGlobalUtil.getSesionMinutosPurgadoNoIniciadas(idEntidad)); //el -X indica que se le restaran X minutos
@@ -206,7 +207,7 @@ public class SesionBean extends BaseEjbJPA<Sesion, Long> implements SesionLocal 
         eliminarSesiones(result);
     }
 
-    private void purgarSesionesErrorFinalidadas(Long idEntidad) throws Exception {
+    private void purgarSesionesErrorFinalidadas(Long idEntidad) throws I18NException {
 
         Calendar hoy = Calendar.getInstance(); //obtiene la fecha de hoy
         hoy.add(Calendar.MINUTE, -PropiedadGlobalUtil.getSesionMinutosPurgadoFinalizadas(idEntidad)); //el -X indica que se le restaran X minutos
@@ -220,7 +221,7 @@ public class SesionBean extends BaseEjbJPA<Sesion, Long> implements SesionLocal 
         eliminarSesiones(result);
     }
 
-    private void eliminarSesiones(List<?> sesiones) throws Exception {
+    private void eliminarSesiones(List<?> sesiones) throws I18NException {
 
         if (sesiones.size() > 0) {
 

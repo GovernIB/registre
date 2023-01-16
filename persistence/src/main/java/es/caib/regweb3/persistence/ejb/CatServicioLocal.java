@@ -1,6 +1,7 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.CatServicio;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 
 import javax.ejb.Local;
 
@@ -18,9 +19,9 @@ public interface CatServicioLocal extends BaseEjb<CatServicio, Long> {
     /**
      * @param codigo
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    CatServicio findByCodigo(Long codigo) throws Exception;
+    CatServicio findByCodigo(Long codigo) throws I18NException;
 
 }
 

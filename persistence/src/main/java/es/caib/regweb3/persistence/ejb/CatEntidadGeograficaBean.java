@@ -1,6 +1,7 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.CatEntidadGeografica;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,26 +30,26 @@ public class CatEntidadGeograficaBean extends BaseEjbJPA<CatEntidadGeografica, L
 
 
     @Override
-    public CatEntidadGeografica getReference(Long id) throws Exception {
+    public CatEntidadGeografica getReference(Long id) throws I18NException {
 
         return em.getReference(CatEntidadGeografica.class, id);
     }
 
     @Override
-    public CatEntidadGeografica findById(Long id) throws Exception {
+    public CatEntidadGeografica findById(Long id) throws I18NException {
 
         return em.find(CatEntidadGeografica.class, id);
     }
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<CatEntidadGeografica> getAll() throws Exception {
+    public List<CatEntidadGeografica> getAll() throws I18NException {
 
         return  em.createQuery("Select catEntidadGeografica from CatEntidadGeografica as catEntidadGeografica order by catEntidadGeografica.id").getResultList();
     }
 
     @Override
-    public Long getTotal() throws Exception {
+    public Long getTotal() throws I18NException {
 
         Query q = em.createQuery("Select count(catEntidadGeografica.id) from CatEntidadGeografica as catEntidadGeografica");
 
@@ -58,7 +59,7 @@ public class CatEntidadGeograficaBean extends BaseEjbJPA<CatEntidadGeografica, L
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<CatEntidadGeografica> getPagination(int inicio) throws Exception {
+    public List<CatEntidadGeografica> getPagination(int inicio) throws I18NException {
 
         Query q = em.createQuery("Select catEntidadGeografica from CatEntidadGeografica as catEntidadGeografica order by catEntidadGeografica.id");
         q.setFirstResult(inicio);
@@ -70,7 +71,7 @@ public class CatEntidadGeograficaBean extends BaseEjbJPA<CatEntidadGeografica, L
 
     @Override
     @SuppressWarnings("unchecked")
-    public CatEntidadGeografica findByCodigo(String codigo) throws Exception {
+    public CatEntidadGeografica findByCodigo(String codigo) throws I18NException {
         Query q = em.createQuery("Select catEntidadGeografica from CatEntidadGeografica as catEntidadGeografica where catEntidadGeografica.codigoEntidadGeografica = :codigo");
 
         q.setParameter("codigo",codigo);

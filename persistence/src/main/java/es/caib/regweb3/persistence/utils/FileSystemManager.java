@@ -3,6 +3,7 @@ package es.caib.regweb3.persistence.utils;
 import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.commons.io.IOUtils;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,7 +34,7 @@ public class FileSystemManager {
      * @param id
      * @return
      */
-    public static byte[] getBytesArchivo(Long id) throws Exception{
+    public static byte[] getBytesArchivo(Long id) throws I18NException {
         File file = new File(getArchivosPath(), String.valueOf(id));
         FileInputStream input = null;
         byte[] content = null;
@@ -44,10 +45,10 @@ public class FileSystemManager {
         } catch (FileNotFoundException e) {
             log.info("El archivo no se encuentro en el path indicado");
             e.printStackTrace();
-            throw e;
+            throw new I18NException("El archivo no se encuentro en el path indicado");
         } catch (IOException e) {
             e.printStackTrace();
-            throw e;
+            throw new I18NException(e.getMessage());
         }
 
         return content;

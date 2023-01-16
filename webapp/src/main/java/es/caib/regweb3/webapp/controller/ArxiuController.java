@@ -49,9 +49,7 @@ import java.util.*;
 @Controller
 @RequestMapping(value = "/arxiu")
 public class ArxiuController extends BaseController {
-
     protected final Logger log = LoggerFactory.getLogger(getClass());
-
 
     @EJB(mappedName = AnexoLocal.JNDI_NAME)
     private AnexoLocal anexoEjb;
@@ -409,8 +407,8 @@ public class ArxiuController extends BaseController {
                 try {
                     arxiuEjb.cerrarExpediente(expediente, apiArxiu, entidad.getId());
                     cerrados = cerrados + 1;
-                } catch (CustodyException c) {
-                    log.info("Ha ocurrido un error al cerrar el expediente: " + expediente.getName() + " --> " + c.getMessage());
+                } catch (I18NException e) {
+                    log.info("Ha ocurrido un error al cerrar el expediente: " + expediente.getName() + " --> " + e.getMessage());
                 }
 
             }

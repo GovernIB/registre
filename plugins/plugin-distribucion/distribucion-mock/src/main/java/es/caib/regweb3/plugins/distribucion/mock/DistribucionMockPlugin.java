@@ -2,6 +2,7 @@ package es.caib.regweb3.plugins.distribucion.mock;
 
 import es.caib.regweb3.model.RegistroEntrada;
 import es.caib.regweb3.plugins.distribucion.IDistribucionPlugin;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.pluginsib.core.utils.AbstractPluginProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,14 +44,14 @@ public class DistribucionMockPlugin extends AbstractPluginProperties implements 
     }
 
     @Override
-    public Boolean distribuir(RegistroEntrada registro, Locale lang) throws Exception {
+    public Boolean distribuir(RegistroEntrada registro, Locale lang) throws I18NException {
 
         return true;
 
     }
 
     @Override
-    public Boolean getEnvioCola() throws Exception {
+    public Boolean getEnvioCola() throws I18NException {
         return false;
     }
 }

@@ -6,6 +6,7 @@ import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NFieldError;
 import org.fundaciobit.genapp.common.i18n.I18NTranslation;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
@@ -45,26 +46,26 @@ public class IntegracionBean extends BaseEjbJPA<Integracion, Long> implements In
 
 
     @Override
-    public Integracion getReference(Long id) throws Exception {
+    public Integracion getReference(Long id) throws I18NException {
 
         return em.getReference(Integracion.class, id);
     }
 
     @Override
-    public Integracion findById(Long id) throws Exception {
+    public Integracion findById(Long id) throws I18NException {
 
         return em.find(Integracion.class, id);
     }
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Integracion> getAll() throws Exception {
+    public List<Integracion> getAll() throws I18NException {
 
         return em.createQuery("Select integracion from Integracion as integracion order by integracion.id").getResultList();
     }
 
     @Override
-    public Long getTotal() throws Exception {
+    public Long getTotal() throws I18NException {
 
         Query q = em.createQuery("Select count(integracion.id) from Integracion as integracion");
 
@@ -74,7 +75,7 @@ public class IntegracionBean extends BaseEjbJPA<Integracion, Long> implements In
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Integracion> getPagination(int inicio) throws Exception {
+    public List<Integracion> getPagination(int inicio) throws I18NException {
 
         Query q = em.createQuery("Select integracion from Integracion as integracion order by integracion.id");
         q.setFirstResult(inicio);
@@ -86,7 +87,7 @@ public class IntegracionBean extends BaseEjbJPA<Integracion, Long> implements In
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Integracion> getByEntidad(Long idEntidad) throws Exception {
+    public List<Integracion> getByEntidad(Long idEntidad) throws I18NException {
 
         Query q = em.createQuery("Select integracion from Integracion as integracion where integracion.entidad.id = :idEntidad order by integracion.id");
         q.setParameter("idEntidad", idEntidad);
@@ -98,7 +99,7 @@ public class IntegracionBean extends BaseEjbJPA<Integracion, Long> implements In
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Integracion> getByEntidadNumReg(Long idEntidad, String numeroRegistro) throws Exception {
+    public List<Integracion> getByEntidadNumReg(Long idEntidad, String numeroRegistro) throws I18NException {
 
         Query q = em.createQuery("Select integracion from Integracion as integracion where " +
                 "integracion.entidad.id = :idEntidad and integracion.numRegFormat =:numeroRegistro order by integracion.fecha desc");
@@ -112,7 +113,7 @@ public class IntegracionBean extends BaseEjbJPA<Integracion, Long> implements In
     }
 
     @Override
-    public Paginacion busqueda(Integracion integracion, Long idEntidad) throws Exception {
+    public Paginacion busqueda(Integracion integracion, Long idEntidad) throws I18NException {
 
         Query q;
         Query q2;
@@ -198,7 +199,7 @@ public class IntegracionBean extends BaseEjbJPA<Integracion, Long> implements In
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Integracion> ultimasIntegracionesErrorTipo(Long idEntidad, Long tipo) throws Exception {
+    public List<Integracion> ultimasIntegracionesErrorTipo(Long idEntidad, Long tipo) throws I18NException {
 
         Query q = em.createQuery("Select i.fecha, i.tipo, i.numRegFormat, i.descripcion from Integracion as i where " +
                 "i.entidad.id = :idEntidad and i.estado =:estado and i.tipo = :tipo and " +
@@ -227,13 +228,13 @@ public class IntegracionBean extends BaseEjbJPA<Integracion, Long> implements In
     }
 
     @Override
-    public void addIntegracionOk(Date inicio, Long tipo, String descripcion, String peticion, Long tiempo, Long idEntidad, String numRegFormat) throws Exception {
+    public void addIntegracionOk(Date inicio, Long tipo, String descripcion, String peticion, Long tiempo, Long idEntidad, String numRegFormat) throws I18NException {
 
         persist(new Integracion(inicio, tipo, RegwebConstantes.INTEGRACION_ESTADO_OK, descripcion, peticion, tiempo, idEntidad, numRegFormat));
     }
 
     @Override
-    public void addIntegracionError(Long tipo, String descripcion, String peticion, Throwable th, String error, Long tiempo, Long idEntidad, String numRegFormat) throws Exception {
+    public void addIntegracionError(Long tipo, String descripcion, String peticion, Throwable th, String error, Long tiempo, Long idEntidad, String numRegFormat) throws I18NException {
 
         String exception = null;
 
@@ -258,7 +259,7 @@ public class IntegracionBean extends BaseEjbJPA<Integracion, Long> implements In
     }
 
     @Override
-    public Integer purgarIntegraciones(Long idEntidad) throws Exception {
+    public Integer purgarIntegraciones(Long idEntidad) throws I18NException {
 
         Calendar hoy = Calendar.getInstance(); //obtiene la fecha de hoy
         hoy.add(Calendar.DATE, -20); //el -20 indica que se le restaran 10 dias
@@ -285,7 +286,7 @@ public class IntegracionBean extends BaseEjbJPA<Integracion, Long> implements In
     }
 
     @Override
-    public Integer eliminarByEntidad(Long idEntidad) throws Exception {
+    public Integer eliminarByEntidad(Long idEntidad) throws I18NException {
 
         List<?> integracion = em.createQuery("select distinct(i.id) from Integracion as i where i.entidad.id = :idEntidad").setParameter("idEntidad", idEntidad).getResultList();
         Integer total = integracion.size();

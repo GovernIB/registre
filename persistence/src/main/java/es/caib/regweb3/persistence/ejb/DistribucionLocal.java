@@ -5,7 +5,6 @@ import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.model.RegistroEntrada;
 import es.caib.regweb3.model.UsuarioEntidad;
 import es.caib.regweb3.persistence.utils.RespuestaDistribucion;
-import es.caib.regweb3.plugins.distribucion.IDistribucionPlugin;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 
@@ -28,25 +27,18 @@ public interface DistribucionLocal {
      * @param re registro de entrada a distribuir
      * @param usuarioEntidad
      * @return
-     * @throws Exception
+     * @throws I18NException
      * @throws I18NException
      */
-    RespuestaDistribucion distribuir(RegistroEntrada re, UsuarioEntidad usuarioEntidad,  String emails, String motivo) throws Exception, I18NException, I18NValidationException;
+    RespuestaDistribucion distribuir(RegistroEntrada re, UsuarioEntidad usuarioEntidad,  String emails, String motivo) throws I18NException, I18NValidationException;
 
     /**
      * Procesar los registros(varios) que estan en la cola
      *
      * @param entidad
-     * @throws Exception
+     * @throws I18NException
      */
-    void distribuirRegistrosEnCola(Entidad entidad) throws Exception;
-
-    /**
-     * Envia un email con los errores de la cola de distribución a los Administradores de la Entidad
-     * @param entidad
-     * @throws Exception
-     */
-    void enviarEmailErrorDistribucion(Entidad entidad) throws Exception;
+    void distribuirRegistrosEnCola(Entidad entidad) throws I18NException;
 
 
     /**
@@ -55,19 +47,19 @@ public interface DistribucionLocal {
      * @param elemento
      * @param entidad
      * @return
-     * @throws Exception
+     * @throws I18NException
      * @throws I18NException
      */
-    Boolean distribuirRegistroEnCola(Cola elemento, Entidad entidad, Long tipoIntegracion) throws Exception;
+    Boolean distribuirRegistroEnCola(Cola elemento, Entidad entidad, Long tipoIntegracion) throws I18NException;
 
     /**
      * Vuelve a Distribuir un registro de Entrada ya distribuido previamente
      * @param idRegistro
      * @param entidad
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Boolean reDistribuirRegistro(Long idRegistro, Entidad entidad) throws Exception;
+    Boolean reDistribuirRegistro(Long idRegistro, Entidad entidad) throws I18NException;
 
     /**
      * Indica si es el plugin de distribucion email

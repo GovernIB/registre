@@ -281,7 +281,6 @@
         <dependency>
             <groupId>org.fundaciobit.genapp</groupId>
             <artifactId>genapp-core</artifactId>
-            <version>${genapp.version}</version>
         </dependency>
 
         <dependency>

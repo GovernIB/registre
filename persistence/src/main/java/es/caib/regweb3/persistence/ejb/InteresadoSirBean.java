@@ -3,6 +3,7 @@ package es.caib.regweb3.persistence.ejb;
 import es.caib.regweb3.model.InteresadoSir;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,26 +32,26 @@ public class InteresadoSirBean extends BaseEjbJPA<InteresadoSir, Long> implement
 
 
     @Override
-    public InteresadoSir getReference(Long id) throws Exception {
+    public InteresadoSir getReference(Long id) throws I18NException {
 
         return em.getReference(InteresadoSir.class, id);
     }
 
     @Override
-    public InteresadoSir findById(Long id) throws Exception {
+    public InteresadoSir findById(Long id) throws I18NException {
 
         return em.find(InteresadoSir.class, id);
     }
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<InteresadoSir> getAll() throws Exception {
+    public List<InteresadoSir> getAll() throws I18NException {
 
         return em.createQuery("Select interesadoSir from InteresadoSir as interesadoSir order by interesadoSir.id").getResultList();
     }
 
     @Override
-    public Long getTotal() throws Exception {
+    public Long getTotal() throws I18NException {
 
         Query q = em.createQuery("Select count(interesadoSir.id) from InteresadoSir as interesadoSir");
         q.setHint("org.hibernate.readOnly", true);
@@ -60,7 +61,7 @@ public class InteresadoSirBean extends BaseEjbJPA<InteresadoSir, Long> implement
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<InteresadoSir> getPagination(int inicio) throws Exception {
+    public List<InteresadoSir> getPagination(int inicio) throws I18NException {
 
         Query q = em.createQuery("Select interesadoSir from InteresadoSir as interesadoSir order by interesadoSir.id");
         q.setFirstResult(inicio);
@@ -71,7 +72,7 @@ public class InteresadoSirBean extends BaseEjbJPA<InteresadoSir, Long> implement
     }
 
     @Override
-    public InteresadoSir guardarInteresadoSir(InteresadoSir interesadoSir) throws Exception {
+    public InteresadoSir guardarInteresadoSir(InteresadoSir interesadoSir) throws I18NException {
 
         interesadoSir.setNombreInteresado(StringUtils.capitailizeWord(interesadoSir.getNombreInteresado(), false));
         interesadoSir.setPrimerApellidoInteresado(StringUtils.capitailizeWord(interesadoSir.getPrimerApellidoInteresado(), false));
@@ -87,7 +88,7 @@ public class InteresadoSirBean extends BaseEjbJPA<InteresadoSir, Long> implement
     }
 
     @Override
-    public Integer eliminarByEntidad(Long idEntidad) throws Exception {
+    public Integer eliminarByEntidad(Long idEntidad) throws I18NException {
 
         List<?> result = em.createQuery("Select distinct(i.id) from InteresadoSir as i where i.registroSir.entidad.id =:idEntidad").setParameter("idEntidad", idEntidad).getResultList();
         Integer total = result.size();

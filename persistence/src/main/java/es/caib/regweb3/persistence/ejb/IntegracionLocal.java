@@ -2,6 +2,7 @@ package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.Integracion;
 import es.caib.regweb3.persistence.utils.Paginacion;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 
 import javax.ejb.Local;
 import java.util.Date;
@@ -24,9 +25,9 @@ public interface IntegracionLocal extends BaseEjb<Integracion, Long> {
      *
      * @param idEntidad
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    List<Integracion> getByEntidad(Long idEntidad) throws Exception;
+    List<Integracion> getByEntidad(Long idEntidad) throws I18NException;
 
     /**
      * Obtiene las integraciones de un número de registro
@@ -34,9 +35,9 @@ public interface IntegracionLocal extends BaseEjb<Integracion, Long> {
      * @param idEntidad
      * @param numeroRegistro
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    List<Integracion> getByEntidadNumReg(Long idEntidad, String numeroRegistro) throws Exception;
+    List<Integracion> getByEntidadNumReg(Long idEntidad, String numeroRegistro) throws I18NException;
 
     /**
      * Búsqueda de integraciones
@@ -44,18 +45,18 @@ public interface IntegracionLocal extends BaseEjb<Integracion, Long> {
      * @param integracion
      * @param idEntidad
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Paginacion busqueda(Integracion integracion, Long idEntidad) throws Exception;
+    Paginacion busqueda(Integracion integracion, Long idEntidad) throws I18NException;
 
     /**
      * Obtiene las últimas 10 Integraciones con error de los últimos 2 días
      *
      * @param idEntidad
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    List<Integracion> ultimasIntegracionesErrorTipo(Long idEntidad, Long tipo) throws Exception;
+    List<Integracion> ultimasIntegracionesErrorTipo(Long idEntidad, Long tipo) throws I18NException;
 
     /**
      * @param tipo
@@ -64,9 +65,9 @@ public interface IntegracionLocal extends BaseEjb<Integracion, Long> {
      * @param tiempo
      * @param idEntidad
      * @param numregformat
-     * @throws Exception
+     * @throws I18NException
      */
-    void addIntegracionOk(Date inicio, Long tipo, String descripcion, String peticion, Long tiempo, Long idEntidad, String numregformat) throws Exception;
+    void addIntegracionOk(Date inicio, Long tipo, String descripcion, String peticion, Long tiempo, Long idEntidad, String numregformat) throws I18NException;
 
     /**
      * @param tipo
@@ -76,26 +77,26 @@ public interface IntegracionLocal extends BaseEjb<Integracion, Long> {
      * @param tiempo
      * @param idEntidad
      * @param numregformat
-     * @throws Exception
+     * @throws I18NException
      */
-    void addIntegracionError(Long tipo, String descripcion, String peticion, Throwable th, String error, Long tiempo, Long idEntidad, String numregformat) throws Exception;
+    void addIntegracionError(Long tipo, String descripcion, String peticion, Throwable th, String error, Long tiempo, Long idEntidad, String numregformat) throws I18NException;
 
     /**
      * Elimina las Integraciones con una antigüedad de 10 días
      *
      * @param idEntidad
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Integer purgarIntegraciones(Long idEntidad) throws Exception;
+    Integer purgarIntegraciones(Long idEntidad) throws I18NException;
 
     /**
      * Elimina las integraciones de una Entidad
      *
      * @param idEntidad
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Integer eliminarByEntidad(Long idEntidad) throws Exception;
+    Integer eliminarByEntidad(Long idEntidad) throws I18NException;
 
 }

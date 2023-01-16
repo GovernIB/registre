@@ -1,5 +1,7 @@
 package es.caib.regweb3.persistence.ejb;
 
+import org.fundaciobit.genapp.common.i18n.I18NException;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -14,60 +16,60 @@ public interface BaseEjb<T extends Serializable, E> {
      * Crear registro
      *
      * @param transientInstance
-     * @throws Exception
+     * @throws I18NException
      */
-    T persist(T transientInstance) throws Exception;
+    T persist(T transientInstance) throws I18NException;
 
     /**
      *  Actualizar registro
      * @param instance
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    T merge(T instance) throws Exception;
+    T merge(T instance) throws I18NException;
 
     /**
      *  Eliminar registro
      * @param persistentInstance
-     * @throws Exception
+     * @throws I18NException
      */
-    void remove(T persistentInstance) throws Exception;
+    void remove(T persistentInstance) throws I18NException;
 
     /**
      *  Obtener registro por id
      * @param id
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    T findById(E id) throws Exception;
+    T findById(E id) throws I18NException;
 
     /**
      *  Obtener una referencia al registro por id
      * @param id
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    T getReference(E id) throws Exception;
+    T getReference(E id) throws I18NException;
 
     /**
      *  Obtener todos los registros
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    List<T> getAll() throws Exception;
+    List<T> getAll() throws I18NException;
 
     /**
      * Obtiene el total de registros para la paginacion
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Long getTotal() throws Exception;
+    Long getTotal() throws I18NException;
 
     /**
      * Obtiene X valores comenzando en la posicion pasada por parametro
      * @param inicio
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    List<T> getPagination(int inicio) throws Exception;
+    List<T> getPagination(int inicio) throws I18NException;
 }

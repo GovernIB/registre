@@ -6,6 +6,7 @@ import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.PlantillaJson;
 import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -131,7 +132,7 @@ public class RegistroUtils{
      * @return
      * @throws Exception
      */
-    public static Long obtenerDiasRegistro(Date fechaCreacionRegistro) throws Exception {
+    public static Long obtenerDiasRegistro(Date fechaCreacionRegistro) throws I18NException {
 
 
        final long MILLSECS_PER_DAY = 24 * 60 * 60 * 1000; //Milisegundos al día
@@ -148,7 +149,7 @@ public class RegistroUtils{
      * @param registroEntrada
      * @return
      */
-    public static  String numeroRegistroFormateado(RegistroEntrada registroEntrada, Libro libro, Entidad entidad) throws Exception{
+    public static  String numeroRegistroFormateado(RegistroEntrada registroEntrada, Libro libro, Entidad entidad) throws I18NException{
 
         String formatNumRegistre = entidad.getNumRegistro();
         if(formatNumRegistre != null){
@@ -172,7 +173,7 @@ public class RegistroUtils{
      * @param registroSalida
      * @return
      */
-    public static String numeroRegistroFormateado(RegistroSalida registroSalida, Libro libro, Entidad entidad) throws Exception{
+    public static String numeroRegistroFormateado(RegistroSalida registroSalida, Libro libro, Entidad entidad) throws I18NException{
 
         String formatNumRegistre = entidad.getNumRegistro();
         if(formatNumRegistre != null){
@@ -227,7 +228,7 @@ public class RegistroUtils{
      * @return
      * @throws Exception
      */
-    public static String obtenerCodigoDir3Interesado(RegistroSalida registroSalida) throws Exception {
+    public static String obtenerCodigoDir3Interesado(RegistroSalida registroSalida) throws I18NException {
 
         List<Interesado> interesados = registroSalida.getRegistroDetalle().getInteresados();
 

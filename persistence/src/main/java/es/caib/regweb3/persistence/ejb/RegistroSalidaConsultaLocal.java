@@ -28,9 +28,9 @@ public interface RegistroSalidaConsultaLocal {
      *
      * @param idRegistroSalida
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    RegistroBasico findByIdLigero(Long idRegistroSalida) throws Exception;
+    RegistroBasico findByIdLigero(Long idRegistroSalida) throws I18NException;
 
 
     /**
@@ -39,9 +39,9 @@ public interface RegistroSalidaConsultaLocal {
      * @param pageNumber
      * @param registroSalida
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Paginacion busqueda(Integer pageNumber, List<Long> organismos, Date fechaInicio, Date fechaFin, RegistroSalida registroSalida, String interesadoNom, String interesadoDoc, String interesadoLli1, String interesadoLli2, String observaciones, Long idUsuario, Long idEntidad) throws Exception;
+    Paginacion busqueda(Integer pageNumber, List<Long> organismos, Date fechaInicio, Date fechaFin, RegistroSalida registroSalida, String interesadoNom, String interesadoDoc, String interesadoLli1, String interesadoLli2, String observaciones, Long idUsuario, Long idEntidad) throws I18NException;
 
 
     /**
@@ -51,18 +51,18 @@ public interface RegistroSalidaConsultaLocal {
      * @param anyo
      * @param libro
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    RegistroSalida findByNumeroAnyoLibro(int numero, int anyo, String libro) throws Exception;
+    RegistroSalida findByNumeroAnyoLibro(int numero, int anyo, String libro) throws I18NException;
 
     /**
      * Obtiene el RegistroSalida a partir de su numero de registro formateado, la entidad y el libro.
      *
      * @param numeroRegistroFormateado
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    RegistroSalida findByNumeroRegistroFormateado(Long idEntidad, String numeroRegistroFormateado) throws Exception;
+    RegistroSalida findByNumeroRegistroFormateado(Long idEntidad, String numeroRegistroFormateado) throws I18NException;
 
 
     /**
@@ -71,10 +71,10 @@ public interface RegistroSalidaConsultaLocal {
      * @param idEntidad
      * @param numeroRegistroFormateado
      * @return
-     * @throws Exception
+     * @throws I18NException
      * @throws I18NException
      */
-    RegistroSalida findByNumeroRegistroFormateadoCompleto(Long idEntidad, String numeroRegistroFormateado) throws Exception, I18NException;
+    RegistroSalida findByNumeroRegistroFormateadoCompleto(Long idEntidad, String numeroRegistroFormateado) throws I18NException;
 
 
     /**
@@ -83,27 +83,27 @@ public interface RegistroSalidaConsultaLocal {
      *
      * @param idRegistroDetalle
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    String findNumeroRegistroFormateadoByRegistroDetalle(Long idRegistroDetalle) throws Exception;
+    String findNumeroRegistroFormateadoByRegistroDetalle(Long idRegistroDetalle) throws I18NException;
 
     /**
      * Retorna el identificador del Libro al que pertenece el RegistroSalida
      *
      * @param idRegistroSalida
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Long getLibro(Long idRegistroSalida) throws Exception;
+    Long getLibro(Long idRegistroSalida) throws I18NException;
 
     /**
      * Retorna el Organismo al que pertenece el RegistroSalida
      *
      * @param idRegistroSalida
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Organismo getOrganismo(Long idRegistroSalida) throws Exception;
+    Organismo getOrganismo(Long idRegistroSalida) throws I18NException;
 
     /**
      * Busca los Registros de Salida de un listado de Libros en función de su estado.
@@ -111,9 +111,9 @@ public interface RegistroSalidaConsultaLocal {
      * @param organismos
      * @param idEstado
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Long getByLibrosEstadoCount(List<Organismo> organismos, Long idEstado) throws Exception;
+    Long getByLibrosEstadoCount(List<Organismo> organismos, Long idEstado) throws I18NException;
 
     /**
      * Busca los Registros de Salida de un listado de Organismos en función de su estado.
@@ -122,36 +122,36 @@ public interface RegistroSalidaConsultaLocal {
      * @param organismos
      * @param idEstado
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    List<RegistroSalida> getByLibrosEstado(int inicio, List<Organismo> organismos, Long idEstado) throws Exception;
+    List<RegistroSalida> getByLibrosEstado(int inicio, List<Organismo> organismos, Long idEstado) throws I18NException;
 
     /**
      * Busca los Registros de Salida de un Libro.
      *
      * @param idLibro
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Long getTotalByLibro(Long idLibro) throws Exception;
+    Long getTotalByLibro(Long idLibro) throws I18NException;
 
     /**
      * Comprueba si un usuario tiene RegistroSalida
      *
      * @param idUsuarioEntidad
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Boolean obtenerPorUsuario(Long idUsuarioEntidad) throws Exception;
+    Boolean obtenerPorUsuario(Long idUsuarioEntidad) throws I18NException;
 
     /**
      * @param pageNumber
      * @param idEntidad
      * @param idOficina
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Paginacion getSirRechazadosReenviadosPaginado(Integer pageNumber, Long idEntidad, Long idOficina) throws Exception;
+    Paginacion getSirRechazadosReenviadosPaginado(Integer pageNumber, Long idEntidad, Long idOficina) throws I18NException;
 
     /**
      * Busca los Registros de Salida de una OficinaActiva Rechazados o Reenviados por SIR
@@ -159,41 +159,41 @@ public interface RegistroSalidaConsultaLocal {
      * @param idOficina
      * @param total
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    List<RegistroSalida> getSirRechazadosReenviados(Long idEntidad, Long idOficina, Integer total) throws Exception;
+    List<RegistroSalida> getSirRechazadosReenviados(Long idEntidad, Long idOficina, Integer total) throws I18NException;
 
     /**
      * Total de Registros de Salida de una OficinaActiva Rechazados o Reenviados por SIR
      *
      * @param idOficina
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Long getSirRechazadosReenviadosCount(Long idOficina) throws Exception;
+    Long getSirRechazadosReenviadosCount(Long idOficina) throws I18NException;
 
     /**
      * @param idEntidad
      * @param documento
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    List<RegistroSalida> getByDocumento(Long idEntidad, String documento) throws Exception;
+    List<RegistroSalida> getByDocumento(Long idEntidad, String documento) throws I18NException;
 
     /**
      * @param query
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Long queryCount(String query) throws Exception;
+    Long queryCount(String query) throws I18NException;
 
     /**
      * Obtiene los últimos organismos destinatario de los registros realizados por el usuario indicado
      *
      * @param usuarioEntidad
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    List<Organismo> ultimosOrganismosRegistro(UsuarioEntidad usuarioEntidad) throws Exception;
+    List<Organismo> ultimosOrganismosRegistro(UsuarioEntidad usuarioEntidad) throws I18NException;
 
 }

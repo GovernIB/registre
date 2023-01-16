@@ -70,20 +70,20 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
 
 
     @Override
-    public Entidad getReference(Long id) throws Exception {
+    public Entidad getReference(Long id) throws I18NException {
 
         return em.getReference(Entidad.class, id);
     }
 
     @Override
-    public Entidad findById(Long id) throws Exception {
+    public Entidad findById(Long id) throws I18NException {
 
         return em.find(Entidad.class, id);
     }
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Entidad findByIdLigero(Long idEntidad) throws Exception {
+    public Entidad findByIdLigero(Long idEntidad) throws I18NException {
 
         Query q = em.createQuery("Select entidad.id, entidad.codigoDir3, entidad.nombre, entidad.logoMenu, entidad.logoPie, entidad.configuracionPersona, " +
                 "entidad.sir, entidad.oficioRemision, entidad.mantenimiento, entidad.textoPie, entidad.colorMenu, entidad.numRegistro, entidad.libro, entidad.diasVisado, entidad.oficioRemision, entidad.perfilCustodia, entidad.sello from Entidad as entidad LEFT JOIN entidad.logoMenu logoMenu LEFT JOIN entidad.logoPie logoPie where " +
@@ -122,13 +122,13 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Entidad> getAll() throws Exception {
+    public List<Entidad> getAll() throws I18NException {
 
         return em.createQuery("Select entidad from Entidad as entidad order by entidad.id").getResultList();
     }
 
     @Override
-    public Long getTotal() throws Exception {
+    public Long getTotal() throws I18NException {
 
         Query q = em.createQuery("Select count(entidad.id) from Entidad as entidad");
 
@@ -138,7 +138,7 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Entidad> getPagination(int inicio) throws Exception {
+    public List<Entidad> getPagination(int inicio) throws I18NException {
 
         Query q = em.createQuery("Select entidad from Entidad as entidad order by entidad.id");
         q.setFirstResult(inicio);
@@ -148,7 +148,7 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
     }
 
     @Override
-    public Entidad nuevaEntidad(Entidad entidad) throws Exception {
+    public Entidad nuevaEntidad(Entidad entidad) throws I18NException {
 
         // Libro único
         Libro libro = new Libro();
@@ -253,7 +253,7 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Entidad findByCodigoDir3(String codigo) throws Exception {
+    public Entidad findByCodigoDir3(String codigo) throws I18NException {
 
         Query q = em.createQuery("Select entidad from Entidad as entidad where entidad.codigoDir3 = :codigo ");
 
@@ -271,7 +271,7 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Boolean tieneOrganismos(Long idEntidad) throws Exception {
+    public Boolean tieneOrganismos(Long idEntidad) throws I18NException {
         Query q = em.createQuery("Select organismo.id from Organismo as organismo where organismo.entidad.id = :idEntidad");
 
         q.setParameter("idEntidad", idEntidad);
@@ -284,7 +284,7 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Entidad> getEntidadesAdministrador(Long idUsuario) throws Exception {
+    public List<Entidad> getEntidadesAdministrador(Long idUsuario) throws I18NException {
 
         Query q = em.createQuery("Select entidad.id, entidad.nombre, entidad.oficioRemision from Entidad as entidad, UsuarioEntidad as usuarioEntidad where usuarioEntidad in elements(entidad.administradores) " +
                 "and usuarioEntidad.usuario.id = :idUsuario and entidad.activo = true order by entidad.id");
@@ -307,7 +307,7 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Entidad> getEntidadesPropietario(Long idUsuario) throws Exception {
+    public List<Entidad> getEntidadesPropietario(Long idUsuario) throws I18NException {
 
         Query q = em.createQuery("Select entidad.id, entidad.nombre, entidad.oficioRemision from Entidad as entidad where entidad.propietario.id = :idUsuario " +
                 "and entidad.activo = true order by entidad.id");
@@ -329,13 +329,13 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
     }
 
     @Override
-    public List<Entidad> getEntidadesActivas() throws Exception {
+    public List<Entidad> getEntidadesActivas() throws I18NException {
 
         return em.createQuery("Select entidad from Entidad as entidad where entidad.activo = true order by entidad.id").getResultList();
     }
 
     @Override
-    public Boolean existeCodigoDir3Edit(String codigo, Long idEntidad) throws Exception {
+    public Boolean existeCodigoDir3Edit(String codigo, Long idEntidad) throws I18NException {
 
         Query q = em.createQuery("Select entidad.id from Entidad as entidad where " +
                 "entidad.id != :idEntidad and entidad.codigoDir3 = :codigo");
@@ -348,7 +348,7 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
     }
 
     @Override
-    public Boolean esAdministrador(UsuarioEntidad usuarioEntidad) throws Exception {
+    public Boolean esAdministrador(UsuarioEntidad usuarioEntidad) throws I18NException {
 
         Query q = em.createQuery("Select entidad.id from Entidad as entidad where entidad.id=:idEntidad and entidad.activo = true and :usuarioEntidad in elements(entidad.administradores) ");
 
@@ -359,7 +359,7 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
     }
 
     @Override
-    public Boolean esAutorizado(Long idEntidad, Long idUsuario) throws Exception {
+    public Boolean esAutorizado(Long idEntidad, Long idUsuario) throws I18NException {
 
         Query q = em.createQuery("Select entidad.id from Entidad as entidad, UsuarioEntidad as usuarioEntidad where (entidad.propietario.id = :idUsuario or usuarioEntidad in elements(entidad.administradores) ) and entidad.id=:idEntidad");
 
@@ -371,7 +371,7 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
     }
 
     @Override
-    public Boolean isSir(Long idEntidad) throws Exception {
+    public Boolean isSir(Long idEntidad) throws I18NException {
 
         Query q = em.createQuery("Select entidad.sir from Entidad as entidad where entidad.id = :idEntidad");
 
@@ -382,13 +382,13 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Entidad> getEntidadesSir() throws Exception {
+    public List<Entidad> getEntidadesSir() throws I18NException {
 
         return em.createQuery("Select entidad from Entidad as entidad where entidad.sir = true order by entidad.id").getResultList();
     }
 
     @Override
-    public Boolean puedoEliminarlo(Long idUsuarioEntidad) throws Exception {
+    public Boolean puedoEliminarlo(Long idUsuarioEntidad) throws I18NException {
 
         return !registroEntradaConsultaEjb.obtenerPorUsuario(idUsuarioEntidad) && !registroSalidaConsultaEjb.obtenerPorUsuario(idUsuarioEntidad)
                 && !historicoRegistroEntradaEjb.obtenerPorUsuario(idUsuarioEntidad) && !historicoRegistroSalidaEjb.obtenerPorUsuario(idUsuarioEntidad)
@@ -397,7 +397,7 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
 
 
     @Override
-    public void eliminarRegistros(Long idEntidad) throws Exception, I18NException {
+    public void eliminarRegistros(Long idEntidad) throws I18NException {
 
         log.info("Dentro eliminar Registros Entidad");
 
@@ -456,7 +456,7 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
     }
 
     @Override
-    public void eliminarEntidad(Long idEntidad) throws Exception, I18NException {
+    public void eliminarEntidad(Long idEntidad) throws I18NException {
 
         Entidad entidad = findById(idEntidad);
 
@@ -528,14 +528,14 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
     }
 
     @Override
-    public void marcarEntidadMantenimiento(Long idEntidad, Boolean mantenimiento) throws Exception {
+    public void marcarEntidadMantenimiento(Long idEntidad, Boolean mantenimiento) throws I18NException {
 
         em.createQuery("update from Entidad set mantenimiento =:mantenimiento where id =:idEntidad").setParameter("idEntidad", idEntidad).setParameter("mantenimiento", mantenimiento).executeUpdate();
 
     }
 
     @Override
-    public boolean isMultiEntidad() throws Exception {
+    public boolean isMultiEntidad() throws I18NException {
         return em.createQuery("Select entidad.id from Entidad as entidad where entidad.sir = true order by entidad.id").getResultList().size() > 1;
     }
 

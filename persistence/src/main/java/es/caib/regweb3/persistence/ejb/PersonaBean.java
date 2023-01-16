@@ -6,6 +6,7 @@ import es.caib.regweb3.persistence.utils.DataBaseUtils;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.jboss.ejb3.annotation.TransactionTimeout;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,19 +39,19 @@ public class PersonaBean extends BaseEjbJPA<Persona, Long> implements PersonaLoc
 
 
     @Override
-    public Persona getReference(Long id) throws Exception {
+    public Persona getReference(Long id) throws I18NException {
 
         return em.getReference(Persona.class, id);
     }
 
     @Override
-    public Persona findById(Long id) throws Exception {
+    public Persona findById(Long id) throws I18NException {
 
         return em.find(Persona.class, id);
     }
 
     @Override
-    public Persona guardarPersona(Persona persona) throws Exception {
+    public Persona guardarPersona(Persona persona) throws I18NException {
 
         persona.setNombre(StringUtils.capitailizeWord(persona.getNombre(), false));
         persona.setApellido1(StringUtils.capitailizeWord(persona.getApellido1(), false));
@@ -62,14 +63,14 @@ public class PersonaBean extends BaseEjbJPA<Persona, Long> implements PersonaLoc
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Persona> getAll() throws Exception {
+    public List<Persona> getAll() throws I18NException {
 
         return em.createQuery("Select persona from Persona as persona order by persona.id").getResultList();
     }
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Persona> getAllbyEntidadTipo(Long idEntidad, Long tipoPersona) throws Exception {
+    public List<Persona> getAllbyEntidadTipo(Long idEntidad, Long tipoPersona) throws I18NException {
 
         StringBuilder query = new StringBuilder("Select persona from Persona as persona  " +
                 "where persona.entidad.id = :idEntidad ");
@@ -95,7 +96,7 @@ public class PersonaBean extends BaseEjbJPA<Persona, Long> implements PersonaLoc
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Persona> getFisicasByEntidad(Long idEntidad) throws Exception {
+    public List<Persona> getFisicasByEntidad(Long idEntidad) throws I18NException {
 
         Query q = em.createQuery("Select persona.id, persona.nombre, persona.apellido1,persona.apellido2, persona.documento, persona.tipo from Persona as persona  " +
                 "where persona.entidad.id = :idEntidad and persona.tipo = :tipoPersona  order by persona.apellido1");
@@ -118,7 +119,7 @@ public class PersonaBean extends BaseEjbJPA<Persona, Long> implements PersonaLoc
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Persona> getJuridicasByEntidad(Long idEntidad) throws Exception {
+    public List<Persona> getJuridicasByEntidad(Long idEntidad) throws I18NException {
 
         Query q = em.createQuery("Select persona.id, persona.razonSocial, persona.documento, persona.tipo from Persona as persona  " +
                 "where persona.entidad.id = :idEntidad and persona.tipo = :tipoPersona  order by persona.razonSocial");
@@ -140,7 +141,7 @@ public class PersonaBean extends BaseEjbJPA<Persona, Long> implements PersonaLoc
     }
 
     @Override
-    public Long getTotal() throws Exception {
+    public Long getTotal() throws I18NException {
 
         Query q = em.createQuery("Select count(persona.id) from Persona as persona");
         q.setHint("org.hibernate.readOnly", true);
@@ -151,7 +152,7 @@ public class PersonaBean extends BaseEjbJPA<Persona, Long> implements PersonaLoc
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Persona> getPagination(int inicio) throws Exception {
+    public List<Persona> getPagination(int inicio) throws I18NException {
 
         Query q = em.createQuery("Select persona from Persona as persona order by persona.id");
         q.setFirstResult(inicio);
@@ -162,7 +163,7 @@ public class PersonaBean extends BaseEjbJPA<Persona, Long> implements PersonaLoc
     }
 
     @Override
-    public Boolean existeDocumentoNew(String documento, Long idEntidad) throws Exception {
+    public Boolean existeDocumentoNew(String documento, Long idEntidad) throws I18NException {
 
         Query q = em.createQuery("Select persona.id from Persona as persona where " +
                 "UPPER(persona.documento) = :documento and persona.entidad.id = :idEntidad");
@@ -175,7 +176,7 @@ public class PersonaBean extends BaseEjbJPA<Persona, Long> implements PersonaLoc
     }
 
     @Override
-    public Boolean existeDocumentoEdit(String documento, Long idPersona, Long idEntidad) throws Exception {
+    public Boolean existeDocumentoEdit(String documento, Long idPersona, Long idEntidad) throws I18NException {
         Query q = em.createQuery("Select persona.id from Persona as persona where " +
                 "persona.id != :idPersona and UPPER(persona.documento) = :documento and persona.entidad.id = :idEntidad");
 
@@ -188,7 +189,7 @@ public class PersonaBean extends BaseEjbJPA<Persona, Long> implements PersonaLoc
     }
 
     @Override
-    public Paginacion busqueda(Integer pageNumber, Long idEntidad, String nombre, String apellido1, String apellido2, String documento, Long tipo) throws Exception {
+    public Paginacion busqueda(Integer pageNumber, Long idEntidad, String nombre, String apellido1, String apellido2, String documento, Long tipo) throws I18NException {
 
         Query q;
         Query q2;
@@ -270,7 +271,7 @@ public class PersonaBean extends BaseEjbJPA<Persona, Long> implements PersonaLoc
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Persona> busquedaFisicas(Long idEntidad, String nombre, String apellido1, String apellido2, String documento, Long idTipoPersona) throws Exception {
+    public List<Persona> busquedaFisicas(Long idEntidad, String nombre, String apellido1, String apellido2, String documento, Long idTipoPersona) throws I18NException {
 
         Query q;
         Map<String, Object> parametros = new HashMap<String, Object>();
@@ -339,7 +340,7 @@ public class PersonaBean extends BaseEjbJPA<Persona, Long> implements PersonaLoc
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Persona> busquedaJuridicas(Long idEntidad, String razonSocial, String documento, Long idTipoPersona) throws Exception {
+    public List<Persona> busquedaJuridicas(Long idEntidad, String razonSocial, String documento, Long idTipoPersona) throws I18NException {
         Query q;
         Map<String, Object> parametros = new HashMap<String, Object>();
         List<String> where = new ArrayList<String>();
@@ -399,7 +400,7 @@ public class PersonaBean extends BaseEjbJPA<Persona, Long> implements PersonaLoc
     }
 
     @Override
-    public Integer eliminarByEntidad(Long idEntidad) throws Exception {
+    public Integer eliminarByEntidad(Long idEntidad) throws I18NException {
 
         Query query = em.createQuery("delete from Persona where entidad.id = :idEntidad");
         return query.setParameter("idEntidad", idEntidad).executeUpdate();
@@ -407,7 +408,7 @@ public class PersonaBean extends BaseEjbJPA<Persona, Long> implements PersonaLoc
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<ObjetoBasico> busquedaPersonas(String text, Long tipoPersona, Long idEntidad) throws Exception {
+    public List<ObjetoBasico> busquedaPersonas(String text, Long tipoPersona, Long idEntidad) throws I18NException {
         Query q;
         String queryBase = "";
 
@@ -469,7 +470,7 @@ public class PersonaBean extends BaseEjbJPA<Persona, Long> implements PersonaLoc
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Persona> findByDocumento(String documento, Long idEntidad) throws Exception {
+    public List<Persona> findByDocumento(String documento, Long idEntidad) throws I18NException {
 
         Query q = em.createQuery("Select persona from Persona as persona where " +
                 "persona.documento = :documento and persona.entidad.id = :idEntidad");
@@ -483,7 +484,7 @@ public class PersonaBean extends BaseEjbJPA<Persona, Long> implements PersonaLoc
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Persona> buscarDuplicados(Long idEntidad) throws Exception {
+    public List<Persona> buscarDuplicados(Long idEntidad) throws I18NException {
 
         Query q = em.createQuery("Select documento from Persona as persona " +
                 "where persona.entidad.id = :idEntidad " +
@@ -505,7 +506,7 @@ public class PersonaBean extends BaseEjbJPA<Persona, Long> implements PersonaLoc
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Persona> getExportarExcel(Long idEntidad, String nombre, String apellido1, String apellido2, String documento, Long tipo) throws Exception {
+    public List<Persona> getExportarExcel(Long idEntidad, String nombre, String apellido1, String apellido2, String documento, Long tipo) throws I18NException {
 
         Query q;
         Map<String, Object> parametros = new HashMap<String, Object>();
@@ -577,7 +578,7 @@ public class PersonaBean extends BaseEjbJPA<Persona, Long> implements PersonaLoc
     @Override
     @SuppressWarnings(value = "unchecked")
     @TransactionTimeout(value = 1200)  // 20 minutos
-    public void capitalizarPersonasJuridicas(Long idEntidad) throws Exception {
+    public void capitalizarPersonasJuridicas(Long idEntidad) throws I18NException {
 
         Query q = em.createQuery("Select persona.id, persona.razonSocial from Persona as persona  " +
                 "where persona.entidad.id =:idEntidad and persona.tipo =:tipoPersona order by persona.id");
@@ -600,7 +601,7 @@ public class PersonaBean extends BaseEjbJPA<Persona, Long> implements PersonaLoc
     @Override
     @SuppressWarnings(value = "unchecked")
     @TransactionTimeout(value = 1200)  // 20 minutos
-    public void capitalizarPersonasFisicas(Long idEntidad) throws Exception {
+    public void capitalizarPersonasFisicas(Long idEntidad) throws I18NException {
 
         Query q = em.createQuery("Select persona.id, persona.nombre, persona.apellido1, persona.apellido2 from Persona as persona  " +
                 "where persona.entidad.id =:idEntidad and persona.tipo =:tipoPersona order by persona.id");

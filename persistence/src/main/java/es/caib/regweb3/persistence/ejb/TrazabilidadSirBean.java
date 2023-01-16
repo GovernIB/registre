@@ -2,6 +2,7 @@ package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.TrazabilidadSir;
 import es.caib.regweb3.utils.RegwebConstantes;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,26 +31,26 @@ public class TrazabilidadSirBean extends BaseEjbJPA<TrazabilidadSir, Long> imple
 
 
     @Override
-    public TrazabilidadSir getReference(Long id) throws Exception {
+    public TrazabilidadSir getReference(Long id) throws I18NException {
 
         return em.getReference(TrazabilidadSir.class, id);
     }
 
     @Override
-    public TrazabilidadSir findById(Long id) throws Exception {
+    public TrazabilidadSir findById(Long id) throws I18NException {
 
         return em.find(TrazabilidadSir.class, id);
     }
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<TrazabilidadSir> getAll() throws Exception {
+    public List<TrazabilidadSir> getAll() throws I18NException {
 
         return em.createQuery("Select trazabilidadSir from TrazabilidadSir as trazabilidadSir order by trazabilidadSir.id").getResultList();
     }
 
     @Override
-    public Long getTotal() throws Exception {
+    public Long getTotal() throws I18NException {
 
         Query q = em.createQuery("Select count(trazabilidadSir.id) from TrazabilidadSir as trazabilidadSir");
 
@@ -59,7 +60,7 @@ public class TrazabilidadSirBean extends BaseEjbJPA<TrazabilidadSir, Long> imple
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<TrazabilidadSir> getPagination(int inicio) throws Exception {
+    public List<TrazabilidadSir> getPagination(int inicio) throws I18NException {
 
         Query q = em.createQuery("Select trazabilidadSir from TrazabilidadSir as trazabilidadSir order by trazabilidadSir.id");
         q.setFirstResult(inicio);
@@ -72,7 +73,7 @@ public class TrazabilidadSirBean extends BaseEjbJPA<TrazabilidadSir, Long> imple
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<TrazabilidadSir> getByRegistroSir(Long idRegistroSir) throws Exception {
+    public List<TrazabilidadSir> getByRegistroSir(Long idRegistroSir) throws I18NException {
 
         Query q = em.createQuery("Select DISTINCT trazabilidadSir from TrazabilidadSir as trazabilidadSir " +
                 "where trazabilidadSir.registroSir.id = :registroSir order by trazabilidadSir.fecha");
@@ -85,7 +86,7 @@ public class TrazabilidadSirBean extends BaseEjbJPA<TrazabilidadSir, Long> imple
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<TrazabilidadSir> getByIdIntercambio(String idIntercambio, Long idEntidad) throws Exception {
+    public List<TrazabilidadSir> getByIdIntercambio(String idIntercambio, Long idEntidad) throws I18NException {
 
         Query q = em.createQuery("Select DISTINCT trazabilidadSir from TrazabilidadSir as trazabilidadSir " +
                 "where trazabilidadSir.registroSir.identificadorIntercambio = :idIntercambio and registroSir.entidad.id = :idEntidad order by trazabilidadSir.id");
@@ -99,7 +100,7 @@ public class TrazabilidadSirBean extends BaseEjbJPA<TrazabilidadSir, Long> imple
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public TrazabilidadSir getByRegistroSirAceptado(Long idRegistroSir) throws Exception {
+    public TrazabilidadSir getByRegistroSirAceptado(Long idRegistroSir) throws I18NException {
 
         Query q = em.createQuery("Select DISTINCT trazabilidadSir from TrazabilidadSir as trazabilidadSir " +
                 "where trazabilidadSir.registroSir.id = :registroSir and trazabilidadSir.tipo = :aceptado");

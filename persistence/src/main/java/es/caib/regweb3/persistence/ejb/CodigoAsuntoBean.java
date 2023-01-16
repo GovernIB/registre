@@ -1,6 +1,7 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.CodigoAsunto;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,26 +32,26 @@ public class CodigoAsuntoBean extends BaseEjbJPA<CodigoAsunto, Long> implements 
 
 
     @Override
-    public CodigoAsunto getReference(Long id) throws Exception {
+    public CodigoAsunto getReference(Long id) throws I18NException {
 
         return em.getReference(CodigoAsunto.class, id);
     }
 
     @Override
-    public CodigoAsunto findById(Long id) throws Exception {
+    public CodigoAsunto findById(Long id) throws I18NException {
 
         return em.find(CodigoAsunto.class, id);
     }
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<CodigoAsunto> getAll() throws Exception {
+    public List<CodigoAsunto> getAll() throws I18NException {
 
         return em.createQuery("Select codigoAsunto from CodigoAsunto as codigoAsunto order by codigoAsunto.id").getResultList();
     }
 
     @Override
-    public Long getTotal() throws Exception {
+    public Long getTotal() throws I18NException {
 
         Query q = em.createQuery("Select count(codigoAsunto.id) from CodigoAsunto as codigoAsunto");
 
@@ -58,7 +59,7 @@ public class CodigoAsuntoBean extends BaseEjbJPA<CodigoAsunto, Long> implements 
     }
 
     @Override
-    public Long getTotal(Long idTipoAsunto) throws Exception {
+    public Long getTotal(Long idTipoAsunto) throws I18NException {
 
         Query q = em.createQuery("Select count(codigoAsunto.id) from CodigoAsunto as codigoAsunto where codigoAsunto.tipoAsunto.id = :idTipoAsunto");
         q.setParameter("idTipoAsunto", idTipoAsunto);
@@ -70,7 +71,7 @@ public class CodigoAsuntoBean extends BaseEjbJPA<CodigoAsunto, Long> implements 
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<CodigoAsunto> getPagination(int inicio) throws Exception {
+    public List<CodigoAsunto> getPagination(int inicio) throws I18NException {
 
         Query q = em.createQuery("Select codigoAsunto from CodigoAsunto as codigoAsunto order by codigoAsunto.id");
         q.setFirstResult(inicio);
@@ -82,7 +83,7 @@ public class CodigoAsuntoBean extends BaseEjbJPA<CodigoAsunto, Long> implements 
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<CodigoAsunto> getPagination(int inicio, Long idEntidad) throws Exception {
+    public List<CodigoAsunto> getPagination(int inicio, Long idEntidad) throws I18NException {
 
         Query q = em.createQuery("Select codigoAsunto from CodigoAsunto as codigoAsunto where codigoAsunto.entidad.id = :idEntidad order by codigoAsunto.id");
 
@@ -95,7 +96,7 @@ public class CodigoAsuntoBean extends BaseEjbJPA<CodigoAsunto, Long> implements 
     }
 
     @Override
-    public Long getTotalEntidad(Long idEntidad) throws Exception {
+    public Long getTotalEntidad(Long idEntidad) throws I18NException {
 
         Query q = em.createQuery("Select count(codigoAsunto.id) from CodigoAsunto as codigoAsunto " +
                 "where codigoAsunto.entidad.id = :idEntidad");
@@ -108,7 +109,7 @@ public class CodigoAsuntoBean extends BaseEjbJPA<CodigoAsunto, Long> implements 
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<CodigoAsunto> getByTipoAsunto(Long idTipoAsunto) throws Exception {
+    public List<CodigoAsunto> getByTipoAsunto(Long idTipoAsunto) throws I18NException {
 
         Query q = em.createQuery("Select codigoAsunto from CodigoAsunto as codigoAsunto where codigoAsunto.tipoAsunto.id = :idTipoAsunto order by codigoAsunto.id");
 
@@ -120,7 +121,7 @@ public class CodigoAsuntoBean extends BaseEjbJPA<CodigoAsunto, Long> implements 
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<CodigoAsunto> getActivosEntidad(Long idEntidad) throws Exception {
+    public List<CodigoAsunto> getActivosEntidad(Long idEntidad) throws I18NException {
 
         Query q = em.createQuery("Select codigoAsunto from CodigoAsunto as codigoAsunto where codigoAsunto.activo = true " +
                 "and codigoAsunto.entidad.id = :idEntidad order by codigoAsunto.id ");
@@ -132,7 +133,7 @@ public class CodigoAsuntoBean extends BaseEjbJPA<CodigoAsunto, Long> implements 
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<CodigoAsunto> getActivosByTipoAsunto(Long idTipoAsunto) throws Exception {
+    public List<CodigoAsunto> getActivosByTipoAsunto(Long idTipoAsunto) throws I18NException {
 
         Query q = em.createQuery("Select codigoAsunto from CodigoAsunto as codigoAsunto where codigoAsunto.tipoAsunto.id = :idTipoAsunto " +
                 "and codigoAsunto.activo= true order by codigoAsunto.id");
@@ -145,7 +146,7 @@ public class CodigoAsuntoBean extends BaseEjbJPA<CodigoAsunto, Long> implements 
 
     @Override
     @SuppressWarnings("unchecked")
-    public CodigoAsunto findByCodigo(String codigo) throws Exception {
+    public CodigoAsunto findByCodigo(String codigo) throws I18NException {
 
         Query q = em.createQuery("Select codigoAsunto from CodigoAsunto as codigoAsunto where codigoAsunto.codigo = :codigo");
 
@@ -162,7 +163,7 @@ public class CodigoAsuntoBean extends BaseEjbJPA<CodigoAsunto, Long> implements 
     }
 
     @Override
-    public Boolean existeCodigoEdit(String codigo, Long idCodigoAsunto, Long idEntidad) throws Exception {
+    public Boolean existeCodigoEdit(String codigo, Long idCodigoAsunto, Long idEntidad) throws I18NException {
 
         Query q = em.createQuery("Select codigoAsunto.id from CodigoAsunto as codigoAsunto where " +
                 "codigoAsunto.id != :idCodigoAsunto and codigoAsunto.codigo = :codigo and codigoAsunto.entidad.id = :idEntidad");
@@ -178,7 +179,7 @@ public class CodigoAsuntoBean extends BaseEjbJPA<CodigoAsunto, Long> implements 
 
     @Override
     @SuppressWarnings("unchecked")
-    public CodigoAsunto findByCodigoEntidad(String codigo, Long idEntidad) throws Exception {
+    public CodigoAsunto findByCodigoEntidad(String codigo, Long idEntidad) throws I18NException {
 
         Query q = em.createQuery("Select codigoAsunto from CodigoAsunto as codigoAsunto where codigoAsunto.codigo = :codigo and codigoAsunto.entidad.id = :idEntidad");
 
@@ -196,7 +197,7 @@ public class CodigoAsuntoBean extends BaseEjbJPA<CodigoAsunto, Long> implements 
     }
 
     @Override
-    public Integer eliminarByEntidad(Long idEntidad) throws Exception {
+    public Integer eliminarByEntidad(Long idEntidad) throws I18NException {
 
         List<?> codigos = em.createQuery("Select distinct(id) from CodigoAsunto where tipoAsunto.entidad.id =:idEntidad").setParameter("idEntidad", idEntidad).getResultList();
 

@@ -31,6 +31,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
@@ -44,7 +45,9 @@ import javax.xml.crypto.MarshalException;
 import javax.xml.crypto.dsig.Reference;
 import javax.xml.crypto.dsig.XMLSignature;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -85,7 +88,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
 
 
     @Override
-    public List<Long> getUltimosPendientesProcesarERTE(EstadoRegistroSir estado, String oficinaSir, Date fechaInicio, Date fechaFin, String aplicacion, Integer total) throws Exception{
+    public List<Long> getUltimosPendientesProcesarERTE(EstadoRegistroSir estado, String oficinaSir, Date fechaInicio, Date fechaFin, String aplicacion, Integer total) throws I18NException{
 
         Query q = em.createQuery("Select r.id from RegistroSir as r " +
                 "where r.codigoEntidadRegistral = :oficinaSir and r.estado = :idEstado " +
@@ -106,13 +109,13 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
     }
 
     @Override
-    public RegistroSir getReference(Long id) throws Exception {
+    public RegistroSir getReference(Long id) throws I18NException {
 
         return em.getReference(RegistroSir.class, id);
     }
 
     @Override
-    public RegistroSir findById(Long id) throws Exception {
+    public RegistroSir findById(Long id) throws I18NException {
 
         RegistroSir registroSir = em.find(RegistroSir.class, id);
         Hibernate.initialize(registroSir.getAnexos());
@@ -124,13 +127,13 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<RegistroSir> getAll() throws Exception {
+    public List<RegistroSir> getAll() throws I18NException {
 
         return em.createQuery("Select registroSir from RegistroSir as registroSir order by registroSir.id").getResultList();
     }
 
     @Override
-    public Long getTotal() throws Exception {
+    public Long getTotal() throws I18NException {
 
         Query q = em.createQuery("Select count(registroSir.id) from RegistroSir as registroSir");
         q.setHint("org.hibernate.readOnly", true);
@@ -141,7 +144,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<RegistroSir> getPagination(int inicio) throws Exception {
+    public List<RegistroSir> getPagination(int inicio) throws I18NException {
 
         Query q = em.createQuery("Select registroSir from RegistroSir as registroSir order by registroSir.id");
         q.setFirstResult(inicio);
@@ -153,7 +156,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public RegistroSir getRegistroSir(String identificadorIntercambio, String codigoEntidadRegistralDestino) throws Exception {
+    public RegistroSir getRegistroSir(String identificadorIntercambio, String codigoEntidadRegistralDestino) throws I18NException {
 
         Query q = em.createQuery("Select registroSir from RegistroSir as registroSir where " +
                 "registroSir.identificadorIntercambio = :identificadorIntercambio and registroSir.codigoEntidadRegistral = :codigoEntidadRegistralDestino " +
@@ -172,7 +175,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
     }
 
     @Override
-    public RegistroSir getRegistroSirConAnexos(Long idRegistroSir) throws Exception{
+    public RegistroSir getRegistroSirConAnexos(Long idRegistroSir) throws I18NException{
 
         RegistroSir registroSir = findById(idRegistroSir);
 
@@ -190,7 +193,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
     }
 
     @Override
-    public List<AnexoSir> getAnexos(RegistroSir registroSir) throws Exception{
+    public List<AnexoSir> getAnexos(RegistroSir registroSir) throws I18NException{
 
         List<AnexoSir> anexosFull = new ArrayList<AnexoSir>();
         for (AnexoSir anexoSir : registroSir.getAnexos()) {
@@ -203,7 +206,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
     }
 
     @Override
-    public RegistroSir crearRegistroSir(FicheroIntercambio ficheroIntercambio, Entidad entidad) throws Exception{
+    public RegistroSir crearRegistroSir(FicheroIntercambio ficheroIntercambio, Entidad entidad) throws I18NException{
 
         RegistroSir registroSir = transformarFicheroIntercambio(ficheroIntercambio, entidad);
         registroSir.setEstado(EstadoRegistroSir.RECIBIDO);
@@ -265,7 +268,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
     }
 
     @Override
-    public void eliminarRegistroSir(RegistroSir registroSir) throws Exception{
+    public void eliminarRegistroSir(RegistroSir registroSir) throws I18NException{
 
         List<TrazabilidadSir> trazabilidades = trazabilidadSirEjb.getByRegistroSir(registroSir.getId());
 
@@ -291,7 +294,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
     }
 
     @Override
-    public void marcarEliminado(RegistroSir registroSir, UsuarioEntidad usuario, String observaciones) throws Exception{
+    public void marcarEliminado(RegistroSir registroSir, UsuarioEntidad usuario, String observaciones) throws I18NException{
 
         // Creamos la TrazabilidadSir
         TrazabilidadSir trazabilidadSir = new TrazabilidadSir(RegwebConstantes.TRAZABILIDAD_SIR_ELIMINAR);
@@ -310,7 +313,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
     }
 
     @Override
-    public Paginacion busqueda(Integer pageNumber, Date fechaInicio, Date fechaFin, RegistroSir registroSir, String oficinaSir, String estado, String entidad) throws Exception{
+    public Paginacion busqueda(Integer pageNumber, Date fechaInicio, Date fechaFin, RegistroSir registroSir, String oficinaSir, String estado, String entidad) throws I18NException{
 
         Query q;
         Query q2;
@@ -429,7 +432,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
     }
 
     @Override
-    public Paginacion getRegistrosEstado(Integer pageNumber, String oficinaSir, String estado) throws Exception{
+    public Paginacion getRegistrosEstado(Integer pageNumber, String oficinaSir, String estado) throws I18NException{
 
         Query q;
         Query q2;
@@ -513,7 +516,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<RegistroSir> getUltimosPendientesProcesar(String oficinaSir, Integer total) throws Exception{
+    public List<RegistroSir> getUltimosPendientesProcesar(String oficinaSir, Integer total) throws I18NException{
 
         Query q = em.createQuery("Select r.id, r.decodificacionEntidadRegistralOrigen, r.fechaRecepcion, r.resumen, r.documentacionFisica from RegistroSir as r " +
                 "where r.codigoEntidadRegistral = :oficinaSir and r.estado = :idEstado " +
@@ -545,7 +548,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Long getPendientesProcesarCount(String oficinaSir) throws Exception{
+    public Long getPendientesProcesarCount(String oficinaSir) throws I18NException{
 
         Query q = em.createQuery("Select count(registroSir.id) from RegistroSir as registroSir " +
                 "where registroSir.codigoEntidadRegistral = :oficinaSir and registroSir.estado = :idEstado " +
@@ -561,7 +564,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public void modificarEstado(Long idRegistroSir, EstadoRegistroSir estado) throws Exception {
+    public void modificarEstado(Long idRegistroSir, EstadoRegistroSir estado) throws I18NException {
 
         Query q = em.createQuery("update RegistroSir set estado=:estado, fechaEstado=:fechaEstado where id = :idRegistroSir");
         q.setParameter("estado", estado);
@@ -573,7 +576,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
 
     @Override
     @TransactionAttribute(value = REQUIRES_NEW)
-    public void modificarEstadoNuevaTransaccion(Long idRegistroSir, EstadoRegistroSir estado) throws Exception {
+    public void modificarEstadoNuevaTransaccion(Long idRegistroSir, EstadoRegistroSir estado) throws I18NException {
 
         Query q = em.createQuery("update RegistroSir set estado=:estado, fechaEstado=:fechaEstado where id = :idRegistroSir");
         q.setParameter("estado", estado);
@@ -584,7 +587,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
 
     @Override
     @TransactionAttribute(value = REQUIRES_NEW)
-    public void incrementarReintentos(Long idRegistroSir, Integer reintentos) throws Exception {
+    public void incrementarReintentos(Long idRegistroSir, Integer reintentos) throws I18NException {
 
         Query q = em.createQuery("update RegistroSir set numeroReintentos=:reintentos where id = :idRegistroSir");
         q.setParameter("reintentos", reintentos);
@@ -594,7 +597,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
 
     @Override
     @TransactionAttribute(value = REQUIRES_NEW)
-    public void modificarEstadoError(Long idRegistroSir, EstadoRegistroSir estado, String codigoError, String descripcionError) throws Exception {
+    public void modificarEstadoError(Long idRegistroSir, EstadoRegistroSir estado, String codigoError, String descripcionError) throws I18NException {
 
         Query q = em.createQuery("update RegistroSir set estado=:estado, codigoError=:codigoError, descripcionError=:descripcionError, fechaEstado=:fechaEstado where id = :idRegistroSir");
         q.setParameter("estado", estado);
@@ -607,7 +610,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Integer eliminarByEntidad(Long idEntidad) throws Exception{
+    public Integer eliminarByEntidad(Long idEntidad) throws I18NException{
 
         List<RegistroSir> registros = em.createQuery("Select a from RegistroSir as a where a.entidad.id =:idEntidad").setParameter("idEntidad",idEntidad).getResultList();
 
@@ -632,7 +635,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
      * @return Información del registroSir registral.
      */
     @Override
-    public RegistroSir transformarFicheroIntercambio(FicheroIntercambio ficheroIntercambio, Entidad entidad)throws Exception{
+    public RegistroSir transformarFicheroIntercambio(FicheroIntercambio ficheroIntercambio, Entidad entidad)throws I18NException{
 
         final SimpleDateFormat SDF = new SimpleDateFormat("yyyyMMddHHmmss");
 
@@ -905,12 +908,12 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
      * Transforma un {@link RegistroEntrada} en un {@link RegistroSir}
      * @param registroEntrada
      * @return
-     * @throws Exception
+     * @throws I18NException
      * @throws I18NException
      * @throws I18NValidationException
      */
     @Override
-    public RegistroSir transformarRegistroEntrada(RegistroEntrada registroEntrada) throws Exception, I18NException {
+    public RegistroSir transformarRegistroEntrada(RegistroEntrada registroEntrada) throws I18NException {
 
         RegistroDetalle registroDetalle = registroEntrada.getRegistroDetalle();
 
@@ -982,12 +985,12 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
      * Transforma un {@link RegistroSalida} en un {@link RegistroSir}
      * @param registroSalida
      * @return
-     * @throws Exception
+     * @throws I18NException
      * @throws I18NException
      * @throws I18NValidationException
      */
     @Override
-    public RegistroSir transformarRegistroSalida(RegistroSalida registroSalida) throws Exception, I18NException{
+    public RegistroSir transformarRegistroSalida(RegistroSalida registroSalida) throws I18NException{
 
         RegistroDetalle registroDetalle = registroSalida.getRegistroDetalle();
 
@@ -1060,7 +1063,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Long> getEnviadosSinAck(Long idEntidad) throws Exception{
+    public List<Long> getEnviadosSinAck(Long idEntidad) throws I18NException{
 
         Query q = em.createQuery("Select registroSir.id from RegistroSir as registroSir " +
                 "where registroSir.entidad.id = :idEntidad and (registroSir.estado = :reenviado or registroSir.estado = :rechazado) " +
@@ -1079,7 +1082,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Long> getEnviadosConError(Long idEntidad) throws Exception{
+    public List<Long> getEnviadosConError(Long idEntidad) throws I18NException{
 
         Query q = em.createQuery("Select registroSir.id from RegistroSir as registroSir " +
                 "where registroSir.entidad.id = :idEntidad and registroSir.estado = :reenviado or registroSir.estado = :rechazado " +
@@ -1098,7 +1101,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
     }
 
     @Override
-    public void reiniciarIntentos(Long idRegistroSir) throws Exception {
+    public void reiniciarIntentos(Long idRegistroSir) throws I18NException {
 
         Query q = em.createQuery("update RegistroSir set numeroReintentos=0 where id = :idRegistroSir");
         q.setParameter("idRegistroSir", idRegistroSir);
@@ -1110,9 +1113,9 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
      * Transforma una Lista de {@link InteresadoSir} en una Lista de {@link Interesado}
      * @param interesados
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    private List<InteresadoSir> procesarInteresadosSir(List<Interesado> interesados) throws Exception{
+    private List<InteresadoSir> procesarInteresadosSir(List<Interesado> interesados) throws I18NException{
         List<InteresadoSir> interesadosSir = new ArrayList<InteresadoSir>();
 
         for (Interesado interesado : interesados) {
@@ -1133,9 +1136,9 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
      * @param interesado
      * @param representante
      * @return Interesado de tipo {@link Interesado}
-     * @throws Exception
+     * @throws I18NException
      */
-    private InteresadoSir transformarInteresadoSir(Interesado interesado, Interesado representante) throws Exception{
+    private InteresadoSir transformarInteresadoSir(Interesado interesado, Interesado representante) throws I18NException{
 
         InteresadoSir interesadoSir = new InteresadoSir();
 
@@ -1326,7 +1329,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
      * @param identificadorIntercambio
      * @return
      */
-    private List<AnexoSir> transformarAnexosSir(List<AnexoFull> anexosFull, String identificadorIntercambio) throws Exception{
+    private List<AnexoSir> transformarAnexosSir(List<AnexoFull> anexosFull, String identificadorIntercambio) throws I18NException{
 
         List<AnexoSir> anexosSir = new ArrayList<AnexoSir>();
         int secuencia = 0;
@@ -1523,7 +1526,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
      * @param registroDetalle
      * @param codigoOficia
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
     private String obtenerCodigoOficinaOrigen(RegistroDetalle registroDetalle, String codigoOficia) {
         String codOficinaOrigen;
@@ -1545,7 +1548,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
      * @param registroDetalle
      * @param denominacionOficia
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
     private String obtenerDenominacionOficinaOrigen(RegistroDetalle registroDetalle, String denominacionOficia) {
         String denominacionOficinaOrigen;
@@ -1647,13 +1650,13 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
      * @param idLibro
      * @param idIdioma
      * @return
-     * @throws Exception
+     * @throws I18NException
      * @throws I18NException
      * @throws I18NValidationException
      */
     @Override
     public RegistroEntrada aceptarRegistroSirEntrada(RegistroSir registroSir, Entidad entidad, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, List<CamposNTI> camposNTIs, Long idOrganismoDestino, Long codigoSia)
-            throws Exception, I18NException, I18NValidationException {
+            throws I18NException, I18NValidationException {
 
         Libro libro = libroEjb.findById(idLibro);
 
@@ -1718,9 +1721,9 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
      * @param registroSir
      * @param idIdioma
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    private RegistroDetalle getRegistroDetalle(RegistroSir registroSir, Long idIdioma, Long codigoSia) throws Exception{
+    private RegistroDetalle getRegistroDetalle(RegistroSir registroSir, Long idIdioma, Long codigoSia) throws I18NException{
 
         RegistroDetalle registroDetalle = new RegistroDetalle();
 
@@ -1778,9 +1781,9 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
      * Transforma una Lista de {@link InteresadoSir} en una Lista de {@link Interesado}
      * @param interesadosSir
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    private List<Interesado> procesarInteresados(List<InteresadoSir> interesadosSir) throws Exception{
+    private List<Interesado> procesarInteresados(List<InteresadoSir> interesadosSir) throws I18NException{
         List<Interesado> interesados = new ArrayList<Interesado>();
 
         for (InteresadoSir interesadoSir : interesadosSir) {
@@ -1808,9 +1811,9 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
      * Transforma un {@link InteresadoSir} en un {@link Interesado}
      * @param interesadoSir
      * @return Interesado de tipo {@link Interesado}
-     * @throws Exception
+     * @throws I18NException
      */
-    private Interesado transformarInteresado(InteresadoSir interesadoSir) throws Exception{
+    private Interesado transformarInteresado(InteresadoSir interesadoSir) throws I18NException{
 
         Interesado interesado = new Interesado();
         interesado.setId((long) (Math.random() * 10000));
@@ -1983,9 +1986,9 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
      * @param camposNTIs representa la lista de anexos del RegistroSir en los que el usuario ha especificado
      *                          los valores de los campos NTI no informados por SICRES (validez Documento, origen, Tipo Documental)
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    private List<AnexoFull> procesarAnexos(RegistroSir registroSir, List<CamposNTI> camposNTIs) throws Exception {
+    private List<AnexoFull> procesarAnexos(RegistroSir registroSir, List<CamposNTI> camposNTIs) throws I18NException {
 
         HashMap<String,AnexoFull> anexosProcesados = new HashMap<String, AnexoFull>();
 
@@ -2022,7 +2025,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
      * @param idEntidad
      * @return AnexoFull tipo {@link AnexoFull}
      */
-    private void transformarAnexoDocumento(AnexoSir anexoSir, Long idEntidad, CamposNTI camposNTI, HashMap<String,AnexoFull> anexosProcesados, String aplicacion) throws Exception {
+    private void transformarAnexoDocumento(AnexoSir anexoSir, Long idEntidad, CamposNTI camposNTI, HashMap<String,AnexoFull> anexosProcesados, String aplicacion) throws I18NException {
 
         // Solo procesamos Documentos no firmados o firmados attached, no las firmas detached
         if(StringUtils.isEmpty(anexoSir.getIdentificadorDocumentoFirmado()) ||
@@ -2162,7 +2165,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
      * @param anexosProcesados Lista de anexos procesados anteriores.
      * @return AnexoFull tipo {@link AnexoFull}
      */
-    private void transformarAnexoFirmaDetached(AnexoSir anexoSir, Map<String, AnexoFull> anexosProcesados, Long idEntidad, String aplicacion) throws Exception {
+    private void transformarAnexoFirmaDetached(AnexoSir anexoSir, Map<String, AnexoFull> anexosProcesados, Long idEntidad, String aplicacion) throws I18NException {
 
         // En este método solo se procesan las firmas detached(aquellas que nos informan
         // con el identificador de documento firmado, que son firma de otro segmento anexo
@@ -2312,9 +2315,9 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
      *
      * @param anexoSir
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    private DocumentCustody getDocumentCustody(AnexoSir anexoSir) throws Exception {
+    private DocumentCustody getDocumentCustody(AnexoSir anexoSir) throws I18NException {
         if (log.isDebugEnabled()) {
             log.debug("  ------------------------------");
             log.debug(" anexoSir.getAnexo = " + anexoSir.getAnexo());
@@ -2335,10 +2338,9 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
      * @param dc
      * @param modoFirma
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    private SignatureCustody getSignatureCustody(AnexoSir anexoSir, DocumentCustody dc,
-                                                 int modoFirma) throws Exception {
+    private SignatureCustody getSignatureCustody(AnexoSir anexoSir, DocumentCustody dc, int modoFirma) throws I18NException {
         if (log.isDebugEnabled()) {
             log.debug("  ------------------------------");
             log.debug(" anexoSir.getAnexo = " + anexoSir.getAnexo());
@@ -2351,7 +2353,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
                     || modoFirma ==  RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED) {
                 String msg = "L'usuari ens indica que hi ha una firma a "+anexoSir.getIdentificadorFichero()+" i no ve (modoFirma = " + modoFirma + ")";
                 log.info(msg, new Exception());
-                throw new Exception(msg);
+                throw new I18NException(msg);
             }
 
         } else {
@@ -2361,7 +2363,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
                 String msg = "L'usuari ens indica que NO hi ha una a "+anexoSir.getIdentificadorFichero()+" firma pero n'envia una"
                         + " (modoFirma = " + modoFirma + ")";
                 log.error(msg, new Exception());
-                throw new Exception(msg);
+                throw new I18NException(msg);
             }
 
 
@@ -2373,11 +2375,10 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
             if(Base64.isBase64(anexoData)){
                 log.info("Entramos en decodificar base64");
                 anexoData=Base64.decodeBase64(anexoData);
-            };
+            }
             sc.setData(anexoData);
             sc.setMime(anexoSir.getTipoMIME());
             sc.setName(anexoSir.getNombreFichero());
-
 
             if (modoFirma ==  RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED) {
                 // Document amb firma adjunta
@@ -2389,7 +2390,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
             } else if (modoFirma ==  RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED) {
                 // Firma en document separat CAS 4
                 if (dc == null) {
-                    throw new Exception("Aquesta firma "+ anexoSir.getIdentificadorFichero() +"  requereix el document original"
+                    throw new I18NException("Aquesta firma "+ anexoSir.getIdentificadorFichero() +"  requereix el document original"
                             + " i no s'ha enviat");
                 }
 
@@ -2426,13 +2427,12 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
      * @param signature
      * @return
      */
-    private  String getXAdESFormat(byte[] signature) throws Exception {
+    private  String getXAdESFormat(byte[] signature) throws I18NException, ParserConfigurationException, IOException, SAXException {
 
         DocumentBuilderFactory dBFactory = DocumentBuilderFactory.newInstance();
         dBFactory.setNamespaceAware(true);
 
-        Document eSignature = dBFactory.newDocumentBuilder().parse(
-                new ByteArrayInputStream(signature));
+        Document eSignature = dBFactory.newDocumentBuilder().parse(new ByteArrayInputStream(signature));
 
         XMLSignature xmlSignature;
         String rootName = eSignature.getDocumentElement().getNodeName();
@@ -2448,13 +2448,13 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         NodeList signsList = eSignature.getElementsByTagNameNS(
                 "http://www.w3.org/2000/09/xmldsig#", "Signature");
         if (signsList.getLength() == 0) {
-            throw new Exception("No te firmes");
+            throw new I18NException("No te firmes");
         }
         Node signatureNode = signsList.item(0);
         try {
             xmlSignature = new XMLSignatureElement((Element) signatureNode).getXMLSignature();
         } catch (MarshalException e) {
-            throw new Exception("marshal exception: " + e.getMessage(), e);
+            throw new I18NException("marshal exception: " + e.getMessage());
         }
         List<?> references = xmlSignature.getSignedInfo().getReferences();
         for (int i = 0; i < references.size(); ++i) {

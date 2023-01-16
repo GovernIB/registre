@@ -1,6 +1,7 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.Rol;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 
 import javax.ejb.Local;
 import java.util.List;
@@ -22,7 +23,7 @@ public interface RolLocal extends BaseEjb<Rol, Long> {
      *
      * @param roles
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    List<Rol> getByRol(List<String> roles) throws Exception;
+    List<Rol> getByRol(List<String> roles) throws I18NException;
 }

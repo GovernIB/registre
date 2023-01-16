@@ -9,6 +9,7 @@ import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.utils.Dir3CaibUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,13 +45,13 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
 
 
     @Override
-    public Organismo getReference(Long id) throws Exception {
+    public Organismo getReference(Long id) throws I18NException {
 
         return em.getReference(Organismo.class, id);
     }
 
     @Override
-    public Organismo findById(Long id) throws Exception {
+    public Organismo findById(Long id) throws I18NException {
 
         Organismo organismo = em.find(Organismo.class, id);
         Hibernate.initialize(organismo.getLibros());
@@ -60,7 +61,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
         return organismo;
     }
 
-    public Organismo findByIdCompleto(Long id) throws Exception {
+    public Organismo findByIdCompleto(Long id) throws I18NException {
 
         Organismo organismo = em.find(Organismo.class, id);
         Hibernate.initialize(organismo.getLibros());
@@ -74,7 +75,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Organismo findByIdLigero(Long idOrganismo) throws Exception {
+    public Organismo findByIdLigero(Long idOrganismo) throws I18NException {
         Query q = em.createQuery("Select organismo.id, organismo.codigo, organismo.denominacion, organismo.codAmbComunidad.id, organismo.estado.id, organismo.entidad.id from Organismo as organismo where " +
                 "organismo.id = :idOrganismo");
 
@@ -95,13 +96,13 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Organismo> getAll() throws Exception {
+    public List<Organismo> getAll() throws I18NException {
 
         return em.createQuery("Select organismo from Organismo as organismo order by organismo.id").getResultList();
     }
 
     @Override
-    public Long getTotal() throws Exception {
+    public Long getTotal() throws I18NException {
 
         Query q = em.createQuery("Select count(organismo.id) from Organismo as organismo");
         q.setHint("org.hibernate.readOnly", true);
@@ -110,7 +111,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
     }
 
     @Override
-    public Long getTotalByEntidad(Long entidad) throws Exception {
+    public Long getTotalByEntidad(Long entidad) throws I18NException {
 
         Query q = em.createQuery("Select count(organismo.id) from Organismo as organismo where " +
                 "organismo.entidad.id = :entidad");
@@ -123,7 +124,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Organismo> getAllByEntidad(Long entidad) throws Exception {
+    public List<Organismo> getAllByEntidad(Long entidad) throws I18NException {
 
         Query q = em.createQuery("Select organismo.id, organismo.codigo, organismo.denominacion from Organismo as organismo where " +
                 "organismo.entidad.id = :entidad");
@@ -145,7 +146,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Organismo> getPagination(int inicio) throws Exception {
+    public List<Organismo> getPagination(int inicio) throws I18NException {
 
         Query q = em.createQuery("Select organismo from Organismo as organismo order by organismo.id");
         q.setFirstResult(inicio);
@@ -157,7 +158,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Organismo> getPaginationByEntidad(int inicio, Long entidad) throws Exception {
+    public List<Organismo> getPaginationByEntidad(int inicio, Long entidad) throws I18NException {
 
         Query q = em.createQuery("Select organismo from Organismo as organismo where " +
                 "organismo.entidad.id = :entidad");
@@ -172,7 +173,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Organismo findByCodigo(String codigo) throws Exception {
+    public Organismo findByCodigo(String codigo) throws I18NException {
 
         Query q = em.createQuery("Select organismo from Organismo as organismo where " +
                 "organismo.codigo = :codigo");
@@ -190,7 +191,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Organismo findByCodigoEntidad(String codigo, Long idEntidad) throws Exception {
+    public Organismo findByCodigoEntidad(String codigo, Long idEntidad) throws I18NException {
 
         Query q = em.createQuery("Select organismo from Organismo as organismo where " +
                 "organismo.codigo = :codigo and organismo.entidad.id = :idEntidad");
@@ -210,7 +211,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Organismo findByCodigoEntidadLigero(String codigo, Long idEntidad) throws Exception {
+    public Organismo findByCodigoEntidadLigero(String codigo, Long idEntidad) throws I18NException {
 
         Query q = em.createQuery("Select organismo.id,organismo.codigo, organismo.denominacion, organismo.codAmbComunidad.id, organismo.estado.id, organismo.entidad.id from Organismo as organismo where " +
                 "organismo.codigo = :codigo and organismo.entidad.id = :idEntidad and organismo.estado.codigoEstadoEntidad=:vigente");
@@ -235,7 +236,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Organismo findByCodigoEntidadSinEstado(String codigo, Long idEntidad) throws Exception {
+    public Organismo findByCodigoEntidadSinEstado(String codigo, Long idEntidad) throws I18NException {
 
         Query q = em.createQuery("Select organismo from Organismo as organismo where " +
                 "organismo.codigo = :codigo and organismo.entidad.id=:idEntidad");
@@ -254,7 +255,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Organismo findByCodigoEntidadSinEstadoLigero(String codigo, Long idEntidad) throws Exception {
+    public Organismo findByCodigoEntidadSinEstadoLigero(String codigo, Long idEntidad) throws I18NException {
 
         Query q = em.createQuery("Select organismo.id,organismo.codigo, organismo.denominacion, organismo.codAmbComunidad.id, organismo.estado, organismo.edp, organismo.entidad.id from Organismo as organismo where " +
                 "organismo.codigo = :codigo and organismo.entidad.id = :idEntidad ");
@@ -280,7 +281,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Organismo findByCodigoLigero(String codigo) throws Exception {
+    public Organismo findByCodigoLigero(String codigo) throws I18NException {
         Query q = em.createQuery("Select organismo.id, organismo.codigo, organismo.denominacion, organismo.codAmbComunidad.id, organismo.estado.id from Organismo as organismo where " +
                 "organismo.codigo = :codigo");
 
@@ -300,7 +301,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Organismo findByCodigoOtraEntidadConLibros(String codigo, Long idEntidadActiva) throws Exception {
+    public Organismo findByCodigoOtraEntidadConLibros(String codigo, Long idEntidadActiva) throws I18NException {
 
         Query q = em.createQuery("Select organismo.id, organismo.codigo, organismo.denominacion, organismo.codAmbComunidad.id, " +
                 "organismo.estado.id from Organismo as organismo inner join organismo.libros as libros where " +
@@ -325,7 +326,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Organismo> findByEntidadReduce(Long entidad) throws Exception {
+    public List<Organismo> findByEntidadReduce(Long entidad) throws I18NException {
 
         Query q = em.createQuery("Select organismo.id, organismo.denominacion from Organismo as organismo where " +
                 "organismo.entidad.id = :entidad");
@@ -346,7 +347,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Organismo> findByEntidadByEstado(Long entidad, String estado) throws Exception {
+    public List<Organismo> findByEntidadByEstado(Long entidad, String estado) throws I18NException {
 
         Query q = em.createQuery("Select organismo.id, organismo.codigo, organismo.denominacion from Organismo as organismo where " +
                 "organismo.entidad.id = :entidad and organismo.estado.codigoEstadoEntidad = :codigoEstado");
@@ -368,7 +369,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Organismo findByCodigoMultiEntidad(String codigo) throws Exception {
+    public Organismo findByCodigoMultiEntidad(String codigo) throws I18NException {
 
         Query q = em.createQuery("Select organismo.id, organismo.codigo, organismo.denominacion, organismo.codAmbComunidad.id, organismo.estado.id, organismo.entidad.id from Organismo as organismo where organismo.codigo = :codigo order by organismo.id asc");
 
@@ -406,7 +407,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Organismo> getAllByEntidadMultiEntidad(Long idEntidad) throws Exception{
+    public List<Organismo> getAllByEntidadMultiEntidad(Long idEntidad) throws I18NException{
 
         List<Organismo> organismos= getAllByEntidad(idEntidad);
         List<Organismo> organismosAEliminar = new ArrayList<>();
@@ -429,7 +430,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Organismo findByCodigoByEntidadMultiEntidad(String codigo, Long idEntidad) throws Exception{
+    public Organismo findByCodigoByEntidadMultiEntidad(String codigo, Long idEntidad) throws I18NException{
 
         if (multiEntidadEjb.isMultiEntidad()) {
             return findByCodigoMultiEntidad(codigo);
@@ -442,7 +443,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Boolean isOrganismoInterno(String codigo, Long idEntidad) throws Exception {
+    public Boolean isOrganismoInterno(String codigo, Long idEntidad) throws I18NException {
 
 
         Organismo organismo;
@@ -472,7 +473,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Organismo> organismosConOficinas(Long entidad) throws Exception {
+    public List<Organismo> organismosConOficinas(Long entidad) throws I18NException {
 
 
         Query q = em.createQuery("Select distinct(organismo.id) , organismo.denominacion from Organismo as organismo, Oficina as oficina " +
@@ -515,7 +516,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Organismo> getOrganismosByNivel(Long nivel, Long idEntidad, String estado) throws Exception {
+    public List<Organismo> getOrganismosByNivel(Long nivel, Long idEntidad, String estado) throws I18NException {
 
         Query q = em.createQuery("Select organismo.id,organismo.codigo, organismo.denominacion, organismo.organismoSuperior.id, organismo.edp from Organismo as organismo where " +
                 "organismo.nivelJerarquico = :nivel and organismo.entidad.id = :idEntidad and organismo.estado.codigoEstadoEntidad = :estado order by organismo.codigo");
@@ -540,7 +541,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Paginacion busqueda(Integer pageNumber, Long idEntidad, Organismo organismo) throws Exception {
+    public Paginacion busqueda(Integer pageNumber, Long idEntidad, Organismo organismo) throws I18NException {
 
         Query q;
         Query q2;
@@ -625,10 +626,10 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
      *
      * @param oficinaActiva
      * @return List
-     * @throws Exception
+     * @throws I18NException
      */
     @Override
-    public LinkedHashSet<Organismo> getByOficinaActiva(Oficina oficinaActiva, String estado) throws Exception {
+    public LinkedHashSet<Organismo> getByOficinaActiva(Oficina oficinaActiva, String estado) throws I18NException {
 
         // Añadimos los organismos a los que da servicio la Oficina (Directos y Funcionales)
         LinkedHashSet<Organismo> organismos = oficinaActiva.getOrganismosFuncionales(estado);
@@ -649,10 +650,10 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
      *
      * @param oficinaActiva
      * @return List
-     * @throws Exception
+     * @throws I18NException
      */
     @Override
-    public LinkedHashSet<Organismo> getAllByOficinaActiva(Oficina oficinaActiva) throws Exception {
+    public LinkedHashSet<Organismo> getAllByOficinaActiva(Oficina oficinaActiva) throws I18NException {
 
         LinkedHashSet<Organismo> organismos = new LinkedHashSet<Organismo>();
 
@@ -671,10 +672,10 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
      *
      * @param organismosPadres organismos de los que obtener sus hijos
      * @param totales          organismos totales obtenidos despues del proceso recursivo.
-     * @throws Exception
+     * @throws I18NException
      */
     @SuppressWarnings(value = "unchecked")
-    private void obtenerHijosOrganismos(LinkedHashSet<Organismo> organismosPadres, LinkedHashSet<Organismo> totales, String estado) throws Exception {
+    private void obtenerHijosOrganismos(LinkedHashSet<Organismo> organismosPadres, LinkedHashSet<Organismo> totales, String estado) throws I18NException {
 
         // recorremos para todos los organismos Padres
         for (Organismo org : organismosPadres) {
@@ -717,11 +718,11 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
      *
      * @param idOrganismo identificador del organismo
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<String> organismoSir(Long idOrganismo) throws Exception {
+    public List<String> organismoSir(Long idOrganismo) throws I18NException {
         List<String> oficinasSir = new ArrayList<String>();
 
         Query q = em.createQuery("Select relacionSirOfi from RelacionSirOfi as relacionSirOfi where " +
@@ -743,9 +744,9 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
      * Activa la opción de permitir usuarios de un Organismo
      *
      * @param idOrganismo
-     * @throws Exception
+     * @throws I18NException
      */
-    public void activarUsuarios(Long idOrganismo) throws Exception {
+    public void activarUsuarios(Long idOrganismo) throws I18NException {
 
         em.createQuery("update from Organismo set permiteUsuarios = true where id  =:idOrganismo")
                 .setParameter("idOrganismo", idOrganismo).executeUpdate();
@@ -755,9 +756,9 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
      * Desactiva la opción de permitir usuarios de un Organismo
      *
      * @param idOrganismo
-     * @throws Exception
+     * @throws I18NException
      */
-    public void desactivarUsuarios(Long idOrganismo) throws Exception {
+    public void desactivarUsuarios(Long idOrganismo) throws I18NException {
 
         em.createQuery("update from Organismo set permiteUsuarios = false where id  =:idOrganismo")
                 .setParameter("idOrganismo", idOrganismo).executeUpdate();
@@ -766,7 +767,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Organismo> getPermitirUsuarios(Long entidad) throws Exception {
+    public List<Organismo> getPermitirUsuarios(Long entidad) throws I18NException {
 
         Query q = em.createQuery("Select organismo.id, organismo.codigo, organismo.denominacion from Organismo as organismo where " +
                 "organismo.entidad.id = :entidad and organismo.permiteUsuarios = true and organismo.estado.codigoEstadoEntidad = :vigente");
@@ -787,7 +788,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
     }
 
     @Override
-    public Long getEntidad(Long idOrganismo) throws Exception {
+    public Long getEntidad(Long idOrganismo) throws I18NException {
 
         Query q = em.createQuery("Select organismo.entidad.id from Organismo as organismo where " +
                 "organismo.id = :idOrganismo");
@@ -799,7 +800,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
     }
 
     @Override
-    public Organismo getOrganismoSuperior(Long idOrganismo) throws Exception {
+    public Organismo getOrganismoSuperior(Long idOrganismo) throws I18NException {
 
         Query q = em.createQuery("Select organismo.organismoSuperior.id, organismoSuperior.codigo from Organismo as organismo where " +
                 "organismo.id = :idOrganismo");
@@ -819,7 +820,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
 
 
     @Override
-    public Organismo getOrganismoRaiz(Long idOrganismo) throws Exception {
+    public Organismo getOrganismoRaiz(Long idOrganismo) throws I18NException {
 
         Query q = em.createQuery("Select organismo.organismoRaiz.id, organismo.organismoRaiz.codigo, organismo.organismoRaiz.denominacion from Organismo as organismo where " +
            "organismo.id = :idOrganismo");
@@ -839,7 +840,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Integer eliminarByEntidad(Long idEntidad) throws Exception {
+    public Integer eliminarByEntidad(Long idEntidad) throws I18NException {
 
         List<?> organismos = em.createQuery("Select distinct(id) from Organismo where entidad.id =:idEntidad").setParameter("idEntidad", idEntidad).getResultList();
         Integer total = organismos.size();
@@ -864,7 +865,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
     }
 
     @Override
-    public void obtenerHistoricosFinales(Long id, Set<Organismo> historicosFinales) throws Exception {
+    public void obtenerHistoricosFinales(Long id, Set<Organismo> historicosFinales) throws I18NException {
         Organismo org = em.find(Organismo.class, id);
         Hibernate.initialize(org.getHistoricoUO());
         Set<Organismo> parciales = org.getHistoricoUO();
@@ -881,7 +882,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
     }
 
     @Override
-    public Boolean isEdpConLibro(Long idOrganismo) throws Exception {
+    public Boolean isEdpConLibro(Long idOrganismo) throws I18NException {
 
         Organismo organismo = findByIdCompleto(idOrganismo);
 
@@ -904,7 +905,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
     }
 
     @Override
-    public Libro obtenerLibroRegistro(Long idOrganismo) throws Exception {
+    public Libro obtenerLibroRegistro(Long idOrganismo) throws I18NException {
 
         Organismo organismo = findById(idOrganismo);
 
@@ -921,7 +922,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
 
 
     @Override
-    public UnidadTF obtenerDestinoExterno(String codigo, Long idEntidad) throws Exception {
+    public UnidadTF obtenerDestinoExterno(String codigo, Long idEntidad) throws I18NException {
 
         //Buscamos el destino externo a partir de su código
         Dir3CaibObtenerUnidadesWs unidadesService = Dir3CaibUtils.getObtenerUnidadesService(PropiedadGlobalUtil.getDir3CaibServer(idEntidad), PropiedadGlobalUtil.getDir3CaibUsername(idEntidad), PropiedadGlobalUtil.getDir3CaibPassword(idEntidad));
@@ -931,7 +932,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<UnidadTF> obtenerSustitutosExternosSIR(String codigo, Long idEntidad) throws Exception {
+    public List<UnidadTF> obtenerSustitutosExternosSIR(String codigo, Long idEntidad) throws I18NException {
 
         Dir3CaibObtenerUnidadesWs unidadesService = Dir3CaibUtils.getObtenerUnidadesService(PropiedadGlobalUtil.getDir3CaibServer(idEntidad), PropiedadGlobalUtil.getDir3CaibUsername(idEntidad), PropiedadGlobalUtil.getDir3CaibPassword(idEntidad));
         return unidadesService.obtenerHistoricosFinalesSIR(codigo);
@@ -940,7 +941,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<UnidadTF> obtenerSustitutosExternos(String codigo, Long idEntidad) throws Exception {
+    public List<UnidadTF> obtenerSustitutosExternos(String codigo, Long idEntidad) throws I18NException {
 
         Dir3CaibObtenerUnidadesWs unidadesService = Dir3CaibUtils.getObtenerUnidadesService(PropiedadGlobalUtil.getDir3CaibServer(idEntidad), PropiedadGlobalUtil.getDir3CaibUsername(idEntidad), PropiedadGlobalUtil.getDir3CaibPassword(idEntidad));
         return unidadesService.obtenerHistoricosFinales(codigo);

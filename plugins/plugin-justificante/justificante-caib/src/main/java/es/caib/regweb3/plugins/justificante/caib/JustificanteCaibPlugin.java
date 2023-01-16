@@ -9,6 +9,7 @@ import es.caib.regweb3.plugins.justificante.utils.I18NJustificanteUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.RegwebUtils;
 import es.caib.regweb3.utils.StringUtils;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.pluginsib.core.utils.AbstractPluginProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -147,14 +148,19 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
      * @param locale
      * @throws Exception
      */
-    private void inicializarPropiedades(IRegistro registro, Long tipoRegistro, Locale locale, String url, String specialValue, String csv, Boolean sir) throws Exception{
+    private void inicializarPropiedades(IRegistro registro, Long tipoRegistro, Locale locale, String url, String specialValue, String csv, Boolean sir) throws I18NException {
 
         // Propiedades configuradas en el plugin
         rutaImatge = this.getProperty(PROPERTY_CAIB_BASE + "logoPath");
         fitWidth = Float.parseFloat(this.getProperty(PROPERTY_CAIB_BASE + "fitWidth", "50"));
         fitHeight= Float.parseFloat(this.getProperty(PROPERTY_CAIB_BASE + "fitHeight", "50"));
 
-        String estampacion = this.getPropertyRequired(PROPERTY_CAIB_BASE + "estampacion");
+        String estampacion = null;
+        try {
+            estampacion = this.getPropertyRequired(PROPERTY_CAIB_BASE + "estampacion");
+        } catch (Exception e) {
+            throw new I18NException("La propiedad 'estampacion' no esta definida y es obligatoria");
+        }
         estampat = MessageFormat.format(estampacion, url, specialValue, csv);
 
         // SIR?
@@ -197,99 +203,113 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
     }
 
     @Override
-    public byte[] generarJustificanteEntrada(RegistroEntrada registroEntrada, String url, String specialValue, String csv, String idioma, Boolean sir) throws Exception{
+    public byte[] generarJustificanteEntrada(RegistroEntrada registroEntrada, String url, String specialValue, String csv, String idioma, Boolean sir) throws I18NException {
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream(4096);
 
         // Define idioma para el justificante
         Locale locale = new Locale(idioma);
 
-        //Inicializamos las propiedades comunes
-        inicializarPropiedades(registroEntrada, RegwebConstantes.REGISTRO_ENTRADA, locale, url, specialValue,csv, sir);
+        try{
+            //Inicializamos las propiedades comunes
+            inicializarPropiedades(registroEntrada, RegwebConstantes.REGISTRO_ENTRADA, locale, url, specialValue,csv, sir);
 
-        // Aplica preferencias
-        Document document = new Document(PageSize.A4);
-        FileOutputStream ficheroPdf = new FileOutputStream("fichero.pdf");
-        PdfWriter writer = PdfWriter.getInstance(document, baos);
-        writer.setViewerPreferences(PdfWriter.ALLOW_PRINTING | PdfWriter.PageLayoutSinglePage);
-        PdfWriter.getInstance(document,ficheroPdf).setInitialLeading(20);
+            // Aplica preferencias
+            Document document = new Document(PageSize.A4);
+            FileOutputStream ficheroPdf = new FileOutputStream("fichero.pdf");
+            PdfWriter writer = PdfWriter.getInstance(document, baos);
+            writer.setViewerPreferences(PdfWriter.ALLOW_PRINTING | PdfWriter.PageLayoutSinglePage);
+            PdfWriter.getInstance(document,ficheroPdf).setInitialLeading(20);
 
-        // Crea el evento para generar la estampación de csv en cada página
-        EstampaCSV event = new EstampaCSV();
-        writer.setPageEvent(event);
+            // Crea el evento para generar la estampación de csv en cada página
+            EstampaCSV event = new EstampaCSV();
+            writer.setPageEvent(event);
 
-        // Inicializa Documento
-        document = inicialitzaDocument(document);
+            // Inicializa Documento
+            document = inicialitzaDocument(document);
 
-        // Bloque principal información del registro (oficina, número, fecha..)
-        informacioRegistre(registroEntrada, locale, document, RegwebConstantes.REGISTRO_ENTRADA);
+            // Bloque principal información del registro (oficina, número, fecha..)
+            informacioRegistre(registroEntrada, locale, document, RegwebConstantes.REGISTRO_ENTRADA);
 
-        // Bloque de Interesados
-        llistarInteressats(registroEntrada.getRegistroDetalle().getInteresados(), locale, document, false);
+            // Bloque de Interesados
+            llistarInteressats(registroEntrada.getRegistroDetalle().getInteresados(), locale, document, false);
 
-        // Bloque de Información adicional del registro (Destino, Idioma, Extracto...)
-        adicionalRegistre(registroEntrada, locale, document, getDestino(registroEntrada), idioma);
+            // Bloque de Información adicional del registro (Destino, Idioma, Extracto...)
+            adicionalRegistre(registroEntrada, locale, document, getDestino(registroEntrada), idioma);
 
-        // Bloque de anexos del Registro
-        llistarAnnexes(registroEntrada, RegwebConstantes.REGISTRO_ENTRADA, locale, document);
+            // Bloque de anexos del Registro
+            llistarAnnexes(registroEntrada, RegwebConstantes.REGISTRO_ENTRADA, locale, document);
 
-        // Leyes
-        parrafoLeyes(document);
+            // Leyes
+            parrafoLeyes(document);
 
-        document.close();
+            document.close();
 
-        return baos.toByteArray();
+            return baos.toByteArray();
+
+        }catch (DocumentException | FileNotFoundException e){
+            e.printStackTrace();
+            throw new I18NException("Error generando el pdf del justificante de entrada");
+        }
     }
 
 
     @Override
-    public byte[] generarJustificanteSalida(RegistroSalida registroSalida, String url, String specialValue, String csv, String idioma, Boolean sir) throws Exception{
+    public byte[] generarJustificanteSalida(RegistroSalida registroSalida, String url, String specialValue, String csv, String idioma, Boolean sir) throws I18NException{
 
         // Define idioma para el justificante
         Locale locale = new Locale(idioma);
 
-        // Inicializamos las propiedades comunes
-        inicializarPropiedades(registroSalida, RegwebConstantes.REGISTRO_SALIDA, locale, url, specialValue,csv, sir);
+        try {
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(4096);
+            // Inicializamos las propiedades comunes
+            inicializarPropiedades(registroSalida, RegwebConstantes.REGISTRO_SALIDA, locale, url, specialValue,csv, sir);
 
-        // Aplica preferencias
-        Document document = new Document(PageSize.A4);
-        FileOutputStream ficheroPdf = new FileOutputStream("fichero.pdf");
-        PdfWriter writer = PdfWriter.getInstance(document, baos);
-        writer.setViewerPreferences(PdfWriter.ALLOW_PRINTING | PdfWriter.PageLayoutSinglePage);
-        PdfWriter.getInstance(document,ficheroPdf).setInitialLeading(20);
+            ByteArrayOutputStream baos = new ByteArrayOutputStream(4096);
 
-        // Crea el evento para generar la estampación de csv en cada página
-        EstampaCSV event = new EstampaCSV();
-        writer.setPageEvent(event);
+            // Aplica preferencias
+            Document document = new Document(PageSize.A4);
+            FileOutputStream ficheroPdf = new FileOutputStream("fichero.pdf");
+            PdfWriter writer = PdfWriter.getInstance(document, baos);
+            writer.setViewerPreferences(PdfWriter.ALLOW_PRINTING | PdfWriter.PageLayoutSinglePage);
+            PdfWriter.getInstance(document,ficheroPdf).setInitialLeading(20);
 
-        // Inicializa Documento
-        document = inicialitzaDocument(document);
+            // Crea el evento para generar la estampación de csv en cada página
+            EstampaCSV event = new EstampaCSV();
+            writer.setPageEvent(event);
 
-        // Bloque principal información del registro (oficina, número, fecha..)
-        informacioRegistre(registroSalida, locale, document, RegwebConstantes.REGISTRO_SALIDA);
+            // Inicializa Documento
+            document = inicialitzaDocument(document);
 
-        // Bloque de Interesados
-        llistarInteressats(registroSalida.getRegistroDetalle().getInteresados(), locale, document, true);
+            // Bloque principal información del registro (oficina, número, fecha..)
+            informacioRegistre(registroSalida, locale, document, RegwebConstantes.REGISTRO_SALIDA);
 
-        // Bloque de Información adicional del registro (Destino, Idioma, Extracto...)
-        adicionalRegistre(registroSalida, locale, document, getDestinatario(registroSalida), idioma);
+            // Bloque de Interesados
+            llistarInteressats(registroSalida.getRegistroDetalle().getInteresados(), locale, document, true);
 
-        // Anexos del Registro
-        llistarAnnexes(registroSalida, RegwebConstantes.REGISTRO_SALIDA, locale, document);
+            // Bloque de Información adicional del registro (Destino, Idioma, Extracto...)
+            adicionalRegistre(registroSalida, locale, document, getDestinatario(registroSalida), idioma);
 
-        // Leyes
-        parrafoLeyes(document);
+            // Anexos del Registro
+            llistarAnnexes(registroSalida, RegwebConstantes.REGISTRO_SALIDA, locale, document);
 
-        document.close();
+            // Leyes
+            parrafoLeyes(document);
 
-        return baos.toByteArray();
+            document.close();
+
+            return baos.toByteArray();
+
+        }catch (DocumentException | FileNotFoundException e){
+            e.printStackTrace();
+            throw new I18NException("Error generando el pdf del justificante de salida");
+        }
+
     }
 
 
     // Inicializa el Documento tanto para el registro de entrada como el de salida
-    protected Document inicialitzaDocument(Document document) throws Exception {
+    protected Document inicialitzaDocument(Document document) throws I18NException {
 
         // Build PDF document.
         document.open();
@@ -311,7 +331,7 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
      * @param document
      * @throws Exception
      */
-    protected void llistarAnnexes(IRegistro registro, Long tipoRegistro, Locale locale, Document document) throws Exception {
+    protected void llistarAnnexes(IRegistro registro, Long tipoRegistro, Locale locale, Document document) throws I18NException, DocumentException {
 
         if(!registro.getRegistroDetalle().getAnexosFull().isEmpty()) {
             // Creamos estilo para el título Adjuntos
@@ -350,7 +370,7 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
 
             for(AnexoFull anexo : registro.getRegistroDetalle().getAnexosFull()) {
                 // Variables per calcular i afegeix el tamany del document (Del DocumentCustody i/o del SignatureCustody)
-                String tamanyFitxer = null;
+                String tamanyFitxer = "1 KB";
                 String nomFitxer = null;
                 String hash = null;
 
@@ -360,9 +380,7 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
                     cellInfoAnnexe2 = new PdfPCell(new Paragraph(anexo.getAnexo().getTitulo(), lletraGovern8));
                     taulaAnnexe.addCell(cellInfoAnnexe2);
                     taulaAnnexe.addCell(new PdfPCell(new Paragraph(anexo.getAnexo().getNombreFichero(), lletraGovern8)));
-                    if(anexo.getAnexo().getTamanoFichero() < 1024){
-                        tamanyFitxer = "1 KB";
-                    }else{
+                    if(anexo.getAnexo().getTamanoFichero() > 1024){
                         tamanyFitxer = anexo.getAnexo().getTamanoFichero()/1024 + " KB";
                     }
                     taulaAnnexe.addCell(new PdfPCell(new Paragraph(tamanyFitxer, lletraGovern8)));
@@ -381,10 +399,8 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
                         // Document
                         hash = new String(anexo.getAnexo().getHash());
                         nomFitxer = anexo.getDocumentoCustody().getName();
-                        if(anexo.getDocumentoCustody().getData().length < 1024){
-                            tamanyFitxer = "1 KB";
-                        }else{
-                            tamanyFitxer = String.valueOf(anexo.getDocumentoCustody().getData().length/1024) + " KB";
+                        if(anexo.getDocumentoCustody().getData().length > 1024){
+                            tamanyFitxer = anexo.getDocumentoCustody().getData().length / 1024 + " KB";
                         }
                         taulaAnnexe.addCell(new PdfPCell(new Paragraph(nomFitxer, lletraGovern8)));
                         taulaAnnexe.addCell(new PdfPCell(new Paragraph(tamanyFitxer, lletraGovern8)));
@@ -402,10 +418,8 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
                         // Firma
                         hash = tradueixMissatge(locale,"justificante.firma") + ": " + new String(RegwebUtils.obtenerHash(anexo.getSignatureCustody().getData()));
                         nomFitxer = tradueixMissatge(locale,"justificante.firma") + ": " + anexo.getSignatureCustody().getName();
-                        if (anexo.getSignatureCustody().getData().length < 1024) {
-                            tamanyFitxer = "1 KB";
-                        } else {
-                            tamanyFitxer = tradueixMissatge(locale,"justificante.firma") + ": " + String.valueOf(anexo.getSignatureCustody().getData().length / 1024) + " KB";
+                        if (anexo.getSignatureCustody().getData().length > 1024) {
+                            tamanyFitxer = tradueixMissatge(locale,"justificante.firma") + ": " + anexo.getSignatureCustody().getData().length / 1024 + " KB";
                         }
                         taulaAnnexe.addCell(new PdfPCell(new Paragraph(nomFitxer, lletraGovern8)));
                         taulaAnnexe.addCell(new PdfPCell(new Paragraph(tamanyFitxer, lletraGovern8)));
@@ -417,10 +431,8 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
                         taulaAnnexe.addCell(cellInfoAnnexe2);
                         hash = new String(anexo.getAnexo().getHash());
                         nomFitxer = anexo.getDocumentoCustody().getName();
-                        if(anexo.getDocumentoCustody().getData().length < 1024){
-                            tamanyFitxer = "1 KB";
-                        }else{
-                            tamanyFitxer = String.valueOf(anexo.getDocumentoCustody().getData().length/1024) + " KB";
+                        if(anexo.getDocumentoCustody().getData().length > 1024){
+                            tamanyFitxer = anexo.getDocumentoCustody().getData().length / 1024 + " KB";
                         }
                     }else if (anexo.getAnexo().getModoFirma()==RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED) { // És un document amb firma attached
 
@@ -428,10 +440,8 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
                         taulaAnnexe.addCell(cellInfoAnnexe2);
                         hash = new String(anexo.getAnexo().getHash());
                         nomFitxer = anexo.getSignatureCustody().getName();
-                        if (anexo.getSignatureCustody().getData().length < 1024) {
-                            tamanyFitxer = "1 KB";
-                        } else {
-                            tamanyFitxer = String.valueOf(anexo.getSignatureCustody().getData().length / 1024) + " KB";
+                        if (anexo.getSignatureCustody().getData().length > 1024) {
+                            tamanyFitxer = anexo.getSignatureCustody().getData().length / 1024 + " KB";
                         }
                     }
 
@@ -473,7 +483,7 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
      * @param document
      * @throws Exception
      */
-    protected void parrafoLeyes(Document document) throws Exception{
+    protected void parrafoLeyes(Document document) throws I18NException, DocumentException {
 
         // Parágrafo Validez legal
         PdfPTable titolPlazos = new PdfPTable(1);
@@ -497,7 +507,7 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
      * @param isSalida
      * @throws Exception
      */
-    protected void llistarInteressats(List<Interesado> interesados, Locale locale, Document document, Boolean isSalida) throws Exception {
+    protected void llistarInteressats(List<Interesado> interesados, Locale locale, Document document, Boolean isSalida) throws I18NException, DocumentException {
 
         // Creamos estilo para el título Interesado
         PdfPTable titolInteressat = new PdfPTable(1);
@@ -754,7 +764,7 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
      * @param tipoRegistro
      * @throws Exception
      */
-    protected void informacioRegistre(IRegistro registro, Locale locale, Document document, Long tipoRegistro) throws Exception {
+    protected void informacioRegistre(IRegistro registro, Locale locale, Document document, Long tipoRegistro) throws I18NException, DocumentException {
 
         document.addTitle(tradueixMissatge(locale,"justificante.anexo.titulo"));
         PdfPTable titulo = new PdfPTable(1);
@@ -815,7 +825,7 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
      * @param idioma
      * @throws Exception
      */
-    protected void adicionalRegistre(IRegistro registro, Locale locale, Document document, String nomDesti, String idioma) throws Exception {
+    protected void adicionalRegistre(IRegistro registro, Locale locale, Document document, String nomDesti, String idioma) throws I18NException, DocumentException {
 
         // Creamos estilo para el título Información
         PdfPTable titolInformacio = new PdfPTable(1);
@@ -1016,7 +1026,7 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
      * @return
      * @throws Exception
      */
-    protected String tradueixMissatge(Locale locale, String missatge) throws Exception {
+    protected String tradueixMissatge(Locale locale, String missatge) throws I18NException {
 
         try {
             ResourceBundle justificantemissatges = ResourceBundle.getBundle("justificante_caib_missatges", locale, UTF8CONTROL);

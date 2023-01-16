@@ -1,6 +1,7 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.ModificacionLopdMigrado;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,13 +30,13 @@ public class ModificacionLopdMigradoBean extends BaseEjbJPA<ModificacionLopdMigr
 
 
     @Override
-    public ModificacionLopdMigrado getReference(Long id) throws Exception {
+    public ModificacionLopdMigrado getReference(Long id) throws I18NException {
 
         return em.getReference(ModificacionLopdMigrado.class, id);
     }
 
     @Override
-    public ModificacionLopdMigrado findById(Long id) throws Exception {
+    public ModificacionLopdMigrado findById(Long id) throws I18NException {
 
         return em.find(ModificacionLopdMigrado.class, id);
 
@@ -44,13 +45,13 @@ public class ModificacionLopdMigradoBean extends BaseEjbJPA<ModificacionLopdMigr
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<ModificacionLopdMigrado> getAll() throws Exception {
+    public List<ModificacionLopdMigrado> getAll() throws I18NException {
 
         return em.createQuery("Select modificacionLopdMigrado from ModificacionLopdMigrado as modificacionLopdMigrado order by modificacionLopdMigrado.id").getResultList();
     }
 
     @Override
-    public Long getTotal() throws Exception {
+    public Long getTotal() throws I18NException {
 
         Query q = em.createQuery("Select count(modificacionLopdMigrado.id) from ModificacionLopdMigrado as modificacionLopdMigrado");
 
@@ -60,7 +61,7 @@ public class ModificacionLopdMigradoBean extends BaseEjbJPA<ModificacionLopdMigr
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<ModificacionLopdMigrado> getPagination(int inicio) throws Exception {
+    public List<ModificacionLopdMigrado> getPagination(int inicio) throws I18NException {
 
         Query q = em.createQuery("Select modificacionLopdMigrado from ModificacionLopdMigrado as modificacionLopdMigrado order by modificacionLopdMigrado.id");
         q.setFirstResult(inicio);
@@ -73,7 +74,7 @@ public class ModificacionLopdMigradoBean extends BaseEjbJPA<ModificacionLopdMigr
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<ModificacionLopdMigrado> getByRegistroMigrado(Long numRegistroMigrado) throws Exception {
+    public List<ModificacionLopdMigrado> getByRegistroMigrado(Long numRegistroMigrado) throws I18NException {
 
         Query q = em.createQuery("Select modificacionLopdMigrado from ModificacionLopdMigrado as modificacionLopdMigrado where " +
                 "modificacionLopdMigrado.registroMigrado.id = :numRegistroMigrado order by modificacionLopdMigrado.fecha asc");
