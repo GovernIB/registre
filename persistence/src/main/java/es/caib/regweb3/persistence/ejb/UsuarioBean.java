@@ -19,6 +19,7 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.interceptor.Interceptors;
 import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
@@ -45,26 +46,26 @@ public class UsuarioBean extends BaseEjbJPA<Usuario, Long> implements UsuarioLoc
     @EJB private RolLocal rolEjb;
 
     @Override
-    public Usuario getReference(Long id) throws Exception {
+    public Usuario getReference(Long id) throws I18NException {
 
         return em.getReference(Usuario.class, id);
     }
 
     @Override
-    public Usuario findById(Long id) throws Exception {
+    public Usuario findById(Long id) throws I18NException {
 
         return em.find(Usuario.class, id);
     }
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Usuario> getAll() throws Exception {
+    public List<Usuario> getAll() throws I18NException {
 
         return em.createQuery("Select usuario from Usuario as usuario order by usuario.id").getResultList();
     }
 
     @Override
-    public Long getTotal() throws Exception {
+    public Long getTotal() throws I18NException {
 
         Query q = em.createQuery("Select count(usuario.id) from Usuario as usuario");
 
@@ -74,7 +75,7 @@ public class UsuarioBean extends BaseEjbJPA<Usuario, Long> implements UsuarioLoc
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Usuario> getPagination(int inicio) throws Exception {
+    public List<Usuario> getPagination(int inicio) throws I18NException {
 
         Query q = em.createQuery("Select usuario from Usuario as usuario order by usuario.id");
         q.setFirstResult(inicio);
@@ -89,9 +90,9 @@ public class UsuarioBean extends BaseEjbJPA<Usuario, Long> implements UsuarioLoc
      *
      * @param identificador
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    public Usuario crearUsuario(String identificador) throws Exception, I18NException {
+    public Usuario crearUsuario(String identificador) throws I18NException {
 
         // Comprobamos si el Usuario ya existe en RWE_USUARIO
         Usuario usuario = findByIdentificador(identificador);
@@ -100,7 +101,12 @@ public class UsuarioBean extends BaseEjbJPA<Usuario, Long> implements UsuarioLoc
         if (usuario == null) {
 
             IUserInformationPlugin loginPlugin = (IUserInformationPlugin) pluginEjb.getPlugin(null, RegwebConstantes.PLUGIN_USER_INFORMATION);
-            UserInfo regwebUserInfo = loginPlugin.getUserInfoByUserName(identificador);
+            UserInfo regwebUserInfo = null;
+            try {
+                regwebUserInfo = loginPlugin.getUserInfoByUserName(identificador);
+            } catch (Exception e) {
+                throw new I18NException("No se ha podido obtener al información del usuario");
+            }
 
             if (regwebUserInfo != null) { // Si el documento existe en el Sistema de autentificación
 
@@ -141,7 +147,12 @@ public class UsuarioBean extends BaseEjbJPA<Usuario, Long> implements UsuarioLoc
                 }
 
                 // Roles
-                RolesInfo rolesInfo = loginPlugin.getRolesByUsername(identificador);
+                RolesInfo rolesInfo = null;
+                try {
+                    rolesInfo = loginPlugin.getRolesByUsername(identificador);
+                } catch (Exception e) {
+                    throw new I18NException("No se han podido obtener los roles del usuario");
+                }
 
                 if (rolesInfo != null && rolesInfo.getRoles().length > 0) {
                     List<String> roles = new ArrayList<String>();
@@ -169,7 +180,7 @@ public class UsuarioBean extends BaseEjbJPA<Usuario, Long> implements UsuarioLoc
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Usuario findByIdentificador(String identificador) throws Exception {
+    public Usuario findByIdentificador(String identificador) throws I18NException {
 
         Query q = em.createQuery("Select usuario from Usuario as usuario where usuario.identificador = :identificador");
 
@@ -186,7 +197,7 @@ public class UsuarioBean extends BaseEjbJPA<Usuario, Long> implements UsuarioLoc
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Usuario findByDocumento(String documento) throws Exception {
+    public Usuario findByDocumento(String documento) throws I18NException {
         Query q = em.createQuery("Select usuario from Usuario as usuario where usuario.documento = :documento");
 
         q.setParameter("documento", documento);
@@ -200,7 +211,7 @@ public class UsuarioBean extends BaseEjbJPA<Usuario, Long> implements UsuarioLoc
     }
 
     @Override
-    public Boolean existeIdentificadorEdit(String identificador, Long idUsuario) throws Exception {
+    public Boolean existeIdentificadorEdit(String identificador, Long idUsuario) throws I18NException {
 
         Query q = em.createQuery("Select usuario.id from Usuario as usuario where " +
                 "usuario.id != :idUsuario and usuario.identificador = :identificador");
@@ -213,7 +224,7 @@ public class UsuarioBean extends BaseEjbJPA<Usuario, Long> implements UsuarioLoc
     }
 
     @Override
-    public Boolean existeDocumentioEdit(String documento, Long idUsuario) throws Exception {
+    public Boolean existeDocumentioEdit(String documento, Long idUsuario) throws I18NException {
         Query q = em.createQuery("Select usuario.id from Usuario as usuario where " +
                 "usuario.id != :idUsuario and usuario.documento = :documento");
 
@@ -225,7 +236,7 @@ public class UsuarioBean extends BaseEjbJPA<Usuario, Long> implements UsuarioLoc
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Paginacion busqueda(Integer pageNumber, String identificador, String nombre, String apellido1, String apellido2, String documento, Long tipoUsuario) throws Exception {
+    public Paginacion busqueda(Integer pageNumber, String identificador, String nombre, String apellido1, String apellido2, String documento, Long tipoUsuario) throws I18NException {
 
         Query q;
         Query q2;
@@ -301,7 +312,7 @@ public class UsuarioBean extends BaseEjbJPA<Usuario, Long> implements UsuarioLoc
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Integer asociarIdioma() throws Exception {
+    public Integer asociarIdioma() throws I18NException {
 
         Query q = em.createQuery("update from Usuario set idioma = :idioma where idioma is null");
 
@@ -312,7 +323,7 @@ public class UsuarioBean extends BaseEjbJPA<Usuario, Long> implements UsuarioLoc
     }
 
     @Override
-    public void actualizarRoles(Usuario usuario, List<Rol> rolesUsuario) throws Exception, I18NException {
+    public void actualizarRoles(Usuario usuario, List<Rol> rolesUsuario) throws I18NException {
 
         // Actualizamos los Roles del usuario según sistema externo
         usuario.setRoles(rolesUsuario);
@@ -321,9 +332,14 @@ public class UsuarioBean extends BaseEjbJPA<Usuario, Long> implements UsuarioLoc
     }
 
     @Override
-    public void actualizarRolesWs(Usuario usuario, RolesInfo rolesInfo) throws Exception, I18NException {
+    public void actualizarRolesWs(Usuario usuario, RolesInfo rolesInfo) throws I18NException {
 
-        RolLocal rolEjb = (RolLocal) new InitialContext().lookup(RolLocal.JNDI_NAME);
+        RolLocal rolEjb = null;
+        try {
+            rolEjb = (RolLocal) new InitialContext().lookup(RolLocal.JNDI_NAME);
+        } catch (NamingException e) {
+            throw new I18NException("No se ha podido obtener la referencia jndi de RolLocal");
+        }
 
         List<String> roles = new ArrayList<String>();
         List<Rol> rolesUsuario = null;

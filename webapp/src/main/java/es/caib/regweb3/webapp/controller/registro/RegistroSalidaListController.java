@@ -367,21 +367,11 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
             Mensaje.saveMessageInfo(request, getMessage("registroSalida.envioSir.ok"));
             jsonResponse.setStatus("SUCCESS");
 
-        } catch (Exception se) {
-            log.info(getMessage("registroSir.error.envio"));
-            jsonResponse.setStatus("FAIL");
-            jsonResponse.setError(getMessage("registroSir.error.envio") + ": " + se.getMessage());
-            se.printStackTrace();
         } catch (I18NException e) {
             log.info(getMessage("registroSir.error.envio"));
             jsonResponse.setStatus("FAIL");
-            jsonResponse.setError(getMessage("registroSir.error.envio") + ": " + I18NUtils.getMessage(e));
+            jsonResponse.setError(getMessage("registroSir.error.envio") + ": " + e.getMessage());
             e.printStackTrace();
-        } catch (I18NValidationException ve) {
-            log.info(getMessage("registroSir.error.envio"));
-            jsonResponse.setStatus("FAIL");
-            jsonResponse.setError(getMessage("registroSir.error.envio") + ": " + I18NUtils.getMessage(ve));
-            ve.printStackTrace();
         }
 
         return jsonResponse;

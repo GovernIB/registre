@@ -3,6 +3,7 @@ package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.Archivo;
 import es.caib.regweb3.persistence.utils.FileSystemManager;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,26 +30,26 @@ public class ArchivoBean extends BaseEjbJPA<Archivo, Long> implements ArchivoLoc
     private EntityManager em;
 
     @Override
-    public Archivo getReference(Long id) throws Exception {
+    public Archivo getReference(Long id) throws I18NException {
 
         return em.getReference(Archivo.class, id);
     }
 
     @Override
-    public Archivo findById(Long id) throws Exception {
+    public Archivo findById(Long id) throws I18NException {
 
         return em.find(Archivo.class, id);
     }
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Archivo> getAll() throws Exception {
+    public List<Archivo> getAll() throws I18NException {
 
         return  em.createQuery("Select archivo from Archivo as archivo order by archivo.id").getResultList();
     }
 
     @Override
-    public Long getTotal() throws Exception {
+    public Long getTotal() throws I18NException {
 
         Query q = em.createQuery("Select count(archivo.id) from Archivo as archivo");
 
@@ -57,7 +58,7 @@ public class ArchivoBean extends BaseEjbJPA<Archivo, Long> implements ArchivoLoc
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Archivo> getPagination(int inicio) throws Exception {
+    public List<Archivo> getPagination(int inicio) throws I18NException {
 
         Query q = em.createQuery("Select archivo from Archivo as archivo order by archivo.id");
         q.setFirstResult(inicio);
@@ -67,7 +68,7 @@ public class ArchivoBean extends BaseEjbJPA<Archivo, Long> implements ArchivoLoc
     }
 
     @Override
-    public List<Long> getAllLigero() throws Exception {
+    public List<Long> getAllLigero() throws I18NException {
 
         Query q = em.createQuery("Select archivo.id from Archivo as archivo order by archivo.id");
 
@@ -80,7 +81,7 @@ public class ArchivoBean extends BaseEjbJPA<Archivo, Long> implements ArchivoLoc
      * @return
      */
     @Override
-    public boolean borrarArchivo(Archivo archivo) throws Exception{
+    public boolean borrarArchivo(Archivo archivo) throws I18NException{
         if (archivo != null) {
             try {
                 if (findById(archivo.getId()) != null) {

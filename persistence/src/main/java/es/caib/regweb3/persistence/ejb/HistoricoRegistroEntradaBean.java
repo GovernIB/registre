@@ -6,6 +6,7 @@ import es.caib.regweb3.model.Usuario;
 import es.caib.regweb3.model.UsuarioEntidad;
 import es.caib.regweb3.persistence.utils.RegistroUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,6 +15,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.xml.bind.JAXBException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -36,26 +38,26 @@ public class HistoricoRegistroEntradaBean extends BaseEjbJPA<HistoricoRegistroEn
 
 
     @Override
-    public HistoricoRegistroEntrada getReference(Long id) throws Exception {
+    public HistoricoRegistroEntrada getReference(Long id) throws I18NException {
 
         return em.getReference(HistoricoRegistroEntrada.class, id);
     }
 
     @Override
-    public HistoricoRegistroEntrada findById(Long id) throws Exception {
+    public HistoricoRegistroEntrada findById(Long id) throws I18NException {
 
         return em.find(HistoricoRegistroEntrada.class, id);
     }
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<HistoricoRegistroEntrada> getAll() throws Exception {
+    public List<HistoricoRegistroEntrada> getAll() throws I18NException {
 
         return em.createQuery("Select historicoRegistroEntrada from HistoricoRegistroEntrada as historicoRegistroEntrada order by historicoRegistroEntrada.id").getResultList();
     }
 
     @Override
-    public Long getTotal() throws Exception {
+    public Long getTotal() throws I18NException {
 
         Query q = em.createQuery("Select count(historicoRegistroEntrada.id) from HistoricoRegistroEntrada as historicoRegistroEntrada");
 
@@ -65,7 +67,7 @@ public class HistoricoRegistroEntradaBean extends BaseEjbJPA<HistoricoRegistroEn
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<HistoricoRegistroEntrada> getPagination(int inicio) throws Exception {
+    public List<HistoricoRegistroEntrada> getPagination(int inicio) throws I18NException {
 
         Query q = em.createQuery("Select historicoRegistroEntrada from HistoricoRegistroEntrada as historicoRegistroEntrada order by historicoRegistroEntrada.id");
         q.setFirstResult(inicio);
@@ -77,7 +79,7 @@ public class HistoricoRegistroEntradaBean extends BaseEjbJPA<HistoricoRegistroEn
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<HistoricoRegistroEntrada> getByRegistroEntrada(Long idRegistro) throws Exception {
+    public List<HistoricoRegistroEntrada> getByRegistroEntrada(Long idRegistro) throws I18NException {
 
         Query q = em.createQuery("Select hre.id, hre.registroEntradaOriginal, hre.estado, hre.fecha, hre.modificacion, hre.usuario.id, hre.usuario.usuario from HistoricoRegistroEntrada as hre where hre.registroEntrada.id =:idRegistro order by hre.fecha desc");
         q.setParameter("idRegistro", idRegistro);
@@ -98,7 +100,7 @@ public class HistoricoRegistroEntradaBean extends BaseEjbJPA<HistoricoRegistroEn
 
 
     @Override
-    public HistoricoRegistroEntrada crearHistoricoRegistroEntrada(RegistroEntrada registroEntrada, UsuarioEntidad usuarioEntidad, String modificacion, boolean serializar) throws Exception {
+    public HistoricoRegistroEntrada crearHistoricoRegistroEntrada(RegistroEntrada registroEntrada, UsuarioEntidad usuarioEntidad, String modificacion, boolean serializar) throws I18NException {
 
         HistoricoRegistroEntrada historico = new HistoricoRegistroEntrada();
 
@@ -109,7 +111,12 @@ public class HistoricoRegistroEntradaBean extends BaseEjbJPA<HistoricoRegistroEn
         historico.setUsuario(usuarioEntidad);
         //Serializamos el RegistroEntrada original
         if (serializar) {
-            String registroEntradaOrigial = RegistroUtils.serilizarXml(registroEntrada);
+            String registroEntradaOrigial = null;
+            try {
+                registroEntradaOrigial = RegistroUtils.serilizarXml(registroEntrada);
+            } catch (JAXBException e) {
+                throw new I18NException("Error serializando el registro para crear un Historico");
+            }
             historico.setRegistroEntradaOriginal(registroEntradaOrigial);
         }
 
@@ -118,7 +125,7 @@ public class HistoricoRegistroEntradaBean extends BaseEjbJPA<HistoricoRegistroEn
     }
 
     @Override
-    public Boolean obtenerPorUsuario(Long idUsuarioEntidad) throws Exception {
+    public Boolean obtenerPorUsuario(Long idUsuarioEntidad) throws I18NException {
 
         Query q;
 
@@ -131,7 +138,7 @@ public class HistoricoRegistroEntradaBean extends BaseEjbJPA<HistoricoRegistroEn
     }
 
     @Override
-    public Integer eliminarByEntidad(Long idEntidad) throws Exception {
+    public Integer eliminarByEntidad(Long idEntidad) throws I18NException {
 
         List<?> hre = em.createQuery("Select distinct(hre.id) from HistoricoRegistroEntrada as hre where hre.registroEntrada.entidad.id =:idEntidad").setParameter("idEntidad", idEntidad).getResultList();
         Integer total = hre.size();

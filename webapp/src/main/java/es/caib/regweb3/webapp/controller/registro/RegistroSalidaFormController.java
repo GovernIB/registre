@@ -212,7 +212,7 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
                 registroSalida = registroSalidaEjb.registrarSalida(registroSalida, entidad, usuarioEntidad, interesadosSesion, null, false);
 
 
-            }catch (Exception | I18NException e) {
+            }catch (I18NException e) {
                 Mensaje.saveMessageError(request, getMessage("regweb.error.registro"));
                 e.printStackTrace();
                 return "redirect:/inici";
@@ -419,7 +419,7 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
                 Mensaje.saveMessageError(request, getMessage("registro.rectificar.no"));
             }
 
-        }catch (Exception | I18NException e){
+        }catch (I18NException e){
             log.info("Error al rectificar el registro");
             e.printStackTrace();
             Mensaje.saveMessageError(request, getMessage("registro.rectificar.error"));

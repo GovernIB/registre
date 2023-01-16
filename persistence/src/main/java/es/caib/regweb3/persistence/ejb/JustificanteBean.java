@@ -368,9 +368,9 @@ public class JustificanteBean implements JustificanteLocal {
      * @param peticion
      * @return
      * @throws I18NException
-     * @throws Exception
+     * @throws I18NException
      */
-    private Firma generarFirmarPdfJustificante(Entidad entidad, IRegistro registro, String idioma, StringBuilder peticion) throws I18NException, Exception {
+    private Firma generarFirmarPdfJustificante(Entidad entidad, IRegistro registro, String idioma, StringBuilder peticion) throws I18NException {
 
         // Carregam el plugin del Justificant per generar el pdf
         IJustificantePlugin justificantePlugin = (IJustificantePlugin) pluginEjb.getPlugin(entidad.getId(), RegwebConstantes.PLUGIN_JUSTIFICANTE);
@@ -452,7 +452,7 @@ public class JustificanteBean implements JustificanteLocal {
      * @param entidad
      * @return
      */
-    private Anexo crearAnexoJustificante(Long perfilCustodia, Locale locale, RegistroDetalle registroDetalle, Entidad entidad) throws Exception {
+    private Anexo crearAnexoJustificante(Long perfilCustodia, Locale locale, RegistroDetalle registroDetalle, Entidad entidad) throws I18NException {
 
         Anexo anexo = new Anexo(perfilCustodia);
 

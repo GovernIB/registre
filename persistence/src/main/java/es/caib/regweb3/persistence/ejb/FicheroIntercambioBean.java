@@ -10,6 +10,7 @@ import es.caib.regweb3.sir.core.excepcion.ValidacionException;
 import es.caib.regweb3.sir.core.utils.FicheroIntercambio;
 import es.caib.regweb3.sir.ejb.MensajeLocal;
 import es.caib.regweb3.utils.RegwebConstantes;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,10 +48,10 @@ public class FicheroIntercambioBean implements FicheroIntercambioLocal {
      * Recibe un fichero de intercambio en formato SICRES3 desde un nodo distribuido
      *
      * @param ficheroIntercambio
-     * @throws Exception
+     * @throws I18NException
      */
     @Override
-    public RespuestaRecepcionSir procesarFicheroIntercambio(FicheroIntercambio ficheroIntercambio) throws Exception {
+    public RespuestaRecepcionSir procesarFicheroIntercambio(FicheroIntercambio ficheroIntercambio) throws I18NException {
 
         RespuestaRecepcionSir respuesta = new RespuestaRecepcionSir();
         RegistroSir registroSir = null;
@@ -323,9 +324,9 @@ public class FicheroIntercambioBean implements FicheroIntercambioLocal {
      * Obtiene la Entidad de REBWEB3 a partir de la Oficina destino
      *
      * @param codigoEntidadRegistralDestino
-     * @throws Exception
+     * @throws I18NException
      */
-    private Entidad obtenerEntidad(String codigoEntidadRegistralDestino) throws Exception {
+    private Entidad obtenerEntidad(String codigoEntidadRegistralDestino) throws I18NException {
 
         if (codigoEntidadRegistralDestino != null) {
 
@@ -341,7 +342,7 @@ public class FicheroIntercambioBean implements FicheroIntercambioLocal {
     }
 
 
-    private Oficina obtenerOficina(String codigo) throws Exception {
+    private Oficina obtenerOficina(String codigo) throws I18NException {
 
         if (multiEntidadEjb.isMultiEntidad()) {
             return oficinaEjb.findByCodigoMultiEntidad(codigo);

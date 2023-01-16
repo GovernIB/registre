@@ -72,9 +72,9 @@ public class ArxiuCaibUtils {
      * @param registro
      * @param firma
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    public JustificanteArxiu crearJustificanteArxiuCaib(IRegistro registro, Long tipoRegistro, Firma firma) throws Exception{
+    public JustificanteArxiu crearJustificanteArxiuCaib(IRegistro registro, Long tipoRegistro, Firma firma) throws I18NException{
 
         ContingutArxiu expediente = null;
         ContingutArxiu documento = null;
@@ -162,9 +162,9 @@ public class ArxiuCaibUtils {
      * @param registro
      * @param firma
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    public JustificanteArxiu crearJustificanteFileSystem(IRegistro registro, Long tipoRegistro, Firma firma) throws Exception{
+    public JustificanteArxiu crearJustificanteFileSystem(IRegistro registro, Long tipoRegistro, Firma firma) throws I18NException{
 
         ContingutArxiu expediente = null;
         ContingutArxiu documento = null;
@@ -194,9 +194,9 @@ public class ArxiuCaibUtils {
      * @param expedientFS
      * @param documentFS
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    public JustificanteArxiu custodiarJustificante(Anexo anexo, Expedient expedientFS, Document documentFS) throws Exception{
+    public JustificanteArxiu custodiarJustificante(Anexo anexo, Expedient expedientFS, Document documentFS) throws I18NException{
 
         ContingutArxiu expediente = null;
         ContingutArxiu documento = null;
@@ -292,9 +292,9 @@ public class ArxiuCaibUtils {
      * @param registro
      * @param tipoRegistro
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    private ContingutArxiu crearExpediente(IRegistro registro, Long tipoRegistro, String serieDocumental, String codigoProcedimiento) throws Exception {
+    private ContingutArxiu crearExpediente(IRegistro registro, Long tipoRegistro, String serieDocumental, String codigoProcedimiento) throws I18NException {
 
         String nombreExpediente = getNombreExpediente(registro, tipoRegistro);
 
@@ -326,9 +326,9 @@ public class ArxiuCaibUtils {
      * @param uuidExpedient
      * @param serieDocumental
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    private ContingutArxiu crearDocumentoJustificante(IRegistro registro, Integer tipoRegistro, String serieDocumental, Firma firma, String uuidExpedient, DocumentEstat estadoDocumento) throws Exception{
+    private ContingutArxiu crearDocumentoJustificante(IRegistro registro, Integer tipoRegistro, String serieDocumental, Firma firma, String uuidExpedient, DocumentEstat estadoDocumento) throws I18NException{
 
         //Generamos el Documento
         Document documento = generarDocumentoJustificante(registro, tipoRegistro, serieDocumental, firma, estadoDocumento);
@@ -347,9 +347,9 @@ public class ArxiuCaibUtils {
      * @param uuidExpedient
      * @param serieDocumental
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    private ContingutArxiu crearDocumento(AnexoFull anexoFull, IRegistro registro, Integer tipoRegistro, String uuidExpedient, String serieDocumental) throws Exception{
+    private ContingutArxiu crearDocumento(AnexoFull anexoFull, IRegistro registro, Integer tipoRegistro, String uuidExpedient, String serieDocumental) throws I18NException{
 
         //Generamos el Documento
         Document documento = generarDocumento(registro, tipoRegistro, anexoFull, serieDocumental);
@@ -364,9 +364,9 @@ public class ArxiuCaibUtils {
      * Obtiene el CSV de un {@link es.caib.plugins.arxiu.api.Document}
      * @param identificadorDocumento
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    public String getCsv(String identificadorDocumento) throws Exception{
+    public String getCsv(String identificadorDocumento) throws I18NException{
         return getArxiuPlugin().getCsv(identificadorDocumento);
     }
 
@@ -374,9 +374,9 @@ public class ArxiuCaibUtils {
      * Obtiene la Url de Printable (CSV incrustado) {@link es.caib.plugins.arxiu.api.Document}
      * @param identificadorDocumento
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    public String getUrlPrintable(String identificadorDocumento) throws Exception{
+    public String getUrlPrintable(String identificadorDocumento) throws I18NException{
         return getPropertyConCsvUrl(identificadorDocumento);
     }
 
@@ -384,9 +384,9 @@ public class ArxiuCaibUtils {
      * Obtiene la Url de la Web Validacion CSV {@link es.caib.plugins.arxiu.api.Document}
      * @param identificadorDocumento
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    public String getCsvValidationWeb(String identificadorDocumento) throws Exception{
+    public String getCsvValidationWeb(String identificadorDocumento) throws I18NException{
         return getPropertyCsvValidationWeb(identificadorDocumento);
     }
 
@@ -398,9 +398,9 @@ public class ArxiuCaibUtils {
      * @param contenido
      * @param original
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    public Document getDocumento(String uuidDocument, String version, Boolean contenido, Boolean original) throws Exception{
+    public Document getDocumento(String uuidDocument, String version, Boolean contenido, Boolean original) throws I18NException{
 
         Document documento = null;
 
@@ -451,9 +451,9 @@ public class ArxiuCaibUtils {
      * @param uuidExpedient
      * @param version
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    public Expedient getExpediente(String uuidExpedient, String version) throws Exception{
+    public Expedient getExpediente(String uuidExpedient, String version) throws I18NException{
 
         Expedient expedient = null;
 
@@ -491,7 +491,7 @@ public class ArxiuCaibUtils {
      * @param uuidExpedient
      * @param uuidDocument
      */
-    public void eliminarJustificanteFS(String uuidExpedient, String uuidDocument) throws Exception{
+    public void eliminarJustificanteFS(String uuidExpedient, String uuidDocument) throws I18NException{
 
 
             log.info("Eliminamos el JustificanteArxiu (Expediente + Documento)");
@@ -561,9 +561,9 @@ public class ArxiuCaibUtils {
      * @param tipoRegistro
      * @param firma
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    private Document generarDocumentoJustificante(IRegistro registro, Integer tipoRegistro, String serieDocumental, Firma firma, DocumentEstat estadoDocumento) throws Exception {
+    private Document generarDocumentoJustificante(IRegistro registro, Integer tipoRegistro, String serieDocumental, Firma firma, DocumentEstat estadoDocumento) throws I18NException {
 
         // Documento
         Document document = new Document();
@@ -605,9 +605,9 @@ public class ArxiuCaibUtils {
      * @param tipoRegistro
      * @param anexoFull
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    private Document generarDocumento(IRegistro registro, Integer tipoRegistro, AnexoFull anexoFull, String serieDocumental) throws Exception {
+    private Document generarDocumento(IRegistro registro, Integer tipoRegistro, AnexoFull anexoFull, String serieDocumental) throws I18NException {
 
         // Documento
         Document document = new Document();
@@ -715,9 +715,9 @@ public class ArxiuCaibUtils {
      * Obtiene una {@link es.caib.plugins.arxiu.api.Firma} a partir de los parámetros
      * @param anexoFull
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    private Firma getFirma(AnexoFull anexoFull) throws Exception {
+    private Firma getFirma(AnexoFull anexoFull) throws I18NException {
 
         Firma firma = new Firma();
         firma.setFitxerNom(anexoFull.getSignatureCustody().getName());
@@ -737,9 +737,9 @@ public class ArxiuCaibUtils {
      *  ${registro.libro.codigo}-<#if registro.origen??>S<#else>E</#if>-${registro.numeroRegistro?string[\"0\"]}_${(registro.fecha)?string[\"yyyy\"]}
      * @param registro
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    public String getNombreExpediente(IRegistro registro, Long tipoRegistro) throws Exception{
+    public String getNombreExpediente(IRegistro registro, Long tipoRegistro) throws I18NException{
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
 
@@ -750,9 +750,9 @@ public class ArxiuCaibUtils {
     /**
      * @param tipoRegistro
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    private String getTipoRegistro(Long tipoRegistro) throws Exception {
+    private String getTipoRegistro(Long tipoRegistro) throws I18NException {
 
         if (tipoRegistro.equals(RegwebConstantes.REGISTRO_ENTRADA)) {
             return "E";
@@ -762,7 +762,7 @@ public class ArxiuCaibUtils {
 
     }
 
-    private Integer getTipoRegistroEni(Long tipoRegistro) throws Exception{
+    private Integer getTipoRegistroEni(Long tipoRegistro) throws I18NException{
 
         if (tipoRegistro.equals(RegwebConstantes.REGISTRO_ENTRADA)) {
             return 0;
@@ -776,9 +776,9 @@ public class ArxiuCaibUtils {
      * @param registro
      * @param tipoRegistro
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    private Map<String, Object> getMedadadesAdicionals(IRegistro registro, Integer tipoRegistro) throws Exception{
+    private Map<String, Object> getMedadadesAdicionals(IRegistro registro, Integer tipoRegistro) throws I18NException{
 
         Map<String, Object> metaDadesAddicionals = new HashMap<String, Object>();
 
@@ -800,9 +800,9 @@ public class ArxiuCaibUtils {
      * Obtiene un {@link es.caib.plugins.arxiu.api.FirmaPerfil} a partir de los parámetros
      * @param singProfile
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    private FirmaPerfil getFirmaPerfil(String singProfile) throws Exception{
+    private FirmaPerfil getFirmaPerfil(String singProfile) throws I18NException{
 
         if(ValidateSignatureConstants.SIGNPROFILE_BES.equals(singProfile) ||
                 ValidateSignatureConstants.SIGNPROFILE_X1.equals(singProfile) ||
@@ -834,9 +834,9 @@ public class ArxiuCaibUtils {
      * Obtiene un {@link es.caib.plugins.arxiu.api.FirmaTipus} a partir de los parámetros
      * @param anexo
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    private FirmaTipus getFirmaTipus(Anexo anexo) throws Exception{
+    private FirmaTipus getFirmaTipus(Anexo anexo) throws I18NException{
 
         if (ValidateSignatureConstants.SIGNTYPE_XAdES.equals(anexo.getSignType()) &&
                 (ValidateSignatureConstants.SIGNFORMAT_EXPLICIT_DETACHED.equals(anexo.getSignFormat()) || ValidateSignatureConstants.SIGNFORMAT_EXPLICIT_EXTERNALLY_DETACHED.equals(anexo.getSignFormat()))) {//TF02
@@ -917,9 +917,9 @@ public class ArxiuCaibUtils {
     /**
      *
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    private IArxiuPlugin getArxiuPlugin() throws Exception {
+    private IArxiuPlugin getArxiuPlugin() throws I18NException {
 
         return arxiuPlugin;
 
@@ -942,23 +942,23 @@ public class ArxiuCaibUtils {
         this.properties = properties;
     }
 
-    private String getPropertyAplicacio() throws Exception {
+    private String getPropertyAplicacio() throws I18NException {
         return getPropertyRequired(PROPERTY_APLICACION);
     }
 
-    private String getPropertySerieDocumental() throws Exception {
+    private String getPropertySerieDocumental() throws I18NException {
         return getPropertyRequired(PROPERTY_SERIE_DOCUMENTAL);
     }
 
-    private String getPropertyCodigoProcedimiento() throws Exception {
+    private String getPropertyCodigoProcedimiento() throws I18NException {
         return getPropertyRequired(PROPERTY_CODIGO_PROCEDIMIENTO);
     }
 
-    private String getPropertyNombreProcedimiento() throws Exception {
+    private String getPropertyNombreProcedimiento() throws I18NException {
         return getPropertyRequired(PROPERTY_NOMBRE_PROCEDIMIENTO);
     }
 
-    private String getPropertyConCsvUrl(String custodyId) throws Exception {
+    private String getPropertyConCsvUrl(String custodyId) throws I18NException {
         String url = getProperty(PROPERTY_CONCSV_URL);
 
         if(StringUtils.isNotEmpty(url)){
@@ -968,7 +968,7 @@ public class ArxiuCaibUtils {
         return null;
     }
 
-    private String getPropertyCsvValidationWeb(String custodyId) throws Exception {
+    private String getPropertyCsvValidationWeb(String custodyId) throws I18NException {
         String url = getProperty(PROPERTY_CSV_VALIDATION_URL);
 
         if(StringUtils.isNotEmpty(url)){
@@ -978,31 +978,31 @@ public class ArxiuCaibUtils {
         return null;
     }
 
-    private String getPropertyConCsvUsername() throws Exception {
+    private String getPropertyConCsvUsername() throws I18NException {
         return getPropertyRequired(PROPERTY_CONCSV_USERNAME);
     }
 
-    private String getPropertyConCsvPassword() throws Exception {
+    private String getPropertyConCsvPassword() throws I18NException {
         return getPropertyRequired(PROPERTY_CONCSV_PASSWORD);
     }
 
-    private Boolean getPropertyCerrarExpediente() throws Exception {
+    private Boolean getPropertyCerrarExpediente() throws I18NException {
         String propiedad = getProperty(PROPERTY_CERRAR_EXPEDIENTE);
 
         return "true".equals(propiedad);
     }
 
-    public final String getProperty(String name) throws Exception{
+    public final String getProperty(String name) throws I18NException{
 
         return properties.getProperty(name);
     }
 
-    public final String getPropertyRequired(String name) throws Exception{
+    public final String getPropertyRequired(String name) throws I18NException{
 
         String value = properties.getProperty(name);
 
         if (value == null) {
-            throw new Exception("Property " + name + " is required but it has not defined in the Properties");
+            throw new I18NException("Property " + name + " is required but it has not defined in the Properties");
         } else {
             return value;
         }

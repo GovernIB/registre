@@ -23,6 +23,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -63,13 +64,13 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
 
 
     @Override
-    public OficioRemision getReference(Long id) throws Exception {
+    public OficioRemision getReference(Long id) throws I18NException {
 
         return em.getReference(OficioRemision.class, id);
     }
 
     @Override
-    public OficioRemision findById(Long id) throws Exception {
+    public OficioRemision findById(Long id) throws I18NException {
 
         OficioRemision oficioRemision = em.find(OficioRemision.class, id);
         Hibernate.initialize(oficioRemision.getRegistrosEntrada());
@@ -80,13 +81,13 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<OficioRemision> getAll() throws Exception {
+    public List<OficioRemision> getAll() throws I18NException {
 
         return  em.createQuery("Select oficioRemision from OficioRemision as oficioRemision order by oficioRemision.id").getResultList();
     }
 
     @Override
-    public Long getTotal() throws Exception {
+    public Long getTotal() throws I18NException {
 
         Query q = em.createQuery("Select count(oficioRemision.id) from OficioRemision as oficioRemision");
         q.setHint("org.hibernate.readOnly", true);
@@ -97,7 +98,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<OficioRemision> getPagination(int inicio) throws Exception {
+    public List<OficioRemision> getPagination(int inicio) throws I18NException {
 
         Query q = em.createQuery("Select oficioRemision from OficioRemision as oficioRemision order by oficioRemision.id");
         q.setFirstResult(inicio);
@@ -109,7 +110,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Paginacion busqueda(Integer pageNumber,Long idOrganismo, Date fechaInicio, Date fechaFin, String usuario, OficioRemision oficioRemision, Long destinoOficioRemision, Integer estadoOficioRemision, Long tipoOficioRemision, Boolean sir) throws Exception {
+    public Paginacion busqueda(Integer pageNumber,Long idOrganismo, Date fechaInicio, Date fechaFin, String usuario, OficioRemision oficioRemision, Long destinoOficioRemision, Integer estadoOficioRemision, Long tipoOficioRemision, Boolean sir) throws I18NException {
 
         Query q;
         Query q2;
@@ -237,7 +238,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
 
 
     @Override
-    public OficioRemision registrarOficioRemision(Entidad entidad, OficioRemision oficioRemision, Long estado) throws Exception, I18NException, I18NValidationException {
+    public OficioRemision registrarOficioRemision(Entidad entidad, OficioRemision oficioRemision, Long estado) throws I18NException, I18NValidationException {
 
         try{
 
@@ -352,7 +353,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
     }
 
     @Override
-    public void anularOficioRemision(Long idOficioRemision, UsuarioEntidad usuarioEntidad) throws Exception{
+    public void anularOficioRemision(Long idOficioRemision, UsuarioEntidad usuarioEntidad) throws I18NException{
 
         OficioRemision oficioRemision = findById(idOficioRemision);
 
@@ -389,7 +390,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<OficioRemision> oficiosPendientesLlegada(Set<Organismo> organismos, Integer total) throws Exception {
+    public List<OficioRemision> oficiosPendientesLlegada(Set<Organismo> organismos, Integer total) throws I18NException {
 
         Query q = em.createQuery("Select o.id, o.fecha, o.oficina, o.organismoDestinatario, o.destinoExternoCodigo, o.destinoExternoDenominacion " +
                 "from OficioRemision as o LEFT JOIN o.organismoDestinatario destino where o.organismoDestinatario in (:organismos) "
@@ -422,7 +423,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
     }
 
     @Override
-    public void actualizarDestinoPendientesLlegada(Long idOrganismoExtinguido, Long idOrganismoSustituto) throws Exception {
+    public void actualizarDestinoPendientesLlegada(Long idOrganismoExtinguido, Long idOrganismoSustituto) throws I18NException {
 
         Query q = em.createQuery("update OficioRemision set organismoDestinatario.id = :idOrganismoSustituto where organismoDestinatario.id = :idOrganismoExtinguido and estado = :pendienteLlegada");
         q.setParameter("idOrganismoSustituto", idOrganismoSustituto);
@@ -434,7 +435,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Paginacion oficiosBusqueda(Set<Organismo> organismos, Integer pageNumber,OficioRemision oficioRemision, Long tipoOficioRemision, int estado) throws Exception {
+    public Paginacion oficiosBusqueda(Set<Organismo> organismos, Integer pageNumber,OficioRemision oficioRemision, Long tipoOficioRemision, int estado) throws I18NException {
 
         Query q;
         Query q2;
@@ -514,7 +515,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
     }
 
     @Override
-    public Long oficiosPendientesLlegadaCount(Set<Organismo> organismos) throws Exception {
+    public Long oficiosPendientesLlegadaCount(Set<Organismo> organismos) throws I18NException {
 
         Query q = em.createQuery("Select count(oficioRemision.id) from OficioRemision as oficioRemision "
                 + "where oficioRemision.organismoDestinatario in (:organismos) "
@@ -528,7 +529,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<RegistroEntrada> getEntradasByOficioRemision(Long idOficioRemision) throws Exception{
+    public List<RegistroEntrada> getEntradasByOficioRemision(Long idOficioRemision) throws I18NException{
 
         Query q = em.createQuery("Select oficioRemision.registrosEntrada from OficioRemision as oficioRemision where oficioRemision.id = :idOficioRemision ");
 
@@ -540,7 +541,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<RegistroSalida> getSalidasByOficioRemision(Long idOficioRemision) throws Exception{
+    public List<RegistroSalida> getSalidasByOficioRemision(Long idOficioRemision) throws I18NException{
 
         Query q = em.createQuery("Select oficioRemision.registrosSalida from OficioRemision as oficioRemision where oficioRemision.id = :idOficioRemision ");
 
@@ -553,7 +554,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<OficioRemision> getByOficinaEstado(Long idOficina, int idEstado, int total) throws Exception{
+    public List<OficioRemision> getByOficinaEstado(Long idOficina, int idEstado, int total) throws I18NException{
 
         Query q = em.createQuery("Select oficioRemision from OficioRemision as oficioRemision where oficioRemision.estado = :idEstado " +
                 "and oficioRemision.oficina.id = :idOficina order by oficioRemision.fecha desc");
@@ -576,7 +577,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Long getByOficinaEstadoCount(Long idOficina, int idEstado) throws Exception{
+    public Long getByOficinaEstadoCount(Long idOficina, int idEstado) throws I18NException{
 
         Query q = em.createQuery("Select count(oficioRemision.id) from OficioRemision as oficioRemision where oficioRemision.estado = :idEstado " +
                 "and oficioRemision.oficina.id = :idOficina");
@@ -590,7 +591,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Paginacion getByOficinaEstadoPaginado(Integer pageNumber, Long idOficinaActiva, Integer idEstado) throws Exception {
+    public Paginacion getByOficinaEstadoPaginado(Integer pageNumber, Long idOficinaActiva, Integer idEstado) throws I18NException {
 
         Query q;
         Query q2;
@@ -639,7 +640,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Long> getEnviadosSinAck(Long idEntidad) throws Exception {
+    public List<Long> getEnviadosSinAck(Long idEntidad) throws I18NException {
 
         Query q = em.createQuery("Select oficioRemision.id from OficioRemision as oficioRemision where (oficioRemision.estado = :enviado or oficioRemision.estado = :reenviado) " +
                 "and oficioRemision.entidad.id = :idEntidad and oficioRemision.numeroReintentos < :maxReintentos order by id");
@@ -655,7 +656,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Long> getEnviadosConError(Long idEntidad) throws Exception {
+    public List<Long> getEnviadosConError(Long idEntidad) throws I18NException {
 
         Query q = em.createQuery("Select oficioRemision.id from OficioRemision as oficioRemision where oficioRemision.entidad.id = :idEntidad " +
                 "and (oficioRemision.estado = :enviadoError or oficioRemision.estado = :reenviadoError) " +
@@ -674,7 +675,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<OficioRemision> getEnviadosSinAckMaxReintentos(Long idEntidad) throws Exception {
+    public List<OficioRemision> getEnviadosSinAckMaxReintentos(Long idEntidad) throws I18NException {
 
         Query q = em.createQuery("Select oficioRemision.fecha, oficioRemision.identificadorIntercambio, oficioRemision.tipoOficioRemision from OficioRemision as oficioRemision where (oficioRemision.estado = :enviado or oficioRemision.estado = :reenviado) " +
                 "and oficioRemision.entidad.id = :idEntidad and oficioRemision.numeroReintentos = :maxReintentos");
@@ -698,7 +699,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<OficioRemision> getEnviadosErrorMaxReintentos(Long idEntidad) throws Exception {
+    public List<OficioRemision> getEnviadosErrorMaxReintentos(Long idEntidad) throws I18NException {
 
         Query q = em.createQuery("Select oficioRemision.fecha, oficioRemision.identificadorIntercambio, oficioRemision.tipoOficioRemision from OficioRemision as oficioRemision where (oficioRemision.estado = :enviadoError or oficioRemision.estado = :reenviadoError) " +
                 "and oficioRemision.entidad.id = :idEntidad and oficioRemision.numeroReintentos = :maxReintentos");
@@ -722,7 +723,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public OficioRemision getByIdentificadorIntercambio(String identificadorIntercambio, String codigoEntidadRegistralDestino) throws Exception{
+    public OficioRemision getByIdentificadorIntercambio(String identificadorIntercambio, String codigoEntidadRegistralDestino) throws I18NException{
 
         Query q = em.createQuery("Select oficioRemision from OficioRemision as oficioRemision where oficioRemision.identificadorIntercambio = :identificadorIntercambio and" +
                 " oficioRemision.oficina.codigo = :codigoEntidadRegistralDestino and oficioRemision.estado != :devuelto and oficioRemision.estado != :rechazado");
@@ -742,7 +743,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public OficioRemision getBySirRechazado(String identificadorIntercambio, String codigoEntidadRegistralDestino) throws Exception{
+    public OficioRemision getBySirRechazado(String identificadorIntercambio, String codigoEntidadRegistralDestino) throws I18NException{
 
         Query q = em.createQuery("Select oficioRemision from OficioRemision as oficioRemision where oficioRemision.identificadorIntercambio = :identificadorIntercambio and" +
                 " oficioRemision.oficina.codigo = :codigoEntidadRegistralDestino and oficioRemision.estado = :rechazado");
@@ -761,7 +762,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public OficioRemision getByIdentificadorIntercambio(String identificadorIntercambio) throws Exception{
+    public OficioRemision getByIdentificadorIntercambio(String identificadorIntercambio) throws I18NException{
 
         Query q = em.createQuery("Select oficioRemision from OficioRemision as oficioRemision where oficioRemision.identificadorIntercambio = :identificadorIntercambio ");
 
@@ -777,7 +778,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
 
     @Override
     @TransactionAttribute(value = REQUIRES_NEW)
-    public void modificarEstado(Long idOficioRemision, int estado) throws Exception {
+    public void modificarEstado(Long idOficioRemision, int estado) throws I18NException {
 
         Query q = em.createQuery("update OficioRemision set estado=:estado, fechaEstado=:fechaEstado where id = :idOficioRemision");
         q.setParameter("estado", estado);
@@ -788,7 +789,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
 
     @Override
     @TransactionAttribute(value = REQUIRES_NEW)
-    public void modificarEstadoError(Long idOficioRemision, int estado, String codigoError, String descripcionError) throws Exception {
+    public void modificarEstadoError(Long idOficioRemision, int estado, String codigoError, String descripcionError) throws I18NException {
 
         Query q = em.createQuery("update OficioRemision set estado=:estado, codigoError=:codigoError, descripcionError=:descripcionError, fechaEstado=:fechaEstado where id = :idOficioRemision");
         q.setParameter("estado", estado);
@@ -801,7 +802,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
 
     @Override
     @TransactionAttribute(value = REQUIRES_NEW)
-    public void incrementarReintentos(Long idOficioRemision, Integer reintentos) throws Exception {
+    public void incrementarReintentos(Long idOficioRemision, Integer reintentos) throws I18NException {
 
         Query q = em.createQuery("update OficioRemision set numeroReintentos=:reintentos where id = :idOficioRemision");
         q.setParameter("reintentos", reintentos);
@@ -810,7 +811,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
     }
 
     @Override
-    public void reiniciarIntentos(Long idOficioRemision) throws Exception {
+    public void reiniciarIntentos(Long idOficioRemision) throws I18NException {
 
         Query q = em.createQuery("update OficioRemision set numeroReintentos=0 where id = :idOficioRemision");
         q.setParameter("idOficioRemision", idOficioRemision);
@@ -820,7 +821,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
 
     @Override
     @TransactionAttribute(value = REQUIRES_NEW)
-    public void aceptarOficioSir(OficioRemision oficio, String codigoEntidadRegistralOrigen, String decodificacionEntidadRegistralOrigen, String numeroRegistroDestino, Date fechaRegistroDestino) throws Exception {
+    public void aceptarOficioSir(OficioRemision oficio, String codigoEntidadRegistralOrigen, String decodificacionEntidadRegistralOrigen, String numeroRegistroDestino, Date fechaRegistroDestino) throws I18NException {
 
         // Actualizamos el Oficio con los datos de la confirmación
         Query q = em.createQuery("update OficioRemision set estado=:estado, codigoEntidadRegistralProcesado=:codigoEntidadRegistralOrigen, " +
@@ -851,7 +852,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<String> getNumerosRegistroEntradaFormateadoByOficioRemision(Long idOficioRemision) throws Exception{
+    public List<String> getNumerosRegistroEntradaFormateadoByOficioRemision(Long idOficioRemision) throws I18NException{
 
         Query q= em.createQuery("select registroEntrada.registroDetalle.id, registroEntrada.numeroRegistroFormateado from RegistroEntrada registroEntrada, OficioRemision ofiRem " +
                 " where registroEntrada in elements(ofiRem.registrosEntrada) and ofiRem.id = :idOficioRemision");
@@ -881,7 +882,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<String> getNumerosRegistroSalidaFormateadoByOficioRemision(Long idOficioRemision) throws Exception{
+    public List<String> getNumerosRegistroSalidaFormateadoByOficioRemision(Long idOficioRemision) throws I18NException{
 
         Query q= em.createQuery("select registroSalida.registroDetalle.id, registroSalida.numeroRegistroFormateado from RegistroSalida registroSalida, OficioRemision ofiRem " +
                 " where registroSalida in elements(ofiRem.registrosSalida) and ofiRem.id = :idOficioRemision");
@@ -911,7 +912,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
     }
 
     @Override
-    public Oficio obtenerTipoOficio(String codigoOrganismo, Long idEntidad) throws Exception{
+    public Oficio obtenerTipoOficio(String codigoOrganismo, Long idEntidad) throws I18NException{
 
         Oficio oficio = new Oficio();
         oficio.setOficioRemision(true);
@@ -953,7 +954,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Integer eliminarByEntidad(Long idEntidad) throws Exception{
+    public Integer eliminarByEntidad(Long idEntidad) throws I18NException{
 
         Query or = em.createQuery("select distinct(id) from OficioRemision where usuarioResponsable.entidad.id = :idEntidad");
         or.setParameter("idEntidad", idEntidad);
@@ -969,7 +970,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public OficioRemision getByNumeroRegistroFormateado(String numeroRegistroFormateado, Long idEntidad) throws Exception {
+    public OficioRemision getByNumeroRegistroFormateado(String numeroRegistroFormateado, Long idEntidad) throws I18NException {
 
         Query q;
         RegistroEntrada registroEntrada = registroEntradaConsultaEjb.findByNumeroRegistroFormateado(idEntidad, numeroRegistroFormateado);
@@ -1002,13 +1003,18 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
     }
 
     @Override
-    public CombineStream generarOficioRemisionRtf(OficioRemision oficioRemision, ModeloOficioRemision modeloOficioRemision, List<String> registrosEntrada, List<String> registrosSalida) throws Exception{
+    public CombineStream generarOficioRemisionRtf(OficioRemision oficioRemision, ModeloOficioRemision modeloOficioRemision, List<String> registrosEntrada, List<String> registrosSalida) throws I18NException{
 
         File archivo = es.caib.regweb3.persistence.utils.FileSystemManager.getArchivo(modeloOficioRemision.getModelo().getId());
         Oficina oficina = oficinaEjb.findById(oficioRemision.getOficina().getId());
 
         // Convertimos el archivo a array de bytes
-        byte[] datos = FileUtils.readFileToByteArray(archivo);
+        byte[] datos = new byte[0];
+        try {
+            datos = FileUtils.readFileToByteArray(archivo);
+        } catch (IOException e) {
+            throw new I18NException(e.getMessage());
+        }
         InputStream is = new ByteArrayInputStream(datos);
         java.util.Hashtable<String,Object> ht = new java.util.Hashtable<String,Object>();
 

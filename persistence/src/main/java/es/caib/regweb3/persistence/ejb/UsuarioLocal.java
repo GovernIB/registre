@@ -27,27 +27,27 @@ public interface UsuarioLocal extends BaseEjb<Usuario, Long> {
      *
      * @param identificador
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Usuario crearUsuario(String identificador) throws Exception, I18NException;
+    Usuario crearUsuario(String identificador) throws I18NException;
 
     /**
      * Retorna el {@link es.caib.regweb3.model.Usuario} asociado a un identificador.
      *
      * @param identificador
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Usuario findByIdentificador(String identificador) throws Exception;
+    Usuario findByIdentificador(String identificador) throws I18NException;
 
     /**
      * Retorna el {@link es.caib.regweb3.model.Usuario} asociado a un documento.
      *
      * @param documento
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Usuario findByDocumento(String documento) throws Exception;
+    Usuario findByDocumento(String documento) throws I18NException;
 
     /**
      * Comprueba si el identificador dado existe en algún usuario excepto el selccionado.
@@ -55,9 +55,9 @@ public interface UsuarioLocal extends BaseEjb<Usuario, Long> {
      * @param identificador
      * @param idUsuario
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Boolean existeIdentificadorEdit(String identificador, Long idUsuario) throws Exception;
+    Boolean existeIdentificadorEdit(String identificador, Long idUsuario) throws I18NException;
 
     /**
      * Comprueba si el documento dado existe en algún usuario excepto el selccionado.
@@ -65,9 +65,9 @@ public interface UsuarioLocal extends BaseEjb<Usuario, Long> {
      * @param documento
      * @param idUsuario
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Boolean existeDocumentioEdit(String documento, Long idUsuario) throws Exception;
+    Boolean existeDocumentioEdit(String documento, Long idUsuario) throws I18NException;
 
     /**
      * Realiza una busqueda de {@link es.caib.regweb3.model.Usuario} según los parámetros
@@ -80,17 +80,17 @@ public interface UsuarioLocal extends BaseEjb<Usuario, Long> {
      * @param documento
      * @param tipoUsuario
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Paginacion busqueda(Integer pageNumber, String identificador, String nombre, String apellido1, String apellido2, String documento, Long tipoUsuario) throws Exception;
+    Paginacion busqueda(Integer pageNumber, String identificador, String nombre, String apellido1, String apellido2, String documento, Long tipoUsuario) throws I18NException;
 
     /**
      * Asocia el idioma por defecto de la aplicación a los usurios sin idioma
      *
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Integer asociarIdioma() throws Exception;
+    Integer asociarIdioma() throws I18NException;
 
     /**
      * Obtiene los Roles del usuario autenticado mediante el plugin de Login.
@@ -98,18 +98,18 @@ public interface UsuarioLocal extends BaseEjb<Usuario, Long> {
      *
      * @param usuario
      * @param rolesUsuario
-     * @throws Exception
+     * @throws I18NException
      * @throws I18NException
      */
-    void actualizarRoles(Usuario usuario, List<Rol> rolesUsuario) throws Exception, I18NException;
+    void actualizarRoles(Usuario usuario, List<Rol> rolesUsuario) throws I18NException;
 
     /**
      * Obtiene los Roles del usuario de WS autenticado mediante el plugin de Login.
      * Actualiza los Roles del usuario en la bbdd de REGWEB3
      *
      * @param usuario
-     * @throws Exception
+     * @throws I18NException
      * @throws I18NException
      */
-    void actualizarRolesWs(Usuario usuario, RolesInfo rolesInfo) throws Exception, I18NException;
+    void actualizarRolesWs(Usuario usuario, RolesInfo rolesInfo) throws I18NException;
 }

@@ -4,13 +4,13 @@ import es.caib.regweb3.model.Interesado;
 import es.caib.regweb3.model.RegistroEntrada;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.plugins.distribucion.IDistribucionPlugin;
-
-import es.caib.regweb3.utils.MailUtils;
 import es.caib.regweb3.utils.Attachment;
+import es.caib.regweb3.utils.MailUtils;
+import org.fundaciobit.genapp.common.i18n.I18NCommonUtils;
+import org.fundaciobit.genapp.common.i18n.I18NException;
+import org.fundaciobit.pluginsib.core.utils.AbstractPluginProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.fundaciobit.genapp.common.i18n.I18NCommonUtils;
-import org.fundaciobit.pluginsib.core.utils.AbstractPluginProperties;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,7 +58,7 @@ public class DistribucionEmailPlugin extends AbstractPluginProperties implements
 
 
     @Override
-    public Boolean distribuir(RegistroEntrada registro, Locale locale) throws Exception {
+    public Boolean distribuir(RegistroEntrada registro, Locale locale) throws I18NException {
 
        try {
            //obtenemos los emails a los que va dirigido. Los emails se envian separados por ";"
@@ -199,14 +199,14 @@ public class DistribucionEmailPlugin extends AbstractPluginProperties implements
 
        }catch (Exception e){
 
-           throw new Exception(e);
+           throw new I18NException(e.getMessage());
        }
 
 
     }
 
     @Override
-    public Boolean getEnvioCola() throws Exception {
+    public Boolean getEnvioCola() throws I18NException {
         return false;
     }
 

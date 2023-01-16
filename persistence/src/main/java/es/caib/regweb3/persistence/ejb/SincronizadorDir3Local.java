@@ -1,6 +1,8 @@
 package es.caib.regweb3.persistence.ejb;
 
 
+import org.fundaciobit.genapp.common.i18n.I18NException;
+
 import javax.ejb.Local;
 import java.sql.Timestamp;
 
@@ -22,8 +24,8 @@ public interface SincronizadorDir3Local {
      * @param fechaActualizacion
      * @param fechaSincronizacion
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    int sincronizarActualizar(Long entidadId, Timestamp fechaActualizacion, Timestamp fechaSincronizacion) throws Exception;
+    int sincronizarActualizar(Long entidadId, Timestamp fechaActualizacion, Timestamp fechaSincronizacion) throws I18NException;
 
 }

@@ -7,6 +7,7 @@ import es.caib.regweb3.persistence.utils.FileSystemManager;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.log4j.Logger;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateless;
@@ -34,26 +35,26 @@ public class AnexoSirBean extends BaseEjbJPA<AnexoSir, Long> implements AnexoSir
 
 
     @Override
-    public AnexoSir getReference(Long id) throws Exception {
+    public AnexoSir getReference(Long id) throws I18NException {
 
         return em.getReference(AnexoSir.class, id);
     }
 
     @Override
-    public AnexoSir findById(Long id) throws Exception {
+    public AnexoSir findById(Long id) throws I18NException {
 
         return em.find(AnexoSir.class, id);
     }
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<AnexoSir> getAll() throws Exception {
+    public List<AnexoSir> getAll() throws I18NException {
 
         return  em.createQuery("Select anexoSir from AnexoSir as anexoSir order by anexoSir.id").getResultList();
     }
 
     @Override
-    public Long getTotal() throws Exception {
+    public Long getTotal() throws I18NException {
 
         Query q = em.createQuery("Select count(anexoSir.id) from AnexoSir as anexoSir");
 
@@ -63,7 +64,7 @@ public class AnexoSirBean extends BaseEjbJPA<AnexoSir, Long> implements AnexoSir
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<AnexoSir> getPagination(int inicio) throws Exception {
+    public List<AnexoSir> getPagination(int inicio) throws I18NException {
 
         Query q = em.createQuery("Select anexoSir from AnexoSir as anexoSir order by anexoSir.id");
         q.setFirstResult(inicio);
@@ -74,7 +75,7 @@ public class AnexoSirBean extends BaseEjbJPA<AnexoSir, Long> implements AnexoSir
 
     @Override
     @SuppressWarnings("unchecked")
-    public int purgarAnexosAceptados(Long idEntidad) throws Exception{
+    public int purgarAnexosAceptados(Long idEntidad) throws I18NException{
 
         Integer numElementos = PropiedadGlobalUtil.getNumElementosPurgoAnexos(idEntidad);
 
@@ -110,7 +111,7 @@ public class AnexoSirBean extends BaseEjbJPA<AnexoSir, Long> implements AnexoSir
 
     @Override
     @SuppressWarnings("unchecked")
-    public int purgarAnexosRegistroSirAceptado(Long idRegistroSir) throws Exception{
+    public int purgarAnexosRegistroSirAceptado(Long idRegistroSir) throws I18NException{
 
         Query q = em.createQuery("Select anexoSir.id, anexoSir.anexo.id from AnexoSir as anexoSir where anexoSir.purgado = false and " +
                 "anexoSir.registroSir.id = :idRegistroSir");
@@ -139,7 +140,7 @@ public class AnexoSirBean extends BaseEjbJPA<AnexoSir, Long> implements AnexoSir
     }
 
     @Override
-    public Integer eliminarByEntidad(Long idEntidad) throws Exception{
+    public Integer eliminarByEntidad(Long idEntidad) throws I18NException{
 
         List<?> result = em.createQuery("Select distinct(a.id) from AnexoSir as a where a.registroSir.entidad.id =:idEntidad").setParameter("idEntidad",idEntidad).getResultList();
         Integer total = result.size();

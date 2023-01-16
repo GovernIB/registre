@@ -11,10 +11,7 @@ import es.caib.regweb3.persistence.utils.NumeroRegistro;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.persistence.utils.RegistroUtils;
 import es.caib.regweb3.plugins.postproceso.IPostProcesoPlugin;
-import es.caib.regweb3.utils.Configuracio;
-import es.caib.regweb3.utils.Dir3CaibUtils;
-import es.caib.regweb3.utils.RegwebConstantes;
-import es.caib.regweb3.utils.StringUtils;
+import es.caib.regweb3.utils.*;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.hibernate.Hibernate;
@@ -32,7 +29,6 @@ import javax.interceptor.Interceptors;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static es.caib.regweb3.utils.RegwebConstantes.REGISTRO_SALIDA;
@@ -70,7 +66,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean implemen
 
 
     @Override
-    public RegistroSalida findByIdCompleto(Long id) throws Exception {
+    public RegistroSalida findByIdCompleto(Long id) throws I18NException {
 
         RegistroSalida registroSalida = findById(id);
 
@@ -82,7 +78,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean implemen
 
     @Override
     public RegistroSalida registrarSalida(RegistroSalida registroSalida, Entidad entidad, UsuarioEntidad usuarioEntidad, List<Interesado> interesados, List<AnexoFull> anexosFull, Boolean validarAnexos)
-            throws Exception, I18NException, I18NValidationException {
+            throws I18NException, I18NValidationException {
 
         try {
             //Asociamos su entidad
@@ -147,7 +143,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean implemen
 
             return registroSalida;
 
-        } catch (I18NException | Exception i18n) {
+        } catch (I18NException i18n) {
             log.info("Error registrando la salida");
             i18n.printStackTrace();
             ejbContext.setRollbackOnly();
@@ -164,7 +160,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean implemen
     }
 
     @Override
-    public RegistroSalida actualizar(RegistroSalida antiguo, RegistroSalida registroSalida, Entidad entidad, UsuarioEntidad usuarioEntidad) throws Exception, I18NException {
+    public RegistroSalida actualizar(RegistroSalida antiguo, RegistroSalida registroSalida, Entidad entidad, UsuarioEntidad usuarioEntidad) throws I18NException {
 
         registroSalida = merge(registroSalida);
 
@@ -187,7 +183,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean implemen
 
 
     @Override
-    public Boolean isOficioRemisionInterno(RegistroSalida registroSalida, Set<String> organismos) throws Exception {
+    public Boolean isOficioRemisionInterno(RegistroSalida registroSalida, Set<String> organismos) throws I18NException {
 
         String codigoDir3 = RegistroUtils.obtenerCodigoDir3Interesado(registroSalida);
 
@@ -200,7 +196,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean implemen
     }
 
     @Override
-    public Boolean isOficioRemisionExterno(RegistroSalida registroSalida, Set<String> organismos) throws Exception {
+    public Boolean isOficioRemisionExterno(RegistroSalida registroSalida, Set<String> organismos) throws I18NException {
 
         String codigoDir3 = RegistroUtils.obtenerCodigoDir3Interesado(registroSalida);
 
@@ -214,7 +210,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean implemen
 
 
     @Override
-    public Boolean isOficioRemisionExternoMultiEntidad(RegistroSalida registroSalida, Set<String> organismos) throws Exception {
+    public Boolean isOficioRemisionExternoMultiEntidad(RegistroSalida registroSalida, Set<String> organismos) throws I18NException {
 
         String codigoDir3 = RegistroUtils.obtenerCodigoDir3Interesado(registroSalida);
 
@@ -231,7 +227,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean implemen
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<OficinaTF> isOficioRemisionSir(RegistroSalida registroSalida, Set<String> organismos, Long idEntidad) throws Exception {
+    public List<OficinaTF> isOficioRemisionSir(RegistroSalida registroSalida, Set<String> organismos, Long idEntidad) throws I18NException {
 
         // Obtenemos el organismo destinatario del Registro en el caso de que sea un OficioRemision externo
         String codigoDir3 = RegistroUtils.obtenerCodigoDir3Interesado(registroSalida);
@@ -250,7 +246,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean implemen
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<OficinaTF> isOficioRemisionSirMultiEntidad(RegistroSalida registroSalida, Set<String> organismos, Long idEntidad) throws Exception {
+    public List<OficinaTF> isOficioRemisionSirMultiEntidad(RegistroSalida registroSalida, Set<String> organismos, Long idEntidad) throws I18NException {
 
         // Obtenemos el organismo destinatario del Registro en el caso de que sea un OficioRemision externo
         String codigoDir3 = RegistroUtils.obtenerCodigoDir3Interesado(registroSalida);
@@ -267,7 +263,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean implemen
     }
 
     @Override
-    public Long proximoEventoSalida(RegistroSalida registroSalida, Entidad entidadActiva) throws Exception {
+    public Long proximoEventoSalida(RegistroSalida registroSalida, Entidad entidadActiva) throws I18NException {
 
         Oficina oficina = oficinaEjb.findById(registroSalida.getOficina().getId());
 
@@ -303,7 +299,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean implemen
 
 
     @Override
-    public Long proximoEventoSalidaMultiEntidad(RegistroSalida registroSalida, Entidad entidadActiva) throws Exception {
+    public Long proximoEventoSalidaMultiEntidad(RegistroSalida registroSalida, Entidad entidadActiva) throws I18NException {
 
         Oficina oficina = oficinaEjb.findById(registroSalida.getOficina().getId());
 
@@ -336,7 +332,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean implemen
     }
 
     @Override
-    public void actualizarEvento(Long idRegistro, Entidad entidadActiva) throws Exception {
+    public void actualizarEvento(Long idRegistro, Entidad entidadActiva) throws I18NException {
 
         RegistroSalida registroSalida = findById(idRegistro);
         Hibernate.initialize(registroSalida.getRegistroDetalle().getInteresados());
@@ -358,10 +354,10 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean implemen
      * @param oficina
      * @param entidad
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
     @SuppressWarnings(value = "unchecked")
-    public Integer actualizarEventoDistribuirSalidas(Oficina oficina, Entidad entidad) throws Exception {
+    public Integer actualizarEventoDistribuirSalidas(Oficina oficina, Entidad entidad) throws I18NException {
 
         // Obtiene los Organismos de la OficinaActiva en los que puede registrar sin generar OficioRemisión
         LinkedHashSet<Organismo> organismos = organismoEjb.getByOficinaActiva(oficina, RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
@@ -389,8 +385,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean implemen
         q.setParameter("administracion", RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION);
         q.setParameter("organismos", organismosCodigo);
         if (StringUtils.isNotEmpty(fecha)) {
-            SimpleDateFormat sdf = new SimpleDateFormat(RegwebConstantes.FORMATO_FECHA);
-            q.setParameter("fecha", sdf.parse(fecha));
+            q.setParameter("fecha", TimeUtils.formateaFecha(fecha, RegwebConstantes.FORMATO_FECHA));
         }
 
         //q.setMaxResults(PropiedadGlobalUtil.getTotalActualizarProximoEvento(entidad.getId()));
@@ -415,10 +410,10 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean implemen
      * @param oficina
      * @param entidad
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
     @SuppressWarnings(value = "unchecked")
-    public Integer actualizarEventoDistribuirSalidasPersona(Oficina oficina, Entidad entidad) throws Exception {
+    public Integer actualizarEventoDistribuirSalidasPersona(Oficina oficina, Entidad entidad) throws I18NException {
 
         String queryFecha = "";
         String fecha = PropiedadGlobalUtil.getFechaOficiosSalida();
@@ -437,8 +432,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean implemen
         q.setParameter("idOficina", oficina.getId());
         q.setParameter("administracion", RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION);
         if (StringUtils.isNotEmpty(fecha)) {
-            SimpleDateFormat sdf = new SimpleDateFormat(RegwebConstantes.FORMATO_FECHA);
-            q.setParameter("fecha", sdf.parse(fecha));
+            q.setParameter("fecha", TimeUtils.formateaFecha(fecha, RegwebConstantes.FORMATO_FECHA));
         }
 
         //q.setMaxResults(PropiedadGlobalUtil.getTotalActualizarProximoEvento(entidad.getId()));
@@ -459,14 +453,14 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean implemen
 
 
     @Override
-    public void anularRegistroSalida(RegistroSalida registroSalida, UsuarioEntidad usuarioEntidad, String observacionesAnulacion) throws Exception {
+    public void anularRegistroSalida(RegistroSalida registroSalida, UsuarioEntidad usuarioEntidad, String observacionesAnulacion) throws I18NException {
 
         // Modificamos el estado del RegistroSalida
         cambiarEstadoAnuladoHistorico(registroSalida, RegwebConstantes.REGISTRO_ANULADO, usuarioEntidad, observacionesAnulacion);
     }
 
     @Override
-    public void activarRegistroSalida(RegistroSalida registroSalida, Entidad entidad, UsuarioEntidad usuarioEntidad) throws Exception {
+    public void activarRegistroSalida(RegistroSalida registroSalida, Entidad entidad, UsuarioEntidad usuarioEntidad) throws I18NException {
 
         // Modificamos el estado del RegistroSalida
         cambiarEstadoHistorico(registroSalida, RegwebConstantes.REGISTRO_PENDIENTE_VISAR, usuarioEntidad);
@@ -487,7 +481,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean implemen
 
 
     @Override
-    public void visarRegistroSalida(RegistroSalida registroSalida, UsuarioEntidad usuarioEntidad) throws Exception {
+    public void visarRegistroSalida(RegistroSalida registroSalida, UsuarioEntidad usuarioEntidad) throws I18NException {
 
         // Modificamos el estado del RegistroSalida
         cambiarEstadoHistorico(registroSalida, RegwebConstantes.REGISTRO_VALIDO, usuarioEntidad);
@@ -498,9 +492,9 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean implemen
      *
      * @param result
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    private List<RegistroBasico> getRegistroBasicoList(List<Object[]> result) throws Exception {
+    private List<RegistroBasico> getRegistroBasicoList(List<Object[]> result) throws I18NException {
 
         List<RegistroBasico> registros = new ArrayList<RegistroBasico>();
 
@@ -515,7 +509,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean implemen
 
     @Override
     @SuppressWarnings("unchecked")
-    public Integer eliminarByEntidad(Long idEntidad) throws Exception {
+    public Integer eliminarByEntidad(Long idEntidad) throws I18NException {
 
         List<Object> registros = em.createQuery("Select distinct(rs.id) from RegistroSalida as rs where rs.entidad.id = :idEntidad").setParameter("idEntidad", idEntidad).getResultList();
 
@@ -529,7 +523,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean implemen
 
 
     @Override
-    public void cambiarEstadoHistorico(RegistroSalida registroSalida, Long idEstado, UsuarioEntidad usuarioEntidad) throws Exception {
+    public void cambiarEstadoHistorico(RegistroSalida registroSalida, Long idEstado, UsuarioEntidad usuarioEntidad) throws I18NException {
         Query q = em.createQuery("update RegistroSalida set estado=:idEstado where id = :idRegistro");
         q.setParameter("idEstado", idEstado);
         q.setParameter("idRegistro", registroSalida.getId());
@@ -543,7 +537,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean implemen
     }
 
     @Override
-    public void cambiarEstadoAnuladoHistorico(RegistroSalida registroSalida, Long idEstado, UsuarioEntidad usuarioEntidad, String observacionesAnulacion) throws Exception {
+    public void cambiarEstadoAnuladoHistorico(RegistroSalida registroSalida, Long idEstado, UsuarioEntidad usuarioEntidad, String observacionesAnulacion) throws I18NException {
 
         Query q = em.createQuery("update RegistroSalida set estado=:idEstado where id = :idRegistro");
         q.setParameter("idEstado", idEstado);
@@ -559,7 +553,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean implemen
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public RegistroSalida rectificar(Entidad entidad, RegistroSalida registroSalida, UsuarioEntidad usuarioEntidad) throws Exception {
+    public RegistroSalida rectificar(Entidad entidad, RegistroSalida registroSalida, UsuarioEntidad usuarioEntidad) throws I18NException {
 
         RegistroSalida rectificado = null;
         Long idRegistro = registroSalida.getId();
@@ -690,14 +684,14 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean implemen
     }
 
     @Override
-    public RegistroSalida getConAnexosFull(Long id) throws Exception, I18NException {
+    public RegistroSalida getConAnexosFull(Long id) throws I18NException {
 
         RegistroSalida registroSalida = findByIdCompleto(id);
         return cargarAnexosFull(registroSalida);
     }
 
     @Override
-    public RegistroSalida getConAnexosFullLigero(Long id) throws Exception, I18NException {
+    public RegistroSalida getConAnexosFullLigero(Long id) throws I18NException {
 
         RegistroSalida rs = em.find(RegistroSalida.class, id);
         Long idEntidad = rs.getEntidad().getId();
@@ -718,10 +712,10 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean implemen
      *
      * @param registroSalida
      * @return
-     * @throws Exception
+     * @throws I18NException
      * @throws I18NException
      */
-    private RegistroSalida cargarAnexosFull(RegistroSalida registroSalida) throws Exception, I18NException {
+    private RegistroSalida cargarAnexosFull(RegistroSalida registroSalida) throws I18NException {
 
         Long idEntidad = registroSalida.getEntidad().getId();
         List<Anexo> anexos = registroSalida.getRegistroDetalle().getAnexos();
@@ -738,7 +732,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean implemen
 
 
     @Override
-    public void postProcesoActualizarRegistro(RegistroSalida rs, Long entidadId) throws Exception, I18NException {
+    public void postProcesoActualizarRegistro(RegistroSalida rs, Long entidadId) throws I18NException {
         IPostProcesoPlugin postProcesoPlugin = (IPostProcesoPlugin) pluginEjb.getPlugin(entidadId, RegwebConstantes.PLUGIN_POSTPROCESO);
         if (postProcesoPlugin != null) {
             postProcesoPlugin.actualizarRegistroSalida(rs);
@@ -747,7 +741,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean implemen
     }
 
     @Override
-    public void postProcesoNuevoRegistro(RegistroSalida rs, Long entidadId) throws Exception, I18NException {
+    public void postProcesoNuevoRegistro(RegistroSalida rs, Long entidadId) throws I18NException {
         IPostProcesoPlugin postProcesoPlugin = (IPostProcesoPlugin) pluginEjb.getPlugin(entidadId, RegwebConstantes.PLUGIN_POSTPROCESO);
         if (postProcesoPlugin != null) {
             postProcesoPlugin.nuevoRegistroSalida(rs);

@@ -1,6 +1,7 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.RegistroEntrada;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,7 +32,7 @@ public class RegistroEntradaCambiarEstadoBean extends BaseEjbJPA<RegistroEntrada
 
 
     @Override
-    public void cambiarEstado(Long idRegistro, Long idEstado) throws Exception {
+    public void cambiarEstado(Long idRegistro, Long idEstado) throws I18NException {
 
         Query q = em.createQuery("update RegistroEntrada set estado=:idEstado where id = :idRegistro");
         q.setParameter("idEstado", idEstado);
@@ -40,13 +41,13 @@ public class RegistroEntradaCambiarEstadoBean extends BaseEjbJPA<RegistroEntrada
     }
 
     @Override
-    public RegistroEntrada getReference(Long id) throws Exception {
+    public RegistroEntrada getReference(Long id) throws I18NException {
 
         return em.getReference(RegistroEntrada.class, id);
     }
 
     @Override
-    public RegistroEntrada findById(Long id) throws Exception {
+    public RegistroEntrada findById(Long id) throws I18NException {
 
         return em.find(RegistroEntrada.class, id);
     }
@@ -54,13 +55,13 @@ public class RegistroEntradaCambiarEstadoBean extends BaseEjbJPA<RegistroEntrada
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<RegistroEntrada> getAll() throws Exception {
+    public List<RegistroEntrada> getAll() throws I18NException {
 
         return em.createQuery("Select registroEntrada from RegistroEntrada as registroEntrada order by registroEntrada.id").getResultList();
     }
 
     @Override
-    public Long getTotal() throws Exception {
+    public Long getTotal() throws I18NException {
 
         Query q = em.createQuery("Select count(registroEntrada.id) from RegistroEntrada as registroEntrada");
 
@@ -70,7 +71,7 @@ public class RegistroEntradaCambiarEstadoBean extends BaseEjbJPA<RegistroEntrada
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<RegistroEntrada> getPagination(int inicio) throws Exception {
+    public List<RegistroEntrada> getPagination(int inicio) throws I18NException {
 
         Query q = em.createQuery("Select registroEntrada from RegistroEntrada as registroEntrada order by registroEntrada.id");
         q.setFirstResult(inicio);

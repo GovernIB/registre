@@ -1,6 +1,7 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.ModeloOficioRemision;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,26 +31,26 @@ public class ModeloOficioRemisionBean extends BaseEjbJPA<ModeloOficioRemision, L
 
 
     @Override
-    public ModeloOficioRemision getReference(Long id) throws Exception {
+    public ModeloOficioRemision getReference(Long id) throws I18NException {
 
         return em.getReference(ModeloOficioRemision.class, id);
     }
 
     @Override
-    public ModeloOficioRemision findById(Long id) throws Exception {
+    public ModeloOficioRemision findById(Long id) throws I18NException {
 
         return em.find(ModeloOficioRemision.class, id);
     }
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<ModeloOficioRemision> getAll() throws Exception {
+    public List<ModeloOficioRemision> getAll() throws I18NException {
 
         return em.createQuery("Select modeloOficioRemision from ModeloOficioRemision as modeloOficioRemision order by modeloOficioRemision.id").getResultList();
     }
 
     @Override
-    public Long getTotal() throws Exception {
+    public Long getTotal() throws I18NException {
 
         Query q = em.createQuery("Select count(modeloOficioRemision.id) from ModeloOficioRemision as modeloOficioRemision");
 
@@ -57,7 +58,7 @@ public class ModeloOficioRemisionBean extends BaseEjbJPA<ModeloOficioRemision, L
     }
 
     @Override
-    public Long getTotal(Long idEntidad) throws Exception {
+    public Long getTotal(Long idEntidad) throws I18NException {
 
         Query q = em.createQuery("Select count(modeloOficioRemision.id) from ModeloOficioRemision as modeloOficioRemision where modeloOficioRemision.entidad.id = :idEntidad");
         q.setParameter("idEntidad", idEntidad);
@@ -67,7 +68,7 @@ public class ModeloOficioRemisionBean extends BaseEjbJPA<ModeloOficioRemision, L
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<ModeloOficioRemision> getByEntidad(Long idEntidad) throws Exception {
+    public List<ModeloOficioRemision> getByEntidad(Long idEntidad) throws I18NException {
 
         Query q = em.createQuery("Select modelo.id, modelo.nombre from ModeloOficioRemision as modelo where modelo.entidad.id = :idEntidad");
         q.setParameter("idEntidad", idEntidad);
@@ -87,7 +88,7 @@ public class ModeloOficioRemisionBean extends BaseEjbJPA<ModeloOficioRemision, L
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<ModeloOficioRemision> getPagination(int inicio) throws Exception {
+    public List<ModeloOficioRemision> getPagination(int inicio) throws I18NException {
 
         Query q = em.createQuery("Select modeloOficioRemision from ModeloOficioRemision as modeloOficioRemision order by modeloOficioRemision.id");
         q.setFirstResult(inicio);
@@ -99,7 +100,7 @@ public class ModeloOficioRemisionBean extends BaseEjbJPA<ModeloOficioRemision, L
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<ModeloOficioRemision> getPagination(int inicio, Long idEntidad) throws Exception {
+    public List<ModeloOficioRemision> getPagination(int inicio, Long idEntidad) throws I18NException {
 
         Query q = em.createQuery("Select modeloOficioRemision from ModeloOficioRemision as modeloOficioRemision where modeloOficioRemision.entidad.id = :idEntidad order by modeloOficioRemision.id");
         q.setParameter("idEntidad", idEntidad);
@@ -111,7 +112,7 @@ public class ModeloOficioRemisionBean extends BaseEjbJPA<ModeloOficioRemision, L
     }
 
     @Override
-    public Integer eliminarByEntidad(Long idEntidad) throws Exception {
+    public Integer eliminarByEntidad(Long idEntidad) throws I18NException {
 
         List<?> modelos = em.createQuery("Select distinct(id) from ModeloOficioRemision where entidad.id =:idEntidad").setParameter("idEntidad", idEntidad).getResultList();
 

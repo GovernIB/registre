@@ -2,6 +2,7 @@ package es.caib.regweb3.persistence.ejb;
 
 
 import es.caib.regweb3.model.RegistroEntrada;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 
 import javax.ejb.Local;
 
@@ -24,8 +25,8 @@ public interface RegistroEntradaCambiarEstadoLocal extends BaseEjb<RegistroEntra
      *
      * @param idRegistro
      * @param idEstado
-     * @throws Exception
+     * @throws I18NException
      */
-    void cambiarEstado(Long idRegistro, Long idEstado) throws Exception;
+    void cambiarEstado(Long idRegistro, Long idEstado) throws I18NException;
 
 }

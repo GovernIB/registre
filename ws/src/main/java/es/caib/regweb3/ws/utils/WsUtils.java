@@ -4,7 +4,10 @@ import es.caib.regweb3.persistence.utils.I18NLogicUtils;
 import org.apache.cxf.binding.soap.SoapFault;
 import org.fundaciobit.genapp.common.i18n.*;
 import org.fundaciobit.genapp.common.query.Field;
-import org.fundaciobit.genapp.common.ws.*;
+import org.fundaciobit.genapp.common.ws.WsFieldValidationError;
+import org.fundaciobit.genapp.common.ws.WsI18NArgument;
+import org.fundaciobit.genapp.common.ws.WsI18NTranslation;
+import org.fundaciobit.genapp.common.ws.WsValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -95,27 +98,6 @@ public class WsUtils {
         }
         return new WsI18NTranslation(translation.getCode(), args);
 
-    }
-
-    /**
-     * Crea una Excepción del tipo WsI18NException
-     * @param code
-     * @param args
-     * @return
-     */
-    public static WsI18NException createWsI18NException(String code, String... args) {
-        return new WsI18NException(WsUtils.convertToWsTranslation(new I18NTranslation(code, args)), I18NLogicUtils.tradueix(new Locale("ca"), code, args));
-    }
-
-    /**
-     * Crea una Excepción del tipo WsI18NException
-     * @param cause
-     * @param code
-     * @param args
-     * @return
-     */
-    public static WsI18NException createWsI18NException(Throwable cause, String code, String... args) {
-        return new WsI18NException(WsUtils.convertToWsTranslation(new I18NTranslation(code, args)), I18NLogicUtils.tradueix(new Locale("ca"),code, args), cause);
     }
 
 

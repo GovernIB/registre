@@ -9,6 +9,7 @@ import es.caib.regweb3.plugins.justificante.utils.I18NJustificanteUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.RegwebUtils;
 import es.caib.regweb3.utils.StringUtils;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.pluginsib.core.utils.AbstractPluginProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -121,7 +122,7 @@ public class JustificanteMockPlugin extends AbstractPluginProperties implements 
      * @param locale
      * @throws Exception
      */
-    private void inicializarPropiedades(Locale locale, Boolean entidadSir) throws Exception{
+    private void inicializarPropiedades(Locale locale, Boolean entidadSir) throws I18NException{
         declaracion = this.getProperty(PROPERTY_CAIB_BASE + "declaracion." + locale);
         ley = this.getProperty(PROPERTY_CAIB_BASE + "ley." + locale);
         sir = entidadSir;
@@ -133,231 +134,244 @@ public class JustificanteMockPlugin extends AbstractPluginProperties implements 
 
 
     @Override
-    public byte[] generarJustificanteEntrada(RegistroEntrada registroEntrada, String url, String specialValue, String csv, String idioma, Boolean sir) throws Exception{
+    public byte[] generarJustificanteEntrada(RegistroEntrada registroEntrada, String url, String specialValue, String csv, String idioma, Boolean sir) throws I18NException {
 
         // Define idioma para el justificante
         Locale locale = new Locale(idioma);
 
-        //Inicializamos las propiedades comunes
-        inicializarPropiedades(locale, sir);
+        try{
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(4096);
+            //Inicializamos las propiedades comunes
+            inicializarPropiedades(locale, sir);
 
-        // Aplica preferencias
-        Document document = new Document(PageSize.A4);
-        FileOutputStream ficheroPdf = new FileOutputStream("fichero.pdf");
-        PdfWriter writer = PdfWriter.getInstance(document, baos);
-        writer.setViewerPreferences(PdfWriter.ALLOW_PRINTING | PdfWriter.PageLayoutSinglePage);
-        PdfWriter.getInstance(document,ficheroPdf).setInitialLeading(20);
+            ByteArrayOutputStream baos = new ByteArrayOutputStream(4096);
 
-        // Crea el evento para generar la estampación de csv en cada página
-        EstampaLogos event = new EstampaLogos();
-        writer.setPageEvent(event);
+            // Aplica preferencias
+            Document document = new Document(PageSize.A4);
+            FileOutputStream ficheroPdf = new FileOutputStream("fichero.pdf");
+            PdfWriter writer = PdfWriter.getInstance(document, baos);
+            writer.setViewerPreferences(PdfWriter.ALLOW_PRINTING | PdfWriter.PageLayoutSinglePage);
+            PdfWriter.getInstance(document,ficheroPdf).setInitialLeading(20);
 
-        // Inicializa Documento
-        document = inicialitzaDocument(document);
+            // Crea el evento para generar la estampación de csv en cada página
+            EstampaLogos event = new EstampaLogos();
+            writer.setPageEvent(event);
 
-        // Comienza a crear el Justificante
-        String denominacionOficina = registroEntrada.getOficina().getDenominacion();
-        String codigoOficina = registroEntrada.getOficina().getCodigo();
-        String numeroRegistroFormateado = registroEntrada.getNumeroRegistroFormateado();
-        Long tipoDocumentacionFisica = registroEntrada.getRegistroDetalle().getTipoDocumentacionFisica();
-        String extracte = registroEntrada.getRegistroDetalle().getExtracto();
-        String nomDesti;
-        if(registroEntrada.getDestino()!=null) {
-            nomDesti = registroEntrada.getDestino().getDenominacion() + " - " + registroEntrada.getDestino().getCodigo();
-        }else{
-            nomDesti = registroEntrada.getDestinoExternoDenominacion() + " - " + registroEntrada.getDestinoExternoCodigo();
-        }
-        String expedient = registroEntrada.getRegistroDetalle().getExpediente();
-        Date fechaRegistro = registroEntrada.getFecha();
-        SimpleDateFormat formatDate = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-        String dataRegistre = formatDate.format(fechaRegistro);
+            // Inicializa Documento
+            document = inicialitzaDocument(document);
 
-        // Altres camps addicionals
-        // Tipus Assumpte
-        String tipoAsunto = null;
-        if(registroEntrada.getRegistroDetalle().getTipoAsunto()!=null) {
-            TraduccionTipoAsunto traduccionTipoAsunto = (TraduccionTipoAsunto) registroEntrada.getRegistroDetalle().getTipoAsunto().getTraduccion(idioma);
-            tipoAsunto = traduccionTipoAsunto.getNombre();
-        }
-        // Codi assumpte
-        String codigoAsunto = null;
-        if(registroEntrada.getRegistroDetalle().getCodigoAsunto()!=null) {
-            TraduccionCodigoAsunto traduccionCodigoAsunto = (TraduccionCodigoAsunto) registroEntrada.getRegistroDetalle().getCodigoAsunto().getTraduccion(idioma);
-            codigoAsunto = traduccionCodigoAsunto.getNombre();
-        }
-        // Idioma
-        String nomIdioma = null;
-        if(registroEntrada.getRegistroDetalle().getIdioma()!=null) {
-            nomIdioma = I18NJustificanteUtils.tradueix(locale, "idioma." + registroEntrada.getRegistroDetalle().getIdioma(), null);
-        }
-        // Referència externa
-        String refExterna = registroEntrada.getRegistroDetalle().getReferenciaExterna();
-        // Transport
-        String transport = null;
-        if(registroEntrada.getRegistroDetalle().getTransporte()!=null) {
-            transport = I18NJustificanteUtils.tradueix(locale, "transporte.0" + registroEntrada.getRegistroDetalle().getTransporte(), null);
-        }
-        // Número transport
-        String numTransport = registroEntrada.getRegistroDetalle().getNumeroTransporte();
-        // Oficina origen, Registre origen i Data origen
-        String oficinaOrigen = null;
-        String numRegOrigen = null;
-        String dataOrigen = null;
-        if(registroEntrada.getRegistroDetalle().getOficinaOrigen()!=null){
-            if(!registroEntrada.getRegistroDetalle().getOficinaOrigen().getCodigo().equals(registroEntrada.getOficina().getCodigo())) {
-                oficinaOrigen = registroEntrada.getRegistroDetalle().getOficinaOrigen().getDenominacion() + " - " + registroEntrada.getRegistroDetalle().getOficinaOrigen().getCodigo();
-                numRegOrigen = registroEntrada.getRegistroDetalle().getNumeroRegistroOrigen();
-                Date fechaOrigen = registroEntrada.getRegistroDetalle().getFechaOrigen();
-                dataOrigen = formatDate.format(fechaOrigen);
+            // Comienza a crear el Justificante
+            String denominacionOficina = registroEntrada.getOficina().getDenominacion();
+            String codigoOficina = registroEntrada.getOficina().getCodigo();
+            String numeroRegistroFormateado = registroEntrada.getNumeroRegistroFormateado();
+            Long tipoDocumentacionFisica = registroEntrada.getRegistroDetalle().getTipoDocumentacionFisica();
+            String extracte = registroEntrada.getRegistroDetalle().getExtracto();
+            String nomDesti;
+            if(registroEntrada.getDestino()!=null) {
+                nomDesti = registroEntrada.getDestino().getDenominacion() + " - " + registroEntrada.getDestino().getCodigo();
+            }else{
+                nomDesti = registroEntrada.getDestinoExternoDenominacion() + " - " + registroEntrada.getDestinoExternoCodigo();
             }
+            String expedient = registroEntrada.getRegistroDetalle().getExpediente();
+            Date fechaRegistro = registroEntrada.getFecha();
+            SimpleDateFormat formatDate = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+            String dataRegistre = formatDate.format(fechaRegistro);
+
+            // Altres camps addicionals
+            // Tipus Assumpte
+            String tipoAsunto = null;
+            if(registroEntrada.getRegistroDetalle().getTipoAsunto()!=null) {
+                TraduccionTipoAsunto traduccionTipoAsunto = (TraduccionTipoAsunto) registroEntrada.getRegistroDetalle().getTipoAsunto().getTraduccion(idioma);
+                tipoAsunto = traduccionTipoAsunto.getNombre();
+            }
+            // Codi assumpte
+            String codigoAsunto = null;
+            if(registroEntrada.getRegistroDetalle().getCodigoAsunto()!=null) {
+                TraduccionCodigoAsunto traduccionCodigoAsunto = (TraduccionCodigoAsunto) registroEntrada.getRegistroDetalle().getCodigoAsunto().getTraduccion(idioma);
+                codigoAsunto = traduccionCodigoAsunto.getNombre();
+            }
+            // Idioma
+            String nomIdioma = null;
+            if(registroEntrada.getRegistroDetalle().getIdioma()!=null) {
+                nomIdioma = I18NJustificanteUtils.tradueix(locale, "idioma." + registroEntrada.getRegistroDetalle().getIdioma(), null);
+            }
+            // Referència externa
+            String refExterna = registroEntrada.getRegistroDetalle().getReferenciaExterna();
+            // Transport
+            String transport = null;
+            if(registroEntrada.getRegistroDetalle().getTransporte()!=null) {
+                transport = I18NJustificanteUtils.tradueix(locale, "transporte.0" + registroEntrada.getRegistroDetalle().getTransporte(), null);
+            }
+            // Número transport
+            String numTransport = registroEntrada.getRegistroDetalle().getNumeroTransporte();
+            // Oficina origen, Registre origen i Data origen
+            String oficinaOrigen = null;
+            String numRegOrigen = null;
+            String dataOrigen = null;
+            if(registroEntrada.getRegistroDetalle().getOficinaOrigen()!=null){
+                if(!registroEntrada.getRegistroDetalle().getOficinaOrigen().getCodigo().equals(registroEntrada.getOficina().getCodigo())) {
+                    oficinaOrigen = registroEntrada.getRegistroDetalle().getOficinaOrigen().getDenominacion() + " - " + registroEntrada.getRegistroDetalle().getOficinaOrigen().getCodigo();
+                    numRegOrigen = registroEntrada.getRegistroDetalle().getNumeroRegistroOrigen();
+                    Date fechaOrigen = registroEntrada.getRegistroDetalle().getFechaOrigen();
+                    dataOrigen = formatDate.format(fechaOrigen);
+                }
+            }
+
+            // Observacions
+            String observacions = registroEntrada.getRegistroDetalle().getObservaciones();
+
+            // Título e Información Registro
+            informacioRegistre(locale, document, denominacionOficina, codigoOficina, dataRegistre, numeroRegistroFormateado,
+                    tipoDocumentacionFisica, registroEntrada.getClass().getSimpleName());
+
+            // Interesados
+            List<Interesado> interesados = registroEntrada.getRegistroDetalle().getInteresados();
+            llistarInteressats(interesados, locale, document, false);
+
+            // Información adicional del Registro
+            adicionalRegistre(locale, document, extracte, nomDesti, expedient, tipoAsunto, codigoAsunto, nomIdioma, refExterna, transport,
+                    numTransport, oficinaOrigen, numRegOrigen, dataOrigen, observacions);
+
+            // Anexos
+            List<AnexoFull> anexos = registroEntrada.getRegistroDetalle().getAnexosFull();
+            llistarAnnexes(anexos, locale, document, denominacionOficina);
+
+            document.close();
+
+            return baos.toByteArray();
+
+        }catch (DocumentException | FileNotFoundException e){
+            e.printStackTrace();
+            throw new I18NException("Error generando el pdf del justificante de entrada");
         }
-
-        // Observacions
-        String observacions = registroEntrada.getRegistroDetalle().getObservaciones();
-
-        // Título e Información Registro
-        informacioRegistre(locale, document, denominacionOficina, codigoOficina, dataRegistre, numeroRegistroFormateado,
-                tipoDocumentacionFisica, registroEntrada.getClass().getSimpleName());
-
-        // Interesados
-        List<Interesado> interesados = registroEntrada.getRegistroDetalle().getInteresados();
-        llistarInteressats(interesados, locale, document, false);
-
-        // Información adicional del Registro
-        adicionalRegistre(locale, document, extracte, nomDesti, expedient, tipoAsunto, codigoAsunto, nomIdioma, refExterna, transport,
-                numTransport, oficinaOrigen, numRegOrigen, dataOrigen, observacions);
-
-        // Anexos
-        List<AnexoFull> anexos = registroEntrada.getRegistroDetalle().getAnexosFull();
-        llistarAnnexes(anexos, locale, document, denominacionOficina);
-
-        document.close();
-
-        return baos.toByteArray();
     }
 
 
     @Override
-    public byte[] generarJustificanteSalida(RegistroSalida registroSalida, String url, String specialValue, String csv, String idioma, Boolean sir) throws Exception{
+    public byte[] generarJustificanteSalida(RegistroSalida registroSalida, String url, String specialValue, String csv, String idioma, Boolean sir) throws I18NException{
 
         // Define idioma para el justificante
         Locale locale = new Locale(idioma);
+        try{
 
-        //Inicializamos las propiedades comunes
-        inicializarPropiedades(locale, sir);
+            //Inicializamos las propiedades comunes
+            inicializarPropiedades(locale, sir);
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(4096);
+            ByteArrayOutputStream baos = new ByteArrayOutputStream(4096);
 
-        // Aplica preferencias
-        Document document = new Document(PageSize.A4);
-        FileOutputStream ficheroPdf = new FileOutputStream("fichero.pdf");
-        PdfWriter writer = PdfWriter.getInstance(document, baos);
-        writer.setViewerPreferences(PdfWriter.ALLOW_PRINTING | PdfWriter.PageLayoutSinglePage);
-        PdfWriter.getInstance(document,ficheroPdf).setInitialLeading(20);
+            // Aplica preferencias
+            Document document = new Document(PageSize.A4);
+            FileOutputStream ficheroPdf = new FileOutputStream("fichero.pdf");
+            PdfWriter writer = PdfWriter.getInstance(document, baos);
+            writer.setViewerPreferences(PdfWriter.ALLOW_PRINTING | PdfWriter.PageLayoutSinglePage);
+            PdfWriter.getInstance(document,ficheroPdf).setInitialLeading(20);
 
-        // Crea el evento para generar la estampación de csv en cada página
-        EstampaLogos event = new EstampaLogos();
-        writer.setPageEvent(event);
+            // Crea el evento para generar la estampación de csv en cada página
+            EstampaLogos event = new EstampaLogos();
+            writer.setPageEvent(event);
 
-        // Inicializa Documento
-        document = inicialitzaDocument(document);
+            // Inicializa Documento
+            document = inicialitzaDocument(document);
 
-        // Comienza a crear el Justificante
-        String denominacionOficina = registroSalida.getOficina().getDenominacion();
-        String codigoOficina = registroSalida.getOficina().getCodigo();
-        String numeroRegistroFormateado = registroSalida.getNumeroRegistroFormateado();
-        Long tipoDocumentacionFisica = registroSalida.getRegistroDetalle().getTipoDocumentacionFisica();
-        String extracte = registroSalida.getRegistroDetalle().getExtracto();
-        String nomOrigen = "";
-        if(registroSalida.getRegistroDetalle().getCodigoEntidadRegistralDestino()!=null){
-            nomOrigen = registroSalida.getRegistroDetalle().getDecodificacionEntidadRegistralDestino() + " - " + registroSalida.getRegistroDetalle().getCodigoEntidadRegistralDestino();
-        }else{
-            List<Interesado> interesadosDestino = registroSalida.getRegistroDetalle().getInteresados();
-            for(Interesado interesado : interesadosDestino) {
-                if(interesado.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION)) {
-                    if(nomOrigen.length()==0) {
-                        nomOrigen = interesado.getNombreCompleto();
-                    }else{
-                        nomOrigen = nomOrigen + ", " + interesado.getNombreCompleto();
+            // Comienza a crear el Justificante
+            String denominacionOficina = registroSalida.getOficina().getDenominacion();
+            String codigoOficina = registroSalida.getOficina().getCodigo();
+            String numeroRegistroFormateado = registroSalida.getNumeroRegistroFormateado();
+            Long tipoDocumentacionFisica = registroSalida.getRegistroDetalle().getTipoDocumentacionFisica();
+            String extracte = registroSalida.getRegistroDetalle().getExtracto();
+            String nomOrigen = "";
+            if(registroSalida.getRegistroDetalle().getCodigoEntidadRegistralDestino()!=null){
+                nomOrigen = registroSalida.getRegistroDetalle().getDecodificacionEntidadRegistralDestino() + " - " + registroSalida.getRegistroDetalle().getCodigoEntidadRegistralDestino();
+            }else{
+                List<Interesado> interesadosDestino = registroSalida.getRegistroDetalle().getInteresados();
+                for(Interesado interesado : interesadosDestino) {
+                    if(interesado.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION)) {
+                        if(nomOrigen.length()==0) {
+                            nomOrigen = interesado.getNombreCompleto();
+                        }else{
+                            nomOrigen = nomOrigen + ", " + interesado.getNombreCompleto();
+                        }
                     }
                 }
             }
-        }
-        String expedient = registroSalida.getRegistroDetalle().getExpediente();
-        Date fechaRegistro = registroSalida.getFecha();
-        SimpleDateFormat formatDate = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-        String dataRegistre = formatDate.format(fechaRegistro);
+            String expedient = registroSalida.getRegistroDetalle().getExpediente();
+            Date fechaRegistro = registroSalida.getFecha();
+            SimpleDateFormat formatDate = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+            String dataRegistre = formatDate.format(fechaRegistro);
 
-        // Altres camps addicionals
-        // Tipus assumpte
-        String tipoAsunto = null;
-        if(registroSalida.getRegistroDetalle().getTipoAsunto()!=null) {
-            TraduccionTipoAsunto traduccionTipoAsunto = (TraduccionTipoAsunto) registroSalida.getRegistroDetalle().getTipoAsunto().getTraduccion(idioma);
-            tipoAsunto = traduccionTipoAsunto.getNombre();
-        }
-        // Codi assumpte
-        String codigoAsunto = null;
-        if(registroSalida.getRegistroDetalle().getCodigoAsunto()!=null) {
-            TraduccionCodigoAsunto traduccionCodigoAsunto = (TraduccionCodigoAsunto) registroSalida.getRegistroDetalle().getCodigoAsunto().getTraduccion(idioma);
-            codigoAsunto = traduccionCodigoAsunto.getNombre();
-        }
-        // Idioma
-        String nomIdioma = null;
-        if(registroSalida.getRegistroDetalle().getIdioma()!=null) {
-            nomIdioma = I18NJustificanteUtils.tradueix(locale, "idioma." + registroSalida.getRegistroDetalle().getIdioma(), null);
-        }
-        // Referencia externa
-        String refExterna = registroSalida.getRegistroDetalle().getReferenciaExterna();
-        // Transport
-        String transport = null;
-        if(registroSalida.getRegistroDetalle().getTransporte()!=null) {
-            transport = I18NJustificanteUtils.tradueix(locale, "transporte.0" + registroSalida.getRegistroDetalle().getTransporte(), null);
-        }
-        // Número transport
-        String numTransport = registroSalida.getRegistroDetalle().getNumeroTransporte();
-        // Oficina origen, Registre origen i Data origen
-        String oficinaOrigen = null;
-        String numRegOrigen = null;
-        String dataOrigen = null;
-        if(registroSalida.getRegistroDetalle().getOficinaOrigen()!=null){
-            if(!registroSalida.getRegistroDetalle().getOficinaOrigen().getCodigo().equals(registroSalida.getOficina().getCodigo())) {
-                oficinaOrigen = registroSalida.getRegistroDetalle().getOficinaOrigen().getDenominacion() + " - " + registroSalida.getRegistroDetalle().getOficinaOrigen().getCodigo();
-                numRegOrigen = registroSalida.getRegistroDetalle().getNumeroRegistroOrigen();
-                Date fechaOrigen = registroSalida.getRegistroDetalle().getFechaOrigen();
-                dataOrigen = formatDate.format(fechaOrigen);
+            // Altres camps addicionals
+            // Tipus assumpte
+            String tipoAsunto = null;
+            if(registroSalida.getRegistroDetalle().getTipoAsunto()!=null) {
+                TraduccionTipoAsunto traduccionTipoAsunto = (TraduccionTipoAsunto) registroSalida.getRegistroDetalle().getTipoAsunto().getTraduccion(idioma);
+                tipoAsunto = traduccionTipoAsunto.getNombre();
             }
+            // Codi assumpte
+            String codigoAsunto = null;
+            if(registroSalida.getRegistroDetalle().getCodigoAsunto()!=null) {
+                TraduccionCodigoAsunto traduccionCodigoAsunto = (TraduccionCodigoAsunto) registroSalida.getRegistroDetalle().getCodigoAsunto().getTraduccion(idioma);
+                codigoAsunto = traduccionCodigoAsunto.getNombre();
+            }
+            // Idioma
+            String nomIdioma = null;
+            if(registroSalida.getRegistroDetalle().getIdioma()!=null) {
+                nomIdioma = I18NJustificanteUtils.tradueix(locale, "idioma." + registroSalida.getRegistroDetalle().getIdioma(), null);
+            }
+            // Referencia externa
+            String refExterna = registroSalida.getRegistroDetalle().getReferenciaExterna();
+            // Transport
+            String transport = null;
+            if(registroSalida.getRegistroDetalle().getTransporte()!=null) {
+                transport = I18NJustificanteUtils.tradueix(locale, "transporte.0" + registroSalida.getRegistroDetalle().getTransporte(), null);
+            }
+            // Número transport
+            String numTransport = registroSalida.getRegistroDetalle().getNumeroTransporte();
+            // Oficina origen, Registre origen i Data origen
+            String oficinaOrigen = null;
+            String numRegOrigen = null;
+            String dataOrigen = null;
+            if(registroSalida.getRegistroDetalle().getOficinaOrigen()!=null){
+                if(!registroSalida.getRegistroDetalle().getOficinaOrigen().getCodigo().equals(registroSalida.getOficina().getCodigo())) {
+                    oficinaOrigen = registroSalida.getRegistroDetalle().getOficinaOrigen().getDenominacion() + " - " + registroSalida.getRegistroDetalle().getOficinaOrigen().getCodigo();
+                    numRegOrigen = registroSalida.getRegistroDetalle().getNumeroRegistroOrigen();
+                    Date fechaOrigen = registroSalida.getRegistroDetalle().getFechaOrigen();
+                    dataOrigen = formatDate.format(fechaOrigen);
+                }
+            }
+
+            // Observacions
+            String observacions = registroSalida.getRegistroDetalle().getObservaciones();
+
+
+            // Título e Información Registro
+            informacioRegistre(locale, document, denominacionOficina, codigoOficina, dataRegistre, numeroRegistroFormateado,
+                    tipoDocumentacionFisica, registroSalida.getClass().getSimpleName());
+
+            // Interesados
+            List<Interesado> interesados = registroSalida.getRegistroDetalle().getInteresados();
+            llistarInteressats(interesados, locale, document, true);
+
+            // Información adicional del Registro
+            adicionalRegistre(locale, document, extracte, nomOrigen, expedient, tipoAsunto, codigoAsunto, nomIdioma, refExterna, transport,
+                    numTransport, oficinaOrigen, numRegOrigen, dataOrigen, observacions);
+
+            // Anexos
+            List<AnexoFull> anexos = registroSalida.getRegistroDetalle().getAnexosFull();
+            llistarAnnexes(anexos, locale, document, denominacionOficina);
+
+            document.close();
+
+            return baos.toByteArray();
+
+        }catch (DocumentException | FileNotFoundException e){
+            e.printStackTrace();
+            throw new I18NException("Error generando el pdf del justificante de entrada");
         }
-
-        // Observacions
-        String observacions = registroSalida.getRegistroDetalle().getObservaciones();
-
-
-        // Título e Información Registro
-        informacioRegistre(locale, document, denominacionOficina, codigoOficina, dataRegistre, numeroRegistroFormateado,
-                tipoDocumentacionFisica, registroSalida.getClass().getSimpleName());
-
-        // Interesados
-        List<Interesado> interesados = registroSalida.getRegistroDetalle().getInteresados();
-        llistarInteressats(interesados, locale, document, true);
-
-        // Información adicional del Registro
-        adicionalRegistre(locale, document, extracte, nomOrigen, expedient, tipoAsunto, codigoAsunto, nomIdioma, refExterna, transport,
-                numTransport, oficinaOrigen, numRegOrigen, dataOrigen, observacions);
-
-        // Anexos
-        List<AnexoFull> anexos = registroSalida.getRegistroDetalle().getAnexosFull();
-        llistarAnnexes(anexos, locale, document, denominacionOficina);
-
-        document.close();
-
-        return baos.toByteArray();
     }
 
 
     // Inicializa el Documento tanto para el registro de entrada como el de salida
-    protected Document inicialitzaDocument(Document document) throws Exception {
+    protected Document inicialitzaDocument(Document document) throws I18NException {
 
         // Build PDF document.
         document.open();
@@ -373,8 +387,7 @@ public class JustificanteMockPlugin extends AbstractPluginProperties implements 
     }
 
     // Lista los anexos tanto para el registro de entrada como el de salida
-    protected void llistarAnnexes(List<AnexoFull> anexos, Locale locale, Document document,
-                                  String denominacio) throws Exception {
+    protected void llistarAnnexes(List<AnexoFull> anexos, Locale locale, Document document, String denominacio) throws I18NException, DocumentException {
 
         if(anexos.size()>0) {
             // Creamos estilo para el título Adjuntos
@@ -528,7 +541,7 @@ public class JustificanteMockPlugin extends AbstractPluginProperties implements 
     }
 
     // Lista los interesados y representantes tanto para el registro de entrada como el de salida
-    protected void llistarInteressats(List<Interesado> interesados, Locale locale, Document document, Boolean isSalida) throws Exception {
+    protected void llistarInteressats(List<Interesado> interesados, Locale locale, Document document, Boolean isSalida) throws I18NException, DocumentException {
 
         // Creamos estilo para el título Interesado
         PdfPTable titolInteressat = new PdfPTable(1);
@@ -780,7 +793,7 @@ public class JustificanteMockPlugin extends AbstractPluginProperties implements 
     // Añade el título y la información de registro
     protected void informacioRegistre(Locale locale, Document document, String denominacionOficina, String codigoOficina,
                                       String dataRegistre, String numeroRegistroFormateado, Long tipoDocumentacionFisica,
-                                      String tipoRegistro) throws Exception {
+                                      String tipoRegistro) throws I18NException, DocumentException {
 
         document.addTitle(tradueixMissatge(locale,"justificante.anexo.titulo"));
         PdfPTable titulo = new PdfPTable(1);
@@ -826,7 +839,7 @@ public class JustificanteMockPlugin extends AbstractPluginProperties implements 
     protected void adicionalRegistre(Locale locale, Document document, String extracte, String nomDesti, String expedient,
                                      String tipoAsunto, String codigoAsunto, String idioma, String refExterna, String transport,
                                      String numTransport, String oficinaOrigen, String numRegOrigen, String dataOrigen,
-                                     String observacions) throws Exception {
+                                     String observacions) throws I18NException, DocumentException {
 
         // Creamos estilo para el título Información
         PdfPTable titolInformacio = new PdfPTable(1);
@@ -945,7 +958,7 @@ public class JustificanteMockPlugin extends AbstractPluginProperties implements 
      * @return
      * @throws Exception
      */
-    protected String tradueixMissatge(Locale locale, String missatge) throws Exception {
+    protected String tradueixMissatge(Locale locale, String missatge) throws I18NException {
 
         try {
             ResourceBundle justificantemissatges = ResourceBundle.getBundle("justificantemissatges", locale);

@@ -45,27 +45,27 @@ public class AsientoRegistralBean implements AsientoRegistralLocal {
     @EJB private MultiEntidadLocal multiEntidadEjb;
 
     @Override
-    public UsuarioEntidad comprobarUsuarioEntidad(String identificador, Long idEntidad) throws Exception, I18NException {
+    public UsuarioEntidad comprobarUsuarioEntidad(String identificador, Long idEntidad) throws I18NException {
         return usuarioEntidadEjb.comprobarUsuarioEntidad(identificador, idEntidad);
     }
 
     @Override
     public RegistroSalida registrarSalida(RegistroSalida registroSalida, Entidad entidad, UsuarioEntidad usuarioEntidad, List<Interesado> interesados, List<AnexoFull> anexos, Boolean validarAnexos)
-            throws Exception, I18NException, I18NValidationException {
+            throws I18NException, I18NValidationException {
 
         return registroSalidaEjb.registrarSalida(registroSalida, entidad, usuarioEntidad, interesados, anexos, validarAnexos);
     }
 
     @Override
     public RegistroEntrada registrarEntrada(RegistroEntrada registroEntrada, Entidad entidad, UsuarioEntidad usuarioEntidad, List<Interesado> interesados, List<AnexoFull> anexos, Boolean validarAnexos)
-            throws Exception, I18NException, I18NValidationException {
+            throws I18NException, I18NValidationException {
 
         return registroEntradaEjb.registrarEntrada(registroEntrada, entidad, usuarioEntidad, interesados, anexos, validarAnexos);
 
     }
 
     @Override
-    public JustificanteReferencia obtenerReferenciaJustificante(String numeroRegistroformateado, Entidad entidad) throws Exception, I18NException {
+    public JustificanteReferencia obtenerReferenciaJustificante(String numeroRegistroformateado, Entidad entidad) throws I18NException {
 
         RegistroEntrada registroEntrada = registroEntradaConsultaEjb.findByNumeroRegistroFormateadoCompleto(entidad.getId(), numeroRegistroformateado);
 
@@ -182,7 +182,7 @@ public class AsientoRegistralBean implements AsientoRegistralLocal {
 
     @Asynchronous
     @Override
-    public void distribuirRegistroEntrada(RegistroEntrada registroEntrada, UsuarioEntidad usuario) throws Exception, I18NException {
+    public void distribuirRegistroEntrada(RegistroEntrada registroEntrada, UsuarioEntidad usuario) throws I18NException {
 
         //DistribucionLocal asynchDistribucion = AsyncUtils.mixinAsync(distribucionEjb);
 
@@ -200,7 +200,7 @@ public class AsientoRegistralBean implements AsientoRegistralLocal {
             // Distribuimos el registro de entrada
             distribucionEjb.distribuir(registroEntrada, usuario, null,null);
 
-        }catch (Exception | I18NValidationException e){
+        }catch (I18NValidationException e){
             e.printStackTrace();
             throw new I18NException("registroEntrada.distribuir.error");
         }
@@ -210,9 +210,9 @@ public class AsientoRegistralBean implements AsientoRegistralLocal {
      * Transforma un conjunto de organismos a un conjunto de strings con los códigos de los organismos
      *
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    private Set<String> getOrganismosOficioRemisionSalida(Set<Organismo> organismos) throws Exception {
+    private Set<String> getOrganismosOficioRemisionSalida(Set<Organismo> organismos) throws I18NException {
 
         // Creamos un Set solo con los codigos
         Set<String> organismosCodigo = new HashSet<String>();
@@ -227,7 +227,7 @@ public class AsientoRegistralBean implements AsientoRegistralLocal {
     /**
      * Método que crea el justiifcante del registro de salida y actualiza su estado
      */
-    private void crearJustificanteCambioEstado(Entidad entidad, RegistroSalida registroSalida, Long estado) throws Exception, I18NValidationException, I18NException {
+    private void crearJustificanteCambioEstado(Entidad entidad, RegistroSalida registroSalida, Long estado) throws I18NException, I18NValidationException, I18NException {
         //Crear Justificante
         crearJustificante(entidad, registroSalida.getUsuario(), registroSalida, RegwebConstantes.REGISTRO_SALIDA, RegistroUtils.getIdiomaJustificante(registroSalida));
 

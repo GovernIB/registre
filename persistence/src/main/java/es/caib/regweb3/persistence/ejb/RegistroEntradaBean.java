@@ -71,7 +71,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean implem
 
 
     @Override
-    public RegistroEntrada findByIdCompleto(Long id) throws Exception {
+    public RegistroEntrada findByIdCompleto(Long id) throws I18NException {
 
         RegistroEntrada registroEntrada = findById(id);
 
@@ -83,7 +83,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean implem
 
     @Override
     public RegistroEntrada registrarEntrada(RegistroEntrada registroEntrada, Entidad entidad, UsuarioEntidad usuarioEntidad, List<Interesado> interesados, List<AnexoFull> anexosFull, Boolean validarAnexos)
-            throws Exception, I18NException, I18NValidationException {
+            throws I18NException, I18NValidationException {
 
         try {
             //Asociamos su entidad
@@ -156,7 +156,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean implem
 
             return registroEntrada;
 
-        } catch (I18NException | Exception i18n) {
+        } catch (I18NException i18n) {
             log.info("Error registrando la entrada");
             i18n.printStackTrace();
             ejbContext.setRollbackOnly();
@@ -173,7 +173,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean implem
     }
 
     @Override
-    public RegistroEntrada actualizar(RegistroEntrada antiguo, RegistroEntrada registroEntrada, Entidad entidad, UsuarioEntidad usuarioEntidad) throws Exception, I18NException {
+    public RegistroEntrada actualizar(RegistroEntrada antiguo, RegistroEntrada registroEntrada, Entidad entidad, UsuarioEntidad usuarioEntidad) throws I18NException {
 
         registroEntrada = merge(registroEntrada);
 
@@ -195,7 +195,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean implem
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Boolean isOficioRemisionInterno(Long idRegistro, Set<Long> organismos) throws Exception {
+    public Boolean isOficioRemisionInterno(Long idRegistro, Set<Long> organismos) throws I18NException {
 
         // Si el array de organismos está vacío, no incluimos la condición.
         String organismosWhere = "";
@@ -224,7 +224,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean implem
     @Override
     @SuppressWarnings(value = "unchecked")
     @TransactionTimeout(value = 1200)  // 20 minutos
-    public Integer actualizarEventoOficioInterno(Oficina oficina) throws Exception {
+    public Integer actualizarEventoOficioInterno(Oficina oficina) throws I18NException {
 
         // Obtiene los Organismos de la OficinaActiva en los que puede registrar sin generar OficioRemisión
         LinkedHashSet<Organismo> organismos = organismoEjb.getByOficinaActiva(oficina, RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
@@ -258,7 +258,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean implem
     @Override
     @SuppressWarnings(value = "unchecked")
     @TransactionTimeout(value = 1200)  // 20 minutos
-    public Integer actualizarEventoDistribuir(Oficina oficina) throws Exception {
+    public Integer actualizarEventoDistribuir(Oficina oficina) throws I18NException {
 
         // Obtiene los Organismos de la OficinaActiva en los que puede registrar sin generar OficioRemisión
         LinkedHashSet<Organismo> organismos = organismoEjb.getByOficinaActiva(oficina, RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
@@ -291,7 +291,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean implem
     @Override
     @SuppressWarnings(value = "unchecked")
     @TransactionTimeout(value = 1200)  // 20 minutos
-    public Integer actualizarEventoOficioExterno(Oficina oficina) throws Exception {
+    public Integer actualizarEventoOficioExterno(Oficina oficina) throws I18NException {
 
 
         Query q = em.createQuery("update RegistroEntrada set evento=:evento " +
@@ -307,7 +307,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean implem
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Boolean isOficioRemisionExterno(Long idRegistro) throws Exception {
+    public Boolean isOficioRemisionExterno(Long idRegistro) throws I18NException {
 
         Query q;
         q = em.createQuery("Select re.id from RegistroEntrada as re where " +
@@ -323,7 +323,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean implem
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<OficinaTF> isOficioRemisionSir(Long idRegistro, Long idEntidad) throws Exception {
+    public List<OficinaTF> isOficioRemisionSir(Long idRegistro, Long idEntidad) throws I18NException {
 
         Query q;
         q = em.createQuery("Select re.destinoExternoCodigo from RegistroEntrada as re where " +
@@ -350,7 +350,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean implem
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<OficinaTF> isOficioRemisionSirMultiEntidad(Long idRegistro, Long idEntidad) throws Exception {
+    public List<OficinaTF> isOficioRemisionSirMultiEntidad(Long idRegistro, Long idEntidad) throws I18NException {
 
         //Miramos los externos
         Query q;
@@ -386,7 +386,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean implem
 
 
     @Override
-    public String obtenerDestinoExternoRE(Long idRegistro) throws Exception {
+    public String obtenerDestinoExternoRE(Long idRegistro) throws I18NException {
 
         Query q;
         q = em.createQuery("Select re.destinoExternoCodigo from RegistroEntrada as re where " +
@@ -407,7 +407,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean implem
 
 
     @Override
-    public Long proximoEventoEntrada(RegistroEntrada registroEntrada, Entidad entidadActiva, Long idOficina) throws Exception {
+    public Long proximoEventoEntrada(RegistroEntrada registroEntrada, Entidad entidadActiva, Long idOficina) throws I18NException {
 
         if (registroEntrada.getDestino() == null) { // Externo
 
@@ -429,7 +429,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean implem
 
 
     @Override
-    public Long proximoEventoEntradaMultiEntidad(RegistroEntrada registroEntrada, Entidad entidadActiva, Long idOficina) throws Exception {
+    public Long proximoEventoEntradaMultiEntidad(RegistroEntrada registroEntrada, Entidad entidadActiva, Long idOficina) throws I18NException {
 
         //Si el destino no es null debemos obtener el organismo correcto en un entorno multientidad para poder comprobar
         // en el siguiente if si hay una entidad que le da soporte
@@ -458,7 +458,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean implem
     }
 
     @Override
-    public void cambiarEstadoHistorico(RegistroEntrada registroEntrada, Long idEstado, UsuarioEntidad usuarioEntidad) throws Exception {
+    public void cambiarEstadoHistorico(RegistroEntrada registroEntrada, Long idEstado, UsuarioEntidad usuarioEntidad) throws I18NException {
 
         Query q = em.createQuery("update RegistroEntrada set estado=:idEstado where id = :idRegistro");
         q.setParameter("idEstado", idEstado);
@@ -473,7 +473,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean implem
     }
 
     @Override
-    public void cambiarEstadoAnuladoHistorico(RegistroEntrada registroEntrada, Long idEstado, UsuarioEntidad usuarioEntidad, String observacionesAnulacion) throws Exception {
+    public void cambiarEstadoAnuladoHistorico(RegistroEntrada registroEntrada, Long idEstado, UsuarioEntidad usuarioEntidad, String observacionesAnulacion) throws I18NException {
 
         Query q = em.createQuery("update RegistroEntrada set estado=:idEstado where id = :idRegistro");
         q.setParameter("idEstado", idEstado);
@@ -489,7 +489,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean implem
 
     @Override
     public void anularRegistroEntrada(RegistroEntrada registroEntrada, UsuarioEntidad usuarioEntidad,
-                                      String observacionesAnulacion) throws Exception {
+                                      String observacionesAnulacion) throws I18NException {
 
         // Estado anulado
         cambiarEstadoAnuladoHistorico(registroEntrada, RegwebConstantes.REGISTRO_ANULADO, usuarioEntidad, observacionesAnulacion);
@@ -498,7 +498,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean implem
 
     @Override
     public void activarRegistroEntrada(RegistroEntrada registroEntrada,
-                                       UsuarioEntidad usuarioEntidad) throws Exception {
+                                       UsuarioEntidad usuarioEntidad) throws I18NException {
 
         // Actualizamos el estado del RegistroEntrada
         cambiarEstadoHistorico(registroEntrada, RegwebConstantes.REGISTRO_PENDIENTE_VISAR, usuarioEntidad);
@@ -506,7 +506,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean implem
     }
 
     @Override
-    public void visarRegistroEntrada(RegistroEntrada registroEntrada, Entidad entidad, UsuarioEntidad usuarioEntidad) throws Exception {
+    public void visarRegistroEntrada(RegistroEntrada registroEntrada, Entidad entidad, UsuarioEntidad usuarioEntidad) throws I18NException {
 
         // Modificamos el estado del RegistroEntrada
         cambiarEstadoHistorico(registroEntrada, RegwebConstantes.REGISTRO_VALIDO, usuarioEntidad);
@@ -526,7 +526,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean implem
     }
 
     @Override
-    public void marcarDistribuido(RegistroEntrada registroEntrada) throws Exception {
+    public void marcarDistribuido(RegistroEntrada registroEntrada) throws I18NException {
 
         // CREAMOS LA TRAZABILIDAD
         Trazabilidad trazabilidad = new Trazabilidad();
@@ -552,7 +552,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean implem
 
 
     @Override
-    public Integer eliminarByEntidad(Long idEntidad) throws Exception {
+    public Integer eliminarByEntidad(Long idEntidad) throws I18NException {
 
         List<?> registros = em.createQuery("Select distinct(re.id) from RegistroEntrada as re where re.entidad.id = :idEntidad").setParameter("idEntidad", idEntidad).getResultList();
 
@@ -567,7 +567,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean implem
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public RegistroEntrada rectificar(RegistroEntrada registroEntrada, Entidad entidad, UsuarioEntidad usuarioEntidad) throws Exception, I18NException {
+    public RegistroEntrada rectificar(RegistroEntrada registroEntrada, Entidad entidad, UsuarioEntidad usuarioEntidad) throws I18NException {
 
         RegistroEntrada rectificado = null;
         Long idRegistro = registroEntrada.getId();
@@ -669,7 +669,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean implem
 
 
     @Override
-    public void actualizarDestinoExtinguido(Long idOrganismoExtinguido, Long idOrganismoSustituto) throws Exception {
+    public void actualizarDestinoExtinguido(Long idOrganismoExtinguido, Long idOrganismoSustituto) throws I18NException {
 
         Query q = em.createQuery("update RegistroEntrada set destino = :idOrganismoSustituto where destino = :idOrganismoExtinguido and (estado = :valido or estado = :pendienteVisar)");
         q.setParameter("idOrganismoSustituto", idOrganismoSustituto);
@@ -682,7 +682,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean implem
     }
 
     @Override
-    public RegistroEntrada getConAnexosFull(Long id) throws Exception, I18NException {
+    public RegistroEntrada getConAnexosFull(Long id) throws I18NException {
 
         RegistroEntrada re = findByIdCompleto(id);
 
@@ -690,7 +690,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean implem
     }
 
     @Override
-    public RegistroEntrada getConAnexosFullLigero(Long id) throws Exception, I18NException {
+    public RegistroEntrada getConAnexosFullLigero(Long id) throws I18NException {
 
         RegistroEntrada re = em.find(RegistroEntrada.class, id);
         Long idEntidad = re.getEntidad().getId();
@@ -706,7 +706,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean implem
     }
 
     @Override
-    public RegistroEntrada getConAnexosFullDistribuir(Long id) throws Exception, I18NException {
+    public RegistroEntrada getConAnexosFullDistribuir(Long id) throws I18NException {
 
         RegistroEntrada re = findByIdCompleto(id);
 
@@ -718,10 +718,10 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean implem
      *
      * @param registroEntrada
      * @return
-     * @throws Exception
+     * @throws I18NException
      * @throws I18NException
      */
-    private RegistroEntrada cargarAnexosFull(RegistroEntrada registroEntrada, Boolean justificante) throws Exception, I18NException {
+    private RegistroEntrada cargarAnexosFull(RegistroEntrada registroEntrada, Boolean justificante) throws I18NException {
 
         Long idEntidad = registroEntrada.getEntidad().getId();
         List<Anexo> anexos = registroEntrada.getRegistroDetalle().getAnexos();
@@ -742,7 +742,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean implem
     }
 
     @Override
-    public void postProcesoActualizarRegistro(RegistroEntrada re, Long entidadId) throws Exception, I18NException {
+    public void postProcesoActualizarRegistro(RegistroEntrada re, Long entidadId) throws I18NException {
         IPostProcesoPlugin postProcesoPlugin = (IPostProcesoPlugin) pluginEjb.getPlugin(entidadId, RegwebConstantes.PLUGIN_POSTPROCESO);
         if (postProcesoPlugin != null) {
             postProcesoPlugin.actualizarRegistroEntrada(re);
@@ -751,7 +751,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean implem
     }
 
     @Override
-    public void postProcesoNuevoRegistro(RegistroEntrada re, Long entidadId) throws Exception, I18NException {
+    public void postProcesoNuevoRegistro(RegistroEntrada re, Long entidadId) throws I18NException {
         IPostProcesoPlugin postProcesoPlugin = (IPostProcesoPlugin) pluginEjb.getPlugin(entidadId, RegwebConstantes.PLUGIN_POSTPROCESO);
         if (postProcesoPlugin != null) {
             postProcesoPlugin.nuevoRegistroEntrada(re);

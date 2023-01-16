@@ -33,9 +33,9 @@ public interface SignatureServerLocal {
      * @param idEntidadActiva
      * @param fileName
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    SignatureCustody signJustificante(byte[] pdfsource, String languageUI, Long idEntidadActiva, StringBuilder peticion, String numeroRegistro, String fileName) throws Exception, I18NException;
+    SignatureCustody signJustificante(byte[] pdfsource, String languageUI, Long idEntidadActiva, StringBuilder peticion, String numeroRegistro, String fileName) throws I18NException;
 
     /**
      * Método que genera una  {@link es.caib.plugins.arxiu.api.Firma} de un Justificante
@@ -45,9 +45,9 @@ public interface SignatureServerLocal {
      * @param idEntidadActiva
      * @param fileName
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Firma signJustificanteApiArxiu(byte[] pdfsource, String languageUI, Long idEntidadActiva, StringBuilder peticion, String numeroRegistro, String fileName) throws Exception, I18NException;
+    Firma signJustificanteApiArxiu(byte[] pdfsource, String languageUI, Long idEntidadActiva, StringBuilder peticion, String numeroRegistro, String fileName) throws I18NException;
 
 
     /**

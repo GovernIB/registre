@@ -7,6 +7,7 @@ import es.caib.regweb3.model.RegistroSir;
 import es.caib.regweb3.model.sir.MensajeControl;
 import es.caib.regweb3.persistence.utils.RespuestaRecepcionSir;
 import es.caib.regweb3.sir.core.utils.FicheroIntercambio;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 
 import javax.ejb.Local;
 import java.util.Date;
@@ -26,52 +27,52 @@ public interface WebServicesMethodsLocal {
      * Recibe un mensaje de control en formato SICRES3 desde un nodo distribuido
      *
      * @param mensaje
-     * @throws Exception
+     * @throws I18NException
      */
-    void procesarMensajeDatosControl(MensajeControl mensaje) throws Exception;
+    void procesarMensajeDatosControl(MensajeControl mensaje) throws I18NException;
 
     /**
      * Recibe un fichero de intercambio en formato SICRES3 desde un nodo distribuido
      *
      * @param ficheroIntercambio
-     * @throws Exception
+     * @throws I18NException
      */
-    RespuestaRecepcionSir procesarFicheroIntercambio(FicheroIntercambio ficheroIntercambio) throws Exception;
+    RespuestaRecepcionSir procesarFicheroIntercambio(FicheroIntercambio ficheroIntercambio) throws I18NException;
 
     /**
      * Elimina un RegistroSir creado
      *
      * @param registroSir
-     * @throws Exception
+     * @throws I18NException
      */
-    void eliminarRegistroSir(RegistroSir registroSir) throws Exception;
+    void eliminarRegistroSir(RegistroSir registroSir) throws I18NException;
 
     /**
      * Guarda un nuevo Mensaje de Control
      *
      * @param mensajeControl
-     * @throws Exception
+     * @throws I18NException
      */
-    void guardarMensajeControl(MensajeControl mensajeControl) throws Exception;
+    void guardarMensajeControl(MensajeControl mensajeControl) throws I18NException;
 
     /**
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Dir3CaibObtenerOficinasWs getObtenerOficinasService(Long idEntidad) throws Exception;
+    Dir3CaibObtenerOficinasWs getObtenerOficinasService(Long idEntidad) throws I18NException;
 
     /**
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Dir3CaibObtenerUnidadesWs getObtenerUnidadesService(Long idEntidad) throws Exception;
+    Dir3CaibObtenerUnidadesWs getObtenerUnidadesService(Long idEntidad) throws I18NException;
 
     /**
      * @param codigo
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Oficina obtenerOficina(String codigo) throws Exception;
+    Oficina obtenerOficina(String codigo) throws I18NException;
 
     /**
      * @param tipo
@@ -81,9 +82,9 @@ public interface WebServicesMethodsLocal {
      * @param tiempo
      * @param idEntidad
      * @param numregformat
-     * @throws Exception
+     * @throws I18NException
      */
-    void addIntegracionError(Long tipo, String descripcion, String peticion, Throwable th, String error, Long tiempo, Long idEntidad, String numregformat) throws Exception;
+    void addIntegracionError(Long tipo, String descripcion, String peticion, Throwable th, String error, Long tiempo, Long idEntidad, String numregformat) throws I18NException;
 
     /**
      * @param inicio
@@ -93,7 +94,7 @@ public interface WebServicesMethodsLocal {
      * @param tiempo
      * @param idEntidad
      * @param numregformat
-     * @throws Exception
+     * @throws I18NException
      */
-    void addIntegracionOk(Date inicio, Long tipo, String descripcion, String peticion, Long tiempo, Long idEntidad, String numregformat) throws Exception;
+    void addIntegracionOk(Date inicio, Long tipo, String descripcion, String peticion, Long tiempo, Long idEntidad, String numregformat) throws I18NException;
 }

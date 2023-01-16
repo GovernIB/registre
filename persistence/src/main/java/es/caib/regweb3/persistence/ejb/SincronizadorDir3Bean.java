@@ -12,6 +12,7 @@ import es.caib.regweb3.utils.Dir3CaibUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 import es.caib.regweb3.utils.TimeUtils;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.hibernate.Hibernate;
 import org.jboss.ejb3.annotation.TransactionTimeout;
 import org.slf4j.Logger;
@@ -70,11 +71,11 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
      * @param fechaActualizacion  fecha de la ultima actualización con dir3caib
      * @param fechaSincronizacion fecha de la primera sincronización con dir3caib.
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
     @Override
     @TransactionTimeout(value = 1800)  // 30 minutos
-    public int sincronizarActualizar(Long entidadId, Timestamp fechaActualizacion, Timestamp fechaSincronizacion) throws Exception {
+    public int sincronizarActualizar(Long entidadId, Timestamp fechaActualizacion, Timestamp fechaSincronizacion) throws I18NException {
 
         Entidad entidad = entidadEjb.findByIdLigero(entidadId);
 
@@ -90,7 +91,7 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
         inicializarCaches();
 
         // Procesamos el arbol de organismos obtenido
-        if (arbol.size() > 0) {
+        if (!arbol.isEmpty()) {
 
             for (UnidadTF unidadTF : arbol) {
 
@@ -166,7 +167,7 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
         }
         //Si no hay pendientes de procesar desactivamos el mantenimiento de la entidad
         // porque ya ha acabado el proceso de sincronización
-        if (pendienteEjb.findPendientesProcesar(entidadId).size() == 0) {
+        if (pendienteEjb.findPendientesProcesar(entidadId).isEmpty()) {
             entidadEjb.marcarEntidadMantenimiento(entidadId, false);
         }
 
@@ -194,9 +195,9 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
      *
      * @param unidadTF
      * @param idEntidad
-     * @throws Exception
+     * @throws I18NException
      */
-    private Organismo sincronizarOrganismo(UnidadTF unidadTF, Long idEntidad) throws Exception {
+    private Organismo sincronizarOrganismo(UnidadTF unidadTF, Long idEntidad) throws I18NException {
 
 
         Entidad entidad = entidadEjb.findByIdLigero(idEntidad);
@@ -253,9 +254,9 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
      * Este método crea todas las oficinas recibidas. Se guardan denominación, estado y organismo responsable
      *
      * @param oficinas conjunto de oficinas recibidas de una entidad
-     * @throws Exception
+     * @throws I18NException
      */
-    private void crearActualizarOficinas(Set<OficinaTF> oficinas, Long idEntidad) throws Exception {
+    private void crearActualizarOficinas(Set<OficinaTF> oficinas, Long idEntidad) throws I18NException {
 
         for (OficinaTF oficinaTF : oficinas) {
 
@@ -291,9 +292,9 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
      * En este método se asigna la oficina responsable a la lista de oficinas recibidas.
      *
      * @param oficinas
-     * @throws Exception
+     * @throws I18NException
      */
-    private void asignarOficinasResponsables(Set<OficinaTF> oficinas, Long idEntidad) throws Exception {
+    private void asignarOficinasResponsables(Set<OficinaTF> oficinas, Long idEntidad) throws I18NException {
 
         for (OficinaTF oficinaTF : oficinas) {
 
@@ -322,9 +323,9 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
      * Método que crea todas las relaciones organizativas de las oficinas recibidas
      *
      * @param oficinas oficinas de la entidad
-     * @throws Exception
+     * @throws I18NException
      */
-    private void crearRelacionesOrganizativas(Set<OficinaTF> oficinas, Long idEntidad) throws Exception {
+    private void crearRelacionesOrganizativas(Set<OficinaTF> oficinas, Long idEntidad) throws I18NException {
 
         log.info("RELACIONES ORGANIZATIVAS");
         log.info("");
@@ -373,9 +374,9 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
      * Método que crea todas las relaciones SIR de las oficinas recibidas
      *
      * @param oficinas oficinas de la entidad
-     * @throws Exception
+     * @throws I18NException
      */
-    private void crearRelacionesSir(Set<OficinaTF> oficinas, Long idEntidad) throws Exception {
+    private void crearRelacionesSir(Set<OficinaTF> oficinas, Long idEntidad) throws I18NException {
 
         log.info("RELACIONES SIR");
         log.info("");
@@ -427,9 +428,9 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
      *
      * @param organismo organismo al que guardar los históricos
      * @param unidadTF  unidad transferida equivalente al organismo que nos proporciona los historicos.
-     * @throws Exception
+     * @throws I18NException
      */
-    private void sincronizarHistoricosOrganismo(Organismo organismo, UnidadTF unidadTF, Long idEntidad) throws Exception {
+    private void sincronizarHistoricosOrganismo(Organismo organismo, UnidadTF unidadTF, Long idEntidad) throws I18NException {
         // Inicializamos sus Historicos, ya la relación está a FetchType.LAZY
         List<String> historicos = unidadTF.getHistoricosUO();
         Set<Organismo> historicosOrg = organismo.getHistoricoUO();
@@ -461,9 +462,9 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
      * @param organismo organismo a actualizar
      * @param unidadTF  datos de la unidad transferida desde dir3caib
      * @param entidad   entidad que se está actualizando
-     * @throws Exception
+     * @throws I18NException
      */
-    private void procesarOrganismo(Organismo organismo, UnidadTF unidadTF, Entidad entidad) throws Exception {
+    private void procesarOrganismo(Organismo organismo, UnidadTF unidadTF, Entidad entidad) throws I18NException {
 
 
         CatEstadoEntidad estado = cacheEstadoEntidad.get(unidadTF.getCodigoEstadoEntidad());
@@ -522,9 +523,9 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
      *
      * @param oficina   oficina a tratar
      * @param oficinaTF oficina transferida desde dir3caib
-     * @throws Exception
+     * @throws I18NException
      */
-    private void procesarOficina(Oficina oficina, OficinaTF oficinaTF, Long idEntidad) throws Exception {
+    private void procesarOficina(Oficina oficina, OficinaTF oficinaTF, Long idEntidad) throws I18NException {
 
         oficina.setDenominacion(oficinaTF.getDenominacion());
         oficina.setEstado(cacheEstadoEntidad.get(oficinaTF.getEstado()));
@@ -578,9 +579,9 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
      *
      * @param tipo    indica organismo o oficina.
      * @param entidad entidad descargada
-     * @throws Exception
+     * @throws I18NException
      */
-    private void nuevaDescarga(String tipo, Entidad entidad) throws Exception {
+    private void nuevaDescarga(String tipo, Entidad entidad) throws I18NException {
 
         Descarga descarga = new Descarga(new Date(), tipo, entidad);
 
@@ -595,9 +596,9 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
      * recibido y si tiene libros.
      *
      * @param organismo organismo a tratar
-     * @throws Exception
+     * @throws I18NException
      */
-    private void procesarExtinguido(Organismo organismo) throws Exception {
+    private void procesarExtinguido(Organismo organismo) throws I18NException {
 
         if (organismo != null) {
 
@@ -621,9 +622,9 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
     /**
      * Inicializa los caches que se utilizarán en el método
      *
-     * @throws Exception
+     * @throws I18NException
      */
-    private void inicializarCaches() throws Exception {
+    private void inicializarCaches() throws I18NException {
 
         long start = System.currentTimeMillis();
         for (CatEstadoEntidad ca : catEstadoEntidadEjb.getAll()) {

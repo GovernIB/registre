@@ -83,34 +83,34 @@ public interface AnexoLocal extends BaseEjb<Anexo, Long> {
      *
      * @param registroEntrada
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    List<AnexoFull> getByRegistroEntrada(RegistroEntrada registroEntrada) throws Exception, I18NException;
+    List<AnexoFull> getByRegistroEntrada(RegistroEntrada registroEntrada) throws I18NException;
 
     /**
      * Método que devuelve todos los anexos de un registro de salida sin el justificante
      *
      * @param registroSalida
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    List<AnexoFull> getByRegistroSalida(RegistroSalida registroSalida) throws Exception, I18NException;
+    List<AnexoFull> getByRegistroSalida(RegistroSalida registroSalida) throws I18NException;
 
     /**
      * Obtiene los anexos de un registroDetalle
      *
      * @param idRegistroDetalle
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    List<Anexo> getByRegistroDetalle(Long idRegistroDetalle) throws Exception;
+    List<Anexo> getByRegistroDetalle(Long idRegistroDetalle) throws I18NException;
 
     /**
      * @param idRegistroDetalle
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    List<Anexo> getByRegistroDetalleLectura(Long idRegistroDetalle) throws Exception;
+    List<Anexo> getByRegistroDetalleLectura(Long idRegistroDetalle) throws I18NException;
 
     /**
      * Método que elimina los anexos de todos los registros(E/S) con estado "REGISTRO_OFICIO_ACEPTADO" que son
@@ -118,27 +118,27 @@ public interface AnexoLocal extends BaseEjb<Anexo, Long> {
      *
      * @param idEntidad
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    int purgarAnexosRegistrosAceptados(Long idEntidad) throws Exception, I18NException;
+    int purgarAnexosRegistrosAceptados(Long idEntidad) throws I18NException;
 
     /**
      * Elimina los anexos de los registros(E/S) que han sido enviados via SIR y confirmados en destino.
      * @param idRegistro
      * @param tipoRegistro
      * @param idEntidad
-     * @throws Exception
+     * @throws I18NException
      * @throws I18NException
      */
-    void purgarAnexosRegistroAceptado(Long idRegistro, Long tipoRegistro, Long idEntidad) throws Exception;
+    void purgarAnexosRegistroAceptado(Long idRegistro, Long tipoRegistro, Long idEntidad) throws I18NException;
 
     /**
      * Método que elimina los anexos asociados a registros que ya se han distribuido.
      * @param idEntidad
-     * @throws Exception
+     * @throws I18NException
      * @throws I18NException
      */
-    int purgarAnexosRegistrosDistribuidos(Long idEntidad) throws Exception, I18NException;
+    int purgarAnexosRegistrosDistribuidos(Long idEntidad) throws I18NException;
 
 
     /**
@@ -146,10 +146,10 @@ public interface AnexoLocal extends BaseEjb<Anexo, Long> {
      *
      * @param custodiaId
      * @param idEntidad
-     * @throws Exception
+     * @throws I18NException
      * @throws I18NException
      */
-    void purgarAnexo(String custodiaId, Long idEntidad) throws Exception, I18NException;
+    void purgarAnexo(String custodiaId, Long idEntidad) throws I18NException;
 
 
     /**
@@ -157,9 +157,9 @@ public interface AnexoLocal extends BaseEjb<Anexo, Long> {
      *
      * @param idRegistroDetalle
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Long getIdJustificante(Long idRegistroDetalle) throws Exception;
+    Long getIdJustificante(Long idRegistroDetalle) throws I18NException;
 
     /**
      * Obtiene el contenido físico del documento como byte[]
@@ -168,7 +168,7 @@ public interface AnexoLocal extends BaseEjb<Anexo, Long> {
      * @param idEntidad
      * @return
      */
-    byte[] getArchivoContent(Anexo anexo, Long idEntidad) throws I18NException, Exception;
+    byte[] getArchivoContent(Anexo anexo, Long idEntidad) throws I18NException;
 
 
     /**
@@ -177,7 +177,7 @@ public interface AnexoLocal extends BaseEjb<Anexo, Long> {
      * @param anexo
      * @return
      */
-    DocumentCustody getArchivo(Anexo anexo, Long idEntidad) throws I18NException, Exception;
+    DocumentCustody getArchivo(Anexo anexo, Long idEntidad) throws I18NException;
 
 
     /**
@@ -185,10 +185,10 @@ public interface AnexoLocal extends BaseEjb<Anexo, Long> {
      *
      * @param custodiaID
      * @return
-     * @throws Exception
+     * @throws I18NException
      * @throws I18NException
      */
-    DocumentCustody getDocumentInfoOnly(String custodiaID, Long idEntidad) throws Exception, I18NException;
+    DocumentCustody getDocumentInfoOnly(String custodiaID, Long idEntidad) throws I18NException;
 
 
     /**
@@ -196,19 +196,19 @@ public interface AnexoLocal extends BaseEjb<Anexo, Long> {
      *
      * @param custodiaID
      * @return
-     * @throws Exception
+     * @throws I18NException
      * @throws I18NException
      */
-    SignatureCustody getSignatureInfoOnly(String custodiaID, Long idEntidad) throws Exception, I18NException;
+    SignatureCustody getSignatureInfoOnly(String custodiaID, Long idEntidad) throws I18NException;
 
     /**
      * @param anexo
      * @param idEntidad
      * @return
-     * @throws Exception
+     * @throws I18NException
      * @throws I18NException
      */
-    SignatureCustody getSignatureInfoOnly(Anexo anexo, Long idEntidad) throws Exception, I18NException;
+    SignatureCustody getSignatureInfoOnly(Anexo anexo, Long idEntidad) throws I18NException;
 
     /**
      * Obtiene la firma existente en el sistema de archivos
@@ -217,7 +217,7 @@ public interface AnexoLocal extends BaseEjb<Anexo, Long> {
      * @param idEntidad
      * @return
      */
-    SignatureCustody getFirma(Anexo anexo, Long idEntidad) throws I18NException, Exception;
+    SignatureCustody getFirma(Anexo anexo, Long idEntidad) throws I18NException;
 
     /**
      * Elimina completamente una custodia ( = elimicion completa de Anexo)
@@ -227,7 +227,7 @@ public interface AnexoLocal extends BaseEjb<Anexo, Long> {
      * @return true si l'arxiu no existeix o s'ha borrat. false en els altres
      * casos.
      */
-    boolean eliminarCustodia(String custodiaID, Anexo anexo, Long idEntidad) throws Exception, I18NException;
+    boolean eliminarCustodia(String custodiaID, Anexo anexo, Long idEntidad) throws I18NException;
 
     /**
      * Obtiene la url de validacion del documento. Si no soporta url, devuelve null
@@ -235,7 +235,7 @@ public interface AnexoLocal extends BaseEjb<Anexo, Long> {
      * @param anexo
      * @return
      */
-    String getUrlValidation(Anexo anexo, Long idEntidad) throws I18NException, Exception;
+    String getUrlValidation(Anexo anexo, Long idEntidad) throws I18NException;
 
     /**
      * Obtiene Url dela Web Validacion CSV. Si no soporta url, devuelve null
@@ -243,9 +243,9 @@ public interface AnexoLocal extends BaseEjb<Anexo, Long> {
      * @param idEntidad
      * @return
      * @throws I18NException
-     * @throws Exception
+     * @throws I18NException
      */
-    String getCsvValidationWeb(Anexo anexo, Long idEntidad) throws I18NException, Exception;
+    String getCsvValidationWeb(Anexo anexo, Long idEntidad) throws I18NException;
 
     /**
      * Obtiene un Anexo con firma attached desde la url de validación
@@ -254,7 +254,7 @@ public interface AnexoLocal extends BaseEjb<Anexo, Long> {
      * @param idEntidad
      * @return SignatureCustody
      */
-    AnexoSimple descargarFirmaDesdeUrlValidacion(Anexo anexo, Long idEntidad) throws I18NException, Exception;
+    AnexoSimple descargarFirmaDesdeUrlValidacion(Anexo anexo, Long idEntidad) throws I18NException;
 
     /**
      * Descarga un Justificante
@@ -262,9 +262,9 @@ public interface AnexoLocal extends BaseEjb<Anexo, Long> {
      * @param idEntidad
      * @return
      * @throws I18NException
-     * @throws Exception
+     * @throws I18NException
      */
-    AnexoSimple descargarJustificante(Anexo anexo, Long idEntidad) throws I18NException, Exception;
+    AnexoSimple descargarJustificante(Anexo anexo, Long idEntidad) throws I18NException;
 
     /**
      * Actualiza la información de un Anexo-Justificante al ser custodiado en Arxiu
@@ -272,7 +272,7 @@ public interface AnexoLocal extends BaseEjb<Anexo, Long> {
      * @param custodiaID
      * @param csv
      * @param idAnexo
-     * @throws Exception
+     * @throws I18NException
      */
-    void custodiarJustificanteArxiu(String expedienteID, String custodiaID, String csv, Long idAnexo) throws Exception;
+    void custodiarJustificanteArxiu(String expedienteID, String custodiaID, String csv, Long idAnexo) throws I18NException;
 }

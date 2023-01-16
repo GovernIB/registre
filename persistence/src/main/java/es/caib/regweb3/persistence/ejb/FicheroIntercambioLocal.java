@@ -2,6 +2,7 @@ package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.persistence.utils.RespuestaRecepcionSir;
 import es.caib.regweb3.sir.core.utils.FicheroIntercambio;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 
 import javax.ejb.Local;
 
@@ -20,9 +21,9 @@ public interface FicheroIntercambioLocal {
      * Recibe un fichero de intercambio en formato SICRES3 desde un nodo distribuido
      *
      * @param ficheroIntercambio
-     * @throws Exception
+     * @throws I18NException
      */
-    RespuestaRecepcionSir procesarFicheroIntercambio(FicheroIntercambio ficheroIntercambio) throws Exception;
+    RespuestaRecepcionSir procesarFicheroIntercambio(FicheroIntercambio ficheroIntercambio) throws I18NException;
 
 }
 

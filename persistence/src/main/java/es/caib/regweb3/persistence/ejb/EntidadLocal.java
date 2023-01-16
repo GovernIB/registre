@@ -23,62 +23,62 @@ public interface EntidadLocal extends BaseEjb<Entidad, Long> {
      *
      * @param idEntidad
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Entidad findByIdLigero(Long idEntidad) throws Exception;
+    Entidad findByIdLigero(Long idEntidad) throws I18NException;
 
     /**
      * Creamos una nueva Entidad y sus propiedades por defecto
      *
      * @param entidad
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Entidad nuevaEntidad(Entidad entidad) throws Exception;
+    Entidad nuevaEntidad(Entidad entidad) throws I18NException;
 
     /**
      * Retorna la Entidad cuyo CódigoDir3 es el indicado por parámetro
      *
      * @param codigo
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Entidad findByCodigoDir3(String codigo) throws Exception;
+    Entidad findByCodigoDir3(String codigo) throws I18NException;
 
     /**
      * Comprueba su una {@link es.caib.regweb3.model.Entidad} tiene algún {@link es.caib.regweb3.model.Organismo} asociado.
      *
      * @param idEntidad
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Boolean tieneOrganismos(Long idEntidad) throws Exception;
+    Boolean tieneOrganismos(Long idEntidad) throws I18NException;
 
     /**
      * Obtiene las entidades de un Usuario
      *
      * @param idUsuario
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    List<Entidad> getEntidadesAdministrador(Long idUsuario) throws Exception;
+    List<Entidad> getEntidadesAdministrador(Long idUsuario) throws I18NException;
 
     /**
      * Obtiene las entidades de un Usuario de las que es Propietario
      *
      * @param idUsuario
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    List<Entidad> getEntidadesPropietario(Long idUsuario) throws Exception;
+    List<Entidad> getEntidadesPropietario(Long idUsuario) throws I18NException;
 
     /**
      * Obtiene las entidades activas.
      *
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    List<Entidad> getEntidadesActivas() throws Exception;
+    List<Entidad> getEntidadesActivas() throws I18NException;
 
     /**
      * Comprueba si el codigoDir3 dado existe en alguna entidad excepto la selccionado.
@@ -86,18 +86,18 @@ public interface EntidadLocal extends BaseEjb<Entidad, Long> {
      * @param codigo
      * @param idEntidad
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Boolean existeCodigoDir3Edit(String codigo, Long idEntidad) throws Exception;
+    Boolean existeCodigoDir3Edit(String codigo, Long idEntidad) throws I18NException;
 
     /**
      * Comprueba si un Usuario es Administrador de la Entidad
      *
      * @param usuarioEntidad
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Boolean esAdministrador(UsuarioEntidad usuarioEntidad) throws Exception;
+    Boolean esAdministrador(UsuarioEntidad usuarioEntidad) throws I18NException;
 
     /**
      * Determina si un usuario es propietario o administrador de esa entidad
@@ -105,67 +105,67 @@ public interface EntidadLocal extends BaseEjb<Entidad, Long> {
      * @param idEntidad
      * @param idUsuario
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Boolean esAutorizado(Long idEntidad, Long idUsuario) throws Exception;
+    Boolean esAutorizado(Long idEntidad, Long idUsuario) throws I18NException;
 
     /**
      * Comprueba si una Entidad está marcada como Sir
      *
      * @param idEntidad
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Boolean isSir(Long idEntidad) throws Exception;
+    Boolean isSir(Long idEntidad) throws I18NException;
 
     /**
      * Obtiene todas las entidades que están marcadas como SIR
      *
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    List<Entidad> getEntidadesSir() throws Exception;
+    List<Entidad> getEntidadesSir() throws I18NException;
 
     /**
      * Comprueba las diferentes dependencias del UsuarioEntidad para saber si es posible eliminarlo
      *
      * @param idUsuarioEntidad
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Boolean puedoEliminarlo(Long idUsuarioEntidad) throws Exception;
+    Boolean puedoEliminarlo(Long idUsuarioEntidad) throws I18NException;
 
     /**
      * Elimina todos los Registros y relaciones de una Entidad.
      *
      * @param idEntidad
-     * @throws Exception
+     * @throws I18NException
      */
-    void eliminarRegistros(Long idEntidad) throws Exception, I18NException;
+    void eliminarRegistros(Long idEntidad) throws I18NException;
 
 
     /**
      * Elimina una Entidad y todos sus datos dependientes
      *
      * @param idEntidad
-     * @throws Exception
+     * @throws I18NException
      */
-    void eliminarEntidad(Long idEntidad) throws Exception, I18NException;
+    void eliminarEntidad(Long idEntidad) throws I18NException;
 
     /**
      * Marca/Desmarca una entidad que está en mantenimiento durante el proceso de sincronización
      *
      * @param idEntidad
      * @param mantenimiento
-     * @throws Exception
+     * @throws I18NException
      */
-    void marcarEntidadMantenimiento(Long idEntidad, Boolean mantenimiento) throws Exception;
+    void marcarEntidadMantenimiento(Long idEntidad, Boolean mantenimiento) throws I18NException;
 
     /**
      * Determina si una implementación es multientidad (más de una entidad con sir activado)
      *
-     * @throws Exception
+     * @throws I18NException
      */
-    boolean isMultiEntidad() throws Exception;
+    boolean isMultiEntidad() throws I18NException;
 
 }

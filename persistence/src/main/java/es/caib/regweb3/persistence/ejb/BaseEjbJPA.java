@@ -1,5 +1,6 @@
 package es.caib.regweb3.persistence.ejb;
 
+import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,7 +24,7 @@ public abstract class BaseEjbJPA<T extends Serializable, E> implements BaseEjb<T
     @PersistenceContext(unitName="regweb3")
     private EntityManager em;
 
-    public void remove(T persistentInstance) throws Exception{
+    public void remove(T persistentInstance) throws I18NException {
 
         try{
             em.remove(em.merge(persistentInstance));
@@ -38,7 +39,7 @@ public abstract class BaseEjbJPA<T extends Serializable, E> implements BaseEjb<T
   
     
 
-    public T persist(T transientInstance) throws Exception{
+    public T persist(T transientInstance) throws I18NException{
 
         try{
             em.persist(transientInstance);
@@ -50,7 +51,7 @@ public abstract class BaseEjbJPA<T extends Serializable, E> implements BaseEjb<T
 
     }
 
-    public T merge(T instance) throws Exception{
+    public T merge(T instance) throws I18NException{
 
         try{
             return em.merge(instance);

@@ -1,6 +1,7 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.ModeloRecibo;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 
 import javax.ejb.Local;
 import java.util.List;
@@ -20,32 +21,32 @@ public interface ModeloReciboLocal extends BaseEjb<ModeloRecibo, Long> {
     /**
      * @param idEntidad
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Long getTotal(Long idEntidad) throws Exception;
+    Long getTotal(Long idEntidad) throws I18NException;
 
     /**
      * @param idEntidad
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    List<ModeloRecibo> getByEntidad(Long idEntidad) throws Exception;
+    List<ModeloRecibo> getByEntidad(Long idEntidad) throws I18NException;
 
     /**
      * @param inicio
      * @param idEntidad
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    List<ModeloRecibo> getPagination(int inicio, Long idEntidad) throws Exception;
+    List<ModeloRecibo> getPagination(int inicio, Long idEntidad) throws I18NException;
 
     /**
      * Elimina los {@link es.caib.regweb3.model.ModeloRecibo} de una Entidad
      *
      * @param idEntidad
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Integer eliminarByEntidad(Long idEntidad) throws Exception;
+    Integer eliminarByEntidad(Long idEntidad) throws I18NException;
 
 }

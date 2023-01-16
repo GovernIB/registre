@@ -27,9 +27,9 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      *
      * @param id
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    RegistroEntrada findByIdCompleto(Long id) throws Exception;
+    RegistroEntrada findByIdCompleto(Long id) throws I18NException;
 
 
     /**
@@ -37,9 +37,9 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      *
      * @param registroEntrada
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    RegistroEntrada registrarEntrada(RegistroEntrada registroEntrada, Entidad entidad, UsuarioEntidad usuarioEntidad, List<Interesado> interesados, List<AnexoFull> anexosFull, Boolean validarAnexos) throws Exception, I18NException, I18NValidationException;
+    RegistroEntrada registrarEntrada(RegistroEntrada registroEntrada, Entidad entidad, UsuarioEntidad usuarioEntidad, List<Interesado> interesados, List<AnexoFull> anexosFull, Boolean validarAnexos) throws I18NException, I18NValidationException;
 
 
     /**
@@ -48,10 +48,10 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      * @param registroEntrada
      * @param usuarioEntidad
      * @return
-     * @throws Exception
+     * @throws I18NException
      * @throws I18NException
      */
-    RegistroEntrada actualizar(RegistroEntrada antiguo, RegistroEntrada registroEntrada, Entidad entidad, UsuarioEntidad usuarioEntidad) throws Exception, I18NException;
+    RegistroEntrada actualizar(RegistroEntrada antiguo, RegistroEntrada registroEntrada, Entidad entidad, UsuarioEntidad usuarioEntidad) throws I18NException;
 
     /**
      * Comprueba si un RegistroEntrada se considera un OficioRemision interno o no
@@ -59,49 +59,49 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      * @param idRegistro
      * @param organismos Lista con los Destinatarios que no se consideran Oficio de Remisión
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Boolean isOficioRemisionInterno(Long idRegistro, Set<Long> organismos) throws Exception;
+    Boolean isOficioRemisionInterno(Long idRegistro, Set<Long> organismos) throws I18NException;
 
     /**
      * Identifica todos los registros de una oficina que son Oficios Internos
      *
      * @param oficina
-     * @throws Exception
+     * @throws I18NException
      */
-    Integer actualizarEventoOficioInterno(Oficina oficina) throws Exception;
+    Integer actualizarEventoOficioInterno(Oficina oficina) throws I18NException;
 
     /**
      * @param oficina
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Integer actualizarEventoDistribuir(Oficina oficina) throws Exception;
+    Integer actualizarEventoDistribuir(Oficina oficina) throws I18NException;
 
     /**
      * @param oficina
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Integer actualizarEventoOficioExterno(Oficina oficina) throws Exception;
+    Integer actualizarEventoOficioExterno(Oficina oficina) throws I18NException;
 
     /**
      * Comprueba si un RegistroEntrada se considera un OficioRemision externo o no
      *
      * @param idRegistro
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Boolean isOficioRemisionExterno(Long idRegistro) throws Exception;
+    Boolean isOficioRemisionExterno(Long idRegistro) throws I18NException;
 
     /**
      * Comprueba si un RegistroEntrada se considera un OficioRemision SIR o no
      * @param idRegistro
      * @param idEntidad
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    List<OficinaTF> isOficioRemisionSir(Long idRegistro, Long idEntidad) throws Exception;
+    List<OficinaTF> isOficioRemisionSir(Long idRegistro, Long idEntidad) throws I18NException;
 
 
     /**
@@ -109,9 +109,9 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      * @param idRegistro
      * @param idEntidad
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    List<OficinaTF> isOficioRemisionSirMultiEntidad(Long idRegistro, Long idEntidad) throws Exception;
+    List<OficinaTF> isOficioRemisionSirMultiEntidad(Long idRegistro, Long idEntidad) throws I18NException;
 
 
     /**
@@ -119,9 +119,9 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      *
      * @param idRegistro
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    String obtenerDestinoExternoRE(Long idRegistro) throws Exception;
+    String obtenerDestinoExternoRE(Long idRegistro) throws I18NException;
 
     /**
      * Obtiene el próximo evento que habrá que realizar con el Registro
@@ -129,9 +129,9 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      * @param registroEntrada
      * @param entidadActiva
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Long proximoEventoEntrada(RegistroEntrada registroEntrada, Entidad entidadActiva, Long idOficina) throws Exception;
+    Long proximoEventoEntrada(RegistroEntrada registroEntrada, Entidad entidadActiva, Long idOficina) throws I18NException;
 
 
     /**
@@ -140,9 +140,9 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      * @param registroEntrada
      * @param entidadActiva
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Long proximoEventoEntradaMultiEntidad(RegistroEntrada registroEntrada, Entidad entidadActiva, Long idOficina) throws Exception;
+    Long proximoEventoEntradaMultiEntidad(RegistroEntrada registroEntrada, Entidad entidadActiva, Long idOficina) throws I18NException;
 
 
     /**
@@ -150,9 +150,9 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      *
      * @param registroEntrada
      * @param idEstado
-     * @throws Exception
+     * @throws I18NException
      */
-    void cambiarEstadoHistorico(RegistroEntrada registroEntrada, Long idEstado, UsuarioEntidad usuarioEntidad) throws Exception;
+    void cambiarEstadoHistorico(RegistroEntrada registroEntrada, Long idEstado, UsuarioEntidad usuarioEntidad) throws I18NException;
 
     /**
      * Cambia el estado de un RegistroEntrada y el HistoricoModificación correspondiente
@@ -160,9 +160,9 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      * @param registroEntrada
      * @param idEstado
      * @param observacionesAnulacion
-     * @throws Exception
+     * @throws I18NException
      */
-    void cambiarEstadoAnuladoHistorico(RegistroEntrada registroEntrada, Long idEstado, UsuarioEntidad usuarioEntidad, String observacionesAnulacion) throws Exception;
+    void cambiarEstadoAnuladoHistorico(RegistroEntrada registroEntrada, Long idEstado, UsuarioEntidad usuarioEntidad, String observacionesAnulacion) throws I18NException;
 
     /**
      * Anula un RegistroEntrada, cambiandole el estado a anulado.
@@ -170,35 +170,35 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      * @param registroEntrada
      * @param usuarioEntidad
      * @param observacionesAnulacion
-     * @throws Exception
+     * @throws I18NException
      */
-    void anularRegistroEntrada(RegistroEntrada registroEntrada, UsuarioEntidad usuarioEntidad, String observacionesAnulacion) throws Exception;
+    void anularRegistroEntrada(RegistroEntrada registroEntrada, UsuarioEntidad usuarioEntidad, String observacionesAnulacion) throws I18NException;
 
     /**
      * Activa un RegistroEntrada, cambiandole el estado a anulado.
      *
      * @param registroEntrada
      * @param usuarioEntidad
-     * @throws Exception
+     * @throws I18NException
      */
-    void activarRegistroEntrada(RegistroEntrada registroEntrada, UsuarioEntidad usuarioEntidad) throws Exception;
+    void activarRegistroEntrada(RegistroEntrada registroEntrada, UsuarioEntidad usuarioEntidad) throws I18NException;
 
     /**
      * Visa un RegistroEntrada, cambiandole el estado a anulado.
      *
      * @param registroEntrada
      * @param usuarioEntidad
-     * @throws Exception
+     * @throws I18NException
      */
-    void visarRegistroEntrada(RegistroEntrada registroEntrada, Entidad entidad, UsuarioEntidad usuarioEntidad) throws Exception;
+    void visarRegistroEntrada(RegistroEntrada registroEntrada, Entidad entidad, UsuarioEntidad usuarioEntidad) throws I18NException;
 
     /**
      * Tramita un RegistroEntrada, creando el HistoricoEstado y Trazabilidad
      *
      * @param registroEntrada
-     * @throws Exception
+     * @throws I18NException
      */
-    void marcarDistribuido(RegistroEntrada registroEntrada) throws Exception;
+    void marcarDistribuido(RegistroEntrada registroEntrada) throws I18NException;
 
 
     /**
@@ -206,9 +206,9 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      *
      * @param idEntidad
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Integer eliminarByEntidad(Long idEntidad) throws Exception;
+    Integer eliminarByEntidad(Long idEntidad) throws I18NException;
 
     /**
      * Rectificar un Registro de entrada, creando una nuevo informando de ello
@@ -216,63 +216,63 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      * @param registroEntrada
      * @param usuarioEntidad
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    RegistroEntrada rectificar(RegistroEntrada registroEntrada, Entidad entidad, UsuarioEntidad usuarioEntidad) throws Exception, I18NException;
+    RegistroEntrada rectificar(RegistroEntrada registroEntrada, Entidad entidad, UsuarioEntidad usuarioEntidad) throws I18NException;
 
     /**
      * Actualiza el Destino extinguido por el que le sustituye
      *
      * @param idOrganismoExtinguido
      * @param idOrganismo
-     * @throws Exception
+     * @throws I18NException
      */
-    void actualizarDestinoExtinguido(Long idOrganismoExtinguido, Long idOrganismo) throws Exception;
+    void actualizarDestinoExtinguido(Long idOrganismoExtinguido, Long idOrganismo) throws I18NException;
 
     /**
      * Método que devuelve un registro de entrada completo, con los anexos completos
      *
      * @param id
      * @return
-     * @throws Exception
+     * @throws I18NException
      * @throws I18NException
      */
-    RegistroEntrada getConAnexosFull(Long id) throws Exception, I18NException;
+    RegistroEntrada getConAnexosFull(Long id) throws I18NException;
 
     /**
      * Método que devuelve un registro de entrada completo, con anexoFull pero sin los documentos fisicos.
      *
      * @param id
      * @return
-     * @throws Exception
+     * @throws I18NException
      * @throws I18NException
      */
-    RegistroEntrada getConAnexosFullLigero(Long id) throws Exception, I18NException;
+    RegistroEntrada getConAnexosFullLigero(Long id) throws I18NException;
 
     /**
      * Obtiene el Registro para Distribuir, sin cargar el Justificante, porque solo se envía el custodyID
      *
      * @param id
      * @return
-     * @throws Exception
+     * @throws I18NException
      * @throws I18NException
      */
-    RegistroEntrada getConAnexosFullDistribuir(Long id) throws Exception, I18NException;
+    RegistroEntrada getConAnexosFullDistribuir(Long id) throws I18NException;
 
     /**
      * Método que invoca al plugin post proceso al actualizar un registro entrada.
      *
      * @param re
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    void postProcesoActualizarRegistro(RegistroEntrada re, Long entidadId) throws Exception, I18NException;
+    void postProcesoActualizarRegistro(RegistroEntrada re, Long entidadId) throws I18NException;
 
     /**
      * @param re
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    void postProcesoNuevoRegistro(RegistroEntrada re, Long entidadId) throws Exception, I18NException;
+    void postProcesoNuevoRegistro(RegistroEntrada re, Long entidadId) throws I18NException;
 
 }

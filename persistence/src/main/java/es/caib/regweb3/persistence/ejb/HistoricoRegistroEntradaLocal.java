@@ -3,6 +3,7 @@ package es.caib.regweb3.persistence.ejb;
 import es.caib.regweb3.model.HistoricoRegistroEntrada;
 import es.caib.regweb3.model.RegistroEntrada;
 import es.caib.regweb3.model.UsuarioEntidad;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 
 import javax.ejb.Local;
 import java.util.List;
@@ -19,7 +20,7 @@ public interface HistoricoRegistroEntradaLocal extends BaseEjb<HistoricoRegistro
     String JNDI_NAME = "java:app/regweb3-persistence/HistoricoRegistroEntradaEJB";
 
 
-    List<HistoricoRegistroEntrada> getByRegistroEntrada(Long idRegistro) throws Exception;
+    List<HistoricoRegistroEntrada> getByRegistroEntrada(Long idRegistro) throws I18NException;
 
     /**
      * Crea un HistoricoRegistroEntrada según los parámetros
@@ -29,27 +30,27 @@ public interface HistoricoRegistroEntradaLocal extends BaseEjb<HistoricoRegistro
      * @param modificacion
      * @param serializar
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    HistoricoRegistroEntrada crearHistoricoRegistroEntrada(RegistroEntrada registroEntrada, UsuarioEntidad usuarioEntidad, String modificacion, boolean serializar) throws Exception;
+    HistoricoRegistroEntrada crearHistoricoRegistroEntrada(RegistroEntrada registroEntrada, UsuarioEntidad usuarioEntidad, String modificacion, boolean serializar) throws I18NException;
 
     /**
      * Comprueba si un usuario tiene HistoricoRegistroEntrada
      *
      * @param idUsuarioEntidad
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Boolean obtenerPorUsuario(Long idUsuarioEntidad) throws Exception;
+    Boolean obtenerPorUsuario(Long idUsuarioEntidad) throws I18NException;
 
     /**
      * Elimina las HistoricoRegistroSalida de una Entidad
      *
      * @param idEntidad
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Integer eliminarByEntidad(Long idEntidad) throws Exception;
+    Integer eliminarByEntidad(Long idEntidad) throws I18NException;
 
 
 }
