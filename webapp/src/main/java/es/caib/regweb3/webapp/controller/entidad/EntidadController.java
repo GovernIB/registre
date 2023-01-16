@@ -627,6 +627,7 @@ public class EntidadController extends BaseController {
 
         } catch (Exception e) {
             log.error("Error actualizacion", e);
+            entidadEjb.marcarEntidadMantenimiento(entidadId, false);
             Mensaje.saveMessageError(request, getMessage("regweb.actualizacion.nook") + ": " + e.getMessage() + " " + getMessage("regweb.actualizacion.revisar"));
             return "redirect:/organismo/list";
         }
