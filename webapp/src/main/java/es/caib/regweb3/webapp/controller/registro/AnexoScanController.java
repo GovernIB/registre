@@ -170,7 +170,9 @@ public class AnexoScanController extends AnexoController {
             }
 
             //Validamos la firma del anexoForm que nos indican, previo a crear el anexo
-            validarAnexoForm(request, anexoForm);
+            if(anexoForm.getNumAnexosRecibidos()>0 && anexoForm.getNumDocumento() <= documentosEscaneados.size()-1) {
+                validarAnexoForm(request, anexoForm);
+            }
 
 
             request.getSession().setAttribute("anexoForm", anexoForm);
