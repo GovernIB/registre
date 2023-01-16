@@ -1,6 +1,7 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.RegistroLopdMigrado;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 
 import javax.ejb.Local;
 import java.util.List;
@@ -23,9 +24,9 @@ public interface RegistroLopdMigradoLocal extends BaseEjb<RegistroLopdMigrado, L
      * @param numRegistro
      * @param accion
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    List<RegistroLopdMigrado> getByRegistroMigrado(Long numRegistro, String accion) throws Exception;
+    List<RegistroLopdMigrado> getByRegistroMigrado(Long numRegistro, String accion) throws I18NException;
 
     /**
      * Devuelve el registro Lopd de un Registro Migrado concreto
@@ -33,17 +34,17 @@ public interface RegistroLopdMigradoLocal extends BaseEjb<RegistroLopdMigrado, L
      * @param numRegistro
      * @param accion
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    RegistroLopdMigrado getCreacion(Long numRegistro, String accion) throws Exception;
+    RegistroLopdMigrado getCreacion(Long numRegistro, String accion) throws I18NException;
 
     /**
      * Elimina todos los Registros LOPD de una entidad
      *
      * @param idEntidad
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Integer eliminarByEntidad(Long idEntidad) throws Exception;
+    Integer eliminarByEntidad(Long idEntidad) throws I18NException;
 
 }

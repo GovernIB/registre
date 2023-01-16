@@ -2,6 +2,7 @@ package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.RegistroEntrada;
 import es.caib.regweb3.model.RegistroSalida;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 
 import javax.ejb.Local;
 import java.util.Date;
@@ -39,9 +40,9 @@ public interface InformeLocal {
      * @param organoDest
      * @param mostraInteressats
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    List<RegistroEntrada> buscaRegistroEntradasOrganismo(Date fechaInicio, Date fechaFin, String numeroRegistroFormateado, String interesadoNom, String interesadoLli1, String interesadoLli2, String interesadoDoc, Boolean anexos, String observaciones, String usuario, String extracto, Long idOrganismo, Long estado, Long idOficina, String organoDest, Long idEntidad, Boolean mostraInteressats) throws Exception;
+    List<RegistroEntrada> buscaRegistroEntradasOrganismo(Date fechaInicio, Date fechaFin, String numeroRegistroFormateado, String interesadoNom, String interesadoLli1, String interesadoLli2, String interesadoDoc, Boolean anexos, String observaciones, String usuario, String extracto, Long idOrganismo, Long estado, Long idOficina, String organoDest, Long idEntidad, Boolean mostraInteressats) throws I18NException;
 
     /**
      * Busca los Registros de Salida en función de varios parámetros
@@ -62,9 +63,9 @@ public interface InformeLocal {
      * @param idOficina
      * @param organoOrig
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    List<RegistroSalida> buscaRegistroSalidasOrganismo(Date fechaInicio, Date fechaFin, String numRegistroFormateado, String interesadoNom, String interesadoLli1, String interesadoLli2, String interesadoDoc, Boolean anexos, String observaciones, String usuario, String extracto, Long idOrganismo, Long estado, Long idOficina, String organoOrig, Long idEntidad, Boolean mostraInteressats) throws Exception;
+    List<RegistroSalida> buscaRegistroSalidasOrganismo(Date fechaInicio, Date fechaFin, String numRegistroFormateado, String interesadoNom, String interesadoLli1, String interesadoLli2, String interesadoDoc, Boolean anexos, String observaciones, String usuario, String extracto, Long idOrganismo, Long estado, Long idOficina, String organoOrig, Long idEntidad, Boolean mostraInteressats) throws I18NException;
 
     /**
      * Busca los Registros de Entrada que no estén anulados ni pendientes en función de la una fecha inicio, una fecha fin, de la Entidad Activa
@@ -73,9 +74,9 @@ public interface InformeLocal {
      * @param fechaFin
      * @param idEntidad
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Long buscaIndicadoresEntradaTotal(Date fechaInicio, Date fechaFin, Long idEntidad) throws Exception;
+    Long buscaIndicadoresEntradaTotal(Date fechaInicio, Date fechaFin, Long idEntidad) throws I18NException;
 
     /**
      * Busca los Registros de Salida que no estén anulados ni pendientes en función de la una fecha inicio, una fecha fin, de la Entidad Activa
@@ -84,9 +85,9 @@ public interface InformeLocal {
      * @param fechaFin
      * @param idEntidad
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Long buscaIndicadoresSalidaTotal(Date fechaInicio, Date fechaFin, Long idEntidad) throws Exception;
+    Long buscaIndicadoresSalidaTotal(Date fechaInicio, Date fechaFin, Long idEntidad) throws I18NException;
 
     /**
      * Busca los Registros de Entrada que no estén anulados ni pendientes en función de la una fecha inicio, una fecha fin, de una Oficina
@@ -95,9 +96,9 @@ public interface InformeLocal {
      * @param fechaFin
      * @param idOficina
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Long buscaIndicadoresOficinaTotalEntrada(Date fechaInicio, Date fechaFin, Long idOficina) throws Exception;
+    Long buscaIndicadoresOficinaTotalEntrada(Date fechaInicio, Date fechaFin, Long idOficina) throws I18NException;
 
     /**
      * Busca los Registros de Salida que no estén anulados ni pendientes en función de la una fecha inicio, una fecha fin, de una Oficina
@@ -106,9 +107,9 @@ public interface InformeLocal {
      * @param fechaFin
      * @param idOficina
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Long buscaIndicadoresOficinaTotalSalida(Date fechaInicio, Date fechaFin, Long idOficina) throws Exception;
+    Long buscaIndicadoresOficinaTotalSalida(Date fechaInicio, Date fechaFin, Long idOficina) throws I18NException;
 
     /**
      * Busca los Registros de Entrada que no estén anulados ni pendientes en función de la una fecha inicio, una fecha fin, por Conselleria
@@ -117,9 +118,9 @@ public interface InformeLocal {
      * @param fechaFin
      * @param conselleria
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Long buscaEntradaPorConselleria(Date fechaInicio, Date fechaFin, Long conselleria) throws Exception;
+    Long buscaEntradaPorConselleria(Date fechaInicio, Date fechaFin, Long conselleria) throws I18NException;
 
     /**
      * Busca los Registros de Salida que no estén anulados ni pendientes en función de la una fecha inicio, una fecha fin, por Conselleria
@@ -128,9 +129,9 @@ public interface InformeLocal {
      * @param fechaFin
      * @param conselleria
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Long buscaSalidaPorConselleria(Date fechaInicio, Date fechaFin, Long conselleria) throws Exception;
+    Long buscaSalidaPorConselleria(Date fechaInicio, Date fechaFin, Long conselleria) throws I18NException;
 
     /**
      * Busca los Registros de Entrada que no estén anulados ni pendientes en función de la una fecha inicio, una fecha fin, por Tipos Asunto, de la Entidad Activa
@@ -140,9 +141,9 @@ public interface InformeLocal {
      * @param tipoAsunto
      * @param idEntidad
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Long buscaEntradaPorAsunto(Date fechaInicio, Date fechaFin, Long tipoAsunto, Long idEntidad) throws Exception;
+    Long buscaEntradaPorAsunto(Date fechaInicio, Date fechaFin, Long tipoAsunto, Long idEntidad) throws I18NException;
 
     /**
      * Busca los Registros de Salida que no estén anulados ni pendientes en función de la una fecha inicio, una fecha fin, por Tipo de Asunto, de la Entidad Activa
@@ -152,9 +153,9 @@ public interface InformeLocal {
      * @param tipoAsunto
      * @param idEntidad
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Long buscaSalidaPorAsunto(Date fechaInicio, Date fechaFin, Long tipoAsunto, Long idEntidad) throws Exception;
+    Long buscaSalidaPorAsunto(Date fechaInicio, Date fechaFin, Long tipoAsunto, Long idEntidad) throws I18NException;
 
     /**
      * Busca los Registros de Entrada que no estén anulados ni pendientes en función de la una fecha inicio, una fecha fin, por Idiomas, de la Entidad Activa
@@ -164,9 +165,9 @@ public interface InformeLocal {
      * @param idioma
      * @param idEntidad
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Long buscaEntradaPorIdioma(Date fechaInicio, Date fechaFin, Long idioma, Long idEntidad) throws Exception;
+    Long buscaEntradaPorIdioma(Date fechaInicio, Date fechaFin, Long idioma, Long idEntidad) throws I18NException;
 
     /**
      * Busca los Registros de Entrada que no estén anulados ni pendientes en función de la una fecha inicio, una fecha fin, por Idiomas, de la Entidad Activa
@@ -176,9 +177,9 @@ public interface InformeLocal {
      * @param idioma
      * @param idOficina
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Long buscaEntradaPorIdiomaOficina(Date fechaInicio, Date fechaFin, Long idioma, Long idOficina) throws Exception;
+    Long buscaEntradaPorIdiomaOficina(Date fechaInicio, Date fechaFin, Long idioma, Long idOficina) throws I18NException;
 
     /**
      * Busca los Registros de Entrada que no estén anulados ni pendientes en función de la una fecha inicio, una fecha fin, por Libros
@@ -187,9 +188,9 @@ public interface InformeLocal {
      * @param fechaFin
      * @param libro
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Long buscaEntradaPorLibro(Date fechaInicio, Date fechaFin, Long libro) throws Exception;
+    Long buscaEntradaPorLibro(Date fechaInicio, Date fechaFin, Long libro) throws I18NException;
 
     /**
      * Busca los Registros de Entrada que no estén anulados ni pendientes en función de la una fecha inicio, una fecha fin, por Oficinas
@@ -198,9 +199,9 @@ public interface InformeLocal {
      * @param fechaFin
      * @param oficina
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Long buscaEntradaPorOficina(Date fechaInicio, Date fechaFin, Long oficina) throws Exception;
+    Long buscaEntradaPorOficina(Date fechaInicio, Date fechaFin, Long oficina) throws I18NException;
 
     /**
      * Busca los Registros de Salida que no estén anulados ni pendientes en función de la una fecha inicio, una fecha fin, por Idiomas, de la Entidad Activa
@@ -210,9 +211,9 @@ public interface InformeLocal {
      * @param idioma
      * @param idOficina
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Long buscaSalidaPorIdiomaOficina(Date fechaInicio, Date fechaFin, Long idioma, Long idOficina) throws Exception;
+    Long buscaSalidaPorIdiomaOficina(Date fechaInicio, Date fechaFin, Long idioma, Long idOficina) throws I18NException;
 
     /**
      * Busca los Registros de Salida que no estén anulados ni pendientes en función de la una fecha inicio, una fecha fin, por Idiomas, de la Entidad Activa
@@ -222,9 +223,9 @@ public interface InformeLocal {
      * @param idioma
      * @param idEntidad
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Long buscaSalidaPorIdioma(Date fechaInicio, Date fechaFin, Long idioma, Long idEntidad) throws Exception;
+    Long buscaSalidaPorIdioma(Date fechaInicio, Date fechaFin, Long idioma, Long idEntidad) throws I18NException;
 
     /**
      * Busca los Registros de Salida que no estén anulados ni pendientes en función de la una fecha inicio, una fecha fin, por Libros
@@ -233,9 +234,9 @@ public interface InformeLocal {
      * @param fechaFin
      * @param libro
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Long buscaSalidaPorLibro(Date fechaInicio, Date fechaFin, Long libro) throws Exception;
+    Long buscaSalidaPorLibro(Date fechaInicio, Date fechaFin, Long libro) throws I18NException;
 
     /**
      * Busca los Registros de Salida que no estén anulados ni pendientes en función de la una fecha inicio, una fecha fin, por Oficinas
@@ -244,8 +245,8 @@ public interface InformeLocal {
      * @param fechaFin
      * @param oficina
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Long buscaSalidaPorOficina(Date fechaInicio, Date fechaFin, Long oficina) throws Exception;
+    Long buscaSalidaPorOficina(Date fechaInicio, Date fechaFin, Long oficina) throws I18NException;
 
 }

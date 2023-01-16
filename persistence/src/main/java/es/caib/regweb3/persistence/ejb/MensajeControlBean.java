@@ -15,6 +15,7 @@ import es.caib.regweb3.sir.core.excepcion.ValidacionException;
 import es.caib.regweb3.utils.Dir3CaibUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,26 +55,26 @@ public class MensajeControlBean extends BaseEjbJPA<MensajeControl, Long> impleme
 
 
     @Override
-    public MensajeControl getReference(Long id) throws Exception {
+    public MensajeControl getReference(Long id) throws I18NException {
 
         return em.getReference(MensajeControl.class, id);
     }
 
     @Override
-    public MensajeControl findById(Long id) throws Exception {
+    public MensajeControl findById(Long id) throws I18NException {
 
         return em.find(MensajeControl.class, id);
     }
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<MensajeControl> getAll() throws Exception {
+    public List<MensajeControl> getAll() throws I18NException {
 
         return em.createQuery("Select mc from MensajeControl as mc order by mc.id").getResultList();
     }
 
     @Override
-    public Long getTotal() throws Exception {
+    public Long getTotal() throws I18NException {
 
         Query q = em.createQuery("Select count(mc.id) from MensajeControl as mc");
 
@@ -83,7 +84,7 @@ public class MensajeControlBean extends BaseEjbJPA<MensajeControl, Long> impleme
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<MensajeControl> getPagination(int inicio) throws Exception {
+    public List<MensajeControl> getPagination(int inicio) throws I18NException {
 
         Query q = em.createQuery("Select mc from MensajeControl as mc order by mc.id");
         q.setFirstResult(inicio);
@@ -95,7 +96,7 @@ public class MensajeControlBean extends BaseEjbJPA<MensajeControl, Long> impleme
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<MensajeControl> getByEntidad(Long idEntidad) throws Exception {
+    public List<MensajeControl> getByEntidad(Long idEntidad) throws I18NException {
 
         Query q = em.createQuery("Select mc from MensajeControl as mc where mc.entidad.id = :idEntidad order by mc.id");
         q.setParameter("idEntidad", idEntidad);
@@ -106,7 +107,7 @@ public class MensajeControlBean extends BaseEjbJPA<MensajeControl, Long> impleme
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Paginacion busqueda(Integer pageNumber, Date fechaInicio, Date fechaFin, MensajeControl mensajeControl, Entidad entidad) throws Exception {
+    public Paginacion busqueda(Integer pageNumber, Date fechaInicio, Date fechaFin, MensajeControl mensajeControl, Entidad entidad) throws I18NException {
 
         Query q;
         Query q2;
@@ -192,7 +193,7 @@ public class MensajeControlBean extends BaseEjbJPA<MensajeControl, Long> impleme
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<MensajeControl> getByIdentificadorIntercambio(String identificadorIntercambio, Long idEntidad) throws Exception {
+    public List<MensajeControl> getByIdentificadorIntercambio(String identificadorIntercambio, Long idEntidad) throws I18NException {
 
         Query q = em.createQuery("Select mc from MensajeControl as mc where " +
                 "mc.entidad.id = :idEntidad and mc.identificadorIntercambio =:identificadorIntercambio order by mc.id");
@@ -208,10 +209,10 @@ public class MensajeControlBean extends BaseEjbJPA<MensajeControl, Long> impleme
      * Realiza las acciones pertinentes cuando se recibie un mensaje de control
      *
      * @param mensaje
-     * @throws Exception
+     * @throws I18NException
      */
     @Override
-    public void procesarMensajeDatosControl(MensajeControl mensaje) throws Exception {
+    public void procesarMensajeDatosControl(MensajeControl mensaje) throws I18NException {
 
         // Comprobamos que el destino pertenece a alguna de las Entidades configuradas
         Entidad entidad = comprobarEntidadMensajeControl(mensaje.getCodigoEntidadRegistralDestino());
@@ -288,9 +289,9 @@ public class MensajeControlBean extends BaseEjbJPA<MensajeControl, Long> impleme
      * Procesa un mensaje de control de tipo ACK
      *
      * @param oficioRemision
-     * @throws Exception
+     * @throws I18NException
      */
-    private void procesarMensajeACK(OficioRemision oficioRemision) throws Exception {
+    private void procesarMensajeACK(OficioRemision oficioRemision) throws I18NException {
 
         switch (oficioRemision.getEstado()) {
 
@@ -323,9 +324,9 @@ public class MensajeControlBean extends BaseEjbJPA<MensajeControl, Long> impleme
      * Procesa un mensaje de control de tipo ACK
      *
      * @param registroSir
-     * @throws Exception
+     * @throws I18NException
      */
-    private void procesarMensajeACK(RegistroSir registroSir) throws Exception {
+    private void procesarMensajeACK(RegistroSir registroSir) throws I18NException {
 
         if (EstadoRegistroSir.REENVIADO.equals(registroSir.getEstado()) ||
                 EstadoRegistroSir.REENVIADO_Y_ERROR.equals(registroSir.getEstado())) {
@@ -354,9 +355,9 @@ public class MensajeControlBean extends BaseEjbJPA<MensajeControl, Long> impleme
      * Procesa un mensaje de control de tipo CONFIRMACION
      *
      * @param oficio
-     * @throws Exception
+     * @throws I18NException
      */
-    private void procesarMensajeCONFIRMACION(OficioRemision oficio, MensajeControl mensaje) throws Exception{
+    private void procesarMensajeCONFIRMACION(OficioRemision oficio, MensajeControl mensaje) throws I18NException{
 
         switch (oficio.getEstado()) {
 
@@ -390,9 +391,9 @@ public class MensajeControlBean extends BaseEjbJPA<MensajeControl, Long> impleme
      *
      * @param oficioRemision
      * @param mensaje
-     * @throws Exception
+     * @throws I18NException
      */
-    private void procesarMensajeERROR(OficioRemision oficioRemision, MensajeControl mensaje) throws Exception {
+    private void procesarMensajeERROR(OficioRemision oficioRemision, MensajeControl mensaje) throws I18NException {
 
         switch (oficioRemision.getEstado()) {
 
@@ -429,9 +430,9 @@ public class MensajeControlBean extends BaseEjbJPA<MensajeControl, Long> impleme
      *
      * @param registroSir
      * @param mensaje
-     * @throws Exception
+     * @throws I18NException
      */
-    private void procesarMensajeERROR(RegistroSir registroSir, MensajeControl mensaje) throws Exception {
+    private void procesarMensajeERROR(RegistroSir registroSir, MensajeControl mensaje) throws I18NException {
 
         if (EstadoRegistroSir.REENVIADO.equals(registroSir.getEstado())) {
 
@@ -454,9 +455,9 @@ public class MensajeControlBean extends BaseEjbJPA<MensajeControl, Long> impleme
      * Comprueba a partir de la Oficina destino, si la Entidad está integrada en SIR
      *
      * @param codigoEntidadRegistralDestino
-     * @throws Exception
+     * @throws I18NException
      */
-    private Entidad comprobarEntidadMensajeControl(String codigoEntidadRegistralDestino) throws Exception {
+    private Entidad comprobarEntidadMensajeControl(String codigoEntidadRegistralDestino) throws I18NException {
 
         Entidad entidad;
         Oficina oficina = oficinaEjb.findByMultiEntidad(codigoEntidadRegistralDestino);
@@ -482,7 +483,7 @@ public class MensajeControlBean extends BaseEjbJPA<MensajeControl, Long> impleme
     }
 
     @Override
-    public Integer eliminarByEntidad(Long idEntidad) throws Exception {
+    public Integer eliminarByEntidad(Long idEntidad) throws I18NException {
 
         List<?> mensajes = em.createQuery("select distinct(mc.id) from MensajeControl as mc where mc.entidad.id = :idEntidad").setParameter("idEntidad", idEntidad).getResultList();
         Integer total = mensajes.size();

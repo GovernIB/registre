@@ -4,6 +4,7 @@ import es.caib.regweb3.model.Oficina;
 import es.caib.regweb3.model.Organismo;
 import es.caib.regweb3.model.RelacionOrganizativaOfi;
 import es.caib.regweb3.model.RelacionOrganizativaOfiPK;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 
 import javax.ejb.Local;
 import java.util.List;
@@ -21,44 +22,44 @@ public interface RelacionOrganizativaOfiLocal extends BaseEjb<RelacionOrganizati
 
 
     /**
-     * @throws Exception
+     * @throws I18NException
      */
-    void deleteAll() throws Exception;
+    void deleteAll() throws I18NException;
 
     /**
      *
      * @param idOficina
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    int deleteByOficinaEntidad(Long idOficina) throws Exception;
+    int deleteByOficinaEntidad(Long idOficina) throws I18NException;
 
     /**
      * Obtiene las Oficinas relacionadas con el Organismo seleccionado
      *
      * @param idOrganismo
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    List<Oficina> getOficinasByOrganismo(Long idOrganismo) throws Exception;
+    List<Oficina> getOficinasByOrganismo(Long idOrganismo) throws I18NException;
 
     /**
      * Obtiene las Oficinas relacionadas con el Organismo seleccionado
      *
      * @param idOrganismo
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    List<Oficina> oficinasOrganizativas(Long idOrganismo, Boolean oficinaVirtual) throws Exception;
+    List<Oficina> oficinasOrganizativas(Long idOrganismo, Boolean oficinaVirtual) throws I18NException;
 
     /**
      * Obtiene los Organismosr elacionados con la Oficina seleccionada
      *
      * @param idOficina
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    List<Organismo> getOrganismosByOficina(Long idOficina) throws Exception;
+    List<Organismo> getOrganismosByOficina(Long idOficina) throws I18NException;
 
     /**
      * Busca una RelacionOrganizativaOfi a partir de la Oficina y el Organismo que la componen
@@ -66,9 +67,9 @@ public interface RelacionOrganizativaOfiLocal extends BaseEjb<RelacionOrganizati
      * @param idOficina
      * @param idOrganismo
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    RelacionOrganizativaOfi getRelacionOrganizativa(Long idOficina, Long idOrganismo) throws Exception;
+    RelacionOrganizativaOfi getRelacionOrganizativa(Long idOficina, Long idOrganismo) throws I18NException;
 
     /**
      * Obtiene las Relaciones organizativas de las Oficinas cuya Entidad responsable es la indicada
@@ -76,17 +77,17 @@ public interface RelacionOrganizativaOfiLocal extends BaseEjb<RelacionOrganizati
      * @param idEntidad
      * @param estado
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    List<RelacionOrganizativaOfi> organizativaByEntidadEstado(Long idEntidad, String estado) throws Exception;
+    List<RelacionOrganizativaOfi> organizativaByEntidadEstado(Long idEntidad, String estado) throws I18NException;
 
     /**
      * Elimina las RelacionOrganizativaOfi de una Entidad
      *
      * @param idEntidad
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Integer eliminarByEntidad(Long idEntidad) throws Exception;
+    Integer eliminarByEntidad(Long idEntidad) throws I18NException;
 
 }

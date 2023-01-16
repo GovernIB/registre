@@ -2,6 +2,7 @@ package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.Descarga;
 import es.caib.regweb3.utils.RegwebConstantes;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,20 +30,20 @@ public class DescargaBean extends BaseEjbJPA<Descarga, Long> implements Descarga
 
 
     @Override
-    public Descarga getReference(Long id) throws Exception {
+    public Descarga getReference(Long id) throws I18NException {
 
         return em.getReference(Descarga.class, id);
     }
 
     @Override
-    public Descarga findById(Long id) throws Exception {
+    public Descarga findById(Long id) throws I18NException {
 
         return em.find(Descarga.class, id);
     }
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Descarga findByTipo(String tipo) throws Exception {
+    public Descarga findByTipo(String tipo) throws I18NException {
         Query q = em.createQuery("select descarga from Descarga as descarga where descarga.tipo=:tipo order by descarga.id desc");
         q.setParameter("tipo", tipo);
         q.setHint("org.hibernate.readOnly", true);
@@ -58,7 +59,7 @@ public class DescargaBean extends BaseEjbJPA<Descarga, Long> implements Descarga
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Descarga ultimaDescarga(String tipo, Long idEntidad) throws Exception {
+    public Descarga ultimaDescarga(String tipo, Long idEntidad) throws I18NException {
 
         Query q = em.createQuery("select descarga from Descarga as descarga where descarga.tipo = :tipo and descarga.entidad.id = :idEntidad order by descarga.id desc");
 
@@ -76,7 +77,7 @@ public class DescargaBean extends BaseEjbJPA<Descarga, Long> implements Descarga
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Descarga findByTipoEntidadInverse(String tipo, Long idEntidad) throws Exception {
+    public Descarga findByTipoEntidadInverse(String tipo, Long idEntidad) throws I18NException {
 
         Query q = em.createQuery("select descarga from Descarga as descarga where descarga.tipo=:tipo and descarga.entidad.id = :idEntidad order by descarga.id asc");
 
@@ -94,13 +95,13 @@ public class DescargaBean extends BaseEjbJPA<Descarga, Long> implements Descarga
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Descarga> getAll() throws Exception {
+    public List<Descarga> getAll() throws I18NException {
 
         return em.createQuery("Select descarga from Descarga as descarga order by descarga.id").getResultList();
     }
 
     @Override
-    public Long getTotal() throws Exception {
+    public Long getTotal() throws I18NException {
 
         Query q = em.createQuery("Select count(descarga.id) from Descarga as descarga");
         q.setHint("org.hibernate.readOnly", true);
@@ -109,7 +110,7 @@ public class DescargaBean extends BaseEjbJPA<Descarga, Long> implements Descarga
     }
 
 
-    public Long getTotalByEntidad(Long idEntidad) throws Exception {
+    public Long getTotalByEntidad(Long idEntidad) throws I18NException {
 
         Query q = em.createQuery("Select count(descarga.id) from Descarga as descarga where descarga.entidad.id=:idEntidad").setParameter("idEntidad", idEntidad);
         q.setHint("org.hibernate.readOnly", true);
@@ -119,7 +120,7 @@ public class DescargaBean extends BaseEjbJPA<Descarga, Long> implements Descarga
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Descarga> getPagination(int inicio) throws Exception {
+    public List<Descarga> getPagination(int inicio) throws I18NException {
 
         Query q = em.createQuery("Select descarga from Descarga as descarga order by descarga.id");
         q.setFirstResult(inicio);
@@ -131,7 +132,7 @@ public class DescargaBean extends BaseEjbJPA<Descarga, Long> implements Descarga
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Descarga> getPaginationByEntidad(int inicio, Long idEntidad) throws Exception {
+    public List<Descarga> getPaginationByEntidad(int inicio, Long idEntidad) throws I18NException {
 
         Query q = em.createQuery("Select descarga from Descarga as descarga where descarga.entidad.id=:idEntidad order by descarga.id desc").setParameter("idEntidad", idEntidad);
         q.setFirstResult(inicio);
@@ -143,7 +144,7 @@ public class DescargaBean extends BaseEjbJPA<Descarga, Long> implements Descarga
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public void deleteByTipo(String tipo) throws Exception {
+    public void deleteByTipo(String tipo) throws I18NException {
 
         Query query = em.createQuery("delete from Descarga as descarga where descarga.tipo=:tipo");
         query.setParameter("tipo", tipo);
@@ -153,14 +154,14 @@ public class DescargaBean extends BaseEjbJPA<Descarga, Long> implements Descarga
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Descarga> findByEntidad(Long idEntidad) throws Exception {
+    public List<Descarga> findByEntidad(Long idEntidad) throws I18NException {
 
         return em.createQuery("Select descarga from Descarga as descarga where descarga.entidad.id =:idEntidad order by descarga.id").setParameter("idEntidad", idEntidad).getResultList();
 
     }
 
     @Override
-    public Integer eliminarByEntidad(Long idEntidad) throws Exception {
+    public Integer eliminarByEntidad(Long idEntidad) throws I18NException {
 
         List<?> descargas = em.createQuery("Select distinct(id) from Descarga where entidad.id =:idEntidad").setParameter("idEntidad", idEntidad).getResultList();
         Integer total = descargas.size();
@@ -184,7 +185,7 @@ public class DescargaBean extends BaseEjbJPA<Descarga, Long> implements Descarga
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Descarga> getPagination(int inicio, Long idEntidad) throws Exception {
+    public List<Descarga> getPagination(int inicio, Long idEntidad) throws I18NException {
 
         Query q = em.createQuery("Select descarga from Descarga as descarga where descarga.entidad.id = :idEntidad order by descarga.id desc");
         q.setParameter("idEntidad", idEntidad);
@@ -196,7 +197,7 @@ public class DescargaBean extends BaseEjbJPA<Descarga, Long> implements Descarga
     }
 
     @Override
-    public Long getTotalEntidad(Long idEntidad) throws Exception {
+    public Long getTotalEntidad(Long idEntidad) throws I18NException {
 
         Query q = em.createQuery("Select count(descarga.id) from Descarga as descarga " +
                 "where descarga.entidad.id = :idEntidad");

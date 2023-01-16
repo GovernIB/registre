@@ -58,7 +58,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Organismo> organismosEntradaPendientesRemisionInternos(Long idOficina, List<Libro> libros, Integer total) throws Exception {
+    public List<Organismo> organismosEntradaPendientesRemisionInternos(Long idOficina, List<Libro> libros, Integer total) throws I18NException {
 
         // Obtenemos los Organismos destinatarios PROPIOS que tiene Oficios de Remision pendientes de tramitar
         Query q;
@@ -92,7 +92,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Organismo> organismosEntradaPendientesRemisionExternosTipo(Long idEntidad, Long idOficina, Long tipoEvento, Integer total) throws Exception {
+    public List<Organismo> organismosEntradaPendientesRemisionExternosTipo(Long idEntidad, Long idOficina, Long tipoEvento, Integer total) throws I18NException {
 
         // Obtenemos los Organismos destinatarios EXTERNOS que tiene Oficios de Remision pendientes de tramitar
         Query q;
@@ -123,7 +123,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
 
 
     @Override
-    public Long oficiosEntradaInternosPendientesRemisionCount(Long idOficina, List<Libro> libros) throws Exception {
+    public Long oficiosEntradaInternosPendientesRemisionCount(Long idOficina, List<Libro> libros) throws I18NException {
 
         // Total oficios internos
         Query q;
@@ -143,7 +143,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
     }
 
     @Override
-    public Long oficiosEntradaExternosPendientesRemisionCount(Long idOficina) throws Exception {
+    public Long oficiosEntradaExternosPendientesRemisionCount(Long idOficina) throws I18NException {
 
         // Total oficios externos
         Query q;
@@ -162,7 +162,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public OficiosRemisionOrganismo oficiosEntradaPendientesRemision(Long tipoEvento, Integer pageNumber, final Integer resultsPerPage, Integer any, Oficina oficinaActiva, String codigoOrganismo, Entidad entidadActiva) throws Exception {
+    public OficiosRemisionOrganismo oficiosEntradaPendientesRemision(Long tipoEvento, Integer pageNumber, final Integer resultsPerPage, Integer any, Oficina oficinaActiva, String codigoOrganismo, Entidad entidadActiva) throws I18NException {
 
         OficiosRemisionOrganismo oficios = new OficiosRemisionOrganismo();
         Oficio oficio = oficioRemisionEjb.obtenerTipoOficio(codigoOrganismo, entidadActiva.getId());
@@ -303,7 +303,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
 
 
     @SuppressWarnings(value = "unchecked")
-    private Paginacion oficiosRemisionByOrganismoInterno(Integer pageNumber, Long idEntidad, final Integer resultsPerPage, Long idOrganismo, Integer any, Long idOficina) throws Exception {
+    private Paginacion oficiosRemisionByOrganismoInterno(Integer pageNumber, Long idEntidad, final Integer resultsPerPage, Long idOrganismo, Integer any, Long idOficina) throws I18NException {
 
         String anyWhere = "";
         if (any != null) {
@@ -377,7 +377,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
 
 
     @SuppressWarnings(value = "unchecked")
-    private Paginacion oficiosRemisionByOrganismoExterno(Integer pageNumber,Long idEntidad, final Integer resultsPerPage, String codigoOrganismo, Integer any, Long idOficina, Long tipoEvento) throws Exception {
+    private Paginacion oficiosRemisionByOrganismoExterno(Integer pageNumber,Long idEntidad, final Integer resultsPerPage, String codigoOrganismo, Integer any, Long idOficina, Long tipoEvento) throws I18NException {
 
         String anyWhere = "";
         if (any != null) {
@@ -460,11 +460,11 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
      * @param idOrganismo
      * @param idLibro
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
     @Override
     public OficioRemision crearOficioRemisionInterno(List<RegistroEntrada> registrosEntrada, Entidad entidad, Oficina oficinaActiva, UsuarioEntidad usuarioEntidad, Long idOrganismo, Long idLibro)
-            throws Exception, I18NException, I18NValidationException {
+            throws I18NException, I18NValidationException {
 
         OficioRemision oficioRemision = new OficioRemision();
         oficioRemision.setEntidad(entidad);
@@ -493,13 +493,13 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
      * @param organismoExternoCodigo
      * @param idLibro
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
 
     public OficioRemision crearOficioRemisionExterno(List<RegistroEntrada> registrosEntrada, Entidad entidad,
                                                      Oficina oficinaActiva, UsuarioEntidad usuarioEntidad, String organismoExternoCodigo,
                                                      String organismoExternoDenominacion, Long idLibro)
-            throws Exception, I18NException, I18NValidationException {
+            throws I18NException, I18NValidationException {
 
         OficioRemision oficioRemision = new OficioRemision();
         oficioRemision.setEntidad(entidad);
@@ -523,7 +523,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
 
     @Override
     public OficioRemision crearOficioRemisionSIR(RegistroEntrada registroEntrada, Entidad entidad, Oficina oficinaActiva, UsuarioEntidad usuarioEntidad, OficinaTF oficinaSirDestino )
-            throws Exception, I18NException, I18NValidationException {
+            throws I18NException, I18NValidationException {
 
         // Creamos el OficioRemision
         OficioRemision oficioRemision = new OficioRemision();
@@ -556,7 +556,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
     }
 
     @Override
-    public List<RegistroEntrada> crearJustificantesRegistros(Entidad entidad, List<RegistroEntrada> registros, UsuarioEntidad usuario) throws Exception, I18NException, I18NValidationException {
+    public List<RegistroEntrada> crearJustificantesRegistros(Entidad entidad, List<RegistroEntrada> registros, UsuarioEntidad usuario) throws I18NException, I18NValidationException {
 
         List<RegistroEntrada> correctos = new ArrayList<RegistroEntrada>();
 
@@ -593,11 +593,11 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
      * como contenga el Oficio.
      *
      * @param oficioRemision
-     * @throws Exception
+     * @throws I18NException
      */
     @Override
     public List<RegistroEntrada> aceptarOficioRemision(OficioRemision oficioRemision,Entidad entidad, UsuarioEntidad usuario, Oficina oficinaActiva,
-                                                       List<OficioPendienteLlegada> oficios) throws Exception, I18NException, I18NValidationException {
+                                                       List<OficioPendienteLlegada> oficios) throws I18NException, I18NValidationException {
 
         List<RegistroEntrada> registros = new ArrayList<RegistroEntrada>();
 

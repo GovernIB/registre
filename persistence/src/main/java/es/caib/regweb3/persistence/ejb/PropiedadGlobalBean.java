@@ -1,6 +1,7 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.PropiedadGlobal;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,13 +30,13 @@ public class PropiedadGlobalBean extends BaseEjbJPA<PropiedadGlobal, Long> imple
 
 
     @Override
-    public PropiedadGlobal getReference(Long id) throws Exception {
+    public PropiedadGlobal getReference(Long id) throws I18NException {
 
         return em.getReference(PropiedadGlobal.class, id);
     }
 
     @Override
-    public PropiedadGlobal findById(Long id) throws Exception {
+    public PropiedadGlobal findById(Long id) throws I18NException {
 
         return em.find(PropiedadGlobal.class, id);
     }
@@ -43,13 +44,13 @@ public class PropiedadGlobalBean extends BaseEjbJPA<PropiedadGlobal, Long> imple
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<PropiedadGlobal> getAll() throws Exception {
+    public List<PropiedadGlobal> getAll() throws I18NException {
 
         return em.createQuery("Select propiedadGlobal from PropiedadGlobal as propiedadGlobal order by propiedadGlobal.id").getResultList();
     }
 
     @Override
-    public Long getTotal() throws Exception {
+    public Long getTotal() throws I18NException {
 
         Query q = em.createQuery("Select count(propiedadGlobal.id) from PropiedadGlobal as propiedadGlobal");
 
@@ -59,7 +60,7 @@ public class PropiedadGlobalBean extends BaseEjbJPA<PropiedadGlobal, Long> imple
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<PropiedadGlobal> getPagination(int inicio) throws Exception {
+    public List<PropiedadGlobal> getPagination(int inicio) throws I18NException {
 
         Query q = em.createQuery("Select propiedadGlobal from PropiedadGlobal as propiedadGlobal order by propiedadGlobal.id");
         q.setFirstResult(inicio);
@@ -71,7 +72,7 @@ public class PropiedadGlobalBean extends BaseEjbJPA<PropiedadGlobal, Long> imple
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<PropiedadGlobal> findByEntidad(Long idEntidad, Long tipo) throws Exception {
+    public List<PropiedadGlobal> findByEntidad(Long idEntidad, Long tipo) throws I18NException {
 
         String tipoWhere = "";
         if (tipo != null) {
@@ -92,7 +93,7 @@ public class PropiedadGlobalBean extends BaseEjbJPA<PropiedadGlobal, Long> imple
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public PropiedadGlobal findByClaveEntidad(String clave, Long idEntidad, Long idPropiedadGlobal) throws Exception {
+    public PropiedadGlobal findByClaveEntidad(String clave, Long idEntidad, Long idPropiedadGlobal) throws I18NException {
 
         String entidadQuery;
         String propiedadQuery = "";
@@ -127,7 +128,7 @@ public class PropiedadGlobalBean extends BaseEjbJPA<PropiedadGlobal, Long> imple
     }
 
     @Override
-    public Long getTotalByEntidad(Long idEntidad, Long tipo) throws Exception {
+    public Long getTotalByEntidad(Long idEntidad, Long tipo) throws I18NException {
 
         String tipoWhere = "";
         if (tipo != null) {
@@ -147,7 +148,7 @@ public class PropiedadGlobalBean extends BaseEjbJPA<PropiedadGlobal, Long> imple
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<PropiedadGlobal> getPaginationByEntidad(int inicio, Long idEntidad, Long tipo) throws Exception {
+    public List<PropiedadGlobal> getPaginationByEntidad(int inicio, Long idEntidad, Long tipo) throws I18NException {
 
         String tipoWhere = "";
         if (tipo != null) {
@@ -168,7 +169,7 @@ public class PropiedadGlobalBean extends BaseEjbJPA<PropiedadGlobal, Long> imple
     }
 
     @Override
-    public Long getTotalREGWEB3(Long tipo) throws Exception {
+    public Long getTotalREGWEB3(Long tipo) throws I18NException {
 
         String tipoWhere = "";
         if (tipo != null) {
@@ -187,7 +188,7 @@ public class PropiedadGlobalBean extends BaseEjbJPA<PropiedadGlobal, Long> imple
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<PropiedadGlobal> getPaginationREGWEB3(int inicio, Long tipo) throws Exception {
+    public List<PropiedadGlobal> getPaginationREGWEB3(int inicio, Long tipo) throws I18NException {
 
         String tipoWhere = "";
         if (tipo != null) {
@@ -207,7 +208,7 @@ public class PropiedadGlobalBean extends BaseEjbJPA<PropiedadGlobal, Long> imple
     }
 
     @Override
-    public Integer eliminarByEntidad(Long idEntidad) throws Exception {
+    public Integer eliminarByEntidad(Long idEntidad) throws I18NException {
 
         List<?> propiedades = em.createQuery("Select distinct(id) from PropiedadGlobal where entidad =:idEntidad").setParameter("idEntidad", idEntidad).getResultList();
 
@@ -219,7 +220,7 @@ public class PropiedadGlobalBean extends BaseEjbJPA<PropiedadGlobal, Long> imple
     }
 
     @Override
-    public String getPropertyByEntidad(Long idEntidad, String clave) throws Exception {
+    public String getPropertyByEntidad(Long idEntidad, String clave) throws I18NException {
 
         Query q = em.createQuery("Select pg.valor from PropiedadGlobal as pg where pg.entidad = :idEntidad and pg.clave = :clave");
         q.setParameter("idEntidad", idEntidad);
@@ -233,7 +234,7 @@ public class PropiedadGlobalBean extends BaseEjbJPA<PropiedadGlobal, Long> imple
     }
 
     @Override
-    public String getProperty(String clave) throws Exception {
+    public String getProperty(String clave) throws I18NException {
 
         Query q = em.createQuery("Select pg.valor from PropiedadGlobal as pg where pg.entidad is null and pg.clave = :clave");
         q.setParameter("clave", clave);
@@ -246,20 +247,20 @@ public class PropiedadGlobalBean extends BaseEjbJPA<PropiedadGlobal, Long> imple
     }
 
     @Override
-    public Boolean getBooleanPropertyByEntidad(Long idEntidad, String clave) throws Exception {
+    public Boolean getBooleanPropertyByEntidad(Long idEntidad, String clave) throws I18NException {
         String value = getPropertyByEntidad(idEntidad, clave);
 
         return value != null && "true".equals(value);
     }
 
-    public Boolean getBooleanProperty(String clave) throws Exception {
+    public Boolean getBooleanProperty(String clave) throws I18NException {
         String value = getProperty(clave);
 
         return value != null && "true".equals(value);
     }
 
     @Override
-    public Long getLongPropertyByEntitat(Long idEntidad, String clave) throws Exception {
+    public Long getLongPropertyByEntitat(Long idEntidad, String clave) throws I18NException {
         String value = getPropertyByEntidad(idEntidad, clave);
         if (value == null || value.trim().length() == 0) {
             return null;
@@ -274,7 +275,7 @@ public class PropiedadGlobalBean extends BaseEjbJPA<PropiedadGlobal, Long> imple
     }
 
     @Override
-    public Long getLongProperty(String clave) throws Exception {
+    public Long getLongProperty(String clave) throws I18NException {
         String value = getProperty(clave);
         if (value == null || value.trim().length() == 0) {
             return null;
@@ -289,7 +290,7 @@ public class PropiedadGlobalBean extends BaseEjbJPA<PropiedadGlobal, Long> imple
     }
 
     @Override
-    public Integer getIntegerPropertyByEntitat(Long idEntidad, String clave) throws Exception {
+    public Integer getIntegerPropertyByEntitat(Long idEntidad, String clave) throws I18NException {
         String value = getPropertyByEntidad(idEntidad, clave);
         if (value == null || value.trim().length() == 0) {
             return null;
@@ -304,7 +305,7 @@ public class PropiedadGlobalBean extends BaseEjbJPA<PropiedadGlobal, Long> imple
     }
 
     @Override
-    public Integer getIntegerProperty(String clave) throws Exception {
+    public Integer getIntegerProperty(String clave) throws I18NException {
         String value = getProperty(clave);
         if (value == null || value.trim().length() == 0) {
             return null;
@@ -320,7 +321,7 @@ public class PropiedadGlobalBean extends BaseEjbJPA<PropiedadGlobal, Long> imple
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<PropiedadGlobal> getAllPropertiesByEntidad(Long idEntidad) throws Exception {
+    public List<PropiedadGlobal> getAllPropertiesByEntidad(Long idEntidad) throws I18NException {
 
         Query q = em.createQuery("Select pg from PropiedadGlobal as pg where pg.entidad = :idEntidad ");
         q.setParameter("idEntidad", idEntidad);
@@ -334,7 +335,7 @@ public class PropiedadGlobalBean extends BaseEjbJPA<PropiedadGlobal, Long> imple
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<PropiedadGlobal> getAllProperties() throws Exception {
+    public List<PropiedadGlobal> getAllProperties() throws I18NException {
 
         Query q = em.createQuery("Select pg from PropiedadGlobal as pg where pg.entidad is null");
 

@@ -6,6 +6,7 @@ import es.caib.regweb3.model.Trazabilidad;
 import es.caib.regweb3.model.utils.EstadoRegistroSir;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.utils.RegwebConstantes;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.jboss.ejb3.annotation.TransactionTimeout;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,7 +40,7 @@ public class TrazabilidadBean extends BaseEjbJPA<Trazabilidad, Long> implements 
     @Override
     @SuppressWarnings(value = "unchecked")
     @TransactionTimeout(value = 1200)  // 20 minutos
-    public List<Trazabilidad> oficiosSinREDestino(Long tipoOficio) throws Exception {
+    public List<Trazabilidad> oficiosSinREDestino(Long tipoOficio) throws I18NException {
         Query q = em.createQuery("Select t from Trazabilidad as t " +
                 "where t.tipo = :tipoTrazabilidad and t.oficioRemision.tipoOficioRemision = :tipoOficio and t.oficioRemision.estado = :estadoOficio " +
                 "and t.registroEntradaDestino is null");
@@ -54,7 +55,7 @@ public class TrazabilidadBean extends BaseEjbJPA<Trazabilidad, Long> implements 
 
     @Override
     @TransactionTimeout(value = 1200)  // 20 minutos
-    public void actualizarTrazabilidad(Long idTrazabilidad, Long idRegistro) throws Exception {
+    public void actualizarTrazabilidad(Long idTrazabilidad, Long idRegistro) throws I18NException {
 
         Query q = em.createQuery("update from Trazabilidad set registroEntradaDestino.id = :idRegistro where id = :idTrazabilidad");
 
@@ -65,26 +66,26 @@ public class TrazabilidadBean extends BaseEjbJPA<Trazabilidad, Long> implements 
 
 
     @Override
-    public Trazabilidad getReference(Long id) throws Exception {
+    public Trazabilidad getReference(Long id) throws I18NException {
 
         return em.getReference(Trazabilidad.class, id);
     }
 
     @Override
-    public Trazabilidad findById(Long id) throws Exception {
+    public Trazabilidad findById(Long id) throws I18NException {
 
         return em.find(Trazabilidad.class, id);
     }
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Trazabilidad> getAll() throws Exception {
+    public List<Trazabilidad> getAll() throws I18NException {
 
         return em.createQuery("Select trazabilidad from Trazabilidad as trazabilidad order by trazabilidad.id").getResultList();
     }
 
     @Override
-    public Long getTotal() throws Exception {
+    public Long getTotal() throws I18NException {
 
         Query q = em.createQuery("Select count(trazabilidad.id) from Trazabilidad as trazabilidad");
 
@@ -94,7 +95,7 @@ public class TrazabilidadBean extends BaseEjbJPA<Trazabilidad, Long> implements 
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Trazabilidad> getPagination(int inicio) throws Exception {
+    public List<Trazabilidad> getPagination(int inicio) throws I18NException {
 
         Query q = em.createQuery("Select trazabilidad from Trazabilidad as trazabilidad order by trazabilidad.id");
         q.setFirstResult(inicio);
@@ -105,7 +106,7 @@ public class TrazabilidadBean extends BaseEjbJPA<Trazabilidad, Long> implements 
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Trazabilidad> getByIdIntercambio(String idIntercambio, Long idEntidad) throws Exception {
+    public List<Trazabilidad> getByIdIntercambio(String idIntercambio, Long idEntidad) throws I18NException {
 
         Query q = em.createQuery("Select DISTINCT t from Trazabilidad as t " +
                 "where t.oficioRemision.identificadorIntercambio = :idIntercambio and t.oficioRemision.entidad.id = :idEntidad order by t.fecha ");
@@ -120,7 +121,7 @@ public class TrazabilidadBean extends BaseEjbJPA<Trazabilidad, Long> implements 
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Trazabilidad> getByRegistroSalida(Long idRegistroSalida) throws Exception {
+    public List<Trazabilidad> getByRegistroSalida(Long idRegistroSalida) throws I18NException {
 
         Query q = em.createQuery("Select DISTINCT trazabilidad from Trazabilidad as trazabilidad " +
                 "where trazabilidad.registroSalida.id = :idRegistroSalida or trazabilidad.registroSalidaRectificado.id = :idRegistroSalida order by trazabilidad.fecha ");
@@ -133,7 +134,7 @@ public class TrazabilidadBean extends BaseEjbJPA<Trazabilidad, Long> implements 
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Trazabilidad> getByRegistroEntrada(Long idRegistroEntrada) throws Exception {
+    public List<Trazabilidad> getByRegistroEntrada(Long idRegistroEntrada) throws I18NException {
 
         Query q = em.createQuery("Select DISTINCT trazabilidad from Trazabilidad as trazabilidad " +
                 "where trazabilidad.registroEntradaOrigen.id = :idRegistroEntrada or trazabilidad.registroEntradaDestino.id = :idRegistroEntrada " +
@@ -147,7 +148,7 @@ public class TrazabilidadBean extends BaseEjbJPA<Trazabilidad, Long> implements 
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Trazabilidad> getByOficioRemision(Long idOficioRemision) throws Exception {
+    public List<Trazabilidad> getByOficioRemision(Long idOficioRemision) throws I18NException {
 
         Query q = em.createQuery("Select DISTINCT trazabilidad from Trazabilidad as trazabilidad " +
                 "where trazabilidad.oficioRemision.id = :idOficioRemision " +
@@ -160,7 +161,7 @@ public class TrazabilidadBean extends BaseEjbJPA<Trazabilidad, Long> implements 
     }
 
     @Override
-    public Trazabilidad getByOficioRegistroEntrada(Long idOficioRemision, Long idRegistroEntrada) throws Exception {
+    public Trazabilidad getByOficioRegistroEntrada(Long idOficioRemision, Long idRegistroEntrada) throws I18NException {
 
         Query q = em.createQuery("Select trazabilidad from Trazabilidad as trazabilidad " +
                 "where trazabilidad.oficioRemision.id = :idOficioRemision and trazabilidad.registroEntradaOrigen.id = :idRegistroEntrada");
@@ -174,7 +175,7 @@ public class TrazabilidadBean extends BaseEjbJPA<Trazabilidad, Long> implements 
     }
 
     @Override
-    public Trazabilidad getByOficioRegistroSalida(Long idOficioRemision, Long idRegistroSalida) throws Exception {
+    public Trazabilidad getByOficioRegistroSalida(Long idOficioRemision, Long idRegistroSalida) throws I18NException {
         Query q = em.createQuery("Select trazabilidad from Trazabilidad as trazabilidad " +
                 "where trazabilidad.oficioRemision.id = :idOficioRemision and trazabilidad.registroSalida.id = :idRegistroSalida");
 
@@ -187,7 +188,7 @@ public class TrazabilidadBean extends BaseEjbJPA<Trazabilidad, Long> implements 
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Trazabilidad> getByRegistroSir(Long idRegistroSir) throws Exception {
+    public List<Trazabilidad> getByRegistroSir(Long idRegistroSir) throws I18NException {
 
         Query q = em.createQuery("Select DISTINCT trazabilidad from Trazabilidad as trazabilidad " +
                 "where trazabilidad.registroSir.id = :registroSir order by trazabilidad.fecha");
@@ -200,7 +201,7 @@ public class TrazabilidadBean extends BaseEjbJPA<Trazabilidad, Long> implements 
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public RegistroEntrada getRegistroAceptado(Long idRegistroSir) throws Exception {
+    public RegistroEntrada getRegistroAceptado(Long idRegistroSir) throws I18NException {
 
         Query q = em.createQuery("Select tra.registroEntradaDestino.id, tra.registroEntradaDestino.numeroRegistroFormateado, tra.registroEntradaDestino.fecha from Trazabilidad as tra " +
                 "where tra.registroSir.id = :registroSir and tra.registroSir.estado = :aceptado");
@@ -227,7 +228,7 @@ public class TrazabilidadBean extends BaseEjbJPA<Trazabilidad, Long> implements 
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<RegistroSalida> obtenerRegistrosSalida(Long idOficioRemision) throws Exception {
+    public List<RegistroSalida> obtenerRegistrosSalida(Long idOficioRemision) throws I18NException {
 
         Query q = em.createQuery("Select t.registroSalida.id, t.registroSalida.estado from Trazabilidad as t " +
                 "where t.oficioRemision.id = :idOficioRemision");
@@ -251,7 +252,7 @@ public class TrazabilidadBean extends BaseEjbJPA<Trazabilidad, Long> implements 
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<RegistroEntrada> getPendientesDistribuirSir(Long idOficina, Long idEntidad, Integer total) throws Exception {
+    public List<RegistroEntrada> getPendientesDistribuirSir(Long idOficina, Long idEntidad, Integer total) throws I18NException {
 
         Query q = em.createQuery("Select t.registroEntradaDestino.id, t.registroEntradaDestino.numeroRegistroFormateado, " +
                 "t.registroEntradaDestino.fecha, t.registroEntradaDestino.registroDetalle.extracto from Trazabilidad as t " +
@@ -290,7 +291,7 @@ public class TrazabilidadBean extends BaseEjbJPA<Trazabilidad, Long> implements 
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Paginacion buscarPendientesDistribuirSir(Long idOficina, Long idEntidad, Integer pageNumber) throws Exception {
+    public Paginacion buscarPendientesDistribuirSir(Long idOficina, Long idEntidad, Integer pageNumber) throws I18NException {
 
         Query q;
         Query q2;
@@ -343,7 +344,7 @@ public class TrazabilidadBean extends BaseEjbJPA<Trazabilidad, Long> implements 
     }
 
     @Override
-    public Integer eliminarByEntidad(Long idEntidad) throws Exception {
+    public Integer eliminarByEntidad(Long idEntidad) throws I18NException {
 
         List<?> trazabilidades = em.createQuery("Select id from Trazabilidad where oficioRemision.entidad.id=:idEntidad").setParameter("idEntidad", idEntidad).getResultList();
         List<?> trazabilidadesSir = em.createQuery("Select id from Trazabilidad where registroSir.entidad.id=:idEntidad").setParameter("idEntidad", idEntidad).getResultList();
@@ -381,7 +382,7 @@ public class TrazabilidadBean extends BaseEjbJPA<Trazabilidad, Long> implements 
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Integer actualizarEstadoSirEntrada(Long idEntidad) throws Exception {
+    public Integer actualizarEstadoSirEntrada(Long idEntidad) throws I18NException {
 
         Query q = em.createQuery("Select registroEntradaOrigen.id from Trazabilidad where " +
                 "oficioRemision.sir = true " +
@@ -416,7 +417,7 @@ public class TrazabilidadBean extends BaseEjbJPA<Trazabilidad, Long> implements 
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Integer actualizarEstadoSirSalida(Long idEntidad) throws Exception {
+    public Integer actualizarEstadoSirSalida(Long idEntidad) throws I18NException {
 
         Query q1 = em.createQuery("Select registroSalida.id from Trazabilidad where " +
                 "oficioRemision.sir = true " +

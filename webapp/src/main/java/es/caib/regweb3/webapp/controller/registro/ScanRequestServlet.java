@@ -1,8 +1,6 @@
 package es.caib.regweb3.webapp.controller.registro;
 
 import es.caib.regweb3.persistence.ejb.ScanWebModuleLocal;
-import org.fundaciobit.genapp.common.i18n.I18NException;
-import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -91,9 +89,6 @@ public class ScanRequestServlet extends HttpServlet {
             requestPlugin(request, response, scanWebID, query, isPost);
         } catch (Exception e) {
             throw new IOException(e.getMessage(), e);
-        } catch (I18NException i18ne) {
-            String msg = I18NUtils.getMessage(i18ne);
-            throw new IOException(msg, i18ne);
         }
 
     }
@@ -121,7 +116,7 @@ public class ScanRequestServlet extends HttpServlet {
 
     protected void requestPlugin(HttpServletRequest request, HttpServletResponse response,
                                  String scanWebID, String query, boolean isPost)
-            throws Exception, I18NException {
+            throws Exception {
 
         String scanWebAbsoluteUrl = (String) request.getSession().getAttribute("scanwebAbsoluteurlBase");
 

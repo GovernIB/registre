@@ -27,19 +27,19 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
      *
      * @param id
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    RegistroSalida findByIdCompleto(Long id) throws Exception;
+    RegistroSalida findByIdCompleto(Long id) throws I18NException;
 
     /**
      * Guarda un Registro de Salida (con anexos)
      *
      * @param registroSalida
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
     RegistroSalida registrarSalida(RegistroSalida registroSalida,Entidad entidad, UsuarioEntidad usuarioEntidad, List<Interesado> interesados, List<AnexoFull> anexos, Boolean validarAnexos)
-            throws Exception, I18NException, I18NValidationException;
+            throws I18NException, I18NValidationException;
 
     /**
      * Actualiza un Registro salida
@@ -48,10 +48,10 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
      * @param registroSalida
      * @param usuarioEntidad
      * @return
-     * @throws Exception
+     * @throws I18NException
      * @throws I18NException
      */
-    RegistroSalida actualizar(RegistroSalida antiguo, RegistroSalida registroSalida, Entidad entidad,UsuarioEntidad usuarioEntidad) throws Exception, I18NException;
+    RegistroSalida actualizar(RegistroSalida antiguo, RegistroSalida registroSalida, Entidad entidad,UsuarioEntidad usuarioEntidad) throws I18NException;
 
     /**
      * Obtiene el próximo evento que habrá que realizar con el Registro
@@ -59,9 +59,9 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
      * @param registroSalida
      * @param entidadActiva
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Long proximoEventoSalida(RegistroSalida registroSalida, Entidad entidadActiva) throws Exception;
+    Long proximoEventoSalida(RegistroSalida registroSalida, Entidad entidadActiva) throws I18NException;
 
 
     /**
@@ -70,16 +70,16 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
      * @param registroSalida
      * @param entidadActiva
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Long proximoEventoSalidaMultiEntidad(RegistroSalida registroSalida, Entidad entidadActiva) throws Exception;
+    Long proximoEventoSalidaMultiEntidad(RegistroSalida registroSalida, Entidad entidadActiva) throws I18NException;
 
     /**
      * @param idRegistro
      * @param entidadActiva
-     * @throws Exception
+     * @throws I18NException
      */
-    void actualizarEvento(Long idRegistro, Entidad entidadActiva) throws Exception;
+    void actualizarEvento(Long idRegistro, Entidad entidadActiva) throws I18NException;
 
     /**
      * Actualiza los Registros de Salida que con de Evento Distribuir
@@ -87,9 +87,9 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
      * @param oficina
      * @param entidad
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Integer actualizarEventoDistribuirSalidas(Oficina oficina, Entidad entidad) throws Exception;
+    Integer actualizarEventoDistribuirSalidas(Oficina oficina, Entidad entidad) throws I18NException;
 
     /**
      * Actualiza los Registros de Salida que con de Evento Distribuir cuyo destinatario es una Persona
@@ -97,9 +97,9 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
      * @param oficina
      * @param entidad
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Integer actualizarEventoDistribuirSalidasPersona(Oficina oficina, Entidad entidad) throws Exception;
+    Integer actualizarEventoDistribuirSalidasPersona(Oficina oficina, Entidad entidad) throws I18NException;
 
     /**
      * Comprueba si un RegistroSalida se considera un OficioRemision interno o no
@@ -107,9 +107,9 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
      * @param registroSalida
      * @param organismos
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Boolean isOficioRemisionInterno(RegistroSalida registroSalida, Set<String> organismos) throws Exception;
+    Boolean isOficioRemisionInterno(RegistroSalida registroSalida, Set<String> organismos) throws I18NException;
 
     /**
      * Comprueba si un RegistroSalida se considera un OficioRemision externo o no
@@ -117,9 +117,9 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
      * @param registroSalida
      * @param organismos
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Boolean isOficioRemisionExterno(RegistroSalida registroSalida, Set<String> organismos) throws Exception;
+    Boolean isOficioRemisionExterno(RegistroSalida registroSalida, Set<String> organismos) throws I18NException;
 
     /**
      * Comprueba si un RegistroSalida se considera un OficioRemision externo o no en un entorno multientidad
@@ -127,10 +127,10 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
      * @param registroSalida
      * @param organismos
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
 
-    Boolean isOficioRemisionExternoMultiEntidad(RegistroSalida registroSalida, Set<String> organismos) throws Exception;
+    Boolean isOficioRemisionExternoMultiEntidad(RegistroSalida registroSalida, Set<String> organismos) throws I18NException;
 
     /**
      * Comprueba si un RegistroSalida se considera un OficioRemision SIR o no
@@ -138,9 +138,9 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
      * @param organismos
      * @param idEntidad
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    List<OficinaTF> isOficioRemisionSir(RegistroSalida registroSalida, Set<String> organismos, Long idEntidad) throws Exception;
+    List<OficinaTF> isOficioRemisionSir(RegistroSalida registroSalida, Set<String> organismos, Long idEntidad) throws I18NException;
 
 
     /**
@@ -148,9 +148,9 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
      * @param registroSalida
      * @param organismos
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    List<OficinaTF> isOficioRemisionSirMultiEntidad(RegistroSalida registroSalida, Set<String> organismos, Long idEntidad) throws Exception;
+    List<OficinaTF> isOficioRemisionSirMultiEntidad(RegistroSalida registroSalida, Set<String> organismos, Long idEntidad) throws I18NException;
 
 
     /**
@@ -159,36 +159,36 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
      * @param registroSalida
      * @param usuarioEntidad
      * @param observacionesAnulacion
-     * @throws Exception
+     * @throws I18NException
      */
-    void anularRegistroSalida(RegistroSalida registroSalida, UsuarioEntidad usuarioEntidad, String observacionesAnulacion) throws Exception;
+    void anularRegistroSalida(RegistroSalida registroSalida, UsuarioEntidad usuarioEntidad, String observacionesAnulacion) throws I18NException;
 
     /**
      * Activa un RegistroSalida, cambiandole el estado a anulado.
      *
      * @param registroSalida
      * @param usuarioEntidad
-     * @throws Exception
+     * @throws I18NException
      */
-    void activarRegistroSalida(RegistroSalida registroSalida, Entidad entidad, UsuarioEntidad usuarioEntidad) throws Exception;
+    void activarRegistroSalida(RegistroSalida registroSalida, Entidad entidad, UsuarioEntidad usuarioEntidad) throws I18NException;
 
     /**
      * Visa un RegistroSalida, cambiandole el estado a anulado.
      *
      * @param registroSalida
      * @param usuarioEntidad
-     * @throws Exception
+     * @throws I18NException
      */
-    void visarRegistroSalida(RegistroSalida registroSalida, UsuarioEntidad usuarioEntidad) throws Exception;
+    void visarRegistroSalida(RegistroSalida registroSalida, UsuarioEntidad usuarioEntidad) throws I18NException;
 
     /**
      * Elimina los RegistroSalida de una Entidad
      *
      * @param idEntidad
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Integer eliminarByEntidad(Long idEntidad) throws Exception;
+    Integer eliminarByEntidad(Long idEntidad) throws I18NException;
 
     /**
      * Cambia el estado de un RegistroSalida
@@ -196,9 +196,9 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
      * @param registroSalida
      * @param idEstado
      * @param usuarioEntidad
-     * @throws Exception
+     * @throws I18NException
      */
-    void cambiarEstadoHistorico(RegistroSalida registroSalida, Long idEstado, UsuarioEntidad usuarioEntidad) throws Exception;
+    void cambiarEstadoHistorico(RegistroSalida registroSalida, Long idEstado, UsuarioEntidad usuarioEntidad) throws I18NException;
 
     /**
      * Cambia el estado de un RegistroEntrada y el HistoricoModificación correspondiente
@@ -206,9 +206,9 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
      * @param registroSalida
      * @param idEstado
      * @param observacionesAnulacion
-     * @throws Exception
+     * @throws I18NException
      */
-    void cambiarEstadoAnuladoHistorico(RegistroSalida registroSalida, Long idEstado, UsuarioEntidad usuarioEntidad, String observacionesAnulacion) throws Exception;
+    void cambiarEstadoAnuladoHistorico(RegistroSalida registroSalida, Long idEstado, UsuarioEntidad usuarioEntidad, String observacionesAnulacion) throws I18NException;
 
 
     /**
@@ -217,9 +217,9 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
      * @param registroSalida
      * @param usuarioEntidad
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    RegistroSalida rectificar(Entidad entidad, RegistroSalida registroSalida, UsuarioEntidad usuarioEntidad) throws Exception;
+    RegistroSalida rectificar(Entidad entidad, RegistroSalida registroSalida, UsuarioEntidad usuarioEntidad) throws I18NException;
 
 
     /**
@@ -227,38 +227,38 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
      *
      * @param id
      * @return
-     * @throws Exception
+     * @throws I18NException
      * @throws I18NException
      */
-    RegistroSalida getConAnexosFull(Long id) throws Exception, I18NException;
+    RegistroSalida getConAnexosFull(Long id) throws I18NException;
 
     /**
      * Método que devuelve un registro de salida completo, con los anexosFull pero sin los documentos fisicos.
      *
      * @param id
      * @return
-     * @throws Exception
+     * @throws I18NException
      * @throws I18NException
      */
-    RegistroSalida getConAnexosFullLigero(Long id) throws Exception, I18NException;
+    RegistroSalida getConAnexosFullLigero(Long id) throws I18NException;
 
     /**
      * Metodo que llama al plugin de postproceso cuando creamos un registro de salida.
      *
      * @param rs
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    void postProcesoNuevoRegistro(RegistroSalida rs, Long entidadId) throws Exception, I18NException;
+    void postProcesoNuevoRegistro(RegistroSalida rs, Long entidadId) throws I18NException;
 
     /**
      * Metodo que llama al plugin de postproceso cuando actualizamos un registro de salida
      *
      * @param rs
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    void postProcesoActualizarRegistro(RegistroSalida rs, Long entidadId) throws Exception, I18NException;
+    void postProcesoActualizarRegistro(RegistroSalida rs, Long entidadId) throws I18NException;
 
 
 }

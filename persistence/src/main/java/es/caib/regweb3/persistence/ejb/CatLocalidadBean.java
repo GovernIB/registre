@@ -2,6 +2,7 @@ package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.CatLocalidad;
 import es.caib.regweb3.utils.RegwebConstantes;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,26 +31,26 @@ public class CatLocalidadBean extends BaseEjbJPA<CatLocalidad, Long> implements 
 
 
     @Override
-    public CatLocalidad getReference(Long id) throws Exception {
+    public CatLocalidad getReference(Long id) throws I18NException {
 
         return em.getReference(CatLocalidad.class, id);
     }
 
     @Override
-    public CatLocalidad findById(Long id) throws Exception {
+    public CatLocalidad findById(Long id) throws I18NException {
 
         return em.find(CatLocalidad.class, id);
     }
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<CatLocalidad> getAll() throws Exception {
+    public List<CatLocalidad> getAll() throws I18NException {
 
         return  em.createQuery("Select catLocalidad from CatLocalidad as catLocalidad order by catLocalidad.id").getResultList();
     }
 
     @Override
-    public Long getTotal() throws Exception {
+    public Long getTotal() throws I18NException {
 
         Query q = em.createQuery("Select count(catLocalidad.id) from CatLocalidad as catLocalidad");
 
@@ -59,7 +60,7 @@ public class CatLocalidadBean extends BaseEjbJPA<CatLocalidad, Long> implements 
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<CatLocalidad> getPagination(int inicio) throws Exception {
+    public List<CatLocalidad> getPagination(int inicio) throws I18NException {
 
         Query q = em.createQuery("Select catLocalidad from CatLocalidad as catLocalidad order by catLocalidad.id");
         q.setFirstResult(inicio);
@@ -71,7 +72,7 @@ public class CatLocalidadBean extends BaseEjbJPA<CatLocalidad, Long> implements 
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public CatLocalidad findByCodigo(Long codigoLocalidad, Long codigoProvincia, String codigoEntidadGeografica) throws Exception {
+    public CatLocalidad findByCodigo(Long codigoLocalidad, Long codigoProvincia, String codigoEntidadGeografica) throws I18NException {
         Query q = em.createQuery("Select catLocalidad from CatLocalidad as catLocalidad where catLocalidad.codigoLocalidad =:codigoLocalidad and catLocalidad.provincia.codigoProvincia =:codigoProvincia and catLocalidad.entidadGeografica.codigoEntidadGeografica =:codigoEntidadGeografica");
 
         q.setParameter("codigoLocalidad", codigoLocalidad);
@@ -90,7 +91,7 @@ public class CatLocalidadBean extends BaseEjbJPA<CatLocalidad, Long> implements 
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public CatLocalidad findByLocalidadProvincia(Long codigoLocalidad, Long codigoProvincia) throws Exception{
+    public CatLocalidad findByLocalidadProvincia(Long codigoLocalidad, Long codigoProvincia) throws I18NException{
         Query q = em.createQuery("Select catLocalidad from CatLocalidad as catLocalidad where " +
                 "catLocalidad.codigoLocalidad =:codigoLocalidad " +
                 "and catLocalidad.provincia.codigoProvincia =:codigoProvincia " +
@@ -111,7 +112,7 @@ public class CatLocalidadBean extends BaseEjbJPA<CatLocalidad, Long> implements 
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<CatLocalidad> getByProvincia(Long idProvincia) throws Exception {
+    public List<CatLocalidad> getByProvincia(Long idProvincia) throws I18NException {
 
         Query q = em.createQuery("Select catLocalidad from CatLocalidad as catLocalidad where " +
                 "catLocalidad.provincia.id = :idProvincia and " +
@@ -127,7 +128,7 @@ public class CatLocalidadBean extends BaseEjbJPA<CatLocalidad, Long> implements 
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<CatLocalidad> getByCodigoProvincia(Long codigoProvincia) throws Exception {
+    public List<CatLocalidad> getByCodigoProvincia(Long codigoProvincia) throws I18NException {
         log.info("inicio getByProvincia");
         Query q = em.createQuery("Select catLocalidad from CatLocalidad as catLocalidad where catLocalidad.provincia.codigoProvincia = :codigoProvincia order by catLocalidad.nombre");
 
@@ -140,7 +141,7 @@ public class CatLocalidadBean extends BaseEjbJPA<CatLocalidad, Long> implements 
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Object[]> getByCodigoProvinciaObject(Long codigoProvincia) throws Exception {
+    public List<Object[]> getByCodigoProvinciaObject(Long codigoProvincia) throws I18NException {
 
         Query q = em.createQuery("Select catLocalidad.codigoLocalidad, catLocalidad.nombre, catLocalidad.entidadGeografica.codigoEntidadGeografica from CatLocalidad as catLocalidad where catLocalidad.provincia.codigoProvincia = :codigoProvincia order by catLocalidad.nombre");
 
@@ -153,7 +154,7 @@ public class CatLocalidadBean extends BaseEjbJPA<CatLocalidad, Long> implements 
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public CatLocalidad findByNombre(String nombre) throws Exception{
+    public CatLocalidad findByNombre(String nombre) throws I18NException{
 
         Query q = em.createQuery("Select catLocalidad from CatLocalidad as catLocalidad where catLocalidad.nombre =:nombre");
 

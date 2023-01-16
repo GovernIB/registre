@@ -4,6 +4,7 @@ import es.caib.regweb3.model.RegistroEntrada;
 import es.caib.regweb3.model.RegistroSalida;
 import es.caib.regweb3.model.Trazabilidad;
 import es.caib.regweb3.persistence.utils.Paginacion;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 
 import javax.ejb.Local;
 import java.util.List;
@@ -23,52 +24,52 @@ public interface TrazabilidadLocal extends BaseEjb<Trazabilidad, Long> {
     /**
      * @param tipoOficio
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    List<Trazabilidad> oficiosSinREDestino(Long tipoOficio) throws Exception;
+    List<Trazabilidad> oficiosSinREDestino(Long tipoOficio) throws I18NException;
 
     /**
      * @param idTrazabilidad
      * @param idRegistro
-     * @throws Exception
+     * @throws I18NException
      */
-    void actualizarTrazabilidad(Long idTrazabilidad, Long idRegistro) throws Exception;
+    void actualizarTrazabilidad(Long idTrazabilidad, Long idRegistro) throws I18NException;
 
     /**
      * Obtiene todas las Trazabilidades a partir de un Identificador Intercambio
      *
      * @param idIntercambio
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    List<Trazabilidad> getByIdIntercambio(String idIntercambio, Long idEntidad) throws Exception;
+    List<Trazabilidad> getByIdIntercambio(String idIntercambio, Long idEntidad) throws I18NException;
 
     /**
      * Obtiene la Trazabilidad de un RegistroSalida
      *
      * @param idRegistroSalida
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    List<Trazabilidad> getByRegistroSalida(Long idRegistroSalida) throws Exception;
+    List<Trazabilidad> getByRegistroSalida(Long idRegistroSalida) throws I18NException;
 
     /**
      * Obtiene la Trazabilidad de un RegistroEntrada
      *
      * @param idRegistroEntrada
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    List<Trazabilidad> getByRegistroEntrada(Long idRegistroEntrada) throws Exception;
+    List<Trazabilidad> getByRegistroEntrada(Long idRegistroEntrada) throws I18NException;
 
     /**
      * Obtiene las Trazabilidades de un OficioRemision
      *
      * @param idOficioRemision
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    List<Trazabilidad> getByOficioRemision(Long idOficioRemision) throws Exception;
+    List<Trazabilidad> getByOficioRemision(Long idOficioRemision) throws I18NException;
 
     /**
      * Obtiene la Trazabilidad correspondiente a un OficioRemision y a un RegistroEntrada
@@ -76,9 +77,9 @@ public interface TrazabilidadLocal extends BaseEjb<Trazabilidad, Long> {
      * @param idOficioRemision
      * @param idRegistroEntrada
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Trazabilidad getByOficioRegistroEntrada(Long idOficioRemision, Long idRegistroEntrada) throws Exception;
+    Trazabilidad getByOficioRegistroEntrada(Long idOficioRemision, Long idRegistroEntrada) throws I18NException;
 
     /**
      * Obtiene la Trazabilidad correspondiente a un OficioRemision y a un RegistroSalida
@@ -86,36 +87,36 @@ public interface TrazabilidadLocal extends BaseEjb<Trazabilidad, Long> {
      * @param idOficioRemision
      * @param idRegistroSalida
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Trazabilidad getByOficioRegistroSalida(Long idOficioRemision, Long idRegistroSalida) throws Exception;
+    Trazabilidad getByOficioRegistroSalida(Long idOficioRemision, Long idRegistroSalida) throws I18NException;
 
     /**
      * Obtiene las Trazabilidades de un RegistroSir
      *
      * @param idRegistroSir
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    List<Trazabilidad> getByRegistroSir(Long idRegistroSir) throws Exception;
+    List<Trazabilidad> getByRegistroSir(Long idRegistroSir) throws I18NException;
 
     /**
      * Obtiene el Registro de Entrada generado a partir de la aceptación de un Registro Sir
      *
      * @param idRegistroSir
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    RegistroEntrada getRegistroAceptado(Long idRegistroSir) throws Exception;
+    RegistroEntrada getRegistroAceptado(Long idRegistroSir) throws I18NException;
 
     /**
      * Elimina las Trazabilidades de una Entidad
      *
      * @param idEntidad
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Integer eliminarByEntidad(Long idEntidad) throws Exception;
+    Integer eliminarByEntidad(Long idEntidad) throws I18NException;
 
     /**
      * Obtiene los RegistroSalida generados en un OficioRemision
@@ -123,7 +124,7 @@ public interface TrazabilidadLocal extends BaseEjb<Trazabilidad, Long> {
      * @param idOficioRemision
      * @return
      */
-    List<RegistroSalida> obtenerRegistrosSalida(Long idOficioRemision) throws Exception;
+    List<RegistroSalida> obtenerRegistrosSalida(Long idOficioRemision) throws I18NException;
 
     /**
      * Obtiene los RegistroEntrada validos que han sido creados a partir de una recepción SIR
@@ -132,9 +133,9 @@ public interface TrazabilidadLocal extends BaseEjb<Trazabilidad, Long> {
      * @param idEntidad
      * @param total
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    List<RegistroEntrada> getPendientesDistribuirSir(Long idOficina, Long idEntidad, Integer total) throws Exception;
+    List<RegistroEntrada> getPendientesDistribuirSir(Long idOficina, Long idEntidad, Integer total) throws I18NException;
 
     /**
      * Obtiene todos los RegistroEntrada validos que han sido creados a partir de una recepción SIR paginados
@@ -143,22 +144,22 @@ public interface TrazabilidadLocal extends BaseEjb<Trazabilidad, Long> {
      * @param idEntidad
      * @param pageNumber
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Paginacion buscarPendientesDistribuirSir(Long idOficina, Long idEntidad, Integer pageNumber) throws Exception;
+    Paginacion buscarPendientesDistribuirSir(Long idOficina, Long idEntidad, Integer pageNumber) throws I18NException;
 
     /**
      * @param idEntidad
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Integer actualizarEstadoSirEntrada(Long idEntidad) throws Exception;
+    Integer actualizarEstadoSirEntrada(Long idEntidad) throws I18NException;
 
     /**
      * @param idEntidad
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Integer actualizarEstadoSirSalida(Long idEntidad) throws Exception;
+    Integer actualizarEstadoSirSalida(Long idEntidad) throws I18NException;
 
 }

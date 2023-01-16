@@ -483,7 +483,7 @@ public class SirController extends BaseController {
 
             return true;
 
-        }catch (Exception | I18NException e){
+        }catch ( I18NException e){
             log.info("Error volviendo a enviar el intercambio..");
             e.printStackTrace();
         }
@@ -660,7 +660,7 @@ public class SirController extends BaseController {
                 }
             }
 
-        } catch (Exception | I18NException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 

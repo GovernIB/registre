@@ -2,6 +2,7 @@ package es.caib.regweb3.persistence.ejb;
 
 
 import es.caib.regweb3.model.Archivo;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 
 import javax.ejb.Local;
 import java.util.List;
@@ -20,15 +21,15 @@ public interface ArchivoLocal extends BaseEjb<Archivo, Long> {
     /**
      * Obtiene los id's de todos los Archivos de la aplicación
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    List<Long> getAllLigero() throws Exception;
+    List<Long> getAllLigero() throws I18NException;
 
     /**
      *
      * @param archivo
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    boolean borrarArchivo(Archivo archivo) throws Exception;
+    boolean borrarArchivo(Archivo archivo) throws I18NException;
 }

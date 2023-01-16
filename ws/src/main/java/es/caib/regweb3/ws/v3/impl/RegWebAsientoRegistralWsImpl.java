@@ -19,7 +19,6 @@ import es.caib.regweb3.ws.converter.AsientoConverter;
 import es.caib.regweb3.ws.converter.AsientoRegistralConverter;
 import es.caib.regweb3.ws.model.*;
 import es.caib.regweb3.ws.utils.UsuarioAplicacionCache;
-import es.caib.regweb3.ws.utils.WsUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.cxf.interceptor.InFaultInterceptors;
 import org.apache.cxf.interceptor.InInterceptors;
@@ -112,7 +111,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
         UsuarioEntidad usuarioAplicacion = usuarioEntidadEjb.findByIdentificadorEntidad(UsuarioAplicacionCache.get().getUsuario().getIdentificador(), entidadActiva.getId());
 
         if (usuarioAplicacion == null) { //No existe
-            throw WsUtils.createWsI18NException("registro.usuario.noExiste", UsuarioAplicacionCache.get().getUsuario().getIdentificador(), entidadActiva.getNombre());
+            throw new I18NException("registro.usuario.noExiste", UsuarioAplicacionCache.get().getUsuario().getIdentificador(), entidadActiva.getNombre());
         }
 
         try{
@@ -127,7 +126,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
 
         }catch (Exception e){
             integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, null,System.currentTimeMillis() - inicio.getTime(), entidadActiva.getId(), "");
-            throw WsUtils.createWsI18NException(e, "error.ws.general");
+            throw new I18NException(e, "error.ws.general");
         }
 
     }
@@ -144,19 +143,19 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
         UsuarioEntidad usuarioAplicacion = usuarioEntidadEjb.findByIdentificadorEntidad(UsuarioAplicacionCache.get().getUsuario().getIdentificador(), entidadActiva.getId());
 
         if (usuarioAplicacion == null) { //No existe
-            throw WsUtils.createWsI18NException("registro.usuario.noExiste", UsuarioAplicacionCache.get().getUsuario().getIdentificador(), entidadActiva.getNombre());
+            throw new I18NException("registro.usuario.noExiste", UsuarioAplicacionCache.get().getUsuario().getIdentificador(), entidadActiva.getNombre());
         }
 
         // 3.- Validar campo obligatorio idSesion
         if(idSesion == null){
-            throw WsUtils.createWsI18NException("error.valor.requerido.ws", "idSesion");
+            throw new I18NException("error.valor.requerido.ws", "idSesion");
         }
 
         // Obtenemos la Sesion
         Sesion sesion = sesionEjb.findByIdSesionUsuario(idSesion, usuarioAplicacion);
 
         if(sesion == null){
-            throw WsUtils.createWsI18NException("sesion.noExiste", idSesion.toString());
+            throw new I18NException("sesion.noExiste", idSesion.toString());
         }
 
         AsientoRegistralSesionWs asientoRegistralSesionWs = new AsientoRegistralSesionWs();
@@ -207,7 +206,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
             usuarioAplicacion = usuarioEntidadEjb.findByIdentificadorEntidad(UsuarioAplicacionCache.get().getUsuario().getIdentificador(), entidadActiva.getId());
 
             if (usuarioAplicacion == null) { //No existe
-                throw WsUtils.createWsI18NException("registro.usuario.noExiste", UsuarioAplicacionCache.get().getUsuario().getIdentificador(), entidadActiva.getNombre());
+                throw new org.fundaciobit.genapp.common.i18n.I18NException("registro.usuario.noExiste", UsuarioAplicacionCache.get().getUsuario().getIdentificador(), entidadActiva.getNombre());
             }
 
             // Comprobar que la Oficina está vigente
@@ -220,7 +219,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
             UsuarioEntidad usuario = asientoRegistralEjb.comprobarUsuarioEntidad(asientoRegistral.getCodigoUsuario(), entidadActiva.getId());
 
             if (usuario == null) {//No existe
-                throw WsUtils.createWsI18NException("registro.usuario.noExiste", asientoRegistral.getCodigoUsuario(), entidadActiva.getNombre());
+                throw new I18NException("registro.usuario.noExiste", asientoRegistral.getCodigoUsuario(), entidadActiva.getNombre());
             }
 
             // Recuperamos el username correcto
@@ -236,14 +235,14 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
                 if(TIPO_OPERACION_COMUNICACION.equals(tipoOperacion)) { //Si es una comunicación
 
                     if (asientoRegistral.getInteresados().size() != 1) { // solo se permite un interesado
-                        throw WsUtils.createWsI18NException("interesado.registro.obligatorio.uno");
+                        throw new I18NException("interesado.registro.obligatorio.uno");
                     }
                 }
                 // Procesamos los interesados
                 interesados = procesarInteresados(asientoRegistral.getInteresados(), interesadoEjb, catPaisEjb, catProvinciaEjb, catLocalidadEjb, personaEjb);
 
             }else{
-                throw WsUtils.createWsI18NException("interesado.registro.obligatorio");
+                throw new I18NException("interesado.registro.obligatorio");
             }
 
             // Validar los Anexos
@@ -260,12 +259,12 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
 
                 // Comprobar ROL RWE_WS_ENTRADA
                 if(!UsuarioAplicacionCache.get().getUsuario().getRwe_ws_entrada()){
-                    throw WsUtils.createWsI18NException("registro.usuario.rol", UsuarioAplicacionCache.get().getUsuario().getIdentificador());
+                    throw new I18NException("registro.usuario.rol", UsuarioAplicacionCache.get().getUsuario().getIdentificador());
                 }
 
                 // Comprobar PERMISO_REGISTRO_ENTRADA de usuario aplicación
                 if (!permisoOrganismoUsuarioEjb.tienePermiso(usuarioAplicacion.getId(), oficina.getOrganismoResponsable().getId(), PERMISO_REGISTRO_ENTRADA, true)) {
-                    throw WsUtils.createWsI18NException("registro.usuario.permisos", usuarioAplicacion.getNombreCompleto(), libro.getCodigo());
+                    throw new I18NException("registro.usuario.permisos", usuarioAplicacion.getNombreCompleto(), libro.getCodigo());
                 }
 
                 // Comprobar que el Organismo destino está vigente
@@ -277,7 +276,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
                     destinoExterno = unidadesService.obtenerUnidad(asientoRegistral.getUnidadTramitacionDestinoCodigo(), null, null);
 
                     if (destinoExterno == null) { //o no existe o está extinguido
-                        throw WsUtils.createWsI18NException("registro.organismo.noExiste", asientoRegistral.getUnidadTramitacionDestinoCodigo());
+                        throw new I18NException("registro.organismo.noExiste", asientoRegistral.getUnidadTramitacionDestinoCodigo());
                     }
                 }else if( !destinoInterno.getEntidad().getId().equals(entidadActiva.getId())){ //No hace falta ir a buscarlo a dir3caib, ya tenemos los datos mínimos.
                     destinoExterno = new UnidadTF();
@@ -285,7 +284,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
                     destinoExterno.setDenominacion(destinoInterno.getDenominacion());
                     destinoInterno = null;
                 } else if (!destinoInterno.getEstado().getCodigoEstadoEntidad().equals(ESTADO_ENTIDAD_VIGENTE)) { //Si está extinguido
-                    throw WsUtils.createWsI18NException("registro.organismo.extinguido", destinoInterno.getNombreCompleto());
+                    throw new I18NException("registro.organismo.extinguido", destinoInterno.getNombreCompleto());
                 }
 
 
@@ -306,7 +305,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
                             // Iniciamos la sesión
                             sesionEjb.iniciarSesion(idSesion, usuarioAplicacion);
                         }catch (Exception e){
-                            throw WsUtils.createWsI18NException("sesion.noExiste", idSesion.toString());
+                            throw new I18NException("sesion.noExiste", idSesion.toString());
                         }
                     }
 
@@ -341,7 +340,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
 
                 }catch (Exception e){
                     e.printStackTrace();
-                    throw WsUtils.createWsI18NException(e, "registroEntrada.nuevo.error");
+                    throw new I18NException(e, "registroEntrada.nuevo.error");
                 }
 
              // Se trata a de un Registro de Salida
@@ -354,22 +353,22 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
 
                 // Comprobar ROL RWE_WS_SALIDA
                 if(!UsuarioAplicacionCache.get().getUsuario().getRwe_ws_salida()){
-                    throw WsUtils.createWsI18NException("registro.usuario.rol", UsuarioAplicacionCache.get().getUsuario().getIdentificador());
+                    throw new I18NException("registro.usuario.rol", UsuarioAplicacionCache.get().getUsuario().getIdentificador());
                 }
 
                 // Comprobar PERMISO_REGISTRO_SALIDA de usuario aplicación
                 if (!permisoOrganismoUsuarioEjb.tienePermiso(usuarioAplicacion.getId(), oficina.getOrganismoResponsable().getId(), PERMISO_REGISTRO_SALIDA, true)) {
-                    throw WsUtils.createWsI18NException("registro.usuario.permisos", usuarioAplicacion.getNombreCompleto(), libro.getCodigo());
+                    throw new I18NException("registro.usuario.permisos", usuarioAplicacion.getNombreCompleto(), libro.getCodigo());
                 }
 
                 // Comprobar que el Organismo Origen está vigente
                 Organismo origen = organismoEjb.findByCodigoEntidadLigero(asientoRegistral.getUnidadTramitacionOrigenCodigo(), entidadActiva.getId());
 
                 if (origen == null) {
-                    throw WsUtils.createWsI18NException("registro.organismo.noExiste", asientoRegistral.getUnidadTramitacionOrigenCodigo());
+                    throw new I18NException("registro.organismo.noExiste", asientoRegistral.getUnidadTramitacionOrigenCodigo());
 
                 } else if (!origen.getEstado().getCodigoEstadoEntidad().equals(ESTADO_ENTIDAD_VIGENTE)) { //Si está extinguido
-                    throw WsUtils.createWsI18NException("registro.organismo.extinguido", origen.getNombreCompleto());
+                    throw new I18NException("registro.organismo.extinguido", origen.getNombreCompleto());
                 }
 
                 // Convertir a registro de Salida
@@ -387,7 +386,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
                             // Iniciamos la sesión
                             sesionEjb.iniciarSesion(idSesion, usuarioAplicacion);
                         }catch (Exception e){
-                            throw WsUtils.createWsI18NException("sesion.noExiste", idSesion.toString());
+                            throw new I18NException("sesion.noExiste", idSesion.toString());
                         }
                     }
 
@@ -422,7 +421,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
                         registroSalidaEjb.anularRegistroSalida(registroSalida, usuarioAplicacion, "Anulación automática tras error al procesar la salida.");
                     }
                     e.printStackTrace();
-                    throw WsUtils.createWsI18NException(e, "registroSalida.nuevo.error");
+                    throw new I18NException(e, "registroSalida.nuevo.error");
                 }
             }
 
@@ -431,7 +430,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
                 sesionEjb.finalizarSesion(idSesion, usuarioAplicacion, asientoRegistral.getTipoRegistro(), asiento.getNumeroRegistroFormateado());
             }
 
-        }catch (I18NException | Exception | I18NValidationException e){
+        }catch (I18NException | I18NValidationException e){
 
             if(entidadActiva != null){
                 integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, null, System.currentTimeMillis() - inicio.getTime(), entidadActiva.getId(), numRegFormat);
@@ -473,7 +472,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
         UsuarioEntidad usuarioEntidad = usuarioEntidadEjb.findByIdentificadorCodigoEntidad( UsuarioAplicacionCache.get().getUsuario().getIdentificador(), entidad);
 
         if(usuarioEntidad == null){//No existe
-            throw WsUtils.createWsI18NException("registroEntrada.usuario.noExiste", UsuarioAplicacionCache.get().getUsuario().getIdentificador(), entidad);
+            throw new I18NException("registroEntrada.usuario.noExiste", UsuarioAplicacionCache.get().getUsuario().getIdentificador(), entidad);
         }
 
         // Obtenemos el AsientoRegistral
@@ -487,7 +486,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
         }catch (Exception e){
 
             integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, null,System.currentTimeMillis() - inicio.getTime(), entidadActiva.getId(), numeroRegistroFormateado);
-            throw WsUtils.createWsI18NException("asientoRegistral.obtener.error", e.getLocalizedMessage());
+            throw new I18NException("asientoRegistral.obtener.error", e.getLocalizedMessage());
         }
 
         // Integracion
@@ -531,7 +530,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
             RegistroEntrada registroEntrada = registroEntradaConsultaEjb.findByNumeroRegistroFormateadoCompleto(entidadActiva.getId(), numeroRegistroFormateado);
 
             if (registroEntrada == null) {
-                throw WsUtils.createWsI18NException("registroEntrada.noExiste", numeroRegistroFormateado);
+                throw new I18NException("registroEntrada.noExiste", numeroRegistroFormateado);
             }
 
             // Si no tiene Justificante, lo generamos
@@ -545,12 +544,12 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
                     }catch (I18NException e){
                         log.info("----------------Error generado justificante via WS------------------");
                         integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, null,System.currentTimeMillis() - inicio.getTime(), entidadActiva.getId(), numeroRegistroFormateado);
-                        throw WsUtils.createWsI18NException("registro.justificante.error", numeroRegistroFormateado);
+                        throw new I18NException("registro.justificante.error", numeroRegistroFormateado);
                     }
 
                     anexoSimple = anexoEjb.descargarJustificante(justificante.getAnexo(), entidadActiva.getId());
                 }else{
-                    throw WsUtils.createWsI18NException("registro.justificante.valido");
+                    throw new I18NException("registro.justificante.valido");
                 }
 
             }else{ // Tiene Justificante, lo obtenemos
@@ -561,7 +560,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
                     anexoSimple = anexoEjb.descargarJustificante(justificante.getAnexo(), entidadActiva.getId());
                 }catch (Exception e){
                     integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, null,System.currentTimeMillis() - inicio.getTime(), entidadActiva.getId(), numeroRegistroFormateado);
-                    throw WsUtils.createWsI18NException("registro.justificante.error", numeroRegistroFormateado);
+                    throw new I18NException("registro.justificante.error", numeroRegistroFormateado);
                 }
             }
 
@@ -577,7 +576,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
             RegistroSalida registroSalida = registroSalidaConsultaEjb.findByNumeroRegistroFormateadoCompleto(entidadActiva.getId(), numeroRegistroFormateado);
 
             if (registroSalida == null) {
-                throw WsUtils.createWsI18NException("registroEntrada.noExiste", numeroRegistroFormateado);
+                throw new I18NException("registroEntrada.noExiste", numeroRegistroFormateado);
             }
 
             // Si no tiene Justificante, lo generamos
@@ -590,12 +589,12 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
                         justificante = justificanteEjb.crearJustificanteWS(entidadActiva, usuario,registroSalida,RegwebConstantes.REGISTRO_SALIDA, RegistroUtils.getIdiomaJustificante(registroSalida));
                     }catch (I18NException e){
                         integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, null,System.currentTimeMillis() - inicio.getTime(), entidadActiva.getId(), numeroRegistroFormateado);
-                        throw WsUtils.createWsI18NException("registro.justificante.error", numeroRegistroFormateado);
+                        throw new I18NException("registro.justificante.error", numeroRegistroFormateado);
                     }
 
                     anexoSimple = anexoEjb.descargarJustificante(justificante.getAnexo(), entidadActiva.getId());
                 }else{
-                    throw WsUtils.createWsI18NException("registro.justificante.valido");
+                    throw new I18NException("registro.justificante.valido");
                 }
 
             }else{ // Tiene Justificante, lo obtenemos
@@ -606,7 +605,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
                     anexoSimple = anexoEjb.descargarJustificante(justificante.getAnexo(), entidadActiva.getId());
                 }catch (Exception e){
                     integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, null,System.currentTimeMillis() - inicio.getTime(), entidadActiva.getId(), numeroRegistroFormateado);
-                    throw WsUtils.createWsI18NException("registro.justificante.error", numeroRegistroFormateado);
+                    throw new I18NException("registro.justificante.error", numeroRegistroFormateado);
                 }
             }
 
@@ -649,7 +648,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
 
         }catch (Exception e){
             integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, null,System.currentTimeMillis() - inicio.getTime(), entidadActiva.getId(), numeroRegistroFormateado);
-            throw WsUtils.createWsI18NException(e, "error.ws.general");
+            throw new I18NException(e, "error.ws.general");
         }
 
     }
@@ -672,17 +671,17 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
 
 
         if (registroEntrada == null) {
-            throw WsUtils.createWsI18NException("registroEntrada.noExiste", numeroRegistroFormateado);
+            throw new I18NException("registroEntrada.noExiste", numeroRegistroFormateado);
         }
 
         // 3.- Comprobamos que el usuario tiene permisos para Distribuir el registro
         if(!permisoOrganismoUsuarioEjb.tienePermiso(usuario.getId(), registroEntrada.getOficina().getOrganismoResponsable().getId(), RegwebConstantes.PERMISO_DISTRIBUCION_REGISTRO, true)){
-            throw WsUtils.createWsI18NException("registroEntrada.distribuir.error.permiso");
+            throw new I18NException("registroEntrada.distribuir.error.permiso");
         }
 
         // 4.- Comprobamos que el RegistroEntrada se puede Distribuir
         if (!registroEntradaConsultaEjb.isDistribuir(registroEntrada.getId())) {
-            throw WsUtils.createWsI18NException("registroEntrada.distribuir.noPermitido");
+            throw new I18NException("registroEntrada.distribuir.noPermitido");
         }
 
         try{
@@ -691,11 +690,11 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
 
             if(!respuestaDistribucion.getEnviadoCola() && !respuestaDistribucion.getEnviado()){ //Cuando hay plugin y no ha llegado a destino
 
-                throw WsUtils.createWsI18NException(("registroEntrada.distribuir.error.noEnviado"));
+                throw new I18NException(("registroEntrada.distribuir.error.noEnviado"));
             }
 
         }catch (Exception e){
-            throw WsUtils.createWsI18NException(e, "registroEntrada.distribuir.error");
+            throw new I18NException(e, "registroEntrada.distribuir.error");
         }
 
     }
@@ -722,7 +721,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
         //Averiguamos si existe un oficio de remisión para el número de registro indicado.
         OficioRemision oficio = oficioRemisionEjb.getByNumeroRegistroFormateado(numeroRegistroFormateado, entidadActiva.getId());
         if(oficio == null){
-            throw WsUtils.createWsI18NException("oficioRemision.noExiste", numeroRegistroFormateado);
+            throw new I18NException("oficioRemision.noExiste", numeroRegistroFormateado);
         }
 
         List<String> registrosEntrada = new ArrayList<String>();
@@ -774,12 +773,12 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
         UsuarioEntidad usuarioAplicacion = usuarioEntidadEjb.findByIdentificadorEntidad(UsuarioAplicacionCache.get().getUsuario().getIdentificador(), entidadActiva.getId());
 
         if (usuarioAplicacion == null) { //No existe
-            throw WsUtils.createWsI18NException("registro.usuario.noExiste", UsuarioAplicacionCache.get().getUsuario().getIdentificador(), entidadActiva.getNombre());
+            throw new I18NException("registro.usuario.noExiste", UsuarioAplicacionCache.get().getUsuario().getIdentificador(), entidadActiva.getNombre());
         }
 
         // 3.- Validar campo obligatorio documento
         if(StringUtils.isEmpty(documento)){
-            throw WsUtils.createWsI18NException("error.valor.requerido.ws", "documento");
+            throw new I18NException("error.valor.requerido.ws", "documento");
         }
 
         // 4.- Validar obligatorio pageNumber
@@ -814,7 +813,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
         }catch (Exception e){
             e.printStackTrace();
             integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, null,System.currentTimeMillis() - inicio.getTime(), entidadActiva.getId(), numRegFormat);
-            throw WsUtils.createWsI18NException(e, "error.ws.general");
+            throw new I18NException(e, "error.ws.general");
         }
 
         return resultado;
@@ -841,12 +840,12 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
 
         // Validar campo obligatorio documento
         if(StringUtils.isEmpty(documento)){
-            throw WsUtils.createWsI18NException("error.valor.requerido.ws", "documento");
+            throw new I18NException("error.valor.requerido.ws", "documento");
         }
 
         // Validar obligatorio numeroRegistroFormateado
         if(StringUtils.isEmpty(numeroRegistroFormateado)){
-            throw WsUtils.createWsI18NException("error.valor.requerido.ws", "numeroRegistroFormateado");
+            throw new I18NException("error.valor.requerido.ws", "numeroRegistroFormateado");
         }
 
         peticion.append("documento: ").append(documento).append(System.getProperty("line.separator"));
@@ -857,7 +856,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
             RegistroEntrada registroEntrada = registroEntradaConsultaEjb.getByDocumentoNumeroRegistro(entidadActiva.getId(), documento, numeroRegistroFormateado);
 
             if (registroEntrada == null) {
-                throw WsUtils.createWsI18NException("registroEntrada.noExiste", numeroRegistroFormateado);
+                throw new I18NException("registroEntrada.noExiste", numeroRegistroFormateado);
             }
 
             AsientoRegistralWs asiento = AsientoRegistralConverter.transformarRegistro(registroEntrada, REGISTRO_ENTRADA, entidadActiva,
@@ -872,7 +871,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
         }catch (Exception e){
             e.printStackTrace();
             integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, null,System.currentTimeMillis() - inicio.getTime(), entidadActiva.getId(), numRegFormat);
-            throw WsUtils.createWsI18NException("asientoRegistral.obtener.error", e.getLocalizedMessage());
+            throw new I18NException("asientoRegistral.obtener.error", e.getLocalizedMessage());
         }
 
     }
@@ -897,12 +896,12 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
         UsuarioEntidad usuarioAplicacion = usuarioEntidadEjb.findByIdentificadorEntidad(UsuarioAplicacionCache.get().getUsuario().getIdentificador(), entidadActiva.getId());
 
         if (usuarioAplicacion == null) { //No existe
-            throw WsUtils.createWsI18NException("registro.usuario.noExiste", UsuarioAplicacionCache.get().getUsuario().getIdentificador(), entidadActiva.getNombre());
+            throw new I18NException("registro.usuario.noExiste", UsuarioAplicacionCache.get().getUsuario().getIdentificador(), entidadActiva.getNombre());
         }
 
         // Validar campo obligatorio documento
         if(StringUtils.isEmpty(documento)){
-            throw WsUtils.createWsI18NException("error.valor.requerido.ws", "documento");
+            throw new I18NException("error.valor.requerido.ws", "documento");
         }
 
         // Validar obligatorio pageNumber
@@ -940,7 +939,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
         }catch (Exception e){
             e.printStackTrace();
             integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, null,System.currentTimeMillis() - inicio.getTime(), entidadActiva.getId(), numRegFormat);
-            throw WsUtils.createWsI18NException(e, "error.ws.general");
+            throw new I18NException(e, "error.ws.general");
         }
 
         return resultado;
@@ -968,12 +967,12 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
 
         // Validar campo obligatorio documento
         if(StringUtils.isEmpty(documento)){
-            throw WsUtils.createWsI18NException("error.valor.requerido.ws", "documento");
+            throw new I18NException("error.valor.requerido.ws", "documento");
         }
 
         // Validar obligatorio numeroRegistroFormateado
         if(StringUtils.isEmpty(numeroRegistroFormateado)){
-            throw WsUtils.createWsI18NException("error.valor.requerido.ws", "numeroRegistroFormateado");
+            throw new I18NException("error.valor.requerido.ws", "numeroRegistroFormateado");
         }
 
         // Validar campo idioma
@@ -989,7 +988,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
             RegistroEntrada registroEntrada = registroEntradaConsultaEjb.getByDocumentoNumeroRegistro(entidadActiva.getId(), documento, numeroRegistroFormateado);
 
             if (registroEntrada == null) {
-                throw WsUtils.createWsI18NException("registroEntrada.noExiste", numeroRegistroFormateado);
+                throw new I18NException("registroEntrada.noExiste", numeroRegistroFormateado);
             }
 
             AsientoWs asiento = AsientoConverter.transformarRegistro(registroEntrada, REGISTRO_ENTRADA, idioma);
@@ -1003,7 +1002,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
         }catch (Exception e){
             e.printStackTrace();
             integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, null,System.currentTimeMillis() - inicio.getTime(), entidadActiva.getId(), numRegFormat);
-            throw WsUtils.createWsI18NException("asientoRegistral.obtener.error", e.getLocalizedMessage());
+            throw new I18NException("asientoRegistral.obtener.error", e.getLocalizedMessage());
         }
     }
 
@@ -1025,7 +1024,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
 
         // Validar obligatorio idAnexo
         if(idAnexo == null){
-            throw WsUtils.createWsI18NException("error.valor.requerido.ws", "idAnexo");
+            throw new I18NException("error.valor.requerido.ws", "idAnexo");
         }
 
         // Validar campo idioma
@@ -1040,7 +1039,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
             AnexoFull anexo = anexoEjb.getAnexoFull(idAnexo, entidadActiva.getId());
 
             if (anexo == null) {
-                throw WsUtils.createWsI18NException("anexo.noExiste", String.valueOf(idAnexo));
+                throw new I18NException("anexo.noExiste", String.valueOf(idAnexo));
             }
 
             FileContentWs fileContentWs = AsientoConverter.transformarFileContentWs(anexo, anexoEjb, entidadActiva, idioma);
@@ -1052,7 +1051,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
         }catch (Exception e){
             e.printStackTrace();
             integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, null,System.currentTimeMillis() - inicio.getTime(), entidadActiva.getId(), numRegFormat);
-            throw WsUtils.createWsI18NException("asientoRegistral.obtener.error", e.getLocalizedMessage());
+            throw new I18NException("asientoRegistral.obtener.error", e.getLocalizedMessage());
         }
 
     }

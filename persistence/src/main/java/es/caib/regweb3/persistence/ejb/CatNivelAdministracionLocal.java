@@ -1,6 +1,7 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.CatNivelAdministracion;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 
 import javax.ejb.Local;
 
@@ -15,6 +16,6 @@ public interface CatNivelAdministracionLocal extends BaseEjb<CatNivelAdministrac
 
   String JNDI_NAME = "java:app/regweb3-persistence/CatNivelAdministracionEJB";
 
-  CatNivelAdministracion findByCodigo(Long codigo) throws Exception;
+  CatNivelAdministracion findByCodigo(Long codigo) throws I18NException;
 
 }

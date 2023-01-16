@@ -28,11 +28,11 @@ public interface SirEnvioLocal {
      * @param oficinaActiva
      * @param usuario
      * @param codigoOficinaSir
-     * @throws Exception
+     * @throws I18NException
      * @throws I18NException
      */
     RegistroEntrada crearIntercambioEntrada(RegistroEntrada registroEntrada, Entidad entidad,Oficina oficinaActiva, UsuarioEntidad usuario, String codigoOficinaSir)
-            throws Exception, I18NException, I18NValidationException;
+            throws I18NException, I18NValidationException;
 
     /**
      * Crear un intercambio SIR salida, preparado par enviarse
@@ -40,11 +40,11 @@ public interface SirEnvioLocal {
      * @param oficinaActiva
      * @param usuario
      * @param codigoOficinaSir
-     * @throws Exception
+     * @throws I18NException
      * @throws I18NException
      */
     RegistroSalida crearIntercambioSalida(RegistroSalida registroSalida, Entidad entidad, Oficina oficinaActiva, UsuarioEntidad usuario, String codigoOficinaSir)
-            throws Exception, I18NException, I18NValidationException;
+            throws I18NException, I18NValidationException;
 
     /**
      * Envia un intercambio a la oficina destino
@@ -53,11 +53,11 @@ public interface SirEnvioLocal {
      * @param oficinaActiva
      * @param usuario
      * @param codigoOficinaSir
-     * @throws Exception
+     * @throws I18NException
      * @throws I18NException
      */
     OficioRemision enviarIntercambio(Long tipoRegistro, IRegistro registro, Entidad entidad, Oficina oficinaActiva, UsuarioEntidad usuario, String codigoOficinaSir)
-            throws Exception, I18NException, I18NValidationException;
+            throws I18NException, I18NValidationException;
 
     /**
      * Reenvia un intercambio, cuando este ha sido RECHAZADO O REENVIADO
@@ -67,73 +67,73 @@ public interface SirEnvioLocal {
      * @param oficinaActiva
      * @param usuario
      * @param observaciones
-     * @throws Exception
+     * @throws I18NException
      */
-    void reenviarIntercambio(Long tipoRegistro, Long idRegistro, Entidad entidad, Oficina oficinaReenvio, Oficina oficinaActiva, UsuarioEntidad usuario, String observaciones) throws Exception, I18NException, I18NValidationException;
+    void reenviarIntercambio(Long tipoRegistro, Long idRegistro, Entidad entidad, Oficina oficinaReenvio, Oficina oficinaActiva, UsuarioEntidad usuario, String observaciones) throws I18NException, I18NValidationException;
 
     /**
      * Vuelve a enviar un intercambio que ya había sido enviado previamente
      * @param oficioRemision
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    void reenviarIntercambio(OficioRemision oficioRemision)throws Exception, I18NException;
+    void reenviarIntercambio(OficioRemision oficioRemision)throws I18NException;
 
     /**
      * Envía un mensaje ACK a partir de los datos de un RegistroSir
      *
      * @param idRegistroSir
-     * @throws Exception
+     * @throws I18NException
      */
-    Boolean enviarACK(Long idRegistroSir) throws Exception;
+    Boolean enviarACK(Long idRegistroSir) throws I18NException;
 
     /**
      * Envía un mensaje de confirmación a partir de los datos de un RegistroSir ACEPTADO
      *
      * @param idRegistroSir
-     * @throws Exception
+     * @throws I18NException
      */
-    Boolean enviarConfirmacion(Long idRegistroSir) throws Exception;
+    Boolean enviarConfirmacion(Long idRegistroSir) throws I18NException;
 
     /**
      * Reenvía un mensaje de control que ya ha sido enviado previamente
      *
      * @param mensaje
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Boolean reenviarMensaje(MensajeControl mensaje) throws Exception;
+    Boolean reenviarMensaje(MensajeControl mensaje) throws I18NException;
 
     /**
      * Renintenta los envíos a SIR sin ACK.
      *
      * @param entidad
-     * @throws Exception
+     * @throws I18NException
      */
-    void reintentarIntercambiosSinAck(Entidad entidad) throws Exception;
+    void reintentarIntercambiosSinAck(Entidad entidad) throws I18NException;
 
     /**
      * Reintenta los Reenvios/Rechazos sin ACK
      * @param entidad
-     * @throws Exception
+     * @throws I18NException
      */
-    void reintentarReenviosRechazosSinAck(Entidad entidad) throws Exception;
+    void reintentarReenviosRechazosSinAck(Entidad entidad) throws I18NException;
 
     /**
      * Renintenta los intercambios con ERROR a SIR sin ACK
      *
      * @param entidad
-     * @throws Exception
+     * @throws I18NException
      */
-    void reintentarIntercambiosConError(Entidad entidad) throws Exception;
+    void reintentarIntercambiosConError(Entidad entidad) throws I18NException;
 
     /**
      * Renintenta los Reenvios/Rechazos con ERROR a SIR sin ACK
      *
      * @param entidad
-     * @throws Exception
+     * @throws I18NException
      */
-    void reintentarReenviosRechazosConError(Entidad entidad) throws Exception;
+    void reintentarReenviosRechazosConError(Entidad entidad) throws I18NException;
 
     /**
      * @param registroSir
@@ -144,24 +144,24 @@ public interface SirEnvioLocal {
      * @param camposNTIs
      * @return
      */
-    RegistroEntrada aceptarRegistroSir(RegistroSir registroSir, Entidad entidad, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, List<CamposNTI> camposNTIs, Long idOrganismoDestino, Boolean distribuir, Long codigoSia, String emails, String motivo) throws Exception, I18NException, I18NValidationException;
+    RegistroEntrada aceptarRegistroSir(RegistroSir registroSir, Entidad entidad, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, List<CamposNTI> camposNTIs, Long idOrganismoDestino, Boolean distribuir, Long codigoSia, String emails, String motivo) throws I18NException, I18NValidationException;
 
 
     /**
      * Reenvio de un Registro SIR
      *
      * @param registroSir
-     * @throws Exception
+     * @throws I18NException
      */
-    void reenviarRegistroSir(RegistroSir registroSir, Oficina oficinaReenvio, Oficina oficinaActiva, Usuario usuario, String observaciones) throws Exception;
+    void reenviarRegistroSir(RegistroSir registroSir, Oficina oficinaReenvio, Oficina oficinaActiva, Usuario usuario, String observaciones) throws I18NException;
 
     /**
      *
      * @param idRegistroSir
      * @param entidad
-     * @throws Exception
+     * @throws I18NException
      */
-    void reenviarRegistroSir(Long idRegistroSir, Entidad entidad) throws Exception;
+    void reenviarRegistroSir(Long idRegistroSir, Entidad entidad) throws I18NException;
 
     /**
      * Método que indica si el RegistroSir puede ser reenviado en función de su estado.
@@ -176,12 +176,12 @@ public interface SirEnvioLocal {
      * @param oficinaActiva
      * @param usuario
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    void rechazarRegistroSir(RegistroSir registroSir, Oficina oficinaActiva, Usuario usuario, String observaciones) throws Exception;
+    void rechazarRegistroSir(RegistroSir registroSir, Oficina oficinaActiva, Usuario usuario, String observaciones) throws I18NException;
 
-    Integer aceptarRegistrosERTE(List<Long> registros, Entidad entidad, String destino, Oficina oficina,Long idLibro, UsuarioEntidad usuarioEntidad) throws Exception;
+    Integer aceptarRegistrosERTE(List<Long> registros, Entidad entidad, String destino, Oficina oficina,Long idLibro, UsuarioEntidad usuarioEntidad) throws I18NException;
 
-    Integer copiarDocumentacionERTE(List<Long> registros, Long idEntidad) throws Exception;
+    Integer copiarDocumentacionERTE(List<Long> registros, Long idEntidad) throws I18NException;
 }
 

@@ -22,27 +22,27 @@ public interface ColaLocal extends BaseEjb<Cola, Long> {
     /**
      * @param inicio
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    List<Cola> getPagination(int inicio) throws Exception;
+    List<Cola> getPagination(int inicio) throws I18NException;
 
     /**
      * Busca todos los elementos de la cola del mismo tipo
      *
      * @param tipo tipo de elemento
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    List<Cola> findByTipoEntidad(Long tipo, Long idEntidad,Integer inicio, Integer total) throws Exception;
+    List<Cola> findByTipoEntidad(Long tipo, Long idEntidad,Integer inicio, Integer total) throws I18NException;
 
     /**
      * Retorna el total de elementos de la Cola en estado PENDIENTE
      * @param tipo
      * @param idEntidad
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Long findPendientesByTipo(Long tipo, Long idEntidad) throws Exception;
+    Long findPendientesByTipo(Long tipo, Long idEntidad) throws I18NException;
 
     /**
      * Busca un elemento de la cola por IdObjeto y por entidad
@@ -50,9 +50,9 @@ public interface ColaLocal extends BaseEjb<Cola, Long> {
      * @param idObjeto
      * @param idEntidad
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Cola findByIdObjeto(Long idObjeto, Long idEntidad) throws Exception;
+    Cola findByIdObjeto(Long idObjeto, Long idEntidad) throws I18NException;
 
     /**
      * Busca un elemento de la cola por IdObjeto, Entidad y Estado
@@ -61,9 +61,9 @@ public interface ColaLocal extends BaseEjb<Cola, Long> {
      * @param idEntidad
      * @param idEstado
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Cola findByIdObjetoEstado(Long idObjeto, Long idEntidad, Long idEstado) throws Exception;
+    Cola findByIdObjetoEstado(Long idObjeto, Long idEntidad, Long idEstado) throws I18NException;
 
     /**
      * Obtiene los elementos de la cola por tipo y por entidad que han alcanzado el máximo de reintentos
@@ -71,9 +71,9 @@ public interface ColaLocal extends BaseEjb<Cola, Long> {
      * @param tipo      tipo de elemento
      * @param idEntidad entidad a la que pertenece
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    List<Cola> findByTipoMaxReintentos(Long tipo, Long idEntidad, int maxReintentos) throws Exception;
+    List<Cola> findByTipoMaxReintentos(Long tipo, Long idEntidad, int maxReintentos) throws I18NException;
 
     /**
      * Realiza la busqueda de los elementos de la cola por entidad
@@ -81,18 +81,18 @@ public interface ColaLocal extends BaseEjb<Cola, Long> {
      * @param cola
      * @param idEntidad
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Paginacion busqueda(Cola cola, Long idEntidad) throws Exception;
+    Paginacion busqueda(Cola cola, Long idEntidad) throws I18NException;
 
     /**
      * @param re
      * @param usuarioEntidad
-     * @throws Exception
+     * @throws I18NException
      * @throws I18NException
      * @throws I18NValidationException
      */
-    boolean enviarAColaDistribucion(RegistroEntrada re, UsuarioEntidad usuarioEntidad) throws Exception;
+    boolean enviarAColaDistribucion(RegistroEntrada re, UsuarioEntidad usuarioEntidad) throws I18NException;
 
     /**
      * añade a la cola de cusodia un nuevo anexo Justificante
@@ -107,58 +107,58 @@ public interface ColaLocal extends BaseEjb<Cola, Long> {
      * Vuelve a activar los elementos en la cola poniendo el contador a 0 para que se puedan volver a enviar
      *
      * @param idEntidad
-     * @throws Exception
+     * @throws I18NException
      * @throws I18NException
      * @throws I18NValidationException
      */
-    void reiniciarColabyEntidadTipo(Long idEntidad, Long tipo) throws Exception, I18NException;
+    void reiniciarColabyEntidadTipo(Long idEntidad, Long tipo) throws I18NException;
 
     /**
      * @param elemento
      * @param error
      * @param entidadId
-     * @throws Exception
+     * @throws I18NException
      */
-    void actualizarElementoCola(Cola elemento, Long entidadId, String error) throws Exception;
+    void actualizarElementoCola(Cola elemento, Long entidadId, String error) throws I18NException;
 
     /**
      * Elimina los elementos de la cola de distribución de la entidad indicada
      *
      * @param idEntidad
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Integer eliminarByEntidad(Long idEntidad) throws Exception;
+    Integer eliminarByEntidad(Long idEntidad) throws I18NException;
 
     /**
      * Reiniciamos un elemento de la cola para que vuelva a relanzarse
      *
      * @param idCola
-     * @throws Exception
+     * @throws I18NException
      */
-    void reiniciarElementoCola(Long idCola) throws Exception;
+    void reiniciarElementoCola(Long idCola) throws I18NException;
 
     /**
      * MArca como procesado un elemento de la Cola
      *
      * @param elemento
      */
-    void procesarElemento(Cola elemento) throws Exception;
+    void procesarElemento(Cola elemento) throws I18NException;
 
     /**
      * Método que elimina los elementos que fueron procesados hace x meses
      *
      * @param idEntidad
-     * @throws Exception
+     * @throws I18NException
      */
-    Integer purgarElementosProcesados(Long idEntidad) throws Exception;
+    Integer purgarElementosProcesados(Long idEntidad) throws I18NException;
 
     /**
      * Obtiene los elementos de cualquier cola que estén en estado Error
      *
      * @param idEntidad
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    List<Cola> getElementosError(Long idEntidad) throws Exception;
+    List<Cola> getElementosError(Long idEntidad) throws I18NException;
 }

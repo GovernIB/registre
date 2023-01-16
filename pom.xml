@@ -43,9 +43,9 @@
         <pluginsib.userinformation.api.version>3.0.0</pluginsib.userinformation.api.version>
         <pluginsib.userinformation.version>3.0.0-SNAPSHOT</pluginsib.userinformation.version>
         <pluginsib.userinformation-keycloak.version>3.0.0-SNAPSHOT</pluginsib.userinformation-keycloak.version>
-        <dir3caib-ws-api.version>1.0.14</dir3caib-ws-api.version>
+        <dir3caib-ws-api.version>1.1.0</dir3caib-ws-api.version>
         <scanweb.api.version>4.0.0</scanweb.api.version>
-        <cxf.version>3.2.5</cxf.version>
+        <cxf.version>3.3.3</cxf.version>
         <pluginsib-validatesignature-afirmacxf.version>2.0.5</pluginsib-validatesignature-afirmacxf.version>
         <slf4j.version>1.7.22.redhat-2</slf4j.version>
         <jaxws-api.version>2.3.1</jaxws-api.version>
@@ -193,11 +193,7 @@
                 <version>${jboss-javaee.version}</version>
                 <type>pom</type>
             </dependency>
-            <dependency>
-                <groupId>org.apache.cxf</groupId>
-                <artifactId>cxf-rt-bindings-soap</artifactId>
-                <version>${cxf.version}</version>
-            </dependency>
+
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-api</artifactId>
@@ -225,6 +221,12 @@
             </dependency>
 
             <!-- Altres llibreries emprades dins els mòduls -->
+            <dependency>
+                <groupId>org.fundaciobit.genapp</groupId>
+                <artifactId>genapp-core</artifactId>
+                <version>${genapp.version}</version>
+            </dependency>
+
             <dependency>
                 <groupId>org.eclipse.microprofile.openapi</groupId>
                 <artifactId>microprofile-openapi-api</artifactId>

@@ -118,7 +118,7 @@ public class AnexoController extends BaseController {
 
     @RequestMapping(value = "/nou", method = RequestMethod.POST)
     public String crearAnexoPost(@ModelAttribute AnexoForm anexoForm, BindingResult result, HttpServletRequest request,
-                                 HttpServletResponse response, Model model) throws Exception, I18NException {
+                                 HttpServletResponse response, Model model) throws I18NException {
 
         Entidad entidad = getEntidadActiva(request);
         //Validamos el anexo
@@ -143,7 +143,7 @@ public class AnexoController extends BaseController {
                 }else { //si quedan más anexos volvemos a coger el siguiente a procesar
                     return "redirect:/anexoScan/transforma";
                 }
-            } catch (I18NValidationException | Exception i18n) {
+            } catch (I18NValidationException i18n) {
                 log.error(i18n.getMessage(), i18n);
                 // TODO
                 Mensaje.saveMessageError(request, i18n.getMessage());
@@ -570,7 +570,7 @@ public class AnexoController extends BaseController {
      * @param model
      * @throws Exception
      */
-    protected void loadCommonAttributes(HttpServletRequest request, Model model) throws Exception {
+    protected void loadCommonAttributes(HttpServletRequest request, Model model) throws I18NException {
         model.addAttribute("tiposDocumental", tipoDocumentalEjb.getByEntidad(getEntidadActiva(request).getId()));
         model.addAttribute("tiposDocumentoAnexo", RegwebConstantes.TIPOS_DOCUMENTO);
         model.addAttribute("tiposFirma", RegwebConstantes.TIPOS_FIRMA);

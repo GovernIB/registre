@@ -28,18 +28,18 @@ public interface UsuarioEntidadLocal extends BaseEjb<UsuarioEntidad, Long> {
      * @param inicio
      * @param idEntidad
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    List<UsuarioEntidad> getPagination(int inicio, Long idEntidad) throws Exception;
+    List<UsuarioEntidad> getPagination(int inicio, Long idEntidad) throws I18NException;
 
     /**
      * Obtiene el total de registros para la paginacion
      *
      * @param idEntidad
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Long getTotal(Long idEntidad) throws Exception;
+    Long getTotal(Long idEntidad) throws I18NException;
 
     /**
      * Crea un UsuarioEntidad, a partir de un identificador y la Entidad
@@ -47,19 +47,19 @@ public interface UsuarioEntidadLocal extends BaseEjb<UsuarioEntidad, Long> {
      * @param identificador
      * @param idEntidad
      * @return
-     * @throws Exception
+     * @throws I18NException
      * @throws I18NException
      */
-    UsuarioEntidad comprobarUsuarioEntidad(String identificador, Long idEntidad) throws Exception, I18NException;
+    UsuarioEntidad comprobarUsuarioEntidad(String identificador, Long idEntidad) throws I18NException;
 
     /**
      * Retorna el {@link es.caib.regweb3.model.UsuarioEntidad} asociado a un identificador.
      *
      * @param identificador
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    UsuarioEntidad findByIdentificador(String identificador) throws Exception;
+    UsuarioEntidad findByIdentificador(String identificador) throws I18NException;
 
     /**
      * Retorna el {@link es.caib.regweb3.model.UsuarioEntidad} asociado a un identificador y a una Entidad
@@ -67,9 +67,9 @@ public interface UsuarioEntidadLocal extends BaseEjb<UsuarioEntidad, Long> {
      * @param identificador
      * @param idEntidad
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    UsuarioEntidad findByIdentificadorEntidad(String identificador, Long idEntidad) throws Exception;
+    UsuarioEntidad findByIdentificadorEntidad(String identificador, Long idEntidad) throws I18NException;
 
     /**
      * Retorna el {@link es.caib.regweb3.model.UsuarioEntidad} asociado a un identificador y el código DIR3 de la entidad
@@ -77,9 +77,9 @@ public interface UsuarioEntidadLocal extends BaseEjb<UsuarioEntidad, Long> {
      * @param identificador
      * @param codigoEntidad
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    UsuarioEntidad findByIdentificadorCodigoEntidad(String identificador, String codigoEntidad) throws Exception;
+    UsuarioEntidad findByIdentificadorCodigoEntidad(String identificador, String codigoEntidad) throws I18NException;
 
 
     /**
@@ -87,35 +87,35 @@ public interface UsuarioEntidadLocal extends BaseEjb<UsuarioEntidad, Long> {
      *
      * @param documento
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    UsuarioEntidad findByDocumento(String documento) throws Exception;
+    UsuarioEntidad findByDocumento(String documento) throws I18NException;
 
 
     /**
      * @param idEntidad
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    List<UsuarioEntidad> findByEntidad(Long idEntidad) throws Exception;
+    List<UsuarioEntidad> findByEntidad(Long idEntidad) throws I18NException;
 
     /**
      * Retorna todos los UsuarioEntidad activos de una entidad
      *
      * @param idEntidad
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    List<Usuario> findActivosByEntidad(Long idEntidad) throws Exception;
+    List<Usuario> findActivosByEntidad(Long idEntidad) throws I18NException;
 
     /**
      * Devuelve los UsuarioEntidad de una Entidad que tiene el ROL RWE_ADMIN
      *
      * @param idEntidad
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    List<UsuarioEntidad> findAdministradoresByEntidad(Long idEntidad) throws Exception;
+    List<UsuarioEntidad> findAdministradoresByEntidad(Long idEntidad) throws I18NException;
 
     /**
      * Busca un UsuarioEntidad a partir del idUsuario y idEntidad
@@ -123,9 +123,9 @@ public interface UsuarioEntidadLocal extends BaseEjb<UsuarioEntidad, Long> {
      * @param idUsuario
      * @param idEntidad
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    UsuarioEntidad findByUsuarioEntidad(Long idUsuario, Long idEntidad) throws Exception;
+    UsuarioEntidad findByUsuarioEntidad(Long idUsuario, Long idEntidad) throws I18NException;
 
     /**
      * Busca un UsuarioEntidad activo a partir del idUsuario y idEntidad
@@ -133,27 +133,27 @@ public interface UsuarioEntidadLocal extends BaseEjb<UsuarioEntidad, Long> {
      * @param idUsuario
      * @param idEntidad
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    UsuarioEntidad findByUsuarioEntidadActivo(Long idUsuario, Long idEntidad) throws Exception;
+    UsuarioEntidad findByUsuarioEntidadActivo(Long idUsuario, Long idEntidad) throws I18NException;
 
     /**
      * Obtiene todas las Entidades en las cuales el Usuario está asociado
      *
      * @param idUsuario
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    List<Entidad> getEntidadesByUsuario(Long idUsuario) throws Exception;
+    List<Entidad> getEntidadesByUsuario(Long idUsuario) throws I18NException;
 
     /**
      * Retorna los {@link es.caib.regweb3.model.Entidad} de un Usuario activos.
      *
      * @param idUsuario
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    List<Entidad> findByUsuario(Long idUsuario) throws Exception;
+    List<Entidad> findByUsuario(Long idUsuario) throws I18NException;
 
     /**
      * Realiza una busqueda de {@link es.caib.regweb3.model.UsuarioEntidad} según los parámetros
@@ -166,9 +166,9 @@ public interface UsuarioEntidadLocal extends BaseEjb<UsuarioEntidad, Long> {
      * @param tipoUsuario
      * @param idOrganismo
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Paginacion busqueda(Integer pageNumber, Long idEntidad, String identificador, String nombre, String apellido1, String apellido2, String documento, Long tipoUsuario, Long idOrganismo, Long permiso) throws Exception;
+    Paginacion busqueda(Integer pageNumber, Long idEntidad, String identificador, String nombre, String apellido1, String apellido2, String documento, Long tipoUsuario, Long idOrganismo, Long permiso) throws I18NException;
 
     /**
      * Devuelve los usuarios de la Entidad activos que no son el usuario actual y según el tipo de usuario
@@ -176,36 +176,36 @@ public interface UsuarioEntidadLocal extends BaseEjb<UsuarioEntidad, Long> {
      * @param idEntidad
      * @param idUsuario
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    List<UsuarioEntidad> findUsuariosPlantilla(Long idEntidad, Long idUsuario, Long tipoUsuario) throws Exception;
+    List<UsuarioEntidad> findUsuariosPlantilla(Long idEntidad, Long idUsuario, Long tipoUsuario) throws I18NException;
 
     /**
      * Modifica la última Oficina utilizada por el usuario
      *
      * @param idUsuario
      * @param idOficina
-     * @throws Exception
+     * @throws I18NException
      */
-    void actualizarOficinaUsuario(Long idUsuario, Long idOficina) throws Exception;
+    void actualizarOficinaUsuario(Long idUsuario, Long idOficina) throws I18NException;
 
     /**
      * Devuelve los UsuarioEntidad de una Entidad que tiene el ROL RWE_USUARIO activos o no activos
      *
      * @param idEntidad
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    List<UsuarioEntidad> findOperadoresByEntidad(Long idEntidad) throws Exception;
+    List<UsuarioEntidad> findOperadoresByEntidad(Long idEntidad) throws I18NException;
 
     /**
      * Elimina las UsuarioEntidad de una Entidad
      *
      * @param idEntidad
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Integer eliminarByEntidad(Long idEntidad) throws Exception;
+    Integer eliminarByEntidad(Long idEntidad) throws I18NException;
 
     /**
      * Lista las {@link es.caib.regweb3.model.PermisoLibroUsuario} para Exportar a Excel
@@ -222,8 +222,8 @@ public interface UsuarioEntidadLocal extends BaseEjb<UsuarioEntidad, Long> {
      * @param permisoRegSalida
      * @param permisoSir
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    List<PermisoOrganismoUsuario> getExportarExcel(Long idEntidad, String identificador, String nombre, String apellido1, String apellido2, String documento, Long tipo, Long idOrganismo, Long permisoRegEntrada, Long permisoRegSalida, Long permisoSir) throws Exception;
+    List<PermisoOrganismoUsuario> getExportarExcel(Long idEntidad, String identificador, String nombre, String apellido1, String apellido2, String documento, Long tipo, Long idOrganismo, Long permisoRegEntrada, Long permisoRegSalida, Long permisoSir) throws I18NException;
 
 }

@@ -42,26 +42,26 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
 
 
     @Override
-    public UsuarioEntidad getReference(Long id) throws Exception {
+    public UsuarioEntidad getReference(Long id) throws I18NException {
 
         return em.getReference(UsuarioEntidad.class, id);
     }
 
     @Override
-    public UsuarioEntidad findById(Long id) throws Exception {
+    public UsuarioEntidad findById(Long id) throws I18NException {
 
         return em.find(UsuarioEntidad.class, id);
     }
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<UsuarioEntidad> getAll() throws Exception {
+    public List<UsuarioEntidad> getAll() throws I18NException {
 
         return em.createQuery("Select usuarioEntidad from UsuarioEntidad as usuarioEntidad order by usuarioEntidad.id").getResultList();
     }
 
     @Override
-    public Long getTotal() throws Exception {
+    public Long getTotal() throws I18NException {
 
         Query q = em.createQuery("Select count(usuarioEntidad.id) from UsuarioEntidad as usuarioEntidad");
 
@@ -71,7 +71,7 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<UsuarioEntidad> getPagination(int inicio, Long idEntidad) throws Exception {
+    public List<UsuarioEntidad> getPagination(int inicio, Long idEntidad) throws I18NException {
 
         Query q = em.createQuery("Select usuarioEntidad from UsuarioEntidad as usuarioEntidad " +
                 "where usuarioEntidad.entidad.id = :idEntidad and usuarioEntidad.activo = true order by usuarioEntidad.id");
@@ -85,7 +85,7 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
     }
 
     @Override
-    public Long getTotal(Long idEntidad) throws Exception {
+    public Long getTotal(Long idEntidad) throws I18NException {
 
         Query q = em.createQuery("Select count(usuarioEntidad.id) from UsuarioEntidad as usuarioEntidad " +
                 "where usuarioEntidad.entidad.id = :idEntidad and usuarioEntidad.activo = true");
@@ -99,7 +99,7 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<UsuarioEntidad> getPagination(int inicio) throws Exception {
+    public List<UsuarioEntidad> getPagination(int inicio) throws I18NException {
 
         Query q = em.createQuery("Select usuarioEntidad from UsuarioEntidad as usuarioEntidad where usuarioEntidad.activo = true order by usuarioEntidad.id");
         q.setFirstResult(inicio);
@@ -111,7 +111,7 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public UsuarioEntidad comprobarUsuarioEntidad(String identificador, Long idEntidad) throws Exception, I18NException {
+    public UsuarioEntidad comprobarUsuarioEntidad(String identificador, Long idEntidad) throws I18NException {
 
         UsuarioEntidad usuarioEntidad = findByIdentificadorEntidad(identificador, idEntidad);
 
@@ -131,7 +131,7 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public UsuarioEntidad findByIdentificador(String identificador) throws Exception {
+    public UsuarioEntidad findByIdentificador(String identificador) throws I18NException {
 
         Query q = em.createQuery("Select usuarioEntidad from UsuarioEntidad as usuarioEntidad "
                 + " where upper(usuarioEntidad.usuario.identificador) = :identificador");
@@ -150,7 +150,7 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Entidad> findByUsuario(Long idUsuario) throws Exception {
+    public List<Entidad> findByUsuario(Long idUsuario) throws I18NException {
 
         Query q = em.createQuery("Select usuarioEntidad.entidad.id, usuarioEntidad.entidad.nombre, usuarioEntidad.entidad.codigoDir3 from UsuarioEntidad as usuarioEntidad "
                 + "where usuarioEntidad.usuario.id = :idUsuario and usuarioEntidad.activo = true and " +
@@ -173,7 +173,7 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public UsuarioEntidad findByIdentificadorEntidad(String identificador, Long idEntidad) throws Exception {
+    public UsuarioEntidad findByIdentificadorEntidad(String identificador, Long idEntidad) throws I18NException {
 
         Query q = em.createQuery("Select usuarioEntidad from UsuarioEntidad as usuarioEntidad where " +
                 "upper(usuarioEntidad.usuario.identificador) = :identificador and " +
@@ -194,7 +194,7 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public UsuarioEntidad findByIdentificadorCodigoEntidad(String identificador, String codigoEntidad) throws Exception {
+    public UsuarioEntidad findByIdentificadorCodigoEntidad(String identificador, String codigoEntidad) throws I18NException {
         Query q = em.createQuery("Select usuarioEntidad from UsuarioEntidad as usuarioEntidad where " +
                 "upper(usuarioEntidad.usuario.identificador) = :identificador and " +
                 "usuarioEntidad.entidad.codigoDir3 = :codigoEntidad");
@@ -213,7 +213,7 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public UsuarioEntidad findByDocumento(String documento) throws Exception {
+    public UsuarioEntidad findByDocumento(String documento) throws I18NException {
         Query q = em.createQuery("Select usuarioEntidad from UsuarioEntidad as usuarioEntidad where usuarioEntidad.usuario.documento = :documento");
 
         q.setParameter("documento", documento);
@@ -229,7 +229,7 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<UsuarioEntidad> findByEntidad(Long idEntidad) throws Exception {
+    public List<UsuarioEntidad> findByEntidad(Long idEntidad) throws I18NException {
 
         Query q = em.createQuery("Select usuarioEntidad.id, usuarioEntidad.usuario from UsuarioEntidad as usuarioEntidad where " +
                 "usuarioEntidad.entidad.id= :idEntidad order by usuarioEntidad.usuario.apellido1");
@@ -251,7 +251,7 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Usuario> findActivosByEntidad(Long idEntidad) throws Exception {
+    public List<Usuario> findActivosByEntidad(Long idEntidad) throws I18NException {
 
         Query q = em.createQuery("Select usuarioEntidad.usuario from UsuarioEntidad as usuarioEntidad where " +
                 "usuarioEntidad.entidad.id = :idEntidad and usuarioEntidad.activo = true and usuarioEntidad.usuario.rwe_admin = true order by usuarioEntidad.usuario.apellido1");
@@ -264,7 +264,7 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<UsuarioEntidad> findAdministradoresByEntidad(Long idEntidad) throws Exception {
+    public List<UsuarioEntidad> findAdministradoresByEntidad(Long idEntidad) throws I18NException {
 
         Query q = em.createQuery("Select usuarioEntidad from UsuarioEntidad as usuarioEntidad where " +
                 "usuarioEntidad.entidad.id= :idEntidad and usuarioEntidad.usuario.rwe_admin = true and usuarioEntidad.activo = true order by usuarioEntidad.usuario.apellido1");
@@ -277,7 +277,7 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public UsuarioEntidad findByUsuarioEntidad(Long idUsuario, Long idEntidad) throws Exception {
+    public UsuarioEntidad findByUsuarioEntidad(Long idUsuario, Long idEntidad) throws I18NException {
 
         Query q = em.createQuery("Select usuarioEntidad from UsuarioEntidad as usuarioEntidad where " +
                 "usuarioEntidad.entidad.id= :idEntidad and usuarioEntidad.usuario.id= :idUsuario");
@@ -297,7 +297,7 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public UsuarioEntidad findByUsuarioEntidadActivo(Long idUsuario, Long idEntidad) throws Exception {
+    public UsuarioEntidad findByUsuarioEntidadActivo(Long idUsuario, Long idEntidad) throws I18NException {
 
         Query q = em.createQuery("Select usuarioEntidad from UsuarioEntidad as usuarioEntidad where " +
                 "usuarioEntidad.entidad.id= :idEntidad and usuarioEntidad.usuario.id= :idUsuario and " +
@@ -318,7 +318,7 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Entidad> getEntidadesByUsuario(Long idUsuario) throws Exception {
+    public List<Entidad> getEntidadesByUsuario(Long idUsuario) throws I18NException {
 
         Query q = em.createQuery("Select usuarioEntidad.entidad.id, usuarioEntidad.entidad.nombre, usuarioEntidad.entidad.oficioRemision from UsuarioEntidad as usuarioEntidad where " +
                 "usuarioEntidad.usuario.id = :idUsuario and usuarioEntidad.entidad.activo = true and usuarioEntidad.activo = true order by usuarioEntidad.entidad.id");
@@ -342,7 +342,7 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Paginacion busqueda(Integer pageNumber, Long idEntidad, String identificador, String nombre, String apellido1, String apellido2, String documento, Long tipoUsuario, Long idOrganismo, Long permiso) throws Exception {
+    public Paginacion busqueda(Integer pageNumber, Long idEntidad, String identificador, String nombre, String apellido1, String apellido2, String documento, Long tipoUsuario, Long idOrganismo, Long permiso) throws I18NException {
 
         Query q;
         Query q2;
@@ -452,7 +452,7 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<UsuarioEntidad> findUsuariosPlantilla(Long idEntidad, Long idUsuario, Long tipoUsuario) throws Exception {
+    public List<UsuarioEntidad> findUsuariosPlantilla(Long idEntidad, Long idUsuario, Long tipoUsuario) throws I18NException {
 
         Query q = em.createQuery("Select usuarioEntidad.id, usuarioEntidad.usuario.id, usuarioEntidad.usuario.identificador " +
                 "from UsuarioEntidad as usuarioEntidad where usuarioEntidad.entidad.id= :idEntidad and " +
@@ -478,7 +478,7 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
     }
 
     @Override
-    public void actualizarOficinaUsuario(Long idUsuario, Long idOficina) throws Exception {
+    public void actualizarOficinaUsuario(Long idUsuario, Long idOficina) throws I18NException {
 
         Query q = em.createQuery("Update UsuarioEntidad set ultimaOficina.id = :idOficina " +
                 "where id = :idUsuario");
@@ -491,7 +491,7 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<UsuarioEntidad> findOperadoresByEntidad(Long idEntidad) throws Exception {
+    public List<UsuarioEntidad> findOperadoresByEntidad(Long idEntidad) throws I18NException {
 
         Query q = em.createQuery("Select usuarioEntidad from UsuarioEntidad as usuarioEntidad where " +
                 "usuarioEntidad.entidad.id= :idEntidad and usuarioEntidad.usuario.rwe_usuari = true order by usuarioEntidad.usuario.apellido1");
@@ -503,7 +503,7 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
     }
 
     @Override
-    public Integer eliminarByEntidad(Long idEntidad) throws Exception {
+    public Integer eliminarByEntidad(Long idEntidad) throws I18NException {
 
         List<?> usuarios = em.createQuery("Select distinct(o.id) from UsuarioEntidad as o where o.entidad.id =:idEntidad").setParameter("idEntidad", idEntidad).getResultList();
         Integer total = usuarios.size();
@@ -531,7 +531,7 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<PermisoOrganismoUsuario> getExportarExcel(Long idEntidad, String identificador, String nombre, String apellido1, String apellido2, String documento, Long tipo, Long idOrganismo, Long permisoRegEntrada, Long permisoRegSalida, Long permisoSir) throws Exception {
+    public List<PermisoOrganismoUsuario> getExportarExcel(Long idEntidad, String identificador, String nombre, String apellido1, String apellido2, String documento, Long tipo, Long idOrganismo, Long permisoRegEntrada, Long permisoRegSalida, Long permisoSir) throws I18NException {
 
         Query q;
         Map<String, Object> parametros = new HashMap<String, Object>();

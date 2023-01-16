@@ -19,6 +19,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import java.io.UnsupportedEncodingException;
 import java.util.*;
 
 import static es.caib.regweb3.persistence.ejb.BaseEjbJPA.RESULTADOS_PAGINACION;
@@ -40,12 +41,11 @@ public class RegistroSalidaConsultaBean implements RegistroSalidaConsultaLocal {
     private EntityManager em;
 
     @EJB private AnexoLocal anexoEjb;
-    @EJB private OrganismoLocal organismoEjb;
 
 
     @Override
     @SuppressWarnings("unchecked")
-    public RegistroBasico findByIdLigero(Long idRegistroSalida) throws Exception{
+    public RegistroBasico findByIdLigero(Long idRegistroSalida) throws I18NException{
         Query q;
 
         q = em.createQuery("Select rs.id, rs.numeroRegistroFormateado, rs.fecha, rs.libro.nombre, rs.usuario.usuario.identificador, rs.estado " +
@@ -77,7 +77,7 @@ public class RegistroSalidaConsultaBean implements RegistroSalidaConsultaLocal {
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Paginacion busqueda(Integer pageNumber,List<Long> organismos, Date fechaInicio, Date fechaFin, RegistroSalida registroSalida, String interesadoNom, String interesadoLli1, String interesadoLli2, String interesadoDoc, String observaciones, Long idUsuario, Long idEntidad) throws Exception {
+    public Paginacion busqueda(Integer pageNumber,List<Long> organismos, Date fechaInicio, Date fechaFin, RegistroSalida registroSalida, String interesadoNom, String interesadoLli1, String interesadoLli2, String interesadoDoc, String observaciones, Long idUsuario, Long idEntidad) throws I18NException {
 
         Query q;
         Query q2;
@@ -127,7 +127,12 @@ public class RegistroSalidaConsultaBean implements RegistroSalidaConsultaLocal {
 
         // Extracto
         if (StringUtils.isNotEmpty(registroSalida.getRegistroDetalle().getExtracto())) {
-            where.add(DataBaseUtils.like("rs.registroDetalle.extracto", "extracto", parametros, new String(registroSalida.getRegistroDetalle().getExtracto().getBytes("ISO-8859-1"), "UTF-8")));
+            try{
+                String extracto = new String(registroSalida.getRegistroDetalle().getExtracto().getBytes("ISO-8859-1"), "UTF-8") ;
+                where.add(DataBaseUtils.like("rs.registroDetalle.extracto", "extracto", parametros, extracto));
+            }catch (UnsupportedEncodingException e){
+                e.printStackTrace();
+            }
         }
 
         // Observaciones
@@ -254,7 +259,7 @@ public class RegistroSalidaConsultaBean implements RegistroSalidaConsultaLocal {
 
     @Override
     @SuppressWarnings("unchecked")
-    public RegistroSalida findByNumeroAnyoLibro(int numero, int anyo, String libro) throws Exception {
+    public RegistroSalida findByNumeroAnyoLibro(int numero, int anyo, String libro) throws I18NException {
 
         Query q = em.createQuery("Select registroSalida "
                 + " from RegistroSalida as registroSalida"
@@ -278,7 +283,7 @@ public class RegistroSalidaConsultaBean implements RegistroSalidaConsultaLocal {
 
     @Override
     @SuppressWarnings("unchecked")
-    public RegistroSalida findByNumeroRegistroFormateado(Long idEntidad, String numeroRegistroFormateado) throws Exception {
+    public RegistroSalida findByNumeroRegistroFormateado(Long idEntidad, String numeroRegistroFormateado) throws I18NException {
 
 
         Query q = em.createQuery("Select rs from RegistroSalida as rs where rs.numeroRegistroFormateado = :numeroRegistroFormateado " +
@@ -298,7 +303,7 @@ public class RegistroSalidaConsultaBean implements RegistroSalidaConsultaLocal {
     }
 
     @Override
-    public RegistroSalida findByNumeroRegistroFormateadoCompleto(Long idEntidad, String numeroRegistroFormateado) throws Exception, I18NException {
+    public RegistroSalida findByNumeroRegistroFormateadoCompleto(Long idEntidad, String numeroRegistroFormateado) throws I18NException {
 
         RegistroSalida registroSalida = findByNumeroRegistroFormateado(idEntidad,numeroRegistroFormateado);
 
@@ -315,7 +320,7 @@ public class RegistroSalidaConsultaBean implements RegistroSalidaConsultaLocal {
 
     @Override
     @SuppressWarnings("unchecked")
-    public String findNumeroRegistroFormateadoByRegistroDetalle(Long idRegistroDetalle) throws Exception {
+    public String findNumeroRegistroFormateadoByRegistroDetalle(Long idRegistroDetalle) throws I18NException {
 
         Query q = em.createQuery("Select registroSalida.numeroRegistroFormateado "
                 + " from RegistroSalida as registroSalida"
@@ -337,7 +342,7 @@ public class RegistroSalidaConsultaBean implements RegistroSalidaConsultaLocal {
 
     @Override
     @SuppressWarnings("unchecked")
-    public Long getLibro(Long idRegistroSalida) throws Exception {
+    public Long getLibro(Long idRegistroSalida) throws I18NException {
 
         Query q;
 
@@ -357,7 +362,7 @@ public class RegistroSalidaConsultaBean implements RegistroSalidaConsultaLocal {
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Organismo getOrganismo(Long idRegistroSalida) throws Exception {
+    public Organismo getOrganismo(Long idRegistroSalida) throws I18NException {
 
         Query q;
 
@@ -376,7 +381,7 @@ public class RegistroSalidaConsultaBean implements RegistroSalidaConsultaLocal {
     }
 
     @Override
-    public Long getByLibrosEstadoCount(List<Organismo> organismos, Long idEstado) throws Exception {
+    public Long getByLibrosEstadoCount(List<Organismo> organismos, Long idEstado) throws I18NException {
 
         Query q;
 
@@ -392,7 +397,7 @@ public class RegistroSalidaConsultaBean implements RegistroSalidaConsultaLocal {
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<RegistroSalida> getByLibrosEstado(int inicio, List<Organismo> organismos, Long idEstado) throws Exception {
+    public List<RegistroSalida> getByLibrosEstado(int inicio, List<Organismo> organismos, Long idEstado) throws I18NException {
 
         Query q;
 
@@ -411,7 +416,7 @@ public class RegistroSalidaConsultaBean implements RegistroSalidaConsultaLocal {
     }
 
     @Override
-    public Long getTotalByLibro(Long idLibro) throws Exception {
+    public Long getTotalByLibro(Long idLibro) throws I18NException {
 
         Query q;
 
@@ -424,7 +429,7 @@ public class RegistroSalidaConsultaBean implements RegistroSalidaConsultaLocal {
     }
 
     @Override
-    public Boolean obtenerPorUsuario(Long idUsuarioEntidad) throws Exception {
+    public Boolean obtenerPorUsuario(Long idUsuarioEntidad) throws I18NException {
 
         Query q;
 
@@ -438,7 +443,7 @@ public class RegistroSalidaConsultaBean implements RegistroSalidaConsultaLocal {
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Paginacion getSirRechazadosReenviadosPaginado(Integer pageNumber, Long idEntidad, Long idOficina) throws Exception {
+    public Paginacion getSirRechazadosReenviadosPaginado(Integer pageNumber, Long idEntidad, Long idOficina) throws I18NException {
 
         Query q;
         Query q2;
@@ -482,7 +487,7 @@ public class RegistroSalidaConsultaBean implements RegistroSalidaConsultaLocal {
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<RegistroSalida> getSirRechazadosReenviados(Long idEntidad, Long idOficina, Integer total) throws Exception {
+    public List<RegistroSalida> getSirRechazadosReenviados(Long idEntidad, Long idOficina, Integer total) throws I18NException {
 
         Query q;
 
@@ -517,7 +522,7 @@ public class RegistroSalidaConsultaBean implements RegistroSalidaConsultaLocal {
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Long getSirRechazadosReenviadosCount(Long idOficina) throws Exception{
+    public Long getSirRechazadosReenviadosCount(Long idOficina) throws I18NException{
 
         Query q;
 
@@ -535,7 +540,7 @@ public class RegistroSalidaConsultaBean implements RegistroSalidaConsultaLocal {
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<RegistroSalida> getByDocumento(Long idEntidad, String documento) throws Exception{
+    public List<RegistroSalida> getByDocumento(Long idEntidad, String documento) throws I18NException{
 
         Query q;
 
@@ -550,7 +555,7 @@ public class RegistroSalidaConsultaBean implements RegistroSalidaConsultaLocal {
     }
 
     @Override
-    public Long queryCount(String query) throws Exception {
+    public Long queryCount(String query) throws I18NException {
 
         Query q;
 
@@ -562,7 +567,7 @@ public class RegistroSalidaConsultaBean implements RegistroSalidaConsultaLocal {
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Organismo> ultimosOrganismosRegistro(UsuarioEntidad usuarioEntidad) throws Exception {
+    public List<Organismo> ultimosOrganismosRegistro(UsuarioEntidad usuarioEntidad) throws I18NException {
 
         Query q;
         q = em.createQuery("Select distinct(rs.registroDetalle.id) from RegistroSalida as rs left outer join rs.registroDetalle.interesados interesado where " +
@@ -602,10 +607,10 @@ public class RegistroSalidaConsultaBean implements RegistroSalidaConsultaLocal {
      * Carga los Anexos Completos al RegistroSalida pasado por parámetro
      * @param registroSalida
      * @return
-     * @throws Exception
+     * @throws I18NException
      * @throws I18NException
      */
-    private RegistroSalida cargarAnexosFull(RegistroSalida registroSalida) throws Exception, I18NException {
+    private RegistroSalida cargarAnexosFull(RegistroSalida registroSalida) throws I18NException {
 
         Long idEntidad = registroSalida.getEntidad().getId();
         List<Anexo> anexos = registroSalida.getRegistroDetalle().getAnexos();

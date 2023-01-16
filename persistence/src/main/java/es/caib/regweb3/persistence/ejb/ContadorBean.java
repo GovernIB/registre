@@ -3,6 +3,7 @@ package es.caib.regweb3.persistence.ejb;
 import es.caib.regweb3.model.Contador;
 import es.caib.regweb3.model.Libro;
 import es.caib.regweb3.persistence.utils.NumeroRegistro;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,26 +36,26 @@ public class ContadorBean extends BaseEjbJPA<Contador, Long> implements Contador
 
 
     @Override
-    public Contador getReference(Long id) throws Exception {
+    public Contador getReference(Long id) throws I18NException {
 
         return em.getReference(Contador.class, id);
     }
 
     @Override
-    public Contador findById(Long id) throws Exception {
+    public Contador findById(Long id) throws I18NException {
 
         return em.find(Contador.class, id);
     }
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Contador> getAll() throws Exception {
+    public List<Contador> getAll() throws I18NException {
 
         return em.createQuery("Select contador from Contador as contador order by contador.id").getResultList();
     }
 
     @Override
-    public Long getTotal() throws Exception {
+    public Long getTotal() throws I18NException {
 
         Query q = em.createQuery("Select count(contador.id) from Contador as contador");
 
@@ -64,7 +65,7 @@ public class ContadorBean extends BaseEjbJPA<Contador, Long> implements Contador
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Contador> getPagination(int inicio) throws Exception {
+    public List<Contador> getPagination(int inicio) throws I18NException {
 
         Query q = em.createQuery("Select contador from Contador as contador order by contador.id");
         q.setFirstResult(inicio);
@@ -75,7 +76,7 @@ public class ContadorBean extends BaseEjbJPA<Contador, Long> implements Contador
     }
 
     @Override
-    public NumeroRegistro incrementarContador(Long idContador) throws Exception {
+    public NumeroRegistro incrementarContador(Long idContador) throws I18NException {
 
         Query q = em.createQuery("update Contador set numero = numero + 1 where id = :idContador ");
         q.setParameter("idContador", idContador);
@@ -90,7 +91,7 @@ public class ContadorBean extends BaseEjbJPA<Contador, Long> implements Contador
     }
 
     @Override
-    public void reiniciarContador(Long idContador) throws Exception {
+    public void reiniciarContador(Long idContador) throws I18NException {
 
         Query q = em.createQuery("update Contador set numero = 0 where id = :idContador ");
         q.setParameter("idContador", idContador);
@@ -99,7 +100,7 @@ public class ContadorBean extends BaseEjbJPA<Contador, Long> implements Contador
     }
 
     @Override
-    public void reiniciarContadoresLibro(Libro libro) throws Exception {
+    public void reiniciarContadoresLibro(Libro libro) throws I18NException {
 
         if(libro.getContadorEntrada()!=null){reiniciarContador(libro.getContadorEntrada().getId());}
         if(libro.getContadorSalida()!=null){reiniciarContador(libro.getContadorSalida().getId());}
@@ -108,7 +109,7 @@ public class ContadorBean extends BaseEjbJPA<Contador, Long> implements Contador
     }
 
     @Override
-    public String secuenciaSir(Long idContador) throws Exception {
+    public String secuenciaSir(Long idContador) throws I18NException {
 
         NumeroRegistro numero = incrementarContador(idContador);
 
@@ -118,7 +119,7 @@ public class ContadorBean extends BaseEjbJPA<Contador, Long> implements Contador
             secuencia = String.format("%08d", numero.getNumero());
 
         } else if (secuencia.length() > 8) {
-            throw new Exception("El valor de la secuencia obtenido del Contador no puede ser superior a 8");
+            throw new I18NException("El valor de la secuencia obtenido del Contador no puede ser superior a 8");
         }
 
         return secuencia;

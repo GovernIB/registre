@@ -915,16 +915,10 @@ public class OficioRemisionController extends BaseController {
 
             model.addAttribute("registrosEntrada", registrosEntrada);
 
-        } catch (Exception e) {
+        } catch (I18NException | I18NValidationException e) {
             e.printStackTrace();
             Mensaje.saveMessageError(request, getMessage("oficioRemision.error.aceptando"));
             return "redirect:/oficioRemision/pendientesLlegada/list";
-        } catch (I18NException ex) {
-            ex.printStackTrace();
-            throw ex;
-        } catch (I18NValidationException ve) {
-            ve.printStackTrace();
-            throw ve;
         }
 
         return "oficioRemision/oficioRemisionAceptado";

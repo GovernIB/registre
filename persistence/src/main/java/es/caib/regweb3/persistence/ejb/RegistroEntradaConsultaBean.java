@@ -19,6 +19,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import java.io.UnsupportedEncodingException;
 import java.util.*;
 
 import static es.caib.regweb3.persistence.ejb.BaseEjbJPA.RESULTADOS_PAGINACION;
@@ -46,7 +47,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Long findByNumeroRegistroOrigen(String numeroRegistroFormateado, Long idRegistro) throws Exception {
+    public Long findByNumeroRegistroOrigen(String numeroRegistroFormateado, Long idRegistro) throws I18NException {
 
         Query q = em.createQuery("Select re.id from RegistroEntrada as re where re.registroDetalle.numeroRegistroOrigen LIKE :numeroRegistroFormateado " +
                 "and re.id != :idRegistro ");
@@ -65,7 +66,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
 
     @SuppressWarnings("unchecked")
     @Override
-    public RegistroBasico findByIdLigero(Long idRegistroEntrada) throws Exception{
+    public RegistroBasico findByIdLigero(Long idRegistroEntrada) throws I18NException{
 
         Query q;
 
@@ -97,7 +98,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Paginacion busqueda(Integer pageNumber, List<Long> organismos, Date fechaInicio, Date fechaFin, RegistroEntrada re, String interesadoNom, String interesadoLli1, String interesadoLli2, String interesadoDoc, String organoDest, String observaciones, Long idUsuario, Long idEntidad) throws Exception {
+    public Paginacion busqueda(Integer pageNumber, List<Long> organismos, Date fechaInicio, Date fechaFin, RegistroEntrada re, String interesadoNom, String interesadoLli1, String interesadoLli2, String interesadoDoc, String organoDest, String observaciones, Long idUsuario, Long idEntidad) throws I18NException {
 
         Query q;
         Query q2;
@@ -148,7 +149,12 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
 
         // Extracto
         if (StringUtils.isNotEmpty(re.getRegistroDetalle().getExtracto())) {
-            where.add(DataBaseUtils.like("re.registroDetalle.extracto", "extracto", parametros, new String(re.getRegistroDetalle().getExtracto().getBytes("ISO-8859-1"), "UTF-8")));
+            try{
+                String extracto = new String(re.getRegistroDetalle().getExtracto().getBytes("ISO-8859-1"), "UTF-8") ;
+                where.add(DataBaseUtils.like("re.registroDetalle.extracto", "extracto", parametros, extracto));
+            }catch (UnsupportedEncodingException e){
+                e.printStackTrace();
+            }
         }
 
         // Observaciones
@@ -289,7 +295,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<RegistroBasico> getByOficinaEstado(Long idOficina, Long idEstado, Integer total) throws Exception {
+    public List<RegistroBasico> getByOficinaEstado(Long idOficina, Long idEstado, Integer total) throws I18NException {
 
         Query q;
 
@@ -313,7 +319,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Paginacion getByOficinaEstadoPaginado(Integer pageNumber, Long idEntidad, Long idOficinaActiva, Long idEstado) throws Exception {
+    public Paginacion getByOficinaEstadoPaginado(Integer pageNumber, Long idEntidad, Long idOficinaActiva, Long idEstado) throws I18NException {
 
         Query q;
         Query q2;
@@ -354,7 +360,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Paginacion pendientesDistribuir(Integer pageNumber, Long idEntidad, Long idOficinaActiva) throws Exception{
+    public Paginacion pendientesDistribuir(Integer pageNumber, Long idEntidad, Long idOficinaActiva) throws I18NException{
 
         Query q;
         Query q2;
@@ -395,7 +401,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
     }
 
     @Override
-    public Long getByOficinaEstadoCount(Long idOficinaActiva, Long idEstado) throws Exception {
+    public Long getByOficinaEstadoCount(Long idOficinaActiva, Long idEstado) throws I18NException {
 
         Query q;
 
@@ -411,7 +417,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<RegistroEntrada> getByLibrosEstado(int inicio, List<Organismo> organismos, Long idEstado) throws Exception {
+    public List<RegistroEntrada> getByLibrosEstado(int inicio, List<Organismo> organismos, Long idEstado) throws I18NException {
 
         Query q;
 
@@ -431,7 +437,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Long getByLibrosEstadoCount(List<Organismo> organismos, Long idEstado) throws Exception {
+    public Long getByLibrosEstadoCount(List<Organismo> organismos, Long idEstado) throws I18NException {
 
         Query q;
 
@@ -448,7 +454,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public RegistroEntrada findByNumeroRegistroFormateado(Long idEntidad, String numeroRegistroFormateado) throws Exception {
+    public RegistroEntrada findByNumeroRegistroFormateado(Long idEntidad, String numeroRegistroFormateado) throws I18NException {
 
         Query q = em.createQuery("Select re from RegistroEntrada as re where re.numeroRegistroFormateado = :numeroRegistroFormateado " +
                 "and re.entidad.id = :idEntidad ");
@@ -469,7 +475,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public RegistroEntrada findByNumeroRegistroFormateadoCompleto(Long idEntidad, String numeroRegistroFormateado) throws Exception, I18NException {
+    public RegistroEntrada findByNumeroRegistroFormateadoCompleto(Long idEntidad, String numeroRegistroFormateado) throws I18NException {
 
         RegistroEntrada registroEntrada = findByNumeroRegistroFormateado(idEntidad,numeroRegistroFormateado);
 
@@ -486,7 +492,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public RegistroEntrada findByNumeroAnyoLibro(int numero, int anyo, String libro) throws Exception {
+    public RegistroEntrada findByNumeroAnyoLibro(int numero, int anyo, String libro) throws I18NException {
 
         Query q = em.createQuery("Select registroEntrada "
                 + " from RegistroEntrada as registroEntrada"
@@ -508,7 +514,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
         }
     }
 
-    public String findNumeroRegistroFormateadoByRegistroDetalle(Long idRegistroDetalle) throws Exception {
+    public String findNumeroRegistroFormateadoByRegistroDetalle(Long idRegistroDetalle) throws I18NException {
 
         Query q = em.createQuery("Select registroEntrada.numeroRegistroFormateado "
                 + " from RegistroEntrada as registroEntrada"
@@ -530,7 +536,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Long getLibro(Long idRegistroEntrada) throws Exception {
+    public Long getLibro(Long idRegistroEntrada) throws I18NException {
 
         Query q;
 
@@ -550,7 +556,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Organismo getOrganismo(Long idRegistroEntrada) throws Exception {
+    public Organismo getOrganismo(Long idRegistroEntrada) throws I18NException {
 
         Query q;
 
@@ -571,7 +577,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Boolean isDistribuir(Long idRegistro) throws Exception {
+    public Boolean isDistribuir(Long idRegistro) throws I18NException {
 
         Query q;
         q = em.createQuery("Select re.id from RegistroEntrada as re where " +
@@ -587,7 +593,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
     }
 
     @Override
-    public Long queryCount(String query) throws Exception {
+    public Long queryCount(String query) throws I18NException {
 
         Query q;
 
@@ -602,9 +608,9 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
      *
      * @param result
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    private List<RegistroBasico> getRegistroBasicoList(List<Object[]> result) throws Exception {
+    private List<RegistroBasico> getRegistroBasicoList(List<Object[]> result) throws I18NException {
 
         List<RegistroBasico> registros = new ArrayList<RegistroBasico>();
 
@@ -630,7 +636,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
 
 
     @Override
-    public Long getTotalByLibro(Long idLibro) throws Exception {
+    public Long getTotalByLibro(Long idLibro) throws I18NException {
 
         Query q;
 
@@ -643,7 +649,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
     }
 
     @Override
-    public Boolean obtenerPorUsuario(Long idUsuarioEntidad) throws Exception {
+    public Boolean obtenerPorUsuario(Long idUsuarioEntidad) throws I18NException {
 
         Query q;
 
@@ -656,7 +662,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
     }
 
     @Override
-    public Boolean tieneEstado(Long idRegistroEntrada, Long idEstado) throws Exception {
+    public Boolean tieneEstado(Long idRegistroEntrada, Long idEstado) throws I18NException {
         Query q;
 
         q = em.createQuery("Select count(re.id) from RegistroEntrada as re where re.id = :idRegistroEntrada and re.estado = :idEstado ");
@@ -670,7 +676,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public RegistroEntrada getByIdentificadorIntercambio(String identificadorIntercambio) throws Exception {
+    public RegistroEntrada getByIdentificadorIntercambio(String identificadorIntercambio) throws I18NException {
 
         Query q = em.createQuery("Select registroEntrada from RegistroEntrada as registroEntrada where registroEntrada.registroDetalle.identificadorIntercambio = :identificadorIntercambio ");
 
@@ -683,7 +689,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Paginacion getSirRechazadosReenviadosPaginado(Integer pageNumber ,Long idEntidad, Long idOficina) throws Exception {
+    public Paginacion getSirRechazadosReenviadosPaginado(Integer pageNumber ,Long idEntidad, Long idOficina) throws I18NException {
 
         Query q;
         Query q2;
@@ -726,7 +732,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<RegistroEntrada> getSirRechazadosReenviados(Long idEntidad, Long idOficina, Integer total) throws Exception {
+    public List<RegistroEntrada> getSirRechazadosReenviados(Long idEntidad, Long idOficina, Integer total) throws I18NException {
 
         Query q;
 
@@ -761,7 +767,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Long getSirRechazadosReenviadosCount(Long idOficina) throws Exception {
+    public Long getSirRechazadosReenviadosCount(Long idOficina) throws I18NException {
 
         Query q;
 
@@ -780,10 +786,10 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
      * Carga los Anexos Completos al RegistroEntrada pasado por parámetro
      * @param registroEntrada
      * @return
-     * @throws Exception
+     * @throws I18NException
      * @throws I18NException
      */
-    private RegistroEntrada cargarAnexosFull(RegistroEntrada registroEntrada) throws Exception, I18NException {
+    private RegistroEntrada cargarAnexosFull(RegistroEntrada registroEntrada) throws I18NException {
 
         Long idEntidad = registroEntrada.getEntidad().getId();
         List<Anexo> anexos = registroEntrada.getRegistroDetalle().getAnexos();
@@ -802,10 +808,10 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
      * Carga los Anexos Ligero al RegistroEntrada pasado por parámetro
      * @param registroEntrada
      * @return
-     * @throws Exception
+     * @throws I18NException
      * @throws I18NException
      */
-    private RegistroEntrada cargarAnexosLigero(RegistroEntrada registroEntrada) throws Exception, I18NException {
+    private RegistroEntrada cargarAnexosLigero(RegistroEntrada registroEntrada) throws I18NException {
 
         Long idEntidad = registroEntrada.getEntidad().getId();
         Hibernate.initialize(registroEntrada.getRegistroDetalle().getAnexos());
@@ -826,7 +832,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<RegistroEntrada> getByDocumento(Long idEntidad, String documento) throws Exception {
+    public List<RegistroEntrada> getByDocumento(Long idEntidad, String documento) throws I18NException {
 
         Query q;
         q = em.createQuery("Select DISTINCT re.id, re.numeroRegistroFormateado, re.fecha, re.registroDetalle.extracto, re.destino, re.destinoExternoCodigo, re.destinoExternoDenominacion " +
@@ -860,7 +866,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Paginacion getByDocumento(Long idEntidad, String documento, Integer pageNumber, Date fechaInicio, Date fechaFin, String numeroRegistro, List<Integer> estados, String extracto, Integer resultPorPagina) throws Exception {
+    public Paginacion getByDocumento(Long idEntidad, String documento, Integer pageNumber, Date fechaInicio, Date fechaFin, String numeroRegistro, List<Integer> estados, String extracto, Integer resultPorPagina) throws I18NException {
 
         Query q1;
         Query q2;
@@ -1004,7 +1010,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public RegistroEntrada getByDocumentoNumeroRegistro(Long idEntidad, String documento, String numeroRegistroFormateado) throws Exception, I18NException {
+    public RegistroEntrada getByDocumentoNumeroRegistro(Long idEntidad, String documento, String numeroRegistroFormateado) throws I18NException {
 
         Query q = em.createQuery("Select re from RegistroEntrada as re left outer join re.registroDetalle.interesados interessat " +
                 "where UPPER(interessat.documento)=UPPER(:documento) and re.numeroRegistroFormateado = :numeroRegistroFormateado " +
@@ -1026,7 +1032,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Organismo> ultimosOrganismosRegistro(UsuarioEntidad usuarioEntidad) throws Exception {
+    public List<Organismo> ultimosOrganismosRegistro(UsuarioEntidad usuarioEntidad) throws I18NException {
 
         Query q;
         q = em.createQuery("Select distinct(re.registroDetalle.id) from RegistroEntrada as re left outer join re.registroDetalle.interesados interesado where " +

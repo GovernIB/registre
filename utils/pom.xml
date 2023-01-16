@@ -83,6 +83,13 @@
 
         </dependency>
         <!--Otras dependencias-->
+
+        <dependency>
+            <groupId>org.fundaciobit.genapp</groupId>
+            <artifactId>genapp-core</artifactId>
+           <scope>provided</scope>
+        </dependency>
+
         <dependency>
             <groupId>com.sun.jersey</groupId>
             <artifactId>jersey-client</artifactId>
@@ -117,6 +124,7 @@
             <groupId>es.caib.dir3caib</groupId>
             <artifactId>dir3caib-ws-api</artifactId>
             <version>${dir3caib-ws-api.version}</version>
+            <classifier>sensei18nexception</classifier>
         </dependency>
 
         <!-- Dependències de test -->

@@ -92,7 +92,7 @@ public class StringUtils {
      * @return
      * @throws Exception
      */
-    public static String recortarNombre(String nombre, int length) throws Exception{
+    public static String recortarNombre(String nombre, int length)  {
         String nombreSinExt = FilenameUtils.removeExtension(nombre);
         String extension = FilenameUtils.getExtension(nombre);
         if(nombreSinExt.length()> length){

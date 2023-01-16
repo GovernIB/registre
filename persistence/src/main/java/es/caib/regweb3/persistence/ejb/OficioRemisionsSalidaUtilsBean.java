@@ -12,10 +12,7 @@ import es.caib.regweb3.persistence.utils.OficiosRemisionOrganismo;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.persistence.utils.RegistroUtils;
-import es.caib.regweb3.utils.Configuracio;
-import es.caib.regweb3.utils.Dir3CaibUtils;
-import es.caib.regweb3.utils.RegwebConstantes;
-import es.caib.regweb3.utils.StringUtils;
+import es.caib.regweb3.utils.*;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.hibernate.Session;
@@ -30,7 +27,6 @@ import javax.interceptor.Interceptors;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 
@@ -64,7 +60,7 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public LinkedHashSet<Organismo> organismosSalidaPendientesRemisionTipo(Long idEntidad, Long idOficina, Long tipoEvento, Integer total) throws Exception {
+    public LinkedHashSet<Organismo> organismosSalidaPendientesRemisionTipo(Long idEntidad, Long idOficina, Long tipoEvento, Integer total) throws I18NException {
 
         String queryFecha = "";
         String fecha = PropiedadGlobalUtil.getFechaOficiosSalida();
@@ -83,8 +79,7 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
         q.setParameter("idOficina", idOficina);
         q.setParameter("tipoEvento", tipoEvento);
         if (StringUtils.isNotEmpty(fecha)) {
-            SimpleDateFormat sdf = new SimpleDateFormat(RegwebConstantes.FORMATO_FECHA);
-            q.setParameter("fecha", sdf.parse(fecha));
+            q.setParameter("fecha", TimeUtils.formateaFecha(fecha, RegwebConstantes.FORMATO_FECHA));
         }
 
         if (total != null) {
@@ -121,7 +116,7 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Long oficiosSalidaPendientesRemisionCount(Long idOficina, Long tipoEvento) throws Exception {
+    public Long oficiosSalidaPendientesRemisionCount(Long idOficina, Long tipoEvento) throws I18NException {
 
         String queryFecha = "";
         String fecha = PropiedadGlobalUtil.getFechaOficiosSalida();
@@ -140,8 +135,7 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
         q.setParameter("tipoEvento", tipoEvento);
 
         if (StringUtils.isNotEmpty(fecha)) {
-            SimpleDateFormat sdf = new SimpleDateFormat(RegwebConstantes.FORMATO_FECHA);
-            q.setParameter("fecha", sdf.parse(fecha));
+            q.setParameter("fecha", TimeUtils.formateaFecha(fecha, RegwebConstantes.FORMATO_FECHA));
         }
 
         q.setHint("org.hibernate.readOnly", true);
@@ -152,7 +146,7 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public OficiosRemisionOrganismo oficiosSalidaPendientesRemision(Integer pageNumber, Integer any, Oficina oficinaActiva, Long idOrganismo, String codigoOrganismo, Entidad entidadActiva, Long tipoEvento) throws Exception {
+    public OficiosRemisionOrganismo oficiosSalidaPendientesRemision(Integer pageNumber, Integer any, Oficina oficinaActiva, Long idOrganismo, String codigoOrganismo, Entidad entidadActiva, Long tipoEvento) throws I18NException {
 
         OficiosRemisionOrganismo oficios = new OficiosRemisionOrganismo();
 
@@ -276,7 +270,7 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
     }
 
     @SuppressWarnings(value = "unchecked")
-    private Paginacion oficiosSalidaByOrganismo(Integer pageNumber, Long idEntidad, String codigoOrganismo, Integer any, Long idOficina, Long tipoEvento) throws Exception {
+    private Paginacion oficiosSalidaByOrganismo(Integer pageNumber, Long idEntidad, String codigoOrganismo, Integer any, Long idOficina, Long tipoEvento) throws I18NException {
 
         String anyWhere = "";
         if (any != null) {
@@ -314,8 +308,7 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
         q.setParameter("administracion", RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION);
         q.setParameter("codigoOrganismo", codigoOrganismo);
         if (StringUtils.isNotEmpty(fecha)) {
-            SimpleDateFormat sdf = new SimpleDateFormat(RegwebConstantes.FORMATO_FECHA);
-            q.setParameter("fecha", sdf.parse(fecha));
+            q.setParameter("fecha", TimeUtils.formateaFecha(fecha, RegwebConstantes.FORMATO_FECHA));
         }
 
         q2.setParameter("idEntidad", idEntidad);
@@ -325,8 +318,7 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
         q2.setParameter("administracion", RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION);
         q2.setParameter("codigoOrganismo", codigoOrganismo);
         if (StringUtils.isNotEmpty(fecha)) {
-            SimpleDateFormat sdf = new SimpleDateFormat(RegwebConstantes.FORMATO_FECHA);
-            q2.setParameter("fecha", sdf.parse(fecha));
+            q2.setParameter("fecha", TimeUtils.formateaFecha(fecha, RegwebConstantes.FORMATO_FECHA));
         }
 
         Paginacion paginacion;
@@ -374,11 +366,11 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
      * @param idOrganismo
      * @param idLibro
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
     @Override
     public OficioRemision crearOficioRemisionInterno(List<RegistroSalida> registrosSalida, Entidad entidad, Oficina oficinaActiva, UsuarioEntidad usuarioEntidad, Long idOrganismo, Long idLibro)
-            throws Exception, I18NException, I18NValidationException {
+            throws I18NException, I18NValidationException {
 
         OficioRemision oficioRemision = new OficioRemision();
         oficioRemision.setEntidad(entidad);
@@ -407,13 +399,13 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
      * @param organismoExterno
      * @param idLibro
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
 
     public OficioRemision crearOficioRemisionExterno(List<RegistroSalida> registrosSalida, Entidad entidad,
                                                      Oficina oficinaActiva, UsuarioEntidad usuarioEntidad, String organismoExterno,
                                                      String organismoExternoDenominacion, Long idLibro)
-            throws Exception, I18NException, I18NValidationException {
+            throws I18NException, I18NValidationException {
 
 
         OficioRemision oficioRemision = new OficioRemision();
@@ -438,7 +430,7 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
 
     @Override
     public OficioRemision crearOficioRemisionSIR(RegistroSalida registroSalida, Entidad entidad, Oficina oficinaActiva, UsuarioEntidad usuarioEntidad, OficinaTF oficinaSirDestino)
-            throws Exception, I18NException, I18NValidationException {
+            throws I18NException, I18NValidationException {
 
         // Creamos el OficioRemision
         OficioRemision oficioRemision = new OficioRemision();
@@ -470,7 +462,7 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
     }
 
     @Override
-    public List<RegistroSalida> crearJustificantesRegistros(Entidad entidad, List<RegistroSalida> registros, UsuarioEntidad usuario) throws Exception, I18NException, I18NValidationException {
+    public List<RegistroSalida> crearJustificantesRegistros(Entidad entidad, List<RegistroSalida> registros, UsuarioEntidad usuario) throws I18NException, I18NValidationException {
 
         List<RegistroSalida> correctos = new ArrayList<RegistroSalida>();
 
@@ -506,11 +498,11 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
      * como contenga el Oficio.
      *
      * @param oficioRemision
-     * @throws Exception
+     * @throws I18NException
      */
     @Override
     public List<RegistroEntrada> aceptarOficioRemision(OficioRemision oficioRemision, Entidad entidad, UsuarioEntidad usuario, Oficina oficinaActiva,
-                                                       List<OficioPendienteLlegada> oficios) throws Exception, I18NException, I18NValidationException {
+                                                       List<OficioPendienteLlegada> oficios) throws I18NException, I18NValidationException {
 
         List<RegistroEntrada> registros = new ArrayList<RegistroEntrada>();
 

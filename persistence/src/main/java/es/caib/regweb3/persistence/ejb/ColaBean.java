@@ -9,6 +9,7 @@ import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 import org.apache.commons.lang.time.DateUtils;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,20 +40,20 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
 
 
     @Override
-    public Cola getReference(Long id) throws Exception {
+    public Cola getReference(Long id) throws I18NException {
 
         return em.getReference(Cola.class, id);
     }
 
     @Override
-    public Cola findById(Long id) throws Exception {
+    public Cola findById(Long id) throws I18NException {
 
         return em.find(Cola.class, id);
     }
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Cola> findByTipoEntidad(Long tipo, Long idEntidad,Integer inicio, Integer total) throws Exception {
+    public List<Cola> findByTipoEntidad(Long tipo, Long idEntidad,Integer inicio, Integer total) throws I18NException {
 
         Query q = em.createQuery("select cola from Cola as cola where cola.tipo=:tipo and cola.usuarioEntidad.entidad.id=:idEntidad  and cola.numeroReintentos < :maxReintentos and cola.estado != :procesado order by cola.fecha asc ");
         q.setParameter("tipo", tipo);
@@ -73,7 +74,7 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Long findPendientesByTipo(Long tipo, Long idEntidad) throws Exception {
+    public Long findPendientesByTipo(Long tipo, Long idEntidad) throws I18NException {
 
         Query q = em.createQuery( "select count(cola.id) from Cola as cola where cola.tipo=:tipo and cola.usuarioEntidad.entidad.id=:idEntidad and cola.estado =:pendiente");
         q.setParameter("tipo", tipo);
@@ -84,7 +85,7 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
     }
 
     @Override
-    public Cola findByIdObjeto(Long idObjeto, Long idEntidad) throws Exception {
+    public Cola findByIdObjeto(Long idObjeto, Long idEntidad) throws I18NException {
 
         Query q = em.createQuery("select cola from Cola as cola where cola.idObjeto=:idObjeto and cola.usuarioEntidad.entidad.id=:idEntidad");
         q.setParameter("idObjeto", idObjeto);
@@ -98,7 +99,7 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
     }
 
     @Override
-    public Cola findByIdObjetoEstado(Long idObjeto, Long idEntidad, Long idEstado) throws Exception {
+    public Cola findByIdObjetoEstado(Long idObjeto, Long idEntidad, Long idEstado) throws I18NException {
 
         Query q = em.createQuery("select cola from Cola as cola where cola.idObjeto=:idObjeto and cola.usuarioEntidad.entidad.id=:idEntidad and " +
                 "cola.estado = :estado");
@@ -117,7 +118,7 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
 
 
     @Override
-    public List<Cola> findByTipoMaxReintentos(Long tipo, Long idEntidad, int maxReintentos) throws Exception {
+    public List<Cola> findByTipoMaxReintentos(Long tipo, Long idEntidad, int maxReintentos) throws I18NException {
 
         Query q = em.createQuery("select cola from Cola as cola where cola.tipo=:tipo and cola.usuarioEntidad.entidad.id=:idEntidad " +
                 "and cola.numeroReintentos = :maxReintentos and cola.estado = :error order by cola.usuarioEntidad.entidad.id asc");
@@ -132,13 +133,13 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Cola> getAll() throws Exception {
+    public List<Cola> getAll() throws I18NException {
 
         return em.createQuery("Select cola from Cola as cola order by cola.id").getResultList();
     }
 
     @Override
-    public Long getTotal() throws Exception {
+    public Long getTotal() throws I18NException {
 
         Query q = em.createQuery("Select count(cola.id) from Cola as cola");
 
@@ -148,7 +149,7 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Cola> getPagination(int inicio) throws Exception {
+    public List<Cola> getPagination(int inicio) throws I18NException {
 
         Query q = em.createQuery("Select cola from Cola as cola order by cola.id");
         q.setFirstResult(inicio);
@@ -160,7 +161,7 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
 
 
     @Override
-    public Paginacion busqueda(Cola cola, Long idEntidad) throws Exception {
+    public Paginacion busqueda(Cola cola, Long idEntidad) throws I18NException {
 
         Query q;
         Query q2;
@@ -241,7 +242,7 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
     }
 
     @Override
-    public void procesarElemento(Cola elemento) throws Exception {
+    public void procesarElemento(Cola elemento) throws I18NException {
 
         Query q = em.createQuery("update from Cola set estado = :procesado, fechaProcesado = :fechaProcesado where id = :idCola");
 
@@ -253,7 +254,7 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
 
 
     @Override
-    public boolean enviarAColaDistribucion(RegistroEntrada re, UsuarioEntidad usuarioEntidad) throws Exception {
+    public boolean enviarAColaDistribucion(RegistroEntrada re, UsuarioEntidad usuarioEntidad) throws I18NException {
 
         try {
 
@@ -306,7 +307,7 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
 
 
     @Override
-    public void reiniciarColabyEntidadTipo(Long idEntidad, Long tipo) throws Exception {
+    public void reiniciarColabyEntidadTipo(Long idEntidad, Long tipo) throws I18NException {
 
         //Obtenemos el numero máximo de reintentos de una propiedad global
         Integer maxReintentos = PropiedadGlobalUtil.getMaxReintentosCola(idEntidad);
@@ -322,7 +323,7 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
 
 
     @Override
-    public void actualizarElementoCola(Cola elemento, Long entidadId, String error) throws Exception {
+    public void actualizarElementoCola(Cola elemento, Long entidadId, String error) throws I18NException {
 
         //Montamos el string de la causa del error
         if (StringUtils.isNotEmpty(error)) {
@@ -355,7 +356,7 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
 
 
     @Override
-    public Integer eliminarByEntidad(Long idEntidad) throws Exception {
+    public Integer eliminarByEntidad(Long idEntidad) throws I18NException {
 
         List<?> colas = em.createQuery("Select distinct(id) from Cola as cola where cola.usuarioEntidad.entidad.id =:idEntidad").setParameter("idEntidad", idEntidad).getResultList();
 
@@ -368,7 +369,7 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
 
 
     @Override
-    public void reiniciarElementoCola(Long idCola) throws Exception {
+    public void reiniciarElementoCola(Long idCola) throws I18NException {
 
         Query q = em.createQuery("update Cola set estado=:pendiente, numeroReintentos = :numeroReintentos, error = '' where id = :idCola");
         q.setParameter("pendiente", RegwebConstantes.COLA_ESTADO_PENDIENTE);
@@ -378,7 +379,7 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
     }
 
     @Override
-    public Integer purgarElementosProcesados(Long idEntidad) throws Exception {
+    public Integer purgarElementosProcesados(Long idEntidad) throws I18NException {
 
         Integer mesesPurgo = PropiedadGlobalUtil.getMesesPurgoProcesadosCola(idEntidad);
 
@@ -410,7 +411,7 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Cola> getElementosError(Long idEntidad) throws Exception {
+    public List<Cola> getElementosError(Long idEntidad) throws I18NException {
 
         Query q = em.createQuery("select cola from Cola as cola where cola.usuarioEntidad.entidad.id=:idEntidad " +
                 "and cola.estado = :error order by cola.id desc");
@@ -428,9 +429,9 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
      * @param idEntidad
      * @param meses
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    private List<Cola> obtenerProcesados(Long idEntidad, Integer meses) throws Exception {
+    private List<Cola> obtenerProcesados(Long idEntidad, Integer meses) throws I18NException {
 
         Date fechaPurgo = DateUtils.addMonths(new Date(), -meses);
 

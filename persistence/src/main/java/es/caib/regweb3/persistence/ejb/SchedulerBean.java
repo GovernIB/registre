@@ -44,7 +44,7 @@ public class SchedulerBean implements SchedulerLocal {
 
 
     @Override
-    public void purgarIntegraciones() throws Exception{
+    public void purgarIntegraciones() throws I18NException{
 
         List<Entidad> entidades = entidadEjb.getAll();
         StringBuilder peticion = new StringBuilder();
@@ -75,7 +75,7 @@ public class SchedulerBean implements SchedulerLocal {
 
     @Override
     @TransactionTimeout(value = 1800)  // 30 minutos
-    public void purgarAnexosSir() throws Exception{
+    public void purgarAnexosSir() throws I18NException{
 
         List<Entidad> entidades = entidadEjb.getAll();
         StringBuilder peticion = new StringBuilder();
@@ -107,11 +107,11 @@ public class SchedulerBean implements SchedulerLocal {
     /**
      * Para cada una de las entidades del sistema, purga los anexos candidatos a
      * purgar (anexos marcados como distribuidos hace x meses).
-     * @throws Exception
+     * @throws I18NException
      */
     @Override
     @TransactionTimeout(value = 1800)  // 30 minutos
-    public void purgarAnexosDistribuidos() throws Exception{
+    public void purgarAnexosDistribuidos() throws I18NException{
 
         List<Entidad> entidades = entidadEjb.getAll();
         StringBuilder peticion = new StringBuilder();
@@ -136,7 +136,7 @@ public class SchedulerBean implements SchedulerLocal {
                 integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_SCHEDULERS, descripcion, peticion.toString(), System.currentTimeMillis() - tiempo, entidad.getId(), "");
             }
 
-        } catch (Exception | I18NException e) {
+        } catch (I18NException e) {
             log.error("Error purgando anexos distribuidos ...", e);
             integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_SCHEDULERS, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - tiempo, entidadActiva.getId(), "");
         }
@@ -144,9 +144,9 @@ public class SchedulerBean implements SchedulerLocal {
 
     /**
      * Método que purga los anexos de los registros que se han enviado via SIR y han sido confirmados en destino.
-     * @throws Exception
+     * @throws I18NException
      */
-    public void purgarAnexosRegistrosConfirmados() throws Exception{
+    public void purgarAnexosRegistrosConfirmados() throws I18NException{
 
         List<Entidad> entidades = entidadEjb.getAll();
         StringBuilder peticion = new StringBuilder();
@@ -171,14 +171,14 @@ public class SchedulerBean implements SchedulerLocal {
             }
 
 
-        } catch (Exception | I18NException e) {
+        } catch (I18NException e) {
             log.error("Error purgando anexos enviados por sir y que han sido confirmados ...", e);
             integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_SCHEDULERS, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - tiempo, entidadActiva.getId(), "");
         }
     }
 
     @Override
-    public void reintentarIntercambiosSinAck() throws Exception {
+    public void reintentarIntercambiosSinAck() throws I18NException {
 
         List<Entidad> entidades = entidadEjb.getEntidadesSir();
 
@@ -191,7 +191,7 @@ public class SchedulerBean implements SchedulerLocal {
     }
 
     @Override
-    public void reintentarReenviosRechazosSinAck() throws Exception {
+    public void reintentarReenviosRechazosSinAck() throws I18NException {
 
         List<Entidad> entidades = entidadEjb.getEntidadesSir();
 
@@ -204,7 +204,7 @@ public class SchedulerBean implements SchedulerLocal {
     }
 
     @Override
-    public void reintentarIntercambiosConError() throws Exception {
+    public void reintentarIntercambiosConError() throws I18NException {
 
         List<Entidad> entidades = entidadEjb.getEntidadesSir();
 
@@ -217,7 +217,7 @@ public class SchedulerBean implements SchedulerLocal {
     }
 
     @Override
-    public void reintentarReenviosRechazosConError() throws Exception {
+    public void reintentarReenviosRechazosConError() throws I18NException {
 
         List<Entidad> entidades = entidadEjb.getEntidadesSir();
 
@@ -230,7 +230,7 @@ public class SchedulerBean implements SchedulerLocal {
     }
 
     @Override
-    public void reiniciarContadoresEntidad() throws Exception {
+    public void reiniciarContadoresEntidad() throws I18NException {
 
         List<Entidad> entidades = entidadEjb.getAll();
         StringBuilder peticion = new StringBuilder();
@@ -263,11 +263,11 @@ public class SchedulerBean implements SchedulerLocal {
 
     /**
      * Inicia la distribución de los registros en cola de cada entidad.
-     * @throws Exception
+     * @throws I18NException
      */
     @Override
     @TransactionTimeout(value = 1800)  // 30 minutos
-    public void distribuirRegistrosEnCola() throws Exception{
+    public void distribuirRegistrosEnCola() throws I18NException{
 
         try {
             List<Entidad> entidades = entidadEjb.getEntidadesActivas();
@@ -288,11 +288,11 @@ public class SchedulerBean implements SchedulerLocal {
 
     /**
      * Inicia la custodia de Justificantes en cola de cada entidad.
-     * @throws Exception
+     * @throws I18NException
      */
     @Override
     @TransactionTimeout(value = 1800)  // 30 minutos
-    public void custodiarJustificantesEnCola() throws Exception{
+    public void custodiarJustificantesEnCola() throws I18NException{
 
         try {
             List<Entidad> entidades = entidadEjb.getEntidadesActivas();
@@ -316,11 +316,11 @@ public class SchedulerBean implements SchedulerLocal {
 
     /**
      * Segundo hilo de custodia de Justificantes en cola de cada entidad.
-     * @throws Exception
+     * @throws I18NException
      */
     @Override
     @TransactionTimeout(value = 1800)  // 30 minutos
-    public void custodiarJustificantesEnCola2() throws Exception{
+    public void custodiarJustificantesEnCola2() throws I18NException{
 
         try {
 
@@ -348,7 +348,7 @@ public class SchedulerBean implements SchedulerLocal {
      * Cierra los expedientes que están en DM del Arxiu Digital del GOIB
      */
     @Override
-    public void cerrarExpedientes() throws Exception {
+    public void cerrarExpedientes() throws I18NException {
 
         List<Entidad> entidades = entidadEjb.getAll();
         StringBuilder peticion = new StringBuilder();
@@ -382,7 +382,7 @@ public class SchedulerBean implements SchedulerLocal {
 
 
     @Override
-    public void generarComunicaciones() throws Exception{
+    public void generarComunicaciones() throws I18NException{
 
         List<Entidad> entidades = entidadEjb.getAll();
         StringBuilder peticion = new StringBuilder();
@@ -424,7 +424,7 @@ public class SchedulerBean implements SchedulerLocal {
     }
 
     @Override
-    public void purgarSesionesWs() throws Exception{
+    public void purgarSesionesWs() throws I18NException{
 
         List<Entidad> entidades = entidadEjb.getAll();
         StringBuilder peticion = new StringBuilder();
@@ -453,40 +453,8 @@ public class SchedulerBean implements SchedulerLocal {
         }
     }
 
-
     @Override
-    public void enviarEmailErrorDistribucion() throws Exception {
-
-        List<Entidad> entidades = entidadEjb.getAll();
-        StringBuilder peticion = new StringBuilder();
-        long tiempo = System.currentTimeMillis();
-        String descripcion = "Envio email de errores de la cola de distribución";
-        Entidad entidadActiva = null;
-
-        try{
-
-            for (Entidad entidad : entidades) {
-
-                //Integración
-                entidadActiva = entidad;
-                Date inicio = new Date();
-                peticion = new StringBuilder();
-                peticion.append("entidad: ").append(entidad.getNombre()).append(System.getProperty("line.separator"));
-
-                distribucionEjb.enviarEmailErrorDistribucion(entidad);
-
-                integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_SCHEDULERS, descripcion, peticion.toString(), System.currentTimeMillis() - tiempo, entidad.getId(), "");
-            }
-
-        }catch (Exception e){
-            e.printStackTrace();
-            integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_SCHEDULERS, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - tiempo, entidadActiva.getId(), "");
-        }
-
-    }
-
-    @Override
-    public void purgarProcesadosColas() throws Exception {
+    public void purgarProcesadosColas() throws I18NException {
 
         List<Entidad> entidades = entidadEjb.getAll();
         StringBuilder peticion = new StringBuilder();

@@ -12,6 +12,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,13 +38,13 @@ public class PluginBean extends BaseEjbJPA<Plugin, Long> implements PluginLocal 
 
 
     @Override
-    public Plugin getReference(Long id) throws Exception {
+    public Plugin getReference(Long id) throws I18NException {
 
         return em.getReference(Plugin.class, id);
     }
 
     @Override
-    public Plugin findById(Long id) throws Exception {
+    public Plugin findById(Long id) throws I18NException {
 
         return em.find(Plugin.class, id);
     }
@@ -51,13 +52,13 @@ public class PluginBean extends BaseEjbJPA<Plugin, Long> implements PluginLocal 
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Plugin> getAll() throws Exception {
+    public List<Plugin> getAll() throws I18NException {
 
         return em.createQuery("Select plugin from Plugin as plugin order by plugin.id").getResultList();
     }
 
     @Override
-    public Long getTotal() throws Exception {
+    public Long getTotal() throws I18NException {
 
         Query q = em.createQuery("Select count(plugin.id) from Plugin as plugin");
         q.setHint("org.hibernate.readOnly", true);
@@ -68,7 +69,7 @@ public class PluginBean extends BaseEjbJPA<Plugin, Long> implements PluginLocal 
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Plugin> getPagination(int inicio) throws Exception {
+    public List<Plugin> getPagination(int inicio) throws I18NException {
 
         Query q = em.createQuery("Select plugin from Plugin as plugin order by plugin.id");
         q.setFirstResult(inicio);
@@ -79,7 +80,7 @@ public class PluginBean extends BaseEjbJPA<Plugin, Long> implements PluginLocal 
     }
 
     @Override
-    public Long getTotalByEntidad(Long idEntidad, Long tipo) throws Exception {
+    public Long getTotalByEntidad(Long idEntidad, Long tipo) throws I18NException {
 
         String tipoWhere = "";
         if (tipo != null) {
@@ -99,7 +100,7 @@ public class PluginBean extends BaseEjbJPA<Plugin, Long> implements PluginLocal 
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Plugin> getPaginationByEntidad(int inicio, Long idEntidad, Long tipo) throws Exception {
+    public List<Plugin> getPaginationByEntidad(int inicio, Long idEntidad, Long tipo) throws I18NException {
 
         String tipoWhere = "";
         if (tipo != null) {
@@ -120,7 +121,7 @@ public class PluginBean extends BaseEjbJPA<Plugin, Long> implements PluginLocal 
     }
 
     @Override
-    public Long getTotalREGWEB3(Long tipo) throws Exception {
+    public Long getTotalREGWEB3(Long tipo) throws I18NException {
 
         String tipoWhere = "";
         if (tipo != null) {
@@ -139,7 +140,7 @@ public class PluginBean extends BaseEjbJPA<Plugin, Long> implements PluginLocal 
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Plugin> getPaginationREGWEB3(int inicio, Long tipo) throws Exception {
+    public List<Plugin> getPaginationREGWEB3(int inicio, Long tipo) throws I18NException {
 
         String tipoWhere = "";
         if (tipo != null) {
@@ -160,7 +161,7 @@ public class PluginBean extends BaseEjbJPA<Plugin, Long> implements PluginLocal 
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Plugin> findByEntidadTipo(Long idEntidad, Long tipo) throws Exception {
+    public List<Plugin> findByEntidadTipo(Long idEntidad, Long tipo) throws I18NException {
 
         String entidadQuery;
 
@@ -234,7 +235,7 @@ public class PluginBean extends BaseEjbJPA<Plugin, Long> implements PluginLocal 
     }
 
     @Override
-    public List<Object> getPlugins(Long idEntidad, Long tipoPlugin) throws Exception {
+    public List<Object> getPlugins(Long idEntidad, Long tipoPlugin) throws I18NException {
 
         List<Plugin> plugins = findByEntidadTipo(idEntidad, tipoPlugin);
 
@@ -252,7 +253,7 @@ public class PluginBean extends BaseEjbJPA<Plugin, Long> implements PluginLocal 
     }
 
     @Override
-    public Integer eliminarByEntidad(Long idEntidad) throws Exception {
+    public Integer eliminarByEntidad(Long idEntidad) throws I18NException {
 
         List<?> plugins = em.createQuery("Select id from Plugin where entidad = :idEntidad").setParameter("idEntidad", idEntidad).getResultList();
 
@@ -266,9 +267,9 @@ public class PluginBean extends BaseEjbJPA<Plugin, Long> implements PluginLocal 
     /**
      * @param plugin
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    private Object cargarPlugin(Plugin plugin) throws Exception {
+    private Object cargarPlugin(Plugin plugin) throws I18NException {
 
         String BASE_PACKAGE = RegwebConstantes.REGWEB3_PROPERTY_BASE;
 
@@ -285,11 +286,19 @@ public class PluginBean extends BaseEjbJPA<Plugin, Long> implements PluginLocal 
         Properties prop = new Properties();
 
         if (plugin.getPropiedadesEntidad() != null && plugin.getPropiedadesEntidad().trim().length() != 0) {
-            prop.load(new StringReader(plugin.getPropiedadesEntidad()));
+            try {
+                prop.load(new StringReader(plugin.getPropiedadesEntidad()));
+            } catch (IOException e) {
+                throw new I18NException("Plugin: Errror obteniendo las propiedades de la entidad");
+            }
         }
 
         if (plugin.getPropiedadesAdmin() != null && plugin.getPropiedadesAdmin().trim().length() != 0) {
-            prop.load(new StringReader(plugin.getPropiedadesAdmin()));
+            try {
+                prop.load(new StringReader(plugin.getPropiedadesAdmin()));
+            } catch (IOException e) {
+                throw new I18NException("Plugin: Error obteniendo las propiedades de la aplicación");
+            }
         }
 
         // Carregant la classe
@@ -299,11 +308,9 @@ public class PluginBean extends BaseEjbJPA<Plugin, Long> implements PluginLocal 
     /**
      * @param plugin
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    private Properties cargarPropiedades(Plugin plugin) throws Exception {
-
-        String BASE_PACKAGE = RegwebConstantes.REGWEB3_PROPERTY_BASE;
+    private Properties cargarPropiedades(Plugin plugin) throws I18NException {
 
         // Si no existe el plugin, retornamos null
         if (plugin == null) {
@@ -311,18 +318,23 @@ public class PluginBean extends BaseEjbJPA<Plugin, Long> implements PluginLocal 
             return null;
         }
 
-        // Obtenemos la clase del Plugin
-        String className = plugin.getClase().trim();
-
         // Obtenemos sus propiedades
         Properties prop = new Properties();
 
         if (plugin.getPropiedadesEntidad() != null && plugin.getPropiedadesEntidad().trim().length() != 0) {
-            prop.load(new StringReader(plugin.getPropiedadesEntidad()));
+            try {
+                prop.load(new StringReader(plugin.getPropiedadesEntidad()));
+            } catch (IOException e) {
+                throw new I18NException("Plugin: Error obteniendo las propiedades de la aplicación");
+            }
         }
 
         if (plugin.getPropiedadesAdmin() != null && plugin.getPropiedadesAdmin().trim().length() != 0) {
-            prop.load(new StringReader(plugin.getPropiedadesAdmin()));
+            try {
+                prop.load(new StringReader(plugin.getPropiedadesAdmin()));
+            } catch (IOException e) {
+                throw new I18NException("Plugin: Error obteniendo las propiedades de la aplicación");
+            }
         }
 
         return prop;

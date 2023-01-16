@@ -1,6 +1,7 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.CatComunidadAutonoma;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,26 +30,26 @@ public class CatComunidadAutonomaBean extends BaseEjbJPA<CatComunidadAutonoma, L
 
 
     @Override
-    public CatComunidadAutonoma getReference(Long id) throws Exception {
+    public CatComunidadAutonoma getReference(Long id) throws I18NException {
 
         return em.getReference(CatComunidadAutonoma.class, id);
     }
 
     @Override
-    public CatComunidadAutonoma findById(Long id) throws Exception {
+    public CatComunidadAutonoma findById(Long id) throws I18NException {
 
         return em.find(CatComunidadAutonoma.class, id);
     }
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<CatComunidadAutonoma> getAll() throws Exception {
+    public List<CatComunidadAutonoma> getAll() throws I18NException {
 
         return  em.createQuery("Select catComunidadAutonoma from CatComunidadAutonoma as catComunidadAutonoma order by catComunidadAutonoma.id").getResultList();
     }
 
     @Override
-    public Long getTotal() throws Exception {
+    public Long getTotal() throws I18NException {
 
         Query q = em.createQuery("Select count(catComunidadAutonoma.id) from CatComunidadAutonoma as catComunidadAutonoma");
 
@@ -58,7 +59,7 @@ public class CatComunidadAutonomaBean extends BaseEjbJPA<CatComunidadAutonoma, L
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<CatComunidadAutonoma> getPagination(int inicio) throws Exception {
+    public List<CatComunidadAutonoma> getPagination(int inicio) throws I18NException {
 
         Query q = em.createQuery("Select catComunidadAutonoma from CatComunidadAutonoma as catComunidadAutonoma order by catComunidadAutonoma.id");
         q.setFirstResult(inicio);
@@ -69,7 +70,7 @@ public class CatComunidadAutonomaBean extends BaseEjbJPA<CatComunidadAutonoma, L
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public CatComunidadAutonoma findByCodigo(Long codigo) throws Exception {
+    public CatComunidadAutonoma findByCodigo(Long codigo) throws I18NException {
         Query q = em.createQuery("Select catComunidadAutonoma from CatComunidadAutonoma as catComunidadAutonoma where catComunidadAutonoma.codigoComunidad = :codigo");
 
         q.setParameter("codigo",codigo);

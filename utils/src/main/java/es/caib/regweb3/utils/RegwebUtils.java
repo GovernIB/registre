@@ -1,8 +1,10 @@
 package es.caib.regweb3.utils;
 
 import org.apache.commons.codec.binary.Base64;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 
 import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
@@ -31,9 +33,14 @@ public class RegwebUtils {
      * @return
      * @throws Exception
      */
-    public static byte[] obtenerHash(byte[] documentoData) throws Exception {
+    public static byte[] obtenerHash(byte[] documentoData) throws I18NException {
 
-        MessageDigest md = MessageDigest.getInstance("SHA-256");
+        MessageDigest md = null;
+        try {
+            md = MessageDigest.getInstance("SHA-256");
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
         byte[] digest = md.digest(documentoData);
 
         return Base64.encodeBase64(digest);

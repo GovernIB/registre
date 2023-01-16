@@ -50,11 +50,11 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
      * @param languageUI
      * @param idEntidadActiva
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
     @Override
     public SignatureCustody signJustificante(byte[] pdfsource, String languageUI,
-                                             Long idEntidadActiva, StringBuilder peticion, String numeroRegistro, String fileName) throws Exception, I18NException {
+                                             Long idEntidadActiva, StringBuilder peticion, String numeroRegistro, String fileName) throws I18NException {
 
         // Cerca el Plugin de Justificant definit a les Propietats Globals
         ISignatureServerPlugin signaturePlugin = (ISignatureServerPlugin) pluginEjb.getPlugin(idEntidadActiva, RegwebConstantes.PLUGIN_FIRMA_SERVIDOR);
@@ -87,11 +87,11 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
      * @param languageUI
      * @param idEntidadActiva
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
     @Override
     public Firma signJustificanteApiArxiu(byte[] pdfsource, String languageUI,
-                                          Long idEntidadActiva, StringBuilder peticion, String numeroRegistro, String fileName) throws Exception, I18NException {
+                                          Long idEntidadActiva, StringBuilder peticion, String numeroRegistro, String fileName) throws I18NException {
 
         // Cerca el Plugin de Justificant definit a les Propietats Globals
         ISignatureServerPlugin signaturePlugin = (ISignatureServerPlugin) pluginEjb.getPlugin(idEntidadActiva, RegwebConstantes.PLUGIN_FIRMA_SERVIDOR);

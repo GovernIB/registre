@@ -2,6 +2,7 @@ package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.utils.RegwebConstantes;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.jboss.ejb3.annotation.TransactionTimeout;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,26 +42,26 @@ public class PermisoOrganismoUsuarioBean extends BaseEjbJPA<PermisoOrganismoUsua
     @EJB private LibroLocal libroEjb;
 
     @Override
-    public PermisoOrganismoUsuario getReference(Long id) throws Exception {
+    public PermisoOrganismoUsuario getReference(Long id) throws I18NException {
 
         return em.getReference(PermisoOrganismoUsuario.class, id);
     }
 
     @Override
-    public PermisoOrganismoUsuario findById(Long id) throws Exception {
+    public PermisoOrganismoUsuario findById(Long id) throws I18NException {
 
         return em.find(PermisoOrganismoUsuario.class, id);
     }
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<PermisoOrganismoUsuario> getAll() throws Exception {
+    public List<PermisoOrganismoUsuario> getAll() throws I18NException {
 
         return em.createQuery("Select permisoOrganismoUsuario from PermisoOrganismoUsuario as permisoOrganismoUsuario order by permisoOrganismoUsuario.organismo.id").getResultList();
     }
 
     @Override
-    public Long getTotal() throws Exception {
+    public Long getTotal() throws I18NException {
 
         Query q = em.createQuery("Select count(permisoOrganismoUsuario.id) from PermisoOrganismoUsuario as permisoOrganismoUsuario");
 
@@ -70,7 +71,7 @@ public class PermisoOrganismoUsuarioBean extends BaseEjbJPA<PermisoOrganismoUsua
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<PermisoOrganismoUsuario> getPagination(int inicio) throws Exception {
+    public List<PermisoOrganismoUsuario> getPagination(int inicio) throws I18NException {
 
         Query q = em.createQuery("Select permisoOrganismoUsuario from PermisoOrganismoUsuario as permisoOrganismoUsuario order by permisoOrganismoUsuario.id");
         q.setFirstResult(inicio);
@@ -81,7 +82,7 @@ public class PermisoOrganismoUsuarioBean extends BaseEjbJPA<PermisoOrganismoUsua
     }
 
     @Override
-    public void crearPermisosUsuarioOrganismo(UsuarioEntidad usuarioEntidad, Organismo organismo) throws Exception {
+    public void crearPermisosUsuarioOrganismo(UsuarioEntidad usuarioEntidad, Organismo organismo) throws I18NException {
 
         for (int column = 0; column < RegwebConstantes.PERMISOS.length; column++) {
             PermisoOrganismoUsuario pou = new PermisoOrganismoUsuario();
@@ -94,14 +95,14 @@ public class PermisoOrganismoUsuarioBean extends BaseEjbJPA<PermisoOrganismoUsua
     }
 
     @Override
-    public void eliminarPermisosOrganismo(Long idOrganismo) throws Exception {
+    public void eliminarPermisosOrganismo(Long idOrganismo) throws I18NException {
 
         em.createQuery("delete from PermisoOrganismoUsuario where organismo.id = :idOrganismo").setParameter("idOrganismo", idOrganismo).executeUpdate();
 
     }
 
     @Override
-    public void eliminarPermisosUsuarioOrganismo(Long idUsuarioEntidad, Long idOrganismo) throws Exception {
+    public void eliminarPermisosUsuarioOrganismo(Long idUsuarioEntidad, Long idOrganismo) throws I18NException {
 
         em.createQuery("delete from PermisoOrganismoUsuario where usuario.id = :idUsuarioEntidad and organismo.id = :idOrganismo")
                 .setParameter("idUsuarioEntidad", idUsuarioEntidad)
@@ -112,7 +113,7 @@ public class PermisoOrganismoUsuarioBean extends BaseEjbJPA<PermisoOrganismoUsua
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<PermisoOrganismoUsuario> findByUsuario(Long idUsuarioEntidad) throws Exception {
+    public List<PermisoOrganismoUsuario> findByUsuario(Long idUsuarioEntidad) throws I18NException {
 
         Query q = em.createQuery("Select pou from PermisoOrganismoUsuario as pou where " +
                 "pou.usuario.id = :idUsuarioEntidad order by pou.organismo.id, pou.permiso");
@@ -124,7 +125,7 @@ public class PermisoOrganismoUsuarioBean extends BaseEjbJPA<PermisoOrganismoUsua
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Organismo> getOrganismosByUsuario(Long idUsuarioEntidad) throws Exception {
+    public List<Organismo> getOrganismosByUsuario(Long idUsuarioEntidad) throws I18NException {
 
         Query q = em.createQuery("Select distinct pou.organismo.id, pou.organismo.codigo, pou.organismo.denominacion from PermisoOrganismoUsuario as pou where " +
                 "pou.usuario.id = :idUsuarioEntidad and pou.organismo.permiteUsuarios = true order by pou.organismo.id");
@@ -146,7 +147,7 @@ public class PermisoOrganismoUsuarioBean extends BaseEjbJPA<PermisoOrganismoUsua
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<PermisoOrganismoUsuario> findByUsuarioOrganismo(Long idUsuarioEntidad, Long idOrganismo) throws Exception {
+    public List<PermisoOrganismoUsuario> findByUsuarioOrganismo(Long idUsuarioEntidad, Long idOrganismo) throws I18NException {
 
         Query q = em.createQuery("Select pou from PermisoOrganismoUsuario as pou where " +
                 "pou.usuario.id = :idUsuarioEntidad and pou.organismo.id = :idOrganismo and pou.organismo.permiteUsuarios = true order by pou.permiso");
@@ -159,7 +160,7 @@ public class PermisoOrganismoUsuarioBean extends BaseEjbJPA<PermisoOrganismoUsua
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<PermisoOrganismoUsuario> findByOrganismo(Long idOrganismo) throws Exception {
+    public List<PermisoOrganismoUsuario> findByOrganismo(Long idOrganismo) throws I18NException {
 
         Query q = em.createQuery("Select pou.id, pou.activo, pou.usuario.id, pou.permiso from PermisoOrganismoUsuario as pou where pou.organismo.id = :idOrganismo " +
                 "and pou.organismo.permiteUsuarios = true order by pou.permiso");
@@ -181,7 +182,7 @@ public class PermisoOrganismoUsuarioBean extends BaseEjbJPA<PermisoOrganismoUsua
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Boolean tienePermisos(Long idOrganismo) throws Exception {
+    public Boolean tienePermisos(Long idOrganismo) throws I18NException {
 
         Query q = em.createQuery("Select pou.id from PermisoOrganismoUsuario as pou where pou.organismo.id = :idOrganismo " +
                 "and pou.organismo.permiteUsuarios = true order by pou.permiso");
@@ -194,7 +195,7 @@ public class PermisoOrganismoUsuarioBean extends BaseEjbJPA<PermisoOrganismoUsua
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<UsuarioEntidad> getUsuariosEntidadByOrganismo(Long idOrganismo) throws Exception {
+    public List<UsuarioEntidad> getUsuariosEntidadByOrganismo(Long idOrganismo) throws I18NException {
 
         Query q = em.createQuery("Select distinct pou.usuario from PermisoOrganismoUsuario as pou where " +
                 " pou.organismo.id = :idOrganismo and pou.organismo.permiteUsuarios = true");
@@ -207,7 +208,7 @@ public class PermisoOrganismoUsuarioBean extends BaseEjbJPA<PermisoOrganismoUsua
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<UsuarioEntidad> getUsuariosEntidadByOrganismos(List<Organismo> organismos) throws Exception {
+    public List<UsuarioEntidad> getUsuariosEntidadByOrganismos(List<Organismo> organismos) throws I18NException {
 
         Query q = em.createQuery("Select distinct pou.usuario.id, pou.usuario.usuario from PermisoOrganismoUsuario as pou where " +
                 "pou.organismo in (:organismos)");
@@ -228,7 +229,7 @@ public class PermisoOrganismoUsuarioBean extends BaseEjbJPA<PermisoOrganismoUsua
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Organismo> getOrganismosPermiso(Long idUsuarioEntidad, Long idPermiso) throws Exception {
+    public List<Organismo> getOrganismosPermiso(Long idUsuarioEntidad, Long idPermiso) throws I18NException {
 
         Query q = em.createQuery("Select distinct pou.organismo.id, pou.organismo.codigo, pou.organismo.denominacion from PermisoOrganismoUsuario as pou where " +
                 "pou.usuario.id = :idUsuarioEntidad and pou.organismo.estado.id = :vigente and pou.organismo.permiteUsuarios = true and (pou.permiso = :idPermiso and pou.activo = true)");
@@ -252,7 +253,7 @@ public class PermisoOrganismoUsuarioBean extends BaseEjbJPA<PermisoOrganismoUsua
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public LinkedHashSet<Oficina> getOficinasPermiso(Long idUsuarioEntidad, Long idPermiso) throws Exception {
+    public LinkedHashSet<Oficina> getOficinasPermiso(Long idUsuarioEntidad, Long idPermiso) throws I18NException {
 
         // Obtenemos los Organismos con los que el usuario tiene el permiso indicado
         List<Organismo> organismos = getOrganismosPermiso(idUsuarioEntidad, idPermiso);
@@ -263,7 +264,7 @@ public class PermisoOrganismoUsuarioBean extends BaseEjbJPA<PermisoOrganismoUsua
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Organismo> getOrganismosRegistro(Long idUsuarioEntidad) throws Exception {
+    public List<Organismo> getOrganismosRegistro(Long idUsuarioEntidad) throws I18NException {
 
         Query q = em.createQuery("Select distinct pou.organismo.id, pou.organismo.codigo, pou.organismo.denominacion from PermisoOrganismoUsuario as pou where " +
                 "pou.usuario.id = :idUsuarioEntidad and pou.organismo.estado.id = :vigente and " +
@@ -294,7 +295,7 @@ public class PermisoOrganismoUsuarioBean extends BaseEjbJPA<PermisoOrganismoUsua
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public LinkedHashSet<Oficina> getOficinasRegistro(Long idUsuarioEntidad) throws Exception {
+    public LinkedHashSet<Oficina> getOficinasRegistro(Long idUsuarioEntidad) throws I18NException {
 
         List<Organismo> organismos = getOrganismosRegistro(idUsuarioEntidad);
 
@@ -304,7 +305,7 @@ public class PermisoOrganismoUsuarioBean extends BaseEjbJPA<PermisoOrganismoUsua
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Organismo> getOrganismosConsulta(Long idUsuarioEntidad) throws Exception {
+    public List<Organismo> getOrganismosConsulta(Long idUsuarioEntidad) throws I18NException {
 
         Query q = em.createQuery("Select distinct pou.organismo.id, pou.organismo.codigo, pou.organismo.denominacion from PermisoOrganismoUsuario as pou where " +
                 "pou.usuario.id = :idUsuarioEntidad and pou.organismo.estado.id = :vigente and pou.organismo.permiteUsuarios = true and " +
@@ -332,7 +333,7 @@ public class PermisoOrganismoUsuarioBean extends BaseEjbJPA<PermisoOrganismoUsua
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public LinkedHashSet<Oficina> getOficinasConsulta(Long idUsuarioEntidad) throws Exception {
+    public LinkedHashSet<Oficina> getOficinasConsulta(Long idUsuarioEntidad) throws I18NException {
 
         List<Organismo> organismos = getOrganismosConsulta(idUsuarioEntidad);
 
@@ -341,7 +342,7 @@ public class PermisoOrganismoUsuarioBean extends BaseEjbJPA<PermisoOrganismoUsua
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public LinkedHashSet<Oficina> getOficinasResponsable(Long idUsuarioEntidad) throws Exception {
+    public LinkedHashSet<Oficina> getOficinasResponsable(Long idUsuarioEntidad) throws I18NException {
 
         List<Organismo> organismos = getOrganismosPermiso(idUsuarioEntidad, RegwebConstantes.PERMISO_RESPONSABLE_OFICINA);
 
@@ -350,7 +351,7 @@ public class PermisoOrganismoUsuarioBean extends BaseEjbJPA<PermisoOrganismoUsua
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public LinkedHashSet<Oficina> getOficinasSir(Long idUsuarioEntidad) throws Exception {
+    public LinkedHashSet<Oficina> getOficinasSir(Long idUsuarioEntidad) throws I18NException {
 
         List<Organismo> organismos = getOrganismosPermiso(idUsuarioEntidad, RegwebConstantes.PERMISO_SIR);
 
@@ -360,7 +361,7 @@ public class PermisoOrganismoUsuarioBean extends BaseEjbJPA<PermisoOrganismoUsua
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Boolean tienePermiso(Set<Long> organismos, Long idUsuarioEntidad, Long idPermiso) throws Exception {
+    public Boolean tienePermiso(Set<Long> organismos, Long idUsuarioEntidad, Long idPermiso) throws I18NException {
 
         Query q = em.createQuery("Select distinct pou.id from PermisoOrganismoUsuario as pou where " +
                 "pou.organismo.id in (:organismos) and pou.usuario.id = :idUsuarioEntidad and (pou.permiso = :idPermiso and pou.activo = true)");
@@ -377,7 +378,7 @@ public class PermisoOrganismoUsuarioBean extends BaseEjbJPA<PermisoOrganismoUsua
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<UsuarioEntidad> getUsuariosRegistroEntidad(Long idEntidad) throws Exception {
+    public List<UsuarioEntidad> getUsuariosRegistroEntidad(Long idEntidad) throws I18NException {
 
         Query q = em.createQuery("Select distinct(pou.usuario) from PermisoOrganismoUsuario as pou where " +
                 "pou.usuario.entidad.id = :idEntidad and pou.usuario.activo = true and pou.usuario.usuario.tipoUsuario = 1");
@@ -390,7 +391,7 @@ public class PermisoOrganismoUsuarioBean extends BaseEjbJPA<PermisoOrganismoUsua
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<UsuarioEntidad> getUsuariosRegistroOrganismo(List<Long> organismos) throws Exception {
+    public List<UsuarioEntidad> getUsuariosRegistroOrganismo(List<Long> organismos) throws I18NException {
 
         Query q = em.createQuery("Select distinct(plu.usuario) from PermisoLibroUsuario as plu where " +
                 "plu.libro.organismo.id in (:organismos) and plu.usuario.usuario.tipoUsuario = 1 and " +
@@ -406,7 +407,7 @@ public class PermisoOrganismoUsuarioBean extends BaseEjbJPA<PermisoOrganismoUsua
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Boolean isAdministradorOrganismo(Long idUsuarioEntidad, Long idOrganismo) throws Exception {
+    public Boolean isAdministradorOrganismo(Long idUsuarioEntidad, Long idOrganismo) throws I18NException {
 
         CatEstadoEntidad vigente = catEstadoEntidadEjb.findByCodigo(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
 
@@ -427,7 +428,7 @@ public class PermisoOrganismoUsuarioBean extends BaseEjbJPA<PermisoOrganismoUsua
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Boolean tienePermiso(Long idUsuarioEntidad, Long idOrganismo, Long idPermiso, Boolean organismoActivo) throws Exception {
+    public Boolean tienePermiso(Long idUsuarioEntidad, Long idOrganismo, Long idPermiso, Boolean organismoActivo) throws I18NException {
 
         Query q = em.createQuery("Select pou.id from PermisoOrganismoUsuario as pou where " +
                 "pou.usuario.id = :idUsuarioEntidad and pou.organismo.id = :idOrganismo and pou.organismo.permiteUsuarios = true and (pou.permiso = :idPermiso and pou.activo = true)");
@@ -444,7 +445,7 @@ public class PermisoOrganismoUsuarioBean extends BaseEjbJPA<PermisoOrganismoUsua
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Boolean puedeRegistrar(Long idUsuarioEntidad, Long idOrganismo) throws Exception {
+    public Boolean puedeRegistrar(Long idUsuarioEntidad, Long idOrganismo) throws I18NException {
 
         Query q = em.createQuery("Select pou.id from PermisoOrganismoUsuario as pou where " +
                 "pou.usuario.id = :idUsuarioEntidad and pou.organismo.id = :idOrganismo and pou.organismo.permiteUsuarios = true and pou.activo = true and (pou.permiso=:registrarEntrada or pou.permiso=:registrarSalida)");
@@ -462,7 +463,7 @@ public class PermisoOrganismoUsuarioBean extends BaseEjbJPA<PermisoOrganismoUsua
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Organismo> getOrganismosAdministrados(Long idUsuarioEntidad) throws Exception {
+    public List<Organismo> getOrganismosAdministrados(Long idUsuarioEntidad) throws I18NException {
 
         CatEstadoEntidad vigente = catEstadoEntidadEjb.findByCodigo(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
 
@@ -488,7 +489,7 @@ public class PermisoOrganismoUsuarioBean extends BaseEjbJPA<PermisoOrganismoUsua
     }
 
     @Override
-    public void actualizarPermiso(Long idPermisoOrganismoUsuario, Boolean esActivo) throws Exception {
+    public void actualizarPermiso(Long idPermisoOrganismoUsuario, Boolean esActivo) throws I18NException {
 
         Query q = em.createQuery("UPDATE PermisoOrganismoUsuario SET activo = :esActivo WHERE " +
                 "id = :idPermisoOrganismoUsuario");
@@ -501,7 +502,7 @@ public class PermisoOrganismoUsuarioBean extends BaseEjbJPA<PermisoOrganismoUsua
 
 
     @Override
-    public Boolean existePermiso(Long idUsuarioEntidad, Long idOrganismo, Long idPermiso) throws Exception {
+    public Boolean existePermiso(Long idUsuarioEntidad, Long idOrganismo, Long idPermiso) throws I18NException {
 
         Query q = em.createQuery("Select pou.id from PermisoOrganismoUsuario as pou where " +
                 "pou.usuario.id = :idUsuarioEntidad and pou.organismo.id = :idOrganismo and " +
@@ -517,7 +518,7 @@ public class PermisoOrganismoUsuarioBean extends BaseEjbJPA<PermisoOrganismoUsua
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<UsuarioEntidad> getUsuariosPermiso(Set<Organismo> organismos, Long permiso) throws Exception {
+    public List<UsuarioEntidad> getUsuariosPermiso(Set<Organismo> organismos, Long permiso) throws I18NException {
 
         Query q = em.createQuery("Select distinct pou.usuario from PermisoOrganismoUsuario as pou where " +
                 "pou.usuario.usuario.tipoUsuario = :persona and pou.organismo in (:organismos) and pou.activo = true and pou.permiso=:sir");
@@ -530,14 +531,14 @@ public class PermisoOrganismoUsuarioBean extends BaseEjbJPA<PermisoOrganismoUsua
     }
 
     @Override
-    public void eliminarByUsuario(Long idUsuarioEntidad) throws Exception {
+    public void eliminarByUsuario(Long idUsuarioEntidad) throws I18NException {
 
         em.createQuery("delete from PermisoOrganismoUsuario where usuario.id=:idUsuarioEntidad ").setParameter("idUsuarioEntidad", idUsuarioEntidad).executeUpdate();
 
     }
 
     @Override
-    public Integer eliminarByEntidad(Long idEntidad) throws Exception {
+    public Integer eliminarByEntidad(Long idEntidad) throws I18NException {
 
         List<?> plus = em.createQuery("select distinct(pou.id) from PermisoOrganismoUsuario as pou where pou.usuario.entidad.id =:idEntidad").setParameter("idEntidad", idEntidad).getResultList();
         Integer total = plus.size();
@@ -560,7 +561,7 @@ public class PermisoOrganismoUsuarioBean extends BaseEjbJPA<PermisoOrganismoUsua
 
     @Override
     @TransactionTimeout(value = 1800)  // 30 minutos
-    public Integer migrarPermisos(Libro libro) throws Exception {
+    public Integer migrarPermisos(Libro libro) throws I18NException {
 
         // Activamos que el organismo pueda tener usuarios
         Organismo organismo = libro.getOrganismo();

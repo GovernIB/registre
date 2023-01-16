@@ -1,6 +1,7 @@
 package es.caib.regweb3.plugins.distribucion;
 
 import es.caib.regweb3.model.RegistroEntrada;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.pluginsib.core.IPlugin;
 
 import java.util.Locale;
@@ -20,15 +21,15 @@ public interface IDistribucionPlugin extends IPlugin {
      * Método que envia/distribuye el registro de entrada a la lista de destinatarios  indicada
      * @param registro registro de entrada que se distribuye
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Boolean distribuir(RegistroEntrada registro, Locale locale) throws Exception;
+    Boolean distribuir(RegistroEntrada registro, Locale locale) throws I18NException;
 
     /**
      * Método que indica si se envia el registro a la cola de distribución o no
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Boolean getEnvioCola() throws Exception;
+    Boolean getEnvioCola() throws I18NException;
 
 }

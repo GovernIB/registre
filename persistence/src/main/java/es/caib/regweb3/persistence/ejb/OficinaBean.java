@@ -10,6 +10,7 @@ import es.caib.regweb3.utils.Dir3Caib;
 import es.caib.regweb3.utils.Dir3CaibUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,13 +48,13 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
 
 
     @Override
-    public Oficina getReference(Long id) throws Exception {
+    public Oficina getReference(Long id) throws I18NException {
 
         return em.getReference(Oficina.class, id);
     }
 
     @Override
-    public Oficina findById(Long id) throws Exception {
+    public Oficina findById(Long id) throws I18NException {
 
         Oficina oficina = em.find(Oficina.class, id);
         Hibernate.initialize(oficina.getOrganizativasOfi());
@@ -63,13 +64,13 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Oficina> getAll() throws Exception {
+    public List<Oficina> getAll() throws I18NException {
 
         return em.createQuery("Select oficina from Oficina as oficina order by oficina.id").getResultList();
     }
 
     @Override
-    public Long getTotal() throws Exception {
+    public Long getTotal() throws I18NException {
 
         Query q = em.createQuery("Select count(oficina.id) from Oficina as oficina");
         q.setHint("org.hibernate.readOnly", true);
@@ -80,7 +81,7 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Oficina> getPagination(int inicio) throws Exception {
+    public List<Oficina> getPagination(int inicio) throws I18NException {
 
         Query q = em.createQuery("Select oficina from Oficina as oficina order by oficina.id");
         q.setFirstResult(inicio);
@@ -92,7 +93,7 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Oficina findByCodigo(String codigo) throws Exception {
+    public Oficina findByCodigo(String codigo) throws I18NException {
 
         Query q = em.createQuery("Select oficina from Oficina as oficina where " +
                 "oficina.codigo = :codigo");
@@ -110,7 +111,7 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
     }
 
     @Override
-    public Oficina findByCodigoMultiEntidad(String codigo) throws Exception {
+    public Oficina findByCodigoMultiEntidad(String codigo) throws I18NException {
 
         Query q = em.createQuery("Select oficina from Oficina as oficina where oficina.codigo = :codigo");
 
@@ -133,7 +134,7 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
     }
 
     @Override
-    public Oficina findByMultiEntidad(String codigo) throws Exception{
+    public Oficina findByMultiEntidad(String codigo) throws I18NException{
         if(multiEntidadEjb.isMultiEntidad()){
             return findByCodigoMultiEntidad(codigo);
         }else{
@@ -142,7 +143,7 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
     }
 
     @Override
-    public Oficina findByCodigoByEntidadMultiEntidad(String codigo, Long idEntidad) throws Exception{
+    public Oficina findByCodigoByEntidadMultiEntidad(String codigo, Long idEntidad) throws I18NException{
         if(multiEntidadEjb.isMultiEntidad()){
             return findByCodigoMultiEntidad(codigo);
         }else{
@@ -153,7 +154,7 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Oficina findByCodigoEntidadSinEstado(String codigo, Long idEntidad) throws Exception {
+    public Oficina findByCodigoEntidadSinEstado(String codigo, Long idEntidad) throws I18NException {
 
         Query q = em.createQuery("Select oficina from Oficina as oficina where " +
                 "oficina.codigo = :codigo and oficina.organismoResponsable.entidad.id=:idEntidad ");
@@ -171,7 +172,7 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
     }
 
     @Override
-    public Oficina findByCodigoLigero(String codigo) throws Exception {
+    public Oficina findByCodigoLigero(String codigo) throws I18NException {
 
         Query q = em.createQuery("Select oficina.id, oficina.codigo, oficina.denominacion from Oficina as oficina where " +
                 "oficina.codigo = :codigo");
@@ -189,7 +190,7 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Oficina findByCodigoEntidad(String codigo, Long idEntidad) throws Exception {
+    public Oficina findByCodigoEntidad(String codigo, Long idEntidad) throws I18NException {
 
         Query q = em.createQuery("Select oficina from Oficina as oficina where " +
                 "oficina.codigo =:codigo and oficina.organismoResponsable.entidad.id = :idEntidad  and " +
@@ -210,7 +211,7 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Oficina findByCodigoVigente(String codigo) throws Exception {
+    public Oficina findByCodigoVigente(String codigo) throws I18NException {
 
         Query q = em.createQuery("Select oficina from Oficina as oficina where " +
                 "oficina.codigo =:codigo and " +
@@ -230,7 +231,7 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Oficina> findByOrganismoResponsable(Long idOrganismo) throws Exception {
+    public List<Oficina> findByOrganismoResponsable(Long idOrganismo) throws I18NException {
         Query q = em.createQuery("Select oficina from Oficina as oficina where " +
                 "oficina.organismoResponsable.id =:idOrganismo and " +
                 "oficina.estado.codigoEstadoEntidad=:vigente");
@@ -248,7 +249,7 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Oficina> oficinasFuncionales(Long idOrganismo, Boolean oficinaVirtual) throws Exception {
+    public List<Oficina> oficinasFuncionales(Long idOrganismo, Boolean oficinaVirtual) throws I18NException {
 
         String oficinaVirtualWhere = "";
 
@@ -282,23 +283,23 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
     }
 
     @Override
-    public List<Oficina> oficinasOrganizativas(Long idOrganismo, Boolean oficinaVirtual) throws Exception {
+    public List<Oficina> oficinasOrganizativas(Long idOrganismo, Boolean oficinaVirtual) throws I18NException {
         return relacionOrganizativaOfiEjb.oficinasOrganizativas(idOrganismo, oficinaVirtual);
     }
 
     @Override
-    public List<Oficina> oficinasSIR(Long idOrganismo) throws Exception {
+    public List<Oficina> oficinasSIR(Long idOrganismo) throws I18NException {
         return relacionSirOfiEjb.oficinasSIR(idOrganismo);
     }
 
     @Override
-    public List<Oficina> oficinasSIREntidad(Long idEntidad) throws Exception {
+    public List<Oficina> oficinasSIREntidad(Long idEntidad) throws I18NException {
         return relacionSirOfiEjb.oficinasSIREntidad(idEntidad);
     }
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Oficina> findByEntidad(Long idEntidad) throws Exception {
+    public List<Oficina> findByEntidad(Long idEntidad) throws I18NException {
         Query q = em.createQuery("Select oficina from Oficina as oficina where " +
                 "oficina.organismoResponsable.entidad.id =:idEntidad");
 
@@ -314,7 +315,7 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Oficina> findByEntidadReduce(Long entidad) throws Exception {
+    public List<Oficina> findByEntidadReduce(Long entidad) throws I18NException {
 
         Query q = em.createQuery("Select oficina.id, oficina.denominacion from Oficina as oficina where " +
            "oficina.organismoResponsable.entidad.id = :entidad");
@@ -335,7 +336,7 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Oficina> findByEntidadByEstado(Long idEntidad, String estado) throws Exception {
+    public List<Oficina> findByEntidadByEstado(Long idEntidad, String estado) throws I18NException {
 
         Query q = em.createQuery("Select oficina.id, oficina.codigo, oficina.denominacion from Oficina as oficina where " +
                 "oficina.organismoResponsable.entidad.id =:idEntidad and oficina.estado.codigoEstadoEntidad=:estado");
@@ -358,7 +359,7 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Oficina> findByEntidadByEstadoMultiEntidad(Long idEntidad, String estado) throws Exception{
+    public List<Oficina> findByEntidadByEstadoMultiEntidad(Long idEntidad, String estado) throws I18NException{
 
         List<Oficina> oficinas= findByEntidadByEstado(idEntidad,estado);
         List<Oficina> oficinasAEliminar = new ArrayList<>();
@@ -379,7 +380,7 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Oficina> responsableByEntidadEstado(Long idEntidad, String estado) throws Exception {
+    public List<Oficina> responsableByEntidadEstado(Long idEntidad, String estado) throws I18NException {
         Query q = em.createQuery("Select oficina.id, oficina.codigo, oficina.denominacion, oficina.organismoResponsable.id from Oficina as oficina where " +
                 "oficina.organismoResponsable.entidad.id =:idEntidad and oficina.estado.codigoEstadoEntidad =:estado and " +
                 "oficina.oficinaResponsable.id = null order by oficina.codigo");
@@ -405,7 +406,7 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Oficina> dependienteByEntidadEstado(Long idEntidad, String estado) throws Exception {
+    public List<Oficina> dependienteByEntidadEstado(Long idEntidad, String estado) throws I18NException {
         Query q = em.createQuery("Select oficina.id, oficina.codigo, oficina.denominacion, oficina.oficinaResponsable.id, oficina.organismoResponsable.id from Oficina as oficina where " +
                 "oficina.organismoResponsable.entidad.id =:idEntidad and oficina.estado.codigoEstadoEntidad =:estado and " +
                 "oficina.oficinaResponsable.id != null order by oficina.codigo");
@@ -429,7 +430,7 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
     }
 
     @Override
-    public LinkedHashSet<Oficina> oficinasServicio(List<Organismo> organismos, Boolean oficinaVirtual) throws Exception {
+    public LinkedHashSet<Oficina> oficinasServicio(List<Organismo> organismos, Boolean oficinaVirtual) throws I18NException {
 
         LinkedHashSet<Oficina> oficinas = new LinkedHashSet<Oficina>();  // Utilizamos un Set porque no permite duplicados
 
@@ -443,7 +444,7 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
     }
 
     @Override
-    public LinkedHashSet<Oficina> oficinasSIR(List<Organismo> organismos) throws Exception {
+    public LinkedHashSet<Oficina> oficinasSIR(List<Organismo> organismos) throws I18NException {
 
         LinkedHashSet<Oficina> oficinas = new LinkedHashSet<Oficina>();  // Utilizamos un Set porque no permite duplicados
 
@@ -456,7 +457,7 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
     }
 
     @Override
-    public Boolean isSIRRecepcion(Long idOficina) throws Exception {
+    public Boolean isSIRRecepcion(Long idOficina) throws I18NException {
 
         Query q = em.createQuery("Select oficina.id from Oficina as oficina where " +
                 "oficina.id =:idOficina and oficina.estado.codigoEstadoEntidad=:vigente and " +
@@ -471,7 +472,7 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
     }
 
     @Override
-    public Boolean isSIREnvio(Long idOficina) throws Exception {
+    public Boolean isSIREnvio(Long idOficina) throws I18NException {
 
         Query q = em.createQuery("Select oficina.id from Oficina as oficina where " +
                 "oficina.id =:idOficina and oficina.estado.codigoEstadoEntidad=:vigente and " +
@@ -487,7 +488,7 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
 
 
     @Override
-    public Boolean isSIR(Long idOficina) throws Exception {
+    public Boolean isSIR(Long idOficina) throws I18NException {
 
         Query q = em.createQuery("Select oficina.id from Oficina as oficina where " +
                 "oficina.id =:idOficina and oficina.estado.codigoEstadoEntidad=:vigente and " +
@@ -502,7 +503,7 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
     }
 
     @Override
-    public Boolean isSIRCompleto(Long idOficina) throws Exception {
+    public Boolean isSIRCompleto(Long idOficina) throws I18NException {
 
         Query q = em.createQuery("Select oficina.id from Oficina as oficina where " +
                 "oficina.id =:idOficina and oficina.estado.codigoEstadoEntidad=:vigente and " +
@@ -519,7 +520,7 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
     }
 
     @Override
-    public LinkedHashSet<Oficina> oficinasServicioCompleto(Long idOrganismo, Boolean oficinaVirtual) throws Exception {
+    public LinkedHashSet<Oficina> oficinasServicioCompleto(Long idOrganismo, Boolean oficinaVirtual) throws I18NException {
 
         Organismo organismoSuperior = organismoEjb.getOrganismoSuperior(idOrganismo);
 
@@ -537,7 +538,7 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
     }
 
     @Override
-    public Boolean tieneOficinasServicio(Long idOrganismo, Boolean oficinaVirtual) throws Exception {
+    public Boolean tieneOficinasServicio(Long idOrganismo, Boolean oficinaVirtual) throws I18NException {
 
         LinkedHashSet<Oficina> oficinas = oficinasServicioCompleto(idOrganismo, oficinaVirtual);
 
@@ -546,7 +547,7 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
 
 
     @Override
-    public Integer eliminarByEntidad(Long idEntidad) throws Exception {
+    public Integer eliminarByEntidad(Long idEntidad) throws I18NException {
 
 
         List<?> oficinasRaiz = em.createQuery("Select distinct(id) from Oficina where organismoResponsable.entidad.id =:idEntidad and oficinaResponsable != null ").setParameter("idEntidad", idEntidad).getResultList();
@@ -592,7 +593,7 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Paginacion busqueda(Integer pageNumber, Long idEntidad, String codigo, String denominacion, Long idCatEstadoEntidad) throws Exception {
+    public Paginacion busqueda(Integer pageNumber, Long idEntidad, String codigo, String denominacion, Long idCatEstadoEntidad) throws I18NException {
 
         Query q;
         Query q2;
@@ -668,9 +669,9 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
      *
      * @param codigo
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    public Long obtenerEntidad(String codigo) throws Exception {
+    public Long obtenerEntidad(String codigo) throws I18NException {
         Query q = em.createQuery("Select oficina.organismoResponsable.entidad.id from Oficina as oficina where " +
                 "oficina.codigo =:codigo and oficina.organismoResponsable.entidad.sir = true");
 
@@ -683,7 +684,7 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
     /**
      * PROVES MULTIENTITAT
      */
-    public Long obtenerEntidadMultiEntidad(String codigo) throws Exception {
+    public Long obtenerEntidadMultiEntidad(String codigo) throws I18NException {
 
         Oficina oficina = findByCodigoMultiEntidad(codigo);
 
@@ -700,9 +701,9 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
      *
      * @param codigo
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    public List<OficinaTF> obtenerOficinasSir(String codigo, Dir3Caib dir3caib) throws Exception {
+    public List<OficinaTF> obtenerOficinasSir(String codigo, Dir3Caib dir3caib) throws I18NException {
         Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService(dir3caib.getServer(), dir3caib.getUser(), dir3caib.getPassword());
         return oficinasService.obtenerOficinasSIRUnidad(codigo);
 

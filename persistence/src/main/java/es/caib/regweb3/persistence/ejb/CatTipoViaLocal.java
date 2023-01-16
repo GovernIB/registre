@@ -1,6 +1,7 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.CatTipoVia;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 
 import javax.ejb.Local;
 
@@ -18,16 +19,16 @@ public interface CatTipoViaLocal extends BaseEjb<CatTipoVia, Long> {
     /**
      * @param codigo
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    CatTipoVia findByCodigo(Long codigo) throws Exception;
+    CatTipoVia findByCodigo(Long codigo) throws I18NException;
 
     /**
      * @param descripcion
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    CatTipoVia findByDescripcion(String descripcion) throws Exception;
+    CatTipoVia findByDescripcion(String descripcion) throws I18NException;
 
 }
 

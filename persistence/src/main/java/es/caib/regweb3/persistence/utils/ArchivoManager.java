@@ -3,6 +3,7 @@ package es.caib.regweb3.persistence.utils;
 import es.caib.regweb3.model.Archivo;
 import es.caib.regweb3.persistence.ejb.ArchivoLocal;
 import es.caib.regweb3.utils.MimeTypeUtils;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -57,9 +58,9 @@ public class ArchivoManager {
 
     /**
      * Si ha habido un error, elimina el Archivo de la bbdd y del sistema de archivos
-     * @throws Exception
+     * @throws I18NException
      */
-    public void processError() throws Exception {
+    public void processError() throws I18NException {
 
         archivoEjb.remove(this.archivoActual);
         FileSystemManager.eliminarArchivo(this.archivoActual.getId());
@@ -69,7 +70,7 @@ public class ArchivoManager {
 
         try {
             processError();
-        } catch (Exception e) {
+        } catch (I18NException e) {
             log.info("Error eliminado archivos en disco..");
             e.printStackTrace();
         }

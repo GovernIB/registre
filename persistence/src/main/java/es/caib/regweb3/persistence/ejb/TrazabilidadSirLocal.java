@@ -1,6 +1,7 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.TrazabilidadSir;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 
 import javax.ejb.Local;
 import java.util.List;
@@ -22,35 +23,35 @@ public interface TrazabilidadSirLocal extends BaseEjb<TrazabilidadSir, Long> {
      *
      * @param idRegistroSir
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    List<TrazabilidadSir> getByRegistroSir(Long idRegistroSir) throws Exception;
+    List<TrazabilidadSir> getByRegistroSir(Long idRegistroSir) throws I18NException;
 
     /**
      * Obtiene todas las TrazabilidadesSir a partir de un Identificador Intercambio
      *
      * @param idIntercambio
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    List<TrazabilidadSir> getByIdIntercambio(String idIntercambio, Long idEntidad) throws Exception;
+    List<TrazabilidadSir> getByIdIntercambio(String idIntercambio, Long idEntidad) throws I18NException;
 
     /**
      * Obtiene la TrazabilidadSir de un RegistroSir aceptado
      *
      * @param idRegistroSir
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    TrazabilidadSir getByRegistroSirAceptado(Long idRegistroSir) throws Exception;
+    TrazabilidadSir getByRegistroSirAceptado(Long idRegistroSir) throws I18NException;
 
     /**
      * Eimina todas las TrazabilidadesSir de una Entidad
      *
      * @param idEntidad
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Integer eliminarByEntidad(Long idEntidad) throws Exception;
+    Integer eliminarByEntidad(Long idEntidad) throws I18NException;
 
 }
