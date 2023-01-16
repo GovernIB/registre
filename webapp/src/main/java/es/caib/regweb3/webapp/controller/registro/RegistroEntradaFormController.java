@@ -541,7 +541,7 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
 
                 Mensaje.saveMessageError(request, getMessage("registro.rectificar.no"));
             }
-        }catch (I18NException | Exception e){
+        }catch (I18NException e){
             log.info("Error al rectificar el registro");
             e.printStackTrace();
             Mensaje.saveMessageError(request, getMessage("registro.rectificar.error"));

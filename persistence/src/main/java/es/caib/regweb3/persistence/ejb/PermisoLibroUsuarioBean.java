@@ -2,6 +2,7 @@ package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.PermisoLibroUsuario;
 import es.caib.regweb3.utils.RegwebConstantes;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,26 +38,26 @@ public class PermisoLibroUsuarioBean extends BaseEjbJPA<PermisoLibroUsuario, Lon
 
 
     @Override
-    public PermisoLibroUsuario getReference(Long id) throws Exception {
+    public PermisoLibroUsuario getReference(Long id) throws I18NException {
 
         return em.getReference(PermisoLibroUsuario.class, id);
     }
 
     @Override
-    public PermisoLibroUsuario findById(Long id) throws Exception {
+    public PermisoLibroUsuario findById(Long id) throws I18NException {
 
         return em.find(PermisoLibroUsuario.class, id);
     }
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<PermisoLibroUsuario> getAll() throws Exception {
+    public List<PermisoLibroUsuario> getAll() throws I18NException {
 
         return em.createQuery("Select permisoLibroUsuario from PermisoLibroUsuario as permisoLibroUsuario order by permisoLibroUsuario.libro.id").getResultList();
     }
 
     @Override
-    public Long getTotal() throws Exception {
+    public Long getTotal() throws I18NException {
 
         Query q = em.createQuery("Select count(permisoLibroUsuario.id) from PermisoLibroUsuario as permisoLibroUsuario");
 
@@ -66,7 +67,7 @@ public class PermisoLibroUsuarioBean extends BaseEjbJPA<PermisoLibroUsuario, Lon
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<PermisoLibroUsuario> getPagination(int inicio) throws Exception {
+    public List<PermisoLibroUsuario> getPagination(int inicio) throws I18NException {
 
         Query q = em.createQuery("Select permisoLibroUsuario from PermisoLibroUsuario as permisoLibroUsuario order by permisoLibroUsuario.id");
         q.setFirstResult(inicio);
@@ -79,7 +80,7 @@ public class PermisoLibroUsuarioBean extends BaseEjbJPA<PermisoLibroUsuario, Lon
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<PermisoLibroUsuario> findByLibro(Long idLibro) throws Exception {
+    public List<PermisoLibroUsuario> findByLibro(Long idLibro) throws I18NException {
 
         Query q = em.createQuery("Select plu.id, plu.permiso, plu.activo, plu.usuario.id from PermisoLibroUsuario as plu where plu.libro.id = :idLibro order by plu.usuario.id");
 
@@ -99,7 +100,7 @@ public class PermisoLibroUsuarioBean extends BaseEjbJPA<PermisoLibroUsuario, Lon
     }
 
     @Override
-    public Integer eliminarByEntidad(Long idEntidad) throws Exception {
+    public Integer eliminarByEntidad(Long idEntidad) throws I18NException {
 
         List<?> plus = em.createQuery("select distinct(plu.id) from PermisoLibroUsuario as plu where plu.usuario.entidad.id =:idEntidad").setParameter("idEntidad", idEntidad).getResultList();
         Integer total = plus.size();

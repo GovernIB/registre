@@ -1,6 +1,7 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.Pendiente;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 
 import javax.ejb.Local;
 import java.util.List;
@@ -21,26 +22,26 @@ public interface PendienteLocal extends BaseEjb<Pendiente, Long> {
      *
      * @param idOrganismo
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Pendiente findByIdOrganismo(Long idOrganismo) throws Exception;
+    Pendiente findByIdOrganismo(Long idOrganismo) throws I18NException;
 
     /**
      * Función que devuelve los pendientes en función de su estado
      *
      * @param estado
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    List<Pendiente> findByEstadoProcesado(String estado, Boolean procesado) throws Exception;
+    List<Pendiente> findByEstadoProcesado(String estado, Boolean procesado) throws I18NException;
 
     /**
      * Función que devuelve los pendientes de procesar
      *
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    List<Pendiente> findPendientesProcesar(Long idEntidad) throws Exception;
+    List<Pendiente> findPendientesProcesar(Long idEntidad) throws I18NException;
 
 
 }

@@ -1,6 +1,7 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.CatEstadoEntidad;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 
 import javax.ejb.Local;
 
@@ -19,8 +20,8 @@ public interface CatEstadoEntidadLocal extends BaseEjb<CatEstadoEntidad, Long> {
      * Retorna los {@link es.caib.regweb3.model.CatEstadoEntidad} a partir de un código
      * @param codigo
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    CatEstadoEntidad findByCodigo(String codigo) throws Exception;
+    CatEstadoEntidad findByCodigo(String codigo) throws I18NException;
 
 }

@@ -1,6 +1,7 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.PermisoLibroUsuario;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 
 import javax.ejb.Local;
 import java.util.List;
@@ -22,9 +23,9 @@ public interface PermisoLibroUsuarioLocal extends BaseEjb<PermisoLibroUsuario, L
      *
      * @param idLibro
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    List<PermisoLibroUsuario> findByLibro(Long idLibro) throws Exception;
+    List<PermisoLibroUsuario> findByLibro(Long idLibro) throws I18NException;
 
 
     /**
@@ -32,8 +33,8 @@ public interface PermisoLibroUsuarioLocal extends BaseEjb<PermisoLibroUsuario, L
      *
      * @param idEntidad
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Integer eliminarByEntidad(Long idEntidad) throws Exception;
+    Integer eliminarByEntidad(Long idEntidad) throws I18NException;
 
 }

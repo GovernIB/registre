@@ -24,18 +24,18 @@ public interface InteresadoLocal extends BaseEjb<Interesado, Long> {
      *
      * @param interesado
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Interesado guardarInteresado(Interesado interesado) throws Exception;
+    Interesado guardarInteresado(Interesado interesado) throws I18NException;
 
     /**
      * Obtiene los Interesados de un RegistroDetalle
      *
      * @param registroDetalle
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    List<Interesado> findByRegistroDetalle(Long registroDetalle) throws Exception;
+    List<Interesado> findByRegistroDetalle(Long registroDetalle) throws I18NException;
 
     /**
      * Obtiene un Interesado a partir del CodigoDir3 y Su registroDetalle
@@ -43,27 +43,27 @@ public interface InteresadoLocal extends BaseEjb<Interesado, Long> {
      * @param codigoDir3
      * @param idRegistroDetalle
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Interesado findByCodigoDir3RegistroDetalle(String codigoDir3, Long idRegistroDetalle) throws Exception;
+    Interesado findByCodigoDir3RegistroDetalle(String codigoDir3, Long idRegistroDetalle) throws I18NException;
 
     /**
      * Eliminanos el Interesado del RegistroDetalle y luego de la bbdd
      *
      * @param idInteresado
      * @param idRegistroDetalle
-     * @throws Exception
+     * @throws I18NException
      */
-    void eliminarInteresadoRegistroDetalle(Long idInteresado, Long idRegistroDetalle) throws Exception;
+    void eliminarInteresadoRegistroDetalle(Long idInteresado, Long idRegistroDetalle) throws I18NException;
 
     /**
      * * Comprueba la existencia de un Documento en el sistema
      *
      * @param documento
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Boolean existeDocumentoNew(String documento) throws Exception;
+    Boolean existeDocumentoNew(String documento) throws I18NException;
 
     /**
      * Comprueba la existencia de un Documento en el sistema para la edición de un Interesado
@@ -71,18 +71,18 @@ public interface InteresadoLocal extends BaseEjb<Interesado, Long> {
      * @param documento
      * @param idInteresado
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    Boolean existeDocumentoEdit(String documento, Long idInteresado) throws Exception;
+    Boolean existeDocumentoEdit(String documento, Long idInteresado) throws I18NException;
 
     /**
      * Comprueba si un RegistroDetalle tiene algún Interesado de Tipo Administración
      *
      * @param idRegistroDetalle
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    String existeInteresadoAdministracion(Long idRegistroDetalle) throws Exception;
+    String existeInteresadoAdministracion(Long idRegistroDetalle) throws I18NException;
 
     /**
      * Guardamos todos los Interesados de un Registro de Entrada o Salida
@@ -90,9 +90,9 @@ public interface InteresadoLocal extends BaseEjb<Interesado, Long> {
      * @param interesadosSesion
      * @param registroDetalle
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    List<Interesado> guardarInteresados(List<Interesado> interesadosSesion, RegistroDetalle registroDetalle) throws Exception;
+    List<Interesado> guardarInteresados(List<Interesado> interesadosSesion, RegistroDetalle registroDetalle) throws I18NException;
 
     /**
      * Método que invoca al plugin de post proceso cuando se crea un interesado. Se indica el tipo de registro y el numero de registro
@@ -101,9 +101,9 @@ public interface InteresadoLocal extends BaseEjb<Interesado, Long> {
      * @param idRegistroDetalle
      * @param tipoRegistro
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    void postProcesoNuevoInteresado(Interesado interesado, Long idRegistroDetalle, Long tipoRegistro, Long entidadId) throws Exception, I18NException;
+    void postProcesoNuevoInteresado(Interesado interesado, Long idRegistroDetalle, Long tipoRegistro, Long entidadId) throws I18NException;
 
     /**
      * Método que invoca al plugin de post proceso cuando se actualiza un interesado. Se indica el tipo de registro y el numero de registro
@@ -112,9 +112,9 @@ public interface InteresadoLocal extends BaseEjb<Interesado, Long> {
      * @param idRegistroDetalle
      * @param tipoRegistro
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    void postProcesoActualizarInteresado(Interesado interesado, Long idRegistroDetalle, Long tipoRegistro, Long entidadId) throws Exception, I18NException;
+    void postProcesoActualizarInteresado(Interesado interesado, Long idRegistroDetalle, Long tipoRegistro, Long entidadId) throws I18NException;
 
     /**
      * Método que invoca al plugin de post proceso cuando se elimina un interesado. Se indica el tipo de registro y el numero de registro
@@ -123,17 +123,17 @@ public interface InteresadoLocal extends BaseEjb<Interesado, Long> {
      * @param idRegistroDetalle
      * @param tipoRegistro
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    void postProcesoEliminarInteresado(Long idInteresado, Long idRegistroDetalle, Long tipoRegistro, Long entidadId) throws Exception, I18NException;
+    void postProcesoEliminarInteresado(Long idInteresado, Long idRegistroDetalle, Long tipoRegistro, Long entidadId) throws I18NException;
 
     /**
-     * @throws Exception
+     * @throws I18NException
      */
-    void capitalizarInteresadosFisicas() throws Exception;
+    void capitalizarInteresadosFisicas() throws I18NException;
 
     /**
-     * @throws Exception
+     * @throws I18NException
      */
-    void capitalizarInteresadosJuridicos() throws Exception;
+    void capitalizarInteresadosJuridicos() throws I18NException;
 }

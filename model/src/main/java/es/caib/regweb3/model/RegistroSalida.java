@@ -1,6 +1,7 @@
 package es.caib.regweb3.model;
 
 import es.caib.regweb3.utils.RegwebConstantes;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 
 import javax.persistence.*;
 import javax.xml.bind.annotation.*;
@@ -263,7 +264,7 @@ public class RegistroSalida implements IRegistro {
     }
 
     @Transient
-    public String interesadoDestinoCodigo() throws Exception {
+    public String interesadoDestinoCodigo() throws I18NException {
 
         List<Interesado> interesados = this.getRegistroDetalle().getInteresados();
 
@@ -278,7 +279,7 @@ public class RegistroSalida implements IRegistro {
     }
 
     @Transient
-    public String getInteresadoDestinoDenominacion() throws Exception {
+    public String getInteresadoDestinoDenominacion() throws I18NException {
 
         List<Interesado> interesados = this.getRegistroDetalle().getInteresados();
 

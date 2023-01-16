@@ -44,26 +44,26 @@ public class InteresadoBean extends BaseEjbJPA<Interesado, Long> implements Inte
 
 
     @Override
-    public Interesado getReference(Long id) throws Exception {
+    public Interesado getReference(Long id) throws I18NException {
 
         return em.getReference(Interesado.class, id);
     }
 
     @Override
-    public Interesado findById(Long id) throws Exception {
+    public Interesado findById(Long id) throws I18NException {
 
         return em.find(Interesado.class, id);
     }
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Interesado> getAll() throws Exception {
+    public List<Interesado> getAll() throws I18NException {
 
         return em.createQuery("Select interesado from Interesado as interesado order by interesado.id").getResultList();
     }
 
     @Override
-    public Long getTotal() throws Exception {
+    public Long getTotal() throws I18NException {
 
         Query q = em.createQuery("Select count(interesado.id) from Interesado as interesado");
         q.setHint("org.hibernate.readOnly", true);
@@ -74,7 +74,7 @@ public class InteresadoBean extends BaseEjbJPA<Interesado, Long> implements Inte
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Interesado> getPagination(int inicio) throws Exception {
+    public List<Interesado> getPagination(int inicio) throws I18NException {
 
         Query q = em.createQuery("Select interesado from Interesado as interesado order by interesado.id");
         q.setFirstResult(inicio);
@@ -85,7 +85,7 @@ public class InteresadoBean extends BaseEjbJPA<Interesado, Long> implements Inte
     }
 
     @Override
-    public Interesado guardarInteresado(Interesado interesado) throws Exception {
+    public Interesado guardarInteresado(Interesado interesado) throws I18NException {
 
         interesado.setNombre(StringUtils.capitailizeWord(interesado.getNombre(), false));
         interesado.setApellido1(StringUtils.capitailizeWord(interesado.getApellido1(), false));
@@ -97,7 +97,7 @@ public class InteresadoBean extends BaseEjbJPA<Interesado, Long> implements Inte
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Interesado> findByRegistroDetalle(Long registroDetalle) throws Exception {
+    public List<Interesado> findByRegistroDetalle(Long registroDetalle) throws I18NException {
 
         Query q = em.createQuery("Select interesado.tipo, interesado.nombre, interesado.apellido1, interesado.apellido2, interesado.documento, interesado.razonSocial, interesado.codigoDir3 from Interesado as interesado " +
                 "where interesado.registroDetalle.id = :registroDetalle");
@@ -132,7 +132,7 @@ public class InteresadoBean extends BaseEjbJPA<Interesado, Long> implements Inte
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Interesado findByCodigoDir3RegistroDetalle(String codigoDir3, Long idRegistroDetalle) throws Exception {
+    public Interesado findByCodigoDir3RegistroDetalle(String codigoDir3, Long idRegistroDetalle) throws I18NException {
         Query q = em.createQuery("Select interesado.id from Interesado as interesado where interesado.codigoDir3 = :codigoDir3 " +
                 "and interesado.registroDetalle.id = :idRegistroDetalle");
 
@@ -151,7 +151,7 @@ public class InteresadoBean extends BaseEjbJPA<Interesado, Long> implements Inte
     }
 
     @Override
-    public void eliminarInteresadoRegistroDetalle(Long idInteresado, Long idRegistroDetalle) throws Exception {
+    public void eliminarInteresadoRegistroDetalle(Long idInteresado, Long idRegistroDetalle) throws I18NException {
 
         Interesado interesado = findById(idInteresado);
         RegistroDetalle registroDetalle = registroDetalleEjb.findByIdConInteresados(idRegistroDetalle);
@@ -170,16 +170,16 @@ public class InteresadoBean extends BaseEjbJPA<Interesado, Long> implements Inte
      *
      * @param interesado
      * @param registroDetalle
-     * @throws Exception
+     * @throws I18NException
      */
-    private void eliminarInteresado(Interesado interesado, RegistroDetalle registroDetalle) throws Exception {
+    private void eliminarInteresado(Interesado interesado, RegistroDetalle registroDetalle) throws I18NException {
         registroDetalle.getInteresados().remove(interesado);
         registroDetalleEjb.merge(registroDetalle);
         remove(interesado);
     }
 
     @Override
-    public Boolean existeDocumentoNew(String documento) throws Exception {
+    public Boolean existeDocumentoNew(String documento) throws I18NException {
         Query q = em.createQuery("Select interesado.id from Interesado as interesado where " +
                 "interesado.documento = :documento");
 
@@ -190,7 +190,7 @@ public class InteresadoBean extends BaseEjbJPA<Interesado, Long> implements Inte
     }
 
     @Override
-    public Boolean existeDocumentoEdit(String documento, Long idInteresado) throws Exception {
+    public Boolean existeDocumentoEdit(String documento, Long idInteresado) throws I18NException {
         Query q = em.createQuery("Select interesado.id from Interesado as interesado where " +
                 "interesado.id != :idInteresado and interesado.documento = :documento");
 
@@ -203,7 +203,7 @@ public class InteresadoBean extends BaseEjbJPA<Interesado, Long> implements Inte
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public String existeInteresadoAdministracion(Long idRegistroDetalle) throws Exception {
+    public String existeInteresadoAdministracion(Long idRegistroDetalle) throws I18NException {
         Query q = em.createQuery("Select interesado.codigoDir3 from Interesado as interesado where " +
                 "interesado.registroDetalle.id = :idRegistroDetalle and interesado.tipo = :administracion");
 
@@ -220,7 +220,7 @@ public class InteresadoBean extends BaseEjbJPA<Interesado, Long> implements Inte
     }
 
     @Override
-    public List<Interesado> guardarInteresados(List<Interesado> interesadosGuardar, RegistroDetalle registroDetalle) throws Exception {
+    public List<Interesado> guardarInteresados(List<Interesado> interesadosGuardar, RegistroDetalle registroDetalle) throws I18NException {
 
         List<Interesado> interesados = new ArrayList<Interesado>();
 
@@ -272,7 +272,7 @@ public class InteresadoBean extends BaseEjbJPA<Interesado, Long> implements Inte
         return interesados;
     }
 
-    public void postProcesoNuevoInteresado(Interesado interesado, Long idRegistroDetalle, Long tipoRegistro, Long entidadId) throws Exception, I18NException {
+    public void postProcesoNuevoInteresado(Interesado interesado, Long idRegistroDetalle, Long tipoRegistro, Long entidadId) throws I18NException {
         IPostProcesoPlugin postProcesoPlugin = (IPostProcesoPlugin) pluginEjb.getPlugin(entidadId, RegwebConstantes.PLUGIN_POSTPROCESO);
 
         if (postProcesoPlugin != null) {
@@ -287,7 +287,7 @@ public class InteresadoBean extends BaseEjbJPA<Interesado, Long> implements Inte
 
     }
 
-    public void postProcesoActualizarInteresado(Interesado interesado, Long idRegistroDetalle, Long tipoRegistro, Long entidadId) throws Exception, I18NException {
+    public void postProcesoActualizarInteresado(Interesado interesado, Long idRegistroDetalle, Long tipoRegistro, Long entidadId) throws I18NException {
         IPostProcesoPlugin postProcesoPlugin = (IPostProcesoPlugin) pluginEjb.getPlugin(entidadId, RegwebConstantes.PLUGIN_POSTPROCESO);
 
         if (postProcesoPlugin != null) {
@@ -302,7 +302,7 @@ public class InteresadoBean extends BaseEjbJPA<Interesado, Long> implements Inte
 
     }
 
-    public void postProcesoEliminarInteresado(Long idInteresado, Long idRegistroDetalle, Long tipoRegistro, Long entidadId) throws Exception, I18NException {
+    public void postProcesoEliminarInteresado(Long idInteresado, Long idRegistroDetalle, Long tipoRegistro, Long entidadId) throws I18NException {
         IPostProcesoPlugin postProcesoPlugin = (IPostProcesoPlugin) pluginEjb.getPlugin(entidadId, RegwebConstantes.PLUGIN_POSTPROCESO);
 
         if (postProcesoPlugin != null) {
@@ -319,7 +319,7 @@ public class InteresadoBean extends BaseEjbJPA<Interesado, Long> implements Inte
     @Override
     @SuppressWarnings(value = "unchecked")
     @TransactionTimeout(value = 3000)  // 50 minutos
-    public void capitalizarInteresadosJuridicos() throws Exception {
+    public void capitalizarInteresadosJuridicos() throws I18NException {
 
         Query q = em.createQuery("Select interesado.id, interesado.razonSocial from Interesado as interesado  " +
                 "where interesado.tipo =:tipoInteresado order by interesado.id");
@@ -341,7 +341,7 @@ public class InteresadoBean extends BaseEjbJPA<Interesado, Long> implements Inte
     @Override
     @SuppressWarnings(value = "unchecked")
     @TransactionTimeout(value = 3000)  // 50 minutos
-    public void capitalizarInteresadosFisicas() throws Exception {
+    public void capitalizarInteresadosFisicas() throws I18NException {
 
         Query q = em.createQuery("Select interesado.id, interesado.nombre, interesado.apellido1, interesado.apellido2 from Interesado as interesado  " +
                 "where interesado.tipo =:tipoInteresado order by interesado.id");

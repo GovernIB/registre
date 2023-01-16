@@ -36,7 +36,7 @@ public class ScanWebModuleEjb implements ScanWebModuleLocal {
 
     @Override
     public String scanDocument(HttpServletRequest request, String absolutePluginRequestPath,
-                               String relativePluginRequestPath, String scanWebID) throws Exception, I18NException {
+                               String relativePluginRequestPath, String scanWebID) throws Exception {
 
         ScanWebConfigRegWeb scanWebConfig = getScanWebConfig(request, scanWebID);
 
@@ -68,7 +68,7 @@ public class ScanWebModuleEjb implements ScanWebModuleLocal {
      */
     public void requestPlugin(HttpServletRequest request, HttpServletResponse response,
                               String absoluteRequestPluginBasePath, String relativeRequestPluginBasePath,
-                              String scanWebID, String query, boolean isPost) throws Exception, I18NException {
+                              String scanWebID, String query, boolean isPost) throws Exception {
 
         ScanWebConfigRegWeb ss = getScanWebConfig(request, scanWebID);
 
@@ -219,7 +219,7 @@ public class ScanWebModuleEjb implements ScanWebModuleLocal {
 
 
     @Override
-    public Set<String> getDefaultFlags(ScanWebConfigRegWeb ss) throws Exception, I18NException {
+    public Set<String> getDefaultFlags(ScanWebConfigRegWeb ss) throws I18NException {
 
         IScanWebPlugin scanWebPlugin =
                 (IScanWebPlugin) pluginEjb.getPlugin(ss.getEntitatID(), RegwebConstantes.PLUGIN_SCAN);

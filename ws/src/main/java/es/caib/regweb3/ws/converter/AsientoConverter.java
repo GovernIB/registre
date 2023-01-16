@@ -12,7 +12,6 @@ import es.caib.regweb3.ws.model.FileContentWs;
 import es.caib.regweb3.ws.model.FileInfoWs;
 import es.caib.regweb3.ws.model.InteresadoWs;
 import es.caib.regweb3.ws.v3.impl.CommonConverter;
-import org.fundaciobit.genapp.common.i18n.I18NException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -126,7 +125,7 @@ public class AsientoConverter extends CommonConverter {
             }
 
 
-        } catch (I18NException | Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             fileContentWs.setError(I18NLogicUtils.tradueix(new Locale(idioma),"anexo.error") + e.getMessage());
         }

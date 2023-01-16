@@ -2,6 +2,7 @@ package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.CatProvincia;
 import es.caib.regweb3.model.utils.ObjetoBasico;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,26 +32,26 @@ public class CatProvinciaBean extends BaseEjbJPA<CatProvincia, Long> implements 
 
 
     @Override
-    public CatProvincia getReference(Long id) throws Exception {
+    public CatProvincia getReference(Long id) throws I18NException {
 
         return em.getReference(CatProvincia.class, id);
     }
 
     @Override
-    public CatProvincia findById(Long id) throws Exception {
+    public CatProvincia findById(Long id) throws I18NException {
 
         return em.find(CatProvincia.class, id);
     }
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<CatProvincia> getAll() throws Exception {
+    public List<CatProvincia> getAll() throws I18NException {
 
         return  em.createQuery("Select catProvincia from CatProvincia as catProvincia order by catProvincia.descripcionProvincia").getResultList();
     }
 
     @Override
-    public Long getTotal() throws Exception {
+    public Long getTotal() throws I18NException {
 
         Query q = em.createQuery("Select count(catProvincia.id) from CatProvincia as catProvincia");
 
@@ -60,7 +61,7 @@ public class CatProvinciaBean extends BaseEjbJPA<CatProvincia, Long> implements 
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<CatProvincia> getPagination(int inicio) throws Exception {
+    public List<CatProvincia> getPagination(int inicio) throws I18NException {
 
         Query q = em.createQuery("Select catProvincia from CatProvincia as catProvincia order by catProvincia.id");
         q.setFirstResult(inicio);
@@ -72,7 +73,7 @@ public class CatProvinciaBean extends BaseEjbJPA<CatProvincia, Long> implements 
 
     @Override
     @SuppressWarnings("unchecked")
-    public CatProvincia findByCodigo(Long codigo) throws Exception {
+    public CatProvincia findByCodigo(Long codigo) throws I18NException {
         Query q = em.createQuery("Select catProvincia from CatProvincia as catProvincia where catProvincia.codigoProvincia = :codigo");
 
         q.setParameter("codigo",codigo);
@@ -88,7 +89,7 @@ public class CatProvinciaBean extends BaseEjbJPA<CatProvincia, Long> implements 
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<CatProvincia> getByComunidad(Long codigoComunidad) throws Exception {
+    public List<CatProvincia> getByComunidad(Long codigoComunidad) throws I18NException {
 
         Query q = em.createQuery("Select catProvincia from CatProvincia as catProvincia where catProvincia.comunidadAutonoma.codigoComunidad = :codigoComunidad order by catProvincia.descripcionProvincia");
 
@@ -100,7 +101,7 @@ public class CatProvinciaBean extends BaseEjbJPA<CatProvincia, Long> implements 
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<ObjetoBasico> getByComunidadObject(Long codigoComunidad) throws Exception {
+    public List<ObjetoBasico> getByComunidadObject(Long codigoComunidad) throws I18NException {
 
         Query q = em.createQuery("Select catProvincia.codigoProvincia, catProvincia.descripcionProvincia from CatProvincia as catProvincia where catProvincia.comunidadAutonoma.codigoComunidad = :codigoComunidad order by catProvincia.descripcionProvincia");
 

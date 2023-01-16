@@ -1,6 +1,7 @@
 package es.caib.regweb3.sir.ejb;
 
 import es.caib.regweb3.model.RegistroSir;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 
 import javax.ejb.Local;
 
@@ -17,17 +18,17 @@ public interface EmisionLocal {
      * @param registroSir
      * @throws Exception
      */
-    void enviarFicheroIntercambio(RegistroSir registroSir) throws Exception;
+    void enviarFicheroIntercambio(RegistroSir registroSir) throws I18NException;
 
     /**
      * @param registroSir
      * @throws Exception
      */
-    void reenviarFicheroIntercambio(RegistroSir registroSir) throws Exception;
+    void reenviarFicheroIntercambio(RegistroSir registroSir) throws I18NException;
 
     /**
      * @param registroSir
      * @throws Exception
      */
-    void rechazarFicheroIntercambio(RegistroSir registroSir) throws Exception;
+    void rechazarFicheroIntercambio(RegistroSir registroSir) throws I18NException;
 }

@@ -13,6 +13,7 @@ import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.persistence.utils.RegistroUtils;
 import es.caib.regweb3.utils.Dir3CaibUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,6 +23,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.xml.bind.JAXBException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -51,19 +53,19 @@ public class PlantillaBean extends BaseEjbJPA<Plantilla, Long> implements Planti
 
 
     @Override
-    public Plantilla getReference(Long id) throws Exception {
+    public Plantilla getReference(Long id) throws I18NException {
 
         return em.getReference(Plantilla.class, id);
     }
 
     @Override
-    public Plantilla findById(Long id) throws Exception {
+    public Plantilla findById(Long id) throws I18NException {
 
         return em.find(Plantilla.class, id);
     }
 
     @Override
-    public Plantilla findByOrden(Long idUsuario, int orden) throws Exception {
+    public Plantilla findByOrden(Long idUsuario, int orden) throws I18NException {
 
         Query q = em.createQuery("Select plantilla from Plantilla as plantilla where " +
                 "plantilla.usuario.id = :idUsuario and plantilla.orden = :orden");
@@ -77,13 +79,13 @@ public class PlantillaBean extends BaseEjbJPA<Plantilla, Long> implements Planti
 
     @SuppressWarnings("unchecked")
     @Override
-    public List<Plantilla> getAll() throws Exception {
+    public List<Plantilla> getAll() throws I18NException {
 
         return em.createQuery("Select plantilla from Plantilla as plantilla order by plantilla.id").getResultList();
     }
 
     @Override
-    public Long getTotal() throws Exception {
+    public Long getTotal() throws I18NException {
 
         Query q = em.createQuery("Select count(plantilla.id) from Plantilla as plantilla");
 
@@ -92,7 +94,7 @@ public class PlantillaBean extends BaseEjbJPA<Plantilla, Long> implements Planti
 
     @SuppressWarnings("unchecked")
     @Override
-    public List<Plantilla> getPagination(int inicio) throws Exception {
+    public List<Plantilla> getPagination(int inicio) throws I18NException {
 
         Query q = em.createQuery("Select plantilla from Plantilla as plantilla order by plantilla.id");
         q.setFirstResult(inicio);
@@ -104,7 +106,7 @@ public class PlantillaBean extends BaseEjbJPA<Plantilla, Long> implements Planti
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<Plantilla> getPaginationUsuario(int inicio, Long idUsuario) throws Exception {
+    public List<Plantilla> getPaginationUsuario(int inicio, Long idUsuario) throws I18NException {
 
         Query q = em.createQuery("Select plantilla from Plantilla as plantilla  " +
                 "where plantilla.usuario.id = :idUsuario order by plantilla.orden");
@@ -119,7 +121,7 @@ public class PlantillaBean extends BaseEjbJPA<Plantilla, Long> implements Planti
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<Plantilla> getAllbyUsuario(Long idUsuario) throws Exception {
+    public List<Plantilla> getAllbyUsuario(Long idUsuario) throws I18NException {
 
         Query q = em.createQuery("Select plantilla from Plantilla as plantilla  " +
                 "where plantilla.usuario.id = :idUsuario order by plantilla.orden");
@@ -132,7 +134,7 @@ public class PlantillaBean extends BaseEjbJPA<Plantilla, Long> implements Planti
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<Plantilla> getActivasbyUsuario(Long idUsuario, Long tipoRegistro) throws Exception {
+    public List<Plantilla> getActivasbyUsuario(Long idUsuario, Long tipoRegistro) throws I18NException {
 
         Query q = em.createQuery("Select plantilla.id, plantilla.nombre from Plantilla as plantilla  " +
                 "where plantilla.usuario.id = :idUsuario and plantilla.tipoRegistro = :tipoRegistro and plantilla.activo = true order by plantilla.orden");
@@ -155,7 +157,7 @@ public class PlantillaBean extends BaseEjbJPA<Plantilla, Long> implements Planti
     }
 
     @Override
-    public Long getTotalbyUsuario(Long idUsuario) throws Exception {
+    public Long getTotalbyUsuario(Long idUsuario) throws I18NException {
 
         Query q = em.createQuery("Select count(plantilla.id) from Plantilla as plantilla " +
                 "where plantilla.usuario.id = :idUsuario");
@@ -167,7 +169,7 @@ public class PlantillaBean extends BaseEjbJPA<Plantilla, Long> implements Planti
     }
 
     @Override
-    public Integer maxOrdenPlantilla(Long idUsuario) throws Exception {
+    public Integer maxOrdenPlantilla(Long idUsuario) throws I18NException {
 
         Query q = em.createQuery("Select max(plantilla.orden) from Plantilla as plantilla  " +
                 "where plantilla.usuario.id = :idUsuario");
@@ -179,7 +181,7 @@ public class PlantillaBean extends BaseEjbJPA<Plantilla, Long> implements Planti
     }
 
     @Override
-    public Long obtenerUsuarioPlantilla(Long idPlantilla) throws Exception {
+    public Long obtenerUsuarioPlantilla(Long idPlantilla) throws I18NException {
 
         Query q = em.createQuery("Select plantilla.usuario.id from Plantilla as plantilla  " +
                 "where plantilla.id = :idPlantilla");
@@ -192,7 +194,7 @@ public class PlantillaBean extends BaseEjbJPA<Plantilla, Long> implements Planti
 
 
     @Override
-    public void modificarOrden(Long idPlantilla, int orden) throws Exception {
+    public void modificarOrden(Long idPlantilla, int orden) throws I18NException {
 
         Query q = em.createQuery("Update Plantilla set orden = :orden where " +
                 "id = :idPlantilla");
@@ -204,7 +206,7 @@ public class PlantillaBean extends BaseEjbJPA<Plantilla, Long> implements Planti
 
 
     @Override
-    public Boolean subirOrden(Long idPlantilla) throws Exception {
+    public Boolean subirOrden(Long idPlantilla) throws I18NException {
 
         boolean result;
 
@@ -237,7 +239,7 @@ public class PlantillaBean extends BaseEjbJPA<Plantilla, Long> implements Planti
     }
 
     @Override
-    public Boolean bajarOrden(Long idPlantilla) throws Exception {
+    public Boolean bajarOrden(Long idPlantilla) throws I18NException {
 
         boolean result;
 
@@ -271,7 +273,7 @@ public class PlantillaBean extends BaseEjbJPA<Plantilla, Long> implements Planti
     }
 
     @Override
-    public Boolean cambiarEstado(Long idPlantilla) throws Exception {
+    public Boolean cambiarEstado(Long idPlantilla) throws I18NException {
 
         boolean result;
 
@@ -296,7 +298,7 @@ public class PlantillaBean extends BaseEjbJPA<Plantilla, Long> implements Planti
     }
 
     @Override
-    public Integer eliminarByEntidad(Long idEntidad) throws Exception {
+    public Integer eliminarByEntidad(Long idEntidad) throws I18NException {
 
         List<?> plantillas = em.createQuery("select distinct(r.id) from Plantilla as r where r.usuario.entidad.id =:idEntidad").setParameter("idEntidad", idEntidad).getResultList();
         Integer total = plantillas.size();
@@ -318,7 +320,7 @@ public class PlantillaBean extends BaseEjbJPA<Plantilla, Long> implements Planti
     }
 
     @Override
-    public Boolean obtenerPorUsuario(Long idUsuarioEntidad) throws Exception {
+    public Boolean obtenerPorUsuario(Long idUsuarioEntidad) throws I18NException {
 
         Query q;
 
@@ -330,7 +332,7 @@ public class PlantillaBean extends BaseEjbJPA<Plantilla, Long> implements Planti
         return (Long) q.getSingleResult() > 0;
     }
 
-    public PlantillaJson obtenerPlantilla(Long idPlantilla, Entidad entidad) throws Exception {
+    public PlantillaJson obtenerPlantilla(Long idPlantilla, Entidad entidad) throws I18NException {
 
         Plantilla plantilla = findById(idPlantilla);
         PlantillaJson plantillaJson = RegistroUtils.desSerilizarPlantillaXml(plantilla.getRepro());
@@ -348,7 +350,12 @@ public class PlantillaBean extends BaseEjbJPA<Plantilla, Long> implements Planti
                         plantillaJson.setDestinoExterno(null);
                         plantillaJson.setDestinoCodigo(null);
                         plantillaJson.setDestinoDenominacion(null);
-                        plantilla.setRepro(RegistroUtils.serilizarXml(plantillaJson));
+
+                        try{
+                            plantilla.setRepro(RegistroUtils.serilizarXml(plantillaJson));
+                        } catch (JAXBException e) {
+                            throw new I18NException("Error serializando la plantilla");
+                        }
                         merge(plantilla);
                     }
 
@@ -361,7 +368,11 @@ public class PlantillaBean extends BaseEjbJPA<Plantilla, Long> implements Planti
                             Organismo organismoVigente = organismoHistoricosFinales.iterator().next();
                             plantillaJson.setDestinoCodigo(organismoVigente.getCodigo());
                             plantillaJson.setDestinoDenominacion(organismoVigente.getDenominacion());
-                            plantilla.setRepro(RegistroUtils.serilizarXml(plantillaJson));
+                            try {
+                                plantilla.setRepro(RegistroUtils.serilizarXml(plantillaJson));
+                            }catch (JAXBException e) {
+                                throw new I18NException("Error serializando la plantilla");
+                            }
                             merge(plantilla);
                         }
                     }
@@ -379,7 +390,11 @@ public class PlantillaBean extends BaseEjbJPA<Plantilla, Long> implements Planti
                         plantillaJson.setOrigenExterno(null);
                         plantillaJson.setOrigenCodigo(null);
                         plantillaJson.setOrigenDenominacion(null);
-                        plantilla.setRepro(RegistroUtils.serilizarXml(plantillaJson));
+                        try{
+                            plantilla.setRepro(RegistroUtils.serilizarXml(plantillaJson));
+                        }catch (JAXBException e) {
+                            throw new I18NException("Error serializando la plantilla");
+                        }
                         merge(plantilla);
                     }
 
@@ -392,7 +407,11 @@ public class PlantillaBean extends BaseEjbJPA<Plantilla, Long> implements Planti
                             Organismo organismoVigente = organismoHistoricosFinales.iterator().next();
                             plantillaJson.setOrigenCodigo(organismoVigente.getCodigo());
                             plantillaJson.setOrigenDenominacion(organismoVigente.getDenominacion());
-                            plantilla.setRepro(RegistroUtils.serilizarXml(plantillaJson));
+                            try{
+                                plantilla.setRepro(RegistroUtils.serilizarXml(plantillaJson));
+                            }catch (JAXBException e) {
+                                throw new I18NException("Error serializando la plantilla");
+                            }
                             merge(plantilla);
                         }
                     }
@@ -412,7 +431,11 @@ public class PlantillaBean extends BaseEjbJPA<Plantilla, Long> implements Planti
                 plantillaJson.setOficinaCodigo(null);
                 plantillaJson.setOficinaDenominacion(null);
                 plantillaJson.setOficinaExterna(null);
-                plantilla.setRepro(RegistroUtils.serilizarXml(plantillaJson));
+                try{
+                    plantilla.setRepro(RegistroUtils.serilizarXml(plantillaJson));
+                }catch (JAXBException e) {
+                    throw new I18NException("Error serializando la plantilla");
+                }
                 merge(plantilla);
             }
 
@@ -422,7 +445,11 @@ public class PlantillaBean extends BaseEjbJPA<Plantilla, Long> implements Planti
                 plantillaJson.setOficinaCodigo(null);
                 plantillaJson.setOficinaDenominacion(null);
                 plantillaJson.setOficinaExterna(null);
-                plantilla.setRepro(RegistroUtils.serilizarXml(plantillaJson));
+                try{
+                    plantilla.setRepro(RegistroUtils.serilizarXml(plantillaJson));
+                }catch (JAXBException e) {
+                    throw new I18NException("Error serializando la plantilla");
+                }
                 merge(plantilla);
             }
         }

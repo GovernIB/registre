@@ -138,7 +138,7 @@ public class RegWebInInterceptor extends AbstractPhaseInterceptor<Message> {
             EjbManager.getUsuarioEJB().actualizarRolesWs(usuariAplicacio, rolesInfo);
 
 
-        } catch (Exception | I18NException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             log.info("Error intentando actualizar los Roles del usuario-aplicación: " + usuariAplicacio.getIdentificador());
         }
@@ -160,8 +160,8 @@ public class RegWebInInterceptor extends AbstractPhaseInterceptor<Message> {
 
         Fault f = (Fault) message.getContent(Exception.class);
 
-        log.error("RegWebInInterceptor::handleFault() - Code = " + f.getCode());
-        log.error("RegWebInInterceptor::handleFault() - Msg = " + f.getMessage());
+        log.info("RegWebInInterceptor::handleFault() - Code = " + f.getCode());
+        log.info("RegWebInInterceptor::handleFault() - Msg = " + f.getMessage());
 
         Throwable cause = f.getCause();
         Long idioma = null;
@@ -178,31 +178,28 @@ public class RegWebInInterceptor extends AbstractPhaseInterceptor<Message> {
             language = RegwebConstantes.CODIGO_BY_IDIOMA_ID.get(idioma);
         }
 
-        log.error("RegWebInInterceptor::handleFault() - Cause = " + cause);
+        log.info("RegWebInInterceptor::handleFault() - Cause = " + cause);
 
         if (cause != null) {
-            log.error("RegWebInInterceptor::handleFault() - Cause Class = " + cause.getClass());
+            log.info("RegWebInInterceptor::handleFault() - Cause Class = " + cause.getClass());
             if (cause instanceof UndeclaredThrowableException) {
-                log.error("RegWebInInterceptor::handleFault() - Cause.UndeclaredThrowable");
+                log.info("RegWebInInterceptor::handleFault() - Cause.UndeclaredThrowable");
                 cause = ((UndeclaredThrowableException) cause).getUndeclaredThrowable();
             }
             if (cause instanceof I18NException) {
-                log.error("RegWebInInterceptor::handleFault() - CAUSE.I18NException");
+                log.info("RegWebInInterceptor::handleFault() - CAUSE.I18NException");
 
                 I18NException i18n = (I18NException) cause;
                 String msg = I18NLogicUtils.getMessage(i18n, new Locale(language));
-                message.setContent(Exception.class,
-                        // new WsI18NException(i18n.getTraduccio(), msg, cause));
-                        new WsI18NException(WsUtils.convertToWsTranslation(i18n.getTraduccio()), msg,
-                                cause));
+                message.setContent(Exception.class, new WsI18NException(WsUtils.convertToWsTranslation(i18n.getTraduccio()), msg, cause));
+
             } else if (cause instanceof I18NValidationException) {
-                log.error("RegWebInInterceptor::handleFault() - CAUSE.ValidationException");
+                log.info("RegWebInInterceptor::handleFault() - CAUSE.ValidationException");
                 I18NValidationException ve = (I18NValidationException) cause;
-                message.setContent(Exception.class,
-                        WsUtils.convertToWsValidationException(ve, new Locale(language)));
+                message.setContent(Exception.class, WsUtils.convertToWsValidationException(ve, new Locale(language)));
             } else {
-                log.error("RegWebInInterceptor::handleFault() - Cause.msg = " + cause.getMessage());
-                log.error("RegWebInInterceptor::handleFault() - Cause.type = " + cause.getClass());
+                log.info("RegWebInInterceptor::handleFault() - Cause.msg = " + cause.getMessage());
+                log.info("RegWebInInterceptor::handleFault() - Cause.type = " + cause.getClass());
             }
 
         }

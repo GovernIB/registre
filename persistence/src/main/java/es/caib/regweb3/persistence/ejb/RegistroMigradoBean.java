@@ -6,6 +6,7 @@ import es.caib.regweb3.model.UsuarioEntidad;
 import es.caib.regweb3.persistence.utils.DataBaseUtils;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.utils.RegwebConstantes;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,13 +40,13 @@ public class RegistroMigradoBean extends BaseEjbJPA<RegistroMigrado, Long> imple
 
 
     @Override
-    public RegistroMigrado getReference(Long id) throws Exception {
+    public RegistroMigrado getReference(Long id) throws I18NException {
 
         return em.getReference(RegistroMigrado.class, id);
     }
 
     @Override
-    public RegistroMigrado findById(Long id) throws Exception {
+    public RegistroMigrado findById(Long id) throws I18NException {
 
         RegistroMigrado registroMigrado = em.find(RegistroMigrado.class, id);
         Hibernate.initialize(registroMigrado.getEntidad());
@@ -56,13 +57,13 @@ public class RegistroMigradoBean extends BaseEjbJPA<RegistroMigrado, Long> imple
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<RegistroMigrado> getAll() throws Exception {
+    public List<RegistroMigrado> getAll() throws I18NException {
 
         return em.createQuery("Select registroMigrado from RegistroMigrado as registroMigrado order by registroMigrado.id").getResultList();
     }
 
     @Override
-    public Long getTotal() throws Exception {
+    public Long getTotal() throws I18NException {
 
         Query q = em.createQuery("Select count(registroMigrado.id) from RegistroMigrado as registroMigrado");
 
@@ -72,7 +73,7 @@ public class RegistroMigradoBean extends BaseEjbJPA<RegistroMigrado, Long> imple
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<RegistroMigrado> getPagination(int inicio) throws Exception {
+    public List<RegistroMigrado> getPagination(int inicio) throws I18NException {
 
         Query q = em.createQuery("Select registroMigrado from RegistroMigrado as registroMigrado order by registroMigrado.id");
         q.setFirstResult(inicio);
@@ -83,7 +84,7 @@ public class RegistroMigradoBean extends BaseEjbJPA<RegistroMigrado, Long> imple
 
 
     @Override
-    public Boolean tieneRegistrosMigrados(Long entidad) throws Exception {
+    public Boolean tieneRegistrosMigrados(Long entidad) throws I18NException {
 
         Query q = em.createQuery("Select count(registroMigrado.id) from RegistroMigrado as registroMigrado where " +
                 "registroMigrado.entidad.id = :entidad");
@@ -95,7 +96,7 @@ public class RegistroMigradoBean extends BaseEjbJPA<RegistroMigrado, Long> imple
 
 
     @Override
-    public Paginacion busqueda(Integer pageNumber, Date fechaInicio, Date fechaFin, Integer numeroRegistro, Integer anoRegistro, RegistroMigrado registroMigrado, Long idEntidad) throws Exception {
+    public Paginacion busqueda(Integer pageNumber, Date fechaInicio, Date fechaFin, Integer numeroRegistro, Integer anoRegistro, RegistroMigrado registroMigrado, Long idEntidad) throws I18NException {
 
         Query q;
         Query q2;
@@ -190,7 +191,7 @@ public class RegistroMigradoBean extends BaseEjbJPA<RegistroMigrado, Long> imple
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<String[]> getOficinas() throws Exception {
+    public List<String[]> getOficinas() throws I18NException {
 
         Query q;
 
@@ -201,7 +202,7 @@ public class RegistroMigradoBean extends BaseEjbJPA<RegistroMigrado, Long> imple
     }
 
     @Override
-    public void insertarRegistroLopdMigrado(Long idRegistroMigrado, Long idUsuarioEntidad) throws Exception {
+    public void insertarRegistroLopdMigrado(Long idRegistroMigrado, Long idUsuarioEntidad) throws I18NException {
 
         RegistroMigrado registroMigrado = findById(idRegistroMigrado);
         UsuarioEntidad usuarioEntidad = usuarioEntidadEjb.findById(idUsuarioEntidad);
@@ -215,7 +216,7 @@ public class RegistroMigradoBean extends BaseEjbJPA<RegistroMigrado, Long> imple
     }
 
     @Override
-    public void insertarRegistrosLopdMigrado(Paginacion paginacion, Long idUsuarioEntidad) throws Exception {
+    public void insertarRegistrosLopdMigrado(Paginacion paginacion, Long idUsuarioEntidad) throws I18NException {
 
         UsuarioEntidad usuarioEntidad = usuarioEntidadEjb.findById(idUsuarioEntidad);
 
@@ -232,7 +233,7 @@ public class RegistroMigradoBean extends BaseEjbJPA<RegistroMigrado, Long> imple
     }
 
     @Override
-    public Integer eliminarByEntidad(Long idEntidad) throws Exception {
+    public Integer eliminarByEntidad(Long idEntidad) throws I18NException {
 
         List<?> tipos = em.createQuery("Select distinct(id) from RegistroMigrado where entidad.id =:idEntidad").setParameter("idEntidad", idEntidad).getResultList();
 

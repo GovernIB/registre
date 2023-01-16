@@ -6,6 +6,7 @@ import es.caib.regweb3.model.Organismo;
 import es.caib.regweb3.model.RelacionOrganizativaOfi;
 import es.caib.regweb3.model.RelacionOrganizativaOfiPK;
 import es.caib.regweb3.utils.RegwebConstantes;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,26 +39,26 @@ public class RelacionOrganizativaOfiBean extends BaseEjbJPA<RelacionOrganizativa
 
 
     @Override
-    public RelacionOrganizativaOfi getReference(RelacionOrganizativaOfiPK id) throws Exception {
+    public RelacionOrganizativaOfi getReference(RelacionOrganizativaOfiPK id) throws I18NException {
 
         return em.getReference(RelacionOrganizativaOfi.class, id);
     }
 
     @Override
-    public RelacionOrganizativaOfi findById(RelacionOrganizativaOfiPK id) throws Exception {
+    public RelacionOrganizativaOfi findById(RelacionOrganizativaOfiPK id) throws I18NException {
 
         return em.find(RelacionOrganizativaOfi.class, id);
     }
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<RelacionOrganizativaOfi> getAll() throws Exception {
+    public List<RelacionOrganizativaOfi> getAll() throws I18NException {
 
         return em.createQuery("Select relacionOrganizativaOfi from RelacionOrganizativaOfi as relacionOrganizativaOfi ").getResultList();
     }
 
     @Override
-    public Long getTotal() throws Exception {
+    public Long getTotal() throws I18NException {
 
         Query q = em.createQuery("Select count(relacionOrganizativaOfi.id) from RelacionOrganizativaOfi as relacionOrganizativaOfi");
 
@@ -66,7 +67,7 @@ public class RelacionOrganizativaOfiBean extends BaseEjbJPA<RelacionOrganizativa
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<RelacionOrganizativaOfi> getPagination(int inicio) throws Exception {
+    public List<RelacionOrganizativaOfi> getPagination(int inicio) throws I18NException {
 
         Query q = em.createQuery("Select relacionOrganizativaOfi from RelacionOrganizativaOfi as relacionOrganizativaOfi ");
         q.setFirstResult(inicio);
@@ -76,14 +77,14 @@ public class RelacionOrganizativaOfiBean extends BaseEjbJPA<RelacionOrganizativa
     }
 
     @Override
-    public void deleteAll() throws Exception {
+    public void deleteAll() throws I18NException {
 
         em.createQuery("delete from RelacionOrganizativaOfi").executeUpdate();
 
     }
 
     @Override
-    public int deleteByOficinaEntidad(Long idOficina) throws Exception {
+    public int deleteByOficinaEntidad(Long idOficina) throws I18NException {
 
         Query q = em.createQuery("delete from RelacionOrganizativaOfi as roo where roo.oficina.id = :idOficina ");
         q.setParameter("idOficina", idOficina);
@@ -93,7 +94,7 @@ public class RelacionOrganizativaOfiBean extends BaseEjbJPA<RelacionOrganizativa
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Oficina> getOficinasByOrganismo(Long idOrganismo) throws Exception {
+    public List<Oficina> getOficinasByOrganismo(Long idOrganismo) throws I18NException {
 
         Query q = em.createQuery("Select distinct relacionOrganizativaOfi.oficina from RelacionOrganizativaOfi as relacionOrganizativaOfi " +
                 "where relacionOrganizativaOfi.organismo.id = :idOrganismo and relacionOrganizativaOfi.estado.codigoEstadoEntidad = :vigente");
@@ -112,7 +113,7 @@ public class RelacionOrganizativaOfiBean extends BaseEjbJPA<RelacionOrganizativa
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Oficina> oficinasOrganizativas(Long idOrganismo, Boolean oficinaVirtual) throws Exception {
+    public List<Oficina> oficinasOrganizativas(Long idOrganismo, Boolean oficinaVirtual) throws I18NException {
 
         String oficinaVirtualWhere = "";
 
@@ -147,7 +148,7 @@ public class RelacionOrganizativaOfiBean extends BaseEjbJPA<RelacionOrganizativa
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Organismo> getOrganismosByOficina(Long idOficina) throws Exception {
+    public List<Organismo> getOrganismosByOficina(Long idOficina) throws I18NException {
 
         Query q = em.createQuery("Select distinct relacionOrganizativaOfi.organismo from RelacionOrganizativaOfi as relacionOrganizativaOfi " +
                 "where relacionOrganizativaOfi.oficina.id = :idOficina and relacionOrganizativaOfi.estado.codigoEstadoEntidad = :vigente");
@@ -161,7 +162,7 @@ public class RelacionOrganizativaOfiBean extends BaseEjbJPA<RelacionOrganizativa
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public RelacionOrganizativaOfi getRelacionOrganizativa(Long idOficina, Long idOrganismo) throws Exception {
+    public RelacionOrganizativaOfi getRelacionOrganizativa(Long idOficina, Long idOrganismo) throws I18NException {
 
         Query q = em.createQuery("Select distinct relacionOrganizativaOfi.oficina from RelacionOrganizativaOfi as relacionOrganizativaOfi " +
                 "where relacionOrganizativaOfi.organismo.id = :idOrganismo and relacionOrganizativaOfi.oficina.id = :idOficina " +
@@ -183,7 +184,7 @@ public class RelacionOrganizativaOfiBean extends BaseEjbJPA<RelacionOrganizativa
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<RelacionOrganizativaOfi> organizativaByEntidadEstado(Long idEntidad, String estado) throws Exception {
+    public List<RelacionOrganizativaOfi> organizativaByEntidadEstado(Long idEntidad, String estado) throws I18NException {
         Query q = em.createQuery("Select relacionOrganizativaOfi.oficina.id, relacionOrganizativaOfi.oficina.codigo, relacionOrganizativaOfi.oficina.denominacion, " +
                 "relacionOrganizativaOfi.organismo.id, relacionOrganizativaOfi.oficina.organismoResponsable.id, relacionOrganizativaOfi.organismo.organismoRaiz.id " +
                 "from RelacionOrganizativaOfi as relacionOrganizativaOfi where " +
@@ -206,7 +207,7 @@ public class RelacionOrganizativaOfiBean extends BaseEjbJPA<RelacionOrganizativa
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Integer eliminarByEntidad(Long idEntidad) throws Exception {
+    public Integer eliminarByEntidad(Long idEntidad) throws I18NException {
 
         List<?> relaciones = em.createQuery("Select distinct(o.id) from RelacionOrganizativaOfi as o where o.organismo.entidad.id =:idEntidad").setParameter("idEntidad", idEntidad).getResultList();
         Integer total = relaciones.size();

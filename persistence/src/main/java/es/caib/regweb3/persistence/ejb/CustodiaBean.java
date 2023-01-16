@@ -49,7 +49,7 @@ public class CustodiaBean implements CustodiaLocal {
 
 
     @Override
-    public Boolean custodiarJustificanteEnCola(Cola elemento, Long idEntidad, Long tipoIntegracion) throws Exception {
+    public Boolean custodiarJustificanteEnCola(Cola elemento, Long idEntidad, Long tipoIntegracion) throws I18NException {
 
         // Integración
         StringBuilder peticion = new StringBuilder();
@@ -87,7 +87,7 @@ public class CustodiaBean implements CustodiaLocal {
 
             return true;
 
-        } catch (Exception | I18NException e) {
+        } catch (I18NException e) {
             log.info("Error custodiando justificante de la Cola: " + elemento.getDescripcionObjeto());
             e.printStackTrace();
             error = hora + e.getMessage();
@@ -101,7 +101,7 @@ public class CustodiaBean implements CustodiaLocal {
 
     @Override
     @TransactionTimeout(value = 1800)  // 30 minutos
-    public void custodiarJustificantesEnCola(Long idEntidad, List<Cola> elementos) throws Exception {
+    public void custodiarJustificantesEnCola(Long idEntidad, List<Cola> elementos) throws I18NException {
 
         log.info("");
         log.info("Cola de CUSTODIA: Hay " + elementos.size() + " elementos que se van a custodiar en esta iteracion");
@@ -117,9 +117,9 @@ public class CustodiaBean implements CustodiaLocal {
      * @param elemento
      * @param idEntidad
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    private Anexo custodiarAnexoDocumentCustody(Cola elemento, Long idEntidad) throws Exception, I18NException {
+    private Anexo custodiarAnexoDocumentCustody(Cola elemento, Long idEntidad) throws I18NException {
 
         IRegistro registro;
         String custodyIdFileSystem;

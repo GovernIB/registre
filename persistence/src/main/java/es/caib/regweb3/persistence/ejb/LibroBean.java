@@ -3,6 +3,7 @@ package es.caib.regweb3.persistence.ejb;
 import es.caib.regweb3.model.Contador;
 import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.model.Libro;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,26 +38,26 @@ public class LibroBean extends BaseEjbJPA<Libro, Long> implements LibroLocal {
 
 
     @Override
-    public Libro getReference(Long id) throws Exception {
+    public Libro getReference(Long id) throws I18NException {
 
         return em.getReference(Libro.class, id);
     }
 
     @Override
-    public Libro findById(Long id) throws Exception {
+    public Libro findById(Long id) throws I18NException {
 
         return em.find(Libro.class, id);
     }
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Libro> getAll() throws Exception {
+    public List<Libro> getAll() throws I18NException {
 
         return em.createQuery("Select libro from Libro as libro order by libro.id").getResultList();
     }
 
     @Override
-    public Long getTotal() throws Exception {
+    public Long getTotal() throws I18NException {
 
         Query q = em.createQuery("Select count(libro.id) from Libro as libro");
 
@@ -66,7 +67,7 @@ public class LibroBean extends BaseEjbJPA<Libro, Long> implements LibroLocal {
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Libro> getPagination(int inicio) throws Exception {
+    public List<Libro> getPagination(int inicio) throws I18NException {
 
         Query q = em.createQuery("Select libro from Libro as libro order by libro.id");
         q.setFirstResult(inicio);
@@ -78,7 +79,7 @@ public class LibroBean extends BaseEjbJPA<Libro, Long> implements LibroLocal {
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Libro> getLibrosEntidad(Long idEntidad) throws Exception {
+    public List<Libro> getLibrosEntidad(Long idEntidad) throws I18NException {
 
         Query q = em.createQuery("Select libro.id, libro.nombre,libro.codigo, libro.organismo.id,libro.organismo.denominacion from Libro as libro where libro.activo = true and libro.organismo.entidad.id = :idEntidad order by libro.id");
         q.setParameter("idEntidad", idEntidad);
@@ -99,7 +100,7 @@ public class LibroBean extends BaseEjbJPA<Libro, Long> implements LibroLocal {
 
 
     @Override
-    public Boolean existeCodigoEdit(String codigo, Long idLibro, Long idEntidad) throws Exception {
+    public Boolean existeCodigoEdit(String codigo, Long idLibro, Long idEntidad) throws I18NException {
 
         Query q = em.createQuery("Select libro.id from Libro as libro where " +
                 "libro.id != :idLibro and libro.codigo = :codigo and libro.organismo.entidad.id = :idEntidad");
@@ -115,7 +116,7 @@ public class LibroBean extends BaseEjbJPA<Libro, Long> implements LibroLocal {
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Libro findByCodigo(String codigo) throws Exception {
+    public Libro findByCodigo(String codigo) throws I18NException {
 
         Query q = em.createQuery("Select libro from Libro as libro where libro.codigo = :codigo");
 
@@ -134,7 +135,7 @@ public class LibroBean extends BaseEjbJPA<Libro, Long> implements LibroLocal {
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Libro findByCodigoEntidad(String codigo, Long idEntidad) throws Exception {
+    public Libro findByCodigoEntidad(String codigo, Long idEntidad) throws I18NException {
 
         Query q = em.createQuery("Select libro from Libro as libro where libro.codigo = :codigo " +
                 "and libro.organismo.entidad.id = :idEntidad");
@@ -154,7 +155,7 @@ public class LibroBean extends BaseEjbJPA<Libro, Long> implements LibroLocal {
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Boolean tieneLibro(Long idOrganismo) throws Exception {
+    public Boolean tieneLibro(Long idOrganismo) throws I18NException {
 
         Query q = em.createQuery("Select libro.id from Libro as libro where " +
                 "libro.organismo.id = :idOrganismo and libro.activo = true");
@@ -168,7 +169,7 @@ public class LibroBean extends BaseEjbJPA<Libro, Long> implements LibroLocal {
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Libro> getLibrosActivosOrganismo(Long idOrganismo) throws Exception {
+    public List<Libro> getLibrosActivosOrganismo(Long idOrganismo) throws I18NException {
 
         Query q = em.createQuery("Select libro.id,libro.codigo, libro.nombre from Libro as libro where " +
                 "libro.organismo.id = :idOrganismo and libro.activo = true");
@@ -190,7 +191,7 @@ public class LibroBean extends BaseEjbJPA<Libro, Long> implements LibroLocal {
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Libro> getLibrosActivosOrganismoDiferente(String codigoOrganismo, Long idEntidad) throws Exception {
+    public List<Libro> getLibrosActivosOrganismoDiferente(String codigoOrganismo, Long idEntidad) throws I18NException {
 
         Query q = em.createQuery("Select libro.id,libro.codigo, libro.nombre from Libro as libro where " +
                 "libro.organismo.codigo = :codigoOrganismo and libro.activo = true and organismo.entidad.id != :idEntidad");
@@ -213,7 +214,7 @@ public class LibroBean extends BaseEjbJPA<Libro, Long> implements LibroLocal {
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Libro> getLibrosOrganismo(Long idOrganismo) throws Exception {
+    public List<Libro> getLibrosOrganismo(Long idOrganismo) throws I18NException {
 
         Query q = em.createQuery("Select libro from Libro as libro where " +
                 "libro.organismo.id = :idOrganismo");
@@ -227,7 +228,7 @@ public class LibroBean extends BaseEjbJPA<Libro, Long> implements LibroLocal {
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Libro> getTodosLibrosEntidad(Long idEntidad) throws Exception {
+    public List<Libro> getTodosLibrosEntidad(Long idEntidad) throws I18NException {
 
         Query q = em.createQuery("Select libro from Libro as libro where libro.organismo.entidad.id = :idEntidad order by libro.id");
         q.setParameter("idEntidad", idEntidad);
@@ -237,7 +238,7 @@ public class LibroBean extends BaseEjbJPA<Libro, Long> implements LibroLocal {
     }
 
     @Override
-    public void reiniciarContadores(Long idLibro) throws Exception {
+    public void reiniciarContadores(Long idLibro) throws I18NException {
 
         Libro libro = findById(idLibro);
 
@@ -249,7 +250,7 @@ public class LibroBean extends BaseEjbJPA<Libro, Long> implements LibroLocal {
     }
 
     @Override
-    public Libro crearLibro(Libro libro) throws Exception {
+    public Libro crearLibro(Libro libro) throws I18NException {
 
         Contador contadorEntrada = contadorEjb.persist(new Contador());
         Contador contadorSalida = contadorEjb.persist(new Contador());
@@ -265,7 +266,7 @@ public class LibroBean extends BaseEjbJPA<Libro, Long> implements LibroLocal {
     }
 
     @Override
-    public Integer eliminarByEntidad(Entidad entidad) throws Exception{
+    public Integer eliminarByEntidad(Entidad entidad) throws I18NException{
 
         List<?> libros = em.createQuery("Select distinct(o.id) from Libro as o where o.organismo.entidad.id =:idEntidad").setParameter("idEntidad", entidad.getId()).getResultList();
         List<Long> contadores = new ArrayList<>();

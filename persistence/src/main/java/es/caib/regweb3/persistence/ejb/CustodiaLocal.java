@@ -1,6 +1,7 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.Cola;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 
 import javax.ejb.Local;
 import java.util.List;
@@ -18,15 +19,15 @@ public interface CustodiaLocal {
      * @param elemento
      * @param idEntidad
      * @param tipoIntegracon
-     * @throws Exception
+     * @throws I18NException
      */
-    Boolean custodiarJustificanteEnCola(Cola elemento, Long idEntidad, Long tipoIntegracon) throws Exception;
+    Boolean custodiarJustificanteEnCola(Cola elemento, Long idEntidad, Long tipoIntegracon) throws I18NException;
 
     /**
      * @param idEntidad
-     * @throws Exception
+     * @throws I18NException
      */
-    void custodiarJustificantesEnCola(Long idEntidad, List<Cola> elementos) throws Exception;
+    void custodiarJustificantesEnCola(Long idEntidad, List<Cola> elementos) throws I18NException;
 
 }
 

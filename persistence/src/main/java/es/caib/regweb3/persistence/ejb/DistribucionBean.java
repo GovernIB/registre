@@ -1,16 +1,16 @@
 package es.caib.regweb3.persistence.ejb;
 
-import es.caib.regweb3.model.*;
+import es.caib.regweb3.model.Cola;
+import es.caib.regweb3.model.Entidad;
+import es.caib.regweb3.model.RegistroEntrada;
+import es.caib.regweb3.model.UsuarioEntidad;
 import es.caib.regweb3.model.utils.AnexoFull;
-import es.caib.regweb3.persistence.utils.I18NLogicUtils;
-import es.caib.regweb3.persistence.utils.MailUtils;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.persistence.utils.RespuestaDistribucion;
 import es.caib.regweb3.plugins.distribucion.IDistribucionPlugin;
 import es.caib.regweb3.plugins.distribucion.email.DistribucionEmailPlugin;
 import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
-import es.caib.regweb3.utils.StringUtils;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
@@ -23,8 +23,6 @@ import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.interceptor.Interceptors;
-import javax.mail.Message;
-import javax.mail.internet.InternetAddress;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -55,11 +53,11 @@ public class DistribucionBean implements DistribucionLocal {
      * @param re registro de entrada a distribuir
      * @param usuarioEntidad
      * @return
-     * @throws Exception
+     * @throws I18NException
      * @throws I18NException
      */
     @Override
-    public RespuestaDistribucion distribuir(RegistroEntrada re, UsuarioEntidad usuarioEntidad, String emails, String motivo) throws Exception, I18NException {
+    public RespuestaDistribucion distribuir(RegistroEntrada re, UsuarioEntidad usuarioEntidad, String emails, String motivo) throws I18NException {
 
         RespuestaDistribucion respuestaDistribucion = new RespuestaDistribucion();
 
@@ -112,11 +110,11 @@ public class DistribucionBean implements DistribucionLocal {
      * @param registroEntrada
      * @param distribucionPlugin
      * @return
-     * @throws Exception
+     * @throws I18NException
      * @throws I18NValidationException
      * @throws I18NException
      */
-    private Boolean distribuirRegistroEntrada(Entidad entidad,RegistroEntrada registroEntrada, IDistribucionPlugin distribucionPlugin) throws Exception, I18NValidationException, I18NException {
+    private Boolean distribuirRegistroEntrada(Entidad entidad,RegistroEntrada registroEntrada, IDistribucionPlugin distribucionPlugin) throws I18NException, I18NValidationException, I18NException {
 
         Boolean distribuido = false;
 
@@ -149,11 +147,11 @@ public class DistribucionBean implements DistribucionLocal {
      * @param elemento elemento de la cola
      * @param entidad
      * @return
-     * @throws Exception
+     * @throws I18NException
      * @throws I18NException
      */
     @Override
-    public Boolean distribuirRegistroEnCola(Cola elemento, Entidad entidad, Long tipoIntegracon) throws Exception {
+    public Boolean distribuirRegistroEnCola(Cola elemento, Entidad entidad, Long tipoIntegracon) throws I18NException {
 
         Boolean distribuido = false;
 
@@ -183,7 +181,7 @@ public class DistribucionBean implements DistribucionLocal {
                 colaEjb.procesarElemento(elemento);
             }
 
-        } catch (Exception | I18NException  e) {
+        } catch (I18NException  e) {
             log.info("Error distribuyendo registro de la Cola: " + elemento.getDescripcionObjeto());
             e.printStackTrace();
             error = hora + e.getMessage();
@@ -207,9 +205,9 @@ public class DistribucionBean implements DistribucionLocal {
      * @param peticion
      * @param inicio
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    private Boolean distribuirRegistro( Entidad entidad, Long tipoIntegracon, String descripcion, RegistroEntrada registroEntrada, IDistribucionPlugin distribucionPlugin, StringBuilder peticion, Date inicio) throws Exception {
+    private Boolean distribuirRegistro( Entidad entidad, Long tipoIntegracon, String descripcion, RegistroEntrada registroEntrada, IDistribucionPlugin distribucionPlugin, StringBuilder peticion, Date inicio) throws I18NException {
 
         Boolean distribuido = false;
 
@@ -230,7 +228,7 @@ public class DistribucionBean implements DistribucionLocal {
                 integracionEjb.addIntegracionOk(inicio, tipoIntegracon, descripcion, peticion.toString(), System.currentTimeMillis() - inicio.getTime(), registroEntrada.getUsuario().getEntidad().getId(), registroEntrada.getNumeroRegistroFormateado());
             }
 
-        } catch (Exception | I18NException | I18NValidationException e) {
+        } catch (I18NException | I18NValidationException e) {
             log.info("Error distribuyendo registro: " + registroEntrada.getNumeroRegistroFormateado());
             e.printStackTrace();
             // Añadimos el error a la integración
@@ -247,11 +245,11 @@ public class DistribucionBean implements DistribucionLocal {
      * @param idRegistro del Registro de Entrada
      * @param entidad
      * @return
-     * @throws Exception
+     * @throws I18NException
      * @throws I18NException
      */
     @Override
-    public Boolean reDistribuirRegistro(Long idRegistro, Entidad entidad) throws Exception {
+    public Boolean reDistribuirRegistro(Long idRegistro, Entidad entidad) throws I18NException {
 
         Boolean distribuido = false;
         RegistroEntrada registroEntrada = null;
@@ -291,7 +289,7 @@ public class DistribucionBean implements DistribucionLocal {
                 integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_DISTRIBUCION, descripcion, peticion.toString(), System.currentTimeMillis() - inicio.getTime(), registroEntrada.getUsuario().getEntidad().getId(), registroEntrada.getNumeroRegistroFormateado());
             }
 
-        } catch (Exception | I18NException | I18NValidationException e) {
+        } catch (I18NException | I18NValidationException e) {
             e.printStackTrace();
             integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_DISTRIBUCION, descripcion, peticion.toString(), e, null,System.currentTimeMillis() - inicio.getTime(), entidad.getId(), registroEntrada.getNumeroRegistroFormateado());
         }
@@ -302,7 +300,7 @@ public class DistribucionBean implements DistribucionLocal {
 
     @Override
     @TransactionTimeout(value = 1800)  // 30 minutos
-    public void distribuirRegistrosEnCola(Entidad entidad) throws Exception {
+    public void distribuirRegistrosEnCola(Entidad entidad) throws I18NException {
 
         //obtiene un numero de elementos (configurable) pendientes de distribuir que estan en la cola
         List<Cola> elementosADistribuir = colaEjb.findByTipoEntidad(RegwebConstantes.COLA_DISTRIBUCION, entidad.getId(),null, PropiedadGlobalUtil.getElementosCola(entidad.getId()));
@@ -317,70 +315,17 @@ public class DistribucionBean implements DistribucionLocal {
 
     }
 
-    //Este método ya no se usa
-    @Override
-    public void enviarEmailErrorDistribucion(Entidad entidad) throws Exception {
-
-        Integer maxReintentos = PropiedadGlobalUtil.getMaxReintentosCola(entidad.getId());
-        Locale locale = new Locale(RegwebConstantes.IDIOMA_CATALAN_CODIGO);
-
-        //Obtenemos el numero de registros que han alcanzado el máximo de reintentos
-        int numRegistrosMaxReintentos = colaEjb.findByTipoMaxReintentos(RegwebConstantes.COLA_DISTRIBUCION, entidad.getId(), maxReintentos).size();
-
-        if (numRegistrosMaxReintentos > 0) {
-
-
-            // Obtenemos los usuarios a los que hay que enviarles el mail
-            List<Usuario> usuariosANotificar = new ArrayList<Usuario>();
-
-            // Propietario Entidad
-            usuariosANotificar.add(entidad.getPropietario());
-
-            // Administradores Entidad
-            for (UsuarioEntidad usuarioEntidad : entidad.getAdministradores()) {
-                usuariosANotificar.add(usuarioEntidad.getUsuario());
-            }
-
-            // Asunto
-            String asunto = I18NLogicUtils.tradueix(locale, "cola.mail.asunto");
-
-            //Montamos el mensaje del mail con el nombre de la Entidad
-            String[] args = {Integer.toString(numRegistrosMaxReintentos),entidad.getNombre()};
-            String mensajeTexto = I18NLogicUtils.tradueix(locale, "cola.mail.cuerpo", args);
-
-            //Enviamos el mail a todos los usuarios
-            InternetAddress addressFrom = new InternetAddress(RegwebConstantes.APLICACION_EMAIL, RegwebConstantes.APLICACION_NOMBRE);
-
-            for (Usuario usuario : usuariosANotificar) {
-
-                if (StringUtils.isNotEmpty(usuario.getEmail())) {
-
-                    try {
-
-                        MailUtils.enviaMail(asunto, mensajeTexto, addressFrom, Message.RecipientType.TO, usuario.getEmail());
-                    } catch (Exception e) {
-                        //Si se produce una excepción continuamos con el proceso.
-                        log.error("Se ha producido un excepcion enviando mail");
-                        e.printStackTrace();
-                    }
-
-                }
-            }
-        }
-    }
-
-
     /**
      * Este método elimina los anexos que no se pueden enviar a Arxiu porque no estan soportados.
      * Son ficheros xml de los cuales no puede hacer el upgrade de la firma y se ha decidido que no se distribuyan.
      *
      * @param original
      * @return
-     * @throws Exception
+     * @throws I18NException
      * @throws I18NException
      * @throws I18NValidationException
      */
-    private RegistroEntrada gestionAnexosByAplicacionSIR(RegistroEntrada original) throws Exception, I18NException, I18NValidationException {
+    private RegistroEntrada gestionAnexosByAplicacionSIR(RegistroEntrada original) throws I18NException, I18NValidationException {
 
         List<AnexoFull> anexosFullADistribuir = new ArrayList<AnexoFull>();
         //Obtenemos los anexos del registro para tratarlos
@@ -407,9 +352,9 @@ public class DistribucionBean implements DistribucionLocal {
      * @param anexosFull
      * @param anexosFullADistribuir
      * @return
-     * @throws Exception
+     * @throws I18NException
      */
-    private List<AnexoFull> gestionarByAplicacionByNombreFichero(String nombreFichero, List<AnexoFull> anexosFull, List<AnexoFull> anexosFullADistribuir) throws Exception {
+    private List<AnexoFull> gestionarByAplicacionByNombreFichero(String nombreFichero, List<AnexoFull> anexosFull, List<AnexoFull> anexosFullADistribuir) throws I18NException {
         //para cada uno de los anexos miramos si es uno de los conflictivos.
         //Estan tipificados en Regweb3Constantes.
         for (AnexoFull anexoFull : anexosFull) {

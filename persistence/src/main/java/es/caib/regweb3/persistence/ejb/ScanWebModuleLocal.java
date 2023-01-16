@@ -41,10 +41,10 @@ public interface ScanWebModuleLocal {
      * @param relativeRequestPluginBasePath
      * @param scanWebID
      * @return
-     * @throws Exception
+     * @throws I18NException
      * @throws I18NException
      */
-    String scanDocument(HttpServletRequest request, String absoluteRequestPluginBasePath, String relativeRequestPluginBasePath, String scanWebID) throws Exception, I18NException;
+    String scanDocument(HttpServletRequest request, String absoluteRequestPluginBasePath, String relativeRequestPluginBasePath, String scanWebID) throws Exception;
 
     /**
      *
@@ -55,11 +55,11 @@ public interface ScanWebModuleLocal {
      * @param scanWebID
      * @param query
      * @param isPost
-     * @throws Exception
+     * @throws I18NException
      * @throws I18NException
      */
     void requestPlugin(HttpServletRequest request, HttpServletResponse response, String absoluteRequestPluginBasePath, String relativeRequestPluginBasePath,
-                       String scanWebID, String query, boolean isPost) throws Exception, I18NException;
+                       String scanWebID, String query, boolean isPost) throws Exception;
 
     /**
      *
@@ -73,10 +73,10 @@ public interface ScanWebModuleLocal {
      *
      * @param ss
      * @return
-     * @throws Exception
+     * @throws I18NException
      * @throws I18NException
      */
-    Set<String> getDefaultFlags(ScanWebConfigRegWeb ss) throws Exception, I18NException;
+    Set<String> getDefaultFlags(ScanWebConfigRegWeb ss) throws I18NException;
 
     /**
      *

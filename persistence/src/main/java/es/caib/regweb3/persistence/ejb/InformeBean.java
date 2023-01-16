@@ -7,6 +7,7 @@ import es.caib.regweb3.model.RegistroSalida;
 import es.caib.regweb3.persistence.utils.DataBaseUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,7 +40,7 @@ public class InformeBean implements InformeLocal {
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<RegistroEntrada> buscaRegistroEntradasOrganismo(Date fechaInicio, Date fechaFin, String numeroRegistroFormateado, String interesadoNom, String interesadoLli1, String interesadoLli2, String interesadoDoc, Boolean anexos, String observaciones, String extracto, String usuario, Long idOrganismo, Long estado, Long idOficina, String organoDest, Long idEntidad, Boolean mostraInteressats) throws Exception {
+    public List<RegistroEntrada> buscaRegistroEntradasOrganismo(Date fechaInicio, Date fechaFin, String numeroRegistroFormateado, String interesadoNom, String interesadoLli1, String interesadoLli2, String interesadoDoc, Boolean anexos, String observaciones, String extracto, String usuario, Long idOrganismo, Long estado, Long idOficina, String organoDest, Long idEntidad, Boolean mostraInteressats) throws I18NException {
 
         Query q;
         Map<String, Object> parametros = new HashMap<String, Object>();
@@ -272,7 +273,7 @@ public class InformeBean implements InformeLocal {
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<RegistroSalida> buscaRegistroSalidasOrganismo(Date fechaInicio, Date fechaFin, String numRegistroFormateado, String interesadoNom, String interesadoLli1, String interesadoLli2, String interesadoDoc, Boolean anexos, String observaciones, String extracto, String usuario, Long idOrganismo, Long estado, Long idOficina, String organoOrig, Long idEntidad, Boolean mostraInteressats) throws Exception {
+    public List<RegistroSalida> buscaRegistroSalidasOrganismo(Date fechaInicio, Date fechaFin, String numRegistroFormateado, String interesadoNom, String interesadoLli1, String interesadoLli2, String interesadoDoc, Boolean anexos, String observaciones, String extracto, String usuario, Long idOrganismo, Long estado, Long idOficina, String organoOrig, Long idEntidad, Boolean mostraInteressats) throws I18NException {
 
         Query q;
         Map<String, Object> parametros = new HashMap<String, Object>();
@@ -506,7 +507,7 @@ public class InformeBean implements InformeLocal {
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Long buscaIndicadoresEntradaTotal(Date fechaInicio, Date fechaFin, Long idEntidad) throws Exception {
+    public Long buscaIndicadoresEntradaTotal(Date fechaInicio, Date fechaFin, Long idEntidad) throws I18NException {
 
         Query q;
 
@@ -525,7 +526,7 @@ public class InformeBean implements InformeLocal {
     }
 
     @Override
-    public Long buscaIndicadoresSalidaTotal(Date fechaInicio, Date fechaFin, Long idEntidad) throws Exception {
+    public Long buscaIndicadoresSalidaTotal(Date fechaInicio, Date fechaFin, Long idEntidad) throws I18NException {
 
         Query q;
 
@@ -546,7 +547,7 @@ public class InformeBean implements InformeLocal {
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Long buscaIndicadoresOficinaTotalEntrada(Date fechaInicio, Date fechaFin, Long idOficina) throws Exception {
+    public Long buscaIndicadoresOficinaTotalEntrada(Date fechaInicio, Date fechaFin, Long idOficina) throws I18NException {
 
         Query q;
 
@@ -565,7 +566,7 @@ public class InformeBean implements InformeLocal {
     }
 
     @Override
-    public Long buscaIndicadoresOficinaTotalSalida(Date fechaInicio, Date fechaFin, Long idOficina) throws Exception {
+    public Long buscaIndicadoresOficinaTotalSalida(Date fechaInicio, Date fechaFin, Long idOficina) throws I18NException {
 
         Query q;
 
@@ -585,7 +586,7 @@ public class InformeBean implements InformeLocal {
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Long buscaEntradaPorConselleria(Date fechaInicio, Date fechaFin, Long conselleria) throws Exception {
+    public Long buscaEntradaPorConselleria(Date fechaInicio, Date fechaFin, Long conselleria) throws I18NException {
 
         Query q;
 
@@ -603,7 +604,7 @@ public class InformeBean implements InformeLocal {
     }
 
     @Override
-    public Long buscaSalidaPorConselleria(Date fechaInicio, Date fechaFin, Long conselleria) throws Exception {
+    public Long buscaSalidaPorConselleria(Date fechaInicio, Date fechaFin, Long conselleria) throws I18NException {
 
         Query q;
 
@@ -622,7 +623,7 @@ public class InformeBean implements InformeLocal {
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Long buscaEntradaPorAsunto(Date fechaInicio, Date fechaFin, Long tipoAsunto, Long idEntidad) throws Exception {
+    public Long buscaEntradaPorAsunto(Date fechaInicio, Date fechaFin, Long tipoAsunto, Long idEntidad) throws I18NException {
 
         Query q;
 
@@ -642,7 +643,7 @@ public class InformeBean implements InformeLocal {
     }
 
     @Override
-    public Long buscaEntradaPorIdioma(Date fechaInicio, Date fechaFin, Long idioma, Long idEntidad) throws Exception {
+    public Long buscaEntradaPorIdioma(Date fechaInicio, Date fechaFin, Long idioma, Long idEntidad) throws I18NException {
 
         Query q;
 
@@ -662,7 +663,7 @@ public class InformeBean implements InformeLocal {
     }
 
     @Override
-    public Long buscaEntradaPorIdiomaOficina(Date fechaInicio, Date fechaFin, Long idioma, Long idOficina) throws Exception {
+    public Long buscaEntradaPorIdiomaOficina(Date fechaInicio, Date fechaFin, Long idioma, Long idOficina) throws I18NException {
 
         Query q;
 
@@ -682,7 +683,7 @@ public class InformeBean implements InformeLocal {
     }
 
     @Override
-    public Long buscaEntradaPorLibro(Date fechaInicio, Date fechaFin, Long libro) throws Exception {
+    public Long buscaEntradaPorLibro(Date fechaInicio, Date fechaFin, Long libro) throws I18NException {
 
         Query q;
 
@@ -700,7 +701,7 @@ public class InformeBean implements InformeLocal {
     }
 
     @Override
-    public Long buscaEntradaPorOficina(Date fechaInicio, Date fechaFin, Long oficina) throws Exception {
+    public Long buscaEntradaPorOficina(Date fechaInicio, Date fechaFin, Long oficina) throws I18NException {
 
         Query q;
 
@@ -718,7 +719,7 @@ public class InformeBean implements InformeLocal {
     }
 
     @Override
-    public Long buscaSalidaPorAsunto(Date fechaInicio, Date fechaFin, Long tipoAsunto, Long idEntidad) throws Exception {
+    public Long buscaSalidaPorAsunto(Date fechaInicio, Date fechaFin, Long tipoAsunto, Long idEntidad) throws I18NException {
 
         Query q;
 
@@ -738,7 +739,7 @@ public class InformeBean implements InformeLocal {
     }
 
     @Override
-    public Long buscaSalidaPorIdioma(Date fechaInicio, Date fechaFin, Long idioma, Long idEntidad) throws Exception {
+    public Long buscaSalidaPorIdioma(Date fechaInicio, Date fechaFin, Long idioma, Long idEntidad) throws I18NException {
 
         Query q;
 
@@ -758,7 +759,7 @@ public class InformeBean implements InformeLocal {
     }
 
     @Override
-    public Long buscaSalidaPorIdiomaOficina(Date fechaInicio, Date fechaFin, Long idioma, Long idOficina) throws Exception {
+    public Long buscaSalidaPorIdiomaOficina(Date fechaInicio, Date fechaFin, Long idioma, Long idOficina) throws I18NException {
 
         Query q;
 
@@ -778,7 +779,7 @@ public class InformeBean implements InformeLocal {
     }
 
     @Override
-    public Long buscaSalidaPorLibro(Date fechaInicio, Date fechaFin, Long libro) throws Exception {
+    public Long buscaSalidaPorLibro(Date fechaInicio, Date fechaFin, Long libro) throws I18NException {
 
         Query q;
 
@@ -796,7 +797,7 @@ public class InformeBean implements InformeLocal {
     }
 
     @Override
-    public Long buscaSalidaPorOficina(Date fechaInicio, Date fechaFin, Long oficina) throws Exception {
+    public Long buscaSalidaPorOficina(Date fechaInicio, Date fechaFin, Long oficina) throws I18NException {
 
         Query q;
 

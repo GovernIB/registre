@@ -664,7 +664,7 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
 
             Mensaje.saveMessageInfo(request, "Se han purgado " + total + " anexos distribuidos.");
 
-        } catch (Exception | I18NException e) {
+        } catch (I18NException e) {
             integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_SCHEDULERS, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - tiempo, entidad.getId(), "");
             Mensaje.saveMessageError(request, "Error purgando anexos distribuidos");
             e.printStackTrace();
@@ -734,7 +734,7 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
 
             Mensaje.saveMessageInfo(request, "Se han purgado " + total + " anexos aceptados en destino SIR.");
 
-        } catch (Exception | I18NException e) {
+        } catch (I18NException e) {
             integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_SCHEDULERS, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - tiempo, entidad.getId(), "");
             Mensaje.saveMessageError(request, "Error purgando anexos aceptados en destino SIR");
             e.printStackTrace();

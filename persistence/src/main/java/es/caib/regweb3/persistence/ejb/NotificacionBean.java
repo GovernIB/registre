@@ -7,6 +7,7 @@ import es.caib.regweb3.model.UsuarioEntidad;
 import es.caib.regweb3.persistence.utils.I18NLogicUtils;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.utils.RegwebConstantes;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,26 +44,26 @@ public class NotificacionBean extends BaseEjbJPA<Notificacion, Long> implements 
     @EJB private UsuarioEntidadLocal usuarioEntidadEjb;
 
     @Override
-    public Notificacion getReference(Long id) throws Exception {
+    public Notificacion getReference(Long id) throws I18NException {
 
         return em.getReference(Notificacion.class, id);
     }
 
     @Override
-    public Notificacion findById(Long id) throws Exception {
+    public Notificacion findById(Long id) throws I18NException {
 
         return em.find(Notificacion.class, id);
     }
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Notificacion> getAll() throws Exception {
+    public List<Notificacion> getAll() throws I18NException {
 
         return em.createQuery("Select notificacion from Notificacion as notificacion order by notificacion.id").getResultList();
     }
 
     @Override
-    public Long getTotal() throws Exception {
+    public Long getTotal() throws I18NException {
 
         Query q = em.createQuery("Select count(notificacion.id) from Notificacion as notificacion");
         q.setHint("org.hibernate.readOnly", true);
@@ -73,7 +74,7 @@ public class NotificacionBean extends BaseEjbJPA<Notificacion, Long> implements 
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Notificacion> getPagination(int inicio) throws Exception {
+    public List<Notificacion> getPagination(int inicio) throws I18NException {
 
         Query q = em.createQuery("Select notificacion from Notificacion as notificacion order by notificacion.id");
         q.setFirstResult(inicio);
@@ -85,7 +86,7 @@ public class NotificacionBean extends BaseEjbJPA<Notificacion, Long> implements 
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Long getByEstadoCount(Long idUsuarioEntidad, Long idEstado) throws Exception {
+    public Long getByEstadoCount(Long idUsuarioEntidad, Long idEstado) throws I18NException {
 
         String queryEstado = "";
         if (idEstado != null) {
@@ -106,7 +107,7 @@ public class NotificacionBean extends BaseEjbJPA<Notificacion, Long> implements 
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Notificacion> getByEntidad(Long idEntidad) throws Exception {
+    public List<Notificacion> getByEntidad(Long idEntidad) throws I18NException {
 
         Query q = em.createQuery("Select notificacion from Notificacion as notificacion where notificacion.destinatario.entidad.id = :idEntidad order by notificacion.id");
         q.setParameter("idEntidad", idEntidad);
@@ -117,7 +118,7 @@ public class NotificacionBean extends BaseEjbJPA<Notificacion, Long> implements 
     }
 
     @Override
-    public Paginacion busqueda(Notificacion notificacion, Long idUsuarioEntidad) throws Exception {
+    public Paginacion busqueda(Notificacion notificacion, Long idUsuarioEntidad) throws I18NException {
 
         Query q;
         Query q2;
@@ -184,7 +185,7 @@ public class NotificacionBean extends BaseEjbJPA<Notificacion, Long> implements 
     }
 
     @Override
-    public void leerNotificacion(Long idNotificacion) throws Exception {
+    public void leerNotificacion(Long idNotificacion) throws I18NException {
 
         Query q = em.createQuery("update from Notificacion set estado = :leido, fechaLeido = :fechaLeido where id = :idNotificacion");
 
@@ -196,7 +197,7 @@ public class NotificacionBean extends BaseEjbJPA<Notificacion, Long> implements 
     }
 
     @Override
-    public Long notificacionesPendientes(Long idUsuarioEntidad) throws Exception {
+    public Long notificacionesPendientes(Long idUsuarioEntidad) throws I18NException {
 
         Query q = em.createQuery("Select count(n.id) from Notificacion as n where n.destinatario.id = :idUsuarioEntidad " +
                 "and n.estado = :nueva");
@@ -209,7 +210,7 @@ public class NotificacionBean extends BaseEjbJPA<Notificacion, Long> implements 
     }
 
     @Override
-    public void notificacionAdminEntidad(Long idEntidad, String asunto, String mensaje) throws Exception {
+    public void notificacionAdminEntidad(Long idEntidad, String asunto, String mensaje) throws I18NException {
 
         List<UsuarioEntidad> administradores = usuarioEntidadEjb.findAdministradoresByEntidad(idEntidad);
 
@@ -228,7 +229,7 @@ public class NotificacionBean extends BaseEjbJPA<Notificacion, Long> implements 
     }
 
     @Override
-    public void notificacionesRegistrosSirPendientes(Long idEntidad) throws Exception {
+    public void notificacionesRegistrosSirPendientes(Long idEntidad) throws I18NException {
 
         List<Oficina> oficinasSir = oficinaEjb.oficinasSIREntidad(idEntidad);
 
@@ -259,7 +260,7 @@ public class NotificacionBean extends BaseEjbJPA<Notificacion, Long> implements 
     }
 
     @Override
-    public void notificacionesRechazadosDevueltos(Long idEntidad) throws Exception {
+    public void notificacionesRechazadosDevueltos(Long idEntidad) throws I18NException {
 
         List<Oficina> oficinasSir = oficinaEjb.oficinasSIREntidad(idEntidad);
 
@@ -315,7 +316,7 @@ public class NotificacionBean extends BaseEjbJPA<Notificacion, Long> implements 
 
 
     @Override
-    public Integer eliminarByEntidad(Long idEntidad) throws Exception {
+    public Integer eliminarByEntidad(Long idEntidad) throws I18NException {
 
         List<?> notificacion = em.createQuery("select distinct(i.id) from Notificacion as i where i.destinatario.entidad.id = :idEntidad").setParameter("idEntidad", idEntidad).getResultList();
         Integer total = notificacion.size();
@@ -337,7 +338,7 @@ public class NotificacionBean extends BaseEjbJPA<Notificacion, Long> implements 
     }
 
     @Override
-    public void eliminarByUsuario(Long idUsuarioEntidad) throws Exception {
+    public void eliminarByUsuario(Long idUsuarioEntidad) throws I18NException {
         Query q = em.createQuery("delete from Notificacion as n where n.remitente.id=:idUsuarioEntidad or n.destinatario.id=:idUsuarioEntidad");
         q.setParameter("idUsuarioEntidad", idUsuarioEntidad);
         q.executeUpdate();

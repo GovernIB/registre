@@ -34,6 +34,12 @@
             <scope>provided</scope>
         </dependency>
 
+        <dependency>
+            <groupId>org.fundaciobit.genapp</groupId>
+            <artifactId>genapp-core</artifactId>
+            <scope>compile</scope>
+        </dependency>
+
         <!-- Plugin DocumentCustody -->
         <dependency>
             <groupId>org.fundaciobit.pluginsib.documentcustody</groupId>

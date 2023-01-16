@@ -8,6 +8,7 @@ import es.caib.regweb3.model.*;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.utils.Dir3CaibUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,7 +44,7 @@ public class SincronizadorCatalogoBean implements SincronizadorCatalogoLocal {
 
     
     @Override
-    public Descarga sincronizarCatalogo() throws Exception {
+    public Descarga sincronizarCatalogo() throws I18NException {
 
         log.info("Inicio sincronizacion catalogo DIR3");
 
@@ -185,7 +186,7 @@ public class SincronizadorCatalogoBean implements SincronizadorCatalogoLocal {
     }
 
     @Override
-    public Descarga actualizarCatalogo() throws Exception {
+    public Descarga actualizarCatalogo() throws I18NException {
 
         log.info("Inicio actualizacion catalogo DIR3");
 
@@ -420,7 +421,7 @@ public class SincronizadorCatalogoBean implements SincronizadorCatalogoLocal {
     }
 
 
-    public Map<Long, CatPais> cachePais() throws Exception {
+    public Map<Long, CatPais> cachePais() throws I18NException {
         Map<Long, CatPais> cachePais = new TreeMap<Long, CatPais>();
         for (CatPais ca : catPaisEjb.getAll()) {
             cachePais.put(ca.getCodigoPais(), ca);
@@ -429,7 +430,7 @@ public class SincronizadorCatalogoBean implements SincronizadorCatalogoLocal {
         return cachePais;
     }
 
-    public Map<Long, CatProvincia> cacheProvincia() throws Exception {
+    public Map<Long, CatProvincia> cacheProvincia() throws I18NException {
         Map<Long, CatProvincia> cacheProvincia = new TreeMap<Long, CatProvincia>();
         for (CatProvincia ca : catProvinciaEjb.getAll()) {
             cacheProvincia.put(ca.getCodigoProvincia(), ca);
@@ -438,7 +439,7 @@ public class SincronizadorCatalogoBean implements SincronizadorCatalogoLocal {
         return cacheProvincia;
     }
 
-    public Map<Long, CatComunidadAutonoma> cacheComunidadAutonoma() throws Exception {
+    public Map<Long, CatComunidadAutonoma> cacheComunidadAutonoma() throws I18NException {
         Map<Long, CatComunidadAutonoma> cacheComunidadAutonoma = new TreeMap<Long, CatComunidadAutonoma>();
         for (CatComunidadAutonoma ca : catComunidadAutonomaEjb.getAll()) {
             cacheComunidadAutonoma.put(ca.getCodigoComunidad(), ca);
@@ -448,7 +449,7 @@ public class SincronizadorCatalogoBean implements SincronizadorCatalogoLocal {
     }
 
 
-    public Map<String, CatEntidadGeografica> cacheEntidadGeografica() throws Exception {
+    public Map<String, CatEntidadGeografica> cacheEntidadGeografica() throws I18NException {
         Map<String, CatEntidadGeografica> cacheEntidadGeografica = new TreeMap<String, CatEntidadGeografica>();
         for (CatEntidadGeografica ca : catEntidadGeograficaEjb.getAll()) {
             cacheEntidadGeografica.put(ca.getCodigoEntidadGeografica(), ca);

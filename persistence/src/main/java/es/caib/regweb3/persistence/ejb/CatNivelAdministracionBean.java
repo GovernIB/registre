@@ -1,6 +1,7 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.CatNivelAdministracion;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,26 +30,26 @@ public class CatNivelAdministracionBean extends BaseEjbJPA<CatNivelAdministracio
 
 
     @Override
-    public CatNivelAdministracion getReference(Long id) throws Exception {
+    public CatNivelAdministracion getReference(Long id) throws I18NException {
 
         return em.getReference(CatNivelAdministracion.class, id);
     }
 
     @Override
-    public CatNivelAdministracion findById(Long id) throws Exception {
+    public CatNivelAdministracion findById(Long id) throws I18NException {
 
         return em.find(CatNivelAdministracion.class, id);
     }
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<CatNivelAdministracion> getAll() throws Exception {
+    public List<CatNivelAdministracion> getAll() throws I18NException {
 
         return  em.createQuery("Select catNivelAdministracion from CatNivelAdministracion as catNivelAdministracion order by catNivelAdministracion.id").getResultList();
     }
 
     @Override
-    public Long getTotal() throws Exception {
+    public Long getTotal() throws I18NException {
 
         Query q = em.createQuery("Select count(catNivelAdministracion.id) from CatNivelAdministracion as catNivelAdministracion");
 
@@ -58,7 +59,7 @@ public class CatNivelAdministracionBean extends BaseEjbJPA<CatNivelAdministracio
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<CatNivelAdministracion> getPagination(int inicio) throws Exception {
+    public List<CatNivelAdministracion> getPagination(int inicio) throws I18NException {
 
         Query q = em.createQuery("Select catNivelAdministracion from CatNivelAdministracion as catNivelAdministracion order by catNivelAdministracion.id");
         q.setFirstResult(inicio);
@@ -70,7 +71,7 @@ public class CatNivelAdministracionBean extends BaseEjbJPA<CatNivelAdministracio
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public CatNivelAdministracion findByCodigo(Long codigo) throws Exception {
+    public CatNivelAdministracion findByCodigo(Long codigo) throws I18NException {
         Query q = em.createQuery("Select catNivelAdministracion from CatNivelAdministracion as catNivelAdministracion where catNivelAdministracion.codigoNivelAdministracion = :codigo");
 
         q.setParameter("codigo",codigo);

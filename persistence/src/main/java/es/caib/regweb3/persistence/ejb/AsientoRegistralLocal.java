@@ -26,10 +26,10 @@ public interface AsientoRegistralLocal {
      * @param identificador
      * @param idEntidad
      * @return
-     * @throws Exception
+     * @throws I18NException
      * @throws I18NException
      */
-    UsuarioEntidad comprobarUsuarioEntidad(String identificador, Long idEntidad) throws Exception, I18NException;
+    UsuarioEntidad comprobarUsuarioEntidad(String identificador, Long idEntidad) throws I18NException;
 
     /**
      * Registra una salida haciendo uso de @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
@@ -39,12 +39,12 @@ public interface AsientoRegistralLocal {
      * @param interesados
      * @param anexos
      * @return
-     * @throws Exception
+     * @throws I18NException
      * @throws I18NException
      * @throws I18NValidationException
      */
     RegistroSalida registrarSalida(RegistroSalida registroSalida, Entidad entidad, UsuarioEntidad usuarioEntidad, List<Interesado> interesados, List<AnexoFull> anexos, Boolean validarAnexos)
-            throws Exception, I18NException, I18NValidationException;
+            throws I18NException, I18NValidationException;
 
     /**
      * Registra una entrada haciendo uso de @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
@@ -54,12 +54,12 @@ public interface AsientoRegistralLocal {
      * @param interesados
      * @param anexos
      * @return
-     * @throws Exception
+     * @throws I18NException
      * @throws I18NException
      * @throws I18NValidationException
      */
     RegistroEntrada registrarEntrada(RegistroEntrada registroEntrada, Entidad entidad, UsuarioEntidad usuarioEntidad, List<Interesado> interesados, List<AnexoFull> anexos, Boolean validarAnexos)
-            throws Exception, I18NException, I18NValidationException;
+            throws I18NException, I18NValidationException;
 
     /**
      * Se crea el Justificante del Registro de manera Asincrona
@@ -76,10 +76,10 @@ public interface AsientoRegistralLocal {
      * Distribuye un registro de entrada de manera Asincrona
      * @param registroEntrada
      * @param usuarioEntidad
-     * @throws Exception
+     * @throws I18NException
      * @throws I18NException
      */
-    void distribuirRegistroEntrada(RegistroEntrada registroEntrada, UsuarioEntidad usuarioEntidad) throws Exception, I18NException;
+    void distribuirRegistroEntrada(RegistroEntrada registroEntrada, UsuarioEntidad usuarioEntidad) throws I18NException;
 
     /**
      * Obtiene la referencia del justificante de un Registro
@@ -87,10 +87,10 @@ public interface AsientoRegistralLocal {
      * @param numeroRegistroformateado
      * @param entidad
      * @return
-     * @throws Exception
+     * @throws I18NException
      * @throws I18NException
      */
-    JustificanteReferencia obtenerReferenciaJustificante(String numeroRegistroformateado, Entidad entidad) throws Exception, I18NException;
+    JustificanteReferencia obtenerReferenciaJustificante(String numeroRegistroformateado, Entidad entidad) throws I18NException;
 
     /**
      * Procesa el Registro de Salida creado según el TipoOperación indicado
@@ -99,7 +99,7 @@ public interface AsientoRegistralLocal {
      * @param registroSalida
      * @return
      * @throws I18NException
-     * @throws Exception
+     * @throws I18NException
      * @throws I18NValidationException
      */
     RegistroSalida procesarRegistroSalida(Long tipoOperacion, RegistroSalida registroSalida, Entidad entidad) throws I18NException, Exception, I18NValidationException;

@@ -9,6 +9,7 @@ import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 import org.apache.commons.codec.binary.Base64;
 import org.fundaciobit.genapp.common.i18n.I18NCommonUtils;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.plugins.validatesignature.api.ValidateSignatureConstants;
 import org.fundaciobit.pluginsib.core.utils.AbstractPluginProperties;
 import org.fundaciobit.pluginsib.core.utils.Metadata;
@@ -60,7 +61,7 @@ public class DistribucionGoibPlugin extends AbstractPluginProperties implements 
     }
 
     @Override
-    public Boolean distribuir(RegistroEntrada registro, Locale locale) throws Exception {
+    public Boolean distribuir(RegistroEntrada registro, Locale locale) throws I18NException {
 
         try {
 
@@ -111,14 +112,14 @@ public class DistribucionGoibPlugin extends AbstractPluginProperties implements 
             } else {
                 e.printStackTrace();
             }
-            throw new Exception(e);
+            throw new I18NException(e.getMessage());
         }
 
     }
 
     /** Método que determina si se debe enviar a la cola o no */
     @Override
-    public Boolean getEnvioCola() throws Exception {
+    public Boolean getEnvioCola() throws I18NException {
         //Si no existe la propiedad o es true se envia  a la cola
         if(getPropertyEnvioCola()== null || Boolean.parseBoolean(getPropertyEnvioCola())){
             return true;
@@ -591,7 +592,7 @@ public class DistribucionGoibPlugin extends AbstractPluginProperties implements 
         return getPropertyRequired(PROPERTY_ENDPOINT);
     }
 
-    private  String getPropertyEnvioCola()  throws Exception{
+    private  String getPropertyEnvioCola()  throws I18NException{
         return getProperty(PROPERTY_ENVIOCOLA);
     }
 }
