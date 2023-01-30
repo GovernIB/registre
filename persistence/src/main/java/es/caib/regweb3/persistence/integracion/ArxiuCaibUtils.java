@@ -151,7 +151,7 @@ public class ArxiuCaibUtils {
             }
 
             e.printStackTrace();
-            throw e;
+            throw new I18NException(e.getMessage());
         }
 
         return new JustificanteArxiu(expediente, documento);
