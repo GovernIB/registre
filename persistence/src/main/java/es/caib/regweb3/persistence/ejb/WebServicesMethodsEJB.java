@@ -9,6 +9,7 @@ import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.persistence.utils.RespuestaRecepcionSir;
 import es.caib.regweb3.sir.core.utils.FicheroIntercambio;
 import es.caib.regweb3.utils.Dir3CaibUtils;
+import es.gob.ad.registros.sir.interService.exception.InterException;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 
 import javax.annotation.security.RolesAllowed;
@@ -32,7 +33,18 @@ public class WebServicesMethodsEJB implements WebServicesMethodsLocal {
     @EJB private IntegracionLocal integracionEjb;
     @EJB private MensajeControlLocal mensajeControlEjb;
     @EJB private RegistroSirLocal registroSirEjb;
+    @EJB private LibSirLocal libSirEjb;
 
+
+    @Override
+    public void recibirAsiento(String registro, String firmaRegistro) throws InterException {
+        libSirEjb.recibirAsiento(registro, firmaRegistro);
+    }
+
+    @Override
+    public void recibirMensajeControl(String mensaje, String firma) throws InterException {
+        libSirEjb.recibirMensajeControl(mensaje, firma);
+    }
 
     @Override
     public void procesarMensajeDatosControl(MensajeControl mensaje) throws I18NException {
