@@ -2,10 +2,10 @@ package es.caib.regweb3.sir.ws.wssir9.impl;
 
 import es.caib.regweb3.model.sir.Errores;
 import es.caib.regweb3.persistence.ejb.WebServicesMethodsLocal;
+import es.caib.regweb3.sir.core.excepcion.ServiceException;
 import es.caib.regweb3.sir.ws.ejb.RecepcionLocal;
 import es.caib.regweb3.sir.ws.wssir9.RespuestaWS;
 import es.caib.regweb3.sir.ws.wssir9.WS_SIR9_PortType;
-import es.gob.ad.registros.sir.interService.exception.InterException;
 import org.apache.cxf.interceptor.InInterceptors;
 import org.jboss.ws.api.annotation.TransportGuarantee;
 import org.jboss.ws.api.annotation.WebContext;
@@ -62,19 +62,6 @@ public class WS_SIR9Impl implements WS_SIR9_PortType {
         RespuestaWS respuestaWS = null;
 
         try{
-
-            // Procesamos el mensaje de control
-            webServicesMethodsEjb.recibirMensajeControl(mensaje, firma);
-
-            // Creamos la respuesta exitosa
-            respuestaWS = crearRespuestaWS(Errores.OK);
-
-        }catch (InterException ie){
-            log.info("Error recibiendo el Mensaje de control", ie);
-            respuestaWS = crearRespuestaWS(ie.getCodigo(), ie.getDescripcion());
-        }
-
-        /*try{
             // Envia el mensaje datos control a REGWEB3
             recepcionEjb.recibirMensajeDatosControl(mensaje, webServicesMethodsEjb);
 
@@ -87,7 +74,7 @@ public class WS_SIR9Impl implements WS_SIR9_PortType {
         } catch (Throwable e) {
             log.info("Error en la recepcion del mensaje de datos de control", e);
             respuestaWS = crearRespuestaWS(Errores.ERROR_NO_CONTROLADO);
-        }*/
+        }
 
         return respuestaWS;
     }
