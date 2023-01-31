@@ -27,16 +27,16 @@ public interface WebServicesMethodsLocal {
      *
      * @param registro
      * @param firmaRegistro
-     */
+     *//*
     void recibirAsiento(String registro, String firmaRegistro) throws InterException;
 
-    /**
+    *//**
      *
      * @param mensaje
      * @param firma
      * @throws InterException
-     */
-    void recibirMensajeControl(String mensaje, String firma) throws InterException;
+     *//*
+    void recibirMensajeControl(String mensaje, String firma) throws InterException;*/
 
     /**
      * Recibe un mensaje de control en formato SICRES3 desde un nodo distribuido
