@@ -13,7 +13,6 @@ import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 import es.caib.regweb3.utils.TimeUtils;
 import org.fundaciobit.genapp.common.i18n.I18NException;
-import org.hibernate.Hibernate;
 import org.jboss.ejb3.annotation.TransactionTimeout;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -220,7 +219,7 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
                 //Guardamos el Organismo
                 organismo = organismoEjb.persist(organismo);
             } else { // Si existe hay que actualizarlo
-                Hibernate.initialize(organismo.getLibros());
+                //Hibernate.initialize(organismo.getLibros());
                 procesarOrganismo(organismo, unidadTF, entidad);
             }
 
@@ -466,7 +465,6 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
      */
     private void procesarOrganismo(Organismo organismo, UnidadTF unidadTF, Entidad entidad) throws I18NException {
 
-
         CatEstadoEntidad estado = cacheEstadoEntidad.get(unidadTF.getCodigoEstadoEntidad());
 
         organismo.setCodigo(unidadTF.getCodigo());
@@ -475,7 +473,6 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
         organismo.setDenominacion(unidadTF.getDenominacion());
         organismo.setNivelJerarquico(unidadTF.getNivelJerarquico());
         organismo.setEdp(unidadTF.isEsEdp());
-
 
         //Nivel Administracion
         CatNivelAdministracion nivelAdministracion = cacheNivelAdministracion.get(unidadTF.getNivelAdministracion());
