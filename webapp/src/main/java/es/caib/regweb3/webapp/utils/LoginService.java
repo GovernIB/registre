@@ -7,6 +7,7 @@ import es.caib.regweb3.persistence.utils.RolUtils;
 import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.Dir3Caib;
 import es.caib.regweb3.utils.RegwebConstantes;
+import es.caib.regweb3.utils.StringUtils;
 import es.caib.regweb3.webapp.security.LoginInfo;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.pluginsib.userinformation.IUserInformationPlugin;
@@ -456,19 +457,27 @@ public class LoginService {
         if (regwebUserInfo != null) { // Si el documento no existe en REGWEB3
 
             Usuario usuario = new Usuario();
-            usuario.setNombre(regwebUserInfo.getName());
+
+            // Nombre
+            if(StringUtils.isNotEmpty(regwebUserInfo.getName())){
+                usuario.setNombre(regwebUserInfo.getName());
+            }else{
+                usuario.setNombre(identificador);
+            }
 
             //Idioma por defecto
             Long idioma = RegwebConstantes.IDIOMA_ID_BY_CODIGO.get(Configuracio.getDefaultLanguage());
             usuario.setIdioma(idioma);
 
-            if (regwebUserInfo.getSurname1() != null) {
+            // Apellido 1
+            if (StringUtils.isNotEmpty(regwebUserInfo.getSurname1())) {
                 usuario.setApellido1(regwebUserInfo.getSurname1());
             } else {
                 usuario.setApellido1("");
             }
 
-            if (regwebUserInfo.getSurname2() != null) {
+            // Apellido 2
+            if (StringUtils.isNotEmpty(regwebUserInfo.getSurname2())) {
                 usuario.setApellido2(regwebUserInfo.getSurname2());
             } else {
                 usuario.setApellido2("");
@@ -478,7 +487,7 @@ public class LoginService {
             usuario.setIdentificador(identificador);
 
             // Email
-            if (regwebUserInfo.getEmail() != null) {
+            if (StringUtils.isNotEmpty(regwebUserInfo.getEmail())) {
                 usuario.setEmail(regwebUserInfo.getEmail());
             } else {
                 usuario.setEmail("no hi ha email");
