@@ -11,17 +11,17 @@ import javax.persistence.*;
 @Entity
 @Table(name = "RWE_METADATO_REGENT")
 @SequenceGenerator(name = "generator", sequenceName = "RWE_MTDRE_SEQ", allocationSize = 1)
-public class MetadatosRegistroEntrada extends Metadato {
+public class MetadatoRegistroEntrada extends Metadato {
 
 
     protected Long id;
     protected RegistroEntrada registroEntrada;
 
 
-    public MetadatosRegistroEntrada() {
+    public MetadatoRegistroEntrada() {
     }
 
-    public MetadatosRegistroEntrada(Long tipo, String campo, String valor) {
+    public MetadatoRegistroEntrada(Long tipo, String campo, String valor) {
         super(tipo, campo, valor);
     }
 
@@ -36,8 +36,8 @@ public class MetadatosRegistroEntrada extends Metadato {
         this.id = id;
     }
 
-    @ManyToOne(fetch = FetchType.EAGER, targetEntity = RegistroEntrada.class)
-    @JoinColumn(name = "REGISTRO_ENTRADA", nullable = false, foreignKey =@ForeignKey(name = "RWE_METAREN_REGENT_FK"))
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = RegistroEntrada.class)
+    @JoinColumn(name = "REGISTRO_ENTRADA", foreignKey = @ForeignKey(name = "RWE_METAREN_REGENT_FK"))
     public RegistroEntrada getRegistroEntrada() {
         return registroEntrada;
     }

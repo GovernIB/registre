@@ -10,16 +10,16 @@ import javax.persistence.*;
 @Entity
 @Table(name = "RWE_METADATO_ANEXO")
 @SequenceGenerator(name = "generator", sequenceName = "RWE_MTDAN_SEQ", allocationSize = 1)
-public class MetadatosAnexo extends Metadato {
+public class MetadatoAnexo extends Metadato {
 
     protected Long id;
     protected Anexo anexo;
 
 
-    public MetadatosAnexo() {
+    public MetadatoAnexo() {
     }
 
-    public MetadatosAnexo(Long tipo, String campo, String valor) {
+    public MetadatoAnexo(Long tipo, String campo, String valor) {
         super(tipo, campo, valor);
     }
 
@@ -36,8 +36,8 @@ public class MetadatosAnexo extends Metadato {
     }
 
 
-    @ManyToOne(fetch = FetchType.EAGER, targetEntity = Anexo.class)
-    @JoinColumn(name = "ANEXO", nullable = false, foreignKey =@ForeignKey(name = "RWE_METANEX_ANEXO_FK"))
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = Anexo.class)
+    @JoinColumn(name = "ANEXO", foreignKey = @ForeignKey(name = "RWE_METANEX_ANEXO_FK"))
     public Anexo getAnexo() {
         return anexo;
     }

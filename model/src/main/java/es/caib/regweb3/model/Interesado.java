@@ -84,11 +84,10 @@ public class Interesado implements Serializable {
 
     //Metadatos nueva arquitectura SIR
     @XmlTransient
-    private String codigoDire;
+    private String codDirectoriosUnificados;
 
     //SICRES4
     private Boolean receptorNotificaciones = false;
-    private String codDirectoriosUnificados;
     private String telefonoMovil;
     private Boolean avisoNotificacionSMS = false;
     private Boolean avisoCorreoElectronico = false;
@@ -216,7 +215,7 @@ public class Interesado implements Serializable {
         //this.registroDetalle = i.registroDetalle;
         this.guardarInteresado = i.guardarInteresado;
         this.entidad = i.entidad;
-        this.codigoDire = i.codigoDire;
+        this.codDirectoriosUnificados = i.codDirectoriosUnificados;
     }
 
 
@@ -455,34 +454,25 @@ public class Interesado implements Serializable {
     }
 
 
-    @Column(name = "CODIGODIRE", length = 15)
-    public String getCodigoDire() {
-        return codigoDire;
-    }
-
-    public void setCodigoDire(String codigoDire) {
-        this.codigoDire = codigoDire;
-    }
-
-
-    //SICRES4
-   //Indica quien es el interesado que recibirá las notificaciones en caso de muchos interesados.
-   @Column(name = "RECEPNOTIF")
-    public Boolean getReceptorNotificaciones() {
-        return receptorNotificaciones;
-    }
-
-    public void setReceptorNotificaciones(Boolean receptorNotificaciones) {
-        this.receptorNotificaciones = receptorNotificaciones;
-    }
-
-    @Column(name = "DIRUNIFICADO", length = 21)
+    @Column(name = "CODDIRUNIF", length = 15)
     public String getCodDirectoriosUnificados() {
         return codDirectoriosUnificados;
     }
 
     public void setCodDirectoriosUnificados(String codDirectoriosUnificados) {
         this.codDirectoriosUnificados = codDirectoriosUnificados;
+    }
+
+
+    //SICRES4
+    //Indica quien es el interesado que recibirá las notificaciones en caso de muchos interesados.
+    @Column(name = "RECEPNOTIF")
+    public Boolean getReceptorNotificaciones() {
+        return receptorNotificaciones;
+    }
+
+    public void setReceptorNotificaciones(Boolean receptorNotificaciones) {
+        this.receptorNotificaciones = receptorNotificaciones;
     }
 
     @Column(name = "TLFMOVIL", length = 20)
