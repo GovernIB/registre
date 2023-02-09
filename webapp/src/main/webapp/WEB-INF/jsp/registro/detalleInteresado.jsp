@@ -64,14 +64,21 @@
 
                 <div class="form-group col-xs-6">
                     <div class="col-xs-5 pull-left etiqueta_regweb control-label">
-                        <label ><spring:message code="persona.canal"/></label>
+                        <label><spring:message code="persona.movil"/></label>
+                    </div>
+                    <div class="col-xs-7" id="telefonoMovil"></div>
+                </div>
+
+                <div class="form-group col-xs-6">
+                    <div class="col-xs-5 pull-left etiqueta_regweb control-label">
+                        <label><spring:message code="persona.canal"/></label>
                     </div>
                     <div class="col-xs-7" id="canal"></div>
                 </div>
 
                 <div class="form-group col-xs-6">
                     <div class="col-xs-5 pull-left etiqueta_regweb control-label">
-                        <label ><spring:message code="interesado.pais"/></label>
+                        <label><spring:message code="interesado.pais"/></label>
                     </div>
                     <div class="col-xs-7" id="pais"></div>
                 </div>
@@ -113,24 +120,39 @@
 
                 <div class="form-group col-xs-6">
                     <div class="col-xs-5 pull-left etiqueta_regweb control-label">
-                        <label><spring:message code="persona.codigoDire"/></label>
+                        <label><spring:message code="persona.codDireUnificados"/></label>
                     </div>
-                    <div class="col-xs-7" id="codigoDIRe"></div>
+                    <div class="col-xs-7" id="codDIReUnificados"></div>
                 </div>
 
                 <div class="form-group col-xs-6">
                     <div class="col-xs-5 pull-left etiqueta_regweb control-label">
-                        <label><spring:message code="persona.direccionElectronica"/></label>
-                    </div>
-                    <div class="col-xs-7" id="direccionElectronica"></div>
-                </div>
-
-                <div class="form-group col-xs-6">
-                    <div class="col-xs-5 pull-left etiqueta_regweb control-label">
-                        <label ><spring:message code="interesado.observaciones"/></label>
+                        <label><spring:message code="interesado.observaciones"/></label>
                     </div>
                     <div class="col-xs-7" id="observaciones"></div>
                 </div>
+
+                <div class="form-group col-xs-6">
+                    <div class="col-xs-5 pull-left etiqueta_regweb control-label">
+                        <label><spring:message code="persona.receptor.notificaciones"/></label>
+                    </div>
+                    <div class="col-xs-7" id="receptorNotificaciones"></div>
+                </div>
+
+                <div class="form-group col-xs-6">
+                    <div class="col-xs-5 pull-left etiqueta_regweb control-label">
+                        <label><spring:message code="persona.notificacion.sms"/></label>
+                    </div>
+                    <div class="col-xs-7" id="avisoNotificacionSMS"></div>
+                </div>
+
+                <div class="form-group col-xs-6">
+                    <div class="col-xs-5 pull-left etiqueta_regweb control-label">
+                        <label><spring:message code="persona.notificacion.email"/></label>
+                    </div>
+                    <div class="col-xs-7" id="avisoCorreoElectronico"></div>
+                </div>
+
 
                 <div class="clearfix"></div>
 
@@ -160,4 +182,6 @@
     tradsinteresado['canalNotificacion.1'] = "<spring:message code='canalNotificacion.1' javaScriptEscape='true' />";
     tradsinteresado['canalNotificacion.2'] = "<spring:message code='canalNotificacion.2' javaScriptEscape='true' />";
     tradsinteresado['canalNotificacion.3'] = "<spring:message code='canalNotificacion.3' javaScriptEscape='true' />";
+    tradsinteresado['true'] = "<spring:message code='regweb.si' javaScriptEscape='true' />";
+    tradsinteresado['false'] = "<spring:message code='regweb.no' javaScriptEscape='true' />";
 </script>
