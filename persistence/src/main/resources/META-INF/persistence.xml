@@ -64,15 +64,18 @@ http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd">
         <class>es.caib.regweb3.model.Usuario</class>
         <class>es.caib.regweb3.model.UsuarioEntidad</class>
         <class>es.caib.regweb3.model.Metadato</class>
-        <class>es.caib.regweb3.model.MetadatosRegistroEntrada</class>
-        <class>es.caib.regweb3.model.MetadatosRegistroSalida</class>
-        <class>es.caib.regweb3.model.MetadatosAnexo</class>
+        <class>es.caib.regweb3.model.MetadatoRegistroEntrada</class>
+        <class>es.caib.regweb3.model.MetadatoRegistroSalida</class>
+        <class>es.caib.regweb3.model.MetadatoAnexo</class>
 
         <!--SIR-->
         <class>es.caib.regweb3.model.RegistroSir</class>
         <class>es.caib.regweb3.model.InteresadoSir</class>
         <class>es.caib.regweb3.model.AnexoSir</class>
         <class>es.caib.regweb3.model.TrazabilidadSir</class>
+        <class>es.caib.regweb3.model.MetadatoAnexoSir</class>
+        <class>es.caib.regweb3.model.MetadatoSir</class>
+        <class>es.caib.regweb3.model.MetadatoRegistroSir</class>
 
 
         <properties>
@@ -83,7 +86,7 @@ http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd">
             les versions d'Oracle superiors a la 12. Per això cal definir explicitament el dialect.
             -->
             <property name="hibernate.dialect" value="org.hibernate.dialect.Oracle12cDialect"/>
-           <!-- <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>-->
+            <!-- <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>-->
             <property name="hibernate.show_sql" value="false"/>
             <!--Permite tener @SequenceGenerator con el mismo nombre-->
             <property name="hibernate.jpa.compliance.global_id_generators" value="false"/>
