@@ -54,6 +54,9 @@
         <version.txt.file>./versio.txt</version.txt.file>
         <timestamp>${maven.build.timestamp}</timestamp>
         <maven.build.timestamp.format>yyyy-MM-dd HH:mm</maven.build.timestamp.format>
+        <!-- LIBSIR-->
+        <libsir.version>3.0.0.RELEASE4</libsir.version>
+        <libsir.groupId>es.gob.ad.registros.sir</libsir.groupId>
     </properties>
 
     <modules>
@@ -278,7 +281,42 @@
                 <version>1.4.01</version>
             </dependency>
 
+            <dependency>
+                <groupId>org.codehaus.woodstox</groupId>
+                <artifactId>woodstox-core-asl</artifactId>
+                <version>4.4.1</version>
+            </dependency>
+
             <!-- Spring -->
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-core</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-context</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-beans</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-tx</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-orm</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-webmvc</artifactId>
@@ -322,6 +360,44 @@
                 <artifactId>junit</artifactId>
                 <version>${junit.version}</version>
                 <scope>test</scope>
+            </dependency>
+
+
+            <!--LIBSIR-->
+            <dependency>
+                <groupId>${libsir.groupId}</groupId>
+                <artifactId>InterService</artifactId>
+                <version>${libsir.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>commons-logging</groupId>
+                        <artifactId>commons-logging</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>xerces</groupId>
+                        <artifactId>xercesImpl</artifactId>
+                    </exclusion>
+                    <!-- <exclusion>
+                         <groupId>org.codehaus.woodstox</groupId>
+                         <artifactId>woodstox-core-asl</artifactId>
+                     </exclusion>-->
+                </exclusions>
+            </dependency>
+
+            <dependency>
+                <groupId>${libsir.groupId}</groupId>
+                <artifactId>interModel.ORACLE</artifactId>
+                <version>${libsir.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>antlr</groupId>
+                        <artifactId>antlr</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>commons-logging</groupId>
+                        <artifactId>commons-logging</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
 
         </dependencies>

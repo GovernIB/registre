@@ -225,6 +225,24 @@
             <scope>provided</scope>
         </dependency>
 
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-orm</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <!--LIBSIR-->
+        <dependency>
+            <groupId>${libsir.groupId}</groupId>
+            <artifactId>InterService</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>${libsir.groupId}</groupId>
+            <artifactId>interModel.ORACLE</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -236,6 +254,32 @@
                     <ejbVersion>3.2</ejbVersion>
                 </configuration>
             </plugin>
+
+            <!-- <plugin>
+                 <artifactId>maven-jar-plugin</artifactId>
+                 <executions>
+                     <execution>
+                         <id>jdbc</id>
+                         <goals>
+                             <goal>test-jar</goal>
+                         </goals>
+                         <phase>package</phase>
+                         <configuration>
+                             <classifier>jdbc</classifier>
+                             <forceCreation>true</forceCreation>
+
+                             <excludes>
+                                 <exclude>**/*.java</exclude>
+                                 <exclude>**/*.class</exclude>
+                                 <exclude>**/arquillian.xml</exclude>
+                                 <exclude>**/arquillian-persistence.xml</exclude>
+                             </excludes>
+                             <skip>false</skip>
+                         </configuration>
+                     </execution>
+
+                 </executions>
+             </plugin>-->
         </plugins>
     </build>
 
