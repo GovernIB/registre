@@ -475,8 +475,8 @@ public class Sicres3XML {
             // Validar el identificador de fichero
             validarIdentificadorFichero(anexo, identificadorIntercambio);
 
-            // Si no es un Fichero Técnico (TipoDocumento = 03), validmos la extensión y el Timo Mime
-            if(!TipoDocumento.FICHERO_TECNICO_INTERNO.getValue().equals(anexo.getTipo_Documento())){
+            // Si no es un Tipo de documento (OTRO), validmos la extensión y el Timo Mime
+            if (!TipoDocumento.OTRO.getValue().equals(anexo.getTipo_Documento())) {
                 // Obtenemos la extensión del fichero
                 String identificadorFichero = StringUtils.substringAfter(anexo.getIdentificador_Fichero(), identificadorIntercambio + "_");
                 String[] tokens = StringUtils.split(identificadorFichero, "_.");

@@ -9,9 +9,18 @@ import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.persistence.utils.RegistroUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
+import es.caib.regweb3.utils.TimeStamp;
 import es.caib.regweb3.webapp.controller.BaseController;
 import es.caib.regweb3.webapp.form.*;
 import es.caib.regweb3.webapp.utils.Mensaje;
+import es.gob.administracionelectronica.eni.xsd.v1_0.documento_e.metadatos.TipoDocumental;
+import es.gob.administracionelectronica.eni.xsd.v1_0.documento_e.metadatos.TipoMetadatos;
+import es.gob.ad.registros.sir.gestionEni.bean.ContenidoBean;
+import es.gob.ad.registros.sir.interService.bean.AnexoBean;
+import es.gob.ad.registros.sir.interService.bean.AsientoBean;
+import es.gob.ad.registros.sir.interService.bean.InteresadoBean;
+import es.gob.ad.registros.sir.interService.bean.OtrosMetadatos;
+import es.gob.ad.registros.sir.libMetadatado.domain.MetadatosRegistro;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
@@ -23,10 +32,12 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.XMLGregorianCalendar;
+import java.sql.Timestamp;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by Fundació BIT.
@@ -249,7 +260,7 @@ public class RegistroSirController extends BaseController {
     public String confirmarRegistroSir(@PathVariable Long idRegistroSir, @ModelAttribute RegistrarForm registrarForm , HttpServletRequest request)
             throws Exception, I18NException, I18NValidationException {
 
-        RegistroSir registroSir = registroSirEjb.findById(idRegistroSir);
+        RegistroSir registroSir = registroSirEjb.getRegistroSirConMetadatos(idRegistroSir);
 
         Entidad entidad = getEntidadActiva(request);
         Oficina oficinaActiva = getOficinaActiva(request);
@@ -265,7 +276,7 @@ public class RegistroSirController extends BaseController {
         // Procesa el RegistroSir
         try{
 
-            RegistroEntrada registroEntrada = sirEnvioEjb.aceptarRegistroSir(registroSir, entidad, usuarioEntidad, oficinaActiva, registrarForm.getIdLibro(), registrarForm.getIdIdioma(), registrarForm.getCamposNTIs(), registrarForm.getIdOrganismoDestino(), registrarForm.getDistribuir(), registrarForm.getCodigoSia(),registrarForm.getEmails(),registrarForm.getMotivo());
+            RegistroEntrada registroEntrada = sirEnvioEjb.aceptarRegistroSir(registroSir, entidad, usuarioEntidad, oficinaActiva, registrarForm.getIdLibro(), registrarForm.getIdIdioma(), registrarForm.getIdOrganismoDestino(), registrarForm.getDistribuir(), registrarForm.getEmails(), registrarForm.getMotivo());
 
             variableReturn = "redirect:/registroEntrada/" + registroEntrada.getId() + "/detalle";
 
