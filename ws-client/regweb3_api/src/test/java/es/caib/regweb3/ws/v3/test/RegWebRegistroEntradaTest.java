@@ -294,9 +294,8 @@ public class RegWebRegistroEntradaTest extends RegWebTestUtils {
 
         anexoWs.setTitulo("Anexo amb canvi AnexoFull");
 
-        anexoWs.setValidezDocumento(CODIGO_SICRES_BY_TIPOVALIDEZDOCUMENTO.get(TIPOVALIDEZDOCUMENTO_COPIA));
         anexoWs.setTipoDocumental(getTestAnexoTipoDocumental());
-        anexoWs.setTipoDocumento(CODIGO_SICRES_BY_TIPO_DOCUMENTO.get(TIPO_DOCUMENTO_FORMULARIO));
+        anexoWs.setTipoDocumento(CODIGO_SICRES_BY_TIPO_ANEXO.get(TIPO_DOCUMENTO_FORMULARIO));
         anexoWs.setOrigenCiudadanoAdmin(ANEXO_ORIGEN_CIUDADANO);
         anexoWs.setObservaciones("Observaciones de Marilen");
 
@@ -327,9 +326,8 @@ public class RegWebRegistroEntradaTest extends RegWebTestUtils {
         AnexoWs anexoFirmaAtached = new AnexoWs();
 
         anexoFirmaAtached.setTitulo("Anexo firma atached");
-        anexoFirmaAtached.setValidezDocumento(CODIGO_SICRES_BY_TIPOVALIDEZDOCUMENTO.get(TIPOVALIDEZDOCUMENTO_COPIA));
         anexoFirmaAtached.setTipoDocumental(getTestAnexoTipoDocumental());
-        anexoFirmaAtached.setTipoDocumento(CODIGO_SICRES_BY_TIPO_DOCUMENTO.get(TIPO_DOCUMENTO_DOC_ADJUNTO));
+        anexoFirmaAtached.setTipoDocumento(CODIGO_SICRES_BY_TIPO_ANEXO.get(TIPO_DOCUMENTO_DOC_ADJUNTO));
         anexoFirmaAtached.setOrigenCiudadanoAdmin(ANEXO_ORIGEN_ADMINISTRACION);
         anexoFirmaAtached.setObservaciones("Observaciones firma atached");
         anexoFirmaAtached.setModoFirma(MODO_FIRMA_ANEXO_ATTACHED);
@@ -356,9 +354,8 @@ public class RegWebRegistroEntradaTest extends RegWebTestUtils {
         AnexoWs anexoFirmaDetached = new AnexoWs();
 
         anexoFirmaDetached.setTitulo("Anexo firma detached");
-        anexoFirmaDetached.setValidezDocumento(CODIGO_SICRES_BY_TIPOVALIDEZDOCUMENTO.get(TIPOVALIDEZDOCUMENTO_COPIA_ORIGINAL));
         anexoFirmaDetached.setTipoDocumental(getTestAnexoTipoDocumental());
-        anexoFirmaDetached.setTipoDocumento(CODIGO_SICRES_BY_TIPO_DOCUMENTO.get(TIPO_DOCUMENTO_FICHERO_TECNICO));
+        anexoFirmaDetached.setTipoDocumento(CODIGO_SICRES_BY_TIPO_ANEXO.get(TIPO_DOCUMENTO_FICHERO_TECNICO));
         anexoFirmaDetached.setOrigenCiudadanoAdmin(ANEXO_ORIGEN_CIUDADANO);
         anexoFirmaDetached.setObservaciones("Observaciones firma detached");
         anexoFirmaDetached.setModoFirma(MODO_FIRMA_ANEXO_DETACHED);
@@ -394,9 +391,8 @@ public class RegWebRegistroEntradaTest extends RegWebTestUtils {
         AnexoWs anexoFirmaDetachedCopia = new AnexoWs();
 
         anexoFirmaDetachedCopia.setTitulo("Anexo firma detached copia");
-        anexoFirmaDetachedCopia.setValidezDocumento(CODIGO_SICRES_BY_TIPOVALIDEZDOCUMENTO.get(TIPOVALIDEZDOCUMENTO_COPIA));
         anexoFirmaDetachedCopia.setTipoDocumental(getTestAnexoTipoDocumental());
-        anexoFirmaDetachedCopia.setTipoDocumento(CODIGO_SICRES_BY_TIPO_DOCUMENTO.get(TIPO_DOCUMENTO_FORMULARIO));
+        anexoFirmaDetachedCopia.setTipoDocumento(CODIGO_SICRES_BY_TIPO_ANEXO.get(TIPO_DOCUMENTO_FORMULARIO));
         anexoFirmaDetachedCopia.setOrigenCiudadanoAdmin(ANEXO_ORIGEN_CIUDADANO);
         anexoFirmaDetachedCopia.setObservaciones("Observaciones firma detached copia");
         anexoFirmaDetachedCopia.setModoFirma(MODO_FIRMA_ANEXO_DETACHED);

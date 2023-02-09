@@ -28,9 +28,10 @@ public class RegWebAsientoRegistralTest extends RegWebTestUtils {
      */
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
-        setEntorno("_localhost_PRO");
+       // setEntorno("_localhost_PRO");
         //setEntorno("_registre3");
         //setEntorno("_proves");
+        setEntorno("_localhost");
         asientoRegistralApi = getAsientoRegistralApi();
     }
 
@@ -100,7 +101,55 @@ public class RegWebAsientoRegistralTest extends RegWebTestUtils {
             try {
 
                 AsientoRegistralWs asientoRegistralWs = getAsiento_to_PersonaFisica(REGISTRO_ENTRADA, true, true);
-                asientoRegistralWs = asientoRegistralApi.crearAsientoRegistral(null,getTestEntidadCodigoDir3(),asientoRegistralWs,null,true,false);
+                asientoRegistralWs = asientoRegistralApi.crearAsientoRegistral(null, getTestEntidadCodigoDir3(), asientoRegistralWs, null, true, false);
+
+                printAsientoBasico(asientoRegistralWs);
+
+            } catch (WsI18NException e) {
+                String msg = WsClientUtils.toString(e);
+                System.out.println("Error WsI18NException: " + msg);
+                throw e;
+            } catch (WsValidationException e) {
+                String msg = WsClientUtils.toString(e);
+                System.out.println("Error WsValidationException: " + msg);
+                throw e;
+            }
+        }
+    }
+
+    @Test
+    public void crearAsientoEntradaJuridica() throws Exception {
+
+        for (int i = 0; i < 1; i++) {
+
+            try {
+
+                AsientoRegistralWs asientoRegistralWs = getAsiento_to_PersonaJuridica(REGISTRO_ENTRADA, true, true);
+                asientoRegistralWs = asientoRegistralApi.crearAsientoRegistral(null, getTestEntidadCodigoDir3(), asientoRegistralWs, null, true, false);
+
+                printAsientoBasico(asientoRegistralWs);
+
+            } catch (WsI18NException e) {
+                String msg = WsClientUtils.toString(e);
+                System.out.println("Error WsI18NException: " + msg);
+                throw e;
+            } catch (WsValidationException e) {
+                String msg = WsClientUtils.toString(e);
+                System.out.println("Error WsValidationException: " + msg);
+                throw e;
+            }
+        }
+    }
+
+    @Test
+    public void crearAsientoEntradaAdministracion() throws Exception {
+
+        for (int i = 0; i < 1; i++) {
+
+            try {
+
+                AsientoRegistralWs asientoRegistralWs = getAsiento_to_Administracion(REGISTRO_ENTRADA, true, "Agencia Tributaria Islas Baleares (ATIB)", "A04013587");
+                asientoRegistralWs = asientoRegistralApi.crearAsientoRegistral(null, getTestEntidadCodigoDir3(), asientoRegistralWs, null, true, false);
 
                 printAsientoBasico(asientoRegistralWs);
 
