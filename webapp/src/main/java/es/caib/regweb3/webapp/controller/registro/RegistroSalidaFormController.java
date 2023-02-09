@@ -571,7 +571,7 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
         // Código Sia
         if(plantillaJson.getCodigoSia()!=null) {
             if (!plantillaJson.getCodigoSia().isEmpty()) {
-                registroSalida.getRegistroDetalle().setCodigoSia(Long.parseLong(plantillaJson.getCodigoSia()));
+                registroSalida.getRegistroDetalle().setCodigoSia(plantillaJson.getCodigoSia());
             }
         }
         // Interesado Administración
