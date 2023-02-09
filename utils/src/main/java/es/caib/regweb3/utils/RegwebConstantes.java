@@ -903,5 +903,6 @@ public interface RegwebConstantes {
     };
 
     Long METADATO_GENERAL= 0L;
-    Long METADATO_PARTICULAR= 1L;
+    Long METADATO_PARTICULAR = 1L;
+    Long METADATO_NTI = 2L;
 }

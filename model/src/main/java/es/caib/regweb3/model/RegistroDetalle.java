@@ -97,7 +97,7 @@ public class RegistroDetalle implements Serializable {
 
     //Metadatos nueva arquitectura SIR
     @XmlElement
-    private Long codigoSia;
+    private String codigoSia;
     @XmlTransient
     private Boolean presencial;
     @XmlTransient
@@ -476,12 +476,12 @@ public class RegistroDetalle implements Serializable {
         this.version = version;
     }
 
-    @Column(name = "CODIGOSIA", length=80)
-    public Long getCodigoSia() {
+    @Column(name = "CODIGOSIA", length = 80)
+    public String getCodigoSia() {
         return codigoSia;
     }
 
-    public void setCodigoSia(Long codigoSia) {
+    public void setCodigoSia(String codigoSia) {
         this.codigoSia = codigoSia;
     }
 
