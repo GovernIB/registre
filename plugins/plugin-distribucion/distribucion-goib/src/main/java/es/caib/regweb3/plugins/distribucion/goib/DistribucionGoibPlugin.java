@@ -312,9 +312,9 @@ public class DistribucionGoibPlugin extends AbstractPluginProperties implements 
             registreInteressat.setTipus(interesado.getTipo().toString());
         }
 
-        //CodigoDIRe
-        if (StringUtils.isNotEmpty(interesado.getCodigoDire())) {
-            registreInteressat.setCodiDire(interesado.getCodigoDire());
+        //Codigo Directorios Unificados
+        if (StringUtils.isNotEmpty(interesado.getCodDirectoriosUnificados())) {
+            registreInteressat.setCodiDire(interesado.getCodDirectoriosUnificados());
         }
 
         return registreInteressat;
