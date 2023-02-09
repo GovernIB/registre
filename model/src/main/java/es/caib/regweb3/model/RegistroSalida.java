@@ -50,7 +50,7 @@ public class RegistroSalida implements IRegistro {
     @XmlElement
     private RegistroDetalle registroDetalle;
 
-    private Set<MetadatosRegistroSalida> metadatosRegistroSalida;
+    private Set<MetadatoRegistroSalida> metadatoRegistroSalida;
 
 
     public RegistroSalida() {
@@ -253,14 +253,14 @@ public class RegistroSalida implements IRegistro {
             fetch = FetchType.EAGER,
             mappedBy = "registroSalida",
             cascade = {CascadeType.ALL},
-            targetEntity = MetadatosRegistroSalida.class
+            targetEntity = MetadatoRegistroSalida.class
     )
-    public Set<MetadatosRegistroSalida> getMetadatosRegistroSalida() {
-        return metadatosRegistroSalida;
+    public Set<MetadatoRegistroSalida> getMetadatosRegistroSalida() {
+        return metadatoRegistroSalida;
     }
 
-    public void setMetadatosRegistroSalida(Set<MetadatosRegistroSalida> metadatosRegistroSalida) {
-        this.metadatosRegistroSalida = metadatosRegistroSalida;
+    public void setMetadatosRegistroSalida(Set<MetadatoRegistroSalida> metadatoRegistroSalida) {
+        this.metadatoRegistroSalida = metadatoRegistroSalida;
     }
 
     @Transient

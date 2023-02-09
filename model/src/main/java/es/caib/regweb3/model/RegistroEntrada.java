@@ -48,7 +48,7 @@ public class RegistroEntrada implements IRegistro {
     private RegistroDetalle registroDetalle;
 
     //SICRES4
-    private Set<MetadatosRegistroEntrada> metadatosRegistroEntrada;
+    private Set<MetadatoRegistroEntrada> metadatoRegistroEntrada;
 
 
     public RegistroEntrada() {
@@ -253,14 +253,14 @@ public class RegistroEntrada implements IRegistro {
             fetch = FetchType.EAGER,
             mappedBy = "registroEntrada",
             cascade = {CascadeType.ALL},
-            targetEntity = MetadatosRegistroEntrada.class
+            targetEntity = MetadatoRegistroEntrada.class
     )
-    public Set<MetadatosRegistroEntrada> getMetadatosRegistroEntrada() {
-        return metadatosRegistroEntrada;
+    public Set<MetadatoRegistroEntrada> getMetadatosRegistroEntrada() {
+        return metadatoRegistroEntrada;
     }
 
-    public void setMetadatosRegistroEntrada(Set<MetadatosRegistroEntrada> metadatosRegistroEntrada) {
-        this.metadatosRegistroEntrada = metadatosRegistroEntrada;
+    public void setMetadatosRegistroEntrada(Set<MetadatoRegistroEntrada> metadatoRegistroEntrada) {
+        this.metadatoRegistroEntrada = metadatoRegistroEntrada;
     }
 
 

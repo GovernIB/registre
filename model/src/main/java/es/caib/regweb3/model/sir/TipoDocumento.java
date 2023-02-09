@@ -8,7 +8,7 @@ public enum TipoDocumento {
 
     FORMULARIO("01", "Formulario"),
     DOCUMENTO_ADJUNTO("02", "Documento adjunto al formulario"),
-    FICHERO_TECNICO_INTERNO("03", "Fichero técnico interno");
+    OTRO("03", "Otro"); //SICRES4
 
     private final String value;
     private final String name;

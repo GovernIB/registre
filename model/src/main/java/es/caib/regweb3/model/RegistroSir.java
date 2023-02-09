@@ -11,6 +11,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Implementación de un RegistroSir de intercambio
@@ -218,15 +219,24 @@ public class RegistroSir implements Serializable {
     private String codigoError;
     private String descripcionError;
 
+    //SICRES4
+    private String modoRegistro; // isPresencial
+    private String codigoSia;
+    private Date fechaRegistroPresentacion;
+    private Boolean referenciaUnica;
+    private String codigoUnidadtramitacionInicio;
+    private String decodificacionUnidadTramitacionInicio;
+    private Set<MetadatoRegistroSir> metadatoRegistroSir;
+
     public RegistroSir() {
     }
 
     public RegistroSir(Long id) {
-        this.id=id;
+        this.id = id;
     }
 
     @Id
-    @GeneratedValue(strategy= GenerationType.SEQUENCE,generator = "generator")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "generator")
     @Column(name="ID")
     public Long getId() {
         return id;
@@ -441,7 +451,7 @@ public class RegistroSir implements Serializable {
         this.identificadorIntercambio = identificadorIntercambio;
     }
 
-    @Column(name = "APLICACION", length = 4, nullable = true)
+    @Column(name = "APLICACION", length = 20, nullable = true)
     public String getAplicacion() {
         return aplicacion;
     }
@@ -459,7 +469,7 @@ public class RegistroSir implements Serializable {
         this.tipoAnotacion = tipoAnotacion;
     }
 
-    @Column(name = "DEC_T_ANOTACION", length = 80, nullable = true)
+    @Column(name = "DEC_T_ANOTACION", length = 160, nullable = true)
     public String getDecodificacionTipoAnotacion() {
         return decodificacionTipoAnotacion;
     }
@@ -521,11 +531,30 @@ public class RegistroSir implements Serializable {
     }
 
     public void setDecodificacionEntidadRegistralInicio(String decodificacionEntidadRegistralInicio) {
-        if(decodificacionEntidadRegistralInicio != null && decodificacionEntidadRegistralInicio.length() > 80){
-            this.decodificacionEntidadRegistralInicio = decodificacionEntidadRegistralInicio.substring(0,79);
-        }else{
+        if (decodificacionEntidadRegistralInicio != null && decodificacionEntidadRegistralInicio.length() > 80) {
+            this.decodificacionEntidadRegistralInicio = decodificacionEntidadRegistralInicio.substring(0, 79);
+        } else {
             this.decodificacionEntidadRegistralInicio = decodificacionEntidadRegistralInicio;
         }
+    }
+
+    //SICRES4
+    @Column(name = "COD_UNI_TRA_INI", length = 21)
+    public String getCodigoUnidadtramitacionInicio() {
+        return codigoUnidadtramitacionInicio;
+    }
+
+    public void setCodigoUnidadtramitacionInicio(String codigoUnidadtramitacionInicio) {
+        this.codigoUnidadtramitacionInicio = codigoUnidadtramitacionInicio;
+    }
+
+    @Column(name = "DEC_UNI_TRA_INI", length = 120, nullable = true)
+    public String getDecodificacionUnidadTramitacionInicio() {
+        return decodificacionUnidadTramitacionInicio;
+    }
+
+    public void setDecodificacionUnidadTramitacionInicio(String decodificacionUnidadTramitacionInicio) {
+        this.decodificacionUnidadTramitacionInicio = decodificacionUnidadTramitacionInicio;
     }
 
     @Lob
@@ -631,6 +660,58 @@ public class RegistroSir implements Serializable {
     public void setDescripcionError(String descripcionError) {
         this.descripcionError = descripcionError;
     }
+
+    @Column(name = "MODO_REGISTRO", length = 1)
+    public String getModoRegistro() {
+        return modoRegistro;
+    }
+
+    public void setModoRegistro(String modoRegistro) {
+        this.modoRegistro = modoRegistro;
+    }
+
+
+    @Column(name = "CODIGO_SIA", length = 80)
+    public String getCodigoSia() {
+        return codigoSia;
+    }
+
+    public void setCodigoSia(String codigoSia) {
+        this.codigoSia = codigoSia;
+    }
+
+    @Column(name = "FECHA_REGISTRO_PRESENTACION", nullable = false)
+    public Date getFechaRegistroPresentacion() {
+        return fechaRegistroPresentacion;
+    }
+
+    public void setFechaRegistroPresentacion(Date fechaRegistroPresentacion) {
+        this.fechaRegistroPresentacion = fechaRegistroPresentacion;
+    }
+
+    @Column(name = "REFERENCIA_UNICA")
+    public Boolean getReferenciaUnica() {
+        return referenciaUnica;
+    }
+
+    public void setReferenciaUnica(Boolean referenciaUnica) {
+        this.referenciaUnica = referenciaUnica;
+    }
+
+    @OneToMany(
+            fetch = FetchType.LAZY,
+            mappedBy = "registroSir",
+            cascade = {CascadeType.ALL},
+            targetEntity = MetadatoRegistroSir.class
+    )
+    public Set<MetadatoRegistroSir> getMetadatosRegistroSir() {
+        return metadatoRegistroSir;
+    }
+
+    public void setMetadatosRegistroSir(Set<MetadatoRegistroSir> metadatoRegistroSir) {
+        this.metadatoRegistroSir = metadatoRegistroSir;
+    }
+
 
     @Override
     public boolean equals(Object o) {
