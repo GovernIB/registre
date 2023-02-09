@@ -193,7 +193,7 @@ Mediante el archivo "busquedaorganismo.js" se implementa dicha búsqueda -->
     tradsinteresado['persona.juridica'] = "<spring:message code='persona.juridica' javaScriptEscape='true' />";
     tradsinteresado['persona.razonSocial'] = "<spring:message code='persona.razonSocial' javaScriptEscape='true' />";
     tradsinteresado['persona.persona'] = "<spring:message code='persona.persona' javaScriptEscape='true' />";
-    tradsinteresado['persona.codigodire'] = "<spring:message code='persona.codigoDire' javaScriptEscape='true' />";
+    tradsinteresado['persona.codDireUnificados'] = "<spring:message code='persona.codDireUnificados' javaScriptEscape='true' />";
     tradsinteresado['interesado.resultados'] = "<spring:message code='interesado.resultados' javaScriptEscape='true' />";
     tradsinteresado['representante.eliminar'] = "<spring:message code='representante.eliminar' javaScriptEscape='true' />";
     tradsinteresado['regweb.confirmar'] = "<spring:message code='regweb.confirmar' javaScriptEscape='true' />";

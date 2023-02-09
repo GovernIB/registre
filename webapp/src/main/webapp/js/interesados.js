@@ -403,7 +403,7 @@ function editarInteresado(id){
 
             $('#direccion').val(result.direccion);
             $('#razonSocial').val(result.razonSocial);
-            $('#codigoDire').val(result.codigoDire);
+            $('#codDIReUnificados').val(result.codDIReUnificados);
             $('#email').val(result.email);
             $('#cp').val(result.cp);
             $('#telefono').val(result.telefono);
@@ -464,17 +464,39 @@ function procesarInteresado() {
 
     var accion = $('#accion').val();
     var idRegistroDetalle = $('#idRegistroDetalle').val();
-    if(idRegistroDetalle.length == 0){
+    if (idRegistroDetalle.length == 0) {
         idRegistroDetalle = 'null';
     }
-    var url = $("#interesadoForm").attr("action").concat('/'+accion).concat('/'+idRegistroDetalle);
+    var url = $("#interesadoForm").attr("action").concat('/' + accion).concat('/' + idRegistroDetalle);
 
-    var json = { "id": $('#id').val(), "tipo": $('#tipo').val(), "nombre" : $('#nombre').val(), "apellido1" : $('#apellido1').val(), "apellido2" : $('#apellido2').val(),"tipoDocumentoIdentificacion": $('#tipoDocumentoIdentificacion').val(), "documento" : $('#documento').val(),
-        "pais" : $('#pais\\.id').val(),"provincia" : $('#provincia\\.id').val(), "localidad" : $('#localidad\\.id').val(), "direccion" : $('#direccion').val(), "razonSocial": $('#razonSocial').val(),"codigoDire": $('#codigoDire').val(), "email" : $('#email').val(), "cp" : $('#cp').val(), "telefono" : $('#telefono').val(),
-        "canal":$('#canal').val(), "observaciones":$('#observaciones').val(), "guardarInteresado":$('#guardarInteresado').prop('checked'), "isRepresentante" : $('#isRepresentante').val(), "receptorNotificaciones" : $('#receptorNotificaciones').prop('checked'),
-        "telefonoMovil" : $('#telefonoMovil').val(), "avisoNotificacionSMS" : $('#avisoNotificacionSMS').prop('checked'), "avisoCorreoElectronico" : $('#avisoCorreoElectronico').prop('checked')};
+    var json = {
+        "id": $('#id').val(),
+        "tipo": $('#tipo').val(),
+        "nombre": $('#nombre').val(),
+        "apellido1": $('#apellido1').val(),
+        "apellido2": $('#apellido2').val(),
+        "tipoDocumentoIdentificacion": $('#tipoDocumentoIdentificacion').val(),
+        "documento": $('#documento').val(),
+        "pais": $('#pais\\.id').val(),
+        "provincia": $('#provincia\\.id').val(),
+        "localidad": $('#localidad\\.id').val(),
+        "direccion": $('#direccion').val(),
+        "razonSocial": $('#razonSocial').val(),
+        "codDIReUnificados": $('#codDIReUnificados').val(),
+        "email": $('#email').val(),
+        "cp": $('#cp').val(),
+        "telefono": $('#telefono').val(),
+        "canal": $('#canal').val(),
+        "observaciones": $('#observaciones').val(),
+        "guardarInteresado": $('#guardarInteresado').prop('checked'),
+        "isRepresentante": $('#isRepresentante').val(),
+        "receptorNotificaciones": $('#receptorNotificaciones').prop('checked'),
+        "telefonoMovil": $('#telefonoMovil').val(),
+        "avisoNotificacionSMS": $('#avisoNotificacionSMS').prop('checked'),
+        "avisoCorreoElectronico": $('#avisoCorreoElectronico').prop('checked')
+    };
 
-    if($('#isRepresentante').val() == 'true'){ // Si es un representate, le añadimos a que persona representa
+    if ($('#isRepresentante').val() == 'true') { // Si es un representate, le añadimos a que persona representa
 
         json['representado'] = $('#representado\\.id').val();
     }
@@ -583,7 +605,7 @@ function quitarErroresInteresado(){
     quitarError('nombre');
     quitarError('apellido1');
     quitarError('razonSocial');
-    quitarError('codigoDire');
+    quitarError('codDIReUnificados');
     quitarError('email');
     quitarError('documento');
     quitarError('direccion');
@@ -593,6 +615,7 @@ function quitarErroresInteresado(){
     quitarError('provincia\\.id');
     quitarError('localidad\\.id');
     quitarError('pais\\.id');
+    quitarError('telefono');
     quitarError('telefonoMovil');
 }
 
@@ -955,7 +978,7 @@ function camposTipoPersona(tipoInteresado){
     if(tipoInteresado == 2){ //Persona fisica
 
         $('#razonSocial').attr("disabled", "disabled");
-        $('#codigoDire').attr("disabled", "disabled");
+        $('#codDIReUnificados').attr("disabled", "disabled");
         $('#nombre').removeAttr("disabled", "disabled");
         $('#apellido1').removeAttr("disabled", "disabled");
         $('#apellido2').removeAttr("disabled", "disabled");
@@ -970,7 +993,7 @@ function camposTipoPersona(tipoInteresado){
     if(tipoInteresado == 3){ //Persona juridica
 
         $('#razonSocial').removeAttr("disabled", "disabled");
-        $('#codigoDire').removeAttr("disabled", "disabled");
+        $('#codDIReUnificados').removeAttr("disabled", "disabled");
         $('#nombre').attr("disabled", "disabled");
         $('#apellido1').attr("disabled", "disabled");
         $('#apellido2').attr("disabled", "disabled");
@@ -1183,17 +1206,20 @@ function obtenerInteresado(idInteresado){
 
             $('#direccion').html(result.direccion);
             $('#razonSocial').html(result.razonSocial);
-            $('#codigoDire').html(result.codigoDire);
+            $('#codDIReUnificados').html(result.codDIReUnificados);
             $('#email').html(result.email);
             $('#cp').html(result.cp);
             $('#telefono').html(result.telefono);
-            if(result.canal != null){
-                $("#canal").html(tradsinteresado['canalNotificacion.'+result.canal]);
+            $('#telefonoMovil').html(result.telefonoMovil);
+            if (result.canal != null) {
+                $("#canal").html(tradsinteresado['canalNotificacion.' + result.canal]);
             }
             $('#observaciones').html(result.observaciones);
 
             //SICRES4
-            $('#telefonoMovil').html(result.telefonoMovil);
+            $('#receptorNotificaciones').html(tradsinteresado[result.receptorNotificaciones]);
+            $('#avisoNotificacionSMS').html(tradsinteresado[result.avisoNotificacionSMS]);
+            $('#avisoCorreoElectronico').html(tradsinteresado[result.avisoCorreoElectronico]);
 
         }
     });
@@ -1219,8 +1245,11 @@ function limpiarInteresadoDetalle(){
     $('#direccion').html('');
     $('#cp').html('');
     $('#razonSocial').html('');
-    $('#codigoDire').html('');
+    $('#codDIReUnificados').html('');
     $('#observaciones').html('');
+    $('#receptorNotificaciones').html('');
+    $('#avisoNotificacionSMS').html('');
+    $('#avisoCorreoElectronico').html('');
 }
 
 /**
