@@ -10,17 +10,17 @@ import javax.persistence.*;
 @Entity
 @Table(name = "RWE_METADATO_REGSAL")
 @SequenceGenerator(name = "generator", sequenceName = "RWE_MTDRS_SEQ", allocationSize = 1)
-public class MetadatosRegistroSalida extends Metadato {
+public class MetadatoRegistroSalida extends Metadato {
 
 
     protected Long id;
     protected RegistroSalida registroSalida;
 
 
-    public MetadatosRegistroSalida() {
+    public MetadatoRegistroSalida() {
     }
 
-    public MetadatosRegistroSalida(Long tipo, String campo, String valor) {
+    public MetadatoRegistroSalida(Long tipo, String campo, String valor) {
         super(tipo, campo, valor);
     }
 
@@ -36,9 +36,8 @@ public class MetadatosRegistroSalida extends Metadato {
     }
 
 
-
-    @ManyToOne(fetch = FetchType.EAGER, targetEntity = RegistroSalida.class)
-    @JoinColumn(name = "REGISTRO_SALIDA", nullable = false, foreignKey =@ForeignKey(name = "RWE_METRSAL_REGSAL_FK"))
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = RegistroSalida.class)
+    @JoinColumn(name = "REGISTRO_SALIDA", foreignKey = @ForeignKey(name = "RWE_METRSAL_REGSAL_FK"))
     public RegistroSalida getRegistroSalida() {
         return registroSalida;
     }

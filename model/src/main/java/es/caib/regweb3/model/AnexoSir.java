@@ -4,6 +4,7 @@ import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Set;
 
 /**
  * Created by earrivi on 26/11/2015.
@@ -81,12 +82,19 @@ public class AnexoSir implements Serializable {
     private Boolean purgado = false;
 
 
+    //CAMPOS NUEVOS SICRES 4
+    private String resumen;
+    private String codigoFormulario;
+    private String urlRepositorio;
+    private Set<MetadatoAnexoSir> metadatosAnexos;
+
+
     public AnexoSir() {
     }
 
     @Id
-    @GeneratedValue(strategy= GenerationType.SEQUENCE,generator = "generator")
-    @Column(name="ID")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "generator")
+    @Column(name = "ID")
     public Long getId() {
         return id;
     }
@@ -251,6 +259,48 @@ public class AnexoSir implements Serializable {
 
     public void setPurgado(Boolean purgado) {
         this.purgado = purgado;
+    }
+
+
+    @Column(name = "RESUMEN", length = 160)
+    public String getResumen() {
+        return resumen;
+    }
+
+    public void setResumen(String resumen) {
+        this.resumen = resumen;
+    }
+
+    @Column(name = "COD_FORMULARIO", length = 80)
+    public String getCodigoFormulario() {
+        return codigoFormulario;
+    }
+
+    public void setCodigoFormulario(String codigoFormulario) {
+        this.codigoFormulario = codigoFormulario;
+    }
+
+    @Column(name = "URL_REPOSITORIO", length = 1000)
+    public String getUrlRepositorio() {
+        return urlRepositorio;
+    }
+
+    public void setUrlRepositorio(String urlRepositorio) {
+        this.urlRepositorio = urlRepositorio;
+    }
+
+    @OneToMany(
+            fetch = FetchType.EAGER,
+            mappedBy = "anexoSir",
+            cascade = {CascadeType.ALL},
+            targetEntity = MetadatoAnexoSir.class
+    )
+    public Set<MetadatoAnexoSir> getMetadatosAnexos() {
+        return metadatosAnexos;
+    }
+
+    public void setMetadatosAnexos(Set<MetadatoAnexoSir> metadatosAnexos) {
+        this.metadatosAnexos = metadatosAnexos;
     }
 
     @Transient

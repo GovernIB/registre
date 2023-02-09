@@ -49,6 +49,17 @@ public class InteresadoSir implements Serializable {
     private String direccionElectronicaHabilitadaRepresentante;
     private String canalPreferenteComunicacionRepresentante;
     private String observaciones;
+    //SICRES 4 -LIBSIR
+    private Boolean avisoCorreoElectronicoInteresado;
+    private Boolean avisoNotificacionSMSInteresado;
+    private Boolean receptorNotificacionesInteresado;
+    private String codigoDirectorioUnificadosInteresado;
+    private String telefonoMovilInteresado;
+    private Boolean avisoCorreoElectronicoRepresentante;
+    private Boolean avisoNotificacionSMSRepresentante;
+    private Boolean receptorNotificacionesRepresentante;
+    private String codigoDirectorioUnificadosRepresentante;
+    private String telefonoMovilRepresentante;
 
 
     public InteresadoSir() {
@@ -56,8 +67,8 @@ public class InteresadoSir implements Serializable {
 
 
     @Id
-    @GeneratedValue(strategy= GenerationType.SEQUENCE,generator = "generator")
-    @Column(name="ID")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "generator")
+    @Column(name = "ID")
     public Long getId() {
         return id;
     }
@@ -355,13 +366,106 @@ public class InteresadoSir implements Serializable {
         this.observaciones = observaciones;
     }
 
-    @Transient
-    public Long getTipoInteresado(){
+    @Column(name = "NOTIF_EMAIL_INTERESADO", length = 1)
+    public Boolean getAvisoCorreoElectronicoInteresado() {
+        return avisoCorreoElectronicoInteresado;
+    }
 
-        if(StringUtils.isNotEmpty(getNombreInteresado()) && StringUtils.isNotEmpty(getPrimerApellidoInteresado())){
+    public void setAvisoCorreoElectronicoInteresado(Boolean avisoCorreoElectronicoInteresado) {
+        this.avisoCorreoElectronicoInteresado = avisoCorreoElectronicoInteresado;
+    }
+
+    @Column(name = "NOTIF_SMS_INTERESADO", length = 1)
+    public Boolean getAvisoNotificacionSMSInteresado() {
+        return avisoNotificacionSMSInteresado;
+    }
+
+    public void setAvisoNotificacionSMSInteresado(Boolean avisoNotificacionSMSInteresado) {
+        this.avisoNotificacionSMSInteresado = avisoNotificacionSMSInteresado;
+    }
+
+    @Column(name = "RECEP_NOTIF_INTERESADO", length = 1)
+    public Boolean getReceptorNotificacionesInteresado() {
+        return receptorNotificacionesInteresado;
+    }
+
+    public void setReceptorNotificacionesInteresado(Boolean receptorNotificacionesInteresado) {
+        this.receptorNotificacionesInteresado = receptorNotificacionesInteresado;
+    }
+
+
+    @Column(name = "COD_DIR_UNIF_INTERESADO", length = 21)
+    public String getCodigoDirectorioUnificadosInteresado() {
+        return codigoDirectorioUnificadosInteresado;
+    }
+
+    public void setCodigoDirectorioUnificadosInteresado(String codigoDirectorioUnificadosInteresado) {
+        this.codigoDirectorioUnificadosInteresado = codigoDirectorioUnificadosInteresado;
+    }
+
+    @Column(name = "TELEFONO_MOVIL_INTERESADO", length = 20, nullable = true)
+    public String getTelefonoMovilInteresado() {
+        return telefonoMovilInteresado;
+    }
+
+    public void setTelefonoMovilInteresado(String telefonoMovilInteresado) {
+        this.telefonoMovilInteresado = telefonoMovilInteresado;
+    }
+
+    @Column(name = "NOTIF_EMAIL_REPRESENTANTE", length = 1)
+    public Boolean getAvisoCorreoElectronicoRepresentante() {
+        return avisoCorreoElectronicoRepresentante;
+    }
+
+    public void setAvisoCorreoElectronicoRepresentante(Boolean avisoCorreoElectronicoRepresentante) {
+        this.avisoCorreoElectronicoRepresentante = avisoCorreoElectronicoRepresentante;
+    }
+
+
+    @Column(name = "NOTIF_SMS_REPRESENTANTE", length = 1)
+    public Boolean getAvisoNotificacionSMSRepresentante() {
+        return avisoNotificacionSMSRepresentante;
+    }
+
+    public void setAvisoNotificacionSMSRepresentante(Boolean avisoNotificacionSMSRepresentante) {
+        this.avisoNotificacionSMSRepresentante = avisoNotificacionSMSRepresentante;
+    }
+
+    @Column(name = "RECEP_NOTIF_REPRESENTANTE", length = 1)
+    public Boolean getReceptorNotificacionesRepresentante() {
+        return receptorNotificacionesRepresentante;
+    }
+
+    public void setReceptorNotificacionesRepresentante(Boolean receptorNotificacionesRepresentante) {
+        this.receptorNotificacionesRepresentante = receptorNotificacionesRepresentante;
+    }
+
+
+    @Column(name = "COD_DIR_UNIF_REPRESENTANTE", length = 21)
+    public String getCodigoDirectorioUnificadosRepresentante() {
+        return codigoDirectorioUnificadosRepresentante;
+    }
+
+    public void setCodigoDirectorioUnificadosRepresentante(String codigoDirectorioUnificadosRepresentante) {
+        this.codigoDirectorioUnificadosRepresentante = codigoDirectorioUnificadosRepresentante;
+    }
+
+    @Column(name = "TELEFONO_MOVIL_REPRESENTANTE", length = 20, nullable = true)
+    public String getTelefonoMovilRepresentante() {
+        return telefonoMovilRepresentante;
+    }
+
+    public void setTelefonoMovilRepresentante(String telefonoMovilRepresentante) {
+        this.telefonoMovilRepresentante = telefonoMovilRepresentante;
+    }
+
+    @Transient
+    public Long getTipoInteresado() {
+
+        if (StringUtils.isNotEmpty(getNombreInteresado()) && StringUtils.isNotEmpty(getPrimerApellidoInteresado())) {
             return RegwebConstantes.TIPO_INTERESADO_PERSONA_FISICA;
 
-        }else if(StringUtils.isNotEmpty(getRazonSocialInteresado())){
+        } else if (StringUtils.isNotEmpty(getRazonSocialInteresado())) {
             return RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA;
 
         }else if(StringUtils.isNotEmpty(getTipoDocumentoIdentificacionInteresado())){ // Caso en que es una Administración, pero no han puesto la denominación en Razon social
