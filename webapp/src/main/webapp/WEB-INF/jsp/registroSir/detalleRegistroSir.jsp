@@ -25,25 +25,30 @@
         <dd><fmt:formatDate value="${registroSir.fechaRecepcion}" pattern="dd/MM/yyyy HH:mm:ss"/></dd>
     </c:if>
 
-    <c:if test="${not empty registroSir.numeroRegistro}">
-        <dt><i class="fa fa-barcode"></i> <spring:message code="registroSir.numeroRegistro"/>: </dt>
-        <dd>${registroSir.numeroRegistro}</dd>
-    </c:if>
+        <c:if test="${not empty registroSir.numeroRegistro}">
+            <dt><i class="fa fa-barcode"></i> <spring:message code="registroSir.numeroRegistro"/>:</dt>
+            <dd>${registroSir.numeroRegistro}</dd>
+        </c:if>
 
-    <c:if test="${not empty registroSir.fechaRegistro}">
-        <dt><i class="fa fa-clock-o"></i> <spring:message code="registroSir.fechaRegistro"/>: </dt>
-        <dd><fmt:formatDate value="${registroSir.fechaRegistro}" pattern="dd/MM/yyyy HH:mm:ss"/></dd>
-    </c:if>
+        <c:if test="${not empty registroSir.fechaRegistro}">
+            <dt><i class="fa fa-clock-o"></i> <spring:message code="registroSir.fechaRegistro"/>:</dt>
+            <dd><fmt:formatDate value="${registroSir.fechaRegistro}" pattern="dd/MM/yyyy HH:mm:ss"/></dd>
+        </c:if>
 
-    <dt><i class="fa fa-file-o"></i> <spring:message code="registroSir.tipoRegistro"/>: </dt>
-    <c:if test="${registroSir.tipoRegistro == 'ENTRADA'}">
-        <dd><span class="label label-info"><spring:message code="registroSir.entrada"/></span></dd>
-    </c:if>
-    <c:if test="${registroSir.tipoRegistro == 'SALIDA'}">
-        <dd><span class="label label-danger"><spring:message code="registroSir.salida"/></span></dd>
-    </c:if>
+        <c:if test="${not empty registroSir.fechaRegistroPresentacion}">
+            <dt><i class="fa fa-clock-o"></i> <spring:message code="registroSir.fechaRegistroPresentacion"/>:</dt>
+            <dd><fmt:formatDate value="${registroSir.fechaRegistroPresentacion}" pattern="dd/MM/yyyy HH:mm:ss"/></dd>
+        </c:if>
 
-    <hr class="divider-primary">
+        <dt><i class="fa fa-file-o"></i> <spring:message code="registroSir.tipoRegistro"/>:</dt>
+        <c:if test="${registroSir.tipoRegistro == 'ENTRADA'}">
+            <dd><span class="label label-info"><spring:message code="registroSir.entrada"/></span></dd>
+        </c:if>
+        <c:if test="${registroSir.tipoRegistro == 'SALIDA'}">
+            <dd><span class="label label-danger"><spring:message code="registroSir.salida"/></span></dd>
+        </c:if>
+
+        <hr class="divider-primary">
 
     <c:if test="${loginInfo.rolActivo.nombre == 'RWE_ADMIN'}">
         <%--Oficina Donde se recibió el registro originalmente--%>
@@ -160,15 +165,22 @@
         </dd>
     </c:if>--%>
 
-    <c:if test="${not empty registroSir.documentacionFisica}">
-        <dt><i class="fa fa-file"></i> <spring:message code="registroSir.tipoDocumentacionFisica"/>: </dt>
-        <dd>
-            <!-- Pone el color que corresponde con el el Tipo de documentacion elegido -->
-            <c:if test="${registroSir.documentacionFisica==RegwebConstantes.TIPO_DOCFISICA_ACOMPANYA_DOC_REQUERIDA}">
-                <span class="text-vermell"><spring:message code="tipoDocumentacionFisica.${registroSir.documentacionFisica}"/></span>
-            </c:if>
-            <c:if test="${registroSir.documentacionFisica==RegwebConstantes.TIPO_DOCFISICA_ACOMPANYA_DOC_COMPLEMENTARIA}">
-                <span class="text-taronja"><spring:message code="tipoDocumentacionFisica.${registroSir.documentacionFisica}"/></span>
+        <c:if test="${not empty registroSir.codigoSia}">
+            <dt><i class="fa fa-barcode"></i> <spring:message code="registroEntrada.codigoSIA"/>:</dt>
+            <dd> ${registroSir.codigoSia}</dd>
+        </c:if>
+
+        <c:if test="${not empty registroSir.documentacionFisica}">
+            <dt><i class="fa fa-file"></i> <spring:message code="registroSir.tipoDocumentacionFisica"/>:</dt>
+            <dd>
+                <!-- Pone el color que corresponde con el el Tipo de documentacion elegido -->
+                <c:if test="${registroSir.documentacionFisica==RegwebConstantes.TIPO_DOCFISICA_ACOMPANYA_DOC_REQUERIDA}">
+                    <span class="text-vermell"><spring:message
+                            code="tipoDocumentacionFisica.${registroSir.documentacionFisica}"/></span>
+                </c:if>
+                <c:if test="${registroSir.documentacionFisica==RegwebConstantes.TIPO_DOCFISICA_ACOMPANYA_DOC_COMPLEMENTARIA}">
+                    <span class="text-taronja"><spring:message
+                            code="tipoDocumentacionFisica.${registroSir.documentacionFisica}"/></span>
             </c:if>
             <c:if test="${registroSir.documentacionFisica==RegwebConstantes.TIPO_DOCFISICA_NO_ACOMPANYA_DOC}">
                 <span class="text-verd"><spring:message code="tipoDocumentacionFisica.${registroSir.documentacionFisica}"/></span>
@@ -215,26 +227,31 @@
     </c:if>
 
     <c:if test="${not empty registroSir.estado}">
-        <dt><i class="fa fa-bookmark"></i> <spring:message code="registroSir.estado"/>: </dt>
+        <dt><i class="fa fa-bookmark"></i> <spring:message code="registroSir.estado"/>:</dt>
         <dd class="eti-rechazo">
-            <c:import url="/WEB-INF/jsp/registroSir/estadosRegistroSir.jsp" />
+            <c:import url="/WEB-INF/jsp/registroSir/estadosRegistroSir.jsp"/>
         </dd>
     </c:if>
 
-    <c:if test="${not empty registroSir.fechaEstado}">
-        <dt><i class="fa fa-clock-o"></i> <spring:message code="registroSir.fechaEstado"/>: </dt>
-        <dd><fmt:formatDate value="${registroSir.fechaEstado}" pattern="dd/MM/yyyy HH:mm:ss"/></dd>
-    </c:if>
+        <c:if test="${not empty registroSir.fechaEstado}">
+            <dt><i class="fa fa-clock-o"></i> <spring:message code="registroSir.fechaEstado"/>:</dt>
+            <dd><fmt:formatDate value="${registroSir.fechaEstado}" pattern="dd/MM/yyyy HH:mm:ss"/></dd>
+        </c:if>
 
-    <c:if test="${registroSir.numeroReintentos > 0}">
-        <dt><i class="fa fa-retweet"></i> <spring:message code="oficioRemision.reintentos"/>: </dt>
-        <dd> ${registroSir.numeroReintentos}</dd>
-    </c:if>
+        <c:if test="${not empty registroSir.modoRegistro}">
+            <dt><i class="fa fa-street-view"></i> <spring:message code="registroSir.modoRegistro"/>:</dt>
+            <dd><spring:message code="registroSir.modoRegistro.${registroSir.modoRegistro}"/></dd>
+        </c:if>
 
-    <c:if test="${registroSir.estado == 'REENVIADO_Y_ERROR' || registroSir.estado == 'RECHAZADO_Y_ERROR'}">
-        <c:if test="${not empty registroSir.codigoError}">
-            <dt><i class="fa fa-bug"></i> <spring:message code="registroSir.codigoError"/>: </dt>
-            <dd> ${registroSir.codigoError}</dd>
+        <c:if test="${registroSir.numeroReintentos > 0}">
+            <dt><i class="fa fa-retweet"></i> <spring:message code="oficioRemision.reintentos"/>:</dt>
+            <dd> ${registroSir.numeroReintentos}</dd>
+        </c:if>
+
+        <c:if test="${registroSir.estado == 'REENVIADO_Y_ERROR' || registroSir.estado == 'RECHAZADO_Y_ERROR'}">
+            <c:if test="${not empty registroSir.codigoError}">
+                <dt><i class="fa fa-bug"></i> <spring:message code="registroSir.codigoError"/>:</dt>
+                <dd> ${registroSir.codigoError}</dd>
         </c:if>
 
         <c:if test="${not empty registroSir.descripcionError}">

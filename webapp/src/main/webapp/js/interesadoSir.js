@@ -41,23 +41,30 @@ function obtenerInteresadoSir(idInteresadoSir){
 
             $('#direccionInteresado').html(result.direccionInteresado);
             $('#razonSocialInteresado').html(result.razonSocialInteresado);
+            $('#codigoDirectorioUnificadosInteresado').html(result.codigoDirectorioUnificadosInteresado);
             $('#direccionElectronicaHabilitadaInteresado').html(result.direccionElectronicaHabilitadaInteresado);
             $('#correoElectronicoInteresado').html(result.correoElectronicoInteresado);
             $('#codigoPostalInteresado').html(result.codigoPostalInteresado);
             $('#telefonoInteresado').html(result.telefonoInteresado);
-            if(result.canalPreferenteComunicacionInteresado != null){
-                $("#canalPreferenteComunicacionInteresado").html(tradsinteresado['canalNotificacion.'+result.canalPreferenteComunicacionInteresado]);
+            $('#telefonoMovilInteresado').html(result.telefonoMovilInteresado);
+            if (result.canalPreferenteComunicacionInteresado != null) {
+                $("#canalPreferenteComunicacionInteresado").html(tradsinteresado['canalNotificacion.' + result.canalPreferenteComunicacionInteresado]);
 
             }
             $('#observaciones').html(result.observaciones);
 
+            //SICRES4
+            $('#receptorNotificacionesInteresado').html(tradsinteresado[result.receptorNotificacionesInteresado]);
+            $('#avisoNotificacionSMSInteresado').html(tradsinteresado[result.avisoNotificacionSMSInteresado]);
+            $('#avisoCorreoElectronicoInteresado').html(tradsinteresado[result.avisoCorreoElectronicoInteresado]);
+
             // Si tiene representante
-            if(result.representante){
+            if (result.representante) {
                 $('#nombreRepresentante').html(result.nombreRepresentante);
                 $('#primerApellidoRepresentante').html(result.primerApellidoRepresentante);
                 $('#segundoApellidoRepresentante').html(result.segundoApellidoRepresentante);
-                if(result.tipoDocumentoIdentificacionRepresentante != null && result.tipoDocumentoIdentificacionRepresentante != '-1'){
-                    $("#tipoDocumentoIdentificacionRepresentante").html(tradsinteresado['tipoDocumentoIdentificacion.'+result.tipoDocumentoIdentificacionRepresentante]);
+                if (result.tipoDocumentoIdentificacionRepresentante != null && result.tipoDocumentoIdentificacionRepresentante != '-1') {
+                    $("#tipoDocumentoIdentificacionRepresentante").html(tradsinteresado['tipoDocumentoIdentificacion.' + result.tipoDocumentoIdentificacionRepresentante]);
                     $('#documentoIdentificacionRepresentante').html(result.documentoIdentificacionRepresentante);
                 }
 
@@ -73,13 +80,21 @@ function obtenerInteresadoSir(idInteresadoSir){
 
                 $('#direccionRepresentante').html(result.direccionRepresentante);
                 $('#razonSocialRepresentante').html(result.razonSocialRepresentante);
+                $('#codigoDirectorioUnificadosRepresentante').html(result.codigoDirectorioUnificadosRepresentante);
                 $('#direccionElectronicaHabilitadaRepresentante').html(result.direccionElectronicaHabilitadaRepresentante);
                 $('#correoElectronicoRepresentante').html(result.correoElectronicoRepresentante);
                 $('#codigoPostalRepresentante').html(result.codigoPostalRepresentante);
                 $('#telefonoRepresentante').html(result.telefonoRepresentante);
-                if(result.canalPreferenteComunicacionRepresentante != null){
-                    $("#canalPreferenteComunicacionRepresentante").html(tradsinteresado['canalNotificacion.'+result.canalPreferenteComunicacionRepresentante]);
+                $('#telefonoMovilRepresentante').html(result.telefonoMovilRepresentante);
+                if (result.canalPreferenteComunicacionRepresentante != null) {
+                    $("#canalPreferenteComunicacionRepresentante").html(tradsinteresado['canalNotificacion.' + result.canalPreferenteComunicacionRepresentante]);
                 }
+
+                //SICRES4
+
+                $('#receptorNotificacionesRepresentante').html(tradsinteresado[result.receptorNotificacionesRepresentante]);
+                $('#avisoNotificacionSMSRepresentante').html(tradsinteresado[result.avisoNotificacionSMSRepresentante]);
+                $('#avisoCorreoElectronicoRepresentante').html(tradsinteresado[result.avisoCorreoElectronicoRepresentante]);
 
                 $('#representante').show();
             }
@@ -109,7 +124,10 @@ function limpiarInteresadoDetalleSir(){
     $('#direccionInteresado').html('');
     $('#codigoPostalInteresado').html('');
     $('#razonSocialInteresado').html('');
-    $('#direccionElectronicaHabilitadaInteresado').html('');
+    $('#direccionElectronicaHabilitadaInteresado').html(''); //TODO deprecated
+    $('#receptorNotificacionesInteresado').html('');
+    $('#avisoNotificacionSMSInteresado').html('');
+    $('#avisoCorreoElectronicoInteresado').html('');
 
     $('#nombreRepresentante').html('');
     $('#primerApellidoRepresentante').html('');
@@ -125,7 +143,10 @@ function limpiarInteresadoDetalleSir(){
     $('#direccionRepresentante').html('');
     $('#codigoPostalRepresentante').html('');
     $('#razonSocialRepresentante').html('');
-    $('#direccionElectronicaHabilitadaRepresentante').html('');
+    $('#direccionElectronicaHabilitadaRepresentante').html(''); //TODO deprecated
+    $('#receptorNotificacionesRepresentante').html('');
+    $('#avisoNotificacionSMSRepresentante').html('');
+    $('#avisoCorreoElectronicoRepresentante').html('');
 
     $('#observaciones').html('');
 }
