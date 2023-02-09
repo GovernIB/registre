@@ -64,7 +64,14 @@
 
                 <div class="form-group col-xs-6">
                     <div class="col-xs-5 pull-left etiqueta_regweb control-label">
-                        <label ><spring:message code="persona.canal"/></label>
+                        <label><spring:message code="persona.movil"/></label>
+                    </div>
+                    <div class="col-xs-7" id="telefonoMovilInteresado"></div>
+                </div>
+
+                <div class="form-group col-xs-6">
+                    <div class="col-xs-5 pull-left etiqueta_regweb control-label">
+                        <label><spring:message code="persona.canal"/></label>
                     </div>
                     <div class="col-xs-7" id="canalPreferenteComunicacionInteresado"></div>
                 </div>
@@ -111,19 +118,43 @@
                     <div class="col-xs-7" id="razonSocialInteresado"></div>
                 </div>
 
+
                 <div class="form-group col-xs-6">
                     <div class="col-xs-5 pull-left etiqueta_regweb control-label">
-                        <label><spring:message code="persona.direccionElectronica"/></label>
+                        <label><spring:message code="interesado.observaciones"/></label>
                     </div>
-                    <div class="col-xs-7" id="direccionElectronicaHabilitadaInteresado"></div>
+                    <div class="col-xs-7" id="observaciones"></div>
                 </div>
 
                 <div class="form-group col-xs-6">
                     <div class="col-xs-5 pull-left etiqueta_regweb control-label">
-                        <label ><spring:message code="interesado.observaciones"/></label>
+                        <label><spring:message code="interesado.codDirectoriosUnificados"/></label>
                     </div>
-                    <div class="col-xs-7" id="observaciones"></div>
+                    <div class="col-xs-7" id="codigoDirectorioUnificadosInteresado"></div>
                 </div>
+
+
+                <div class="form-group col-xs-6">
+                    <div class="col-xs-5 pull-left etiqueta_regweb control-label">
+                        <label><spring:message code="persona.notificacion.sms"/></label>
+                    </div>
+                    <div class="col-xs-7" id="avisoNotificacionSMSInteresado"></div>
+                </div>
+
+                <div class="form-group col-xs-6">
+                    <div class="col-xs-5 pull-left etiqueta_regweb control-label">
+                        <label><spring:message code="persona.notificacion.email"/></label>
+                    </div>
+                    <div class="col-xs-7" id="avisoCorreoElectronicoInteresado"></div>
+                </div>
+
+                <div class="form-group col-xs-6">
+                    <div class="col-xs-5 pull-left etiqueta_regweb control-label">
+                        <label><spring:message code="persona.receptor.notificaciones"/></label>
+                    </div>
+                    <div class="col-xs-7" id="receptorNotificacionesInteresado"></div>
+                </div>
+
 
             </div>
             <div class="clearfix"></div>
@@ -185,7 +216,14 @@
 
                     <div class="form-group col-xs-6">
                         <div class="col-xs-5 pull-left etiqueta_regweb control-label">
-                            <label ><spring:message code="persona.canal"/></label>
+                            <label><spring:message code="persona.movil"/></label>
+                        </div>
+                        <div class="col-xs-7" id="telefonoMovilRepresentante"></div>
+                    </div>
+
+                    <div class="form-group col-xs-6">
+                        <div class="col-xs-5 pull-left etiqueta_regweb control-label">
+                            <label><spring:message code="persona.canal"/></label>
                         </div>
                         <div class="col-xs-7" id="canalPreferenteComunicacionRepresentante"></div>
                     </div>
@@ -232,11 +270,34 @@
                         <div class="col-xs-7" id="razonSocialRepresentante"></div>
                     </div>
 
+
                     <div class="form-group col-xs-6">
                         <div class="col-xs-5 pull-left etiqueta_regweb control-label">
-                            <label><spring:message code="persona.direccionElectronica"/></label>
+                            <label><spring:message code="interesado.codDirectoriosUnificados"/></label>
                         </div>
-                        <div class="col-xs-7" id="direccionElectronicaHabilitadaRepresentante"></div>
+                        <div class="col-xs-7" id="codigoDirectorioUnificadosRepresentante"></div>
+                    </div>
+
+
+                    <div class="form-group col-xs-6">
+                        <div class="col-xs-5 pull-left etiqueta_regweb control-label">
+                            <label><spring:message code="persona.notificacion.sms"/></label>
+                        </div>
+                        <div class="col-xs-7" id="avisoNotificacionSMSRepresentante"></div>
+                    </div>
+
+                    <div class="form-group col-xs-6">
+                        <div class="col-xs-5 pull-left etiqueta_regweb control-label">
+                            <label><spring:message code="persona.notificacion.email"/></label>
+                        </div>
+                        <div class="col-xs-7" id="avisoCorreoElectronicoRepresentante"></div>
+                    </div>
+
+                    <div class="form-group col-xs-6">
+                        <div class="col-xs-5 pull-left etiqueta_regweb control-label">
+                            <label><spring:message code="persona.receptor.notificaciones"/></label>
+                        </div>
+                        <div class="col-xs-7" id="receptorNotificacionesRepresentante"></div>
                     </div>
 
                     <div class="clearfix"></div>
@@ -266,4 +327,7 @@
     tradsinteresado['canalNotificacion.01'] = "<spring:message code='canalNotificacion.DIRECCION_POSTAL' javaScriptEscape='true' />";
     tradsinteresado['canalNotificacion.02'] = "<spring:message code='canalNotificacion.DIRECCION_ELECTRONICA_HABILITADA' javaScriptEscape='true' />";
     tradsinteresado['canalNotificacion.03'] = "<spring:message code='canalNotificacion.COMPARECENCIA_ELECTRONICA' javaScriptEscape='true' />";
+    tradsinteresado['true'] = "<spring:message code='regweb.si' javaScriptEscape='true' />";
+    tradsinteresado['false'] = "<spring:message code='regweb.no' javaScriptEscape='true' />";
+
 </script>
