@@ -57,10 +57,9 @@ public class AsientoRegistralConverter extends CommonConverter {
       registroEntrada.setEstado(RegwebConstantes.REGISTRO_VALIDO);
       registroEntrada.setLibro(libro);
       registroDetalle.setExtracto(asientoRegistral.getResumen()); //Extracto
-      registroDetalle.setTipoDocumentacionFisica(new Long(asientoRegistral.getTipoDocumentacionFisicaCodigo()));
-      //registroDetalle.setTipoAsunto(getTipoAsunto(asientoRegistral.getTipoAsunto(),usuario.getEntidad().getId(), tipoAsuntoEjb));
-      registroDetalle.setIdioma(asientoRegistral.getIdioma());
-      registroDetalle.setCodigoSia(asientoRegistral.getCodigoSia());
+       registroDetalle.setTipoDocumentacionFisica(asientoRegistral.getTipoDocumentacionFisicaCodigo());
+       registroDetalle.setIdioma(asientoRegistral.getIdioma());
+       registroDetalle.setCodigoSia(String.valueOf(asientoRegistral.getCodigoSia()));
 
       if(StringUtils.isNotEmpty(asientoRegistral.getCodigoAsunto())){registroDetalle.setCodigoAsunto(getCodigoAsunto(asientoRegistral.getCodigoAsunto(), codigoAsuntoEjb));}
       if(StringUtils.isNotEmpty(asientoRegistral.getReferenciaExterna())){registroDetalle.setReferenciaExterna(asientoRegistral.getReferenciaExterna());}
@@ -108,11 +107,10 @@ public class AsientoRegistralConverter extends CommonConverter {
       registroSalida.setUsuario(usuario);
       registroSalida.setEstado(RegwebConstantes.REGISTRO_VALIDO);
       registroSalida.setLibro(libro);
-      registroDetalle.setExtracto(asientoRegistral.getResumen());
-      registroDetalle.setTipoDocumentacionFisica(new Long(asientoRegistral.getTipoDocumentacionFisicaCodigo()));
-      //registroDetalle.setTipoAsunto(getTipoAsunto(asientoRegistral.getTipoAsunto(), usuario.getEntidad().getId(), tipoAsuntoEjb));
-      registroDetalle.setIdioma(asientoRegistral.getIdioma());
-      registroDetalle.setCodigoSia(asientoRegistral.getCodigoSia());
+       registroDetalle.setExtracto(asientoRegistral.getResumen());
+       registroDetalle.setTipoDocumentacionFisica(asientoRegistral.getTipoDocumentacionFisicaCodigo());
+       registroDetalle.setIdioma(asientoRegistral.getIdioma());
+       registroDetalle.setCodigoSia(String.valueOf(asientoRegistral.getCodigoSia()));
 
       if (StringUtils.isNotEmpty(asientoRegistral.getCodigoAsunto())) {registroDetalle.setCodigoAsunto(getCodigoAsunto(asientoRegistral.getCodigoAsunto(), codigoAsuntoEjb));}
       if (StringUtils.isNotEmpty(asientoRegistral.getReferenciaExterna())) {registroDetalle.setReferenciaExterna(asientoRegistral.getReferenciaExterna());}
@@ -352,8 +350,12 @@ public class AsientoRegistralConverter extends CommonConverter {
       if (StringUtils.isNotEmpty(registroDetalle.getExpone())) { asientoRegistral.setExpone(registroDetalle.getExpone());}
       if (StringUtils.isNotEmpty(registroDetalle.getSolicita())) { asientoRegistral.setSolicita(registroDetalle.getSolicita());}
 
-      if (registroDetalle.getCodigoSia() != null) { asientoRegistral.setCodigoSia(registroDetalle.getCodigoSia());}
-      if (registroDetalle.getPresencial() != null) { asientoRegistral.setPresencial(registroDetalle.getPresencial());}
+       if (registroDetalle.getCodigoSia() != null) {
+           asientoRegistral.setCodigoSia(Long.parseLong(registroDetalle.getCodigoSia()));
+       }
+       if (registroDetalle.getPresencial() != null) {
+           asientoRegistral.setPresencial(registroDetalle.getPresencial());
+       }
       if (registroDetalle.getTipoEnvioDocumentacion() != null) { asientoRegistral.setTipoEnvioDocumentacion(registroDetalle.getTipoEnvioDocumentacion());}
 
       // Campos con información SIR dependientes del Estado

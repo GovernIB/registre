@@ -15,7 +15,7 @@ public class DatosInteresadoWs implements Serializable {
     private String tipoDocumentoIdentificacion;
     private String documento;
     private String razonSocial;
-    private String codigoDire;
+    private String codDirectoriosUnificados;
     private String nombre;
     private String apellido1;
     private String apellido2;
@@ -166,11 +166,11 @@ public class DatosInteresadoWs implements Serializable {
         this.observaciones = observaciones;
     }
 
-    public String getCodigoDire() {
-        return codigoDire;
+    public String getCodDirectoriosUnificados() {
+        return codDirectoriosUnificados;
     }
 
-    public void setCodigoDire(String codigoDire) {
-        this.codigoDire = codigoDire;
+    public void setCodDirectoriosUnificados(String codDirectoriosUnificados) {
+        this.codDirectoriosUnificados = codDirectoriosUnificados;
     }
 }

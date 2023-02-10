@@ -251,8 +251,12 @@ public class AsientoConverter extends CommonConverter {
         }
 
         if (StringUtils.isNotEmpty(registroDetalle.getExpone())) { asiento.setExpone(registroDetalle.getExpone());}
-        if (StringUtils.isNotEmpty(registroDetalle.getSolicita())) { asiento.setSolicita(registroDetalle.getSolicita());}
-        if (registroDetalle.getCodigoSia() != null) { asiento.setCodigoSia(registroDetalle.getCodigoSia());}
+        if (StringUtils.isNotEmpty(registroDetalle.getSolicita())) {
+            asiento.setSolicita(registroDetalle.getSolicita());
+        }
+        if (registroDetalle.getCodigoSia() != null) {
+            asiento.setCodigoSia(Long.parseLong(registroDetalle.getCodigoSia()));
+        }
 
 
         //Interesados
