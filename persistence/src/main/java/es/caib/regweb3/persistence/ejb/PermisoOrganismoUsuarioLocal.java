@@ -29,6 +29,13 @@ public interface PermisoOrganismoUsuarioLocal extends BaseEjb<PermisoOrganismoUs
     void crearPermisosUsuarioOrganismo(UsuarioEntidad usuarioEntidad, Organismo organismo) throws I18NException;
 
     /**
+     * Crear los permisos para el nuevo organismo a todos los usuarios OAMR con los permisos de lectura activados
+     * @param organismo
+     * @throws I18NException
+     */
+    void crearPermisosUsuarioOARM(Organismo organismo) throws I18NException;
+
+    /**
      * Elimina todos los permisos de un determinado Organismo
      *
      * @param idOrganismo

@@ -15,14 +15,13 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by Fundació BIT.
  * Controller que gestiona todas las operaciones con {@link es.caib.regweb3.model.Entidad}
+ *
  * @author earrivi
  * Date: 11/02/14
  */
@@ -30,10 +29,10 @@ import java.util.Map;
 @RequestMapping(value = "/organismo")
 @SessionAttributes(types = Organismo.class)
 public class OrganismoController extends BaseController {
-    
+
     @EJB(mappedName = DescargaLocal.JNDI_NAME)
     private DescargaLocal descargaEjb;
-    
+
     @EJB(mappedName = CatEstadoEntidadLocal.JNDI_NAME)
     private CatEstadoEntidadLocal catEstadoEntidadEjb;
 
@@ -47,70 +46,72 @@ public class OrganismoController extends BaseController {
     private RelacionSirOfiLocal relacionSirOfiEjb;
 
 
-   /**
-   * Listado de todos los Organismos
-   */
-   @RequestMapping(value = "/list", method = RequestMethod.GET)
-   public String listado(Model model, HttpServletRequest request) throws  Exception{
+    /**
+     * Listado de todos los Organismos
+     */
+    @RequestMapping(value = "/list", method = RequestMethod.GET)
+    public String listado(Model model, HttpServletRequest request) throws Exception {
 
-       Entidad entidad = getEntidadActiva(request);
+        Entidad entidad = getEntidadActiva(request);
 
-       Organismo organismo = new Organismo();
-       organismo.setEstado(catEstadoEntidadEjb.findByCodigo(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE));
-       OrganismoBusquedaForm organismoBusqueda =  new OrganismoBusquedaForm(organismo,1);
+        Organismo organismo = new Organismo();
+        organismo.setEstado(catEstadoEntidadEjb.findByCodigo(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE));
+        OrganismoBusquedaForm organismoBusqueda = new OrganismoBusquedaForm(organismo, 1);
 
-       Paginacion paginacion = organismoEjb.busqueda(1, entidad.getId(), organismo);
+        Paginacion paginacion = organismoEjb.busqueda(1, entidad.getId(), organismo);
 
-       // Mirant si es una sincronitzacio o actualitzacio
-       Descarga descarga = descargaEjb.ultimaDescarga(RegwebConstantes.UNIDAD, entidad.getId());
-       if(descarga != null){
+        // Mirant si es una sincronitzacio o actualitzacio
+        Descarga descarga = descargaEjb.ultimaDescarga(RegwebConstantes.UNIDAD, entidad.getId());
+        if (descarga != null) {
             model.addAttribute("descarga", descarga);
-       }
+        }
 
-       model.addAttribute("paginacion", paginacion);
-       model.addAttribute("organismoBusqueda",organismoBusqueda);
-       model.addAttribute("entidad", entidad);
+        model.addAttribute("paginacion", paginacion);
+        model.addAttribute("organismoBusqueda", organismoBusqueda);
+        model.addAttribute("entidad", entidad);
 
-       return "organismo/organismoList";
-   }
+        return "organismo/organismoList";
+    }
 
-   /**
-   * Listado de organismos
-   * @param busqueda
-   * @return
-   * @throws Exception
-   */
-   @RequestMapping(value = "/list", method = RequestMethod.POST)
-   public ModelAndView list(@ModelAttribute OrganismoBusquedaForm busqueda, HttpServletRequest request)throws Exception {
+    /**
+     * Listado de organismos
+     *
+     * @param busqueda
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/list", method = RequestMethod.POST)
+    public ModelAndView list(@ModelAttribute OrganismoBusquedaForm busqueda, HttpServletRequest request) throws Exception {
 
-      ModelAndView mav = new ModelAndView("organismo/organismoList");
+        ModelAndView mav = new ModelAndView("organismo/organismoList");
 
-      Organismo organismo = busqueda.getOrganismo();
-      Entidad entidad = getEntidadActiva(request);
+        Organismo organismo = busqueda.getOrganismo();
+        Entidad entidad = getEntidadActiva(request);
 
-      Paginacion paginacion = organismoEjb.busqueda(busqueda.getPageNumber(), entidad.getId(), organismo);
+        Paginacion paginacion = organismoEjb.busqueda(busqueda.getPageNumber(), entidad.getId(), organismo);
 
-      // Mirant si es una sincronitzacio o actualitzacio per mostrar botó de sincro o actualizar
-      Descarga descarga = descargaEjb.ultimaDescarga(RegwebConstantes.UNIDAD, entidad.getId());
-      if(descarga != null){
-        mav.addObject("descarga", descarga);
-      }
+        // Mirant si es una sincronitzacio o actualitzacio per mostrar botó de sincro o actualizar
+        Descarga descarga = descargaEjb.ultimaDescarga(RegwebConstantes.UNIDAD, entidad.getId());
+        if (descarga != null) {
+            mav.addObject("descarga", descarga);
+        }
 
-      mav.addObject("paginacion", paginacion);
-      mav.addObject("organismoBusqueda", busqueda);
-      mav.addObject("entidad", entidad);
+        mav.addObject("paginacion", paginacion);
+        mav.addObject("organismoBusqueda", busqueda);
+        mav.addObject("entidad", entidad);
 
-      return mav;
-  }
+        return mav;
+    }
 
     /**
      * Listado de oficinas que dan servicio a un un Organismo
+     *
      * @param idOrganismo
      * @return
      * @throws Exception
      */
     @RequestMapping(value = "/{idOrganismo}/oficinas", method = RequestMethod.GET)
-    public ModelAndView oficinas(@PathVariable Long idOrganismo)throws Exception {
+    public ModelAndView oficinas(@PathVariable Long idOrganismo) throws Exception {
 
         ModelAndView mav = new ModelAndView("organismo/oficinasList");
 
@@ -126,25 +127,26 @@ public class OrganismoController extends BaseController {
 
     /**
      * Listado de usuarios de un Organismo
+     *
      * @param idOrganismo
      * @return
      * @throws Exception
      */
     @RequestMapping(value = "/{idOrganismo}/usuarios", method = RequestMethod.GET)
-    public String usuariosOrganismo(@PathVariable Long idOrganismo, Model model, HttpServletRequest request)throws Exception {
+    public String usuariosOrganismo(@PathVariable Long idOrganismo, Model model, HttpServletRequest request) throws Exception {
 
         Organismo organismo = organismoEjb.findByIdLigero(idOrganismo);
         Entidad entidadActiva = getEntidadActiva(request);
 
         // Comprueba que el Organismo existe
-        if(organismo == null) {
+        if (organismo == null) {
             log.info("No existe este organismo");
             Mensaje.saveMessageError(request, getMessage("aviso.organismo.noExiste"));
             return "redirect:/organismo/list";
         }
 
         // Comprueba que el Organismo pertenece a la Entida Activa
-        if(!organismo.getEntidad().equals(entidadActiva)) {
+        if (!organismo.getEntidad().equals(entidadActiva)) {
             log.info("No administra este Organismo");
             Mensaje.saveMessageError(request, getMessage("aviso.rol"));
             return "redirect:/organismo/list";
@@ -163,7 +165,6 @@ public class OrganismoController extends BaseController {
     }
 
 
-
     /**
      * Activar los usuarios de un {@link es.caib.regweb3.model.Organismo}
      */
@@ -174,11 +175,13 @@ public class OrganismoController extends BaseController {
 
             Organismo organismo = organismoEjb.findByIdLigero(idOrganismo);
 
-            if(oficinaEjb.tieneOficinasServicio(idOrganismo, RegwebConstantes.OFICINA_VIRTUAL_SI) && !entidadEjb.existeCodigoDir3Edit(organismo.getCodigo(), getEntidadActiva(request).getId())){
+            if (oficinaEjb.tieneOficinasServicio(idOrganismo, RegwebConstantes.OFICINA_VIRTUAL_SI) && !entidadEjb.existeCodigoDir3Edit(organismo.getCodigo(), getEntidadActiva(request).getId())) {
+
                 organismoEjb.activarUsuarios(idOrganismo);
+                permisoOrganismoUsuarioEjb.crearPermisosUsuarioOARM(organismo);
 
                 Mensaje.saveMessageInfo(request, getMessage("organismo.activarUsuarios.ok"));
-            }else{
+            } else {
                 Mensaje.saveMessageError(request, getMessage("organismo.activarUsuarios.error"));
             }
 
@@ -212,6 +215,7 @@ public class OrganismoController extends BaseController {
 
     /**
      * Listado de organismos y oficinas
+     *
      * @return
      * @throws Exception
      */
@@ -233,23 +237,23 @@ public class OrganismoController extends BaseController {
         List<Organismo> organismosSeptimoNivel = organismoEjb.getOrganismosByNivel((long) 7, entidad.getId(), RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
 
         // Subimos los niveles de los organismos para empezar desde la raiz
-        if(organismosPrimerNivel.size() == 0){
-            if(organismosSegundoNivel.size() == 0){
-                if(organismosTercerNivel.size() == 0){
-                    if(organismosCuartoNivel.size() == 0){
-                        if(organismosQuintoNivel.size() == 0){
-                            if(organismosSextoNivel.size() == 0){
-                                if(organismosSeptimoNivel.size() > 0){
+        if (organismosPrimerNivel.size() == 0) {
+            if (organismosSegundoNivel.size() == 0) {
+                if (organismosTercerNivel.size() == 0) {
+                    if (organismosCuartoNivel.size() == 0) {
+                        if (organismosQuintoNivel.size() == 0) {
+                            if (organismosSextoNivel.size() == 0) {
+                                if (organismosSeptimoNivel.size() > 0) {
                                     organismosPrimerNivel.addAll(organismosSeptimoNivel);
                                     organismosSeptimoNivel.clear();
                                 }
-                            } else{
+                            } else {
                                 organismosPrimerNivel.addAll(organismosSextoNivel);
                                 organismosSegundoNivel.addAll(organismosSeptimoNivel);
                                 organismosSextoNivel.clear();
                                 organismosSeptimoNivel.clear();
                             }
-                        } else{
+                        } else {
                             organismosPrimerNivel.addAll(organismosQuintoNivel);
                             organismosSegundoNivel.addAll(organismosSextoNivel);
                             organismosTercerNivel.addAll(organismosSeptimoNivel);
@@ -257,7 +261,7 @@ public class OrganismoController extends BaseController {
                             organismosSextoNivel.clear();
                             organismosSeptimoNivel.clear();
                         }
-                    } else{
+                    } else {
                         organismosPrimerNivel.addAll(organismosCuartoNivel);
                         organismosSegundoNivel.addAll(organismosQuintoNivel);
                         organismosTercerNivel.addAll(organismosSextoNivel);
@@ -266,7 +270,7 @@ public class OrganismoController extends BaseController {
                         organismosSextoNivel.clear();
                         organismosSeptimoNivel.clear();
                     }
-                } else{
+                } else {
                     organismosPrimerNivel.addAll(organismosTercerNivel);
                     organismosSegundoNivel.addAll(organismosCuartoNivel);
                     organismosTercerNivel.addAll(organismosQuintoNivel);
@@ -275,7 +279,7 @@ public class OrganismoController extends BaseController {
                     organismosSextoNivel.clear();
                     organismosSeptimoNivel.clear();
                 }
-            } else{
+            } else {
                 organismosPrimerNivel.addAll(organismosSegundoNivel);
                 organismosSegundoNivel.addAll(organismosTercerNivel);
                 organismosTercerNivel.addAll(organismosCuartoNivel);

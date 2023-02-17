@@ -203,4 +203,19 @@ public interface UsuarioEntidadLocal extends BaseEjb<UsuarioEntidad, Long> {
     Integer eliminarByEntidad(Long idEntidad) throws I18NException;
 
 
+    /**
+     * Se activa o desactiva que un Usuario sea OAMR
+     * @param idUsuarioEntidad
+     * @throws I18NException
+     */
+    void activarOAMR(Long idUsuarioEntidad, Boolean activo) throws I18NException;
+
+    /**
+     * Obtiene todos los usuarios marcados como OAMR de una entidad
+     * @param idEntidad
+     * @return
+     * @throws I18NException
+     */
+    List<UsuarioEntidad> getOAMRByEntidad(Long idEntidad) throws I18NException;
+
 }

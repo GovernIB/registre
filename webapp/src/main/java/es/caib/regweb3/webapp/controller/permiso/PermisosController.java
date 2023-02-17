@@ -188,6 +188,34 @@ public class PermisosController extends BaseController {
     }
 
     /**
+     * Activa que un {@link es.caib.regweb3.model.UsuarioEntidad} sea OAMR
+     */
+    @RequestMapping(value = "/{idUsuarioEntidad}/activarOAMR", method = RequestMethod.GET)
+    public String activarOAMR(@PathVariable Long idUsuarioEntidad, HttpServletRequest request) throws Exception {
+
+        usuarioEntidadEjb.activarOAMR(idUsuarioEntidad, true);
+
+        Mensaje.saveMessageInfo(request, getMessage("usuario.activar.oamr.ok"));
+
+        return "redirect:/entidad/usuarios";
+
+    }
+
+    /**
+     * DEsactiva que un {@link es.caib.regweb3.model.UsuarioEntidad} sea OAMR
+     */
+    @RequestMapping(value = "/{idUsuarioEntidad}/desactivarOAMR", method = RequestMethod.GET)
+    public String desactivarOAMR(@PathVariable Long idUsuarioEntidad, HttpServletRequest request) throws Exception {
+
+        usuarioEntidadEjb.activarOAMR(idUsuarioEntidad, false);
+
+        Mensaje.saveMessageInfo(request, getMessage("usuario.desactivar.oamr.ok"));
+
+        return "redirect:/entidad/usuarios";
+
+    }
+
+    /**
      * Eliminar la asignación de un Usuario a una Entidad
      */
     @RequestMapping(value = "/{idUsuarioEntidad}/delete", method = RequestMethod.GET)
@@ -215,6 +243,7 @@ public class PermisosController extends BaseController {
             } else {
                 // Desactivamos este usuario de la Entidad
                 usuarioEntidad.setActivo(false);
+                usuarioEntidad.setOamr(false);
                 usuarioEntidadEjb.merge(usuarioEntidad);
 
                 Mensaje.saveMessageInfo(request, getMessage("usuario.desactivado"));

@@ -40,6 +40,7 @@ public class PermisoOrganismoUsuarioBean extends BaseEjbJPA<PermisoOrganismoUsua
     @EJB private PermisoLibroUsuarioLocal permisoLibroUsuarioEjb;
     @EJB private OrganismoLocal organismoEjb;
     @EJB private LibroLocal libroEjb;
+    @EJB private UsuarioEntidadLocal usuarioEntidadEjb;
 
     @Override
     public PermisoOrganismoUsuario getReference(Long id) throws I18NException {
@@ -91,6 +92,28 @@ public class PermisoOrganismoUsuarioBean extends BaseEjbJPA<PermisoOrganismoUsua
             pou.setUsuario(usuarioEntidad);
             persist(pou);
         }
+
+    }
+
+    @Override
+    public void crearPermisosUsuarioOARM(Organismo organismo) throws I18NException {
+
+        List<UsuarioEntidad> usuariosOARM = usuarioEntidadEjb.getOAMRByEntidad(organismo.getEntidad().getId());
+
+       for(UsuarioEntidad usuarioEntidad: usuariosOARM){
+
+           for (int column = 0; column < RegwebConstantes.PERMISOS.length; column++) {
+               PermisoOrganismoUsuario pou = new PermisoOrganismoUsuario();
+               pou.setOrganismo(organismo);
+               pou.setPermiso(RegwebConstantes.PERMISOS[column]);
+               pou.setUsuario(usuarioEntidad);
+
+               if(PERMISOS[column].equals(PERMISO_CONSULTA_REGISTRO_ENTRADA) || PERMISOS[column].equals(PERMISO_CONSULTA_REGISTRO_SALIDA)){
+                   pou.setActivo(true);
+               }
+               persist(pou);
+           }
+       }
 
     }
 
