@@ -352,9 +352,9 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
         StringBuilder query;
 
         if (idOrganismo != null && idOrganismo > 0) { //Si s'ha triat un Organismo a la cerca
-            query = new StringBuilder("Select DISTINCT usuarioEntidad.id, usuarioEntidad.usuario from UsuarioEntidad as usuarioEntidad, PermisoOrganismoUsuario as pou ");
+            query = new StringBuilder("Select DISTINCT usuarioEntidad.id, usuarioEntidad.usuario, usuarioEntidad.oamr from UsuarioEntidad as usuarioEntidad, PermisoOrganismoUsuario as pou ");
         } else {  //Si NO s'ha triat cap llibre a la cerca
-            query = new StringBuilder("Select DISTINCT usuarioEntidad.id, usuarioEntidad.usuario from UsuarioEntidad as usuarioEntidad ");
+            query = new StringBuilder("Select DISTINCT usuarioEntidad.id, usuarioEntidad.usuario, usuarioEntidad.oamr from UsuarioEntidad as usuarioEntidad ");
         }
 
         if (identificador != null && identificador.length() > 0) {
@@ -404,7 +404,7 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
                 query.append(w);
                 count++;
             }
-            q2 = em.createQuery(query.toString().replaceAll("Select DISTINCT usuarioEntidad.id, usuarioEntidad.usuario from UsuarioEntidad as usuarioEntidad", "Select count(DISTINCT usuarioEntidad.usuario.id) from UsuarioEntidad as usuarioEntidad "));
+            q2 = em.createQuery(query.toString().replaceAll("Select DISTINCT usuarioEntidad.id, usuarioEntidad.usuario, usuarioEntidad.oamr from UsuarioEntidad as usuarioEntidad", "Select count(DISTINCT usuarioEntidad.usuario.id) from UsuarioEntidad as usuarioEntidad "));
             query.append("order by usuarioEntidad.usuario.nombre, usuarioEntidad.usuario.apellido1");
             q = em.createQuery(query.toString());
 
@@ -414,7 +414,7 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
             }
 
         } else {
-            q2 = em.createQuery(query.toString().replaceAll("Select DISTINCT usuarioEntidad.id, usuarioEntidad.usuario from UsuarioEntidad as usuarioEntidad", "Select count(DISTINCT usuarioEntidad.usuario.id) from UsuarioEntidad as usuarioEntidad "));
+            q2 = em.createQuery(query.toString().replaceAll("Select DISTINCT usuarioEntidad.id, usuarioEntidad.usuario, usuarioEntidad.oamr from UsuarioEntidad as usuarioEntidad", "Select count(DISTINCT usuarioEntidad.usuario.id) from UsuarioEntidad as usuarioEntidad "));
             query.append("order by usuarioEntidad.usuario.nombre, usuarioEntidad.usuario.apellido1");
             q = em.createQuery(query.toString());
         }
@@ -440,7 +440,7 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
 
         for (Object[] object : result) {
             UsuarioEntidad usuario = new UsuarioEntidad((Long) object[0], (Usuario) object[1], null);
-
+            usuario.setOamr((Boolean) object[2]);
             usuarios.add(usuario);
         }
 
@@ -674,6 +674,30 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
         }
 
         return permisos;
+    }
+
+    @Override
+    public void activarOAMR(Long idUsuarioEntidad, Boolean activo) throws I18NException {
+
+        Query q = em.createQuery("Update UsuarioEntidad set oamr = :activo where id = :idUsuarioEntidad");
+
+        q.setParameter("idUsuarioEntidad", idUsuarioEntidad);
+        q.setParameter("activo", activo);
+        q.executeUpdate();
+
+    }
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public List<UsuarioEntidad> getOAMRByEntidad(Long idEntidad) throws I18NException {
+
+        Query q = em.createQuery("Select usuarioEntidad from UsuarioEntidad as usuarioEntidad where " +
+                "usuarioEntidad.entidad.id = :idEntidad and usuarioEntidad.activo = true and usuarioEntidad.usuario.rwe_usuari = true and usuarioEntidad.oamr = true");
+
+        q.setParameter("idEntidad", idEntidad);
+        q.setHint("org.hibernate.readOnly", true);
+
+        return q.getResultList();
     }
 
 }

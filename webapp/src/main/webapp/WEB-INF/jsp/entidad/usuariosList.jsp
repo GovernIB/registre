@@ -231,6 +231,13 @@
                                                             && usuarioEntidad.usuario.rwe_ws_salida == false && usuarioEntidad.usuario.rwe_ws_ciudadano == false}">
                                                                 <a class="btn btn-warning disabled btn-sm" title="<spring:message code="usuario.asignar.permisos.denegado"/> "><span class="fa fa-key"></span></a>
                                                             </c:if>
+                                                            <%--Usuarios OAMR--%>
+                                                            <c:if test="${usuarioEntidad.oamr}">
+                                                                <a class="btn btn-success btn-sm" onclick='javascript:confirm("<c:url value="/permisos/${usuarioEntidad.id}/desactivarOAMR"/>","<spring:message code="usuario.oamr.desactivar" htmlEscape="true"/>")' href="javascript:void(0);" title="<spring:message code="usuario.oamr.desactivar"/>"><span class="fa fa-home"></span></a>
+                                                            </c:if>
+                                                            <c:if test="${not usuarioEntidad.oamr && usuarioEntidad.usuario.tipoUsuario == 1}">
+                                                                <a class="btn btn-primary btn-sm" onclick='javascript:confirm("<c:url value="/permisos/${usuarioEntidad.id}/activarOAMR"/>","<spring:message code="usuario.oamr.activar" htmlEscape="true"/>")' href="javascript:void(0);" title="<spring:message code="usuario.oamr.activar"/>"><span class="fa fa-check"></span></a>
+                                                            </c:if>
 
                                                             <a class="btn btn-danger btn-sm" onclick='javascript:confirm("<c:url value="/permisos/${usuarioEntidad.id}/delete"/>","<spring:message code="regweb.confirmar.eliminacion" htmlEscape="true"/>")' href="javascript:void(0);" title="<spring:message code="regweb.eliminar"/>"><span class="fa fa-eraser"></span></a>
                                                         </td>

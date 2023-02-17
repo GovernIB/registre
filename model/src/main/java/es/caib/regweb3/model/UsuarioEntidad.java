@@ -29,6 +29,8 @@ public class UsuarioEntidad implements Serializable{
     private Boolean activo = true;
     @XmlTransient
     private Oficina ultimaOficina;
+    @XmlTransient
+    private Boolean oamr = false;
 
     public UsuarioEntidad() {
     }
@@ -104,6 +106,15 @@ public class UsuarioEntidad implements Serializable{
 
     public void setUltimaOficina(Oficina ultimaOficina) {
         this.ultimaOficina = ultimaOficina;
+    }
+
+    @Column(name = "OAMR", nullable = false)
+    public Boolean getOamr() {
+        return oamr;
+    }
+
+    public void setOamr(Boolean oamr) {
+        this.oamr = oamr;
     }
 
     @Transient
