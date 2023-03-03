@@ -148,29 +148,30 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
         List<Interesado> interesadosSesion = (List<Interesado>) session.getAttribute(RegwebConstantes.SESSION_INTERESADOS_SALIDA);
         Boolean errorInteresado = true;
         Boolean errorInteresadoNotificaciones = true;
-        if(interesadosSesion != null && interesadosSesion.size() > 0){
+        if (interesadosSesion != null && interesadosSesion.size() > 0) {
             errorInteresado = false;
-            for(Interesado inter: interesadosSesion){
-                if(inter.getReceptorNotificaciones()){
+            for (Interesado inter : interesadosSesion) {
+                if (inter.getReceptorNotificaciones()) {
                     errorInteresadoNotificaciones = false;
                     break;
                 }
             }
         }
 
-        if (result.hasErrors() || errorInteresado || errorInteresadoNotificaciones) { // Si hay errores volvemos a la vista del formulario
+        if (interesadosSesion != null && interesadosSesion.size() > 0 && errorInteresadoNotificaciones) {
+            interesadosSesion.get(0).setReceptorNotificaciones(true);
+        }
+
+        if (result.hasErrors() || errorInteresado) { // Si hay errores volvemos a la vista del formulario
 
             // Si no hay ningún interesado, generamos un error.
-            if(errorInteresado){
+            if (errorInteresado) {
                 model.addAttribute("errorInteresado", errorInteresado);
             }
 
-            if(errorInteresadoNotificaciones){
-                model.addAttribute("errorInteresadoNotificaciones", errorInteresadoNotificaciones);
-            }
 
             LinkedHashSet<Oficina> oficinasOrigen;
-            if(multiEntidadEjb.isMultiEntidad()){
+            if (multiEntidadEjb.isMultiEntidad()) {
                 oficinasOrigen = new LinkedHashSet<>(getOficinasOrigenMultiEntidad(request));
             }else{
                 oficinasOrigen = new LinkedHashSet<>(getOficinasOrigen(request));

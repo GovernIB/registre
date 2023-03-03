@@ -234,6 +234,11 @@ public class InteresadoController extends BaseController{
             Entidad entidad = getEntidadActiva(request);
 
             try {
+                //Marcamos por defecto como receptor de notificicaciones si es el primer interesado.
+                List<Interesado> interesadosSesion = (List<Interesado>) session.getAttribute(variableSesion);
+                if (interesadosSesion == null) {
+                    interesado.setReceptorNotificaciones(true);
+                }
 
                 // Procesamos los datos de un interesado
                 interesado = procesarInteresado(interesado);
@@ -352,24 +357,41 @@ public class InteresadoController extends BaseController{
 
     /**
      * Crea o modifica una Interesado y la añade a la variable de sesion que almacena los interesados que son de tipo Persona
+     *
      * @param interesado
      * @param request
      * @param result
      * @return
      */
-    @RequestMapping(value="/gestionar/{tipoRegistro}/editar/{idRegistroDetalle}", method= RequestMethod.POST)
+    @RequestMapping(value = "/gestionar/{tipoRegistro}/editar/{idRegistroDetalle}", method = RequestMethod.POST)
     @ResponseBody
-    public JsonResponse editarInteresado(@PathVariable Long tipoRegistro,@PathVariable String idRegistroDetalle,
-        @RequestBody Interesado interesado, HttpServletRequest request, BindingResult result) {
+    public JsonResponse editarInteresado(@PathVariable Long tipoRegistro, @PathVariable String idRegistroDetalle,
+                                         @RequestBody Interesado interesado, HttpServletRequest request, BindingResult result) throws I18NException {
 
-        String variableSesion = (tipoRegistro.equals(REGISTRO_ENTRADA) ? RegwebConstantes.SESSION_INTERESADOS_ENTRADA:RegwebConstantes.SESSION_INTERESADOS_SALIDA);
+        String variableSesion = (tipoRegistro.equals(REGISTRO_ENTRADA) ? RegwebConstantes.SESSION_INTERESADOS_ENTRADA : RegwebConstantes.SESSION_INTERESADOS_SALIDA);
 
         Boolean isRepresentante = interesado.getIsRepresentante();
         JsonResponse jsonResponse = new JsonResponse();
 
         // Validamos el interesado
         interesado.setEntidad(getEntidadActiva(request).getId());
-        interesadoValidator.validate(interesado,result);
+        interesadoValidator.validate(interesado, result);
+
+        //Validamos que haya al menos un interesado como receptor de Notificaciones (obligatorio en Sicres 4)
+        RegistroDetalle registroDetalle = registroDetalleEjb.findByIdConInteresados(Long.valueOf(idRegistroDetalle));
+        boolean tieneReceptor = false;
+        if (registroDetalle != null && registroDetalle.getInteresados().size() > 0) {
+            for (Interesado interesado1 : registroDetalle.getInteresados()) {
+                if (interesado1.getReceptorNotificaciones()) {
+                    tieneReceptor = true;
+                    break;
+                }
+            }
+            //Si no hay ninguno marcado como receptor, marcamos el primero por defecto.
+            if (!tieneReceptor) {
+                registroDetalle.getInteresados().get(0).setReceptorNotificaciones(true);
+            }
+        }
 
         if (result.hasErrors()) { // Si hay errores, preparamos la respuesta.
 
@@ -377,8 +399,8 @@ public class InteresadoController extends BaseController{
 
             jsonResponse.setStatus("FAIL");
             jsonResponse.setErrores(errores);
-            
-            
+
+
         } else { // Si no hay errores, actualizamos el Interesado
 
             jsonResponse.setStatus("SUCCESS");
@@ -623,7 +645,6 @@ public class InteresadoController extends BaseController{
 
             }else{// Edición de un registro, lo eliminanos de la bbdd
                 RegistroDetalle registroDetalle = registroDetalleEjb.findByIdConInteresados(Long.valueOf(idRegistroDetalle));
-                Interesado interesado = interesadoEjb.findById(id);
                 if(registroDetalle != null && registroDetalle.getInteresados().size()>1 ) { // Si solo hay un Interesado, no permitimos eliminarlo.
                     Boolean hayNotificaciones = false;
                     for(Interesado inter: registroDetalle.getInteresados()) {
