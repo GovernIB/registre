@@ -251,8 +251,9 @@
                         <div class="form-group col-xs-6 senseMargeLat">
                             <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
                                 <label for="codDirectoriosUnificados" rel="popupAbajo"
-                                       data-content="<spring:message code="registro.ayuda.codDireUnificados.interesado"/>"
-                                       data-toggle="popover"><spring:message code="persona.codDireUnificados"/></label>
+                                       data-content="<spring:message code="registro.ayuda.codDirectoriosUnificados.interesado"/>"
+                                       data-toggle="popover"><spring:message
+                                        code="persona.codDirectoriosUnificados"/></label>
                             </div>
                             <div class="col-xs-8">
                                 <input id="codDirectoriosUnificados" name="codDirectoriosUnificados"
@@ -277,7 +278,8 @@
                                 <label for="receptorNotificaciones" data-content="<spring:message code="registro.ayuda.interesado.receptor"/>"><spring:message code="persona.receptor.notificaciones"/></label>
                             </div>
                             <div class="col-xs-8">
-                                <input type="checkbox" id="receptorNotificaciones"  />
+                                <input type="checkbox" id="receptorNotificaciones"/>
+                                <span id="receptorNotificacionesError"></span>
                             </div>
                         </div>
                     </div>

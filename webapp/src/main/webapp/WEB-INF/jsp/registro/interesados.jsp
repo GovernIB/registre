@@ -41,18 +41,6 @@
                 </div>
             </c:if>
 
-            <c:if test="${errorInteresadoNotificaciones && param.tipoRegistro == RegwebConstantes.REGISTRO_ENTRADA}">
-                <div class="alert alert-danger alert-dismissable">
-                    <strong><spring:message code="interesado.interesado"/>.</strong> <spring:message code="interesado.registro.obligatorio.notificacion"/>
-                </div>
-            </c:if>
-
-            <c:if test="${errorInteresadoNotificaciones && param.tipoRegistro == RegwebConstantes.REGISTRO_SALIDA}">
-                <div class="alert alert-danger alert-dismissable">
-                    <strong><spring:message code="registroSalida.destinatario"/>.</strong> <spring:message code="destinatario.registro.obligatorio.notificacion"/>
-                </div>
-            </c:if>
-
             <c:if test="${param.tipoRegistro == RegwebConstantes.REGISTRO_ENTRADA}">
                 <div class="form-group col-xs-12">
                     <div class="col-xs-2 pull-left etiqueta_regweb control-label">
@@ -193,7 +181,7 @@ Mediante el archivo "busquedaorganismo.js" se implementa dicha búsqueda -->
     tradsinteresado['persona.juridica'] = "<spring:message code='persona.juridica' javaScriptEscape='true' />";
     tradsinteresado['persona.razonSocial'] = "<spring:message code='persona.razonSocial' javaScriptEscape='true' />";
     tradsinteresado['persona.persona'] = "<spring:message code='persona.persona' javaScriptEscape='true' />";
-    tradsinteresado['persona.codDireUnificados'] = "<spring:message code='persona.codDireUnificados' javaScriptEscape='true' />";
+    tradsinteresado['persona.codDirectoriosUnificados'] = "<spring:message code='persona.codDirectoriosUnificados' javaScriptEscape='true' />";
     tradsinteresado['interesado.resultados'] = "<spring:message code='interesado.resultados' javaScriptEscape='true' />";
     tradsinteresado['representante.eliminar'] = "<spring:message code='representante.eliminar' javaScriptEscape='true' />";
     tradsinteresado['regweb.confirmar'] = "<spring:message code='regweb.confirmar' javaScriptEscape='true' />";

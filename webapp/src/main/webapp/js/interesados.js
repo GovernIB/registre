@@ -403,7 +403,7 @@ function editarInteresado(id){
 
             $('#direccion').val(result.direccion);
             $('#razonSocial').val(result.razonSocial);
-            $('#codDIReUnificados').val(result.codDIReUnificados);
+            $('#codDirectoriosUnificados').val(result.codDirectoriosUnificados);
             $('#email').val(result.email);
             $('#cp').val(result.cp);
             $('#telefono').val(result.telefono);
@@ -482,7 +482,7 @@ function procesarInteresado() {
         "localidad": $('#localidad\\.id').val(),
         "direccion": $('#direccion').val(),
         "razonSocial": $('#razonSocial').val(),
-        "codDIReUnificados": $('#codDIReUnificados').val(),
+        "codDirectoriosUnificados": $('#codDirectoriosUnificados').val(),
         "email": $('#email').val(),
         "cp": $('#cp').val(),
         "telefono": $('#telefono').val(),
@@ -605,7 +605,7 @@ function quitarErroresInteresado(){
     quitarError('nombre');
     quitarError('apellido1');
     quitarError('razonSocial');
-    quitarError('codDIReUnificados');
+    quitarError('codDirectoriosUnificados');
     quitarError('email');
     quitarError('documento');
     quitarError('direccion');
@@ -617,6 +617,7 @@ function quitarErroresInteresado(){
     quitarError('pais\\.id');
     quitarError('telefono');
     quitarError('telefonoMovil');
+    quitarError('receptorNotificaciones');
 }
 
 /**
@@ -978,7 +979,7 @@ function camposTipoPersona(tipoInteresado){
     if(tipoInteresado == 2){ //Persona fisica
 
         $('#razonSocial').attr("disabled", "disabled");
-        $('#codDIReUnificados').attr("disabled", "disabled");
+        $('#codDirectoriosUnificados').attr("disabled", "disabled");
         $('#nombre').removeAttr("disabled", "disabled");
         $('#apellido1').removeAttr("disabled", "disabled");
         $('#apellido2').removeAttr("disabled", "disabled");
@@ -993,7 +994,7 @@ function camposTipoPersona(tipoInteresado){
     if(tipoInteresado == 3){ //Persona juridica
 
         $('#razonSocial').removeAttr("disabled", "disabled");
-        $('#codDIReUnificados').removeAttr("disabled", "disabled");
+        $('#codDirectoriosUnificados').removeAttr("disabled", "disabled");
         $('#nombre').attr("disabled", "disabled");
         $('#apellido1').attr("disabled", "disabled");
         $('#apellido2').attr("disabled", "disabled");
@@ -1206,7 +1207,7 @@ function obtenerInteresado(idInteresado){
 
             $('#direccion').html(result.direccion);
             $('#razonSocial').html(result.razonSocial);
-            $('#codDIReUnificados').html(result.codDIReUnificados);
+            $('#codDirectoriosUnificados').html(result.codDirectoriosUnificados);
             $('#email').html(result.email);
             $('#cp').html(result.cp);
             $('#telefono').html(result.telefono);
@@ -1245,7 +1246,7 @@ function limpiarInteresadoDetalle(){
     $('#direccion').html('');
     $('#cp').html('');
     $('#razonSocial').html('');
-    $('#codDIReUnificados').html('');
+    $('#codDirectoriosUnificados').html('');
     $('#observaciones').html('');
     $('#receptorNotificaciones').html('');
     $('#avisoNotificacionSMS').html('');
