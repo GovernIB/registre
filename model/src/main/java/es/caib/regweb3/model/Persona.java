@@ -47,6 +47,13 @@ public class Persona implements Serializable {
 
     private boolean guardarInteresado;
 
+    //SICRES4
+    private Boolean receptorNotificaciones = false;
+    private String telefonoMovil;
+    private Boolean avisoNotificacionSMS = false;
+    private Boolean avisoCorreoElectronico = false;
+    private String codDirectoriosUnificados;
+
     public Persona() {
     }
 
@@ -114,6 +121,10 @@ public class Persona implements Serializable {
         this.canal = interesado.getCanal();
         this.observaciones = interesado.getObservaciones();
         this.guardarInteresado = interesado.isGuardarInteresado();
+        this.receptorNotificaciones = interesado.getReceptorNotificaciones();
+        this.avisoNotificacionSMS = interesado.getAvisoNotificacionSMS();
+        this.avisoCorreoElectronico = interesado.getAvisoCorreoElectronico();
+        this.telefonoMovil = interesado.getTelefonoMovil();
     }
 
 
@@ -297,6 +308,54 @@ public class Persona implements Serializable {
 
     public void setEntidad(Entidad entidad) {
         this.entidad = entidad;
+    }
+
+
+    //SICRES4
+
+    @Column(name = "RECEPNOTIF")
+    public Boolean getReceptorNotificaciones() {
+        return receptorNotificaciones;
+    }
+
+    public void setReceptorNotificaciones(Boolean receptorNotificaciones) {
+        this.receptorNotificaciones = receptorNotificaciones;
+    }
+
+    @Column(name = "TLFMOVIL", length = 20)
+    public String getTelefonoMovil() {
+        return telefonoMovil;
+    }
+
+    public void setTelefonoMovil(String telefonoMovil) {
+        this.telefonoMovil = telefonoMovil;
+    }
+
+    @Column(name = "AVISONOTIFSMS")
+    public Boolean getAvisoNotificacionSMS() {
+        return avisoNotificacionSMS;
+    }
+
+    public void setAvisoNotificacionSMS(Boolean avisoNotificacionSMS) {
+        this.avisoNotificacionSMS = avisoNotificacionSMS;
+    }
+
+    @Column(name = "AVISONOTIFEMAIL")
+    public Boolean getAvisoCorreoElectronico() {
+        return avisoCorreoElectronico;
+    }
+
+    public void setAvisoCorreoElectronico(Boolean avisoCorreoElectronico) {
+        this.avisoCorreoElectronico = avisoCorreoElectronico;
+    }
+
+    @Column(name = "CODDIRUNIF", length = 15)
+    public String getCodDirectoriosUnificados() {
+        return codDirectoriosUnificados;
+    }
+
+    public void setCodDirectoriosUnificados(String codDirectoriosUnificados) {
+        this.codDirectoriosUnificados = codDirectoriosUnificados;
     }
 
 

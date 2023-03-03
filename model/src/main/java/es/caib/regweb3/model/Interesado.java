@@ -413,7 +413,7 @@ public class Interesado implements Serializable {
 
     @ManyToOne()
     @JoinColumn(name = "REPRESENTADO", foreignKey = @ForeignKey(name = "RWE_INTERESADO_REPRESENT_FK"))
-    @JsonIgnore
+   // @JsonIgnore
     public Interesado getRepresentado() {
         return representado;
     }
