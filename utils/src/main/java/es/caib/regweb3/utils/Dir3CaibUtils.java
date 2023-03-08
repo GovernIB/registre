@@ -9,11 +9,15 @@ import es.caib.dir3caib.ws.api.unidad.Dir3CaibObtenerUnidadesWsService;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.client.RestTemplate;
 
 import javax.xml.ws.BindingProvider;
+import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.util.Map;
 
 /**
@@ -29,7 +33,6 @@ public class Dir3CaibUtils {
     private static final String OBTENER_OFICINAS = "/ws/Dir3CaibObtenerOficinas";
     private static final String UNIDAD_DENOMINACION = "/rest/unidad/denominacion";
     private static final String OFICINA_DENOMINACION = "/rest/oficina/denominacion";
-    private static final String UNIDAD_OFICINA_SIR = "/rest/unidad/tieneOficinaSir/";
 
     private static final Long TIMEOUT = 500000L;
 
@@ -116,7 +119,6 @@ public class Dir3CaibUtils {
 
         String url = null;
         String denominacion;
-        RestTemplate restTemplate = new RestTemplate();
 
         if (tipo.equalsIgnoreCase("oficina")) {
             url = server + OFICINA_DENOMINACION;
@@ -127,35 +129,26 @@ public class Dir3CaibUtils {
         // Parámetro codigo
         url = url + "?codigo=" + codigoDir3;
 
+        HttpClient httpClient = HttpClient.newBuilder().build();
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .GET()
+                .uri(URI.create(url))
+                .build();
+
         try {
-            denominacion = restTemplate.getForObject(url, String.class);
-        } catch (Exception e) {
+            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+
+            denominacion = response.body();
+
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
+            log.info("Error obteniendo la denominacion de: " + codigoDir3);
             return null;
         }
 
         return denominacion;
-
     }
-
-    /**
-     * Averigua si una Unidad tiene alguna OficinaSir que le dé servicio
-     *
-     * @param server
-     * @param codigoUnidad
-     * @return
-     * @throws Exception
-     */
-    public static Boolean tieneOficinaSir(String server, String codigoUnidad) {
-
-        String url = server + UNIDAD_OFICINA_SIR + codigoUnidad;
-
-        RestTemplate restTemplate = new RestTemplate();
-
-        return restTemplate.getForObject(url, Boolean.class);
-
-    }
-
 
     private static void configAddressUserPasswordTimeout(String usr, String pwd, String endpoint, Long timeout, Object api) {
 
