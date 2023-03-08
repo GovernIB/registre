@@ -32,18 +32,7 @@ public class WebServicesMethodsEJB implements WebServicesMethodsLocal {
     @EJB private IntegracionLocal integracionEjb;
     @EJB private MensajeControlLocal mensajeControlEjb;
     @EJB private RegistroSirLocal registroSirEjb;
-    /*@EJB private LibSirLocal libSirEjb;
 
-
-    @Override
-    public void recibirAsiento(String registro, String firmaRegistro) throws InterException {
-        libSirEjb.recibirAsiento(registro, firmaRegistro);
-    }
-
-    @Override
-    public void recibirMensajeControl(String mensaje, String firma) throws InterException {
-        libSirEjb.recibirMensajeControl(mensaje, firma);
-    }*/
 
     @Override
     public void procesarMensajeDatosControl(MensajeControl mensaje) throws I18NException {

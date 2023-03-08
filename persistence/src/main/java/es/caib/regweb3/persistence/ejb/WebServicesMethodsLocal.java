@@ -7,7 +7,6 @@ import es.caib.regweb3.model.RegistroSir;
 import es.caib.regweb3.model.sir.MensajeControl;
 import es.caib.regweb3.persistence.utils.RespuestaRecepcionSir;
 import es.caib.regweb3.sir.core.utils.FicheroIntercambio;
-import es.gob.ad.registros.sir.interService.exception.InterException;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 
 import javax.ejb.Local;
@@ -22,21 +21,6 @@ import java.util.Date;
 public interface WebServicesMethodsLocal {
 
     String JNDI_NAME = "java:app/regweb3-persistence/WebServicesMethodsEJB";
-
-    /**
-     *
-     * @param registro
-     * @param firmaRegistro
-     *//*
-    void recibirAsiento(String registro, String firmaRegistro) throws InterException;
-
-    *//**
-     *
-     * @param mensaje
-     * @param firma
-     * @throws InterException
-     *//*
-    void recibirMensajeControl(String mensaje, String firma) throws InterException;*/
 
     /**
      * Recibe un mensaje de control en formato SICRES3 desde un nodo distribuido

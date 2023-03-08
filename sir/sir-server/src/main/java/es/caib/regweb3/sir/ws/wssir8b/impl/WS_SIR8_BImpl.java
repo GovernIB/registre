@@ -2,11 +2,12 @@ package es.caib.regweb3.sir.ws.wssir8b.impl;
 
 
 import es.caib.regweb3.model.sir.Errores;
+import es.caib.regweb3.persistence.ejb.LibSirLocal;
 import es.caib.regweb3.persistence.ejb.WebServicesMethodsLocal;
-import es.caib.regweb3.sir.core.excepcion.ServiceException;
 import es.caib.regweb3.sir.ws.ejb.RecepcionLocal;
 import es.caib.regweb3.sir.ws.wssir8b.RespuestaWS;
 import es.caib.regweb3.sir.ws.wssir8b.WS_SIR8_B_PortType;
+import es.gob.ad.registros.sir.interService.exception.InterException;
 import org.apache.cxf.interceptor.InInterceptors;
 import org.jboss.ws.api.annotation.TransportGuarantee;
 import org.jboss.ws.api.annotation.WebContext;
@@ -51,6 +52,9 @@ public class WS_SIR8_BImpl implements WS_SIR8_B_PortType {
     @EJB(mappedName = WebServicesMethodsLocal.JNDI_NAME)
     private WebServicesMethodsLocal webServicesMethodsEjb;
 
+    @EJB (mappedName = LibSirLocal.JNDI_NAME)
+    private LibSirLocal libSirEjb;
+
     public static final String NAME = "WS_SIR8_B";
 
     public static final String NAME_WS = NAME;
@@ -62,7 +66,22 @@ public class WS_SIR8_BImpl implements WS_SIR8_B_PortType {
 
         RespuestaWS respuestaWS = null;
 
-        log.info("-------------------- Recibiendo fichero de intercambio en WS_SIR8_B --------------------");
+        try{
+
+            // Procesamos el intercambio recibido
+            libSirEjb.recibirAsiento(registro, firmaRegistro);
+
+            // Creamos la respuesta exitosa
+            respuestaWS = crearRespuestaWS(Errores.OK);
+
+        }catch (InterException ie){
+            log.info("Error recibiendo el Fichero de Intercambio", ie);
+            respuestaWS = crearRespuestaWS(ie.getCodigo(), ie.getDescripcion());
+        }
+
+
+
+       /* log.info("-------------------- Recibiendo fichero de intercambio en WS_SIR8_B --------------------");
         if(registro.contains("<Anexo>")){
             log.info("Fichero de intercambio: " + registro.replace(registro.substring(registro.indexOf("<Anexo>"), registro.lastIndexOf("</Anexo>")), ""));
         }else{
@@ -90,7 +109,7 @@ public class WS_SIR8_BImpl implements WS_SIR8_B_PortType {
                 log.info("Error inesperado recibiendo en el Fichero de Intercambio", e);
                 respuestaWS = crearRespuestaWS(Errores.ERROR_NO_CONTROLADO);
             }
-        }
+        }*/
 
         //log.info("Respuesta envioFichero: " + respuestaWS.getCodigo() +" - "+ respuestaWS.getDescripcion());
 
