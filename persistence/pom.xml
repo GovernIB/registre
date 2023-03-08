@@ -190,6 +190,24 @@
             <scope>provided</scope>
         </dependency>
 
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-orm</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <!--LIBSIR-->
+        <dependency>
+            <groupId>es.gob.ad.registros.sir</groupId>
+            <artifactId>InterService</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>es.gob.ad.registros.sir</groupId>
+            <artifactId>interModel.ORACLE</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
         <!--<dependency>
             <groupId>org.jboss.ejb3</groupId>
             <artifactId>jboss-ejb3-common</artifactId>
@@ -222,24 +240,6 @@
             <groupId>org.fundaciobit.pluginsib.utils</groupId>
             <artifactId>pluginsib-utils-cxf</artifactId>
             <version>2.0.0</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-orm</artifactId>
-            <scope>provided</scope>
-        </dependency>
-
-        <!--LIBSIR-->
-        <dependency>
-            <groupId>${libsir.groupId}</groupId>
-            <artifactId>InterService</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>${libsir.groupId}</groupId>
-            <artifactId>interModel.ORACLE</artifactId>
             <scope>provided</scope>
         </dependency>
 

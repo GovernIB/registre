@@ -365,7 +365,7 @@
 
             <!--LIBSIR-->
             <dependency>
-                <groupId>${libsir.groupId}</groupId>
+                <groupId>es.gob.ad.registros.sir</groupId>
                 <artifactId>InterService</artifactId>
                 <version>${libsir.version}</version>
                 <exclusions>
@@ -377,15 +377,15 @@
                         <groupId>xerces</groupId>
                         <artifactId>xercesImpl</artifactId>
                     </exclusion>
-                    <!-- <exclusion>
-                         <groupId>org.codehaus.woodstox</groupId>
-                         <artifactId>woodstox-core-asl</artifactId>
-                     </exclusion>-->
+                    <exclusion>
+                        <groupId>org.springframework</groupId>
+                        <artifactId>spring-web</artifactId>
+                    </exclusion>
                 </exclusions>
             </dependency>
 
             <dependency>
-                <groupId>${libsir.groupId}</groupId>
+                <groupId>es.gob.ad.registros.sir</groupId>
                 <artifactId>interModel.ORACLE</artifactId>
                 <version>${libsir.version}</version>
                 <exclusions>
@@ -396,6 +396,10 @@
                     <exclusion>
                         <groupId>commons-logging</groupId>
                         <artifactId>commons-logging</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.springframework</groupId>
+                        <artifactId>spring-web</artifactId>
                     </exclusion>
                 </exclusions>
             </dependency>

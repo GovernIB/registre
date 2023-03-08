@@ -42,7 +42,7 @@
         <dependency>
             <groupId>org.fundaciobit.genapp</groupId>
             <artifactId>genapp-gen</artifactId>
-            <version>${genapp.version}</version>
+            <version>1.0</version>
         </dependency>
 
         <dependency>

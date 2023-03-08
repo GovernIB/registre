@@ -295,21 +295,6 @@
             <scope>provided</scope>
         </dependency>
 
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-orm</artifactId>
-        </dependency>
-
-        <!--LIBSIR-->
-        <dependency>
-            <groupId>${libsir.groupId}</groupId>
-            <artifactId>InterService</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>${libsir.groupId}</groupId>
-            <artifactId>interModel.ORACLE</artifactId>
-        </dependency>
-
         <!-- Mòduls que van dins l'application.xml -->
         <dependency>
             <groupId>es.caib.regweb3</groupId>
@@ -346,6 +331,26 @@
             <artifactId>spring-beans</artifactId>
             <version>${spring.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-orm</artifactId>
+        </dependency>
+
+        <!--LIBSIR-->
+        <dependency>
+            <groupId>es.gob.ad.registros.sir</groupId>
+            <artifactId>InterService</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>es.gob.ad.registros.sir</groupId>
+            <artifactId>interModel.ORACLE</artifactId>
+        </dependency>
+
+        <!--<dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-dbcp2</artifactId>
+        </dependency>-->
 
         <dependency>
             <groupId>es.caib.regweb3</groupId>
