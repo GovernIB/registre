@@ -2,6 +2,7 @@ package es.caib.regweb3.model;
 
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.model.utils.IndicadorPrueba;
+import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.Versio;
 import org.hibernate.annotations.Type;
 
@@ -546,6 +547,20 @@ public class RegistroDetalle implements Serializable {
         }
 
         return "";
+    }
+
+    @Transient
+    public String getDocumentoInteresado() {
+        if (!interesados.isEmpty()) {
+
+            for (Interesado interesado : interesados) {
+                if (!interesado.getIsRepresentante() && !interesado.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION)) {
+
+                    return interesado.getDocumento();
+                }
+            }
+        }
+        return null;
     }
 
     @Transient

@@ -15,6 +15,7 @@ import es.caib.regweb3.persistence.utils.RegistroUtils;
 import es.caib.regweb3.plugins.justificante.IJustificantePlugin;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.RegwebUtils;
+import es.caib.regweb3.utils.StringUtils;
 import org.fundaciobit.genapp.common.i18n.I18NArgumentCode;
 import org.fundaciobit.genapp.common.i18n.I18NArgumentString;
 import org.fundaciobit.genapp.common.i18n.I18NException;
@@ -41,6 +42,8 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import static es.caib.regweb3.utils.RegwebConstantes.REGISTRO_ENTRADA;
+
 
 /**
  * Created by Fundació BIT.
@@ -63,6 +66,7 @@ public class JustificanteBean implements JustificanteLocal {
     @EJB private SignatureServerLocal signatureServerEjb;
     @EJB private IntegracionLocal integracionEjb;
     @EJB private ColaLocal colaEjb;
+    @EJB private CarpetaLocal carpetaEjb;
     @Autowired ArxiuCaibUtils arxiuCaibUtils;
 
 
@@ -346,10 +350,14 @@ public class JustificanteBean implements JustificanteLocal {
             // Integracion
             integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_JUSTIFICANTE, descripcion, peticion.toString(), System.currentTimeMillis() - inicio.getTime(), entidad.getId(), numRegFormat);
 
+            // Avisar a Carpeta Ciutadana de que el Justificante custodiado está disponible
+            if(tipoRegistro.equals(REGISTRO_ENTRADA) && StringUtils.isNotEmpty(registro.getRegistroDetalle().getDocumentoInteresado())){
+                carpetaEjb.enviarNotificacionCarpeta(registro, entidad.getId());
+            }
+
             return anexoFull;
 
         }catch (Exception e){
-            //error = true;
 
             try {
                 integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_JUSTIFICANTE, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - inicio.getTime(), entidad.getId(), numRegFormat);

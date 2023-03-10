@@ -168,6 +168,14 @@
             <scope>provided</scope>
         </dependency>
 
+        <!--Carpeta-->
+        <dependency>
+            <groupId>es.caib.carpeta</groupId>
+            <artifactId>carpeta-api-interna-client</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+
 
         <!-- Dependències de test -->
         <dependency>
