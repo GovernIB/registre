@@ -307,6 +307,10 @@
                     <groupId>org.fundaciobit.genapp</groupId>
                     <artifactId>genapp-core</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-web</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
 
@@ -356,6 +360,7 @@
             <groupId>commons-fileupload</groupId>
             <artifactId>commons-fileupload</artifactId>
             <version>1.2.2</version>
+            <scope>provided</scope>
         </dependency>
 
         <!-- iText -->
