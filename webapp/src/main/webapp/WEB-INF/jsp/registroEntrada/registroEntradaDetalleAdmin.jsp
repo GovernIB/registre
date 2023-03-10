@@ -125,6 +125,10 @@
                         <c:if test="${registro.estado == RegwebConstantes.REGISTRO_DISTRIBUIDO && registro.registroDetalle.anexosPurgado == false}">
                             <div class="btn-group"><button type="button" onclick="reDistribuir('<c:url value="/adminEntidad/registroEntrada/${registro.id}/reDistribuir"/>')" class="btn btn-primary btn-sm"><spring:message code="registroEntrada.redistribuir"/></button></div>
                         </c:if>
+                        <%--Botón Marcar Distribuido--%>
+                        <c:if test="${registro.estado == RegwebConstantes.REGISTRO_DISTRIBUYENDO && tieneJustificanteCustodiado}">
+                            <div class="btn-group"><button type="button" onclick="goTo('<c:url value="/adminEntidad/registroEntrada/${registro.id}/marcarDistribuido"/>')" class="btn btn-primary btn-sm"><spring:message code="registroEntrada.marcarDistribuido"/></button></div>
+                        </c:if>
                     </div>
                 </div>
 

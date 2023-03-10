@@ -221,6 +221,7 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
         // Permisos
         Boolean tieneJustificante = registro.getRegistroDetalle().getTieneJustificante();
         model.addAttribute("tieneJustificante", tieneJustificante);
+        model.addAttribute("tieneJustificanteCustodiado", registro.getRegistroDetalle().getTieneJustificanteCustodiado());
 
         // Solo si no es una reserva de número
         if(!registro.getEstado().equals(RegwebConstantes.REGISTRO_RESERVA)){
@@ -248,6 +249,23 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
         lopdEjb.altaLopd(registro.getNumeroRegistro(), registro.getFecha(), registro.getLibro().getId(), usuarioEntidad.getId(), RegwebConstantes.REGISTRO_ENTRADA, RegwebConstantes.LOPD_CONSULTA);
 
         return "registroEntrada/registroEntradaDetalleAdmin";
+    }
+
+    /**
+     * Marca como distribuido un {@link es.caib.regweb3.model.RegistroEntrada}
+     */
+    @RequestMapping(value = "/registroEntrada/{idRegistro}/marcarDistribuido", method = RequestMethod.GET)
+    public String marcarDistribuido(@PathVariable Long idRegistro, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
+
+        RegistroEntrada registro = registroEntradaEjb.findByIdCompleto(idRegistro);
+
+        // Justificante
+        if (registro.getRegistroDetalle().getTieneJustificanteCustodiado()) {
+            distribucionEjb.marcarDistribuido(registro);
+            Mensaje.saveMessageInfo(request, getMessage("registroEntrada.distribuir.ok"));
+        }
+
+        return "redirect:/adminEntidad/registroEntrada/" + idRegistro + "/detalle";
     }
 
     /**
