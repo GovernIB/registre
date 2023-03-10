@@ -559,28 +559,4 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
         return q.getResultList();
     }
 
-    @Override
-    public void activarOAMR(Long idUsuarioEntidad, Boolean activo) throws I18NException {
-
-        Query q = em.createQuery("Update UsuarioEntidad set oamr = :activo where id = :idUsuarioEntidad");
-
-        q.setParameter("idUsuarioEntidad", idUsuarioEntidad);
-        q.setParameter("activo", activo);
-        q.executeUpdate();
-
-    }
-
-    @Override
-    @SuppressWarnings(value = "unchecked")
-    public List<UsuarioEntidad> getOAMRByEntidad(Long idEntidad) throws I18NException {
-
-        Query q = em.createQuery("Select usuarioEntidad from UsuarioEntidad as usuarioEntidad where " +
-                "usuarioEntidad.entidad.id = :idEntidad and usuarioEntidad.activo = true and usuarioEntidad.usuario.rwe_usuari = true and usuarioEntidad.oamr = true");
-
-        q.setParameter("idEntidad", idEntidad);
-        q.setHint("org.hibernate.readOnly", true);
-
-        return q.getResultList();
-    }
-
 }
