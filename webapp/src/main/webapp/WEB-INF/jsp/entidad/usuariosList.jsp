@@ -40,6 +40,7 @@
                     <div class="panel-body">
                         <form:form modelAttribute="usuarioEntidadBusqueda" method="post" cssClass="form-horizontal">
                             <form:hidden path="pageNumber"/>
+                            <form:hidden path="exportar"/>
 
                                 <div class="col-xs-12">
                                     <div class="form-group col-xs-6 espaiLinies senseMargeLat">
@@ -94,7 +95,7 @@
                                         </div>
                                         <div class="col-xs-8">
                                             <form:select path="usuarioEntidad.usuario.tipoUsuario" cssClass="chosen-select">
-                                                <form:option value="0" default="default">...</form:option>
+                                                <form:option value="" default="default">...</form:option>
                                                 <form:option value="1"><spring:message code="usuario.tipo.1"/></form:option>
                                                 <form:option value="2"><spring:message code="usuario.tipo.2"/></form:option>
                                             </form:select>
@@ -123,20 +124,39 @@
                                             <form:select path="permiso" cssClass="chosen-select" disabled="true">
                                                 <form:option value="">...</form:option>
                                                 <c:forEach items="${permisos}" var="permiso">
-                                                    <form:option value="${permiso}" > <spring:message code="permiso.nombre.${permiso}"/></form:option>
+                                                    <form:option value="${permiso}"> <spring:message
+                                                            code="permiso.nombre.${permiso}"/></form:option>
                                                 </c:forEach>
                                             </form:select>
                                         </div>
                                     </div>
                                 </div>
-
-                                <div class="form-group col-xs-12">
-                                    <input type="submit" value="<spring:message code="regweb.buscar"/>" class="btn btn-warning btn-sm"/>
-                                    <input type="reset" value="<spring:message code="regweb.restablecer"/>" class="btn btn-sm"/>
-                                    <c:if test="${not empty paginacion.listado}">
-                                        <a class="btn btn-success btn-sm pull-right" onclick="exportarUsuarios('<c:url value="/entidad/exportarUsuarios"/>','${usuarioEntidadBusqueda.usuarioEntidad.usuario.identificador}','${usuarioEntidadBusqueda.usuarioEntidad.usuario.nombre}','${usuarioEntidadBusqueda.usuarioEntidad.usuario.apellido1}','${usuarioEntidadBusqueda.usuarioEntidad.usuario.apellido2}','${usuarioEntidadBusqueda.usuarioEntidad.usuario.documento}','${usuarioEntidadBusqueda.usuarioEntidad.usuario.tipoUsuario}','${usuarioEntidadBusqueda.organismo.id}')" title="<spring:message code="usuario.exportar.busqueda"/>"><spring:message code="usuario.exportar"/></a>
-                                    </c:if>
+                            <div class="col-xs-12">
+                                <div class="col-xs-6 espaiLinies senseMargeLat">
+                                    <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                        <label for="usuarioEntidad.oamr"><spring:message code="usuario.oamr"/></label>
+                                    </div>
+                                    <div class="col-xs-8">
+                                        <form:select path="usuarioEntidad.oamr" cssClass="chosen-select">
+                                            <form:option value="" label="..."/>
+                                            <form:option value="true"><spring:message code="regweb.si"/></form:option>
+                                            <form:option value="false"><spring:message code="regweb.no"/></form:option>
+                                        </form:select>
+                                    </div>
                                 </div>
+                            </div>
+
+                            <div class="form-group col-xs-12">
+                                <input type="submit" value="<spring:message code="regweb.buscar"/>"
+                                       class="btn btn-warning btn-sm"/>
+                                <input type="reset" value="<spring:message code="regweb.restablecer"/>"
+                                       class="btn btn-sm"/>
+                                <c:if test="${not empty paginacion.listado}">
+                                    <a class="btn btn-success btn-sm pull-right" onclick="exportar()"
+                                       title="<spring:message code="usuario.exportar.busqueda"/>"><spring:message
+                                            code="usuario.exportar"/></a>
+                                </c:if>
+                            </div>
 
                         </form:form>
 
@@ -274,11 +294,17 @@
     $('#organismo\\.id').change(function () {
 
         if ($('#organismo\\.id option:selected').val() > 0) {
-            $('#permiso').removeAttr("disabled","disabled").trigger("chosen:updated");
-        }else{
-            $('#permiso').attr("disabled","disabled").trigger("chosen:updated");
+            $('#permiso').removeAttr("disabled", "disabled").trigger("chosen:updated");
+        } else {
+            $('#permiso').attr("disabled", "disabled").trigger("chosen:updated");
         }
     });
+
+    function exportar() {
+        $('#exportar').val(true);
+        $('#usuarioEntidadBusqueda').submit();
+        $('#exportar').val(false);
+    }
 
     /**
      * Script per exportar els usuaris consultats a l'Excel

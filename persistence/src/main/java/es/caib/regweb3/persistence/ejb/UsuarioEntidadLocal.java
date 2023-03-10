@@ -1,7 +1,6 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.Entidad;
-import es.caib.regweb3.model.PermisoOrganismoUsuario;
 import es.caib.regweb3.model.Usuario;
 import es.caib.regweb3.model.UsuarioEntidad;
 import es.caib.regweb3.persistence.utils.Paginacion;
@@ -159,16 +158,12 @@ public interface UsuarioEntidadLocal extends BaseEjb<UsuarioEntidad, Long> {
      * Realiza una busqueda de {@link es.caib.regweb3.model.UsuarioEntidad} según los parámetros
      *
      * @param pageNumber
-     * @param nombre
-     * @param apellido1
-     * @param apellido2
-     * @param documento
-     * @param tipoUsuario
+     * @param usuarioEntidad
      * @param idOrganismo
      * @return
      * @throws I18NException
      */
-    Paginacion busqueda(Integer pageNumber, Long idEntidad, String identificador, String nombre, String apellido1, String apellido2, String documento, Long tipoUsuario, Long idOrganismo, Long permiso) throws I18NException;
+    Paginacion busqueda(Integer pageNumber, Long idEntidad, UsuarioEntidad usuarioEntidad, Long idOrganismo, Long permiso) throws I18NException;
 
     /**
      * Devuelve los usuarios de la Entidad activos que no son el usuario actual y según el tipo de usuario
@@ -207,23 +202,5 @@ public interface UsuarioEntidadLocal extends BaseEjb<UsuarioEntidad, Long> {
      */
     Integer eliminarByEntidad(Long idEntidad) throws I18NException;
 
-    /**
-     * Lista las {@link es.caib.regweb3.model.PermisoLibroUsuario} para Exportar a Excel
-     *
-     * @param idEntidad
-     * @param identificador
-     * @param nombre
-     * @param apellido1
-     * @param apellido2
-     * @param documento
-     * @param tipo
-     * @param idOrganismo
-     * @param permisoRegEntrada
-     * @param permisoRegSalida
-     * @param permisoSir
-     * @return
-     * @throws I18NException
-     */
-    List<PermisoOrganismoUsuario> getExportarExcel(Long idEntidad, String identificador, String nombre, String apellido1, String apellido2, String documento, Long tipo, Long idOrganismo, Long permisoRegEntrada, Long permisoRegSalida, Long permisoSir) throws I18NException;
 
 }

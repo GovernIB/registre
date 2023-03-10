@@ -1,6 +1,7 @@
 package es.caib.regweb3.webapp.view;
 
-import es.caib.regweb3.model.PermisoOrganismoUsuario;
+import es.caib.regweb3.model.UsuarioEntidad;
+import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -13,7 +14,6 @@ import org.springframework.web.servlet.view.document.AbstractExcelView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -40,21 +40,18 @@ public class ExportarUsuariosExcel extends AbstractExcelView {
     protected void buildExcelDocument(Map<String, Object> model, HSSFWorkbook workbook, HttpServletRequest request, HttpServletResponse response) throws Exception {
 
         //Obtenemos los usuarios
-        List<PermisoOrganismoUsuario> permisos = (List<PermisoOrganismoUsuario>) model.get("permisos");
+        Paginacion resultados = (Paginacion) model.get("resultados");
 
-        //Obtenemos el libro elegegido en la búsqueda
-        String organismo = (String) model.get("organismo");
-
-        int hojasExcel = (permisos.size()/65000)+1;
-        int resta = permisos.size() % 65000;
+        int hojasExcel = (resultados.getListado().size() / 65000) + 1;
+        int resta = resultados.getListado().size() % 65000;
 
         for (int k = 0; k < hojasExcel; k++) {
             boolean ultimaHoja = false;
-            if (k == hojasExcel-1) {
+            if (k == hojasExcel - 1) {
                 ultimaHoja = true;
             }
 
-            HSSFSheet sheet = workbook.createSheet("REGWEB3_"+k);
+            HSSFSheet sheet = workbook.createSheet("REGWEB3_" + k);
             sheet.setFitToPage(true);
 
             //Estilo título
@@ -122,51 +119,29 @@ public class ExportarUsuariosExcel extends AbstractExcelView {
             HSSFRow tipusRow = sheet.createRow(2);
             tipusRow.setHeightInPoints(15);
 
-            HSSFCell tipusCell = tipusRow.createCell(0);
             HSSFRow fechaInicioRow = sheet.createRow(3);
             fechaInicioRow.setHeightInPoints(15);
-            HSSFCell fechaInicioCell = fechaInicioRow.createCell(0);
+
             HSSFRow fechaFinRow = sheet.createRow(4);
             fechaFinRow.setHeightInPoints(15);
-            HSSFCell fechaFinCell = fechaFinRow.createCell(0);
+
             HSSFRow mostrarRow = sheet.createRow(5);
             mostrarRow.setHeightInPoints(15);
-            HSSFCell mostrarCell = mostrarRow.createCell(0);
+
 
             //Título
-            if(organismo!=null) {
-                sheet.addMergedRegion(CellRangeAddress.valueOf("$A$1:$H$1"));
-                tittleCell.setCellValue(getMessage("usuario.exportar.lista"));
-                tittleCell.setCellStyle(titulo);
-                sheet.addMergedRegion(CellRangeAddress.valueOf("$A$2:$H$2"));
-            }else{
-                sheet.addMergedRegion(CellRangeAddress.valueOf("$A$1:$E$1"));
-                tittleCell.setCellValue(getMessage("usuario.exportar.lista"));
-                tittleCell.setCellStyle(titulo);
-                sheet.addMergedRegion(CellRangeAddress.valueOf("$A$2:$E$2"));
-            }
+            sheet.addMergedRegion(CellRangeAddress.valueOf("$A$1:$E$1"));
+            tittleCell.setCellValue(getMessage("usuario.exportar.lista"));
+            tittleCell.setCellStyle(titulo);
+            sheet.addMergedRegion(CellRangeAddress.valueOf("$A$2:$E$2"));
 
             int rowNum = 1;
-
-            //Libro
-            if(organismo!=null) {
-                HSSFRow lineaLibro = sheet.createRow(rowNum++);
-                lineaLibro.setHeightInPoints(15);
-                HSSFCell libroCol = lineaLibro.createCell(0);
-                libroCol.setCellValue(getMessage("organismo.organismo")+ ": " + organismo);
-                libroCol.setCellStyle(fila);
-            }
 
             HSSFRow header = sheet.createRow(rowNum++);
             header.setHeightInPoints(15);
 
             // Dades que se mostren d'un usuari
-            String[] capsalera;
-            if(organismo!=null) {
-                capsalera = new String[]{"usuario.identificador", "usuario.nombre", "usuario.documento", "usuario.tipoUsuario", "usuario.email", "permiso.entrada", "permiso.salida", "permiso.sir"};
-            }else{
-                capsalera = new String[]{"usuario.identificador", "usuario.nombre", "usuario.documento", "usuario.tipoUsuario", "usuario.email"};
-            }
+            String[] capsalera = new String[]{"usuario.identificador", "usuario.nombre", "usuario.documento", "usuario.tipoUsuario", "usuario.oamr", "usuario.email"};
 
             // DADES A MOSTRAR
             // Capçalera
@@ -190,53 +165,27 @@ public class ExportarUsuariosExcel extends AbstractExcelView {
             for (int i = inici; i < fi; i++) {
 
                 HSSFRow row = sheet.createRow(rowNum++);
-                PermisoOrganismoUsuario pou = permisos.get(i);
+                UsuarioEntidad usuario = (UsuarioEntidad) resultados.getListado().get(i);
                 // Identificador
-                row.createCell(0).setCellValue(pou.getUsuario().getUsuario().getIdentificador());
+                row.createCell(0).setCellValue(usuario.getUsuario().getIdentificador());
                 // Nom
-                row.createCell(1).setCellValue(pou.getUsuario().getUsuario().getNombreCompleto());
+                row.createCell(1).setCellValue(usuario.getUsuario().getNombreCompleto());
                 // Document
-                row.createCell(2).setCellValue(pou.getUsuario().getUsuario().getDocumento());
+                row.createCell(2).setCellValue(usuario.getUsuario().getDocumento());
                 // Tipo Usuario
-                if (pou.getUsuario().getUsuario().getTipoUsuario().equals(RegwebConstantes.TIPO_USUARIO_PERSONA)) {
+                if (usuario.getUsuario().getTipoUsuario().equals(RegwebConstantes.TIPO_USUARIO_PERSONA)) {
                     row.createCell(3).setCellValue(getMessage("usuario.tipo.persona"));
                 } else {
                     row.createCell(3).setCellValue(getMessage("usuario.tipo.aplicacion"));
                 }
-                // Mail
-                row.createCell(4).setCellValue(pou.getUsuario().getUsuario().getEmail());
-
-                if(organismo!=null) {
-                    // Permiso
-                    row.createCell(5).setCellValue("");
-                    row.createCell(6).setCellValue("");
-                    row.createCell(7).setCellValue("");
-                    boolean mismoUsuario = true;
-                    while (mismoUsuario) {
-                        if (pou.getPermiso().equals(RegwebConstantes.PERMISO_REGISTRO_ENTRADA)) {
-                            row.createCell(5).setCellValue("X");
-                        } else {
-                            if (pou.getPermiso().equals(RegwebConstantes.PERMISO_REGISTRO_SALIDA)) {
-                                row.createCell(6).setCellValue("X");
-                            } else {
-                                if (pou.getPermiso().equals(RegwebConstantes.PERMISO_SIR)) {
-                                    row.createCell(7).setCellValue("X");
-                                }
-                            }
-                        }
-
-                        if (i < permisos.size() - 1) {
-                            if (!pou.getUsuario().getId().equals(permisos.get(i + 1).getUsuario().getId())) {
-                                mismoUsuario = false;
-                            } else {
-                                i = i + 1;
-                                pou = permisos.get(i);
-                            }
-                        } else {
-                            mismoUsuario = false;
-                        }
-                    }
+                // OAMR
+                if (usuario.getOamr()) {
+                    row.createCell(4).setCellValue(getMessage("regweb.si"));
+                } else {
+                    row.createCell(4).setCellValue(getMessage("regweb.no"));
                 }
+                // Mail
+                row.createCell(5).setCellValue(usuario.getUsuario().getEmail());
 
                 // Aplicam estils a les cel·les
                 for (int g = 0; g < capsalera.length; g++) {
@@ -249,16 +198,7 @@ public class ExportarUsuariosExcel extends AbstractExcelView {
                 sheet.autoSizeColumn(i);
             }
 
-            String nombreFichero;
-            if(organismo == null) {
-                nombreFichero = getMessage("usuario.exportar.fichero") + ".xls";
-            }else{
-                organismo = organismo.replace(".","_");
-                organismo = organismo.replace(" ","_");
-                organismo = organismo.replace(",","");
-                organismo = organismo.replace("'","_");
-                nombreFichero = getMessage("usuario.exportar.fichero") + "_" + organismo + ".xls";
-            }
+            String nombreFichero = getMessage("usuario.exportar.fichero") + ".xls";
 
             // Cabeceras Response
             response.setHeader("Content-Disposition", "attachment; filename=" + nombreFichero);
