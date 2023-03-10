@@ -1,10 +1,8 @@
 package es.caib.regweb3.persistence.ejb;
 
-import es.caib.regweb3.model.Cola;
-import es.caib.regweb3.model.Entidad;
-import es.caib.regweb3.model.RegistroEntrada;
-import es.caib.regweb3.model.UsuarioEntidad;
+import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.AnexoFull;
+import es.caib.regweb3.persistence.utils.I18NLogicUtils;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.persistence.utils.RespuestaDistribucion;
 import es.caib.regweb3.plugins.distribucion.IDistribucionPlugin;
@@ -23,8 +21,10 @@ import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.interceptor.Interceptors;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -40,13 +40,17 @@ public class DistribucionBean implements DistribucionLocal {
 
     protected final org.apache.log4j.Logger log = Logger.getLogger(getClass());
 
+    @PersistenceContext(unitName = "regweb3")
+    private EntityManager em;
+
     @EJB private RegistroEntradaLocal registroEntradaEjb;
     @EJB private JustificanteLocal justificanteEjb;
     @EJB private IntegracionLocal integracionEjb;
     @EJB private PluginLocal pluginEjb;
     @EJB private ColaLocal colaEjb;
     @EJB private EntidadLocal entidadEjb;
-
+    @EJB private TrazabilidadLocal trazabilidadEjb;
+    @EJB private HistoricoRegistroEntradaLocal historicoRegistroEntradaEjb;
 
     /**
      * Método que envia a distribuir el registro en función del valor de la propiedad envioCola de cada plugin.
@@ -65,8 +69,6 @@ public class DistribucionBean implements DistribucionLocal {
 
         StringBuilder peticion = new StringBuilder();
         Date inicio = new Date();
-        String hora = "<b>" + new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(inicio) + "</b>&nbsp;&nbsp;&nbsp;";
-        String error = "";
 
         try {
             //Si es el plugin de email hay que asignar los valores.
@@ -207,10 +209,9 @@ public class DistribucionBean implements DistribucionLocal {
      * @return
      * @throws I18NException
      */
-    private Boolean distribuirRegistro( Entidad entidad, Long tipoIntegracon, String descripcion, RegistroEntrada registroEntrada, IDistribucionPlugin distribucionPlugin, StringBuilder peticion, Date inicio) throws I18NException {
+    private Boolean distribuirRegistro(Entidad entidad, Long tipoIntegracon, String descripcion, RegistroEntrada registroEntrada, IDistribucionPlugin distribucionPlugin, StringBuilder peticion, Date inicio) throws I18NException {
 
         Boolean distribuido = false;
-
 
         try {
 
@@ -224,7 +225,7 @@ public class DistribucionBean implements DistribucionLocal {
             distribuido = distribuirRegistroEntrada(entidad, registroEntrada, distribucionPlugin);
 
             if (distribuido) { //Si la distribución ha ido bien
-                registroEntradaEjb.marcarDistribuido(registroEntrada);
+                marcarDistribuido(registroEntrada);
                 integracionEjb.addIntegracionOk(inicio, tipoIntegracon, descripcion, peticion.toString(), System.currentTimeMillis() - inicio.getTime(), registroEntrada.getUsuario().getEntidad().getId(), registroEntrada.getNumeroRegistroFormateado());
             }
 
@@ -315,31 +316,30 @@ public class DistribucionBean implements DistribucionLocal {
 
     }
 
-    /**
-     * Este método elimina los anexos que no se pueden enviar a Arxiu porque no estan soportados.
-     * Son ficheros xml de los cuales no puede hacer el upgrade de la firma y se ha decidido que no se distribuyan.
-     *
-     * @param original
-     * @return
-     * @throws I18NException
-     * @throws I18NException
-     * @throws I18NValidationException
-     */
-    private RegistroEntrada gestionAnexosByAplicacionSIR(RegistroEntrada original) throws I18NException, I18NValidationException {
 
-        List<AnexoFull> anexosFullADistribuir = new ArrayList<AnexoFull>();
-        //Obtenemos los anexos del registro para tratarlos
-        List<AnexoFull> anexosFull = original.getRegistroDetalle().getAnexosFull();
-        //Lista de anexos para el procesamiento intermedio
-        List<AnexoFull> anexosFullIntermedio = new ArrayList<AnexoFull>();
+    public void marcarDistribuido(RegistroEntrada registroEntrada) throws I18NException {
 
+        // CREAMOS LA TRAZABILIDAD
+        Trazabilidad trazabilidad = new Trazabilidad();
+        trazabilidad.setOficioRemision(null);
+        trazabilidad.setFecha(new Date());
+        trazabilidad.setTipo(RegwebConstantes.TRAZABILIDAD_DISTRIBUCION);
+        trazabilidad.setRegistroEntradaOrigen(registroEntrada);
+        trazabilidad.setRegistroSalida(null);
+        trazabilidad.setRegistroEntradaDestino(null);
+        //trazabilidadEjb.persist(trazabilidad);
+        em.persist(trazabilidad);
 
-        gestionarByAplicacionByNombreFichero(RegwebConstantes.FICHERO_REGISTROELECTRONICO, anexosFull, anexosFullIntermedio);
-        gestionarByAplicacionByNombreFichero(RegwebConstantes.FICHERO_DEFENSORPUEBLO, anexosFullIntermedio, anexosFullADistribuir);
+        // Creamos el HistoricoRegistroEntrada para la distribución
+        registroEntrada.setEstado(RegwebConstantes.REGISTRO_DISTRIBUIDO);
+        historicoRegistroEntradaEjb.crearHistoricoRegistroEntrada(registroEntrada,
+                registroEntrada.getUsuario(), I18NLogicUtils.tradueix(new Locale(Configuracio.getDefaultLanguage()), "registro.modificacion.estado"), false);
 
-        original.getRegistroDetalle().setAnexosFull(anexosFullADistribuir);
+        Query q = em.createQuery("update RegistroEntrada set estado=:idEstado where id = :idRegistro");
+        q.setParameter("idEstado", RegwebConstantes.REGISTRO_DISTRIBUIDO);
+        q.setParameter("idRegistro", registroEntrada.getId());
+        q.executeUpdate();
 
-        return original;
     }
 
 
@@ -347,6 +347,7 @@ public class DistribucionBean implements DistribucionLocal {
      * Este método lo que hace es eliminar de la lista de anexos a distribuir, aquellos que el Arxiu no soporta que son
      * de formato xml y que no puede hacer el upgrade de la firma.
      * Lo que hace es comparar el nombre del Fichero y la aplicación de la que procede, para determinar si lo elimina o no.
+     *
      *
      * @param nombreFichero
      * @param anexosFull

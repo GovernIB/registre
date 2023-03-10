@@ -40,7 +40,6 @@ public interface DistribucionLocal {
      */
     void distribuirRegistrosEnCola(Entidad entidad) throws I18NException;
 
-
     /**
      * Procesa un registro de la cola de manera individual
      *
@@ -60,6 +59,14 @@ public interface DistribucionLocal {
      * @throws I18NException
      */
     Boolean reDistribuirRegistro(Long idRegistro, Entidad entidad) throws I18NException;
+
+    /**
+     * Tramita un RegistroEntrada, creando el HistoricoEstado y Trazabilidad
+     *
+     * @param registroEntrada
+     * @throws I18NException
+     */
+    void marcarDistribuido(RegistroEntrada registroEntrada) throws I18NException;
 
     /**
      * Indica si es el plugin de distribucion email

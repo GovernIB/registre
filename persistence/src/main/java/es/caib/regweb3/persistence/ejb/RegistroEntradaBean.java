@@ -564,7 +564,6 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean implem
         return registros.size();
     }
 
-
     @Override
     @SuppressWarnings(value = "unchecked")
     public RegistroEntrada rectificar(RegistroEntrada registroEntrada, Entidad entidad, UsuarioEntidad usuarioEntidad) throws I18NException {
