@@ -17,11 +17,13 @@ public class UsuarioEntidadBusquedaForm implements Serializable {
     private Organismo organismo;
     private Long permiso;
     private Integer pageNumber;
+    private Boolean exportar = false;
 
     public UsuarioEntidadBusquedaForm() {
     }
 
     public UsuarioEntidadBusquedaForm(UsuarioEntidad usuarioEntidad, Integer pageNumber) {
+        usuarioEntidad.setOamr(null);
         this.usuarioEntidad = usuarioEntidad;
         this.pageNumber = pageNumber;
     }
@@ -56,5 +58,13 @@ public class UsuarioEntidadBusquedaForm implements Serializable {
 
     public void setPageNumber(Integer pageNumber) {
         this.pageNumber = pageNumber;
+    }
+
+    public Boolean getExportar() {
+        return exportar;
+    }
+
+    public void setExportar(Boolean exportar) {
+        this.exportar = exportar;
     }
 }

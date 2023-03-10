@@ -178,23 +178,31 @@ public class EntidadController extends BaseController {
     public ModelAndView usuariosEntidad(@ModelAttribute UsuarioEntidadBusquedaForm busqueda, HttpServletRequest request) throws Exception {
 
         ModelAndView mav = new ModelAndView("entidad/usuariosList");
-        Usuario usuario = busqueda.getUsuarioEntidad().getUsuario();
         Organismo organismo = busqueda.getOrganismo();
         Entidad entidad = getEntidadActiva(request);
 
-        Paginacion paginacion = usuarioEntidadEjb.busqueda(busqueda.getPageNumber(),
-                entidad.getId(), usuario.getIdentificador(), usuario.getNombre(),
-                usuario.getApellido1(), usuario.getApellido2(), usuario.getDocumento(),
-                usuario.getTipoUsuario(), organismo.getId(), busqueda.getPermiso());
 
-        busqueda.setPageNumber(1);
-        mav.addObject("entidad", entidad);
-        mav.addObject("paginacion", paginacion);
-        mav.addObject("organismos", organismoEjb.getPermitirUsuarios(entidad.getId()));
-        mav.addObject("usuarioEntidadBusqueda", busqueda);
-        mav.addObject("permisos", RegwebConstantes.PERMISOS);
+        if(busqueda.getExportar()){ // Creamos un excel con los resultados
+            mav = new ModelAndView("exportarUsuariosExcel");
+            Paginacion paginacion = usuarioEntidadEjb.busqueda(null,
+                    entidad.getId(), busqueda.getUsuarioEntidad(), organismo.getId(), busqueda.getPermiso());
 
-        return mav;
+            mav.addObject("resultados", paginacion);
+
+            return  mav;
+        }else{ // Búsqueda normal
+            Paginacion paginacion = usuarioEntidadEjb.busqueda(busqueda.getPageNumber(),
+                    entidad.getId(), busqueda.getUsuarioEntidad(), organismo.getId(), busqueda.getPermiso());
+            busqueda.setPageNumber(1);
+            mav.addObject("entidad", entidad);
+            mav.addObject("paginacion", paginacion);
+            mav.addObject("organismos", organismoEjb.getPermitirUsuarios(entidad.getId()));
+            mav.addObject("usuarioEntidadBusqueda", busqueda);
+            mav.addObject("permisos", RegwebConstantes.PERMISOS);
+
+            return mav;
+        }
+
     }
 
     /**
@@ -970,38 +978,6 @@ public class EntidadController extends BaseController {
 
         mav.addObject("entidad", entidad);
 
-
-        return mav;
-    }
-
-
-    /**
-     * Export de {@link es.caib.regweb3.model.Usuario} a Excel
-     */
-    @RequestMapping(value = "/exportarUsuarios", method = RequestMethod.GET)
-    public ModelAndView exportarUsuarios(HttpServletRequest request) throws Exception {
-
-        ModelAndView mav = new ModelAndView("exportarUsuariosExcel");
-
-        Entidad entidad = getEntidadActiva(request);
-
-        String identificador = request.getParameter("identificador");
-        String nombre = request.getParameter("nombre");
-        String apellido1 = request.getParameter("apellido1");
-        String apellido2 = request.getParameter("apellido2");
-        String documento = request.getParameter("documento");
-        Long tipo = Long.valueOf(request.getParameter("tipo"));
-        Long idOrganismo = Long.valueOf(request.getParameter("idOrganismo"));
-
-        List<PermisoOrganismoUsuario> permisos = usuarioEntidadEjb.getExportarExcel(entidad.getId(), identificador, nombre, apellido1, apellido2, documento, tipo, idOrganismo, RegwebConstantes.PERMISO_REGISTRO_ENTRADA, RegwebConstantes.PERMISO_REGISTRO_SALIDA, RegwebConstantes.PERMISO_SIR);
-
-        mav.addObject("permisos", permisos);
-
-        if (idOrganismo != -1) {
-            mav.addObject("organismo", organismoEjb.findByIdLigero(idOrganismo).getDenominacion());
-        } else {
-            mav.addObject("organismo", null);
-        }
 
         return mav;
     }
