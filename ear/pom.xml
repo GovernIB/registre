@@ -405,6 +405,12 @@
             <type>ejb</type>
         </dependency>
 
+        <!--Carpeta-->
+        <dependency>
+            <groupId>es.caib.carpeta</groupId>
+            <artifactId>carpeta-api-interna-client</artifactId>
+        </dependency>
+
         <!-- iText -->
         <dependency>
             <groupId>com.itextpdf</groupId>
@@ -412,12 +418,7 @@
             <version>${itext.version}</version>
         </dependency>
 
-        <!-- Apache Commons -->
-        <dependency>
-            <groupId>commons-fileupload</groupId>
-            <artifactId>commons-fileupload</artifactId>
-            <version>1.2.2</version>
-        </dependency>
+
 
     </dependencies>
 

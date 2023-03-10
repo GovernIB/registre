@@ -45,11 +45,14 @@ public class CustodiaBean implements CustodiaLocal {
     @EJB private ColaLocal colaEjb;
     @EJB private RegistroEntradaLocal registroEntradaEjb;
     @EJB private RegistroSalidaLocal registroSalidaEjb;
+    @EJB private CarpetaLocal carpetaEjb;
     @Autowired ArxiuCaibUtils arxiuCaibUtils;
 
 
     @Override
     public Boolean custodiarJustificanteEnCola(Cola elemento, Long idEntidad, Long tipoIntegracion) throws I18NException {
+
+        IRegistro registro;
 
         // Integración
         StringBuilder peticion = new StringBuilder();
@@ -69,8 +72,15 @@ public class CustodiaBean implements CustodiaLocal {
             peticion.append("idElemento: ").append(elemento.getIdObjeto()).append(System.getProperty("line.separator"));
             peticion.append("numeroRegistro: ").append(elemento.getDescripcionObjeto()).append(System.getProperty("line.separator"));
 
+            // Obtenemos el registro correspondiente
+            if (elemento.getTipoRegistro().equals(REGISTRO_ENTRADA)) {
+                registro = registroEntradaEjb.getConAnexosFullLigero(elemento.getIdObjeto());
+            } else {
+                registro = registroSalidaEjb.getConAnexosFullLigero(elemento.getIdObjeto());
+            }
+
             // Custodiamos el justificante en Arxiu-Caib
-            Anexo anexo = custodiarAnexoDocumentCustody(elemento, idEntidad);
+            Anexo anexo = custodiarAnexoDocumentCustody(registro, elemento.getTipoRegistro(), idEntidad);
 
             // Marcamos el justificante como procesado en la Cola
             colaEjb.procesarElemento(elemento);
@@ -78,12 +88,17 @@ public class CustodiaBean implements CustodiaLocal {
             // Integración
             peticion.append("expediente creado: ").append(anexo.getExpedienteID()).append(System.getProperty("line.separator"));
             peticion.append("documento creado: ").append(anexo.getCustodiaID()).append(System.getProperty("line.separator"));
+            peticion.append("idAnexo: ").append(anexo.getId()).append(System.getProperty("line.separator"));
             if (StringUtils.isNotEmpty(anexo.getCsv())) {
                 peticion.append("csv: ").append(anexo.getCsv()).append(System.getProperty("line.separator"));
             }
-            peticion.append("idAnexo: ").append(anexo.getId()).append(System.getProperty("line.separator"));
 
             integracionEjb.addIntegracionOk(inicio, tipoIntegracion, descripcion, peticion.toString(), System.currentTimeMillis() - inicio.getTime(), idEntidad, elemento.getDescripcionObjeto());
+
+            // Avisar a Carpeta Ciutadana de que el Justificante custodiado está disponible
+            if(elemento.getTipoRegistro().equals(REGISTRO_ENTRADA) && StringUtils.isNotEmpty(registro.getRegistroDetalle().getDocumentoInteresado())){
+                carpetaEjb.enviarNotificacionCarpeta(registro, idEntidad);
+            }
 
             return true;
 
@@ -114,22 +129,14 @@ public class CustodiaBean implements CustodiaLocal {
     }
 
     /**
-     * @param elemento
+     * @param registro
      * @param idEntidad
      * @return
      * @throws I18NException
      */
-    private Anexo custodiarAnexoDocumentCustody(Cola elemento, Long idEntidad) throws I18NException {
+    private Anexo custodiarAnexoDocumentCustody(IRegistro registro, Long tipoRegistro, Long idEntidad) throws I18NException {
 
-        IRegistro registro;
         String custodyIdFileSystem;
-
-        // Obtenemos el registro correspondiente
-        if (elemento.getTipoRegistro().equals(REGISTRO_ENTRADA)) {
-            registro = registroEntradaEjb.getConAnexosFullLigero(elemento.getIdObjeto());
-        } else {
-            registro = registroSalidaEjb.getConAnexosFullLigero(elemento.getIdObjeto());
-        }
 
         // Volvemos a comprobar que el Justificante no esté custodiado (A veces se cuela en la Cola (doble click usuario), el mismo registro dos veces)
         if(registro.getRegistroDetalle().getTieneJustificanteCustodiado()){
@@ -145,7 +152,7 @@ public class CustodiaBean implements CustodiaLocal {
 
         // Custodiamos el Justificante en Arxiu-Caib
         Firma justificanteFirmado = justificante.signatureCustodytoFirma();
-        JustificanteArxiu justificanteArxiu = arxiuCaibUtils.crearJustificanteArxiuCaib(registro, elemento.getTipoRegistro(), justificanteFirmado);
+        JustificanteArxiu justificanteArxiu = arxiuCaibUtils.crearJustificanteArxiuCaib(registro, tipoRegistro, justificanteFirmado);
 
         try {
             // Eliminamos el Justificantre en FileSystem

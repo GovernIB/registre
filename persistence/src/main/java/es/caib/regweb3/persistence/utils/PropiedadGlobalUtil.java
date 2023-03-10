@@ -415,6 +415,68 @@ public class PropiedadGlobalUtil {
     }
 
     /**
+     * Retorna el valor de la propiedad CarpetaEnviarMEnsajes de la entidad indicada.
+     * Propiedad: es.caib.regweb3.carpeta.enviarMensajes
+     * @param idEntidad
+     * @return
+     */
+    public static Boolean getCarpetaEnviarMensajes(Long idEntidad) {
+        final String partialPropertyName = "carpeta.enviarMensajes";
+
+        return getBooleanByEntidad(idEntidad, partialPropertyName);
+
+    }
+
+    /**
+     * Retorna el valor de la propiedad CarpetaServer de la entidad indicada.
+     * Propiedad: es.caib.regweb3.carpeta.server
+     * @param idEntidad
+     * @return
+     */
+    public static String getCarpetaServer(Long idEntidad) {
+        final String partialPropertyName = "carpeta.server";
+
+        return getStringByEntidad(idEntidad, partialPropertyName);
+
+    }
+
+    /**
+     * Retorna el valor de la propiedad CarpetaUsername de la entidad indicada.
+     * Propiedad: es.caib.regweb3.carpeta.username
+     * @param idEntidad
+     * @return
+     */
+    public static String getCarpetaUsername(Long idEntidad) {
+        final String partialPropertyName = "carpeta.username";
+
+        return getStringByEntidad(idEntidad, partialPropertyName);
+    }
+
+    /**
+     * Retorna el valor de la propiedad CarpetaPassword de la entidad indicada.
+     * Propiedad: es.caib.regweb3.carpeta.password
+     * @param idEntidad
+     * @return
+     */
+    public static String getCarpetaPassword(Long idEntidad) {
+        final String partialPropertyName = "carpeta.password";
+
+        return getStringByEntidad(idEntidad, partialPropertyName);
+    }
+
+    /**
+     * Retorna el valor de la propiedad CarpetaMotificacionCode de la entidad indicada.
+     * Propiedad: es.caib.regweb3.carpeta.notificationCode
+     * @param idEntidad
+     * @return
+     */
+    public static String getCarpetaNotificationCode(Long idEntidad) {
+        final String partialPropertyName = "carpeta.notificationCode";
+
+        return getStringByEntidad(idEntidad, partialPropertyName);
+    }
+
+    /**
      * Retorna el valor de la propiedad SirServerBase de la entidad indicada.
      * Propiedad: es.caib.regweb3.sir.serverbase
      * @param idEntidad
