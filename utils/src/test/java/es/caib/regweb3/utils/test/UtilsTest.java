@@ -3,6 +3,12 @@ package es.caib.regweb3.utils.test;
 import es.caib.regweb3.utils.StringUtils;
 import org.junit.Test;
 
+import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+
 public class UtilsTest {
 
     @Test
@@ -38,5 +44,29 @@ public class UtilsTest {
         System.out.println("Cadena inicial: " + cadena);
 
         System.out.println("Cadena corregida: " + StringUtils.recortarCadena(cadena,20));
+    }
+
+    @Test
+    public void denominacionDir3(){
+
+        String url = "https://dev.caib.es/dir3caib/rest/unidad/denominacion"+ "?codigo=A04003749";
+        String tieneOficinaSIR = "https://dev.caib.es/dir3caib/rest/unidad/tieneOficinaSir/"+ "A04003749";
+
+        HttpClient httpClient = HttpClient.newBuilder().build();
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .GET()
+                .uri(URI.create(tieneOficinaSIR))
+                .build();
+
+        try {
+            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+
+            System.out.println("Respuesta: " + response.body());
+
+        } catch (IOException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 }
