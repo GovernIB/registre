@@ -424,6 +424,7 @@ public interface RegwebConstantes {
     long TIPO_PROPIEDAD_SCANNER = 5L;
     long TIPO_PROPIEDAD_DISTRIBUCION = 6L;
     long TIPO_PROPIEDAD_SIR = 7L;
+    long TIPO_PROPIEDAD_CARPETA = 8L;
 
     long[] TIPOS_PROPIEDAD_GLOBAL = {
             TIPO_PROPIEDAD_GENERAL,
@@ -432,7 +433,8 @@ public interface RegwebConstantes {
             TIPO_PROPIEDAD_USERINFORMATION,
             TIPO_PROPIEDAD_SCANNER,
             TIPO_PROPIEDAD_DISTRIBUCION,
-            TIPO_PROPIEDAD_SIR
+            TIPO_PROPIEDAD_SIR,
+            TIPO_PROPIEDAD_CARPETA
     };
 
 
@@ -740,6 +742,7 @@ public interface RegwebConstantes {
     Long INTEGRACION_JUSTIFICANTE = 5L;
     Long INTEGRACION_CERRAR_EXPEDIENTE = 6L;
     Long INTEGRACION_SCHEDULERS = 7L;
+    Long INTEGRACION_CARPETA = 8L;
 
     Long[] INTEGRACION_TIPOS = {
             INTEGRACION_CUSTODIA,
@@ -759,7 +762,8 @@ public interface RegwebConstantes {
             INTEGRACION_WS,
             INTEGRACION_CERRAR_EXPEDIENTE,
             INTEGRACION_SIR,
-            INTEGRACION_SCHEDULERS
+            INTEGRACION_SCHEDULERS,
+            INTEGRACION_CARPETA
     };
 
     /* -------------- ESTADO INTEGRACION --------------*/
