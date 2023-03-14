@@ -485,12 +485,92 @@ public class PropiedadGlobalUtil {
     public static String getSirServerBase(Long idEntidad) {
         final String partialPropertyName = "sir.serverbase";
 
-        return  getStringByEntidad(idEntidad, partialPropertyName);
+        return getStringByEntidad(idEntidad, partialPropertyName);
+    }
+
+
+    /**
+     * Retorna el valor de la propiedad InterDocServer.
+     * Propiedad: es.caib.regweb3.dir3caib.server
+     *
+     * @return
+     */
+    public static String getInterDocServer() {
+        final String partialPropertyName = "interdoc.server";
+
+        return getString(partialPropertyName);
+
+    }
+
+    /**
+     * Retorna el valor de la propiedad InterDocUsername.
+     * Propiedad: es.caib.regweb3.dir3caib.username
+     *
+     * @return
+     */
+    public static String getInterDocUsername() {
+        final String partialPropertyName = "interdoc.username";
+
+        return getString(partialPropertyName);
+
+    }
+
+    /**
+     * Retorna el valor de la propiedad InterDocPassword.
+     * Propiedad: es.caib.regweb3.dir3caib.password
+     *
+     * @return
+     */
+    public static String getInterDocPassword() {
+        final String partialPropertyName = "interdoc.password";
+
+        return getString(partialPropertyName);
+    }
+
+    /**
+     * Retorna el valor de la propiedad InterDocServer de la entidad indicada.
+     * Propiedad: es.caib.regweb3.dir3caib.server
+     *
+     * @param idEntidad
+     * @return
+     */
+    public static String getInterDocServer(Long idEntidad) {
+        final String partialPropertyName = "interdoc.server";
+
+        return getStringByEntidad(idEntidad, partialPropertyName);
+
+    }
+
+    /**
+     * Retorna el valor de la propiedad InterDocUsername de la entidad indicada.
+     * Propiedad: es.caib.regweb3.dir3caib.username
+     *
+     * @param idEntidad
+     * @return
+     */
+    public static String getInterDocUsername(Long idEntidad) {
+        final String partialPropertyName = "interdoc.username";
+
+        return getStringByEntidad(idEntidad, partialPropertyName);
+    }
+
+    /**
+     * Retorna el valor de la propiedad InterDocPassword de la entidad indicada.
+     * Propiedad: es.caib.regweb3.dir3caib.password
+     *
+     * @param idEntidad
+     * @return
+     */
+    public static String getInterDocPassword(Long idEntidad) {
+        final String partialPropertyName = "interdoc.password";
+
+        return getStringByEntidad(idEntidad, partialPropertyName);
     }
 
     /**
      * Retorna el valor de la propiedad Fecha Oficio Salida de la entidad indicada.
      * Propiedad: es.caib.regweb3.oficioSalida.fecha
+     *
      * @return
      */
     public static String getFechaOficiosSalida() {

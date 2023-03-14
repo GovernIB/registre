@@ -730,7 +730,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
      */
     @Override
     public RegistroSir transformarAsientoBean(AsientoBean asientoBean, Entidad entidad) throws I18NException {
-        final SimpleDateFormat SDF = new SimpleDateFormat("yyyyMMddHHmmssz");
+        final SimpleDateFormat SDF = new SimpleDateFormat(FORMATO_FECHA_SICRES4);
 
         RegistroSir registroSir = null;
 
@@ -1193,8 +1193,8 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         registroSir.setTipoRegistro(TipoRegistro.ENTRADA);
         registroSir.setDocumentacionFisica(String.valueOf(registroDetalle.getTipoDocumentacionFisica()));
         registroSir.setObservacionesApunte(registroDetalle.getObservaciones());
-        registroSir.setCodigoEntidadRegistralInicio(obtenerCodigoOficinaOrigen(registroDetalle,registroEntrada.getOficina().getCodigo()));
-        registroSir.setDecodificacionEntidadRegistralInicio(obtenerDenominacionOficinaOrigen(registroDetalle, registroEntrada.getOficina().getDenominacion()));
+        registroSir.setCodigoEntidadRegistralInicio(RegistroUtils.obtenerCodigoOficinaOrigen(registroDetalle, registroEntrada.getOficina().getCodigo()));
+        registroSir.setDecodificacionEntidadRegistralInicio(RegistroUtils.obtenerDenominacionOficinaOrigen(registroDetalle, registroEntrada.getOficina().getDenominacion()));
 
         // Segmento De_Formulario_Genérico
         registroSir.setExpone(registroDetalle.getExpone());
@@ -1273,8 +1273,8 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         registroSir.setTipoRegistro(TipoRegistro.SALIDA);
         registroSir.setDocumentacionFisica(String.valueOf(registroDetalle.getTipoDocumentacionFisica()));
         registroSir.setObservacionesApunte(registroDetalle.getObservaciones());
-        registroSir.setCodigoEntidadRegistralInicio(obtenerCodigoOficinaOrigen(registroDetalle, registroSalida.getOficina().getCodigo()));
-        registroSir.setDecodificacionEntidadRegistralInicio(obtenerDenominacionOficinaOrigen(registroDetalle, registroSalida.getOficina().getDenominacion()));
+        registroSir.setCodigoEntidadRegistralInicio(RegistroUtils.obtenerCodigoOficinaOrigen(registroDetalle, registroSalida.getOficina().getCodigo()));
+        registroSir.setDecodificacionEntidadRegistralInicio(RegistroUtils.obtenerDenominacionOficinaOrigen(registroDetalle, registroSalida.getOficina().getDenominacion()));
 
         // Segmento De_Formulario_Genérico
         registroSir.setExpone(registroDetalle.getExpone());
@@ -1582,7 +1582,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
 
                     SignatureCustody sc = anexoFull.getSignatureCustody();
 
-                    String identificador_fichero = generateIdentificadorFichero(identificadorIntercambio, secuencia, sc.getName());
+                    String identificador_fichero = RegistroUtils.generateIdentificadorFichero(identificadorIntercambio, secuencia, sc.getName());
                     secuencia++;
 
                     anexoSir = crearAnexoSir(sc.getName(),identificador_fichero,
@@ -1602,7 +1602,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
 
                     DocumentCustody dc = anexoFull.getDocumentoCustody();
 
-                    identificador_fichero = generateIdentificadorFichero(identificadorIntercambio, secuencia, dc.getName());
+                    identificador_fichero = RegistroUtils.generateIdentificadorFichero(identificadorIntercambio, secuencia, dc.getName());
                     secuencia++;
 
                     anexoSir = crearAnexoSir(dc.getName(),identificador_fichero,
@@ -1618,7 +1618,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
 
                     sc = anexoFull.getSignatureCustody();
 
-                    String identificador_fichero_FIRMA = generateIdentificadorFichero(identificadorIntercambio, secuencia, sc.getName());
+                    String identificador_fichero_FIRMA = RegistroUtils.generateIdentificadorFichero(identificadorIntercambio, secuencia, sc.getName());
                     secuencia++;
 
                     anexoSir = crearAnexoSir(sc.getName(),identificador_fichero_FIRMA,
@@ -1703,87 +1703,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         return anexoSir;
     }
 
-    /**
-     * Metodo que genera identificador de anxso según el patron
-     * identificadorIntercambio_01_secuencia.extension
-     * donde secuencia es cadena que repesenta secuencia en formato 0001 (leftpading con 0 y máximo de 4 caracteres)
-     * donde extesion es la extension del anexo
-     *
-     * @param identificadorIntercambio
-     * @param secuencia
-     * @param fileName
-     * @return
-     */
-    protected String generateIdentificadorFichero(String identificadorIntercambio, int secuencia, String fileName) {
-
-        return identificadorIntercambio +
-                "_01_" +
-                StringUtils.leftPad(
-                        String.valueOf(secuencia), 4, "0") +
-                "." + getExtension(fileName);
-    }
-
-    /**
-     * Obtiene la Extensión de un Fichero a partir de su nombre
-     *
-     * @param nombreFichero
-     * @return extensión del fichero
-     */
-    private String getExtension(String nombreFichero) {
-        String extension = "";
-
-        int i = nombreFichero.lastIndexOf('.');
-        if (i > 0) {
-            extension = nombreFichero.substring(i + 1);
-        }
-
-        return extension;
-    }
-
-    /**
-     * Obtiene el código Oficina de Origen dependiendo de si es interna o externa
-     *
-     * @param registroDetalle
-     * @param codigoOficia
-     * @return
-     * @throws I18NException
-     */
-    private String obtenerCodigoOficinaOrigen(RegistroDetalle registroDetalle, String codigoOficia) {
-        String codOficinaOrigen;
-
-        if ((registroDetalle.getOficinaOrigenExternoCodigo() == null) && (registroDetalle.getOficinaOrigen() == null)) {
-            codOficinaOrigen = codigoOficia;
-        } else if (registroDetalle.getOficinaOrigenExternoCodigo() != null) {
-            codOficinaOrigen = registroDetalle.getOficinaOrigenExternoCodigo();
-        } else {
-            codOficinaOrigen = registroDetalle.getOficinaOrigen().getCodigo();
-        }
-
-        return codOficinaOrigen;
-    }
-
-    /**
-     * Obtiene el denominación Oficina de Origen dependiendo de si es interna o externa
-     *
-     * @param registroDetalle
-     * @param denominacionOficia
-     * @return
-     * @throws I18NException
-     */
-    private String obtenerDenominacionOficinaOrigen(RegistroDetalle registroDetalle, String denominacionOficia) {
-        String denominacionOficinaOrigen;
-
-        if ((registroDetalle.getOficinaOrigenExternoCodigo() == null) && (registroDetalle.getOficinaOrigen() == null)) {
-            denominacionOficinaOrigen = denominacionOficia;
-        } else if (registroDetalle.getOficinaOrigenExternoCodigo() != null) {
-            denominacionOficinaOrigen = registroDetalle.getOficinaOrigenExternoDenominacion();
-        } else {
-            denominacionOficinaOrigen = registroDetalle.getOficinaOrigen().getDenominacion();
-        }
-
-        return denominacionOficinaOrigen;
-    }
-
+    //TODO MIRAR DE BORRAR ESTAN EN LibSirUtils.java
     /**
      *
      * @param registroDetalle
@@ -1803,6 +1723,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         return null;
     }
 
+    //TODO MIRAR DE BORRAR ESTAN EN LibSirUtils.java
     /**
      *
      * @param registroDetalle
@@ -2335,7 +2256,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
                     anexo.setTipoDocumental(tipoDocumentalEjb.findByCodigoEntidad(metadatoAnexoSir.getValor(), idEntidad));
                 }
                 if (metadatoAnexoSir.getCampo().equals("fechaCaptura")) {
-                    SimpleDateFormat formatter = new SimpleDateFormat("YYYYMMDDhhmmssz");
+                    SimpleDateFormat formatter = new SimpleDateFormat(FORMATO_FECHA_SICRES4);
                     anexo.setFechaCaptura(formatter.parse(metadatoAnexoSir.getValor()));
                 }
                 //TODO VERSIONNTI
@@ -2858,7 +2779,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
 
         MetadatoAnexoSir metadatoAnexoSir;
 
-        DateFormat formatter = new SimpleDateFormat("YYYYMMDDhhmmssz");
+        DateFormat formatter = new SimpleDateFormat(FORMATO_FECHA_SICRES4);
 
         if (tiposMetadato != null) {
             //fechaCaptura

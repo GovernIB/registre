@@ -45,6 +45,22 @@ public class ArchivoController extends BaseController{
 
     }
 
+
+    @RequestMapping(value = "/obtenerDocumentoReferencia/{archivoId}", method = RequestMethod.GET)
+    public void obtenerDocumentoReferencia(@PathVariable("archivoId") Long archivoId, HttpServletRequest request, HttpServletResponse response) {
+        Archivo archivo = null;
+
+        try {
+            archivo = archivoEjb.findById(archivoId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        fullDownload(archivoId, archivo.getNombre(), archivo.getMime(), response);
+
+    }
+
+
     public void fullDownload(Long archivoId, String filename, String contentType, HttpServletResponse response) {
 
         FileInputStream input;

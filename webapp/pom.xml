@@ -450,6 +450,12 @@
             <scope>provided</scope>
         </dependency>
 
+        <dependency>
+            <groupId>es.gob.ad.registros.sir</groupId>
+            <artifactId>InterService</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
     </dependencies>
 
 

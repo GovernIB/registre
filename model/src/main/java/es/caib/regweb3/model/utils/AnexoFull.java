@@ -337,12 +337,35 @@ public class AnexoFull{
         }
     }
 
+    public String getTituloCorto() {
+
+        if (getDocumentoCustody() != null) {
+            String tituloCorto = getDocumentoCustody().getName();
+
+            if (tituloCorto.length() > 100) {
+                tituloCorto = getDocumentoCustody().getName().substring(0, 100) + "...";
+            }
+            return tituloCorto;
+        } else {
+            if (getSignatureCustody() != null) {
+                String tituloCorto = getSignatureCustody().getName();
+
+                if (tituloCorto.length() > 100) {
+                    tituloCorto = getSignatureCustody().getName().substring(0, 100) + "...";
+                }
+                return tituloCorto;
+            } else {
+                return "";
+            }
+        }
+    }
+
     @Transient
-    public void arxiuDocumentToCustody(){
+    public void arxiuDocumentToCustody() {
 
         getAnexo().setPerfilCustodia(RegwebConstantes.PERFIL_CUSTODIA_DOCUMENT_CUSTODY);
 
-        String custodyId = getAnexo().getCustodiaID() +"#"+getAnexo().getExpedienteID();
+        String custodyId = getAnexo().getCustodiaID() + "#" + getAnexo().getExpedienteID();
         getAnexo().setCustodiaID(custodyId);
 
         SignatureCustody sc = new SignatureCustody();

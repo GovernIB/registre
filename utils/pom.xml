@@ -122,6 +122,13 @@
             <scope>test</scope>
         </dependency>
 
+        <!--INTERDOC-->
+        <dependency>
+            <groupId>es.caib.interdoc</groupId>
+            <artifactId>interdoc-ws-api</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+
     </dependencies>
 
     <build>

@@ -8,6 +8,7 @@ import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 
 import javax.ejb.Local;
+import javax.xml.datatype.DatatypeConfigurationException;
 import java.text.ParseException;
 import java.util.List;
 
@@ -58,7 +59,7 @@ public interface SirEnvioLocal {
      * @throws I18NException
      */
     OficioRemision enviarIntercambio(Long tipoRegistro, IRegistro registro, Entidad entidad, Oficina oficinaActiva, UsuarioEntidad usuario, String codigoOficinaSir)
-            throws I18NException, I18NValidationException;
+            throws I18NException, I18NValidationException, DatatypeConfigurationException;
 
     /**
      * Reenvia un intercambio, cuando este ha sido RECHAZADO O REENVIADO

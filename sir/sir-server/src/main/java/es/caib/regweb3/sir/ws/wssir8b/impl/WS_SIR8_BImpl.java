@@ -62,11 +62,12 @@ public class WS_SIR8_BImpl implements WS_SIR8_B_PortType {
 
     @Override
     @WebMethod(operationName = "envioFicherosAAplicacion")
-    public RespuestaWS envioFicherosAAplicacion(@WebParam(name = "value0") String registro, @WebParam(name = "value1") String firmaRegistro) {
+    //public RespuestaWS envioFicherosAAplicacion(@WebParam(name = "value0") String registro, @WebParam(name = "value1") String firmaRegistro) {
+    public RespuestaWS envioFicherosAAplicacion(@WebParam(name = "registro") String registro, @WebParam(name = "firmaRegistro") String firmaRegistro) {
 
         RespuestaWS respuestaWS = null;
 
-        try{
+        try {
 
             // Procesamos el intercambio recibido
             libSirEjb.recibirAsiento(registro, firmaRegistro);
@@ -74,7 +75,7 @@ public class WS_SIR8_BImpl implements WS_SIR8_B_PortType {
             // Creamos la respuesta exitosa
             respuestaWS = crearRespuestaWS(Errores.OK);
 
-        }catch (InterException ie){
+        } catch (InterException ie) {
             log.info("Error recibiendo el Fichero de Intercambio", ie);
             respuestaWS = crearRespuestaWS(ie.getCodigo(), ie.getDescripcion());
         }

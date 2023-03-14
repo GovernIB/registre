@@ -6,6 +6,7 @@ import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.PlantillaJson;
 import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
+import org.apache.commons.lang.StringUtils;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -275,6 +276,90 @@ public class RegistroUtils{
 
         return stb.toString();
 
+    }
+
+
+    /**
+     * Obtiene el código Oficina de Origen dependiendo de si es interna o externa
+     *
+     * @param registroDetalle
+     * @param codigoOficia
+     * @return
+     * @throws I18NException
+     */
+    public static String obtenerCodigoOficinaOrigen(RegistroDetalle registroDetalle, String codigoOficia) {
+        String codOficinaOrigen;
+
+        if ((registroDetalle.getOficinaOrigenExternoCodigo() == null) && (registroDetalle.getOficinaOrigen() == null)) {
+            codOficinaOrigen = codigoOficia;
+        } else if (registroDetalle.getOficinaOrigenExternoCodigo() != null) {
+            codOficinaOrigen = registroDetalle.getOficinaOrigenExternoCodigo();
+        } else {
+            codOficinaOrigen = registroDetalle.getOficinaOrigen().getCodigo();
+        }
+
+        return codOficinaOrigen;
+    }
+
+    /**
+     * Obtiene el denominación Oficina de Origen dependiendo de si es interna o externa
+     *
+     * @param registroDetalle
+     * @param denominacionOficia
+     * @return
+     * @throws I18NException
+     */
+    public static String obtenerDenominacionOficinaOrigen(RegistroDetalle registroDetalle, String denominacionOficia) {
+        String denominacionOficinaOrigen;
+
+        if ((registroDetalle.getOficinaOrigenExternoCodigo() == null) && (registroDetalle.getOficinaOrigen() == null)) {
+            denominacionOficinaOrigen = denominacionOficia;
+        } else if (registroDetalle.getOficinaOrigenExternoCodigo() != null) {
+            denominacionOficinaOrigen = registroDetalle.getOficinaOrigenExternoDenominacion();
+        } else {
+            denominacionOficinaOrigen = registroDetalle.getOficinaOrigen().getDenominacion();
+        }
+
+        return denominacionOficinaOrigen;
+    }
+
+
+    /**
+     * Metodo que genera identificador de anxso según el patron
+     * identificadorIntercambio_01_secuencia.extension
+     * donde secuencia es cadena que repesenta secuencia en formato 0001 (leftpading con 0 y máximo de 4 caracteres)
+     * donde extesion es la extension del anexo
+     *
+     * @param identificadorIntercambio
+     * @param secuencia
+     * @param fileName
+     * @return
+     */
+    public static String generateIdentificadorFichero(String identificadorIntercambio, int secuencia, String fileName) {
+
+        return identificadorIntercambio +
+                "_01_" +
+                StringUtils.leftPad(
+                        String.valueOf(secuencia), 4, "0") +
+                "." + getExtension(fileName);
+    }
+
+
+    /**
+     * Obtiene la Extensión de un Fichero a partir de su nombre
+     *
+     * @param nombreFichero
+     * @return extensión del fichero
+     */
+    public static String getExtension(String nombreFichero) {
+        String extension = "";
+
+        int i = nombreFichero.lastIndexOf('.');
+        if (i > 0) {
+            extension = nombreFichero.substring(i + 1);
+        }
+
+        return extension;
     }
 
 }

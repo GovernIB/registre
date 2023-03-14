@@ -121,6 +121,7 @@ public interface RegwebConstantes {
     /* -------------- FORMATOS --------------*/
     String FORMATO_FECHA = "dd/MM/yyyy";
     String FORMATO_FECHA_HORA = "dd/MM/yyyy HH:mm";
+    String FORMATO_FECHA_SICRES4 = "YYYYMMDDHHmmssz";
     Integer ANY = 2015;
 
     /* -------------- PERMISOS LIBRO REGISTROS --------------*/
@@ -512,6 +513,8 @@ public interface RegwebConstantes {
     String REGISTRO_SALIDA_ESCRITO = "Sortida";
     String REGISTRO_ENTRADA_ESCRITO_CASTELLANO = "Entrada";
     String REGISTRO_SALIDA_ESCRITO_CASTELLANO = "Salida";
+    String REGISTRO_ENTRADA_LIBSIR = "0";
+    String REGISTRO_SALIDA_LIBSIR = "1";
 
     /* -------------- TIPO DOCUMENTO IDENTIFICACION --------------*/
     char TIPODOCUMENTOID_NIF = 'N';
@@ -653,6 +656,12 @@ public interface RegwebConstantes {
         put(TIPO_ANEXO_JUSTIF_REG, "0" + TIPO_ANEXO_JUSTIF_REG);
         put(TIPO_ANEXO_DOC_ADJUNTO, "0" + TIPO_ANEXO_DOC_ADJUNTO);
         put(TIPO_ANEXO_OTRO, "0" + TIPO_ANEXO_OTRO);
+    }};
+
+    Map<Long, String> TIPO_DOCUMENTO_TIPO_ANEXO = new HashMap<Long, String>() {{
+        put(TIPO_DOCUMENTO_FORMULARIO, TIPO_ANEXO_DOC_ADJUNTO_SICRES4);
+        put(TIPO_DOCUMENTO_DOC_ADJUNTO, TIPO_ANEXO_DOC_ADJUNTO_SICRES4);
+        put(TIPO_DOCUMENTO_FICHERO_TECNICO, TIPO_ANEXO_OTRO_SICRES4);
     }};
 
     Map<String, Long> TIPO_ANEXO_BY_CODIGO_NTI

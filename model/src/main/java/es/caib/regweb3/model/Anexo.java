@@ -106,7 +106,7 @@ public class Anexo implements Serializable {
 
     //Referencia Única
     private String endpointRFU; //endpoint de INTERDOC
-    private String identificadorRFU; // identificador INTERDOC
+    private String identificadorRFU; // identificador INTERDOC = XMLREFERENCIA
 
 
 
