@@ -5,12 +5,12 @@
 
     <parent>
         <groupId>es.caib.regweb3</groupId>
-        <version>3.3.0</version>
+        <version>3.3.1</version>
         <artifactId>plugin-distribucion</artifactId>
     </parent>
 
     <artifactId>plugin-distribucion-api</artifactId>
-    <version>3.3.0</version>
+    <version>3.3.1</version>
     <packaging>jar</packaging>
 
     <name>RegWeb3 - Distribucion Plugin - API</name>

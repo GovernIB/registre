@@ -6,7 +6,7 @@
 
     <groupId>es.caib.regweb3</groupId>
     <artifactId>regweb3</artifactId>
-    <version>3.3.0</version>
+    <version>3.3.1</version>
     <packaging>pom</packaging>
 
     <name>RegWeb3</name>

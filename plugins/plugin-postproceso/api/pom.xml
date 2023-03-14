@@ -5,12 +5,12 @@
 
     <parent>
         <groupId>es.caib.regweb3</groupId>
-        <version>3.3.0</version>
+        <version>3.3.1</version>
         <artifactId>plugin-postproceso</artifactId>
     </parent>
 
     <artifactId>plugin-postproceso-api</artifactId>
-    <version>3.3.0</version>
+    <version>3.3.1</version>
     <packaging>jar</packaging>
 
     <name>RegWeb3 - Post Proceso Plugins - API</name>

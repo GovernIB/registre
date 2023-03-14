@@ -7,7 +7,7 @@
     <parent>
         <artifactId>regweb3</artifactId>
         <groupId>es.caib.regweb3</groupId>
-        <version>3.3.0</version>
+        <version>3.3.1</version>
     </parent>
 
     <artifactId>regweb3-ear</artifactId>

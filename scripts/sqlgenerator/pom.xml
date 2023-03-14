@@ -4,14 +4,14 @@
 
     <artifactId>regweb3-sqlgenerator</artifactId>
     <packaging>jar</packaging>
-    <version>3.3.0</version>
+    <version>3.3.1</version>
 
     <name>RegWeb3 - Scripts - SQL Generator</name>
 
     <parent>
         <groupId>es.caib.regweb3</groupId>
         <artifactId>regweb3-scripts</artifactId>
-        <version>3.3.0</version>
+        <version>3.3.1</version>
     </parent>
 
 
@@ -37,12 +37,22 @@
             <groupId>es.caib.regweb3</groupId>
             <artifactId>regweb3-persistence</artifactId>
             <version>${project.version}</version>
+            <type>jar</type>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>es.caib.regweb3</groupId>
+            <artifactId>regweb3-persistence</artifactId>
+            <version>${project.version}</version>
+            <type>jar</type>
+            <classifier>jdbc</classifier>
         </dependency>
 
         <dependency>
             <groupId>org.fundaciobit.genapp</groupId>
-            <artifactId>genapp-gen</artifactId>
-            <version>1.0</version>
+            <artifactId>genapp-sqlgenerator</artifactId>
+            <version>${genapp.version}</version>
         </dependency>
 
         <dependency>
@@ -52,28 +62,22 @@
         </dependency>
 
         <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-core</artifactId>
-            <version>3.3.2.GA</version>
-        </dependency>
-
-        <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
             <version>1.2.14</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <scope>provided</scope>
-        </dependency>
+         <dependency>
+             <groupId>org.slf4j</groupId>
+             <artifactId>slf4j-api</artifactId>
+             <scope>provided</scope>
+         </dependency>
 
-        <!--<dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
-            <version>1.5.4</version>
-        </dependency>-->
+        <dependency>
+            <groupId>org.fundaciobit.genapp</groupId>
+            <artifactId>genapp-core</artifactId>
+            <version>${genapp.version}</version>
+        </dependency>
 
     </dependencies>
 
