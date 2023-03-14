@@ -264,7 +264,8 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
 
                 // Comprobar PERMISO_REGISTRO_ENTRADA de usuario aplicación
                 if (!permisoOrganismoUsuarioEjb.tienePermiso(usuarioAplicacion.getId(), oficina.getOrganismoResponsable().getId(), PERMISO_REGISTRO_ENTRADA, true)) {
-                    throw new I18NException("registro.usuario.permisos", usuarioAplicacion.getNombreCompleto(), libro.getCodigo());
+                    peticion.append("oficina: ").append(oficina.getDenominacion() + " ("+oficina.getCodigo()+")").append(System.getProperty("line.separator"));
+                    throw new I18NException("registro.usuario.permisos", usuarioAplicacion.getNombreCompleto());
                 }
 
                 // Comprobar que el Organismo destino está vigente
@@ -358,6 +359,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
 
                 // Comprobar PERMISO_REGISTRO_SALIDA de usuario aplicación
                 if (!permisoOrganismoUsuarioEjb.tienePermiso(usuarioAplicacion.getId(), oficina.getOrganismoResponsable().getId(), PERMISO_REGISTRO_SALIDA, true)) {
+                    peticion.append("oficina: ").append(oficina.getDenominacion() + " ("+oficina.getCodigo()+")").append(System.getProperty("line.separator"));
                     throw new I18NException("registro.usuario.permisos", usuarioAplicacion.getNombreCompleto(), libro.getCodigo());
                 }
 
