@@ -167,6 +167,7 @@
 
                                                         <%--Opciones pendiente procesar--%>
                                                         <c:if test="${cola.estado != RegwebConstantes.COLA_ESTADO_PROCESADO}">
+                                                            <a class="btn btn-danger btn-sm" onclick='confirm("<c:url value="/cola/${cola.id}/eliminar"/>","<spring:message code="cola.confirmar.eliminar" htmlEscape="true"/>")' href="javascript:void(0);" title="<spring:message code="regweb.eliminar"/>"><span class="fa fa-eraser"></span></a>
                                                             <c:if test="${cola.numeroReintentos > 0}">
                                                                 <a class="btn btn-info btn-sm" onclick='confirm("<c:url value="/cola/${cola.id}/procesar"/>","<spring:message code="cola.confirmar.procesar" htmlEscape="true"/>")' href="javascript:void(0);" title="<spring:message code="cola.procesar"/>"><span class="fa fa-check"></span></a>
                                                             </c:if>

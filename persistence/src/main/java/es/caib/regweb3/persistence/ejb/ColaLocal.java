@@ -139,7 +139,7 @@ public interface ColaLocal extends BaseEjb<Cola, Long> {
     void reiniciarElementoCola(Long idCola) throws I18NException;
 
     /**
-     * MArca como procesado un elemento de la Cola
+     * Marca como procesado un elemento de la Cola
      *
      * @param elemento
      */
@@ -161,4 +161,12 @@ public interface ColaLocal extends BaseEjb<Cola, Long> {
      * @throws I18NException
      */
     List<Cola> getElementosError(Long idEntidad) throws I18NException;
+
+
+    /**
+     * Elimina un elemento de la Cola
+     * @param idCola
+     * @throws I18NException
+     */
+    void eliminarElemento(Long idCola) throws I18NException;
 }

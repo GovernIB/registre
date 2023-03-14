@@ -204,6 +204,26 @@ public class ColaController extends BaseController {
         return "redirect:/cola/list";
     }
 
+    @RequestMapping(value = "/{idCola}/eliminar")
+    public String eliminarCola(@PathVariable Long idCola, HttpServletRequest request) {
+
+        try {
+            Cola elemento = colaEjb.findById(idCola);
+
+            colaEjb.eliminarElemento(idCola);
+
+            Mensaje.saveMessageInfo(request, getMessage("cola.eliminar.ok"));
+
+            return "redirect:/cola/list/"+elemento.getTipo();
+
+        } catch (Exception e) {
+            Mensaje.saveMessageError(request, getMessage("cola.error.eliminar"));
+            e.printStackTrace();
+        }
+
+        return "redirect:/cola/list";
+    }
+
     /**
      * Reiniciar un {@link Cola} y le pone el contador a 0.
      */

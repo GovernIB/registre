@@ -424,24 +424,17 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
     }
 
     /**
-     * Obtiene los elementos procesados de la Cola de una antiguedad determinada
+     * Elimina un elemento de la cola
      *
-     * @param idEntidad
-     * @param meses
+     * @param idCola
      * @return
      * @throws I18NException
      */
-    private List<Cola> obtenerProcesados(Long idEntidad, Integer meses) throws I18NException {
+    @Override
+    public void eliminarElemento(Long idCola) throws I18NException {
 
-        Date fechaPurgo = DateUtils.addMonths(new Date(), -meses);
+        em.createQuery("delete from Cola where id =:idCola").setParameter("idCola", idCola).executeUpdate();
 
-        Query q = em.createQuery("select cola from Cola as cola where cola.estado=:procesado and cola.fecha<=:fechaPurgo and cola.usuarioEntidad.entidad.id =:idEntidad");
-
-        q.setParameter("fechaPurgo", fechaPurgo);
-        q.setParameter("procesado", RegwebConstantes.COLA_ESTADO_PROCESADO);
-        q.setParameter("idEntidad", idEntidad);
-
-        return q.getResultList();
     }
 
 }
