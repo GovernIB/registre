@@ -69,10 +69,10 @@ public class Integracion implements Serializable {
         this.entidad = new Entidad(idEntidad);
         this.peticion = peticion;
         this.tiempo = tiempo;
-        this.error = error;
-        this.excepcion = excepcion;
         this.fecha = new Date();
         this.numRegFormat = numRegFormat;
+        this.error = error;
+        this.excepcion = excepcion;
     }
 
     @Id
@@ -153,6 +153,15 @@ public class Integracion implements Serializable {
         this.peticion = peticion;
     }
 
+    @Column(name = "NUMREGFORMAT", length = 255)
+    public String getNumRegFormat() {
+        return numRegFormat;
+    }
+
+    public void setNumRegFormat(String numRegFormat) {
+        this.numRegFormat = numRegFormat;
+    }
+    
     @Lob
     @Column(name = "ERROR", length = 2147483647)
     public String getError() {
@@ -171,15 +180,6 @@ public class Integracion implements Serializable {
 
     public void setExcepcion(String excepcion) {
         this.excepcion = excepcion;
-    }
-
-    @Column(name = "NUMREGFORMAT", length = 255)
-    public String getNumRegFormat() {
-        return numRegFormat;
-    }
-
-    public void setNumRegFormat(String numRegFormat) {
-        this.numRegFormat = numRegFormat;
     }
 
 

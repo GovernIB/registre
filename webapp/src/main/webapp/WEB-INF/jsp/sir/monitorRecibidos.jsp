@@ -252,6 +252,12 @@
                                                                 <c:if test="${not empty registroSir.identificadorIntercambio}">
                                                                 	<li><a href="<c:url value="/sir/${registroSir.identificadorIntercambio}/detalle"/>" target="_blank"><spring:message code="idIntercambio.detalle"/></a></li>
                                                                 </c:if>
+                                                                <c:if test="${empty registroSir.identificadorIntercambio 
+                                                                				&& (registroSir.estado == 'ENVIADO_CONFIRMADO' || registroSir.estado == 'RECIBIDO_CONFIRMADO' || registroSir.estado == 'FINALIZADO') 
+                                                                				&& not empty registroSir.fechaRecepcion}">
+                                                                        <c:url value="/sir/recibido/actualizarEstado" var="urlActualizar"/>
+                                                                    	<li><a href="javascript:void(0);" onclick="actualizarRegistroSir('${registroSir.id}','${urlActualizar}', '<spring:message code="registroSir.actualizar.mensaje"/>')"><spring:message code="registroSir.actualizar"/></a></li>
+                                                                    </c:if>
                                                                 <%-- 
                                                                 <c:if test="${registroSir.estado == 'RECIBIDO'}">
                                                                     <li><a data-toggle="modal" role="button" href="#eliminarModal" onclick="limpiarModalEliminar(${registroSir.id});"><spring:message code="registroSir.eliminar"/></a></li>

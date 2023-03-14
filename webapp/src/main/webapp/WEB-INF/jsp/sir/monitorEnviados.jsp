@@ -184,7 +184,7 @@
                                                     <col>
                                                     <col>
                                                     <col>
-                                                    <col>
+                                                   <!-- <col>-->
                                                     <col width="51">
                                                 </colgroup>
                                                 <thead>

@@ -673,10 +673,36 @@ public class SirController extends BaseController {
     			}
 				Mensaje.saveMessageInfo(request, "Se ha actualizado el intercambio");
 
-				return "redirect:/sir/monitorRecibidos";
+				return "redirect:/sir/monitorEnviados";
 			
 			}
 
+		} catch (Exception | I18NException e) {
+			e.printStackTrace();
+			Mensaje.saveMessageError(request, "Ha ocurrido un error actualizando el intercambio: " + e.getMessage());
+		}
+		return "redirect:/sir/monitorEnviados";
+	}
+	
+	/**
+	 * Actualiza un {@link es.caib.regweb3.model.RegistroSir}
+	 */
+	@RequestMapping(value = "/recibido/actualizarEstado", method = RequestMethod.GET)
+	@ResponseBody
+	public String actualizarRegistroSirRecibido(@RequestParam Long id, HttpServletRequest request) throws Exception {
+		try {
+			RegistroSir registroSir = registroSirEjb.findById(id);
+			UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
+			
+			if (! RegwebUtils.contains(RegwebConstantes.ESTADOS_REGISTRO_SIR_FINALES, registroSir.getEstado()) && registroSir.getFechaRecepcion() != null) {
+    			synchronized(Semaforo.getCreacionSemaforo()) {
+    				sirEnvioEjb.actualizarEnvioSirRealizado(registroSir, usuarioEntidad);
+    			}
+				Mensaje.saveMessageInfo(request, "Se ha actualizado el intercambio");
+
+				return "redirect:/sir/monitorRecibidos";
+			
+			}
 		} catch (Exception | I18NException e) {
 			e.printStackTrace();
 			Mensaje.saveMessageError(request, "Ha ocurrido un error actualizando el intercambio: " + e.getMessage());

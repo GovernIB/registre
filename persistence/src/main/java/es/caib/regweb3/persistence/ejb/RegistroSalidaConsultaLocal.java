@@ -192,4 +192,7 @@ public interface RegistroSalidaConsultaLocal{
      */
     public RegistroSalida findByNumeroRegistro(String codigoEntidad, String numeroRegistro) throws Exception;
 
+
+	List<String> obtenerRegistrosSirFinalizados(Long idEntidad);
+
 }

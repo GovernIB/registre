@@ -255,4 +255,5 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
 			throws Exception;
 
 	void marcarRectificado(Long idRegistro);
+
 }

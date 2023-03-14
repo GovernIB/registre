@@ -304,4 +304,6 @@ public interface RegistroEntradaConsultaLocal {
      */
     List<Organismo> ultimosOrganismosRegistro(UsuarioEntidad usuarioEntidad) throws Exception;
 
+	List<String> obtenerRegistrosSirFinalizados(Long idEntidad);
+
 }

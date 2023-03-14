@@ -1188,32 +1188,79 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
 	@Override
 	@SuppressWarnings(value = "unchecked")
 	public List<Long> getRegistrosSirPendientes(Long idEntidad, int maxReintentos) throws Exception {
-		Query q = em.createQuery("Select registroSir.id from RegistroSir as registroSir "
-				+ "where registroSir.entidad.id = :idEntidad "
-				+ "and (registroSir.estado = :pendienteEnvio "
-				+ "		or registroSir.estado = :pendienteConfirmacion "
-				+ "		or registroSir.estado = :pendienteConfirmacionManual "
-				+ "		or registroSir.estado = :tramite or registroSir.estado = :proceso "
-				+ "		or registroSir.estado = :reenviado) "
-				+ "and (registroSir.numeroReintentos is null or registroSir.numeroReintentos < :reintentos) order by id");
-		q.setParameter("idEntidad", idEntidad);
-		q.setParameter("pendienteEnvio", EstadoRegistroSir.PENDIENTE_ENVIO);
-		q.setParameter("pendienteConfirmacion", EstadoRegistroSir.ENVIADO_PENDIENTE_CONFIRMACION);
-		q.setParameter("pendienteConfirmacionManual", EstadoRegistroSir.ENVIADO_PENDIENTE_CONFIRMACION_MANUAL);
-		q.setParameter("tramite", EstadoRegistroSir.EN_TRAMITE);
-		q.setParameter("proceso", EstadoRegistroSir.ENVIO_PROCESO);
-		q.setParameter("reenviado", EstadoRegistroSir.REENVIADO);
-		q.setParameter("reintentos", maxReintentos);
+		//Obtiene los registros de entrada finalizados
+		List<String> entradaSirFinalizados = registroEntradaConsultaEjb.obtenerRegistrosSirFinalizados(idEntidad);
+		//Obtiene los registros de salida finalizados
+		List<String> salidaSirFinalizados = registroSalidaConsultaEjb.obtenerRegistrosSirFinalizados(idEntidad);
+		Query q = null;
 		
-		return q.getResultList();
+		if (!entradaSirFinalizados.isEmpty() && !salidaSirFinalizados.isEmpty()) {
+			//Obtiene registros sir no finalizados
+			q = em.createQuery("Select registroSir.id from RegistroSir as registroSir "
+					+ "where registroSir.entidad.id = :idEntidad "
+					+ "and (registroSir.estado = :pendienteEnvio "
+					+ "		or registroSir.estado = :pendienteConfirmacion "
+					+ "		or registroSir.estado = :pendienteConfirmacionManual "
+					+ "		or registroSir.estado = :tramite "
+					+ "		or registroSir.estado = :proceso "
+					+ "		or registroSir.estado = :reenviado) "
+					+ "and (registroSir.numeroReintentos is null or registroSir.numeroReintentos < :reintentos) "
+					+ "and (registroSir.numeroRegistro not in (:entradaSirFinalizados) or registroSir.numeroRegistro not in (:salidaSirFinalizados)) "
+					+ "order by id");
+		} else if (!entradaSirFinalizados.isEmpty() && salidaSirFinalizados.isEmpty()) {
+			//Obtiene registros sir no finalizados
+			q = em.createQuery("Select registroSir.id from RegistroSir as registroSir "
+					+ "where registroSir.entidad.id = :idEntidad "
+					+ "and (registroSir.estado = :pendienteEnvio "
+					+ "		or registroSir.estado = :pendienteConfirmacion "
+					+ "		or registroSir.estado = :pendienteConfirmacionManual "
+					+ "		or registroSir.estado = :tramite "
+					+ "		or registroSir.estado = :proceso "
+					+ "		or registroSir.estado = :reenviado) "
+					+ "and (registroSir.numeroReintentos is null or registroSir.numeroReintentos < :reintentos) "
+					+ "and (registroSir.numeroRegistro not in (:entradaSirFinalizados)) "
+					+ "order by id");
+		} else if (entradaSirFinalizados.isEmpty() && !salidaSirFinalizados.isEmpty()) {
+			//Obtiene registros sir no finalizados
+			q = em.createQuery("Select registroSir.id from RegistroSir as registroSir "
+					+ "where registroSir.entidad.id = :idEntidad "
+					+ "and (registroSir.estado = :pendienteEnvio "
+					+ "		or registroSir.estado = :pendienteConfirmacion "
+					+ "		or registroSir.estado = :pendienteConfirmacionManual "
+					+ "		or registroSir.estado = :tramite "
+					+ "		or registroSir.estado = :proceso "
+					+ "		or registroSir.estado = :reenviado) "
+					+ "and (registroSir.numeroReintentos is null or registroSir.numeroReintentos < :reintentos) "
+					+ "and (registroSir.numeroRegistro not in (:salidaSirFinalizados)) "
+					+ "order by id");
+		}
+		
+		if (q != null) {
+			q.setParameter("idEntidad", idEntidad);
+			q.setParameter("pendienteEnvio", EstadoRegistroSir.PENDIENTE_ENVIO);
+			q.setParameter("pendienteConfirmacion", EstadoRegistroSir.ENVIADO_PENDIENTE_CONFIRMACION);
+			q.setParameter("pendienteConfirmacionManual", EstadoRegistroSir.ENVIADO_PENDIENTE_CONFIRMACION_MANUAL);
+			q.setParameter("tramite", EstadoRegistroSir.EN_TRAMITE);
+			q.setParameter("proceso", EstadoRegistroSir.ENVIO_PROCESO);
+			q.setParameter("reenviado", EstadoRegistroSir.REENVIADO);
+			
+			q.setParameter("entradaSirFinalizados", entradaSirFinalizados);
+			q.setParameter("salidaSirFinalizados", salidaSirFinalizados);
+			
+			q.setParameter("reintentos", maxReintentos);
+			
+			return q.getResultList();
+		}
+		return new ArrayList<Long>();
 	}
 	
 	@Override
 	@SuppressWarnings(value = "unchecked")
 	public List<Long> getRegistrosSirRecibidosSinId(Long idEntidad) throws Exception {
 		Query q = em.createQuery("Select registroSir.id from RegistroSir as registroSir "
-				+ "where registroSir.entidad.id = :idEntidad and registroSir.estado = :enviadoConfirmado or registroSir.estado = :recibidoConfirmado "
-				+ "or registroSir.estado = :finalizado or registroSir.fechaRecepcion != null order by id");
+				+ "where registroSir.entidad.id = :idEntidad and (registroSir.estado = :enviadoConfirmado or registroSir.estado = :recibidoConfirmado or registroSir.estado = :finalizado) "
+				+ "and registroSir.fechaRecepcion is not null "
+				+ "and registroSir.identificadorIntercambio is null order by id");
 		q.setParameter("idEntidad", idEntidad);
 		q.setParameter("enviadoConfirmado", EstadoRegistroSir.ENVIADO_CONFIRMADO);
 		q.setParameter("recibidoConfirmado", EstadoRegistroSir.RECIBIDO_CONFIRMADO);

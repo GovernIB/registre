@@ -598,7 +598,20 @@ public class RegistroSalidaConsultaBean implements RegistroSalidaConsultaLocal {
 
         return organismos;
     }
-
+    
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public List<String> obtenerRegistrosSirFinalizados(Long idEntidad) {
+		Query q = em.createQuery("Select salida.numeroRegistro from RegistroSalida as salida "
+				+ "where salida.usuario.entidad.id = :idEntidad "
+				+ "and (salida.estado = :aceptado or salida.estado = :rechazado) "
+				+ "order by id");
+		
+		q.setParameter("idEntidad", idEntidad);
+		q.setParameter("aceptado", RegwebConstantes.REGISTRO_OFICIO_ACEPTADO);
+		q.setParameter("rechazado", RegwebConstantes.REGISTRO_RECHAZADO);
+		return q.getResultList();
+    }
 
     /**
      * Carga los Anexos Completos al RegistroSalida pasado por parámetro

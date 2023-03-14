@@ -283,5 +283,4 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
 
 	void marcarRectificado(Long idRegistro);
 
-
 }

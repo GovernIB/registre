@@ -1077,6 +1077,20 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
         return organismos;
     }
 
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public List<String> obtenerRegistrosSirFinalizados(Long idEntidad) {
+		Query q = em.createQuery("Select entrada.numeroRegistro from RegistroEntrada as entrada "
+				+ "where entrada.usuario.entidad.id = :idEntidad "
+				+ "and (entrada.estado = :aceptado or entrada.estado = :rechazado) "
+				+ "order by id");
+		
+		q.setParameter("idEntidad", idEntidad);
+		q.setParameter("aceptado", RegwebConstantes.REGISTRO_OFICIO_ACEPTADO);
+		q.setParameter("rechazado", RegwebConstantes.REGISTRO_RECHAZADO);
+		return q.getResultList();
+    }
+    
     /**
      * Comprueba si alguno de los valores de búsqueda referentes al Interesado se ha rellenado
      * @param interesadoNom

@@ -500,9 +500,9 @@ public class SirEnvioBean implements SirEnvioLocal {
     }
 
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    @TransactionTimeout(value = 3000)  // 30 minutos
     @Override
     public void actualizarEnviosSir(Entidad entidad) throws Exception {
-    	StringBuilder peticion = new StringBuilder();
     	long tiempo = System.currentTimeMillis();
     	String descripcionPar = "";
 		try {
@@ -510,9 +510,10 @@ public class SirEnvioBean implements SirEnvioLocal {
 //          // RegistrosSir con estado no final
 			List<Long> registrosSirIds = registroSirEjb.getRegistrosSirPendientes(entidad.getId(), PropiedadGlobalUtil.getMaxReintentActualizacionEnviosSir());
 			for (Long registroSirId : registrosSirIds) {
+				StringBuilder peticion = new StringBuilder();
 		    	String descripcion = "Actualizando estado envío SIR (idEnvioSir=" + registroSirId + ")";
-				RegistroSir registroSir = registroSirEjb.findById(registroSirId);
 				try {
+					RegistroSir registroSir = registroSirEjb.findById(registroSirId);
 			        peticion.append("Número registro: ").append(registroSir.getNumeroRegistro()).append(System.getProperty("line.separator"));
 			        OficioRemision oficioRemision = oficioRemisionEjb.getByNumeroRegistro(
 			        		registroSir.getNumeroRegistro(), 
@@ -544,7 +545,7 @@ public class SirEnvioBean implements SirEnvioLocal {
 			integracionEjb.addIntegracionError(
 					RegwebConstantes.INTEGRACION_SIR, 
 					descripcionPar, 
-					peticion.toString(), 
+					"Ha habido un error actualizando el estado de los registros SIR", 
 					e, 
 					null, 
 					System.currentTimeMillis() - tiempo, 
@@ -626,6 +627,7 @@ public class SirEnvioBean implements SirEnvioLocal {
     }
 
 	@Override
+	@TransactionTimeout(value = 3000)  // 30 minutos
 	public void actualizarIdEnviosSirRecibidos(Entidad entidad) throws Exception, I18NException {
 		StringBuilder peticion = new StringBuilder();
 		long tiempo = System.currentTimeMillis();
