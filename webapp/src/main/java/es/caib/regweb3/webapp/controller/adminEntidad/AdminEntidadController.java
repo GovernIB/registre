@@ -154,11 +154,6 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
             // Ponemos la hora 23:59 a la fecha fin
             Date fechaFin = RegistroUtils.ajustarHoraBusqueda(busqueda.getFechaFin());
 
-            /* Solución a los problemas de encoding del formulario GET */
-            String nombreInteresado = new String(busqueda.getInteressatNom().getBytes("ISO-8859-1"), "UTF-8");
-            String apellido1Interesado = new String(busqueda.getInteressatLli1().getBytes("ISO-8859-1"), "UTF-8");
-            String apellido2Interesado = new String(busqueda.getInteressatLli2().getBytes("ISO-8859-1"), "UTF-8");
-
             // Organismo origen seleccionado
             List<Long> organismos = new ArrayList<>();
             if(busqueda.getIdOrganismo() == null){
@@ -168,7 +163,7 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
             }
 
             //Búsqueda de registros
-            Paginacion paginacion = registroEntradaConsultaEjb.busqueda(busqueda.getPageNumber(), organismos,busqueda.getFechaInicio(), fechaFin, registroEntrada, nombreInteresado, apellido1Interesado, apellido2Interesado, busqueda.getInteressatDoc(), busqueda.getOrganDestinatari(), null, busqueda.getIdUsuario(), entidadActiva.getId());
+            Paginacion paginacion = registroEntradaConsultaEjb.busqueda(busqueda.getPageNumber(), organismos,busqueda.getFechaInicio(), fechaFin, registroEntrada, busqueda.getInteressatNom(), busqueda.getInteressatLli1(), busqueda.getInteressatLli2(), busqueda.getInteressatDoc(), busqueda.getOrganDestinatari(), null, busqueda.getIdUsuario(), entidadActiva.getId());
 
             busqueda.setPageNumber(1);
             mav.addObject("paginacion", paginacion);
@@ -181,7 +176,7 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
         if (StringUtils.isNotEmpty(busqueda.getOrganDestinatari())) {
             Organismo org = organismoEjb.findByCodigoByEntidadMultiEntidad(busqueda.getOrganDestinatari(), entidadActiva.getId());
             if(org== null || !organosDestino.contains(org)){ //Es organismo externo, lo añadimos a la lista
-                organosDestino.add(new Organismo(null,busqueda.getOrganDestinatari(),new String(busqueda.getOrganDestinatariNom().getBytes("ISO-8859-1"), "UTF-8") ));
+                organosDestino.add(new Organismo(null,busqueda.getOrganDestinatari(),busqueda.getOrganDestinatariNom()));
             }
         }
 
@@ -191,13 +186,6 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
         mav.addObject("oficinasRegistro", oficinasRegistro);
         mav.addObject("registroEntradaBusqueda", busqueda);
         mav.addObject("organDestinatari", busqueda.getOrganDestinatari());
-
-        /* Solucion a los problemas de encoding del formulario GET */
-        busqueda.getRegistroEntrada().getRegistroDetalle().setExtracto(new String(busqueda.getRegistroEntrada().getRegistroDetalle().getExtracto().getBytes("ISO-8859-1"), "UTF-8"));
-        busqueda.setInteressatNom(new String(busqueda.getInteressatNom().getBytes("ISO-8859-1"), "UTF-8"));
-        busqueda.setInteressatLli1(new String(busqueda.getInteressatLli1().getBytes("ISO-8859-1"), "UTF-8"));
-        busqueda.setInteressatLli2(new String(busqueda.getInteressatLli2().getBytes("ISO-8859-1"), "UTF-8"));
-        busqueda.setOrganDestinatariNom(new String(busqueda.getOrganDestinatariNom().getBytes("ISO-8859-1"), "UTF-8"));
 
         return mav;
     }
@@ -439,11 +427,6 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
             // Ponemos la hora 23:59 a la fecha fin
             Date fechaFin = RegistroUtils.ajustarHoraBusqueda(busqueda.getFechaFin());
 
-            /* Solución a los problemas de encoding del formulario GET */
-            String nombreInteresado = new String(busqueda.getInteressatNom().getBytes("ISO-8859-1"), "UTF-8");
-            String apellido1Interesado = new String(busqueda.getInteressatLli1().getBytes("ISO-8859-1"), "UTF-8");
-            String apellido2Interesado = new String(busqueda.getInteressatLli2().getBytes("ISO-8859-1"), "UTF-8");
-
             // Organismo origen seleccionado
             List<Long> organismos = new ArrayList<>();
             if(busqueda.getIdOrganismo() == null){
@@ -453,7 +436,7 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
             }
 
             //Búsqueda de registros
-            Paginacion paginacion = registroSalidaConsultaEjb.busqueda(busqueda.getPageNumber(),organismos, busqueda.getFechaInicio(), fechaFin, registroSalida, nombreInteresado, apellido1Interesado, apellido2Interesado, busqueda.getInteressatDoc(),null, busqueda.getIdUsuario(), entidadActiva.getId());
+            Paginacion paginacion = registroSalidaConsultaEjb.busqueda(busqueda.getPageNumber(),organismos, busqueda.getFechaInicio(), fechaFin, registroSalida, busqueda.getInteressatNom(), busqueda.getInteressatLli1(), busqueda.getInteressatLli2(), busqueda.getInteressatDoc(),null, busqueda.getIdUsuario(), entidadActiva.getId());
 
             busqueda.setPageNumber(1);
             mav.addObject("paginacion", paginacion);
@@ -466,12 +449,6 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
         mav.addObject("usuariosEntidad",usuariosEntidad);
         mav.addObject("oficinasRegistro", oficinasRegistro);
         mav.addObject("registroEntradaBusqueda", busqueda);
-
-        /* Solucion a los problemas de encoding del formulario GET */
-        busqueda.getRegistroSalida().getRegistroDetalle().setExtracto(new String(busqueda.getRegistroSalida().getRegistroDetalle().getExtracto().getBytes("ISO-8859-1"), "UTF-8"));
-        busqueda.setInteressatNom(new String(busqueda.getInteressatNom().getBytes("ISO-8859-1"), "UTF-8"));
-        busqueda.setInteressatLli1(new String(busqueda.getInteressatLli1().getBytes("ISO-8859-1"), "UTF-8"));
-        busqueda.setInteressatLli2(new String(busqueda.getInteressatLli2().getBytes("ISO-8859-1"), "UTF-8"));
 
         return mav;
     }
