@@ -9,7 +9,6 @@ import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.persistence.utils.RegistroUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
-import es.caib.regweb3.utils.TimeStamp;
 import es.caib.regweb3.webapp.controller.BaseController;
 import es.caib.regweb3.webapp.form.*;
 import es.caib.regweb3.webapp.utils.Mensaje;
@@ -24,12 +23,10 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
-import javax.xml.datatype.DatatypeFactory;
-import javax.xml.datatype.XMLGregorianCalendar;
-import java.sql.Timestamp;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Fundació BIT.
@@ -233,7 +230,7 @@ public class RegistroSirController extends BaseController {
         model.addAttribute("idiomas", RegwebConstantes.IDIOMAS_REGISTRO);
         model.addAttribute("tiposValidezDocumento",RegwebConstantes.TIPOS_VALIDEZDOCUMENTO);
         model.addAttribute("tiposDocumentales",tipoDocumentalEjb.getByEntidad(getEntidadActiva(request).getId()));
-        model.addAttribute("puedeReenviar",  sirEnvioEjb.puedeReenviarRegistroSir(registroSir.getEstado())); // si el estado es RECIBIDO, REENVIADO o REENVIADO_Y_ERROR se puede reenviar
+        model.addAttribute("puedeReenviar",  puedeReenviarRegistroSir(registroSir.getEstado())); // si el estado es RECIBIDO, REENVIADO o REENVIADO_Y_ERROR se puede reenviar
         model.addAttribute("trazabilidades", trazabilidadSirEjb.getByRegistroSir(registroSir.getId()));
         model.addAttribute("registroSir",registroSir);
         model.addAttribute("anexosSirFull",componerAnexoSirFull(registroSir.getAnexos()));
@@ -299,7 +296,7 @@ public class RegistroSirController extends BaseController {
 
         String variableReturn = "redirect:/registroSir/"+idRegistroSir+"/detalle";
 
-        // Comprobamos si ya ha sido confirmado
+        // Comprobamos si ya ha sido rechazado
         if(registroSir.getEstado().equals(EstadoRegistroSir.RECHAZADO)){
             Mensaje.saveMessageError(request, getMessage("registroSir.estado.error"));
             return variableReturn;
@@ -322,6 +319,13 @@ public class RegistroSirController extends BaseController {
     @RequestMapping(value = "/{idRegistroSir}/reenviar", method = RequestMethod.GET)
     public String reenviarRegistroSir(@PathVariable Long idRegistroSir, Model model, HttpServletRequest request) throws Exception {
 
+        EstadoRegistroSir estado = registroSirEjb.getEstado(idRegistroSir);
+
+        if(!puedeReenviarRegistroSir(estado)){
+            Mensaje.saveMessageError(request, getMessage("registroSir.estado.error"));
+            return "redirect:/registroSir/"+idRegistroSir+"/detalle";
+        }
+
         model.addAttribute("comunidadesAutonomas", catComunidadAutonomaEjb.getAll());
         model.addAttribute("nivelesAdministracion", catNivelAdministracionEjb.getAll());
         model.addAttribute("registroSir", registroSirEjb.findById(idRegistroSir));
@@ -334,21 +338,20 @@ public class RegistroSirController extends BaseController {
      * Reenvia un {@link RegistroSir}
      */
     @RequestMapping(value = "/reenviar/{idRegistroSir}", method = RequestMethod.POST)
-    public String reenviarRegistroSir(@PathVariable Long idRegistroSir, @ModelAttribute ReenviarForm reenviarForm , HttpServletRequest request)
+    public String reenviarRegistroSir(@PathVariable Long idRegistroSir, @ModelAttribute ReenviarForm reenviarForm, HttpServletRequest request)
             throws Exception, I18NException, I18NValidationException {
 
         //Montamos la oficina de reenvio seleccionada por el usuario
         Oficina oficinaReenvio = reenviarForm.oficinaReenvio();
         Oficina oficinaActiva = getOficinaActiva(request);
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
-        String variableReturn = "redirect:/registroSir/"+idRegistroSir+"/detalle";
 
         RegistroSir registroSir  = registroSirEjb.findById(idRegistroSir);
 
         // Comprobamos si ya ha sido reenviado
         if(registroSir.getEstado().equals(EstadoRegistroSir.REENVIADO)){
             Mensaje.saveMessageError(request, getMessage("registroSir.error.reenvio"));
-            return variableReturn;
+            return "redirect:/registroSir/"+idRegistroSir+"/detalle";
         }
 
         // Reenvia el RegistroSir
@@ -366,6 +369,18 @@ public class RegistroSirController extends BaseController {
         }
 
         return "redirect:/registroSir/"+idRegistroSir+"/detalle";
+    }
+
+    /**
+     *
+     * @param estado
+     * @return
+     */
+    private boolean puedeReenviarRegistroSir(EstadoRegistroSir estado) {
+        return estado.equals(EstadoRegistroSir.RECIBIDO) ||
+                estado.equals(EstadoRegistroSir.REENVIADO) ||
+                estado.equals(EstadoRegistroSir.REENVIADO_Y_ERROR);
+
     }
 
 

@@ -51,8 +51,8 @@ import javax.xml.crypto.dsig.XMLSignature;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.ByteArrayInputStream;
-import java.text.DateFormat;
 import java.io.IOException;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -181,6 +181,15 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         }else{
             return null;
         }
+    }
+
+    @Override
+    public EstadoRegistroSir getEstado(Long idRegistroSir) throws I18NException {
+
+        Query q = em.createQuery("Select registroSir.estado from RegistroSir as registroSir where registroSir.id = :idRegistroSir");
+        q.setParameter("idRegistroSir",idRegistroSir);
+
+        return (EstadoRegistroSir) q.getSingleResult();
     }
 
     @Override
