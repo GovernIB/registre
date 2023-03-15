@@ -175,6 +175,15 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
     }
 
     @Override
+    public EstadoRegistroSir getEstado(Long idRegistroSir) throws I18NException {
+
+        Query q = em.createQuery("Select registroSir.estado from RegistroSir as registroSir where registroSir.id = :idRegistroSir");
+        q.setParameter("idRegistroSir",idRegistroSir);
+
+        return (EstadoRegistroSir) q.getSingleResult();
+    }
+
+    @Override
     public RegistroSir getRegistroSirConAnexos(Long idRegistroSir) throws I18NException{
 
         RegistroSir registroSir = findById(idRegistroSir);
