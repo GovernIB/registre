@@ -209,6 +209,12 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
             parametros.put("tipoDocumentacion", re.getRegistroDetalle().getTipoDocumentacionFisica());
         }
 
+        // CódigoSIA
+        if (re.getRegistroDetalle().getCodigoSia() != null) {
+            where.add(" re.registroDetalle.codigoSia = :codigoSia ");
+            parametros.put("codigoSia",  re.getRegistroDetalle().getCodigoSia());
+        }
+
         // Intervalo fechas
         where.add(" (re.fecha >= :fechaInicio  ");
         parametros.put("fechaInicio", fechaInicio);

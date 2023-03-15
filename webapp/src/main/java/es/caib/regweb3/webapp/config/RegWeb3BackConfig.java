@@ -15,6 +15,7 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
+import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -25,6 +26,7 @@ import org.springframework.web.servlet.view.BeanNameViewResolver;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 import javax.annotation.PostConstruct;
+import javax.servlet.Filter;
 import java.util.List;
 import java.util.Locale;
 
@@ -61,6 +63,14 @@ public class RegWeb3BackConfig extends WebMvcConfigurerAdapter {
     }
 
     @Bean
+    public Filter characterEncodingFilter() {
+        CharacterEncodingFilter characterEncodingFilter = new CharacterEncodingFilter();
+        characterEncodingFilter.setEncoding("UTF-8");
+        characterEncodingFilter.setForceEncoding(true);
+        return characterEncodingFilter;
+    }
+
+    @Bean
     public ResourceBundleMessageSource messageSource() {
         ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
         messageSource.setBasenames("missatges", "logicmissatges");
@@ -70,23 +80,17 @@ public class RegWeb3BackConfig extends WebMvcConfigurerAdapter {
 
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
 
-        registry.addResourceHandler("/css/**")
-                .addResourceLocations("/css/");
+        registry.addResourceHandler("/css/**").addResourceLocations("/css/");
 
-        registry.addResourceHandler("/font-awesome/**")
-                .addResourceLocations("/font-awesome/");
+        registry.addResourceHandler("/font-awesome/**").addResourceLocations("/font-awesome/");
 
-        registry.addResourceHandler("/img/**")
-                .addResourceLocations("/img/");
+        registry.addResourceHandler("/img/**").addResourceLocations("/img/");
 
-        registry.addResourceHandler("/ico/**")
-                .addResourceLocations("/ico/");
+        registry.addResourceHandler("/ico/**").addResourceLocations("/ico/");
 
-        registry.addResourceHandler("/js/**")
-                .addResourceLocations("/js/");
+        registry.addResourceHandler("/js/**").addResourceLocations("/js/");
 
-        registry.addResourceHandler("/doc/**")
-                .addResourceLocations("/doc/");
+        registry.addResourceHandler("/doc/**").addResourceLocations("/doc/");
     }
 
     @Override
