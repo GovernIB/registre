@@ -465,10 +465,16 @@ public class AnexoScanController extends AnexoController {
         ScanWebResult scanWebResult = config.getScanWebResult();
 
 
-       // log.info("Error detectat REGWEB3: " + scanWebResult.getStatus().getErrorMsg());
-        if (scanWebResult.getStatus().getErrorMsg() != null) {
-            log.error(scanWebResult.getStatus().getErrorMsg());
-            throw new I18NException("anexo.perfilscan.error", new I18NArgumentString(scanWebResult.getStatus().getErrorMsg()));
+
+        if (scanWebResult.getStatus().getStatus()!= ScanWebStatus.STATUS_FINAL_OK) {
+            if(scanWebResult.getStatus().getErrorMsg()!=null) {
+                log.error(scanWebResult.getStatus().getErrorMsg());
+                throw new I18NException("anexo.perfilscan.error", new I18NArgumentString(scanWebResult.getStatus().getErrorMsg()));
+            }else{
+                log.error("S'ha produït un error desconegut en el procés d'escaneig");
+                throw new I18NException("anexo.perfilscan.error", new I18NArgumentString("S'ha produït un error desconegut en el procés d'escaneig)"));
+            }
+
         }
 
 
