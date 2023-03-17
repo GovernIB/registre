@@ -19,7 +19,6 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import java.io.UnsupportedEncodingException;
 import java.util.*;
 
 import static es.caib.regweb3.persistence.ejb.BaseEjbJPA.RESULTADOS_PAGINACION;
@@ -127,12 +126,7 @@ public class RegistroSalidaConsultaBean implements RegistroSalidaConsultaLocal {
 
         // Extracto
         if (StringUtils.isNotEmpty(registroSalida.getRegistroDetalle().getExtracto())) {
-            try{
-                String extracto = new String(registroSalida.getRegistroDetalle().getExtracto().getBytes("ISO-8859-1"), "UTF-8") ;
-                where.add(DataBaseUtils.like("rs.registroDetalle.extracto", "extracto", parametros, extracto));
-            }catch (UnsupportedEncodingException e){
-                e.printStackTrace();
-            }
+            where.add(DataBaseUtils.like("rs.registroDetalle.extracto", "extracto", parametros, registroSalida.getRegistroDetalle().getExtracto()));
         }
 
         // Observaciones
