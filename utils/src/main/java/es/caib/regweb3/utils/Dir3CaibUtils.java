@@ -118,7 +118,7 @@ public class Dir3CaibUtils {
     public static String denominacion(String server, String codigoDir3, String tipo) {
 
         String url = null;
-        String denominacion = "";
+        String denominacion;
 
         if (tipo.equalsIgnoreCase("oficina")) {
             url = server + OFICINA_DENOMINACION;
@@ -140,6 +140,8 @@ public class Dir3CaibUtils {
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
             if(response.statusCode() == 200){
                 denominacion = response.body();
+            }else{
+                denominacion = null;
             }
 
         } catch (IOException | InterruptedException e) {
