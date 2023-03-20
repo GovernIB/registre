@@ -138,8 +138,11 @@ public class Dir3CaibUtils {
 
         try {
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-
-            denominacion = response.body();
+            if(response.statusCode() == 200){
+                denominacion = response.body();
+            }else{
+                denominacion = null;
+            }
 
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
@@ -148,6 +151,7 @@ public class Dir3CaibUtils {
         }
 
         return denominacion;
+
     }
 
     private static void configAddressUserPasswordTimeout(String usr, String pwd, String endpoint, Long timeout, Object api) {
