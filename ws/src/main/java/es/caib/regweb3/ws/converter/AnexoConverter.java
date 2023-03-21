@@ -57,7 +57,7 @@ public class AnexoConverter extends CommonConverter {
          doc = new DocumentCustody();
          doc.setData(anexoWs.getFicheroAnexado());
          doc.setMime(anexoWs.getTipoMIMEFicheroAnexado());
-         doc.setName(anexoWs.getNombreFicheroAnexado());
+         doc.setName(StringUtils.eliminarCaracteresProhibidosSIR(anexoWs.getNombreFicheroAnexado()));
       }
       anexoFull.setDocumentoCustody(doc);
       anexoFull.setDocumentoFileDelete(false);
@@ -69,7 +69,7 @@ public class AnexoConverter extends CommonConverter {
          sign = new SignatureCustody();
          sign.setData(anexoWs.getFirmaAnexada());
          sign.setMime(anexoWs.getTipoMIMEFirmaAnexada());
-         sign.setName(anexoWs.getNombreFirmaAnexada());
+         sign.setName(StringUtils.eliminarCaracteresProhibidosSIR(anexoWs.getNombreFirmaAnexada()));
       }
 
       switch (modoFirma) {
@@ -88,12 +88,12 @@ public class AnexoConverter extends CommonConverter {
             if(StringUtils.isNotEmpty(anexoWs.getNombreFirmaAnexada()) && (anexoWs.getFirmaAnexada()!=null && anexoWs.getFirmaAnexada().length >0)){
                sign.setData(anexoWs.getFirmaAnexada());
                sign.setMime(anexoWs.getTipoMIMEFirmaAnexada());
-               sign.setName(anexoWs.getNombreFirmaAnexada());
+               sign.setName(StringUtils.eliminarCaracteresProhibidosSIR(anexoWs.getNombreFirmaAnexada()));
             }else{
                if (StringUtils.isNotEmpty(anexoWs.getNombreFicheroAnexado()) && (anexoWs.getFicheroAnexado()!=null && anexoWs.getFicheroAnexado().length >0)) {
                   sign.setData(anexoWs.getFicheroAnexado());
                   sign.setMime(anexoWs.getTipoMIMEFicheroAnexado());
-                  sign.setName(anexoWs.getNombreFicheroAnexado());
+                  sign.setName(StringUtils.eliminarCaracteresProhibidosSIR(anexoWs.getNombreFicheroAnexado()));
                } else {
                   throw new Exception("Los campos 'nombreFirmaAnexada' o 'FirmaAnexada y 'nombreFicheroAnexado' o 'ficheroAnexado' no pueden estar vacios caso FIRMA ATTACHED");
                }
