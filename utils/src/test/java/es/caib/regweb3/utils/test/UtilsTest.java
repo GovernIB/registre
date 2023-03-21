@@ -38,6 +38,15 @@ public class UtilsTest {
     }
 
     @Test
+    public void eliminarCaracteresSIR(){
+        String cadena = "IMP_Informe_159-20-CA_casa_Sa_Pa_sa_den_Xumeu_Pere_St_;Josep_de_Sa_Talaia%09.002.pdf";
+
+        System.out.println("Cadena inicial: " + cadena);
+
+        System.out.println("Cadena corregida: " + StringUtils.eliminarCaracteresProhibidosSIR(cadena));
+    }
+
+    @Test
     public void recortarCadena(){
         String cadena = "taxa_bonif_50_Fam_Num_B1_SET21_Garippa.pdf";
 
