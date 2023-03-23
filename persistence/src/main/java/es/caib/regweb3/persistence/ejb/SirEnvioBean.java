@@ -259,7 +259,7 @@ public class SirEnvioBean implements SirEnvioLocal {
                 registroEntrada = crearIntercambioEntrada(registroEntrada, entidad, oficinaActiva, usuario, oficinaSirDestino);
 
                 //Guardamos los anexos en interdoc.
-                List<AnexoFull> anexosGuardados = gestionAnexosInterdoc(registro.getRegistroDetalle());
+                List<AnexoFull> anexosGuardados = gestionAnexosInterdoc(registro.getRegistroDetalle(), entidad.getId());
 
                 //Actualizamos los anexos con la referencia.
                 registroEntrada.getRegistroDetalle().setAnexosFull(anexosGuardados);
@@ -275,7 +275,7 @@ public class SirEnvioBean implements SirEnvioLocal {
                 registroSalida = crearIntercambioSalida(registroSalida, entidad, oficinaActiva, usuario, oficinaSirDestino);
 
                 //Guardamos los anexos en interdoc.
-                List<AnexoFull> anexosGuardados = gestionAnexosInterdoc(registro.getRegistroDetalle());
+                List<AnexoFull> anexosGuardados = gestionAnexosInterdoc(registro.getRegistroDetalle(), entidad.getId());
 
                 //Actualizamos los anexos con la referencia.
                 registroSalida.getRegistroDetalle().setAnexosFull(anexosGuardados);
@@ -1269,7 +1269,7 @@ public class SirEnvioBean implements SirEnvioLocal {
      * @param registroDetalle
      * @throws I18NException
      */
-    private List<AnexoFull> gestionAnexosInterdoc(RegistroDetalle registroDetalle) throws I18NException {
+    private List<AnexoFull> gestionAnexosInterdoc(RegistroDetalle registroDetalle, Long idEntidad) throws I18NException {
         //Obtener documento interesado
         Interesado interesado = registroDetalle.getInteresados().get(0);
         String documento = interesado.getDocumento();
@@ -1281,9 +1281,8 @@ public class SirEnvioBean implements SirEnvioLocal {
         List<AnexoFull> anexosFull = registroDetalle.getAnexosFull();
         List<AnexoFull> anexosGuardados = new ArrayList<>();
         for (AnexoFull anexoFull : anexosFull) {
-            //anexoFull.getAnexo().setIdentificadorRFU(libSirUtils.guardarDocumentoInterdoc(anexoFull, entidad.getId(), documento));
+            anexoFull.getAnexo().setIdentificadorRFU(libSirUtils.guardarDocumentoInterdoc(anexoFull, idEntidad, documento));
             //TEMPORAL TODO eliminar y dejar la linea de arriba que está comentada
-            anexoFull.getAnexo().setIdentificadorRFU("Esto es una referencia única");
             anexosGuardados.add(anexoFull);
         }
         return anexosGuardados;
