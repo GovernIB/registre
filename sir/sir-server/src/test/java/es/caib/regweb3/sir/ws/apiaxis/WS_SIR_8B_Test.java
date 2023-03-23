@@ -25,7 +25,7 @@ public class WS_SIR_8B_Test {
         WS_SIR8_B_PortType service = locator.getWS_SIR8_B();
 
 
-        String registro = IOUtils.toString(new FileInputStream(new File("C:\\Users\\mgonzalez.TIC\\Documents\\OTAE\\REGWEB3-4.0\\repositorio\\registre\\sir\\sir-server\\src\\test\\java\\es\\caib\\regweb3\\sir\\ws\\apiaxis\\sircall.xml")), "UTF-8");
+        String registro = IOUtils.toString(new FileInputStream(new File("C:\\Users\\earrivi\\Documents\\Proyectos\\OTAE\\REGWEB3\\repositorio\\registre\\sir\\sir-server\\src\\test\\java\\es\\caib\\regweb3\\sir\\ws\\apiaxis\\sircall.xml")), "UTF-8");
 
 
         RespuestaWS respuesta = service.envioFicherosAAplicacion(registro, "");

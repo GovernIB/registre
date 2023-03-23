@@ -55,7 +55,6 @@
                             <thead>
                                 <tr>
                                     <th><spring:message code="anexo.titulo"/></th>
-                                    <th><spring:message code="anexo.sir.validezDocumento"/></th>
                                     <th><spring:message code="anexo.tipoDocumento.corto"/></th>
                                     <c:if test="${registro.estado != RegwebConstantes.REGISTRO_OFICIO_ACEPTADO && !anexosPurgados}">
                                         <th><spring:message code="anexo.tamano"/></th>
@@ -83,8 +82,6 @@
                                                 </c:if>
                                             </a>
                                         </td>
-                                        <%--VALIDEZ DOCUMENTO--%>
-                                        <td><spring:message code="tipoValidezDocumento.${anexo.validezDocumento}"/></td>
                                         <%--TIPO DOCUMENTO--%>
                                         <td><spring:message code="tipoDocumento.0${anexo.tipoDocumento}"/></td>
                                         <%--TAMAÑO--%>
@@ -254,7 +251,8 @@
                                 <tr>
                                     <td class="senseBorder"></td>
                                     <td class="senseBorder"></td>
-                                    <td class="senseBorder text-right" colspan="2"><spring:message code="anexo.sumatotaltamany"/>:
+                                    <td class="senseBorder text-right" colspan="1"><spring:message
+                                            code="anexo.sumatotaltamany"/>:
                                         <b>${totalA} KB</b></td>
                                     <td class="senseBorder"></td>
                                     <td class="senseBorder"></td>

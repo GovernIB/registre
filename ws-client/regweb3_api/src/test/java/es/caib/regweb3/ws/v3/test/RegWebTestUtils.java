@@ -648,7 +648,6 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
 
             final String fichero = "pdf_sin_firma.pdf";
             anexoSinFirma.setTitulo("Anexo Sin Firma");
-            String copia = CODIGO_SICRES_BY_TIPOVALIDEZDOCUMENTO.get(TIPOVALIDEZDOCUMENTO_COPIA);
             anexoSinFirma.setTipoDocumental(getTestAnexoTipoDocumental());
             String formulario = CODIGO_SICRES_BY_TIPO_ANEXO.get(TIPO_DOCUMENTO_FORMULARIO);
             anexoSinFirma.setTipoDocumento(formulario);
@@ -677,7 +676,6 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
 
             final String fichero = "pdf_con_firma.pdf";
             anexoConFirmaAttached.setTitulo("Anexo Con Firma Attached");
-            String original = CODIGO_SICRES_BY_TIPOVALIDEZDOCUMENTO.get(TIPOVALIDEZDOCUMENTO_ORIGINAL);
             anexoConFirmaAttached.setTipoDocumental(getTestAnexoTipoDocumental());
             String formulario = CODIGO_SICRES_BY_TIPO_ANEXO.get(TIPO_DOCUMENTO_FORMULARIO);
             anexoConFirmaAttached.setTipoDocumento(formulario);
@@ -704,7 +702,6 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
             //anexoConFirmaDetached.setTamanoFichero(3000);
 
             anexoConFirmaDetached.setTitulo("Anexo Con Firma Detached");
-            String original = CODIGO_SICRES_BY_TIPOVALIDEZDOCUMENTO.get(TIPOVALIDEZDOCUMENTO_ORIGINAL);
             anexoConFirmaDetached.setTipoDocumental(getTestAnexoTipoDocumental());
             String formulario = CODIGO_SICRES_BY_TIPO_ANEXO.get(TIPO_DOCUMENTO_FORMULARIO);
             anexoConFirmaDetached.setTipoDocumento(formulario);

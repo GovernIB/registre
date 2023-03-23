@@ -95,7 +95,6 @@
                         <thead>
                             <tr>
                                 <th><spring:message code="anexo.titulo"/></th>
-                                <th><spring:message code="anexo.sir.validezDocumento"/></th>
                                 <th><spring:message code="anexo.tipoDocumento.corto"/></th>
                                 <th class="center"><spring:message code="anexo.tamano"/></th>
                                 <th class="center"><spring:message code="anexo.anexo"/></th>
@@ -121,8 +120,6 @@
                                     </c:if>
                                 </td>
 
-                                <%--VALIDEZ DOCUMENTO--%>
-                                <td><spring:message code="tipoValidezDocumento.${anexoFull.anexo.validezDocumento}"/></td>
 
                                 <%--TIPO DOCUMENTO--%>
                                 <td><spring:message code="tipoDocumento.0${anexoFull.anexo.tipoDocumento}"/></td>
@@ -313,7 +310,8 @@
                         <tr>
                             <td class="senseBorder"></td>
                             <td class="senseBorder"></td>
-                            <td class="senseBorder text-right" colspan="2"><spring:message code="anexo.sumatotaltamany"/>:
+                            <td class="senseBorder text-right" colspan="1"><spring:message
+                                    code="anexo.sumatotaltamany"/>:
                                 <b>${totalA} KB</b></td>
                             <td class="senseBorder"></td>
                             <td class="senseBorder"></td>

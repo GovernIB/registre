@@ -233,6 +233,7 @@ public class SirEnvioBean implements SirEnvioLocal {
 
         OficioRemision oficioRemision = null;
         RegistroSir registroSir = null;
+        AsientoBean asientoBean = null;
 
         Date inicio = new Date();
         StringBuilder peticion = new StringBuilder();
@@ -251,37 +252,21 @@ public class SirEnvioBean implements SirEnvioLocal {
             log.info("Enviando FicheroIntercambio del registro: " + registro.getNumeroRegistroFormateado() + " mediante SIR a: " + oficinaSirDestino.getDenominacion());
             log.info("");
 
-            List<AnexoFull> anexosFull = registro.getRegistroDetalle().getAnexosFull();
-            //Obtener documento interesado
-            Interesado interesado = registro.getRegistroDetalle().getInteresados().get(0);
-            String documento = interesado.getDocumento();
-            if (documento == null) {
-                documento = interesado.getCodigoDir3();
-            }
-            //Guardamos los anexos en interdoc
-            List<AnexoFull> anexosGuardados = new ArrayList<>();
-            for (AnexoFull anexoFull : anexosFull) {
-                anexoFull.getAnexo().setIdentificadorRFU(libSirUtils.guardarDocumentoInterdoc(anexoFull, entidad.getId(), documento));
-                anexosGuardados.add(anexoFull);
-            }
-
             if (tipoRegistro.equals(RegwebConstantes.REGISTRO_ENTRADA)) {
 
                 // Creamos el Intercambio y el Oficio de remisión SIR
                 RegistroEntrada registroEntrada = (RegistroEntrada) registro;
                 registroEntrada = crearIntercambioEntrada(registroEntrada, entidad, oficinaActiva, usuario, oficinaSirDestino);
 
-                // Añadimos los anexos cargados anteriormente, para no tener que volver a hacerlo
-                //List<AnexoFull> anexosFull = registro.getRegistroDetalle().getAnexosFull();
-                //registroEntrada.getRegistroDetalle().setAnexosFull(anexosFull);
+                //Guardamos los anexos en interdoc.
+                List<AnexoFull> anexosGuardados = gestionAnexosInterdoc(registro.getRegistroDetalle());
 
                 //Actualizamos los anexos con la referencia.
                 registroEntrada.getRegistroDetalle().setAnexosFull(anexosGuardados);
 
                 //Transformamos el registro de Entrada a AsientoBean
-                AsientoBean asientoBean = libSirUtils.transformarRegistroEntrada(registroEntrada);
+                asientoBean = libSirUtils.transformarRegistroEntrada(registroEntrada);
 
-                //registroSir = registroSirEjb.transformarRegistroEntrada(registroEntrada);
 
             } else if (tipoRegistro.equals(RegwebConstantes.REGISTRO_SALIDA)) {
 
@@ -289,32 +274,35 @@ public class SirEnvioBean implements SirEnvioLocal {
                 RegistroSalida registroSalida = (RegistroSalida) registro;
                 registroSalida = crearIntercambioSalida(registroSalida, entidad, oficinaActiva, usuario, oficinaSirDestino);
 
-                // Añadimos los anexos cargados anteriormente, para no tener que volver a hacerlo
-                registroSalida.getRegistroDetalle().setAnexosFull(registro.getRegistroDetalle().getAnexosFull());
+                //Guardamos los anexos en interdoc.
+                List<AnexoFull> anexosGuardados = gestionAnexosInterdoc(registro.getRegistroDetalle());
 
+                //Actualizamos los anexos con la referencia.
+                registroSalida.getRegistroDetalle().setAnexosFull(anexosGuardados);
 
                 //Transformamos el registro de Salida a AsientoBean
-                AsientoBean asientoBean = libSirUtils.transformarRegistroSalida(registroSalida);
-
-                // Transformamos el RegistroSalida en un RegistroSir
-                // registroSir = registroSirEjb.transformarRegistroSalida(registroSalida);
+                asientoBean = libSirUtils.transformarRegistroSalida(registroSalida);
 
             }
 
 
             try {
-                log.info("Llego hasta aquí envio Asiento Bean");
-               /* TODO DESCOMENTAR inicio = new Date();
+                inicio = new Date();
                 // Integración
-                peticion.append("IdentificadorIntercambio: ").append(registroSir.getIdentificadorIntercambio()).append(System.getProperty("line.separator"));
+               /* peticion.append("IdentificadorIntercambio: ").append(registroSir.getIdentificadorIntercambio()).append(System.getProperty("line.separator"));
                 peticion.append("Origen: ").append(registroSir.getDecodificacionEntidadRegistralOrigen()).append(System.getProperty("line.separator"));
-                peticion.append("Destino: ").append(registroSir.getDecodificacionEntidadRegistralDestino()).append(System.getProperty("line.separator"));
+                peticion.append("Destino: ").append(registroSir.getDecodificacionEntidadRegistralDestino()).append(System.getProperty("line.separator"));*/
+
+                peticion.append("IdentificadorIntercambio: ").append(asientoBean.getCdIntercambio()).append(System.getProperty("line.separator"));
+                peticion.append("Origen: ").append(asientoBean.getDsEnRgOrigen()).append(System.getProperty("line.separator"));
+                peticion.append("Destino: ").append(asientoBean.getDsEnRgDestino()).append(System.getProperty("line.separator"));
 
                 // Enviamos el Registro mediante el Componente CIR
+                //TODO arreglar para llamar al método de LIBSIR para enviar el asientoBean
                 emisionEjb.enviarFicheroIntercambio(registroSir);
 
                 // Integración
-                integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_SIR, descripcion, peticion.toString(), System.currentTimeMillis() - inicio.getTime(), entidad.getId(), registroSir.getIdentificadorIntercambio());*/
+                integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_SIR, descripcion, peticion.toString(), System.currentTimeMillis() - inicio.getTime(), entidad.getId(), registroSir.getIdentificadorIntercambio());
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -322,7 +310,8 @@ public class SirEnvioBean implements SirEnvioLocal {
             }
 
             log.info("");
-            log.info("Fin enviando FicheroIntercambio del registro: " + registroSir.getNumeroRegistro());
+            // log.info("Fin enviando FicheroIntercambio del registro: " + registroSir.getNumeroRegistro());
+            log.info("Fin enviando FicheroIntercambio del registro: " + registro.getNumeroRegistroFormateado());
             log.info("----------------------------------------------------------------------------------------------");
 
         } catch (I18NValidationException | I18NException | DatatypeConfigurationException s) {
@@ -1083,7 +1072,7 @@ public class SirEnvioBean implements SirEnvioLocal {
                 integracionEjb.addIntegracionError(tipoIntegracion, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - inicio.getTime(), oficio.getUsuarioResponsable().getEntidad().getId(), oficio.getIdentificadorIntercambio());
 
                 // Solo lanzamos la Excepción si no se trata del SCHEDULER
-                if(tipoIntegracion.equals(RegwebConstantes.INTEGRACION_SIR)){
+                if (tipoIntegracion.equals(RegwebConstantes.INTEGRACION_SIR)) {
                     throw e;
                 }
             }
@@ -1091,9 +1080,22 @@ public class SirEnvioBean implements SirEnvioLocal {
 
     }
 
+    /**
+     * Indica si el RegistroSir  se puede reenviar, en función de su estado
+     *
+     * @param estado del registroSir
+     * @return
+     */
+    public boolean puedeReenviarRegistroSir(EstadoRegistroSir estado) {
+        return estado.equals(EstadoRegistroSir.RECIBIDO) ||
+                estado.equals(EstadoRegistroSir.REENVIADO) ||
+                estado.equals(EstadoRegistroSir.REENVIADO_Y_ERROR);
+
+    }
+
     @Override
     @TransactionTimeout(value = 3000)  // 50 minutos
-    public Integer aceptarRegistrosERTE(List<Long> registros, Entidad entidad, String destino, Oficina oficina,Long idLibro, UsuarioEntidad usuarioEntidad) throws I18NException{
+    public Integer aceptarRegistrosERTE(List<Long> registros, Entidad entidad, String destino, Oficina oficina, Long idLibro, UsuarioEntidad usuarioEntidad) throws I18NException {
 
         // ruta actual: /app/caib/regweb/archivos
         // ruta erte: /app/caib/regweb/dades/erte
@@ -1258,5 +1260,32 @@ public class SirEnvioBean implements SirEnvioLocal {
 
         return stb.toString();
 
+    }
+
+
+    /**
+     * Método que guarda los anexos en interdoc
+     *
+     * @param registroDetalle
+     * @throws I18NException
+     */
+    private List<AnexoFull> gestionAnexosInterdoc(RegistroDetalle registroDetalle) throws I18NException {
+        //Obtener documento interesado
+        Interesado interesado = registroDetalle.getInteresados().get(0);
+        String documento = interesado.getDocumento();
+        if (documento == null) {
+            documento = interesado.getCodigoDir3();
+        }
+
+        //Guardamos los anexos en interdoc
+        List<AnexoFull> anexosFull = registroDetalle.getAnexosFull();
+        List<AnexoFull> anexosGuardados = new ArrayList<>();
+        for (AnexoFull anexoFull : anexosFull) {
+            //anexoFull.getAnexo().setIdentificadorRFU(libSirUtils.guardarDocumentoInterdoc(anexoFull, entidad.getId(), documento));
+            //TEMPORAL TODO eliminar y dejar la linea de arriba que está comentada
+            anexoFull.getAnexo().setIdentificadorRFU("Esto es una referencia única");
+            anexosGuardados.add(anexoFull);
+        }
+        return anexosGuardados;
     }
 }
