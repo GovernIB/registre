@@ -1091,19 +1091,6 @@ public class SirEnvioBean implements SirEnvioLocal {
 
     }
 
-    /**
-     * Indica si el RegistroSir  se puede reenviar, en función de su estado
-     *
-     * @param estado del registroSir
-     * @return
-     */
-    public boolean puedeReenviarRegistroSir(EstadoRegistroSir estado) {
-        return estado.equals(EstadoRegistroSir.RECIBIDO) ||
-                estado.equals(EstadoRegistroSir.REENVIADO) ||
-                estado.equals(EstadoRegistroSir.REENVIADO_Y_ERROR);
-
-    }
-
     @Override
     @TransactionTimeout(value = 3000)  // 50 minutos
     public Integer aceptarRegistrosERTE(List<Long> registros, Entidad entidad, String destino, Oficina oficina,Long idLibro, UsuarioEntidad usuarioEntidad) throws I18NException{

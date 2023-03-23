@@ -3,7 +3,7 @@ package es.caib.regweb3.persistence.ejb;
 import es.caib.dir3caib.ws.api.oficina.OficinaTF;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.sir.MensajeControl;
-import es.caib.regweb3.model.utils.EstadoRegistroSir;
+import es.caib.regweb3.model.utils.CamposNTI;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 
@@ -163,14 +163,6 @@ public interface SirEnvioLocal {
      * @throws I18NException
      */
     void reenviarRegistroSir(Long idRegistroSir, Entidad entidad) throws I18NException;
-
-    /**
-     * Método que indica si el RegistroSir puede ser reenviado en función de su estado.
-     *
-     * @param estado del RegistroSir
-     * @return
-     */
-    boolean puedeReenviarRegistroSir(EstadoRegistroSir estado);
 
     /**
      * @param registroSir

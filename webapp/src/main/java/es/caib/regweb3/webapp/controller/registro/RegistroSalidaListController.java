@@ -143,11 +143,6 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
             // Ponemos la hora 23:59 a la fecha fin
             Date fechaFin = RegistroUtils.ajustarHoraBusqueda(busqueda.getFechaFin());
 
-            /* Solución a los problemas de encoding del formulario GET */
-            String nombreInteresado = new String(busqueda.getInteressatNom().getBytes("ISO-8859-1"), "UTF-8");
-            String apellido1Interesado = new String(busqueda.getInteressatLli1().getBytes("ISO-8859-1"), "UTF-8");
-            String apellido2Interesado = new String(busqueda.getInteressatLli2().getBytes("ISO-8859-1"), "UTF-8");
-
             // Organismo origen seleccionado
             List<Long> organismos = new ArrayList<>();
             if(busqueda.getIdOrganismo() == null){
@@ -157,7 +152,7 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
             }
 
             //Búsqueda de registros
-            Paginacion paginacion = registroSalidaConsultaEjb.busqueda(busqueda.getPageNumber(), organismos, busqueda.getFechaInicio(), fechaFin, registroSalida, nombreInteresado, apellido1Interesado, apellido2Interesado, busqueda.getInteressatDoc(), busqueda.getObservaciones(), busqueda.getIdUsuario(), entidadActiva.getId());
+            Paginacion paginacion = registroSalidaConsultaEjb.busqueda(busqueda.getPageNumber(), organismos, busqueda.getFechaInicio(), fechaFin, registroSalida, busqueda.getInteressatNom(), busqueda.getInteressatLli1(), busqueda.getInteressatLli2(), busqueda.getInteressatDoc(), busqueda.getObservaciones(), busqueda.getIdUsuario(), entidadActiva.getId());
 
             busqueda.setPageNumber(1);
             mav.addObject("paginacion", paginacion);
@@ -175,13 +170,6 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
         mav.addObject("registroSalidaBusqueda", busqueda);
         mav.addObject("organOrigen", busqueda.getOrganOrigen());
         mav.addObject("anularForm", new AnularForm());
-
-        /* Solucion a los problemas de encoding del formulario GET */
-        busqueda.getRegistroSalida().getRegistroDetalle().setExtracto(new String(busqueda.getRegistroSalida().getRegistroDetalle().getExtracto().getBytes("ISO-8859-1"), "UTF-8"));
-        busqueda.setObservaciones(new String(busqueda.getObservaciones().getBytes("ISO-8859-1"), "UTF-8"));
-        busqueda.setInteressatNom(new String(busqueda.getInteressatNom().getBytes("ISO-8859-1"), "UTF-8"));
-        busqueda.setInteressatLli1(new String(busqueda.getInteressatLli1().getBytes("ISO-8859-1"), "UTF-8"));
-        busqueda.setInteressatLli2(new String(busqueda.getInteressatLli2().getBytes("ISO-8859-1"), "UTF-8"));
 
         return mav;
     }

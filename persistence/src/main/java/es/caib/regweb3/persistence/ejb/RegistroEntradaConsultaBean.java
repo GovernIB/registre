@@ -19,7 +19,6 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import java.io.UnsupportedEncodingException;
 import java.util.*;
 
 import static es.caib.regweb3.persistence.ejb.BaseEjbJPA.RESULTADOS_PAGINACION;
@@ -149,12 +148,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
 
         // Extracto
         if (StringUtils.isNotEmpty(re.getRegistroDetalle().getExtracto())) {
-            try{
-                String extracto = new String(re.getRegistroDetalle().getExtracto().getBytes("ISO-8859-1"), "UTF-8") ;
-                where.add(DataBaseUtils.like("re.registroDetalle.extracto", "extracto", parametros, extracto));
-            }catch (UnsupportedEncodingException e){
-                e.printStackTrace();
-            }
+            where.add(DataBaseUtils.like("re.registroDetalle.extracto", "extracto", parametros, re.getRegistroDetalle().getExtracto()));
         }
 
         // Observaciones
@@ -207,6 +201,12 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
         if (re.getRegistroDetalle().getTipoDocumentacionFisica() != null && re.getRegistroDetalle().getTipoDocumentacionFisica() > 0) {
             where.add(" re.registroDetalle.tipoDocumentacionFisica = :tipoDocumentacion ");
             parametros.put("tipoDocumentacion", re.getRegistroDetalle().getTipoDocumentacionFisica());
+        }
+
+        // CódigoSIA
+        if (re.getRegistroDetalle().getCodigoSia() != null) {
+            where.add(" re.registroDetalle.codigoSia = :codigoSia ");
+            parametros.put("codigoSia",  re.getRegistroDetalle().getCodigoSia());
         }
 
         // Intervalo fechas

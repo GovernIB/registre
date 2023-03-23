@@ -948,6 +948,9 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
             doc.setName(checkFileName(doc.getName(), "file.bin"));
 
+            //Sustituimos caracteres no validos de SIR
+            anexo.setNombreFichero(StringUtils.sustituirCaracteresProhibidosSIR(doc.getName(),'_'));
+
             if(anexo.getFechaCaptura() == null) {
                 anexo.setFechaCaptura(new Date());
             }
@@ -978,6 +981,8 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
             //Asignamos los datos nuevos recibidos
             signature.setName(checkFileName(signature.getName(), "signature.bin"));
+
+            anexo.setNombreFichero(StringUtils.sustituirCaracteresProhibidosSIR(signature.getName(),'_'));
 
             final String mime = signature.getMime();
             if (mime == null) {

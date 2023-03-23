@@ -72,6 +72,22 @@ public class StringUtils {
     }
 
     /**
+     * Dada una cadena, busca si existe alguna ocurrencia de los caracteres prohibidos por SIR {@link es.caib.regweb3.utils.RegwebConstantes} y los elimina
+     * @param cadena
+     * @return
+     */
+    public static String eliminarCaracteresProhibidosSIR(String cadena){
+
+        for (char s: RegwebConstantes.CARACTERES_NO_PERMITIDOS_SIR.toCharArray()) {
+
+            cadena = cadena.replace(String.valueOf(s), "");
+
+        }
+
+        return cadena;
+    }
+
+    /**
      * Función que recorta un string a una longitud especificada
      * @param cadena cadena a recortar
      * @param length longitud a la que recortar

@@ -70,23 +70,17 @@ public class RegWeb3BackConfig extends WebMvcConfigurerAdapter {
 
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
 
-        registry.addResourceHandler("/css/**")
-                .addResourceLocations("/css/");
+        registry.addResourceHandler("/css/**").addResourceLocations("/css/");
 
-        registry.addResourceHandler("/font-awesome/**")
-                .addResourceLocations("/font-awesome/");
+        registry.addResourceHandler("/font-awesome/**").addResourceLocations("/font-awesome/");
 
-        registry.addResourceHandler("/img/**")
-                .addResourceLocations("/img/");
+        registry.addResourceHandler("/img/**").addResourceLocations("/img/");
 
-        registry.addResourceHandler("/ico/**")
-                .addResourceLocations("/ico/");
+        registry.addResourceHandler("/ico/**").addResourceLocations("/ico/");
 
-        registry.addResourceHandler("/js/**")
-                .addResourceLocations("/js/");
+        registry.addResourceHandler("/js/**").addResourceLocations("/js/");
 
-        registry.addResourceHandler("/doc/**")
-                .addResourceLocations("/doc/");
+        registry.addResourceHandler("/doc/**").addResourceLocations("/doc/");
     }
 
     @Override
