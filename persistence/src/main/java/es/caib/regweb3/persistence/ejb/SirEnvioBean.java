@@ -439,7 +439,7 @@ public class SirEnvioBean implements SirEnvioLocal {
      * @throws I18NException
      */
     @Override
-    public RegistroEntrada aceptarRegistroSir(RegistroSir registroSir, Entidad entidad, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, List<CamposNTI> camposNTIs, Long idOrganismoDestino, Boolean distribuir, Long codigoSia,String emails, String motivo)
+    public RegistroEntrada aceptarRegistroSir(RegistroSir registroSir, Entidad entidad, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, List<CamposNTI> camposNTIs, Long idOrganismoDestino, Long codigoSia,String emails, String motivo)
             throws I18NException, I18NValidationException {
 
         Date inicio = new Date();
@@ -465,9 +465,8 @@ public class SirEnvioBean implements SirEnvioLocal {
             enviarMensajeConfirmacion(registroSir, registroEntrada.getNumeroRegistroFormateado(), registroEntrada.getFecha());
 
             // Distribuimos el Registro de Entrada si así se ha indicado
-            if(distribuir){
-                distribucionEjb.distribuir(registroEntrada, usuario,emails,motivo);
-            }
+            distribucionEjb.distribuir(registroEntrada, usuario,emails,motivo);
+
 
             // Integracion
             integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_SIR, descripcion, peticion.toString(), System.currentTimeMillis() - inicio.getTime(), registroSir.getEntidad().getId(), registroSir.getIdentificadorIntercambio());
@@ -1093,7 +1092,7 @@ public class SirEnvioBean implements SirEnvioLocal {
                 Organismo organismoDestino = organismoEjb.findByCodigoEntidadLigero(destino, entidad.getId());
 
                 //Aceptar el RegistroSir
-                RegistroEntrada registroEntrada = aceptarRegistroSir(registroSir, entidad, usuarioEntidad, oficina,idLibro,RegwebConstantes.IDIOMA_CASTELLANO_ID,camposNTIS, organismoDestino.getId(), true,null,null,null);
+                RegistroEntrada registroEntrada = aceptarRegistroSir(registroSir, entidad, usuarioEntidad, oficina,idLibro,RegwebConstantes.IDIOMA_CASTELLANO_ID,camposNTIS, organismoDestino.getId(),null,null,null);
 
                 // Copiamos cada anexo en la carpeta creada
                 for(AnexoSir anexoSir:registroSir.getAnexos()){

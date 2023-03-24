@@ -12,10 +12,8 @@ public class RegistrarForm {
 
     private Long idLibro;
     private Long idIdioma;
-    private Long idTipoAsunto;
     private List<CamposNTI> camposNTIs;
     private Long idOrganismoDestino;
-    private Boolean distribuir;
     private Long codigoSia;
     private String emails;
     private String motivo;
@@ -41,14 +39,6 @@ public class RegistrarForm {
         this.idIdioma = idIdioma;
     }
 
-    public Long getIdTipoAsunto() {
-        return idTipoAsunto;
-    }
-
-    public void setIdTipoAsunto(Long idTipoAsunto) {
-        this.idTipoAsunto = idTipoAsunto;
-    }
-
     public List<CamposNTI> getCamposNTIs() {
         return camposNTIs;
     }
@@ -63,14 +53,6 @@ public class RegistrarForm {
 
     public void setIdOrganismoDestino(Long idOrganismoDestino) {
         this.idOrganismoDestino = idOrganismoDestino;
-    }
-
-    public Boolean getDistribuir() {
-        return distribuir;
-    }
-
-    public void setDistribuir(Boolean distribuir) {
-        this.distribuir = distribuir;
     }
 
     public Long getCodigoSia() {

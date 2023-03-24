@@ -265,7 +265,7 @@ public class RegistroSirController extends BaseController {
         // Procesa el RegistroSir
         try{
 
-            RegistroEntrada registroEntrada = sirEnvioEjb.aceptarRegistroSir(registroSir, entidad, usuarioEntidad, oficinaActiva, registrarForm.getIdLibro(), registrarForm.getIdIdioma(), registrarForm.getCamposNTIs(), registrarForm.getIdOrganismoDestino(), registrarForm.getDistribuir(), registrarForm.getCodigoSia(),registrarForm.getEmails(),registrarForm.getMotivo());
+            RegistroEntrada registroEntrada = sirEnvioEjb.aceptarRegistroSir(registroSir, entidad, usuarioEntidad, oficinaActiva, registrarForm.getIdLibro(), registrarForm.getIdIdioma(), registrarForm.getCamposNTIs(), registrarForm.getIdOrganismoDestino(), registrarForm.getCodigoSia(),registrarForm.getEmails(),registrarForm.getMotivo());
 
             variableReturn = "redirect:/registroEntrada/" + registroEntrada.getId() + "/detalle";
 
