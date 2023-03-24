@@ -1,8 +1,10 @@
 package es.caib.regweb3.persistence.ejb;
 
-import es.caib.regweb3.model.*;
+import es.caib.regweb3.model.Cola;
+import es.caib.regweb3.model.Entidad;
+import es.caib.regweb3.model.RegistroEntrada;
+import es.caib.regweb3.model.UsuarioEntidad;
 import es.caib.regweb3.model.utils.AnexoFull;
-import es.caib.regweb3.persistence.utils.I18NLogicUtils;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.persistence.utils.RespuestaDistribucion;
 import es.caib.regweb3.plugins.distribucion.IDistribucionPlugin;
@@ -23,7 +25,6 @@ import javax.ejb.TransactionAttributeType;
 import javax.interceptor.Interceptors;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -225,7 +226,7 @@ public class DistribucionBean implements DistribucionLocal {
             distribuido = distribuirRegistroEntrada(entidad, registroEntrada, distribucionPlugin);
 
             if (distribuido) { //Si la distribución ha ido bien
-                marcarDistribuido(registroEntrada);
+                registroEntradaEjb.marcarDistribuido(registroEntrada);
                 integracionEjb.addIntegracionOk(inicio, tipoIntegracon, descripcion, peticion.toString(), System.currentTimeMillis() - inicio.getTime(), registroEntrada.getUsuario().getEntidad().getId(), registroEntrada.getNumeroRegistroFormateado());
             }
 
@@ -315,33 +316,6 @@ public class DistribucionBean implements DistribucionLocal {
         }
 
     }
-
-
-    public void marcarDistribuido(RegistroEntrada registroEntrada) throws I18NException {
-
-        // CREAMOS LA TRAZABILIDAD
-        Trazabilidad trazabilidad = new Trazabilidad();
-        trazabilidad.setOficioRemision(null);
-        trazabilidad.setFecha(new Date());
-        trazabilidad.setTipo(RegwebConstantes.TRAZABILIDAD_DISTRIBUCION);
-        trazabilidad.setRegistroEntradaOrigen(registroEntrada);
-        trazabilidad.setRegistroSalida(null);
-        trazabilidad.setRegistroEntradaDestino(null);
-        //trazabilidadEjb.persist(trazabilidad);
-        em.persist(trazabilidad);
-
-        // Creamos el HistoricoRegistroEntrada para la distribución
-        registroEntrada.setEstado(RegwebConstantes.REGISTRO_DISTRIBUIDO);
-        historicoRegistroEntradaEjb.crearHistoricoRegistroEntrada(registroEntrada,
-                registroEntrada.getUsuario(), I18NLogicUtils.tradueix(new Locale(Configuracio.getDefaultLanguage()), "registro.modificacion.estado"), false);
-
-        Query q = em.createQuery("update RegistroEntrada set estado=:idEstado where id = :idRegistro");
-        q.setParameter("idEstado", RegwebConstantes.REGISTRO_DISTRIBUIDO);
-        q.setParameter("idRegistro", registroEntrada.getId());
-        q.executeUpdate();
-
-    }
-
 
     /**
      * Este método lo que hace es eliminar de la lista de anexos a distribuir, aquellos que el Arxiu no soporta que son

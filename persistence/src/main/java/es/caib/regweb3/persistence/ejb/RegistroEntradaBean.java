@@ -29,6 +29,8 @@ import javax.annotation.Resource;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.interceptor.Interceptors;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -526,6 +528,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean implem
     }
 
     @Override
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public void marcarDistribuido(RegistroEntrada registroEntrada) throws I18NException {
 
         // CREAMOS LA TRAZABILIDAD
@@ -536,18 +539,25 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean implem
         trazabilidad.setRegistroEntradaOrigen(registroEntrada);
         trazabilidad.setRegistroSalida(null);
         trazabilidad.setRegistroEntradaDestino(null);
-        trazabilidadEjb.persist(trazabilidad);
+        //trazabilidadEjb.persist(trazabilidad);
+        em.persist(trazabilidad);
 
         // Creamos el HistoricoRegistroEntrada para la distribución
         registroEntrada.setEstado(RegwebConstantes.REGISTRO_DISTRIBUIDO);
-        historicoRegistroEntradaEjb.crearHistoricoRegistroEntrada(registroEntrada,
-                registroEntrada.getUsuario(), I18NLogicUtils.tradueix(new Locale(Configuracio.getDefaultLanguage()), "registro.modificacion.estado"), false);
+        HistoricoRegistroEntrada historico = new HistoricoRegistroEntrada();
+        historico.setEstado(registroEntrada.getEstado());
+        historico.setRegistroEntrada(registroEntrada);
+        historico.setFecha(new Date());
+        historico.setModificacion(I18NLogicUtils.tradueix(new Locale(Configuracio.getDefaultLanguage()), "registro.modificacion.estado"));
+        historico.setUsuario(registroEntrada.getUsuario());
+        em.persist(historico);
+
+        //historicoRegistroEntradaEjb.crearHistoricoRegistroEntrada(registroEntrada, registroEntrada.getUsuario(), I18NLogicUtils.tradueix(new Locale(Configuracio.getDefaultLanguage()), "registro.modificacion.estado"), false);
 
         Query q = em.createQuery("update RegistroEntrada set estado=:idEstado where id = :idRegistro");
         q.setParameter("idEstado", RegwebConstantes.REGISTRO_DISTRIBUIDO);
         q.setParameter("idRegistro", registroEntrada.getId());
         q.executeUpdate();
-
     }
 
 

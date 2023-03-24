@@ -249,7 +249,7 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
 
         // Justificante
         if (registro.getRegistroDetalle().getTieneJustificanteCustodiado()) {
-            distribucionEjb.marcarDistribuido(registro);
+            registroEntradaEjb.marcarDistribuido(registro);
             Mensaje.saveMessageInfo(request, getMessage("registroEntrada.distribuir.ok"));
         }
 
