@@ -156,7 +156,7 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
 
             busqueda.setPageNumber(1);
             mav.addObject("paginacion", paginacion);
-            mav.addObject("puedeEditar", permisoOrganismoUsuarioEjb.tienePermiso(usuarioEntidad.getId(), busqueda.getIdOrganismo(), RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_SALIDA, true));
+            mav.addObject("permisoEditar", permisoOrganismoUsuarioEjb.tienePermiso(usuarioEntidad.getId(), busqueda.getIdOrganismo(), RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_SALIDA, true));
 
 
             // Alta en tabla LOPD
@@ -199,10 +199,10 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
 
         // Permisos
         Boolean tieneJustificante = registro.getRegistroDetalle().getTieneJustificante();
-        Boolean puedeEditar = permisoOrganismoUsuarioEjb.tienePermiso(usuarioEntidad.getId(), registro.getOficina().getOrganismoResponsable().getId(), RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_SALIDA, true);
+        Boolean permisoEditar = permisoOrganismoUsuarioEjb.tienePermiso(usuarioEntidad.getId(), registro.getOficina().getOrganismoResponsable().getId(), RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_SALIDA, true);
 
         model.addAttribute("isResponsableOrganismo", permisoOrganismoUsuarioEjb.isAdministradorOrganismo(usuarioEntidad.getId(),registro.getOficina().getOrganismoResponsable().getId()));
-        model.addAttribute("puedeEditar", puedeEditar);
+        model.addAttribute("permisoEditar", permisoEditar);
         model.addAttribute("tieneJustificante", tieneJustificante);
         model.addAttribute("maxReintentos", PropiedadGlobalUtil.getMaxReintentosSir(entidadActiva.getId()));
 
@@ -215,8 +215,8 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
         }
 
         // Anexos completo
-        Boolean anexosCompleto = (registro.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO) || registro.getEstado().equals(RegwebConstantes.REGISTRO_PENDIENTE_VISAR)) && puedeEditar && !tieneJustificante;
-        if (anexosCompleto) { // Si se muestran los anexos
+        Boolean anexosEditar = (registro.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO) || registro.getEstado().equals(RegwebConstantes.REGISTRO_PENDIENTE_VISAR)) && registro.getRegistroDetalle().getPresencial() && permisoEditar && !tieneJustificante;
+        if (anexosEditar) {
 
             List<AnexoFull> anexos = anexoEjb.getByRegistroSalida(registro); //Inicializamos los anexos del registro de salida.
             initScanAnexos(entidadActiva, model); // Inicializa los atributos para escanear anexos
@@ -230,15 +230,17 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
             model.addAttribute("anexos", anexos);
             model.addAttribute("anexoDetachedPermitido", PropiedadGlobalUtil.getPermitirAnexosDetached(entidadActiva.getId()));
         }
-        model.addAttribute("anexosCompleto", anexosCompleto);
+        model.addAttribute("anexosEditar", anexosEditar);
 
-        // Interesados, solo si el Registro en Válio
-        if (registro.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO) && !tieneJustificante) {
+        // Interesados
+        Boolean interesadosEditar = registro.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO) && registro.getRegistroDetalle().getPresencial() && permisoEditar && !tieneJustificante;
+
+        if (interesadosEditar) {
 
             initDatosInteresados(model, organismosOficinaActiva);
             model.addAttribute("ultimosOrganismos",  registroSalidaConsultaEjb.ultimosOrganismosRegistro(usuarioEntidad));
-
         }
+        model.addAttribute("interesadosEditar", interesadosEditar);
 
         // Justificante
         if (tieneJustificante) {
@@ -514,7 +516,7 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
 
         try {
 
-            RegistroSalida registroSalida = registroSalidaEjb.findById(idRegistro);
+            RegistroSalida registroSalida = registroSalidaEjb.findByIdCompleto(idRegistro);
             Entidad entidad = getEntidadActiva(request);
             UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
 
