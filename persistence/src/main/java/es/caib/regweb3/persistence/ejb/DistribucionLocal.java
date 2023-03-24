@@ -61,14 +61,6 @@ public interface DistribucionLocal {
     Boolean reDistribuirRegistro(Long idRegistro, Entidad entidad) throws I18NException;
 
     /**
-     * Tramita un RegistroEntrada, creando el HistoricoEstado y Trazabilidad
-     *
-     * @param registroEntrada
-     * @throws I18NException
-     */
-    void marcarDistribuido(RegistroEntrada registroEntrada) throws I18NException;
-
-    /**
      * Indica si es el plugin de distribucion email
      * @param idEntidad
      * @return
