@@ -8,8 +8,6 @@ import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 
 import javax.ejb.Local;
-import javax.xml.datatype.DatatypeConfigurationException;
-import java.text.ParseException;
 import java.util.List;
 
 /**
@@ -59,7 +57,7 @@ public interface SirEnvioLocal {
      * @throws I18NException
      */
     OficioRemision enviarIntercambio(Long tipoRegistro, IRegistro registro, Entidad entidad, Oficina oficinaActiva, UsuarioEntidad usuario, String codigoOficinaSir)
-            throws I18NException, I18NValidationException, DatatypeConfigurationException;
+            throws I18NException, I18NValidationException;
 
     /**
      * Reenvia un intercambio, cuando este ha sido RECHAZADO O REENVIADO
@@ -143,9 +141,10 @@ public interface SirEnvioLocal {
      * @param oficinaActiva
      * @param idLibro
      * @param idIdioma
+     * @param camposNTIs
      * @return
      */
-    RegistroEntrada aceptarRegistroSir(RegistroSir registroSir, Entidad entidad, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, Long idOrganismoDestino, Boolean distribuir, String emails, String motivo) throws I18NException, I18NValidationException, ParseException;
+    RegistroEntrada aceptarRegistroSir(RegistroSir registroSir, Entidad entidad, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, List<CamposNTI> camposNTIs, Long idOrganismoDestino, Long codigoSia, String emails, String motivo) throws I18NException, I18NValidationException;
 
 
     /**

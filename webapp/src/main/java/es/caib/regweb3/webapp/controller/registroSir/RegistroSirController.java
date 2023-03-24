@@ -28,8 +28,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import static es.caib.regweb3.utils.RegwebConstantes.FORMATO_FECHA_SICRES4;
-
 /**
  * Created by Fundació BIT.
  *
@@ -251,7 +249,7 @@ public class RegistroSirController extends BaseController {
     public String confirmarRegistroSir(@PathVariable Long idRegistroSir, @ModelAttribute RegistrarForm registrarForm , HttpServletRequest request)
             throws Exception, I18NException, I18NValidationException {
 
-        RegistroSir registroSir = registroSirEjb.getRegistroSirConMetadatos(idRegistroSir);
+        RegistroSir registroSir = registroSirEjb.findById(idRegistroSir);
 
         Entidad entidad = getEntidadActiva(request);
         Oficina oficinaActiva = getOficinaActiva(request);
@@ -267,7 +265,7 @@ public class RegistroSirController extends BaseController {
         // Procesa el RegistroSir
         try{
 
-            RegistroEntrada registroEntrada = sirEnvioEjb.aceptarRegistroSir(registroSir, entidad, usuarioEntidad, oficinaActiva, registrarForm.getIdLibro(), registrarForm.getIdIdioma(), registrarForm.getIdOrganismoDestino(), registrarForm.getDistribuir(), registrarForm.getEmails(), registrarForm.getMotivo());
+            RegistroEntrada registroEntrada = sirEnvioEjb.aceptarRegistroSir(registroSir, entidad, usuarioEntidad, oficinaActiva, registrarForm.getIdLibro(), registrarForm.getIdIdioma(), registrarForm.getCamposNTIs(), registrarForm.getIdOrganismoDestino(), registrarForm.getCodigoSia(),registrarForm.getEmails(),registrarForm.getMotivo());
 
             variableReturn = "redirect:/registroEntrada/" + registroEntrada.getId() + "/detalle";
 
