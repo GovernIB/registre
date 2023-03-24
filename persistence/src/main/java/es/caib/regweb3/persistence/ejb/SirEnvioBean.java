@@ -1281,7 +1281,7 @@ public class SirEnvioBean implements SirEnvioLocal {
         List<AnexoFull> anexosFull = registroDetalle.getAnexosFull();
         List<AnexoFull> anexosGuardados = new ArrayList<>();
         for (AnexoFull anexoFull : anexosFull) {
-            anexoFull.getAnexo().setIdentificadorRFU(libSirUtils.guardarDocumentoInterdoc(anexoFull, idEntidad, documento));
+            //anexoFull.getAnexo().setIdentificadorRFU(libSirUtils.guardarDocumentoInterdoc(anexoFull, idEntidad, documento));
             //TEMPORAL TODO eliminar y dejar la linea de arriba que está comentada
             anexosGuardados.add(anexoFull);
         }
