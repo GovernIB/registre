@@ -257,7 +257,7 @@
                                 <%--Botonera--%>
                                 <td class="center">
                                     <c:if test="${!anexoFull.anexo.justificante}">
-                                        <c:if test="${(registro.estado == RegwebConstantes.REGISTRO_VALIDO || registro.estado == RegwebConstantes.REGISTRO_RESERVA || registro.estado == RegwebConstantes.REGISTRO_PENDIENTE_VISAR) && puedeEditar && !anexoFull.anexo.confidencial}">
+                                        <c:if test="${(registro.estado == RegwebConstantes.REGISTRO_VALIDO || registro.estado == RegwebConstantes.REGISTRO_RESERVA || registro.estado == RegwebConstantes.REGISTRO_PENDIENTE_VISAR) && permisoEditar && !anexoFull.anexo.confidencial}">
 
                                             <%--Instalación estándar --%>
                                             <spring:eval expression="@environment.getProperty('es.caib.regweb3.iscaib')" var="isCaib"/>
@@ -300,7 +300,7 @@
                                             </c:if>
 
                                         </c:if>
-                                        <c:if test="${(registro.estado != RegwebConstantes.REGISTRO_VALIDO && registro.estado != RegwebConstantes.REGISTRO_RESERVA && registro.estado != RegwebConstantes.REGISTRO_PENDIENTE_VISAR) || !puedeEditar || anexoFull.anexo.confidencial}">
+                                        <c:if test="${(registro.estado != RegwebConstantes.REGISTRO_VALIDO && registro.estado != RegwebConstantes.REGISTRO_RESERVA && registro.estado != RegwebConstantes.REGISTRO_PENDIENTE_VISAR) || !permisoEditar || anexoFull.anexo.confidencial}">
                                             <a class="btn btn-warning disabled btn-sm" href="javascript:void(0);" title="Editar"><span class="fa fa-pencil"></span></a>
                                             <a class="btn btn-danger disabled btn-sm" href="javascript:void(0);" title="<spring:message code="regweb.eliminar"/>"><span class="fa fa-eraser"></span></a>
                                         </c:if>

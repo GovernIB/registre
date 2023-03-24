@@ -284,8 +284,6 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
                 oficinasOrigen = new LinkedHashSet<>(getOficinasOrigen(request));
             }
 
-           // Set<Oficina> oficinasOrigen = getOficinasOrigen(request);
-
             if(!registroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_RESERVA)){ //Si no se trata de una reserva de número
 
                 // Organismo destino: Select
