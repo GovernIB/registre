@@ -47,7 +47,6 @@
                             <thead>
                             <tr>
                                 <th><spring:message code="anexo.titulo"/></th>
-                                <th><spring:message code="anexo.sir.tipoDocumento"/></th>
                                 <%--<th><spring:message code="anexo.tamano"/></th>--%>
                                 <c:if test="${registroSir.estado == 'RECIBIDO'}">
                                     <th><spring:message code="anexo.sir.validezDocumento"/></th>
@@ -64,14 +63,15 @@
                             <c:forEach var="anexo" items="${anexosSirFull}" varStatus="status">
                                 <tr id="anexo${anexo.documento.id}">
                                     <td class="ajustTamanySir">
-                                        <c:if test="${anexo.documento.nombreFichero != anexo.documento.nombreFicheroCorto}">
-                                            <p rel="popupAbajo" data-content="${anexo.documento.nombreFichero}" data-toggle="popover">${anexo.documento.nombreFicheroCorto}</p>
-                                        </c:if>
-                                        <c:if test="${anexo.documento.nombreFichero == anexo.documento.nombreFicheroCorto}">
-                                            ${anexo.documento.nombreFichero}
-                                        </c:if>
+                                        <a data-toggle="modal" href="#detalleAnexoSir${anexo.documento.id}">
+                                            <c:if test="${anexo.documento.nombreFichero != anexo.documento.nombreFicheroCorto}">
+                                                <p rel="popupAbajo" data-content="${anexo.documento.nombreFichero}" data-toggle="popover">${anexo.documento.nombreFicheroCorto}</p>
+                                            </c:if>
+                                            <c:if test="${anexo.documento.nombreFichero == anexo.documento.nombreFicheroCorto}">
+                                                ${anexo.documento.nombreFichero}
+                                            </c:if>
+                                        </a>
                                     </td>
-                                    <td class="ajustTamanySir"><spring:message code="tipoDocumento.${anexo.documento.tipoDocumento}"/></td>
                                     <%--<td>${anexo.documento.tamano} KB</td>--%>
 
                                         <%-- Gestionamos los campos NTI que no vienen informados por SICRES.
@@ -84,13 +84,10 @@
                                         <c:if test="${empty anexo.documento.validezDocumento}">
                                             <td class="ajustTamanySir">
                                                     <%--Si s'ha de posar valor per validez Documento--%>
-                                                <select id="camposNTIs[${status.index}].idValidezDocumento"
-                                                        name="camposNTIs[${status.index}].idValidezDocumento"
-                                                        class="chosen-select"
+                                                <select id="camposNTIs[${status.index}].idValidezDocumento" name="camposNTIs[${status.index}].idValidezDocumento" class="chosen-select"
                                                         <c:if test="${anexo.documento.tipoDocumento == RegwebConstantes.CODIGO_SICRES_BY_TIPO_DOCUMENTO[RegwebConstantes.TIPO_DOCUMENTO_FICHERO_TECNICO]}">disabled</c:if> >
                                                         <c:forEach items="${tiposValidezDocumento}" var="validezDocumento">
-                                                            <option value="${validezDocumento}"><spring:message
-                                                                    code="tipoValidezDocumento.${validezDocumento}"/></option>
+                                                            <option value="${validezDocumento}"><spring:message code="tipoValidezDocumento.${validezDocumento}"/></option>
                                                         </c:forEach>
                                                 </select>
                                             </td>
@@ -103,20 +100,15 @@
 
 
                                         <td class="ajustTamanySir">
-                                            <select id="camposNTIs[${status.index}].idOrigen"
-                                                    name="camposNTIs[${status.index}].idOrigen" class="chosen-select"
+                                            <select id="camposNTIs[${status.index}].idOrigen" name="camposNTIs[${status.index}].idOrigen" class="chosen-select"
                                                     <c:if test="${anexo.documento.tipoDocumento == RegwebConstantes.CODIGO_SICRES_BY_TIPO_DOCUMENTO[RegwebConstantes.TIPO_DOCUMENTO_FICHERO_TECNICO] }">disabled</c:if>>
-                                                <option value="0"><spring:message
-                                                        code="anexo.origen.ciudadano"/></option>
-                                                <option value="1" selected="selected"><spring:message
-                                                        code="anexo.origen.administracion"/></option>
+                                                <option value="0"><spring:message code="anexo.origen.ciudadano"/></option>
+                                                <option value="1" selected="selected"><spring:message code="anexo.origen.administracion"/></option>
                                             </select>
                                         </td>
 
                                         <td class="ajustTamanySir">
-                                            <select id="camposNTIs[${status.index}].idTipoDocumental"
-                                                    name="camposNTIs[${status.index}].idTipoDocumental"
-                                                    class="chosen-select"
+                                            <select id="camposNTIs[${status.index}].idTipoDocumental" name="camposNTIs[${status.index}].idTipoDocumental" class="chosen-select"
                                                     <c:if test="${anexo.documento.tipoDocumento == RegwebConstantes.CODIGO_SICRES_BY_TIPO_DOCUMENTO[RegwebConstantes.TIPO_DOCUMENTO_FICHERO_TECNICO] }">disabled</c:if>>
                                                 <option value="">...</option>
                                                 <c:forEach items="${tiposDocumentales}" var="tipoDocumental">
@@ -128,10 +120,8 @@
 
                                     <c:if test="${not anexo.documento.purgado}">
                                         <td class="center ajustTamanySir">
-                                            <a class="btn btn-success btn-sm"
-                                                     href="<c:url value="/archivo/${anexo.documento.anexo.id}"/>"
-                                                     target="_blank" title="<spring:message code="anexo.descargar"/>"><span
-                                                    class="fa fa-download"></span></a>
+                                            <a class="btn btn-success btn-sm" href="<c:url value="/archivo/${anexo.documento.anexo.id}"/>"
+                                                     target="_blank" title="<spring:message code="anexo.descargar"/>"><span class="fa fa-download"></span></a>
                                         </td>
                                     </c:if>
 
@@ -145,10 +135,8 @@
                                         <c:if test="${not empty anexo.firma}">
 
                                             <c:if test="${not anexo.documento.purgado}">
-                                                <a class="btn btn-info btn-default btn-sm"
-                                                   href="<c:url value="/archivo/${anexo.firma.anexo.id}"/>"
-                                                   target="_blank"
-                                                   title="<spring:message code="anexo.tipofirma.detached"/>"><span class="fa fa-download"></span></a>
+                                                <a class="btn btn-info btn-default btn-sm" href="<c:url value="/archivo/${anexo.firma.anexo.id}"/>"
+                                                   target="_blank" title="<spring:message code="anexo.tipofirma.detached"/>"><span class="fa fa-download"></span></a>
                                             </c:if>
 
                                             <c:if test="${anexo.documento.purgado}">
@@ -165,10 +153,7 @@
                                         </c:if>
                                     </td>
 
-                                    <input type="hidden"
-                                           id="camposNTIs[${status.index}].id"
-                                           name="camposNTIs[${status.index}].id"
-                                           value="${anexo.documento.id}"/>
+                                    <input type="hidden" id="camposNTIs[${status.index}].id" name="camposNTIs[${status.index}].id" value="${anexo.documento.id}"/>
                                 </tr>
 
                             </c:forEach>
@@ -180,5 +165,83 @@
             </div>
         </div>
     </div>
-
 </div>
+
+<c:forEach var="anexoSir" items="${anexosSirFull}" varStatus="status">
+
+    <div id="detalleAnexoSir${anexoSir.documento.id}" class="modal fade">
+
+        <div class="modal-dialog modal-lg" id="formularioAnexo">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                    <h3>${anexoSir.documento.nombreFichero}</h3>
+                </div>
+
+                <div class="modal-body">
+
+                    <div class="form-group col-xs-6">
+                        <div class="col-xs-5 pull-left etiqueta_regweb control-label">
+                            <label><spring:message code="anexo.titulo"/></label>
+                        </div>
+                        <div class="col-xs-7">${anexoSir.documento.nombreFichero}</div>
+                    </div>
+
+                    <c:if test="${not empty anexoSir.documento.validezDocumento}">
+                        <div class="form-group col-xs-6">
+                            <div class="col-xs-5 pull-left etiqueta_regweb control-label">
+                                <label ><spring:message code="anexo.validezDocumento"/></label>
+                            </div>
+                            <div class="col-xs-7"><spring:message code="tipoValidezDocumento.${RegwebConstantes.TIPOVALIDEZDOCUMENTO_BY_CODIGO_SICRES[anexoSir.documento.validezDocumento]}"/></div>
+                        </div>
+                    </c:if>
+
+                    <div class="form-group col-xs-6">
+                        <div class="col-xs-5 pull-left etiqueta_regweb control-label">
+                            <label><spring:message code="anexo.tipoDocumento"/></label>
+                        </div>
+                        <div class="col-xs-7"><spring:message code="tipoDocumento.${anexoSir.documento.tipoDocumento}"/></div>
+                    </div>
+
+                    <div class="form-group col-xs-6">
+                        <div class="col-xs-5 pull-left etiqueta_regweb control-label">
+                            <label><spring:message code="anexo.tamano"/></label>
+                        </div>
+                        <div class="col-xs-7">${anexoSir.documento.tamano} KB</div>
+                    </div>
+
+                    <div class="form-group col-xs-6">
+                        <div class="col-xs-5 pull-left etiqueta_regweb control-label">
+                            <label><spring:message code="anexo.observaciones"/></label>
+                        </div>
+                        <div class="col-xs-7">${anexoSir.documento.observaciones}</div>
+                    </div>
+
+                    <div class="form-group col-xs-6">
+                        <div class="col-xs-5 pull-left etiqueta_regweb control-label">
+                            <label><spring:message code="anexo.mime"/></label>
+                        </div>
+                        <div class="col-xs-7">${anexoSir.documento.tipoMIME}</div>
+                    </div>
+
+                    <div class="form-group col-xs-6">
+                        <div class="col-xs-5 pull-left etiqueta_regweb control-label">
+                            <label><spring:message code="anexoSir.identificadorFichero"/></label>
+                        </div>
+                        <div class="col-xs-7">${anexoSir.documento.identificadorFichero}</div>
+                    </div>
+
+                    <div class="clearfix"></div>
+
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-sm" data-dismiss="modal" aria-hidden="true">
+                        <spring:message code="regweb.cerrar"/></button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+</c:forEach>

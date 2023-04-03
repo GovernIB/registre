@@ -872,14 +872,14 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
                         anexo.setValidacionOCSPCertificado(Base64.encodeBase64String(de_Anexo.getValidacion_OCSP_Certificado()));
                         anexo.setHash(Base64.encodeBase64String(de_Anexo.getHash()));
                         //Si el tipo mime es null, se obtiene de la extensión del fichero
-//                        if (de_Anexo.getTipo_MIME() == null || de_Anexo.getTipo_MIME().isEmpty()) {
-//                            String mime = MimeTypeUtils.getMimeTypeFileName(de_Anexo.getNombre_Fichero_Anexado());
-//                            if(mime.length() <= 20){
-//                                anexo.setTipoMIME(mime);
-//                            }
-//                        } else {
-//                            anexo.setTipoMIME(de_Anexo.getTipo_MIME());
-//                        }
+                        if (StringUtils.isEmpty(de_Anexo.getTipo_MIME())) {
+                            //String mime = MimeTypeUtils.getMimeTypeFileName(de_Anexo.getNombre_Fichero_Anexado());
+                            //if(mime.length() <= 20){
+                            //    anexo.setTipoMIME(mime);
+                            //}
+                        } else {
+                            anexo.setTipoMIME(de_Anexo.getTipo_MIME());
+                        }
 
                         ArchivoManager am = null;
                         try {
