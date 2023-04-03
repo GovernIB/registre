@@ -198,7 +198,7 @@ public class AsientoRegistralBean implements AsientoRegistralLocal {
 
         try{
             // Distribuimos el registro de entrada
-            distribucionEjb.distribuir(registroEntrada, usuario, null,null);
+            distribucionEjb.distribuir(registroEntrada, usuario, "Distribución desde WS",null,null);
 
         }catch (I18NValidationException e){
             e.printStackTrace();

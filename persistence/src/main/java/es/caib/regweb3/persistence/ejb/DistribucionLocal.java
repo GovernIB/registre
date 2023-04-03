@@ -30,7 +30,7 @@ public interface DistribucionLocal {
      * @throws I18NException
      * @throws I18NException
      */
-    RespuestaDistribucion distribuir(RegistroEntrada re, UsuarioEntidad usuarioEntidad,  String emails, String motivo) throws I18NException, I18NValidationException;
+    RespuestaDistribucion distribuir(RegistroEntrada re, UsuarioEntidad usuarioEntidad, String descripcion,  String emails, String motivo) throws I18NException, I18NValidationException;
 
     /**
      * Procesar los registros(varios) que estan en la cola

@@ -1,6 +1,7 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.Plugin;
+import es.caib.regweb3.plugins.distribucion.mock.DistribucionMockPlugin;
 import es.caib.regweb3.utils.RegwebConstantes;
 import org.fundaciobit.genapp.common.i18n.I18NArgumentString;
 import org.fundaciobit.genapp.common.i18n.I18NException;
@@ -199,6 +200,25 @@ public class PluginBean extends BaseEjbJPA<Plugin, Long> implements PluginLocal 
         }
 
         return null;
+    }
+
+    @Override
+    public Object getPluginDistribucion(Long idEntidad) throws I18NException {
+
+        try {
+            List<Plugin> plugins;
+
+            plugins = findByEntidadTipo(idEntidad, RegwebConstantes.PLUGIN_DISTRIBUCION);
+
+            if (plugins.size() > 0) {
+                return cargarPlugin(plugins.get(0));
+            }else{
+                return cargarPlugin(new Plugin(DistribucionMockPlugin.class.getName()));
+            }
+        } catch (Exception e) {
+            throw new I18NException(e, "error.desconegut", new I18NArgumentString(e.getMessage()));
+        }
+
     }
 
     @Override
