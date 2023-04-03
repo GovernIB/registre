@@ -53,8 +53,6 @@
 
                     <form:form id="registrarForm" modelAttribute="registrarForm" action="${urlAceptar}" method="post" cssClass="form-horizontal">
 
-
-
                     <%-- Se muestra la Botonera si el RegistroSir está pendiente de procesar--%>
                     <c:if test="${registroSir.estado == 'RECIBIDO' && loginInfo.rolActivo.nombre == 'RWE_USUARI'}">
 
@@ -312,10 +310,18 @@
 </c:import>
 
 <c:import url="../registro/registroDistribuir.jsp">
+    <c:param name="aceptarRegistroSir" value="true"/>
 </c:import>
+
 <script type="text/javascript" src="<c:url value="/js/busquedaorganismo.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/distribuir.js"/>"></script>
 
 <script type="application/javascript">
+
+    <%-- Traducciones para distribuir.js --%>
+    var traddistribuir = new Array();
+    traddistribuir['distribuir.distribuyendo'] ="<spring:message code="registroEntrada.distribuyendo" javaScriptEscape="true"/>";
+
     // Realiza el Registro de un registroSir
     function aceptarRegistroSir() {
 
@@ -330,13 +336,10 @@
         // Mira si todos los campos son correctos
         if ((codigoSia)) {
 
-            if(${pluginDistribucionEmail}){
+            if(${pluginDistribucionEmail}){ // si tiene configurado el plugin de Distribución via E-Mail, mostramos el modal
                 $('#distribuirModal').modal('show');
             }else{
-                waitingDialog.show('<spring:message code="registroSir.aceptando" javaScriptEscape='true'/>', {
-                    dialogSize: 'm',
-                    progressType: 'primarycd'
-                });
+                waitingDialog.show('<spring:message code="registroSir.aceptando" javaScriptEscape='true'/>', {dialogSize: 'm', progressType: 'primary'});
                 doForm('#registrarForm');
             }
 

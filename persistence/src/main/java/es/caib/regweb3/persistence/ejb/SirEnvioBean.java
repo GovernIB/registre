@@ -439,7 +439,7 @@ public class SirEnvioBean implements SirEnvioLocal {
      * @throws I18NException
      */
     @Override
-    public RegistroEntrada aceptarRegistroSir(RegistroSir registroSir, Entidad entidad, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, List<CamposNTI> camposNTIs, Long idOrganismoDestino, Long codigoSia,String emails, String motivo)
+    public RegistroEntrada aceptarRegistroSir(RegistroSir registroSir, Entidad entidad, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, List<CamposNTI> camposNTIs, Long idOrganismoDestino, Long codigoSia, String emails, String motivo)
             throws I18NException, I18NValidationException {
 
         Date inicio = new Date();
@@ -458,15 +458,13 @@ public class SirEnvioBean implements SirEnvioLocal {
 
         try {
             // Creamos y registramos el RegistroEntrada a partir del RegistroSir aceptado
-
             registroEntrada = registroSirEjb.aceptarRegistroSirEntrada(registroSir,entidad, usuario, oficinaActiva, idLibro, idIdioma, camposNTIs, idOrganismoDestino, codigoSia);
 
             // Enviamos el Mensaje de Confirmación
             enviarMensajeConfirmacion(registroSir, registroEntrada.getNumeroRegistroFormateado(), registroEntrada.getFecha());
 
             // Distribuimos el Registro de Entrada si así se ha indicado
-            distribucionEjb.distribuir(registroEntrada, usuario,emails,motivo);
-
+            distribucionEjb.distribuir(registroEntrada, usuario,"Distribución aceptando SIR", emails, motivo);
 
             // Integracion
             integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_SIR, descripcion, peticion.toString(), System.currentTimeMillis() - inicio.getTime(), registroSir.getEntidad().getId(), registroSir.getIdentificadorIntercambio());
@@ -1113,7 +1111,7 @@ public class SirEnvioBean implements SirEnvioLocal {
                         log.info("No encuentra el fichero");
                     }
                 }
-                distribucionEjb.distribuir(registroEntrada, usuarioEntidad,null,null);
+                distribucionEjb.distribuir(registroEntrada, usuarioEntidad,"Distribución aceptando SIR",null,null);
 
 
             }catch (Exception e){

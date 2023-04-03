@@ -12,9 +12,8 @@ import es.caib.regweb3.plugins.distribucion.Destinatarios;
 public class RespuestaDistribucion {
 
     private Destinatarios destinatarios; //Lista de los destinatarios a los que se debe distribuir
-    private Boolean enviado = false; //true si se ha enviado distribuido bien
-    private Boolean enviadoCola = false; //true si se ha enviado a la cola bien
-    private Boolean hayPlugin = false; //true si se ha especificado plugin.
+    private Boolean distribuido = false; //true si se ha enviado distribuido bien
+    private Boolean encolado = false; //true si se ha enviado a la cola bien
     private Boolean envioMail = false; //envio con plugin de emails
 
 
@@ -29,28 +28,20 @@ public class RespuestaDistribucion {
         this.destinatarios = destinatarios;
     }
 
-    public Boolean getEnviado() {
-        return enviado;
+    public Boolean getDistribuido() {
+        return distribuido;
     }
 
-    public void setEnviado(Boolean enviado) {
-        this.enviado = enviado;
+    public void setDistribuido(Boolean distribuido) {
+        this.distribuido = distribuido;
     }
 
-    public Boolean getHayPlugin() {
-        return hayPlugin;
+    public Boolean getEncolado() {
+        return encolado;
     }
 
-    public void setHayPlugin(Boolean hayPlugin) {
-        this.hayPlugin = hayPlugin;
-    }
-
-    public Boolean getEnviadoCola() {
-        return enviadoCola;
-    }
-
-    public void setEnviadoCola(Boolean enviadoCola) {
-        this.enviadoCola = enviadoCola;
+    public void setEncolado(Boolean encolado) {
+        this.encolado = encolado;
     }
 
     public Boolean getEnvioMail() {

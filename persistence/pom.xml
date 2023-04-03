@@ -79,6 +79,12 @@
 
         <dependency>
             <groupId>es.caib.regweb3</groupId>
+            <artifactId>plugin-distribucion-mock</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>es.caib.regweb3</groupId>
             <artifactId>plugin-postproceso-api</artifactId>
             <scope>provided</scope>
         </dependency>

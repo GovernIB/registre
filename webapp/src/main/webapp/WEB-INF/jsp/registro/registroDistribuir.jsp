@@ -45,11 +45,10 @@
                                 </div>
                             </div>
 
-
                             <div class="row">
                                 <div class="form-group col-xs-12">
                                     <div class="col-xs-12">
-                                        <input type="button" value="<spring:message code="regweb.distribuir"/>" class="btn btn-warning btn-sm" onclick="validarFormEmail()"/>
+                                        <input type="button" value="<spring:message code="regweb.distribuir"/>" class="btn btn-warning btn-sm" onclick="validarFormEmail(${param.aceptarRegistroSir})"/>
 
                                         <c:if test="${tipoRegistro == RegwebConstantes.REGISTRO_ENTRADA}">
                                             <input type="button" value="<spring:message code="regweb.cancelar"/>" onclick="goTo('<c:url value="/registroEntrada/${registro.id}/detalle"/>')" class="btn btn-sm"/>
@@ -72,74 +71,3 @@
         </div>
     </div>
 </div>
-
-
-<script type="text/javascript">
-
-    var urlDistribuirMail = '<c:url value="/registroEntrada/${registro.id}/distribuir"/>';
-    var urlDetalle = '<c:url value="/registroEntrada/${registro.id}/detalle" />';
-
-
-
-    /* Función que mediante llamada ajax envia los emails y el motivo al controller para distribuir
-       un registro con el plugin de distribución */
-    function distribuirviamail() {
-
-        $('#distribuirModal').modal('hide');
-
-        var json = { "emails": $("#distribuirForm textarea[name=emails]").val(), "motivo": $("#distribuirForm textarea[name=motivo]").val()};
-
-        jQuery.ajax({
-            async: true,
-            url: urlDistribuirMail,
-            type: 'POST',
-            data: JSON.stringify(json),
-            dataType: 'json',
-            contentType: 'application/json',
-            beforeSend: function(objeto){
-                waitingDialog.show('<spring:message code="registroEntrada.distribuyendo" javaScriptEscape="true"/>', {dialogSize: 'm', progressType: 'success'});
-            },
-            success:function(respuesta){
-
-                if( respuesta.status === 'SUCCESS' || respuesta.status === 'ENVIADO_COLA'){
-                    goTo(urlDetalle);
-
-                }else if(respuesta.status === 'FAIL') {//Si ha ocurrido un fallo en el envio
-                    mensajeError('#mensajes', respuesta.error);
-                    waitingDialog.hide();
-                }
-
-                waitingDialog.hide();
-            }
-
-        });
-    }
-
-    /* Valida els camps del formulari */
-    function validarFormEmail() {
-
-        var emails = $("#distribuirForm textarea[name=emails]").val();
-        var motivo = $("#distribuirForm textarea[name=motivo]").val();
-
-
-        if(validaCampo(emails,'idEmails')&& validaCampo(motivo,'idMotivo')) {
-
-            if($("#registrarForm input[name=distribuir]").val() ){
-                $("#registrarForm input[name=emails]").val(emails);
-                $("#registrarForm input[name=motivo]").val(motivo);
-                $('#distribuirModal').modal('hide');
-                waitingDialog.show('<spring:message code="registroEntrada.distribuyendo" javaScriptEscape="true"/>', {dialogSize: 'm', progressType: 'success'});
-                doForm('#registrarForm');
-            }else{
-                distribuirviamail();
-            }
-
-        }else{
-            return false;
-        }
-    }
-
-</script>
-
-</body>
-</html>

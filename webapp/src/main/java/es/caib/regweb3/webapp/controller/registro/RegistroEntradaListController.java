@@ -217,6 +217,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         model.addAttribute("isResponsableOrganismo", permisoOrganismoUsuarioEjb.isAdministradorOrganismo(usuarioEntidad.getId(),registro.getOficina().getOrganismoResponsable().getId()));
         model.addAttribute("permisoEditar", permisoEditar);
         model.addAttribute("permisoDistribuir", permisoOrganismoUsuarioEjb.tienePermiso(usuarioEntidad.getId(), registro.getOficina().getOrganismoResponsable().getId(), RegwebConstantes.PERMISO_DISTRIBUCION_REGISTRO, true));
+        model.addAttribute("pluginDistribucionEmail", distribucionEjb.isDistribucionPluginEmail(getEntidadActiva(request).getId()));
         model.addAttribute("tieneJustificante", tieneJustificante);
         model.addAttribute("maxReintentos", PropiedadGlobalUtil.getMaxReintentosSir(entidadActiva.getId()));
 
@@ -698,128 +699,38 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
     @RequestMapping(value = "/{idRegistro}/distribuir", method = RequestMethod.POST)
     public
     @ResponseBody
-    JsonResponse distribuirRegistroEntrada(@PathVariable Long idRegistro, HttpServletRequest request,@RequestBody DistribuirForm distribuirForm) throws Exception {
+    JsonResponse distribuirRegistroEntrada(@PathVariable Long idRegistro, HttpServletRequest request, @RequestBody DistribuirForm distribuirForm) throws Exception {
 
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
         RegistroEntrada registroEntrada;
         RespuestaDistribucion respuesta = new RespuestaDistribucion();
         JsonResponse response = new JsonResponse();
 
-
         try {
 
-            IDistribucionPlugin distribucionPlugin = (IDistribucionPlugin) pluginEjb.getPlugin(usuarioEntidad.getEntidad().getId(), RegwebConstantes.PLUGIN_DISTRIBUCION);
+            IDistribucionPlugin distribucionPlugin = (IDistribucionPlugin) pluginEjb.getPluginDistribucion(usuarioEntidad.getEntidad().getId());
             if(distribucionPlugin.getClass().getName().contains("DistribucionGoibPlugin")){
                 registroEntrada = registroEntradaEjb.getConAnexosFullDistribuir(idRegistro);
             }else{
                 registroEntrada = registroEntradaEjb.getConAnexosFull(idRegistro);
-
             }
 
             //Distribuimos el registro
-            respuesta = distribucionEjb.distribuir(registroEntrada, usuarioEntidad, distribuirForm.getEmails(), distribuirForm.getMotivo());
+            respuesta = distribucionEjb.distribuir(registroEntrada, usuarioEntidad,"Distribución desde oficina", distribuirForm.getEmails(), distribuirForm.getMotivo());
 
-            if (respuesta.getHayPlugin()) {//
-                if (respuesta.getEnviadoCola()) { //Si se ha enviado a la cola
-                    response.setStatus("ENVIADO_COLA");
-                    Mensaje.saveMessageInfo(request, getMessage("registroEntrada.enviocola"));
-                } else if ((respuesta.getHayPlugin() && respuesta.getEnviado())) { //Cuando se ha distribuido correctamente
-                    Mensaje.saveMessageInfo(request, getMessage("registroEntrada.distribuir.ok"));
-                    response.setStatus("SUCCESS");
-                } else if(respuesta.getEnvioMail()){
-                    response.setStatus("ENVIO_MAIL");
-                    Mensaje.saveMessageInfo(request, getMessage("registroEntrada.enviomail"));
-                }else if (respuesta.getHayPlugin() && !respuesta.getEnviado()) { //Cuando no se ha distribuido correctamente
-                    response.setStatus("FAIL");
-                    response.setError(getMessage("registroEntrada.distribuir.error.noEnviado"));
-                }
-            } else {
-
+            if (respuesta.getEncolado()) { //Si se ha enviado a la cola
+                response.setStatus("ENVIADO_COLA");
+                Mensaje.saveMessageInfo(request, getMessage("registroEntrada.enviocola"));
+            } else if (respuesta.getDistribuido()) { //Cuando se ha distribuido correctamente
                 Mensaje.saveMessageInfo(request, getMessage("registroEntrada.distribuir.ok"));
                 response.setStatus("SUCCESS");
-            }
-
-            response.setResult(respuesta);
-
-        } catch (I18NValidationException e) {
-            e.printStackTrace();
-            response.setStatus("FAIL");
-            response.setError(I18NUtils.getMessage(e));
-            response.setResult(respuesta);
-            return response;
-        } catch (I18NException ie) {
-            ie.printStackTrace();
-            response.setStatus("FAIL");
-            response.setError(I18NUtils.getMessage(ie));
-            response.setResult(respuesta);
-            return response;
-        } catch (Exception ste) {
-            ste.printStackTrace();
-            response.setStatus("FAIL");
-            response.setError(ste.getMessage());
-            response.setResult(respuesta);
-            return response;
-        }
-
-        return response;
-    }
-
-    /**
-     * Función que determina que plugin de distribución está configurado
-     *
-     * @param idRegistro identificador del registro
-     * @param request
-     * @return
-     * @throws Exception
-     */
-    @RequestMapping(value = "/{idRegistro}/determinar/plugin/distribucion", method = RequestMethod.GET)
-    public @ResponseBody JsonResponse determinarPluginDistribuicion(@PathVariable Long idRegistro, HttpServletRequest request) throws Exception {
-
-        UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
-        RegistroEntrada registroEntrada;
-        RespuestaDistribucion respuesta = new RespuestaDistribucion();
-        JsonResponse response = new JsonResponse();
-
-
-        try {
-            //Mirar Plugin distribució
-            IDistribucionPlugin distribucionPlugin = (IDistribucionPlugin)  pluginEjb.getPlugin(usuarioEntidad.getEntidad().getId(), RegwebConstantes.PLUGIN_DISTRIBUCION);
-
-            if (distribucionPlugin != null) {
-
-                if (distribucionPlugin.getClass().getName().contains("DistribucionEmailPlugin")) {
-                    log.info(" Envio MAIL");
-
-                    respuesta.setEnvioMail(true);
-                } else {
-
-                    if(distribucionPlugin.getClass().getName().contains("DistribucionGoibPlugin")){
-                        registroEntrada = registroEntradaEjb.getConAnexosFullDistribuir(idRegistro);
-                    }else{
-                        registroEntrada = registroEntradaEjb.getConAnexosFull(idRegistro);
-                    }
-
-                    respuesta = distribucionEjb.distribuir(registroEntrada, usuarioEntidad,null,null);
-
-                }
-                respuesta.setHayPlugin(true);
-            }
-
-            if (respuesta.getHayPlugin()) {//
-                if (respuesta.getEnviadoCola()) { //Si se ha enviado a la cola
-                    response.setStatus("ENVIADO_COLA");
-                    Mensaje.saveMessageInfo(request, getMessage("registroEntrada.enviocola"));
-                } else if ((respuesta.getHayPlugin() && respuesta.getEnviado())) { //Cuando se ha distribuido correctamente
-                    Mensaje.saveMessageInfo(request, getMessage("registroEntrada.distribuir.ok"));
-                    response.setStatus("SUCCESS");
-                } else if(respuesta.getEnvioMail()){
-                    response.setStatus("ENVIO_MAIL");
-                }else if (respuesta.getHayPlugin() && !respuesta.getEnviado()) { //Cuando no se ha distribuido correctamente
-                    response.setStatus("FAIL");
-                    response.setError(getMessage("registroEntrada.distribuir.error.noEnviado"));
-                }
+            } else if(respuesta.getEnvioMail()){
+                response.setStatus("ENVIO_MAIL");
+                Mensaje.saveMessageInfo(request, getMessage("registroEntrada.enviomail"));
+            }else if (!respuesta.getDistribuido()) { //Cuando no se ha distribuido correctamente
+                response.setStatus("FAIL");
+                response.setError(getMessage("registroEntrada.distribuir.error.noEnviado"));
             } else {
-
                 Mensaje.saveMessageInfo(request, getMessage("registroEntrada.distribuir.ok"));
                 response.setStatus("SUCCESS");
             }
