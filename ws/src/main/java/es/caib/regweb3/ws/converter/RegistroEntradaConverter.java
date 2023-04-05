@@ -6,6 +6,7 @@ import es.caib.regweb3.persistence.ejb.CodigoAsuntoLocal;
 import es.caib.regweb3.persistence.ejb.OficinaLocal;
 import es.caib.regweb3.persistence.ejb.TipoAsuntoLocal;
 import es.caib.regweb3.persistence.utils.I18NLogicUtils;
+import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 import es.caib.regweb3.ws.model.AnexoWs;
@@ -33,7 +34,7 @@ public class RegistroEntradaConverter extends CommonConverter {
      * @throws Exception
      * @throws I18NException
      */
-    public static RegistroEntrada getRegistroEntrada(RegistroEntradaWs registroEntradaWs,
+    public static RegistroEntrada getRegistroEntrada(RegistroEntradaWs registroEntradaWs, UsuarioEntidad usuarioAplicacion,
                                                      UsuarioEntidad usuario, Libro libro, Oficina oficina, Organismo destinoInterno, UnidadTF destinoExterno,
         CodigoAsuntoLocal codigoAsuntoEjb, TipoAsuntoLocal tipoAsuntoEjb, OficinaLocal oficinaEjb)
             throws Exception {
@@ -44,7 +45,16 @@ public class RegistroEntradaConverter extends CommonConverter {
 
         RegistroEntrada registroEntrada = new RegistroEntrada();
         RegistroDetalle registroDetalle = new RegistroDetalle();
-        registroDetalle.setPresencial(false);
+
+        // Presencial
+        if(Configuracio.isCAIB() && usuarioAplicacion.getUsuario().getIdentificador().equals("$sistra_regweb")){
+            // Script temporal para identificar los Pre-Registros desde Sistra1
+            registroDetalle.setPresencial(!usuarioAplicacion.getId().equals(usuario.getId())); // Los marcamos como presenciales para poder editarlos
+            registroDetalle.setObservaciones("Origen pre-registre Sistra");
+        }else{
+            registroDetalle.setPresencial(false);
+        }
+
 
         if (destinoInterno == null) {
             registroEntrada.setDestino(null);
