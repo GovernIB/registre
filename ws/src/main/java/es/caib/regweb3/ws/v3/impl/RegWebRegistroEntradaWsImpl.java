@@ -182,7 +182,7 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl implemen
 
         // 8.- Convertir RegistroEntradaWs a RegistroEntrada
         RegistroEntrada registroEntrada = RegistroEntradaConverter.getRegistroEntrada(
-           registroEntradaWs, usuario, libro, oficina, destinoInterno, destinoExterno,
+           registroEntradaWs, usuarioAplicacion, usuario, libro, oficina, destinoInterno, destinoExterno,
            codigoAsuntoEjb, tipoAsuntoEjb, oficinaEjb);
 
         // 9.- Validar el RegistroEntrada
