@@ -101,6 +101,8 @@
     trads_general['sesion.expirar.titulo'] = "<spring:message code='regweb.sesion.expirar.titulo' javaScriptEscape='true' />";
     trads_general['sesion.expirar.mensaje'] = "<spring:message code='regweb.sesion.expirar.mensaje' javaScriptEscape='true' />";
     trads_general['sesion.expirar.boton'] = "<spring:message code='regweb.sesion.expirar.boton' javaScriptEscape='true' />";
+    trads_general['error.valor.requerido'] = "<spring:message code='error.valor.requerido' javaScriptEscape='true' />";
+    trads_general['error.formato.incorrecto'] = "<spring:message code='error.formato.incorrecto' javaScriptEscape='true' />";
 
 </script>
 

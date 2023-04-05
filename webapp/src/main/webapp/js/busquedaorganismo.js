@@ -503,7 +503,7 @@ function validarFormReenvio() {
     var observaciones = $('#observaciones').val();
     var datosOficinaReenvio = $('#datosOficinaReenvio').val();
 
-    if(validaCampo(datosOficinaReenvio,'idDatosOficinaReenvio')&& validaCampo(observaciones,'idObservaciones')) {
+    if(validaObligatorio(datosOficinaReenvio,'idDatosOficinaReenvio')&& validaObligatorio(observaciones,'idObservaciones')) {
         doForm('#reenviarForm');
     }else{
         return false;

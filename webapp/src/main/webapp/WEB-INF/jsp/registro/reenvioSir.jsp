@@ -115,8 +115,6 @@
                                     </div>
                                 </div>
                             </div>
-                            <c:set var="errorObligatori"><spring:message code="error.valor.requerido"/></c:set>
-                            <input id="error" type="hidden" value="${errorObligatori}"/>
                         </form:form>
                     </div>
                 </div>

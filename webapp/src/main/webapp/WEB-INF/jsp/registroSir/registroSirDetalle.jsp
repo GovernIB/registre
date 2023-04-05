@@ -121,9 +121,16 @@
                                     <div class="col-xs-5 pull-left etiqueta_regweb control-label textEsq">
                                         <label for="codigoSia" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.codigoSIA"/>" data-toggle="popover"> <spring:message code="registroEntrada.codigoSIA"/></label>
                                     </div>
-                                    <div class="col-xs-7" id="codigoSia">
+                                    <div class="col-xs-7" id="codigoSiaDiv">
                                         <form:input path="codigoSia" maxlength="20" cssClass="form-control"/> <span class="errors"></span>
                                     </div>
+
+                                </div>
+
+                                <%--Extracto--%>
+                                <div class="form-group col-xs-12" id="extractoDiv">
+                                    <label for="extracto" class="pull-left etiqueta_regweb control-label textEsq" > <spring:message code="registroEntrada.extracto"/></label>
+                                    <form:textarea path="extracto" rows="5" maxlength="240" cssClass="form-control"/> <span class="errors"></span>
                                 </div>
 
                                 <div class="row">
@@ -140,8 +147,6 @@
                                         </c:if>
                                     </div>
                                 </div>
-                                <c:set var="errorObligatori"><spring:message code="error.valor.requerido"/></c:set>
-                                <input id="error" type="hidden" value="${errorObligatori}"/>
 
                             </c:if>
 
@@ -324,17 +329,11 @@
 
     // Realiza el Registro de un registroSir
     function aceptarRegistroSir() {
-
-        var codigoSia = true;
-        var codigoSiaValue = $('#codigoSia').val();
-
-        // Valida que el código SIA sea numérico
-        if(!validaEntero(codigoSiaValue, 'codigoSia')){
-            codigoSia = false;
-        }
-
         // Mira si todos los campos son correctos
-        if ((codigoSia)) {
+        var codigoSia = validaEntero($('#codigoSia').val(), 'codigoSiaDiv');
+        var extracto = validaObligatorio($('#extracto').val(), 'extractoDiv');
+
+        if (codigoSia && extracto) {
 
             if(${pluginDistribucionEmail}){ // si tiene configurado el plugin de Distribución via E-Mail, mostramos el modal
                 $('#distribuirModal').modal('show');

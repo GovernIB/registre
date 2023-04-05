@@ -288,7 +288,7 @@ Mediante el archivo "busquedaorganismo.js" se implementa dicha búsqueda -->
             timeout: 200,
             displayField: "nombre",
             valueField: "id",
-            triggerLength: 4,
+            triggerLength: 5,
             method: "post",
             loadingClass: "loading-circle"
         },
@@ -310,7 +310,7 @@ Mediante el archivo "busquedaorganismo.js" se implementa dicha búsqueda -->
             timeout: 200,
             displayField: "nombre",
             valueField: "id",
-            triggerLength: 4,
+            triggerLength: 5,
             method: "post",
             loadingClass: "loading-circle"
         },

@@ -1664,7 +1664,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
      * @throws I18NValidationException
      */
     @Override
-    public RegistroEntrada aceptarRegistroSirEntrada(RegistroSir registroSir, Entidad entidad, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, List<CamposNTI> camposNTIs, Long idOrganismoDestino, Long codigoSia)
+    public RegistroEntrada aceptarRegistroSirEntrada(RegistroSir registroSir, Entidad entidad, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, List<CamposNTI> camposNTIs, Long idOrganismoDestino, Long codigoSia, String extracto)
             throws I18NException, I18NValidationException {
 
         Libro libro = libroEjb.findById(idLibro);
@@ -1683,7 +1683,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         registroEntrada.setDestinoExternoDenominacion(null);
 
         // RegistroDetalle
-        registroEntrada.setRegistroDetalle(getRegistroDetalle(registroSir, idIdioma, codigoSia));
+        registroEntrada.setRegistroDetalle(getRegistroDetalle(registroSir, idIdioma, codigoSia, extracto));
 
         // Interesados
         List<Interesado> interesados = procesarInteresados(registroSir.getInteresados());
@@ -1732,13 +1732,17 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
      * @return
      * @throws I18NException
      */
-    private RegistroDetalle getRegistroDetalle(RegistroSir registroSir, Long idIdioma, Long codigoSia) throws I18NException{
+    private RegistroDetalle getRegistroDetalle(RegistroSir registroSir, Long idIdioma, Long codigoSia, String extracto) throws I18NException{
 
         RegistroDetalle registroDetalle = new RegistroDetalle();
 
         registroDetalle.setRecibidoSir(true);
         registroDetalle.setPresencial(false);
-        registroDetalle.setExtracto(registroSir.getResumen());
+        if(StringUtils.isNotEmpty(extracto)){
+            registroDetalle.setExtracto(extracto);
+        }else{
+            registroDetalle.setExtracto(registroSir.getResumen());
+        }
         registroDetalle.setTipoDocumentacionFisica(Long.valueOf(registroSir.getDocumentacionFisica()));
         registroDetalle.setIdioma(idIdioma);
         registroDetalle.setCodigoSia(codigoSia);

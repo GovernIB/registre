@@ -118,7 +118,7 @@ function validarFormEmail(aceptarRegistroSir) {
     var motivo = $("#distribuirForm textarea[name=motivo]").val();
 
     // Validamos los campos
-    if(validaCampo(emails,'idEmails') && validaCampo(motivo,'idMotivo')) {
+    if(validaObligatorio(emails,'idEmails') && validaObligatorio(motivo,'idMotivo')) {
 
         if(aceptarRegistroSir){ // Si se trata de la aceptación de un RegistroSir, procesaremos el formulario de registroSirDetalle.jsp
             $("#registrarForm input[name=emails]").val(emails);

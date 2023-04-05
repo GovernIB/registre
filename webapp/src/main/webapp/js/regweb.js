@@ -892,27 +892,24 @@ function validaFechasConjuntas(fechaInicio, fechaFin, campInicio, campFin){
 }
 
 // Valida que el valor introducido en el campo numeroRegistro sea un número entero
-function validaEntero(numeroRegistro, campNumeroRegistro){
+function validaEntero(numeroRegistro, campo){
 
     //Compruebo si es un valor numérico
-    if(numeroRegistro.length>0) {
+    if (isNaN(numeroRegistro)) {
+        var variable = "#" + campo + " span.errors";
+        var formatoHtml = "<span id='"+ campo +".errors' class='help-block'>" + trads_general['error.formato.incorrecto'] + "</span>";
+        $(variable).html(formatoHtml);
+        $(variable).parents(".form-group").addClass("has-error");
 
-        var contienePunto = numeroRegistro.indexOf('.');
+        return false;
+    } else {
+        var variable = "#" + campo + " span.errors";
+        var htmlNormal = "<span id='" + campo + ".errors'></span>";
+        $(variable).html(htmlNormal);
+        $(variable).parents(".form-group").removeClass("has-error");
 
-        if ((!isNaN(numeroRegistro))&&(contienePunto==-1)) {
-            var variable = "#" + campNumeroRegistro + " span.errors";
-            var htmlNormal = "<span id='" + campNumeroRegistro + ".errors'></span>";
-            $(variable).html(htmlNormal);
-            $(variable).parents(".form-group").removeClass("has-error");
-        } else {
-            var variable = "#" + campNumeroRegistro + " span.errors";
-            var formatoHtml = "<span id='" + campNumeroRegistro + ".errors' class='help-block'>" + $('#error4').val() + "</span>";
-            $(variable).html(formatoHtml);
-            $(variable).parents(".form-group").addClass("has-error");
-        }
+        return true;
     }
-
-    return !isNaN(numeroRegistro);
 }
 
 // Valida que esté selecionado un libro
@@ -934,19 +931,19 @@ function validaLibro(libro, campoLibro){
 }
 
 // Valida que el campo tenga un valor, sin no tiene marca el error
-function validaCampo(valorCampo,campo){
-    if (valorCampo!='') {
+function validaObligatorio(valor, campo){
+    if (valor != '') {
         var variable = "#" + campo + " span.errors";
         var htmlNormal = "<span id='" + campo + ".errors'></span>";
         $(variable).html(htmlNormal);
         $(variable).parents(".form-group").removeClass("has-error");
     } else {
         var variable = "#" + campo + " span.errors";
-        var formatoHtml = "<span id='" + campo + ".errors' class='help-block'>" + $('#error').val() + "</span>";
+        var formatoHtml = "<span id='" + campo + ".errors' class='help-block'>" + trads_general['error.valor.requerido'] + "</span>";
         $(variable).html(formatoHtml);
         $(variable).parents(".form-group").addClass("has-error");
     }
-    return valorCampo!='';
+    return valor != '';
 }
 
 // Valida que el campo tenga un valor diferente de -1 (select), si no tiene marca el error
