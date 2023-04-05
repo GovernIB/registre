@@ -197,7 +197,11 @@ public class RegistroDetalle implements Serializable {
     }
 
     public void setExtracto(String extracto) {
-        this.extracto = extracto;
+        if(extracto.length() > 240){
+            this.extracto = extracto.substring(0,239);
+        }else{
+            this.extracto = extracto;
+        }
     }
 
 
