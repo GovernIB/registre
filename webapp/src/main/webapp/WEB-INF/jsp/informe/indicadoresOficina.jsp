@@ -90,13 +90,6 @@
                                 <button type="submit" class="btn btn-warning  btn-sm"><spring:message code="regweb.buscar"/></button>
                             </div>
 
-                            <c:set var="errorInicio"><spring:message code="error.fechaInicio.posterior"/></c:set>
-                            <input id="error1" type="hidden" value="${errorInicio}"/>
-                            <c:set var="errorFin"><spring:message code="error.fechaFin.posterior"/></c:set>
-                            <input id="error2" type="hidden" value="${errorFin}"/>
-                            <c:set var="errorInicioFin"><spring:message code="error.fechaInicioFin.posterior"/></c:set>
-                            <input id="error3" type="hidden" value="${errorInicioFin}"/>
-
                         </form:form>
                     </div>
                 </div>

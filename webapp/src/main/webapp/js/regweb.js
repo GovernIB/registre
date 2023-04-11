@@ -835,7 +835,7 @@ function validaFechasConjuntas(fechaInicio, fechaFin, campInicio, campFin){
     // Mira si la fecha Fin es posterior a la actual
     if(!esAnterior(fechaFin.value,fechaActual)){
         var variable = "#" + campFin + " span.errors";
-        var formatoHtml = "<span id='"+ campFin +".errors' class='help-block'>" + $('#error2').val() + "</span>";
+        var formatoHtml = "<span id='"+ campFin +".errors' class='help-block'>" + trads_general['error.fechaFin.posterior'] + "</span>";
         $(variable).html(formatoHtml);
         $(variable).parents(".form-group").addClass("has-error");
         finCorrecta = false;
@@ -850,7 +850,7 @@ function validaFechasConjuntas(fechaInicio, fechaFin, campInicio, campFin){
     // Mira si la fecha Inicio es posterior a la actual
     if(!esAnterior(fechaInicio.value,fechaActual)){
         var variable = "#" + campInicio + " span.errors";
-        var formatoHtml = "<span id='"+ campInicio +".errors' class='help-block'>" + $('#error1').val() + "</span>";
+        var formatoHtml = "<span id='"+ campInicio +".errors' class='help-block'>" + trads_general['error.fechaInicio.posterior'] + "</span>";
         $(variable).html(formatoHtml);
         $(variable).parents(".form-group").addClass("has-error");
         inicioCorrecta = false;
@@ -876,11 +876,11 @@ function validaFechasConjuntas(fechaInicio, fechaFin, campInicio, campFin){
             posterior = true;
         }else{
             var variable = "#" + campInicio + " span.errors";
-            var formatoHtml = "<span id='"+ campInicio +".errors' class='help-block'>" + $('#error3').val() + "</span>";
+            var formatoHtml = "<span id='"+ campInicio +".errors' class='help-block'>" + trads_general['error.fechaInicioFin.posterior'] + "</span>";
             $(variable).html(formatoHtml);
             $(variable).parents(".form-group").addClass("has-error");
             var variable2 = "#" + campFin + " span.errors";
-            var formatoHtml2 = "<span id='"+ campFin +".errors' class='help-block'>" + $('#error3').val() + "</span>";
+            var formatoHtml2 = "<span id='"+ campFin +".errors' class='help-block'>" + trads_general['error.fechaInicioFin.posterior'] + "</span>";
             $(variable2).html(formatoHtml2);
             $(variable2).parents(".form-group").addClass("has-error");
             posterior = false;
@@ -922,7 +922,7 @@ function validaLibro(libro, campoLibro){
         $(variable).parents(".form-group").removeClass("has-error");
     } else {
         var variable = "#" + campoLibro + " span.errors";
-        var formatoHtml = "<span id='" + campoLibro + ".errors' class='help-block'>" + $('#error5').val() + "</span>";
+        var formatoHtml = "<span id='" + campoLibro + ".errors' class='help-block'>" + trads_general['error.libro.seleccionado'] + "</span>";
         $(variable).html(formatoHtml);
         $(variable).parents(".form-group").addClass("has-error");
     }
@@ -955,7 +955,7 @@ function validaSelect(valorCampo,campo){
         $(variable).parents(".form-group").removeClass("has-error");
     } else {
         var variable = "#" + campo + " span.errors";
-        var formatoHtml = "<span id='" + campo + ".errors' class='help-block'>" + $('#error').val() + "</span>";
+        var formatoHtml = "<span id='" + campo + ".errors' class='help-block'>" + trads_general['error.valor.requerido'] + "</span>";
         $(variable).html(formatoHtml);
         $(variable).parents(".form-group").addClass("has-error");
     }
