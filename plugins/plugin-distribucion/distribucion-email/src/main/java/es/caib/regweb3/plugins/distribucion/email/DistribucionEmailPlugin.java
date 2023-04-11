@@ -85,7 +85,7 @@ public class DistribucionEmailPlugin extends AbstractPluginProperties implements
                    String telefono = interesado.getTelefono() != null ? interesado.getTelefono() : "";
                    //SICRES4 @Deprecated
                    String direccionElectronica = interesado.getDireccionElectronica() != null ? interesado.getDireccionElectronica() : "";
-                   String canal = interesado.getCanal() != null ? interesado.getCanal().toString() : "";
+                   String canal = interesado.getCanal() != null && interesado.getCanal()!= -1? interesado.getCanal().toString() : "";
                    String observacionesInteresado = interesado.getObservaciones() != null ? interesado.getObservaciones() : "";
 
 
