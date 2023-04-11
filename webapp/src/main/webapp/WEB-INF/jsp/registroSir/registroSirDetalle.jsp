@@ -53,8 +53,6 @@
 
                     <form:form id="registrarForm" modelAttribute="registrarForm" action="${urlAceptar}" method="post" cssClass="form-horizontal">
 
-
-
                     <%-- Se muestra la Botonera si el RegistroSir está pendiente de procesar--%>
                     <c:if test="${registroSir.estado == 'RECIBIDO' && loginInfo.rolActivo.nombre == 'RWE_USUARI'}">
 
@@ -70,8 +68,6 @@
                             <%--Libro único--%>
                             <form:hidden path="idLibro" value="${libro.id}"/>
 
-                            <%--Distribuir--%>
-                            <form:hidden path="distribuir"/>
                             <form:hidden path="emails"/>
                             <form:hidden path="motivo"/>
 
@@ -88,12 +84,10 @@
                                         <form:select path="idIdioma" cssClass="chosen-select">
                                             <c:forEach items="${idiomas}" var="idioma">
                                                 <c:if test="${idioma == RegwebConstantes.IDIOMA_CASTELLANO_ID}">
-                                                    <form:option value="${idioma}" selected="selected"><spring:message
-                                                            code="idioma.${idioma}"/></form:option>
+                                                    <form:option value="${idioma}" selected="selected"><spring:message code="idioma.${idioma}"/></form:option>
                                                 </c:if>
                                                 <c:if test="${idioma != RegwebConstantes.IDIOMA_CASTELLANO_ID}">
-                                                    <form:option value="${idioma}"><spring:message
-                                                            code="idioma.${idioma}"/></form:option>
+                                                    <form:option value="${idioma}"><spring:message code="idioma.${idioma}"/></form:option>
                                                 </c:if>
                                             </c:forEach>
                                         </form:select>
@@ -122,21 +116,25 @@
                                     </div>
                                 </div>
 
+                                <%--Código SIA--%>
+                                <div class="form-group col-xs-12">
+                                    <div class="col-xs-5 pull-left etiqueta_regweb control-label textEsq">
+                                        <label for="codigoSia" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.codigoSIA"/>" data-toggle="popover"> <spring:message code="registroEntrada.codigoSIA"/></label>
+                                    </div>
+                                    <div class="col-xs-7" id="codigoSia">
+                                        <form:input path="codigoSia" maxlength="20" cssClass="form-control"/> <span class="errors"></span>
+                                    </div>
+                                </div>
+
                                 <div class="row">
                                     <div class="col-xs-12 list-group-item-heading">
                                         <c:if test="${registroSir.documentacionFisica!=RegwebConstantes.TIPO_DOCFISICA_NO_ACOMPANYA_DOC}">
-                                            <button type="button" onclick='javascript:confirm("javascript:aceptarRegistroSir(false)","<spring:message code="regweb.confirmar.registroSIR" htmlEscape="true"/>")' href="javascript:void(0);" class="btn btn-primary btn-sm btn-block">
-                                                <spring:message code="registroSir.aceptar"/>
-                                            </button>
-                                            <button type="button" onclick='javascript:confirm("javascript:aceptarRegistroSir(true)","<spring:message code="regweb.confirmar.registroSIR" htmlEscape="true"/>")' href="javascript:void(0);" class="btn btn-success btn-sm btn-block">
+                                            <button type="button" onclick='javascript:confirm("javascript:aceptarRegistroSir()","<spring:message code="regweb.confirmar.registroSIR" htmlEscape="true"/>")' href="javascript:void(0);" class="btn btn-success btn-sm btn-block">
                                                 <spring:message code="registroSir.aceptar.distribuir"/>
                                             </button>
                                         </c:if>
                                         <c:if test="${registroSir.documentacionFisica==RegwebConstantes.TIPO_DOCFISICA_NO_ACOMPANYA_DOC}">
-                                            <button type="button" class="btn btn-primary btn-sm btn-block" onclick="aceptarRegistroSir(false)">
-                                                <spring:message code="registroSir.aceptar"/>
-                                            </button>
-                                            <button type="button" class="btn btn-success btn-sm btn-block" onclick="aceptarRegistroSir(true)">
+                                            <button type="button" class="btn btn-success btn-sm btn-block" onclick="aceptarRegistroSir()">
                                                 <spring:message code="registroSir.aceptar.distribuir"/>
                                             </button>
                                         </c:if>
@@ -312,56 +310,39 @@
 </c:import>
 
 <c:import url="../registro/registroDistribuir.jsp">
+    <c:param name="aceptarRegistroSir" value="true"/>
 </c:import>
+
 <script type="text/javascript" src="<c:url value="/js/busquedaorganismo.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/distribuir.js"/>"></script>
 
 <script type="application/javascript">
+
+    <%-- Traducciones para distribuir.js --%>
+    var traddistribuir = new Array();
+    traddistribuir['distribuir.distribuyendo'] ="<spring:message code="registroEntrada.distribuyendo" javaScriptEscape="true"/>";
+
     // Realiza el Registro de un registroSir
-    function aceptarRegistroSir(isDistribuir) {
-        $('#distribuir').val(isDistribuir);
-        var libro = true;
-        var idioma = true;
-        var tipoAsunto = true;
+    function aceptarRegistroSir() {
+
         var codigoSia = true;
-        var idLibro = $('#idLibro').val();
-        var idIdioma = $('#idIdioma').val();
-        var idTipoAsunto = $('#idTipoAsunto').val();
         var codigoSiaValue = $('#codigoSia').val();
 
-        // Valida que haya un libro elegido
-        if (!validaCampo(idLibro, 'libro')) {
-            libro = false;
-        }
-        // Valida que haya un idioma elegido
-        if (!validaCampo(idIdioma, 'idioma')) {
-            idioma = false;
-        }
-        // Valida que haya un tipoAsunto elegido
-        if (!validaSelect(idTipoAsunto, 'tipoAsunto')) {
-            tipoAsunto = false;
+        // Valida que el código SIA sea numérico
+        if(!validaEntero(codigoSiaValue, 'codigoSia')){
+            codigoSia = false;
         }
 
         // Mira si todos los campos son correctos
-        if ((libro) && (idioma) && (tipoAsunto) && (codigoSia)) {
-            if(isDistribuir){
-                if(${pluginDistribucionEmail}){
-                    $('#distribuirModal').modal('show');
-                }else{
-                    waitingDialog.show('<spring:message code="registroSir.aceptando" javaScriptEscape='true'/>', {
-                        dialogSize: 'm',
-                        progressType: 'primarycd'
-                    });
-                    doForm('#registrarForm');
-                    //return true;
-                }
-            }else {
-                waitingDialog.show('<spring:message code="registroSir.aceptando" javaScriptEscape='true'/>', {
-                    dialogSize: 'm',
-                    progressType: 'primarycd'
-                });
+        if ((codigoSia)) {
+
+            if(${pluginDistribucionEmail}){ // si tiene configurado el plugin de Distribución via E-Mail, mostramos el modal
+                $('#distribuirModal').modal('show');
+            }else{
+                waitingDialog.show('<spring:message code="registroSir.aceptando" javaScriptEscape='true'/>', {dialogSize: 'm', progressType: 'primary'});
                 doForm('#registrarForm');
-                //return true;
             }
+
         } else {
             return false;
         }

@@ -66,7 +66,7 @@
                             <c:if test="${registro.estado != RegwebConstantes.REGISTRO_RESERVA}">
 
                                 <%--Si no se ha generado el justificante y el registro no está ANULADO, muestra el boton para generarlo --%>
-                                <c:if test="${idJustificante == null && registro.estado != RegwebConstantes.REGISTRO_ANULADO && puedeEditar && not empty registro.registroDetalle.interesados}">
+                                <c:if test="${!tieneJustificante && registro.estado != RegwebConstantes.REGISTRO_ANULADO && permisoEditar}">
                                     <div class="btn-group">
                                         <button type="button" class="btn btn-warning btn-sm dropdown-toggle" data-toggle="dropdown">
                                             <spring:message code="justificante.boton"/> <span class="caret"></span>
@@ -106,10 +106,10 @@
                     </c:if>
 
                     <%--Botón Distribuir y Oficio Remision--%>
-                    <c:if test="${registro.estado == RegwebConstantes.REGISTRO_VALIDO && puedeEditar}">
+                    <c:if test="${registro.estado == RegwebConstantes.REGISTRO_VALIDO && permisoEditar}">
 
                         <%--ES UNA DISTRIBUCIÓN--%>
-                        <c:if test="${(registro.evento == RegwebConstantes.EVENTO_DISTRIBUIR && puedeDistribuir && not empty registro.registroDetalle.interesados)}">
+                        <c:if test="${(registro.evento == RegwebConstantes.EVENTO_DISTRIBUIR && permisoDistribuir && not empty registro.registroDetalle.interesados)}">
                             <div class="panel-footer center">
 
                                 <c:if test="${distribuirRipea}">
@@ -121,7 +121,7 @@
                                     </c:if>
 
                                     <c:if test="${registro.registroDetalle.tipoDocumentacionFisica == RegwebConstantes.TIPO_DOCFISICA_ACOMPANYA_DOC_REQUERIDA || fn:length(registro.registroDetalle.anexos) > 0}">
-                                        <button type="button" onclick='confirmDistribuir("<spring:message code="regweb.confirmar.distribuir" htmlEscape="true"/>")'
+                                        <button type="button" onclick='confirmDistribuir("<spring:message code="regweb.confirmar.distribuir" htmlEscape="true"/>", ${pluginDistribucionEmail})'
                                                 class="btn btn-success btn-sm btn-block"><spring:message code="regweb.distribuir"/></button>
                                     </c:if>
 
@@ -223,12 +223,12 @@
                         </c:if>
 
                         <%--Botón Editar Registro--%>
-                        <c:if test="${(registro.estado == RegwebConstantes.REGISTRO_VALIDO || registro.estado == RegwebConstantes.REGISTRO_RESERVA) && puedeEditar && !tieneJustificante}">
+                        <c:if test="${(registro.estado == RegwebConstantes.REGISTRO_VALIDO || registro.estado == RegwebConstantes.REGISTRO_RESERVA) && registro.registroDetalle.presencial && permisoEditar && !tieneJustificante}">
                             <div class="btn-group"><button type="button" onclick="goTo('<c:url value="/registroEntrada/${registro.id}/edit"/>')" class="btn btn-warning btn-sm"><spring:message code="registro.boton.editar"/></button></div>
                         </c:if>
 
                         <%--Botón Activar--%>
-                        <c:if test="${registro.estado == RegwebConstantes.REGISTRO_ANULADO && puedeEditar}">
+                        <c:if test="${registro.estado == RegwebConstantes.REGISTRO_ANULADO && permisoEditar}">
                             <div class="btn-group"><button type="button" onclick='javascript:confirm("<c:url value="/registroEntrada/${registro.id}/activar"/>","<spring:message code="regweb.confirmar.activar" htmlEscape="true"/>")' class="btn btn-primary btn-sm"><spring:message code="regweb.activar"/></button></div>
                         </c:if>
 
@@ -238,19 +238,19 @@
                         </c:if>
 
                         <%--Botón Anular--%>
-                        <c:if test="${(registro.estado == RegwebConstantes.REGISTRO_VALIDO || registro.estado == RegwebConstantes.REGISTRO_RESERVA || registro.estado == RegwebConstantes.REGISTRO_PENDIENTE_VISAR) && puedeEditar}">
+                        <c:if test="${(registro.estado == RegwebConstantes.REGISTRO_VALIDO || registro.estado == RegwebConstantes.REGISTRO_RESERVA || registro.estado == RegwebConstantes.REGISTRO_PENDIENTE_VISAR) && permisoEditar}">
                             <div class="btn-group">
                                 <a data-toggle="modal" role="button" href="#anularModal" onclick="limpiarModalAnulacion(${registro.id});" class="btn btn-danger btn-sm"><spring:message code="regweb.anular"/></a>
                             </div>
                         </c:if>
 
                         <%--Botón reenviar--%>
-                        <c:if test="${(registro.estado == RegwebConstantes.REGISTRO_RECHAZADO || registro.estado == RegwebConstantes.REGISTRO_REENVIADO) && puedeEditar}">
+                        <c:if test="${(registro.estado == RegwebConstantes.REGISTRO_RECHAZADO || registro.estado == RegwebConstantes.REGISTRO_REENVIADO) && permisoEditar}">
                             <div class="btn-group"><button type="button" onclick='javascript:goTo("<c:url value="/registroEntrada/${registro.id}/reenviar"/>")' class="btn btn-success btn-sm"><spring:message code="registro.boton.reenviar"/></button></div>
                         </c:if>
 
                         <%--Botón rectificar--%>
-                        <c:if test="${(registro.estado == RegwebConstantes.REGISTRO_ANULADO || registro.estado == RegwebConstantes.REGISTRO_RECHAZADO) && puedeEditar}">
+                        <c:if test="${(registro.estado == RegwebConstantes.REGISTRO_ANULADO || registro.estado == RegwebConstantes.REGISTRO_RECHAZADO) && permisoEditar}">
                             <div class="btn-group"><button type="button" onclick='javascript:confirm("<c:url value="/registroEntrada/${registro.id}/rectificar"/>","<spring:message code="regweb.confirmar.rectificar" htmlEscape="true"/>")' class="btn btn-danger btn-sm"><spring:message code="registro.boton.rectificar"/></button></div>
                         </c:if>
 
@@ -285,14 +285,14 @@
                             <c:if test="${registro.registroDetalle.tipoDocumentacionFisica != RegwebConstantes.TIPO_DOCFISICA_ACOMPANYA_DOC_REQUERIDA || registro.registroDetalle.tieneAnexos}">
 
                                 <!-- ANEXOS COMPLETO-->
-                                <c:if test="${anexosCompleto}">
+                                <c:if test="${anexosEditar}">
                                     <c:import url="../registro/anexos.jsp">
                                         <c:param name="tipoRegistro" value="${RegwebConstantes.REGISTRO_ENTRADA}"/>
                                     </c:import>
                                 </c:if>
 
                                 <%--ANEXOS SOLO LECTURA--%>
-                                <c:if test="${not anexosCompleto}">
+                                <c:if test="${not anexosEditar}">
                                    <c:import url="../registro/anexosLectura.jsp">
                                        <c:param name="tipoRegistro" value="${RegwebConstantes.REGISTRO_ENTRADA}"/>
                                        <c:param name="idEntidad" value="${registro.oficina.organismoResponsable.entidad.id}"/>
@@ -301,16 +301,15 @@
                             </c:if>
 
                             <%--INTERESADOS--%>
-                            <c:if test="${registro.estado == RegwebConstantes.REGISTRO_VALIDO && puedeEditar && !tieneJustificante}">
+                            <c:if test="${interesadosEditar}">
                                 <c:import url="../registro/interesados.jsp">
                                     <c:param name="tipoRegistro" value="${RegwebConstantes.REGISTRO_ENTRADA}"/>
-                                    <%--<c:param name="comunidad" value="${comunidad.codigoComunidad}"/>--%>
                                     <c:param name="idRegistroDetalle" value="${registro.registroDetalle.id}"/>
                                 </c:import>
                             </c:if>
 
                             <%--INTERESADOS SOLO LECTURA--%>
-                            <c:if test="${(registro.estado != RegwebConstantes.REGISTRO_VALIDO && registro.estado != RegwebConstantes.REGISTRO_RESERVA) || !puedeEditar || tieneJustificante}">
+                            <c:if test="${not interesadosEditar}">
                                 <c:import url="../registro/interesadosLectura.jsp">
                                     <c:param name="tipoRegistro" value="${RegwebConstantes.REGISTRO_ENTRADA}"/>
                                 </c:import>
@@ -364,6 +363,7 @@
 
     <%--Modal de distribución vial mail --%>
     <c:import url="../registro/registroDistribuir.jsp">
+        <c:param name="aceptarRegistroSir" value="false"/>
     </c:import>
 
 </div>
@@ -373,17 +373,12 @@
 
 
 <script type="text/javascript">
-    var urlDeterminarPluginDistrib = '<c:url value="/registroEntrada/${registro.id}/determinar/plugin/distribucion"/>';
+    var urlDistribuir = '<c:url value="/registroEntrada/${registro.id}/distribuir"/>';
     var urlDetalle = '<c:url value="/registroEntrada/${registro.id}/detalle" />';
 
     <%-- Traducciones para distribuir.js --%>
     var traddistribuir = new Array();
-    traddistribuir['campo.obligatorio'] = "<spring:message code='registro.distribuir.propuesto.obligatorio' javaScriptEscape='true' />";
-    traddistribuir['distribuir.nodestinatarios'] = "<spring:message code='registro.distribuir.nodestinatarios' javaScriptEscape='true' />";
-    traddistribuir['distribuir.noenviado'] = "<spring:message code='registroEntrada.distribuir.error.noEnviado' javaScriptEscape='true' />";
-    traddistribuir['distribuir.error.plugin'] = "<spring:message code='registroEntrada.distribuir.error.plugin' javaScriptEscape='true' />";
     traddistribuir['distribuir.distribuyendo'] ="<spring:message code="registroEntrada.distribuyendo" javaScriptEscape="true"/>";
-
 
     var tradestado = new Array();
     tradestado['estado.E'] = "<spring:message code="unidad.estado.E" javaScriptEscape='true' />";
@@ -392,7 +387,6 @@
     tradestado['estado.T'] = "<spring:message code="unidad.estado.T" javaScriptEscape='true' />";
 
 </script>
-
 
 <script type="text/javascript" src="<c:url value="/js/busquedaorganismo.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/sello.js"/>"></script>
@@ -431,22 +425,21 @@
      */
     function crearJustificante(url){
 
-            $.ajax({
-                url:url,
-                type:'POST',
-                beforeSend: function(objeto){
-                    waitingDialog.show('<spring:message code="justificante.generando" javaScriptEscape='true'/>', {dialogSize: 'm', progressType: 'info'});
-                },
-                success:function(respuesta){
-                    if(respuesta.status == 'SUCCESS'){
-                        goTo('<c:url value="/registroEntrada/${idRegistro}/detalle?justificante=true"/>');
-                    }else if(respuesta.status == 'FAIL') {
-                        mensajeError('#mensajes', respuesta.error);
-                        waitingDialog.hide();
-                    }
+        $.ajax({
+            url:url,
+            type:'POST',
+            beforeSend: function(objeto){
+                waitingDialog.show('<spring:message code="justificante.generando" javaScriptEscape='true'/>', {dialogSize: 'm', progressType: 'info'});
+            },
+            success:function(respuesta){
+                if(respuesta.status == 'SUCCESS'){
+                    goTo('<c:url value="/registroEntrada/${idRegistro}/detalle?justificante=true"/>');
+                }else if(respuesta.status == 'FAIL') {
+                    mensajeError('#mensajes', respuesta.error);
+                    waitingDialog.hide();
                 }
-            });
-
+            }
+        });
     }
 
 </script>

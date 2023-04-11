@@ -42,6 +42,10 @@ public class Plugin implements Serializable {
         this.tipo = tipo;
     }
 
+    public Plugin(String clase) {
+        this.clase = clase;
+    }
+
     public Plugin(Long idEntidad) {
         this.entidad = idEntidad;
     }

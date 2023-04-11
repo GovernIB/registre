@@ -30,7 +30,7 @@ public interface DistribucionLocal {
      * @throws I18NException
      * @throws I18NException
      */
-    RespuestaDistribucion distribuir(RegistroEntrada re, UsuarioEntidad usuarioEntidad,  String emails, String motivo) throws I18NException, I18NValidationException;
+    RespuestaDistribucion distribuir(RegistroEntrada re, UsuarioEntidad usuarioEntidad, String descripcion,  String emails, String motivo) throws I18NException, I18NValidationException;
 
     /**
      * Procesar los registros(varios) que estan en la cola
@@ -59,14 +59,6 @@ public interface DistribucionLocal {
      * @throws I18NException
      */
     Boolean reDistribuirRegistro(Long idRegistro, Entidad entidad) throws I18NException;
-
-    /**
-     * Tramita un RegistroEntrada, creando el HistoricoEstado y Trazabilidad
-     *
-     * @param registroEntrada
-     * @throws I18NException
-     */
-    void marcarDistribuido(RegistroEntrada registroEntrada) throws I18NException;
 
     /**
      * Indica si es el plugin de distribucion email

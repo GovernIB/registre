@@ -63,6 +63,12 @@ public abstract class AbstractRegistroCommonFormController extends BaseControlle
             return true;
         }
 
+        //Comprobamos que el Registro sea Presencial
+        if(!registro.getRegistroDetalle().getPresencial()){
+            Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.registro.modificar.telematico"));
+            return true;
+        }
+
         // Si tiene Justificante generado, no se puede editar
         if (registro.getRegistroDetalle().getTieneJustificante()) {
             log.info("Este Registro no se puede modificar, porque ya se ha generado su Justificante");

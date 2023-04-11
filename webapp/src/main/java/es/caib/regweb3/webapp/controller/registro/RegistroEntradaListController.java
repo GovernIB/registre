@@ -164,7 +164,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
 
             busqueda.setPageNumber(1);
             mav.addObject("paginacion", paginacion);
-            mav.addObject("puedeEditar", permisoOrganismoUsuarioEjb.tienePermiso(usuarioEntidad.getId(), busqueda.getIdOrganismo(), RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_ENTRADA, true));
+            mav.addObject("permisoEditar", permisoOrganismoUsuarioEjb.tienePermiso(usuarioEntidad.getId(), busqueda.getIdOrganismo(), RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_ENTRADA, true));
 
             // Alta en tabla LOPD
             lopdEjb.insertarRegistros(paginacion, usuarioEntidad, entidadActiva.getLibro(), RegwebConstantes.REGISTRO_ENTRADA, RegwebConstantes.LOPD_LISTADO);
@@ -186,10 +186,6 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         mav.addObject("registroEntradaBusqueda", busqueda);
         mav.addObject("organDestinatari", busqueda.getOrganDestinatari());
         mav.addObject("anularForm", new AnularForm());
-
-        /* Solucion a los problemas de encoding del formulario GET */
-        //busqueda.getRegistroEntrada().getRegistroDetalle().setExtracto(new String(busqueda.getRegistroEntrada().getRegistroDetalle().getExtracto().getBytes("ISO-8859-1"), "UTF-8"));
-        //busqueda.setOrganDestinatariNom(new String(busqueda.getOrganDestinatariNom().getBytes("ISO-8859-1"), "UTF-8"));
 
         return mav;
 
@@ -216,11 +212,12 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
 
         // Permisos
         Boolean tieneJustificante = registro.getRegistroDetalle().getTieneJustificante();
-        Boolean puedeEditar = permisoOrganismoUsuarioEjb.tienePermiso(usuarioEntidad.getId(), registro.getOficina().getOrganismoResponsable().getId(), RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_ENTRADA, true);
+        Boolean permisoEditar = permisoOrganismoUsuarioEjb.tienePermiso(usuarioEntidad.getId(), registro.getOficina().getOrganismoResponsable().getId(), RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_ENTRADA, true);
 
         model.addAttribute("isResponsableOrganismo", permisoOrganismoUsuarioEjb.isAdministradorOrganismo(usuarioEntidad.getId(),registro.getOficina().getOrganismoResponsable().getId()));
-        model.addAttribute("puedeEditar", puedeEditar);
-        model.addAttribute("puedeDistribuir", permisoOrganismoUsuarioEjb.tienePermiso(usuarioEntidad.getId(), registro.getOficina().getOrganismoResponsable().getId(), RegwebConstantes.PERMISO_DISTRIBUCION_REGISTRO, true));
+        model.addAttribute("permisoEditar", permisoEditar);
+        model.addAttribute("permisoDistribuir", permisoOrganismoUsuarioEjb.tienePermiso(usuarioEntidad.getId(), registro.getOficina().getOrganismoResponsable().getId(), RegwebConstantes.PERMISO_DISTRIBUCION_REGISTRO, true));
+        model.addAttribute("pluginDistribucionEmail", distribucionEjb.isDistribucionPluginEmail(getEntidadActiva(request).getId()));
         model.addAttribute("tieneJustificante", tieneJustificante);
         model.addAttribute("maxReintentos", PropiedadGlobalUtil.getMaxReintentosSir(entidadActiva.getId()));
 
@@ -255,8 +252,8 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
 
 
             // Anexos
-            Boolean anexosCompleto = (registro.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO) || registro.getEstado().equals(RegwebConstantes.REGISTRO_PENDIENTE_VISAR)) && puedeEditar && !tieneJustificante;
-            if (anexosCompleto) { // Si se muestran los anexos completo
+            Boolean anexosEditar = (registro.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO) || registro.getEstado().equals(RegwebConstantes.REGISTRO_PENDIENTE_VISAR)) && registro.getRegistroDetalle().getPresencial() && permisoEditar && !tieneJustificante;
+            if (anexosEditar) {
 
                 List<AnexoFull> anexos = anexoEjb.getByRegistroEntrada(registro); //Inicializamos los anexos del registro de entrada.
                 initScanAnexos(entidadActiva, model); // Inicializa los atributos para escanear anexos
@@ -269,15 +266,16 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
                 model.addAttribute("anexos", anexos);
                 model.addAttribute("anexoDetachedPermitido", PropiedadGlobalUtil.getPermitirAnexosDetached(entidadActiva.getId()));
             }
-            model.addAttribute("anexosCompleto", anexosCompleto);
+            model.addAttribute("anexosEditar", anexosEditar);
 
             // Interesados
-            if (registro.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO) && puedeEditar && !tieneJustificante) {
+            Boolean interesadosEditar = registro.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO) && registro.getRegistroDetalle().getPresencial() && permisoEditar && !tieneJustificante;
+            if (interesadosEditar) {
 
                 initDatosInteresados(model, organismosOficinaActiva);
                 model.addAttribute("ultimosOrganismos",  registroEntradaConsultaEjb.ultimosOrganismosRegistro(usuarioEntidad));
-
             }
+            model.addAttribute("interesadosEditar", interesadosEditar);
 
             // Justificante
             if (tieneJustificante) {
@@ -614,7 +612,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
 
         try {
 
-            RegistroEntrada registroEntrada = registroEntradaEjb.findById(idRegistro);
+            RegistroEntrada registroEntrada = registroEntradaEjb.findByIdCompleto(idRegistro);
             UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
 
             // Comprobamos si el RegistroEntrada tiene el estado anulado
@@ -701,128 +699,38 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
     @RequestMapping(value = "/{idRegistro}/distribuir", method = RequestMethod.POST)
     public
     @ResponseBody
-    JsonResponse distribuirRegistroEntrada(@PathVariable Long idRegistro, HttpServletRequest request,@RequestBody DistribuirForm distribuirForm) throws Exception {
+    JsonResponse distribuirRegistroEntrada(@PathVariable Long idRegistro, HttpServletRequest request, @RequestBody DistribuirForm distribuirForm) throws Exception {
 
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
         RegistroEntrada registroEntrada;
         RespuestaDistribucion respuesta = new RespuestaDistribucion();
         JsonResponse response = new JsonResponse();
 
-
         try {
 
-            IDistribucionPlugin distribucionPlugin = (IDistribucionPlugin) pluginEjb.getPlugin(usuarioEntidad.getEntidad().getId(), RegwebConstantes.PLUGIN_DISTRIBUCION);
+            IDistribucionPlugin distribucionPlugin = (IDistribucionPlugin) pluginEjb.getPluginDistribucion(usuarioEntidad.getEntidad().getId());
             if(distribucionPlugin.getClass().getName().contains("DistribucionGoibPlugin")){
                 registroEntrada = registroEntradaEjb.getConAnexosFullDistribuir(idRegistro);
             }else{
                 registroEntrada = registroEntradaEjb.getConAnexosFull(idRegistro);
-
             }
 
             //Distribuimos el registro
-            respuesta = distribucionEjb.distribuir(registroEntrada, usuarioEntidad, distribuirForm.getEmails(), distribuirForm.getMotivo());
+            respuesta = distribucionEjb.distribuir(registroEntrada, usuarioEntidad,"Distribución desde oficina", distribuirForm.getEmails(), distribuirForm.getMotivo());
 
-            if (respuesta.getHayPlugin()) {//
-                if (respuesta.getEnviadoCola()) { //Si se ha enviado a la cola
-                    response.setStatus("ENVIADO_COLA");
-                    Mensaje.saveMessageInfo(request, getMessage("registroEntrada.enviocola"));
-                } else if ((respuesta.getHayPlugin() && respuesta.getEnviado())) { //Cuando se ha distribuido correctamente
-                    Mensaje.saveMessageInfo(request, getMessage("registroEntrada.distribuir.ok"));
-                    response.setStatus("SUCCESS");
-                } else if(respuesta.getEnvioMail()){
-                    response.setStatus("ENVIO_MAIL");
-                    Mensaje.saveMessageInfo(request, getMessage("registroEntrada.enviomail"));
-                }else if (respuesta.getHayPlugin() && !respuesta.getEnviado()) { //Cuando no se ha distribuido correctamente
-                    response.setStatus("FAIL");
-                    response.setError(getMessage("registroEntrada.distribuir.error.noEnviado"));
-                }
-            } else {
-
+            if (respuesta.getEncolado()) { //Si se ha enviado a la cola
+                response.setStatus("ENVIADO_COLA");
+                Mensaje.saveMessageInfo(request, getMessage("registroEntrada.enviocola"));
+            } else if (respuesta.getDistribuido()) { //Cuando se ha distribuido correctamente
                 Mensaje.saveMessageInfo(request, getMessage("registroEntrada.distribuir.ok"));
                 response.setStatus("SUCCESS");
-            }
-
-            response.setResult(respuesta);
-
-        } catch (I18NValidationException e) {
-            e.printStackTrace();
-            response.setStatus("FAIL");
-            response.setError(I18NUtils.getMessage(e));
-            response.setResult(respuesta);
-            return response;
-        } catch (I18NException ie) {
-            ie.printStackTrace();
-            response.setStatus("FAIL");
-            response.setError(I18NUtils.getMessage(ie));
-            response.setResult(respuesta);
-            return response;
-        } catch (Exception ste) {
-            ste.printStackTrace();
-            response.setStatus("FAIL");
-            response.setError(ste.getMessage());
-            response.setResult(respuesta);
-            return response;
-        }
-
-        return response;
-    }
-
-    /**
-     * Función que determina que plugin de distribución está configurado
-     *
-     * @param idRegistro identificador del registro
-     * @param request
-     * @return
-     * @throws Exception
-     */
-    @RequestMapping(value = "/{idRegistro}/determinar/plugin/distribucion", method = RequestMethod.GET)
-    public @ResponseBody JsonResponse determinarPluginDistribuicion(@PathVariable Long idRegistro, HttpServletRequest request) throws Exception {
-
-        UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
-        RegistroEntrada registroEntrada;
-        RespuestaDistribucion respuesta = new RespuestaDistribucion();
-        JsonResponse response = new JsonResponse();
-
-
-        try {
-            //Mirar Plugin distribució
-            IDistribucionPlugin distribucionPlugin = (IDistribucionPlugin)  pluginEjb.getPlugin(usuarioEntidad.getEntidad().getId(), RegwebConstantes.PLUGIN_DISTRIBUCION);
-
-            if (distribucionPlugin != null) {
-
-                if (distribucionPlugin.getClass().getName().contains("DistribucionEmailPlugin")) {
-                    log.info(" Envio MAIL");
-
-                    respuesta.setEnvioMail(true);
-                } else {
-
-                    if(distribucionPlugin.getClass().getName().contains("DistribucionGoibPlugin")){
-                        registroEntrada = registroEntradaEjb.getConAnexosFullDistribuir(idRegistro);
-                    }else{
-                        registroEntrada = registroEntradaEjb.getConAnexosFull(idRegistro);
-                    }
-
-                    respuesta = distribucionEjb.distribuir(registroEntrada, usuarioEntidad,null,null);
-
-                }
-                respuesta.setHayPlugin(true);
-            }
-
-            if (respuesta.getHayPlugin()) {//
-                if (respuesta.getEnviadoCola()) { //Si se ha enviado a la cola
-                    response.setStatus("ENVIADO_COLA");
-                    Mensaje.saveMessageInfo(request, getMessage("registroEntrada.enviocola"));
-                } else if ((respuesta.getHayPlugin() && respuesta.getEnviado())) { //Cuando se ha distribuido correctamente
-                    Mensaje.saveMessageInfo(request, getMessage("registroEntrada.distribuir.ok"));
-                    response.setStatus("SUCCESS");
-                } else if(respuesta.getEnvioMail()){
-                    response.setStatus("ENVIO_MAIL");
-                }else if (respuesta.getHayPlugin() && !respuesta.getEnviado()) { //Cuando no se ha distribuido correctamente
-                    response.setStatus("FAIL");
-                    response.setError(getMessage("registroEntrada.distribuir.error.noEnviado"));
-                }
+            } else if(respuesta.getEnvioMail()){
+                response.setStatus("ENVIO_MAIL");
+                Mensaje.saveMessageInfo(request, getMessage("registroEntrada.enviomail"));
+            }else if (!respuesta.getDistribuido()) { //Cuando no se ha distribuido correctamente
+                response.setStatus("FAIL");
+                response.setError(getMessage("registroEntrada.distribuir.error.noEnviado"));
             } else {
-
                 Mensaje.saveMessageInfo(request, getMessage("registroEntrada.distribuir.ok"));
                 response.setStatus("SUCCESS");
             }

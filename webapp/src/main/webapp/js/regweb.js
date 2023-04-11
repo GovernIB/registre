@@ -79,39 +79,6 @@
 
 });
 
-
-// Muestra el cuadro de confirmación para distribuir un registro
-function confirmDistribuir(mensaje) {
-
-    var confirmModal =
-        $("<div class=\"modal fade\">" +
-            "<div class=\"modal-dialog\">" +
-            "<div class=\"modal-content\">" +
-            "<div class=\"modal-header\">" +
-            "<button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\">&times;</button>" +
-            "<h4 class=\"modal-title\">Confirmar</h4>" +
-            "</div>" +
-
-            "<div class=\"modal-body\">" +
-            "<p>" + mensaje + "</p>" +
-            "</div>" +
-
-            "<div class=\"modal-footer\">" +
-            "<button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\">No</button>" +
-            "<button type=\"button\" id=\"okButton\" class=\"btn btn-danger\">Sí</button>" +
-            "</div>" +
-            "</div>" +
-            "</div>" +
-            "</div>");
-
-    confirmModal.find("#okButton").click(function (event) {
-        distribuir();
-        confirmModal.modal("hide");
-    });
-
-    confirmModal.modal("show");
-}
-
 // Muestra un popup con un mensaje informativo
 function mensajeInformativo(titulo,mensaje) {
 

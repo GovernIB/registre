@@ -423,7 +423,7 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl implemen
 
         try{
             // Distribuimos el registro de entrada
-            distribucionEjb.distribuir(registroEntrada, usuarioEntidad,null,null);
+            distribucionEjb.distribuir(registroEntrada, usuarioEntidad, "Distribución desde WS",null,null);
 
         }catch (I18NValidationException e){
             e.printStackTrace();
@@ -464,18 +464,16 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl implemen
 
         try{
             // 7.- Distribuimos el registro de entrada
-            RespuestaDistribucion respuestaDistribucion = distribucionEjb.distribuir(registroEntrada, usuario,null,null);
+            RespuestaDistribucion respuestaDistribucion = distribucionEjb.distribuir(registroEntrada, usuario, "Distribución desde WS",null,null);
 
             // Si el Plugin permite seleccionar Destinatarios, no se puede distribuir automaticamente
             if(respuestaDistribucion.getDestinatarios() != null){
                 throw new I18NException("registroEntrada.distribuir.destinatarios");
             }
 
-            if(respuestaDistribucion.getHayPlugin()){// Si hay plugin
-                if(!respuestaDistribucion.getEnviadoCola()  && !respuestaDistribucion.getEnviado()){ //Cuando hay plugin y no ha llegado a destino
+            if(!respuestaDistribucion.getEncolado()  && !respuestaDistribucion.getDistribuido()){ //Cuando hay plugin y no ha llegado a destino
 
-                    throw new I18NException(("registroEntrada.distribuir.error.noEnviado"));
-                }
+                throw new I18NException(("registroEntrada.distribuir.error.noEnviado"));
             }
 
         }catch (Exception e){

@@ -70,7 +70,7 @@ public class AnexoScanController extends AnexoController {
         request.getSession().setAttribute("anexoForm", anexoForm);
         loadCommonAttributesScan(request, model, anexoForm.getRegistroID(),scanwebAbsoluteurlBase);
 
-        model.addAttribute("tiposValidezDocumento", RegwebConstantes.TIPOS_VALIDEZDOCUMENTO);
+        //model.addAttribute("tiposValidezDocumento", RegwebConstantes.TIPOS_VALIDEZDOCUMENTO);
         model.addAttribute("anexoForm", anexoForm);
 
         return "registro/formularioAnexoScan";
@@ -97,7 +97,7 @@ public class AnexoScanController extends AnexoController {
         request.getSession().setAttribute("anexoForm", anexoForm);
         loadCommonAttributesScan(request, model, anexoForm.getRegistroID(),scanwebAbsoluteurlBase);
 
-        model.addAttribute("tiposValidezDocumento", RegwebConstantes.TIPOS_VALIDEZDOCUMENTO);
+        //model.addAttribute("tiposValidezDocumento", RegwebConstantes.TIPOS_VALIDEZDOCUMENTO);
         model.addAttribute("anexoForm", anexoForm);
 
         return "registro/formularioAnexoScanMasivo";
@@ -244,10 +244,9 @@ public class AnexoScanController extends AnexoController {
      * @throws Exception
      * @throws I18NException
      */
-    protected void loadCommonAttributesScan(HttpServletRequest request, Model model,
-                                            Long registroID, String scanwebAbsoluteurlBase) throws Exception, I18NException {
+    protected void loadCommonAttributesScan(HttpServletRequest request, Model model, Long registroID, String scanwebAbsoluteurlBase) throws Exception, I18NException {
 
-        loadCommonAttributes(request, model);
+        loadCommonAttributes(request, model, true);
 
         // Scan
         Entidad entidad = getEntidadActiva(request);
