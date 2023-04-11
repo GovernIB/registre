@@ -938,23 +938,22 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
             where.add(sEstados.toString());
         }
 
-
-        // Añadimos los parámetros a la query
-        if (parametros.size() != 0) {
-
-            query.append("where ");
-            int count = 0;
-            for (String w : where) {
-                if (count != 0) {
-                    query.append(" and ");
-                }
-                query.append(w);
-                count++;
+        query.append("where ");
+        int count = 0;
+        for (String w : where) {
+            if (count != 0) {
+                query.append(" and ");
             }
+            query.append(w);
+            count++;
+        }
 
-            // Duplicamos la query solo para obtener los resultados totales
-            q2 = em.createQuery(query.toString().replaceAll(queryBase, "Select DISTINCT count(re.id) " +
-                    "from RegistroEntrada as re left outer join re.registroDetalle.interesados interessat LEFT JOIN re.destino destino "));
+        // Duplicamos la query solo para obtener los resultados totales
+        StringBuilder queryCount = new StringBuilder("Select count(DISTINCT re.id) " +
+                "from RegistroEntrada as re left outer join re.registroDetalle.interesados interessat LEFT JOIN re.destino destino ");
+
+        q2 = em.createQuery(query.toString().replaceAll(queryBase, queryCount.toString()));
+        if (parametros.size() != 0) {
             query.append(" order by re.fecha desc ");
             q1 = em.createQuery(query.toString());
 
@@ -963,16 +962,11 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
                 q1.setParameter(param.getKey(), param.getValue());
                 q2.setParameter(param.getKey(), param.getValue());
             }
-
-        } else {
-            // Duplicamos la query solo para obtener los resultados totales
-            q2 = em.createQuery(query.toString().replaceAll(queryBase, "Select DISTINCT count(re.id) " +
-                    "from RegistroEntrada as re left outer join re.registroDetalle.interesados interessat LEFT JOIN re.destino destino "));
+        }else{
             query.append(" order by re.fecha desc ");
             q1 = em.createQuery(query.toString());
-
-
         }
+
 
         Long total = (Long) q2.getSingleResult();
 
@@ -1002,7 +996,6 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
 
             registros.add(registroEntrada);
         }
-
         paginacion.setListado(registros);
 
         return paginacion;
