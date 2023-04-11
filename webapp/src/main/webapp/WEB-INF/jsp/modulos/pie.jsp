@@ -101,6 +101,13 @@
     trads_general['sesion.expirar.titulo'] = "<spring:message code='regweb.sesion.expirar.titulo' javaScriptEscape='true' />";
     trads_general['sesion.expirar.mensaje'] = "<spring:message code='regweb.sesion.expirar.mensaje' javaScriptEscape='true' />";
     trads_general['sesion.expirar.boton'] = "<spring:message code='regweb.sesion.expirar.boton' javaScriptEscape='true' />";
+    trads_general['error.valor.requerido'] = "<spring:message code='error.valor.requerido' javaScriptEscape='true' />";
+    trads_general['error.formato.incorrecto'] = "<spring:message code='error.formato.incorrecto' javaScriptEscape='true' />";
+    trads_general['error.fechaInicio.posterior'] = "<spring:message code='error.fechaInicio.posterior' javaScriptEscape='true' />";
+    trads_general['error.fechaFin.posterior'] = "<spring:message code='error.fechaFin.posterior' javaScriptEscape='true' />";
+    trads_general['error.fechaInicioFin.posterior'] = "<spring:message code='error.fechaInicioFin.posterior' javaScriptEscape='true' />";
+    trads_general['error.numeroRegistro.noNumerico'] = "<spring:message code='error.numeroRegistro.noNumerico' javaScriptEscape='true' />";
+    trads_general['error.libro.seleccionado'] = "<spring:message code='error.libro.seleccionado' javaScriptEscape='true' />";
 
 </script>
 
