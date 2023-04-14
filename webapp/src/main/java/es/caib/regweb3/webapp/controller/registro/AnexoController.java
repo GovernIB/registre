@@ -148,8 +148,7 @@ public class AnexoController extends BaseController {
      Prepara los datos de un anexo para su edición
      */
     @RequestMapping(value = "/editar/{registroDetalleID}/{tipoRegistro}/{registroID}/{anexoID}/{isOficioRemisionSir}", method = RequestMethod.GET)
-    public String editarAnexoGet(HttpServletRequest request,
-                                 HttpServletResponse response, @PathVariable Long registroDetalleID,
+    public String editarAnexoGet(HttpServletRequest request, @PathVariable Long registroDetalleID,
                                  @PathVariable Long tipoRegistro, @PathVariable Long registroID,
                                  @PathVariable Long anexoID, @PathVariable boolean isOficioRemisionSir, Model model) throws I18NException, Exception {
 
@@ -191,7 +190,6 @@ public class AnexoController extends BaseController {
 
         //Cargamos los atributos comunes
         loadCommonAttributes(request, model, anexoForm.getAnexo().getScan());
-
 
         model.addAttribute("anexoForm", anexoForm);
 

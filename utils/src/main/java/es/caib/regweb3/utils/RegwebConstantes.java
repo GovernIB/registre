@@ -207,8 +207,7 @@ public interface RegwebConstantes {
     };
 
     Long[] TIPOS_VALIDEZDOCUMENTO_ARCHIVO = {
-            TIPOVALIDEZDOCUMENTO_COPIA,
-            TIPOVALIDEZDOCUMENTO_ORIGINAL
+            TIPOVALIDEZDOCUMENTO_COPIA
     };
 
     Long[] TIPOS_VALIDEZDOCUMENTO_SCAN = {
