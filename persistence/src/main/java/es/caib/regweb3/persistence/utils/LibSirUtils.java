@@ -21,8 +21,6 @@ import es.gob.administracionelectronica.eni.xsd.v1_0.documento_e.metadatos.TipoM
 import org.apache.commons.lang.StringUtils;
 import org.fundaciobit.genapp.common.i18n.I18NArgumentString;
 import org.fundaciobit.genapp.common.i18n.I18NException;
-import org.fundaciobit.plugins.documentcustody.api.DocumentCustody;
-import org.fundaciobit.plugins.documentcustody.api.SignatureCustody;
 import org.fundaciobit.pluginsib.core.utils.Metadata;
 import org.fundaciobit.pluginsib.core.utils.MetadataConstants;
 import org.slf4j.Logger;
@@ -518,7 +516,7 @@ public class LibSirUtils {
      * @param registroDetalle
      * @return
      */
-    private String obtenerDenominacionUnidadTramitacionDestino(RegistroDetalle registroDetalle) {
+    public static String obtenerDenominacionUnidadTramitacionDestino(RegistroDetalle registroDetalle) {
 
         List<Interesado> interesados = registroDetalle.getInteresados();
 
@@ -536,7 +534,7 @@ public class LibSirUtils {
      * @param registroDetalle
      * @return
      */
-    private String obtenerCodigoUnidadTramitacionDestino(RegistroDetalle registroDetalle) {
+    public static String obtenerCodigoUnidadTramitacionDestino(RegistroDetalle registroDetalle) {
 
         List<Interesado> interesados = registroDetalle.getInteresados();
 
@@ -550,7 +548,7 @@ public class LibSirUtils {
         return null;
     }
 
-    public String guardarDocumentoInterdoc(AnexoFull anexoFull, Long idEntidad, String documentoInteresado) throws I18NException {
+    public static String guardarDocumentoInterdoc(AnexoFull anexoFull, Long idEntidad, String documentoInteresado) throws I18NException {
 
         Anexo anexo = anexoFull.getAnexo();
 
@@ -634,6 +632,21 @@ public class LibSirUtils {
         } catch (Exception e) {
             throw new I18NException(e, "anexo.error.guardando.interdoc",
                     new I18NArgumentString(String.valueOf(anexoFull.getAnexo().getId())),
+                    new I18NArgumentString(e.getMessage()));
+        }
+
+
+    }
+
+    public static Fitxer obtenerDocumentoInterdoc(String referencia, String usuari, String clau, Long idEntidad) throws I18NException {
+
+        ObtenerReferenciaWs referenciaWs = ReferenciaUnicaUtils.getObtenerReferenciaService(PropiedadGlobalUtil.getInterDocServer(idEntidad), PropiedadGlobalUtil.getInterDocUsername(idEntidad), PropiedadGlobalUtil.getInterDocPassword(idEntidad));
+
+        try {
+            return referenciaWs.descarregarDocument(referencia, usuari, clau);
+        } catch (Exception e) {
+            throw new I18NException(e, "anexo.error.guardando.interdoc",
+                    new I18NArgumentString(referencia),
                     new I18NArgumentString(e.getMessage()));
         }
 

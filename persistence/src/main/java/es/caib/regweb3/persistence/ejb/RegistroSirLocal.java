@@ -5,10 +5,12 @@ import es.caib.regweb3.model.utils.EstadoRegistroSir;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.sir.core.utils.FicheroIntercambio;
 import es.gob.ad.registros.sir.interService.bean.AsientoBean;
+import es.gob.ad.registros.sir.interService.exception.InterException;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 
 import javax.ejb.Local;
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
@@ -66,15 +68,6 @@ public interface RegistroSirLocal extends BaseEjb<RegistroSir, Long> {
     RegistroSir getRegistroSirConAnexos(Long idRegistroSir) throws I18NException;
 
     /**
-     * Obtiene un registroSir incluyendo los metadatos
-     *
-     * @param idRegistroSir
-     * @return
-     * @throws Exception
-     */
-    RegistroSir getRegistroSirConMetadatos(Long idRegistroSir) throws Exception;
-
-    /**
      * Obtiene los AnexosSir completos de un RegistroSir
      *
      * @param registroSir
@@ -90,16 +83,6 @@ public interface RegistroSirLocal extends BaseEjb<RegistroSir, Long> {
      * @throws I18NException
      */
     RegistroSir crearRegistroSir(FicheroIntercambio ficheroIntercambio, Entidad entidad) throws I18NException;
-
-    /**
-     * Crea un registroSir a partir de un AsientoBean (LIBSIR)
-     *
-     * @param asientoBean
-     * @param entidad
-     * @return
-     * @throws Exception
-     */
-    RegistroSir crearRegistroSir(AsientoBean asientoBean, Entidad entidad) throws Exception;
 
     /**
      * Eliminar un RegistroSir y sus trazabilidades
@@ -202,8 +185,6 @@ public interface RegistroSirLocal extends BaseEjb<RegistroSir, Long> {
      */
     RegistroSir transformarFicheroIntercambio(FicheroIntercambio ficheroIntercambio, Entidad entidad) throws I18NException;
 
-    RegistroSir transformarAsientoBean(AsientoBean asientoBean, Entidad entidad) throws I18NException;
-
 
     /**
      * @param registroEntrada
@@ -265,5 +246,12 @@ public interface RegistroSirLocal extends BaseEjb<RegistroSir, Long> {
      * @throws I18NException
      * @throws I18NValidationException
      */
-    RegistroEntrada aceptarRegistroSirEntrada(RegistroSir registroSir, Entidad entidad, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, Long idOrganismoDestino) throws I18NException, I18NValidationException, ParseException;
+    RegistroEntrada aceptarRegistroSirEntrada(RegistroSir registroSir, Entidad entidad, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, Long idOrganismoDestino) throws I18NException, I18NValidationException, ParseException, InterException;
+
+
+    RegistroSir crearRegistroSir(AsientoBean asientoBean, Entidad entidad) throws Exception;
+
+    RegistroSir transformarAsientoBean(AsientoBean asientoBean, Entidad entidad) throws I18NException, InterException;
+
+    RegistroSir findByIdConMetadatos(Long id) throws I18NException;
 }

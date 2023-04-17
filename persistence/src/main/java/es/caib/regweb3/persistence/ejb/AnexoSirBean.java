@@ -161,4 +161,13 @@ public class AnexoSirBean extends BaseEjbJPA<AnexoSir, Long> implements AnexoSir
         return total;
 
     }
+
+    @Override
+    public AnexoSir findByIdFichero(String idFichero) throws I18NException {
+        Query q = em.createQuery("Select anexoSir from AnexoSir as anexoSir where anexoSir.identificadorFichero:=idFichero");
+        q.setParameter("idFichero", idFichero);
+
+
+        return (AnexoSir) q.getSingleResult();
+    }
 }

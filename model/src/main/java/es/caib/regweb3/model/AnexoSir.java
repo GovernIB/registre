@@ -88,6 +88,14 @@ public class AnexoSir implements Serializable {
     private String urlRepositorio;
     private Set<MetadatoAnexoSir> metadatosAnexos;
 
+    //Camps de firma de SICRES 4
+    private String tipoFirma;
+    private String csv;
+    private String regulacionCsv;
+    private byte[] firmaBase64;
+    //TODO ESPERANDO RESPUESTA DE MADRID
+    //  private Object  referenciaFirma;   //Indica el identificador donde se encuentra el bloque de contenido.
+
 
     public AnexoSir() {
     }
@@ -302,6 +310,53 @@ public class AnexoSir implements Serializable {
     public void setMetadatosAnexos(Set<MetadatoAnexoSir> metadatosAnexos) {
         this.metadatosAnexos = metadatosAnexos;
     }
+
+    @Column(name = "TIPO_FIRMA", length = 5)
+    public String getTipoFirma() {
+        return tipoFirma;
+    }
+
+    public void setTipoFirma(String tipoFirma) {
+        this.tipoFirma = tipoFirma;
+    }
+
+    @Column(name = "CSV", length = 512)
+    public String getCsv() {
+        return csv;
+    }
+
+    public void setCsv(String csv) {
+        this.csv = csv;
+    }
+
+    @Column(name = "REGULACION_CSV", length = 2000)
+    public String getRegulacionCsv() {
+        return regulacionCsv;
+    }
+
+    public void setRegulacionCsv(String regulacionCsv) {
+        this.regulacionCsv = regulacionCsv;
+    }
+
+
+    @Type(type = "org.hibernate.type.BinaryType")
+    @Column(name = "FIRMA_BASE64", nullable = true, length = 2000)
+    public byte[] getFirmaBase64() {
+        return firmaBase64;
+    }
+
+    public void setFirmaBase64(byte[] firmaBase64) {
+        this.firmaBase64 = firmaBase64;
+    }
+
+    /*@Column(name = "REFERENCIA_FIRMA", length = 2000)
+    public Object getReferenciaFirma() {
+        return referenciaFirma;
+    }
+
+    public void setReferenciaFirma(Object referenciaFirma) {
+        this.referenciaFirma = referenciaFirma;
+    }*/
 
     @Transient
     public byte[] getAnexoData() {

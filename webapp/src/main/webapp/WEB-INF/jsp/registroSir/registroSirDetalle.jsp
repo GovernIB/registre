@@ -116,15 +116,6 @@
                                     </div>
                                 </div>
 
-                                <%--Código SIA--%>
-                                <div class="form-group col-xs-12">
-                                    <div class="col-xs-5 pull-left etiqueta_regweb control-label textEsq">
-                                        <label for="codigoSia" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.codigoSIA"/>" data-toggle="popover"> <spring:message code="registroEntrada.codigoSIA"/></label>
-                                    </div>
-                                    <div class="col-xs-7" id="codigoSia">
-                                        <form:input path="codigoSia" maxlength="20" cssClass="form-control"/> <span class="errors"></span>
-                                    </div>
-                                </div>
 
                                 <div class="row">
                                     <div class="col-xs-12 list-group-item-heading">
@@ -325,27 +316,12 @@
     // Realiza el Registro de un registroSir
     function aceptarRegistroSir() {
 
-        var codigoSia = true;
-        var codigoSiaValue = $('#codigoSia').val();
-
-        // Valida que el código SIA sea numérico
-        if(!validaEntero(codigoSiaValue, 'codigoSia')){
-            codigoSia = false;
-        }
-
-        // Mira si todos los campos son correctos
-        if ((codigoSia)) {
-
             if(${pluginDistribucionEmail}){ // si tiene configurado el plugin de Distribución via E-Mail, mostramos el modal
                 $('#distribuirModal').modal('show');
             }else{
                 waitingDialog.show('<spring:message code="registroSir.aceptando" javaScriptEscape='true'/>', {dialogSize: 'm', progressType: 'primary'});
                 doForm('#registrarForm');
             }
-
-        } else {
-            return false;
-        }
     }
 
     function rechazarRegistroSir() {

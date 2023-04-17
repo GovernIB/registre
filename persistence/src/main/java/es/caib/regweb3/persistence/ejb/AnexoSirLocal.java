@@ -34,10 +34,13 @@ public interface AnexoSirLocal extends BaseEjb<AnexoSir, Long> {
 
     /**
      * Elimina los AnexoSir de una Entidad
+     *
      * @param idEntidad
      * @return
      * @throws I18NException
      */
     Integer eliminarByEntidad(Long idEntidad) throws I18NException;
+
+    AnexoSir findByIdFichero(String idFichero) throws I18NException;
 }
 

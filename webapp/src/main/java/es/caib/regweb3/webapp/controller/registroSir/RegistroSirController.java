@@ -11,7 +11,9 @@ import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 import es.caib.regweb3.webapp.controller.BaseController;
 import es.caib.regweb3.webapp.form.*;
+import es.caib.regweb3.webapp.utils.AnexoUtils;
 import es.caib.regweb3.webapp.utils.Mensaje;
+import es.gob.ad.registros.sir.interService.bean.AsientoBean;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
@@ -23,10 +25,13 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import es.gob.ad.registros.sir.interModel.model.Anexo;
 
 /**
  * Created by Fundació BIT.
@@ -64,6 +69,8 @@ public class RegistroSirController extends BaseController {
     @EJB(mappedName = DistribucionLocal.JNDI_NAME)
     private DistribucionLocal distribucionEjb;
 
+    @EJB(mappedName = LibSirLocal.JNDI_NAME)
+    private LibSirLocal libSirEjb;
 
 
     /**
@@ -249,7 +256,7 @@ public class RegistroSirController extends BaseController {
     public String confirmarRegistroSir(@PathVariable Long idRegistroSir, @ModelAttribute RegistrarForm registrarForm , HttpServletRequest request)
             throws Exception, I18NException, I18NValidationException {
 
-        RegistroSir registroSir = registroSirEjb.findById(idRegistroSir);
+        RegistroSir registroSir = registroSirEjb.findByIdConMetadatos(idRegistroSir);
 
         Entidad entidad = getEntidadActiva(request);
         Oficina oficinaActiva = getOficinaActiva(request);
@@ -265,7 +272,7 @@ public class RegistroSirController extends BaseController {
         // Procesa el RegistroSir
         try{
 
-            RegistroEntrada registroEntrada = sirEnvioEjb.aceptarRegistroSir(registroSir, entidad, usuarioEntidad, oficinaActiva, registrarForm.getIdLibro(), registrarForm.getIdIdioma(), registrarForm.getCamposNTIs(), registrarForm.getIdOrganismoDestino(), registrarForm.getCodigoSia(),registrarForm.getEmails(),registrarForm.getMotivo());
+            RegistroEntrada registroEntrada = sirEnvioEjb.aceptarRegistroSir(registroSir, entidad, usuarioEntidad, oficinaActiva, registrarForm.getIdLibro(), registrarForm.getIdIdioma(), registrarForm.getIdOrganismoDestino(), registrarForm.getEmails(), registrarForm.getMotivo());
 
             variableReturn = "redirect:/registroEntrada/" + registroEntrada.getId() + "/detalle";
 
@@ -451,19 +458,57 @@ public class RegistroSirController extends BaseController {
      * @param anexos
      * @return
      */
-    private AnexoSir buscarAnexoSirConFirma(String identificadorFichero, List<AnexoSir> anexos){
+    private AnexoSir buscarAnexoSirConFirma(String identificadorFichero, List<AnexoSir> anexos) {
 
         for (AnexoSir anexo : anexos) {
-            if(identificadorFichero.equals(anexo.getIdentificadorDocumentoFirmado())) return anexo;
+            if (identificadorFichero.equals(anexo.getIdentificadorDocumentoFirmado())) return anexo;
         }
         return null;
     }
+
+
+    /**
+     * Función que nos permite mostrar el contenido de un anexo de referencia unica
+     *
+     * @param anexoSirIdFichero identificador del anexo
+     */
+    @RequestMapping(value = "/descargarDocumentoRFU/{anexoSirIdFichero}/{cdIntercambio}", method = RequestMethod.GET)
+    public void anexoRFU(@PathVariable("anexoSirIdFichero") String anexoSirIdFichero, @PathVariable("cdIntercambio") String cdIntercambio, HttpServletRequest request,
+                         HttpServletResponse response) throws Exception, I18NException {
+
+
+        AnexoSir anexoSir = anexoSirEjb.findByIdFichero(anexoSirIdFichero);
+
+        byte[] data = libSirEjb.obtenerAnexoReferencia(cdIntercambio, anexoSirIdFichero);
+        log.info("Anexo " + data.length);
+
+        AnexoUtils.download(anexoSir.getTipoMIME(), response, anexoSir.getNombreFichero(), data);
+
+
+    }
+
+    @RequestMapping(value = "/consultarAnexo", method = RequestMethod.GET)
+    public String consultarAnexo(HttpServletRequest request,
+                                 HttpServletResponse response) throws Exception, I18NException {
+
+
+        AsientoBean asiento = libSirEjb.consultaAsiento("O00006056", "O00002721_22_90000013");
+
+
+        Oficina oficina = oficinaEjb.findByMultiEntidad(asiento.getCdEnRgDestino());
+
+        RegistroSir registroSir = registroSirEjb.crearRegistroSir(asiento, oficina.getOrganismoResponsable().getEntidad());
+
+
+        return "redirect:/registroSir/" + registroSir.getId() + "/detalle";
+    }
+
 
     @InitBinder("oficioRemisionBusqueda")
     public void oficioRemisionBusqueda(WebDataBinder binder) {
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         CustomDateEditor dateEditor = new CustomDateEditor(sdf, true);
-        binder.registerCustomEditor(java.util.Date.class,dateEditor);
+        binder.registerCustomEditor(java.util.Date.class, dateEditor);
     }
 }
 

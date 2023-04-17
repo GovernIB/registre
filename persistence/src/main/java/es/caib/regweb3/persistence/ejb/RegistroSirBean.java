@@ -15,6 +15,14 @@ import es.caib.regweb3.sir.core.schema.types.Tipo_RegistroType;
 import es.caib.regweb3.sir.core.utils.FicheroIntercambio;
 import es.caib.regweb3.utils.Dir3CaibUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
+import es.caib.regweb3.utils.RegwebUtils;
+import es.gob.ad.registros.sir.gestionEni.bean.FirmaBean;
+import es.gob.ad.registros.sir.interService.bean.AnexoBean;
+import es.gob.ad.registros.sir.interService.bean.InteresadoBean;
+import es.gob.ad.registros.sir.interService.bean.AsientoBean;
+import es.gob.ad.registros.sir.interService.exception.InterException;
+import es.gob.ad.registros.sir.interService.service.IConsultaService;
+import es.gob.administracionelectronica.eni.xsd.v1_0.documento_e.metadatos.TipoMetadatos;
 import net.java.xades.security.xml.XMLSignatureElement;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.ArrayUtils;
@@ -27,6 +35,7 @@ import org.fundaciobit.pluginsib.utils.cxf.CXFUtils;
 import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -48,9 +57,11 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static es.caib.regweb3.utils.RegwebConstantes.*;
 import static javax.ejb.TransactionAttributeType.REQUIRES_NEW;
@@ -75,20 +86,37 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
     @EJB private InteresadoSirLocal interesadoSirEjb;
     @EJB private AnexoSirLocal anexoSirEjb;
     @EJB private RegistroEntradaLocal registroEntradaEjb;
-    @EJB private ArchivoLocal archivoEjb;
-    @EJB private LibroLocal libroEjb;
-    @EJB private CatProvinciaLocal catProvinciaEjb;
-    @EJB private CatLocalidadLocal catLocalidadEjb;
-    @EJB private OrganismoLocal organismoEjb;
-    @EJB private CatPaisLocal catPaisEjb;
-    @EJB private TipoDocumentalLocal tipoDocumentalEjb;
-    @EJB private TrazabilidadSirLocal trazabilidadSirEjb;
-    @EJB private TrazabilidadLocal trazabilidadEjb;
-    @EJB private SignatureServerLocal signatureServerEjb;
+    @EJB
+    private ArchivoLocal archivoEjb;
+    @EJB
+    private LibroLocal libroEjb;
+    @EJB
+    private CatProvinciaLocal catProvinciaEjb;
+    @EJB
+    private CatLocalidadLocal catLocalidadEjb;
+    @EJB
+    private OrganismoLocal organismoEjb;
+    @EJB
+    private CatPaisLocal catPaisEjb;
+    @EJB
+    private TipoDocumentalLocal tipoDocumentalEjb;
+    @EJB
+    private TrazabilidadSirLocal trazabilidadSirEjb;
+    @EJB
+    private TrazabilidadLocal trazabilidadEjb;
+    @EJB
+    private SignatureServerLocal signatureServerEjb;
+    @EJB
+    private MetadatoRegistroSirLocal metadatoRegistroSirEjb;
+
+    @Autowired
+    IConsultaService consultaService;
+    @Autowired
+    RegwebUtils regwebUtils;
 
 
     @Override
-    public List<Long> getUltimosPendientesProcesarERTE(EstadoRegistroSir estado, String oficinaSir, Date fechaInicio, Date fechaFin, String aplicacion, Integer total) throws I18NException{
+    public List<Long> getUltimosPendientesProcesarERTE(EstadoRegistroSir estado, String oficinaSir, Date fechaInicio, Date fechaFin, String aplicacion, Integer total) throws I18NException {
 
         Query q = em.createQuery("Select r.id from RegistroSir as r " +
                 "where r.codigoEntidadRegistral = :oficinaSir and r.estado = :idEstado " +
@@ -120,6 +148,17 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         RegistroSir registroSir = em.find(RegistroSir.class, id);
         Hibernate.initialize(registroSir.getAnexos());
         Hibernate.initialize(registroSir.getInteresados());
+
+        return registroSir;
+    }
+
+    @Override
+    public RegistroSir findByIdConMetadatos(Long id) throws I18NException {
+
+        RegistroSir registroSir = em.find(RegistroSir.class, id);
+        Hibernate.initialize(registroSir.getAnexos());
+        Hibernate.initialize(registroSir.getInteresados());
+        Hibernate.initialize(registroSir.getMetadatosRegistroSir());
 
         return registroSir;
     }
@@ -968,8 +1007,8 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         registroSir.setTipoRegistro(TipoRegistro.ENTRADA);
         registroSir.setDocumentacionFisica(String.valueOf(registroDetalle.getTipoDocumentacionFisica()));
         registroSir.setObservacionesApunte(registroDetalle.getObservaciones());
-        registroSir.setCodigoEntidadRegistralInicio(obtenerCodigoOficinaOrigen(registroDetalle,registroEntrada.getOficina().getCodigo()));
-        registroSir.setDecodificacionEntidadRegistralInicio(obtenerDenominacionOficinaOrigen(registroDetalle, registroEntrada.getOficina().getDenominacion()));
+        registroSir.setCodigoEntidadRegistralInicio(RegistroUtils.obtenerCodigoOficinaOrigen(registroDetalle, registroEntrada.getOficina().getCodigo()));
+        registroSir.setDecodificacionEntidadRegistralInicio(RegistroUtils.obtenerDenominacionOficinaOrigen(registroDetalle, registroEntrada.getOficina().getDenominacion()));
 
         // Segmento De_Formulario_Genérico
         registroSir.setExpone(registroDetalle.getExpone());
@@ -1019,11 +1058,11 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         // Segmento De_Destino
         registroSir.setCodigoEntidadRegistralDestino(registroDetalle.getCodigoEntidadRegistralDestino());
         registroSir.setDecodificacionEntidadRegistralDestino(registroDetalle.getDecodificacionEntidadRegistralDestino());
-        registroSir.setCodigoUnidadTramitacionDestino(obtenerCodigoUnidadTramitacionDestino(registroDetalle));
-        String destinoExternoDecodificacion = obtenerDenominacionUnidadTramitacionDestino(registroDetalle);
-        if(es.caib.regweb3.utils.StringUtils.isNotEmpty(destinoExternoDecodificacion)) {
+        registroSir.setCodigoUnidadTramitacionDestino(LibSirUtils.obtenerCodigoUnidadTramitacionDestino(registroDetalle));
+        String destinoExternoDecodificacion = LibSirUtils.obtenerDenominacionUnidadTramitacionDestino(registroDetalle);
+        if (es.caib.regweb3.utils.StringUtils.isNotEmpty(destinoExternoDecodificacion)) {
             registroSir.setDecodificacionUnidadTramitacionDestino(destinoExternoDecodificacion);
-        }else{
+        } else {
             registroSir.setDecodificacionUnidadTramitacionDestino(null);
         }
 
@@ -1048,8 +1087,8 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         registroSir.setTipoRegistro(TipoRegistro.SALIDA);
         registroSir.setDocumentacionFisica(String.valueOf(registroDetalle.getTipoDocumentacionFisica()));
         registroSir.setObservacionesApunte(registroDetalle.getObservaciones());
-        registroSir.setCodigoEntidadRegistralInicio(obtenerCodigoOficinaOrigen(registroDetalle, registroSalida.getOficina().getCodigo()));
-        registroSir.setDecodificacionEntidadRegistralInicio(obtenerDenominacionOficinaOrigen(registroDetalle, registroSalida.getOficina().getDenominacion()));
+        registroSir.setCodigoEntidadRegistralInicio(RegistroUtils.obtenerCodigoOficinaOrigen(registroDetalle, registroSalida.getOficina().getCodigo()));
+        registroSir.setDecodificacionEntidadRegistralInicio(RegistroUtils.obtenerDenominacionOficinaOrigen(registroDetalle, registroSalida.getOficina().getDenominacion()));
 
         // Segmento De_Formulario_Genérico
         registroSir.setExpone(registroDetalle.getExpone());
@@ -1355,7 +1394,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
 
                     SignatureCustody sc = anexoFull.getSignatureCustody();
 
-                    String identificador_fichero = generateIdentificadorFichero(identificadorIntercambio, secuencia, sc.getName());
+                    String identificador_fichero = RegistroUtils.generateIdentificadorFichero(identificadorIntercambio, secuencia, sc.getName());
                     secuencia++;
 
                     anexoSir = crearAnexoSir(sc.getName(),identificador_fichero,
@@ -1375,7 +1414,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
 
                     DocumentCustody dc = anexoFull.getDocumentoCustody();
 
-                    identificador_fichero = generateIdentificadorFichero(identificadorIntercambio, secuencia, dc.getName());
+                    identificador_fichero = RegistroUtils.generateIdentificadorFichero(identificadorIntercambio, secuencia, dc.getName());
                     secuencia++;
 
                     anexoSir = crearAnexoSir(dc.getName(),identificador_fichero,
@@ -1391,7 +1430,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
 
                     sc = anexoFull.getSignatureCustody();
 
-                    String identificador_fichero_FIRMA = generateIdentificadorFichero(identificadorIntercambio, secuencia, sc.getName());
+                    String identificador_fichero_FIRMA = RegistroUtils.generateIdentificadorFichero(identificadorIntercambio, secuencia, sc.getName());
                     secuencia++;
 
                     anexoSir = crearAnexoSir(sc.getName(),identificador_fichero_FIRMA,
@@ -1449,24 +1488,8 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         anexoSir.setNombreFichero(es.caib.regweb3.utils.StringUtils.eliminarCaracteresProhibidosArxiu(nombreFichero));
 
         anexoSir.setIdentificadorFichero(identificadorFichero);
-
-        if(validezDocumento != null){
-            anexoSir.setValidezDocumento(validezDocumento);
-        }
         anexoSir.setTipoDocumento(tipoDocumento);
-        if(certificado != null){
-            anexoSir.setCertificado(Base64.encodeBase64String(certificado));
-        }
-        if(firma != null){
-            anexoSir.setFirma(firma);
-        }
-        if(timeStamp != null){
-            anexoSir.setTimestamp(Base64.encodeBase64String(timeStamp));
-        }
-        if(validacionOCSPCertificado != null){
-            anexoSir.setValidacionOCSPCertificado(Base64.encodeBase64String(validacionOCSPCertificado));
-        }
-        anexoSir.setHash(Base64.encodeBase64String(hash));
+
         if(tipoMime != null){
             if(tipoMime.equals("text/xml")){ //SICRES3 obliga a que el mime de un xml sea application/xml
                 anexoSir.setTipoMIME("application/xml");
@@ -1490,125 +1513,6 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         }
 
         return anexoSir;
-    }
-
-    /**
-     * Metodo que genera identificador de anxso según el patron
-     * identificadorIntercambio_01_secuencia.extension
-     * donde secuencia es cadena que repesenta secuencia en formato 0001 (leftpading con 0 y máximo de 4 caracteres)
-     * donde extesion es la extension del anexo
-     *
-     * @param identificadorIntercambio
-     * @param secuencia
-     * @param fileName
-     * @return
-     */
-    protected String generateIdentificadorFichero(String identificadorIntercambio, int secuencia, String fileName) {
-
-        return identificadorIntercambio +
-                "_01_" +
-                StringUtils.leftPad(
-                        String.valueOf(secuencia), 4, "0") +
-                "." + getExtension(fileName);
-    }
-
-    /**
-     * Obtiene la Extensión de un Fichero a partir de su nombre
-     *
-     * @param nombreFichero
-     * @return extensión del fichero
-     */
-    private String getExtension(String nombreFichero) {
-        String extension = "";
-
-        int i = nombreFichero.lastIndexOf('.');
-        if (i > 0) {
-            extension = nombreFichero.substring(i + 1);
-        }
-
-        return extension;
-    }
-
-    /**
-     * Obtiene el código Oficina de Origen dependiendo de si es interna o externa
-     *
-     * @param registroDetalle
-     * @param codigoOficia
-     * @return
-     * @throws I18NException
-     */
-    private String obtenerCodigoOficinaOrigen(RegistroDetalle registroDetalle, String codigoOficia) {
-        String codOficinaOrigen;
-
-        if ((registroDetalle.getOficinaOrigenExternoCodigo() == null) && (registroDetalle.getOficinaOrigen() == null)) {
-            codOficinaOrigen = codigoOficia;
-        } else if (registroDetalle.getOficinaOrigenExternoCodigo() != null) {
-            codOficinaOrigen = registroDetalle.getOficinaOrigenExternoCodigo();
-        } else {
-            codOficinaOrigen = registroDetalle.getOficinaOrigen().getCodigo();
-        }
-
-        return codOficinaOrigen;
-    }
-
-    /**
-     * Obtiene el denominación Oficina de Origen dependiendo de si es interna o externa
-     *
-     * @param registroDetalle
-     * @param denominacionOficia
-     * @return
-     * @throws I18NException
-     */
-    private String obtenerDenominacionOficinaOrigen(RegistroDetalle registroDetalle, String denominacionOficia) {
-        String denominacionOficinaOrigen;
-
-        if ((registroDetalle.getOficinaOrigenExternoCodigo() == null) && (registroDetalle.getOficinaOrigen() == null)) {
-            denominacionOficinaOrigen = denominacionOficia;
-        } else if (registroDetalle.getOficinaOrigenExternoCodigo() != null) {
-            denominacionOficinaOrigen = registroDetalle.getOficinaOrigenExternoDenominacion();
-        } else {
-            denominacionOficinaOrigen = registroDetalle.getOficinaOrigen().getDenominacion();
-        }
-
-        return denominacionOficinaOrigen;
-    }
-
-    /**
-     *
-     * @param registroDetalle
-     * @return
-     */
-    private String obtenerCodigoUnidadTramitacionDestino(RegistroDetalle registroDetalle){
-
-        List<Interesado> interesados = registroDetalle.getInteresados();
-
-        for (Interesado interesado : interesados) {
-            if(interesado.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION)){
-
-                return interesado.getCodigoDir3();
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     *
-     * @param registroDetalle
-     * @return
-     */
-    private String obtenerDenominacionUnidadTramitacionDestino(RegistroDetalle registroDetalle){
-
-        List<Interesado> interesados = registroDetalle.getInteresados();
-
-        for (Interesado interesado : interesados) {
-            if(interesado.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION)){
-
-                return interesado.getRazonSocial();
-            }
-        }
-
-        return null;
     }
 
     /**
@@ -1664,8 +1568,8 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
      * @throws I18NValidationException
      */
     @Override
-    public RegistroEntrada aceptarRegistroSirEntrada(RegistroSir registroSir, Entidad entidad, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, List<CamposNTI> camposNTIs, Long idOrganismoDestino, Long codigoSia)
-            throws I18NException, I18NValidationException {
+    public RegistroEntrada aceptarRegistroSirEntrada(RegistroSir registroSir, Entidad entidad, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, Long idOrganismoDestino)
+            throws I18NException, I18NValidationException, ParseException, InterException {
 
         Libro libro = libroEjb.findById(idLibro);
 
@@ -1683,16 +1587,23 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         registroEntrada.setDestinoExternoDenominacion(null);
 
         // RegistroDetalle
-        registroEntrada.setRegistroDetalle(getRegistroDetalle(registroSir, idIdioma, codigoSia));
+        registroEntrada.setRegistroDetalle(getRegistroDetalle(registroSir, idIdioma));
 
         // Interesados
         List<Interesado> interesados = procesarInteresados(registroSir.getInteresados());
 
         // Anexos
-        List<AnexoFull> anexosFull = procesarAnexos(registroSir, camposNTIs);
+        List<AnexoFull> anexosFull = procesarAnexosRFU(registroSir);
+
+        //METADATOS
+        Set<MetadatoRegistroEntrada> metadatos = registroSir.getMetadatosRegistroSir().stream()
+                .map(metadato -> new MetadatoRegistroEntrada(metadato.getTipo(), metadato.getCampo(), metadato.getValor()) {
+                }).collect(Collectors.toSet());
+
+        registroEntrada.setMetadatosRegistroEntrada(metadatos);
 
         // Registramos el Registro Entrada
-        registroEntrada = registroEntradaEjb.registrarEntrada(registroEntrada, entidad, usuario,interesados,anexosFull, true);
+        registroEntrada = registroEntradaEjb.registrarEntrada(registroEntrada, entidad, usuario, interesados, anexosFull, true);
 
 
         // Creamos la TrazabilidadSir
@@ -1727,31 +1638,36 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
 
     /**
      * Obtiene un {@link RegistroDetalle} a partir de los datos de un RegistroSir
+     *
      * @param registroSir
      * @param idIdioma
      * @return
      * @throws I18NException
      */
-    private RegistroDetalle getRegistroDetalle(RegistroSir registroSir, Long idIdioma, Long codigoSia) throws I18NException{
+    private RegistroDetalle getRegistroDetalle(RegistroSir registroSir, Long idIdioma) throws I18NException {
 
         RegistroDetalle registroDetalle = new RegistroDetalle();
 
         registroDetalle.setRecibidoSir(true);
-        registroDetalle.setPresencial(false);
+        if (registroSir.getModoRegistro().equals(ModoRegistro.getModoRegistroValue("PRESENCIAL"))) {
+            registroDetalle.setPresencial(true);
+        } else {
+            registroDetalle.setPresencial(false);
+        }
         registroDetalle.setExtracto(registroSir.getResumen());
         registroDetalle.setTipoDocumentacionFisica(Long.valueOf(registroSir.getDocumentacionFisica()));
         registroDetalle.setIdioma(idIdioma);
-        registroDetalle.setCodigoSia(codigoSia);
-        // registroDetalle.setTipoAsunto(new TipoAsunto(idTipoAsunto));
+        registroDetalle.setCodigoSia(registroSir.getCodigoSia());// ahora con LIBSIR viene informado. Cogerlo de RegistroSIR
+
         registroDetalle.setCodigoAsunto(null);
 
-        if(registroSir.getTipoTransporte() != null){
+        if (registroSir.getTipoTransporte() != null) {
             registroDetalle.setTransporte(Long.valueOf(registroSir.getTipoTransporte()));
         }
-        if(StringUtils.isNotEmpty(registroSir.getNumeroTransporte())){
+        if (StringUtils.isNotEmpty(registroSir.getNumeroTransporte())) {
             registroDetalle.setNumeroTransporte(registroSir.getNumeroTransporte());
         }
-        if(StringUtils.isNotEmpty(registroSir.getObservacionesApunte())){
+        if (StringUtils.isNotEmpty(registroSir.getObservacionesApunte())) {
             registroDetalle.setObservaciones(registroSir.getObservacionesApunte());
         }
         if(StringUtils.isNotEmpty(registroSir.getReferenciaExterna())){
@@ -1888,15 +1804,20 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         if (StringUtils.isNotEmpty(interesadoSir.getTelefonoInteresado())) {
             interesado.setTelefono(interesadoSir.getTelefonoInteresado());
         }
-        if (StringUtils.isNotEmpty(interesadoSir.getDireccionElectronicaHabilitadaInteresado())) {
-            interesado.setDireccionElectronica(interesadoSir.getDireccionElectronicaHabilitadaInteresado());
-        }
+
         if (interesadoSir.getCanalPreferenteComunicacionInteresado() != null) {
             interesado.setCanal(RegwebConstantes.CANALNOTIFICACION_BY_CODIGO.get(interesadoSir.getCanalPreferenteComunicacionInteresado()));
         }
         if (StringUtils.isNotEmpty(interesadoSir.getObservaciones())) {
             interesado.setObservaciones(interesadoSir.getObservaciones());
         }
+
+        //SICRES4 campos nuevos
+        interesado.setAvisoNotificacionSMS(interesadoSir.getAvisoNotificacionSMSInteresado());
+        interesado.setAvisoCorreoElectronico(interesadoSir.getAvisoCorreoElectronicoInteresado());
+        interesado.setCodDirectoriosUnificados(interesadoSir.getCodigoDirectorioUnificadosInteresado());
+        interesado.setReceptorNotificaciones(interesadoSir.getReceptorNotificacionesInteresado());
+        interesado.setTelefonoMovil(interesadoSir.getTelefonoMovilInteresado());
 
         return interesado;
 
@@ -1973,9 +1894,6 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         if (StringUtils.isNotEmpty(representanteSir.getTelefonoRepresentante())) {
             representante.setTelefono(representanteSir.getTelefonoRepresentante());
         }
-        if (StringUtils.isNotEmpty(representanteSir.getDireccionElectronicaHabilitadaRepresentante())) {
-            representante.setDireccionElectronica(representanteSir.getDireccionElectronicaHabilitadaRepresentante());
-        }
         if (representanteSir.getCanalPreferenteComunicacionRepresentante() != null) {
             representante.setCanal(RegwebConstantes.CANALNOTIFICACION_BY_CODIGO.get(representanteSir.getCanalPreferenteComunicacionRepresentante()));
         }
@@ -1983,512 +1901,572 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
             representante.setObservaciones(representanteSir.getObservaciones());
         }
 
+        //SICRES4 campos nuevos
+        representante.setAvisoNotificacionSMS(representanteSir.getAvisoNotificacionSMSRepresentante());
+        representante.setAvisoCorreoElectronico(representanteSir.getAvisoCorreoElectronicoRepresentante());
+        representante.setCodDirectoriosUnificados(representanteSir.getCodigoDirectorioUnificadosRepresentante());
+        representante.setReceptorNotificaciones(representanteSir.getReceptorNotificacionesRepresentante());
+        representante.setTelefonoMovil(representanteSir.getTelefonoMovilRepresentante());
+
         return representante;
 
     }
 
 
+    /**
+     * Método que comprueba si el tipoMime es aceptado por SIR, si no lo es devuelve null
+     *
+     * @param tipoMime
+     * @return
+     */
+    private String tipoMimeAceptadoPorSir(String tipoMime) {
+
+        if (tipoMime.length() <= ANEXO_TIPOMIME_MAXLENGTH_SIR && Arrays.asList(TIPOS_MIME_ACEPTADO_SIR).contains(tipoMime)) {
+            return tipoMime;
+        } else {
+            return null;
+        }
+
+    }
+
+
+    //PARTE NUEVA MARILEN ASIENTOBEAN
+    @Override
+    public RegistroSir crearRegistroSir(AsientoBean asientoBean, Entidad entidad) throws Exception {
+
+        RegistroSir registroSir = transformarAsientoBean(asientoBean, entidad);
+        registroSir.setEstado(EstadoRegistroSir.RECIBIDO);
+
+        try {
+
+            // En caso de recepción, le asignamos la entidad a la que va dirigida
+            if (registroSir.getEntidad() == null) {
+                registroSir.setEntidad(entidad);
+            }
+
+            registroSir = persist(registroSir);
+
+            //Guardamos los Metadatos
+            Set<MetadatoRegistroSir> metadatosRegistroSir = registroSir.getMetadatosRegistroSir();
+            if (metadatosRegistroSir != null && metadatosRegistroSir.size() > 0) {
+                for (MetadatoRegistroSir metadatoRegistroSir : metadatosRegistroSir) {
+                    metadatoRegistroSir.setRegistroSir(registroSir);
+                    metadatoRegistroSirEjb.persist(metadatoRegistroSir);
+                }
+            }
+
+            // Guardamos los Interesados
+            List<InteresadoSir> interesadosSir = registroSir.getInteresados();
+            if (interesadosSir != null && interesadosSir.size() > 0) {
+                for (InteresadoSir interesadoSir : interesadosSir) {
+                    interesadoSir.setRegistroSir(registroSir);
+                    interesadoSirEjb.guardarInteresadoSir(interesadoSir);
+                }
+            }
+
+            // Guardamos los Anexos
+            List<AnexoSir> anexosSir = registroSir.getAnexos();
+            if (anexosSir != null && anexosSir.size() > 0) {
+                for (AnexoSir anexoSir : anexosSir) {
+                    anexoSir.setRegistroSir(registroSir);
+                    anexoSirEjb.persist(anexoSir);
+                }
+            }
+            em.flush();
+
+            // Creamos la TrazabilidadSir
+            TrazabilidadSir trazabilidadSir = new TrazabilidadSir(RegwebConstantes.TRAZABILIDAD_SIR_RECEPCION);
+            trazabilidadSir.setRegistroSir(registroSir);
+            trazabilidadSir.setCodigoEntidadRegistralOrigen(registroSir.getCodigoEntidadRegistralOrigen());
+            trazabilidadSir.setDecodificacionEntidadRegistralOrigen(registroSir.getDecodificacionEntidadRegistralOrigen());
+            trazabilidadSir.setCodigoEntidadRegistralDestino(registroSir.getCodigoEntidadRegistralDestino());
+            trazabilidadSir.setDecodificacionEntidadRegistralDestino(registroSir.getDecodificacionEntidadRegistralDestino());
+            trazabilidadSir.setAplicacion(registroSir.getAplicacion());
+            trazabilidadSir.setNombreUsuario(registroSir.getNombreUsuario());
+            trazabilidadSir.setContactoUsuario(registroSir.getContactoUsuario());
+            trazabilidadSir.setObservaciones(registroSir.getDecodificacionTipoAnotacion());
+            trazabilidadSirEjb.persist(trazabilidadSir);
+
+        } catch (Exception e) {
+            log.info("Error al crear el RegistroSir:");
+            e.printStackTrace();
+            for (AnexoSir anexoSir : registroSir.getAnexos()) {
+                ArchivoManager am = new ArchivoManager(anexoSir.getAnexo(), archivoEjb);
+                am.processErrorArchivosWithoutThrowException();
+                log.info("Eliminamos los posibles archivos creados: " + anexoSir.getAnexo().getId());
+            }
+            throw e;
+        }
+
+        return registroSir;
+    }
+
 
     /**
+     * Crea un RegistroSir a partir de un AsientoBean (LIBSIR)
      *
+     * @return Información del registroSir registral.
+     */
+    @Override
+    public RegistroSir transformarAsientoBean(AsientoBean asientoBean, Entidad entidad) throws I18NException, InterException {
+        final SimpleDateFormat SDF = new SimpleDateFormat(FORMATO_FECHA_SICRES4);
+
+        RegistroSir registroSir = null;
+
+        if (asientoBean != null) {
+            registroSir = new RegistroSir();
+            registroSir.setFechaRecepcion(new Date());
+
+            //Entidad Registral Origen
+            registroSir.setCodigoEntidadRegistralOrigen(asientoBean.getCdEnRgOrigen());
+            if (StringUtils.isNotEmpty(asientoBean.getDsEnRgOrigen())) {
+                registroSir.setDecodificacionEntidadRegistralOrigen(asientoBean.getDsEnRgOrigen());
+            } else {
+                registroSir.setDecodificacionEntidadRegistralOrigen(Dir3CaibUtils.denominacion(PropiedadGlobalUtil.getDir3CaibServer(entidad.getId()), asientoBean.getCdEnRgOrigen(), RegwebConstantes.OFICINA));
+            }
+
+            registroSir.setNumeroRegistro(asientoBean.getNuRgOrigen());
+            registroSir.setFechaRegistro(asientoBean.getFeRgOrigen());
+            registroSir.setTimestampRegistro(asientoBean.getTsRgOrigen());
+
+            //Unidad Tramitación Origen
+            registroSir.setCodigoUnidadTramitacionOrigen(asientoBean.getCdUnTrOrigen());
+            if (StringUtils.isNotEmpty(asientoBean.getDsUnTrOrigen())) {
+                registroSir.setDecodificacionUnidadTramitacionOrigen(asientoBean.getDsUnTrOrigen());
+            } else {
+                registroSir.setDecodificacionUnidadTramitacionOrigen(Dir3CaibUtils.denominacion(PropiedadGlobalUtil.getDir3CaibServer(entidad.getId()), asientoBean.getCdUnTrOrigen(), RegwebConstantes.UNIDAD));
+            }
+
+            //Entidad Registral
+            registroSir.setCodigoEntidadRegistral(asientoBean.getCdEnRgDestino());
+
+            //Entidad Registral Destino
+            registroSir.setCodigoEntidadRegistralDestino(asientoBean.getCdEnRgDestino());
+            if (StringUtils.isNotEmpty(asientoBean.getDsEnRgDestino())) {
+                registroSir.setDecodificacionEntidadRegistralDestino(asientoBean.getDsEnRgDestino());
+            } else {
+                registroSir.setDecodificacionEntidadRegistralDestino(Dir3CaibUtils.denominacion(PropiedadGlobalUtil.getDir3CaibServer(entidad.getId()), asientoBean.getCdEnRgDestino(), RegwebConstantes.OFICINA));
+            }
+            //Unidad Tramitación Destino
+            registroSir.setCodigoUnidadTramitacionDestino(asientoBean.getCdUnTrDestino());
+            if (StringUtils.isNotEmpty(asientoBean.getDsUnTrDestino())) {
+                registroSir.setDecodificacionUnidadTramitacionDestino(asientoBean.getDsUnTrDestino());
+            } else {
+                registroSir.setDecodificacionUnidadTramitacionDestino(Dir3CaibUtils.denominacion(PropiedadGlobalUtil.getDir3CaibServer(entidad.getId()), asientoBean.getCdUnTrDestino(), RegwebConstantes.UNIDAD));
+            }
+
+            registroSir.setResumen(asientoBean.getDsResumen());
+            registroSir.setCodigoAsunto(asientoBean.getCdAsunto());
+            registroSir.setReferenciaExterna(asientoBean.getRfExterna());
+            registroSir.setNumeroExpediente(asientoBean.getNuExpediente());
+            registroSir.setTipoTransporte(TipoTransporte.getTipoTransporteValue(asientoBean.getCdTpTransporte()));
+            registroSir.setNombreUsuario(asientoBean.getNoUsuario());
+            registroSir.setContactoUsuario(asientoBean.getCtUsuario());
+            registroSir.setIdentificadorIntercambio(asientoBean.getCdIntercambio());
+            registroSir.setAplicacion(asientoBean.getApVersion());
+            registroSir.setTipoAnotacion(asientoBean.getCdTpAnotacion());
+            registroSir.setDecodificacionTipoAnotacion(asientoBean.getDsTpAnotacion());
+            registroSir.setTipoRegistro(TipoRegistro.getTipoRegistro(asientoBean.getCdTpRegistro()));
+
+            //Documentación Física
+            if (StringUtils.isNotEmpty(asientoBean.getCdDocFisica())) {
+                registroSir.setDocumentacionFisica(DocumentacionFisica.getDocumentacionFisicaValue(asientoBean.getCdDocFisica()));
+            }
+            registroSir.setObservacionesApunte(asientoBean.getDsObservaciones());
+
+            //Indicador de Prueba
+            if (StringUtils.isNotEmpty(asientoBean.getCdInPrueba())) {
+                registroSir.setIndicadorPrueba(IndicadorPrueba.getIndicadorPrueba(asientoBean.getCdInPrueba()));
+            }
+
+            //Entidad Registral Inicio
+            registroSir.setCodigoEntidadRegistralInicio(asientoBean.getCdEnRgInicio());
+            if (StringUtils.isNotEmpty(asientoBean.getDsEnRgInicio())) {
+                registroSir.setDecodificacionEntidadRegistralOrigen(asientoBean.getDsEnRgInicio());
+            } else {
+                registroSir.setDecodificacionEntidadRegistralOrigen(Dir3CaibUtils.denominacion(PropiedadGlobalUtil.getDir3CaibServer(entidad.getId()), asientoBean.getCdEnRgInicio(), RegwebConstantes.OFICINA));
+            }
+            registroSir.setExpone(asientoBean.getDsExpone());
+            registroSir.setSolicita(asientoBean.getDsSolicita());
+            registroSir.setEstado(EstadoRegistroSir.getEstadoRegistroSir(asientoBean.getCdEstado())); // TODO DEFINIR NUEVOS ESTADOS LIBSIR
+            //TODO CAMPOS NUEVOS SICRES4
+            registroSir.setModoRegistro(asientoBean.getModoRegistro().substring(1));
+            registroSir.setFechaRegistroPresentacion(asientoBean.getFeRgPresentacion());
+            registroSir.setCodigoSia(asientoBean.getCdSia());
+            registroSir.setReferenciaUnica(asientoBean.isReferenciaUnica()); //SI
+            //  asientoBean.getCdIntercambioPrevio();// Este campo irá en RE /RS /RDETALLE (Revisado Edu)
+            registroSir.setCodigoUnidadtramitacionInicio(asientoBean.getCdUnTrInicio()); //Campos nuevos de internos y control SI SE AÑADE
+            registroSir.setDecodificacionUnidadTramitacionInicio(asientoBean.getDsUnTrInicio());
+
+            //METADATOS GENERALES Y PARTICULARES
+            Set<MetadatoRegistroSir> metadatos = asientoBean.getOtrosMetadatosGenerales().stream()
+                    .map(metadato -> new MetadatoRegistroSir(METADATO_GENERAL, metadato.getCampo(), metadato.getValor()) {
+                    }).collect(Collectors.toSet());
+
+            metadatos.addAll(asientoBean.getOtrosMetadatosParticulares().stream()
+                    .map(metadato -> new MetadatoRegistroSir(METADATO_PARTICULAR, metadato.getCampo(), metadato.getValor()) {
+                    }).collect(Collectors.toSet()));
+
+            registroSir.setMetadatosRegistroSir(metadatos);
+
+
+            //INTERESADOS
+            Set<es.gob.ad.registros.sir.interService.bean.InteresadoBean> interesadosBean = asientoBean.getInteresadosBean();
+            if (!interesadosBean.isEmpty()) {
+                for (InteresadoBean interesadoBean : interesadosBean) {
+                    if (interesadoBean != null) {
+
+                        // Si se trata de una Salida y no tiene Interesados
+                        if (asientoBean.getCdTpRegistro().equals(TipoRegistro.SALIDA.getValue()) && StringUtils.isBlank(interesadoBean.getRazonSocialInteresado())
+                                && (StringUtils.isBlank(interesadoBean.getNombreInteresado()) && StringUtils.isBlank(interesadoBean.getPrimerApellidoInteresado()))) {
+
+                            // Creamos uno a partir de la Entidad destino
+                            registroSir.getInteresados().add(crearInteresadoJuridicoAsientoBean(asientoBean.getCdUnTrDestino(), asientoBean.getDsUnTrDestino(), asientoBean.getCdEnRgDestino(), entidad.getId()));
+
+                        } else {
+                            InteresadoSir interesadoSir = transformarInteresadoBean(interesadoBean);
+                            registroSir.getInteresados().add(interesadoSir);
+                        }
+
+                    }
+                }
+            }
+
+            //ANEXOS
+            Set<es.gob.ad.registros.sir.interService.bean.AnexoBean> anexosBean = asientoBean.getAnexosBean();
+            if (!anexosBean.isEmpty()) {
+                for (es.gob.ad.registros.sir.interService.bean.AnexoBean anexoBean : anexosBean) {
+                    if (anexoBean != null) {
+                        AnexoSir anexo = transformarAnexoBean(anexoBean, asientoBean.getCdIntercambio());
+                        registroSir.getAnexos().add(anexo);
+                    }
+                }
+            }
+
+        }
+
+        return registroSir;
+    }
+
+    /**
+     * Crea un Interesado tipo Persona Juridica a partir del Código Unidad De Gestión de destino o si no está informado,
+     * a partir del Código Entidad Registral de destino
+     *
+     * @return
+     */
+    private InteresadoSir crearInteresadoJuridicoAsientoBean(String cdUnTrDestino, String dsUnTrDestino, String cdEnRgDestino, Long idEntidad) {
+
+        InteresadoSir interesadoSalida = new InteresadoSir();
+
+        if (StringUtils.isNotBlank(cdUnTrDestino)) {
+
+            interesadoSalida.setTipoDocumentoIdentificacionInteresado(TipoDocumentoIdentificacion.CODIGO_ORIGEN_VALUE.getValue());
+            interesadoSalida.setDocumentoIdentificacionInteresado(cdUnTrDestino);
+
+            if (StringUtils.isNotBlank(dsUnTrDestino)) {
+                interesadoSalida.setRazonSocialInteresado(dsUnTrDestino);
+            } else {
+                interesadoSalida.setRazonSocialInteresado(Dir3CaibUtils.denominacion(PropiedadGlobalUtil.getDir3CaibServer(idEntidad), cdUnTrDestino, RegwebConstantes.UNIDAD));
+
+            }
+
+
+        } else {
+            try {
+                Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService(PropiedadGlobalUtil.getDir3CaibServer(idEntidad), PropiedadGlobalUtil.getDir3CaibUsername(idEntidad), PropiedadGlobalUtil.getDir3CaibPassword(idEntidad));
+
+                OficinaTF oficinaTF = oficinasService.obtenerOficina(cdEnRgDestino, null, null);
+
+                interesadoSalida.setTipoDocumentoIdentificacionInteresado(TipoDocumentoIdentificacion.CODIGO_ORIGEN_VALUE.getValue());
+                interesadoSalida.setDocumentoIdentificacionInteresado(oficinaTF.getCodUoResponsable());
+                interesadoSalida.setRazonSocialInteresado(Dir3CaibUtils.denominacion(PropiedadGlobalUtil.getDir3CaibServer(idEntidad), oficinaTF.getCodUoResponsable(), RegwebConstantes.UNIDAD));
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        return interesadoSalida;
+    }
+
+
+    /**
      * @param registroSir
-     * @param camposNTIs representa la lista de anexos del RegistroSir en los que el usuario ha especificado
-     *                          los valores de los campos NTI no informados por SICRES (validez Documento, origen, Tipo Documental)
      * @return
      * @throws I18NException
      */
-    private List<AnexoFull> procesarAnexos(RegistroSir registroSir, List<CamposNTI> camposNTIs) throws I18NException {
+    private List<AnexoFull> procesarAnexosRFU(RegistroSir registroSir) throws I18NException, ParseException, InterException {
 
-        HashMap<String,AnexoFull> anexosProcesados = new HashMap<String, AnexoFull>();
+        List<AnexoFull> anexos = new ArrayList<>();
 
-        // Procesamos los Documentos con firma Attached o sin firma
         for (AnexoSir anexoSir : registroSir.getAnexos()) {
-            for (CamposNTI cnti : camposNTIs) {
-                if (anexoSir.getId().equals(cnti.getId())) {
-                    transformarAnexoDocumento(anexoSir, registroSir.getEntidad().getId(), cnti, anexosProcesados,anexoSir.getRegistroSir().getAplicacion());
-                }
+            anexos.add(transformarAnexoRFU(anexoSir, registroSir.getEntidad().getId(), anexoSir.getRegistroSir().getAplicacion(), registroSir.getIdentificadorIntercambio()));
+        }
+
+        return anexos;
+    }
+
+    private AnexoFull transformarAnexoRFU(AnexoSir anexoSir, Long idEntidad, String aplicacion, String idIntercambio) throws I18NException, ParseException, InterException {
+
+        AnexoFull anexoFull = new AnexoFull();
+        Anexo anexo = new Anexo(RegwebConstantes.PERFIL_CUSTODIA_DOCUMENT_CUSTODY);
+
+        //TODO Temporal hata que se acepten todos los registros sir pendientes con anexos que tienen caracteres prohibidos
+        anexo.setTitulo(es.caib.regweb3.utils.StringUtils.eliminarCaracteresProhibidosArxiu(anexoSir.getNombreFichero()));
+
+        // Tipo Documento
+        if (anexoSir.getTipoDocumento() != null) {
+            anexo.setTipoDocumento(Long.valueOf(anexoSir.getTipoDocumento()));
+
+            // Si es un Documento técnico, ponemos el Origen a ADMINSITRACIÓN
+            if (anexoSir.getTipoDocumento().equals(RegwebConstantes.TIPO_DOCUMENTO_FICHERO_TECNICO_SICRES)) {
+                anexo.setOrigenCiudadanoAdmin(RegwebConstantes.ANEXO_ORIGEN_ADMINISTRACION);
             }
         }
+        anexo.setObservaciones(anexoSir.getObservaciones());
 
-        // Procesamos las Firma detached
-        for (AnexoSir anexoSir : registroSir.getAnexos()) {
-            transformarAnexoFirmaDetached(anexoSir, anexosProcesados,registroSir.getEntidad().getId(), anexoSir.getRegistroSir().getAplicacion());
+
+        // SICRES 4 Campos NTI vienen informados como metadatos
+        for (MetadatoAnexoSir metadatoAnexoSir : anexoSir.getMetadatosAnexos()) {
+            if (metadatoAnexoSir.getCampo().equals("origenCiudadanoAdministracion")) {
+                anexo.setOrigenCiudadanoAdmin(Integer.valueOf(metadatoAnexoSir.getValor()));
+            }
+            if (metadatoAnexoSir.getCampo().equals("tipoDocumental")) {
+                anexo.setTipoDocumental(tipoDocumentalEjb.findByCodigoEntidad(metadatoAnexoSir.getValor(), idEntidad));
+            }
+            if (metadatoAnexoSir.getCampo().equals("fechaCaptura")) {
+                SimpleDateFormat formatter = new SimpleDateFormat(FORMATO_FECHA_SICRES4);
+                anexo.setFechaCaptura(formatter.parse(metadatoAnexoSir.getValor()));
+            }
+            //TODO VERSIONNTI
+
         }
 
-        // Eliminam duplicats
-        Set<AnexoFull> set = new HashSet<AnexoFull>(anexosProcesados.values());
+        //SICRES4 campos nuevos
+        anexo.setResumen(anexoSir.getResumen());
+        anexo.setCodigoFormulario(anexoSir.getCodigoFormulario());
+        anexo.setEndpointRFU(anexoSir.getUrlRepositorio());
 
-        return new ArrayList<AnexoFull>(set);
+        //METADATOS
+        Set<MetadatoAnexo> metadatos = anexoSir.getMetadatosAnexos().stream()
+                .map(metadato -> new MetadatoAnexo(metadato.getTipo(), metadato.getCampo(), metadato.getValor()) {
+                }).collect(Collectors.toSet());
+
+        anexo.setMetadatosAnexos(metadatos);
+
+        //LIBSIR
+        if (anexoSir.getTipoFirma() != null) {
+            anexo.setModoFirma(MODO_FIRMA_ANEXO_ATTACHED);
+            SignatureCustody sc = getSignatureCustodyRFU(anexoSir, idIntercambio);
+            anexoFull.setDocumentoCustody(null);
+            anexoFull.setSignatureCustody(sc);
+            anexoFull.setAnexo(anexo);
+        } else {
+            anexo.setModoFirma(RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA);
+            DocumentCustody dc = getDocumentCustodyRFU(anexoSir, idIntercambio);
+            anexoFull.setAnexo(anexo);
+            anexoFull.setDocumentoCustody(dc);
+        }
+
+        return anexoFull;
+
     }
 
     /**
-     * Transforma un {@link AnexoSir} en un {@link AnexoFull}
-     * A partir de la clase AnexoSir transformamos a un AnexoFull para poder guardarlo en regweb3.
-     * La particularidad de este método, es que se necesita pasar una lista de los anexos que se han procesado anteriormente
-     * del AnexoSir que nos envian, ya que puede haber anexos que son firma de uno anteriormente procesado y lo necesitamos
-     * para acabar de montar el anexo ya que para regweb3 el anexo y su firma van en el mismo AnexoFull.
-     * Además ahora se pasa una lista de anexosSirRecibidos ya que para cada anexo el usuario debe escoger 3 campos que
-     * pueden no venir informados en SICRES y son obligatorios en NTI.
-     * Los campos en concreto son (validezDocumento, origen, tipo Documental)
-     * @param anexoSir
-     * @param idEntidad
-     * @return AnexoFull tipo {@link AnexoFull}
-     */
-    private void transformarAnexoDocumento(AnexoSir anexoSir, Long idEntidad, CamposNTI camposNTI, HashMap<String,AnexoFull> anexosProcesados, String aplicacion) throws I18NException {
-
-        // Solo procesamos Documentos no firmados o firmados attached, no las firmas detached
-        if(StringUtils.isEmpty(anexoSir.getIdentificadorDocumentoFirmado()) ||
-                anexoSir.getIdentificadorDocumentoFirmado().equals(anexoSir.getIdentificadorFichero())){
-
-            AnexoFull anexoFull = new AnexoFull();
-            Anexo anexo = new Anexo(RegwebConstantes.PERFIL_CUSTODIA_DOCUMENT_CUSTODY);
-
-            //TODO Temporal hata que se acepten todos los registros sir pendientes con anexos que tienen caracteres prohibidos
-            anexo.setTitulo(es.caib.regweb3.utils.StringUtils.eliminarCaracteresProhibidosArxiu(anexoSir.getNombreFichero()));
-
-            // Validez Documento
-            if (anexoSir.getValidezDocumento() != null) {
-                //Transformamos de copia compulsada a copia_original = autèntica
-                if(Long.valueOf(anexoSir.getValidezDocumento()).equals(TIPOVALIDEZDOCUMENTO_COPIA_COMPULSADA)){
-                    anexo.setValidezDocumento(TIPOVALIDEZDOCUMENTO_COPIA_ORIGINAL);
-                }else {
-                    anexo.setValidezDocumento(Long.valueOf(anexoSir.getValidezDocumento()));
-                }
-            } else {//Campo NTI Cogemos la validez de documento indicada por el usuario
-                if (camposNTI.getIdValidezDocumento() != null) {
-                    anexo.setValidezDocumento(Long.valueOf(camposNTI.getIdValidezDocumento()));
-
-                }else{ //Si no hay valor, por defecto "Copia"
-                    anexo.setValidezDocumento(TIPOVALIDEZDOCUMENTO_COPIA);
-                }
-            }
-
-            // Tipo Documento
-            if (anexoSir.getTipoDocumento() != null) {
-                anexo.setTipoDocumento(Long.valueOf(anexoSir.getTipoDocumento()));
-
-                // Si es un Documento técnico, ponemos el Origen a ADMINSITRACIÓN
-                if(anexoSir.getTipoDocumento().equals(RegwebConstantes.TIPO_DOCUMENTO_FICHERO_TECNICO_SICRES)){
-                    anexo.setOrigenCiudadanoAdmin(RegwebConstantes.ANEXO_ORIGEN_ADMINISTRACION);
-                }
-            }
-            anexo.setObservaciones(anexoSir.getObservaciones());
-
-            //Campo NTI no informados, asignamos lo que indica el usuario
-            if (camposNTI.getIdOrigen() != null) {
-                anexo.setOrigenCiudadanoAdmin(camposNTI.getIdOrigen().intValue());
-
-            }else{ // Si no está informado, por defecto Ciudadano
-                anexo.setOrigenCiudadanoAdmin(ANEXO_ORIGEN_CIUDADANO);
-            }
-
-            // Si el usuario no especifica el tipo Documental, por defecto se pone TD99 - Otros
-            if (camposNTI.getIdTipoDocumental() == null || camposNTI.getIdTipoDocumental().equals("")) {
-                anexo.setTipoDocumental(tipoDocumentalEjb.findByCodigoEntidad("TD99", idEntidad));
-            }else{
-                anexo.setTipoDocumental(tipoDocumentalEjb.findByCodigoEntidad(camposNTI.getIdTipoDocumental(), idEntidad));
-            }
-
-            if(anexoSir.getCertificado()!= null) {
-                anexo.setCertificado(anexoSir.getCertificado().getBytes());
-            }
-
-            if (anexoSir.getFirma() != null) {
-                anexo.setFirma(anexoSir.getFirma());
-
-            }
-            if (anexoSir.getTimestamp() != null) {
-                anexo.setTimestamp(anexoSir.getTimestamp().getBytes());
-            }
-
-            if (anexoSir.getValidacionOCSPCertificado() != null) {
-                anexo.setValidacionOCSPCertificado(anexoSir.getValidacionOCSPCertificado().getBytes());
-            }
-
-            if(anexoSir.getHash()!= null){
-                anexo.setHash(anexoSir.getHash().getBytes());
-            }
-
-            DocumentCustody dc;
-            SignatureCustody sc;
-            // Si el IdentificadorDocumentoFirmado está informado
-            if (es.caib.regweb3.utils.StringUtils.isNotEmpty(anexoSir.getIdentificadorDocumentoFirmado())) {
-
-                // Si el IdentificadorDocumentoFirmado es igual al IdentificadorFichero, es una Firma Attached
-                if(anexoSir.getIdentificadorDocumentoFirmado().equals(anexoSir.getIdentificadorFichero())){
-                    /** PARCHE ESPU*/
-                    if(RegwebConstantes.APLICACION_SIR_ESPU.equals(aplicacion)){
-                        //log.info("Documento con firma attached aplicación ESPU: " + anexoSir.getIdentificadorFichero());
-                        //En este caso se guarda como un no firmado
-                        anexo.setModoFirma(RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA);
-                        dc = getDocumentCustody(anexoSir);
-                        anexoFull.setAnexo(anexo);
-                        anexoFull.setDocumentoCustody(dc);
-                    }else{
-                        //log.info("Documento con firma attached: " + anexoSir.getIdentificadorFichero());
-                        //Caso Firma Attached caso 5, se guarda el documento en signatureCustody, como lo especifica el API DE CUSTODIA(II)
-                        anexo.setModoFirma(RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED);
-                        sc = getSignatureCustody(anexoSir, null, anexo.getModoFirma());
-                        anexoFull.setDocumentoCustody(null);
-                        anexoFull.setSignatureCustody(sc);
-                        anexoFull.setAnexo(anexo);
-                    }
-
-                }
-
-            } else { // El anexo no es firma de nadie
-                //log.info("Documento sin firma: " + anexoSir.getIdentificadorFichero());
-                anexo.setModoFirma(RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA);
-
-                /** PARCHE GREG PROBLEMA: El campo  firma que se informa es más grande que 255 y al intentar hacer el insert peta por superar longitud
-                 * De momento cortamos el campo, pero se debe informar a MADRID de este caso concreto */
-                if (anexoSir.getFirma() != null) { // Anexo con Firma CSV
-                    if(anexoSir.getFirma().length() >= 255) {
-                        anexo.setCsv(null);
-                    }else{
-                        anexo.setCsv(anexoSir.getFirma());
-                    }
-                    //TODO Metadada a custodia pel csv.
-                }
-                dc = getDocumentCustody(anexoSir);
-                anexoFull.setAnexo(anexo);
-                anexoFull.setDocumentoCustody(dc);
-            }
-
-            anexosProcesados.put(anexoSir.getIdentificadorFichero(), anexoFull);
-
-        }
-    }
-
-
-    /**
-     * Transforma un {@link AnexoSir} en un {@link AnexoFull}
-     * A partir de la clase AnexoSir transformamos a un AnexoFull para poder guardarlo en regweb3.
-     * La particularidad de este método, es que se necesita pasar una lista de los anexos que se han procesado anteriormente
-     * del AnexoSir que nos envian, ya que puede haber anexos que son firma de uno anteriormente procesado y lo necesitamos
-     * para acabar de montar el anexo ya que para regweb3 el anexo y su firma van en el mismo AnexoFull.
-     * Además ahora se pasa una lista de anexosSirRecibidos ya que para cada anexo el usuario debe escoger 3 campos que
-     * pueden no venir informados en SICRES y son obligatorios en NTI.
-     * Los campos en concreto son (validezDocumento, origen, tipo Documental)
-     * @param anexoSir
-     * @param anexosProcesados Lista de anexos procesados anteriores.
-     * @return AnexoFull tipo {@link AnexoFull}
-     */
-    private void transformarAnexoFirmaDetached(AnexoSir anexoSir, Map<String, AnexoFull> anexosProcesados, Long idEntidad, String aplicacion) throws I18NException {
-
-        // En este método solo se procesan las firmas detached(aquellas que nos informan
-        // con el identificador de documento firmado, que son firma de otro segmento anexo
-        if (es.caib.regweb3.utils.StringUtils.isNotEmpty(anexoSir.getIdentificadorDocumentoFirmado()) &&
-                !anexoSir.getIdentificadorDocumentoFirmado().equals(anexoSir.getIdentificadorFichero())) {
-
-            AnexoFull anexoFirmado = anexosProcesados.get(anexoSir.getIdentificadorDocumentoFirmado());//obtenemos el anexo firmado previamente procesado
-            if(anexoFirmado.getAnexo().getModoFirma() != MODO_FIRMA_ANEXO_ATTACHED) { // si la firma detached es de un firma attached, la descartamos
-
-
-                byte[] anexoSirData = FileSystemManager.getBytesArchivo(anexoSir.getAnexo().getId());
-
-                // CASO ORVE BASE64 Decodificamos previamente porque vienen las firmas codificadas en base64
-                if (Base64.isBase64(anexoSirData)) {
-                    anexoSirData = Base64.decodeBase64(anexoSirData);
-                    anexoSir.setAnexoData(anexoSirData);
-                }
-
-                if (CXFUtils.isXMLFormat(anexoSirData)) { //Miramos si es un formato XML
-                    //A pesar de que por identificador de documento firmado nos indican que es una firma detached, debemos
-                    // averiguar si es una firma attached o detached  y esto nos lo indica el contenido del xml que nos envian.
-
-                    /*******  COMENTAMOS TEMPORALMENTE MIRAR EL FORMATO DEL XADES YA QUE EN TODOS LOS CASOS SE ELIMINA EL XSIG, LO HACEMOS A RAIZ DEL PROBLEMA DE FORMATO DE GEISER CON EL XML CON CAPA <AFIRMA></AFIRMA>  ********/
-                /*String format= getXAdESFormat(anexoSirData);
-
-                if(SIGNFORMAT_EXPLICIT_DETACHED.equals(format)){// XADES Detached
-                    //Obtenemos el anexo original cuya firma es la que estamos tratando, que ha sido previamente procesado
-                    AnexoFull anexoFull = anexosProcesados.get(anexoSir.getIdentificadorDocumentoFirmado());
-
-                    if(anexoFull.getSignatureCustody() == null) { // Es un documento sin firma(documento plano)
-                        //Descartamos la firma xsig y lanzamos mensaje.
-                        log.warn("FIRMA d'un anexoSir(document pla) ja que es tipus Xades Detached no suportada per ARXIU: només guardam document ");
-
-                        // Descomentar aquest codi quan arxiu deixi guardar xsig (propuesta de toni, pero esta mas ordenado en el codigo de marilen
-                        //CASO XADES DETACHED DE DOCUMENT PLA = CADES (AFEGIT MARILEN, CODI OPTIMITZAT, descomentar quan ARXIU guardi Xsig)
-                        //Caso Firma Detached, caso 4, se guarda 1 anexo, con el doc original en documentCustody y la firma en SignatureCustody
-                        *//*anexoFull.getAnexo().setModoFirma(RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED); // asignamos el modo de firma
-                        SignatureCustody sc = getSignatureCustody(anexoSir, anexoFull.getDocumentoCustody(), anexoFull.getAnexo().getModoFirma()); //Asignamos la firma
-                        anexoFull.setSignatureCustody(sc);*//*
-
-                    }else{ //Es un documento firmado que además nos envian el xsig como detached.
-
-                        log.warn("Descartat FIRMA d'un anexoSir(documentsignat) ja que es tipus Xades Detached no suportada per ARXIU: només guardam document ");
-
-                        // Descomentar aquest codi quan arxiu deixi guardar xsig
-
-                        //NO SOPORTADO POR MODELO CUSTODIA
-                        //Obtenemos el documento firmado que está en signatureCustody porque ha sido procesado
-                        // anteriormente.
-                        *//*SignatureCustody scAntic = anexoFull.getSignatureCustody();
-
-                        // Apunta a una signatura (attached o detached): collim la signatura com a doc detached
-                        //Creamos un nuevo documentCustody para guardar el documento firmado
-                        DocumentCustody  dc = new DocumentCustody(scAntic.getName(), scAntic.getMime(), scAntic.getData());
-
-                        *//**//*Montamos el nuevo anexo
-                            -(DocumentCustody = documento firmado)
-                            -(signatureCustody = firma detached que estamos tratando)
-                        *//**//*
-                        AnexoFull anexoFullnou = new AnexoFull();
-                        anexoFullnou.setDocumentoCustody(dc);
-
-                        SignatureCustody sc = new SignatureCustody();
-                        sc.setData(FileSystemManager.getBytesArchivo(anexoSir.getAnexo().getId()));
-                        sc.setMime(anexoSir.getTipoMIME());
-                        sc.setName(anexoSir.getNombreFichero());
-                        anexoFullnou.setSignatureCustody(sc);
-
-                        anexosProcesados.put(anexoSir.getIdentificadorFichero(),anexoFullnou );*//*
-
-                    }
-
-                }else{
-                    // XADES attached
-                    // CAS ORVE:  es una XADES attached pero AnexoSIR apunta a un DETACHED
-
-                    // nomes ens serveix el contingut que ja s'ha donat d'alta: no feim res per que ARXIU no funciomna
-                    //log.warn("AnexoSir-Detached amb firma tipus Xades attached (CAS ORVE)");
-
-                    // Descomentar aquest codi quan arxiu deixi guardar xsig i si es vol guardar dins arxiu la firma de comunicació
-
-                    //En este caso, nos mandan un xml attached, como detached. Por tanto lo guardaremos como una firma attached aislada
-                    //Aquí perdemos el vinculo al documento del que nos indican que es su firma detached(lo cual no es cierto)
-                    *//*SignatureCustody sc = new SignatureCustody();
-
-                    sc.setData(FileSystemManager.getBytesArchivo(anexoSir.getAnexo().getId()));
-                    sc.setMime(anexoSir.getTipoMIME());
-                    sc.setName(anexoSir.getNombreFichero());
-                    sc.setAttachedDocument(true);
-
-                    //Montamos el nuevo anexoFull como attached, ya que es un xades attached
-                    AnexoFull anexoFullnou = new AnexoFull();
-                    Anexo anexoNou = new Anexo();
-                    anexoFullnou.setSignatureCustody(sc);
-                    anexoFullnou.setDocumentoCustody(null);
-                    anexoNou.setModoFirma(RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED);
-
-                    //Debemos construir el anexo completo, porque es nuevo.
-                    anexoNou.setTitulo(anexoSir.getNombreFichero());
-                    anexoNou.setValidezDocumento(RegwebConstantes.TIPOVALIDEZDOCUMENTO_ORIGINAL);
-                    anexoNou.setObservaciones(anexoSir.getObservaciones());
-                    anexoNou.setOrigenCiudadanoAdmin(RegwebConstantes.ANEXO_ORIGEN_ADMINISTRACION);
-                    anexoNou.setTipoDocumental(tipoDocumentalEjb.findByCodigoEntidad("TD99", idEntidad));
-                    if(anexoSir.getTipoDocumento()!=null) {
-                        anexoNou.setTipoDocumento(Long.valueOf(anexoSir.getTipoDocumento()));
-                    }
-                    if(anexoSir.getCertificado()!= null) {
-                        anexoNou.setCertificado(anexoSir.getCertificado().getBytes());
-                    }
-                    if (anexoSir.getFirma() != null) {
-                        anexoNou.setFirma(anexoSir.getFirma().getBytes());
-                    }
-                    if (anexoSir.getTimestamp() != null) {
-                        anexoNou.setTimestamp(anexoSir.getTimestamp().getBytes());
-                    }
-                    if (anexoSir.getValidacionOCSPCertificado() != null) {
-                        anexoNou.setValidacionOCSPCertificado(anexoSir.getValidacionOCSPCertificado().getBytes());
-                    }
-                    if(anexoSir.getHash()!= null){
-                        anexoNou.setHash(anexoSir.getHash().getBytes());
-                    }
-                    anexoFullnou.setAnexo(anexoNou);
-
-
-                    anexosProcesados.put(anexoSir.getIdentificadorFichero(),anexoFullnou );*//*
-
-                }*/
-                } else {
-
-                    // CADES
-
-                    //Caso Firma Detached, caso 4, se guarda 1 anexo, con el doc original en documentCustody y la firma en SignatureCustody
-                    anexoFirmado.getAnexo().setModoFirma(RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED); // asignamos el modo de firma
-                    SignatureCustody sc = getSignatureCustody(anexoSir, anexoFirmado.getDocumentoCustody(), anexoFirmado.getAnexo().getModoFirma()); //Asignamos la firma
-                    anexoFirmado.setSignatureCustody(sc);
-
-                }
-
-            }
-
-        }
-
-    }
-
-
-    /**
-     *
      * @param anexoSir
      * @return
      * @throws I18NException
      */
-    private DocumentCustody getDocumentCustody(AnexoSir anexoSir) throws I18NException {
+    private DocumentCustody getDocumentCustodyRFU(AnexoSir anexoSir, String idIntercambio) throws InterException {
         if (log.isDebugEnabled()) {
             log.debug("  ------------------------------");
             log.debug(" anexoSir.getAnexo = " + anexoSir.getAnexo());
         }
+
         DocumentCustody dc = null;
         if (anexoSir.getAnexo() != null) {
             dc = new DocumentCustody();
-            dc.setData(FileSystemManager.getBytesArchivo(anexoSir.getAnexo().getId()));
+            dc.setData(consultaService.getDocEniDescargadoIdFicheroYCdIntercambio(anexoSir.getIdentificadorFichero(), idIntercambio));
             dc.setMime(anexoSir.getTipoMIME());
             dc.setName(anexoSir.getNombreFichero());
         }
         return dc;
     }
 
+
     /**
-     *
      * @param anexoSir
-     * @param dc
-     * @param modoFirma
      * @return
      * @throws I18NException
      */
-    private SignatureCustody getSignatureCustody(AnexoSir anexoSir, DocumentCustody dc, int modoFirma) throws I18NException {
+    private SignatureCustody getSignatureCustodyRFU(AnexoSir anexoSir, String idIntercambio) throws InterException {
         if (log.isDebugEnabled()) {
             log.debug("  ------------------------------");
             log.debug(" anexoSir.getAnexo = " + anexoSir.getAnexo());
         }
 
         SignatureCustody sc = null;
-        if (anexoSir.getAnexo() == null) {
+        sc = new SignatureCustody();
 
-            if (modoFirma ==  RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED
-                    || modoFirma ==  RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED) {
-                String msg = "L'usuari ens indica que hi ha una firma a "+anexoSir.getIdentificadorFichero()+" i no ve (modoFirma = " + modoFirma + ")";
-                log.info(msg, new Exception());
-                throw new I18NException(msg);
-            }
+        //obtenemos el contenido a través del método de LIBSIR
+        byte[] anexoData = consultaService.getDocEniDescargadoIdFicheroYCdIntercambio(anexoSir.getIdentificadorFichero(), idIntercambio);
+        sc.setData(anexoData);
 
-        } else {
-
-            if (modoFirma !=  RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED
-                    && modoFirma !=  RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED) {
-                String msg = "L'usuari ens indica que NO hi ha una a "+anexoSir.getIdentificadorFichero()+" firma pero n'envia una"
-                        + " (modoFirma = " + modoFirma + ")";
-                log.error(msg, new Exception());
-                throw new I18NException(msg);
-            }
-
-
-
-            sc = new SignatureCustody();
-
-            //Averiguamos si está en Base64 para decodificarlo y luego que se valide bien la firma.
-            byte[] anexoData = FileSystemManager.getBytesArchivo(anexoSir.getAnexo().getId());
-            if(Base64.isBase64(anexoData)){
-                log.info("Entramos en decodificar base64");
-                anexoData=Base64.decodeBase64(anexoData);
-            }
-            sc.setData(anexoData);
-            sc.setMime(anexoSir.getTipoMIME());
-            sc.setName(anexoSir.getNombreFichero());
-
-            if (modoFirma ==  RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED) {
-                // Document amb firma adjunta
-                sc.setAttachedDocument(null);
-
-                // TODO Emprar mètode per descobrir tipus de signatura
-                sc.setSignatureType(SignatureCustody.OTHER_DOCUMENT_WITH_ATTACHED_SIGNATURE);
-
-            } else if (modoFirma ==  RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED) {
-                // Firma en document separat CAS 4
-                if (dc == null) {
-                    throw new I18NException("Aquesta firma "+ anexoSir.getIdentificadorFichero() +"  requereix el document original"
-                            + " i no s'ha enviat");
-                }
-
-                sc.setAttachedDocument(false);
-                // TODO Emprar mètode per descobrir tipus de signatura
-                sc.setSignatureType(SignatureCustody.OTHER_SIGNATURE_WITH_DETACHED_DOCUMENT);
-            }
+        if (Base64.isBase64(anexoData)) {
+            log.info("Entramos en decodificar base64");
+            anexoData = Base64.decodeBase64(anexoData);
         }
+        sc.setData(anexoData);
+        sc.setMime(anexoSir.getTipoMIME());
+        sc.setName(anexoSir.getNombreFichero());
+        sc.setAttachedDocument(null);
+        sc.setSignatureType(SignatureCustody.OTHER_DOCUMENT_WITH_ATTACHED_SIGNATURE);
+
         return sc;
     }
 
+    private InteresadoSir transformarInteresadoBean(InteresadoBean interesadoBean) throws I18NException {
+        InteresadoSir interesado = new InteresadoSir();
 
+        // Información del interesado
+        interesado.setDocumentoIdentificacionInteresado(interesadoBean.getDocumentoIdentificacionInteresado());
+        interesado.setRazonSocialInteresado(interesadoBean.getRazonSocialInteresado());
+        interesado.setNombreInteresado(interesadoBean.getNombreInteresado());
+        interesado.setPrimerApellidoInteresado(interesadoBean.getPrimerApellidoInteresado());
+        interesado.setSegundoApellidoInteresado(interesadoBean.getSegundoApellidoInteresado());
+        interesado.setCodigoPaisInteresado(interesadoBean.getPaisInteresado());
+        interesado.setCodigoProvinciaInteresado(interesadoBean.getProvinciaInteresado());
+        interesado.setCodigoMunicipioInteresado(interesadoBean.getMunicipioInteresado());
+        interesado.setDireccionInteresado(interesadoBean.getDireccionInteresado());
+        interesado.setCodigoPostalInteresado(interesadoBean.getCodPostalInteresado());
+        interesado.setCorreoElectronicoInteresado(interesadoBean.getCorreoElectronicoInteresado());
+        interesado.setTelefonoInteresado(interesadoBean.getTelefonoFijoInteresado());
+        interesado.setTelefonoMovilInteresado(interesadoBean.getTelefonoMovilInteresado());
 
-
-    /** La firma està continguda dins del document: PADES, ODT, OOXML */
-    public static final String SIGNFORMAT_IMPLICIT_ENVELOPED_ATTACHED = "implicit_enveloped/attached";
-
-    /** La firma conté al document: Xades ATTACHED */
-    public static final String SIGNFORMAT_IMPLICIT_ENVELOPING_ATTACHED = "implicit_enveloping/attached";
-
-    /**
-     * El documetn està forà de la firma: xades detached i cades detached
-     */
-    public static final String SIGNFORMAT_EXPLICIT_DETACHED = "explicit/detached";
-
-    /**
-     * Cas específic de Xades externally detached
-     */
-    public static final String SIGNFORMAT_EXPLICIT_EXTERNALLY_DETACHED = "explicit/externally_detached";
-
-
-    /**
-     * AQUEST MÈTODE ESTA DUPLICAT AL PLUGIN-INTEGR@
-     * @param signature
-     * @return
-     */
-    private  String getXAdESFormat(byte[] signature) throws I18NException, ParserConfigurationException, IOException, SAXException {
-
-        DocumentBuilderFactory dBFactory = DocumentBuilderFactory.newInstance();
-        dBFactory.setNamespaceAware(true);
-
-        Document eSignature = dBFactory.newDocumentBuilder().parse(new ByteArrayInputStream(signature));
-
-        XMLSignature xmlSignature;
-        String rootName = eSignature.getDocumentElement().getNodeName();
-        if (rootName.equalsIgnoreCase("ds:Signature") || rootName.equals("ROOT_COSIGNATURES")) {
-            //  "XAdES Enveloping"
-            return SIGNFORMAT_IMPLICIT_ENVELOPING_ATTACHED;
+        String tipoDocumento = interesadoBean.getTipoDocumentoIdentificacionInteresado();
+        if (StringUtils.isNotBlank(tipoDocumento)) {
+            interesado.setTipoDocumentoIdentificacionInteresado(TipoDocumentoIdentificacion.getTipoDocumentoIdentificacionValue(tipoDocumento));
         }
-        NodeList signatureNodeLs = eSignature.getElementsByTagName("ds:Manifest");
-        if (signatureNodeLs.getLength() > 0) {
-            //  "XAdES Externally Detached
-            return SIGNFORMAT_EXPLICIT_EXTERNALLY_DETACHED;
+
+        String canalPreferente = interesadoBean.getCanalPreferenteComunicacionInteresado();
+        if (StringUtils.isNotBlank(canalPreferente)) {
+            interesado.setCanalPreferenteComunicacionInteresado(CanalNotificacion.getCanalNotificacionValue(canalPreferente));
         }
-        NodeList signsList = eSignature.getElementsByTagNameNS(
-                "http://www.w3.org/2000/09/xmldsig#", "Signature");
-        if (signsList.getLength() == 0) {
-            throw new I18NException("No te firmes");
+
+        //CAMPOS NUEVOS SICRES4 TODO AVISOS SMS Y CORREOELECTRONICO
+        interesado.setAvisoCorreoElectronicoInteresado(interesadoBean.isSolicitaNotificacionEmailInteresado());
+        interesado.setAvisoNotificacionSMSInteresado(interesadoBean.isSolicitaNotificacionSMSInteresado());
+        interesado.setReceptorNotificacionesInteresado(interesadoBean.isReceptorNotificacionInteresado());
+        interesado.setCodigoDirectorioUnificadosInteresado(interesadoBean.getCodigoDirectoriosUnificadosInteresado());
+
+        // Información del representante
+        interesado.setDocumentoIdentificacionRepresentante(interesadoBean.getDocumentoIdentificacionRepresentante());
+        interesado.setRazonSocialRepresentante(interesadoBean.getRazonSocialRepresentante());
+        interesado.setNombreRepresentante(interesadoBean.getNombreRepresentante());
+        interesado.setPrimerApellidoRepresentante(interesadoBean.getPrimerApellidoRepresentante());
+        interesado.setSegundoApellidoRepresentante(interesadoBean.getSegundoApellidoRepresentante());
+        interesado.setCodigoPaisRepresentante(interesadoBean.getPaisRepresentante());
+        interesado.setCodigoProvinciaRepresentante(interesadoBean.getProvinciaRepresentante());
+        interesado.setCodigoMunicipioRepresentante(interesadoBean.getMunicipioRepresentante());
+        interesado.setDireccionRepresentante(interesadoBean.getDireccionRepresentante());
+        interesado.setCodigoPostalRepresentante(interesadoBean.getCodPostalRepresentante());
+        interesado.setCorreoElectronicoRepresentante(interesadoBean.getCorreoElectronicoRepresentante());
+        interesado.setTelefonoRepresentante(interesadoBean.getTelefonoFijoRepresentante());
+        interesado.setTelefonoMovilRepresentante(interesadoBean.getTelefonoMovilInteresado());
+
+        tipoDocumento = interesadoBean.getTipoDocumentoIdentificacionRepresentante();
+        if (StringUtils.isNotBlank(tipoDocumento)) {
+            interesado.setTipoDocumentoIdentificacionRepresentante(TipoDocumentoIdentificacion.getTipoDocumentoIdentificacionValue(tipoDocumento));
         }
-        Node signatureNode = signsList.item(0);
-        try {
-            xmlSignature = new XMLSignatureElement((Element) signatureNode).getXMLSignature();
-        } catch (MarshalException e) {
-            throw new I18NException("marshal exception: " + e.getMessage());
+
+        canalPreferente = interesadoBean.getCanalPreferenteComunicacionRepresentante();
+        if (StringUtils.isNotBlank(canalPreferente)) {
+            interesado.setCanalPreferenteComunicacionRepresentante(CanalNotificacion.getCanalNotificacionValue(canalPreferente));
         }
-        List<?> references = xmlSignature.getSignedInfo().getReferences();
-        for (int i = 0; i < references.size(); ++i) {
-            if (!"".equals(((Reference) references.get(i)).getURI()))
-                continue;
-            //  "XAdES Enveloped"
-            return SIGNFORMAT_IMPLICIT_ENVELOPED_ATTACHED;
-        }
-        //  "XAdES Detached"
-        return SIGNFORMAT_EXPLICIT_DETACHED;
+
+        //CAMPOS NUEVOS SICRES4 TODO AVISOS SMS Y CORREOELECTRONICO
+        interesado.setAvisoCorreoElectronicoRepresentante(interesadoBean.isSolicitaNotificacionEmailRepresentante());
+        interesado.setAvisoCorreoElectronicoRepresentante(interesadoBean.isSolicitaNotificacionSMSRepresentante());
+        interesado.setReceptorNotificacionesRepresentante(interesadoBean.isReceptorNotificacionRepresentante());
+        interesado.setCodigoDirectorioUnificadosRepresentante(interesadoBean.getCodigoDirectoriosUnificadosRepresentante());
+
+        interesado.setObservaciones(interesadoBean.getObservaciones());
+
+        return interesado;
     }
 
-    /**
-     * Método que comprueba si el tipoMime es aceptado por SIR, si no lo es devuelve null
-     * @param tipoMime
-     * @return
-     */
-    private String tipoMimeAceptadoPorSir(String tipoMime){
+    private AnexoSir transformarAnexoBean(AnexoBean anexoBean, String idIntercambio) throws I18NException, InterException {
+        AnexoSir anexo = new AnexoSir();
 
-        if(tipoMime.length() <= ANEXO_TIPOMIME_MAXLENGTH_SIR && Arrays.asList(TIPOS_MIME_ACEPTADO_SIR).contains(tipoMime)){
-            return tipoMime;
-        }else{
-            return null;
+        anexo.setNombreFichero(es.caib.regweb3.utils.StringUtils.eliminarCaracteresProhibidosArxiu(anexoBean.getNombreFichero()));
+        anexo.setIdentificadorFichero(anexoBean.getIdentificadorFichero());
+        anexo.setIdentificadorDocumentoFirmado(anexoBean.getIdentificadorDocumentoFirmado());
+        anexo.setTipoMIME(anexoBean.getContenidoBean().getNombreFormato());
+        anexo.setObservaciones(anexoBean.getObservaciones());
+
+        String tipoAnexo = anexoBean.getTipoAnexo();
+        if (StringUtils.isNotBlank(tipoAnexo)) {
+            anexo.setTipoDocumento(TipoDocumento.getTipoDocumentoValue(tipoAnexo));
         }
 
+        //CAMPOS NUEVOS SICRES4
+        anexo.setResumen(anexoBean.getResumen());
+        anexo.setCodigoFormulario(anexoBean.getCodigoFormulario());
+        anexo.setUrlRepositorio(anexoBean.getUrlRepositorio());
+
+        //FirmaBean
+        FirmaBean firmaBean = anexoBean.getFirmaBean();
+        if (firmaBean != null) {
+
+            anexo.setTipoFirma(firmaBean.getTipoFirma() != null ? firmaBean.getTipoFirma().value() : "");
+            if (firmaBean.getContenidoFirma() != null && firmaBean.getContenidoFirma().getCsv() != null) {
+                anexo.setCsv(firmaBean.getContenidoFirma().getCsv() != null ? firmaBean.getContenidoFirma().getCsv().getValorCSV() : "");
+                anexo.setRegulacionCsv(firmaBean.getContenidoFirma().getCsv() != null ? firmaBean.getContenidoFirma().getCsv().getRegulacionGeneracionCSV() : "");
+            }
+            if (firmaBean.getContenidoFirma() != null && firmaBean.getContenidoFirma().getFirmaConCertificadoBean() != null) {
+                anexo.setFirmaBase64(firmaBean.getContenidoFirma().getFirmaConCertificadoBean() != null ? firmaBean.getContenidoFirma().getFirmaConCertificadoBean().getFirmaBase64() : null);
+                //TODO PENDIENte DE MADRID A VER QUE es
+                // anexo.setReferenciaFirma(firmaBean.getContenidoFirma().getFirmaConCertificadoBean()!=null?firmaBean.getContenidoFirma().getFirmaConCertificadoBean().getReferenciaFirma():"");
+            }
+        }
+
+        //METADATOS SICRES4
+        Set<MetadatoAnexoSir> metadatosAnexos = anexoBean.getOtrosMetadatosGenerales().stream()
+                .map(metadato -> new MetadatoAnexoSir(METADATO_GENERAL, metadato.getCampo(), metadato.getValor()) {
+                }).collect(Collectors.toSet());
+
+        metadatosAnexos.addAll(anexoBean.getOtrosMetadatosParticulares().stream()
+                .map(metadato -> new MetadatoAnexoSir(METADATO_PARTICULAR, metadato.getCampo(), metadato.getValor()) {
+                }).collect(Collectors.toSet()));
+
+
+        // LIBSIR estos son los metadatos ENI (documentoElectrónico)
+        TipoMetadatos tiposMetadato = anexoBean.getTipoMetadatos();
+
+        MetadatoAnexoSir metadatoAnexoSir;
+
+        DateFormat formatter = new SimpleDateFormat(FORMATO_FECHA_SICRES4);
+
+        if (tiposMetadato != null) {
+            //fechaCaptura
+            metadatoAnexoSir = new MetadatoAnexoSir(METADATO_NTI, "fechaCaptura", formatter.format(tiposMetadato.getFechaCaptura().toGregorianCalendar().getTime()));
+            metadatosAnexos.add(metadatoAnexoSir);
+
+            //origenCiudadanoAdministracion
+            metadatoAnexoSir = new MetadatoAnexoSir(METADATO_NTI, "origenCiudadanoAdministracion", tiposMetadato.isOrigenCiudadanoAdministracion() ? "1" : "0");
+            metadatosAnexos.add(metadatoAnexoSir);
+
+            //tipoDocumental
+            metadatoAnexoSir = new MetadatoAnexoSir(METADATO_NTI, "tipoDocumental", tiposMetadato.getTipoDocumental().value());
+            metadatosAnexos.add(metadatoAnexoSir);
+
+            anexo.setMetadatosAnexos(metadatosAnexos);
+
+        }
+
+        return anexo;
     }
+
+
 
 }

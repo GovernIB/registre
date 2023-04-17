@@ -4,6 +4,7 @@ import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang.StringUtils;
 import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
 import org.fundaciobit.plugins.documentcustody.api.DocumentCustody;
 import org.fundaciobit.plugins.documentcustody.api.SignatureCustody;
@@ -12,8 +13,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.util.UriUtils;
 
 import javax.activation.MimetypesFileTypeMap;
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.CharsetEncoder;
@@ -205,7 +209,35 @@ public class AnexoUtils {
         // Implementació de RFC6266. La majoria de navegadors soporten la codificació en UTF-8 emprant
         // "filename*=", pels que no ho soportin, ficam "filename=" abans.
         return (attachment ? "attachment" : "inline")
-           + "; filename=\"" + filename + "\""
-           + "; filename*=UTF-8''" + utf8filename;
+                + "; filename=\"" + filename + "\""
+                + "; filename*=UTF-8''" + utf8filename;
+    }
+
+
+    /**
+     * Método que descarga un fichero mediante HttpServletResponse response
+     *
+     * @param contentType
+     * @param response
+     * @param filename
+     * @param data
+     * @throws IOException
+     */
+    public static void download(String contentType, HttpServletResponse response, String filename, byte[] data) throws IOException, Exception {
+        OutputStream output;
+
+        // Obtenemos el ContentType si el que nos indican es null
+        if (StringUtils.isEmpty(contentType)) {
+            contentType = AnexoUtils.getContentType(filename, data);
+        }
+
+        response.setContentType(contentType);
+        response.setHeader("Content-Disposition", AnexoUtils.getContentDispositionHeader(true, filename));
+        response.setContentLength(data.length);
+
+        output = response.getOutputStream();
+        output.write(data);
+
+        output.flush();
     }
 }

@@ -1,8 +1,12 @@
 package es.caib.regweb3.persistence.ejb;
 
+import es.gob.ad.registros.sir.interModel.model.Anexo;
+import es.gob.ad.registros.sir.interService.bean.AsientoBean;
 import es.gob.ad.registros.sir.interService.exception.InterException;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 
 import javax.ejb.Local;
+import java.util.List;
 
 /**
  * Created by DGMAD
@@ -23,10 +27,31 @@ public interface LibSirLocal {
     void recibirAsiento(String registro, String firmaRegistro) throws InterException;
 
     /**
-     *
      * @param mensaje
      * @param firma
      * @throws InterException
      */
     void recibirMensajeControl(String mensaje, String firma) throws InterException;
+
+
+    /**
+     * @param maxResults
+     * @throws InterException
+     */
+    List<AsientoBean> consultaAsientosPendientes(int maxResults) throws InterException;
+
+    AsientoBean consultaAsiento(String oficina, String cdIntercambio) throws InterException;
+
+    /**
+     * @param cdIntercambio
+     * @param idFichero
+     * @return
+     * @throws InterException
+     */
+    byte[] obtenerAnexoReferencia(String cdIntercambio, String idFichero) throws InterException;
+
+   /* Anexo obtenerAnexoReferencia2(String cdIntercambio, String idFichero) throws InterException;
+
+    // pruebas
+    byte[] obtenerAnexoReferenciaContenido(Long cdAnexo) throws InterException;*/
 }

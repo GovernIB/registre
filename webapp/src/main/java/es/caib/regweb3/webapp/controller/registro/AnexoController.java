@@ -341,7 +341,7 @@ public class AnexoController extends BaseController {
 
         ScanWebPlainFile separador = scanWebModuleEjb.obtenerDocumentoSeparador(entidadActiva.getId(), languageUI);
 
-        download(separador.getMime(), response, separador.getName(),separador.getData());
+        AnexoUtils.download(separador.getMime(), response, separador.getName(), separador.getData());
 
     }
 
@@ -368,7 +368,7 @@ public class AnexoController extends BaseController {
             Document justificante = arxiuCaibUtils.getDocumento(anexo.getCustodiaID(), null, true, original);
 
             if(justificante != null){
-                download(justificante.getContingut().getTipusMime(), response, justificante.getNom(),justificante.getContingut().getContingut());
+                AnexoUtils.download(justificante.getContingut().getTipusMime(), response, justificante.getNom(), justificante.getContingut().getContingut());
             }else {
                 Mensaje.saveMessageError(request, getMessage("justificante.noExiste", anexo.getCustodiaID()));
                 response.sendRedirect("/regweb3/inici");
@@ -431,7 +431,7 @@ public class AnexoController extends BaseController {
                     }
                 }
 
-                download(contentType, response, filename, data);
+                AnexoUtils.download(contentType, response, filename, data);
             }
         } catch (I18NException i18ne) {
             log.error(I18NUtils.getMessage(i18ne), i18ne);
@@ -457,7 +457,7 @@ public class AnexoController extends BaseController {
         String contentType = anexoForm.getDocumentoCustody().getMime();
         String filename = anexoForm.getDocumentoCustody().getName();
 
-        download(contentType, response, filename, data);
+        AnexoUtils.download(contentType, response, filename, data);
     }
 
 
@@ -473,7 +473,7 @@ public class AnexoController extends BaseController {
         String contentType = anexoForm.getSignatureCustody().getMime();
         String filename = anexoForm.getSignatureCustody().getName();
 
-        download(contentType, response, filename, data);
+        AnexoUtils.download(contentType, response, filename, data);
     }
 
     /**
@@ -814,7 +814,7 @@ public class AnexoController extends BaseController {
      * @param data
      * @throws IOException
      */
-    private void download(String contentType, HttpServletResponse response, String filename, byte[] data) throws IOException, Exception {
+   /* private void download(String contentType, HttpServletResponse response, String filename, byte[] data) throws IOException, Exception {
         OutputStream output;
 
         // Obtenemos el ContentType si el que nos indican es null
@@ -830,7 +830,7 @@ public class AnexoController extends BaseController {
         output.write(data);
 
         output.flush();
-    }
+    }*/
 
     /**
      * Método que prepara el anexoForm previo a crear un anexo
