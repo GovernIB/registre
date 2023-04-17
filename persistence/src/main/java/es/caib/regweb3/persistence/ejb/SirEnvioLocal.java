@@ -3,11 +3,12 @@ package es.caib.regweb3.persistence.ejb;
 import es.caib.dir3caib.ws.api.oficina.OficinaTF;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.sir.MensajeControl;
-import es.caib.regweb3.model.utils.CamposNTI;
+import es.gob.ad.registros.sir.interService.exception.InterException;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 
 import javax.ejb.Local;
+import java.text.ParseException;
 import java.util.List;
 
 /**
@@ -144,7 +145,7 @@ public interface SirEnvioLocal {
      * @param camposNTIs
      * @return
      */
-    RegistroEntrada aceptarRegistroSir(RegistroSir registroSir, Entidad entidad, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, List<CamposNTI> camposNTIs, Long idOrganismoDestino, Long codigoSia, String emails, String motivo) throws I18NException, I18NValidationException;
+    RegistroEntrada aceptarRegistroSir(RegistroSir registroSir, Entidad entidad, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, Long idOrganismoDestino, String emails, String motivo) throws I18NException, I18NValidationException, ParseException, InterException;
 
 
     /**

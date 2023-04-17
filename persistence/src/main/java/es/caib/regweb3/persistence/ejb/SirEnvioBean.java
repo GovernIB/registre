@@ -6,7 +6,6 @@ import es.caib.dir3caib.ws.api.oficina.OficinaTF;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.sir.MensajeControl;
 import es.caib.regweb3.model.sir.TipoAnotacion;
-import es.caib.regweb3.model.utils.CamposNTI;
 import es.caib.regweb3.model.utils.EstadoRegistroSir;
 import es.caib.regweb3.model.utils.IndicadorPrueba;
 import es.caib.regweb3.persistence.integracion.ArxiuCaibUtils;
@@ -17,6 +16,7 @@ import es.caib.regweb3.sir.ejb.MensajeLocal;
 import es.caib.regweb3.utils.Dir3CaibUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
+import es.gob.ad.registros.sir.interService.exception.InterException;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.hibernate.Session;
@@ -36,6 +36,7 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -439,8 +440,8 @@ public class SirEnvioBean implements SirEnvioLocal {
      * @throws I18NException
      */
     @Override
-    public RegistroEntrada aceptarRegistroSir(RegistroSir registroSir, Entidad entidad, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, List<CamposNTI> camposNTIs, Long idOrganismoDestino, Long codigoSia, String emails, String motivo)
-            throws I18NException, I18NValidationException {
+    public RegistroEntrada aceptarRegistroSir(RegistroSir registroSir, Entidad entidad, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, Long idOrganismoDestino, String emails, String motivo)
+            throws I18NException, I18NValidationException, ParseException, InterException {
 
         Date inicio = new Date();
         StringBuilder peticion = new StringBuilder();
@@ -458,7 +459,7 @@ public class SirEnvioBean implements SirEnvioLocal {
 
         try {
             // Creamos y registramos el RegistroEntrada a partir del RegistroSir aceptado
-            registroEntrada = registroSirEjb.aceptarRegistroSirEntrada(registroSir,entidad, usuario, oficinaActiva, idLibro, idIdioma, camposNTIs, idOrganismoDestino, codigoSia);
+            registroEntrada = registroSirEjb.aceptarRegistroSirEntrada(registroSir, entidad, usuario, oficinaActiva, idLibro, idIdioma, idOrganismoDestino);
 
             // Enviamos el Mensaje de Confirmación
             enviarMensajeConfirmacion(registroSir, registroEntrada.getNumeroRegistroFormateado(), registroEntrada.getFecha());
@@ -1078,19 +1079,10 @@ public class SirEnvioBean implements SirEnvioLocal {
 
                 log.info("Procesando el registro sir pendiente: " + registroSir.getId());
 
-                // Crear List<CamposNTI> ficticia
-                List<CamposNTI> camposNTIS =  new ArrayList<CamposNTI>();
-                for(AnexoSir anexoSir:registroSir.getAnexos()){
-                    CamposNTI campoNTI = new CamposNTI();
-                    campoNTI.setId(anexoSir.getId());
-
-                    camposNTIS.add(campoNTI);
-                }
-
                 Organismo organismoDestino = organismoEjb.findByCodigoEntidadLigero(destino, entidad.getId());
 
                 //Aceptar el RegistroSir
-                RegistroEntrada registroEntrada = aceptarRegistroSir(registroSir, entidad, usuarioEntidad, oficina,idLibro,RegwebConstantes.IDIOMA_CASTELLANO_ID,camposNTIS, organismoDestino.getId(),null,null,null);
+                RegistroEntrada registroEntrada = aceptarRegistroSir(registroSir, entidad, usuarioEntidad, oficina, idLibro, RegwebConstantes.IDIOMA_CASTELLANO_ID, organismoDestino.getId(), null, null);
 
                 // Copiamos cada anexo en la carpeta creada
                 for(AnexoSir anexoSir:registroSir.getAnexos()){
