@@ -245,4 +245,23 @@ public class Regweb3Scheduler {
             e.printStackTrace();
         }
     }*/
+
+
+    /**
+     * Qué hace: consulta los asientos recibidos via SIR.
+     * Cuando lo hace: Cada 5 minutos a las 00:00, 02:00 y 03:00
+     */
+    /*@Scheduled(cron = "0 0/5 * * * ?") */
+    public void consultarAsientosRecibidosPorSIR() {
+
+        try {
+
+            schedulerEjb.consultarAsientosRecibidosPorSIR();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
 }

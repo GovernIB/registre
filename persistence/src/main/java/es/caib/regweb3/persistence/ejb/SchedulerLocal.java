@@ -113,5 +113,7 @@ public interface SchedulerLocal {
      * @throws I18NException
      */
     void purgarProcesadosColas() throws I18NException;
+
+    void consultarAsientosRecibidosPorSIR() throws I18NException;
 }
 

@@ -2,12 +2,18 @@ package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.Cola;
 import es.caib.regweb3.model.Entidad;
+import es.caib.regweb3.model.Oficina;
+import es.caib.regweb3.model.RegistroSir;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.utils.RegwebConstantes;
+import es.gob.ad.registros.sir.interService.bean.AsientoBean;
+import es.gob.ad.registros.sir.interService.exception.InterException;
+import es.gob.ad.registros.sir.interService.service.IConsultaService;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.jboss.ejb3.annotation.TransactionTimeout;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.security.RunAs;
 import javax.ejb.EJB;
@@ -31,20 +37,36 @@ public class SchedulerBean implements SchedulerLocal {
 
     @EJB private SirEnvioLocal sirEnvioEjb;
     @EJB private EntidadLocal entidadEjb;
-    @EJB private ContadorLocal contadorEjb;
-    @EJB private IntegracionLocal integracionEjb;
-    @EJB private ArxiuLocal arxiuEjb;
-    @EJB private AnexoSirLocal anexoSirEjb;
-    @EJB private AnexoLocal anexoEjb;
-    @EJB private NotificacionLocal notificacionEjb;
-    @EJB private DistribucionLocal distribucionEjb;
-    @EJB private SesionLocal sesionEjb;
-    @EJB private ColaLocal colaEjb;
-    @EJB private CustodiaLocal custodiaEjb;
+    @EJB
+    private ContadorLocal contadorEjb;
+    @EJB
+    private IntegracionLocal integracionEjb;
+    @EJB
+    private ArxiuLocal arxiuEjb;
+    @EJB
+    private AnexoSirLocal anexoSirEjb;
+    @EJB
+    private AnexoLocal anexoEjb;
+    @EJB
+    private NotificacionLocal notificacionEjb;
+    @EJB
+    private DistribucionLocal distribucionEjb;
+    @EJB
+    private SesionLocal sesionEjb;
+    @EJB
+    private ColaLocal colaEjb;
+    @EJB
+    private CustodiaLocal custodiaEjb;
+    @EJB
+    private LibSirLocal libSirEjb;
+    @EJB
+    private RegistroSirLocal registroSirEjb;
+    @EJB
+    private OficinaLocal oficinaEjb;
 
 
     @Override
-    public void purgarIntegraciones() throws I18NException{
+    public void purgarIntegraciones() throws I18NException {
 
         List<Entidad> entidades = entidadEjb.getAll();
         StringBuilder peticion = new StringBuilder();
@@ -481,6 +503,38 @@ public class SchedulerBean implements SchedulerLocal {
 
         } catch (Exception e) {
             log.error("Error purgando elementos procesados cola ...", e);
+            integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_SCHEDULERS, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - tiempo, entidadActiva.getId(), "");
+        }
+    }
+
+
+    @Override
+    public void consultarAsientosRecibidosPorSIR() throws I18NException {
+
+
+        StringBuilder peticion = new StringBuilder();
+        long tiempo = System.currentTimeMillis();
+        String descripcion = "Consultar Asientos Recibidos SIR";
+        Entidad entidadActiva = null;
+        try {
+            //Integración
+            Date inicio = new Date();
+            peticion = new StringBuilder();
+
+            List<AsientoBean> asientosPendientes = libSirEjb.consultaAsientosPendientes(10);
+            //Vamos creando los registros SIR
+            for (AsientoBean asiento : asientosPendientes) {
+                Oficina oficina = oficinaEjb.findByMultiEntidad(asiento.getCdEnRgDestino());
+                registroSirEjb.crearRegistroSir(asiento, oficina.getOrganismoResponsable().getEntidad());
+            }
+
+            peticion.append("asientosPendientes: ").append(asientosPendientes.size()).append(System.getProperty("line.separator"));
+
+            integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_SCHEDULERS, descripcion, peticion.toString(), System.currentTimeMillis() - tiempo, null, "");
+
+
+        } catch (Exception e) {
+            log.error("Error obteniendo asientos SIR pendientes ...", e);
             integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_SCHEDULERS, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - tiempo, entidadActiva.getId(), "");
         }
     }
