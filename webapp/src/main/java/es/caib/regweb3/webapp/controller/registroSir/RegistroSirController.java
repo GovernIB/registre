@@ -31,8 +31,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import es.gob.ad.registros.sir.interModel.model.Anexo;
-
 /**
  * Created by Fundació BIT.
  *
@@ -256,7 +254,7 @@ public class RegistroSirController extends BaseController {
     public String confirmarRegistroSir(@PathVariable Long idRegistroSir, @ModelAttribute RegistrarForm registrarForm , HttpServletRequest request)
             throws Exception, I18NException, I18NValidationException {
 
-        RegistroSir registroSir = registroSirEjb.findByIdConMetadatos(idRegistroSir);
+        RegistroSir registroSir = registroSirEjb.getRegistroSirConMetadatos(idRegistroSir);
 
         Entidad entidad = getEntidadActiva(request);
         Oficina oficinaActiva = getOficinaActiva(request);

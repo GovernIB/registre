@@ -1,9 +1,7 @@
 package es.caib.regweb3.persistence.ejb;
 
-import es.gob.ad.registros.sir.interModel.model.Anexo;
 import es.gob.ad.registros.sir.interService.bean.AsientoBean;
 import es.gob.ad.registros.sir.interService.exception.InterException;
-import org.fundaciobit.genapp.common.i18n.I18NException;
 
 import javax.ejb.Local;
 import java.util.List;
@@ -54,4 +52,6 @@ public interface LibSirLocal {
 
     // pruebas
     byte[] obtenerAnexoReferenciaContenido(Long cdAnexo) throws InterException;*/
+
+    void enviarAsiento(AsientoBean asientoBean) throws InterException;
 }

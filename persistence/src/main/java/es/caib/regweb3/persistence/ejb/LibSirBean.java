@@ -1,13 +1,12 @@
 package es.caib.regweb3.persistence.ejb;
 
 
-import es.gob.ad.registros.sir.interModel.model.Anexo;
-import es.gob.ad.registros.sir.interService.bean.AnexoBean;
 import es.gob.ad.registros.sir.interService.bean.AsientoBean;
 import es.gob.ad.registros.sir.interService.exception.InterException;
 import es.gob.ad.registros.sir.interService.service.IAnexoService;
 import es.gob.ad.registros.sir.interService.service.IConsultaService;
 import es.gob.ad.registros.sir.interService.service.IEntradaService;
+import es.gob.ad.registros.sir.interService.service.ISalidaService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,10 +32,9 @@ public class LibSirBean implements LibSirLocal{
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
-    @Autowired
-    IEntradaService entradaService;
-    @Autowired
-    IConsultaService consultaService;
+    @Autowired IEntradaService entradaService;
+    @Autowired IConsultaService consultaService;
+    @Autowired ISalidaService salidaService;
 
     @Autowired
     IAnexoService anexoService;
@@ -88,5 +86,13 @@ public class LibSirBean implements LibSirLocal{
 
         return anexoService.getContenido(cdAnexo);
     }*/
+
+    @Override
+    public void enviarAsiento(AsientoBean asientoBean) throws InterException{
+
+        salidaService.enviar(asientoBean);
+        log.info("Enviado AsientoBean" + asientoBean.getNuRgOrigen());
+
+    }
 
 }
