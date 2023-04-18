@@ -164,7 +164,7 @@ public class AnexoSirBean extends BaseEjbJPA<AnexoSir, Long> implements AnexoSir
 
     @Override
     public AnexoSir findByIdFichero(String idFichero) throws I18NException {
-        Query q = em.createQuery("Select anexoSir from AnexoSir as anexoSir where anexoSir.identificadorFichero:=idFichero");
+        Query q = em.createQuery("Select anexoSir from AnexoSir as anexoSir where anexoSir.identificadorFichero=:idFichero");
         q.setParameter("idFichero", idFichero);
 
 

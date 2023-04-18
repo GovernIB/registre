@@ -82,7 +82,7 @@
                                         <td class="center ajustTamanySir">
                                             <a class="btn btn-success btn-sm"
                                                 <%--href="<c:url value="/archivo/${anexo.documento.anexo.id}"/>"--%>
-                                               href="<c:url value="/descargarDocumentoRFU/${anexo.documento.identificadorFichero}/${registroSir.identificadorIntercambio}"/>"
+                                               href="<c:url value="/registroSir/descargarDocumentoRFU/${anexo.documento.identificadorFichero}/${registroSir.identificadorIntercambio}"/>"
                                                target="_blank" title="<spring:message code="anexo.descargar"/>"><span
                                                     class="fa fa-download"></span></a>
                                         </td>
