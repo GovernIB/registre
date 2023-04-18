@@ -10,7 +10,6 @@ import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 
 import javax.ejb.Local;
-import java.io.IOException;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
@@ -253,5 +252,5 @@ public interface RegistroSirLocal extends BaseEjb<RegistroSir, Long> {
 
     RegistroSir transformarAsientoBean(AsientoBean asientoBean, Entidad entidad) throws I18NException, InterException;
 
-    RegistroSir findByIdConMetadatos(Long id) throws I18NException;
+    RegistroSir getRegistroSirConMetadatos(Long idRegistroSir) throws Exception;
 }

@@ -18,12 +18,11 @@ import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.RegwebUtils;
 import es.gob.ad.registros.sir.gestionEni.bean.FirmaBean;
 import es.gob.ad.registros.sir.interService.bean.AnexoBean;
-import es.gob.ad.registros.sir.interService.bean.InteresadoBean;
 import es.gob.ad.registros.sir.interService.bean.AsientoBean;
+import es.gob.ad.registros.sir.interService.bean.InteresadoBean;
 import es.gob.ad.registros.sir.interService.exception.InterException;
 import es.gob.ad.registros.sir.interService.service.IConsultaService;
 import es.gob.administracionelectronica.eni.xsd.v1_0.documento_e.metadatos.TipoMetadatos;
-import net.java.xades.security.xml.XMLSignatureElement;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
@@ -31,16 +30,10 @@ import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.fundaciobit.plugins.documentcustody.api.DocumentCustody;
 import org.fundaciobit.plugins.documentcustody.api.SignatureCustody;
-import org.fundaciobit.pluginsib.utils.cxf.CXFUtils;
 import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
@@ -50,13 +43,6 @@ import javax.ejb.TransactionAttributeType;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import javax.xml.crypto.MarshalException;
-import javax.xml.crypto.dsig.Reference;
-import javax.xml.crypto.dsig.XMLSignature;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -86,33 +72,20 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
     @EJB private InteresadoSirLocal interesadoSirEjb;
     @EJB private AnexoSirLocal anexoSirEjb;
     @EJB private RegistroEntradaLocal registroEntradaEjb;
-    @EJB
-    private ArchivoLocal archivoEjb;
-    @EJB
-    private LibroLocal libroEjb;
-    @EJB
-    private CatProvinciaLocal catProvinciaEjb;
-    @EJB
-    private CatLocalidadLocal catLocalidadEjb;
-    @EJB
-    private OrganismoLocal organismoEjb;
-    @EJB
-    private CatPaisLocal catPaisEjb;
-    @EJB
-    private TipoDocumentalLocal tipoDocumentalEjb;
-    @EJB
-    private TrazabilidadSirLocal trazabilidadSirEjb;
-    @EJB
-    private TrazabilidadLocal trazabilidadEjb;
-    @EJB
-    private SignatureServerLocal signatureServerEjb;
-    @EJB
-    private MetadatoRegistroSirLocal metadatoRegistroSirEjb;
+    @EJB private ArchivoLocal archivoEjb;
+    @EJB private LibroLocal libroEjb;
+    @EJB private CatProvinciaLocal catProvinciaEjb;
+    @EJB private CatLocalidadLocal catLocalidadEjb;
+    @EJB private OrganismoLocal organismoEjb;
+    @EJB private CatPaisLocal catPaisEjb;
+    @EJB private TipoDocumentalLocal tipoDocumentalEjb;
+    @EJB private TrazabilidadSirLocal trazabilidadSirEjb;
+    @EJB private TrazabilidadLocal trazabilidadEjb;
+    @EJB private SignatureServerLocal signatureServerEjb;
+    @EJB private MetadatoRegistroSirLocal metadatoRegistroSirEjb;
 
-    @Autowired
-    IConsultaService consultaService;
-    @Autowired
-    RegwebUtils regwebUtils;
+    @Autowired IConsultaService consultaService;
+    @Autowired RegwebUtils regwebUtils;
 
 
     @Override
@@ -148,17 +121,6 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         RegistroSir registroSir = em.find(RegistroSir.class, id);
         Hibernate.initialize(registroSir.getAnexos());
         Hibernate.initialize(registroSir.getInteresados());
-
-        return registroSir;
-    }
-
-    @Override
-    public RegistroSir findByIdConMetadatos(Long id) throws I18NException {
-
-        RegistroSir registroSir = em.find(RegistroSir.class, id);
-        Hibernate.initialize(registroSir.getAnexos());
-        Hibernate.initialize(registroSir.getInteresados());
-        Hibernate.initialize(registroSir.getMetadatosRegistroSir());
 
         return registroSir;
     }
@@ -235,6 +197,17 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         }
 
         registroSir.setAnexos(anexosFull);
+
+        return registroSir;
+
+    }
+
+    @Override
+    public RegistroSir getRegistroSirConMetadatos(Long idRegistroSir) throws Exception {
+
+        RegistroSir registroSir = findById(idRegistroSir);
+
+        Hibernate.initialize(registroSir.getMetadatosRegistroSir());
 
         return registroSir;
 
