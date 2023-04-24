@@ -7,15 +7,24 @@ import es.caib.interdoc.ws.api.Metadada;
 import es.caib.interdoc.ws.api.ObtenerReferenciaRequestInfo;
 import es.caib.interdoc.ws.api.ObtenerReferenciaWs;
 import es.caib.regweb3.model.*;
-
+import es.caib.regweb3.model.sir.CanalNotificacion;
+import es.caib.regweb3.model.sir.TipoDocumento;
 import es.caib.regweb3.model.sir.TipoDocumentoIdentificacion;
-import es.caib.regweb3.model.utils.AnexoFull;
+import es.caib.regweb3.model.sir.TipoTransporte;
+import es.caib.regweb3.model.utils.*;
+import es.caib.regweb3.persistence.ejb.TipoDocumentalLocal;
 import es.caib.regweb3.utils.Dir3CaibUtils;
 import es.caib.regweb3.utils.ReferenciaUnicaUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.gob.ad.registros.sir.gestionEni.bean.ContenidoBean;
-import es.gob.ad.registros.sir.interService.bean.*;
+import es.gob.ad.registros.sir.gestionEni.bean.FirmaBean;
+import es.gob.ad.registros.sir.interService.bean.AnexoBean;
+import es.gob.ad.registros.sir.interService.bean.AsientoBean;
+import es.gob.ad.registros.sir.interService.bean.InteresadoBean;
+import es.gob.ad.registros.sir.interService.bean.OtrosMetadatos;
+import es.gob.ad.registros.sir.interService.exception.InterException;
 import es.gob.ad.registros.sir.interService.interSincroDIR3.service.IServiciosOfiService;
+import es.gob.ad.registros.sir.interService.service.IConsultaService;
 import es.gob.administracionelectronica.eni.xsd.v1_0.documento_e.metadatos.TipoDocumental;
 import es.gob.administracionelectronica.eni.xsd.v1_0.documento_e.metadatos.TipoMetadatos;
 import org.apache.commons.lang.StringUtils;
@@ -28,13 +37,17 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.ejb.EJB;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import java.nio.charset.StandardCharsets;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static es.caib.regweb3.utils.RegwebConstantes.*;
@@ -51,6 +64,13 @@ public class LibSirUtils {
 
     @Autowired
     IServiciosOfiService serviciosOfiService;
+
+    @Autowired
+    IConsultaService consultaService;
+
+    @EJB(mappedName = TipoDocumentalLocal.JNDI_NAME)
+    public TipoDocumentalLocal tipoDocumentalEjb;
+
 
     /**
      * Transforma un registro de Entrada a un AsientoBean para enviarlo mediante la libreria SIR.
@@ -651,5 +671,330 @@ public class LibSirUtils {
         }
 
 
+    }
+
+
+    public static RegistroSir transformarAsientoBean(AsientoBean asientoBean, Entidad entidad) throws I18NException, InterException {
+        final SimpleDateFormat SDF = new SimpleDateFormat(FORMATO_FECHA_SICRES4);
+
+        RegistroSir registroSir = null;
+
+        if (asientoBean != null) {
+            registroSir = new RegistroSir();
+            registroSir.setFechaRecepcion(new Date());
+
+            //Entidad Registral Origen
+            registroSir.setCodigoEntidadRegistralOrigen(asientoBean.getCdEnRgOrigen());
+            if (StringUtils.isNotEmpty(asientoBean.getDsEnRgOrigen())) {
+                registroSir.setDecodificacionEntidadRegistralOrigen(asientoBean.getDsEnRgOrigen());
+            } else {
+                registroSir.setDecodificacionEntidadRegistralOrigen(Dir3CaibUtils.denominacion(PropiedadGlobalUtil.getDir3CaibServer(entidad.getId()), asientoBean.getCdEnRgOrigen(), RegwebConstantes.OFICINA));
+            }
+
+            registroSir.setNumeroRegistro(asientoBean.getNuRgOrigen());
+            registroSir.setFechaRegistro(asientoBean.getFeRgOrigen());
+            registroSir.setTimestampRegistro(asientoBean.getTsRgOrigen());
+
+            //Unidad Tramitación Origen
+            registroSir.setCodigoUnidadTramitacionOrigen(asientoBean.getCdUnTrOrigen());
+            if (StringUtils.isNotEmpty(asientoBean.getDsUnTrOrigen())) {
+                registroSir.setDecodificacionUnidadTramitacionOrigen(asientoBean.getDsUnTrOrigen());
+            } else {
+                registroSir.setDecodificacionUnidadTramitacionOrigen(Dir3CaibUtils.denominacion(PropiedadGlobalUtil.getDir3CaibServer(entidad.getId()), asientoBean.getCdUnTrOrigen(), RegwebConstantes.UNIDAD));
+            }
+
+            //Entidad Registral
+            registroSir.setCodigoEntidadRegistral(asientoBean.getCdEnRgDestino());
+
+            //Entidad Registral Destino
+            registroSir.setCodigoEntidadRegistralDestino(asientoBean.getCdEnRgDestino());
+            if (StringUtils.isNotEmpty(asientoBean.getDsEnRgDestino())) {
+                registroSir.setDecodificacionEntidadRegistralDestino(asientoBean.getDsEnRgDestino());
+            } else {
+                registroSir.setDecodificacionEntidadRegistralDestino(Dir3CaibUtils.denominacion(PropiedadGlobalUtil.getDir3CaibServer(entidad.getId()), asientoBean.getCdEnRgDestino(), RegwebConstantes.OFICINA));
+            }
+            //Unidad Tramitación Destino
+            registroSir.setCodigoUnidadTramitacionDestino(asientoBean.getCdUnTrDestino());
+            if (StringUtils.isNotEmpty(asientoBean.getDsUnTrDestino())) {
+                registroSir.setDecodificacionUnidadTramitacionDestino(asientoBean.getDsUnTrDestino());
+            } else {
+                registroSir.setDecodificacionUnidadTramitacionDestino(Dir3CaibUtils.denominacion(PropiedadGlobalUtil.getDir3CaibServer(entidad.getId()), asientoBean.getCdUnTrDestino(), RegwebConstantes.UNIDAD));
+            }
+
+            registroSir.setResumen(asientoBean.getDsResumen());
+            registroSir.setCodigoAsunto(asientoBean.getCdAsunto());
+            registroSir.setReferenciaExterna(asientoBean.getRfExterna());
+            registroSir.setNumeroExpediente(asientoBean.getNuExpediente());
+            registroSir.setTipoTransporte(TipoTransporte.getTipoTransporteValue(asientoBean.getCdTpTransporte()));
+            registroSir.setNombreUsuario(asientoBean.getNoUsuario());
+            registroSir.setContactoUsuario(asientoBean.getCtUsuario());
+            registroSir.setIdentificadorIntercambio(asientoBean.getCdIntercambio());
+            registroSir.setAplicacion(asientoBean.getApVersion());
+            registroSir.setTipoAnotacion(asientoBean.getCdTpAnotacion());
+            registroSir.setDecodificacionTipoAnotacion(asientoBean.getDsTpAnotacion());
+            registroSir.setTipoRegistro(TipoRegistro.getTipoRegistro(asientoBean.getCdTpRegistro()));
+
+            //Documentación Física
+            if (StringUtils.isNotEmpty(asientoBean.getCdDocFisica())) {
+                registroSir.setDocumentacionFisica(DocumentacionFisica.getDocumentacionFisicaValue(asientoBean.getCdDocFisica()));
+            }
+            registroSir.setObservacionesApunte(asientoBean.getDsObservaciones());
+
+            //Indicador de Prueba
+            if (StringUtils.isNotEmpty(asientoBean.getCdInPrueba())) {
+                registroSir.setIndicadorPrueba(IndicadorPrueba.getIndicadorPrueba(asientoBean.getCdInPrueba()));
+            }
+
+            //Entidad Registral Inicio
+            registroSir.setCodigoEntidadRegistralInicio(asientoBean.getCdEnRgInicio());
+            if (StringUtils.isNotEmpty(asientoBean.getDsEnRgInicio())) {
+                registroSir.setDecodificacionEntidadRegistralOrigen(asientoBean.getDsEnRgInicio());
+            } else {
+                registroSir.setDecodificacionEntidadRegistralOrigen(Dir3CaibUtils.denominacion(PropiedadGlobalUtil.getDir3CaibServer(entidad.getId()), asientoBean.getCdEnRgInicio(), RegwebConstantes.OFICINA));
+            }
+            registroSir.setExpone(asientoBean.getDsExpone());
+            registroSir.setSolicita(asientoBean.getDsSolicita());
+            registroSir.setEstado(EstadoRegistroSir.getEstadoRegistroSir(asientoBean.getCdEstado())); // TODO DEFINIR NUEVOS ESTADOS LIBSIR
+            //TODO CAMPOS NUEVOS SICRES4
+            registroSir.setModoRegistro(asientoBean.getModoRegistro().substring(1));
+            registroSir.setFechaRegistroPresentacion(asientoBean.getFeRgPresentacion());
+            registroSir.setCodigoSia(asientoBean.getCdSia());
+            registroSir.setReferenciaUnica(asientoBean.isReferenciaUnica()); //SI
+            //  asientoBean.getCdIntercambioPrevio();// Este campo irá en RE /RS /RDETALLE (Revisado Edu)
+            registroSir.setCodigoUnidadtramitacionInicio(asientoBean.getCdUnTrInicio()); //Campos nuevos de internos y control SI SE AÑADE
+            registroSir.setDecodificacionUnidadTramitacionInicio(asientoBean.getDsUnTrInicio());
+
+            //METADATOS GENERALES Y PARTICULARES
+            Set<MetadatoRegistroSir> metadatos = asientoBean.getOtrosMetadatosGenerales().stream()
+                    .map(metadato -> new MetadatoRegistroSir(METADATO_GENERAL, metadato.getCampo(), metadato.getValor()) {
+                    }).collect(Collectors.toSet());
+
+            metadatos.addAll(asientoBean.getOtrosMetadatosParticulares().stream()
+                    .map(metadato -> new MetadatoRegistroSir(METADATO_PARTICULAR, metadato.getCampo(), metadato.getValor()) {
+                    }).collect(Collectors.toSet()));
+
+            registroSir.setMetadatosRegistroSir(metadatos);
+
+
+            //INTERESADOS
+            Set<es.gob.ad.registros.sir.interService.bean.InteresadoBean> interesadosBean = asientoBean.getInteresadosBean();
+            if (!interesadosBean.isEmpty()) {
+                for (es.gob.ad.registros.sir.interService.bean.InteresadoBean interesadoBean : interesadosBean) {
+                    if (interesadoBean != null) {
+
+                        // Si se trata de una Salida y no tiene Interesados
+                        if (asientoBean.getCdTpRegistro().equals(TipoRegistro.SALIDA.getValue()) && StringUtils.isBlank(interesadoBean.getRazonSocialInteresado())
+                                && (StringUtils.isBlank(interesadoBean.getNombreInteresado()) && StringUtils.isBlank(interesadoBean.getPrimerApellidoInteresado()))) {
+
+                            // Creamos uno a partir de la Entidad destino
+                            registroSir.getInteresados().add(crearInteresadoJuridicoAsientoBean(asientoBean.getCdUnTrDestino(), asientoBean.getDsUnTrDestino(), asientoBean.getCdEnRgDestino(), entidad.getId()));
+
+                        } else {
+                            InteresadoSir interesadoSir = transformarInteresadoBean(interesadoBean);
+                            registroSir.getInteresados().add(interesadoSir);
+                        }
+
+                    }
+                }
+            }
+
+            //ANEXOS
+            Set<es.gob.ad.registros.sir.interService.bean.AnexoBean> anexosBean = asientoBean.getAnexosBean();
+            if (!anexosBean.isEmpty()) {
+                for (es.gob.ad.registros.sir.interService.bean.AnexoBean anexoBean : anexosBean) {
+                    if (anexoBean != null) {
+                        AnexoSir anexo = transformarAnexoBean(anexoBean, asientoBean.getCdIntercambio());
+                        registroSir.getAnexos().add(anexo);
+                    }
+                }
+            }
+
+        }
+
+        return registroSir;
+    }
+
+    /**
+     * Crea un Interesado tipo Persona Juridica a partir del Código Unidad De Gestión de destino o si no está informado,
+     * a partir del Código Entidad Registral de destino
+     *
+     * @return
+     */
+    private static InteresadoSir crearInteresadoJuridicoAsientoBean(String cdUnTrDestino, String dsUnTrDestino, String cdEnRgDestino, Long idEntidad) {
+
+        InteresadoSir interesadoSalida = new InteresadoSir();
+
+        if (StringUtils.isNotBlank(cdUnTrDestino)) {
+
+            interesadoSalida.setTipoDocumentoIdentificacionInteresado(TipoDocumentoIdentificacion.CODIGO_ORIGEN_VALUE.getValue());
+            interesadoSalida.setDocumentoIdentificacionInteresado(cdUnTrDestino);
+
+            if (StringUtils.isNotBlank(dsUnTrDestino)) {
+                interesadoSalida.setRazonSocialInteresado(dsUnTrDestino);
+            } else {
+                interesadoSalida.setRazonSocialInteresado(Dir3CaibUtils.denominacion(PropiedadGlobalUtil.getDir3CaibServer(idEntidad), cdUnTrDestino, RegwebConstantes.UNIDAD));
+
+            }
+
+
+        } else {
+            try {
+                Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService(PropiedadGlobalUtil.getDir3CaibServer(idEntidad), PropiedadGlobalUtil.getDir3CaibUsername(idEntidad), PropiedadGlobalUtil.getDir3CaibPassword(idEntidad));
+
+                OficinaTF oficinaTF = oficinasService.obtenerOficina(cdEnRgDestino, null, null);
+
+                interesadoSalida.setTipoDocumentoIdentificacionInteresado(TipoDocumentoIdentificacion.CODIGO_ORIGEN_VALUE.getValue());
+                interesadoSalida.setDocumentoIdentificacionInteresado(oficinaTF.getCodUoResponsable());
+                interesadoSalida.setRazonSocialInteresado(Dir3CaibUtils.denominacion(PropiedadGlobalUtil.getDir3CaibServer(idEntidad), oficinaTF.getCodUoResponsable(), RegwebConstantes.UNIDAD));
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        return interesadoSalida;
+    }
+
+    private static InteresadoSir transformarInteresadoBean(InteresadoBean interesadoBean) throws I18NException {
+        InteresadoSir interesado = new InteresadoSir();
+
+        // Información del interesado
+        interesado.setDocumentoIdentificacionInteresado(interesadoBean.getDocumentoIdentificacionInteresado());
+        interesado.setRazonSocialInteresado(interesadoBean.getRazonSocialInteresado());
+        interesado.setNombreInteresado(interesadoBean.getNombreInteresado());
+        interesado.setPrimerApellidoInteresado(interesadoBean.getPrimerApellidoInteresado());
+        interesado.setSegundoApellidoInteresado(interesadoBean.getSegundoApellidoInteresado());
+        interesado.setCodigoPaisInteresado(interesadoBean.getPaisInteresado());
+        interesado.setCodigoProvinciaInteresado(interesadoBean.getProvinciaInteresado());
+        interesado.setCodigoMunicipioInteresado(interesadoBean.getMunicipioInteresado());
+        interesado.setDireccionInteresado(interesadoBean.getDireccionInteresado());
+        interesado.setCodigoPostalInteresado(interesadoBean.getCodPostalInteresado());
+        interesado.setCorreoElectronicoInteresado(interesadoBean.getCorreoElectronicoInteresado());
+        interesado.setTelefonoInteresado(interesadoBean.getTelefonoFijoInteresado());
+        interesado.setTelefonoMovilInteresado(interesadoBean.getTelefonoMovilInteresado());
+
+        String tipoDocumento = interesadoBean.getTipoDocumentoIdentificacionInteresado();
+        if (StringUtils.isNotBlank(tipoDocumento)) {
+            interesado.setTipoDocumentoIdentificacionInteresado(TipoDocumentoIdentificacion.getTipoDocumentoIdentificacionValue(tipoDocumento));
+        }
+
+        String canalPreferente = interesadoBean.getCanalPreferenteComunicacionInteresado();
+        if (StringUtils.isNotBlank(canalPreferente)) {
+            interesado.setCanalPreferenteComunicacionInteresado(CanalNotificacion.getCanalNotificacionValue(canalPreferente));
+        }
+
+        //CAMPOS NUEVOS SICRES4 TODO AVISOS SMS Y CORREOELECTRONICO
+        interesado.setAvisoCorreoElectronicoInteresado(interesadoBean.isSolicitaNotificacionEmailInteresado());
+        interesado.setAvisoNotificacionSMSInteresado(interesadoBean.isSolicitaNotificacionSMSInteresado());
+        interesado.setReceptorNotificacionesInteresado(interesadoBean.isReceptorNotificacionInteresado());
+        interesado.setCodigoDirectorioUnificadosInteresado(interesadoBean.getCodigoDirectoriosUnificadosInteresado());
+
+        // Información del representante
+        interesado.setDocumentoIdentificacionRepresentante(interesadoBean.getDocumentoIdentificacionRepresentante());
+        interesado.setRazonSocialRepresentante(interesadoBean.getRazonSocialRepresentante());
+        interesado.setNombreRepresentante(interesadoBean.getNombreRepresentante());
+        interesado.setPrimerApellidoRepresentante(interesadoBean.getPrimerApellidoRepresentante());
+        interesado.setSegundoApellidoRepresentante(interesadoBean.getSegundoApellidoRepresentante());
+        interesado.setCodigoPaisRepresentante(interesadoBean.getPaisRepresentante());
+        interesado.setCodigoProvinciaRepresentante(interesadoBean.getProvinciaRepresentante());
+        interesado.setCodigoMunicipioRepresentante(interesadoBean.getMunicipioRepresentante());
+        interesado.setDireccionRepresentante(interesadoBean.getDireccionRepresentante());
+        interesado.setCodigoPostalRepresentante(interesadoBean.getCodPostalRepresentante());
+        interesado.setCorreoElectronicoRepresentante(interesadoBean.getCorreoElectronicoRepresentante());
+        interesado.setTelefonoRepresentante(interesadoBean.getTelefonoFijoRepresentante());
+        interesado.setTelefonoMovilRepresentante(interesadoBean.getTelefonoMovilInteresado());
+
+        tipoDocumento = interesadoBean.getTipoDocumentoIdentificacionRepresentante();
+        if (StringUtils.isNotBlank(tipoDocumento)) {
+            interesado.setTipoDocumentoIdentificacionRepresentante(TipoDocumentoIdentificacion.getTipoDocumentoIdentificacionValue(tipoDocumento));
+        }
+
+        canalPreferente = interesadoBean.getCanalPreferenteComunicacionRepresentante();
+        if (StringUtils.isNotBlank(canalPreferente)) {
+            interesado.setCanalPreferenteComunicacionRepresentante(CanalNotificacion.getCanalNotificacionValue(canalPreferente));
+        }
+
+        //CAMPOS NUEVOS SICRES4 TODO AVISOS SMS Y CORREOELECTRONICO
+        interesado.setAvisoCorreoElectronicoRepresentante(interesadoBean.isSolicitaNotificacionEmailRepresentante());
+        interesado.setAvisoCorreoElectronicoRepresentante(interesadoBean.isSolicitaNotificacionSMSRepresentante());
+        interesado.setReceptorNotificacionesRepresentante(interesadoBean.isReceptorNotificacionRepresentante());
+        interesado.setCodigoDirectorioUnificadosRepresentante(interesadoBean.getCodigoDirectoriosUnificadosRepresentante());
+
+        interesado.setObservaciones(interesadoBean.getObservaciones());
+
+        return interesado;
+    }
+
+
+    private static AnexoSir transformarAnexoBean(AnexoBean anexoBean, String idIntercambio) throws I18NException, InterException {
+        AnexoSir anexo = new AnexoSir();
+
+        anexo.setNombreFichero(es.caib.regweb3.utils.StringUtils.eliminarCaracteresProhibidosArxiu(anexoBean.getNombreFichero()));
+        anexo.setIdentificadorFichero(anexoBean.getIdentificadorFichero());
+        anexo.setIdentificadorDocumentoFirmado(anexoBean.getIdentificadorDocumentoFirmado());
+        anexo.setTipoMIME(anexoBean.getContenidoBean().getNombreFormato());
+        anexo.setObservaciones(anexoBean.getObservaciones());
+
+        String tipoAnexo = anexoBean.getTipoAnexo();
+        if (StringUtils.isNotBlank(tipoAnexo)) {
+            anexo.setTipoDocumento(TipoDocumento.getTipoDocumentoValue(tipoAnexo));
+        }
+
+        //CAMPOS NUEVOS SICRES4
+        anexo.setResumen(anexoBean.getResumen());
+        anexo.setCodigoFormulario(anexoBean.getCodigoFormulario());
+        anexo.setUrlRepositorio(anexoBean.getUrlRepositorio());
+
+        //FirmaBean
+        FirmaBean firmaBean = anexoBean.getFirmaBean();
+        if (firmaBean != null) {
+
+            anexo.setTipoFirma(firmaBean.getTipoFirma() != null ? firmaBean.getTipoFirma().value() : "");
+            if (firmaBean.getContenidoFirma() != null && firmaBean.getContenidoFirma().getCsv() != null) {
+                anexo.setCsv(firmaBean.getContenidoFirma().getCsv() != null ? firmaBean.getContenidoFirma().getCsv().getValorCSV() : "");
+                anexo.setRegulacionCsv(firmaBean.getContenidoFirma().getCsv() != null ? firmaBean.getContenidoFirma().getCsv().getRegulacionGeneracionCSV() : "");
+            }
+            if (firmaBean.getContenidoFirma() != null && firmaBean.getContenidoFirma().getFirmaConCertificadoBean() != null) {
+                anexo.setFirmaBase64(firmaBean.getContenidoFirma().getFirmaConCertificadoBean() != null ? firmaBean.getContenidoFirma().getFirmaConCertificadoBean().getFirmaBase64() : null);
+                //Incidencia 1900484
+                anexo.setReferenciaFirma(firmaBean.getContenidoFirma().getFirmaConCertificadoBean()!=null?firmaBean.getContenidoFirma().getFirmaConCertificadoBean().getReferenciaFirma():"");
+            }
+        }
+
+        //METADATOS SICRES4
+        Set<MetadatoAnexoSir> metadatosAnexos = anexoBean.getOtrosMetadatosGenerales().stream()
+                .map(metadato -> new MetadatoAnexoSir(METADATO_GENERAL, metadato.getCampo(), metadato.getValor()) {
+                }).collect(Collectors.toSet());
+
+        metadatosAnexos.addAll(anexoBean.getOtrosMetadatosParticulares().stream()
+                .map(metadato -> new MetadatoAnexoSir(METADATO_PARTICULAR, metadato.getCampo(), metadato.getValor()) {
+                }).collect(Collectors.toSet()));
+
+
+        // LIBSIR estos son los metadatos ENI (documentoElectrónico)
+        TipoMetadatos tiposMetadato = anexoBean.getTipoMetadatos();
+
+        MetadatoAnexoSir metadatoAnexoSir;
+
+        DateFormat formatter = new SimpleDateFormat(FORMATO_FECHA_SICRES4);
+
+        if (tiposMetadato != null) {
+            //fechaCaptura
+            metadatoAnexoSir = new MetadatoAnexoSir(METADATO_NTI, "fechaCaptura", formatter.format(tiposMetadato.getFechaCaptura().toGregorianCalendar().getTime()));
+            metadatosAnexos.add(metadatoAnexoSir);
+
+            //origenCiudadanoAdministracion
+            metadatoAnexoSir = new MetadatoAnexoSir(METADATO_NTI, "origenCiudadanoAdministracion", tiposMetadato.isOrigenCiudadanoAdministracion() ? "1" : "0");
+            metadatosAnexos.add(metadatoAnexoSir);
+
+            //tipoDocumental
+            metadatoAnexoSir = new MetadatoAnexoSir(METADATO_NTI, "tipoDocumental", tiposMetadato.getTipoDocumental().value());
+            metadatosAnexos.add(metadatoAnexoSir);
+
+            anexo.setMetadatosAnexos(metadatosAnexos);
+
+        }
+
+        return anexo;
     }
 }

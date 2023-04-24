@@ -250,7 +250,5 @@ public interface RegistroSirLocal extends BaseEjb<RegistroSir, Long> {
 
     RegistroSir crearRegistroSir(AsientoBean asientoBean, Entidad entidad) throws Exception;
 
-    RegistroSir transformarAsientoBean(AsientoBean asientoBean, Entidad entidad) throws I18NException, InterException;
-
     RegistroSir getRegistroSirConMetadatos(Long idRegistroSir) throws Exception;
 }
