@@ -610,7 +610,7 @@ function quitarErroresInteresado(){
     quitarError('documento');
     quitarError('direccion');
     quitarError('tipoDocumentoIdentificacion');
-    quitarError('canalNotificacion');
+    quitarError('canal');
     quitarError('cp');
     quitarError('provincia\\.id');
     quitarError('localidad\\.id');
@@ -992,7 +992,6 @@ function camposTipoPersona(tipoInteresado){
     }
 
     if(tipoInteresado == 3){ //Persona juridica
-
         $('#razonSocial').removeAttr("disabled", "disabled");
         $('#codDirectoriosUnificados').removeAttr("disabled", "disabled");
         $('#nombre').attr("disabled", "disabled");
@@ -1002,7 +1001,8 @@ function camposTipoPersona(tipoInteresado){
         $('#rao').html("<span class=\"text-danger\">*</span> " + tradsinteresado['persona.razonSocial']);
         $('#nom').html(tradsinteresado['regweb3.nombre']);
         $('#llinatge1').html(tradsinteresado['usuario.apellido1']);
-
+        //SICRES 4 OBLIGATORIO
+        $('#canal option[value="2"]').attr("selected", true).trigger("chosen:updated");
         tiposDocumentoPersonaJuridica();
     }
 

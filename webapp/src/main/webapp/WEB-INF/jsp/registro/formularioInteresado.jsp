@@ -218,7 +218,7 @@
                                         <option value="${canalNotificacion}"><spring:message code="canalNotificacion.${canalNotificacion}"/></option>
                                     </c:forEach>
                                 </select>
-                                <span id="canalNotificacionError"></span>
+                                <span id="canalError"></span>
                             </div>
                         </div>
 

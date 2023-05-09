@@ -1,6 +1,5 @@
 package es.caib.regweb3.persistence.validator;
 
-import es.caib.regweb3.model.CatPais;
 import es.caib.regweb3.model.Interesado;
 import es.caib.regweb3.persistence.ejb.CatPaisLocal;
 import es.caib.regweb3.persistence.ejb.InteresadoLocal;
@@ -77,6 +76,13 @@ public class InteresadoValidator<T> extends AbstractRegWebValidator<T> {
                 if (interesado.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA)) {
                     rejectIfEmptyOrWhitespace(errors, __target__, "razonSocial",
                             "error.valor.requerido");
+                    if (interesado.getCanal() != null) {
+                        if (interesado.getCanal().equals(RegwebConstantes.CANAL_DIRECCION_POSTAL)){
+                            log.info("Entro en canal postal ");
+                            rejectValue(errors, "canal", "error.canal.direccion.electronica");
+                        }
+                    }
+
                 }
 
                 // Validaciones si es ADMINISTRACION
@@ -88,28 +94,28 @@ public class InteresadoValidator<T> extends AbstractRegWebValidator<T> {
         }
 
         // Gestionamos las validaciones según el Canal escogido
-        if (interesado.getCanal() == null) {
-            //rejectIfEmptyOrWhitespace(errors, __target__, "canal", "error.valor.requerido","El camp és obligatori");
-        } else {
-
-            if (interesado.getCanal().equals(RegwebConstantes.CANAL_DIRECCION_POSTAL)) {
-                if (interesado.getPais() == null || interesado.getPais().getId() == null || interesado.getPais().getId() == -1) {
-                    rejectValue(errors, "pais.id", "error.valor.requerido");
-                }
-                if (interesado.getProvincia() == null || interesado.getProvincia().getId() == null || interesado.getProvincia().getId() == -1) {
-                    rejectValue(errors, "provincia.id", "error.valor.requerido");
-                }
-                if (interesado.getLocalidad() == null || interesado.getLocalidad().getId() == null || interesado.getLocalidad().getId() == -1) {
-                    rejectValue(errors, "localidad.id", "error.valor.requerido");
-                }
-                if (StringUtils.isEmpty(interesado.getCp())) {
-                    rejectIfEmptyOrWhitespace(errors, __target__, "cp", "error.valor.requerido");
-                }
-                if (StringUtils.isEmpty(interesado.getDireccion())) {
-                    rejectIfEmptyOrWhitespace(errors, __target__, "direccion", "error.valor.requerido");
+        if (interesado.getCanal() != null) {
+            if (!interesado.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA)) {
+                if (interesado.getCanal().equals(RegwebConstantes.CANAL_DIRECCION_POSTAL)) {
+                    if (interesado.getPais() == null || interesado.getPais().getId() == null || interesado.getPais().getId() == -1) {
+                        rejectValue(errors, "pais.id", "error.valor.requerido");
+                    }
+                    if (interesado.getProvincia() == null || interesado.getProvincia().getId() == null || interesado.getProvincia().getId() == -1) {
+                        rejectValue(errors, "provincia.id", "error.valor.requerido");
+                    }
+                    if (interesado.getLocalidad() == null || interesado.getLocalidad().getId() == null || interesado.getLocalidad().getId() == -1) {
+                        rejectValue(errors, "localidad.id", "error.valor.requerido");
+                    }
+                    if (StringUtils.isEmpty(interesado.getCp())) {
+                        rejectIfEmptyOrWhitespace(errors, __target__, "cp", "error.valor.requerido");
+                    }
+                    if (StringUtils.isEmpty(interesado.getDireccion())) {
+                        rejectIfEmptyOrWhitespace(errors, __target__, "direccion", "error.valor.requerido");
+                    }
                 }
             }
         }
+
 
         // CÓDIGO POSTAL
         if (interesado.getCp() != null && interesado.getCp().length() > 0) {
