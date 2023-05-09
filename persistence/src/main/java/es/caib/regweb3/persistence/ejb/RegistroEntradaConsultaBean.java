@@ -204,7 +204,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
         }
 
         // CódigoSIA
-        if (re.getRegistroDetalle().getCodigoSia() != null) {
+        if (StringUtils.isNotEmpty(re.getRegistroDetalle().getCodigoSia())) {
             where.add(" re.registroDetalle.codigoSia = :codigoSia ");
             parametros.put("codigoSia",  re.getRegistroDetalle().getCodigoSia());
         }
