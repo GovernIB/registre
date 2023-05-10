@@ -314,6 +314,7 @@ public class JustificanteBean implements JustificanteLocal {
 
             // Crea el anexo del justificante firmado
             Anexo anexo = crearAnexoJustificante(RegwebConstantes.PERFIL_CUSTODIA_ARXIU, locale, registro.getRegistroDetalle(), entidad);
+            anexo.setNombreFichero(firma.getFitxerNom());
 
             //Deprecated SICRES4
             // Hash
