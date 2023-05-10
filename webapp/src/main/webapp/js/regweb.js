@@ -696,6 +696,18 @@ function doForm(formulario){
 }
 
 /**
+ * Realiza el submit del formulario pasado por parámetro, inicializando la paginación.
+ * @param formulario
+ */
+
+function doFormPaginacion(formulario){
+
+    window.onbeforeunload = null;
+    $('#pageNumber').val(1);
+    $(formulario).submit();
+}
+
+/**
  * Obtiene el valor traducido de un elemento, para comprar las modificaciones de un Registro
  * @param url donde hacer la petición ajax
  * @param id
