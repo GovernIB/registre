@@ -281,7 +281,7 @@
                                                                         <li><a href="javascript:void(0);" onclick="reiniciarContador('${oficioRemision.id}','${urlReiniciar}')"><spring:message code="registroSir.reiniciar"/></a></li>
                                                                     </c:if>
                                                                     <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_SIR_ENVIADO || oficioRemision.estado == RegwebConstantes.OFICIO_SIR_ENVIADO_ACK || oficioRemision.estado == RegwebConstantes.OFICIO_SIR_RECHAZADO
-                                                                    || oficioRemision.estado == RegwebConstantes.OFICIO_SIR_REENVIADO || oficioRemision.estado == RegwebConstantes.OFICIO_SIR_REENVIADO_ACK}">
+                                                                    || oficioRemision.estado == RegwebConstantes.OFICIO_SIR_REENVIADO || oficioRemision.estado == RegwebConstantes.OFICIO_SIR_REENVIADO_ACK || oficioRemision.estado == RegwebConstantes.OFICIO_SIR_ENVIADO_ERROR}">
                                                                         <li class="divider"></li>
                                                                         <li><a href="javascript:void(0);" onclick='confirm("javascript:reenviarIntercambio(${oficioRemision.id})","<spring:message code="regweb.confirmar.enviarIntercambio" htmlEscape="true"/>")'><spring:message code="intercambio.reenviar"/></a></li>
                                                                     </c:if>

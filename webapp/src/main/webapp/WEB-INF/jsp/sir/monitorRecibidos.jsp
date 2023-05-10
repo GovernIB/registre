@@ -248,8 +248,8 @@
                                                                 <spring:message code="regweb.acciones"/> <span class="caret"></span>
                                                             </button>
                                                             <ul class="dropdown-menu dropdown">
-                                                                <li><a href="<c:url value="/registroSir/${registroSir.id}/detalle"/>" target="_blank"><spring:message code="registroSir.detalle"/></a></li>
                                                                 <li><a href="<c:url value="/sir/${registroSir.identificadorIntercambio}/detalle"/>" target="_blank"><spring:message code="idIntercambio.detalle"/></a></li>
+                                                                <li><a href="<c:url value="/registroSir/${registroSir.id}/detalle"/>" target="_blank"><spring:message code="registroSir.detalle"/></a></li>
                                                                 <c:if test="${registroSir.estado == 'RECIBIDO' || registroSir.estado == 'REENVIADO' || registroSir.estado == 'RECHAZADO'}">
                                                                     <li><a data-toggle="modal" role="button" href="#eliminarModal" onclick="limpiarModalEliminar(${registroSir.id});"><spring:message code="registroSir.eliminar"/></a></li>
                                                                 </c:if>
