@@ -49,7 +49,7 @@
                                             <form:label path="tipo"><spring:message code="propiedadGlobal.tipo"/></form:label>
                                         </div>
                                         <div class="col-xs-8">
-                                            <form:select path="tipo" cssClass="chosen-select" onchange="doForm('#propiedadGlobalBusqueda')">
+                                            <form:select path="tipo" cssClass="chosen-select" onchange="doFormPaginacion('#propiedadGlobalBusqueda')">
                                                 <form:option value="">...</form:option>
                                                 <c:forEach items="${tiposPropiedad}" var="tipo">
                                                     <form:option value="${tipo}"><spring:message code="propiedadGlobal.tipo.${tipo}" /></form:option>
