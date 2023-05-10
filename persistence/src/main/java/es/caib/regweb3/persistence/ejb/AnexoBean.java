@@ -269,7 +269,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
             // Obtenemos el Plugin de Custodia correspondiente
             if (anexo.isJustificante()) {
-
+                anexo.setNombreFichero(anexoFull.getSignatureCustody().getName());
                 if(PropiedadGlobalUtil.getCustodiaDiferida(entidad.getId())){ // Si está activa la Custodia en diferido, lo guardamos en FileSystem
                     custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(entidad.getId(), RegwebConstantes.PLUGIN_CUSTODIA_FS_JUSTIFICANTE);
                 }else{
@@ -278,6 +278,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
                 descripcion = "Nuevo anexo justificante";
             } else {
+                anexo.setNombreFichero(anexoFull.getDocFileName());
                 custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(entidad.getId(), RegwebConstantes.PLUGIN_CUSTODIA_ANEXOS);
             }
 
