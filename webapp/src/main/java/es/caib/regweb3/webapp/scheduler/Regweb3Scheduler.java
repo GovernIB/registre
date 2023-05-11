@@ -248,15 +248,16 @@ public class Regweb3Scheduler {
 
 
     /**
-     * Qué hace: consulta los asientos recibidos via SIR.
+     * Qué hace: consulta los asientos pendientes por SIR.
+     * Contempla los recibidos y los enviados
      * Cuando lo hace: Cada 5 minutos a las 00:00, 02:00 y 03:00
      */
     /*@Scheduled(cron = "0 0/5 * * * ?") */
-    public void consultarAsientosRecibidosPorSIR() {
+    public void consultarAsientosPendientesSIR() {
 
         try {
 
-            schedulerEjb.consultarAsientosRecibidosPorSIR();
+            schedulerEjb.consultarAsientosPendientesSIR();
 
         } catch (Exception e) {
             e.printStackTrace();
