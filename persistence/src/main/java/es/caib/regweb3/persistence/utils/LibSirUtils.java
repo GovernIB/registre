@@ -27,6 +27,7 @@ import es.gob.ad.registros.sir.interService.interSincroDIR3.service.IServiciosOf
 import es.gob.ad.registros.sir.interService.service.IConsultaService;
 import es.gob.administracionelectronica.eni.xsd.v1_0.documento_e.metadatos.TipoDocumental;
 import es.gob.administracionelectronica.eni.xsd.v1_0.documento_e.metadatos.TipoMetadatos;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
 import org.fundaciobit.genapp.common.i18n.I18NArgumentString;
 import org.fundaciobit.genapp.common.i18n.I18NException;
@@ -44,10 +45,7 @@ import java.nio.charset.StandardCharsets;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static es.caib.regweb3.utils.RegwebConstantes.*;
@@ -79,7 +77,7 @@ public class LibSirUtils {
      * @return
      * @throws I18NException
      */
-    public AsientoBean transformarRegistroEntrada(RegistroEntrada registroEntrada) throws I18NException, DatatypeConfigurationException {
+    public AsientoBean transformarRegistroEntrada(RegistroEntrada registroEntrada) throws I18NException, DatatypeConfigurationException, InterException {
 
         RegistroDetalle registroDetalle = registroEntrada.getRegistroDetalle();
 
@@ -92,7 +90,8 @@ public class LibSirUtils {
             asientoBean.setNuRgOrigen(registroEntrada.getNumeroRegistroFormateado());
             asientoBean.setFeRgOrigen(registroEntrada.getFecha());
             asientoBean.setFeRgPresentacion(registroEntrada.getFecha());
-            asientoBean.setTsRgOrigen(new Timestamp(registroEntrada.getFecha().getTime()).toString());
+            asientoBean.setTsRgOrigen(Base64.encodeBase64String(new Timestamp(registroEntrada.getFecha().getTime()).toString().getBytes()));
+            asientoBean.setTsRgPresentacion(Base64.encodeBase64String(new Timestamp(registroEntrada.getFecha().getTime()).toString().getBytes()));
 
             //Unidad Tramitación Origen
             asientoBean.setCdUnTrOrigen(registroEntrada.getOficina().getOrganismoResponsable().getCodigo());
@@ -156,7 +155,7 @@ public class LibSirUtils {
                 }
             }
 
-            transformarAnexos(registroEntrada.getRegistroDetalle().getAnexosFull(), asientoBean, registroDetalle.getIdentificadorIntercambio());
+            asientoBean.setAnexosBean(transformarAnexos(registroEntrada.getRegistroDetalle().getAnexosFull(), registroDetalle.getIdentificadorIntercambio()));
 
         }
         return asientoBean;
@@ -184,7 +183,8 @@ public class LibSirUtils {
             asientoBean.setNuRgOrigen(registroSalida.getNumeroRegistroFormateado());
             asientoBean.setFeRgOrigen(registroSalida.getFecha());
             asientoBean.setFeRgPresentacion(registroSalida.getFecha());
-            asientoBean.setTsRgOrigen(new Timestamp(registroSalida.getFecha().getTime()).toString());
+            asientoBean.setTsRgOrigen(Base64.encodeBase64String(new Timestamp(registroSalida.getFecha().getTime()).toString().getBytes()));
+            asientoBean.setTsRgPresentacion(Base64.encodeBase64String(new Timestamp(registroSalida.getFecha().getTime()).toString().getBytes()));
 
             //Unidad Tramitación Origen
             asientoBean.setCdUnTrOrigen(registroSalida.getOficina().getOrganismoResponsable().getCodigo());
@@ -255,7 +255,7 @@ public class LibSirUtils {
             }*/
 
 
-            transformarAnexos(registroSalida.getRegistroDetalle().getAnexosFull(), asientoBean, registroDetalle.getIdentificadorIntercambio());
+            asientoBean.setAnexosBean(transformarAnexos(registroSalida.getRegistroDetalle().getAnexosFull(), registroDetalle.getIdentificadorIntercambio()));
         }
         return asientoBean;
 
@@ -303,7 +303,7 @@ public class LibSirUtils {
     }
 
 
-    private AnexoBean transformarAnexo(Anexo anexo, int secuencia, String identificadorIntercambio) throws DatatypeConfigurationException {
+    private AnexoBean transformarAnexo(Anexo anexo, int secuencia, String identificadorIntercambio, String tipoMime) throws DatatypeConfigurationException {
 
         es.gob.ad.registros.sir.interService.bean.AnexoBean anexoBean = new AnexoBean();
 
@@ -323,8 +323,9 @@ public class LibSirUtils {
         //Referencia Única del anexo
         ContenidoBean contenidoBean = new ContenidoBean();
         contenidoBean.setContenido(anexo.getIdentificadorRFU().getBytes(StandardCharsets.UTF_8));
-        contenidoBean.setNombreFormato("application/xml");
+        contenidoBean.setNombreFormato(tipoMime);
         anexoBean.setContenidoBean(contenidoBean);
+
 
         //URL repositorio Referencia Única
         anexoBean.setUrlRepositorio(anexo.getEndpointRFU());
@@ -374,11 +375,30 @@ public class LibSirUtils {
             anexoBean.setTipoMetadatos(tipoMetadatos);
         }
 
+        //Metadatos obligatorios SICRES4
+        Set<OtrosMetadatos> metadatoAnexoGeneral = new HashSet<>();
+
+        //Hash
+        OtrosMetadatos otrosMetadatos = new OtrosMetadatos();
+        otrosMetadatos.setCampo("Hash");
+        otrosMetadatos.setValor(Base64.encodeBase64String(anexo.getHash()));
+        metadatoAnexoGeneral.add(otrosMetadatos);
+
+        //Algoritmo Hash
+        otrosMetadatos = new OtrosMetadatos();
+        otrosMetadatos.setCampo("AlgoritmoHash");
+        otrosMetadatos.setValor("SHA256");
+        metadatoAnexoGeneral.add(otrosMetadatos);
+
+        anexoBean.setOtrosMetadatosGenerales(metadatoAnexoGeneral);
+
         return anexoBean;
     }
 
-    private void transformarAnexos(List<AnexoFull> anexosFull, AsientoBean asientoBean, String identificadorIntercambio) throws DatatypeConfigurationException {
 
+    private Set<AnexoBean> transformarAnexos(List<AnexoFull> anexosFull, String identificadorIntercambio) throws DatatypeConfigurationException {
+
+        Set<AnexoBean> anexoBeans= new HashSet<>();
         int secuencia = 0;
         if (!anexosFull.isEmpty()) {
             for (AnexoFull anexoFull : anexosFull) {
@@ -386,12 +406,13 @@ public class LibSirUtils {
                     es.gob.ad.registros.sir.interService.bean.AnexoBean anexoBean;
 
                     Anexo anexo = anexoFull.getAnexo();
-                    anexoBean = transformarAnexo(anexo, secuencia, identificadorIntercambio);
+                    anexoBean = transformarAnexo(anexo, secuencia, identificadorIntercambio, anexoFull.getMime());
                     secuencia++;
-                    asientoBean.getAnexosBean().add(anexoBean);
+                    anexoBeans.add(anexoBean);
                 }
             }
         }
+        return anexoBeans;
 
     }
 
@@ -400,7 +421,15 @@ public class LibSirUtils {
         //  InteresadoSir interesado = new InteresadoSir();
         es.gob.ad.registros.sir.interService.bean.InteresadoBean interesadoBean = new InteresadoBean();
 
+        //Tipo Interesado
+        interesadoBean.setTipoPersonaInteresado(TIPOS_PERSONA_SICRES4.get(interesado.getTipo()));
+
         // Información del interesado
+        Long tipoDocumento = interesado.getTipoDocumentoIdentificacion();
+        if (tipoDocumento != null) {
+            interesadoBean.setTipoDocumentoIdentificacionInteresado(String.valueOf(CODIGO_NTI_BY_TIPODOCUMENTOID.get(tipoDocumento)));
+        }
+        interesadoBean.setTipoDocumentoIdentificacionInteresado("X");
         interesadoBean.setDocumentoIdentificacionInteresado(interesado.getDocumento());
         interesadoBean.setRazonSocialInteresado(interesado.getRazonSocial());
         interesadoBean.setNombreInteresado(interesado.getNombre());
@@ -422,14 +451,11 @@ public class LibSirUtils {
         interesadoBean.setTelefonoMovilInteresado(interesado.getTelefonoMovil());
 
 
-        Long tipoDocumento = interesado.getTipoDocumentoIdentificacion();
-        if (tipoDocumento != null) {
-            interesadoBean.setTipoDocumentoIdentificacionInteresado(String.valueOf(CODIGO_NTI_BY_TIPODOCUMENTOID.get(tipoDocumento)));
-        }
-
         Long canalPreferente = interesado.getCanal();
-        if (canalPreferente != null) {
+        if (canalPreferente != -1) {
             interesadoBean.setCanalPreferenteComunicacionInteresado(CODIGO_BY_CANALNOTIFICACION.get(canalPreferente));
+        }else { // TODO PENDIENTE DE INCIDENCIA 1945947
+            interesadoBean.setCanalPreferenteComunicacionInteresado("2");
         }
 
         //CAMPOS NUEVOS SICRES4
@@ -441,6 +467,7 @@ public class LibSirUtils {
         // Información del representante
         Interesado representante = interesado.getRepresentante();
         if (representante != null) {
+            interesadoBean.setTipoPersonaRepresentante(RegwebConstantes.TIPOS_PERSONA_SICRES4.get(representante.getTipo()));
             interesadoBean.setDocumentoIdentificacionRepresentante(representante.getDocumento());
             interesadoBean.setRazonSocialRepresentante(representante.getRazonSocial());
             interesadoBean.setNombreRepresentante(representante.getNombre());
@@ -468,8 +495,10 @@ public class LibSirUtils {
             }
 
             canalPreferente = representante.getCanal();
-            if (canalPreferente != null) {
+            if (canalPreferente !=-1) {
                 interesadoBean.setCanalPreferenteComunicacionRepresentante(CODIGO_BY_CANALNOTIFICACION.get(canalPreferente));
+            }else{// TODO PENDIENTE DE INCIDENCIA 1945947
+                interesadoBean.setCanalPreferenteComunicacionRepresentante("2");
             }
 
             //CAMPOS NUEVOS SICRES4
@@ -957,7 +986,7 @@ public class LibSirUtils {
             if (firmaBean.getContenidoFirma() != null && firmaBean.getContenidoFirma().getFirmaConCertificadoBean() != null) {
                 anexo.setFirmaBase64(firmaBean.getContenidoFirma().getFirmaConCertificadoBean() != null ? firmaBean.getContenidoFirma().getFirmaConCertificadoBean().getFirmaBase64() : null);
                 //Incidencia 1900484
-                anexo.setReferenciaFirma(firmaBean.getContenidoFirma().getFirmaConCertificadoBean()!=null?firmaBean.getContenidoFirma().getFirmaConCertificadoBean().getReferenciaFirma():"");
+                anexo.setReferenciaFirma(firmaBean.getContenidoFirma().getFirmaConCertificadoBean()!=null?(String)firmaBean.getContenidoFirma().getFirmaConCertificadoBean().getReferenciaFirma():"");
             }
         }
 
