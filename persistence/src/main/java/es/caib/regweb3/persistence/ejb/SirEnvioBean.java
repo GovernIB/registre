@@ -1439,7 +1439,7 @@ public class SirEnvioBean implements SirEnvioLocal {
             reenviarRecibidoBean.setCdIntercambio(registroSir.getIdentificadorIntercambio());
             reenviarRecibidoBean.setCdEnRgProcesa(oficinaActiva.getCodigo());
             reenviarRecibidoBean.setCdEnRgDestino(oficinaReenvio.getCodigo());
-            reenviarRecibidoBean.setDsEnRgDestino(oficinaActiva.getDenominacion());
+            reenviarRecibidoBean.setDsEnRgDestino(oficinaReenvio.getDenominacion());
             reenviarRecibidoBean.setCdUnTrDestino(oficinaReenvio.getOrganismoResponsable().getCodigo());
             reenviarRecibidoBean.setDsUnTrDestino(oficinaReenvio.getOrganismoResponsable().getDenominacion());
             reenviarRecibidoBean.setMotivo(observaciones);
