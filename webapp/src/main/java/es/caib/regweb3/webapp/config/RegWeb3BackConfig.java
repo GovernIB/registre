@@ -93,7 +93,7 @@ public class RegWeb3BackConfig extends WebMvcConfigurerAdapter {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(inicioInterceptor())
-                .excludePathPatterns("/css/**", "/font-awesome/**", "/ico/**", "/img/**", "/js/**", "/doc/**", "/anexo/guardarScan/**", "/anexo/scanwebresource/**", "/anexo/scanwebresource2/**")
+                .excludePathPatterns("/css/**", "/font-awesome/**", "/ico/**", "/img/**", "/js/**", "/doc/**", "/anexo/guardarScan/**", "/anexo/scanwebresource/**", "/anexo/scanwebresource2/**", "/public/**")
                 .addPathPatterns("/**");
 
         registry.addInterceptor(registroEntradaInterceptor()).addPathPatterns("/registroEntrada/**");
