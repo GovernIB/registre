@@ -59,6 +59,7 @@ public class RegWeb3SecurityConfig extends WebSecurityConfigurerAdapter {
                 antMatchers("/error.jsp").permitAll().
                 antMatchers("/anexo/guardarScan/**").permitAll().
                 antMatchers("/anexo/scanwebresource/**").permitAll().
+                antMatchers("/public/**").permitAll().
                 /* ----- RWE_SUPERADMIN ----- */
                 antMatchers("/entidad/new").hasAuthority("RWE_SUPERADMIN").
                 antMatchers("/entidad/list").hasAuthority("RWE_SUPERADMIN").
