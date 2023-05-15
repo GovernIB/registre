@@ -71,15 +71,10 @@ public class RegWeb3BackConfig extends WebMvcConfigurerAdapter {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
 
         registry.addResourceHandler("/css/**").addResourceLocations("/css/");
-
         registry.addResourceHandler("/font-awesome/**").addResourceLocations("/font-awesome/");
-
         registry.addResourceHandler("/img/**").addResourceLocations("/img/");
-
         registry.addResourceHandler("/ico/**").addResourceLocations("/ico/");
-
         registry.addResourceHandler("/js/**").addResourceLocations("/js/");
-
         registry.addResourceHandler("/doc/**").addResourceLocations("/doc/");
     }
 
@@ -93,7 +88,7 @@ public class RegWeb3BackConfig extends WebMvcConfigurerAdapter {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(inicioInterceptor())
-                .excludePathPatterns("/css/**", "/font-awesome/**", "/ico/**", "/img/**", "/js/**", "/doc/**", "/anexo/guardarScan/**", "/anexo/scanwebresource/**", "/anexo/scanwebresource2/**")
+                .excludePathPatterns("/css/**", "/font-awesome/**", "/ico/**", "/img/**", "/js/**", "/doc/**", "/anexo/guardarScan/**", "/anexo/scanwebresource/**", "/anexo/scanwebresource2/**", "/public/**")
                 .addPathPatterns("/**");
 
         registry.addInterceptor(registroEntradaInterceptor()).addPathPatterns("/registroEntrada/**");
