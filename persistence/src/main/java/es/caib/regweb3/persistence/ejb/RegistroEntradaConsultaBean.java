@@ -910,20 +910,20 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
         }
 
         // Numero registro
-        if(numeroRegistro!=null && !numeroRegistro.isEmpty()){
+        if(StringUtils.isNotEmpty(numeroRegistro)){
             where.add(" re.numeroRegistroFormateado LIKE :numeroRegistroFormateado ");
             parametros.put("numeroRegistroFormateado", "%" + numeroRegistro + "%");
         }
 
         //Extracto
-        if(extracto!=null && !extracto.isEmpty()){
+        if(StringUtils.isNotEmpty(extracto)){
             where.add(" re.registroDetalle.extracto LIKE :extracto ");
             parametros.put("extracto", "%" + extracto + "%");
         }
 
 
         //Estados (hacemos una or con todos los estados que nos envian)
-        if(estados != null && !estados.isEmpty()){
+        if(estados != null && estados.size()>0){
             StringBuilder sEstados = new StringBuilder();
             sEstados.append(" ( ");
             for(int i= 0; i<estados.size(); i++){
@@ -949,7 +949,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
         }
 
         // Duplicamos la query solo para obtener los resultados totales
-        StringBuilder queryCount = new StringBuilder("Select count(DISTINCT re.id) " +
+        StringBuilder queryCount = new StringBuilder("Select count ( DISTINCT  re.id) " +
                 "from RegistroEntrada as re left outer join re.registroDetalle.interesados interessat LEFT JOIN re.destino destino ");
 
         q2 = em.createQuery(query.toString().replaceAll(queryBase, queryCount.toString()));
@@ -971,12 +971,12 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
         Long total = (Long) q2.getSingleResult();
 
         Integer resultadosPorPagina= resultPorPagina!=null?resultPorPagina:RESULTADOS_PAGINACION;
-        int inicio = pageNumber * resultadosPorPagina;
+        int inicio = (pageNumber - 1) * resultadosPorPagina;
         q1.setFirstResult(inicio);
         q1.setMaxResults(resultadosPorPagina);
 
 
-        Paginacion paginacion = new Paginacion(total.intValue(), pageNumber);
+        Paginacion paginacion = new Paginacion(total.intValue(), pageNumber, resultadosPorPagina);
 
         List<Object[]> result = q1.getResultList();
         List<RegistroEntrada> registros = new ArrayList<>();
