@@ -95,7 +95,7 @@ public interface SirEnvioLocal {
      * @param idRegistroSir
      * @throws I18NException
      */
-    Boolean enviarConfirmacion(Long idRegistroSir) throws I18NException;
+    Boolean enviarConfirmacion(Long idRegistroSir) throws I18NException, InterException;
 
     /**
      * Reenvía un mensaje de control que ya ha sido enviado previamente
@@ -143,7 +143,6 @@ public interface SirEnvioLocal {
      * @param oficinaActiva
      * @param idLibro
      * @param idIdioma
-     * @param camposNTIs
      * @return
      */
     RegistroEntrada aceptarRegistroSir(RegistroSir registroSir, Entidad entidad, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, Long idOrganismoDestino, String emails, String motivo) throws I18NException, I18NValidationException, ParseException, InterException;
@@ -156,6 +155,14 @@ public interface SirEnvioLocal {
      * @throws I18NException
      */
     void reenviarRegistroSir(RegistroSir registroSir, Oficina oficinaReenvio, Oficina oficinaActiva, Usuario usuario, String observaciones) throws I18NException;
+
+    /**
+     * Reenvio de un Registro SIR con LIBSIR
+     *
+     * @param registroSir
+     * @throws I18NException
+     */
+    void reenviarRegistroSirLIBSIR(RegistroSir registroSir, Oficina oficinaReenvio, Oficina oficinaActiva, Usuario usuario, String observaciones) throws I18NException, InterException;
 
     /**
      *
@@ -173,6 +180,16 @@ public interface SirEnvioLocal {
      * @throws I18NException
      */
     void rechazarRegistroSir(RegistroSir registroSir, Oficina oficinaActiva, Usuario usuario, String observaciones) throws I18NException;
+
+    /**
+     * Rechaza un registro sir a través de LIBSIR
+     * @param registroSir
+     * @param oficinaActiva
+     * @param usuario
+     * @return
+     * @throws I18NException
+     */
+    void rechazarRegistroSirLIBSIR(RegistroSir registroSir, Oficina oficinaActiva, Usuario usuario, String observaciones) throws I18NException, InterException;
 
     Integer aceptarRegistrosERTE(List<Long> registros, Entidad entidad, String destino, Oficina oficina,Long idLibro, UsuarioEntidad usuarioEntidad) throws I18NException;
 

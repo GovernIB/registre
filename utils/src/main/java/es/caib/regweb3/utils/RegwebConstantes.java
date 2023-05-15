@@ -159,11 +159,17 @@ public interface RegwebConstantes {
             TIPO_PERSONA_JURIDICA
     };
 
-
     /* -------------- TIPO INTERESADO --------------*/
     Long TIPO_INTERESADO_ADMINISTRACION = 1L;
     Long TIPO_INTERESADO_PERSONA_FISICA = 2L;
     Long TIPO_INTERESADO_PERSONA_JURIDICA = 3L;
+
+    Map<Long, String> TIPOS_PERSONA_SICRES4 = new HashMap<Long, String>() {{
+        put(TIPO_INTERESADO_ADMINISTRACION, "2" );
+        put(TIPO_INTERESADO_PERSONA_FISICA, "1");
+        put(TIPO_INTERESADO_PERSONA_JURIDICA, "2" );
+
+    }};
 
     Long[] TIPOS_INTERESADO = {
             TIPO_INTERESADO_PERSONA_FISICA,

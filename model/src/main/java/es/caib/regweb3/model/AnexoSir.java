@@ -93,8 +93,7 @@ public class AnexoSir implements Serializable {
     private String csv;
     private String regulacionCsv;
     private byte[] firmaBase64;
-    //TODO ESPERANDO RESPUESTA DE MADRID
-    //  private Object  referenciaFirma;   //Indica el identificador donde se encuentra el bloque de contenido.
+    private String  referenciaFirma;   //Indica el identificador donde se encuentra el bloque de contenido.
 
 
     public AnexoSir() {
@@ -349,14 +348,15 @@ public class AnexoSir implements Serializable {
         this.firmaBase64 = firmaBase64;
     }
 
-    /*@Column(name = "REFERENCIA_FIRMA", length = 2000)
-    public Object getReferenciaFirma() {
+
+    @Column(name = "REFERENCIA_FIRMA")
+    public String getReferenciaFirma() {
         return referenciaFirma;
     }
 
-    public void setReferenciaFirma(Object referenciaFirma) {
+    public void setReferenciaFirma(String referenciaFirma) {
         this.referenciaFirma = referenciaFirma;
-    }*/
+    }
 
     @Transient
     public byte[] getAnexoData() {

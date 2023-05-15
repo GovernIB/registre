@@ -3,11 +3,13 @@ package es.caib.regweb3.persistence.ejb;
 import es.caib.regweb3.model.Cola;
 import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.model.Oficina;
-import es.caib.regweb3.model.RegistroSir;
+import es.caib.regweb3.model.OficioRemision;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.utils.RegwebConstantes;
+import es.gob.ad.registros.sir.interModel.dao.enums.TipoEstadoEnum;
 import es.gob.ad.registros.sir.interService.bean.AsientoBean;
-import es.gob.ad.registros.sir.interService.exception.InterException;
+import es.gob.ad.registros.sir.interService.bean.DatosRegistroProcesoBean;
+import es.gob.ad.registros.sir.interService.bean.ResultadoRegistroProcesoBean;
 import es.gob.ad.registros.sir.interService.service.IConsultaService;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.jboss.ejb3.annotation.TransactionTimeout;
@@ -18,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.annotation.security.RunAs;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -63,6 +66,10 @@ public class SchedulerBean implements SchedulerLocal {
     private RegistroSirLocal registroSirEjb;
     @EJB
     private OficinaLocal oficinaEjb;
+    @EJB
+    private OficioRemisionLocal oficioRemisionEjb;
+
+    @Autowired IConsultaService consultaService;
 
 
     @Override
@@ -509,7 +516,7 @@ public class SchedulerBean implements SchedulerLocal {
 
 
     @Override
-    public void consultarAsientosRecibidosPorSIR() throws I18NException {
+    public void consultarAsientosPendientesSIR() throws I18NException {
 
 
         StringBuilder peticion = new StringBuilder();
@@ -522,10 +529,38 @@ public class SchedulerBean implements SchedulerLocal {
             peticion = new StringBuilder();
 
             List<AsientoBean> asientosPendientes = libSirEjb.consultaAsientosPendientes(10);
-            //Vamos creando los registros SIR
+
+            //ENVIADOS
+            List<DatosRegistroProcesoBean> enviados= new ArrayList<>();
+
             for (AsientoBean asiento : asientosPendientes) {
-                Oficina oficina = oficinaEjb.findByMultiEntidad(asiento.getCdEnRgDestino());
-                registroSirEjb.crearRegistroSir(asiento, oficina.getOrganismoResponsable().getEntidad());
+                OficioRemision oficio = oficioRemisionEjb.getByIdentificadorIntercambio(asiento.getCdIntercambio());
+                if(oficio!= null){
+                   if(TipoEstadoEnum.EC.getCodigo().equals(asiento.getCdEstado())){
+                       DatosRegistroProcesoBean datosRegistroProcesoBean = new DatosRegistroProcesoBean();
+                       datosRegistroProcesoBean.setCdIntercambio(oficio.getIdentificadorIntercambio());
+                       datosRegistroProcesoBean.setCdEnRgProcesa(oficio.getOficina().getCodigo());
+                       //datosRegistroProcesoBean.setEstadoAplicacion(estado); // TODO No se que estado poner
+                       enviados.add(datosRegistroProcesoBean);
+                   }
+                }else{
+                   if(TipoEstadoEnum.R.getCodigo().equals(asiento.getCdEstado())){
+                       Oficina oficina = oficinaEjb.findByMultiEntidad(asiento.getCdEnRgDestino());
+                       registroSirEjb.crearRegistroSir(asiento, oficina.getOrganismoResponsable().getEntidad());
+                   }
+                }
+            }
+
+            //Marcamos como procesados los enviados
+            ResultadoRegistroProcesoBean resultado = consultaService.procesar(enviados);
+            if (resultado != null) {
+                if(!resultado.getRegistrosProcesados().isEmpty()){
+                    resultado.getRegistrosProcesados().forEach((v) -> log.error(("Intercambio procesado :" + v)));
+                }
+                if(!resultado.getRegistrosErrorProceso().isEmpty()){
+                    resultado.getRegistrosErrorProceso().forEach((k, v) -> log.error(("Error producido : " + k + " - " + v)));
+                    //TODO Gestión de errores que dependan de Regweb3
+                }
             }
 
             peticion.append("asientosPendientes: ").append(asientosPendientes.size()).append(System.getProperty("line.separator"));
