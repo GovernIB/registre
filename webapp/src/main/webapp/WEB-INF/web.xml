@@ -42,6 +42,13 @@
     <security-constraint>
         <web-resource-collection>
             <web-resource-name>webapp</web-resource-name>
+            <url-pattern>/public/*</url-pattern>
+        </web-resource-collection>
+    </security-constraint>
+
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>webapp</web-resource-name>
             <url-pattern>/*</url-pattern>
         </web-resource-collection>
         <auth-constraint>
