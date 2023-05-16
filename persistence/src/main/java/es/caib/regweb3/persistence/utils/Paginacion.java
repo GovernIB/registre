@@ -40,8 +40,8 @@ public class Paginacion {
         }
 
         currentIndex = pageNumber;
-        beginIndex = Math.max(1, currentIndex - BaseEjbJPA.RESULTADOS_PAGINACION);
-        endIndex = Math.min(beginIndex + 10, totalPages);
+        beginIndex = Math.max(1, currentIndex - totalPaginacion);
+        endIndex = Math.min(beginIndex + totalPaginacion, totalPages);
     }
 
     public int getTotalPages() {

@@ -971,7 +971,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
         Long total = (Long) q2.getSingleResult();
 
         Integer resultadosPorPagina= resultPorPagina!=null?resultPorPagina:RESULTADOS_PAGINACION;
-        int inicio = (pageNumber - 1) * resultadosPorPagina;
+        int inicio = (pageNumber) * resultadosPorPagina;
         q1.setFirstResult(inicio);
         q1.setMaxResults(resultadosPorPagina);
 
