@@ -1,12 +1,11 @@
 package es.caib.regweb3.webapp.controller;
 
-import javax.servlet.http.HttpServletResponse;
-
+import es.caib.regweb3.utils.Versio;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import es.caib.regweb3.utils.Versio;
+import javax.servlet.http.HttpServletResponse;
 
 @Controller
 public class PublicController {

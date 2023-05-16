@@ -466,9 +466,9 @@ public class RegWebAsientoRegistralTest extends RegWebTestUtils {
         try {
 
 
-            Timestamp tFechaInicio = setDate(01,01,2020);
+            Timestamp tFechaInicio = setDate(01,03,2023);//ojo el month es 1 menos (03 = Abril)
 
-            Timestamp tFechaFin = setDate(05,07,2021);
+            Timestamp tFechaFin = setDate(01,04,2023);
             Integer resultPorPagina= 5;
             String numeroRegistroFormateado="GPRO-E-3/2021";
 
@@ -479,7 +479,7 @@ public class RegWebAsientoRegistralTest extends RegWebTestUtils {
             estados.add(6);
             estados.add(7);
 
-            ResultadoBusquedaWs asientos = asientoRegistralApi.obtenerAsientosCiudadanoCarpeta(getTestEntidadCodigoDir3(),"44328254D",0,"es",null, null,"", estados, "test", resultPorPagina );
+            ResultadoBusquedaWs asientos = asientoRegistralApi.obtenerAsientosCiudadanoCarpeta(getTestEntidadCodigoDir3(),"44328254D",1,"es",tFechaInicio, tFechaFin,"", estados, "", resultPorPagina );
 
             System.out.println("Asientos encontrados: " +asientos.getTotalResults());
 
