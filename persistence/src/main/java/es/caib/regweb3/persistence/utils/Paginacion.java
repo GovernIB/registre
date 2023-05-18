@@ -41,7 +41,7 @@ public class Paginacion {
 
         currentIndex = pageNumber;
         beginIndex = Math.max(1, currentIndex - totalPaginacion);
-        endIndex = Math.min(beginIndex + totalPaginacion, totalPages);
+        endIndex = Math.min(beginIndex + 10, totalPages);
     }
 
     public int getTotalPages() {
