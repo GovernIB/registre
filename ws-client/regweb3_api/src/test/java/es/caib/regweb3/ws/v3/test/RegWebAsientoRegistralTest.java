@@ -479,7 +479,7 @@ public class RegWebAsientoRegistralTest extends RegWebTestUtils {
             estados.add(6);
             estados.add(7);
 
-            ResultadoBusquedaWs asientos = asientoRegistralApi.obtenerAsientosCiudadanoCarpeta(getTestEntidadCodigoDir3(),"44328254D",1,"es",tFechaInicio, tFechaFin,"", estados, "", resultPorPagina );
+            ResultadoBusquedaWs asientos = asientoRegistralApi.obtenerAsientosCiudadanoCarpeta(getTestEntidadCodigoDir3(),"44328254D",0,"es",tFechaInicio, tFechaFin,"", estados, "", resultPorPagina );
 
             System.out.println("Asientos encontrados: " +asientos.getTotalResults());
 
