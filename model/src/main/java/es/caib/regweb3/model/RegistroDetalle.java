@@ -526,7 +526,7 @@ public class RegistroDetalle implements Serializable {
 
     @Transient
     public String getNombreInteresadosHtml() {
-        if (interesados != null && interesados.size() > 0) {
+        if (!interesados.isEmpty()) {
             String nombres = "";
             for (Interesado interesado : interesados) {
                 if (!interesado.getIsRepresentante()) {
@@ -539,14 +539,28 @@ public class RegistroDetalle implements Serializable {
                         nombres = nombres.concat(" <br/>");
                     }
                 }
-
-
             }
-
             return nombres;
         }
-
         return "";
+    }
+
+    @Transient
+    public Boolean isInteresadoJuridico(){
+
+        if(getTotalInteresados() == 1){
+
+            for (Interesado interesado : interesados) {
+
+                if (!interesado.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_FISICA)) {
+                    return true;
+                }else if(interesado.getRepresentante() != null && interesado.getRepresentante().getTipo().equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA)){
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     @Transient

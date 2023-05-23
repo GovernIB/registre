@@ -224,32 +224,10 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         // Solo si no es una reserva de número
         if (!registro.getEstado().equals(RegwebConstantes.REGISTRO_RESERVA)) {
 
-            // Oficio Remision
-            if (entidadActiva.getOficioRemision() && (registro.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO) || registro.getEstado().equals(RegwebConstantes.REGISTRO_PENDIENTE_VISAR))) {
-
-                if (registro.getEvento().equals(RegwebConstantes.EVENTO_OFICIO_SIR)) { // Mensajes de limitaciones anexos si es oficio de remisión sir
-                    initMensajeNotaInformativaAnexos(entidadActiva, model);
-                }
+            // Mensajes de limitaciones anexos si es oficio de remisión sir
+            if (entidadActiva.getOficioRemision() && (registro.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO) || registro.getEstado().equals(RegwebConstantes.REGISTRO_PENDIENTE_VISAR)) && (registro.getEvento().equals(RegwebConstantes.EVENTO_OFICIO_SIR))) {
+                initMensajeNotaInformativaAnexos(entidadActiva, model);
             }
-
-            // ANULAR DISTRIBUIR TEMPORAL POR MOTIVO DE FIRMA XSIG NO VALIDABLE
-            if (registro.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO)) {
-
-                boolean distribuirRipea = true;
-                if (PropiedadGlobalUtil.getNoDistribuir(entidadActiva.getId())) {
-                    for (Anexo anexo : registro.getRegistroDetalle().getAnexos()) {
-                        //Solo miramos si la firma es valida si el anexo tiene firma
-                        if (anexo.getModoFirma() != RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA && !anexo.getTipoDocumento().equals(RegwebConstantes.TIPO_DOCUMENTO_FICHERO_TECNICO) && !anexo.isJustificante() && !anexo.getConfidencial()) {
-                            if (!anexo.getFirmaValida()) { //Si la firma es invalida no se distribuye.
-                                distribuirRipea = false;
-                                break;
-                            }
-                        }
-                    }
-                }
-                model.addAttribute("distribuirRipea", distribuirRipea);
-            }
-
 
             // Anexos
             Boolean anexosEditar = (registro.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO) || registro.getEstado().equals(RegwebConstantes.REGISTRO_PENDIENTE_VISAR)) && registro.getRegistroDetalle().getPresencial() && permisoEditar && !tieneJustificante;
@@ -284,7 +262,12 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
                 model.addAttribute("idJustificante", justificante.getId());
                 String urlValidacion = anexoEjb.getUrlValidation(justificante,entidadActiva.getId());
                 model.addAttribute("tieneUrlValidacion", StringUtils.isNotEmpty(urlValidacion));
+            }
 
+            // Aviso registro presencial
+            if(registro.getRegistroDetalle().getPresencial() && registro.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO) && !tieneJustificante){
+                model.addAttribute("avisoRegistroPresencial", registro.getRegistroDetalle().isInteresadoJuridico());
+                log.info("avisoRegistroPresencial : " + registro.getRegistroDetalle().isInteresadoJuridico());
             }
 
             // Historicos
