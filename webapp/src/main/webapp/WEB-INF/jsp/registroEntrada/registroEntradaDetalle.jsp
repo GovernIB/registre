@@ -112,23 +112,14 @@
                         <c:if test="${(registro.evento == RegwebConstantes.EVENTO_DISTRIBUIR && permisoDistribuir && not empty registro.registroDetalle.interesados)}">
                             <div class="panel-footer center">
 
-                                <c:if test="${distribuirRipea}">
-
-                                    <c:if test="${(registro.registroDetalle.tipoDocumentacionFisica == RegwebConstantes.TIPO_DOCFISICA_NO_ACOMPANYA_DOC || registro.registroDetalle.tipoDocumentacionFisica == RegwebConstantes.TIPO_DOCFISICA_ACOMPANYA_DOC_COMPLEMENTARIA)
-                                      && fn:length(registro.registroDetalle.anexos) == 0}">
-                                        <button type="button" onclick='mensajeInformativo("<spring:message code="distribuir.advertencia" htmlEscape="true"/>","<spring:message code="distribuir.tipoDoc.anexos" htmlEscape="true"/>")'
-                                                class="btn btn-success btn-sm btn-block"><spring:message code="regweb.distribuir"/></button>
-                                    </c:if>
-
-                                    <c:if test="${registro.registroDetalle.tipoDocumentacionFisica == RegwebConstantes.TIPO_DOCFISICA_ACOMPANYA_DOC_REQUERIDA || fn:length(registro.registroDetalle.anexos) > 0}">
-                                        <button type="button" onclick='confirmDistribuir("<spring:message code="regweb.confirmar.distribuir" htmlEscape="true"/>", ${pluginDistribucionEmail})'
-                                                class="btn btn-success btn-sm btn-block"><spring:message code="regweb.distribuir"/></button>
-                                    </c:if>
-
+                                <c:if test="${(registro.registroDetalle.tipoDocumentacionFisica == RegwebConstantes.TIPO_DOCFISICA_NO_ACOMPANYA_DOC || registro.registroDetalle.tipoDocumentacionFisica == RegwebConstantes.TIPO_DOCFISICA_ACOMPANYA_DOC_COMPLEMENTARIA)
+                                  && fn:length(registro.registroDetalle.anexos) == 0}">
+                                    <button type="button" onclick='mensajeInformativo("<spring:message code="distribuir.advertencia" htmlEscape="true"/>","<spring:message code="distribuir.tipoDoc.anexos" htmlEscape="true"/>")'
+                                            class="btn btn-success btn-sm btn-block"><spring:message code="regweb.distribuir"/></button>
                                 </c:if>
 
-                                <c:if test="${not distribuirRipea}">
-                                    <button type="button" onclick='mensajeInformativo("<spring:message code="distribuir.advertencia" htmlEscape="true"/>","<spring:message code="distribuir.manualmente" htmlEscape="true"/>")'
+                                <c:if test="${registro.registroDetalle.tipoDocumentacionFisica == RegwebConstantes.TIPO_DOCFISICA_ACOMPANYA_DOC_REQUERIDA || fn:length(registro.registroDetalle.anexos) > 0}">
+                                    <button type="button" onclick='confirmDistribuir("<spring:message code="regweb.confirmar.distribuir" htmlEscape="true"/>", ${pluginDistribucionEmail})'
                                             class="btn btn-success btn-sm btn-block"><spring:message code="regweb.distribuir"/></button>
                                 </c:if>
 
@@ -259,14 +250,15 @@
                 </div>
 
             </div>
-            <!-- Fin Panel Lateral -->
+            <!-- Fin Panel Lateral izquierdo -->
+
+            <!-- Inicio pestañas (General, Trazabiliad, Modificaciones) -->
 
             <c:if test="${registro.estado != RegwebConstantes.REGISTRO_RESERVA}">
 
                 <div class="col-xs-8">
 
                     <ul class="navInfo navInfo-tabs" id="myTab">
-
                         <li><a href="#general" data-toggle="tab"><i class="fa fa-file-o"></i> General</a></li>
                         <c:if test="${not empty trazabilidades}">
                             <li><a href="#trazabilidad" data-toggle="tab"><i class="fa fa-clock-o fa-fw"></i> <spring:message code="registroEntrada.trazabilidad"/></a></li>
@@ -274,7 +266,6 @@
                         <c:if test="${not empty historicos && registro.estado != RegwebConstantes.REGISTRO_RESERVA}">
                             <li><a href="#modificaciones" data-toggle="tab"><i class="fa fa-pencil-square-o"></i> <spring:message code="regweb.modificaciones"/></a></li>
                         </c:if>
-
                     </ul>
 
                     <div id="contenido" class="tab-content contentInfo">
@@ -283,7 +274,6 @@
 
                             <!-- ANEXOS -->
                             <c:if test="${registro.registroDetalle.tipoDocumentacionFisica != RegwebConstantes.TIPO_DOCFISICA_ACOMPANYA_DOC_REQUERIDA || registro.registroDetalle.tieneAnexos}">
-
                                 <!-- ANEXOS COMPLETO-->
                                 <c:if test="${anexosEditar}">
                                     <c:import url="../registro/anexos.jsp">
@@ -325,13 +315,10 @@
 
                         <%--TRAZABILIDAD--%>
                         <c:if test="${not empty trazabilidades}">
-
                             <div class="tab-pane" id="trazabilidad">
-
                                 <c:import url="../trazabilidad/trazabilidadEntrada.jsp">
                                     <c:param name="adminEntidad" value="false"/>
                                 </c:import>
-
                             </div>
                         </c:if>
                         <!-- MODIFICACIONES REGISTRO -->
@@ -342,14 +329,11 @@
                                 </c:import>
                             </div>
                         </c:if>
-
                     </div>
                 </div>
             </c:if>
-
-
         </div>
-        </div><!-- /div.row-->
+    </div><!-- /div.row-->
 
     <%--Modal ANULAR--%>
     <c:import url="../registro/anular.jsp">
@@ -368,9 +352,7 @@
 
 </div>
 
-
 <c:import url="../modulos/pie.jsp"/>
-
 
 <script type="text/javascript">
     var urlDistribuir = '<c:url value="/registroEntrada/${registro.id}/distribuir"/>';
@@ -403,6 +385,13 @@
         </c:if>
     };
 
+    // Muestra mensaje informativo si el registro es Presencial de una persona jurídica
+    $(document).ready(function () {
+        <c:if test="${avisoRegistroPresencial}">
+        mensajeInformativo("<spring:message code="aviso.registro.presencial.titulo" htmlEscape="true"/>","<spring:message code="aviso.registro.presencial" htmlEscape="true"/>")
+        </c:if>
+    });
+
 
     // Muestra los datos del hitórico seleccionado y oculta el resto
     function comparaRegistros(idHistorico){
@@ -423,6 +412,7 @@
      * Genera el Justificante del Registro
      * @param url
      */
+
     function crearJustificante(url){
 
         $.ajax({
@@ -443,7 +433,6 @@
     }
 
 </script>
-
 
 </body>
 </html>
