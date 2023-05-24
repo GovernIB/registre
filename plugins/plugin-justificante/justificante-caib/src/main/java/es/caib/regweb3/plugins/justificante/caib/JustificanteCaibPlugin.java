@@ -53,7 +53,6 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
     private Font lletraGovern14bold;
 
     private static final BaseColor GOIB_VERDE = new BaseColor(51, 132, 79);
-    private static final BaseColor GOIB_ROJO = new BaseColor(204, 7, 60);
 
 
     /**
@@ -66,9 +65,6 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
         public void onStartPage(PdfWriter writer, Document document) {
 
             try{
-                // LOGOS
-                PdfPTable logos = new PdfPTable(2);
-                logos.setWidthPercentage(100);
                 // Regweb3
                 ClassLoader classLoader = getClass().getClassLoader();
                 InputStream fileRW = classLoader.getResourceAsStream("img/logo-regweb3.jpg");
@@ -105,8 +101,6 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
                     document.add(parrafo);
                     document.add(logoSIR);
                 }
-                document.add(Chunk.NEWLINE);
-                document.add(Chunk.NEWLINE);
             } catch (DocumentException ex) {
                 // Atrapamos excepciones concernientes al documento.
             } catch (java.io.IOException ex) {
@@ -228,7 +222,7 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
             inicializarPropiedades(registroEntrada, RegwebConstantes.REGISTRO_ENTRADA, locale, url, specialValue,csv, sir);
 
             // Aplica preferencias
-            Document document = new Document(PageSize.A4);
+            Document document = new Document(PageSize.A4, 36, 36, 86, 36);
             FileOutputStream ficheroPdf = new FileOutputStream("fichero.pdf");
             PdfWriter writer = PdfWriter.getInstance(document, baos);
             writer.setViewerPreferences(PdfWriter.ALLOW_PRINTING | PdfWriter.PageLayoutSinglePage);
@@ -355,13 +349,12 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
             // Creamos estilo para el título Adjuntos
             Paragraph titulo = new Paragraph(tradueixMissatge(locale,"justificante.adjuntos"), lletraGovern10bold);
             document.add(titulo);
-            document.add(Chunk.NEWLINE);
             document.add(getLineaVerde());
 
             // Añadimos los campos de la Información
             PdfPTable taulaAnnexe = new PdfPTable(new float[]{15, 15, 10, 10, 10, 25, 12});
             taulaAnnexe.setWidthPercentage(100);
-            taulaAnnexe.setSpacingBefore(5);
+            taulaAnnexe.setSpacingBefore(8);
             PdfPCell cellInfoAnnexe = new PdfPCell(new Paragraph(tradueixMissatge(locale,"justificante.nombreAdjunto"), lletraGovern9bold));
             cellInfoAnnexe.setBackgroundColor(BaseColor.WHITE);
             cellInfoAnnexe.setBorderColor(BaseColor.BLACK);
@@ -489,7 +482,6 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
 
         Paragraph titulo = new Paragraph(tradueixMissatge(locale,"justificante.titulo.validez"), lletraGovern10bold);
         document.add(titulo);
-        document.add(Chunk.NEWLINE);
         document.add(getLineaVerde());
 
         Paragraph texto = new Paragraph(textoLegalValidez, lletraGovern8);
@@ -508,7 +500,6 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
 
         Paragraph titulo = new Paragraph(tradueixMissatge(locale,"justificante.titulo.registro.presencial"), lletraGovern10bold);
         document.add(titulo);
-        document.add(Chunk.NEWLINE);
         document.add(getLineaVerde());
 
         Paragraph texto = new Paragraph(avisoRegistroPresencial, lletraGovern8);
@@ -535,7 +526,6 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
 
         Paragraph paragraph = new Paragraph(etiqueta, lletraGovern10bold);
         document.add(paragraph);
-        document.add(Chunk.NEWLINE);
         document.add(getLineaVerde());
 
         PdfPTable taulaInteresado = new PdfPTable(new float[] { 15, 30, 15, 30 });
@@ -843,7 +833,6 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
 
         Paragraph titulo = new Paragraph(tradueixMissatge(locale,"justificante.informacion"), lletraGovern10bold);
         document.add(titulo);
-        document.add(Chunk.NEWLINE);
         document.add(getLineaVerde());
 
         // Añadimos los campos de la Información
@@ -1073,6 +1062,7 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
         LineSeparator linea = new LineSeparator();
         linea.setLineColor(GOIB_VERDE);
         linea.setLineWidth(1f);
+        linea.setOffset(-4);
 
         return linea;
     }
