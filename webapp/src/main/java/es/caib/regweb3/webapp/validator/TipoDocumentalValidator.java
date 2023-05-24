@@ -15,6 +15,7 @@ import javax.ejb.EJB;
 /**
  * Created by Fundació BIT.
  * Gestiona las Validaciones del formulario para crear o editar una {@link es.caib.regweb3.model.TipoDocumental}
+ *
  * @author earrivi
  * Date: 11/02/14
  */
@@ -36,37 +37,34 @@ public class TipoDocumentalValidator implements Validator {
 
         TipoDocumental tipoDocumental = (TipoDocumental) o;
 
-        for (Long idioma :  RegwebConstantes.IDIOMAS_UI) {
-          ValidationUtils.rejectIfEmpty(errors, "traducciones[" + RegwebConstantes.CODIGO_BY_IDIOMA_ID.get(idioma) + "].nombre", "error.valor.requerido", "El camp nom és obligatori");
-        }
-        //ValidationUtils.rejectIfEmpty(errors, "traducciones[" + RegwebConstantes.IDIOMA_CATALAN_CODIGO + "].nombre", "error.valor.requerido", "El camp nom és obligatori");
-        //ValidationUtils.rejectIfEmpty(errors, "traducciones[" + RegwebConstantes.IDIOMA_CASTELLANO_CODIGO + "].nombre", "error.valor.requerido", "El camp nom és obligatori");
-
-      try {
-        if (tipoDocumental.getCodigoNTI() != null && tipoDocumental.getCodigoNTI().length() > 0) {
-
-          if (tipoDocumental.getId() != null) {  // Se trata de una modificación
-
-            if (tipoDocumentalEjb.existeCodigoEdit(tipoDocumental.getCodigoNTI(), tipoDocumental.getId(), tipoDocumental.getEntidad().getId())) {
-              errors.rejectValue("codigoNTI", "error.codigo.existe", "El codi ja existeix");
-            }
-
-          } else {
-
-            if (tipoDocumentalEjb.findByCodigoEntidad(tipoDocumental.getCodigoNTI(), tipoDocumental.getEntidad().getId()) != null) {
-              errors.rejectValue("codigoNTI", "error.codigo.existe", "El codi ja existeix");
-            }
-          }
-
-        } else{
-            errors.rejectValue("codigoNTI", "error.codigo.obligatorio", "El codi NTI és obligatori");
+        for (Long idioma : RegwebConstantes.IDIOMAS_UI) {
+            ValidationUtils.rejectIfEmpty(errors, "traducciones[" + RegwebConstantes.CODIGO_BY_IDIOMA_ID.get(idioma) + "].nombre", "error.valor.requerido", "El camp nom és obligatori");
         }
 
-      }catch(Exception e){
-         e.printStackTrace();
-      }
+        try {
+            if (tipoDocumental.getCodigoNTI() != null && tipoDocumental.getCodigoNTI().length() > 0) {
+
+                if (tipoDocumental.getId() != null) {  // Se trata de una modificación
+
+                    if (tipoDocumentalEjb.existeCodigoEdit(tipoDocumental.getCodigoNTI(), tipoDocumental.getId(), tipoDocumental.getEntidad().getId())) {
+                        errors.rejectValue("codigoNTI", "error.codigo.existe", "El codi ja existeix");
+                    }
+
+                } else {
+
+                    if (tipoDocumentalEjb.findByCodigoEntidad(tipoDocumental.getCodigoNTI(), tipoDocumental.getEntidad().getId()) != null) {
+                        errors.rejectValue("codigoNTI", "error.codigo.existe", "El codi ja existeix");
+                    }
+                }
+
+            } else {
+                errors.rejectValue("codigoNTI", "error.codigo.obligatorio", "El codi NTI és obligatori");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
-
 
 }
