@@ -446,4 +446,10 @@ public class AnexoFull{
 
     }
 
+    @Transient
+    public String getHash(){
+
+        return org.apache.commons.codec.binary.StringUtils.newStringUtf8(anexo.getHash());
+    }
+
 }
