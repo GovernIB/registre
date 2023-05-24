@@ -46,7 +46,7 @@
 
                     <!-- Formulario -->
                     <div class="panel-body">
-                            <form:hidden path="entidad.id"/>
+                            <%--<form:hidden path="entidad.id"/>--%>
                             <form:errors path="traducciones['es'].nombre" cssClass="has-error help-block" element="span"><span class="help-block-red"><spring:message code="regweb.traduccion.obligatorio"/></span></form:errors>
 
                             <div class="form-group col-xs-12 senseMargeLat">

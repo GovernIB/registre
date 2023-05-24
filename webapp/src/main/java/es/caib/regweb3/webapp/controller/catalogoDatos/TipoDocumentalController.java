@@ -118,9 +118,8 @@ public class TipoDocumentalController extends BaseController {
     public String editarTipoDocumental(@PathVariable("tipoDocumentalId") Long tipoDocumentalId, Model model, HttpServletRequest request) {
 
         TipoDocumental tipoDocumental = null;
-        try {
 
-            Entidad entidadActiva = getEntidadActiva(request);
+        try {
 
             tipoDocumental = tipoDocumentalEjb.findById(tipoDocumentalId);
 
