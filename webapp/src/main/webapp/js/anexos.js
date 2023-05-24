@@ -15,33 +15,33 @@ function obtenerAnexo(idAnexo, idEntidad){
         dataType: 'json',
         contentType: 'application/json',
 
-        success: function(result) {
+        success: function(anexoFull) {
 
-            $('#anexoTitulo').html(result.anexo.titulo);
-            $('#titulo').html(result.anexo.titulo);
-            $('#validezDocumento').html(tradsanexo['tipoValidezDocumento.'+result.anexo.validezDocumento]);
-            $('#tipoDocumento').html(tradsanexo['tipoDocumento.0'+result.anexo.tipoDocumento]);
-            $('#observacionesAnexo').html(result.anexo.observaciones);
-            $('#hash').html(result.anexo.hash);
-            if(result.anexo.scan == true){
+            $('#anexoTitulo').html(anexoFull.anexo.titulo);
+            $('#titulo').html(anexoFull.anexo.titulo);
+            $('#validezDocumento').html(tradsanexo['tipoValidezDocumento.'+anexoFull.anexo.validezDocumento]);
+            $('#tipoDocumento').html(tradsanexo['tipoDocumento.0'+anexoFull.anexo.tipoDocumento]);
+            $('#observacionesAnexo').html(anexoFull.anexo.observaciones);
+            $('#hash').html(anexoFull.hash);
+            if(anexoFull.anexo.scan == true){
                 $('#escaneado').html("Si");
             }else{
                 $('#escaneado').html("No");
             }
-            $('#origen').html(tradsanexo['anexo.origen.'+result.anexo.origenCiudadanoAdmin]);
-            obtenerElementoTraducido(urlTipoDocumental, result.anexo.tipoDocumental.id, 'tipoDocumental');
-            if(result.anexo.modoFirma == 0 || result.anexo.modoFirma == 2 ){
-                $('#mime').html(result.docMime);
-                $('#nombreFichero').html(result.docFileName);
+            $('#origen').html(tradsanexo['anexo.origen.'+anexoFull.anexo.origenCiudadanoAdmin]);
+            obtenerElementoTraducido(urlTipoDocumental, anexoFull.anexo.tipoDocumental.id, 'tipoDocumental');
+            if(anexoFull.anexo.modoFirma == 0 || anexoFull.anexo.modoFirma == 2 ){
+                $('#mime').html(anexoFull.docMime);
+                $('#nombreFichero').html(anexoFull.docFileName);
             }else {
-                $('#mime').html(result.signMime);
-                $('#nombreFichero').html(result.signFileName);
+                $('#mime').html(anexoFull.signMime);
+                $('#nombreFichero').html(anexoFull.signFileName);
             }
 
-            if(result.anexo.modoFirma !== 0){ // Firma Attached o detached
-                $('#tipoFirma').html(result.anexo.signType);
-                $('#perfilFirma').html(result.anexo.signProfile);
-                $('#formatoFirma').html(result.anexo.signFormat);
+            if(anexoFull.anexo.modoFirma !== 0){ // Firma Attached o detached
+                $('#tipoFirma').html(anexoFull.anexo.signType);
+                $('#perfilFirma').html(anexoFull.anexo.signProfile);
+                $('#formatoFirma').html(anexoFull.anexo.signFormat);
                 $('#firmaInformacion').show();
             }else{
                 $('#firmaInformacion').hide();
