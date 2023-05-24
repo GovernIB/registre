@@ -75,6 +75,13 @@
                     <div class="col-xs-7" id="nombreFichero"></div>
                 </div>
 
+                <div class="form-group col-xs-10">
+                    <div class="col-xs-3 pull-left etiqueta_regweb control-label">
+                        <label><spring:message code="anexo.hash"/></label>
+                    </div>
+                    <div class="col-xs-9" id="hash"></div>
+                </div>
+
                 <div id="firmaInformacion">
                     <div class="form-group col-xs-6">
                         <div class="col-xs-5 pull-left etiqueta_regweb control-label">
