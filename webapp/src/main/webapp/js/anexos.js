@@ -22,6 +22,7 @@ function obtenerAnexo(idAnexo, idEntidad){
             $('#validezDocumento').html(tradsanexo['tipoValidezDocumento.'+result.anexo.validezDocumento]);
             $('#tipoDocumento').html(tradsanexo['tipoDocumento.0'+result.anexo.tipoDocumento]);
             $('#observacionesAnexo').html(result.anexo.observaciones);
+            $('#hash').html(result.anexo.hash);
             if(result.anexo.scan == true){
                 $('#escaneado').html("Si");
             }else{
