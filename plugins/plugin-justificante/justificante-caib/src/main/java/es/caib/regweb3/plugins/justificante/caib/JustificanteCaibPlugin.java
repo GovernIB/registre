@@ -41,7 +41,6 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
 
     private String textoLegalValidez;
     private String textoLegalDocElectronica;
-    private String avisoRegistroPresencial;
     private String estampat = null;
     private String rutaImatge = null;
     private Float fitWidth = null;
@@ -200,11 +199,6 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
             textoLegalValidez = tradueixMissatge(locale,"justificante.texto.validez.presencial");
         }else{ // Telemático
             textoLegalValidez = tradueixMissatge(locale,"justificante.texto.validez.telematico");
-        }
-
-        // Aviso registro presencial
-        if(RegwebConstantes.REGISTRO_ENTRADA.equals(tipoRegistro) && registro.getRegistroDetalle().getPresencial() && registro.getRegistroDetalle().isInteresadoJuridico()){
-            avisoRegistroPresencial = tradueixMissatge(locale,"justificante.texto.registro.presencial");
         }
 
     }
@@ -502,7 +496,7 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
         document.add(titulo);
         document.add(getLineaVerde());
 
-        Paragraph texto = new Paragraph(avisoRegistroPresencial, lletraGovern8);
+        Paragraph texto = new Paragraph(tradueixMissatge(locale,"justificante.texto.registro.presencial"), lletraGovern8);
         document.add(texto);
     }
 
