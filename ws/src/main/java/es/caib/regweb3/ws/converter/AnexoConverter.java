@@ -16,6 +16,8 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Calendar;
 
+import static es.caib.regweb3.utils.StringUtils.eliminarCaracteresProhibidosArxiu;
+
 
 /**
  * Created 1/12/14 13:45
@@ -136,7 +138,7 @@ public class AnexoConverter extends CommonConverter {
 
       Anexo anexo = new Anexo(RegwebConstantes.PERFIL_CUSTODIA_DOCUMENT_CUSTODY);
 
-      if(StringUtils.isNotEmpty(anexoWs.getTitulo())){ anexo.setTitulo(anexoWs.getTitulo());}
+      if(StringUtils.isNotEmpty(anexoWs.getTitulo())){ anexo.setTitulo(eliminarCaracteresProhibidosArxiu(anexoWs.getTitulo()));}
 
       if(anexoWs.getTipoDocumental()!= null) {
 
