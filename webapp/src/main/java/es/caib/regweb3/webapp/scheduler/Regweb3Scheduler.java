@@ -43,13 +43,6 @@ public class Regweb3Scheduler {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        /*try {
-            schedulerEjb.enviarEmailErrorDistribucion();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }*/
     }
 
     /**
@@ -150,6 +143,7 @@ public class Regweb3Scheduler {
      * Cuando lo hace: cada 20 minutos, a los 5 minutos de haberse iniciado el servidor.
      */
     @Scheduled(fixedDelay = 1200000, initialDelay = 300000)
+    //@Scheduled(fixedDelay = 180000, initialDelay = 120000) // 3 minutos - 2 de retraso
     public void distribuirRegistrosEnCola(){
 
         try {
@@ -167,6 +161,7 @@ public class Regweb3Scheduler {
      * (de 01:00h a 02:00h hay una parada por Backup de Arxiu)
      */
     @Scheduled(cron = "0 0/20 2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,0 * * *")
+    //@Scheduled(fixedDelay = 180000) // 3 minutos
     public void custodiarJustificantesEnCola(){
 
         try {
@@ -198,9 +193,9 @@ public class Regweb3Scheduler {
 
     /**
      * Qué hace: purga los anexos de los registros distribuidos
-     * Cuando lo hace: Cada 20 minutos a las 00:00, a las 01:00 y a las 02:00
+     * Cuando lo hace: Cada 10 minutos desde las 01:00 hasta las 06:00
      */
-    /*@Scheduled(cron = "0 0/20 0,1,2 * * *") //
+    @Scheduled(cron = "0 0/10 1,2,3,4,5,6 * * *") //
     public void purgarAnexosDistribuidos(){
 
         try {
@@ -211,7 +206,7 @@ public class Regweb3Scheduler {
             e.printStackTrace();
         }
 
-    }*/
+    }
 
 
     /**

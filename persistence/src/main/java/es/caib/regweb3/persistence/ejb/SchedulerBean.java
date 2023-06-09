@@ -123,17 +123,21 @@ public class SchedulerBean implements SchedulerLocal {
 
             for(Entidad entidad: entidades) {
 
-                //Integración
-                entidadActiva = entidad;
-                Date inicio = new Date();
-                peticion = new StringBuilder();
-                peticion.append("entidad: ").append(entidad.getNombre()).append(System.getProperty("line.separator"));
+                if(PropiedadGlobalUtil.getPurgarAnexosDistribuidos(entidad.getId())){
 
-                //Purgamos los anexos de registros distribuidos un máximo de numElementos
-                int total = anexoEjb.purgarAnexosRegistrosDistribuidos(entidad.getId());
-                peticion.append("total anexos purgados: ").append(total).append(System.getProperty("line.separator"));
+                    //Integración
+                    entidadActiva = entidad;
+                    Date inicio = new Date();
+                    peticion = new StringBuilder();
+                    peticion.append("entidad: ").append(entidad.getNombre()).append(System.getProperty("line.separator"));
 
-                integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_SCHEDULERS, descripcion, peticion.toString(), System.currentTimeMillis() - tiempo, entidad.getId(), "");
+                    //Purgamos los anexos de registros distribuidos un máximo de numElementos
+                    int total = anexoEjb.purgarAnexosRegistrosDistribuidos(entidad.getId());
+                    peticion.append("total anexos purgados: ").append(total).append(System.getProperty("line.separator"));
+
+                    integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_SCHEDULERS, descripcion, peticion.toString(), System.currentTimeMillis() - tiempo, entidad.getId(), "");
+                }
+
             }
 
         } catch (I18NException e) {

@@ -1255,23 +1255,25 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
     @Override
     public int purgarAnexosRegistrosDistribuidos(Long idEntidad) throws I18NException{
-
+        Date inicio = new Date();
         Integer mesesPurgo = PropiedadGlobalUtil.getMesesPurgoAnexos(idEntidad);
         Integer numElementos = PropiedadGlobalUtil.getNumElementosPurgoAnexos(idEntidad);
 
+        Date fechaInicioPurgado = TimeUtils.formateaFecha("01/04/2023", RegwebConstantes.FORMATO_FECHA); // 1 de abril 2023
         Date fechaPurgo = DateUtils.addMonths(new Date(), -mesesPurgo);
 
-        // Obtenemos aquellos anexos que corresponden a registros Distribuidos y la fecha de distribución la cogemos de la trazabilidad.
-        Query q = em.createQuery("select a.custodiaID from Anexo a, RegistroEntrada re " +
-                "where a.registroDetalle.id = re.registroDetalle.id and a.justificante = false and a.purgado = false and a.confidencial = false " +
-                "and re.usuario.entidad.id = :idEntidad and re.fecha <= :fechaPurgo and re.estado =:distribuido ");
+        Query q = em.createQuery("Select anexos.custodiaID from RegistroEntrada as re left join re.registroDetalle.anexos as anexos " +
+                "where re.entidad.id = :idEntidad and re.registroDetalle.id = anexos.registroDetalle.id and re.fecha >= :fechaInicioPurgado and re.fecha <= :fechaPurgo " +
+                "and re.estado =:distribuido and anexos.purgado = false and anexos.justificante=false and anexos.confidencial = false");
 
         q.setParameter("idEntidad", idEntidad);
+        q.setParameter("fechaInicioPurgado", fechaInicioPurgado);
         q.setParameter("fechaPurgo", fechaPurgo);
         q.setParameter("distribuido", RegwebConstantes.REGISTRO_DISTRIBUIDO);
         q.setMaxResults(numElementos);
 
         List<String> custodyIds = q.getResultList();
+        log.info("Total anexosTotales a purgar: " + custodyIds.size() + " en " + TimeUtils.formatElapsedTime(System.currentTimeMillis() - inicio.getTime()));
 
         for (String custodyId : custodyIds) {
             //Purgamos anexo a anexo
