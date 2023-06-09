@@ -434,7 +434,7 @@ public interface RegwebConstantes {
     long TIPO_PROPIEDAD_CUSTODIA = 3L;
     long TIPO_PROPIEDAD_USERINFORMATION = 4L;
     long TIPO_PROPIEDAD_SCANNER = 5L;
-    long TIPO_PROPIEDAD_DISTRIBUCION = 6L;
+    long TIPO_PROPIEDAD_COLA = 6L;
     long TIPO_PROPIEDAD_SIR = 7L;
     long TIPO_PROPIEDAD_CARPETA = 8L;
 
@@ -444,7 +444,7 @@ public interface RegwebConstantes {
             TIPO_PROPIEDAD_CUSTODIA,
             TIPO_PROPIEDAD_USERINFORMATION,
             TIPO_PROPIEDAD_SCANNER,
-            TIPO_PROPIEDAD_DISTRIBUCION,
+            TIPO_PROPIEDAD_COLA,
             TIPO_PROPIEDAD_SIR,
             TIPO_PROPIEDAD_CARPETA
     };
