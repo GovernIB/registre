@@ -4,6 +4,7 @@ package es.caib.regweb3.webapp.scheduler;
 import es.caib.regweb3.persistence.ejb.SchedulerLocal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import javax.ejb.EJB;
@@ -27,7 +28,7 @@ public class Regweb3Scheduler {
      * Qué hace: Realiza tareas administrativas generales de la aplicación
      * Cuando lo hace: Todos días, a las 01:00 h.
      */
-   /* @Scheduled(cron = "0 0 1 * * *") // 0 0 1 * * * Cada día a las 01:00h
+    @Scheduled(cron = "0 0 1 * * *") // 0 0 1 * * * Cada día a las 01:00h
     public void tareasAdministrativas(){
         try {
             schedulerEjb.purgarIntegraciones();
@@ -42,19 +43,12 @@ public class Regweb3Scheduler {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        *//*try {
-            schedulerEjb.enviarEmailErrorDistribucion();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }*//*
     }
 
-    *//**
+    /**
      * Qué hace: Genera las comunicaciones automáticas a los usuarios
      * Cuando lo hace: Cada primer día de mes
-     *//*
+     */
     @Scheduled(cron = "0 0 0 1 * ?")
     public void generarComunicaciones(){
 
@@ -67,10 +61,10 @@ public class Regweb3Scheduler {
 
     }
 
-    *//**
+    /**
      * Qué hace: Inicializa a 0 los contadores de todos los libros de todas las entidades
      * Cuando lo hace: Todos los 1 de Enero a las 00:00:00 h.
-     *//*
+     */
     @Scheduled(cron = "0 0 0 1 1 ?")
     public void inicializarContadores(){
 
@@ -83,10 +77,10 @@ public class Regweb3Scheduler {
 
     }
 
-    *//**
+    /**
      * Qué hace: Reintenta enviar los Intercambios SIR sin ACK
      * Cuando lo hace: cada 15 minutos
-     *//*
+     */
     @Scheduled(fixedDelay = 900000)
     public void reintentarIntercambiosSinAck(){
 
@@ -98,10 +92,10 @@ public class Regweb3Scheduler {
         }
     }
 
-    *//**
+    /**
      * Qué hace: Reintenta enviar los reenvios/rechazos SIR sin ACK
      * Cuando lo hace: cada 30 minutos, a los 5 minutos de iniciarse el servidor.
-     *//*
+     */
     @Scheduled(fixedDelay = 1800000, initialDelay = 300000)
     public void reintentarReenviosRechazosSinAck(){
 
@@ -113,10 +107,10 @@ public class Regweb3Scheduler {
         }
     }
 
-    *//**
+    /**
      * Qué hace: Reintenta enviar los Intercambios SIR con error
      * Cuando lo hace: cada 30 minutos, a los 10 minutos de haberse iniciado el servidor.
-     *//*
+     */
     @Scheduled(fixedDelay = 1800000, initialDelay = 600000)
     public void reintentarIntercambiosConError(){
 
@@ -128,10 +122,10 @@ public class Regweb3Scheduler {
         }
     }
 
-    *//**
+    /**
      * Qué hace: Reintenta enviar los reenvios/rechazos SIR con error
      * Cuando lo hace: cada 30 minutos, a los 10 minutos de haberse iniciado el servidor.
-     *//*
+     */
     @Scheduled(fixedDelay = 1800000, initialDelay = 600000)
     public void reintentarReenviosRechazosConError(){
 
@@ -144,11 +138,12 @@ public class Regweb3Scheduler {
     }
 
 
-    *//**
+    /**
      * Qué hace: Distribuye los registros que hay en la cola
      * Cuando lo hace: cada 20 minutos, a los 5 minutos de haberse iniciado el servidor.
-     *//*
+     */
     @Scheduled(fixedDelay = 1200000, initialDelay = 300000)
+    //@Scheduled(fixedDelay = 180000, initialDelay = 120000) // 3 minutos - 2 de retraso
     public void distribuirRegistrosEnCola(){
 
         try {
@@ -160,12 +155,13 @@ public class Regweb3Scheduler {
         }
     }
 
-    *//**
+    /**
      * Qué hace: Custodia los Justificantes que hay en la cola
      * Cuándo lo hace: cada 20 minutos desde las 02:00 hasta las 00:00
      * (de 01:00h a 02:00h hay una parada por Backup de Arxiu)
-     *//*
+     */
     @Scheduled(cron = "0 0/20 2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,0 * * *")
+    //@Scheduled(fixedDelay = 180000) // 3 minutos
     public void custodiarJustificantesEnCola(){
 
         try {
@@ -177,11 +173,11 @@ public class Regweb3Scheduler {
         }
     }
 
-    *//**
+    /**
      * Qué hace: Custodia los Justificantes que hay en la cola
      * Cuándo lo hace: cada 20 minutos desde las 15:00 hasta las 07:00
      * (de 01:00h a 02:00h hay una parada por Backup de Arxiu)
-     *//*
+     */
     @Scheduled(cron = "0 0/20 15,16,17,18,19,20,21,22,23,0,2,3,4,5,6 * * *")
     public void custodiarJustificantesEnCola2(){
 
@@ -192,14 +188,14 @@ public class Regweb3Scheduler {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }*/
+    }
 
 
     /**
      * Qué hace: purga los anexos de los registros distribuidos
-     * Cuando lo hace: Cada 20 minutos a las 00:00, a las 01:00 y a las 02:00
+     * Cuando lo hace: Cada 10 minutos desde las 01:00 hasta las 06:00
      */
-    /*@Scheduled(cron = "0 0/20 0,1,2 * * *") //
+    @Scheduled(cron = "0 0/10 1,2,3,4,5,6 * * *") //
     public void purgarAnexosDistribuidos(){
 
         try {
@@ -210,7 +206,7 @@ public class Regweb3Scheduler {
             e.printStackTrace();
         }
 
-    }*/
+    }
 
 
     /**
@@ -245,24 +241,4 @@ public class Regweb3Scheduler {
             e.printStackTrace();
         }
     }*/
-
-
-    /**
-     * Qué hace: consulta los asientos pendientes por SIR.
-     * Contempla los recibidos y los enviados
-     * Cuando lo hace: Cada 5 minutos a las 00:00, 02:00 y 03:00
-     */
-    /*@Scheduled(cron = "0 0/5 * * * ?") */
-    public void consultarAsientosPendientesSIR() {
-
-        try {
-
-            schedulerEjb.consultarAsientosPendientesSIR();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-
 }

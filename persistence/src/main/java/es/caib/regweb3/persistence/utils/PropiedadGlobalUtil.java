@@ -216,14 +216,14 @@ public class PropiedadGlobalUtil {
     }
 
     /**
-     * Indicam si volem validar firmes dels annexes introduïts
-     * Propiedad: es.caib.regweb3.validarfirmas
+     * Devuelve el valor de la propiedad que indica si se han de purgar los anexos de los Registros distribuidos
+     * Propiedad: es.caib.regweb3.purgarAnexosDistribuidos
+     * @param idEntidad
      * @return
      */
-    public static Boolean validarFirmas() {
-        final String partialPropertyName = "validarfirmas";
-
-        return getBoolean(partialPropertyName);
+    public static Boolean getPurgarAnexosDistribuidos(Long idEntidad) {
+        final String partialPropertyName = "anexos.purgarAnexosDistribuidos";
+        return getBooleanByEntidad(idEntidad, partialPropertyName);
 
     }
 
