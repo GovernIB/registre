@@ -9,11 +9,11 @@
     <parent>
         <groupId>es.caib.regweb3</groupId>
         <artifactId>regweb3-sir</artifactId>
-        <version>3.3.1</version>
+        <version>3.3.2</version>
     </parent>
 
     <artifactId>regweb3-sir-core</artifactId>
-    <version>3.3.1</version>
+    <version>3.3.2</version>
     <packaging>jar</packaging>
 
     <name>RegWeb3 - SIR - Core</name>
