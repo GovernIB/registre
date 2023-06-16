@@ -536,8 +536,8 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
             // Si no tiene Justificante, lo generamos
             if(!registroEntrada.getRegistroDetalle().getTieneJustificante()){
 
-                // Solo se puede generar si el registro es Válido o está en la Cola de distribución
-                if(registroEntrada.getEstado().equals(REGISTRO_VALIDO) || registroEntrada.getEstado().equals(REGISTRO_DISTRIBUYENDO)){
+                // Solo se puede generar si el registro es Válido o está en la Cola de distribución o ya se ha distribuido (Para casos anteriores a la puesta en marcha del Libro único)
+                if(registroEntrada.getEstado().equals(REGISTRO_VALIDO) || registroEntrada.getEstado().equals(REGISTRO_DISTRIBUYENDO) || registroEntrada.getEstado().equals(REGISTRO_DISTRIBUIDO)){
 
                     try{
                         justificante = justificanteEjb.crearJustificanteWS(entidadActiva, usuario,registroEntrada,RegwebConstantes.REGISTRO_ENTRADA, RegistroUtils.getIdiomaJustificante(registroEntrada));
