@@ -3,6 +3,7 @@ package es.caib.regweb3.model;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.model.utils.IndicadorPrueba;
 import es.caib.regweb3.utils.RegwebConstantes;
+import es.caib.regweb3.utils.StringUtils;
 import es.caib.regweb3.utils.Versio;
 import org.hibernate.annotations.Type;
 
@@ -197,7 +198,7 @@ public class RegistroDetalle implements Serializable {
     }
 
     public void setExtracto(String extracto) {
-        if(extracto.length() > 240){
+        if(StringUtils.isNotEmpty(extracto) && extracto.length() > 240){
             this.extracto = extracto.substring(0,239);
         }else{
             this.extracto = extracto;
