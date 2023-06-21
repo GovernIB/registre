@@ -538,7 +538,7 @@ public class Anexo implements Serializable {
         this.endpointRFU = endpointRFU;
     }
 
-    @Column(name = "IDENTIFRFU")
+    @Column(name = "IDENTIFRFU", length=4000)
     public String getIdentificadorRFU() {
         return identificadorRFU;
     }
