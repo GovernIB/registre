@@ -70,6 +70,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean implem
     @EJB private PluginLocal pluginEjb;
     @EJB private OrganismoLocal organismoEjb;
     @EJB private MultiEntidadLocal multiEntidadEjb;
+    @EJB private MetadatoRegistroEntradaLocal metadatoRegistroEntradaEjb;
 
 
     @Override
@@ -139,6 +140,16 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean implem
                 }
 
                 registroEntrada.getRegistroDetalle().getAnexosFull().addAll(anexosFull);
+            }
+
+            //Procesamos los metadatos
+            //guardamos los metadatos del Registro de Entrada
+            Set<MetadatoRegistroEntrada> metadatosRE = registroEntrada.getMetadatosRegistroEntrada();
+            if (metadatosRE != null && metadatosRE.size() > 0) {
+                for (MetadatoRegistroEntrada metadatoRegistroEntrada : metadatosRE) {
+                    metadatoRegistroEntrada.setRegistroEntrada(registroEntrada);
+                    metadatoRegistroEntradaEjb.persist(metadatoRegistroEntrada);
+                }
             }
 
             // Obtenemos el próximo evento del Registro
