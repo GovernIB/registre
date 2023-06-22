@@ -404,7 +404,6 @@ public class LibSirUtils {
             for (AnexoFull anexoFull : anexosFull) {
                 if (anexoFull != null) {
                     es.gob.ad.registros.sir.interService.bean.AnexoBean anexoBean;
-
                     Anexo anexo = anexoFull.getAnexo();
                     anexoBean = transformarAnexo(anexo, secuencia, identificadorIntercambio, anexoFull.getMime());
                     secuencia++;
@@ -454,7 +453,7 @@ public class LibSirUtils {
         Long canalPreferente = interesado.getCanal();
         if (canalPreferente != -1) {
             interesadoBean.setCanalPreferenteComunicacionInteresado(CODIGO_BY_CANALNOTIFICACION.get(canalPreferente));
-        }else { // TODO PENDIENTE DE INCIDENCIA 1945947
+        }else{// TODO PENDIENTE DE INCIDENCIA 1945947
             interesadoBean.setCanalPreferenteComunicacionInteresado("2");
         }
 
@@ -620,10 +619,10 @@ public class LibSirUtils {
             fitxer.setMime(anexoFull.getMime());
             fitxer.setNom(anexoFull.getFileName());
             obtenerReferenciaRequestInfo.setDocument(fitxer);
-
             //Se envia el documento/codigodir3 del interesado
             obtenerReferenciaRequestInfo.getInteressats().add(documentoInteresado);
             obtenerReferenciaRequestInfo.setCsv("estoeselcsv");
+            //obtenerReferenciaRequestInfo.setCsv(anexoFull.getAnexo().getCsv());
 
             //ENVIO DE METADATOS NECESARIOS PARA ARCHIVO
             List<Metadata> metadatosAnexo = anexoFull.getMetadatas();
@@ -671,7 +670,7 @@ public class LibSirUtils {
             fecha.setTime(anexoFull.getAnexo().getFechaCaptura());
             metadada.setClau("eni:fecha_inicio");
             DateFormat formatter = new SimpleDateFormat(FORMATO_FECHA_SICRES4);
-            metadada.setValor(formatter.format(anexoFull.getAnexo().getFechaCaptura()));
+            metadada.setValor(formatter.format(fecha.getTime()));
             obtenerReferenciaRequestInfo.getMetadades().add(metadada);
 
         }
@@ -1010,20 +1009,22 @@ public class LibSirUtils {
         if (tiposMetadato != null) {
             //fechaCaptura
             metadatoAnexoSir = new MetadatoAnexoSir(METADATO_NTI, "fechaCaptura", formatter.format(tiposMetadato.getFechaCaptura().toGregorianCalendar().getTime()));
+          //  metadatoAnexoSir = new MetadatoAnexoSir(METADATO_NTI, "fechaCaptura", formatter.format(new Date()));
             metadatosAnexos.add(metadatoAnexoSir);
 
             //origenCiudadanoAdministracion
             metadatoAnexoSir = new MetadatoAnexoSir(METADATO_NTI, "origenCiudadanoAdministracion", tiposMetadato.isOrigenCiudadanoAdministracion() ? "1" : "0");
+         //   metadatoAnexoSir = new MetadatoAnexoSir(METADATO_NTI, "origenCiudadanoAdministracion", "1");
             metadatosAnexos.add(metadatoAnexoSir);
 
             //tipoDocumental
             metadatoAnexoSir = new MetadatoAnexoSir(METADATO_NTI, "tipoDocumental", tiposMetadato.getTipoDocumental().value());
+           // metadatoAnexoSir = new MetadatoAnexoSir(METADATO_NTI, "tipoDocumental", "TD01");
             metadatosAnexos.add(metadatoAnexoSir);
-
-            anexo.setMetadatosAnexos(metadatosAnexos);
 
         }
 
+        anexo.setMetadatosAnexos(metadatosAnexos);
         return anexo;
     }
 }
