@@ -88,10 +88,11 @@ public class LibSirBean implements LibSirLocal{
     }*/
 
     @Override
-    public void enviarAsiento(AsientoBean asientoBean) throws InterException{
+    public String enviarAsiento(AsientoBean asientoBean) throws InterException{
 
         salidaService.enviar(asientoBean);
-        log.info("Enviado AsientoBean" + asientoBean.getNuRgOrigen());
+        log.info("Enviado AsientoBean" + asientoBean.getNuRgOrigen() + " - " + asientoBean.getCdIntercambio());
+        return asientoBean.getCdIntercambio();
 
     }
 
