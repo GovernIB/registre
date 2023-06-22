@@ -15,6 +15,7 @@ import es.caib.regweb3.webapp.controller.BaseController;
 import es.caib.regweb3.webapp.form.*;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import es.caib.regweb3.webapp.validator.OficioRemisionBusquedaValidator;
+import es.gob.ad.registros.sir.interService.exception.InterException;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
@@ -613,7 +614,12 @@ public class OficioRemisionController extends BaseController {
             log.info(" Error enviant a SIR: " + I18NUtils.getMessage(ve), ve);
             Mensaje.saveMessageError(request, getMessage("registroSir.error.envio") + ": " + ve.getMessage());
             return new ModelAndView(redirect);
+        }  catch (InterException ie) {
+            log.info(" Error enviant a SIR : " + ie.getMessage(), ie);
+            Mensaje.saveMessageError(request, getMessage("registroSir.error.envio") + ": " + ie.getMessage());
+            return new ModelAndView(redirect);
         }
+
 
         Mensaje.saveMessageInfo(request, getMessage("oficioRemision.generar.ok"));
 
