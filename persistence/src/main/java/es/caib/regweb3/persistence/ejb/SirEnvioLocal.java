@@ -3,6 +3,8 @@ package es.caib.regweb3.persistence.ejb;
 import es.caib.dir3caib.ws.api.oficina.OficinaTF;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.sir.MensajeControl;
+import es.caib.regweb3.model.utils.AnexoFull;
+import es.gob.ad.registros.sir.interService.bean.AsientoBean;
 import es.gob.ad.registros.sir.interService.exception.InterException;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
@@ -33,8 +35,8 @@ public interface SirEnvioLocal {
      * @throws I18NException
      * @throws I18NException
      */
-    RegistroEntrada crearIntercambioEntrada(RegistroEntrada registroEntrada, Entidad entidad,Oficina oficinaActiva, UsuarioEntidad usuario, OficinaTF oficinaSirDestino)
-            throws I18NException, I18NValidationException;
+    AsientoBean crearIntercambioEntrada(RegistroEntrada registroEntrada, Entidad entidad, Oficina oficinaActiva, UsuarioEntidad usuario, OficinaTF oficinaSirDestino)
+            throws I18NException, I18NValidationException, InterException, DatatypeConfigurationException;
 
     /**
      * Crear un intercambio SIR salida, preparado par enviarse
@@ -45,8 +47,8 @@ public interface SirEnvioLocal {
      * @throws I18NException
      * @throws I18NException
      */
-    RegistroSalida crearIntercambioSalida(RegistroSalida registroSalida, Entidad entidad, Oficina oficinaActiva, UsuarioEntidad usuario, OficinaTF oficinaSirDestino)
-            throws I18NException, I18NValidationException;
+    AsientoBean crearIntercambioSalida(RegistroSalida registroSalida, Entidad entidad, Oficina oficinaActiva, UsuarioEntidad usuario, OficinaTF oficinaSirDestino)
+            throws I18NException, I18NValidationException, InterException, DatatypeConfigurationException;
 
     /**
      * Envia un intercambio a la oficina destino
@@ -59,7 +61,7 @@ public interface SirEnvioLocal {
      * @throws I18NException
      */
     OficioRemision enviarIntercambio(Long tipoRegistro, IRegistro registro, Entidad entidad, Oficina oficinaActiva, UsuarioEntidad usuario, String codigoOficinaSir)
-            throws I18NException, I18NValidationException, DatatypeConfigurationException;
+            throws I18NException, I18NValidationException, DatatypeConfigurationException, InterException;
 
     /**
      * Reenvia un intercambio, cuando este ha sido RECHAZADO O REENVIADO
@@ -194,5 +196,7 @@ public interface SirEnvioLocal {
     Integer aceptarRegistrosERTE(List<Long> registros, Entidad entidad, String destino, Oficina oficina,Long idLibro, UsuarioEntidad usuarioEntidad) throws I18NException;
 
     Integer copiarDocumentacionERTE(List<Long> registros, Long idEntidad) throws I18NException;
+
+    List<AnexoFull> gestionAnexosInterdoc(RegistroDetalle registroDetalle, Long idEntidad) throws I18NException;
 }
 
