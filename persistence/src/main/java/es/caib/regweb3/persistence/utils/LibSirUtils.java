@@ -453,8 +453,8 @@ public class LibSirUtils {
         Long canalPreferente = interesado.getCanal();
         if (canalPreferente != -1) {
             interesadoBean.setCanalPreferenteComunicacionInteresado(CODIGO_BY_CANALNOTIFICACION.get(canalPreferente));
-        }else{// TODO PENDIENTE DE INCIDENCIA 1945947
-            interesadoBean.setCanalPreferenteComunicacionInteresado("2");
+        }else{ // se debe indicar a null cuando no está informado
+            interesadoBean.setCanalPreferenteComunicacionInteresado(null);
         }
 
         //CAMPOS NUEVOS SICRES4
@@ -497,7 +497,7 @@ public class LibSirUtils {
             if (canalPreferente !=-1) {
                 interesadoBean.setCanalPreferenteComunicacionRepresentante(CODIGO_BY_CANALNOTIFICACION.get(canalPreferente));
             }else{// TODO PENDIENTE DE INCIDENCIA 1945947
-                interesadoBean.setCanalPreferenteComunicacionRepresentante("2");
+                interesadoBean.setCanalPreferenteComunicacionRepresentante(null);
             }
 
             //CAMPOS NUEVOS SICRES4
