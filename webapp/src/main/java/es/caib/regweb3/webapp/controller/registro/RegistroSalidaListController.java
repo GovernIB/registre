@@ -362,6 +362,11 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
             jsonResponse.setStatus("FAIL");
             jsonResponse.setError(getMessage("registroSir.error.envio") + ": " + e.getMessage());
             e.printStackTrace();
+        }catch (Exception ie) {
+            log.info(getMessage("registroSir.error.envio"));
+            jsonResponse.setStatus("FAIL");
+            jsonResponse.setError(getMessage("registroSir.error.envio") + ": " + ie.getMessage());
+            ie.printStackTrace();
         }
 
         return jsonResponse;
