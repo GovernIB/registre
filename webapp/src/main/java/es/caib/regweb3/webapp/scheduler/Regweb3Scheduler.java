@@ -81,7 +81,7 @@ public class Regweb3Scheduler {
      * Qué hace: Reintenta enviar los Intercambios SIR sin ACK
      * Cuando lo hace: cada 15 minutos
      */
-    @Scheduled(fixedDelay = 900000)
+   // @Scheduled(fixedDelay = 900000)
     public void reintentarIntercambiosSinAck(){
 
         try {
@@ -96,7 +96,7 @@ public class Regweb3Scheduler {
      * Qué hace: Reintenta enviar los reenvios/rechazos SIR sin ACK
      * Cuando lo hace: cada 30 minutos, a los 5 minutos de iniciarse el servidor.
      */
-    @Scheduled(fixedDelay = 1800000, initialDelay = 300000)
+   // @Scheduled(fixedDelay = 1800000, initialDelay = 300000)
     public void reintentarReenviosRechazosSinAck(){
 
         try {
@@ -111,7 +111,7 @@ public class Regweb3Scheduler {
      * Qué hace: Reintenta enviar los Intercambios SIR con error
      * Cuando lo hace: cada 30 minutos, a los 10 minutos de haberse iniciado el servidor.
      */
-    @Scheduled(fixedDelay = 1800000, initialDelay = 600000)
+   // @Scheduled(fixedDelay = 1800000, initialDelay = 600000)
     public void reintentarIntercambiosConError(){
 
         try {
@@ -126,7 +126,7 @@ public class Regweb3Scheduler {
      * Qué hace: Reintenta enviar los reenvios/rechazos SIR con error
      * Cuando lo hace: cada 30 minutos, a los 10 minutos de haberse iniciado el servidor.
      */
-    @Scheduled(fixedDelay = 1800000, initialDelay = 600000)
+   // @Scheduled(fixedDelay = 1800000, initialDelay = 600000)
     public void reintentarReenviosRechazosConError(){
 
         try {
