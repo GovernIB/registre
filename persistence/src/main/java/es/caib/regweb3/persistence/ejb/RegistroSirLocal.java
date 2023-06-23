@@ -49,6 +49,8 @@ public interface RegistroSirLocal extends BaseEjb<RegistroSir, Long> {
      */
     RegistroSir getRegistroSir(String identificadorIntercambio, String codigoEntidadRegistralDestino) throws I18NException;
 
+    RegistroSir getByIdIntercambio(String identificadorIntercambio) throws I18NException;
+
     /**
      * Obtiene el Estado de un RegistroSir
      * @param idRegistroSir
