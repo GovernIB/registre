@@ -53,5 +53,5 @@ public interface LibSirLocal {
     // pruebas
     byte[] obtenerAnexoReferenciaContenido(Long cdAnexo) throws InterException;*/
 
-    void enviarAsiento(AsientoBean asientoBean) throws InterException;
+    String enviarAsiento(AsientoBean asientoBean) throws InterException;
 }

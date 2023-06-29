@@ -121,7 +121,7 @@ public interface RegwebConstantes {
     /* -------------- FORMATOS --------------*/
     String FORMATO_FECHA = "dd/MM/yyyy";
     String FORMATO_FECHA_HORA = "dd/MM/yyyy HH:mm";
-    String FORMATO_FECHA_SICRES4 = "YYYYMMDDHHmmssz";
+    String FORMATO_FECHA_SICRES4 = "yyyyMMddHHmmssZ";
     Integer ANY = 2015;
 
     /* -------------- PERMISOS LIBRO REGISTROS --------------*/

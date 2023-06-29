@@ -1757,6 +1757,16 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
         q.executeUpdate();
     }
 
+    @Override
+    @TransactionAttribute(value=REQUIRES_NEW)
+    public void guardarIdentificadorRFU(Long idAnexo, String identificadorRFU) throws I18NException {
+
+        Query q = em.createQuery("update Anexo set identificadorRFU=:identificadorRFU where id = :idAnexo");
+        q.setParameter("identificadorRFU", identificadorRFU);
+        q.setParameter("idAnexo", idAnexo);
+        q.executeUpdate();
+    }
+
     /**
      * Carga los metadatos de un anexo
      * @param anexoFull

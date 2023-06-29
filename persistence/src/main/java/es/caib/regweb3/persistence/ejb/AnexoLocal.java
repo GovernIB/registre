@@ -275,4 +275,12 @@ public interface AnexoLocal extends BaseEjb<Anexo, Long> {
      * @throws I18NException
      */
     void custodiarJustificanteArxiu(String expedienteID, String custodiaID, String csv, Long idAnexo) throws I18NException;
+
+    /**
+     * Guarda el xml de referencia única cuando guardamos el anexo en interdoc.
+     * @param idAnexo
+     * @param identificadorRFU
+     * @throws I18NException
+     */
+    public void guardarIdentificadorRFU(Long idAnexo, String identificadorRFU) throws I18NException;
 }

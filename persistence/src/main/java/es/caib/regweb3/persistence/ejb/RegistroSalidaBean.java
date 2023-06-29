@@ -63,6 +63,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean implemen
     @EJB private PluginLocal pluginEjb;
     @EJB private OrganismoLocal organismoEjb;
     @EJB private MultiEntidadLocal multiEntidadEjb;
+    @EJB private MetadatoRegistroSalidaLocal metadatoRegistroSalidaEjb;
 
 
     @Override
@@ -126,6 +127,16 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean implemen
                     registroSalida.getRegistroDetalle().getAnexos().add(anexoFullCreado.getAnexo());
                 }
                 registroSalida.getRegistroDetalle().getAnexosFull().addAll(anexosFull);
+            }
+
+            //Procesamos los metadatos
+            //guardamos los metadatos del Registro de Entrada
+            Set<MetadatoRegistroSalida> metadatosRS = registroSalida.getMetadatosRegistroSalida();
+            if (metadatosRS != null && metadatosRS.size() > 0) {
+                for (MetadatoRegistroSalida metadatoRegistroSalida : metadatosRS) {
+                    metadatoRegistroSalida.setRegistroSalida(registroSalida);
+                    metadatoRegistroSalidaEjb.persist(metadatoRegistroSalida);
+                }
             }
 
             // Obtenemos el próximo evento del Registro

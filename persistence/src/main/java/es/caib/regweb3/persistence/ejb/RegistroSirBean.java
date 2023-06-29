@@ -77,6 +77,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
     @EJB private TrazabilidadLocal trazabilidadEjb;
     @EJB private SignatureServerLocal signatureServerEjb;
     @EJB private MetadatoRegistroSirLocal metadatoRegistroSirEjb;
+    @EJB private MetadatoAnexoSirLocal metadatoAnexoSirEjb;
 
     @Autowired IConsultaService consultaService;
 
@@ -158,6 +159,23 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
 
         q.setParameter("identificadorIntercambio",identificadorIntercambio);
         q.setParameter("codigoEntidadRegistralDestino",codigoEntidadRegistralDestino);
+        q.setParameter("eliminado",EstadoRegistroSir.ELIMINADO);
+
+        List<RegistroSir> registroSir = q.getResultList();
+        if(registroSir.size() >= 1){
+            return registroSir.get(0);
+        }else{
+            return null;
+        }
+    }
+
+    public RegistroSir getByIdIntercambio(String identificadorIntercambio) throws I18NException {
+
+        Query q = em.createQuery("Select registroSir from RegistroSir as registroSir where " +
+                "registroSir.identificadorIntercambio = :identificadorIntercambio " +
+                "and registroSir.estado != :eliminado");
+
+        q.setParameter("identificadorIntercambio",identificadorIntercambio);
         q.setParameter("eliminado",EstadoRegistroSir.ELIMINADO);
 
         List<RegistroSir> registroSir = q.getResultList();
@@ -1936,6 +1954,16 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
                 for (AnexoSir anexoSir : anexosSir) {
                     anexoSir.setRegistroSir(registroSir);
                     anexoSirEjb.persist(anexoSir);
+
+                    //guardamos los metadatos del anexo SIR
+                    Set<MetadatoAnexoSir> metadatosAnexoSir = anexoSir.getMetadatosAnexos();
+                    log.info("METADATOS ANEXOS SIR" + anexoSir.getMetadatosAnexos().size());
+                    if (metadatosAnexoSir != null && metadatosAnexoSir.size() > 0) {
+                        for (MetadatoAnexoSir metadatoAnexoSir : metadatosAnexoSir) {
+                            metadatoAnexoSir.setAnexoSir(anexoSir);
+                            metadatoAnexoSirEjb.persist(metadatoAnexoSir);
+                        }
+                    }
                 }
             }
             em.flush();
@@ -1956,11 +1984,11 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         } catch (Exception e) {
             log.info("Error al crear el RegistroSir:");
             e.printStackTrace();
-            for (AnexoSir anexoSir : registroSir.getAnexos()) {
+            /*for (AnexoSir anexoSir : registroSir.getAnexos()) {
                 ArchivoManager am = new ArchivoManager(anexoSir.getAnexo(), archivoEjb);
                 am.processErrorArchivosWithoutThrowException();
                 log.info("Eliminamos los posibles archivos creados: " + anexoSir.getAnexo().getId());
-            }
+            }*/
             throw e;
         }
 
@@ -1991,7 +2019,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         AnexoFull anexoFull = new AnexoFull();
         Anexo anexo = new Anexo(RegwebConstantes.PERFIL_CUSTODIA_DOCUMENT_CUSTODY);
 
-        //TODO Temporal hata que se acepten todos los registros sir pendientes con anexos que tienen caracteres prohibidos
+        //TODO Temporal hasta que se acepten todos los registros sir pendientes con anexos que tienen caracteres prohibidos
         anexo.setTitulo(es.caib.regweb3.utils.StringUtils.eliminarCaracteresProhibidosArxiu(anexoSir.getNombreFichero()));
 
         // Tipo Documento
