@@ -110,7 +110,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Paginacion busqueda(Integer pageNumber,Long idOrganismo, Date fechaInicio, Date fechaFin, String usuario, OficioRemision oficioRemision, Long destinoOficioRemision, Integer estadoOficioRemision, Long tipoOficioRemision, Boolean sir) throws I18NException {
+    public Paginacion busqueda(Integer pageNumber,Long idOrganismo, Date fechaInicio, Date fechaFin, String usuario, OficioRemision oficioRemision, Long destinoOficioRemision, Integer estadoOficioRemision, Long tipoOficioRemision, Boolean sir, Long idEntidad) throws I18NException {
 
         Query q;
         Query q2;
@@ -121,6 +121,10 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
                 "o.estado, o.tipoOficioRemision, o.numeroReintentos, o.codigoError, o.descripcionError from OficioRemision as o LEFT JOIN o.organismoDestinatario destino ");
 
         StringBuilder query = new StringBuilder(queryBase);
+
+        // Entidad
+        where.add(" o.entidad.id =:idEntidad  ");
+        parametros.put("idEntidad", idEntidad);
 
         // Organismo
         if(idOrganismo != null){

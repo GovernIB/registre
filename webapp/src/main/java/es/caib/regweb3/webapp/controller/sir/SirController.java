@@ -363,8 +363,8 @@ public class SirController extends BaseController {
 
         // Ajustam la dataFi per a que ens trobi els oficis del mateix dia
         busqueda.setFechaFin(RegistroUtils.ajustarHoraBusqueda(busqueda.getFechaFin()));
-
-        Paginacion paginacion = oficioRemisionEjb.busqueda(busqueda.getPageNumber(), busqueda.getIdOrganismo(), busqueda.getFechaInicio(), busqueda.getFechaFin(),null, oficioRemision, busqueda.getDestinoOficioRemision(), busqueda.getEstadoOficioRemision(), busqueda.getTipoOficioRemision(), true);
+        Entidad entidadActiva = getEntidadActiva(request);
+        Paginacion paginacion = oficioRemisionEjb.busqueda(busqueda.getPageNumber(), busqueda.getIdOrganismo(), busqueda.getFechaInicio(), busqueda.getFechaFin(),null, oficioRemision, busqueda.getDestinoOficioRemision(), busqueda.getEstadoOficioRemision(), busqueda.getTipoOficioRemision(), true, entidadActiva.getId());
 
         busqueda.setPageNumber(1);
         mav.addObject("paginacion", paginacion);
@@ -374,7 +374,6 @@ public class SirController extends BaseController {
         mav.addObject("oficioRemisionBusqueda", busqueda);
 
         return mav;
-
     }
 
 
