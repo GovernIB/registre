@@ -267,7 +267,6 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
             // Aviso registro presencial
             if(registro.getRegistroDetalle().getPresencial() && registro.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO) && !tieneJustificante){
                 model.addAttribute("avisoRegistroPresencial", registro.getRegistroDetalle().isInteresadoJuridico());
-                log.info("avisoRegistroPresencial : " + registro.getRegistroDetalle().isInteresadoJuridico());
             }
 
             // Historicos
