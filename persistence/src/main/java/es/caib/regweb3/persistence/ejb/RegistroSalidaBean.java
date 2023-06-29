@@ -251,7 +251,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean implemen
             return oficinasService.obtenerOficinasSIRUnidad(codigoDir3);
         }
 
-        return null;
+        return Collections.emptyList();
     }
 
 
@@ -270,7 +270,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean implemen
             return oficinasService.obtenerOficinasSIRUnidad(codigoDir3);
         }
 
-        return null;
+        return Collections.emptyList();
     }
 
     @Override
