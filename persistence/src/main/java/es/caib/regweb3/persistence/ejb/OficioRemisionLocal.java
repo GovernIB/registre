@@ -36,7 +36,7 @@ public interface OficioRemisionLocal extends BaseEjb<OficioRemision, Long> {
      * @return
      * @throws I18NException
      */
-    Paginacion busqueda(Integer pageNumber, Long idOrganismo, Date fechaInicio, Date fechaFin, String usuario, OficioRemision oficioRemision, Long tipoOficioRemision, Integer estadoOficioRemision, Long tipoRegistro, Boolean sir) throws I18NException;
+    Paginacion busqueda(Integer pageNumber, Long idOrganismo, Date fechaInicio, Date fechaFin, String usuario, OficioRemision oficioRemision, Long tipoOficioRemision, Integer estadoOficioRemision, Long tipoRegistro, Boolean sir, Long idEntidad) throws I18NException;
 
     /**
      * Registra un OficioRemision asignandole número
