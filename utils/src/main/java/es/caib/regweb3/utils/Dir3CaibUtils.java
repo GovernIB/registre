@@ -33,6 +33,8 @@ public class Dir3CaibUtils {
     private static final String OBTENER_OFICINAS = "/ws/Dir3CaibObtenerOficinas";
     private static final String UNIDAD_DENOMINACION = "/rest/unidad/denominacion";
     private static final String OFICINA_DENOMINACION = "/rest/oficina/denominacion";
+    private static final String UNIDAD_EXISTE = "/rest/unidad/existe";
+    private static final String OFICINA_EXISTE = "/rest/oficina/existe";
 
     private static final Long TIMEOUT = 500000L;
 
@@ -151,6 +153,53 @@ public class Dir3CaibUtils {
         }
 
         return denominacion;
+
+    }
+
+    /**
+     * Obtiene la Denominacion de una unidad u oficina a partir de su CódigoDir3
+     *
+     * @param codigoDir3
+     * @param tipo
+     * @return
+     * @throws Exception
+     */
+    public static Boolean existe(String server, String codigoDir3, String tipo) {
+
+        String url = null;
+        Boolean existe;
+
+        if (tipo.equalsIgnoreCase("oficina")) {
+            url = server + OFICINA_EXISTE;
+        } else if (tipo.equalsIgnoreCase("unidad")) {
+            url = server + UNIDAD_EXISTE;
+        }
+
+        // Parámetro codigo
+        url = url + "?codigo=" + codigoDir3;
+
+        HttpClient httpClient = HttpClient.newBuilder().build();
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .GET()
+                .uri(URI.create(url))
+                .build();
+
+        try {
+            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+            if(response.statusCode() == 200){
+                existe = Boolean.valueOf(response.body());
+            }else{
+                existe = false;
+            }
+
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+            log.info("Error obteniendo la unidad/oficina de: " + codigoDir3);
+            return false;
+        }
+
+        return existe;
 
     }
 

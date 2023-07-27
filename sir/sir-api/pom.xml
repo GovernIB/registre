@@ -129,9 +129,16 @@
             <artifactId>dom4j</artifactId>
             <scope>provided</scope>
         </dependency>
+
         <dependency>
             <groupId>commons-lang</groupId>
             <artifactId>commons-lang</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>es.caib.regweb3</groupId>
+            <artifactId>regweb3-utils</artifactId>
             <scope>provided</scope>
         </dependency>
 

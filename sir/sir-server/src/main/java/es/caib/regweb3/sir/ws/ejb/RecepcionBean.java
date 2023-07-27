@@ -7,6 +7,7 @@ import es.caib.regweb3.model.sir.MensajeControl;
 import es.caib.regweb3.model.sir.TipoAnotacion;
 import es.caib.regweb3.model.sir.TipoMensaje;
 import es.caib.regweb3.persistence.ejb.WebServicesMethodsLocal;
+import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.persistence.utils.RespuestaRecepcionSir;
 import es.caib.regweb3.sir.core.excepcion.ServiceException;
 import es.caib.regweb3.sir.core.excepcion.ValidacionException;
@@ -85,7 +86,7 @@ public class RecepcionBean implements RecepcionLocal{
                 Assert.isTrue(entidad.getActivo(), "La Entidad a la que va dirigida el Asiento Registral no está activa");
                 Assert.isTrue(entidad.getSir(), "La Entidad a la que va dirigida el Asiento Registral no tiene el servicio SIR activo");
 
-                sicres3XML.validarFicheroIntercambio(ficheroIntercambio, webServicesMethodsEjb.getObtenerOficinasService(entidad.getId()), webServicesMethodsEjb.getObtenerUnidadesService(entidad.getId()));
+                sicres3XML.validarFicheroIntercambio(ficheroIntercambio, PropiedadGlobalUtil.getDir3CaibServer(entidad.getId()));
             } catch (IllegalArgumentException e) {
                 log.info("ERROR DE VALIDACION DEL XML RECIBIDO: " + e.getLocalizedMessage());
                 throw new ValidacionException(Errores.ERROR_0037, e.getMessage(), e);
