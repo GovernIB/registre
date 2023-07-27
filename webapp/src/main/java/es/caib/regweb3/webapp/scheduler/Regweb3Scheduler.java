@@ -193,9 +193,9 @@ public class Regweb3Scheduler {
 
     /**
      * Qué hace: purga los anexos de los registros distribuidos
-     * Cuando lo hace: Cada 10 minutos desde las 01:00 hasta las 06:00
+     * Cuando lo hace: Cada 5 minutos desde las 01:00 hasta las 06:00
      */
-    @Scheduled(cron = "0 0/10 1,2,3,4,5,6 * * *") //
+    @Scheduled(cron = "0 0/5 1,2,3,4,5,6 * * *") //
     public void purgarAnexosDistribuidos(){
 
         try {
