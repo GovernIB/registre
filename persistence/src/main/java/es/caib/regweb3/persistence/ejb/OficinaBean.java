@@ -61,6 +61,14 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
         return oficina;
     }
 
+    @Override
+    public Oficina findByIdCompleto(Long id) throws I18NException {
+
+        Oficina oficina = em.find(Oficina.class, id);
+        Hibernate.initialize(oficina.getOficinaResponsable());
+        return oficina;
+    }
+
 
     @Override
     @SuppressWarnings(value = "unchecked")

@@ -83,7 +83,7 @@ public class OficinaController extends BaseController {
     @RequestMapping(value = "/{idOficina}/detalle", method = RequestMethod.GET)
     public String detalleOficina(@PathVariable Long idOficina, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception{
 
-        Oficina oficina = oficinaEjb.findById(idOficina);
+        Oficina oficina = oficinaEjb.findByIdCompleto(idOficina);
 
         model.addAttribute("oficina",oficina);
 
