@@ -151,7 +151,22 @@
                                                                 <span class="label label-danger">No</span>
                                                             </c:if>
                                                         </td>
-                                                        <td class="center">${organismo.estado.descripcionEstadoEntidad}</td>
+                                                        <td class="center">
+                                                            <c:choose>
+                                                                <c:when test="${organismo.estado.codigoEstadoEntidad == RegwebConstantes.ESTADO_ENTIDAD_ANULADO}">
+                                                                    <span class="label label-danger"><spring:message code="unidad.estado.${organismo.estado.codigoEstadoEntidad}" /></span>
+                                                                </c:when>
+                                                                <c:when test="${organismo.estado.codigoEstadoEntidad == RegwebConstantes.ESTADO_ENTIDAD_EXTINGUIDO}">
+                                                                    <span class="label label-warning"><spring:message code="unidad.estado.${organismo.estado.codigoEstadoEntidad}" /></span>
+                                                                </c:when>
+                                                                <c:when test="${organismo.estado.codigoEstadoEntidad == RegwebConstantes.ESTADO_ENTIDAD_TRANSITORIO}">
+                                                                    <span class="label label-default"><spring:message code="unidad.estado.${organismo.estado.codigoEstadoEntidad}" /></span>
+                                                                </c:when>
+                                                                <c:when test="${organismo.estado.codigoEstadoEntidad == RegwebConstantes.ESTADO_ENTIDAD_VIGENTE}">
+                                                                    <span class="label label-success"><spring:message code="unidad.estado.${organismo.estado.codigoEstadoEntidad}" /></span>
+                                                                </c:when>
+                                                            </c:choose>
+                                                        </td>
                                                         <td class="center">
                                                             <c:if test="${organismo.permiteUsuarios}">
                                                                 <a class="btn btn-primary btn-sm" href="<c:url value="/organismo/${organismo.id}/usuarios"/>" title="<spring:message code="organismo.usuarios"/>"><span class="fa fa-users"></span></a>
