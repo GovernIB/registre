@@ -1255,16 +1255,16 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
     @Override
     public int purgarAnexosRegistrosDistribuidos(Long idEntidad) throws I18NException{
-        Date inicio = new Date();
+
         Integer mesesPurgo = PropiedadGlobalUtil.getMesesPurgoAnexos(idEntidad);
         Integer numElementos = PropiedadGlobalUtil.getNumElementosPurgoAnexos(idEntidad);
 
         Date fechaInicioPurgado = TimeUtils.formateaFecha("01/04/2023", RegwebConstantes.FORMATO_FECHA); // 1 de abril 2023
-        Date fechaPurgo = DateUtils.addMonths(new Date(), -mesesPurgo);
+        Date fechaPurgo = DateUtils.addMonths(new Date(), -mesesPurgo); // Restamos los meses
 
         Query q = em.createQuery("Select anexos.custodiaID from RegistroEntrada as re left join re.registroDetalle.anexos as anexos " +
                 "where re.entidad.id = :idEntidad and re.registroDetalle.id = anexos.registroDetalle.id and re.fecha >= :fechaInicioPurgado and re.fecha <= :fechaPurgo " +
-                "and re.estado =:distribuido and anexos.purgado = false and anexos.justificante=false and anexos.confidencial = false");
+                "and re.estado =:distribuido and anexos.purgado = false and anexos.justificante=false and anexos.confidencial = false order by re.fecha desc");
 
         q.setParameter("idEntidad", idEntidad);
         q.setParameter("fechaInicioPurgado", fechaInicioPurgado);
@@ -1273,7 +1273,6 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
         q.setMaxResults(numElementos);
 
         List<String> custodyIds = q.getResultList();
-        log.info("Total anexosTotales a purgar: " + custodyIds.size() + " en " + TimeUtils.formatElapsedTime(System.currentTimeMillis() - inicio.getTime()));
 
         for (String custodyId : custodyIds) {
             //Purgamos anexo a anexo
