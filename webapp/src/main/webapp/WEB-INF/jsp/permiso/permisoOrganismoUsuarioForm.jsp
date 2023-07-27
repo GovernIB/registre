@@ -53,10 +53,10 @@
                             <div class="col-xs-12">
                                 <div class="form-group col-xs-12 espaiLinies senseMargeLat">
                                     <div class="col-xs-2 pull-left etiqueta_regweb control-label textEsq">
-                                        <form:label path="organismos"><spring:message code="organismo.organismos"/></form:label>
+                                        <form:label path="organismosActivos"><spring:message code="organismo.organismos"/></form:label>
                                     </div>
                                     <div class="col-xs-6">
-                                        <form:select id="organismos" path="organismos"  items="${organismosActivos}" itemValue="id" itemLabel="denominacion" cssClass="chosen-select"/>
+                                        <form:select id="organismosActivos" path="organismosActivos"  items="${organismosActivos}" itemValue="id" itemLabel="denominacion" cssClass="chosen-select"/>
                                     </div>
                                     <div class="col-xs-1">
                                         <button class="btn btn-warning btn-sm" onclick="asignarOrganismo()"><spring:message code="permisos.asignar"/></button>
@@ -71,14 +71,14 @@
                         </c:if>
 
                         <div class="col-xs-12">
-                            <c:if test="${empty organismos}">
+                            <c:if test="${empty organismosAsociados}">
                                 <div class="alert alert-grey">
-                                    No existen organismos relacionados, asigne uno para gestionar sus permisos.
+                                    <spring:message code="permiso.organismos.sinAsignar"/>
                                 </div>
                             </c:if>
                         </div>
 
-                        <c:if test="${not empty organismos}">
+                        <c:if test="${not empty organismosAsociados}">
 
                             <form:form modelAttribute="permisoOrganismoUsuarioForm" method="post" cssClass="form-horizontal">
                                 <form:hidden path="usuarioEntidad.id"/>
@@ -95,7 +95,7 @@
                                             </thead>
                                             <tbody>
 
-                                                <c:forEach var="organismo" items="${organismos}" varStatus="contador">
+                                                <c:forEach var="organismo" items="${organismosAsociados}" varStatus="contador">
                                                     <c:set var="sizePermisos" value="${RegwebConstantes.TOTAL_PERMISOS}"/>
                                                     <c:set var="inicio" value="${contador.index * sizePermisos}"/>
                                                     <c:set var="fin" value="${inicio+sizePermisos-1}"/>
@@ -116,7 +116,7 @@
                                     </div>
                                 </div>
                                 <!-- Botonera -->
-                                <c:if test="${not empty organismos}">
+                                <c:if test="${not empty organismosAsociados}">
                                     <input type="submit" value="<spring:message code="regweb.guardar"/>" onclick="" class="btn btn-warning btn-sm"/>
                                 </c:if>
                                 <input type="button" value="<spring:message code="regweb.cancelar"/>" onclick="goTo('<c:url value="/entidad/usuarios"/>')" class="btn btn-sm">

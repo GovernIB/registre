@@ -139,9 +139,10 @@ public class PermisoOrganismoUsuarioBean extends BaseEjbJPA<PermisoOrganismoUsua
     public List<PermisoOrganismoUsuario> findByUsuario(Long idUsuarioEntidad) throws I18NException {
 
         Query q = em.createQuery("Select pou from PermisoOrganismoUsuario as pou where " +
-                "pou.usuario.id = :idUsuarioEntidad order by pou.organismo.id, pou.permiso");
+                "pou.usuario.id = :idUsuarioEntidad and pou.organismo.estado.id = :vigente order by pou.organismo.id, pou.permiso");
 
         q.setParameter("idUsuarioEntidad", idUsuarioEntidad);
+        q.setParameter("vigente", catEstadoEntidadEjb.findByCodigo(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE).getId());
 
         return q.getResultList();
     }
@@ -151,9 +152,10 @@ public class PermisoOrganismoUsuarioBean extends BaseEjbJPA<PermisoOrganismoUsua
     public List<Organismo> getOrganismosByUsuario(Long idUsuarioEntidad) throws I18NException {
 
         Query q = em.createQuery("Select distinct pou.organismo.id, pou.organismo.codigo, pou.organismo.denominacion from PermisoOrganismoUsuario as pou where " +
-                "pou.usuario.id = :idUsuarioEntidad and pou.organismo.permiteUsuarios = true order by pou.organismo.id");
+                "pou.usuario.id = :idUsuarioEntidad and pou.organismo.permiteUsuarios = true and pou.organismo.estado.id = :vigente order by pou.organismo.id");
 
         q.setParameter("idUsuarioEntidad", idUsuarioEntidad);
+        q.setParameter("vigente", catEstadoEntidadEjb.findByCodigo(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE).getId());
 
         List<Organismo> organismos = new ArrayList<Organismo>();
 
