@@ -68,24 +68,26 @@ public class PermisosController extends BaseController {
             PermisoOrganismoUsuarioForm permisoOrganismoUsuarioForm = new PermisoOrganismoUsuarioForm();
             permisoOrganismoUsuarioForm.setUsuarioEntidad(usuarioEntidad);
 
+            // Obtenemos los permisos de un Usuario
             List<PermisoOrganismoUsuario> permisos = permisoOrganismoUsuarioEjb.findByUsuario(usuarioEntidad.getId());
             permisoOrganismoUsuarioForm.setPermisoOrganismoUsuarios(permisos);
 
+            // Obtenemos los Organismos vigentes que permiten asociar usuarios
             List<Organismo> organismosActivos = organismoEjb.getPermitirUsuarios(entidad.getId());
-            List<Organismo> organismos = new ArrayList<Organismo>();
+            List<Organismo> organismosAsociados = new ArrayList<Organismo>();
             if (permisos.size() > 0) {
-                organismos = permisoOrganismoUsuarioEjb.getOrganismosByUsuario(usuarioEntidad.getId());
+                organismosAsociados = permisoOrganismoUsuarioEjb.getOrganismosByUsuario(usuarioEntidad.getId());
             }
 
             // Eliminamos los que ya estén asociados
-            for(Organismo organismo:organismos){
+            for(Organismo organismo:organismosAsociados){
                 organismosActivos.remove(organismo);
             }
 
             model.addAttribute(permisoOrganismoUsuarioForm);
             model.addAttribute("entidad", entidad);
             model.addAttribute("permisos", RegwebConstantes.PERMISOS);
-            model.addAttribute("organismos", organismos);
+            model.addAttribute("organismosAsociados", organismosAsociados);
             model.addAttribute("organismosActivos", organismosActivos);
 
             return "permiso/permisoOrganismoUsuarioForm";
