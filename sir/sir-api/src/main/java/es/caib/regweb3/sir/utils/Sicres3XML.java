@@ -1,9 +1,5 @@
 package es.caib.regweb3.sir.utils;
 
-import es.caib.dir3caib.ws.api.oficina.Dir3CaibObtenerOficinasWs;
-import es.caib.dir3caib.ws.api.oficina.OficinaTF;
-import es.caib.dir3caib.ws.api.unidad.Dir3CaibObtenerUnidadesWs;
-import es.caib.dir3caib.ws.api.unidad.UnidadTF;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.sir.*;
 import es.caib.regweb3.model.utils.AnexoFull;
@@ -18,6 +14,7 @@ import es.caib.regweb3.sir.core.schema.Fichero_Intercambio_SICRES_3;
 import es.caib.regweb3.sir.core.schema.types.Indicador_PruebaType;
 import es.caib.regweb3.sir.core.utils.Assert;
 import es.caib.regweb3.sir.core.utils.FicheroIntercambio;
+import es.caib.regweb3.utils.Dir3CaibUtils;
 import es.caib.regweb3.utils.MimeTypeUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.Versio;
@@ -59,10 +56,8 @@ public class Sicres3XML {
 
     private static final SimpleDateFormat SDF = new SimpleDateFormat("yyyyMMddHHmmss");
 
-    // Service WS Dir3Caib
-    private Dir3CaibObtenerOficinasWs oficinasService;
-    private Dir3CaibObtenerUnidadesWs unidadesService;
-
+    // Server Dir3Caib
+    private String dir3CaibServer;
     /**
      * Map con los valores de los campos del xml que deben estar en formato base64 junto con su expresión xpath de seleccion
      */
@@ -151,7 +146,7 @@ public class Sicres3XML {
      * Valida un Fichero de Intercambio recibido
      * @param fichero
      */
-    public void validarFicheroIntercambio(FicheroIntercambio fichero, Dir3CaibObtenerOficinasWs oficinasService, Dir3CaibObtenerUnidadesWs unidadesService) {
+    public void validarFicheroIntercambio(FicheroIntercambio fichero, String dir3CaibServer) {
 
         //log.info("Validando FicheroIntercambio...");
 
@@ -159,8 +154,7 @@ public class Sicres3XML {
 
         // Obtenemos los Service para Dir3
         try {
-            this.oficinasService = oficinasService;
-            this.unidadesService = unidadesService;
+            this.dir3CaibServer = dir3CaibServer;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -2021,7 +2015,7 @@ public class Sicres3XML {
      */
     private boolean validarCodigoEntidadRegistral(String codigoEntidadRegistral) {
 
-        OficinaTF oficinaTF = null;
+        Boolean oficina;
 
         if (StringUtils.length(codigoEntidadRegistral) > LONGITUD_CODIGO_ENTIDAD_REGISTRAL) {
             log.info("Tamaño CodigoEntidadRegistral demasiado largo");
@@ -2030,20 +2024,20 @@ public class Sicres3XML {
         }
 
         try {
-            oficinaTF = oficinasService.obtenerOficina(codigoEntidadRegistral,null,null);
+            oficina = Dir3CaibUtils.existe(dir3CaibServer,codigoEntidadRegistral, RegwebConstantes.OFICINA);
 
         } catch (Exception e) {
             log.info("Error en validarCodigoEntidadRegistral: " + e.getMessage(), e);
             throw new RuntimeException(e);
         }
 
-        if(oficinaTF == null){
+        if(!oficina){
             log.info("Oficina "+codigoEntidadRegistral+" no encontrada en Dir3");
             return false;
             //throw new IllegalArgumentException("CodigoEntidadRegistral "+codigoEntidadRegistral+" no encontrada en Dir3");
+        }else{
+            return true;
         }
-
-        return true;
     }
 
     /**
@@ -2053,25 +2047,25 @@ public class Sicres3XML {
      */
     private boolean validarCodigoUnidadTramitacion(String codigoUnidadTramitacion) {
 
-        UnidadTF unidadTF = null;
+        Boolean unidad;
 
         if (StringUtils.length(codigoUnidadTramitacion) > LONGITUD_CODIGO_UNIDAD_TRAMITACION) {
             throw new IllegalArgumentException("Tamaño CODIGO_UNIDAD_TRAMITACION demasiado largo");
         }
 
         try {
-            unidadTF = unidadesService.buscarUnidad(codigoUnidadTramitacion);
+            unidad = Dir3CaibUtils.existe(dir3CaibServer,codigoUnidadTramitacion,RegwebConstantes.UNIDAD);
 
         } catch (Exception e) {
             log.info("Error en validarCodigoUnidadTramitacion: " + e.getMessage(), e);
             throw new RuntimeException(e);
         }
 
-        if(unidadTF == null){
-            throw new IllegalArgumentException("Unidad "+codigoUnidadTramitacion+" no encontrada en Dir3");
+        if(!unidad){
+            throw new IllegalArgumentException("Unidad "+codigoUnidadTramitacion+" no encontrada o extinguida en Dir3");
         }
 
-        return true;
+        return unidad;
     }
 
 
