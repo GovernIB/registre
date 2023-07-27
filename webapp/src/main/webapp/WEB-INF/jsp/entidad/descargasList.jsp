@@ -68,19 +68,21 @@
                                         <div class="table-responsive">
                                             <table class="table table-bordered table-hover table-striped">
                                                 <thead>
-                                                <tr>
-                                                    <th><spring:message code="regweb.fechasincronizacion"/></th>
-                                                    <th><spring:message code="regweb.tipo"/></th>
-                                                </tr>
+                                                    <tr>
+                                                        <th>Id</th>
+                                                        <th><spring:message code="regweb.fechasincronizacion"/></th>
+                                                        <th><spring:message code="regweb.tipo"/></th>
+                                                    </tr>
                                                 </thead>
 
                                                 <tbody>
-                                                <c:forEach var="descarga" items="${listado}">
-                                                    <tr>
-                                                        <td><fmt:formatDate pattern="dd/MM/yyyy" value="${descarga.fechaImportacion}" /></td>
-                                                        <td><c:if test="${descarga.tipo=='unidad'}"><spring:message code="descarga.tipo.unidad"/></c:if><c:if test="${descarga.tipo=='oficina'}"><spring:message code="descarga.tipo.oficina"/></c:if></td>
-                                                    </tr>
-                                                </c:forEach>
+                                                    <c:forEach var="descarga" items="${listado}">
+                                                        <tr>
+                                                            <td>${descarga.id}</td>
+                                                            <td><fmt:formatDate pattern="dd/MM/yyyy HH:mm" value="${descarga.fechaImportacion}" /></td>
+                                                            <td><c:if test="${descarga.tipo=='unidad'}"><spring:message code="descarga.tipo.unidad"/></c:if><c:if test="${descarga.tipo=='oficina'}"><spring:message code="descarga.tipo.oficina"/></c:if></td>
+                                                        </tr>
+                                                    </c:forEach>
                                                 </tbody>
                                             </table>
 
