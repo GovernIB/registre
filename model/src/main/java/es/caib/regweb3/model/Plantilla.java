@@ -74,7 +74,7 @@ public class Plantilla implements Serializable {
         this.repro = repro;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne()
     @JoinColumn(name = "USUARIOENTIDAD", foreignKey = @ForeignKey(name = "RWE_REPRO_USUARIO_FK"))
     @JsonIgnore
     public UsuarioEntidad getUsuario() {
