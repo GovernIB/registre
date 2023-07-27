@@ -22,6 +22,13 @@ public interface OficinaLocal extends BaseEjb<Oficina, Long> {
 
     String JNDI_NAME = "java:app/regweb3-persistence/OficinaEJB";
 
+    /**
+     * Carga una Oficina con todas sus relaciones
+     * @param id
+     * @return
+     * @throws I18NException
+     */
+    Oficina findByIdCompleto(Long id) throws I18NException;
 
     /**
      * Busca una Oficina a partir de su código
