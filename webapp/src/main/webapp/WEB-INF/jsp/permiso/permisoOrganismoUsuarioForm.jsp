@@ -137,7 +137,7 @@
 
     function asignarOrganismo(){
 
-        var idOrganismo = $('#organismos option:selected').val();
+        var idOrganismo = $('#organismosActivos option:selected').val();
         var url = '<c:url value="/permisos/${permisoOrganismoUsuarioForm.usuarioEntidad.id}"/>/'+idOrganismo+'/asignar';
         document.location.href=url;
     }
