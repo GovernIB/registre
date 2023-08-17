@@ -51,7 +51,7 @@
         </dt>
         <dd>
             <c:if test="${not empty registroSir.codigoEntidadRegistral}">
-                ${registroSir.codigoEntidadRegistral} -
+                ${registroSir.codigoEntidadRegistral}
             </c:if>
         </dd>
         <hr class="divider-primary">
