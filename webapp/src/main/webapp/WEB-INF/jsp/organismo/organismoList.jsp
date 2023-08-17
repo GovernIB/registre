@@ -175,7 +175,7 @@
                                                             <c:if test="${not organismo.permiteUsuarios}">
                                                                 <a class="btn btn-primary btn-sm" onclick='javascript:confirm("<c:url value="/organismo/${organismo.id}/activarUsuarios"/>","<spring:message code="organismo.usuarios.activar" htmlEscape="true"/>")' href="javascript:void(0);" title="<spring:message code="organismo.usuarios.activar"/>"><span class="fa fa-check"></span></a>
                                                             </c:if>
-                                                            <a class="btn btn-warning btn-sm" href="<c:url value="/organismo/${organismo.id}/oficinas"/>" title="<spring:message code="organismo.oficinas"/>"><span class="fa fa-home"></span></a>
+                                                            <a class="btn btn-warning btn-sm" href="<c:url value="/organismo/${organismo.id}/detalle"/>" target="_blank" title="<spring:message code="organismo.detalle"/>"><span class="fa fa-eye"></span></a>
                                                         </td>
                                                     </tr>
                                                 </c:forEach>

@@ -1,7 +1,10 @@
 package es.caib.regweb3.webapp.controller.organismo;
 
 import es.caib.regweb3.model.*;
-import es.caib.regweb3.persistence.ejb.*;
+import es.caib.regweb3.persistence.ejb.CatEstadoEntidadLocal;
+import es.caib.regweb3.persistence.ejb.DescargaLocal;
+import es.caib.regweb3.persistence.ejb.RelacionOrganizativaOfiLocal;
+import es.caib.regweb3.persistence.ejb.RelacionSirOfiLocal;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.TimeUtils;
@@ -35,9 +38,6 @@ public class OrganismoController extends BaseController {
 
     @EJB(mappedName = CatEstadoEntidadLocal.JNDI_NAME)
     private CatEstadoEntidadLocal catEstadoEntidadEjb;
-
-    @EJB(mappedName = LibroLocal.JNDI_NAME)
-    private LibroLocal libroEjb;
 
     @EJB(mappedName = RelacionOrganizativaOfiLocal.JNDI_NAME)
     private RelacionOrganizativaOfiLocal relacionOrganizativaOfiEjb;
@@ -101,6 +101,22 @@ public class OrganismoController extends BaseController {
         mav.addObject("entidad", entidad);
 
         return mav;
+    }
+
+    /**
+     * Muestra el detalle de un {@link es.caib.regweb3.model.Organismo}
+     */
+    @RequestMapping(value = "/{idOrganismo}/detalle", method = RequestMethod.GET)
+    public String detalleOrganismo(@PathVariable Long idOrganismo, Model model) throws Exception{
+
+        Organismo organismo = organismoEjb.findByIdCompleto(idOrganismo);
+        LinkedHashSet<Oficina> oficinas = oficinaEjb.oficinasServicioCompleto(idOrganismo, RegwebConstantes.OFICINA_VIRTUAL_SI);
+
+        model.addAttribute("oficinas", oficinas);
+        model.addAttribute("organismo",organismo);
+
+        return "organismo/organismoDetalle";
+
     }
 
     /**
