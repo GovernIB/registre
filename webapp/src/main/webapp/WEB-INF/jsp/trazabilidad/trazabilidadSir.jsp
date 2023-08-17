@@ -37,9 +37,9 @@
                                 <p><small><i class="fa fa-institution"></i> <strong><spring:message code="organismo.origen"/>:</strong> ${trazabilidad.registroSir.decodificacionUnidadTramitacionOrigen}</small></p>
                             </c:if>
                             <p><small><i class="fa fa-clock-o"></i> <strong><spring:message code="registroSir.fechaRecepcion"/>:</strong> <fmt:formatDate value="${trazabilidad.fecha}" pattern="dd/MM/yyyy HH:mm:ss"/></small></p>
-                            <c:if test="${trazabilidad.registroSir.tipoAnotacion == '03'}">
+                           <%-- <c:if test="${trazabilidad.registroSir.tipoAnotacion == '03'}">
                                 <p><small><i class="fa fa-newspaper-o"></i> <strong><spring:message code="registroSir.motivo"/>:</strong> ${trazabilidad.registroSir.decodificacionTipoAnotacion}</small></p>
-                            </c:if>
+                            </c:if>--%>
                         </div>
                     </div>
                 </li>

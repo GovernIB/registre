@@ -302,7 +302,7 @@ public class RegistroSirController extends BaseController {
         String variableReturn = "redirect:/registroSir/"+idRegistroSir+"/detalle";
 
         // Comprobamos si ya ha sido rechazado
-        if(registroSir.getEstado().equals(EstadoRegistroSir.RECHAZADO)){
+        if(!registroSir.getEstado().equals(EstadoRegistroSir.RECIBIDO)){
             Mensaje.saveMessageError(request, getMessage("registroSir.estado.error"));
             return variableReturn;
         }
