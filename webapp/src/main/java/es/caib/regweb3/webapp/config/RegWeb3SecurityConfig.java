@@ -86,6 +86,7 @@ public class RegWeb3SecurityConfig extends WebSecurityConfigurerAdapter {
                 antMatchers("/libro/**").hasAuthority(RWE_ADMIN).
                 antMatchers("/sir/**").hasAuthority(RWE_ADMIN).
                 antMatchers("/cola/**").hasAuthority(RWE_ADMIN).
+                antMatchers("/pendiente/**").hasAuthority(RWE_ADMIN).
                 /* ----- RWE_SUPERADMIN y RWE_ADMIN ----- */
                 antMatchers("/entidad/**/edit").hasAnyAuthority(RWE_SUPERADMIN,RWE_ADMIN).
                 antMatchers("/usuario/new").hasAnyAuthority(RWE_SUPERADMIN,RWE_ADMIN).

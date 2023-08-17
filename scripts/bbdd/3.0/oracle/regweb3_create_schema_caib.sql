@@ -468,6 +468,7 @@ create table RWE_ORGANISMO (
 
 create table RWE_PENDIENTE (
    ID number(19,0) not null,
+   ENTIDAD number(19,0),
 	ESTADO varchar2(255 char),
 	FECHA timestamp,
 	IDORGANISMO number(19,0),
@@ -1457,6 +1458,11 @@ create index RWE_REGMIG_FECREG_I on RWE_REGISTRO_MIGRADO (FECHAREG) TABLESPACE R
        foreign key (TIPOVIA) 
        references RWE_CATTIPOVIA;
 
+    alter table RWE_PENDIENTE
+        add constraint RWE_PENDIE_ENTIDAD_FK
+        foreign key (ENTIDAD)
+        references RWE_ENTIDAD;
+
     alter table RWE_PERMLIBUSU 
        add constraint RWE_PERMLIBUSU_LIBRO_FK 
        foreign key (LIBRO) 
@@ -1733,7 +1739,78 @@ create index RWE_REGMIG_FECREG_I on RWE_REGISTRO_MIGRADO (FECHAREG) TABLESPACE R
        add constraint RWE_USUARIO_IDENTIFICADOR_uk unique (IDENTIFICADOR);
  -- FINAL UNIQUEs
 
-
+-- INICI GRANTS
+grant select, insert, delete, update on RWE_ANEXO to www_regweb;
+grant select, insert, delete, update on RWE_ANEXO_SIR to www_regweb;
+grant select, insert, delete, update on RWE_ARCHIVO to www_regweb;
+grant select, insert, delete, update on RWE_CATCOMUNIDADAUTONOMA to www_regweb;
+grant select, insert, delete, update on RWE_CATENTIDADGEOGRAFICA to www_regweb;
+grant select, insert, delete, update on RWE_CATESTADOENTIDAD to www_regweb;
+grant select, insert, delete, update on RWE_CATLOCALIDAD to www_regweb;
+grant select, insert, delete, update on RWE_CATNIVELADMINISTRACION to www_regweb;
+grant select, insert, delete, update on RWE_CATPAIS to www_regweb;
+grant select, insert, delete, update on RWE_CATPROVINCIA to www_regweb;
+grant select, insert, delete, update on RWE_CATSERVICIO to www_regweb;
+grant select, insert, delete, update on RWE_CATTIPOVIA to www_regweb;
+grant select, insert, delete, update on RWE_CODIGOASUNTO to www_regweb;
+grant select, insert, delete, update on RWE_COLA to www_regweb;
+grant select, insert, delete, update on RWE_CONFIGURACION to www_regweb;
+grant select, insert, delete, update on RWE_CONTADOR to www_regweb;
+grant select, insert, delete, update on RWE_DESCARGA to www_regweb;
+grant select, insert, delete, update on RWE_ENTIDAD to www_regweb;
+grant select, insert, delete, update on RWE_ENTIDAD_USUENT to www_regweb;
+grant select, insert, delete, update on RWE_HISTORICOUO to www_regweb;
+grant select, insert, delete, update on RWE_HISTORICO_REGISTRO_ENTRADA to www_regweb;
+grant select, insert, delete, update on RWE_HISTORICO_REGISTRO_SALIDA to www_regweb;
+grant select, insert, delete, update on RWE_INTEGRACION to www_regweb;
+grant select, insert, delete, update on RWE_INTERESADO to www_regweb;
+grant select, insert, delete, update on RWE_INTERESADO_SIR to www_regweb;
+grant select, insert, delete, update on RWE_LIBRO to www_regweb;
+grant select, insert, delete, update on RWE_LOPD to www_regweb;
+grant select, insert, delete, update on RWE_MENSAJE_CONTROL to www_regweb;
+grant select, insert, delete, update on RWE_MODELO_OFICIO_REMISION to www_regweb;
+grant select, insert, delete, update on RWE_MODELO_RECIBO to www_regweb;
+grant select, insert, delete, update on RWE_MODIFICACIONLOPD_MIGRADO to www_regweb;
+grant select, insert, delete, update on RWE_NOTIFICACION to www_regweb;
+grant select, insert, delete, update on RWE_OFICINA to www_regweb;
+grant select, insert, delete, update on RWE_OFICINA_SERVICIO to www_regweb;
+grant select, insert, delete, update on RWE_OFICIO_REMISION to www_regweb;
+grant select, insert, delete, update on RWE_OFIREM_REGENT to www_regweb;
+grant select, insert, delete, update on RWE_OFIREM_REGSAL to www_regweb;
+grant select, insert, delete, update on RWE_ORGANISMO to www_regweb;
+grant select, insert, delete, update on RWE_PENDIENTE to www_regweb;
+grant select, insert, delete, update on RWE_PERMLIBUSU to www_regweb;
+grant select, insert, delete, update on RWE_PERMORGUSU to www_regweb;
+grant select, insert, delete, update on RWE_PERSONA to www_regweb;
+grant select, insert, delete, update on RWE_PLUGIN to www_regweb;
+grant select, insert, delete, update on RWE_PROPIEDADGLOBAL to www_regweb;
+grant select, insert, delete, update on RWE_REGISTROLOPD_MIGRADO to www_regweb;
+grant select, insert, delete, update on RWE_REGISTRO_DETALLE to www_regweb;
+grant select, insert, delete, update on RWE_REGISTRO_ENTRADA to www_regweb;
+grant select, insert, delete, update on RWE_REGISTRO_MIGRADO to www_regweb;
+grant select, insert, delete, update on RWE_REGISTRO_SALIDA to www_regweb;
+grant select, insert, delete, update on RWE_REGISTRO_SIR to www_regweb;
+grant select, insert, delete, update on RWE_RELORGOFI to www_regweb;
+grant select, insert, delete, update on RWE_RELSIROFI to www_regweb;
+grant select, insert, delete, update on RWE_REPRO to www_regweb;
+grant select, insert, delete, update on RWE_ROL to www_regweb;
+grant select, insert, delete, update on RWE_SESION to www_regweb;
+grant select, insert, delete, update on RWE_TIPOASUNTO to www_regweb;
+grant select, insert, delete, update on RWE_TIPODOCUMENTAL to www_regweb;
+grant select, insert, delete, update on RWE_TRAZABILIDAD to www_regweb;
+grant select, insert, delete, update on RWE_TRAZABILIDAD_SIR to www_regweb;
+grant select, insert, delete, update on RWE_TRA_CODIGOASUNTO to www_regweb;
+grant select, insert, delete, update on RWE_TRA_TDOCUMENTAL to www_regweb;
+grant select, insert, delete, update on RWE_TRA_TIPOASUNTO to www_regweb;
+grant select, insert, delete, update on RWE_USUARIO to www_regweb;
+grant select, insert, delete, update on RWE_USUARIO_ENTIDAD to www_regweb;
+grant select on RWE_ALL_SEQ to www_regweb;
+grant select on RWE_POU_SEQ to www_regweb;
+grant select on RWE_SESION_SEQ to www_regweb;
+grant select on RWE_SIR_SEQ to www_regweb;
+grant select on RWE_COLA_SEQ to www_regweb;
+grant select on RWE_INT_SEQ to www_regweb;
+-- FINAL GRANTS
 
 
 --LOBs--

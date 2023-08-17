@@ -506,6 +506,7 @@ create sequence RWE_SIR_SEQ start with 1 increment by  1;
 
     create table RWE_PENDIENTE (
        ID number(19,0) not null,
+       ENTIDAD number(19,0),
         ESTADO varchar2(255 char),
         FECHA timestamp,
         IDORGANISMO number(19,0),
@@ -1349,6 +1350,11 @@ alter table RWE_ORGANISMO
    add constraint RWE_ORGANISMO_TIPOVIA_FK
    foreign key (TIPOVIA)
    references RWE_CATTIPOVIA;
+
+alter table RWE_PENDIENTE
+    add constraint RWE_PENDIE_ENTIDAD_FK
+    foreign key (ENTIDAD)
+    references RWE_ENTIDAD;
 
 alter table RWE_PERMLIBUSU
    add constraint RWE_PERMLIBUSU_LIBRO_FK
