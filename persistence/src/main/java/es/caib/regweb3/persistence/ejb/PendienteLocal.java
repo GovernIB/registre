@@ -16,6 +16,24 @@ public interface PendienteLocal extends BaseEjb<Pendiente, Long> {
 
     String JNDI_NAME = "java:app/regweb3-persistence/PendienteEJB";
 
+    /**
+     *
+     * @param idEntidad
+     * @param procesado
+     * @return
+     * @throws I18NException
+     */
+    Long getTotalByEntidad(Long idEntidad, Boolean procesado) throws I18NException;
+
+    /**
+     *
+     * @param inicio
+     * @param idEntidad
+     * @param procesado
+     * @return
+     * @throws I18NException
+     */
+    List<Pendiente> getPaginationByEntidad(int inicio, Long idEntidad, Boolean procesado) throws I18NException;
 
     /**
      * Obtiene el registro pendiente del organismo en cuestión
@@ -25,15 +43,6 @@ public interface PendienteLocal extends BaseEjb<Pendiente, Long> {
      * @throws I18NException
      */
     Pendiente findByIdOrganismo(Long idOrganismo) throws I18NException;
-
-    /**
-     * Función que devuelve los pendientes en función de su estado
-     *
-     * @param estado
-     * @return
-     * @throws I18NException
-     */
-    List<Pendiente> findByEstadoProcesado(String estado, Boolean procesado) throws I18NException;
 
     /**
      * Función que devuelve los pendientes de procesar

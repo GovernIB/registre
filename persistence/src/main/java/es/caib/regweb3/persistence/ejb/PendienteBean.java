@@ -6,12 +6,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.security.RolesAllowed;
-import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -29,8 +27,6 @@ public class PendienteBean extends BaseEjbJPA<Pendiente, Long> implements Pendie
     @PersistenceContext(unitName = "regweb3")
     private EntityManager em;
 
-    @EJB private OrganismoLocal organismoEjb;
-
 
     @Override
     public Pendiente getReference(Long id) throws I18NException {
@@ -44,6 +40,47 @@ public class PendienteBean extends BaseEjbJPA<Pendiente, Long> implements Pendie
         return em.find(Pendiente.class, id);
     }
 
+    @Override
+    public Long getTotalByEntidad(Long idEntidad, Boolean procesado) throws I18NException {
+
+        String procesadoWhere = "";
+        if (procesado != null) {
+            procesadoWhere = "and p.procesado = :procesado ";
+        }
+
+        Query q = em.createQuery("Select count(p.id) from Pendiente as p where p.entidad.id = :idEntidad " + procesadoWhere);
+        q.setParameter("idEntidad", idEntidad);
+        q.setHint("org.hibernate.readOnly", true);
+
+        if (procesado != null) {
+            q.setParameter("procesado", procesado);
+        }
+
+        return (Long) q.getSingleResult();
+    }
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public List<Pendiente> getPaginationByEntidad(int inicio, Long idEntidad, Boolean procesado) throws I18NException {
+
+        String procesadoWhere = "";
+        if (procesado != null) {
+            procesadoWhere = "and p.procesado = :procesado ";
+        }
+
+        Query q = em.createQuery("Select p from Pendiente as p where p.entidad.id = :idEntidad " + procesadoWhere + " order by p.id");
+        q.setParameter("idEntidad", idEntidad);
+        q.setFirstResult(inicio);
+        q.setMaxResults(RESULTADOS_PAGINACION);
+        q.setHint("org.hibernate.readOnly", true);
+
+        if (procesado != null) {
+            q.setParameter("procesado", procesado);
+        }
+
+        return q.getResultList();
+    }
+
 
     public Pendiente findByIdOrganismo(Long idOrganismo) throws I18NException {
 
@@ -55,35 +92,13 @@ public class PendienteBean extends BaseEjbJPA<Pendiente, Long> implements Pendie
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Pendiente> findByEstadoProcesado(String estado, Boolean procesado) throws I18NException {
-
-        Query q = em.createQuery("Select pendiente from Pendiente as pendiente where pendiente.estado=:estado and pendiente.procesado=:procesado");
-        q.setParameter("estado", estado);
-        q.setParameter("procesado", procesado);
-        q.setHint("org.hibernate.readOnly", true);
-
-        return q.getResultList();
-
-    }
-
-    @Override
-    @SuppressWarnings(value = "unchecked")
     public List<Pendiente> findPendientesProcesar(Long idEntidad) throws I18NException {
 
-        //TODO Habría que poner el campo identidad en la tabla RWE_PENDIENTE
+        Query q = em.createQuery("Select p from Pendiente as p where p.entidad.id = :idEntidad and p.procesado = false");
 
-        Query q = em.createQuery("Select pendiente from Pendiente as pendiente where pendiente.procesado = false");
+        q.setParameter("idEntidad", idEntidad);
 
-        List<Pendiente> pendientes = q.getResultList();
-        List<Pendiente> pendientesEntidad = new ArrayList<Pendiente>();
-        for (Pendiente pendiente : pendientes) {
-            Long entidadOrganismo = organismoEjb.getEntidad(pendiente.getIdOrganismo());
-            if (idEntidad.equals(entidadOrganismo)) {
-                pendientesEntidad.add(pendiente);
-            }
-        }
-        return pendientesEntidad;
-
+        return q.getResultList();
     }
 
 

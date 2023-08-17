@@ -16,6 +16,7 @@ import java.util.Date;
 public class Pendiente implements Serializable {
 
     private Long id;
+    private Entidad entidad;
     private Long idOrganismo;
     private Boolean procesado;
     private String estado;
@@ -24,10 +25,12 @@ public class Pendiente implements Serializable {
     public Pendiente() {
     }
 
-    public Pendiente(Long idOrganismo, Boolean procesado, String estado) {
+    public Pendiente(Entidad entidad, Long idOrganismo, Boolean procesado, String estado) {
+        this.entidad = entidad;
         this.idOrganismo = idOrganismo;
         this.procesado = procesado;
         this.estado = estado;
+        this.fecha = new Date();
     }
 
     @Id
@@ -39,6 +42,16 @@ public class Pendiente implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ENTIDAD", foreignKey = @ForeignKey(name = "RWE_PENDIE_ENTIDAD_FK"))
+    public Entidad getEntidad() {
+        return entidad;
+    }
+
+    public void setEntidad(Entidad entidad) {
+        this.entidad = entidad;
     }
 
     @Column(name = "IDORGANISMO")
@@ -75,5 +88,18 @@ public class Pendiente implements Serializable {
 
     public void setFecha(Date fecha) {
         this.fecha = fecha;
+    }
+
+    @Transient
+    private Integer pageNumber = 1;
+
+    @Transient
+    public Integer getPageNumber() {
+        return pageNumber;
+    }
+
+    @Transient
+    public void setPageNumber(Integer pageNumber) {
+        this.pageNumber = pageNumber;
     }
 }
