@@ -1,14 +1,10 @@
 package es.caib.regweb3.persistence.ejb;
 
-import es.caib.dir3caib.ws.api.oficina.Dir3CaibObtenerOficinasWs;
-import es.caib.dir3caib.ws.api.unidad.Dir3CaibObtenerUnidadesWs;
 import es.caib.regweb3.model.Oficina;
 import es.caib.regweb3.model.RegistroSir;
 import es.caib.regweb3.model.sir.MensajeControl;
-import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.persistence.utils.RespuestaRecepcionSir;
 import es.caib.regweb3.sir.core.utils.FicheroIntercambio;
-import es.caib.regweb3.utils.Dir3CaibUtils;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 
 import javax.annotation.security.RolesAllowed;
@@ -52,16 +48,6 @@ public class WebServicesMethodsEJB implements WebServicesMethodsLocal {
     @Override
     public void guardarMensajeControl(MensajeControl mensajeControl) throws I18NException {
         mensajeControlEjb.persist(mensajeControl);
-    }
-
-    @Override
-    public Dir3CaibObtenerOficinasWs getObtenerOficinasService(Long idEntidad) throws I18NException {
-        return Dir3CaibUtils.getObtenerOficinasService(PropiedadGlobalUtil.getDir3CaibServer(idEntidad), PropiedadGlobalUtil.getDir3CaibUsername(idEntidad), PropiedadGlobalUtil.getDir3CaibPassword(idEntidad));
-    }
-
-    @Override
-    public Dir3CaibObtenerUnidadesWs getObtenerUnidadesService(Long idEntidad) throws I18NException {
-        return Dir3CaibUtils.getObtenerUnidadesService(PropiedadGlobalUtil.getDir3CaibServer(idEntidad), PropiedadGlobalUtil.getDir3CaibUsername(idEntidad), PropiedadGlobalUtil.getDir3CaibPassword(idEntidad));
     }
 
 
