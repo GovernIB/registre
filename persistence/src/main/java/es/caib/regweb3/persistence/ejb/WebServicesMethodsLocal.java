@@ -1,7 +1,5 @@
 package es.caib.regweb3.persistence.ejb;
 
-import es.caib.dir3caib.ws.api.oficina.Dir3CaibObtenerOficinasWs;
-import es.caib.dir3caib.ws.api.unidad.Dir3CaibObtenerUnidadesWs;
 import es.caib.regweb3.model.Oficina;
 import es.caib.regweb3.model.RegistroSir;
 import es.caib.regweb3.model.sir.MensajeControl;
@@ -54,18 +52,6 @@ public interface WebServicesMethodsLocal {
      * @throws I18NException
      */
     void guardarMensajeControl(MensajeControl mensajeControl) throws I18NException;
-
-    /**
-     * @return
-     * @throws I18NException
-     */
-    Dir3CaibObtenerOficinasWs getObtenerOficinasService(Long idEntidad) throws I18NException;
-
-    /**
-     * @return
-     * @throws I18NException
-     */
-    Dir3CaibObtenerUnidadesWs getObtenerUnidadesService(Long idEntidad) throws I18NException;
 
     /**
      * @param codigo
