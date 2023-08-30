@@ -184,14 +184,14 @@ public class RelacionOrganizativaOfiBean extends BaseEjbJPA<RelacionOrganizativa
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<RelacionOrganizativaOfi> organizativaByEntidadEstado(Long idEntidad, String estado) throws I18NException {
+    public List<RelacionOrganizativaOfi> organizativaByEntidadEstado(Long idEntidad) throws I18NException {
         Query q = em.createQuery("Select relacionOrganizativaOfi.oficina.id, relacionOrganizativaOfi.oficina.codigo, relacionOrganizativaOfi.oficina.denominacion, " +
                 "relacionOrganizativaOfi.organismo.id, relacionOrganizativaOfi.oficina.organismoResponsable.id, relacionOrganizativaOfi.organismo.organismoRaiz.id " +
                 "from RelacionOrganizativaOfi as relacionOrganizativaOfi where " +
                 "relacionOrganizativaOfi.organismo.entidad.id =:idEntidad and relacionOrganizativaOfi.estado.codigoEstadoEntidad =:estado order by relacionOrganizativaOfi.oficina.codigo");
 
         q.setParameter("idEntidad", idEntidad);
-        q.setParameter("estado", estado);
+        q.setParameter("estado", RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
         q.setHint("org.hibernate.readOnly", true);
 
         List<Object[]> result = q.getResultList();

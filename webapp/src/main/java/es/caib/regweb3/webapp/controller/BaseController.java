@@ -41,7 +41,6 @@ public class BaseController {
 
     @EJB(mappedName = EntidadLocal.JNDI_NAME)
     public EntidadLocal entidadEjb;
-
     @EJB(mappedName = TipoDocumentalLocal.JNDI_NAME)
     public TipoDocumentalLocal tipoDocumentalEjb;
 
@@ -62,6 +61,9 @@ public class BaseController {
 
     @EJB(mappedName = NotificacionLocal.JNDI_NAME)
     public NotificacionLocal notificacionEjb;
+
+    @EJB(mappedName = MultiEntidadLocal.JNDI_NAME)
+    private MultiEntidadLocal multiEntidadEjb;
 
 
     /**
@@ -395,21 +397,13 @@ public class BaseController {
      * @return
      * @throws Exception
      */
-    public Set<Oficina> getOficinasOrigen(HttpServletRequest request ) throws  Exception {
+    public Set<Oficina> getOficinasOrigen(HttpServletRequest request) throws  Exception {
 
-        return new HashSet<Oficina>(oficinaEjb.findByEntidadByEstado(getEntidadActiva(request).getId(), RegwebConstantes.ESTADO_ENTIDAD_VIGENTE));
-    }
-
-
-    /**
-     *  Obtiene todas las oficinas de la entidad activa vigentes
-     * @param request
-     * @return
-     * @throws Exception
-     */
-    public Set<Oficina> getOficinasOrigenMultiEntidad(HttpServletRequest request ) throws  Exception {
-
-        return new HashSet<Oficina>(oficinaEjb.findByEntidadByEstadoMultiEntidad(getEntidadActiva(request).getId(), RegwebConstantes.ESTADO_ENTIDAD_VIGENTE));
+        if(multiEntidadEjb.isMultiEntidad()){
+            return new HashSet<Oficina>(oficinaEjb.findByEntidadByEstadoMultiEntidad(getEntidadActiva(request).getId(), RegwebConstantes.ESTADO_ENTIDAD_VIGENTE));
+        }else{
+            return new HashSet<Oficina>(oficinaEjb.findByEntidadByEstado(getEntidadActiva(request).getId(), RegwebConstantes.ESTADO_ENTIDAD_VIGENTE));
+        }
     }
 
     /**
@@ -428,7 +422,6 @@ public class BaseController {
         }
 
         return anys;
-
     }
 
 

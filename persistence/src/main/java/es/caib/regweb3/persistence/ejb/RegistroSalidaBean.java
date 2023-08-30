@@ -11,7 +11,10 @@ import es.caib.regweb3.persistence.utils.NumeroRegistro;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.persistence.utils.RegistroUtils;
 import es.caib.regweb3.plugins.postproceso.IPostProcesoPlugin;
-import es.caib.regweb3.utils.*;
+import es.caib.regweb3.utils.Configuracio;
+import es.caib.regweb3.utils.Dir3CaibUtils;
+import es.caib.regweb3.utils.RegwebConstantes;
+import es.caib.regweb3.utils.StringUtils;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.hibernate.Hibernate;
@@ -268,7 +271,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean implemen
         Oficina oficina = oficinaEjb.findById(registroSalida.getOficina().getId());
 
         // Obtiene los Organismos de la OficinaActiva en los que puede registrar sin generar OficioRemisión
-        LinkedHashSet<Organismo> organismos = organismoEjb.getByOficinaActiva(oficina, RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
+        LinkedHashSet<Organismo> organismos = organismoEjb.getOrganismosRegistro(oficina);
         // Creamos un Set solo con los codigos
         Set<String> organismosCodigo = new HashSet<String>();
 
@@ -304,7 +307,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean implemen
         Oficina oficina = oficinaEjb.findById(registroSalida.getOficina().getId());
 
         // Obtiene los Organismos de la OficinaActiva en los que puede registrar sin generar OficioRemisión
-        LinkedHashSet<Organismo> organismos = organismoEjb.getByOficinaActiva(oficina, RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
+        LinkedHashSet<Organismo> organismos = organismoEjb.getOrganismosRegistro(oficina);
         // Creamos un Set solo con los codigos
         Set<String> organismosCodigo = new HashSet<String>();
 
@@ -347,110 +350,6 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean implemen
 
         merge(registroSalida);
     }
-
-    /**
-     * Obtiene los Registros de Salida que son DISTRIBUCIÓN
-     *
-     * @param oficina
-     * @param entidad
-     * @return
-     * @throws I18NException
-     */
-    @SuppressWarnings(value = "unchecked")
-    public Integer actualizarEventoDistribuirSalidas(Oficina oficina, Entidad entidad) throws I18NException {
-
-        // Obtiene los Organismos de la OficinaActiva en los que puede registrar sin generar OficioRemisión
-        LinkedHashSet<Organismo> organismos = organismoEjb.getByOficinaActiva(oficina, RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
-        // Creamos un Set solo con los codigos
-        Set<String> organismosCodigo = new HashSet<String>();
-        for (Organismo organismo : organismos) {
-            organismosCodigo.add(organismo.getCodigo());
-        }
-
-        String queryFecha = "";
-        String fecha = PropiedadGlobalUtil.getFechaOficiosSalida();
-
-        if (StringUtils.isNotEmpty(fecha)) {
-            queryFecha = " rs.fecha >= :fecha and ";
-        }
-
-        // Obtenemos los Registros de Salida que son Oficio de remisión
-        Query q = em.createQuery("Select distinct(rs.id) from RegistroSalida as rs where " +
-                "rs.estado = :valido and evento is null and rs.oficina.id = :idOficina and " + queryFecha +
-                " rs.registroDetalle.id in (select i.registroDetalle.id from Interesado as i where i.registroDetalle.id = rs.registroDetalle.id and i.tipo = :administracion and codigoDir3 in (:organismos)) ");
-
-        // Parámetros
-        q.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
-        q.setParameter("idOficina", oficina.getId());
-        q.setParameter("administracion", RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION);
-        q.setParameter("organismos", organismosCodigo);
-        if (StringUtils.isNotEmpty(fecha)) {
-            q.setParameter("fecha", TimeUtils.formateaFecha(fecha, RegwebConstantes.FORMATO_FECHA));
-        }
-
-        //q.setMaxResults(PropiedadGlobalUtil.getTotalActualizarProximoEvento(entidad.getId()));
-        q.setHint("org.hibernate.readOnly", true);
-        List<Long> registros = q.getResultList();
-
-        for (Long idRegistro : registros) {
-
-            Query q1 = em.createQuery("update RegistroSalida set evento=:evento where id = :idRegistro and evento is null");
-            q1.setParameter("evento", RegwebConstantes.EVENTO_DISTRIBUIR);
-            q1.setParameter("idRegistro", idRegistro);
-            q1.executeUpdate();
-
-        }
-
-        return registros.size();
-    }
-
-    /**
-     * Obtiene los Registros de Salida que son DISTRIBUCIÓN
-     *
-     * @param oficina
-     * @param entidad
-     * @return
-     * @throws I18NException
-     */
-    @SuppressWarnings(value = "unchecked")
-    public Integer actualizarEventoDistribuirSalidasPersona(Oficina oficina, Entidad entidad) throws I18NException {
-
-        String queryFecha = "";
-        String fecha = PropiedadGlobalUtil.getFechaOficiosSalida();
-
-        if (StringUtils.isNotEmpty(fecha)) {
-            queryFecha = " rs.fecha >= :fecha and ";
-        }
-
-        // Obtenemos los Registros de Salida que son Oficio de remisión
-        Query q = em.createQuery("Select distinct(rs.id) from RegistroSalida as rs where " +
-                "rs.estado = :valido and evento is null and rs.oficina.id = :idOficina and " + queryFecha +
-                " rs.registroDetalle.id in (select i.registroDetalle.id from Interesado as i where i.registroDetalle.id = rs.registroDetalle.id and i.tipo != :administracion ) ");
-
-        // Parámetros
-        q.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
-        q.setParameter("idOficina", oficina.getId());
-        q.setParameter("administracion", RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION);
-        if (StringUtils.isNotEmpty(fecha)) {
-            q.setParameter("fecha", TimeUtils.formateaFecha(fecha, RegwebConstantes.FORMATO_FECHA));
-        }
-
-        //q.setMaxResults(PropiedadGlobalUtil.getTotalActualizarProximoEvento(entidad.getId()));
-        q.setHint("org.hibernate.readOnly", true);
-        List<Long> registros = q.getResultList();
-
-        for (Long idRegistro : registros) {
-
-            Query q1 = em.createQuery("update RegistroSalida set evento=:evento where id = :idRegistro and evento is null");
-            q1.setParameter("evento", RegwebConstantes.EVENTO_DISTRIBUIR);
-            q1.setParameter("idRegistro", idRegistro);
-            q1.executeUpdate();
-
-        }
-
-        return registros.size();
-    }
-
 
     @Override
     public void anularRegistroSalida(RegistroSalida registroSalida, UsuarioEntidad usuarioEntidad, String observacionesAnulacion) throws I18NException {
@@ -593,7 +492,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean implemen
             //Para evitar lazy.
             Oficina oficina = oficinaEjb.findById(registroSalida.getOficina().getId());
 
-            LinkedHashSet<Organismo> organismos = organismoEjb.getByOficinaActiva(oficina, RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
+            LinkedHashSet<Organismo> organismos = organismoEjb.getOrganismosRegistro(oficina);
             // Creamos un Set solo con los codigos
             Set<String> organismosCodigo = new HashSet<String>();
 

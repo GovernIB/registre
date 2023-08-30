@@ -86,6 +86,7 @@ public class OficinaController extends BaseController {
         Oficina oficina = oficinaEjb.findByIdCompleto(idOficina);
 
         model.addAttribute("oficina",oficina);
+        model.addAttribute("organismos",organismoEjb.getOrganismosRegistro(oficina));
 
         return "oficina/oficinaDetalle";
 

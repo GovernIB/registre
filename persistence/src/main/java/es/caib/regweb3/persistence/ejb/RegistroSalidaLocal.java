@@ -1,7 +1,10 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.dir3caib.ws.api.oficina.OficinaTF;
-import es.caib.regweb3.model.*;
+import es.caib.regweb3.model.Entidad;
+import es.caib.regweb3.model.Interesado;
+import es.caib.regweb3.model.RegistroSalida;
+import es.caib.regweb3.model.UsuarioEntidad;
 import es.caib.regweb3.model.utils.AnexoFull;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
@@ -81,25 +84,6 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
      */
     void actualizarEvento(Long idRegistro, Entidad entidadActiva) throws I18NException;
 
-    /**
-     * Actualiza los Registros de Salida que con de Evento Distribuir
-     *
-     * @param oficina
-     * @param entidad
-     * @return
-     * @throws I18NException
-     */
-    Integer actualizarEventoDistribuirSalidas(Oficina oficina, Entidad entidad) throws I18NException;
-
-    /**
-     * Actualiza los Registros de Salida que con de Evento Distribuir cuyo destinatario es una Persona
-     *
-     * @param oficina
-     * @param entidad
-     * @return
-     * @throws I18NException
-     */
-    Integer actualizarEventoDistribuirSalidasPersona(Oficina oficina, Entidad entidad) throws I18NException;
 
     /**
      * Comprueba si un RegistroSalida se considera un OficioRemision interno o no

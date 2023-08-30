@@ -5,7 +5,6 @@ import es.caib.dir3caib.ws.api.oficina.OficinaTF;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.PlantillaJson;
 import es.caib.regweb3.persistence.ejb.CodigoAsuntoLocal;
-import es.caib.regweb3.persistence.ejb.MultiEntidadLocal;
 import es.caib.regweb3.persistence.ejb.PlantillaLocal;
 import es.caib.regweb3.persistence.utils.RegistroUtils;
 import es.caib.regweb3.utils.Dir3Caib;
@@ -53,9 +52,6 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
     @EJB(mappedName = CodigoAsuntoLocal.JNDI_NAME)
     private CodigoAsuntoLocal codigoAsuntoEjb;
 
-    @EJB(mappedName = MultiEntidadLocal.JNDI_NAME)
-    private MultiEntidadLocal multiEntidadEjb;
-
     /**
      * Carga el formulario para un nuevo {@link es.caib.regweb3.model.RegistroSalida} a partir de una {@link Plantilla}
      */
@@ -65,12 +61,7 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
         // Buscamos la Plantilla
         Plantilla plantilla = plantillaEjb.findById(idPlantilla);
 
-        LinkedHashSet<Oficina> oficinasOrigen;
-        if(multiEntidadEjb.isMultiEntidad()){
-            oficinasOrigen = new LinkedHashSet<>(getOficinasOrigenMultiEntidad(request));
-        }else{
-            oficinasOrigen = new LinkedHashSet<>(getOficinasOrigen(request));
-        }
+        LinkedHashSet<Oficina> oficinasOrigen = new LinkedHashSet<>(getOficinasOrigen(request));
 
         // Buscamos nuestra oficina activa
         Oficina oficinaActiva = getOficinaActiva(request);
@@ -103,12 +94,7 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
 
         Oficina oficina = getOficinaActiva(request);
 
-        LinkedHashSet<Oficina> oficinasOrigen;
-        if(multiEntidadEjb.isMultiEntidad()){
-            oficinasOrigen = new LinkedHashSet<>(getOficinasOrigenMultiEntidad(request));
-        }else{
-            oficinasOrigen = new LinkedHashSet<>(getOficinasOrigen(request));
-        }
+        LinkedHashSet<Oficina> oficinasOrigen = new LinkedHashSet<>(getOficinasOrigen(request));
 
         RegistroSalida registroSalida = new RegistroSalida();
         registroSalida.setLibro(getLibroEntidad(request));
@@ -160,12 +146,7 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
                 model.addAttribute("errorInteresado", errorInteresado);
             }
 
-            LinkedHashSet<Oficina> oficinasOrigen;
-            if(multiEntidadEjb.isMultiEntidad()){
-                oficinasOrigen = new LinkedHashSet<>(getOficinasOrigenMultiEntidad(request));
-            }else{
-                oficinasOrigen = new LinkedHashSet<>(getOficinasOrigen(request));
-            }
+            LinkedHashSet<Oficina> oficinasOrigen = new LinkedHashSet<>(getOficinasOrigen(request));
 
             model.addAttribute(entidad);
             model.addAttribute(getUsuarioAutenticado(request));
@@ -261,12 +242,7 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
             }
 
             // Oficina Origen: Select
-            Set<Oficina> oficinasOrigen;
-            if(multiEntidadEjb.isMultiEntidad()){
-                oficinasOrigen = new LinkedHashSet<>(getOficinasOrigenMultiEntidad(request));
-            }else{
-                oficinasOrigen = new LinkedHashSet<>(getOficinasOrigen(request));
-            }
+            Set<Oficina> oficinasOrigen = new LinkedHashSet<>(getOficinasOrigen(request));
 
             // Si la Oficina Origen es Externa, la añadimos al listado.
             Oficina oficinaOrigen = registroSalida.getRegistroDetalle().getOficinaOrigen();
@@ -319,12 +295,7 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
             model.addAttribute("organismosOficinaActiva", organismosOficinaActiva);
 
             // Oficina Origen: Select
-            Set<Oficina> oficinasOrigen;
-            if(multiEntidadEjb.isMultiEntidad()){
-                oficinasOrigen = new LinkedHashSet<>(getOficinasOrigenMultiEntidad(request));
-            }else{
-                oficinasOrigen = new LinkedHashSet<>(getOficinasOrigen(request));
-            }
+            Set<Oficina> oficinasOrigen = new LinkedHashSet<>(getOficinasOrigen(request));
 
             if (!registroSalida.getRegistroDetalle().getOficinaOrigen().getCodigo().equals("-1")) { // Si han indicado OficinaOrigen
                 Oficina oficinaOrigen = oficinaEjb.findByCodigoByEntidadMultiEntidad(registroSalida.getRegistroDetalle().getOficinaOrigen().getCodigo(), entidad.getId());

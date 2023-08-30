@@ -47,11 +47,10 @@ public interface RelacionSirOfiLocal extends BaseEjb<RelacionSirOfi, RelacionSir
      * Obtiene las oficinas que son SIR de una Entidad según un estado
      *
      * @param idEntidad
-     * @param estado
      * @return
      * @throws I18NException
      */
-    List<RelacionSirOfi> relacionesSirOfiByEntidadEstado(Long idEntidad, String estado) throws I18NException;
+    List<RelacionSirOfi> relacionesSirOfiByEntidadEstado(Long idEntidad) throws I18NException;
 
     /**
      * Obtiene las Oficinas SIR con el Organismo seleccionado

@@ -1,7 +1,10 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.dir3caib.ws.api.oficina.OficinaTF;
-import es.caib.regweb3.model.*;
+import es.caib.regweb3.model.Entidad;
+import es.caib.regweb3.model.Interesado;
+import es.caib.regweb3.model.RegistroEntrada;
+import es.caib.regweb3.model.UsuarioEntidad;
 import es.caib.regweb3.model.utils.AnexoFull;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
@@ -62,28 +65,6 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      * @throws I18NException
      */
     Boolean isOficioRemisionInterno(Long idRegistro, Set<Long> organismos) throws I18NException;
-
-    /**
-     * Identifica todos los registros de una oficina que son Oficios Internos
-     *
-     * @param oficina
-     * @throws I18NException
-     */
-    Integer actualizarEventoOficioInterno(Oficina oficina) throws I18NException;
-
-    /**
-     * @param oficina
-     * @return
-     * @throws I18NException
-     */
-    Integer actualizarEventoDistribuir(Oficina oficina) throws I18NException;
-
-    /**
-     * @param oficina
-     * @return
-     * @throws I18NException
-     */
-    Integer actualizarEventoOficioExterno(Oficina oficina) throws I18NException;
 
     /**
      * Comprueba si un RegistroEntrada se considera un OficioRemision externo o no

@@ -516,14 +516,14 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Organismo> getOrganismosByNivel(Long nivel, Long idEntidad, String estado) throws I18NException {
+    public List<Organismo> getOrganismosByNivel(Long nivel, Long idEntidad) throws I18NException {
 
         Query q = em.createQuery("Select organismo.id,organismo.codigo, organismo.denominacion, organismo.organismoSuperior.id, organismo.edp from Organismo as organismo where " +
-                "organismo.nivelJerarquico = :nivel and organismo.entidad.id = :idEntidad and organismo.estado.codigoEstadoEntidad = :estado order by organismo.codigo");
+                "organismo.nivelJerarquico = :nivel and entidad.id = :idEntidad and organismo.estado.codigoEstadoEntidad = :estado order by organismo.codigo");
 
         q.setParameter("nivel", nivel);
         q.setParameter("idEntidad", idEntidad);
-        q.setParameter("estado", estado);
+        q.setParameter("estado", RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
         q.setHint("org.hibernate.readOnly", true);
 
         List<Organismo> organismos = new ArrayList<Organismo>();
@@ -560,9 +560,17 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
             where.add(" organismo.estado.id = :idCatEstadoEntidad");
             parametros.put("idCatEstadoEntidad", organismo.getEstado().getId());
         }
+        // Permite usuarios
+        if(organismo.getPermiteUsuarios() != null){
+            where.add(" organismo.permiteUsuarios = :permiteUsuarios ");
+            parametros.put("permiteUsuarios",organismo.getPermiteUsuarios());
+        }
+        // Externo
+        if(organismo.getExterno() != null){
+            where.add(" organismo.externo = :externo ");
+            parametros.put("externo",organismo.getExterno());
+        }
 
-        /*where.add(" organismo.permiteUsuarios = :permiteUsuarios");
-        parametros.put("permiteUsuarios", organismo.getPermiteUsuarios());*/
 
         // Añadimos la Entidad
         where.add("organismo.entidad.id = :idEntidad ");
@@ -610,8 +618,6 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
 
         List<Organismo> organismos = q.getResultList();
         for (Organismo org : organismos) {
-            //Hibernate.initialize(org.getLibros());
-            //Hibernate.initialize(org.getOrganismoRaiz());
             Hibernate.initialize(org.getOrganismoSuperior());
         }
         paginacion.setListado(organismos);
@@ -620,47 +626,24 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
 
     }
 
+
     /**
-     * Método que obtiene los organismos vigentes y en los que puede registrar de la oficina activa,
-     * sin generar OficioRemisión.
+     * Método que obtiene los organismos vigentes y en los que puede registrar de la oficina
      *
-     * @param oficinaActiva
+     * @param oficina
      * @return List
      * @throws I18NException
      */
     @Override
-    public LinkedHashSet<Organismo> getByOficinaActiva(Oficina oficinaActiva, String estado) throws I18NException {
+    public LinkedHashSet<Organismo> getOrganismosRegistro(Oficina oficina) throws I18NException {
 
         // Añadimos los organismos a los que da servicio la Oficina (Directos y Funcionales)
-        LinkedHashSet<Organismo> organismos = oficinaActiva.getOrganismosFuncionales(estado);
+        LinkedHashSet<Organismo> organismos = oficina.getOrganismosFuncionales();
 
         // Añadimos todos los hijos de los Organismos obtenidos anteriormetne
         LinkedHashSet<Organismo> hijosTotales = new LinkedHashSet<Organismo>();
-        obtenerHijosOrganismos(organismos, hijosTotales, estado);
+        obtenerHijosOrganismos(organismos, hijosTotales, RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
         organismos.addAll(hijosTotales);
-
-        return organismos;
-
-    }
-
-    /**
-     * Método que obtiene todos los organismo de la oficina activa sin generar OficioRemisión.
-     * Este método permitirá mostrar el botón distribuir en caso de que el organismo esté extinguido,
-     * anulado o transitorio, además de vigente
-     *
-     * @param oficinaActiva
-     * @return List
-     * @throws I18NException
-     */
-    @Override
-    public LinkedHashSet<Organismo> getAllByOficinaActiva(Oficina oficinaActiva) throws I18NException {
-
-        LinkedHashSet<Organismo> organismos = new LinkedHashSet<Organismo>();
-
-        organismos.addAll(getByOficinaActiva(oficinaActiva, RegwebConstantes.ESTADO_ENTIDAD_VIGENTE));
-        organismos.addAll(getByOficinaActiva(oficinaActiva, RegwebConstantes.ESTADO_ENTIDAD_EXTINGUIDO));
-        organismos.addAll(getByOficinaActiva(oficinaActiva, RegwebConstantes.ESTADO_ENTIDAD_ANULADO));
-        organismos.addAll(getByOficinaActiva(oficinaActiva, RegwebConstantes.ESTADO_ENTIDAD_TRANSITORIO));
 
         return organismos;
 
@@ -681,16 +664,9 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
         for (Organismo org : organismosPadres) {
 
             Query q = em.createQuery("select organismo.id,organismo.codigo, organismo.denominacion, organismo.edp from Organismo as organismo where organismo.organismoSuperior.id =:idOrganismoSuperior " +
-                    "and organismo.estado.codigoEstadoEntidad =:estado and organismo.edp =:edp");
+                    "and organismo.externo=false and organismo.estado.codigoEstadoEntidad =:estado");
             q.setParameter("idOrganismoSuperior", org.getId());
             q.setParameter("estado", estado);
-
-            // Si el organismo padre es EDP, buscamos sus hijos EDP
-            if (org.getEdp()) {
-                q.setParameter("edp", true);
-            } else {
-                q.setParameter("edp", false);
-            }
 
             LinkedHashSet<Organismo> hijos = new LinkedHashSet<Organismo>();
 
@@ -707,7 +683,6 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
 
             // Hijos de cada organismo
             obtenerHijosOrganismos(hijos, totales, estado);
-
 
         }
 
@@ -762,6 +737,49 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
 
         em.createQuery("update from Organismo set permiteUsuarios = false where id  =:idOrganismo")
                 .setParameter("idOrganismo", idOrganismo).executeUpdate();
+
+    }
+
+    /**
+     * Activa la opción de considerar un Organismo como Externo a la Entidad
+     *
+     * @param idOrganismo
+     * @throws I18NException
+     */
+    public void activarExterno(Long idOrganismo) throws I18NException {
+
+        em.createQuery("update from Organismo set externo = true where id  =:idOrganismo")
+                .setParameter("idOrganismo", idOrganismo).executeUpdate();
+    }
+
+    /**
+     * Desactiva la opción de considerar un Organismo como Externo a la Entidad
+     *
+     * @param idOrganismo
+     * @throws I18NException
+     */
+    public void desactivarExterno(Long idOrganismo) throws I18NException {
+
+        em.createQuery("update from Organismo set externo = false where id  =:idOrganismo")
+                .setParameter("idOrganismo", idOrganismo).executeUpdate();
+
+    }
+
+    /**
+     * Comprueba si un Organismo es externo
+     *
+     * @param codigo
+     * @throws I18NException
+     */
+    public Boolean isExterno(String codigo, Long idEntidad) throws I18NException {
+
+        Query q = em.createQuery("Select organismo.id from Organismo as organismo where " +
+                "organismo.codigo =:codigo and organismo.externo = true and organismo.entidad.id = :idEntidad");
+
+        q.setParameter("codigo", codigo);
+        q.setParameter("idEntidad", idEntidad);
+
+        return q.getResultList().size() > 0;
 
     }
 
