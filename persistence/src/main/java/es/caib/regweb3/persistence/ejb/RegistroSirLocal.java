@@ -172,7 +172,7 @@ public interface RegistroSirLocal extends BaseEjb<RegistroSir, Long> {
      * @param reintentos
      * @throws I18NException
      */
-    void incrementarReintentos(Long idRegistroSir, Integer reintentos) throws I18NException;
+    void incrementarReintentos(Long idRegistroSir) throws I18NException;
 
     /**
      * @param ficheroIntercambio
