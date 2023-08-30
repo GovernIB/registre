@@ -937,15 +937,13 @@ public class SirEnvioBean implements SirEnvioLocal {
 
             log.info("Reintentado reenvío/rechazo " + registroSir.getIdentificadorIntercambio() + " a " + registroSir.getDecodificacionEntidadRegistralDestino());
 
-            log.info("Reintentado reenvío/rechazo " + registroSir.getIdentificadorIntercambio() + " a " + registroSir.getDecodificacionEntidadRegistralDestino());
-
             descripcion = "Reintentar reenvío/rechazo a: " + registroSir.getCodigoEntidadRegistralDestino();
             peticion.append("IdentificadorIntercambio: ").append(registroSir.getIdentificadorIntercambio()).append(System.getProperty("line.separator"));
             peticion.append("Origen: ").append(registroSir.getDecodificacionEntidadRegistralOrigen()).append(System.getProperty("line.separator"));
             peticion.append("Destino: ").append(registroSir.getDecodificacionEntidadRegistralDestino()).append(System.getProperty("line.separator"));
 
             emisionEjb.enviarFicheroIntercambio(registroSir);
-            registroSirEjb.incrementarReintentos(registroSir.getId(),registroSir.getNumeroReintentos() + 1);
+            registroSirEjb.incrementarReintentos(registroSir.getId());
 
             // Modificamos su estado si estaba marcado con ERROR
             if (registroSir.getEstado().equals(EstadoRegistroSir.REENVIADO_Y_ERROR)) {
@@ -960,6 +958,7 @@ public class SirEnvioBean implements SirEnvioLocal {
             log.info("Error al reintenar el envio del RegistroSir id: " + idRegistroSir);
             e.printStackTrace();
             integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_SCHEDULERS, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - inicio.getTime(), entidad.getId(), "");
+            registroSirEjb.incrementarReintentos(idRegistroSir);
         }
 
     }

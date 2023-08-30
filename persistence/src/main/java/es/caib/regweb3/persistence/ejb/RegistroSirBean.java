@@ -619,10 +619,9 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
 
     @Override
     @TransactionAttribute(value = REQUIRES_NEW)
-    public void incrementarReintentos(Long idRegistroSir, Integer reintentos) throws I18NException {
+    public void incrementarReintentos(Long idRegistroSir) throws I18NException {
 
-        Query q = em.createQuery("update RegistroSir set numeroReintentos=:reintentos where id = :idRegistroSir");
-        q.setParameter("reintentos", reintentos);
+        Query q = em.createQuery("update RegistroSir set numeroReintentos=numeroReintentos+1 where id = :idRegistroSir");
         q.setParameter("idRegistroSir", idRegistroSir);
         q.executeUpdate();
     }
