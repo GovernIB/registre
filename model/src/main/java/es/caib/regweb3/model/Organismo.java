@@ -64,7 +64,6 @@ public class Organismo implements Serializable {
     private CatComunidadAutonoma codAmbComunidad;
     @XmlTransient
     private CatProvincia codAmbProvincia;
-
     @XmlTransient
     private CatPais codPais;
     @XmlTransient
@@ -77,12 +76,12 @@ public class Organismo implements Serializable {
     private String numVia;
     @XmlTransient
     private String codPostal;
-
     @XmlTransient
     private Set<Organismo> historicoUO; // relacion de historicos
-
     @XmlTransient
     private Boolean permiteUsuarios = false; // Permite asociar usuarios
+    @XmlTransient
+    private Boolean externo = false; // Indica que no se permite registrar
 
 
     public Organismo() {
@@ -390,6 +389,15 @@ public class Organismo implements Serializable {
 
     public void setPermiteUsuarios(Boolean permiteUsuarios) {
         this.permiteUsuarios = permiteUsuarios;
+    }
+
+    @Column(name = "EXTERNO")
+    public Boolean getExterno() {
+        return externo;
+    }
+
+    public void setExterno(Boolean externo) {
+        this.externo = externo;
     }
 
     @Transient

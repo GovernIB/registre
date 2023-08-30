@@ -19,66 +19,76 @@
 
     <div class="well well-white">
 
-            <!-- Miga de pan -->
-           <div class="row">
-                <div class="col-xs-12">
-                    <ol class="breadcrumb">
-                        <c:import url="../modulos/migadepan.jsp"/>
-                        <li class="active"><i class="fa fa-pencil-square-o"></i>
-                            <c:if test="${not empty registroEntrada.id}"><spring:message code="registroEntrada.editar"/> ${registroEntrada.numeroRegistroFormateado}</c:if>
-                            <c:if test="${empty registroEntrada.id}"><spring:message code="registroEntrada.nuevo"/></c:if>
-                        </li>
-                    </ol>
-                </div>
-           </div><!-- Fin miga de pan -->
+        <!-- Miga de pan -->
+        <div class="row">
+            <div class="col-xs-12">
+                <ol class="breadcrumb">
+                    <c:import url="../modulos/migadepan.jsp"/>
+                    <li class="active"><i class="fa fa-pencil-square-o"></i>
+                        <c:if test="${not empty registroEntrada.id}"><spring:message code="registroEntrada.editar"/> ${registroEntrada.numeroRegistroFormateado}</c:if>
+                        <c:if test="${empty registroEntrada.id}"><spring:message code="registroEntrada.nuevo"/></c:if>
+                    </li>
+                </ol>
+            </div>
+        </div><!-- Fin miga de pan -->
 
-            <div id="mensajes"></div>
+        <div id="mensajes"></div>
 
-            <div class="row">
-                <div class="col-xs-12">
-
-                    <div class="panel panel-info">
-                        <div class="panel-heading">
-                            <c:if test="${empty registroEntrada.id}"><a data-toggle="modal" role="button" href="#modalSelectPlantilla" class="btn btn-info btn-xs pull-right margin-left10" onclick="cargarPlantillas('<c:url value="/rest/obtenerPlantillas"/>','${loginInfo.usuarioEntidadActivo.id}','${RegwebConstantes.REGISTRO_ENTRADA}')"><span class="fa fa-refresh"></span> <spring:message code="plantilla.select"/></a></c:if>
-                            <a data-toggle="modal" role="button" href="#modalNewPlantilla" class="btn btn-info btn-xs pull-right" onclick="preparaFormularioPlantilla('${RegwebConstantes.REGISTRO_ENTRADA}')"><span class="fa fa-plus"></span> <spring:message code="plantilla.nuevo"/></a>
-                            <h3 class="panel-title"><i class="fa fa-file-o"></i>
-                                <strong>
-                                    <c:if test="${not empty registroEntrada.id}"><spring:message code="registroEntrada.editar"/> ${registroEntrada.numeroRegistroFormateado}</c:if>
-                                    <c:if test="${empty registroEntrada.id}"><spring:message code="registroEntrada.nuevo"/></c:if>
-                                </strong>
-                            </h3>
-                        </div>
-                        <div class="panel-body">
-                            <div class="col-xs-12"><strong>${entidad.nombre} - ${registroEntrada.oficina.denominacion}</strong></div>
-
-                            <div class="form-group col-xs-12">
-                                <strong>
-                                    <c:if test="${not empty registroEntrada.id}"> <fmt:formatDate value="${registroEntrada.fecha}" pattern="dd/MM/yyyy HH:mm:ss"/></c:if>
-                                    <c:if test="${empty registroEntrada.id}"><c:set var="now" value="<%=new java.util.Date()%>" /> <fmt:formatDate value="${now}" pattern="dd/MM/yyyy HH:mm:ss"/></c:if>
-                                </strong>
-                            </div>
-                            <div class="col-xs-12"><strong>${usuario.nombreCompleto} (${usuario.email})</strong></div>
-                        </div>
+        <c:if test="${errorOrganismoExterno}">
+            <div class="alert alert-danger">
+                <div class="row vertical-align">
+                    <div class="col-xs-1 text-center">
+                        <i class="fa fa-times-circle fa-2x"></i>
                     </div>
-
+                    <div class="col-xs-11">
+                        <strong><spring:message code="organismo.externo.error"/></strong>
+                    </div>
                 </div>
             </div>
+        </c:if>
 
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        <c:if test="${empty registroEntrada.id}"><a data-toggle="modal" role="button" href="#modalSelectPlantilla" class="btn btn-info btn-xs pull-right margin-left10" onclick="cargarPlantillas('<c:url value="/rest/obtenerPlantillas"/>','${loginInfo.usuarioEntidadActivo.id}','${RegwebConstantes.REGISTRO_ENTRADA}')"><span class="fa fa-refresh"></span> <spring:message code="plantilla.select"/></a></c:if>
+                        <a data-toggle="modal" role="button" href="#modalNewPlantilla" class="btn btn-info btn-xs pull-right" onclick="preparaFormularioPlantilla('${RegwebConstantes.REGISTRO_ENTRADA}')"><span class="fa fa-plus"></span> <spring:message code="plantilla.nuevo"/></a>
+                        <h3 class="panel-title"><i class="fa fa-file-o"></i>
+                            <strong>
+                                <c:if test="${not empty registroEntrada.id}"><spring:message code="registroEntrada.editar"/> ${registroEntrada.numeroRegistroFormateado}</c:if>
+                                <c:if test="${empty registroEntrada.id}"><spring:message code="registroEntrada.nuevo"/></c:if>
+                            </strong>
+                        </h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="col-xs-12"><strong>${entidad.nombre} - ${registroEntrada.oficina.denominacion}</strong></div>
 
-           <div class="row">
+                        <div class="form-group col-xs-12">
+                            <strong>
+                                <c:if test="${not empty registroEntrada.id}"> <fmt:formatDate value="${registroEntrada.fecha}" pattern="dd/MM/yyyy HH:mm:ss"/></c:if>
+                                <c:if test="${empty registroEntrada.id}"><c:set var="now" value="<%=new java.util.Date()%>" /> <fmt:formatDate value="${now}" pattern="dd/MM/yyyy HH:mm:ss"/></c:if>
+                            </strong>
+                        </div>
+                        <div class="col-xs-12"><strong>${usuario.nombreCompleto} (${usuario.email})</strong></div>
+                    </div>
+                </div>
+            </div>
+       </div>
 
-               <c:if test="${origenPlantilla}">
-                   <c:url value="/registroEntrada/new" var="urlRegistroEntrada"/>
-               </c:if>
-               <c:if test="${!origenPlantilla}">
-                   <c:url value="" var="urlRegistroEntrada"/>
-               </c:if>
+        <div class="row">
 
-               <form:form modelAttribute="registroEntrada" method="post" cssClass="form-horizontal" action="${urlRegistroEntrada}">
+            <c:if test="${origenPlantilla}">
+               <c:url value="/registroEntrada/new" var="urlRegistroEntrada"/>
+            </c:if>
+            <c:if test="${!origenPlantilla}">
+               <c:url value="" var="urlRegistroEntrada"/>
+            </c:if>
 
-               <div class="col-xs-6">
+            <form:form modelAttribute="registroEntrada" method="post" cssClass="form-horizontal" action="${urlRegistroEntrada}">
 
-                   <div class="panel panel-info">
+                <div class="col-xs-6">
+
+                    <div class="panel panel-info">
 
                        <div class="panel-heading">
                            <h3 class="panel-title"><i class="fa fa-pencil-square"></i> <strong><spring:message code="registro.datos.obligatorios"/></strong></h3>
@@ -133,7 +143,7 @@
                                </div>
                                <div class="col-xs-10">
                                    <form:select path="registroDetalle.idioma" cssClass="chosen-select">
-                                    <c:forEach items="${idiomas}" var="idioma">                                       
+                                    <c:forEach items="${idiomas}" var="idioma">
                                        <form:option value="${idioma}"><spring:message code="idioma.${idioma}"/></form:option>
                                     </c:forEach>
                                    </form:select>
@@ -164,15 +174,13 @@
                            </div>
 
                        </div>
-                   </div>
-               </div>
+                    </div>
+                </div>
 
+                <!-- Datos Opcionales -->
+                <div class="col-xs-6">
 
-               <!-- Datos Opcionales -->
-               <div class="col-xs-6">
-
-
-                   <div class="panel panel-info">
+                    <div class="panel panel-info">
 
                        <div class="panel-heading">
                            <h3 class="panel-title"><i class="fa fa-pencil-square-o"></i> <strong><spring:message code="registro.datos.opcionales"/></strong></h3>
@@ -215,7 +223,7 @@
                                    <label for="registroDetalle.transporte" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.transporte"/>" data-toggle="popover"><spring:message code="registroEntrada.transporte"/></label>
                                </div>
                                <div class="col-xs-5">
-                                    <form:select path="registroDetalle.transporte" cssClass="chosen-select"> 
+                                    <form:select path="registroDetalle.transporte" cssClass="chosen-select">
                                       <form:option value="-1">...</form:option>
                                       <c:forEach items="${transportes}" var="transporte">
                                          <form:option value="${transporte}"><spring:message code="transporte.0${transporte}" /></form:option>
@@ -243,24 +251,24 @@
 
                            <div class="form-group col-xs-12">
 
-                                   <div class="col-xs-2 pull-left etiqueta_regweb control-label textEsq">
-                                       <label for="registroDetalle.oficinaOrigen.codigo" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.origen"/>" data-toggle="popover"><spring:message code="registroEntrada.oficinaOrigen"/></label>
-                                   </div>
-                                   <div class="col-xs-8">
-                                        <form:select path="registroDetalle.oficinaOrigen.codigo" cssClass="chosen-select">
-                                           <option value="-1">...</option>
-                                           <c:forEach items="${oficinasOrigen}" var="oficina">
-                                               <c:if test="${registroEntrada.registroDetalle.oficinaOrigen.codigo != null}">
-                                                   <option value="${oficina.codigo}" <c:if test="${registroEntrada.registroDetalle.oficinaOrigen.codigo == oficina.codigo}">selected="selected"</c:if>>${oficina.denominacion}</option>
-                                               </c:if>
-                                               <c:if test="${registroEntrada.registroDetalle.oficinaOrigen.codigo == null}">
-                                                   <option value="${oficina.codigo}" <c:if test="${registroEntrada.registroDetalle.oficinaOrigenExternoCodigo == oficina.codigo}">selected="selected"</c:if>>${oficina.denominacion}</option>
-                                               </c:if>
+                               <div class="col-xs-2 pull-left etiqueta_regweb control-label textEsq">
+                                   <label for="registroDetalle.oficinaOrigen.codigo" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.origen"/>" data-toggle="popover"><spring:message code="registroEntrada.oficinaOrigen"/></label>
+                               </div>
+                               <div class="col-xs-8">
+                                    <form:select path="registroDetalle.oficinaOrigen.codigo" cssClass="chosen-select">
+                                       <option value="-1">...</option>
+                                       <c:forEach items="${oficinasOrigen}" var="oficina">
+                                           <c:if test="${registroEntrada.registroDetalle.oficinaOrigen.codigo != null}">
+                                               <option value="${oficina.codigo}" <c:if test="${registroEntrada.registroDetalle.oficinaOrigen.codigo == oficina.codigo}">selected="selected"</c:if>>${oficina.denominacion}</option>
+                                           </c:if>
+                                           <c:if test="${registroEntrada.registroDetalle.oficinaOrigen.codigo == null}">
+                                               <option value="${oficina.codigo}" <c:if test="${registroEntrada.registroDetalle.oficinaOrigenExternoCodigo == oficina.codigo}">selected="selected"</c:if>>${oficina.denominacion}</option>
+                                           </c:if>
 
-                                           </c:forEach>
-                                       </form:select>
-                                       <form:errors path="registroDetalle.oficinaOrigen.codigo" cssClass="help-block" element="span"/>
-                                   </div>
+                                       </c:forEach>
+                                   </form:select>
+                                   <form:errors path="registroDetalle.oficinaOrigen.codigo" cssClass="help-block" element="span"/>
+                               </div>
 
                                <div class="col-xs-2 boto-panel">
                                    <a data-toggle="modal" role="button" href="#modalBuscadorOficinaOrigen"
@@ -301,51 +309,50 @@
                                    <form:input path="registroDetalle.codigoSia" maxlength="20" cssClass="form-control"/> <form:errors path="registroDetalle.codigoSia" cssClass="help-block" element="span"/>
                                </div>
                            </div>
-
                        </div>
-                   </div>
-               </div>
-               </form:form>
+                    </div>
+                </div>
+            </form:form>
 
-               <!-- INTERESADOS -->
-               <c:if test="${empty registroEntrada.id || registroEntrada.estado == RegwebConstantes.REGISTRO_RESERVA}">
-                   <c:set var="registro" value="${registroEntrada}"/>
-                   <c:import url="../registro/interesados.jsp">
-                       <c:param name="tipoRegistro" value="${RegwebConstantes.REGISTRO_ENTRADA}"/>
-                       <%--<c:param name="comunidad" value="${comunidad.codigoComunidad}"/>--%>
-                   </c:import>
-               </c:if>
+            <!-- INTERESADOS -->
+            <c:if test="${empty registroEntrada.id || registroEntrada.estado == RegwebConstantes.REGISTRO_RESERVA}">
+               <c:set var="registro" value="${registroEntrada}"/>
+               <c:import url="../registro/interesados.jsp">
+                   <c:param name="tipoRegistro" value="${RegwebConstantes.REGISTRO_ENTRADA}"/>
+                   <%--<c:param name="comunidad" value="${comunidad.codigoComunidad}"/>--%>
+               </c:import>
+            </c:if>
 
-               <!-- Botonera -->
-               <div class="col-xs-12">
-                   <button type="button" class="btn btn-warning btn-sm" onclick="doForm('#registroEntrada')">
-                       <c:if test="${empty registroEntrada.id}">
-                           <spring:message code="regweb.registrar"/>
-                       </c:if>
-                       <c:if test="${not empty registroEntrada.id}">
-                           <spring:message code="regweb.actualizar"/>
-                       </c:if>
-                   </button>
+            <!-- Botonera -->
+            <div class="col-xs-12">
+               <button type="button" class="btn btn-warning btn-sm" onclick="doForm('#registroEntrada')">
+                   <c:if test="${empty registroEntrada.id}">
+                       <spring:message code="regweb.registrar"/>
+                   </c:if>
+                   <c:if test="${not empty registroEntrada.id}">
+                       <spring:message code="regweb.actualizar"/>
+                   </c:if>
+               </button>
 
-                   <button type="button" onclick="goTo('<c:url value="/registroEntrada/list"/>')" class="btn btn-sm"><spring:message code="regweb.cancelar"/></button>
-               </div>
+               <button type="button" onclick="goTo('<c:url value="/registroEntrada/list"/>')" class="btn btn-sm"><spring:message code="regweb.cancelar"/></button>
+            </div>
 
-           </div>
+       </div>
 
-            <!-- Importamos el codigo jsp del modal del formulario para realizar la búsqueda de organismos Destino
-                 Mediante el archivo "busquedaorganismo.js" se implementa dicha búsqueda -->
+        <!-- Importamos el codigo jsp del modal del formulario para realizar la búsqueda de organismos Destino
+             Mediante el archivo "busquedaorganismo.js" se implementa dicha búsqueda -->
         <c:import url="../registro/buscadorOrganismosOficinasREPestanas.jsp">
-                <c:param name="tipo" value="OrganismoDestino"/>
-            </c:import>
+            <c:param name="tipo" value="OrganismoDestino"/>
+        </c:import>
 
-            <!-- Importamos el codigo jsp del modal del formulario para realizar la busqueda de organismos Origen
-                 Mediante el archivo "busquedaorganismo.js" se implementa dicha búsqueda -->
+        <!-- Importamos el codigo jsp del modal del formulario para realizar la busqueda de organismos Origen
+             Mediante el archivo "busquedaorganismo.js" se implementa dicha búsqueda -->
         <c:import url="../registro/buscadorOrganismosOficinasREPestanas.jsp">
-                <c:param name="tipo" value="OficinaOrigen"/>
-            </c:import>
+            <c:param name="tipo" value="OficinaOrigen"/>
+        </c:import>
 
-            <%--Nueva Plantilla--%>
-            <c:import url="../registro/formularioPlantilla.jsp"/>
+        <%--Nueva Plantilla--%>
+        <c:import url="../registro/formularioPlantilla.jsp"/>
 
     </div>
 </div> <!-- /container -->
@@ -418,7 +425,6 @@
 </script>
 
 <script type="text/javascript" src="<c:url value="/js/plantilla.js"/>"></script>
-
 
 </body>
 </html>

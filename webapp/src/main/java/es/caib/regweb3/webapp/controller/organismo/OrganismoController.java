@@ -56,6 +56,9 @@ public class OrganismoController extends BaseController {
 
         Organismo organismo = new Organismo();
         organismo.setEstado(catEstadoEntidadEjb.findByCodigo(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE));
+        organismo.setPermiteUsuarios(null);
+        organismo.setExterno(null);
+
         OrganismoBusquedaForm organismoBusqueda = new OrganismoBusquedaForm(organismo, 1);
 
         Paginacion paginacion = organismoEjb.busqueda(1, entidad.getId(), organismo);
@@ -220,6 +223,46 @@ public class OrganismoController extends BaseController {
 
             // Eliminamos los permisos de los usuarios de ese Organismo
             permisoOrganismoUsuarioEjb.eliminarPermisosOrganismo(idOrganismo);
+            Mensaje.saveMessageInfo(request, getMessage("organismo.desactivarUsuarios.ok"));
+
+        } catch (Exception e) {
+            Mensaje.saveMessageError(request, getMessage("regweb.error.registro"));
+            e.printStackTrace();
+        }
+
+        return "redirect:/organismo/list";
+    }
+
+    /**
+     * Activar los usuarios de un {@link es.caib.regweb3.model.Organismo}
+     */
+    @RequestMapping(value = "/{idOrganismo}/activarExterno")
+    public String activarExterno(@PathVariable Long idOrganismo, HttpServletRequest request) {
+
+        try {
+
+            organismoEjb.activarExterno(idOrganismo);
+
+            Mensaje.saveMessageInfo(request, getMessage("organismo.activarExterno.ok"));
+
+        } catch (Exception e) {
+            Mensaje.saveMessageError(request, getMessage("regweb.error.registro"));
+            e.printStackTrace();
+        }
+
+        return "redirect:/organismo/list";
+    }
+
+    /**
+     * Desactiv los usuarios de un {@link es.caib.regweb3.model.Organismo}
+     */
+    @RequestMapping(value = "/{idOrganismo}/desactivarExterno")
+    public String desactivarExterno(@PathVariable Long idOrganismo, HttpServletRequest request) {
+
+        try {
+
+            organismoEjb.desactivarExterno(idOrganismo);
+            Mensaje.saveMessageInfo(request, getMessage("organismo.desactivarExterno.ok"));
 
         } catch (Exception e) {
             Mensaje.saveMessageError(request, getMessage("regweb.error.registro"));
@@ -235,8 +278,8 @@ public class OrganismoController extends BaseController {
      * @return
      * @throws Exception
      */
-    @RequestMapping(value = "/arbolList", method = RequestMethod.GET)
-    public ModelAndView arbolList(HttpServletRequest request) throws Exception {
+    @RequestMapping(value = "/arbol", method = RequestMethod.GET)
+    public ModelAndView arbol(HttpServletRequest request) throws Exception {
         Long start = System.currentTimeMillis();
 
         ModelAndView mav = new ModelAndView("organismo/arbolList");
@@ -244,13 +287,13 @@ public class OrganismoController extends BaseController {
         Entidad entidad = getEntidadActiva(request);
 
         // Lista los organismos según su nivel
-        List<Organismo> organismosPrimerNivel = organismoEjb.getOrganismosByNivel((long) 1, entidad.getId(), RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
-        List<Organismo> organismosSegundoNivel = organismoEjb.getOrganismosByNivel((long) 2, entidad.getId(), RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
-        List<Organismo> organismosTercerNivel = organismoEjb.getOrganismosByNivel((long) 3, entidad.getId(), RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
-        List<Organismo> organismosCuartoNivel = organismoEjb.getOrganismosByNivel((long) 4, entidad.getId(), RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
-        List<Organismo> organismosQuintoNivel = organismoEjb.getOrganismosByNivel((long) 5, entidad.getId(), RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
-        List<Organismo> organismosSextoNivel = organismoEjb.getOrganismosByNivel((long) 6, entidad.getId(), RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
-        List<Organismo> organismosSeptimoNivel = organismoEjb.getOrganismosByNivel((long) 7, entidad.getId(), RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
+        List<Organismo> organismosPrimerNivel = organismoEjb.getOrganismosByNivel((long) 1, entidad.getId());
+        List<Organismo> organismosSegundoNivel = organismoEjb.getOrganismosByNivel((long) 2, entidad.getId());
+        List<Organismo> organismosTercerNivel = organismoEjb.getOrganismosByNivel((long) 3, entidad.getId());
+        List<Organismo> organismosCuartoNivel = organismoEjb.getOrganismosByNivel((long) 4, entidad.getId());
+        List<Organismo> organismosQuintoNivel = organismoEjb.getOrganismosByNivel((long) 5, entidad.getId());
+        List<Organismo> organismosSextoNivel = organismoEjb.getOrganismosByNivel((long) 6, entidad.getId());
+        List<Organismo> organismosSeptimoNivel = organismoEjb.getOrganismosByNivel((long) 7, entidad.getId());
 
         // Subimos los niveles de los organismos para empezar desde la raiz
         if (organismosPrimerNivel.size() == 0) {
@@ -307,14 +350,14 @@ public class OrganismoController extends BaseController {
         }
 
         // Lista las Oficinas según si son Responsables, Dependientes o Funcionales
-        List<Oficina> oficinasPrincipales = oficinaEjb.responsableByEntidadEstado(entidad.getId(), RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
-        List<Oficina> oficinasAuxiliares = oficinaEjb.dependienteByEntidadEstado(entidad.getId(), RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
+        List<Oficina> oficinasPrincipales = oficinaEjb.responsableByEntidadEstado(entidad.getId());
+        List<Oficina> oficinasAuxiliares = oficinaEjb.dependienteByEntidadEstado(entidad.getId());
 
         // Lista las Oficinas Organizativas
-        List<RelacionOrganizativaOfi> relacionesOrganizativaOfi = relacionOrganizativaOfiEjb.organizativaByEntidadEstado(entidad.getId(), RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
+        List<RelacionOrganizativaOfi> relacionesOrganizativaOfi = relacionOrganizativaOfiEjb.organizativaByEntidadEstado(entidad.getId());
 
         // Lista las Relaciones SirOfi
-        List<RelacionSirOfi> relacionesSirOfi = relacionSirOfiEjb.relacionesSirOfiByEntidadEstado(entidad.getId(), RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
+        List<RelacionSirOfi> relacionesSirOfi = relacionSirOfiEjb.relacionesSirOfiByEntidadEstado(entidad.getId());
 
         // Lista los libros de los organismos según el nivel del Organismo al que pertenecen
 

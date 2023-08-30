@@ -229,7 +229,7 @@ public class Oficina implements Serializable {
      */
     @Transient
     @JsonIgnore
-    public LinkedHashSet<Organismo> getOrganismosFuncionales(String estado) {
+    public LinkedHashSet<Organismo> getOrganismosFuncionales() {
 
         LinkedHashSet<Organismo> organismos = new LinkedHashSet<Organismo>();
 
@@ -239,7 +239,7 @@ public class Oficina implements Serializable {
         // Añadimos solo los Organismos del estado que nos indican
         Hibernate.initialize(this.getOrganizativasOfi());
         for (RelacionOrganizativaOfi relacionOrganizativaOfi : this.getOrganizativasOfi()) {
-            if (estado.equals(relacionOrganizativaOfi.getEstado().getCodigoEstadoEntidad())) {
+            if (RegwebConstantes.ESTADO_ENTIDAD_VIGENTE.equals(relacionOrganizativaOfi.getEstado().getCodigoEstadoEntidad())) {
                 organismos.add(relacionOrganizativaOfi.getOrganismo());
             }
         }

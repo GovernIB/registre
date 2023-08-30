@@ -224,23 +224,24 @@
 
                     <%--TRAZABILIDAD--%>
                     <c:if test="${not empty trazabilidades}">
-
                         <div class="tab-pane" id="trazabilidad">
+                            <c:if test="${loginInfo.rolActivo.nombre == 'RWE_ADMIN'}">
+                                <c:import url="../trazabilidad/trazabilidadSir.jsp">
+                                    <c:param name="adminEntidad" value="true"/>
+                                </c:import>
+                            </c:if>
 
-                            <c:import url="../trazabilidad/trazabilidadSir.jsp">
-                                <c:param name="adminEntidad" value="false"/>
-                            </c:import>
-
+                            <c:if test="${loginInfo.rolActivo.nombre == 'RWE_USUARI'}">
+                                <c:import url="../trazabilidad/trazabilidadSir.jsp">
+                                    <c:param name="adminEntidad" value="false"/>
+                                </c:import>
+                            </c:if>
                         </div>
-
                     </c:if>
-
                 </div>
             </div>
 
-
         </div><!-- /div.row-->
-
 
         <%--Modal Rechazo--%>
         <div id="rechazoModal" class="modal fade">

@@ -1,3 +1,9 @@
 --Nuevo campo ENTIDAD en RWE_PENDIENTE
 alter table RWE_PENDIENTE add ENTIDAD number(19,0);
 alter table RWE_PENDIENTE add constraint RWE_PENDIE_ENTIDAD_FK foreign key (ENTIDAD) references RWE_ENTIDAD;
+
+--Nuevo campo EXTERNO en RWE_ORGANISMO
+ALTER TABLE RWE_ORGANISMO ADD EXTERNO number(1,0) DEFAULT 0;
+
+--Nuevo índice en la tabla RWE_INTERESADO
+create index RWE_INTERES_REGDET_FK_I on RWE_INTERESADO (REGISTRODETALLE);

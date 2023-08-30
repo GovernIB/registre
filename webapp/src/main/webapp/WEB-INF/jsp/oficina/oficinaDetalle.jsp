@@ -67,7 +67,7 @@
                                 </c:choose>
                             </dd>
                             <dt><i class="fa fa-list-ul"></i> <spring:message code="oficina.servicios"/>: </dt>
-                            <dd>
+                            <dd> <br>
                                 <ul>
                                     <c:forEach var="servicio" items="${oficina.servicios}">
                                         <li>${servicio.descServicio}</li>
@@ -85,6 +85,59 @@
             <!-- Fin Panel Lateral -->
 
                 <div class="col-xs-8">
+
+                    <div class="panel panel-warning">
+
+                        <div class="panel-heading">
+                            <h3 class="panel-title"><i class="fa fa-list"></i> <strong><spring:message code="oficina.organismos"/></strong></h3>
+                        </div>
+
+                        <div class="panel-body">
+
+                            <div class="row">
+                                <div class="col-xs-12">
+
+                                    <c:if test="${organismos != null && empty organismos}">
+                                        <div class="alert alert-grey">
+                                            <spring:message code="regweb.listado.vacio"/> <strong><spring:message code="organismo.organismo"/></strong>
+                                        </div>
+                                    </c:if>
+
+                                    <c:if test="${not empty organismos}">
+
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered table-hover table-striped">
+                                                <thead>
+                                                    <tr>
+                                                        <th><spring:message code="organismo.denominacion"/></th>
+                                                        <th>EDP</th>
+                                                        <th><spring:message code="organismo.buscador.codigo"/></th>
+                                                    </tr>
+                                                </thead>
+
+                                                <tbody>
+                                                <c:forEach var="organismo" items="${organismos}">
+                                                    <tr>
+                                                        <td>${organismo.denominacion}</td>
+                                                        <td>
+                                                            <c:if test="${organismo.edp == true}">
+                                                                <span class="label label-success">Si</span>
+                                                            </c:if>
+                                                            <c:if test="${organismo.edp == false}">
+                                                                <span class="label label-danger">No</span>
+                                                            </c:if>
+                                                        </td>
+                                                        <td>${organismo.codigo}</td>
+                                                    </tr>
+                                                </c:forEach>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </c:if>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
                 </div>
 

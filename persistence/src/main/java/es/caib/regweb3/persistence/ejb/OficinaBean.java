@@ -66,6 +66,7 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
 
         Oficina oficina = em.find(Oficina.class, id);
         Hibernate.initialize(oficina.getOficinaResponsable());
+        Hibernate.initialize(oficina.getOrganizativasOfi());
         return oficina;
     }
 
@@ -388,13 +389,13 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Oficina> responsableByEntidadEstado(Long idEntidad, String estado) throws I18NException {
+    public List<Oficina> responsableByEntidadEstado(Long idEntidad) throws I18NException {
         Query q = em.createQuery("Select oficina.id, oficina.codigo, oficina.denominacion, oficina.organismoResponsable.id from Oficina as oficina where " +
                 "oficina.organismoResponsable.entidad.id =:idEntidad and oficina.estado.codigoEstadoEntidad =:estado and " +
                 "oficina.oficinaResponsable.id = null order by oficina.codigo");
 
         q.setParameter("idEntidad", idEntidad);
-        q.setParameter("estado", estado);
+        q.setParameter("estado", RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
         q.setHint("org.hibernate.readOnly", true);
 
         List<Object[]> result = q.getResultList();
@@ -414,13 +415,13 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Oficina> dependienteByEntidadEstado(Long idEntidad, String estado) throws I18NException {
+    public List<Oficina> dependienteByEntidadEstado(Long idEntidad) throws I18NException {
         Query q = em.createQuery("Select oficina.id, oficina.codigo, oficina.denominacion, oficina.oficinaResponsable.id, oficina.organismoResponsable.id from Oficina as oficina where " +
                 "oficina.organismoResponsable.entidad.id =:idEntidad and oficina.estado.codigoEstadoEntidad =:estado and " +
                 "oficina.oficinaResponsable.id != null order by oficina.codigo");
 
         q.setParameter("idEntidad", idEntidad);
-        q.setParameter("estado", estado);
+        q.setParameter("estado", RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
         q.setHint("org.hibernate.readOnly", true);
 
         List<Object[]> result = q.getResultList();

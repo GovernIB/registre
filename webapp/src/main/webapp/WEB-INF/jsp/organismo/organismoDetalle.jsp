@@ -72,6 +72,15 @@
                                     </c:when>
                                 </c:choose>
                             </dd>
+                            <dt><i class="fa fa-institution"></i> <spring:message code="organismo.externo"/>: </dt>
+                            <dd>
+                                <c:if test="${organismo.externo == true}">
+                                    <span class="label label-success">Si</span>
+                                </c:if>
+                                <c:if test="${organismo.externo == false}">
+                                    <span class="label label-danger">No</span>
+                                </c:if>
+                            </dd>
 
                         </dl>
 

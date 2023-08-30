@@ -207,11 +207,10 @@ public interface OrganismoLocal extends BaseEjb<Organismo, Long> {
     /**
      * @param nivel
      * @param idEntidad
-     * @param estado
      * @return
      * @throws I18NException
      */
-    List<Organismo> getOrganismosByNivel(Long nivel, Long idEntidad, String estado) throws I18NException;
+    List<Organismo> getOrganismosByNivel(Long nivel, Long idEntidad) throws I18NException;
 
     /**
      * Realiza la búsqueda por nombre de los organismos de una entidad
@@ -225,24 +224,12 @@ public interface OrganismoLocal extends BaseEjb<Organismo, Long> {
 
     /**
      * Método que obtiene los organismos vigentes y en los que puede registrar la oficina activa.
-     *
-     * @param oficinaActiva
-     * @return List
+     * @param oficina
+     * @return
      * @throws I18NException
      */
-    LinkedHashSet<Organismo> getByOficinaActiva(Oficina oficinaActiva, String estado) throws I18NException;
+    LinkedHashSet<Organismo> getOrganismosRegistro(Oficina oficina) throws I18NException;
 
-
-    /**
-     * Método que obtiene todos los organismo de la oficina activa sin generar OficioRemisión.
-     * Este método permitirá mostrar el botón distribuir en caso de que el organismo esté extinguido,
-     * anulado o transitorio, además de vigente
-     *
-     * @param oficinaActiva
-     * @return List
-     * @throws I18NException
-     */
-    LinkedHashSet<Organismo> getAllByOficinaActiva(Oficina oficinaActiva) throws I18NException;
 
     /**
      * Método que nos devuelve los códigos DIR3 de las oficinas SIR de un organismo
@@ -268,6 +255,31 @@ public interface OrganismoLocal extends BaseEjb<Organismo, Long> {
      * @throws I18NException
      */
     void desactivarUsuarios(Long idOrganismo) throws I18NException;
+
+    /**
+     * Activa la opción de considerar un Organismo como Externo a la Entidad
+     *
+     * @param idOrganismo
+     * @throws I18NException
+     */
+    void activarExterno(Long idOrganismo) throws I18NException;
+
+    /**
+     * Desactiva la opción de considerar un Organismo como Externo a la Entidad
+     *
+     * @param idOrganismo
+     * @throws I18NException
+     */
+    void desactivarExterno(Long idOrganismo) throws I18NException;
+
+    /**
+     * Comprueba si un Organismo es Externo
+     * @param codigo
+     * @param idEntidad
+     * @return
+     * @throws I18NException
+     */
+    Boolean isExterno(String codigo, Long idEntidad) throws I18NException;
 
     /**
      * Obtiene todos los Organismos que permiten asociar usuarios

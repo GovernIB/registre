@@ -193,21 +193,19 @@ public interface OficinaLocal extends BaseEjb<Oficina, Long> {
      * Obtiene las Oficinas responsables cuya Entidad responsable es la indicada
      *
      * @param idEntidad
-     * @param estado
      * @return
      * @throws I18NException
      */
-    List<Oficina> responsableByEntidadEstado(Long idEntidad, String estado) throws I18NException;
+    List<Oficina> responsableByEntidadEstado(Long idEntidad) throws I18NException;
 
     /**
      * Obtiene las Oficinas dependientes cuya Entidad responsable es la indicada
      *
      * @param idEntidad
-     * @param estado
      * @return
      * @throws I18NException
      */
-    List<Oficina> dependienteByEntidadEstado(Long idEntidad, String estado) throws I18NException;
+    List<Oficina> dependienteByEntidadEstado(Long idEntidad) throws I18NException;
 
     /**
      * Retorna las Oficinas(Funcionales y Organizativas) que dan servicio a un Organismo,

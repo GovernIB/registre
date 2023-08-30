@@ -75,11 +75,10 @@ public interface RelacionOrganizativaOfiLocal extends BaseEjb<RelacionOrganizati
      * Obtiene las Relaciones organizativas de las Oficinas cuya Entidad responsable es la indicada
      *
      * @param idEntidad
-     * @param estado
      * @return
      * @throws I18NException
      */
-    List<RelacionOrganizativaOfi> organizativaByEntidadEstado(Long idEntidad, String estado) throws I18NException;
+    List<RelacionOrganizativaOfi> organizativaByEntidadEstado(Long idEntidad) throws I18NException;
 
     /**
      * Elimina las RelacionOrganizativaOfi de una Entidad

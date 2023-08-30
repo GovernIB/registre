@@ -31,7 +31,7 @@
 <button type="button" class="btn btn-primary btn-xs" onclick="amaga(${fn:length(organismosSegundoNivel)},${fn:length(organismosTercerNivel)},${fn:length(organismosCuartoNivel)})"><i class="fa fa-sitemap fa-rotate-180"></i> <spring:message code="organismo.arbol.cierra"/></button>
 </div>
 <div class="btn-group pad-left">
-<button type="button" class="btn btn-info btn-xs" onclick="goTo('<c:url value="/organismo/arbolList"/>')"><i class="fa fa-sitemap"></i> <spring:message code="organismo.arbol.abre"/></button>
+<button type="button" class="btn btn-info btn-xs" onclick="goTo('<c:url value="/organismo/arbol"/>')"><i class="fa fa-sitemap"></i> <spring:message code="organismo.arbol.abre"/></button>
 </div>
 <div class="btn-group pad-left">
 <button type="button" id="infoCopy" class="btn btn-default btn-xs" disabled style="cursor:default"><i class="fa fa-info-circle colophon">  <spring:message code="organismo.arbol.copiar"/></i></button>

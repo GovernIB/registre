@@ -115,13 +115,13 @@ public class RelacionSirOfiBean extends BaseEjbJPA<RelacionSirOfi, RelacionSirOf
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<RelacionSirOfi> relacionesSirOfiByEntidadEstado(Long idEntidad, String estado) throws I18NException {
+    public List<RelacionSirOfi> relacionesSirOfiByEntidadEstado(Long idEntidad) throws I18NException {
         Query q = em.createQuery("Select relacionSirOfi.oficina.id, relacionSirOfi.oficina.codigo, relacionSirOfi.oficina.denominacion, " +
                 "relacionSirOfi.organismo.id, relacionSirOfi.oficina.organismoResponsable.id from RelacionSirOfi as relacionSirOfi where " +
                 "relacionSirOfi.organismo.entidad.id =:idEntidad and relacionSirOfi.estado.codigoEstadoEntidad =:estado order by relacionSirOfi.oficina.codigo");
 
         q.setParameter("idEntidad", idEntidad);
-        q.setParameter("estado", estado);
+        q.setParameter("estado", RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
         q.setHint("org.hibernate.readOnly", true);
 
         List<Object[]> result = q.getResultList();

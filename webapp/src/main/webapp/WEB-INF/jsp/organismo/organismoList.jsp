@@ -34,10 +34,8 @@
                 <div class="panel panel-warning">
 
                     <div class="panel-heading">
-                        <a class="btn btn-warning btn-xs pull-right margin-left10" href="<c:url value="/organismo/arbolList"/>" role="button"><span class="fa fa-sitemap"></span> <spring:message code="organismo.organigrama"/></a>
-                        <%--<a class="btn btn-warning btn-xs pull-right" href="<c:url value="/entidad/librosCambiar"/>" role="button"><span class="fa fa-book"></span> <spring:message code="entidad.cambiarlibros"/></a>--%>
-                        <h3 class="panel-title"><i class="fa fa-search"></i> <strong><spring:message
-                                code="organismo.buscador.entidad"/> ${entidad.nombre} (${entidad.codigoDir3})</strong></h3>
+                        <a class="btn btn-warning btn-xs pull-right margin-left10" href="<c:url value="/organismo/arbol"/>" role="button"><span class="fa fa-sitemap"></span> <spring:message code="organismo.organigrama"/></a>
+                        <h3 class="panel-title"><i class="fa fa-search"></i> <strong><spring:message code="organismo.buscador.entidad"/> ${entidad.nombre} (${entidad.codigoDir3})</strong></h3>
                     </div>
 
                     <div class="panel-body">
@@ -67,7 +65,7 @@
                             <div class="col-xs-12">
                                 <div class="form-group col-xs-6 espaiLinies senseMargeLat">
                                     <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
-                                        <form:label path="organismo.estado.id"><span class="text-danger">*</span> <spring:message code="organismo.estado"/></form:label>
+                                        <form:label path="organismo.estado.id"><spring:message code="organismo.estado"/></form:label>
                                     </div>
                                     <div class="col-xs-8">
 
@@ -77,14 +75,33 @@
                                         <form:errors path="organismo.estado.id" cssClass="help-block" element="span"/>
                                     </div>
                                 </div>
-                                <%--<div class="form-group col-xs-6 espaiLinies senseMargeLat">
+                                <div class="form-group col-xs-6 espaiLinies senseMargeLat">
                                     <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
-                                        <form:label path="organismo.permiteUsuarios"><spring:message code="organismo.permiteUsuarios"/></form:label>
+                                         <form:label path="organismo.permiteUsuarios"><spring:message code="organismo.permiteUsuarios"/></form:label>
                                     </div>
                                     <div class="col-xs-8">
-                                        <form:checkbox path="organismo.permiteUsuarios"/>
+                                        <form:select path="organismo.permiteUsuarios" cssClass="chosen-select">
+                                            <form:option value="" label="..."/>
+                                            <form:option value="true"><spring:message code="regweb.si"/></form:option>
+                                            <form:option value="false"><spring:message code="regweb.no"/></form:option>
+                                        </form:select>
                                     </div>
-                                </div>--%>
+                                </div>
+                            </div>
+                            <div class="col-xs-12">
+                                <div class="form-group col-xs-6 espaiLinies senseMargeLat">
+                                    <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                        <form:label path="organismo.externo"><spring:message code="organismo.externo"/></form:label>
+                                    </div>
+                                    <div class="col-xs-8">
+                                        <form:select path="organismo.externo" cssClass="chosen-select">
+                                            <form:option value="" label="..."/>
+                                            <form:option value="true"><spring:message code="regweb.si"/></form:option>
+                                            <form:option value="false"><spring:message code="regweb.no"/></form:option>
+                                        </form:select>
+                                    </div>
+                                </div>
+
                             </div>
 
                             <div class="form-group col-xs-12">
@@ -117,20 +134,19 @@
                                             <p class="pull-right"><spring:message code="regweb.pagina"/> <strong>${paginacion.currentIndex}</strong> de ${paginacion.totalPages}</p>
                                         </div>
 
-                                        <div class="table-responsive">
-                                            <table class="table table-bordered table-hover table-striped">
-                                                <thead>
+                                        <table class="table table-bordered table-hover table-striped">
+                                            <thead>
                                                 <tr>
                                                     <th><spring:message code="organismo.organismo"/></th>
                                                     <th><spring:message code="entidad.codigoDir3"/></th>
                                                     <th><spring:message code="organismo.organismoSuperior"/></th>
                                                     <th>EDP</th>
                                                     <th class="center"><spring:message code="organismo.estado"/></th>
-                                                    <th width="130" class="center"><spring:message code="regweb.acciones"/></th>
+                                                    <th width="140" class="center"><spring:message code="regweb.acciones"/></th>
                                                 </tr>
-                                                </thead>
+                                            </thead>
 
-                                                <tbody>
+                                            <tbody>
                                                 <c:forEach var="organismo" items="${paginacion.listado}">
                                                     <tr>
                                                         <td>${organismo.denominacion}</td>
@@ -169,25 +185,40 @@
                                                         </td>
                                                         <td class="center">
                                                             <c:if test="${organismo.permiteUsuarios}">
-                                                                <a class="btn btn-primary btn-sm" href="<c:url value="/organismo/${organismo.id}/usuarios"/>" title="<spring:message code="organismo.usuarios"/>"><span class="fa fa-users"></span></a>
-                                                                <a class="btn btn-danger btn-sm" onclick='javascript:confirm("<c:url value="/organismo/${organismo.id}/desactivarUsuarios"/>","<spring:message code="organismo.usuarios.desactivar" htmlEscape="true"/>")' href="javascript:void(0);" title="<spring:message code="organismo.usuarios.desactivar"/>"><span class="fa fa-close"></span></a>
+
+                                                                <div class="btn-group">
+                                                                    <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown">
+                                                                        <i class="fa fa-users"></i> <span class="caret"></span>
+                                                                    </button>
+                                                                    <ul class="dropdown-menu">
+                                                                        <li class="submenu-complet"><a href="<c:url value="/organismo/${organismo.id}/usuarios"/>" target="_blank"><span class="fa fa-eye"></span> <spring:message code="organismo.usuarios"/></a></li>
+                                                                        <li class="submenu-complet"><a href="javascript:void(0);" onclick='javascript:confirm("<c:url value="/organismo/${organismo.id}/desactivarUsuarios"/>","<spring:message code="organismo.usuarios.desactivar" htmlEscape="true"/>")'><span class="fa fa-close"></span> <spring:message code="organismo.permiteUsuarios.desactivar"/></a></li>
+                                                                    </ul>
+                                                                </div>
+
                                                             </c:if>
                                                             <c:if test="${not organismo.permiteUsuarios}">
                                                                 <a class="btn btn-primary btn-sm" onclick='javascript:confirm("<c:url value="/organismo/${organismo.id}/activarUsuarios"/>","<spring:message code="organismo.usuarios.activar" htmlEscape="true"/>")' href="javascript:void(0);" title="<spring:message code="organismo.usuarios.activar"/>"><span class="fa fa-check"></span></a>
+                                                            </c:if>
+
+                                                            <c:if test="${organismo.externo}">
+                                                                <a class="btn btn-success btn-sm" href="javascript:void(0);" onclick='javascript:confirm("<c:url value="/organismo/${organismo.id}/desactivarExterno"/>","<spring:message code="organismo.externo.desactivar" htmlEscape="true"/>")' title="<spring:message code="organismo.externo.desactivar"/>"><span class="fa fa-institution"></span></a>
+                                                            </c:if>
+                                                            <c:if test="${not organismo.externo}">
+                                                                <a class="btn btn-danger btn-sm" href="javascript:void(0);" onclick='javascript:confirm("<c:url value="/organismo/${organismo.id}/activarExterno"/>","<spring:message code="organismo.externo.activar" htmlEscape="true"/>")' title="<spring:message code="organismo.externo.activar"/>"><span class="fa fa-ban"></span></a>
                                                             </c:if>
                                                             <a class="btn btn-warning btn-sm" href="<c:url value="/organismo/${organismo.id}/detalle"/>" target="_blank" title="<spring:message code="organismo.detalle"/>"><span class="fa fa-eye"></span></a>
                                                         </td>
                                                     </tr>
                                                 </c:forEach>
-                                                </tbody>
-                                            </table>
+                                            </tbody>
+                                        </table>
 
-                                            <!-- Paginacion -->
-                                            <c:import url="../modulos/paginacionBusqueda.jsp">
-                                                <c:param name="entidad" value="organismo"/>
-                                            </c:import>
+                                        <!-- Paginacion -->
+                                        <c:import url="../modulos/paginacionBusqueda.jsp">
+                                            <c:param name="entidad" value="organismo"/>
+                                        </c:import>
 
-                                        </div>
                                     </c:if>
                                 </div>
                             </div>

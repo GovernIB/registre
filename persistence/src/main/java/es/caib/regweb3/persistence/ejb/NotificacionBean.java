@@ -239,7 +239,7 @@ public class NotificacionBean extends BaseEjbJPA<Notificacion, Long> implements 
                 log.info("Conunicaciones RegistrosSirPendientes para la oficina: " + oficina.getDenominacion());
 
                 //Obtener los usuarios con Permiso SIR en la Oficina indicada
-                LinkedHashSet<Organismo> organismos = organismoEjb.getByOficinaActiva(oficinaEjb.findById(oficina.getId()), RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
+                LinkedHashSet<Organismo> organismos = organismoEjb.getOrganismosRegistro(oficinaEjb.findById(oficina.getId()));
                 List<UsuarioEntidad> usuarios = permisoOrganismoUsuarioEjb.getUsuariosPermiso(organismos, RegwebConstantes.PERMISO_SIR);
 
                 //Crear notificación para cada usuario
@@ -273,7 +273,7 @@ public class NotificacionBean extends BaseEjbJPA<Notificacion, Long> implements 
                 log.info("Conunicaciones Entradas RechazadosDevueltos para la oficina: " + oficina.getDenominacion());
 
                 //Obtener los usuarios con Permiso SIR en la Oficina indicada
-                LinkedHashSet<Organismo> organismos = organismoEjb.getByOficinaActiva(oficina, RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
+                LinkedHashSet<Organismo> organismos = organismoEjb.getOrganismosRegistro(oficina);
                 List<UsuarioEntidad> usuarios = permisoOrganismoUsuarioEjb.getUsuariosPermiso(organismos, RegwebConstantes.PERMISO_SIR);
 
                 //Crear notificación para cada usuario
@@ -296,7 +296,7 @@ public class NotificacionBean extends BaseEjbJPA<Notificacion, Long> implements 
                 log.info("Conunicaciones Salidas RechazadosDevueltos para la oficina: " + oficina.getDenominacion());
 
                 //Obtener los usuarios con Permiso SIR en la Oficina indicada
-                LinkedHashSet<Organismo> organismos = organismoEjb.getByOficinaActiva(oficina, RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
+                LinkedHashSet<Organismo> organismos = organismoEjb.getOrganismosRegistro(oficina);
                 List<UsuarioEntidad> usuarios = permisoOrganismoUsuarioEjb.getUsuariosPermiso(organismos, RegwebConstantes.PERMISO_SIR);
 
                 //Crear notificación para cada usuario
