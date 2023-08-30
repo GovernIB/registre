@@ -22,7 +22,8 @@ import java.util.List;
         @Index(name = "RWE_INTERES_CATPAI_FK_I", columnList = "PAIS"),
         @Index(name = "RWE_INTERES_CATLOC_FK_I", columnList = "LOCALIDAD"),
         @Index(name = "RWE_INTERES_REPADO_FK_I", columnList = "REPRESENTADO"),
-        @Index(name = "RWE_INTERES_REPANT_FK_I", columnList = "REPRESENTANTE")
+        @Index(name = "RWE_INTERES_REPANT_FK_I", columnList = "REPRESENTANTE"),
+        @Index(name = "RWE_INTERES_REGDET_FK_I", columnList = "REGISTRODETALLE")
 })
 @SequenceGenerator(name = "generator", sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
 @XmlRootElement(name = "interesado")
