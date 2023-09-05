@@ -18,6 +18,9 @@ import es.caib.regweb3.utils.ReferenciaUnicaUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.gob.ad.registros.sir.gestionEni.bean.ContenidoBean;
 import es.gob.ad.registros.sir.gestionEni.bean.FirmaBean;
+import es.gob.ad.registros.sir.gestionEni.bean.documento.MetadatosEni;
+import es.gob.ad.registros.sir.gestionEni.bean.documento.TipoMetadatoImpl;
+import es.gob.ad.registros.sir.gestionEni.bean.metadato.TipoDocumentalEnum;
 import es.gob.ad.registros.sir.interService.bean.AnexoBean;
 import es.gob.ad.registros.sir.interService.bean.AsientoBean;
 import es.gob.ad.registros.sir.interService.bean.InteresadoBean;
@@ -25,8 +28,6 @@ import es.gob.ad.registros.sir.interService.bean.OtrosMetadatos;
 import es.gob.ad.registros.sir.interService.exception.InterException;
 import es.gob.ad.registros.sir.interService.interSincroDIR3.service.IServiciosOfiService;
 import es.gob.ad.registros.sir.interService.service.IConsultaService;
-import es.gob.administracionelectronica.eni.xsd.v1_0.documento_e.metadatos.TipoDocumental;
-import es.gob.administracionelectronica.eni.xsd.v1_0.documento_e.metadatos.TipoMetadatos;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
 import org.fundaciobit.genapp.common.i18n.I18NArgumentString;
@@ -40,10 +41,10 @@ import org.springframework.stereotype.Component;
 
 import javax.ejb.EJB;
 import javax.xml.datatype.DatatypeConfigurationException;
-import javax.xml.datatype.DatatypeFactory;
 import java.nio.charset.StandardCharsets;
 import java.sql.Timestamp;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -77,7 +78,7 @@ public class LibSirUtils {
      * @return
      * @throws I18NException
      */
-    public AsientoBean transformarRegistroEntrada(RegistroEntrada registroEntrada) throws I18NException, DatatypeConfigurationException, InterException {
+    public AsientoBean transformarRegistroEntrada(RegistroEntrada registroEntrada) throws I18NException, DatatypeConfigurationException, InterException, ParseException {
 
         RegistroDetalle registroDetalle = registroEntrada.getRegistroDetalle();
 
@@ -170,7 +171,7 @@ public class LibSirUtils {
      * @return
      * @throws I18NException
      */
-    public AsientoBean transformarRegistroSalida(RegistroSalida registroSalida) throws I18NException, DatatypeConfigurationException {
+    public AsientoBean transformarRegistroSalida(RegistroSalida registroSalida) throws I18NException, DatatypeConfigurationException, ParseException {
 
         RegistroDetalle registroDetalle = registroSalida.getRegistroDetalle();
 
@@ -303,7 +304,7 @@ public class LibSirUtils {
     }
 
 
-    private AnexoBean transformarAnexo(Anexo anexo, int secuencia, String identificadorIntercambio, String tipoMime) throws DatatypeConfigurationException {
+    private AnexoBean transformarAnexo(Anexo anexo, int secuencia, String identificadorIntercambio, String tipoMime) throws DatatypeConfigurationException, ParseException {
 
         es.gob.ad.registros.sir.interService.bean.AnexoBean anexoBean = new AnexoBean();
 
@@ -353,26 +354,33 @@ public class LibSirUtils {
             anexoBean.setOtrosMetadatosGenerales(otrosMetadatosAnexGeneral);
             anexoBean.setOtrosMetadatosParticulares(otrosMetadatosAnexParticular);
 
-            //METADATOS ENI
+            //METADATOS ENI //TODO Eliminar TipoMetadatos que está comentado cuando la versión 3.1.0 de LIBSIR funcione.
             Set<MetadatoAnexo> metadatosAnexoENI = anexo.getMetadatosAnexos().stream().filter(metadato -> metadato.getTipo().equals(METADATO_NTI)).collect(Collectors.toSet());
-            TipoMetadatos tipoMetadatos = new TipoMetadatos();
+            //TipoMetadatos tipoMetadatos = new TipoMetadatos();
+            MetadatosEni metadatosEni = new TipoMetadatoImpl();
             for (MetadatoAnexo metadatoAnexo : metadatosAnexoENI) {
 
                 String str = metadatoAnexo.getCampo();
+
                 switch (str) {
                     case "fechaCaptura":
-                        tipoMetadatos.setFechaCaptura(DatatypeFactory.newInstance().newXMLGregorianCalendar(metadatoAnexo.getValor()));
+                        //tipoMetadatos.setFechaCaptura(DatatypeFactory.newInstance().newXMLGregorianCalendar(metadatoAnexo.getValor()));
+                        SimpleDateFormat formatter = new SimpleDateFormat(FORMATO_FECHA_SICRES4);
+                        metadatosEni.setFechaCapturaDate(formatter.parse(metadatoAnexo.getValor()));
                         break;
                     case "origenCiudadanoAdministracion":
-                        tipoMetadatos.setOrigenCiudadanoAdministracion(Boolean.parseBoolean(metadatoAnexo.getValor()));
+                        metadatosEni.setOrigenCiudadanoAdministracion(Boolean.parseBoolean(metadatoAnexo.getValor()));
+                       // tipoMetadatos.setOrigenCiudadanoAdministracion(Boolean.parseBoolean(metadatoAnexo.getValor()));
                         break;
                     case "tipoDocumental":
-                        tipoMetadatos.setTipoDocumental(TipoDocumental.fromValue(metadatoAnexo.getValor()));
+                        metadatosEni.setTipoDocumentalENI(TipoDocumentalEnum.fromValue(metadatoAnexo.getValor()));
+                      //  tipoMetadatos.setTipoDocumental(TipoDocumental.fromValue(metadatoAnexo.getValor()));
                         break;
                 }
 
             }
-            anexoBean.setTipoMetadatos(tipoMetadatos);
+            anexoBean.setTipoMetadatos(metadatosEni);
+            //anexoBean.setTipoMetadatos(tipoMetadatos);
         }
 
         //Metadatos obligatorios SICRES4
@@ -396,7 +404,7 @@ public class LibSirUtils {
     }
 
 
-    private Set<AnexoBean> transformarAnexos(List<AnexoFull> anexosFull, String identificadorIntercambio) throws DatatypeConfigurationException {
+    private Set<AnexoBean> transformarAnexos(List<AnexoFull> anexosFull, String identificadorIntercambio) throws DatatypeConfigurationException, ParseException {
 
         Set<AnexoBean> anexoBeans= new HashSet<>();
         int secuencia = 0;
@@ -1000,29 +1008,30 @@ public class LibSirUtils {
 
 
         // LIBSIR estos son los metadatos ENI (documentoElectrónico)
-        TipoMetadatos tiposMetadato = anexoBean.getTipoMetadatos();
+        MetadatosEni tiposMetadato = anexoBean.getTipoMetadatos();
+       // TipoMetadatos tiposMetadato = anexoBean.getTipoMetadatos();
 
         MetadatoAnexoSir metadatoAnexoSir;
 
         DateFormat formatter = new SimpleDateFormat(FORMATO_FECHA_SICRES4);
 
-        if (tiposMetadato != null) {
+     //   if (tiposMetadato != null) { //TODO TEMPORAL DESCOMENTAR
             //fechaCaptura
-            metadatoAnexoSir = new MetadatoAnexoSir(METADATO_NTI, "fechaCaptura", formatter.format(tiposMetadato.getFechaCaptura().toGregorianCalendar().getTime()));
-          //  metadatoAnexoSir = new MetadatoAnexoSir(METADATO_NTI, "fechaCaptura", formatter.format(new Date()));
+           // metadatoAnexoSir = new MetadatoAnexoSir(METADATO_NTI, "fechaCaptura", formatter.format(tiposMetadato.getFechaCaptura().toGregorianCalendar().getTime()));
+            metadatoAnexoSir = new MetadatoAnexoSir(METADATO_NTI, "fechaCaptura", formatter.format(new Date()));
             metadatosAnexos.add(metadatoAnexoSir);
 
             //origenCiudadanoAdministracion
-            metadatoAnexoSir = new MetadatoAnexoSir(METADATO_NTI, "origenCiudadanoAdministracion", tiposMetadato.isOrigenCiudadanoAdministracion() ? "1" : "0");
-         //   metadatoAnexoSir = new MetadatoAnexoSir(METADATO_NTI, "origenCiudadanoAdministracion", "1");
+          //  metadatoAnexoSir = new MetadatoAnexoSir(METADATO_NTI, "origenCiudadanoAdministracion", tiposMetadato.isOrigenCiudadanoAdministracion() ? "1" : "0");
+            metadatoAnexoSir = new MetadatoAnexoSir(METADATO_NTI, "origenCiudadanoAdministracion", "1");
             metadatosAnexos.add(metadatoAnexoSir);
 
             //tipoDocumental
-            metadatoAnexoSir = new MetadatoAnexoSir(METADATO_NTI, "tipoDocumental", tiposMetadato.getTipoDocumental().value());
-           // metadatoAnexoSir = new MetadatoAnexoSir(METADATO_NTI, "tipoDocumental", "TD01");
+           // metadatoAnexoSir = new MetadatoAnexoSir(METADATO_NTI, "tipoDocumental", tiposMetadato.getTipoDocumental().value());
+            metadatoAnexoSir = new MetadatoAnexoSir(METADATO_NTI, "tipoDocumental", "TD01");
             metadatosAnexos.add(metadatoAnexoSir);
 
-        }
+      //  }
 
         anexo.setMetadatosAnexos(metadatosAnexos);
         return anexo;
