@@ -103,7 +103,7 @@ public class SirEnvioBean implements SirEnvioLocal {
      */
     @Override
     public AsientoBean crearIntercambioEntrada(RegistroEntrada registroEntrada, Entidad entidad, Oficina oficinaActiva, UsuarioEntidad usuario, OficinaTF oficinaSirDestino)
-            throws I18NException, I18NValidationException, InterException, DatatypeConfigurationException {
+            throws I18NException, I18NValidationException, InterException, DatatypeConfigurationException, ParseException {
 
         OficioRemision oficioRemision = null;
 
@@ -182,7 +182,7 @@ public class SirEnvioBean implements SirEnvioLocal {
      */
     @Override
     public AsientoBean crearIntercambioSalida(RegistroSalida registroSalida, Entidad entidad, Oficina oficinaActiva, UsuarioEntidad usuario, OficinaTF oficinaSirDestino)
-            throws I18NException, I18NValidationException, InterException, DatatypeConfigurationException {
+            throws I18NException, I18NValidationException, InterException, DatatypeConfigurationException, ParseException {
 
         OficioRemision oficioRemision = null;
 
@@ -258,7 +258,7 @@ public class SirEnvioBean implements SirEnvioLocal {
      */
     @Override
     public OficioRemision enviarIntercambio(Long tipoRegistro, IRegistro registro, Entidad entidad, Oficina oficinaActiva, UsuarioEntidad usuario, String codigoOficinaSir)
-            throws I18NException, I18NValidationException, DatatypeConfigurationException, InterException {
+            throws I18NException, I18NValidationException, DatatypeConfigurationException, InterException, ParseException {
 
         OficioRemision oficioRemision = null;
         RegistroSir registroSir = null;
@@ -1300,7 +1300,8 @@ public class SirEnvioBean implements SirEnvioLocal {
      * @param numeroRegistroFormateado
      * @throws I18NException
      */
-    private void confirmarRegistroSirLIBSIR(RegistroSir registroSir, String numeroRegistroFormateado, Date fechaRegistro) throws I18NException, InterException {
+    @Override
+    public void confirmarRegistroSirLIBSIR(RegistroSir registroSir, String numeroRegistroFormateado, Date fechaRegistro) throws I18NException, InterException {
 
         ConfirmarRecibidoBean confirmarRecibidoBean = new ConfirmarRecibidoBean();
         confirmarRecibidoBean.setCdIntercambio(registroSir.getIdentificadorIntercambio());
