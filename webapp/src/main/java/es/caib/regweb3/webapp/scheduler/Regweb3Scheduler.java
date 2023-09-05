@@ -241,4 +241,40 @@ public class Regweb3Scheduler {
             e.printStackTrace();
         }
     }*/
+
+    /**
+     * Qué hace: reencola los asientos que no se han enviado por algun error
+     * Cuando lo hace: cada dia a las 02:00
+     */
+    @Scheduled(cron = "0 0 2 * * *") // 0 0 8 * * * Cada día a las 02:00h
+    public void reencolarAsientosPendientes(){
+
+        try {
+
+            //El método está probado, falta probar el scheduler que lo haga cuando toca.
+            //Aún por decidir la frecuencia.
+            //Este método son asientos que han dado error porque el destino no funciona..
+            schedulerEjb.reencolarAsientos();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    /**
+     * Qué hace: obtiene los asientos que se reciben via SIR
+     * Cuando lo hace: cada 15 minutos
+     */
+    @Scheduled(fixedDelay = 900000)
+    public void consultarAsientosPendientes(){
+
+        try {
+
+            schedulerEjb.consultarAsientosPendientesSIR();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
