@@ -1,28 +1,42 @@
 package es.caib.regweb3.persistence.ejb;
 
-import es.caib.regweb3.model.Cola;
-import es.caib.regweb3.model.Entidad;
-import es.caib.regweb3.model.Oficina;
-import es.caib.regweb3.model.OficioRemision;
+
+import es.caib.regweb3.model.*;
+import es.caib.regweb3.model.sir.Errores;
+import es.caib.regweb3.model.sir.TipoAnotacion;
+import es.caib.regweb3.model.sir.TipoMensaje;
+import es.caib.regweb3.model.utils.EstadoRegistroSir;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
+import es.caib.regweb3.sir.core.excepcion.ValidacionException;
+import es.caib.regweb3.sir.core.utils.Assert;
 import es.caib.regweb3.utils.RegwebConstantes;
+import es.caib.regweb3.utils.StringUtils;
 import es.gob.ad.registros.sir.interModel.dao.enums.TipoEstadoEnum;
 import es.gob.ad.registros.sir.interService.bean.AsientoBean;
 import es.gob.ad.registros.sir.interService.bean.DatosRegistroProcesoBean;
 import es.gob.ad.registros.sir.interService.bean.ResultadoRegistroProcesoBean;
+import es.gob.ad.registros.sir.interService.exception.InterException;
 import es.gob.ad.registros.sir.interService.service.IConsultaService;
+import es.gob.ad.registros.sir.interService.service.ISalidaService;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.jboss.ejb3.annotation.TransactionTimeout;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
 
 import javax.annotation.security.RunAs;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import javax.interceptor.Interceptors;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.toList;
 
 /**
  * Created by Fundació BIT.
@@ -34,6 +48,7 @@ import java.util.List;
 @Stateless(name = "SchedulerEJB")
 //@RolesAllowed({"RWE_ADMIN","RWE_USUARI"})
 @RunAs("RWE_USUARI")
+@Interceptors(SpringBeanAutowiringInterceptor.class)
 public class SchedulerBean implements SchedulerLocal {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
@@ -68,8 +83,17 @@ public class SchedulerBean implements SchedulerLocal {
     private OficinaLocal oficinaEjb;
     @EJB
     private OficioRemisionLocal oficioRemisionEjb;
+    @EJB
+    private TrazabilidadSirLocal trazabilidadSirEjb;
+    @EJB
+    private RegistroEntradaLocal registroEntradaEjb;
+    @EJB
+    private RegistroSalidaLocal registroSalidaEjb;
+    @EJB
+    private MensajeControlLocal mensajeControlEjb;
 
     @Autowired IConsultaService consultaService;
+    @Autowired ISalidaService salidaService;
 
 
     @Override
@@ -522,59 +546,293 @@ public class SchedulerBean implements SchedulerLocal {
     @Override
     public void consultarAsientosPendientesSIR() throws I18NException {
 
-
         StringBuilder peticion = new StringBuilder();
         long tiempo = System.currentTimeMillis();
-        String descripcion = "Consultar Asientos Recibidos SIR";
+        Date inicio = null;
+        String descripcion = "";
         Entidad entidadActiva = null;
         try {
-            //Integración
-            Date inicio = new Date();
-            peticion = new StringBuilder();
-
             List<AsientoBean> asientosPendientes = libSirEjb.consultaAsientosPendientes(10);
 
             //ENVIADOS
-            List<DatosRegistroProcesoBean> enviados= new ArrayList<>();
+            List<DatosRegistroProcesoBean> aProcesar= new ArrayList<>();
 
-            for (AsientoBean asiento : asientosPendientes) {
-                OficioRemision oficio = oficioRemisionEjb.getByIdentificadorIntercambio(asiento.getCdIntercambio());
-                if(oficio!= null){
-                   if(TipoEstadoEnum.EC.getCodigo().equals(asiento.getCdEstado())){
-                       DatosRegistroProcesoBean datosRegistroProcesoBean = new DatosRegistroProcesoBean();
-                       datosRegistroProcesoBean.setCdIntercambio(oficio.getIdentificadorIntercambio());
-                       datosRegistroProcesoBean.setCdEnRgProcesa(oficio.getOficina().getCodigo());
-                       //datosRegistroProcesoBean.setEstadoAplicacion(estado); // TODO No se que estado poner
-                       enviados.add(datosRegistroProcesoBean);
-                   }
-                }else{
-                   if(TipoEstadoEnum.R.getCodigo().equals(asiento.getCdEstado())){
-                       Oficina oficina = oficinaEjb.findByMultiEntidad(asiento.getCdEnRgDestino());
-                       registroSirEjb.crearRegistroSir(asiento, oficina.getOrganismoResponsable().getEntidad());
-                   }
+            for(AsientoBean asiento: asientosPendientes){
+
+                log.info("Asiento CDINTERCAMBIO" + asiento.getCdIntercambio());
+                log.info("Asiento Estado" + asiento.getCdEstado());
+                log.info("Asiento Destino" + asiento.getCdEnRgDestino());
+
+
+                if(TipoEstadoEnum.R.getCodigo().equals(asiento.getCdEstado())){ //Recibido
+                    inicio = new Date();
+                    descripcion = "Recepción Intercambio: ";
+                    RegistroSir registroSir = registroSirEjb.getByIdIntercambio(asiento.getCdIntercambio());
+                    if(registroSir == null){
+                        log.info("CASO REGISTRO RECIBIDO NUEVO");
+                        Oficina oficina = oficinaEjb.findByMultiEntidad(asiento.getCdEnRgDestino());
+                        Entidad entidad = oficina.getOrganismoResponsable().getEntidad();
+                        Assert.notNull(entidad,"No existe ninguna Entidad a la que corresponda este envío");
+                        Assert.isTrue(entidad.getActivo(), "La Entidad a la que va dirigida el Asiento Registral no está activa");
+                        Assert.isTrue(entidad.getSir(), "La Entidad a la que va dirigida el Asiento Registral no tiene el servicio SIR activo");
+                        registroSir= registroSirEjb.crearRegistroSir(asiento, entidad);
+
+                        descripcion = descripcion.concat(asiento.getDsTpAnotacion());
+                        datosIntegracion(asiento, peticion);
+                        integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_SIR, descripcion, peticion.toString(), System.currentTimeMillis() - inicio.getTime(), entidad.getId(), asiento.getCdIntercambio());
+                        log.info("El registroSir no existia en el sistema y se ha creado: " + registroSir.getIdentificadorIntercambio());
+                    }else{
+                       if (EstadoRegistroSir.ACEPTADO.equals(registroSir.getEstado())) {
+                           log.info("Se ha recibido un ENVIO que ya ha sido aceptado previamente: " + registroSir.getIdentificadorIntercambio() + "lo marcamos como procesado");
+                           //Volvemos a recibir un asiento que ya hemos aceptado, marcamos como procesado
+                           DatosRegistroProcesoBean datosRegistroProcesoBean = new DatosRegistroProcesoBean();
+                           datosRegistroProcesoBean.setCdIntercambio(asiento.getCdIntercambio());
+                           datosRegistroProcesoBean.setCdEnRgProcesa(asiento.getCdEnRgProcesa());
+                           datosRegistroProcesoBean.setEstadoAplicacion(TipoEstadoEnum.R.getCodigo());
+                           aProcesar.add(datosRegistroProcesoBean);
+                       }else if(EstadoRegistroSir.RECIBIDO.equals(registroSir.getEstado())){
+                           log.info("El RegistroSir " + registroSir.getIdentificadorIntercambio() + " ya se habia recibido anteriormente y está en estado pendiente de procesar");
+                       }else{
+                           log.info("Se ha recibido un ENVIO con estado incompatible: " + registroSir.getIdentificadorIntercambio());
+                       }
+                    }
                 }
+                if(TipoEstadoEnum.EC.getCodigo().equals(asiento.getCdEstado())){ //Enviado y confirmado
+                    log.info("ENVIADO " + asiento.getCdIntercambio());
+                    log.info("ENVIADOS ESTADO" + asiento.getCdEstado());
+                    OficioRemision oficioRemision = oficioRemisionEjb.getByIdentificadorIntercambio(asiento.getCdIntercambio());
+                    if(oficioRemision!=null) { log.info("Oficio SIR ID" + oficioRemision.getId());}
+                    if(oficioRemision!=null) {
+
+                        switch (oficioRemision.getEstado()) {
+
+                            case RegwebConstantes.OFICIO_SIR_ENVIADO:
+                           /* case RegwebConstantes.OFICIO_SIR_ENVIADO_ACK:
+                            case RegwebConstantes.OFICIO_SIR_ENVIADO_ERROR:*/
+                            case RegwebConstantes.OFICIO_SIR_REENVIADO:
+                           /* case RegwebConstantes.OFICIO_SIR_REENVIADO_ACK:
+                            case RegwebConstantes.OFICIO_SIR_REENVIADO_ERROR:*/
+
+                                oficioRemisionEjb.aceptarOficioSir(oficioRemision, asiento.getCdEnRgDestino(), asiento.getDsEnRgDestino(), asiento.getCdEnRgOrigen(), asiento.getFeEntradaDestino());
+                                break;
+
+                            case (RegwebConstantes.OFICIO_ACEPTADO):
+                                log.info("Se ha recibido un mensaje de confirmación duplicado");
+                                break;
+
+                            default:
+                                log.info("El RegistroSir no tiene el estado necesario para ser Confirmado: " + oficioRemision.getIdentificadorIntercambio());
+                                throw new ValidacionException(Errores.ERROR_0037, "El RegistroSir no tiene el estado necesario para ser Confirmado: " + oficioRemision.getIdentificadorIntercambio());
+                        }
+
+
+                        DatosRegistroProcesoBean datosRegistroProcesoBean = new DatosRegistroProcesoBean();
+                        datosRegistroProcesoBean.setCdIntercambio(asiento.getCdIntercambio());
+                        datosRegistroProcesoBean.setCdEnRgProcesa(asiento.getCdEnRgProcesa());
+                        datosRegistroProcesoBean.setEstadoAplicacion(TipoEstadoEnum.EC.getCodigo());
+                        aProcesar.add(datosRegistroProcesoBean);
+
+                    }
+                }
+                if(TipoEstadoEnum.ERCH.getCodigo().equals(asiento.getCdEstado())) { //Rechazo de un asiento enviado
+                    //Integraciones revisadas OK
+                    OficioRemision oficioRemision = oficioRemisionEjb.getByIdentificadorIntercambio(asiento.getCdIntercambio());
+
+                    // Oficio Remision: Ha sido enviado por nosotros a SIR
+                    if (oficioRemision != null) { // Existe en el sistema
+
+                        oficioRemisionEjb.  marcarRechazadoOficioSir(oficioRemision,asiento.getCdEnRgOrigen(),TipoMensaje.RECHAZO.getValue(),TipoMensaje.RECHAZO.getName(),asiento.getCdIntercambio());
+
+                        //Procesamos
+                        DatosRegistroProcesoBean datosRegistroProcesoBean = new DatosRegistroProcesoBean();
+                        datosRegistroProcesoBean.setCdIntercambio(asiento.getCdIntercambio());
+                        datosRegistroProcesoBean.setCdEnRgProcesa(asiento.getCdEnRgProcesa());
+                        datosRegistroProcesoBean.setEstadoAplicacion(TipoEstadoEnum.ERCH.getCodigo());
+                        aProcesar.add(datosRegistroProcesoBean);
+
+                    }
+
+                }
+
+                //PROBADO y OK.
+                if(TipoEstadoEnum.RRE.getCodigo().equals(asiento.getCdEstado())) { //– Recibido Reenviado: el reenvío de un registro se ha enviado por la plataforma SIR y se
+                    //ha recibido su correspondiente ACK (el registro reenviado ha llegado al destino).
+
+                    //Integraciones revisadas OK
+                    RegistroSir registroSir = registroSirEjb.getByIdIntercambio(asiento.getCdIntercambio());
+                    OficioRemision oficioRemision = oficioRemisionEjb.getByIdentificadorIntercambio(asiento.getCdIntercambio());
+
+                    if(registroSir!=null){
+                            registroSirEjb.modificarEstadoNuevaTransaccion(registroSir.getId(), EstadoRegistroSir.REENVIADO_Y_ACK);
+
+                            //PROCESAMOS
+                            DatosRegistroProcesoBean datosRegistroProcesoBean = new DatosRegistroProcesoBean();
+                            datosRegistroProcesoBean.setCdIntercambio(asiento.getCdIntercambio());
+                            datosRegistroProcesoBean.setCdEnRgProcesa(asiento.getCdEnRgProcesa());
+                            datosRegistroProcesoBean.setEstadoAplicacion(TipoEstadoEnum.RRE.getCodigo());
+                            aProcesar.add(datosRegistroProcesoBean);
+
+
+                    // Oficio Remision: Ha sido enviado por nosotros a SIR//TODO no tengo claro si este caso se tiene que contemplar con LIBSIR
+                    }/* else if (oficioRemision != null) { // Ya existe en el sistema
+
+                            log.info("XXXXXXXX Entro en oficioSir reenviado ");
+                            oficioRemisionEjb.modificarEstado(oficioRemision.getId(), RegwebConstantes.OFICIO_SIR_REENVIADO_ACK);
+
+                            DatosRegistroProcesoBean datosRegistroProcesoBean = new DatosRegistroProcesoBean();
+                            datosRegistroProcesoBean.setCdIntercambio(asiento.getCdIntercambio());
+                            datosRegistroProcesoBean.setCdEnRgProcesa(asiento.getCdEnRgProcesa());
+                            datosRegistroProcesoBean.setEstadoAplicacion(TipoEstadoEnum.RRE.getCodigo());
+                            aProcesar.add(datosRegistroProcesoBean);
+
+                    }*/
+
+                }
+
+                if(TipoEstadoEnum.EERR.getCodigo().equals(asiento.getCdEstado())){//Enviado Erróneo: se ha producido un error en el envío del registro.
+
+                    descripcion = "Recepción Error en Envio: " + TipoEstadoEnum.EERR.getCodigo();
+                    peticion.append("IdentificadorIntercambio: ").append(asiento.getCdIntercambio()).append(System.getProperty("line.separator"));
+                    peticion.append("Origen: ").append(asiento.getCdEnRgOrigen()).append(System.getProperty("line.separator"));
+                    peticion.append("Destino: ").append(asiento.getCdEnRgDestino()).append(System.getProperty("line.separator"));
+                    peticion.append("Descripcion: ").append(TipoEstadoEnum.EERR.getDescripcion()).append(System.getProperty("line.separator"));
+
+
+                    OficioRemision oficioRemision = oficioRemisionEjb.getByIdentificadorIntercambio(asiento.getCdIntercambio());
+
+
+                   // if(oficioRemision.getEstado() == RegwebConstantes.OFICIO_ACEPTADO){
+                        //PROCESAMOS
+                    log.info("SSSSS " + asiento.getCdTpAnotacion());
+                    log.info("SSSSS " + asiento.getDsTpAnotacion());
+                        oficioRemisionEjb.modificarEstadoError(oficioRemision.getId(), RegwebConstantes.OFICIO_SIR_ENVIADO_ERROR, TipoMensaje.ERROR.getName(), TipoMensaje.ERROR.getValue());
+
+                        DatosRegistroProcesoBean datosRegistroProcesoBean = new DatosRegistroProcesoBean();
+                        datosRegistroProcesoBean.setCdIntercambio(asiento.getCdIntercambio());
+                        datosRegistroProcesoBean.setCdEnRgProcesa(asiento.getCdEnRgProcesa());
+                        datosRegistroProcesoBean.setEstadoAplicacion(TipoEstadoEnum.EERR.getCodigo());
+                        aProcesar.add(datosRegistroProcesoBean);
+                   // }
+
+                    integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_SIR, descripcion, peticion.toString(), null, null, System.currentTimeMillis() - inicio.getTime(), oficioRemision.getEntidad().getId(), asiento.getCdIntercambio());
+                }
+
+//TODO PENDENT DE PROVAR TOTS AQUESTS CASOS QUAN INTERDOC EM RETORNI UN ENIDOC
+                if(TipoEstadoEnum.RERR.getCodigo().equals(asiento.getCdEstado())){ // Recibido Confirmado Erróneo: se ha producido un error en la confirmación del registro
+                    RegistroSir registroSir = registroSirEjb.getByIdIntercambio(asiento.getCdIntercambio());
+                    if(EstadoRegistroSir.ACEPTADO.equals(registroSir.getEstado())){
+                        //PROCESAMOS
+                        DatosRegistroProcesoBean datosRegistroProcesoBean = new DatosRegistroProcesoBean();
+                        datosRegistroProcesoBean.setCdIntercambio(asiento.getCdIntercambio());
+                        datosRegistroProcesoBean.setCdEnRgProcesa(asiento.getCdEnRgProcesa());
+                        datosRegistroProcesoBean.setEstadoAplicacion(TipoEstadoEnum.RERR.getCodigo());
+                        aProcesar.add(datosRegistroProcesoBean);
+                    }else{
+                        log.info("Se ha producido un error en la confirmación del asiento (" + asiento.getCdIntercambio()+ ") - (" + TipoEstadoEnum.RERR.getDescripcion()+ ")");
+                    }
+                }
+
+               /* if(TipoEstadoEnum.RCHERR.getCodigo().equals(asiento.getCdEstado())){// Rechazado Erróneo: se ha producido un error en el rechazo de un registro.
+                    RegistroSir registroSir = registroSirEjb.getByIdIntercambio(asiento.getCdIntercambio());
+                    if(EstadoRegistroSir.RECHAZADO_Y_ACK.equals(registroSir.getEstado())){
+                        //PROCESAMOS
+                        DatosRegistroProcesoBean datosRegistroProcesoBean = new DatosRegistroProcesoBean();
+                        datosRegistroProcesoBean.setCdIntercambio(asiento.getCdIntercambio());
+                        datosRegistroProcesoBean.setCdEnRgProcesa(asiento.getCdEnRgProcesa());
+                        datosRegistroProcesoBean.setEstadoAplicacion(TipoEstadoEnum.RCHERR.getCodigo());
+                        aProcesar.add(datosRegistroProcesoBean);
+                    }else{
+                        log.info("Se ha producido un error en el rechazo del asiento (" + asiento.getCdIntercambio()+ ") - (" + TipoEstadoEnum.RCHERR.getDescripcion()+ ")");
+                    }
+                }
+
+                if(TipoEstadoEnum.REERR.getCodigo().equals(asiento.getCdEstado())){// Reenviado Erróneo: se ha producido un error en el reenvío del registro.
+                    RegistroSir registroSir = registroSirEjb.getByIdIntercambio(asiento.getCdIntercambio());
+                    if(EstadoRegistroSir.REENVIADO_Y_ACK.equals(registroSir.getEstado())){
+                        //PROCESAMOS
+                        DatosRegistroProcesoBean datosRegistroProcesoBean = new DatosRegistroProcesoBean();
+                        datosRegistroProcesoBean.setCdIntercambio(asiento.getCdIntercambio());
+                        datosRegistroProcesoBean.setCdEnRgProcesa(asiento.getCdEnRgProcesa());
+                        datosRegistroProcesoBean.setEstadoAplicacion(TipoEstadoEnum.REERR.getCodigo());
+                        aProcesar.add(datosRegistroProcesoBean);
+                    }else{
+                        log.info("Se ha producido un error en el reenvio del asiento (" + asiento.getCdIntercambio()+ ") - (" + TipoEstadoEnum.REERR.getDescripcion()+ ")");
+                    }
+                }*/
             }
+
 
             //Marcamos como procesados los enviados
-            ResultadoRegistroProcesoBean resultado = consultaService.procesar(enviados);
+           ResultadoRegistroProcesoBean resultado = consultaService.procesar(aProcesar);
             if (resultado != null) {
-                if(!resultado.getRegistrosProcesados().isEmpty()){
+                if(resultado.getRegistrosProcesados()!=null){
                     resultado.getRegistrosProcesados().forEach((v) -> log.error(("Intercambio procesado :" + v)));
                 }
-                if(!resultado.getRegistrosErrorProceso().isEmpty()){
+                if(resultado.getRegistrosErrorProceso()!=null){
                     resultado.getRegistrosErrorProceso().forEach((k, v) -> log.error(("Error producido : " + k + " - " + v)));
-                    //TODO Gestión de errores que dependan de Regweb3
+                    // Els errors que retorna son (he mirat el codi del mètode)
+                    //0075=[{0}] no puede ser procesado porque no se encuentra en estado {1}.
+                    //0076=[{0}] no tiene ningún estado pendiente de procesar para la oficina {1}.
+
                 }
             }
-
-            peticion.append("asientosPendientes: ").append(asientosPendientes.size()).append(System.getProperty("line.separator"));
-
-            integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_SCHEDULERS, descripcion, peticion.toString(), System.currentTimeMillis() - tiempo, null, "");
-
-
         } catch (Exception e) {
             log.error("Error obteniendo asientos SIR pendientes ...", e);
-            integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_SCHEDULERS, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - tiempo, entidadActiva.getId(), "");
+        }
+    }
+
+
+    @Override
+    public void reencolarAsientos() throws I18NException {
+
+        //Estados candidatos a ser reencolados
+        List<String> estados = new ArrayList<>();
+        estados.add(TipoEstadoEnum.PE.getCodigo());
+        estados.add(TipoEstadoEnum.PRAE.getCodigo());
+        estados.add(TipoEstadoEnum.PERCH.getCodigo());
+        estados.add(TipoEstadoEnum.PRAERCH.getCodigo());
+        estados.add(TipoEstadoEnum.PRE.getCodigo());
+        estados.add(TipoEstadoEnum.PRARE.getCodigo());
+
+        try{
+            //Obtenemos aquellos asientos que se encuentran en alguno de los estados anteriores
+            List<AsientoBean> asientos = consultaService.consultarAsientosPendientesPorEstado(20, estados);
+
+            //Los agrupamos por oficina que los procesa
+            Map<String, List<String>> asientosPorCdEnProcesa = asientos.stream()
+                    .collect(groupingBy(AsientoBean::getCdEnRgProcesa, Collectors.mapping(AsientoBean::getCdIntercambio, toList())));
+
+            //LLamamos al método de libsir para que sean reencolados.
+            asientosPorCdEnProcesa.forEach((k, v) -> {
+                try {
+                    salidaService.reencolar(k, v);
+                } catch (InterException ie) {
+                    ie.printStackTrace();
+                }
+            });
+
+        }catch ( InterException ie){
+            throw new I18NException("Error consultando los asientos para ser reencolados ");
+        }
+
+    }
+
+
+
+
+    /**
+     *
+     * @param asientoBean
+     * @param peticion
+     */
+    private void datosIntegracion(AsientoBean asientoBean, StringBuilder peticion){
+        peticion.append("TipoAnotación: ").append(TipoAnotacion.getTipoAnotacion(asientoBean.getCdTpAnotacion()).getName()).append(System.getProperty("line.separator"));
+        peticion.append("IdentificadorIntercambio: ").append(asientoBean.getCdIntercambio()).append(System.getProperty("line.separator"));
+        peticion.append("Origen: ").append(asientoBean.getDsEnRgOrigen()).append(" (").append(asientoBean.getCdEnRgOrigen()).append(")").append(System.getProperty("line.separator"));
+        peticion.append("Destino: ").append(asientoBean.getDsEnRgDestino()).append(" (").append(asientoBean.getCdEnRgDestino()).append(")").append(System.getProperty("line.separator"));
+
+        if(StringUtils.isNotEmpty(asientoBean.getDsTpAnotacion())){
+            peticion.append("Motivo: ").append(asientoBean.getDsTpAnotacion()).append(System.getProperty("line.separator"));
         }
     }
 }

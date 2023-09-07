@@ -12,6 +12,7 @@ import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import javax.ejb.Local;
 import javax.xml.datatype.DatatypeConfigurationException;
 import java.text.ParseException;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -36,7 +37,7 @@ public interface SirEnvioLocal {
      * @throws I18NException
      */
     AsientoBean crearIntercambioEntrada(RegistroEntrada registroEntrada, Entidad entidad, Oficina oficinaActiva, UsuarioEntidad usuario, OficinaTF oficinaSirDestino)
-            throws I18NException, I18NValidationException, InterException, DatatypeConfigurationException;
+            throws I18NException, I18NValidationException, InterException, DatatypeConfigurationException, ParseException;
 
     /**
      * Crear un intercambio SIR salida, preparado par enviarse
@@ -48,7 +49,7 @@ public interface SirEnvioLocal {
      * @throws I18NException
      */
     AsientoBean crearIntercambioSalida(RegistroSalida registroSalida, Entidad entidad, Oficina oficinaActiva, UsuarioEntidad usuario, OficinaTF oficinaSirDestino)
-            throws I18NException, I18NValidationException, InterException, DatatypeConfigurationException;
+            throws I18NException, I18NValidationException, InterException, DatatypeConfigurationException, ParseException;
 
     /**
      * Envia un intercambio a la oficina destino
@@ -61,7 +62,7 @@ public interface SirEnvioLocal {
      * @throws I18NException
      */
     OficioRemision enviarIntercambio(Long tipoRegistro, IRegistro registro, Entidad entidad, Oficina oficinaActiva, UsuarioEntidad usuario, String codigoOficinaSir)
-            throws I18NException, I18NValidationException, DatatypeConfigurationException, InterException;
+            throws I18NException, I18NValidationException, DatatypeConfigurationException, InterException, ParseException;
 
     /**
      * Reenvia un intercambio, cuando este ha sido RECHAZADO O REENVIADO
@@ -183,6 +184,16 @@ public interface SirEnvioLocal {
      */
     void rechazarRegistroSir(RegistroSir registroSir, Oficina oficinaActiva, Usuario usuario, String observaciones) throws I18NException;
 
+    /**
+     * Confirma un registro sir a través de LIBSIR
+     * @param registroSir
+     * @param numeroRegistroFormateado
+     * @param fechaRegistro
+     * @return
+     * @throws I18NException
+     */
+
+    void confirmarRegistroSirLIBSIR(RegistroSir registroSir, String numeroRegistroFormateado, Date fechaRegistro) throws I18NException, InterException;
     /**
      * Rechaza un registro sir a través de LIBSIR
      * @param registroSir

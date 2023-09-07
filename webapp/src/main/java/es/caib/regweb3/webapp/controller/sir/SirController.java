@@ -216,12 +216,15 @@ public class SirController extends BaseController {
             registroSirEjb.modificarEstado(registroSir.getId(), EstadoRegistroSir.ACEPTADO);
 
             // Enviamos el Mensaje de Confirmación
-            MensajeControl confirmacion = mensajeEjb.enviarMensajeConfirmacion(registroSir, registroEntrada.getNumeroRegistroFormateado(), registroEntrada.getFecha());
+            //MensajeControl confirmacion = mensajeEjb.enviarMensajeConfirmacion(registroSir, registroEntrada.getNumeroRegistroFormateado(), registroEntrada.getFecha());
+            sirEnvioEjb.confirmarRegistroSirLIBSIR(registroSir, registroEntrada.getNumeroRegistroFormateado(), registroEntrada.getFecha());
 
+            //YA NO ES NECESARIO CON LIBSIR
             // Guardamos el mensaje de confirmación
-            mensajeControlEjb.persist(confirmacion);
+            //mensajeControlEjb.persist(confirmacion);
 
-            Mensaje.saveMessageInfo(request,"Se ha vuelto a aceptar el RegistroSir y enviado el mensaje de conformación");
+            //Mensaje.saveMessageInfo(request,"Se ha vuelto a aceptar el RegistroSir y enviado el mensaje de conformación");
+            Mensaje.saveMessageInfo(request,"Se ha vuelto a aceptar el RegistroSir y confirmado via LIBSIR");
 
             return "redirect:/sir/"+registroSir.getIdentificadorIntercambio()+"/detalle";
 

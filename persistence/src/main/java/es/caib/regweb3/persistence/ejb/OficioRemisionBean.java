@@ -1,7 +1,9 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.*;
+import es.caib.regweb3.model.sir.Errores;
 import es.caib.regweb3.persistence.utils.*;
+import es.caib.regweb3.sir.core.excepcion.ValidacionException;
 import es.caib.regweb3.utils.CombineStream;
 import es.caib.regweb3.utils.ConvertirTexto;
 import es.caib.regweb3.utils.RegwebConstantes;
@@ -851,6 +853,61 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
 
         }
 
+    }
+
+    public void marcarRechazadoOficioSir(OficioRemision oficio, String codigoEntidadRegistralOrigen, String tipoMensaje, String descripcionMensaje, String identificadorIntercambio) throws I18NException{
+
+        log.info("Hemos recibido un  RECHAZO  a un envio nuestro");
+
+
+        // Oficio Remision: Ha sido enviado por nosotros a SIR
+        if (oficio != null) { // Existe en el sistema
+
+            if (oficio.getEstado() == RegwebConstantes.OFICIO_SIR_ENVIADO ||
+                    //oficio.getEstado() == RegwebConstantes.OFICIO_SIR_ENVIADO_ACK ||
+                    oficio.getEstado() == RegwebConstantes.OFICIO_SIR_REENVIADO) {
+                //  oficio.getEstado() == RegwebConstantes.OFICIO_SIR_REENVIADO_ACK) {
+
+                if (oficio.getTipoOficioRemision().equals(RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA)) {
+
+
+                    RegistroEntrada registroEntrada = oficio.getRegistrosEntrada().get(0);
+                    // Actualizamos el registro de entrada
+                    registroEntrada.setEstado(RegwebConstantes.REGISTRO_RECHAZADO);
+                    registroEntrada.getRegistroDetalle().setTipoAnotacion(tipoMensaje);
+                    registroEntrada.getRegistroDetalle().setDecodificacionTipoAnotacion(descripcionMensaje);
+                    registroEntradaEjb.merge(registroEntrada);
+
+                } else if (oficio.getTipoOficioRemision().equals(RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA)) {
+
+                    RegistroSalida registroSalida = oficio.getRegistrosSalida().get(0);
+                    // Actualizamos el registro de salida
+                    registroSalida.setEstado(RegwebConstantes.REGISTRO_RECHAZADO);
+                    registroSalida.getRegistroDetalle().setTipoAnotacion(tipoMensaje);
+                    registroSalida.getRegistroDetalle().setDecodificacionTipoAnotacion(descripcionMensaje);
+                    registroSalidaEjb.merge(registroSalida);
+                }
+
+                // Actualizamos el oficio
+                oficio.setCodigoEntidadRegistralProcesado(codigoEntidadRegistralOrigen);
+                oficio.setEstado(RegwebConstantes.OFICIO_SIR_RECHAZADO);
+                oficio.setFechaEstado(new Date());
+                oficio.setTipoAnotacion(tipoMensaje);
+                oficio.setDecodificacionTipoAnotacion(descripcionMensaje);
+                merge(oficio);
+
+                log.info("El oficio de remision existia en el sistema, nos lo han rechazado: " + oficio.getIdentificadorIntercambio());
+
+            } else if (oficio.getEstado() == RegwebConstantes.OFICIO_SIR_RECHAZADO) {
+
+                log.info("Se ha recibido un RECHAZO de un registroSir que ya esta devuelto" + identificadorIntercambio);
+                throw new ValidacionException(Errores.ERROR_0037, "Se ha recibido un RECHAZO de un registroSir que ya esta devuelto" + identificadorIntercambio);
+
+            } else {
+                log.info("Se ha recibido un RECHAZO cuyo estado no lo permite: " + identificadorIntercambio);
+                throw new ValidacionException(Errores.ERROR_0037, "Se ha recibido un RECHAZO cuyo estado no lo permite: " + identificadorIntercambio);
+            }
+        }
     }
 
 

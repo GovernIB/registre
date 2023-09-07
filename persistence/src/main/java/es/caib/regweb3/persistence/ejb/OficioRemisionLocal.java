@@ -252,6 +252,8 @@ public interface OficioRemisionLocal extends BaseEjb<OficioRemision, Long> {
      */
     void aceptarOficioSir(OficioRemision oficio, String codigoEntidadRegistralOrigen, String decodificacionEntidadRegistralOrigen, String numeroRegistroDestino, Date fechaRegistroDestino) throws I18NException;
 
+    void marcarRechazadoOficioSir(OficioRemision oficio, String codigoEntidadRegistralOrigen, String tipoMensaje, String descripcionMensaje, String identificadorIntercambio) throws I18NException;
+
     /**
      * Busca los Números de Registro Formateados de los Registros de Entrada que pertenecen a un OficioRemision
      *
