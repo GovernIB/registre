@@ -177,9 +177,10 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      * Tramita un RegistroEntrada, creando el HistoricoEstado y Trazabilidad
      *
      * @param registroEntrada
+     * @param descripcion
      * @throws I18NException
      */
-    void marcarDistribuido(RegistroEntrada registroEntrada) throws I18NException;
+    void marcarDistribuido(RegistroEntrada registroEntrada, String descripcion) throws I18NException;
 
 
     /**

@@ -88,11 +88,12 @@ public interface ColaLocal extends BaseEjb<Cola, Long> {
     /**
      * @param re
      * @param usuarioEntidad
+     * @param descripcion
      * @throws I18NException
      * @throws I18NException
      * @throws I18NValidationException
      */
-    boolean enviarAColaDistribucion(RegistroEntrada re, UsuarioEntidad usuarioEntidad) throws I18NException;
+    boolean enviarAColaDistribucion(RegistroEntrada re, UsuarioEntidad usuarioEntidad, String descripcion) throws I18NException;
 
     /**
      * añade a la cola de cusodia un nuevo anexo Justificante

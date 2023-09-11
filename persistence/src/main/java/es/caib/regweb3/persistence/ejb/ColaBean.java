@@ -1,9 +1,6 @@
 package es.caib.regweb3.persistence.ejb;
 
-import es.caib.regweb3.model.Cola;
-import es.caib.regweb3.model.IRegistro;
-import es.caib.regweb3.model.RegistroEntrada;
-import es.caib.regweb3.model.UsuarioEntidad;
+import es.caib.regweb3.model.*;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.utils.RegwebConstantes;
@@ -254,7 +251,7 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
 
 
     @Override
-    public boolean enviarAColaDistribucion(RegistroEntrada re, UsuarioEntidad usuarioEntidad) throws I18NException {
+    public boolean enviarAColaDistribucion(RegistroEntrada re, UsuarioEntidad usuarioEntidad, String descripcion) throws I18NException {
 
         try {
 
@@ -269,6 +266,15 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
             cola.setEstado(RegwebConstantes.COLA_ESTADO_PENDIENTE);
 
             persist(cola);
+
+            // Creamos el HistoricoRegistroEntrada para la distribución
+            HistoricoRegistroEntrada historico = new HistoricoRegistroEntrada();
+            historico.setEstado(RegwebConstantes.REGISTRO_DISTRIBUYENDO);
+            historico.setRegistroEntrada(re);
+            historico.setFecha(new Date());
+            historico.setModificacion(descripcion);
+            historico.setUsuario(re.getUsuario());
+            em.persist(historico);
 
             registroEntradaEjb.cambiarEstado(re.getId(), RegwebConstantes.REGISTRO_DISTRIBUYENDO);
 

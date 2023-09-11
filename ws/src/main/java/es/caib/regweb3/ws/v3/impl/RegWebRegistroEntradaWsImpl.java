@@ -31,6 +31,7 @@ import org.jboss.ws.api.annotation.TransportGuarantee;
 import org.jboss.ws.api.annotation.WebContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.i18n.LocaleContextHolder;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
@@ -423,7 +424,7 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl implemen
 
         try{
             // Distribuimos el registro de entrada
-            distribucionEjb.distribuir(registroEntrada, usuarioEntidad, "Distribución desde WS",null,null);
+            distribucionEjb.distribuir(registroEntrada, usuarioEntidad, I18NLogicUtils.tradueix(LocaleContextHolder.getLocale(), "distribucion.ws"),null,null);
 
         }catch (I18NValidationException e){
             e.printStackTrace();
@@ -464,7 +465,7 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl implemen
 
         try{
             // 7.- Distribuimos el registro de entrada
-            RespuestaDistribucion respuestaDistribucion = distribucionEjb.distribuir(registroEntrada, usuario, "Distribución desde WS",null,null);
+            RespuestaDistribucion respuestaDistribucion = distribucionEjb.distribuir(registroEntrada, usuario, I18NLogicUtils.tradueix(LocaleContextHolder.getLocale(), "distribucion.ws"),null,null);
 
             // Si el Plugin permite seleccionar Destinatarios, no se puede distribuir automaticamente
             if(respuestaDistribucion.getDestinatarios() != null){

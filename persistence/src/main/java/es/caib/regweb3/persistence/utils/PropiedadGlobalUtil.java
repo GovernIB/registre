@@ -689,8 +689,6 @@ public class PropiedadGlobalUtil {
 
     }
 
-
-
     /**
      * Propiedad: es.caib.regweb3.procesados.purgo.meses
      * @param idEntidad
@@ -820,6 +818,33 @@ public class PropiedadGlobalUtil {
     public static boolean segundoHiloCustodia(Long idEntidad){
         final String partialPropertyName = "cola.2hilo.custodia";
         return getBooleanByEntidad(idEntidad, partialPropertyName);
+    }
+
+    /**
+     * Propiedad que activa/desactiva la Distribución automática
+     * Propiedad: es.caib.regweb3.parar.cola.distribucion
+     * @param idEntidad
+     * @return
+     */
+    public static boolean distribucionAutomatica(Long idEntidad){
+        final String partialPropertyName = "cola.distribucionAutomatica";
+        return getBooleanByEntidad(idEntidad, partialPropertyName);
+    }
+
+    /**
+     * Propiedad que retorna los días de antigüedad de los registros para ser distribuidos automáticamente
+     * Propiedad: es.caib.regweb3.cola.distribucionAutomatic.dias
+     * @param idEntidad
+     * @return
+     */
+    public static Integer getDiasDistribucionAutomatica(Long idEntidad) {
+        final String partialPropertyName = "cola.distribucionAutomatica.dias";
+        Integer valor =  getIntegerByEntidad(idEntidad,partialPropertyName);
+
+        if (valor == null) {
+            valor = 2;
+        }
+        return valor;
     }
 
     /**

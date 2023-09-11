@@ -317,6 +317,49 @@ public class SchedulerBean implements SchedulerLocal {
 
     }
 
+    /**
+     * Envía a la cola de distribución los registros que cumplen con los requisitos
+     * @throws I18NException
+     */
+    @Override
+    @TransactionTimeout(value = 1800)  // 30 minutos
+    public void distribucionAutomatica() throws I18NException{
+
+        List<Entidad> entidades = entidadEjb.getAll();
+        StringBuilder peticion = new StringBuilder();
+        long tiempo = System.currentTimeMillis();
+        String descripcion = "Distribución automática de registros";
+        Entidad entidadActiva = null;
+
+        try {
+
+            for (Entidad entidad : entidades) {
+
+                if(PropiedadGlobalUtil.distribucionAutomatica(entidad.getId())) {
+
+                    //Integración
+                    entidadActiva = entidad;
+                    Date inicio = new Date();
+                    peticion = new StringBuilder();
+                    peticion.append("entidad: ").append(entidad.getNombre()).append(System.getProperty("line.separator"));
+
+                    // Distribuimos registros automáticamente
+                    int total = distribucionEjb.distribuirAutomaticamente(entidad);
+                    peticion.append("total registros distribuidos: ").append(total).append(System.getProperty("line.separator"));
+
+                    integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_SCHEDULERS, descripcion, peticion.toString(), System.currentTimeMillis() - tiempo, entidad.getId(), "");
+
+                }
+            }
+
+        }catch (Exception e){
+
+            log.error("Error distribuyendo automaticamente registros ...", e);
+            integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_SCHEDULERS, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - tiempo, entidadActiva.getId(), "");
+
+        }
+    }
+
 
     /**
      * Inicia la distribución de los registros en cola de cada entidad.

@@ -15,6 +15,7 @@ import es.caib.regweb3.webapp.utils.Mensaje;
 import es.caib.regweb3.webapp.utils.TipoCola;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
+import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -184,7 +185,7 @@ public class ColaController extends BaseController {
 
                 // Marcamos como distribuido el Registro
                 RegistroEntrada registroEntrada = registroEntradaEjb.findById(elemento.getIdObjeto());
-                registroEntradaEjb.marcarDistribuido(registroEntrada);
+                registroEntradaEjb.marcarDistribuido(registroEntrada, I18NUtils.tradueix("distribucion.cola"));
 
             }else if(elemento.getTipo().equals(RegwebConstantes.COLA_CUSTODIA)){
                 // Marcamos el elemento como procesado
