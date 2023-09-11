@@ -5,6 +5,7 @@ import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.model.RegistroEntrada;
 import es.caib.regweb3.model.UsuarioEntidad;
 import es.caib.regweb3.model.utils.AnexoFull;
+import es.caib.regweb3.persistence.utils.I18NLogicUtils;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.persistence.utils.RespuestaDistribucion;
 import es.caib.regweb3.plugins.distribucion.IDistribucionPlugin;
@@ -45,6 +46,7 @@ public class DistribucionBean implements DistribucionLocal {
     private EntityManager em;
 
     @EJB private RegistroEntradaLocal registroEntradaEjb;
+    @EJB private RegistroEntradaConsultaLocal registroEntradaConsultaEjb;
     @EJB private JustificanteLocal justificanteEjb;
     @EJB private IntegracionLocal integracionEjb;
     @EJB private PluginLocal pluginEjb;
@@ -90,7 +92,7 @@ public class DistribucionBean implements DistribucionLocal {
 
             // Activada la Cola de Distribución
             if(plugin.getEnvioCola()){
-                Boolean encolado = colaEjb.enviarAColaDistribucion(re, usuarioEntidad);
+                Boolean encolado = colaEjb.enviarAColaDistribucion(re, usuarioEntidad, descripcion);
                 respuestaDistribucion.setEncolado(encolado);
             }else{ // Distribución inmediata
                 Entidad entidad = entidadEjb.findByIdLigero(usuarioEntidad.getEntidad().getId());
@@ -181,7 +183,7 @@ public class DistribucionBean implements DistribucionLocal {
             peticion.append("oficina: ").append(registroEntrada.getOficina().getDenominacion()).append(System.getProperty("line.separator"));
             peticion.append("plugin: ").append(distribucionPlugin.getClass().getName()).append(System.getProperty("line.separator"));
 
-            distribuido = distribuirRegistro(entidad, tipoIntegracion, "Distribución desde Cola", registroEntrada, distribucionPlugin,peticion,inicio);
+            distribuido = distribuirRegistro(entidad, tipoIntegracion, I18NLogicUtils.tradueix(new Locale(Configuracio.getDefaultLanguage()), "distrbucion.cola"), registroEntrada, distribucionPlugin,peticion,inicio);
 
             if (distribuido) { //Si la distribución ha ido bien
                 colaEjb.procesarElemento(elemento);
@@ -197,6 +199,25 @@ public class DistribucionBean implements DistribucionLocal {
 
         return distribuido;
 
+    }
+    @Override
+    public Integer distribuirAutomaticamente(Entidad entidad) throws I18NException{
+
+        List<RegistroEntrada> registros = registroEntradaConsultaEjb.getDistribucionAutomatica(entidad.getId());
+        int total = 0;
+        for(RegistroEntrada registro:registros){
+
+            // Solo se distribuyen los registros con TipoDoc=1 o TipoDoc=2/3 con anexos
+            if(registro.getRegistroDetalle().getTipoDocumentacionFisica().equals(RegwebConstantes.TIPO_DOCFISICA_ACOMPANYA_DOC_REQUERIDA) ||
+                    (registro.getRegistroDetalle().getTipoDocumentacionFisica().equals(RegwebConstantes.TIPO_DOCFISICA_ACOMPANYA_DOC_COMPLEMENTARIA) && registro.getRegistroDetalle().getTieneAnexos()) ||
+                    (registro.getRegistroDetalle().getTipoDocumentacionFisica().equals(RegwebConstantes.TIPO_DOCFISICA_NO_ACOMPANYA_DOC) && registro.getRegistroDetalle().getTieneAnexos())){
+
+                distribuir(registro, registro.getUsuario(), I18NLogicUtils.tradueix(new Locale(Configuracio.getDefaultLanguage()), "distribucion.automatica"),null,null);
+                total++;
+            }
+        }
+
+        return total;
     }
 
 
@@ -220,7 +241,7 @@ public class DistribucionBean implements DistribucionLocal {
         distribuido = distribuirRegistroEntrada(entidad, registroEntrada, distribucionPlugin);
 
         if (distribuido) { //Si la distribución ha ido bien
-            registroEntradaEjb.marcarDistribuido(registroEntrada);
+            registroEntradaEjb.marcarDistribuido(registroEntrada, descripcion);
             integracionEjb.addIntegracionOk(inicio, tipoIntegracion, descripcion, peticion.toString(), System.currentTimeMillis() - inicio.getTime(), registroEntrada.getUsuario().getEntidad().getId(), registroEntrada.getNumeroRegistroFormateado());
         }
 

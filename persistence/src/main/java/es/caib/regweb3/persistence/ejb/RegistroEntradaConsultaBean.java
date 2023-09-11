@@ -9,6 +9,7 @@ import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
+import es.caib.regweb3.utils.TimeUtils;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.hibernate.Hibernate;
@@ -55,7 +56,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
         q.setParameter("idRegistro", idRegistro);
 
         List<Long> registros = q.getResultList();
-        log.info("findByNumeroRegistroOrigen ("+numeroRegistroFormateado+"): " + registros.size());
+
         if (registros.size() == 1) {
             return registros.get(0);
         } else {
@@ -1058,6 +1059,30 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
         }
 
         return organismos;
+    }
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public List<RegistroEntrada> getDistribucionAutomatica(Long idEntidad) throws I18NException{
+
+        Date fechaInicio = TimeUtils.formateaFecha("20/08/2023", RegwebConstantes.FORMATO_FECHA); //
+        Calendar hoy = Calendar.getInstance(); //obtiene la fecha de hoy
+        hoy.add(Calendar.DATE, PropiedadGlobalUtil.getDiasDistribucionAutomatica(idEntidad)); // se le restaran X días
+
+        Query q;
+
+        q = em.createQuery("Select re from RegistroEntrada as re where re.entidad.id = :idEntidad and re.estado = :valido and re.evento = :distribuir and re.registroDetalle.presencial = true " +
+                "and re.fecha >= :fechaInicio and re.fecha <= :fecha order by re.id");
+
+        q.setParameter("idEntidad", idEntidad);
+        q.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
+        q.setParameter("distribuir", RegwebConstantes.EVENTO_DISTRIBUIR);
+        q.setParameter("fechaInicio", fechaInicio); // Registros con una antigüedad de X días
+        q.setParameter("fecha", hoy.getTime()).getResultList(); // Registros con una antigüedad de X días
+
+        q.setMaxResults(15);
+
+        return q.getResultList();
     }
 
     /**

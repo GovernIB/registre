@@ -444,7 +444,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean implem
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    public void marcarDistribuido(RegistroEntrada registroEntrada) throws I18NException {
+    public void marcarDistribuido(RegistroEntrada registroEntrada, String descripcion) throws I18NException {
 
         // CREAMOS LA TRAZABILIDAD
         Trazabilidad trazabilidad = new Trazabilidad();
@@ -454,7 +454,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean implem
         trazabilidad.setRegistroEntradaOrigen(registroEntrada);
         trazabilidad.setRegistroSalida(null);
         trazabilidad.setRegistroEntradaDestino(null);
-        //trazabilidadEjb.persist(trazabilidad);
+
         em.persist(trazabilidad);
 
         // Creamos el HistoricoRegistroEntrada para la distribución
@@ -463,11 +463,9 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean implem
         historico.setEstado(registroEntrada.getEstado());
         historico.setRegistroEntrada(registroEntrada);
         historico.setFecha(new Date());
-        historico.setModificacion(I18NLogicUtils.tradueix(new Locale(Configuracio.getDefaultLanguage()), "registro.modificacion.estado"));
+        historico.setModificacion(descripcion);
         historico.setUsuario(registroEntrada.getUsuario());
         em.persist(historico);
-
-        //historicoRegistroEntradaEjb.crearHistoricoRegistroEntrada(registroEntrada, registroEntrada.getUsuario(), I18NLogicUtils.tradueix(new Locale(Configuracio.getDefaultLanguage()), "registro.modificacion.estado"), false);
 
         Query q = em.createQuery("update RegistroEntrada set estado=:idEstado where id = :idRegistro");
         q.setParameter("idEstado", RegwebConstantes.REGISTRO_DISTRIBUIDO);

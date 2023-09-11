@@ -698,7 +698,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
             }
 
             //Distribuimos el registro
-            respuesta = distribucionEjb.distribuir(registroEntrada, usuarioEntidad,"Distribución desde oficina", distribuirForm.getEmails(), distribuirForm.getMotivo());
+            respuesta = distribucionEjb.distribuir(registroEntrada, usuarioEntidad,I18NUtils.tradueix("distribucion.oficina"), distribuirForm.getEmails(), distribuirForm.getMotivo());
 
             if (respuesta.getEncolado()) { //Si se ha enviado a la cola
                 response.setStatus("ENVIADO_COLA");

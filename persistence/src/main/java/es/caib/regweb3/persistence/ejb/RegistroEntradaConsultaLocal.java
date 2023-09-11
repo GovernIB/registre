@@ -287,4 +287,12 @@ public interface RegistroEntradaConsultaLocal {
      */
     List<Organismo> ultimosOrganismosRegistro(UsuarioEntidad usuarioEntidad) throws I18NException;
 
+    /**
+     * Obtiene los Registros de Entrada válidos con una antigüedad de X días para distribuir automáticamente
+     * @param idEntidad
+     * @return
+     * @throws I18NException
+     */
+    List<RegistroEntrada> getDistribucionAutomatica(Long idEntidad) throws I18NException;
+
 }

@@ -52,6 +52,13 @@ public interface DistribucionLocal {
     Boolean distribuirRegistroEnCola(Cola elemento, Entidad entidad, Long tipoIntegracion) throws I18NException;
 
     /**
+     * Distribuye automáticamente los registros que tengan una determinada antigüedad en estado Válido
+     * @param entidad
+     * @throws I18NException
+     */
+    Integer distribuirAutomaticamente(Entidad entidad) throws I18NException;
+
+    /**
      * Vuelve a Distribuir un registro de Entrada ya distribuido previamente
      * @param idRegistro
      * @param entidad

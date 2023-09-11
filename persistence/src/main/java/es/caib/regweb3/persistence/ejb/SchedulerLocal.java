@@ -59,6 +59,12 @@ public interface SchedulerLocal {
     void reiniciarContadoresEntidad() throws I18NException;
 
     /**
+     * Envía a la cola de distribución los registros que cumplen con los requisitos
+     * @throws I18NException
+     */
+    void distribucionAutomatica() throws I18NException;
+
+    /**
      * Inicia la distribución de los registros en cola de cada entidad.
      *
      * @throws I18NException
