@@ -6,17 +6,18 @@ import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.persistence.utils.I18NLogicUtils;
 import es.caib.regweb3.persistence.utils.JustificanteReferencia;
 import es.caib.regweb3.persistence.utils.RegistroUtils;
+import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.i18n.LocaleContextHolder;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.*;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 import static es.caib.regweb3.utils.RegwebConstantes.*;
@@ -200,7 +201,7 @@ public class AsientoRegistralBean implements AsientoRegistralLocal {
 
         try{
             // Distribuimos el registro de entrada
-            distribucionEjb.distribuir(registroEntrada, usuario, I18NLogicUtils.tradueix(LocaleContextHolder.getLocale(), "distribucion.ws"),null,null);
+            distribucionEjb.distribuir(registroEntrada, usuario, I18NLogicUtils.tradueix(new Locale(Configuracio.getDefaultLanguage()), "distribucion.ws"),null,null);
 
         }catch (I18NValidationException e){
             e.printStackTrace();

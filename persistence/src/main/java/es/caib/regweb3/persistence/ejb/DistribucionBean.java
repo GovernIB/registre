@@ -183,7 +183,7 @@ public class DistribucionBean implements DistribucionLocal {
             peticion.append("oficina: ").append(registroEntrada.getOficina().getDenominacion()).append(System.getProperty("line.separator"));
             peticion.append("plugin: ").append(distribucionPlugin.getClass().getName()).append(System.getProperty("line.separator"));
 
-            distribuido = distribuirRegistro(entidad, tipoIntegracion, I18NLogicUtils.tradueix(new Locale(Configuracio.getDefaultLanguage()), "distrbucion.cola"), registroEntrada, distribucionPlugin,peticion,inicio);
+            distribuido = distribuirRegistro(entidad, tipoIntegracion, I18NLogicUtils.tradueix(new Locale(Configuracio.getDefaultLanguage()), "distribucion.cola"), registroEntrada, distribucionPlugin,peticion,inicio);
 
             if (distribuido) { //Si la distribución ha ido bien
                 colaEjb.procesarElemento(elemento);
