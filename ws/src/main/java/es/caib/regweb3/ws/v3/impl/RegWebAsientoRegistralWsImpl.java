@@ -30,7 +30,6 @@ import org.jboss.ws.api.annotation.TransportGuarantee;
 import org.jboss.ws.api.annotation.WebContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.i18n.LocaleContextHolder;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
@@ -689,7 +688,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
 
         try{
             // 5.- Distribuimos el registro de entrada
-            RespuestaDistribucion respuestaDistribucion = distribucionEjb.distribuir(registroEntrada, usuario, I18NLogicUtils.tradueix(LocaleContextHolder.getLocale(), "distribucion.ws"),null,null);
+            RespuestaDistribucion respuestaDistribucion = distribucionEjb.distribuir(registroEntrada, usuario, I18NLogicUtils.tradueix(new Locale(Configuracio.getDefaultLanguage()), "distribucion.ws"),null,null);
 
             if(!respuestaDistribucion.getEncolado() && !respuestaDistribucion.getDistribuido()){ //Cuando hay plugin y no ha llegado a destino
 
