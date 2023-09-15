@@ -1078,9 +1078,9 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
         q.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
         q.setParameter("distribuir", RegwebConstantes.EVENTO_DISTRIBUIR);
         q.setParameter("fechaInicio", fechaInicio); // Registros con una antigüedad de X días
-        q.setParameter("fecha", hoy.getTime()).getResultList(); // Registros con una antigüedad de X días
+        q.setParameter("fecha", hoy.getTime()); // Registros con una antigüedad de X días
 
-        q.setMaxResults(15);
+        q.setMaxResults(25);
 
         return q.getResultList();
     }
