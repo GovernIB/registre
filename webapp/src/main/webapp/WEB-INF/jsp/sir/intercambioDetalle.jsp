@@ -124,7 +124,8 @@
 
                                     <c:if test="${trazabilidades[0].oficioRemision.estado == RegwebConstantes.OFICIO_SIR_ENVIADO || trazabilidades[0].oficioRemision.estado == RegwebConstantes.OFICIO_SIR_ENVIADO_ACK || trazabilidades[0].oficioRemision.estado == RegwebConstantes.OFICIO_SIR_RECHAZADO
                                                                     || trazabilidades[0].oficioRemision.estado == RegwebConstantes.OFICIO_SIR_REENVIADO || trazabilidades[0].oficioRemision.estado == RegwebConstantes.OFICIO_SIR_REENVIADO_ACK}">
-                                        <div class="btn-group"><button type="button" onclick='confirm("javascript:reenviarIntercambio(${trazabilidades[0].oficioRemision.id})","<spring:message code="regweb.confirmar.enviarIntercambio" htmlEscape="true"/>")' class="btn btn-warning btn-sm"><spring:message code="intercambio.reenviar"/></button></div>
+                                        <%--<div class="btn-group"><button type="button" onclick='confirm("javascript:reenviarIntercambio(${trazabilidades[0].oficioRemision.id})","<spring:message code="regweb.confirmar.enviarIntercambio" htmlEscape="true"/>")' class="btn btn-warning btn-sm"><spring:message code="intercambio.reenviar"/></button></div>--%>
+                                        <div class="btn-group"><button type="button" onclick="reencolarIntercambioModal('${trazabilidades[0].oficioRemision.oficina.codigo}','${trazabilidades[0].oficioRemision.identificadorIntercambio}', confirmModal)" class="btn btn-warning btn-sm"><spring:message code="intercambio.reenviar"/></button></div>
                                     </c:if>
                                 </div>
                             </c:if>
@@ -176,9 +177,10 @@
                                         <div class="btn-group"><button type="button" onclick="reiniciarContador('${trazabilidades[0].oficioRemision.id}','${urlReiniciar}')" class="btn btn-warning btn-sm"><spring:message code="registroSir.reiniciar"/></button></div>
                                     </c:if>
 
-                                    <c:if test="${trazabilidades[0].oficioRemision.estado == RegwebConstantes.OFICIO_SIR_ENVIADO || trazabilidades[0].oficioRemision.estado == RegwebConstantes.OFICIO_SIR_ENVIADO_ACK || trazabilidades[0].oficioRemision.estado == RegwebConstantes.OFICIO_SIR_RECHAZADO
+                                    <c:if test="${trazabilidades[0].oficioRemision.estado == RegwebConstantes.OFICIO_SIR_ENVIADO  || trazabilidades[0].oficioRemision.estado == RegwebConstantes.OFICIO_SIR_RECHAZADO
                                                                     || trazabilidades[0].oficioRemision.estado == RegwebConstantes.OFICIO_SIR_REENVIADO || trazabilidades[0].oficioRemision.estado == RegwebConstantes.OFICIO_SIR_REENVIADO_ACK}">
-                                        <div class="btn-group"><button type="button" onclick='confirm("javascript:reenviarIntercambio(${trazabilidades[0].oficioRemision.id})","<spring:message code="regweb.confirmar.enviarIntercambio" htmlEscape="true"/>")' class="btn btn-warning btn-sm"><spring:message code="intercambio.reenviar"/></button></div>
+                                        <%--<div class="btn-group"><button type="button" onclick='confirm("javascript:reencolarIntercambio(${trazabilidades[0].oficioRemision.oficina.codigo},${trazabilidades[0].oficioRemision.idIntercambio})","<spring:message code="regweb.confirmar.enviarIntercambio" htmlEscape="true"/>")' class="btn btn-warning btn-sm"><spring:message code="intercambio.reenviar"/></button></div>--%>
+                                        <div class="btn-group"><button type="button" onclick="reencolarIntercambioModal('${trazabilidades[0].oficioRemision.oficina.codigo}','${trazabilidades[0].oficioRemision.identificadorIntercambio}', confirmModal)" class="btn btn-warning btn-sm"><spring:message code="intercambio.reenviar"/></button></div>
                                     </c:if>
                                 </div>
                             </c:if>
@@ -372,7 +374,7 @@
 
         var urlEnviarACK = '<c:url value="/sir/enviarACK"/>';
         var urlEnviarConfirmacion = '<c:url value="/sir/enviarConfirmacion"/>';
-        var urlReenviarIntercambio = '<c:url value="/sir/reenviarIntercambio"/>';
+        var urlReencolarIntercambio = '<c:url value="/sir/reencolarIntercambio"/>';
         var tradsMensajeControl = [];
         tradsMensajeControl['mensajeControl.ACK.enviado.ok'] = "<spring:message code='mensajeControl.ACK.enviado.ok' javaScriptEscape='true' />";
         tradsMensajeControl['mensajeControl.ACK.enviado.error'] = "<spring:message code='mensajeControl.ACK.enviado.error' javaScriptEscape='true' />";
@@ -383,6 +385,29 @@
         tradsSir['registroSir.reiniciar.error'] = "<spring:message code='registroSir.reiniciar.error' javaScriptEscape='true' />";
         tradsSir['intercambio.reenviado.ok'] = "<spring:message code='intercambio.reenviado.ok' javaScriptEscape='true' />";
         tradsSir['intercambio.reenviado.error'] = "<spring:message code='intercambio.reenviado.error' javaScriptEscape='true' />";
+        tradsSir['intercambio.continuar'] = "<spring:message code="regweb.continuar" javaScriptEscape="true"/>";
+
+        var confirmModal =
+            $("<div class=\"modal fade\">" +
+                "<div class=\"modal-dialog\">" +
+                "<div class=\"modal-content\">" +
+                "<div class=\"modal-header\">" +
+                "<button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\">&times;</button>" +
+                "<h4 class=\"modal-title\">Confirmar</h4>" +
+                "</div>" +
+
+                "<div class=\"modal-body\">" +
+                "<p>"+tradsSir['intercambio.continuar']+"</p>" +
+                "</div>" +
+
+                "<div class=\"modal-footer\">" +
+                "<button type=\"button\" id=\"cancelButton\" class=\"btn btn-default\" data-dismiss=\"modal\">No</button>"+
+                "<button type=\"button\" id=\"okButton\" class=\"btn btn-danger\">Ok</button>" +
+                "</div>" +
+                "</div>" +
+                "</div>" +
+                "</div>");
+
     </script>
 
     <script type="text/javascript" src="<c:url value="/js/sir.js"/>"></script>

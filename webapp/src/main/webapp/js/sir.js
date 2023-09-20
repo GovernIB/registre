@@ -73,55 +73,90 @@ function reenviarMensaje(idMensaje){
     });
 }
 
+
 /**
- * Volver a enviar un intercmbio
+ * Volver a enviar un intercambio con la libreria LIBSIR
  * @param idOficioRemision
  */
-function reenviarIntercambio(idOficioRemision){
+function reencolarIntercambio(oficina, idIntercambio){
 
-    // Reenviamos intercambio
-    $.ajax({
-        url: urlReenviarIntercambio,
-        data: { idOficioRemision: idOficioRemision },
-        type: "GET",
-        dataType: 'json',
-        contentType: 'application/json',
+         // Reenviamos intercambio
+         $.ajax({
+             url: urlReencolarIntercambio,
+             data: {oficina: oficina, idIntercambio: idIntercambio},
+             type: "GET",
+             dataType: 'json',
+             contentType: 'application/json',
 
-        success: function(result) {
+             success: function (result) {
 
-            if(result === true){
-                mensajeSuccess("#mensajes", tradsSir['intercambio.reenviado.ok']);
-            }else{
-                mensajeError("#mensajes", tradsSir['intercambio.reenviado.error']);
-            }
-        }
-    });
+                 if (result === true) {
+                     mensajeSuccess("#mensajes", tradsSir['intercambio.reenviado.ok']);
+                 } else {
+                     mensajeError("#mensajes", tradsSir['intercambio.reenviado.error']);
+                 }
+             }
+         });
+
 }
 
 /**
- * Volver a enviar un Registro Sir
- * @param idRegistroSir
+ * Marcar como Error Técnico intercambio con la libreria LIBSIR
+ * @param idOficioRemision
  */
-function reintentarEnvioRegistroSir(idRegistroSir){
+function marcarErrorTecnicoIntercambio(oficina, idIntercambio){
 
-    // Reenviamos Registro Sir
-    $.ajax({
-        url: urlReintentarEnvioRegistroSir,
-        data: { idRegistroSir: idRegistroSir },
-        type: "GET",
-        dataType: 'json',
-        contentType: 'application/json',
+    // Marcamos como error técnico
 
-        success: function(result) {
+        $.ajax({
+            url: urlMarcarErrorTecnicoIntercambio,
+            data: {idIntercambio: idIntercambio, oficina: oficina},
+            type: "GET",
+            dataType: 'json',
+            contentType: 'application/json',
 
-            if(result === true){
-                mensajeSuccess("#mensajes", tradsSir['intercambio.reenviado.ok']);
-            }else{
-                mensajeError("#mensajes", tradsSir['intercambio.reenviado.error']);
+            success: function (result) {
+
+                if (result === true) {
+                    mensajeSuccess("#mensajes", tradsSir['intercambio.marcado.ok']);
+                } else {
+                    mensajeError("#mensajes", tradsSir['intercambio.marcado.error']);
+                }
             }
-        }
-    });
+        });
+
 }
+
+
+/**
+ * Desmarcar como Error Técnico intercambio con la libreria LIBSIR
+ * @param idOficioRemision
+ */
+function desmarcarErrorTecnicoIntercambio(oficina, idIntercambio){
+
+    // Marcamos como error técnico
+    if(confirm("", tradsSir['intercambio.confirmar.desmarcar'])) {
+        $.ajax({
+            url: urlDesmarcarErrorTecnicoIntercambio,
+            data: {idIntercambio: idIntercambio, oficina: oficina},
+            type: "GET",
+            dataType: 'json',
+            contentType: 'application/json',
+
+            success: function (result) {
+
+                if (result === true) {
+                    mensajeSuccess("#mensajes", tradsSir['intercambio.desmarcado.ok']);
+                } else {
+                    mensajeError("#mensajes", tradsSir['intercambio.desmarcado.error']);
+                }
+            }
+        });
+    }
+}
+
+
+
 
 /**
  * Envia un mensaje ACK
@@ -145,5 +180,56 @@ function reiniciarContador(id, url){
                 mensajeError("#mensajes", tradsSir['registroSir.reiniciar.error']);
             }
         }
+    });
+}
+
+
+//Funciones modales para SIR
+function reencolarIntercambioModal(oficina, idIntercambio,confirmModal){
+
+    confirmModal.modal("show");
+
+    confirmModal.find("#cancelButton").click(function (event) {
+        confirmModal.modal("hide");
+    });
+
+
+    confirmModal.find("#okButton").click(function (event) {
+        confirmModal.modal("hide");
+        reencolarIntercambio(oficina,idIntercambio);
+
+    });
+}
+
+function marcarErrorTecnicoIntercambioModal(oficina, idIntercambio, confirmModal){
+
+    confirmModal.modal("show");
+
+    confirmModal.find("#cancelButton").click(function (event) {
+        confirmModal.modal("hide");
+    });
+
+
+    confirmModal.find("#okButton").click(function (event) {
+        confirmModal.modal("hide");
+        marcarErrorTecnicoIntercambio(oficina,idIntercambio);
+
+    });
+}
+
+
+function desmarcarErrorTecnicoIntercambioModal(oficina, idIntercambio, confirmModal){
+
+    confirmModal.modal("show");
+
+    confirmModal.find("#cancelButton").click(function (event) {
+        confirmModal.modal("hide");
+    });
+
+
+    confirmModal.find("#okButton").click(function (event) {
+        confirmModal.modal("hide");
+        reencolarIntercambio(oficina,idIntercambio);
+
     });
 }

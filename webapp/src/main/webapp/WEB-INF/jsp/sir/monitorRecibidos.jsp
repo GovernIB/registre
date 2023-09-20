@@ -242,6 +242,7 @@
                                                         </c:if>
                                                     </td>
                                                     <td class="center">${registroSir.numeroReintentos}</td>
+
                                                     <td class="center">
                                                         <div class="btn-group pull-right text12">
                                                             <button type="button" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown">
@@ -253,18 +254,27 @@
                                                                 <c:if test="${registroSir.estado == 'RECIBIDO' || registroSir.estado == 'REENVIADO' || registroSir.estado == 'RECHAZADO'}">
                                                                     <li><a data-toggle="modal" role="button" href="#eliminarModal" onclick="limpiarModalEliminar(${registroSir.id});"><spring:message code="registroSir.eliminar"/></a></li>
                                                                 </c:if>
-                                                                <li class="divider"></li>
-                                                                <li><a href="javascript:void(0);" onclick='confirm("javascript:enviarACK(${registroSir.id})","<spring:message code="regweb.confirmar.enviarMensaje" htmlEscape="true"/>")'><spring:message code="mensajeControl.enviar.ACK"/></a></li>
-                                                                <c:if test="${registroSir.estado == 'ACEPTADO'}">
-                                                                    <li><a href="javascript:void(0);" onclick='confirm("javascript:enviarConfirmacion(${registroSir.id})","<spring:message code="regweb.confirmar.enviarMensaje" htmlEscape="true"/>")'><spring:message code="mensajeControl.enviar.confirmacion"/></a></li>
+                                                                <c:if test="${registroSir.estado == 'REENVIADO' || registroSir.estado == 'RECHAZADO' || registroSir.estado == 'ACEPTADO'}">
+                                                                    <li class="divider"></li>
                                                                 </c:if>
-                                                                <c:if test="${registroSir.estado == 'REENVIADO' || registroSir.estado == 'REENVIADO_Y_ERROR' || registroSir.estado == 'RECHAZADO' || registroSir.estado == 'RECHAZADO_Y_ERROR'}">
-                                                                    <li><a href="javascript:void(0);" onclick='confirm("javascript:reintentarEnvioRegistroSir(${registroSir.id})","<spring:message code="regweb.confirmar.enviarIntercambio" htmlEscape="true"/>")'><spring:message code="intercambio.reenviar"/></a></li>
+                                                                <%-- <li><a href="javascript:void(0);" onclick='confirm("javascript:enviarACK(${registroSir.id})","<spring:message code="regweb.confirmar.enviarMensaje" htmlEscape="true"/>")'><spring:message code="mensajeControl.enviar.ACK"/></a></li>
+                                                                 <c:if test="${registroSir.estado == 'ACEPTADO'}">
+                                                                     <li><a href="javascript:void(0);" onclick='confirm("javascript:enviarConfirmacion(${registroSir.id})","<spring:message code="regweb.confirmar.enviarMensaje" htmlEscape="true"/>")'><spring:message code="mensajeControl.enviar.confirmacion"/></a></li>
+                                                                 </c:if>--%>
+                                                                <%-- Reencolar LIBSIR --%>
+                                                                <c:if test="${registroSir.estado == 'REENVIADO' || registroSir.estado == 'RECHAZADO'}">
+                                                                    <li><a href="javascript:void(0);" onclick="reencolarIntercambioModal('${registroSir.codigoEntidadRegistral}', '${registroSir.identificadorIntercambio}', confirmModal)"><spring:message code="intercambio.reenviar"/></a></li>
                                                                 </c:if>
-                                                                <c:if test="${registroSir.estado != 'ACEPTADO'}">
-                                                                    <c:url value="/sir/registroSir/reiniciar" var="urlReiniciar"/>
-                                                                    <li><a href="javascript:void(0);" onclick="reiniciarContador('${registroSir.id}','${urlReiniciar}')"><spring:message code="registroSir.reiniciar"/></a></li>
+                                                                <c:if test="${registroSir.estado == 'REENVIADO' || registroSir.estado == 'RECHAZADO' || registroSir.estado == 'ACEPTADO'}">
+                                                                    <li><a href="javascript:void(0);" onclick="marcarErrorTecnicoIntercambioModal('${registroSir.codigoEntidadRegistral}', '${registroSir.identificadorIntercambio}', confirmModal)"><spring:message code="intercambio.marcar"/></a></li>
                                                                 </c:if>
+                                                                <c:if test="${registroSir.estado == 'REENVIADO' || registroSir.estado == 'RECHAZADO' || registroSir.estado == 'ACEPTADO'}">
+                                                                    <li><a href="javascript:void(0);" onclick="desmarcarErrorTecnicoIntercambioModal('${registroSir.codigoEntidadRegistral}', '${registroSir.identificadorIntercambio}', confirmModal)"><spring:message code="intercambio.desmarcar"/></a></li>
+                                                                </c:if>
+                                                                <%-- <c:if test="${registroSir.estado != 'ACEPTADO'}">
+                                                                     <c:url value="/sir/registroSir/reiniciar" var="urlReiniciar"/>
+                                                                     <li><a href="javascript:void(0);" onclick="reiniciarContador('${registroSir.id}','${urlReiniciar}')"><spring:message code="registroSir.reiniciar"/></a></li>
+                                                                 </c:if>--%>
                                                             </ul>
                                                         </div>
                                                     </td>
@@ -299,7 +309,9 @@
 
     var urlEnviarACK = '<c:url value="/sir/enviarACK"/>';
     var urlEnviarConfirmacion = '<c:url value="/sir/enviarConfirmacion"/>';
-    var urlReintentarEnvioRegistroSir = '<c:url value="/sir/reintentarEnvioRegistroSir"/>';
+    var urlReencolarIntercambio = '<c:url value="/sir/reencolarIntercambio"/>';
+    var urlMarcarErrorTecnicoIntercambio = '<c:url value="/sir/marcarErrorTecnicoIntercambio"/>';
+    var urlDesmarcarErrorTecnicoIntercambio = '<c:url value="/sir/desmarcarErrorTecnicoIntercambio"/>';
     var tradsMensajeControl = [];
     var tradsSir = [];
     tradsMensajeControl['mensajeControl.ACK.enviado.ok'] = "<spring:message code='mensajeControl.ACK.enviado.ok' javaScriptEscape='true' />";
@@ -310,6 +322,37 @@
     tradsSir['registroSir.reiniciar.error'] = "<spring:message code='registroSir.reiniciar.error' javaScriptEscape='true' />";
     tradsSir['intercambio.reenviado.ok'] = "<spring:message code='intercambio.reenviado.ok' javaScriptEscape='true' />";
     tradsSir['intercambio.reenviado.error'] = "<spring:message code='intercambio.reenviado.error' javaScriptEscape='true' />";
+    tradsSir['intercambio.marcado.ok'] = "<spring:message code='intercambio.marcado.ok' javaScriptEscape='true' />";
+    tradsSir['intercambio.marcado.error'] = "<spring:message code='intercambio.marcado.error' javaScriptEscape='true' />";
+    tradsSir['intercambio.desmarcado.ok'] = "<spring:message code='intercambio.desmarcado.ok' javaScriptEscape='true' />";
+    tradsSir['intercambio.desmarcado.error'] = "<spring:message code='intercambio.desmarcado.error' javaScriptEscape='true' />";
+    tradsSir['intercambio.confirmar.envio'] = "<spring:message code="regweb.confirmar.enviarIntercambio" javaScriptEscape="true"/>";
+    tradsSir['intercambio.confirmar.marcar'] = "<spring:message code="regweb.confirmar.marcarIntercambio" javaScriptEscape="true"/>";
+    tradsSir['intercambio.confirmar.desmarcar'] = "<spring:message code="regweb.confirmar.desmarcarIntercambio" javaScriptEscape="true"/>";
+    tradsSir['intercambio.continuar'] = "<spring:message code="regweb.continuar" javaScriptEscape="true"/>";
+
+    var confirmModal =
+        $("<div class=\"modal fade\">" +
+            "<div class=\"modal-dialog\">" +
+            "<div class=\"modal-content\">" +
+            "<div class=\"modal-header\">" +
+            "<button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\">&times;</button>" +
+            "<h4 class=\"modal-title\">Confirmar</h4>" +
+            "</div>" +
+
+            "<div class=\"modal-body\">" +
+            "<p>"+tradsSir['intercambio.continuar']+"</p>" +
+            "</div>" +
+
+            "<div class=\"modal-footer\">" +
+            "<button type=\"button\" id=\"cancelButton\" class=\"btn btn-default\" data-dismiss=\"modal\">No</button>"+
+            "<button type=\"button\" id=\"okButton\" class=\"btn btn-danger\">Ok</button>" +
+            "</div>" +
+            "</div>" +
+            "</div>" +
+            "</div>");
+
+
 </script>
 
 <script type="text/javascript" src="<c:url value="/js/sir.js"/>"></script>

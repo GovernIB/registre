@@ -38,6 +38,14 @@ public interface LibSirLocal {
      */
     List<AsientoBean> consultaAsientosPendientes(int maxResults) throws InterException;
 
+
+    /**
+     * @param maxResults
+     * @param estado
+     * @throws InterException
+     */
+    List<AsientoBean> consultaAsientosPendientesEstado(int maxResults, String estado) throws InterException;
+
     AsientoBean consultaAsiento(String oficina, String cdIntercambio) throws InterException;
 
     /**
@@ -48,10 +56,38 @@ public interface LibSirLocal {
      */
     byte[] obtenerAnexoReferencia(String cdIntercambio, String idFichero) throws InterException;
 
-   /* Anexo obtenerAnexoReferencia2(String cdIntercambio, String idFichero) throws InterException;
-
-    // pruebas
-    byte[] obtenerAnexoReferenciaContenido(Long cdAnexo) throws InterException;*/
-
+    /**
+     * Envia un asiento al componente CIR a través de LIBSIR.
+     * @param asientoBean
+     * @return
+     * @throws InterException
+     */
     String enviarAsiento(AsientoBean asientoBean) throws InterException;
+
+    /**
+     * Reencola un asiento al componente CIR a través de LIBSIR.
+     * @param oficina
+     * @param cdIntercambio
+     * @return
+     * @throws InterException
+     */
+    void reencolarAsiento(String oficina, String cdIntercambio) throws InterException;
+
+    /**
+     * Marca com error tècnic un asiento per que no se reintenti.
+     * @param oficina
+     * @param cdIntercambio
+     * @return
+     * @throws InterException
+     */
+    void marcarErrorTecnicoAsiento(String oficina, String cdIntercambio) throws InterException;
+
+    /**
+     * Desmarca com error tècnic un asiento per que no se reintenti.
+     * @param oficina
+     * @param cdIntercambio
+     * @return
+     * @throws InterException
+     */
+    void desmarcarErrorTecnicoAsiento(String oficina, String cdIntercambio) throws InterException;
 }

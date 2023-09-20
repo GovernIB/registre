@@ -15,6 +15,8 @@ import es.caib.regweb3.utils.*;
 import es.caib.regweb3.webapp.controller.BaseController;
 import es.caib.regweb3.webapp.form.*;
 import es.caib.regweb3.webapp.utils.Mensaje;
+import es.gob.ad.registros.sir.interModel.dao.enums.TipoEstadoEnum;
+import es.gob.ad.registros.sir.interService.bean.AsientoBean;
 import org.dom4j.Document;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.slf4j.Logger;
@@ -62,6 +64,9 @@ public class SirController extends BaseController {
 
     @EJB(mappedName = MensajeLocal.JNDI_NAME)
     private MensajeLocal mensajeEjb;
+
+    @EJB(mappedName = LibSirLocal.JNDI_NAME)
+    private LibSirLocal libSirEjb;
 
 
 
@@ -493,6 +498,89 @@ public class SirController extends BaseController {
         return false;
 
     }
+
+
+    /**
+     * Vuelve a reencolar un Intercambio, ya enviado previamente
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/reencolarIntercambio", method = RequestMethod.GET)
+    @ResponseBody
+    public Boolean reencolarIntercambio(@RequestParam String oficina, @RequestParam String idIntercambio )throws Exception {
+        log.info("LLEGO A REENCOLAR");
+        try{
+            AsientoBean asiento =libSirEjb.consultaAsiento(oficina,idIntercambio);//TODO OJO ESTO DESCARGA LOS ANEXOS; NO ES MUY OPTIMO.
+            if(TipoEstadoEnum.PRAE.getCodigo().equals(asiento.getCdEstado()) || TipoEstadoEnum.PRARE.getCodigo().equals(asiento.getCdEstado())) {
+                libSirEjb.reencolarAsiento(oficina, idIntercambio);
+            }
+
+            return true;
+
+        }catch ( Exception e){
+            log.info("Error reencolando el intercambio..");
+            e.printStackTrace();
+        }
+
+        return false;
+
+    }
+
+
+    /**
+     * Vuelve a reencolar un Intercambio, ya enviado previamente
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/marcarErrorTecnicoIntercambio", method = RequestMethod.GET)
+    @ResponseBody
+    public Boolean marcarErrorTecnicoIntercambio(@RequestParam String oficina,@RequestParam String idIntercambio )throws Exception {
+
+        try{
+            AsientoBean asiento =libSirEjb.consultaAsiento(oficina,idIntercambio);//TODO OJO ESTO DESCARGA LOS ANEXOS; NO ES MUY OPTIMO.
+            if(TipoEstadoEnum.PRAE.getCodigo().equals(asiento.getCdEstado()) || TipoEstadoEnum.PRARE.getCodigo().equals(asiento.getCdEstado()) ||
+               TipoEstadoEnum.PRAC.getCodigo().equals(asiento.getCdEstado()) || TipoEstadoEnum.PRAERCH.getCodigo().equals(asiento.getCdEstado())) {
+                libSirEjb.marcarErrorTecnicoAsiento(oficina, idIntercambio);
+            }
+
+            return true;
+
+        }catch ( Exception e){
+            log.info("Error marcando como error técnico el intercambio..");
+            e.printStackTrace();
+        }
+
+        return false;
+
+    }
+
+    /**
+     * Vuelve a reencolar un Intercambio, ya enviado previamente
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/desmarcarErrorTecnicoIntercambio", method = RequestMethod.GET)
+    @ResponseBody
+    public Boolean desmarcarErrorTecnicoIntercambio(@RequestParam String oficina,@RequestParam String idIntercambio )throws Exception {
+        try{
+            AsientoBean asiento =libSirEjb.consultaAsiento(oficina,idIntercambio);//TODO OJO ESTO DESCARGA LOS ANEXOS; NO ES MUY OPTIMO.
+            if(TipoEstadoEnum.PRAE.getCodigo().equals(asiento.getCdEstado()) || TipoEstadoEnum.PRARE.getCodigo().equals(asiento.getCdEstado()) ||
+               TipoEstadoEnum.PRAC.getCodigo().equals(asiento.getCdEstado()) || TipoEstadoEnum.PRAERCH.getCodigo().equals(asiento.getCdEstado())) {
+
+                    libSirEjb.desmarcarErrorTecnicoAsiento(oficina, idIntercambio);
+            }
+
+            return true;
+
+        }catch ( Exception e){
+            log.info("Error desmarcando como error técnico el intercambio..");
+            e.printStackTrace();
+        }
+
+        return false;
+
+    }
+
 
     /**
      * Vuelve a enviar un Intercambio, ya enviado previamente
