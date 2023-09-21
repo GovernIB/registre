@@ -56,7 +56,7 @@
         <timestamp>${maven.build.timestamp}</timestamp>
         <maven.build.timestamp.format>yyyy-MM-dd HH:mm</maven.build.timestamp.format>
         <!-- LIBSIR-->
-        <libsir.version>3.0.1</libsir.version>
+        <libsir.version>3.1.0</libsir.version>
         <libsir.groupId>es.gob.ad.registros.sir</libsir.groupId>
     </properties>
 
@@ -396,7 +396,14 @@
             <dependency>
                 <groupId>es.gob.ad.registros.sir</groupId>
                 <artifactId>gestionEni</artifactId>
-                <version>3.0.0.RELEASE4</version>
+               <!-- <version>3.0.0.RELEASE4</version>-->
+                 <version>3.1.0</version>
+            </dependency>
+
+            <dependency>
+                <groupId>es.gob.ad.registros.sir</groupId>
+                <artifactId>sirCommons</artifactId>
+                <version>3.1.0</version>
             </dependency>
 
             <dependency>
