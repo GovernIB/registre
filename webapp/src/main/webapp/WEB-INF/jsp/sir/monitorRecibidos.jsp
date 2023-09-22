@@ -257,10 +257,6 @@
                                                                 <c:if test="${registroSir.estado == 'REENVIADO' || registroSir.estado == 'RECHAZADO' || registroSir.estado == 'ACEPTADO'}">
                                                                     <li class="divider"></li>
                                                                 </c:if>
-                                                                <%-- <li><a href="javascript:void(0);" onclick='confirm("javascript:enviarACK(${registroSir.id})","<spring:message code="regweb.confirmar.enviarMensaje" htmlEscape="true"/>")'><spring:message code="mensajeControl.enviar.ACK"/></a></li>
-                                                                 <c:if test="${registroSir.estado == 'ACEPTADO'}">
-                                                                     <li><a href="javascript:void(0);" onclick='confirm("javascript:enviarConfirmacion(${registroSir.id})","<spring:message code="regweb.confirmar.enviarMensaje" htmlEscape="true"/>")'><spring:message code="mensajeControl.enviar.confirmacion"/></a></li>
-                                                                 </c:if>--%>
                                                                 <%-- Reencolar LIBSIR --%>
                                                                 <c:if test="${registroSir.estado == 'REENVIADO' || registroSir.estado == 'RECHAZADO'}">
                                                                     <li><a href="javascript:void(0);" onclick="reencolarIntercambioModal('${registroSir.codigoEntidadRegistral}', '${registroSir.identificadorIntercambio}', confirmModal)"><spring:message code="intercambio.reenviar"/></a></li>
@@ -271,10 +267,6 @@
                                                                 <c:if test="${registroSir.estado == 'REENVIADO' || registroSir.estado == 'RECHAZADO' || registroSir.estado == 'ACEPTADO'}">
                                                                     <li><a href="javascript:void(0);" onclick="desmarcarErrorTecnicoIntercambioModal('${registroSir.codigoEntidadRegistral}', '${registroSir.identificadorIntercambio}', confirmModal)"><spring:message code="intercambio.desmarcar"/></a></li>
                                                                 </c:if>
-                                                                <%-- <c:if test="${registroSir.estado != 'ACEPTADO'}">
-                                                                     <c:url value="/sir/registroSir/reiniciar" var="urlReiniciar"/>
-                                                                     <li><a href="javascript:void(0);" onclick="reiniciarContador('${registroSir.id}','${urlReiniciar}')"><spring:message code="registroSir.reiniciar"/></a></li>
-                                                                 </c:if>--%>
                                                             </ul>
                                                         </div>
                                                     </td>
