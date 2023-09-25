@@ -282,11 +282,6 @@ public abstract class AbstractRegistroWsImpl extends AuthenticatedBaseWsImpl {
             throw new I18NException("entidad.libro.inactivo", entidad.getNombre());
         }
 
-        //Si quedan libros pendientes de procesar no se puede registrar
-        if(pendienteEjb.findPendientesProcesar(entidad.getId()).size()>0){
-            throw new I18NException("registro.entidad.mantenimiento", entidad.getNombre());
-        }
-
         // 3.- Comprobamos que el Usuario pertenece a la Entidad indicada
         if (!UsuarioAplicacionCache.get().getEntidades().contains(entidad)) {
             log.info("El usuario "+UsuarioAplicacionCache.get().getUsuario().getNombreCompleto()+" no pertenece a la entidad.");
