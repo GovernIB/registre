@@ -1067,7 +1067,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
 
         Date fechaInicio = TimeUtils.formateaFecha("20/08/2023", RegwebConstantes.FORMATO_FECHA); //
         Calendar hoy = Calendar.getInstance(); //obtiene la fecha de hoy
-        hoy.add(Calendar.DATE, PropiedadGlobalUtil.getDiasDistribucionAutomatica(idEntidad)); // se le restaran X días
+        hoy.add(Calendar.DATE, -PropiedadGlobalUtil.getDiasDistribucionAutomatica(idEntidad)); // se le restaran X días
 
         Query q;
 
