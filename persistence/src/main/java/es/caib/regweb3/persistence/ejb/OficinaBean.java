@@ -10,14 +10,19 @@ import es.caib.regweb3.utils.Dir3Caib;
 import es.caib.regweb3.utils.Dir3CaibUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
+import es.gob.ad.registros.sir.interModel.dao.enums.TipoOperacionGestionEnum;
+import es.gob.ad.registros.sir.interService.service.IOficinaService;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import javax.interceptor.Interceptors;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
@@ -32,6 +37,7 @@ import java.util.*;
 
 @Stateless(name = "OficinaEJB")
 @RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI", "RWE_WS_ENTRADA", "RWE_WS_SALIDA"})
+@Interceptors(SpringBeanAutowiringInterceptor.class)
 public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLocal {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
@@ -44,6 +50,9 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
     @EJB private CatServicioLocal catServicioEjb;
     @EJB private OrganismoLocal organismoEjb;
     @EJB private MultiEntidadLocal multiEntidadEjb;
+
+    @Autowired
+    IOficinaService oficinaService;
 
 
 
@@ -673,35 +682,23 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
 
     }
 
-    /**
-     * Obtiene el id de la Entidad a la que pertenece la Oficina
-     *
-     * @param codigo
-     * @return
-     * @throws I18NException
-     */
-    public Long obtenerEntidad(String codigo) throws I18NException {
-        Query q = em.createQuery("Select oficina.organismoResponsable.entidad.id from Oficina as oficina where " +
-                "oficina.codigo =:codigo and oficina.organismoResponsable.entidad.sir = true");
+    @Override
+    public Boolean gestionarOficinaLibSir(Long idOficina) throws Exception{
 
-        q.setParameter("codigo", codigo);
+        Oficina oficina = findById(idOficina);
 
-        return (Long) q.getSingleResult();
-    }
+        String tipoOperacion = !oficina.getActivaLibSir() ? TipoOperacionGestionEnum.A.name() : TipoOperacionGestionEnum.B.name();
 
+        es.gob.ad.registros.sir.interService.bean.OficinaBean oficinaBean = new es.gob.ad.registros.sir.interService.bean.OficinaBean(oficina.getCodigo(),"0", tipoOperacion);
 
-    /**
-     * PROVES MULTIENTITAT
-     */
-    public Long obtenerEntidadMultiEntidad(String codigo) throws I18NException {
+        // Actualizamos la oficna en LIBSIR
+        oficinaService.gestionarOficina(oficinaBean);
 
-        Oficina oficina = findByCodigoMultiEntidad(codigo);
+        // Actualizamos la Oficina en REGWEB3
+        oficina.setActivaLibSir(!oficina.getActivaLibSir());
+        merge(oficina);
 
-        if (oficina.getOrganismoResponsable().getEntidad().getSir()) {
-            return oficina.getOrganismoResponsable().getEntidad().getId();
-        } else {
-            return null;
-        }
+        return !oficina.getActivaLibSir();
     }
 
 
@@ -712,6 +709,7 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
      * @return
      * @throws I18NException
      */
+    @Override
     public List<OficinaTF> obtenerOficinasSir(String codigo, Dir3Caib dir3caib) throws I18NException {
         Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService(dir3caib.getServer(), dir3caib.getUser(), dir3caib.getPassword());
         return oficinasService.obtenerOficinasSIRUnidad(codigo);

@@ -8,6 +8,7 @@ import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.controller.BaseController;
 import es.caib.regweb3.webapp.form.OficinaBusquedaForm;
+import es.caib.regweb3.webapp.utils.Mensaje;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -90,5 +91,28 @@ public class OficinaController extends BaseController {
 
         return "oficina/oficinaDetalle";
 
+    }
+
+    /**
+     * Carga el formulario para ver el detalle de un {@link es.caib.regweb3.model.RegistroEntrada}
+     */
+    @RequestMapping(value = "/{idOficina}/gestionarOficinaLibSir", method = RequestMethod.GET)
+    public String gestionarOficinaLibSir(@PathVariable Long idOficina, HttpServletRequest request) throws Exception{
+
+        try{
+            Boolean activa = oficinaEjb.gestionarOficinaLibSir(idOficina);
+
+            if(activa){
+                Mensaje.saveMessageInfo(request, getMessage("oficina.desactivarLibSir.ok"));
+            }else{
+                Mensaje.saveMessageInfo(request, getMessage("oficina.activarLibSir.ok"));
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
+            Mensaje.saveMessageError(request,getMessage("regweb.error.general"));
+        }
+
+        return "redirect:/oficina/"+idOficina+"/detalle";
     }
 }

@@ -221,6 +221,11 @@
             <artifactId>interModel.ORACLE</artifactId>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>es.gob.ad.registros.sir</groupId>
+            <artifactId>interModel-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
 
         <!--<dependency>
             <groupId>org.jboss.ejb3</groupId>

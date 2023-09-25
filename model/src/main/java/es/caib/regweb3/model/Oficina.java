@@ -62,6 +62,8 @@ public class Oficina implements Serializable {
     private String codPostal;
     @XmlTransient
     private Set<CatServicio> servicios;
+    @XmlTransient
+    private Boolean activaLibSir;
 
     @Transient
     private Boolean isSirRecepcion = false;
@@ -69,8 +71,6 @@ public class Oficina implements Serializable {
     private Boolean isSirEnvio = false;
     @Transient
     private Boolean isSir = false;
-    @Transient
-    private Boolean isOficinaSir = false;
 
 
     public Oficina() {
@@ -334,6 +334,16 @@ public class Oficina implements Serializable {
 
     public void setServicios(Set<CatServicio> servicios) {
         this.servicios = servicios;
+    }
+
+    @Column(name = "ACTIVALIBSIR")
+    @JsonIgnore
+    public Boolean getActivaLibSir() {
+        return activaLibSir;
+    }
+
+    public void setActivaLibSir(Boolean activaLibSir) {
+        this.activaLibSir = activaLibSir;
     }
 
     @Transient

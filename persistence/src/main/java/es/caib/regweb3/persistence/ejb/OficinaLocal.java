@@ -307,23 +307,11 @@ public interface OficinaLocal extends BaseEjb<Oficina, Long> {
     Paginacion busqueda(Integer pageNumber, Long idEntidad, String codigo, String denominacion, Long idCatEstadoEntidad) throws I18NException;
 
     /**
-     * Obtiene el id de la Entidad a la que pertenece la Oficina
      *
-     * @param codigo
-     * @return
-     * @throws I18NException
+     * @param idOficina
+     * @throws Exception
      */
-    Long obtenerEntidad(String codigo) throws I18NException;
-
-
-    /**
-     * Obtiene el id de la Entidad a la que pertenece la Oficina en un entorno multientidad
-     *
-     * @param codigo
-     * @return
-     * @throws I18NException
-     */
-    Long obtenerEntidadMultiEntidad(String codigo) throws I18NException;
+    Boolean gestionarOficinaLibSir(Long idOficina) throws Exception;
 
     /**
      * Obtiene las oficinas SIR desde dir3caib(via WS) de la unidad indicada en el código

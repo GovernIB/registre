@@ -396,14 +396,19 @@
             <dependency>
                 <groupId>es.gob.ad.registros.sir</groupId>
                 <artifactId>gestionEni</artifactId>
-               <!-- <version>3.0.0.RELEASE4</version>-->
-                 <version>3.1.0</version>
+                <version>${libsir.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>es.gob.ad.registros.sir</groupId>
                 <artifactId>sirCommons</artifactId>
-                <version>3.1.0</version>
+                <version>${libsir.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>es.gob.ad.registros.sir</groupId>
+                <artifactId>interModel-api</artifactId>
+                <version>${libsir.version}</version>
             </dependency>
 
             <dependency>

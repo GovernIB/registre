@@ -110,6 +110,7 @@
                                                     <col>
                                                     <col>
                                                     <col>
+                                                    <col>
                                                     <col width="51">
                                                 </colgroup>
                                                 <thead>
@@ -118,6 +119,7 @@
                                                     <th><spring:message code="oficina.codigo"/></th>
                                                     <th><spring:message code="oficina.organismoResponsable"/></th>
                                                     <th><spring:message code="oficina.sir"/></th>
+                                                    <th>LIBSIR</th>
                                                     <th class="center"><spring:message code="regweb.acciones"/></th>
                                                 </tr>
                                                 </thead>
@@ -134,6 +136,15 @@
                                                             </c:if>
 
                                                             <c:if test="${not oficina.oficinaSir}">
+                                                                <span class="label label-danger"><spring:message code="regweb.no"/></span>
+                                                            </c:if>
+                                                        </td>
+                                                        <td>
+                                                            <c:if test="${oficina.activaLibSir}">
+                                                                <span class="label label-success"><spring:message code="regweb.si"/></span>
+                                                            </c:if>
+
+                                                            <c:if test="${not oficina.activaLibSir}">
                                                                 <span class="label label-danger"><spring:message code="regweb.no"/></span>
                                                             </c:if>
                                                         </td>

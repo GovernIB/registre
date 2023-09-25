@@ -28,6 +28,8 @@
         </div>
         <!-- Fin miga de pan -->
 
+        <c:import url="../modulos/mensajes.jsp"/>
+
         <div class="row">
 
             <!-- Panel Lateral -->
@@ -74,13 +76,38 @@
                                     </c:forEach>
                                 </ul>
                             </dd>
+                            <dt><i class="fa fa-bookmark"></i> LIBSIR: </dt>
+                            <dd>
+                                <c:choose>
+                                    <c:when test="${oficina.activaLibSir}">
+                                        <span class="label label-success"><spring:message code="cola.activa" /></span>
+                                    </c:when>
+                                    <c:when test="${not oficina.activaLibSir}">
+                                        <span class="label label-danger">Inactiva</span>
+                                    </c:when>
+
+                                </c:choose>
+                            </dd>
 
                         </dl>
 
                     </div>
 
-                </div>
+                    <div class="panel-footer center">
 
+                        <div class="btn-group">
+                            <button type="button" onclick="confirm('<c:url value="/oficina/${oficina.id}/gestionarOficinaLibSir"/>', '<spring:message code="regweb.continuar" htmlEscape="true"/>')" class="btn btn-primary btn-sm">
+                                <c:if test="${oficina.activaLibSir}">
+                                    <spring:message code="oficina.desactivarLibSir"/>
+                                </c:if>
+                                <c:if test="${not oficina.activaLibSir}">
+                                    <spring:message code="oficina.activarLibSir"/>
+                                </c:if>
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
             </div>
             <!-- Fin Panel Lateral -->
 
