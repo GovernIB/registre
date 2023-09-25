@@ -245,6 +245,11 @@ public class IntegracionBean extends BaseEjbJPA<Integracion, Long> implements In
                 error = getErrorFromValidationException((I18NValidationException) th);
             }
 
+            if (th instanceof I18NException) {
+                I18NException i18n = (I18NException) th;
+                error = I18NLogicUtils.getMessage(i18n, new Locale(Configuracio.getDefaultLanguage()));
+            }
+
             StringWriter sw = new StringWriter();
             PrintWriter pw = new PrintWriter(sw, true);
             th.printStackTrace(pw);

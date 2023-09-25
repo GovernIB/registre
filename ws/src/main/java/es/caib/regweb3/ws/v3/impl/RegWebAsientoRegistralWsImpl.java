@@ -1001,10 +1001,10 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
 
             return asiento;
 
-        }catch (Exception e){
+        }catch (I18NException e){
             e.printStackTrace();
             integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, null,System.currentTimeMillis() - inicio.getTime(), entidadActiva.getId(), numeroRegistroFormateado);
-            throw new I18NException("asientoRegistral.obtener.error", e.getLocalizedMessage());
+            throw e;
         }
     }
 
@@ -1050,7 +1050,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
 
             return fileContentWs;
 
-        }catch (Exception e){
+        }catch (I18NException e){
             e.printStackTrace();
             integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, null,System.currentTimeMillis() - inicio.getTime(), entidadActiva.getId(), numRegFormat);
             throw new I18NException("asientoRegistral.obtener.error", e.getLocalizedMessage());
