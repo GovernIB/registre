@@ -106,7 +106,7 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
                     sincronizarHistoricosOrganismo(organismo, unidadTF, entidadId);
 
                     // Comprobamos si se ha extinguido y hay que realizar acciones en consecuencia
-                    procesarExtinguido(organismo);
+                    procesarExtinguido(organismo, entidad);
                 }
             }
 
@@ -160,16 +160,17 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
                 Boolean tieneOficinas = oficinaEjb.tieneOficinasServicio(organismo.getId(), RegwebConstantes.OFICINA_VIRTUAL_SI);
                 if (!tieneOficinas) {//si no tiene se debe guardar en la tabla de pendientes para que los procese el usuario manualmente
                     //guardar pendiente
-                    pendienteEjb.persist(new Pendiente(organismo.getId(), false, organismo.getEstado().getCodigoEstadoEntidad()));
+                    pendienteEjb.persist(new Pendiente(entidad,organismo.getId(), false, RegwebConstantes.ESTADO_ENTIDAD_VIGENTE));
+                    log.info("Pendiente procesar: Organismo sin oficinas que le den servicio: " + organismo.getDenominacion());
                 }
 
             }
         }
         //Si no hay pendientes de procesar desactivamos el mantenimiento de la entidad
         // porque ya ha acabado el proceso de sincronización
-        if (pendienteEjb.findPendientesProcesar(entidadId).isEmpty()) {
+        //if (pendienteEjb.findPendientesProcesar(entidadId).isEmpty()) {
             entidadEjb.marcarEntidadMantenimiento(entidadId, false);
-        }
+        //}
 
         log.info(" REGWEB3 ORGANISMOS ACTUALIZADOS:  " + arbol.size());
         log.info(" REGWEB3 OFICINAS ACTUALIZADAS:  " + oficinasActualizadas);
@@ -598,7 +599,7 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
      * @param organismo organismo a tratar
      * @throws I18NException
      */
-    private void procesarExtinguido(Organismo organismo) throws I18NException {
+    private void procesarExtinguido(Organismo organismo, Entidad entidad) throws I18NException {
 
         if (organismo != null) {
 
@@ -611,12 +612,11 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
                 // Si el Organismos tiene permisos asignados, creamos un registro en Pendiente
                 if (permisoOrganismoUsuarioEjb.tienePermisos(organismo.getId())) {
 
-                    pendienteEjb.persist(new Pendiente(organismo.getId(), false, organismo.getEstado().getCodigoEstadoEntidad()));
+                    pendienteEjb.persist(new Pendiente(entidad, organismo.getId(), false, organismo.getEstado().getCodigoEstadoEntidad()));
+                    log.info("Pendiente procesar - Organismo extinguido: " + organismo.getDenominacion());
                 }
             }
-
         }
-
     }
 
     /**
