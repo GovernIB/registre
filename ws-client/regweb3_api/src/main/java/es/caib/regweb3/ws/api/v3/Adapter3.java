@@ -2,19 +2,19 @@
 package es.caib.regweb3.ws.api.v3;
 
 import javax.xml.bind.annotation.adapters.XmlAdapter;
-import java.sql.Time;
+import java.sql.Date;
 
 public class Adapter3
-    extends XmlAdapter<String, Time>
+    extends XmlAdapter<String, Date>
 {
 
 
-    public Time unmarshal(String value) {
-        return (org.fundaciobit.genapp.common.ws.WsTimeAdapter.parseTime(value));
+    public Date unmarshal(String value) {
+        return (org.fundaciobit.genapp.common.ws.WsSqlDateAdapter.parseDate(value));
     }
 
-    public String marshal(Time value) {
-        return (org.fundaciobit.genapp.common.ws.WsTimeAdapter.printTime(value));
+    public String marshal(Date value) {
+        return (org.fundaciobit.genapp.common.ws.WsSqlDateAdapter.printDate(value));
     }
 
 }

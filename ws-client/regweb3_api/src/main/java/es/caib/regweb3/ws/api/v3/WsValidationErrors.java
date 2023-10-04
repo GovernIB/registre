@@ -14,26 +14,29 @@ import java.util.List;
  * <p>El siguiente fragmento de esquema especifica el contenido que se espera que haya en esta clase.
  * 
  * <pre>
- * &lt;complexType name="WsValidationErrors">
- *   &lt;complexContent>
- *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *       &lt;sequence>
- *         &lt;element name="fieldFaults" type="{http://impl.v3.ws.regweb3.caib.es/}wsFieldValidationError" maxOccurs="unbounded" minOccurs="0"/>
- *       &lt;/sequence>
- *     &lt;/restriction>
- *   &lt;/complexContent>
- * &lt;/complexType>
+ * &lt;complexType name="WsValidationErrors"&gt;
+ *   &lt;complexContent&gt;
+ *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
+ *       &lt;sequence&gt;
+ *         &lt;element name="fieldFaults" type="{http://impl.v3.ws.regweb3.caib.es/}wsFieldValidationError" maxOccurs="unbounded" minOccurs="0"/&gt;
+ *         &lt;element name="message" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/&gt;
+ *       &lt;/sequence&gt;
+ *     &lt;/restriction&gt;
+ *   &lt;/complexContent&gt;
+ * &lt;/complexType&gt;
  * </pre>
  * 
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "WsValidationErrors", propOrder = {
-    "fieldFaults"
+    "fieldFaults",
+    "message"
 })
 public class WsValidationErrors {
 
     protected List<WsFieldValidationError> fieldFaults;
+    protected String message;
 
     /**
      * Gets the value of the fieldFaults property.
@@ -62,6 +65,30 @@ public class WsValidationErrors {
             fieldFaults = new ArrayList<WsFieldValidationError>();
         }
         return this.fieldFaults;
+    }
+
+    /**
+     * Obtiene el valor de la propiedad message.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getMessage() {
+        return message;
+    }
+
+    /**
+     * Define el valor de la propiedad message.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setMessage(String value) {
+        this.message = value;
     }
 
 }

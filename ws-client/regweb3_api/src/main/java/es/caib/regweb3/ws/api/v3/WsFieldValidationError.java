@@ -13,18 +13,18 @@ import javax.xml.bind.annotation.XmlType;
  * <p>El siguiente fragmento de esquema especifica el contenido que se espera que haya en esta clase.
  * 
  * <pre>
- * &lt;complexType name="wsFieldValidationError">
- *   &lt;complexContent>
- *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *       &lt;sequence>
- *         &lt;element name="label" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="field" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="translation" type="{http://impl.v3.ws.regweb3.caib.es/}wsI18NTranslation"/>
- *         &lt;element name="error" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *       &lt;/sequence>
- *     &lt;/restriction>
- *   &lt;/complexContent>
- * &lt;/complexType>
+ * &lt;complexType name="wsFieldValidationError"&gt;
+ *   &lt;complexContent&gt;
+ *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
+ *       &lt;sequence&gt;
+ *         &lt;element name="label" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
+ *         &lt;element name="field" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
+ *         &lt;element name="translation" type="{http://impl.v3.ws.regweb3.caib.es/}wsI18NTranslation"/&gt;
+ *         &lt;element name="error" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
+ *       &lt;/sequence&gt;
+ *     &lt;/restriction&gt;
+ *   &lt;/complexContent&gt;
+ * &lt;/complexType&gt;
  * </pre>
  * 
  * 

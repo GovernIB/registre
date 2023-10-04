@@ -12,15 +12,15 @@ import javax.xml.bind.annotation.XmlType;
  * <p>El siguiente fragmento de esquema especifica el contenido que se espera que haya en esta clase.
  * 
  * <pre>
- * &lt;complexType name="registroSalidaWs">
- *   &lt;complexContent>
- *     &lt;extension base="{http://impl.v3.ws.regweb3.caib.es/}registroWs">
- *       &lt;sequence>
- *         &lt;element name="origen" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
- *       &lt;/sequence>
- *     &lt;/extension>
- *   &lt;/complexContent>
- * &lt;/complexType>
+ * &lt;complexType name="registroSalidaWs"&gt;
+ *   &lt;complexContent&gt;
+ *     &lt;extension base="{http://impl.v3.ws.regweb3.caib.es/}registroWs"&gt;
+ *       &lt;sequence&gt;
+ *         &lt;element name="origen" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/&gt;
+ *       &lt;/sequence&gt;
+ *     &lt;/extension&gt;
+ *   &lt;/complexContent&gt;
+ * &lt;/complexType&gt;
  * </pre>
  * 
  * 

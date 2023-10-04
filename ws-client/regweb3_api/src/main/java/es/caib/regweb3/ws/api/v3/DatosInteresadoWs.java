@@ -12,32 +12,36 @@ import javax.xml.bind.annotation.XmlType;
  * <p>El siguiente fragmento de esquema especifica el contenido que se espera que haya en esta clase.
  * 
  * <pre>
- * &lt;complexType name="datosInteresadoWs">
- *   &lt;complexContent>
- *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *       &lt;sequence>
- *         &lt;element name="apellido1" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
- *         &lt;element name="apellido2" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
- *         &lt;element name="canal" type="{http://www.w3.org/2001/XMLSchema}long" minOccurs="0"/>
- *         &lt;element name="codigoDire" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
- *         &lt;element name="cp" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
- *         &lt;element name="direccion" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
- *         &lt;element name="direccionElectronica" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
- *         &lt;element name="documento" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
- *         &lt;element name="email" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
- *         &lt;element name="localidad" type="{http://www.w3.org/2001/XMLSchema}long" minOccurs="0"/>
- *         &lt;element name="nombre" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
- *         &lt;element name="observaciones" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
- *         &lt;element name="pais" type="{http://www.w3.org/2001/XMLSchema}long" minOccurs="0"/>
- *         &lt;element name="provincia" type="{http://www.w3.org/2001/XMLSchema}long" minOccurs="0"/>
- *         &lt;element name="razonSocial" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
- *         &lt;element name="telefono" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
- *         &lt;element name="tipoDocumentoIdentificacion" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
- *         &lt;element name="tipoInteresado" type="{http://www.w3.org/2001/XMLSchema}long" minOccurs="0"/>
- *       &lt;/sequence>
- *     &lt;/restriction>
- *   &lt;/complexContent>
- * &lt;/complexType>
+ * &lt;complexType name="datosInteresadoWs"&gt;
+ *   &lt;complexContent&gt;
+ *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
+ *       &lt;sequence&gt;
+ *         &lt;element name="apellido1" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/&gt;
+ *         &lt;element name="apellido2" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/&gt;
+ *         &lt;element name="avisoCorreoElectronico" type="{http://www.w3.org/2001/XMLSchema}boolean" minOccurs="0"/&gt;
+ *         &lt;element name="avisoNotificacionSMS" type="{http://www.w3.org/2001/XMLSchema}boolean" minOccurs="0"/&gt;
+ *         &lt;element name="canal" type="{http://www.w3.org/2001/XMLSchema}long" minOccurs="0"/&gt;
+ *         &lt;element name="codDirectoriosUnificados" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/&gt;
+ *         &lt;element name="cp" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/&gt;
+ *         &lt;element name="direccion" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/&gt;
+ *         &lt;element name="direccionElectronica" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/&gt;
+ *         &lt;element name="documento" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/&gt;
+ *         &lt;element name="email" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/&gt;
+ *         &lt;element name="localidad" type="{http://www.w3.org/2001/XMLSchema}long" minOccurs="0"/&gt;
+ *         &lt;element name="nombre" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/&gt;
+ *         &lt;element name="observaciones" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/&gt;
+ *         &lt;element name="pais" type="{http://www.w3.org/2001/XMLSchema}long" minOccurs="0"/&gt;
+ *         &lt;element name="provincia" type="{http://www.w3.org/2001/XMLSchema}long" minOccurs="0"/&gt;
+ *         &lt;element name="razonSocial" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/&gt;
+ *         &lt;element name="receptorNotificaciones" type="{http://www.w3.org/2001/XMLSchema}boolean" minOccurs="0"/&gt;
+ *         &lt;element name="telefono" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/&gt;
+ *         &lt;element name="telefonoMovil" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/&gt;
+ *         &lt;element name="tipoDocumentoIdentificacion" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/&gt;
+ *         &lt;element name="tipoInteresado" type="{http://www.w3.org/2001/XMLSchema}long" minOccurs="0"/&gt;
+ *       &lt;/sequence&gt;
+ *     &lt;/restriction&gt;
+ *   &lt;/complexContent&gt;
+ * &lt;/complexType&gt;
  * </pre>
  * 
  * 
@@ -46,8 +50,10 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(name = "datosInteresadoWs", propOrder = {
     "apellido1",
     "apellido2",
+    "avisoCorreoElectronico",
+    "avisoNotificacionSMS",
     "canal",
-    "codigoDire",
+    "codDirectoriosUnificados",
     "cp",
     "direccion",
     "direccionElectronica",
@@ -59,7 +65,9 @@ import javax.xml.bind.annotation.XmlType;
     "pais",
     "provincia",
     "razonSocial",
+    "receptorNotificaciones",
     "telefono",
+    "telefonoMovil",
     "tipoDocumentoIdentificacion",
     "tipoInteresado"
 })
@@ -67,8 +75,10 @@ public class DatosInteresadoWs {
 
     protected String apellido1;
     protected String apellido2;
+    protected Boolean avisoCorreoElectronico;
+    protected Boolean avisoNotificacionSMS;
     protected Long canal;
-    protected String codigoDire;
+    protected String codDirectoriosUnificados;
     protected String cp;
     protected String direccion;
     protected String direccionElectronica;
@@ -80,7 +90,9 @@ public class DatosInteresadoWs {
     protected Long pais;
     protected Long provincia;
     protected String razonSocial;
+    protected Boolean receptorNotificaciones;
     protected String telefono;
+    protected String telefonoMovil;
     protected String tipoDocumentoIdentificacion;
     protected Long tipoInteresado;
 
@@ -133,6 +145,54 @@ public class DatosInteresadoWs {
     }
 
     /**
+     * Obtiene el valor de la propiedad avisoCorreoElectronico.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Boolean }
+     *     
+     */
+    public Boolean isAvisoCorreoElectronico() {
+        return avisoCorreoElectronico;
+    }
+
+    /**
+     * Define el valor de la propiedad avisoCorreoElectronico.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Boolean }
+     *     
+     */
+    public void setAvisoCorreoElectronico(Boolean value) {
+        this.avisoCorreoElectronico = value;
+    }
+
+    /**
+     * Obtiene el valor de la propiedad avisoNotificacionSMS.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Boolean }
+     *     
+     */
+    public Boolean isAvisoNotificacionSMS() {
+        return avisoNotificacionSMS;
+    }
+
+    /**
+     * Define el valor de la propiedad avisoNotificacionSMS.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Boolean }
+     *     
+     */
+    public void setAvisoNotificacionSMS(Boolean value) {
+        this.avisoNotificacionSMS = value;
+    }
+
+    /**
      * Obtiene el valor de la propiedad canal.
      * 
      * @return
@@ -157,27 +217,27 @@ public class DatosInteresadoWs {
     }
 
     /**
-     * Obtiene el valor de la propiedad codigoDire.
+     * Obtiene el valor de la propiedad codDirectoriosUnificados.
      * 
      * @return
      *     possible object is
      *     {@link String }
      *     
      */
-    public String getCodigoDire() {
-        return codigoDire;
+    public String getCodDirectoriosUnificados() {
+        return codDirectoriosUnificados;
     }
 
     /**
-     * Define el valor de la propiedad codigoDire.
+     * Define el valor de la propiedad codDirectoriosUnificados.
      * 
      * @param value
      *     allowed object is
      *     {@link String }
      *     
      */
-    public void setCodigoDire(String value) {
-        this.codigoDire = value;
+    public void setCodDirectoriosUnificados(String value) {
+        this.codDirectoriosUnificados = value;
     }
 
     /**
@@ -445,6 +505,30 @@ public class DatosInteresadoWs {
     }
 
     /**
+     * Obtiene el valor de la propiedad receptorNotificaciones.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Boolean }
+     *     
+     */
+    public Boolean isReceptorNotificaciones() {
+        return receptorNotificaciones;
+    }
+
+    /**
+     * Define el valor de la propiedad receptorNotificaciones.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Boolean }
+     *     
+     */
+    public void setReceptorNotificaciones(Boolean value) {
+        this.receptorNotificaciones = value;
+    }
+
+    /**
      * Obtiene el valor de la propiedad telefono.
      * 
      * @return
@@ -466,6 +550,30 @@ public class DatosInteresadoWs {
      */
     public void setTelefono(String value) {
         this.telefono = value;
+    }
+
+    /**
+     * Obtiene el valor de la propiedad telefonoMovil.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getTelefonoMovil() {
+        return telefonoMovil;
+    }
+
+    /**
+     * Define el valor de la propiedad telefonoMovil.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setTelefonoMovil(String value) {
+        this.telefonoMovil = value;
     }
 
     /**
