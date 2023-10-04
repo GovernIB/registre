@@ -104,7 +104,7 @@ public class WS_SIR8_BImpl implements WS_SIR8_B_PortType {
         }catch (Exception e){
 
             if(e.getMessage().equals(Errores.ERROR_0037.getName()) || e.getMessage().equals(Errores.ERROR_COD_ENTIDAD_INVALIDO.getName())){ //Error de validación
-                log.info("Error de validacion en el Fichero de Intercambio: " + e.getLocalizedMessage());
+                log.debug("Error de validacion en el Fichero de Intercambio: " + e.getLocalizedMessage());
                 respuestaWS = crearRespuestaWS(Errores.ERROR_0037);
             }else{
                 log.info("Error inesperado recibiendo en el Fichero de Intercambio", e);

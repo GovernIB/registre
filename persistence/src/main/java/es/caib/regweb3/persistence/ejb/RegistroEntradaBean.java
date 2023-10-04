@@ -625,6 +625,18 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean implem
     }
 
     @Override
+    public void actualizarDestinoExternoExtinguido(Long idRegistro, String destinoExternoCodigo, String destinoExternoDenominacion) throws I18NException {
+
+        Query q = em.createQuery("update RegistroEntrada set destinoExternoCodigo = :destinoExternoCodigo, destinoExternoDenominacion = :destinoExternoDenominacion where id = :idRegistro");
+        q.setParameter("idRegistro", idRegistro);
+        q.setParameter("destinoExternoCodigo", destinoExternoCodigo);
+        q.setParameter("destinoExternoDenominacion", destinoExternoDenominacion);
+
+        q.executeUpdate();
+
+    }
+
+    @Override
     public RegistroEntrada getConAnexosFull(Long id) throws I18NException {
 
         RegistroEntrada re = findByIdCompleto(id);

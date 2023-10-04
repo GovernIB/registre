@@ -208,7 +208,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean implemen
     @Override
     public Boolean isOficioRemisionInterno(RegistroSalida registroSalida, Set<String> organismos) throws I18NException {
 
-        String codigoDir3 = RegistroUtils.obtenerCodigoDir3Interesado(registroSalida);
+        String codigoDir3 = registroSalida.getInteresadoDestinoCodigo();
 
         if (StringUtils.isNotEmpty(codigoDir3)) {
             Long idEntidad = registroSalida.getEntidad().getId();
@@ -221,7 +221,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean implemen
     @Override
     public Boolean isOficioRemisionExterno(RegistroSalida registroSalida, Set<String> organismos) throws I18NException {
 
-        String codigoDir3 = RegistroUtils.obtenerCodigoDir3Interesado(registroSalida);
+        String codigoDir3 = registroSalida.getInteresadoDestinoCodigo();
 
         if (StringUtils.isNotEmpty(codigoDir3)) {
             Long idEntidad = registroSalida.getEntidad().getId();
@@ -235,7 +235,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean implemen
     @Override
     public Boolean isOficioRemisionExternoMultiEntidad(RegistroSalida registroSalida, Set<String> organismos) throws I18NException {
 
-        String codigoDir3 = RegistroUtils.obtenerCodigoDir3Interesado(registroSalida);
+        String codigoDir3 = registroSalida.getInteresadoDestinoCodigo();
 
         if (StringUtils.isNotEmpty(codigoDir3)) {
 
@@ -253,7 +253,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean implemen
     public List<OficinaTF> isOficioRemisionSir(RegistroSalida registroSalida, Set<String> organismos, Long idEntidad) throws I18NException {
 
         // Obtenemos el organismo destinatario del Registro en el caso de que sea un OficioRemision externo
-        String codigoDir3 = RegistroUtils.obtenerCodigoDir3Interesado(registroSalida);
+        String codigoDir3 = registroSalida.getInteresadoDestinoCodigo();
 
         // Si se trata de un OficioRemisionExterno, comprobamos si el destino tiene Oficinas Sir
         if (StringUtils.isNotEmpty(codigoDir3) && isOficioRemisionExterno(registroSalida, organismos)) {
@@ -272,7 +272,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean implemen
     public List<OficinaTF> isOficioRemisionSirMultiEntidad(RegistroSalida registroSalida, Set<String> organismos, Long idEntidad) throws I18NException {
 
         // Obtenemos el organismo destinatario del Registro en el caso de que sea un OficioRemision externo
-        String codigoDir3 = RegistroUtils.obtenerCodigoDir3Interesado(registroSalida);
+        String codigoDir3 = registroSalida.getInteresadoDestinoCodigo();
 
         // Si se trata de un OficioRemisionExterno, comprobamos si el destino tiene Oficinas Sir
         if (StringUtils.isNotEmpty(codigoDir3) && isOficioRemisionExternoMultiEntidad(registroSalida, organismos)) {

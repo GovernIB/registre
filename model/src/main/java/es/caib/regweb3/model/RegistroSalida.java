@@ -264,33 +264,42 @@ public class RegistroSalida implements IRegistro {
     }
 
     @Transient
-    public String interesadoDestinoCodigo() throws I18NException {
+    public String getInteresadoDestinoCodigo() throws I18NException {
 
-        List<Interesado> interesados = this.getRegistroDetalle().getInteresados();
+        Interesado destinatario = getInteresadoDestino();
 
-        for (Interesado interesado : interesados) {
-            if (interesado.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION)) {
-
-                return interesado.getCodigoDir3();
-            }
+        if(destinatario != null){
+            return destinatario.getCodigoDir3();
+        }else{
+            return "";
         }
-
-        return null;
     }
 
     @Transient
     public String getInteresadoDestinoDenominacion() throws I18NException {
 
+        Interesado destinatario = getInteresadoDestino();
+
+        if(destinatario != null){
+            return destinatario.getRazonSocial();
+        }else{
+            return "";
+        }
+
+    }
+
+    @Transient
+    public Interesado getInteresadoDestino() throws I18NException {
+
         List<Interesado> interesados = this.getRegistroDetalle().getInteresados();
 
         for (Interesado interesado : interesados) {
             if (interesado.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION)) {
 
-                return interesado.getRazonSocial();
+                return interesado;
             }
         }
-
-        return "";
+        return null;
     }
 
     @Override

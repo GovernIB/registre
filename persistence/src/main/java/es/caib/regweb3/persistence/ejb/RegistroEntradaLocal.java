@@ -212,6 +212,15 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
     void actualizarDestinoExtinguido(Long idOrganismoExtinguido, Long idOrganismo) throws I18NException;
 
     /**
+     * Actualiza el Destino externo extinguido de un Registro por el sustituto
+     * @param idRegistro
+     * @param destinoExternoCodigo
+     * @param destinoExternoDenominacion
+     * @throws I18NException
+     */
+    void actualizarDestinoExternoExtinguido(Long idRegistro, String destinoExternoCodigo, String destinoExternoDenominacion) throws I18NException;
+
+    /**
      * Método que devuelve un registro de entrada completo, con los anexos completos
      *
      * @param id

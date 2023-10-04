@@ -19,7 +19,6 @@ import java.io.StringWriter;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
 /**
@@ -221,26 +220,6 @@ public class RegistroUtils{
         fecha = calendarDate.getTime();
 
         return fecha;
-    }
-
-    /**
-     *
-     * @param registroSalida
-     * @return
-     * @throws Exception
-     */
-    public static String obtenerCodigoDir3Interesado(RegistroSalida registroSalida) throws I18NException {
-
-        List<Interesado> interesados = registroSalida.getRegistroDetalle().getInteresados();
-
-        for (Interesado interesado : interesados) {
-            if (interesado.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION)) {
-
-                return interesado.getCodigoDir3();
-
-            }
-        }
-        return null;
     }
 
     /**
