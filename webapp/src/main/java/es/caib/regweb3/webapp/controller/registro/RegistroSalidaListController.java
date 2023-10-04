@@ -67,6 +67,9 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
     @EJB(mappedName = JustificanteLocal.JNDI_NAME)
     private JustificanteLocal justificanteEjb;
 
+    @EJB(mappedName = InteresadoLocal.JNDI_NAME)
+    private InteresadoLocal interesadoEjb;
+
 
     /**
      * Listado de todos los Registros de Salida
@@ -295,17 +298,19 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
         }
 
         //Obtenemos el destino externo de dir3caib que nos han indicado para ver si está extinguido
-        String codigoDir3 = RegistroUtils.obtenerCodigoDir3Interesado(registroSalida);
+        Interesado destinatario = registroSalida.getInteresadoDestino();
 
         //Consultamos el estado del destino externo
-        if (codigoDir3 != null) {
-            UnidadTF destino = organismoEjb.obtenerDestinoExterno(codigoDir3, entidadActiva.getId());
+        if (destinatario.getCodigoDir3() != null) {
+            UnidadTF destino = organismoEjb.obtenerDestinoExterno(destinatario.getCodigoDir3(), entidadActiva.getId());
             mav.addObject("destino", destino);
             List<OficinaTF> oficinasSIR = new ArrayList<OficinaTF>();
             //Si está extinguido obtenemos sus sustitutos(con oficinas SIR) de dir3caib
             if (destino.getCodigoEstadoEntidad().equals(RegwebConstantes.ESTADO_ENTIDAD_EXTINGUIDO)) {
                 List<UnidadTF> sustitutos = organismoEjb.obtenerSustitutosExternosSIR(destino.getCodigo(), entidadActiva.getId());
                 if (sustitutos.size() == 1) {
+                    //Actualizamos el destino extinguido por el sustituto
+                    interesadoEjb.actualizarDestinoExternoExtinguido(destinatario.getId(), sustitutos.get(0).getCodigo(), sustitutos.get(0).getDenominacion());
                     //obtenemos sus oficinas SIR
                     oficinasSIR = oficinaEjb.obtenerOficinasSir(sustitutos.get(0).getCodigo(), getLoginInfo(request).getDir3Caib());
                 }

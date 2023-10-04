@@ -481,7 +481,11 @@ public class RegistroSir implements Serializable {
     }
 
     public void setDecodificacionTipoAnotacion(String decodificacionTipoAnotacion) {
-        this.decodificacionTipoAnotacion = decodificacionTipoAnotacion;
+        if(decodificacionTipoAnotacion != null && decodificacionTipoAnotacion.length() > 80){
+            this.decodificacionTipoAnotacion = decodificacionTipoAnotacion.substring(0,79);
+        }else{
+            this.decodificacionTipoAnotacion = decodificacionTipoAnotacion;
+        }
     }
 
     @Column(name = "TIPO_REGISTRO", length = 1, nullable = false)

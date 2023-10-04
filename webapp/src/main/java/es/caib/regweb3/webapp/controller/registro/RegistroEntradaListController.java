@@ -323,6 +323,9 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
             if (destino.getCodigoEstadoEntidad().equals(RegwebConstantes.ESTADO_ENTIDAD_EXTINGUIDO)) {
                 List<UnidadTF> sustitutos = organismoEjb.obtenerSustitutosExternosSIR(destino.getCodigo(), entidadActiva.getId());
                 if (sustitutos.size() == 1) {
+                    //Actualizamos el destino extinguido por el sustituto
+                    registroEntradaEjb.actualizarDestinoExternoExtinguido(registroEntrada.getId(), sustitutos.get(0).getCodigo(), sustitutos.get(0).getDenominacion());
+
                     //obtenemos sus oficinas SIR
                     oficinasSIR = oficinaEjb.obtenerOficinasSir(sustitutos.get(0).getCodigo(), getLoginInfo(request).getDir3Caib());
                 }
