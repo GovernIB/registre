@@ -529,12 +529,15 @@ public class OficioRemisionController extends BaseController {
                     Mensaje.saveMessageError(request, getMessage("oficioRemision.seleccion"));
                     return new ModelAndView(redirect);
 
-                } else { // Creamos el OficioRemisión a partir de los registros de entrada seleccionados.
+                } else { // Creamos el OficioRemisión SIR a partir de los registros de entrada seleccionados.
 
                     // Para cada Registro de Entrada generamos un oficio de remision SIR.
                     for (RegistroEntrada registroEntradaAEnviar : registrosEntrada) {
 
                         RegistroEntrada registroEntrada = registroEntradaEjb.getConAnexosFull(registroEntradaAEnviar.getId());
+
+                        // Actualizamos el codigoDir3 destino por si estaba extinguido y se ha seleccionado un sustituto
+                        registroEntrada.setDestinoExternoCodigo(oficioRemisionForm.getOrganismoExternoCodigo());
 
                         // Crear el Justificante
                         if (!registroEntrada.getRegistroDetalle().getTieneJustificante()) {
@@ -579,12 +582,15 @@ public class OficioRemisionController extends BaseController {
                     Mensaje.saveMessageError(request, getMessage("oficioRemision.seleccion"));
                     return new ModelAndView(redirect);
 
-                } else { // Creamos el OficioRemisión a partir de los registros de salida seleccionados.
+                } else { // Creamos el OficioRemisión SIR a partir de los registros de salida seleccionados.
 
                     // Para cada Registro de Salida generamos un oficio de remision SIR.
                     for (RegistroSalida registroSalidaAEnviar : registrosSalida) {
 
                         RegistroSalida registroSalida = registroSalidaEjb.getConAnexosFull(registroSalidaAEnviar.getId());
+
+                        // Actualizamos el codigoDir3 destino por si estaba extinguido y se ha seleccionado un sustituto
+                        registroSalida.getInteresadoDestino().setCodigoDir3(oficioRemisionForm.getOrganismoExternoCodigo());
 
                         // Crear el Justificante
                         if (!registroSalida.getRegistroDetalle().getTieneJustificante()) {

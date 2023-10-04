@@ -136,4 +136,12 @@ public interface InteresadoLocal extends BaseEjb<Interesado, Long> {
      * @throws I18NException
      */
     void capitalizarInteresadosJuridicos() throws I18NException;
+
+    /**
+     * Actualiza el codigoDir3 y denominación de un Destinatario de tipo Administración
+     * @param id
+     * @param codigoDir3
+     * @param razonSocial
+     */
+    void actualizarDestinoExternoExtinguido(Long id, String codigoDir3, String razonSocial);
 }

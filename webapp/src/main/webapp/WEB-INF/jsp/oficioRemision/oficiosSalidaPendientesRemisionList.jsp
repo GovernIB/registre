@@ -302,6 +302,7 @@
                                                             </div>
                                                         </div>
                                                         <input type="hidden" id="organismoExternoCodigo" name="organismoExternoCodigo" value="${(oficiosRemisionOrganismo.sustitutos[0]).codigo}"/>
+                                                        <input type="hidden" id="organismoExternoDenominacion" name="organismoExternoDenominacion" value="${(oficiosRemisionOrganismo.sustitutos[0]).denominacion}"/>
                                                     </c:if>
 
                                                     <!--Organismo externo extinguido, con varios sustitutos-->

@@ -386,7 +386,7 @@ public class SirEnvioBean implements SirEnvioLocal {
                 oficioRemision.setLibro(new Libro(registroSalida.getLibro().getId()));
                 oficioRemision.setIdentificadorIntercambio(registroSalida.getRegistroDetalle().getIdentificadorIntercambio());
                 oficioRemision.setTipoOficioRemision(RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA);
-                oficioRemision.setDestinoExternoCodigo(registroSalida.interesadoDestinoCodigo());
+                oficioRemision.setDestinoExternoCodigo(registroSalida.getInteresadoDestinoCodigo());
                 oficioRemision.setDestinoExternoDenominacion(registroSalida.getInteresadoDestinoDenominacion());
                 oficioRemision.setRegistrosSalida(Collections.singletonList(registroSalida));
                 oficioRemision.setOrganismoDestinatario(null);
@@ -687,9 +687,8 @@ public class SirEnvioBean implements SirEnvioLocal {
 
             RegistroEntrada registroEntrada = trazabilidadSir.getRegistroEntrada();
 
-            enviarMensajeConfirmacion(trazabilidadSir.getRegistroSir(), registroEntrada.getNumeroRegistroFormateado(), registroEntrada.getFecha());
+            return enviarMensajeConfirmacion(trazabilidadSir.getRegistroSir(), registroEntrada.getNumeroRegistroFormateado(), registroEntrada.getFecha());
 
-            return true;
         }
 
         return false;
@@ -894,13 +893,22 @@ public class SirEnvioBean implements SirEnvioLocal {
      * @param numeroRegistroFormateado
      * @throws I18NException
      */
-    private void enviarMensajeConfirmacion(RegistroSir registroSir, String numeroRegistroFormateado, Date fechaRegistro) throws I18NException {
+    private Boolean enviarMensajeConfirmacion(RegistroSir registroSir, String numeroRegistroFormateado, Date fechaRegistro)  {
 
-        // Enviamos el mensaje de confirmación
-        MensajeControl confirmacion = mensajeEjb.enviarMensajeConfirmacion(registroSir, numeroRegistroFormateado, fechaRegistro);
+        try{
 
-        // Guardamos el mensaje de confirmación
-        mensajeControlEjb.persist(confirmacion);
+            // Enviamos el mensaje de confirmación
+            MensajeControl confirmacion = mensajeEjb.enviarMensajeConfirmacion(registroSir, numeroRegistroFormateado, fechaRegistro);
+
+            // Guardamos el mensaje de confirmación
+            mensajeControlEjb.persist(confirmacion);
+
+            return true;
+
+        }catch (Exception e){
+            log.info("Error enviando el mensaje de Confirmacion de: " + registroSir.getIdentificadorIntercambio());
+            return false;
+        }
     }
 
     /**

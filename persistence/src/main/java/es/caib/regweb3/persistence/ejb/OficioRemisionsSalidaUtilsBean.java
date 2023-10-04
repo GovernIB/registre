@@ -444,7 +444,7 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
         oficioRemision.setLibro(new Libro(registroSalida.getLibro().getId()));
         oficioRemision.setIdentificadorIntercambio(registroSalida.getRegistroDetalle().getIdentificadorIntercambio());
         oficioRemision.setTipoOficioRemision(RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA);
-        oficioRemision.setDestinoExternoCodigo(registroSalida.interesadoDestinoCodigo());
+        oficioRemision.setDestinoExternoCodigo(registroSalida.getInteresadoDestinoCodigo());
         oficioRemision.setDestinoExternoDenominacion(registroSalida.getInteresadoDestinoDenominacion());
         oficioRemision.setRegistrosSalida(Collections.singletonList(registroSalida));
         oficioRemision.setOrganismoDestinatario(null);
