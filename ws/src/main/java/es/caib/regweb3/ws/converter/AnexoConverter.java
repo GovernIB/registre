@@ -1,12 +1,14 @@
 package es.caib.regweb3.ws.converter;
 
 import es.caib.regweb3.model.Anexo;
+import es.caib.regweb3.model.MetadatoAnexo;
 import es.caib.regweb3.model.TipoDocumental;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.persistence.ejb.TipoDocumentalLocal;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 import es.caib.regweb3.ws.model.AnexoWs;
+import es.caib.regweb3.ws.model.MetadatoWs;
 import es.caib.regweb3.ws.v3.impl.CommonConverter;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.plugins.documentcustody.api.DocumentCustody;
@@ -15,6 +17,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Calendar;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static es.caib.regweb3.utils.StringUtils.eliminarCaracteresProhibidosArxiu;
 
@@ -185,6 +189,17 @@ public class AnexoConverter extends CommonConverter {
          anexo.setTamanoFichero(anexoWs.getTamanoFichero());
       }
 
+      //SICRES4
+      if(anexoWs.getResumen() != null){anexo.setResumen(anexoWs.getResumen());}
+      if(anexoWs.getCodigoFormulario() != null){anexo.setCodigoFormulario(anexoWs.getCodigoFormulario());}
+
+      if(anexoWs.getMetadatos()!=null) {
+         Set<MetadatoAnexo> metadatos = anexoWs.getMetadatos().stream()
+                 .map(metadato -> new MetadatoAnexo(metadato.getTipo(), metadato.getCampo(), metadato.getValor()) {
+                 }).collect(Collectors.toSet());
+         anexo.setMetadatosAnexos(metadatos);
+      }
+
       return anexo;
 
    }
@@ -231,6 +246,17 @@ public class AnexoConverter extends CommonConverter {
          // SICRES4 Deprecated
          if(anexo.getHash() != null){ anexoWs.setHash(anexo.getHash()); }
          anexoWs.setTamanoFichero(anexo.getTamanoFichero());
+      }
+
+      //SICRES4
+      if(anexo.getResumen() != null){anexoWs.setResumen(anexo.getResumen());}
+      if(anexo.getCodigoFormulario() != null){anexoWs.setCodigoFormulario(anexo.getCodigoFormulario());}
+
+      if(anexo.getMetadatosAnexos()!=null) {
+         Set<MetadatoWs> metadatos = anexo.getMetadatosAnexos().stream()
+                 .map(metadato -> new MetadatoWs(metadato.getTipo(), metadato.getCampo(), metadato.getValor()) {
+                 }).collect(Collectors.toSet());
+         anexoWs.setMetadatos(metadatos);
       }
 
       return anexoWs;

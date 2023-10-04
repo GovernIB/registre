@@ -108,9 +108,17 @@ public class DatosInteresadoConverter extends CommonConverter {
         if(StringUtils.isNotEmpty(datosInteresadoWs.getCp())){interesado.setCp(datosInteresadoWs.getCp());}
         if(StringUtils.isNotEmpty(datosInteresadoWs.getEmail())){interesado.setEmail(datosInteresadoWs.getEmail());}
         if(StringUtils.isNotEmpty(datosInteresadoWs.getTelefono())){interesado.setTelefono(datosInteresadoWs.getTelefono());}
+        if(StringUtils.isNotEmpty(datosInteresadoWs.getTelefonoMovil())){interesado.setTelefonoMovil(datosInteresadoWs.getTelefonoMovil());}
         if(StringUtils.isNotEmpty(datosInteresadoWs.getDireccionElectronica())){interesado.setDireccionElectronica(datosInteresadoWs.getDireccionElectronica());}
         if(datosInteresadoWs.getCanal() != null){interesado.setCanal(datosInteresadoWs.getCanal());}
         if(StringUtils.isNotEmpty(datosInteresadoWs.getObservaciones())){interesado.setObservaciones(datosInteresadoWs.getObservaciones());}
+
+        //SICRES4
+        interesado.setReceptorNotificaciones(datosInteresadoWs.getReceptorNotificaciones());
+        interesado.setAvisoNotificacionSMS(datosInteresadoWs.getAvisoNotificacionSMS());
+        interesado.setAvisoCorreoElectronico(datosInteresadoWs.getAvisoCorreoElectronico());
+        if(StringUtils.isNotEmpty(interesado.getTelefonoMovil())){datosInteresadoWs.setTelefonoMovil(interesado.getTelefonoMovil());}
+
 
         return interesado;
 
@@ -153,10 +161,15 @@ public class DatosInteresadoConverter extends CommonConverter {
         if(StringUtils.isNotEmpty(interesado.getCp())){datosInteresadoWs.setCp(interesado.getCp());}
         if(StringUtils.isNotEmpty(interesado.getEmail())){datosInteresadoWs.setEmail(interesado.getEmail());}
         if(StringUtils.isNotEmpty(interesado.getTelefono())){datosInteresadoWs.setTelefono(interesado.getTelefono());}
+        if(StringUtils.isNotEmpty(interesado.getTelefonoMovil())){datosInteresadoWs.setTelefonoMovil(interesado.getTelefonoMovil());}
         if(StringUtils.isNotEmpty(interesado.getDireccionElectronica())){datosInteresadoWs.setDireccionElectronica(interesado.getDireccionElectronica());}
         if(interesado.getCanal() != null){datosInteresadoWs.setCanal(interesado.getCanal());}
         if(StringUtils.isNotEmpty(interesado.getObservaciones())){datosInteresadoWs.setObservaciones(interesado.getObservaciones());}
 
+        //SICRES4
+        datosInteresadoWs.setReceptorNotificaciones(interesado.getReceptorNotificaciones());
+        datosInteresadoWs.setAvisoNotificacionSMS(interesado.getAvisoNotificacionSMS());
+        datosInteresadoWs.setAvisoCorreoElectronico(interesado.getAvisoCorreoElectronico());
         return datosInteresadoWs;
     }
 }

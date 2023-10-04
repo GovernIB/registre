@@ -7,11 +7,14 @@ import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 import es.caib.regweb3.ws.model.AsientoRegistralWs;
 import es.caib.regweb3.ws.model.InteresadoWs;
+import es.caib.regweb3.ws.model.MetadatoWs;
 import es.caib.regweb3.ws.v3.impl.CommonConverter;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static es.caib.regweb3.utils.RegwebConstantes.*;
 
@@ -75,6 +78,14 @@ public class AsientoRegistralConverter extends CommonConverter {
 
       registroEntrada.setRegistroDetalle(registroDetalle);
 
+      System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX " + asientoRegistral.getMetadatos().size());
+      if(asientoRegistral.getMetadatos()!=null) {
+         Set<MetadatoRegistroEntrada> metadatos = asientoRegistral.getMetadatos().stream()
+                 .map(metadato -> new MetadatoRegistroEntrada(metadato.getTipo(), metadato.getCampo(), metadato.getValor()) {
+                 }).collect(Collectors.toSet());
+         registroEntrada.setMetadatosRegistroEntrada(metadatos);
+      }
+
       return registroEntrada;
    }
 
@@ -126,6 +137,13 @@ public class AsientoRegistralConverter extends CommonConverter {
 
       registroSalida.setRegistroDetalle(registroDetalle);
 
+      if(asientoRegistral.getMetadatos()!=null) {
+         Set<MetadatoRegistroSalida> metadatos = asientoRegistral.getMetadatos().stream()
+                 .map(metadato -> new MetadatoRegistroSalida(metadato.getTipo(), metadato.getCampo(), metadato.getValor()) {
+                 }).collect(Collectors.toSet());
+         registroSalida.setMetadatosRegistroSalida(metadatos);
+      }
+
       return registroSalida;
    }
 
@@ -160,6 +178,12 @@ public class AsientoRegistralConverter extends CommonConverter {
             asientoRegistral.setUnidadTramitacionDestinoDenominacion(registroEntrada.getDestinoExternoDenominacion());
          }
 
+         //Metadatos
+         Set<MetadatoWs> metadatos = registroEntrada.getMetadatosRegistroEntrada().stream()
+                 .map(metadato -> new MetadatoWs(metadato.getTipo(), metadato.getCampo(), metadato.getValor()) {
+                 }).collect(Collectors.toSet());
+         asientoRegistral.setMetadatos(metadatos);
+
       }else {
 
          RegistroSalida registroSalida = (RegistroSalida) registro;
@@ -172,7 +196,15 @@ public class AsientoRegistralConverter extends CommonConverter {
             asientoRegistral.setUnidadTramitacionOrigenCodigo(registroSalida.getOrigenExternoCodigo());
             asientoRegistral.setUnidadTramitacionOrigenDenominacion(registroSalida.getOrigenExternoDenominacion());
          }
+
+         //Metadatos
+         Set<MetadatoWs> metadatos = registroSalida.getMetadatosRegistroSalida().stream()
+                 .map(metadato -> new MetadatoWs(metadato.getTipo(), metadato.getCampo(), metadato.getValor()) {
+                 }).collect(Collectors.toSet());
+         asientoRegistral.setMetadatos(metadatos);
       }
+
+
 
       // Anexos
       asientoRegistral.setAnexos(transformarAnexosWs(registro.getRegistroDetalle()));

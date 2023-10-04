@@ -176,8 +176,13 @@ public abstract class AbstractRegistroWsImpl extends AuthenticatedBaseWsImpl {
             throws Exception, I18NValidationException, I18NException {
 
         List<Interesado> interesados = new ArrayList<Interesado>();
+        boolean tieneReceptor = false;
 
         for (InteresadoWs interesadoWs : interesadosWs) {
+
+            if(interesadoWs.getInteresado().getReceptorNotificaciones()){
+                tieneReceptor = true;
+            }
 
             Interesado interesado = DatosInteresadoConverter.getInteresado(interesadoWs.getInteresado(),
                     catPaisEjb, catProvinciaEjb, catLocalidadEjb);
@@ -194,6 +199,9 @@ public abstract class AbstractRegistroWsImpl extends AuthenticatedBaseWsImpl {
                 interesados.add(interesado);
 
             } else {// Interesado con Representante
+                if(interesadoWs.getRepresentante().getReceptorNotificaciones()){
+                    tieneReceptor = true;
+                }
 
                 Interesado representante = DatosInteresadoConverter.getInteresado(
                         interesadoWs.getRepresentante(),
@@ -218,6 +226,11 @@ public abstract class AbstractRegistroWsImpl extends AuthenticatedBaseWsImpl {
 
             }
 
+        }
+
+        //Si no han indicado el receptor de notificaciones ponemos el primer interesado por defecto.
+        if(!tieneReceptor){
+            interesados.get(0).setReceptorNotificaciones(true);
         }
 
         return interesados;

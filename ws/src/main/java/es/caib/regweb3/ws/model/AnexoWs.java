@@ -5,6 +5,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlInlineBinaryData;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Calendar;
+import java.util.Set;
 
 
 /**
@@ -25,7 +26,7 @@ public class AnexoWs {
     private String tipoMIMEFicheroAnexado;
     private String tipoDocumental;
     private String validezDocumento;
-    private String tipoDocumento;
+    private String tipoDocumento; //SICRES 4 le llama tipoAnexo
     private String observaciones;
     private Integer origenCiudadanoAdmin;
     private Calendar fechaCaptura;
@@ -40,6 +41,12 @@ public class AnexoWs {
     @XmlInlineBinaryData
     private byte[] hash;
     private int tamanoFichero;
+
+
+    //SICRES4
+    private String resumen;
+    private String codigoFormulario;
+    private Set<MetadatoWs> metadatos;
 
     public String getTitulo() {
       return titulo;
@@ -196,5 +203,29 @@ public class AnexoWs {
 
     public void setTamanoFichero(int tamanoFichero) {
         this.tamanoFichero = tamanoFichero;
+    }
+
+    public String getResumen() {
+        return resumen;
+    }
+
+    public void setResumen(String resumen) {
+        this.resumen = resumen;
+    }
+
+    public String getCodigoFormulario() {
+        return codigoFormulario;
+    }
+
+    public void setCodigoFormulario(String codigoFormulario) {
+        this.codigoFormulario = codigoFormulario;
+    }
+
+    public Set<MetadatoWs> getMetadatos() {
+        return metadatos;
+    }
+
+    public void setMetadatos(Set<MetadatoWs> metadatos) {
+        this.metadatos = metadatos;
     }
 }

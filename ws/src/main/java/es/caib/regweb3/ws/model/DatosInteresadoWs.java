@@ -30,6 +30,12 @@ public class DatosInteresadoWs implements Serializable {
     private Long canal;
     private String observaciones;
 
+    //SICRES4
+    private Boolean receptorNotificaciones;
+    private String telefonoMovil;
+    private Boolean avisoNotificacionSMS;
+    private Boolean avisoCorreoElectronico;
+
     public Long getTipoInteresado() {
         return tipoInteresado;
     }
@@ -172,5 +178,37 @@ public class DatosInteresadoWs implements Serializable {
 
     public void setCodDirectoriosUnificados(String codDirectoriosUnificados) {
         this.codDirectoriosUnificados = codDirectoriosUnificados;
+    }
+
+    public Boolean getReceptorNotificaciones() {
+        return receptorNotificaciones;
+    }
+
+    public void setReceptorNotificaciones(Boolean receptorNotificaciones) {
+        this.receptorNotificaciones = receptorNotificaciones;
+    }
+
+    public String getTelefonoMovil() {
+        return telefonoMovil;
+    }
+
+    public void setTelefonoMovil(String telefonoMovil) {
+        this.telefonoMovil = telefonoMovil;
+    }
+
+    public Boolean getAvisoNotificacionSMS() {
+        return avisoNotificacionSMS;
+    }
+
+    public void setAvisoNotificacionSMS(Boolean avisoNotificacionSMS) {
+        this.avisoNotificacionSMS = avisoNotificacionSMS;
+    }
+
+    public Boolean getAvisoCorreoElectronico() {
+        return avisoCorreoElectronico;
+    }
+
+    public void setAvisoCorreoElectronico(Boolean avisoCorreoElectronico) {
+        this.avisoCorreoElectronico = avisoCorreoElectronico;
     }
 }

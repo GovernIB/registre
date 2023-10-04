@@ -4,6 +4,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 @XmlRootElement
 public class AsientoRegistralWs implements Serializable {
@@ -68,6 +69,10 @@ public class AsientoRegistralWs implements Serializable {
     private String motivo; //Motivo rechazo o reenvio
     private String codigoEntidadRegistralProcesado; // Codigo de la oficina que acepta o rechaza, reenvia
     private String decodificacionEntidadRegistralProcesado; // Denominacion de la oficina que acepta o rechaza, reenvia
+
+
+    //SICRES4
+    private Set<MetadatoWs> metadatos;
 
 
     public AsientoRegistralWs() {
@@ -467,5 +472,13 @@ public class AsientoRegistralWs implements Serializable {
 
     public void setDecodificacionEntidadRegistralProcesado(String decodificacionEntidadRegistralProcesado) {
         this.decodificacionEntidadRegistralProcesado = decodificacionEntidadRegistralProcesado;
+    }
+
+    public Set<MetadatoWs> getMetadatos() {
+        return metadatos;
+    }
+
+    public void setMetadatos(Set<MetadatoWs> metadatos) {
+        this.metadatos = metadatos;
     }
 }
