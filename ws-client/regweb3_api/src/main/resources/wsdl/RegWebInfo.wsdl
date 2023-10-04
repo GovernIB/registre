@@ -519,7 +519,7 @@
   </wsdl:binding>
   <wsdl:service name="RegWebInfoWsService">
     <wsdl:port name="RegWebInfoWs" binding="tns:RegWebInfoWsServiceSoapBinding">
-      <soap:address location="http://localhost:8080/regweb3/ws/v3/RegWebInfo"/>
+      <soap:address location="http://localhost:9080/regweb3/ws/v3/RegWebInfo"/>
     </wsdl:port>
   </wsdl:service>
 </wsdl:definitions>
