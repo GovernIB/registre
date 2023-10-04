@@ -362,5 +362,19 @@ public class InteresadoBean extends BaseEjbJPA<Interesado, Long> implements Inte
         }
     }
 
+    /**
+     * Actualiza el codigoDir3 y denominación de un Destinatario de tipo Administración
+     * @param id
+     * @param codigoDir3
+     * @param razonSocial
+     */
+    public void actualizarDestinoExternoExtinguido(Long id, String codigoDir3, String razonSocial){
+        Query q = em.createQuery("update Interesado set codigoDir3 = :codigoDir3,  razonSocial = :razonSocial where id = :id");
+        q.setParameter("id", id);
+        q.setParameter("codigoDir3", codigoDir3);
+        q.setParameter("razonSocial", razonSocial);
+
+        q.executeUpdate();
+    }
 
 }
