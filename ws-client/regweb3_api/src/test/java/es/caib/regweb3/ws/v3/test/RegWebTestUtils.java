@@ -257,6 +257,15 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
         asiento.setTipoTransporte("01");
         asiento.setObservaciones("Asiento registral realizado mediante el api WS");
 
+        List<MetadatoWs> metadatos = new ArrayList<>();
+        MetadatoWs metadatoWs = new MetadatoWs();
+        metadatoWs.setCampo("Metadato Asiento 1");
+        metadatoWs.setValor("Valor del metadato Asiento 1 ");
+        metadatoWs.setTipo(METADATO_GENERAL);
+
+        metadatos.add(metadatoWs);
+        asiento.getMetadatos().addAll(metadatos);
+
         return asiento;
     }
 
@@ -339,7 +348,6 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
     /**
      *
      * @param tipoRegistro
-     * @param representante
      * @return
      */
     public AsientoRegistralWs getAsiento_to_Administracion(Long tipoRegistro, Boolean anexos, String razonSocial, String documento){
@@ -494,6 +502,10 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
         personaFisica.setPais((long) 724);
         personaFisica.setProvincia((long) 7);
         personaFisica.setCp("07010");
+        personaFisica.setTelefonoMovil("678345123");
+        personaFisica.setReceptorNotificaciones(false);
+        personaFisica.setAvisoNotificacionSMS(true);
+        personaFisica.setAvisoCorreoElectronico(true);
 
         return personaFisica;
     }
@@ -512,6 +524,9 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
         personaJuridica.setEmail("info@mercadona.es");
         personaJuridica.setPais((long) 724);
         personaJuridica.setProvincia((long) 46);
+        personaJuridica.setAvisoCorreoElectronico(false);
+        personaJuridica.setAvisoNotificacionSMS(false);
+        personaJuridica.setReceptorNotificaciones(false);
 
         return personaJuridica;
     }
@@ -529,6 +544,9 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
             representante.setApellido1("De la torre");
             representante.setPais((long) 724);
             representante.setProvincia((long) 46);
+            representante.setAvisoCorreoElectronico(false);
+            representante.setAvisoNotificacionSMS(false);
+            representante.setReceptorNotificaciones(false);
 
         }else if(tipoPersona.equals(TIPO_INTERESADO_PERSONA_JURIDICA)){
             representante.setTipoInteresado(TIPO_INTERESADO_PERSONA_JURIDICA);
@@ -538,6 +556,9 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
             representante.setEmail("info@mercadona.es");
             representante.setPais((long) 724);
             representante.setProvincia((long) 46);
+            representante.setAvisoCorreoElectronico(false);
+            representante.setAvisoNotificacionSMS(false);
+            representante.setReceptorNotificaciones(false);
         }
 
         return representante;
@@ -553,7 +574,8 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
       Define un interesado de tipo administración integrado en SIR
      */
     public DatosInteresadoWs getAdministracionSir(){
-        return getAdministracion("Unidad Demoorve CCAA 1","A13010361");
+       // return getAdministracion("Unidad Demoorve CCAA 1","A13010361");
+        return getAdministracion("Ayuntamiento de Onís","L01330432");
     }
 
 
@@ -574,6 +596,9 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
         administracion.setTipoDocumentoIdentificacion(String.valueOf(TIPODOCUMENTOID_CODIGO_ORIGEN));
         administracion.setRazonSocial(razonSocial);
         administracion.setDocumento(documento);
+        administracion.setReceptorNotificaciones(false);
+        administracion.setAvisoCorreoElectronico(false);
+        administracion.setAvisoNotificacionSMS(false);
 
         return administracion;
     }
@@ -663,6 +688,22 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
             anexoSinFirma.setTipoMIMEFicheroAnexado(Utils.getMimeType(fichero));
 
             anexos.add(anexoSinFirma);
+
+            List<MetadatoWs> metadatos = new ArrayList<>();
+            MetadatoWs metadatoWs = new MetadatoWs();
+            metadatoWs.setCampo("Metadato 1");
+            metadatoWs.setValor("Valor del metadato1 ");
+            metadatoWs.setTipo(METADATO_GENERAL);
+
+            metadatos.add(metadatoWs);
+
+            MetadatoWs metadatoWs2 = new MetadatoWs();
+            metadatoWs2.setCampo("Metadato 2");
+            metadatoWs2.setValor("Valor del metadato2 ");
+            metadatoWs2.setTipo(METADATO_PARTICULAR);
+            metadatos.add(metadatoWs2);
+            anexoSinFirma.getMetadatos().addAll(metadatos);
+
         }
 
         // Anexo con firma attached

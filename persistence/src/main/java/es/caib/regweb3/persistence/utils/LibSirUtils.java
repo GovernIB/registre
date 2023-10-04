@@ -122,27 +122,29 @@ public class LibSirUtils {
 
             //METADATOS
             Set<MetadatoRegistroEntrada> metadatosRE = registroEntrada.getMetadatosRegistroEntrada();
-            Set<MetadatoRegistroEntrada> metadatoREGeneral = metadatosRE.stream().filter(metadato -> metadato.getTipo().equals(METADATO_GENERAL)).collect(Collectors.toSet());
-            Set<MetadatoRegistroEntrada> metadatoREParticular = metadatosRE.stream().filter(metadato -> metadato.getTipo().equals(METADATO_PARTICULAR)).collect(Collectors.toSet());
+            if(metadatosRE!=null) {
+                Set<MetadatoRegistroEntrada> metadatoREGeneral = metadatosRE.stream().filter(metadato -> metadato.getTipo().equals(METADATO_GENERAL)).collect(Collectors.toSet());
+                Set<MetadatoRegistroEntrada> metadatoREParticular = metadatosRE.stream().filter(metadato -> metadato.getTipo().equals(METADATO_PARTICULAR)).collect(Collectors.toSet());
 
-            Set<OtrosMetadatos> otrosMetadatosGeneral = metadatoREGeneral.stream()
-                    .map(metadato -> {
-                        OtrosMetadatos otroMetadato = new OtrosMetadatos();
-                        otroMetadato.setCampo(metadato.getCampo());
-                        otroMetadato.setValor(metadato.getValor());
-                        return otroMetadato;
-                    }).collect(Collectors.toSet());
+                Set<OtrosMetadatos> otrosMetadatosGeneral = metadatoREGeneral.stream()
+                        .map(metadato -> {
+                            OtrosMetadatos otroMetadato = new OtrosMetadatos();
+                            otroMetadato.setCampo(metadato.getCampo());
+                            otroMetadato.setValor(metadato.getValor());
+                            return otroMetadato;
+                        }).collect(Collectors.toSet());
 
-            Set<OtrosMetadatos> otrosMetadatosParticular = metadatoREParticular.stream()
-                    .map(metadato -> {
-                        OtrosMetadatos otroMetadato = new OtrosMetadatos();
-                        otroMetadato.setCampo(metadato.getCampo());
-                        otroMetadato.setValor(metadato.getValor());
-                        return otroMetadato;
-                    }).collect(Collectors.toSet());
+                Set<OtrosMetadatos> otrosMetadatosParticular = metadatoREParticular.stream()
+                        .map(metadato -> {
+                            OtrosMetadatos otroMetadato = new OtrosMetadatos();
+                            otroMetadato.setCampo(metadato.getCampo());
+                            otroMetadato.setValor(metadato.getValor());
+                            return otroMetadato;
+                        }).collect(Collectors.toSet());
 
-            asientoBean.setOtrosMetadatosGenerales(otrosMetadatosGeneral);
-            asientoBean.setOtrosMetadatosParticulares(otrosMetadatosParticular);
+                asientoBean.setOtrosMetadatosGenerales(otrosMetadatosGeneral);
+                asientoBean.setOtrosMetadatosParticulares(otrosMetadatosParticular);
+            }
 
 
             //INTERESADOS
@@ -220,29 +222,30 @@ public class LibSirUtils {
             transformarRegistroDetalle(registroDetalle, asientoBean, null);
 
             //METADATOS
-            Set<MetadatoRegistroSalida> metadatosRE = registroSalida.getMetadatosRegistroSalida();
-            Set<MetadatoRegistroSalida> metadatoREGeneral = metadatosRE.stream().filter(metadato -> metadato.getTipo().equals(METADATO_GENERAL)).collect(Collectors.toSet());
-            Set<MetadatoRegistroSalida> metadatoREParticular = metadatosRE.stream().filter(metadato -> metadato.getTipo().equals(METADATO_PARTICULAR)).collect(Collectors.toSet());
+            Set<MetadatoRegistroSalida> metadatosRS = registroSalida.getMetadatosRegistroSalida();
+            if(metadatosRS!=null) {
+                Set<MetadatoRegistroSalida> metadatoRSGeneral = metadatosRS.stream().filter(metadato -> metadato.getTipo().equals(METADATO_GENERAL)).collect(Collectors.toSet());
+                Set<MetadatoRegistroSalida> metadatoRSParticular = metadatosRS.stream().filter(metadato -> metadato.getTipo().equals(METADATO_PARTICULAR)).collect(Collectors.toSet());
 
-            Set<OtrosMetadatos> otrosMetadatosGeneral = metadatoREGeneral.stream()
-                    .map(metadato -> {
-                        OtrosMetadatos otroMetadato = new OtrosMetadatos();
-                        otroMetadato.setCampo(metadato.getCampo());
-                        otroMetadato.setValor(metadato.getValor());
-                        return otroMetadato;
-                    }).collect(Collectors.toSet());
+                Set<OtrosMetadatos> otrosMetadatosGeneral = metadatoRSGeneral.stream()
+                        .map(metadato -> {
+                            OtrosMetadatos otroMetadato = new OtrosMetadatos();
+                            otroMetadato.setCampo(metadato.getCampo());
+                            otroMetadato.setValor(metadato.getValor());
+                            return otroMetadato;
+                        }).collect(Collectors.toSet());
 
-            Set<OtrosMetadatos> otrosMetadatosParticular = metadatoREParticular.stream()
-                    .map(metadato -> {
-                        OtrosMetadatos otroMetadato = new OtrosMetadatos();
-                        otroMetadato.setCampo(metadato.getCampo());
-                        otroMetadato.setValor(metadato.getValor());
-                        return otroMetadato;
-                    }).collect(Collectors.toSet());
+                Set<OtrosMetadatos> otrosMetadatosParticular = metadatoRSParticular.stream()
+                        .map(metadato -> {
+                            OtrosMetadatos otroMetadato = new OtrosMetadatos();
+                            otroMetadato.setCampo(metadato.getCampo());
+                            otroMetadato.setValor(metadato.getValor());
+                            return otroMetadato;
+                        }).collect(Collectors.toSet());
 
-            asientoBean.setOtrosMetadatosGenerales(otrosMetadatosGeneral);
-            asientoBean.setOtrosMetadatosParticulares(otrosMetadatosParticular);
-
+                asientoBean.setOtrosMetadatosGenerales(otrosMetadatosGeneral);
+                asientoBean.setOtrosMetadatosParticulares(otrosMetadatosParticular);
+            }
 
             //INTERESADOS Irá siempre vacio, porque el destinatario va informado en el segmento DeDestino
             /*List<Interesado> interesados = registroDetalle.getInteresados();

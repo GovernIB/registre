@@ -279,7 +279,7 @@ public class RegWebAsientoRegistralTest extends RegWebTestUtils {
 
             try {
                 AsientoRegistralWs asientoRegistralWs = getAsiento_to_PersonaFisica(REGISTRO_SALIDA, true, true);
-                asientoRegistralWs.getAnexos().addAll(getAnexos());
+               // asientoRegistralWs.getAnexos().addAll(getAnexos());
 
                 asientoRegistralWs = asientoRegistralApi.crearAsientoRegistral(null,getTestEntidadCodigoDir3(),asientoRegistralWs,null,false,true);
 

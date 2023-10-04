@@ -67,6 +67,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean implemen
     @EJB private OrganismoLocal organismoEjb;
     @EJB private MultiEntidadLocal multiEntidadEjb;
     @EJB private MetadatoRegistroSalidaLocal metadatoRegistroSalidaEjb;
+    @EJB private MetadatoAnexoLocal metadatoAnexoEjb;
 
 
     @Override
@@ -126,8 +127,16 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean implemen
                 for (AnexoFull anexoFull : anexosFull) {
                     anexoFull.getAnexo().setRegistroDetalle(registroSalida.getRegistroDetalle());
                     AnexoFull anexoFullCreado = anexoEjb.crearAnexo(anexoFull, usuarioEntidad, entidad, registroID, REGISTRO_SALIDA, null, validarAnexos);
-
                     registroSalida.getRegistroDetalle().getAnexos().add(anexoFullCreado.getAnexo());
+
+                    //Asignamos los metadatos al anexo.
+                    Set<MetadatoAnexo> metadatosAnexo = anexoFullCreado.getAnexo().getMetadatosAnexos();
+                    if (metadatosAnexo != null && metadatosAnexo.size() > 0) {
+                        for (MetadatoAnexo metadatoAnexo : metadatosAnexo) {
+                            metadatoAnexo.setAnexo(anexoFullCreado.getAnexo());
+                            metadatoAnexoEjb.persist(metadatoAnexo);
+                        }
+                    }
                 }
                 registroSalida.getRegistroDetalle().getAnexosFull().addAll(anexosFull);
             }

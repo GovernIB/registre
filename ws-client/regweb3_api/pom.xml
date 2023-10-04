@@ -182,135 +182,9 @@
                 <plugins>
 
                     <plugin>
-                        <groupId>org.apache.cxf</groupId>
-                        <artifactId>cxf-java2ws-plugin</artifactId>
-                        <version>${cxf.version}</version>
-                        <dependencies>
-                            <dependency>
-                                <groupId>org.apache.cxf</groupId>
-                                <artifactId>cxf-rt-frontend-jaxws</artifactId>
-                                <version>${cxf.version}</version>
-                            </dependency>
-                            <dependency>
-                                <groupId>org.apache.cxf</groupId>
-                                <artifactId>cxf-rt-frontend-simple</artifactId>
-                                <version>${cxf.version}</version>
-                            </dependency>
-                            <dependency>
-                                <groupId>${project.groupId}</groupId>
-                                <artifactId>regweb3-ws-server</artifactId>
-                                <version>${project.version}</version>
-                                <scope>compile</scope>
-                            </dependency>
-
-                            <dependency>
-                                <groupId>org.fundaciobit.genapp</groupId>
-                                <artifactId>genapp-core</artifactId>
-                                <version>${genapp.version}</version>
-                                <scope>compile</scope>
-                            </dependency>
-
-                            <dependency>
-                                <groupId>${project.groupId}</groupId>
-                                <artifactId>regweb3-model</artifactId>
-                                <version>${project.version}</version>
-                                <scope>compile</scope>
-                            </dependency>
-
-                        </dependencies>
-
-                        <executions>
-
-                            <execution>
-                                <id>generate-wsdl-RegWebInfoWs</id>
-                                <phase>generate-sources</phase>
-                                <configuration>
-                                    <className>es.caib.regweb3.ws.v3.impl.RegWebInfoWs</className>
-                                    <genWsdl>true</genWsdl>
-                                    <verbose>true</verbose>
-                                    <outputFile>${basedir}/src/main/resources/wsdl/RegWebInfo.wsdl</outputFile>
-                                    <argline>-s ${basedir}/code -portname RegWebInfoWs -address
-                                        http://localhost:8080/regweb3/ws/v3/RegWebInfo
-                                    </argline>
-                                </configuration>
-                                <goals>
-                                    <goal>java2ws</goal>
-                                </goals>
-                            </execution>
-                            <execution>
-                                <id>generate-wsdl-RegWebPersonasWs</id>
-                                <phase>generate-sources</phase>
-                                <configuration>
-                                    <className>es.caib.regweb3.ws.v3.impl.RegWebPersonasWs</className>
-                                    <genWsdl>true</genWsdl>
-                                    <verbose>true</verbose>
-                                    <outputFile>${basedir}/src/main/resources/wsdl/RegWebPersonas.wsdl</outputFile>
-                                    <argline>-s ${basedir}/code -portname RegWebPersonasWs -address
-                                        http://localhost:8080/regweb3/ws/v3/RegWebPersonas
-                                    </argline>
-                                </configuration>
-                                <goals>
-                                    <goal>java2ws</goal>
-                                </goals>
-                            </execution>
-                            <execution>
-                                <id>generate-wsdl-RegWebRegistroEntradaWs</id>
-                                <phase>generate-sources</phase>
-                                <configuration>
-                                    <className>es.caib.regweb3.ws.v3.impl.RegWebRegistroEntradaWs</className>
-                                    <genWsdl>true</genWsdl>
-                                    <verbose>true</verbose>
-                                    <outputFile>${basedir}/src/main/resources/wsdl/RegWebRegistroEntrada.wsdl
-                                    </outputFile>
-                                    <argline>-s ${basedir}/code -portname RegWebRegistroEntradaWs -address
-                                        http://localhost:8080/regweb3/ws/v3/RegWebRegistroEntrada
-                                    </argline>
-                                </configuration>
-                                <goals>
-                                    <goal>java2ws</goal>
-                                </goals>
-                            </execution>
-                            <execution>
-                                <id>generate-wsdl-RegWebRegistroSalidaWs</id>
-                                <phase>generate-sources</phase>
-                                <configuration>
-                                    <className>es.caib.regweb3.ws.v3.impl.RegWebRegistroSalidaWs</className>
-                                    <genWsdl>true</genWsdl>
-                                    <verbose>true</verbose>
-                                    <outputFile>${basedir}/src/main/resources/wsdl/RegWebRegistroSalida.wsdl
-                                    </outputFile>
-                                    <argline>-s ${basedir}/code -portname RegWebRegistroSalidaWs -address
-                                        http://localhost:8080/regweb3/ws/v3/RegWebRegistroSalida
-                                    </argline>
-                                </configuration>
-                                <goals>
-                                    <goal>java2ws</goal>
-                                </goals>
-                            </execution>
-                            <execution>
-                                <id>generate-wsdl-RegWebAsientoRegistralWs</id>
-                                <phase>generate-sources</phase>
-                                <configuration>
-                                    <className>es.caib.regweb3.ws.v3.impl.RegWebAsientoRegistralWs</className>
-                                    <genWsdl>true</genWsdl>
-                                    <verbose>true</verbose>
-                                    <outputFile>${basedir}/src/main/resources/wsdl/RegWebAsientoRegistral.wsdl
-                                    </outputFile>
-                                    <argline>-s ${basedir}/code -portname RegWebAsientoRegistralWs -address
-                                        http://localhost:8080/regweb3/ws/v3/RegWebAsientoRegistral
-                                    </argline>
-                                </configuration>
-                                <goals>
-                                    <goal>java2ws</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-
-                    <plugin>
                         <groupId>org.jboss.ws.plugins</groupId>
                         <artifactId>maven-jaxws-tools-plugin</artifactId>
-                        <version>1.1.1.Final</version>
+                        <version>1.1.2.Final</version>
                         <configuration>
                             <verbose>true</verbose>
                             <goalPrefix>wsconsume</goalPrefix>
@@ -331,9 +205,9 @@
                                     <wsdls>
                                         <wsdl>${basedir}/src/main/resources/wsdl/RegWebHelloWorld.wsdl</wsdl>
                                     </wsdls>
-                                    <wsdlLocation>http://localhost:8080/regweb3/ws/v3/RegWebHelloWorld?wsdl
+                                    <wsdlLocation>http://localhost:9080/regweb3/ws/v3/RegWebHelloWorld?wsdl
                                     </wsdlLocation>
-                                    <argLine>-n</argLine>
+                                    <!--<argLine>-n</argLine>-->
                                 </configuration>
                             </execution>
                             <execution>
@@ -347,9 +221,9 @@
                                         </wsdl>
                                     </wsdls>
                                     <wsdlLocation>
-                                        http://localhost:8080/regweb3/ws/v3/RegWebHelloWorldWithSecurity?wsdl
+                                        http://localhost:9080/regweb3/ws/v3/RegWebHelloWorldWithSecurity?wsdl
                                     </wsdlLocation>
-                                    <argLine>-n</argLine>
+                                    <!--<argLine>-n</argLine>-->
                                 </configuration>
                             </execution>
                             <execution>
@@ -361,8 +235,8 @@
                                     <wsdls>
                                         <wsdl>${basedir}/src/main/resources/wsdl/RegWebInfo.wsdl</wsdl>
                                     </wsdls>
-                                    <wsdlLocation>http://localhost:8080/regweb3/ws/v3/RegWebInfo?wsdl</wsdlLocation>
-                                    <argLine>-n</argLine>
+                                    <wsdlLocation>http://localhost:9080/regweb3/ws/v3/RegWebInfo?wsdl</wsdlLocation>
+                                    <!--<argLine>-n</argLine>-->
                                 </configuration>
                             </execution>
                             <execution>
@@ -374,8 +248,8 @@
                                     <wsdls>
                                         <wsdl>${basedir}/src/main/resources/wsdl/RegWebPersonas.wsdl</wsdl>
                                     </wsdls>
-                                    <wsdlLocation>http://localhost:8080/regweb3/ws/v3/RegWebPersonas?wsdl</wsdlLocation>
-                                    <argLine>-n</argLine>
+                                    <wsdlLocation>http://localhost:9080/regweb3/ws/v3/RegWebPersonas?wsdl</wsdlLocation>
+                                    <!--<argLine>-n</argLine>-->
                                 </configuration>
                             </execution>
                             <execution>
@@ -387,9 +261,9 @@
                                     <wsdls>
                                         <wsdl>${basedir}/src/main/resources/wsdl/RegWebRegistroEntrada.wsdl</wsdl>
                                     </wsdls>
-                                    <wsdlLocation>http://localhost:8080/regweb3/ws/v3/RegWebRegistroEntrada?wsdl
+                                    <wsdlLocation>http://localhost:9080/regweb3/ws/v3/RegWebRegistroEntrada?wsdl
                                     </wsdlLocation>
-                                    <argLine>-n</argLine>
+                                    <!--<argLine>-n</argLine>-->
                                 </configuration>
                             </execution>
                             <execution>
@@ -401,9 +275,9 @@
                                     <wsdls>
                                         <wsdl>${basedir}/src/main/resources/wsdl/RegWebRegistroSalida.wsdl</wsdl>
                                     </wsdls>
-                                    <wsdlLocation>http://localhost:8080/regweb3/ws/v3/RegWebRegistroSalida?wsdl
+                                    <wsdlLocation>http://localhost:9080/regweb3/ws/v3/RegWebRegistroSalida?wsdl
                                     </wsdlLocation>
-                                    <argLine>-n</argLine>
+                                    <!--<argLine>-n</argLine>-->
                                 </configuration>
                             </execution>
                             <execution>
@@ -415,9 +289,9 @@
                                     <wsdls>
                                         <wsdl>${basedir}/src/main/resources/wsdl/RegWebAsientoRegistral.wsdl</wsdl>
                                     </wsdls>
-                                    <wsdlLocation>http://localhost:8080/regweb3/ws/v3/RegWebAsientoRegistral?wsdl
+                                    <wsdlLocation>http://localhost:9080/regweb3/ws/v3/RegWebAsientoRegistral?wsdl
                                     </wsdlLocation>
-                                    <argLine>-n</argLine>
+                                    <!--<argLine>-n</argLine>-->
                                 </configuration>
                             </execution>
 

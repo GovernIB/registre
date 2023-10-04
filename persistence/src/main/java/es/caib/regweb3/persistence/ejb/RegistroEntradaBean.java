@@ -70,6 +70,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean implem
     @EJB private OrganismoLocal organismoEjb;
     @EJB private MultiEntidadLocal multiEntidadEjb;
     @EJB private MetadatoRegistroEntradaLocal metadatoRegistroEntradaEjb;
+    @EJB private MetadatoAnexoLocal metadatoAnexoEjb;
 
 
     @Override
@@ -136,6 +137,15 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean implem
                         anexoFullCreado = anexoEjb.crearAnexoConfidencial(anexoFull, usuarioEntidad, entidad, registroID, REGISTRO_ENTRADA);
                     }
                     registroEntrada.getRegistroDetalle().getAnexos().add(anexoFullCreado.getAnexo());
+
+                    //Asignamos los metadatos al anexo.
+                    Set<MetadatoAnexo> metadatosAnexo = anexoFullCreado.getAnexo().getMetadatosAnexos();
+                    if (metadatosAnexo != null && metadatosAnexo.size() > 0) {
+                        for (MetadatoAnexo metadatoAnexo : metadatosAnexo) {
+                            metadatoAnexo.setAnexo(anexoFullCreado.getAnexo());
+                            metadatoAnexoEjb.persist(metadatoAnexo);
+                        }
+                    }
                 }
 
                 registroEntrada.getRegistroDetalle().getAnexosFull().addAll(anexosFull);
