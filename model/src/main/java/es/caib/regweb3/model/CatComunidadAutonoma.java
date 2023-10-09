@@ -124,7 +124,6 @@ public class CatComunidadAutonoma implements Serializable {
         int hash = 7;
         hash = 37 * hash + (this.codigoComunidad != null ? this.codigoComunidad.hashCode() : 0);
         hash = 37 * hash + (this.descripcionComunidad != null ? this.descripcionComunidad.hashCode() : 0);
-        hash = 37 * hash + (this.pais != null ? this.pais.hashCode() : 0);
         hash = 37 * hash + (this.c_comunidad_rpc != null ? this.c_comunidad_rpc.hashCode() : 0);
         hash = 37 * hash + (this.c_codigo_dir2 != null ? this.c_codigo_dir2.hashCode() : 0);
         return hash;
@@ -143,9 +142,6 @@ public class CatComunidadAutonoma implements Serializable {
             return false;
         }
         if ((this.descripcionComunidad == null) ? (other.descripcionComunidad != null) : !this.descripcionComunidad.equals(other.descripcionComunidad)) {
-            return false;
-        }
-        if (this.pais != other.pais && (this.pais == null || !this.pais.equals(other.pais))) {
             return false;
         }
         if ((this.c_comunidad_rpc == null) ? (other.c_comunidad_rpc != null) : !this.c_comunidad_rpc.equals(other.c_comunidad_rpc)) {
