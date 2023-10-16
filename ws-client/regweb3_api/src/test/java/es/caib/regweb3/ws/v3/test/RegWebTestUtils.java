@@ -503,9 +503,9 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
         personaFisica.setProvincia((long) 7);
         personaFisica.setCp("07010");
         personaFisica.setTelefonoMovil("678345123");
-        personaFisica.setReceptorNotificaciones(false);
+       /* personaFisica.setReceptorNotificaciones(false);
         personaFisica.setAvisoNotificacionSMS(true);
-        personaFisica.setAvisoCorreoElectronico(true);
+        personaFisica.setAvisoCorreoElectronico(true);*/
 
         return personaFisica;
     }
@@ -583,7 +583,7 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
       Define un interesado de tipo administración como administración externa
      */
     public DatosInteresadoWs getAdministracionExterna(){
-        return getAdministracion("Ajuntament d'Escorca","L01070197");
+        return getAdministracion("Parlament de les Illes Balears","I00000201");
     }
 
 
@@ -920,6 +920,45 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
      *
      */
 
+
+    /**
+     *
+     *
+     * @return
+     */
+    private RegistroSalidaWs getDatosComunesRegistroSalida(){
+
+        RegistroSalidaWs registroSalidaWs = new RegistroSalidaWs();
+
+        registroSalidaWs.setOrigen(getTestOrigenCodigoDir3());
+        registroSalidaWs.setOficina(getTestOficinaOrigenCodigoDir3());
+        registroSalidaWs.setLibro(getTestDestinoLibro());
+
+        registroSalidaWs.setExtracto(System.currentTimeMillis() + " probando ws");
+        registroSalidaWs.setDocFisica((long) 1);
+        registroSalidaWs.setIdioma("es");
+        registroSalidaWs.setTipoAsunto(getTestTipoAsunto());
+        registroSalidaWs.setCodigoAsunto("23");
+
+        registroSalidaWs.setAplicacion("WsTest");
+        registroSalidaWs.setVersion("1");
+
+        registroSalidaWs.setCodigoUsuario(getTestUserName());
+        registroSalidaWs.setContactoUsuario("earrivi@fundaciobit.org");
+
+        registroSalidaWs.setNumExpediente("");
+        registroSalidaWs.setNumTransporte("");
+        registroSalidaWs.setObservaciones("");
+
+        registroSalidaWs.setRefExterna("");
+        registroSalidaWs.setTipoTransporte("");
+
+        registroSalidaWs.setExpone("expone");
+        registroSalidaWs.setSolicita("solicita");
+
+        return registroSalidaWs;
+    }
+
     /**
      *
      *
@@ -968,6 +1007,40 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
 
         // Datos comunes
         RegistroEntradaWs registro = getDatosComunesRegistroEntrada();
+
+        // Interesados
+        InteresadoWs interesadoWs = new InteresadoWs();
+
+        // Interesado persona fisica principal
+        interesadoWs.setInteresado(getPersonaFisica());
+
+        // Representante persona fisica
+        if(representante){
+            interesadoWs.setRepresentante(getRepresentante(TIPO_INTERESADO_PERSONA_FISICA));
+        }
+
+        registro.getInteresados().add(interesadoWs);
+
+        try {
+            registro.getAnexos().addAll(getAnexos());
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return registro;
+    }
+
+
+    /**
+     *
+     *
+     * @param representante
+     * @return
+     */
+    public RegistroSalidaWs getRegistroSalida_to_PersonaFisica( Boolean representante) {
+
+        // Datos comunes
+        RegistroSalidaWs registro = getDatosComunesRegistroSalida();
 
         // Interesados
         InteresadoWs interesadoWs = new InteresadoWs();

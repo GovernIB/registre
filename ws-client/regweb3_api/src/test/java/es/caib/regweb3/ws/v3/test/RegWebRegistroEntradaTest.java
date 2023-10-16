@@ -29,7 +29,8 @@ public class RegWebRegistroEntradaTest extends RegWebTestUtils {
      */
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
-        setEntorno("_localhost_PRO");
+        //setEntorno("_localhost_PRO");
+        setEntorno("_localhost");
         registroEntradaApi = getRegistroEntradaApi();
     }
 
@@ -185,6 +186,7 @@ public class RegWebRegistroEntradaTest extends RegWebTestUtils {
             interesado.setApellido1("González");
             interesado.setCanal((long) 1);
             interesado.setDireccion("Avenida picasso");
+            interesado.setCp("07001");
             interesado.setLocalidad((long) 407);
             interesado.setPais((long) 724);
             interesado.setProvincia((long) 7);

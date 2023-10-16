@@ -20,7 +20,8 @@ public class RegWebRegistroSalidaTest extends RegWebTestUtils{
      */
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
-        setEntorno("_localhost_PRO");
+        //setEntorno("_localhost_PRO");
+        setEntorno("_localhost");
         registroSalidaApi = getRegistroSalidaApi();
     }
 
@@ -105,7 +106,7 @@ public class RegWebRegistroSalidaTest extends RegWebTestUtils{
 
         RegistroSalidaWs registroSalidaWs = new RegistroSalidaWs();
 
-        registroSalidaWs.setOrigen(getTestDestinoCodigoDir3());
+        registroSalidaWs.setOrigen(getTestOrigenCodigoDir3());
         registroSalidaWs.setOficina(getTestOficinaOrigenCodigoDir3());
         registroSalidaWs.setLibro(getTestDestinoLibro());
 
@@ -193,4 +194,26 @@ public class RegWebRegistroSalidaTest extends RegWebTestUtils{
         }
 
     }}
+
+
+    @Test
+    public void crearRegistroSalida2() {
+        try {
+
+            for (int i = 0; i < 1; i++) {
+                RegistroSalidaWs registroSalidaWs = getRegistroSalida_to_PersonaFisica(false);
+                IdentificadorWs identificadorWs = registroSalidaApi.nuevoRegistroSalida(getTestEntidadCodigoDir3(), registroSalidaWs);
+
+                printIdentificadorWSBasico(identificadorWs);
+            }
+
+
+        } catch (WsI18NException e) {
+            String msg = WsClientUtils.toString(e);
+            System.out.println("Error WsI18NException: " + msg);
+        } catch (WsValidationException e) {
+            String msg = WsClientUtils.toString(e);
+            System.out.println("Error WsValidationException: " + msg);
+        }
+    }
 }

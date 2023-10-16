@@ -242,7 +242,6 @@ public class RegWebAsientoRegistralTest extends RegWebTestUtils {
             }
         }
     }
-
     /**
      * Tipo comunicación:
      *                    1-  Si va dirigido a una Persona física o jurídica se crea el justificante y se marca como REGISTRO_VALIDO
@@ -363,7 +362,8 @@ public class RegWebAsientoRegistralTest extends RegWebTestUtils {
 
         try {
 
-            JustificanteReferenciaWs just = asientoRegistralApi.obtenerReferenciaJustificante(getTestEntidadCodigoDir3(),"L18E256/2020");
+            //JustificanteReferenciaWs just = asientoRegistralApi.obtenerReferenciaJustificante(getTestEntidadCodigoDir3(),"L18E256/2020");
+            JustificanteReferenciaWs just = asientoRegistralApi.obtenerReferenciaJustificante(getTestEntidadCodigoDir3(),"GPRO-E-132/2023");
 
             System.out.println("Justificante csv: " + just.getCsv());
             System.out.println("Justificante: url: " + just.getUrl());
@@ -402,7 +402,7 @@ public class RegWebAsientoRegistralTest extends RegWebTestUtils {
     public void distribuirAsientoregistral() throws Exception{
 
         try {
-            AsientoRegistralWs entrada = getAsiento_to_AdministracionExterna(REGISTRO_SALIDA, false);
+            AsientoRegistralWs entrada = getAsiento_to_PersonaFisica(REGISTRO_ENTRADA, false, false);
             entrada = asientoRegistralApi.crearAsientoRegistral(null,getTestEntidadCodigoDir3(), entrada,null,true,false);
 
             asientoRegistralApi.distribuirAsientoRegistral(getTestEntidadCodigoDir3(),entrada.getNumeroRegistroFormateado());
@@ -412,7 +412,7 @@ public class RegWebAsientoRegistralTest extends RegWebTestUtils {
         }
     }
 
-    @Test
+    @Test //TODO Revisar este test porque no se crea oficio de remisión externo.
     public void obtenerOficioExterno() {
 
         try {
