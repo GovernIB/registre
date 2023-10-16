@@ -179,10 +179,13 @@ public class AsientoRegistralConverter extends CommonConverter {
          }
 
          //Metadatos
-         Set<MetadatoWs> metadatos = registroEntrada.getMetadatosRegistroEntrada().stream()
-                 .map(metadato -> new MetadatoWs(metadato.getTipo(), metadato.getCampo(), metadato.getValor()) {
-                 }).collect(Collectors.toSet());
-         asientoRegistral.setMetadatos(metadatos);
+         Set<MetadatoRegistroEntrada> metadatosRE = registroEntrada.getMetadatosRegistroEntrada();
+         if(metadatosRE!=null) {
+            Set<MetadatoWs> metadatos = metadatosRE.stream()
+                    .map(metadato -> new MetadatoWs(metadato.getTipo(), metadato.getCampo(), metadato.getValor()) {
+                    }).collect(Collectors.toSet());
+            asientoRegistral.setMetadatos(metadatos);
+         }
 
       }else {
 
@@ -198,10 +201,13 @@ public class AsientoRegistralConverter extends CommonConverter {
          }
 
          //Metadatos
-         Set<MetadatoWs> metadatos = registroSalida.getMetadatosRegistroSalida().stream()
-                 .map(metadato -> new MetadatoWs(metadato.getTipo(), metadato.getCampo(), metadato.getValor()) {
-                 }).collect(Collectors.toSet());
-         asientoRegistral.setMetadatos(metadatos);
+         Set<MetadatoRegistroSalida> metadatosRS = registroSalida.getMetadatosRegistroSalida();
+         if(metadatosRS!=null) {
+            Set<MetadatoWs> metadatos = metadatosRS.stream()
+                    .map(metadato -> new MetadatoWs(metadato.getTipo(), metadato.getCampo(), metadato.getValor()) {
+                    }).collect(Collectors.toSet());
+            asientoRegistral.setMetadatos(metadatos);
+         }
       }
 
 
