@@ -31,10 +31,10 @@ public class DatosInteresadoWs implements Serializable {
     private String observaciones;
 
     //SICRES4
-    private Boolean receptorNotificaciones;
+    private Boolean receptorNotificaciones = false;
     private String telefonoMovil;
-    private Boolean avisoNotificacionSMS;
-    private Boolean avisoCorreoElectronico;
+    private Boolean avisoNotificacionSMS = false;
+    private Boolean avisoCorreoElectronico = false;
 
     public Long getTipoInteresado() {
         return tipoInteresado;
