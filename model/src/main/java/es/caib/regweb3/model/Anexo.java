@@ -521,6 +521,7 @@ public class Anexo implements Serializable {
             cascade = {CascadeType.ALL},
             targetEntity = MetadatoAnexo.class
     )
+    @JsonIgnore
     public Set<MetadatoAnexo> getMetadatosAnexos() {
         return metadatoAnexos;
     }
