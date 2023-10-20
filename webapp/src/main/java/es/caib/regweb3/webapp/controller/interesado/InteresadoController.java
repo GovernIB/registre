@@ -378,18 +378,20 @@ public class InteresadoController extends BaseController{
         interesadoValidator.validate(interesado, result);
 
         //Validamos que haya al menos un interesado como receptor de Notificaciones (obligatorio en Sicres 4)
-        RegistroDetalle registroDetalle = registroDetalleEjb.findByIdConInteresados(Long.valueOf(idRegistroDetalle));
-        boolean tieneReceptor = false;
-        if (registroDetalle != null && registroDetalle.getInteresados().size() > 0) {
-            for (Interesado interesado1 : registroDetalle.getInteresados()) {
-                if (interesado1.getReceptorNotificaciones()) {
-                    tieneReceptor = true;
-                    break;
+        if(!idRegistroDetalle.equals("null")) {
+            RegistroDetalle registroDetalle = registroDetalleEjb.findByIdConInteresados(Long.valueOf(idRegistroDetalle));
+            boolean tieneReceptor = false;
+            if (registroDetalle != null && registroDetalle.getInteresados().size() > 0) {
+                for (Interesado interesado1 : registroDetalle.getInteresados()) {
+                    if (interesado1.getReceptorNotificaciones()) {
+                        tieneReceptor = true;
+                        break;
+                    }
                 }
-            }
-            //Si no hay ninguno marcado como receptor, marcamos el primero por defecto.
-            if (!tieneReceptor) {
-                registroDetalle.getInteresados().get(0).setReceptorNotificaciones(true);
+                //Si no hay ninguno marcado como receptor, marcamos el primero por defecto.
+                if (!tieneReceptor) {
+                    registroDetalle.getInteresados().get(0).setReceptorNotificaciones(true);
+                }
             }
         }
 
