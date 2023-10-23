@@ -506,7 +506,7 @@ public class AnexoController extends BaseController {
      */
     protected void loadCommonAttributes(HttpServletRequest request, Model model, Boolean scan) throws I18NException {
         model.addAttribute("tiposDocumental", tipoDocumentalEjb.getByEntidad(getEntidadActiva(request).getId()));
-        model.addAttribute("tiposDocumentoAnexo", RegwebConstantes.TIPOS_DOCUMENTO);
+        model.addAttribute("tiposDocumentoAnexo", RegwebConstantes.TIPOS_DOCUMENTO_REGISTRO_PRESENCIAL);
         model.addAttribute("tiposFirma", RegwebConstantes.TIPOS_FIRMA);
 
         // Tipos Validez según casuistica
