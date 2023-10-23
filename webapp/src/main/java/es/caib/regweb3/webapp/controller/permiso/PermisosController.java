@@ -2,6 +2,7 @@ package es.caib.regweb3.webapp.controller.permiso;
 
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.persistence.ejb.LibroLocal;
+import es.caib.regweb3.persistence.ejb.PermisoLibroUsuarioLocal;
 import es.caib.regweb3.persistence.ejb.UsuarioLocal;
 import es.caib.regweb3.persistence.utils.RolUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
@@ -39,6 +40,9 @@ public class PermisosController extends BaseController {
 
     @EJB(mappedName = LibroLocal.JNDI_NAME)
     private LibroLocal libroEjb;
+
+    @EJB(mappedName = PermisoLibroUsuarioLocal.JNDI_NAME)
+    private PermisoLibroUsuarioLocal permisoLibroUsuarioEjb;
 
 
     /**
@@ -233,6 +237,7 @@ public class PermisosController extends BaseController {
 
             // Eliminamos todos sus PermisoLibroUsuario
             permisoOrganismoUsuarioEjb.eliminarByUsuario(idUsuarioEntidad);
+            permisoLibroUsuarioEjb.eliminarByUsuario(idUsuarioEntidad); // Permisos antiguos, ants de Libro único
 
             // Comprobar si el usuario tiene Registros en la Entidad
             if (entidadEjb.puedoEliminarlo(idUsuarioEntidad)) {

@@ -100,6 +100,13 @@ public class PermisoLibroUsuarioBean extends BaseEjbJPA<PermisoLibroUsuario, Lon
     }
 
     @Override
+    public void eliminarByUsuario(Long idUsuarioEntidad) throws Exception {
+
+        em.createQuery("delete from PermisoLibroUsuario where usuario.id=:idUsuarioEntidad ").setParameter("idUsuarioEntidad", idUsuarioEntidad).executeUpdate();
+
+    }
+
+    @Override
     public Integer eliminarByEntidad(Long idEntidad) throws I18NException {
 
         List<?> plus = em.createQuery("select distinct(plu.id) from PermisoLibroUsuario as plu where plu.usuario.entidad.id =:idEntidad").setParameter("idEntidad", idEntidad).getResultList();

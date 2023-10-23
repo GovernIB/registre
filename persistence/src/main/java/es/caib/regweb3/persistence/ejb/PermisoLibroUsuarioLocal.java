@@ -27,6 +27,12 @@ public interface PermisoLibroUsuarioLocal extends BaseEjb<PermisoLibroUsuario, L
      */
     List<PermisoLibroUsuario> findByLibro(Long idLibro) throws I18NException;
 
+    /**
+     *
+     * @param idUsuarioEntidad
+     * @throws Exception
+     */
+    void eliminarByUsuario(Long idUsuarioEntidad) throws Exception;
 
     /**
      * Elimina las PermisoLibroUsuario de una Entidad
