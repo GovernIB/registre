@@ -94,6 +94,8 @@ function gestionarRepresentante(idRepresentante,idRepresentado,urlEditar){
 
                 // Activamos o deshabilitamos campos según el TipoPersona escogido
                 tipoInteresadoRepresentante();
+                // Gestión de los cambios del Canal de Notificación
+                actualizarCanalNotificacion();
 
             }
         });

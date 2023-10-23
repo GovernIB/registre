@@ -184,15 +184,20 @@ public class PersonaController extends BaseController {
      * Editar un {@link es.caib.regweb3.model.Persona}
      */
     @RequestMapping(value = "/{personaId}/edit", method = RequestMethod.POST)
-    public String editarPersona(@ModelAttribute @Valid Persona persona, BindingResult result,
-                                SessionStatus status, HttpServletRequest request) {
+    public String editarPersona(@ModelAttribute @Valid Persona persona, BindingResult result, Model model, SessionStatus status, HttpServletRequest request) throws Exception{
 
         cleanEmptyValues(persona);
-
 
         personaValidator.validate(persona, result);
 
         if (result.hasErrors()) { // Si hay errores volvemos a la vista del formulario
+
+            model.addAttribute("tiposDocumento", RegwebConstantes.TIPOS_DOCUMENTOID);
+            model.addAttribute("tiposPersona", RegwebConstantes.TIPOS_PERSONA);
+            model.addAttribute("canales", RegwebConstantes.CANALES_NOTIFICACION);
+            model.addAttribute("provincias", catProvinciaEjb.getAll());
+            model.addAttribute("paises", catPaisEjb.getAll());
+
             return "persona/personaForm";
         } else { // Si no hay errores actualizamos el registro
 
