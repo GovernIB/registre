@@ -621,10 +621,17 @@ public interface RegwebConstantes {
     String TIPO_DOCUMENTO_DOC_ADJUNTO_SICRES = "02";
     String TIPO_DOCUMENTO_FICHERO_TECNICO_SICRES = "03";
 
+    /* -------- TIPO DOCUMENTO ---------- */
     Long[] TIPOS_DOCUMENTO = {
             TIPO_DOCUMENTO_FORMULARIO,
             TIPO_DOCUMENTO_DOC_ADJUNTO,
             TIPO_DOCUMENTO_FICHERO_TECNICO
+    };
+
+    /* -------- TIPO DOCUMENTO PARA REGISTROS PRESENCIALES ---------- */
+    Long[] TIPOS_DOCUMENTO_REGISTRO_PRESENCIAL = {
+            TIPO_DOCUMENTO_FORMULARIO,
+            TIPO_DOCUMENTO_DOC_ADJUNTO
     };
 
     Map<Long, String> CODIGO_SICRES_BY_TIPO_DOCUMENTO = new HashMap<Long, String>() {{
