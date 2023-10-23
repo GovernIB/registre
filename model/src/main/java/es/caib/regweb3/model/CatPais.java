@@ -1,5 +1,7 @@
 package es.caib.regweb3.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 import javax.xml.bind.annotation.*;
 import java.io.Serializable;
@@ -14,6 +16,7 @@ import java.io.Serializable;
 @SequenceGenerator(name = "generator", sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
 @XmlRootElement(name = "pais")
 @XmlAccessorType(XmlAccessType.FIELD)
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class CatPais implements Serializable {
 
     @XmlAttribute

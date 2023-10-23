@@ -487,14 +487,9 @@ public class InteresadoController extends BaseController{
 
         try {
 
+            // Creamos el representante a partir de la Persona seleccionada
             Interesado representante = new Interesado(personaEjb.findById(idRepresentante));
             representante.setIsRepresentante(true);
-
-            //Creamos la respuesta
-            PersonaJson personaJson = new PersonaJson();
-            personaJson.setId(representante.getId().toString());
-            personaJson.setNombre(representante.getNombreCompleto());
-            jsonResponse.setResult(personaJson);
 
             if(idRegistroDetalle == null){ // Sesion
 
@@ -528,6 +523,12 @@ public class InteresadoController extends BaseController{
                 // Plug-in de Post-Proceso
                 interesadoEjb.postProcesoActualizarInteresado(representado, idRegistroDetalle, tipoRegistro,entidadActiva.getId());
             }
+
+            //Creamos la respuesta
+            PersonaJson personaJson = new PersonaJson();
+            personaJson.setId(representante.getId().toString());
+            personaJson.setNombre(representante.getNombreCompleto());
+            jsonResponse.setResult(personaJson);
 
         } catch(I18NException i18ne) {
           log.error(I18NUtils.getMessage(i18ne), i18ne);
@@ -896,6 +897,7 @@ public class InteresadoController extends BaseController{
 
         String variableSesion = (tipoRegistro.equals(REGISTRO_ENTRADA) ? RegwebConstantes.SESSION_INTERESADOS_ENTRADA:RegwebConstantes.SESSION_INTERESADOS_SALIDA);
 
+        log.info("Interesado: " + id);
         Interesado interesado = interesadoEjb.findById(id);
 
         if(interesado == null) {
