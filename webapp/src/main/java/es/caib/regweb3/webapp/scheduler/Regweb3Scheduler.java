@@ -139,9 +139,9 @@ public class Regweb3Scheduler {
 
     /**
      * Qué hace: Envía a la cola de distribución los registros que cumples con los requisitos
-     * Cuando lo hace: Cada 10 minutos desde las 01:00 hasta las 06:00
+     * Cuando lo hace: Cada 30 minutos desde las 01:00 hasta las 06:00
      */
-    @Scheduled(cron = "0 0/10 1,2,3,4,5,6 * * *")
+    @Scheduled(cron = "0 0/30 1,2,3,4,5,6 * * *")
     //@Scheduled(fixedDelay = 180000) // 3 minutos
     public void distribucionAutomatica(){
 
