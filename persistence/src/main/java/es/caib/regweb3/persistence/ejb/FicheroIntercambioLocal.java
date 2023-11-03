@@ -23,7 +23,7 @@ public interface FicheroIntercambioLocal {
      * @param ficheroIntercambio
      * @throws I18NException
      */
-    RespuestaRecepcionSir procesarFicheroIntercambio(FicheroIntercambio ficheroIntercambio) throws I18NException;
+    RespuestaRecepcionSir procesarFicheroIntercambio(FicheroIntercambio ficheroIntercambio) throws Exception;
 
 }
 
