@@ -920,7 +920,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
         }catch (CustodyException | MetadataFormatException | NotSupportedCustodyException c){
             log.info("Error custodiando un anexo (CustodyException): " + c.getMessage());
-            throw new I18NException("Ha ocurrido un errro custodianto un anexo");
+            throw new I18NException("anexo.error.guardando", custodyID);
         }
 
     }

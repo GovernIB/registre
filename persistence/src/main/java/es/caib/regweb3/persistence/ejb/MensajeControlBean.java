@@ -420,7 +420,7 @@ public class MensajeControlBean extends BaseEjbJPA<MensajeControl, Long> impleme
             case (RegwebConstantes.OFICIO_SIR_REENVIADO_ERROR):
 
                 log.info("Se ha recibido un mensaje de error duplicado con identificador: " + oficioRemision.getIdentificadorIntercambio());
-                throw new ValidacionException(Errores.ERROR_0037, "Se ha recibido un mensaje de error duplicado con identificador: " + oficioRemision.getIdentificadorIntercambio());
+                //throw new ValidacionException(Errores.ERROR_0037, "Se ha recibido un mensaje de error duplicado con identificador: " + oficioRemision.getIdentificadorIntercambio());
 
         }
     }
@@ -446,7 +446,7 @@ public class MensajeControlBean extends BaseEjbJPA<MensajeControl, Long> impleme
                 EstadoRegistroSir.RECHAZADO_Y_ERROR.equals(registroSir.getEstado())) {
 
             log.info("Se ha recibido un mensaje de error duplicado con identificador: " + registroSir.getIdentificadorIntercambio());
-            throw new ValidacionException(Errores.ERROR_0037, "Se ha recibido un mensaje de error duplicado con identificador: " + registroSir.getIdentificadorIntercambio());
+            //throw new ValidacionException(Errores.ERROR_0037, "Se ha recibido un mensaje de error duplicado con identificador: " + registroSir.getIdentificadorIntercambio());
 
         }
     }

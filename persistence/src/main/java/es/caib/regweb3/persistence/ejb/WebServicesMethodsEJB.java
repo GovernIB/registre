@@ -36,7 +36,7 @@ public class WebServicesMethodsEJB implements WebServicesMethodsLocal {
     }
 
     @Override
-    public RespuestaRecepcionSir procesarFicheroIntercambio(FicheroIntercambio ficheroIntercambio) throws I18NException {
+    public RespuestaRecepcionSir procesarFicheroIntercambio(FicheroIntercambio ficheroIntercambio) throws Exception {
         return ficheroIntercambioEjb.procesarFicheroIntercambio(ficheroIntercambio);
     }
 

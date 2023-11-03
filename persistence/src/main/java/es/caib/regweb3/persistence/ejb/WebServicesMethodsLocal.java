@@ -35,7 +35,7 @@ public interface WebServicesMethodsLocal {
      * @param ficheroIntercambio
      * @throws I18NException
      */
-    RespuestaRecepcionSir procesarFicheroIntercambio(FicheroIntercambio ficheroIntercambio) throws I18NException;
+    RespuestaRecepcionSir procesarFicheroIntercambio(FicheroIntercambio ficheroIntercambio) throws Exception;
 
     /**
      * Elimina un RegistroSir creado
