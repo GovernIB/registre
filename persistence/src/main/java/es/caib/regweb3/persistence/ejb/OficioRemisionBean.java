@@ -649,7 +649,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
     public List<Long> getEnviadosSinAck(Long idEntidad) throws I18NException {
 
         Query q = em.createQuery("Select oficioRemision.id from OficioRemision as oficioRemision where (oficioRemision.estado = :enviado or oficioRemision.estado = :reenviado) " +
-                "and oficioRemision.entidad.id = :idEntidad and oficioRemision.numeroReintentos < :maxReintentos order by id");
+                "and oficioRemision.entidad.id = :idEntidad and oficioRemision.sir=true and oficioRemision.numeroReintentos < :maxReintentos order by id");
 
         q.setParameter("enviado", RegwebConstantes.OFICIO_SIR_ENVIADO);
         q.setParameter("reenviado", RegwebConstantes.OFICIO_SIR_REENVIADO);
@@ -664,7 +664,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
     @SuppressWarnings(value = "unchecked")
     public List<Long> getEnviadosConError(Long idEntidad) throws I18NException {
 
-        Query q = em.createQuery("Select oficioRemision.id from OficioRemision as oficioRemision where oficioRemision.entidad.id = :idEntidad " +
+        Query q = em.createQuery("Select oficioRemision.id from OficioRemision as oficioRemision where oficioRemision.entidad.id = :idEntidad and oficioRemision.sir=true " +
                 "and (oficioRemision.estado = :enviadoError or oficioRemision.estado = :reenviadoError) " +
                 "and (oficioRemision.codigoError = '0039' or oficioRemision.codigoError = '0046' or oficioRemision.codigoError = '0057' or oficioRemision.codigoError = '0065' " +
                 "or oficioRemision.codigoError = '0063' or oficioRemision.codigoError = '0058' or oficioRemision.codigoError = '0068' or oficioRemision.codigoError = '0043' " +
@@ -684,7 +684,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
     public List<OficioRemision> getEnviadosSinAckMaxReintentos(Long idEntidad) throws I18NException {
 
         Query q = em.createQuery("Select oficioRemision.fecha, oficioRemision.identificadorIntercambio, oficioRemision.tipoOficioRemision from OficioRemision as oficioRemision where (oficioRemision.estado = :enviado or oficioRemision.estado = :reenviado) " +
-                "and oficioRemision.entidad.id = :idEntidad and oficioRemision.numeroReintentos = :maxReintentos");
+                "and oficioRemision.entidad.id = :idEntidad and oficioRemision.sir=true and oficioRemision.numeroReintentos = :maxReintentos");
 
         q.setParameter("enviado", RegwebConstantes.OFICIO_SIR_ENVIADO);
         q.setParameter("reenviado", RegwebConstantes.OFICIO_SIR_REENVIADO);
@@ -708,7 +708,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
     public List<OficioRemision> getEnviadosErrorMaxReintentos(Long idEntidad) throws I18NException {
 
         Query q = em.createQuery("Select oficioRemision.fecha, oficioRemision.identificadorIntercambio, oficioRemision.tipoOficioRemision from OficioRemision as oficioRemision where (oficioRemision.estado = :enviadoError or oficioRemision.estado = :reenviadoError) " +
-                "and oficioRemision.entidad.id = :idEntidad and oficioRemision.numeroReintentos = :maxReintentos");
+                "and oficioRemision.entidad.id = :idEntidad and oficioRemision.sir=true and oficioRemision.numeroReintentos = :maxReintentos");
 
         q.setParameter("enviadoError", RegwebConstantes.OFICIO_SIR_ENVIADO_ERROR);
         q.setParameter("reenviadoError", RegwebConstantes.OFICIO_SIR_REENVIADO_ERROR);
