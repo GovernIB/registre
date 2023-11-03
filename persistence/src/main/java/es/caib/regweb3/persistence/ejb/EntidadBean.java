@@ -3,6 +3,7 @@ package es.caib.regweb3.persistence.ejb;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.utils.RegwebConstantes;
 import org.fundaciobit.genapp.common.i18n.I18NException;
+import org.fundaciobit.plugins.documentcustody.api.IDocumentCustodyPlugin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,6 +15,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 import java.util.Set;
 
 /**
@@ -541,6 +543,22 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
     @Override
     public boolean isMultiEntidad() throws I18NException {
         return em.createQuery("Select entidad.id from Entidad as entidad where entidad.sir = true order by entidad.id").getResultList().size() > 1;
+    }
+
+    @Override
+    public Boolean isJustificanteCustodiadoLocal(Long idEntidad) throws I18NException {
+
+        IDocumentCustodyPlugin documentCustodyPlugin = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE);
+
+        if(documentCustodyPlugin != null){
+
+            Properties properties = pluginEjb.getPropertiesPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE);
+            String custodiadoLocal = properties.getProperty(RegwebConstantes.REGWEB3_PROPERTY_BASE+"plugins.documentcustody.filesystem.custodiadoLocal");
+
+            return "true".equals(custodiadoLocal);
+        }
+
+        return false;
     }
 
 }
