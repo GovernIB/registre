@@ -245,11 +245,12 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
     @RequestMapping(value = "/registroEntrada/{idRegistro}/marcarDistribuido", method = RequestMethod.GET)
     public String marcarDistribuido(@PathVariable Long idRegistro, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
 
+        UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
         RegistroEntrada registro = registroEntradaEjb.findByIdCompleto(idRegistro);
 
         // Justificante
         if (registro.getRegistroDetalle().getTieneJustificanteCustodiado()) {
-            registroEntradaEjb.marcarDistribuido(registro, I18NUtils.tradueix("distribucion.cola"));
+            registroEntradaEjb.marcarDistribuido(registro, usuarioEntidad, I18NUtils.tradueix("distribucion.cola"));
             Mensaje.saveMessageInfo(request, getMessage("registroEntrada.distribuir.ok"));
         }
 
