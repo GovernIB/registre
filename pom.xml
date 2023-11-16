@@ -36,7 +36,7 @@
         <plugin-documentcustody-arxiudigitalcaib.version>4.0.3</plugin-documentcustody-arxiudigitalcaib.version>
         <genapp.version>2.0.0-SNAPSHOT</genapp.version>
         <pluginsib-core.version>2.0.0</pluginsib-core.version>
-        <pluginsib-validatesignature-api>2.0.0</pluginsib-validatesignature-api>
+        <pluginsib-validatesignature-api>2.1.0-SNAPSHOT</pluginsib-validatesignature-api>
         <pluginsib-signatureserver-api>3.1.0-SNAPSHOT</pluginsib-signatureserver-api>
         <pluginsib-signatureserver-miniappletinserver>3.0.0</pluginsib-signatureserver-miniappletinserver>
         <pluginsib-signatureserver-afirmaserver>3.1.0-SNAPSHOT</pluginsib-signatureserver-afirmaserver>
@@ -47,13 +47,13 @@
         <carpeta-api-interna-client.version>1.1</carpeta-api-interna-client.version>
         <scanweb.api.version>4.0.0</scanweb.api.version>
         <cxf.version>3.3.3</cxf.version>
-        <pluginsib-validatesignature-afirmacxf.version>2.0.5</pluginsib-validatesignature-afirmacxf.version>
+        <pluginsib-validatesignature-afirmacxf.version>2.1.0-SNAPSHOT</pluginsib-validatesignature-afirmacxf.version>
         <slf4j.version>1.7.22.redhat-2</slf4j.version>
         <jaxws-api.version>2.3.1</jaxws-api.version>
         <!--Otros-->
         <version.txt.template.file>./scripts/templates/versio.txt.template</version.txt.template.file>
         <version.txt.file>./versio.txt</version.txt.file>
-        <timestamp>${maven.build.timestamp}</timestamp>
+        <!--<timestamp>${maven.build}</timestamp>-->
         <maven.build.timestamp.format>yyyy-MM-dd HH:mm</maven.build.timestamp.format>
     </properties>
 
@@ -491,6 +491,26 @@
                             <goal>site</goal>
                         </goals>
                         <phase>deploy</phase>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>1.10</version>
+                <executions>
+                    <execution>
+                        <id>timestamp-property</id>
+                        <goals>
+                            <goal>timestamp-property</goal>
+                        </goals>
+                        <configuration>
+                            <name>timestamp</name>
+                            <pattern>dd-MM-yyyy HH:mm</pattern>
+                            <locale>es_ES</locale>
+                            <timeZone>Europe/Madrid</timeZone>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
