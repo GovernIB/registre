@@ -3,6 +3,7 @@ package es.caib.regweb3.webapp.controller.cola;
 import es.caib.regweb3.model.Cola;
 import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.model.RegistroEntrada;
+import es.caib.regweb3.model.UsuarioEntidad;
 import es.caib.regweb3.persistence.ejb.ColaLocal;
 import es.caib.regweb3.persistence.ejb.CustodiaLocal;
 import es.caib.regweb3.persistence.ejb.DistribucionLocal;
@@ -155,9 +156,10 @@ public class ColaController extends BaseController {
     public String distribuirRegistro(@PathVariable Long idCola, HttpServletRequest request) throws Exception {
 
         Entidad entidadActiva = getEntidadActiva(request);
+        UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
         Cola elemento = colaEjb.findById(idCola);
 
-        Boolean distribuido = distribucionEjb.distribuirRegistroEnCola(elemento, entidadActiva,RegwebConstantes.INTEGRACION_DISTRIBUCION);
+        Boolean distribuido = distribucionEjb.distribuirRegistroEnCola(elemento, entidadActiva, usuarioEntidad, RegwebConstantes.INTEGRACION_DISTRIBUCION);
 
         if(distribuido){
             Mensaje.saveMessageInfo(request, getMessage("registroEntrada.distribuir.ok"));
@@ -172,7 +174,9 @@ public class ColaController extends BaseController {
      * Marcar como procesado un elemento de la {@link Cola}
      */
     @RequestMapping(value = "/{colaId}/procesar")
-    public String procesarCola(@PathVariable Long colaId, HttpServletRequest request) {
+    public String procesarCola(@PathVariable Long colaId, HttpServletRequest request) throws I18NException {
+
+        UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
 
         try {
 
@@ -185,7 +189,7 @@ public class ColaController extends BaseController {
 
                 // Marcamos como distribuido el Registro
                 RegistroEntrada registroEntrada = registroEntradaEjb.findById(elemento.getIdObjeto());
-                registroEntradaEjb.marcarDistribuido(registroEntrada, I18NUtils.tradueix("distribucion.cola"));
+                registroEntradaEjb.marcarDistribuido(registroEntrada, usuarioEntidad, I18NUtils.tradueix("distribucion.cola"));
 
             }else if(elemento.getTipo().equals(RegwebConstantes.COLA_CUSTODIA)){
                 // Marcamos el elemento como procesado
