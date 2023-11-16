@@ -59,8 +59,8 @@ public class CarpetaBean implements CarpetaLocal {
 
         String notificationCode = PropiedadGlobalUtil.getCarpetaNotificationCode(idEntidad); // String | Codi de la notificació. Demanar a l'administrador de Carpeta.
         List<String> notificationParameters = Arrays.asList(registro.getNumeroRegistroFormateado()); // List<String> | Paràmetres associats al Codi de la notificació
-        String notificationLang = "ca"; // String | Idioma en que s'enviaran les notificacions
-        String langError = "ca"; // String | Idioma en que s'enviaran els missatges d'error
+        String notificationLang = RegwebConstantes.IDIOMA_CATALAN_CODIGO; // String | Idioma en que s'enviaran les notificacions
+        String langError = RegwebConstantes.IDIOMA_CATALAN_CODIGO; // String | Idioma en que s'enviaran els missatges d'error
 
         // Integración
         peticion.append("notificationCode: ").append(notificationCode).append(System.getProperty("line.separator"));
@@ -68,23 +68,26 @@ public class CarpetaBean implements CarpetaLocal {
         peticion.append("documento: ").append(registro.getRegistroDetalle().getDocumentoInteresado()).append(System.getProperty("line.separator"));
 
         try {
-            SendMessageResult result = apiInstance.sendNotificationToMobile(registro.getRegistroDetalle().getDocumentoInteresado(), notificationCode, notificationParameters, notificationLang, langError);
-            peticion.append("ResultCode: ").append(result.getCode()).append(System.getProperty("line.separator"));
-            if(StringUtils.isNotEmpty(result.getMessage())){
-                peticion.append("ResultMessage: ").append(result.getMessage()).append(System.getProperty("line.separator"));
+            // Comprobamos que el ciudadano/empresa está dado de Alta en las Notificaciones de Carpeta
+            Boolean existeCiudadano = apiInstance.existCitizen(registro.getRegistroDetalle().getDocumentoInteresado(), RegwebConstantes.IDIOMA_CATALAN_CODIGO);
+            if(existeCiudadano){
+                SendMessageResult result = apiInstance.sendNotificationToMobile(registro.getRegistroDetalle().getDocumentoInteresado(), notificationCode, notificationParameters, notificationLang, langError);
+                peticion.append("ResultCode: ").append(result.getCode()).append(System.getProperty("line.separator"));
+                if(StringUtils.isNotEmpty(result.getMessage())){
+                    peticion.append("ResultMessage: ").append(result.getMessage()).append(System.getProperty("line.separator"));
+                }
+
+                integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_CARPETA, descripcion, peticion.toString(), System.currentTimeMillis() - inicio.getTime(), idEntidad, registro.getNumeroRegistroFormateado());
             }
 
-            integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_CARPETA, descripcion, peticion.toString(), System.currentTimeMillis() - inicio.getTime(), idEntidad, registro.getNumeroRegistroFormateado());
         } catch (ApiException e) {
             log.info("Exception when calling NotificacionsApi#help");
             e.printStackTrace();
             integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_CARPETA, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - inicio.getTime(), idEntidad, registro.getNumeroRegistroFormateado());
-
         }
-
     }
 
-    private NotificacionsApi getApiInstance(Long idEntidad) throws I18NException {
+    private NotificacionsApi getApiInstance(Long idEntidad) {
 
         ApiClient defaultClient = Configuration.getDefaultApiClient();
         defaultClient.setBasePath(PropiedadGlobalUtil.getCarpetaServer(idEntidad));
