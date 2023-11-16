@@ -444,7 +444,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean implem
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    public void marcarDistribuido(RegistroEntrada registroEntrada, String descripcion) throws I18NException {
+    public void marcarDistribuido(RegistroEntrada registroEntrada, UsuarioEntidad usuarioEntidad, String descripcion) throws I18NException {
 
         // CREAMOS LA TRAZABILIDAD
         Trazabilidad trazabilidad = new Trazabilidad();
@@ -464,7 +464,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean implem
         historico.setRegistroEntrada(registroEntrada);
         historico.setFecha(new Date());
         historico.setModificacion(descripcion);
-        historico.setUsuario(registroEntrada.getUsuario());
+        historico.setUsuario(usuarioEntidad);
         em.persist(historico);
 
         Query q = em.createQuery("update RegistroEntrada set estado=:idEstado where id = :idRegistro");

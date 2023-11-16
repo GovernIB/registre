@@ -2,6 +2,7 @@ package es.caib.regweb3.webapp.controller.distribucion;
 
 import es.caib.regweb3.model.Cola;
 import es.caib.regweb3.model.Entidad;
+import es.caib.regweb3.model.UsuarioEntidad;
 import es.caib.regweb3.persistence.ejb.ColaLocal;
 import es.caib.regweb3.persistence.ejb.DistribucionLocal;
 import es.caib.regweb3.utils.RegwebConstantes;
@@ -40,12 +41,13 @@ public class DistribucionController extends BaseController {
      * @throws I18NValidationException
      */
     @RequestMapping(value = "/{idCola}/distribuirRegistro/{tipo}", method = RequestMethod.GET)
-    public String distribuirRegistro(@PathVariable Long idCola, @PathVariable Long tipo, HttpServletRequest request) throws Exception, I18NException,I18NValidationException {
+    public String distribuirRegistro(@PathVariable Long idCola, @PathVariable Long tipo, HttpServletRequest request) throws Exception, I18NException {
 
         Entidad entidadActiva = getEntidadActiva(request);
+        UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
         Cola elemento = colaEjb.findById(idCola);
 
-        Boolean distribuido = distribucionEjb.distribuirRegistroEnCola(elemento, entidadActiva,RegwebConstantes.INTEGRACION_DISTRIBUCION);
+        Boolean distribuido = distribucionEjb.distribuirRegistroEnCola(elemento, entidadActiva, usuarioEntidad, RegwebConstantes.INTEGRACION_DISTRIBUCION);
 
         if(distribuido){
             Mensaje.saveMessageInfo(request, getMessage("registroEntrada.distribuir.ok"));
