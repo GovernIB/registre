@@ -501,6 +501,7 @@ create sequence RWE_SIR_SEQ start 1 increment 1;
         ORGANISMORAIZ int8,
         ORGANISMOSUPERIOR int8,
         TIPOVIA int8,
+        EXTERNO bool,
         primary key (ID)
     );
 
@@ -510,6 +511,7 @@ create sequence RWE_SIR_SEQ start 1 increment 1;
         FECHA timestamp,
         IDORGANISMO int8,
         PROCESADO boolean,
+        ENTIDAD int8,
         primary key (ID)
     );
 
@@ -954,6 +956,7 @@ create index RWE_REGMIG_REMDES_I on RWE_REGISTRO_MIGRADO (DESREMDES);
 
   
 create index RWE_SESION_USUENT_FK_I on RWE_SESION (USUARIO);
+create index RWE_INTERES_REGDET_FK_I on RWE_INTERESADO (REGISTRODETALLE);
 
     
 
@@ -1611,6 +1614,11 @@ create index RWE_SESION_USUENT_FK_I on RWE_SESION (USUARIO);
        add constraint RWE_USUENT_USUARIO_FK 
        foreign key (USUARIO) 
        references RWE_USUARIO;
+
+    alter table if exists RWE_PENDIENTE
+       add constraint RWE_PENDIE_ENTIDAD_FK
+       foreign key (ENTIDAD)
+       references RWE_ENTIDAD;
 
 
 --INICI UNIQUES--
