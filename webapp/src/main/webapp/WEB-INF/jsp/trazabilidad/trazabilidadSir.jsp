@@ -59,6 +59,8 @@
                             </div>
                             <div class="timeline-body">
                                 <p><small><i class="fa fa-home"></i> <strong><spring:message code="oficina.destino"/>:</strong> ${trazabilidad.decodificacionEntidadRegistralDestino} - ${trazabilidad.codigoEntidadRegistralDestino}</small></p>
+                                <p><small><i class="fa fa-home"></i> <strong><spring:message code="oficina.origen"/>:</strong> ${trazabilidad.decodificacionEntidadRegistralOrigen} - ${trazabilidad.codigoEntidadRegistralOrigen}</small></p>
+                                <p><small><i class="fa fa-user"></i> <strong><spring:message code="usuario.usuario"/>:</strong> ${trazabilidad.nombreUsuario}</small></p>
                                 <p><small><i class="fa fa-file-o"></i> <strong><spring:message code="registroSir.motivo"/>:</strong> ${trazabilidad.observaciones}</small></p>
                                 <p><small><i class="fa fa-clock-o"></i> <strong><spring:message code="registroSir.fechaReenvio"/>:</strong> <fmt:formatDate value="${trazabilidad.fecha}" pattern="dd/MM/yyyy HH:mm:ss"/></small></p>
                             </div>
@@ -76,6 +78,7 @@
                             </div>
                             <div class="timeline-body">
                                 <p><small><i class="fa fa-home"></i> <strong><spring:message code="oficina.origen"/>:</strong> ${trazabilidad.decodificacionEntidadRegistralOrigen} - ${trazabilidad.codigoEntidadRegistralOrigen}</small></p>
+                                <p><small><i class="fa fa-user"></i> <strong><spring:message code="usuario.usuario"/>:</strong> ${trazabilidad.nombreUsuario}</small></p>
                                 <p><small><i class="fa fa-file-o"></i> <strong><spring:message code="registroSir.motivo"/>:</strong> ${trazabilidad.observaciones}</small></p>
                                 <p><small><i class="fa fa-clock-o"></i> <strong><spring:message code="registroSir.fechaReenvio"/>:</strong> <fmt:formatDate value="${trazabilidad.fecha}" pattern="dd/MM/yyyy HH:mm:ss"/></small></p>
                             </div>
@@ -96,6 +99,8 @@
                         </div>
                         <div class="timeline-body">
                             <p><small><i class="fa fa-home"></i> <strong><spring:message code="oficina.destino"/>:</strong> ${trazabilidad.decodificacionEntidadRegistralDestino} - ${trazabilidad.codigoEntidadRegistralDestino}</small></p>
+                            <p><small><i class="fa fa-home"></i> <strong><spring:message code="oficina.origen"/>:</strong> ${trazabilidad.decodificacionEntidadRegistralOrigen} - ${trazabilidad.codigoEntidadRegistralOrigen}</small></p>
+                            <p><small><i class="fa fa-user"></i> <strong><spring:message code="usuario.usuario"/>:</strong> ${trazabilidad.nombreUsuario}</small></p>
                             <p><small><i class="fa fa-file-o"></i> <strong><spring:message code="registroSir.motivo"/>:</strong> ${trazabilidad.observaciones}</small></p>
                             <p><small><i class="fa fa-clock-o"></i> <strong><spring:message code="registroSir.fechaRechazo"/>:</strong> <fmt:formatDate value="${trazabilidad.fecha}" pattern="dd/MM/yyyy HH:mm:ss"/></small></p>
                         </div>
@@ -146,7 +151,7 @@
                             <h4 class="timeline-title"><spring:message code="registroSir.eliminado"/>:</h4>
                         </div>
                         <div class="timeline-body">
-                            <p><small><i class="fa fa-home"></i> <strong><spring:message code="usuario.usuario"/>:</strong> ${trazabilidad.nombreUsuario}</small></p>
+                            <p><small><i class="fa fa-user"></i> <strong><spring:message code="usuario.usuario"/>:</strong> ${trazabilidad.nombreUsuario}</small></p>
                             <p><small><i class="fa fa-file-o"></i> <strong><spring:message code="registroSir.motivo"/>:</strong> ${trazabilidad.observaciones}</small></p>
                             <p><small><i class="fa fa-clock-o"></i> <strong><spring:message code="registroSir.fechaEliminado"/>:</strong> <fmt:formatDate value="${trazabilidad.fecha}" pattern="dd/MM/yyyy HH:mm:ss"/></small></p>
                         </div>
