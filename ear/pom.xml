@@ -30,6 +30,7 @@
                     <applicationName>regweb3</applicationName>
                     <displayName>Govern de les Illes Balears</displayName>
                     <description>Registre Web</description>
+                    <skinnyWars>true</skinnyWars>
                     <!-- Nom mòduls d'acord amb punt 4.2 de l'Estàndard CAIB -->
                     <outputFileNameMapping>@{artifactId}@-@{version}@.@{extension}@</outputFileNameMapping>
                     <version>8</version>
