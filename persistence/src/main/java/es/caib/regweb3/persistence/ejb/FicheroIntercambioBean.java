@@ -51,7 +51,7 @@ public class FicheroIntercambioBean implements FicheroIntercambioLocal {
      * @throws I18NException
      */
     @Override
-    public RespuestaRecepcionSir procesarFicheroIntercambio(FicheroIntercambio ficheroIntercambio) throws I18NException {
+    public RespuestaRecepcionSir procesarFicheroIntercambio(FicheroIntercambio ficheroIntercambio) throws Exception {
 
         RespuestaRecepcionSir respuesta = new RespuestaRecepcionSir();
         RegistroSir registroSir = null;

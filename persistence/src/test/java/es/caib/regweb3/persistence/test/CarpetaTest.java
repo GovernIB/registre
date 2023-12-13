@@ -6,6 +6,8 @@ import es.caib.carpeta.apiinterna.client.services.ApiClient;
 import es.caib.carpeta.apiinterna.client.services.ApiException;
 import es.caib.carpeta.apiinterna.client.services.Configuration;
 import es.caib.carpeta.apiinterna.client.services.auth.HttpBasicAuth;
+import es.caib.regweb3.utils.RegwebConstantes;
+import org.fundaciobit.pluginsib.core.utils.XTrustProvider;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -30,15 +32,23 @@ public class CarpetaTest {
     }
 
     @Test
+    public void existCitizen() throws Exception{
+
+        Boolean existe = getApiInstance().existCitizen("43201388M", RegwebConstantes.IDIOMA_CATALAN_CODIGO);
+
+        System.out.println("Existe: " + existe);
+    }
+
+    @Test
     public void sendMessage() throws Exception{
 
         NotificacionsApi apiInstance = getApiInstance();
 
-        String nif = "43146650F";
+        String nif = "43201388M";
         String notificationCode = "REGISTREENTRADA"; // String | Codi de la notificació. Demanar a l'administrador de Carpeta.
-        List<String> notificationParameters = Arrays.asList("GOIBE001/2023"); // List<String> | Paràmetres associats al Codi de la notificació
-        String notificationLang = "ca"; // String | Idioma en que s'enviaran les notificacions
-        String langError = "ca"; // String | Idioma en que s'enviaran els missatges d'error
+        List<String> notificationParameters = Arrays.asList("GOIBE002/2023"); // List<String> | Paràmetres associats al Codi de la notificació
+        String notificationLang = RegwebConstantes.IDIOMA_CATALAN_CODIGO; // String | Idioma en que s'enviaran les notificacions
+        String langError = RegwebConstantes.IDIOMA_CATALAN_CODIGO; // String | Idioma en que s'enviaran els missatges d'error
         try {
             SendMessageResult result = apiInstance.sendNotificationToMobile(nif, notificationCode, notificationParameters, notificationLang, langError);
             System.out.println(result);
@@ -49,9 +59,9 @@ public class CarpetaTest {
     }
 
     private NotificacionsApi getApiInstance() throws Exception{
-
+        XTrustProvider.install();
         ApiClient defaultClient = Configuration.getDefaultApiClient();
-        defaultClient.setBasePath("https://dev.caib.es/carpetaapi/interna");
+        defaultClient.setBasePath("https://se.caib.es/carpetaapi/interna");
         // Configure HTTP basic authorization: BasicAuth
         HttpBasicAuth BasicAuth = (HttpBasicAuth) defaultClient.getAuthentication("BasicAuth");
         BasicAuth.setUsername("$regweb_carpeta");

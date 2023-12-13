@@ -273,7 +273,7 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
             historico.setRegistroEntrada(re);
             historico.setFecha(new Date());
             historico.setModificacion(descripcion);
-            historico.setUsuario(re.getUsuario());
+            historico.setUsuario(usuarioEntidad);
             em.persist(historico);
 
             registroEntradaEjb.cambiarEstado(re.getId(), RegwebConstantes.REGISTRO_DISTRIBUYENDO);

@@ -118,7 +118,7 @@ public class JustificanteBean implements JustificanteLocal {
      * @throws I18NException
      * @throws I18NValidationException
      */
-    private AnexoFull crearJustificanteDocumentCustody(Entidad entidad, UsuarioEntidad usuarioEntidad, IRegistro registro, Long tipoRegistro, String idioma, Boolean fileSystem) throws I18NException, I18NValidationException{
+    private AnexoFull crearJustificanteDocumentCustody(Entidad entidad, UsuarioEntidad usuarioEntidad, IRegistro registro, Long tipoRegistro, String idioma, Boolean custodiaDiferida) throws I18NException, I18NValidationException{
 
         String custodyID = null;
         boolean error = false;
@@ -145,7 +145,7 @@ public class JustificanteBean implements JustificanteLocal {
 
             numRegFormat = registro.getNumeroRegistroFormateado();
 
-            // Carregam el plugin del Justificant
+            // Carregam el plugin de generació del pdf del Justificant
             IJustificantePlugin justificantePlugin = (IJustificantePlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_JUSTIFICANTE);
 
             // Comprova que existeix el plugin de justificant
@@ -155,7 +155,7 @@ public class JustificanteBean implements JustificanteLocal {
             }
 
             // Carregam el plugin de Custodia del Justificante
-            if(fileSystem){ // Si no se va a custodiar es porqué se va a generar el FileSystem
+            if(custodiaDiferida){ // Se custodiará posteriomente mediante la Cola, ahora se guardará temporalmente en FileSystem
                 documentCustodyPlugin = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA_FS_JUSTIFICANTE);
 
             }else{
@@ -173,7 +173,7 @@ public class JustificanteBean implements JustificanteLocal {
             // Cerca el Plugin de Justificant definit a les Propietats Globals
             ISignatureServerPlugin signaturePlugin = (ISignatureServerPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_FIRMA_SERVIDOR);
 
-            // Comprova que existeix el plugin de justificant
+            // Comprova que existeix el plugin de signatura
             if (signaturePlugin == null) {
                 // No s´ha definit cap plugin de Firma. Consulti amb el seu Administrador.
                 throw new I18NException("error.plugin.nodefinit", new I18NArgumentCode("plugin.tipo.4"));
@@ -219,7 +219,7 @@ public class JustificanteBean implements JustificanteLocal {
             anexoFull = anexoEjb.crearAnexo(anexoFull, usuarioEntidad, entidad, registro.getId(), tipoRegistro, custodyID, false);
 
             // Cola distribución
-            if(fileSystem){ // Si no se va a custodiar inicialmente, lo metemos en la cola de Custodia en diferido
+            if(custodiaDiferida){ // Si no se va a custodiar inicialmente, lo metemos en la cola de Custodia en diferido
                 colaEjb.enviarAColaCustodia(registro, tipoRegistro, usuarioEntidad);
             }
 
@@ -251,18 +251,15 @@ public class JustificanteBean implements JustificanteLocal {
             log.error(e.getMessage(), e);
             throw new I18NException(e, "justificante.error", new I18NArgumentString(e.getMessage()));
         } finally {
-            if (error) {
 
-                if (documentCustodyPlugin != null && custodyID != null) {
-                    try {
-                        documentCustodyPlugin.deleteCustody(custodyID);
-                    } catch (Throwable th) {
-                        log.warn("Error esborrant justificant a custodia: " + th.getMessage(), th);
-                    }
+            if (error && (documentCustodyPlugin != null && custodyID != null)) {
+                try {
+                    documentCustodyPlugin.deleteCustody(custodyID);
+                } catch (Throwable th) {
+                    log.warn("Error esborrant justificant a custodia: " + th.getMessage(), th);
                 }
             }
         }
-
     }
 
     /**

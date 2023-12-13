@@ -274,7 +274,7 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
             ByteArrayOutputStream baos = new ByteArrayOutputStream(4096);
 
             // Aplica preferencias
-            Document document = new Document(PageSize.A4);
+            Document document = new Document(PageSize.A4, 36, 36, 86, 36);
             FileOutputStream ficheroPdf = new FileOutputStream("fichero.pdf");
             PdfWriter writer = PdfWriter.getInstance(document, baos);
             writer.setViewerPreferences(PdfWriter.ALLOW_PRINTING | PdfWriter.PageLayoutSinglePage);

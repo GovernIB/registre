@@ -23,4 +23,14 @@
             <module name="org.keycloak.keycloak-wildfly-subsystem" optional="true"/>
         </dependencies>
     </deployment>
+
+    <sub-deployment name="regweb3-persistence.jar">
+        <exclusions>
+            <module name="org.jboss.resteasy.resteasy-json-binding-provider" />
+        </exclusions>
+        <dependencies>
+            <module name="org.jboss.resteasy.resteasy-jackson-provider" />
+        </dependencies>
+    </sub-deployment>
+
 </jboss-deployment-structure>

@@ -691,6 +691,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
     @ResponseBody
     JsonResponse distribuirRegistroEntrada(@PathVariable Long idRegistro, HttpServletRequest request, @RequestBody DistribuirForm distribuirForm) throws Exception {
 
+        Entidad entidadActiva = getEntidadActiva(request);
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
         RegistroEntrada registroEntrada;
         RespuestaDistribucion respuesta = new RespuestaDistribucion();
@@ -698,7 +699,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
 
         try {
 
-            IDistribucionPlugin distribucionPlugin = (IDistribucionPlugin) pluginEjb.getPluginDistribucion(usuarioEntidad.getEntidad().getId());
+            IDistribucionPlugin distribucionPlugin = (IDistribucionPlugin) pluginEjb.getPluginDistribucion(entidadActiva.getId());
             if(distribucionPlugin.getClass().getName().contains("DistribucionGoibPlugin")){
                 registroEntrada = registroEntradaEjb.getConAnexosFullDistribuir(idRegistro);
             }else{

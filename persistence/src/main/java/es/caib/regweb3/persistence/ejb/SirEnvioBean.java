@@ -72,7 +72,7 @@ public class SirEnvioBean implements SirEnvioLocal {
     @EJB private IntegracionLocal integracionEjb;
     @EJB private DistribucionLocal distribucionEjb;
     @EJB private OrganismoLocal organismoEjb;
-    @EJB private PluginLocal pluginEjb;
+    @EJB private EntidadLocal entidadEjb;
     @Autowired ArxiuCaibUtils arxiuCaibUtils;
 
 
@@ -980,7 +980,8 @@ public class SirEnvioBean implements SirEnvioLocal {
                 RegistroEntrada registroEntrada = registroEntradaEjb.getConAnexosFull(oficio.getRegistrosEntrada().get(0).getId());
 
                 // Si tiene el Justificante generado y custodiado lo reenviamos
-                if (registroEntrada.getRegistroDetalle().getTieneJustificanteCustodiado()) {
+                if (registroEntrada.getRegistroDetalle().getTieneJustificanteCustodiado() || entidadEjb.isJustificanteCustodiadoLocal(registroEntrada.getEntidad().getId())) {
+
 
                     // Transformamos el RegistroEntrada en un RegistroSir
                     RegistroSir registroSir = registroSirEjb.transformarRegistroEntrada(registroEntrada);
@@ -1002,7 +1003,7 @@ public class SirEnvioBean implements SirEnvioLocal {
                     integracionEjb.addIntegracionOk(inicio, tipoIntegracion, descripcion, peticion.toString(), System.currentTimeMillis() - inicio.getTime(), oficio.getUsuarioResponsable().getEntidad().getId(), oficio.getIdentificadorIntercambio());
 
                 }else{
-                    integracionEjb.addIntegracionError(tipoIntegracion, descripcion, peticion.toString(), null, "No tiene el justificante custodiado", System.currentTimeMillis() - inicio.getTime(), oficio.getUsuarioResponsable().getEntidad().getId(), oficio.getIdentificadorIntercambio());
+                    integracionEjb.addIntegracionError(tipoIntegracion, descripcion, peticion.toString(), null, I18NLogicUtils.tradueix(new Locale(Configuracio.getDefaultLanguage()), "registro.justificante.noCustodiado"), System.currentTimeMillis() - inicio.getTime(), oficio.getUsuarioResponsable().getEntidad().getId(), oficio.getIdentificadorIntercambio());
                 }
 
             }catch (I18NException e){
@@ -1025,7 +1026,7 @@ public class SirEnvioBean implements SirEnvioLocal {
                 RegistroSalida registroSalida = registroSalidaEjb.getConAnexosFull(oficio.getRegistrosSalida().get(0).getId());
 
                 // Si tiene el Justificante generado y custodiado lo reenviamos
-                if (registroSalida.getRegistroDetalle().getTieneJustificanteCustodiado()) {
+                if (registroSalida.getRegistroDetalle().getTieneJustificanteCustodiado() || entidadEjb.isJustificanteCustodiadoLocal(registroSalida.getEntidad().getId())) {
 
                     // Transformamos el RegistroSalida en un RegistroSir
                     RegistroSir registroSir = registroSirEjb.transformarRegistroSalida(registroSalida);
@@ -1048,7 +1049,7 @@ public class SirEnvioBean implements SirEnvioLocal {
 
                 }else{
 
-                    integracionEjb.addIntegracionError(tipoIntegracion, descripcion, peticion.toString(), null, "No tiene el justificante custodiado", System.currentTimeMillis() - inicio.getTime(), oficio.getUsuarioResponsable().getEntidad().getId(), oficio.getIdentificadorIntercambio());
+                    integracionEjb.addIntegracionError(tipoIntegracion, descripcion, peticion.toString(), null, I18NLogicUtils.tradueix(new Locale(Configuracio.getDefaultLanguage()), "registro.justificante.noCustodiado"), System.currentTimeMillis() - inicio.getTime(), oficio.getUsuarioResponsable().getEntidad().getId(), oficio.getIdentificadorIntercambio());
                 }
 
             }catch (I18NException e){
