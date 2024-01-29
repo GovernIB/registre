@@ -11,7 +11,6 @@ import es.caib.regweb3.webapp.controller.BaseController;
 import es.caib.regweb3.webapp.editor.UsuarioEntidadEditor;
 import es.caib.regweb3.webapp.form.EntidadForm;
 import es.caib.regweb3.webapp.form.LibroOrganismo;
-import es.caib.regweb3.webapp.form.UsuarioEntidadBusquedaForm;
 import es.caib.regweb3.webapp.utils.*;
 import es.caib.regweb3.webapp.validator.EntidadValidator;
 import org.fundaciobit.genapp.common.i18n.I18NException;
@@ -149,67 +148,12 @@ public class EntidadController extends BaseController {
         return mav;
     }
 
-    /**
-     * Listado de todos los usurios de una Entidad
-     */
-    @RequestMapping(value = "/usuarios", method = RequestMethod.GET)
-    public String listadoUsuariosEntidad(Model model, HttpServletRequest request) throws Exception {
-
-        Entidad entidad = getEntidadActiva(request);
-
-        UsuarioEntidadBusquedaForm usuarioEntidadBusqueda = new UsuarioEntidadBusquedaForm(new UsuarioEntidad(), 1);
-
-        model.addAttribute("usuarioEntidadBusqueda", usuarioEntidadBusqueda);
-        model.addAttribute("entidad", entidad);
-        model.addAttribute("organismos", organismoEjb.getPermitirUsuarios(entidad.getId()));
-        model.addAttribute("permisos", RegwebConstantes.PERMISOS);
-
-        return "entidad/usuariosList";
-    }
-
-    /**
-     * Listado de usuarios de una Entidad
-     *
-     * @param busqueda
-     * @return
-     * @throws Exception
-     */
-    @RequestMapping(value = "/usuarios", method = RequestMethod.POST)
-    public ModelAndView usuariosEntidad(@ModelAttribute UsuarioEntidadBusquedaForm busqueda, HttpServletRequest request) throws Exception {
-
-        ModelAndView mav = new ModelAndView("entidad/usuariosList");
-        Organismo organismo = busqueda.getOrganismo();
-        Entidad entidad = getEntidadActiva(request);
-
-
-        if (busqueda.getExportar()) { // Creamos un excel con los resultados
-            mav = new ModelAndView("exportarUsuariosExcel");
-            Paginacion paginacion = usuarioEntidadEjb.busqueda(null,
-                    entidad.getId(), busqueda.getUsuarioEntidad(), organismo.getId(), busqueda.getPermiso());
-
-            mav.addObject("resultados", paginacion);
-
-            return mav;
-        } else { // Búsqueda normal
-            Paginacion paginacion = usuarioEntidadEjb.busqueda(busqueda.getPageNumber(),
-                    entidad.getId(), busqueda.getUsuarioEntidad(), organismo.getId(), busqueda.getPermiso());
-            busqueda.setPageNumber(1);
-            mav.addObject("entidad", entidad);
-            mav.addObject("paginacion", paginacion);
-            mav.addObject("organismos", organismoEjb.getPermitirUsuarios(entidad.getId()));
-            mav.addObject("usuarioEntidadBusqueda", busqueda);
-            mav.addObject("permisos", RegwebConstantes.PERMISOS);
-
-            return mav;
-        }
-
-    }
 
     /**
      * Carga el formulario para un nuevo {@link es.caib.regweb3.model.Entidad}
      */
     @RequestMapping(value = "/new", method = RequestMethod.GET)
-    public String nuevaEntidad(Model model) throws Exception {
+    public String nuevaEntidad(Model model, HttpServletRequest request) throws Exception {
 
         Entidad entidad = new Entidad();
 
@@ -390,6 +334,7 @@ public class EntidadController extends BaseController {
                     usuarioEntidad = new UsuarioEntidad();
                     usuarioEntidad.setEntidad(entidad);
                     usuarioEntidad.setUsuario(entidad.getPropietario());
+                    usuarioEntidad.setFechaAlta(new Date());
 
                     usuarioEntidadEjb.persist(usuarioEntidad);
                 } else if (!usuarioEntidad.getActivo()) { //Si existe, pero está inactivo, lo activamos.
@@ -636,7 +581,7 @@ public class EntidadController extends BaseController {
         } catch (Exception e) {
             log.error("Error actualizacion", e);
             entidadEjb.marcarEntidadMantenimiento(entidadId, false);
-            Mensaje.saveMessageError(request, getMessage("regweb.actualizacion.nook") + ": " + e.getMessage() + " " + getMessage("regweb.actualizacion.revisar"));
+            Mensaje.saveMessageError(request, getMessage("regweb.actualizacion.nook") + ": " + e.getMessage());
             return "redirect:/organismo/list";
         }
 
@@ -680,7 +625,7 @@ public class EntidadController extends BaseController {
         } catch (Exception e) {
             e.printStackTrace();
             jsonResponse.setStatus("FAIL");
-            jsonResponse.setError(getMessage("regweb.sincronizacion.nook") + ": " + e.getMessage() + " " + getMessage("regweb.actualizacion.revisar"));
+            jsonResponse.setError(getMessage("regweb.sincronizacion.nook") + ": " + e.getMessage());
         }
 
         return jsonResponse;
@@ -786,7 +731,7 @@ public class EntidadController extends BaseController {
 
                     // Si tiene permisos, hay que cambiarle el Organismo del que dependen
                     if(permisos.size() > 0){
-
+                        log.info("Buscando sustitutos de: " + organismoExtinguido.getDenominacion() + " - " + organismoExtinguido.getCodigo());
                         Set<Organismo> sustitutosOficina = obtenerSustitutosOficina(organismoExtinguido.getId());
 
                         if(sustitutosOficina.size() == 0){ // Error, no hay ningún Organismos sustituto
@@ -830,11 +775,11 @@ public class EntidadController extends BaseController {
             model.addAttribute("extinguidosAutomaticos", extinguidosAutomaticos); // organismos que se les ha asignado automaticamente permisos.
 
             // Quitamos el modo mantenimiento de la Entidad
-            entidadEjb.marcarEntidadMantenimiento(entidad.getId(), false);
+            //entidadEjb.marcarEntidadMantenimiento(entidad.getId(), false);
 
         } else {
             // Quitamos el modo mantenimiento de la Entidad
-            entidadEjb.marcarEntidadMantenimiento(entidad.getId(), false);
+            //entidadEjb.marcarEntidadMantenimiento(entidad.getId(), false);
 
             Mensaje.saveMessageInfo(request, getMessage("organismo.nopendientesprocesar"));
             return "redirect:/organismo/list";
