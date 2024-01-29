@@ -127,7 +127,7 @@
 
                                <div class="col-xs-2 boto-panel">
                                    <a data-toggle="modal" role="button" href="#modalBuscadorOrganismoDestino"
-                                      onclick="inicializarBuscador('#codNivelAdministracionOrganismoDestino','#codComunidadAutonomaOrganismoDestino','#provinciaOrganismoDestino','#localidadOrganismoDestino',${RegwebConstantes.nivelAdminAutonomica}, ${RegwebConstantes.comunidadBaleares}, 'OrganismoDestino' );"
+                                      onclick="inicializarBuscador('#codNivelAdministracionOrganismoDestino','#codComunidadAutonomaOrganismoDestino','#provinciaOrganismoDestino','#localidadOrganismoDestino',${RegwebConstantes.nivelAdminAutonomica}, ${RegwebConstantes.COMUNIDAD_BALEARES}, 'OrganismoDestino' );"
                                       class="btn btn-warning btn-sm"><spring:message code="regweb.buscar"/></a>
                                </div>
 
@@ -272,7 +272,7 @@
 
                                <div class="col-xs-2 boto-panel">
                                    <a data-toggle="modal" role="button" href="#modalBuscadorOficinaOrigen"
-                                      onclick="inicializarBuscador('#codNivelAdministracionOficinaOrigen','#codComunidadAutonomaOficinaOrigen','#provinciaOficinaOrigen','#localidadOficinaOrigen',${RegwebConstantes.nivelAdminAutonomica}, ${RegwebConstantes.comunidadBaleares}, 'OficinaOrigen' );"
+                                      onclick="inicializarBuscador('#codNivelAdministracionOficinaOrigen','#codComunidadAutonomaOficinaOrigen','#provinciaOficinaOrigen','#localidadOficinaOrigen',${RegwebConstantes.nivelAdminAutonomica}, ${RegwebConstantes.COMUNIDAD_BALEARES}, 'OficinaOrigen' );"
                                       class="btn btn-warning btn-sm"><spring:message code="regweb.buscar"/></a>
                                </div>
 

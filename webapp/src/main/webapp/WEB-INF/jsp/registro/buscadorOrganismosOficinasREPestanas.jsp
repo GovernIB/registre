@@ -28,7 +28,7 @@ que se le indica -->
 
                         <form id="organismoREBusquedaForm${param.tipo}" class="form-horizontal" action="" method="post">
                             <input id="nivelAdministracion" type="hidden" value="${RegwebConstantes.nivelAdminAutonomica}"/>
-                            <input id="comunidadAutonoma" type="hidden" value="${RegwebConstantes.comunidadBaleares}"/>
+                            <input id="comunidadAutonoma" type="hidden" value="${RegwebConstantes.COMUNIDAD_BALEARES}"/>
 
                             <div class="form-group col-xs-12 senseMargeLat">
                                 <div class="col-xs-6">

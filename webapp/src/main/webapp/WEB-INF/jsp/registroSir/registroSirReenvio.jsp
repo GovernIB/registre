@@ -60,7 +60,7 @@
                                     </div>
                                     <div class="col-xs-3 boto-panel">
                                         <a data-toggle="modal" role="button" href="#modalBuscadorOficinaSir"
-                                           onclick="inicializarBuscador('#codNivelAdministracionOficinaSir','#codComunidadAutonomaOficinaSir','#provinciaOficinaSir','#localidadOficinaSir',${RegwebConstantes.nivelAdminAutonomica}, ${RegwebConstantes.comunidadBaleares},'OficinaSir' );"
+                                           onclick="inicializarBuscador('#codNivelAdministracionOficinaSir','#codComunidadAutonomaOficinaSir','#provinciaOficinaSir','#localidadOficinaSir',${RegwebConstantes.nivelAdminAutonomica}, ${RegwebConstantes.COMUNIDAD_BALEARES},'OficinaSir' );"
                                            class="btn btn-warning btn-sm"><spring:message code="regweb.buscar"/></a>
                                     </div>
                                     <!-- Fin de gestión de organismo destino -->
