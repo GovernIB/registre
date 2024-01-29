@@ -355,7 +355,7 @@ function cargarSelect(url,idElemento,idSelect, valorSelected, todos){
  */
 function actualizarSelect(url, idSelect, seleccion, valorSelected, todos, async){
     var html = '';
-    if (seleccion != '-1' && seleccion != null) {
+    if (seleccion != null) {
         jQuery.ajax({
             async: async,
             url: url,
@@ -364,7 +364,7 @@ function actualizarSelect(url, idSelect, seleccion, valorSelected, todos, async)
             data: { id: seleccion },
             contentType: 'application/json',
             success: function(result) {
-                if(todos){html = '<option value="-1">...</option>';}
+                if(todos){html = '<option value="">...</option>';}
                 var len = result.length;
                 var selected='';
                 for ( var i = 0; i < len; i++) {
