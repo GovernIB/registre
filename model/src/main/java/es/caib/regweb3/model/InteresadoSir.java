@@ -364,10 +364,9 @@ public class InteresadoSir implements Serializable {
         }else if(StringUtils.isNotEmpty(getRazonSocialInteresado())){
             return RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA;
 
-        }else if(StringUtils.isNotEmpty(getTipoDocumentoIdentificacionInteresado())){ // Caso en que es una Administración, pero no han puesto la denominación en Razon social
-            if(getTipoDocumentoIdentificacionInteresado().equals(String.valueOf(RegwebConstantes.TIPODOCUMENTOID_CODIGO_ORIGEN))){
-                return RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA;
-            }
+        }else if(StringUtils.isNotEmpty(getTipoDocumentoIdentificacionInteresado()) && (getTipoDocumentoIdentificacionInteresado().equals(String.valueOf(RegwebConstantes.TIPODOCUMENTOID_CODIGO_ORIGEN)))){
+            return RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION;
+
         }
 
         return null;
@@ -382,10 +381,9 @@ public class InteresadoSir implements Serializable {
         }else if(StringUtils.isNotEmpty(getRazonSocialRepresentante())){
             return RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA;
 
-        }else if(StringUtils.isNotEmpty(getTipoDocumentoIdentificacionRepresentante())){ // Caso en que es una Administración, pero no han puesto la denominación en Razon social
-            if(getTipoDocumentoIdentificacionRepresentante().equals(String.valueOf(RegwebConstantes.TIPODOCUMENTOID_CODIGO_ORIGEN))){
-                return RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA;
-            }
+        }else if(StringUtils.isNotEmpty(getTipoDocumentoIdentificacionRepresentante()) && (getTipoDocumentoIdentificacionRepresentante().equals(String.valueOf(RegwebConstantes.TIPODOCUMENTOID_CODIGO_ORIGEN)))){
+            return RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION;
+
         }
 
         return null;
@@ -405,6 +403,8 @@ public class InteresadoSir implements Serializable {
             return getNombrePersonaFisica();
         }else if(getTipoInteresado().equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA)){
             return getNombrePersonaJuridica();
+        }else if(getTipoInteresado().equals(RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION)){
+            return getNombreAdministracion();
         }
 
         return "";
@@ -462,6 +462,18 @@ public class InteresadoSir implements Serializable {
         }
 
         return  personaJuridica;
+    }
+
+    @Transient
+    public String getNombreAdministracion() {
+        String nombre = (getRazonSocialInteresado() != null) ? getRazonSocialInteresado() : getNombreInteresado();
+
+        if (getDocumentoIdentificacionInteresado() != null) {
+            nombre += " - " + getDocumentoIdentificacionInteresado();
+        }
+
+        return nombre;
+
     }
 
     @Transient
