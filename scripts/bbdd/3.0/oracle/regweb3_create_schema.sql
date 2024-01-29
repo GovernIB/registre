@@ -96,6 +96,14 @@ create sequence RWE_SIR_SEQ start with 1 increment by  1;
         primary key (ID)
     );
 
+    CREATE TABLE RWE_CATISLA (
+         ID number(19,0) not null,
+         CODIGOISLA number(19,0) not null,
+         DESCRIPCIONISLA varchar2(50 char) not null,
+         PROVINCIA number(19,0),
+         primary key (ID)
+    );
+
     create table RWE_CATLOCALIDAD (
        ID number(19,0) not null,
         CODIGOLOCALIDAD number(19,0) not null,
@@ -430,6 +438,8 @@ create sequence RWE_SIR_SEQ start with 1 increment by  1;
         OFICINARESPONSABLE number(19,0),
         ORGANISMORESPONSABLE number(19,0),
         TIPOVIA number(19,0),
+        OAMR number(1,0),
+        ISLA number(19,0),
         primary key (ID)
     );
 
@@ -501,6 +511,7 @@ create sequence RWE_SIR_SEQ start with 1 increment by  1;
         ORGANISMORAIZ number(19,0),
         ORGANISMOSUPERIOR number(19,0),
         TIPOVIA number(19,0),
+        ISLA number(19,0),
         primary key (ID)
     );
 
@@ -876,17 +887,32 @@ create sequence RWE_SIR_SEQ start with 1 increment by  1;
     create table RWE_USUARIO_ENTIDAD (
        ID number(19,0) not null,
         ACTIVO number(1,0) not null,
-        OAMR number(1,0) not null,
         ENTIDAD number(19,0),
         ULTIMAOFICINA number(19,0),
         USUARIO number(19,0),
+        CATEGORIA number(19,0),
+        FUNCION number(19,0),
+        TELEFONO varchar2(255 char),
+        CAI number(10,0),
+        NOMBRETRABAJO varchar2(255 char),
+        CODIGOTRABAJO varchar2(255 char),
+        OBSERVACIONES varchar2(255 char),
+        clave number(1,0) not null,
+        bitcita number(1,0) not null,
+        asistencia number(1,0) not null,
+        apodera number(1,0) not null,
+        notificacion number(1,0) not null,
+        FECHAALTA timestamp,
         primary key (ID)
     );
+
 create index RWE_ANEXO_TDOCAL_FK_I on RWE_ANEXO (TDOCUMENTAL);
+create index RWE_ANEXO_CUSTID_FK_I on RWE_ANEXO (CUSTODIAID);
 create index RWE_ANEXO_REGDET_FK_I on RWE_ANEXO (REGISTRODETALLE);
 create index RWE_CATCOM_CATPAI_FK_I on RWE_CATCOMUNIDADAUTONOMA (PAIS);
 create index RWE_CATLOC_CATPRO_FK_I on RWE_CATLOCALIDAD (PROVINCIA);
 create index RWE_CATLOC_CATENG_FK_I on RWE_CATLOCALIDAD (ENTIDADGEOGRAFICA);
+create index RWE_CATISL_CATPRO_FK_I on RWE_CATISLA (PROVINCIA);
 create index RWE_CATPRO_CATCAU_FK_I on RWE_CATPROVINCIA (COMUNIDADAUTONOMA);
 create index RWE_DESCAR_ENTIDA_FK_I on RWE_DESCARGA (ENTIDAD);
 create index RWE_ENTIDA_PRO_FK_I on RWE_ENTIDAD (PROPIETARIO);
@@ -917,6 +943,7 @@ create index RWE_OFICIN_LOCALI_FK_I on RWE_OFICINA (LOCALIDAD);
 create index RWE_OFICIN_TVIA_FK_I on RWE_OFICINA (TIPOVIA);
 create index RWE_OFICIN_ORGANI_FK_I on RWE_OFICINA (ORGANISMORESPONSABLE);
 create index RWE_OFICIN_OFICIN_FK_I on RWE_OFICINA (OFICINARESPONSABLE);
+create index RWE_OFICIN_ISLA_FK_I on RWE_OFICINA (ISLA);
 create index RWE_OFIREM_ORGANI_FK_I on RWE_OFICIO_REMISION (ORGANISMODEST);
 create index RWE_OFIREM_LIBRO_FK_I on RWE_OFICIO_REMISION (LIBRO);
 create index RWE_OFIREM_OFICIN_FK_I on RWE_OFICIO_REMISION (OFICINA);
@@ -931,6 +958,7 @@ create index RWE_ORGANI_PAIS_FK_I on RWE_ORGANISMO (PAIS);
 create index RWE_ORGANI_LOCALI_FK_I on RWE_ORGANISMO (LOCALIDAD);
 create index RWE_ORGANI_TVIA_FK_I on RWE_ORGANISMO (TIPOVIA);
 create index RWE_ORGANI_PROVIN_FK_I on RWE_ORGANISMO (CODAMBPROVINCIA);
+create index RWE_ORGANI_ISLA_FK_I on RWE_ORGANISMO (ISLA);
 create index RWE_PELIUS_LIBRO_FK_I on RWE_PERMLIBUSU (LIBRO);
 create index RWE_PELIUS_USUARI_FK_I on RWE_PERMLIBUSU (USUARIO);
 create index RWE_POU_ORG_FK_I on RWE_PERMORGUSU (ORGANISMO);
@@ -976,6 +1004,11 @@ alter table RWE_ANEXO_SIR
    add constraint RWE_ANEXOSIR_REGSIR_FK
    foreign key (REGISTRO_SIR)
    references RWE_REGISTRO_SIR;
+
+alter table RWE_CATISLA
+    add constraint RWE_CATISLA_CATPROVIN_FK
+    foreign key (PROVINCIA)
+    references RWE_CATPROVINCIA;
 
 alter table RWE_CATCOMUNIDADAUTONOMA
    add constraint RWE_CATCOMUNAUT_CATPAIS_FK
@@ -1242,6 +1275,11 @@ alter table RWE_OFICINA
    foreign key (TIPOVIA)
    references RWE_CATTIPOVIA;
 
+alter table RWE_OFICINA
+    add constraint RWE_OFICINA_ISLA_FK
+    foreign key (ISLA)
+    references RWE_CATISLA;
+
 alter table RWE_OFICINA_SERVICIO
    add constraint RWE_OFICINA_SERVICIO_FK
    foreign key (IDSERVICIO)
@@ -1351,6 +1389,11 @@ alter table RWE_ORGANISMO
    add constraint RWE_ORGANISMO_TIPOVIA_FK
    foreign key (TIPOVIA)
    references RWE_CATTIPOVIA;
+
+alter table RWE_ORGANISMO
+    add constraint RWE_ORGANISMO_ISLA_FK
+    foreign key (ISLA)
+    references RWE_CATISLA;
 
 alter table RWE_PENDIENTE
     add constraint RWE_PENDIE_ENTIDAD_FK
