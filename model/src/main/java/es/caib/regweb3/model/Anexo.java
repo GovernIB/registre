@@ -24,6 +24,7 @@ import java.util.List;
         indexes = {
                 @Index(name = "RWE_ANEXO_TDOCAL_FK_I", columnList = "TDOCUMENTAL"),
                 @Index(name = "RWE_ANEXO_REGDET_FK_I", columnList = "REGISTRODETALLE"),
+                @Index(name = "RWE_ANEXO_CUSTID_FK_I", columnList = "CUSTODIAID")
         })
 @XmlRootElement(name = "anexo")
 @XmlAccessorType(XmlAccessType.FIELD)
