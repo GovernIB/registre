@@ -90,7 +90,7 @@
                     </c:if>
 
                     <a id="buscarOrganismo" data-toggle="modal" href="#modalBuscadorOrganismoInteresado"
-                       onclick="inicializarBuscador('#codNivelAdministracionOrganismoInteresado','#codComunidadAutonomaOrganismoInteresado','#provinciaOrganismoInteresado','#localidadOrganismoInteresado',${RegwebConstantes.nivelAdminAutonomica}, ${RegwebConstantes.comunidadBaleares}, 'OrganismoInteresado' );"
+                       onclick="inicializarBuscador('#codNivelAdministracionOrganismoInteresado','#codComunidadAutonomaOrganismoInteresado','#provinciaOrganismoInteresado','#localidadOrganismoInteresado',${RegwebConstantes.nivelAdminAutonomica}, ${RegwebConstantes.COMUNIDAD_BALEARES}, 'OrganismoInteresado' );"
                        style="display: none;" class="btn btn-warning btn-sm"><spring:message code="regweb.buscar"/></a>
                 </div>
                 <c:if test="${param.tipoRegistro == RegwebConstantes.REGISTRO_ENTRADA}">
