@@ -146,6 +146,12 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
             parametros.put("numeroRegistroFormateado", "%" + re.getNumeroRegistroFormateado() + "%");
         }
 
+        // Numero registro origen
+        if (StringUtils.isNotEmpty(re.getRegistroDetalle().getNumeroRegistroOrigen())) {
+            where.add(" re.registroDetalle.numeroRegistroOrigen LIKE :numeroRegistroOrigen");
+            parametros.put("numeroRegistroOrigen", "%" + re.getRegistroDetalle().getNumeroRegistroOrigen() + "%");
+        }
+
         // Extracto
         if (StringUtils.isNotEmpty(re.getRegistroDetalle().getExtracto())) {
             where.add(DataBaseUtils.like("re.registroDetalle.extracto", "extracto", parametros, re.getRegistroDetalle().getExtracto()));
