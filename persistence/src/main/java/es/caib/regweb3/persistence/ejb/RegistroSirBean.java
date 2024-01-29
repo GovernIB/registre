@@ -1728,12 +1728,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         interesado.setIsRepresentante(false);
 
         // Averiguamos que tipo es el Interesado
-        if (StringUtils.isEmpty(interesadoSir.getRazonSocialInteresado())) {
-            interesado.setTipo(RegwebConstantes.TIPO_INTERESADO_PERSONA_FISICA);
-
-        } else {
-            interesado.setTipo(RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA);
-        }
+        interesado.setTipo(interesadoSir.getTipoInteresado());
 
         if (StringUtils.isNotEmpty(interesadoSir.getRazonSocialInteresado())) {
             interesado.setRazonSocial(interesadoSir.getRazonSocialInteresado());
@@ -1819,12 +1814,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         representante.setIsRepresentante(true);
 
         // Averiguamos que tipo es el Representante
-        if (StringUtils.isEmpty(representanteSir.getRazonSocialRepresentante())) {
-            representante.setTipo(RegwebConstantes.TIPO_INTERESADO_PERSONA_FISICA);
-
-        } else {
-            representante.setTipo(RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA);
-        }
+        representante.setTipo(representanteSir.getTipoRepresentante());
 
         if (StringUtils.isNotEmpty(representanteSir.getRazonSocialRepresentante())) {
             representante.setRazonSocial(representanteSir.getRazonSocialRepresentante());
