@@ -21,6 +21,7 @@ import org.springframework.web.bind.support.SessionStatus;
 
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 
 /**
  * Created 14/02/14 12:52
@@ -107,6 +108,7 @@ public class UsuarioExisteController extends BaseController {
                     usuarioEntidad = new UsuarioEntidad();
                     usuarioEntidad.setUsuario(usuarioExistente);
                     usuarioEntidad.setEntidad(entidad);
+                    usuarioEntidad.setFechaAlta(new Date());
                     usuarioEntidadEjb.persist(usuarioEntidad);
 
                     Mensaje.saveMessageInfo(request, getMessage("usuarioEntidad.nuevo.ok"));
