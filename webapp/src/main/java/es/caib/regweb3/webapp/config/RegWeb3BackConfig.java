@@ -97,6 +97,7 @@ public class RegWeb3BackConfig extends WebMvcConfigurerAdapter {
         registry.addInterceptor(personaInterceptor()).addPathPatterns("/persona/**");
         registry.addInterceptor(libroInterceptor()).addPathPatterns("/libro/**");
         registry.addInterceptor(usuarioInterceptor()).addPathPatterns("/usuario/**");
+        registry.addInterceptor(usuarioEntidadInterceptor()).addPathPatterns("/usuarioEntidad/**");
         registry.addInterceptor(entidadInterceptor()).addPathPatterns("/entidad/**");
         registry.addInterceptor(organismoInterceptor()).addPathPatterns("/organismo/**");
         registry.addInterceptor(registroMigradoInterceptor()).addPathPatterns("/registroMigrado/**");
@@ -195,6 +196,9 @@ public class RegWeb3BackConfig extends WebMvcConfigurerAdapter {
     UsuarioInterceptor usuarioInterceptor() {return new UsuarioInterceptor();}
 
     @Bean
+    UsuarioEntidadInterceptor usuarioEntidadInterceptor() {return new UsuarioEntidadInterceptor();}
+
+    @Bean
     EntidadInterceptor entidadInterceptor() {return new EntidadInterceptor();}
 
     @Bean
@@ -286,5 +290,9 @@ public class RegWeb3BackConfig extends WebMvcConfigurerAdapter {
 
     @Bean
     ExportarUsuariosExcel exportarUsuariosExcel() {return new ExportarUsuariosExcel();}
+    @Bean
+    ExportarPermisosUsuariosExcel exportarPermisosUsuariosExcel() {return new ExportarPermisosUsuariosExcel();}
+    @Bean
+    ExportarOficinasExcel exportarOficinasExcel() {return new ExportarOficinasExcel();}
 
 }

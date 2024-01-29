@@ -69,12 +69,15 @@ public class RegWeb3SecurityConfig extends WebSecurityConfigurerAdapter {
                 antMatchers("/entidad/**/anular").hasAuthority(RWE_SUPERADMIN).
                 antMatchers("/entidad/**/activar").hasAuthority(RWE_SUPERADMIN).
                 antMatchers("/usuario/list").hasAuthority(RWE_SUPERADMIN).
+                antMatchers("/usuario/**/edit").hasAuthority(RWE_SUPERADMIN).
                 antMatchers("/usuario/**/delete").hasAuthority(RWE_SUPERADMIN).
                 antMatchers("/dir3/**").hasAuthority(RWE_SUPERADMIN).
+                /* ----- RWE_USUARI ----- */
+                antMatchers("/usuarioEntidad/**/edit").hasAuthority(RWE_USUARI).
                 /* ----- RWE_ADMIN ----- */
                 antMatchers("/entidad/permisos/**").hasAuthority(RWE_ADMIN).
                 antMatchers("/entidad/procesarPendientes").hasAuthority(RWE_ADMIN).
-                antMatchers("/entidad/usuarios").hasAuthority(RWE_ADMIN).
+                antMatchers("/usuarioEntidad/**").hasAuthority(RWE_ADMIN).
                 antMatchers("/entidad/**/sincronizar").hasAuthority(RWE_ADMIN).
                 antMatchers("/entidad/**/actualizar").hasAuthority(RWE_ADMIN).
                 antMatchers("/entidad/procesarlibroorganismo/**").hasAuthority(RWE_ADMIN).
@@ -93,8 +96,7 @@ public class RegWeb3SecurityConfig extends WebSecurityConfigurerAdapter {
                 antMatchers("/propiedadGlobal/**").hasAnyAuthority(RWE_SUPERADMIN,RWE_ADMIN).
                 antMatchers("/plugin/**").hasAnyAuthority(RWE_SUPERADMIN,RWE_ADMIN).
                 antMatchers("/configuracion/**").hasAnyAuthority(RWE_SUPERADMIN,RWE_ADMIN).
-                /* ----- RWE_SUPERADMIN,  RWE_ADMIN y RWE_USUARI ----- */
-                antMatchers("/usuario/**/edit").hasAnyAuthority(RWE_SUPERADMIN,RWE_ADMIN, RWE_USUARI).
+                /* ----- RWE_SUPERADMIN, RWE_ADMIN y RWE_USUARI ----- */
                 antMatchers("/informe/**").hasAnyAuthority(RWE_SUPERADMIN,RWE_ADMIN,RWE_USUARI).
                 antMatchers("/persona/**").hasAnyAuthority(RWE_SUPERADMIN,RWE_ADMIN,RWE_USUARI).
                 /* ----- RWE_USUARI ----- */

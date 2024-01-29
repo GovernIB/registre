@@ -21,7 +21,7 @@
             <div class="col-xs-12">
                 <ol class="breadcrumb">
                     <c:import url="../modulos/migadepan.jsp"/>
-                    <li><a href="<c:url value="/entidad/usuarios"/>" ><i class="fa fa-list-ul"></i> <spring:message code="organismo.usuarios"/></a></li>
+                    <li><a href="<c:url value="/usuarioEntidad/list"/>" ><i class="fa fa-list-ul"></i> <spring:message code="organismo.usuarios"/></a></li>
                     <li class="active"><i class="fa fa-pencil-square-o"></i><spring:message code="usuarioEntidad.existeUsuario"/></li>
                 </ol>
             </div>
@@ -59,7 +59,7 @@
 
                     <!-- Botonera -->
                     <input type="submit" value="<spring:message code="regweb.guardar"/>" onclick="" class="btn btn-warning btn-sm"/>
-                    <input type="button" value="<spring:message code="regweb.cancelar"/>" onclick="goTo('<c:url value="/entidad/usuarios"/>')" class="btn btn-sm" />
+                    <input type="button" value="<spring:message code="regweb.cancelar"/>" onclick="goTo('<c:url value="/usuarioEntidad/list"/>')" class="btn btn-sm" />
 
                 </form:form>
             </div>

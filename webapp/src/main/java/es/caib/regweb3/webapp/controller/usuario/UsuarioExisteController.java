@@ -83,7 +83,7 @@ public class UsuarioExisteController extends BaseController {
 
                     if(usuarioExistente == null){
                         Mensaje.saveMessageError(request, getMessage("usuario.no.encontrado"));
-                        return "redirect:/entidad/usuarios";
+                        return "redirect:/usuarioEntidad/list";
                     }
                 }
 
@@ -94,7 +94,7 @@ public class UsuarioExisteController extends BaseController {
                         && !usuarioExistente.getRwe_ws_entrada() && !usuarioExistente.getRwe_ws_salida()){
 
                     Mensaje.saveMessageError(request, getMessage("usuarioEntidad.rol"));
-                    return "redirect:/entidad/usuarios";
+                    return "redirect:/usuarioEntidad/list";
                 }
 
                 //Comprobamos si el usuario no pertecene ya a la Entidad
@@ -110,7 +110,7 @@ public class UsuarioExisteController extends BaseController {
                     usuarioEntidadEjb.persist(usuarioEntidad);
 
                     Mensaje.saveMessageInfo(request, getMessage("usuarioEntidad.nuevo.ok"));
-                    return "redirect:/entidad/usuarios";
+                    return "redirect:/usuarioEntidad/list";
 
                 }else{ //Si ya pertenecia a la Entidad, lo volvemos a activar
 
@@ -131,7 +131,7 @@ public class UsuarioExisteController extends BaseController {
                 e.printStackTrace();
             }
 
-            return "redirect:/entidad/usuarios";
+            return "redirect:/usuarioEntidad/list";
         }
     }
 

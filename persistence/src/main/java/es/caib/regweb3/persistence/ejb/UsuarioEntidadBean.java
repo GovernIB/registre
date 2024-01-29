@@ -8,6 +8,7 @@ import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 import org.fundaciobit.genapp.common.i18n.I18NException;
+import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -351,49 +352,106 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
 
         StringBuilder query;
 
-        if (idOrganismo != null && idOrganismo > 0) { //Si s'ha triat un Organismo a la cerca
-            query = new StringBuilder("Select DISTINCT usuarioEntidad.id, usuarioEntidad.usuario, usuarioEntidad.oamr from UsuarioEntidad as usuarioEntidad, PermisoOrganismoUsuario as pou ");
-        } else {  //Si NO s'ha triat cap llibre a la cerca
-            query = new StringBuilder("Select DISTINCT usuarioEntidad.id, usuarioEntidad.usuario, usuarioEntidad.oamr from UsuarioEntidad as usuarioEntidad ");
+        if (idOrganismo != null) { //Si s'ha triat un Organismo a la cerca
+            query = new StringBuilder("Select DISTINCT usuarioEntidad from UsuarioEntidad as usuarioEntidad, PermisoOrganismoUsuario as pou ");
+        } else {  //Si NO s'ha triat cap Organismo a la cerca
+            query = new StringBuilder("Select DISTINCT usuarioEntidad from UsuarioEntidad as usuarioEntidad ");
         }
 
+        // Identificador
         if (StringUtils.isNotEmpty(usuarioEntidad.getUsuario().getIdentificador())) {
             where.add(DataBaseUtils.like("usuarioEntidad.usuario.identificador", "identificador", parametros, usuarioEntidad.getUsuario().getIdentificador()));
         }
+        // Nombre
         if (StringUtils.isNotEmpty(usuarioEntidad.getUsuario().getNombre())) {
             where.add(DataBaseUtils.like("usuarioEntidad.usuario.nombre", "nombre", parametros, usuarioEntidad.getUsuario().getNombre()));
         }
+        // Primer apellido
         if (StringUtils.isNotEmpty(usuarioEntidad.getUsuario().getApellido1())) {
             where.add(DataBaseUtils.like("usuarioEntidad.usuario.apellido1", "apellido1", parametros, usuarioEntidad.getUsuario().getApellido1()));
         }
+        // Segundo apellido
         if (StringUtils.isNotEmpty(usuarioEntidad.getUsuario().getApellido2())) {
             where.add(DataBaseUtils.like("usuarioEntidad.usuario.apellido2", "apellido2", parametros, usuarioEntidad.getUsuario().getApellido2()));
         }
+        // Documento
         if (StringUtils.isNotEmpty(usuarioEntidad.getUsuario().getDocumento())) {
             where.add(" upper(usuarioEntidad.usuario.documento) like upper(:documento) ");
             parametros.put("documento", "%" + usuarioEntidad.getUsuario().getDocumento().toLowerCase() + "%");
         }
+
+        // Tipo Usuario
         if (usuarioEntidad.getUsuario().getTipoUsuario() != null) {
             where.add("usuarioEntidad.usuario.tipoUsuario = :tipoUsuario ");
             parametros.put("tipoUsuario", usuarioEntidad.getUsuario().getTipoUsuario());
         }
 
-        if (idOrganismo != null && idOrganismo > 0) { //Si s'ha triat un organisme a la cerca
+        // Organismo
+        if (idOrganismo != null) { //Si s'ha triat un organisme a la cerca
             where.add("usuarioEntidad.id = pou.usuario.id ");
             where.add("pou.organismo.id = :idOrganismo ");
             parametros.put("idOrganismo", idOrganismo);
             where.add("pou.activo = true ");
+
+            // Permiso
+            if (permiso != null) { //Si s'ha triat un permis
+                where.add("pou.permiso = :permiso ");
+                parametros.put("permiso", permiso);
+            }
         }
 
-        if (permiso != null && idOrganismo != null) { //Si s'ha triat un organisme a la cerca
-            where.add("pou.permiso = :permiso ");
-            parametros.put("permiso", permiso);
+        // Oficina
+        if (usuarioEntidad.getUltimaOficina() != null && usuarioEntidad.getUltimaOficina().getId() !=null) {
+            where.add("usuarioEntidad.ultimaOficina.id = :ultimaOficina ");
+            parametros.put("ultimaOficina", usuarioEntidad.getUltimaOficina().getId());
         }
 
-        //OAMR
-        if(usuarioEntidad.getOamr() != null){
-            where.add(" usuarioEntidad.oamr = :oamr ");
-            parametros.put("oamr", usuarioEntidad.getOamr());
+        // Función
+        if (usuarioEntidad.getFuncion() != null) {
+            where.add("usuarioEntidad.funcion = :funcion ");
+            parametros.put("funcion", usuarioEntidad.getFuncion());
+        }
+
+        // Categoría
+        if (usuarioEntidad.getCategoria() != null) {
+            where.add("usuarioEntidad.categoria = :categoria ");
+            parametros.put("categoria", usuarioEntidad.getCategoria());
+        }
+
+        // CAI
+        if (usuarioEntidad.getCai() != null) {
+            where.add("usuarioEntidad.cai = :cai ");
+            parametros.put("cai", usuarioEntidad.getCai());
+        }
+
+        // Clave
+        if (usuarioEntidad.getClave() != null) {
+            where.add("usuarioEntidad.clave = :clave ");
+            parametros.put("clave", usuarioEntidad.getClave());
+        }
+
+        // Bitcita
+        if (usuarioEntidad.getBitcita() != null) {
+            where.add("usuarioEntidad.bitcita = :bitcita ");
+            parametros.put("bitcita", usuarioEntidad.getBitcita());
+        }
+
+        // Asistencia
+        if (usuarioEntidad.getAsistencia() != null) {
+            where.add("usuarioEntidad.asistencia = :asistencia ");
+            parametros.put("asistencia", usuarioEntidad.getAsistencia());
+        }
+
+        // Apodera
+        if (usuarioEntidad.getApodera() != null) {
+            where.add("usuarioEntidad.apodera = :apodera ");
+            parametros.put("apodera", usuarioEntidad.getApodera());
+        }
+
+        // Notificación espontánea
+        if (usuarioEntidad.getNotificacionEspontanea() != null) {
+            where.add("usuarioEntidad.notificacionEspontanea = :notificacionEspontanea ");
+            parametros.put("notificacionEspontanea", usuarioEntidad.getNotificacionEspontanea());
         }
 
         where.add("usuarioEntidad.entidad.id = :idEntidad ");
@@ -410,8 +468,8 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
                 query.append(w);
                 count++;
             }
-            q2 = em.createQuery(query.toString().replaceAll("Select DISTINCT usuarioEntidad.id, usuarioEntidad.usuario, usuarioEntidad.oamr from UsuarioEntidad as usuarioEntidad", "Select count(DISTINCT usuarioEntidad.usuario.id) from UsuarioEntidad as usuarioEntidad "));
-            query.append("order by usuarioEntidad.usuario.nombre, usuarioEntidad.usuario.apellido1");
+            q2 = em.createQuery(query.toString().replaceAll("Select DISTINCT usuarioEntidad from UsuarioEntidad as usuarioEntidad", "Select count(DISTINCT usuarioEntidad.id) from UsuarioEntidad as usuarioEntidad "));
+            //query.append("order by usuarioEntidad.usuario.nombre, usuarioEntidad.usuario.apellido1");
             q = em.createQuery(query.toString());
 
             for (Map.Entry<String, Object> param : parametros.entrySet()) {
@@ -420,8 +478,8 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
             }
 
         } else {
-            q2 = em.createQuery(query.toString().replaceAll("Select DISTINCT usuarioEntidad.id, usuarioEntidad.usuario, usuarioEntidad.oamr from UsuarioEntidad as usuarioEntidad", "Select count(DISTINCT usuarioEntidad.usuario.id) from UsuarioEntidad as usuarioEntidad "));
-            query.append("order by usuarioEntidad.usuario.nombre, usuarioEntidad.usuario.apellido1");
+            q2 = em.createQuery(query.toString().replaceAll("Select DISTINCT usuarioEntidad from UsuarioEntidad as usuarioEntidad", "Select count(DISTINCT usuarioEntidad.id) from UsuarioEntidad as usuarioEntidad "));
+            //query.append("order by usuarioEntidad.usuario.nombre, usuarioEntidad.usuario.apellido1");
             q = em.createQuery(query.toString());
         }
 
@@ -439,18 +497,12 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
             paginacion = new Paginacion(0, 0);
         }
 
-
-        List<UsuarioEntidad> usuarios = new ArrayList<UsuarioEntidad>();
-
-        List<Object[]> result = q.getResultList();
-
-        for (Object[] object : result) {
-            UsuarioEntidad usuario = new UsuarioEntidad((Long) object[0], (Usuario) object[1], null);
-            usuario.setOamr((Boolean) object[2]);
-            usuarios.add(usuario);
+        List<UsuarioEntidad> usuarios = q.getResultList();
+        for (UsuarioEntidad ue : usuarios) {
+            Hibernate.initialize(ue.getUltimaOficina());
         }
-
         paginacion.setListado(usuarios);
+
 
         return paginacion;
 
@@ -486,8 +538,7 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
     @Override
     public void actualizarOficinaUsuario(Long idUsuario, Long idOficina) throws I18NException {
 
-        Query q = em.createQuery("Update UsuarioEntidad set ultimaOficina.id = :idOficina " +
-                "where id = :idUsuario");
+        Query q = em.createQuery("Update UsuarioEntidad set ultimaOficina.id = :idOficina where id = :idUsuario");
 
         q.setParameter("idOficina", idOficina);
         q.setParameter("idUsuario", idUsuario);
@@ -536,27 +587,30 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
     }
 
     @Override
-    public void activarOAMR(Long idUsuarioEntidad, Boolean activo) throws I18NException {
+    @SuppressWarnings(value = "unchecked")
+    public List<UsuarioEntidad> getUsuariosOficina(Long idEntidad, Long idOficina) throws I18NException {
 
-        Query q = em.createQuery("Update UsuarioEntidad set oamr = :activo where id = :idUsuarioEntidad");
+        Query q = em.createQuery("Select usuarioEntidad from UsuarioEntidad as usuarioEntidad where " +
+                "usuarioEntidad.entidad.id = :idEntidad and usuarioEntidad.activo = true and usuarioEntidad.ultimaOficina.id = :idOficina order by usuarioEntidad.usuario.apellido1");
 
-        q.setParameter("idUsuarioEntidad", idUsuarioEntidad);
-        q.setParameter("activo", activo);
-        q.executeUpdate();
+        q.setParameter("idEntidad", idEntidad);
+        q.setParameter("idOficina", idOficina);
+        q.setHint("org.hibernate.readOnly", true);
 
+        return q.getResultList();
     }
 
     @Override
     @SuppressWarnings(value = "unchecked")
     public List<UsuarioEntidad> getOAMRByEntidad(Long idEntidad) throws I18NException {
-
         Query q = em.createQuery("Select usuarioEntidad from UsuarioEntidad as usuarioEntidad where " +
-                "usuarioEntidad.entidad.id = :idEntidad and usuarioEntidad.activo = true and usuarioEntidad.usuario.rwe_usuari = true and usuarioEntidad.oamr = true");
+                "usuarioEntidad.entidad.id = :idEntidad and usuarioEntidad.activo = true and usuarioEntidad.usuario.rwe_usuari = true and usuarioEntidad.ultimaOficina.oamr = true");
 
         q.setParameter("idEntidad", idEntidad);
         q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList();
     }
+
 
 }

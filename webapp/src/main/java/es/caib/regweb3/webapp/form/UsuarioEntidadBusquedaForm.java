@@ -17,13 +17,13 @@ public class UsuarioEntidadBusquedaForm implements Serializable {
     private Organismo organismo;
     private Long permiso;
     private Integer pageNumber;
-    private Boolean exportar = false;
+    private Boolean exportarUsuarios = false;
+    private Boolean exportarPermisos = false;
 
     public UsuarioEntidadBusquedaForm() {
     }
 
     public UsuarioEntidadBusquedaForm(UsuarioEntidad usuarioEntidad, Integer pageNumber) {
-        usuarioEntidad.setOamr(null);
         this.usuarioEntidad = usuarioEntidad;
         this.pageNumber = pageNumber;
     }
@@ -60,11 +60,19 @@ public class UsuarioEntidadBusquedaForm implements Serializable {
         this.pageNumber = pageNumber;
     }
 
-    public Boolean getExportar() {
-        return exportar;
+    public Boolean getExportarUsuarios() {
+        return exportarUsuarios;
     }
 
-    public void setExportar(Boolean exportar) {
-        this.exportar = exportar;
+    public void setExportarUsuarios(Boolean exportarUsuarios) {
+        this.exportarUsuarios = exportarUsuarios;
+    }
+
+    public Boolean getExportarPermisos() {
+        return exportarPermisos;
+    }
+
+    public void setExportarPermisos(Boolean exportarPermisos) {
+        this.exportarPermisos = exportarPermisos;
     }
 }

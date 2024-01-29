@@ -1,6 +1,9 @@
 package es.caib.regweb3.webapp.view;
 
+import es.caib.regweb3.model.Organismo;
+import es.caib.regweb3.model.PermisoOrganismoUsuario;
 import es.caib.regweb3.model.UsuarioEntidad;
+import es.caib.regweb3.persistence.ejb.PermisoOrganismoUsuarioLocal;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.utils.StringUtils;
 import es.caib.regweb3.utils.TimeUtils;
@@ -13,11 +16,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.servlet.view.document.AbstractExcelView;
 
+import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
+
+import static es.caib.regweb3.utils.StringUtils.toStringSiNo;
 
 /**
  * Created by Fundació BIT.
@@ -25,9 +31,12 @@ import java.util.Map;
  * Date: 30/10/19
  */
 
-public class ExportarUsuariosExcel extends AbstractExcelView {
+public class ExportarPermisosUsuariosExcel extends AbstractExcelView {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
+
+    @EJB(mappedName = PermisoOrganismoUsuarioLocal.JNDI_NAME)
+    public PermisoOrganismoUsuarioLocal permisoOrganismoUsuarioEjb;
 
     /**
      * Retorna el mensaje traducido según el idioma del usuario
@@ -44,6 +53,7 @@ public class ExportarUsuariosExcel extends AbstractExcelView {
 
         //Obtenemos los usuarios
         Paginacion resultados = (Paginacion) model.get("resultados");
+        Organismo organismo = (Organismo) model.get("organismo");
 
         int hojasExcel = (resultados.getListado().size()/65000)+1;
         int resta = resultados.getListado().size() % 65000;
@@ -111,12 +121,11 @@ public class ExportarUsuariosExcel extends AbstractExcelView {
             HSSFRow mostrarRow = sheet.createRow(5);
             mostrarRow.setHeightInPoints(15);
 
-
             //Título
-            sheet.addMergedRegion(CellRangeAddress.valueOf("$A$1:$N$1"));
+            sheet.addMergedRegion(CellRangeAddress.valueOf("$A$1:$Q$1"));
             tittleCell.setCellValue(getMessage("usuario.exportar.lista"));
             tittleCell.setCellStyle(titulo);
-            sheet.addMergedRegion(CellRangeAddress.valueOf("$A$2:$N$2"));
+            sheet.addMergedRegion(CellRangeAddress.valueOf("$A$2:$Q$2"));
 
             int rowNum = 1;
 
@@ -124,7 +133,7 @@ public class ExportarUsuariosExcel extends AbstractExcelView {
             header.setHeightInPoints(15);
 
             // Dades que se mostren d'un usuari
-            String[] capsalera = new String[]{"usuario.identificador", "usuario.nombre", "usuario.documento", "usuario.categoria","usuario.funcion","usuario.codigoTrabajo","usuario.nombreTrabajo","organismo.organismo", "oficina.oficina","usuario.observaciones", "usuario.fechaAlta", "usuario.cai", "usuario.email", "usuario.telefono"};
+            String[] capsalera = new String[]{"usuario.identificador", "usuario.nombre", "usuario.clave","usuario.bitcita", "usuario.asistencia", "usuario.apodera", "usuario.notificacionEspontanea", "organismo.organismo", "permiso.nombre.1","permiso.nombre.2", "permiso.nombre.3", "permiso.nombre.4", "permiso.nombre.5", "permiso.nombre.6","permiso.nombre.7","permiso.nombre.8","permiso.nombre.9"};
 
             // DADES A MOSTRAR
             // Capçalera
@@ -153,74 +162,25 @@ public class ExportarUsuariosExcel extends AbstractExcelView {
                 row.createCell(0).setCellValue(usuario.getUsuario().getIdentificador());
                 // Nom
                 row.createCell(1).setCellValue(usuario.getUsuario().getNombreCompleto());
-                // Document
-                row.createCell(2).setCellValue(usuario.getUsuario().getDocumento());
-                // Categoría
-                if(usuario.getCategoria() != null){
-                    row.createCell(3).setCellValue(getMessage("usuario.categoria."+usuario.getCategoria()));
-                }else {
-                    row.createCell(3).setCellValue("");
-                }
-                // Función
-                if(usuario.getFuncion() != null){
-                    row.createCell(4).setCellValue(getMessage("usuario.funcion."+usuario.getFuncion()));
-                }else{
-                    row.createCell(4).setCellValue("");
-                }
-                // Código trabajo
-                if(StringUtils.isNotEmpty(usuario.getCodigoTrabajo())){
-                    row.createCell(5).setCellValue(usuario.getCodigoTrabajo());
-                }else{
-                    row.createCell(5).setCellValue("");
-                }
-                // Nombre trabajo
-                if(StringUtils.isNotEmpty(usuario.getNombreTrabajo())){
-                    row.createCell(6).setCellValue(usuario.getNombreTrabajo());
-                }else{
-                    row.createCell(6).setCellValue("");
-                }
+                // Clave
+                row.createCell(2).setCellValue(StringUtils.toStringSiNo(usuario.getClave()));
+                // Bitcita
+                row.createCell(3).setCellValue(StringUtils.toStringSiNo(usuario.getBitcita()));
+                // Asistencia
+                row.createCell(4).setCellValue(StringUtils.toStringSiNo(usuario.getAsistencia()));
+                // Apodera
+                row.createCell(5).setCellValue(StringUtils.toStringSiNo(usuario.getApodera()));
+                // Notificación espontánea
+                row.createCell(6).setCellValue(StringUtils.toStringSiNo(usuario.getNotificacionEspontanea()));
+                // Organismo
+                row.createCell(7).setCellValue(organismo.getDenominacion());
 
-                // Organismo - Oficina
-                if(usuario.getUltimaOficina() != null){
-                    row.createCell(7).setCellValue(usuario.getUltimaOficina().getOrganismoResponsable().getDenominacion());
-                    row.createCell(8).setCellValue(usuario.getUltimaOficina().getDenominacion());
-                }else{
-                    row.createCell(7).setCellValue("");
-                    row.createCell(8).setCellValue("");
-                }
-
-                // Observaciones
-                if(usuario.getObservaciones() != null){
-                    row.createCell(9).setCellValue(usuario.getObservaciones());
-                }else{
-                    row.createCell(9).setCellValue("");
-                }
-
-                // Fecha alta
-                if(usuario.getFechaAlta() != null){
-                    row.createCell(10).setCellValue(new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(usuario.getFechaAlta()));
-                }else{
-                    row.createCell(10).setCellValue("");
-                }
-
-                // CAI
-                if(usuario.getCai() != null){
-                    row.createCell(11).setCellValue(usuario.getCai());
-                }else{
-                    row.createCell(11).setCellValue("");
-                }
-
-                // Mail
-                if(usuario.getUsuario().getEmail() != null){
-                    row.createCell(12).setCellValue(usuario.getUsuario().getEmail());
-                }else{
-                    row.createCell(12).setCellValue("");
-                }
-                // Teléfono
-                if(usuario.getTelefono() != null){
-                    row.createCell(13).setCellValue(usuario.getTelefono());
-                }else{
-                    row.createCell(13).setCellValue("");
+                // Permiso
+                List<PermisoOrganismoUsuario> permisos = permisoOrganismoUsuarioEjb.findByUsuarioOrganismo(usuario.getId(), organismo.getId());
+                int j = 8;
+                for(PermisoOrganismoUsuario pou:permisos){
+                    row.createCell(j).setCellValue(toStringSiNo(pou.getActivo()));
+                    j++;
                 }
 
                 // Aplicam estils a les cel·les
@@ -234,12 +194,11 @@ public class ExportarUsuariosExcel extends AbstractExcelView {
                 sheet.autoSizeColumn(i);
             }
 
-            String nombreFichero = getMessage("usuario.exportar.fichero") + "_"+TimeUtils.imprimeFecha(new Date(), "dd-MM-yyyy") +".xls";
+            String nombreFichero = getMessage("usuario.exportar.fichero") + "_Permisos_"+ TimeUtils.imprimeFecha(new Date(), "dd-MM-yyyy") +".xls";
 
             // Cabeceras Response
             response.setHeader("Content-Disposition", "attachment; filename=" + nombreFichero);
             response.setHeader("Content-Type", "application/vnd.ms-excel;charset=UTF-8");
-
         }
     }
 
