@@ -15,6 +15,7 @@ http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd">
         <class>es.caib.regweb3.model.CatComunidadAutonoma</class>
         <class>es.caib.regweb3.model.CatEntidadGeografica</class>
         <class>es.caib.regweb3.model.CatEstadoEntidad</class>
+        <class>es.caib.regweb3.model.CatIsla</class>
         <class>es.caib.regweb3.model.CatLocalidad</class>
         <class>es.caib.regweb3.model.CatNivelAdministracion</class>
         <class>es.caib.regweb3.model.CatPais</class>

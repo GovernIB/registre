@@ -15,7 +15,7 @@ import javax.servlet.http.HttpSession;
 
 /**
  * Created by Fundació BIT.
- *
+ * <p>
  * Interceptor para la gestión de Usuarios
  *
  * @author earrivi
@@ -29,30 +29,22 @@ public class UsuarioInterceptor extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
-      //final long start = System.currentTimeMillis();
-      try {
         String url = request.getServletPath();
 
         HttpSession session = request.getSession();
-          LoginInfo loginInfo = (LoginInfo) session.getAttribute(RegwebConstantes.SESSION_LOGIN_INFO);
-          Rol rolActivo = loginInfo.getRolActivo();
+        LoginInfo loginInfo = (LoginInfo) session.getAttribute(RegwebConstantes.SESSION_LOGIN_INFO);
+        Rol rolActivo = loginInfo.getRolActivo();
 
         // Listado usuarios de la aplicación
-        if(url.equals("/usuario/list")){
-            if(!rolActivo.getNombre().equals(RegwebConstantes.RWE_SUPERADMIN)){
-                log.info("Error de rol");
-                Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.rol"));
-                response.sendRedirect("/regweb3/aviso");
-                return false;
-            }
+        if (url.equals("/usuario/list") && (!rolActivo.getNombre().equals(RegwebConstantes.RWE_SUPERADMIN))) {
+
+            Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.rol"));
+            response.sendRedirect("/regweb3/aviso");
+            return false;
+
         }
 
-
         return true;
-    } finally {
-      //log.info("Interceptor Usuarioa: " + TimeUtils.formatElapsedTime(System.currentTimeMillis() - start));
-    }
-    }
 
-
+    }
 }

@@ -63,7 +63,7 @@ public class PermisosController extends BaseController {
 
         if(roles == null){
             Mensaje.saveMessageError(request, getMessage("usuario.asignar.permisos.denegado"));
-            return "redirect:/entidad/usuarios";
+            return "redirect:/usuarioEntidad/list";
         }
 
         // Si no dispone de algún ROL, no se le pueden asignar permisos
@@ -79,7 +79,7 @@ public class PermisosController extends BaseController {
             // Obtenemos los Organismos vigentes que permiten asociar usuarios
             List<Organismo> organismosActivos = organismoEjb.getPermitirUsuarios(entidad.getId());
             List<Organismo> organismosAsociados = new ArrayList<Organismo>();
-            if (permisos.size() > 0) {
+            if (!permisos.isEmpty()) {
                 organismosAsociados = permisoOrganismoUsuarioEjb.getOrganismosByUsuario(usuarioEntidad.getId());
             }
 
@@ -97,7 +97,7 @@ public class PermisosController extends BaseController {
             return "permiso/permisoOrganismoUsuarioForm";
         } else {
             Mensaje.saveMessageError(request, getMessage("usuario.asignar.permisos.denegado"));
-            return "redirect:/entidad/usuarios";
+            return "redirect:/usuarioEntidad/list";
         }
     }
 
@@ -132,7 +132,7 @@ public class PermisosController extends BaseController {
         }
 
         status.setComplete();
-        return "redirect:/entidad/usuarios";
+        return "redirect:/usuarioEntidad/list";
     }
 
     /**
@@ -194,34 +194,6 @@ public class PermisosController extends BaseController {
     }
 
     /**
-     * Activa que un {@link es.caib.regweb3.model.UsuarioEntidad} sea OAMR
-     */
-    @RequestMapping(value = "/{idUsuarioEntidad}/activarOAMR", method = RequestMethod.GET)
-    public String activarOAMR(@PathVariable Long idUsuarioEntidad, HttpServletRequest request) throws Exception {
-
-        usuarioEntidadEjb.activarOAMR(idUsuarioEntidad, true);
-
-        Mensaje.saveMessageInfo(request, getMessage("usuario.activar.oamr.ok"));
-
-        return "redirect:/entidad/usuarios";
-
-    }
-
-    /**
-     * DEsactiva que un {@link es.caib.regweb3.model.UsuarioEntidad} sea OAMR
-     */
-    @RequestMapping(value = "/{idUsuarioEntidad}/desactivarOAMR", method = RequestMethod.GET)
-    public String desactivarOAMR(@PathVariable Long idUsuarioEntidad, HttpServletRequest request) throws Exception {
-
-        usuarioEntidadEjb.activarOAMR(idUsuarioEntidad, false);
-
-        Mensaje.saveMessageInfo(request, getMessage("usuario.desactivar.oamr.ok"));
-
-        return "redirect:/entidad/usuarios";
-
-    }
-
-    /**
      * Eliminar la asignación de un Usuario a una Entidad
      */
     @RequestMapping(value = "/{idUsuarioEntidad}/delete", method = RequestMethod.GET)
@@ -232,7 +204,7 @@ public class PermisosController extends BaseController {
 
             if (entidadEjb.esAdministrador(usuarioEntidad)) {
                 Mensaje.saveMessageError(request, getMessage("usuarioEntidad.administrador"));
-                return "redirect:/entidad/usuarios";
+                return "redirect:/usuarioEntidad/list";
             }
 
             // Eliminamos todos sus PermisoLibroUsuario
@@ -250,7 +222,6 @@ public class PermisosController extends BaseController {
             } else {
                 // Desactivamos este usuario de la Entidad
                 usuarioEntidad.setActivo(false);
-                usuarioEntidad.setOamr(false);
                 usuarioEntidadEjb.merge(usuarioEntidad);
 
                 Mensaje.saveMessageInfo(request, getMessage("usuario.desactivado"));
@@ -261,7 +232,7 @@ public class PermisosController extends BaseController {
             e.printStackTrace();
         }
 
-        return "redirect:/entidad/usuarios";
+        return "redirect:/usuarioEntidad/list";
     }
 
     /**

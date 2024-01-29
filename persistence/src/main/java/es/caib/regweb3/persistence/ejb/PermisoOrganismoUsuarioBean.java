@@ -1,8 +1,12 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.*;
+import es.caib.regweb3.persistence.utils.DataBaseUtils;
+import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.utils.RegwebConstantes;
+import es.caib.regweb3.utils.StringUtils;
 import org.fundaciobit.genapp.common.i18n.I18NException;
+import org.hibernate.Hibernate;
 import org.jboss.ejb3.annotation.TransactionTimeout;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,10 +17,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by Fundació BIT.
@@ -613,6 +614,147 @@ public class PermisoOrganismoUsuarioBean extends BaseEjbJPA<PermisoOrganismoUsua
         libroEjb.merge(libro);
 
         return permisos.size();
+
+    }
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public Paginacion busqueda(Long idEntidad, UsuarioEntidad usuarioEntidad, Long idOrganismo) throws I18NException {
+
+        Query q;
+
+        Map<String, Object> parametros = new HashMap<String, Object>();
+        List<String> where = new ArrayList<String>();
+
+        StringBuilder query;
+
+        query = new StringBuilder("Select DISTINCT pou from PermisoOrganismoUsuario as pou ");
+
+        // Identificador
+        if (StringUtils.isNotEmpty(usuarioEntidad.getUsuario().getIdentificador())) {
+            where.add(DataBaseUtils.like("pou.usuario.usuario.identificador", "identificador", parametros, usuarioEntidad.getUsuario().getIdentificador()));
+        }
+        // Nombre
+        if (StringUtils.isNotEmpty(usuarioEntidad.getUsuario().getNombre())) {
+            where.add(DataBaseUtils.like("pou.usuario.usuario.nombre", "nombre", parametros, usuarioEntidad.getUsuario().getNombre()));
+        }
+        // Primer apellido
+        if (StringUtils.isNotEmpty(usuarioEntidad.getUsuario().getApellido1())) {
+            where.add(DataBaseUtils.like("pou.usuario.usuario.apellido1", "apellido1", parametros, usuarioEntidad.getUsuario().getApellido1()));
+        }
+        // Segundo apellido
+        if (StringUtils.isNotEmpty(usuarioEntidad.getUsuario().getApellido2())) {
+            where.add(DataBaseUtils.like("pou.usuario.usuario.apellido2", "apellido2", parametros, usuarioEntidad.getUsuario().getApellido2()));
+        }
+        // Documento
+        if (StringUtils.isNotEmpty(usuarioEntidad.getUsuario().getDocumento())) {
+            where.add(" upper(pou.usuario.usuario.documento) like upper(:documento) ");
+            parametros.put("documento", "%" + usuarioEntidad.getUsuario().getDocumento().toLowerCase() + "%");
+        }
+
+        // Tipo Usuario
+        if (usuarioEntidad.getUsuario().getTipoUsuario() != null) {
+            where.add("pou.usuario.usuario.tipoUsuario = :tipoUsuario ");
+            parametros.put("tipoUsuario", usuarioEntidad.getUsuario().getTipoUsuario());
+        }
+
+        // Organismo
+        if (idOrganismo != null) { //Si s'ha triat un organisme a la cerca
+            where.add("pou.organismo.id = :idOrganismo ");
+            parametros.put("idOrganismo", idOrganismo);
+            where.add("pou.activo = true ");
+
+        }
+
+        // Oficina
+        if (usuarioEntidad.getUltimaOficina() != null && usuarioEntidad.getUltimaOficina().getId() !=null) {
+            where.add("pou.usuario.ultimaOficina.id = :ultimaOficina ");
+            parametros.put("ultimaOficina", usuarioEntidad.getUltimaOficina().getId());
+        }
+
+        // Función
+        if (usuarioEntidad.getFuncion() != null) {
+            where.add("pou.usuario.funcion = :funcion ");
+            parametros.put("funcion", usuarioEntidad.getFuncion());
+        }
+
+        // Categoría
+        if (usuarioEntidad.getCategoria() != null) {
+            where.add("pou.usuario.categoria = :categoria ");
+            parametros.put("categoria", usuarioEntidad.getCategoria());
+        }
+
+        // CAI
+        if (usuarioEntidad.getCai() != null) {
+            where.add("pou.usuario.cai = :cai ");
+            parametros.put("cai", usuarioEntidad.getCai());
+        }
+
+        // Clave
+        if (usuarioEntidad.getClave() != null) {
+            where.add("pou.usuario.clave = :clave ");
+            parametros.put("clave", usuarioEntidad.getClave());
+        }
+
+        // Bitcita
+        if (usuarioEntidad.getBitcita() != null) {
+            where.add("pou.usuario.bitcita = :bitcita ");
+            parametros.put("bitcita", usuarioEntidad.getBitcita());
+        }
+
+        // Asistencia
+        if (usuarioEntidad.getAsistencia() != null) {
+            where.add("pou.usuario.asistencia = :asistencia ");
+            parametros.put("asistencia", usuarioEntidad.getAsistencia());
+        }
+
+        // Apodera
+        if (usuarioEntidad.getApodera() != null) {
+            where.add("pou.usuario.apodera = :apodera ");
+            parametros.put("apodera", usuarioEntidad.getApodera());
+        }
+
+        // Notificación espontánea
+        if (usuarioEntidad.getNotificacionEspontanea() != null) {
+            where.add("pou.usuario.notificacionEspontanea = :notificacionEspontanea ");
+            parametros.put("notificacionEspontanea", usuarioEntidad.getNotificacionEspontanea());
+        }
+
+        where.add("pou.usuario.entidad.id = :idEntidad ");
+        parametros.put("idEntidad", idEntidad);
+        where.add("pou.usuario.activo = true ");
+
+        // Parámetros
+        query.append("where ");
+        int count = 0;
+        for (String w : where) {
+            if (count != 0) {
+                query.append(" and ");
+            }
+            query.append(w);
+            count++;
+        }
+        query.append("order by pou.usuario.id");
+        q = em.createQuery(query.toString());
+
+        for (Map.Entry<String, Object> param : parametros.entrySet()) {
+            q.setParameter(param.getKey(), param.getValue());
+
+        }
+
+
+        Paginacion paginacion = new Paginacion(0, 0);
+        q.setHint("org.hibernate.readOnly", true);
+
+
+        List<PermisoOrganismoUsuario> pous = q.getResultList();
+        for (PermisoOrganismoUsuario pou : pous) {
+            Hibernate.initialize(pou.getOrganismo());
+            Hibernate.initialize(pou.getUsuario());
+        }
+        paginacion.setListado(q.getResultList());
+
+        return paginacion;
 
     }
 

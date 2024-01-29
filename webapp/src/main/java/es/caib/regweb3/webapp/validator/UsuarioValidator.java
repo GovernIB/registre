@@ -54,7 +54,7 @@ public class UsuarioValidator implements Validator {
             ValidationUtils.rejectIfEmptyOrWhitespace(errors, "documento", "error.valor.requerido", "El camp és obligatori");
 
             // Formato DNI
-            if (usuario.getDocumento() != null && usuario.getDocumento().length() > 0) {
+            if (usuario.getDocumento() != null && !usuario.getDocumento().isEmpty()) {
 
                 String documento = usuario.getDocumento();
                 String letras = "TRWAGMYFPDXBNJZSQVHLCKE";
@@ -86,7 +86,7 @@ public class UsuarioValidator implements Validator {
             try {
 
                 // Identificador único
-                if (usuario.getIdentificador() != null && usuario.getIdentificador().length() > 0) {
+                if (usuario.getIdentificador() != null && !usuario.getIdentificador().isEmpty()) {
 
                     if(!loginService.existeIdentificador(usuario.getIdentificador())){
                         errors.rejectValue("identificador", "usuario.identificador.no.existe", "L'identificador no existeix al sistema de usuaris");

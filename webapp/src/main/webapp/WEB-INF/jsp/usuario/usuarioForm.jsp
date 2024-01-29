@@ -150,7 +150,7 @@
                     <input type="button" value="<spring:message code="regweb.cancelar"/>" onclick="goTo('<c:url value="/inici"/>')" class="btn btn-sm">
                 </c:if>
                 <c:if test="${loginInfo.rolActivo.nombre == 'RWE_ADMIN'}">
-                    <input type="button" value="<spring:message code="regweb.cancelar"/>" onclick="goTo('<c:url value="/entidad/usuarios"/>')" class="btn btn-sm">
+                    <input type="button" value="<spring:message code="regweb.cancelar"/>" onclick="goTo('<c:url value="/usuarioEntidad/list"/>')" class="btn btn-sm">
                 </c:if>
                 <c:if test="${loginInfo.rolActivo.nombre == 'RWE_SUPERADMIN'}">
                     <input type="button" value="<spring:message code="regweb.cancelar"/>" onclick="goTo('<c:url value="/usuario/list"/>')" class="btn btn-sm">

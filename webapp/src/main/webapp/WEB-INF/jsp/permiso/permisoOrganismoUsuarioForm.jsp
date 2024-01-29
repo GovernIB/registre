@@ -21,7 +21,7 @@
             <div class="col-xs-12">
                 <ol class="breadcrumb">
                     <li><a href="<c:url value="/inici"/>"><i class="fa fa-institution"></i> ${loginInfo.entidadActiva.nombre}</a></li>
-                    <li><a href="<c:url value="/entidad/usuarios"/>" ><i class="fa fa-list-ul"></i> <spring:message code="organismo.usuarios"/></a></li>
+                    <li><a href="<c:url value="/usuarioEntidad/list"/>" ><i class="fa fa-list-ul"></i> <spring:message code="organismo.usuarios"/></a></li>
                     <li class="active"><i class="fa fa-pencil-square-o"></i> <strong><spring:message
                             code="usuario.modificar.permisos"/>
                         a ${permisoOrganismoUsuarioForm.usuarioEntidad.usuario.nombreCompleto}</strong></li>
@@ -119,7 +119,7 @@
                                 <c:if test="${not empty organismosAsociados}">
                                     <input type="submit" value="<spring:message code="regweb.guardar"/>" onclick="" class="btn btn-warning btn-sm"/>
                                 </c:if>
-                                <input type="button" value="<spring:message code="regweb.cancelar"/>" onclick="goTo('<c:url value="/entidad/usuarios"/>')" class="btn btn-sm">
+                                <input type="button" value="<spring:message code="regweb.cancelar"/>" onclick="goTo('<c:url value="/usuarioEntidad/list"/>')" class="btn btn-sm">
                                 <!-- Fin Botonera -->
                             </form:form>
                         </c:if>

@@ -71,11 +71,20 @@
                         </c:if>
 
                         <%--Datos usuario--%>
-                        <li>
-                            <a href="<c:url value="/usuario/${loginInfo.usuarioAutenticado.id}/edit"/>">
-                                <i class="fa fa-gear"></i> <spring:message code="usuario.editar"/>
-                            </a>
-                        </li>
+                        <c:if test="${loginInfo.rolActivo.nombre == 'RWE_ADMIN' || loginInfo.rolActivo.nombre == 'RWE_USUARI'}">
+                            <li>
+                                <a href="<c:url value="/usuarioEntidad/${loginInfo.usuarioEntidadActivo.id}/edit"/>">
+                                    <i class="fa fa-gear"></i> <spring:message code="usuario.editar"/>
+                                </a>
+                            </li>
+                        </c:if>
+                        <c:if test="${loginInfo.rolActivo.nombre == 'RWE_SUPERADMIN'}">
+                            <li>
+                                <a href="<c:url value="/usuario/${loginInfo.usuarioAutenticado.id}/edit"/>">
+                                    <i class="fa fa-gear"></i> <spring:message code="usuario.editar"/>
+                                </a>
+                            </li>
+                        </c:if>
 
                     </ul>
                 </li>

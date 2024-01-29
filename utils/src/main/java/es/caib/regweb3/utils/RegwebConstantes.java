@@ -148,6 +148,33 @@ public interface RegwebConstantes {
 
     Integer TOTAL_PERMISOS = PERMISOS.length;
 
+    /* -------------- CATEGORÍA LABORAL --------------*/
+
+    Long PERSONAL_FUNCIONARI = 1L;
+    Long PERSONAL_LABORAL = 2L;
+    Long PERSONAL_ESTATUTARIO = 3L;
+    Long PERSONAL_OTROS = 4L;
+
+    Long[] CATEGORIA_LABORAL = {
+            PERSONAL_FUNCIONARI,
+            PERSONAL_LABORAL,
+            PERSONAL_ESTATUTARIO,
+            PERSONAL_OTROS
+    };
+
+    /* -------------- FUNCIÓN EN LA OFICINA --------------*/
+
+    Long FUNCION_TITULAR = 1L;
+    Long FUNCION_SUSTITUTO = 2L;
+    Long FUNCION_JEFE = 3L;
+    Long FUNCION_OTROS = 4L;
+
+    Long[] FUNCION_OFICINA = {
+            FUNCION_TITULAR,
+            FUNCION_SUSTITUTO,
+            FUNCION_JEFE,
+            FUNCION_OTROS
+    };
 
     /* -------------- TIPO PERSONA --------------*/
     Long TIPO_PERSONA_FISICA = 2L;
@@ -410,7 +437,7 @@ public interface RegwebConstantes {
     /* -------------- PAIS --------------*/
     Long PAIS_ESPAÑA = 724L;
     Long nivelAdminAutonomica = 2L; // Administración Autonómica
-    Long comunidadBaleares = 4L; // Illes Balears
+    Long PROVINCIA_BALEARES = 7L; // Illes Balears
 
     /* -------------- ENTIDAD GEOGRÁFICA --------------*/
     String ENTIDAD_GEOGRAFICA_MUNICIPIO = "01";

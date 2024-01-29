@@ -139,15 +139,6 @@ public class UsuarioController extends BaseController {
      @RequestMapping(value = "/{usuarioId}/edit", method = RequestMethod.GET)
      public String editarUsuario(@PathVariable("usuarioId") Long usuarioId, Model model,HttpServletRequest request) {
 
-         if(isOperador(request)){ //Si es Operador, solo puede modificar su usuario.
-            Usuario usuarioAutenticado = getUsuarioAutenticado(request);
-
-             if(!usuarioId.equals(usuarioAutenticado.getId())){
-                 Mensaje.saveMessageError(request, getMessage("error.autorizacion"));
-                 return "redirect:/inici";
-             }
-         }
-
          Usuario usuario = null;
          try {
              usuario = usuarioEjb.findById(usuarioId);
@@ -245,7 +236,7 @@ public class UsuarioController extends BaseController {
 
                     Mensaje.saveMessageInfo(request, getMessage("usuarioEntidad.nuevo.ok"));
                     status.setComplete();
-                    return "redirect:/entidad/usuarios";
+                    return "redirect:/usuarioEntidad/list";
                 }
 
                 Mensaje.saveMessageInfo(request, getMessage("regweb.guardar.registro"));
@@ -255,7 +246,7 @@ public class UsuarioController extends BaseController {
                 e.printStackTrace();
             }
 
-            return "redirect:/entidad/usuarios";
+            return "redirect:/usuarioEntidad/list";
         }
     }
 
@@ -318,7 +309,5 @@ public class UsuarioController extends BaseController {
      public void initBinder(WebDataBinder binder) {
          binder.setDisallowedFields("id");
          binder.setDisallowedFields("roles");
-
-         binder.setValidator(this.usuarioValidator);
      }
 }

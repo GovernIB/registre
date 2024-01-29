@@ -63,18 +63,21 @@ public class RegWeb3SecurityConfig extends WebSecurityConfigurerAdapter {
                 antMatchers("/anexo/scanwebresource/**").permitAll().
                 antMatchers("/public/versio").permitAll().
                 /* ----- RWE_SUPERADMIN ----- */
-                        antMatchers("/entidad/new").hasAuthority(RWE_SUPERADMIN).
+                antMatchers("/entidad/new").hasAuthority(RWE_SUPERADMIN).
                 antMatchers("/entidad/list").hasAuthority(RWE_SUPERADMIN).
                 antMatchers("/entidad/**/eliminar").hasAuthority(RWE_SUPERADMIN).
                 antMatchers("/entidad/**/anular").hasAuthority(RWE_SUPERADMIN).
                 antMatchers("/entidad/**/activar").hasAuthority(RWE_SUPERADMIN).
                 antMatchers("/usuario/list").hasAuthority(RWE_SUPERADMIN).
+                antMatchers("/usuario/**/edit").hasAuthority(RWE_SUPERADMIN).
                 antMatchers("/usuario/**/delete").hasAuthority(RWE_SUPERADMIN).
                 antMatchers("/dir3/**").hasAuthority(RWE_SUPERADMIN).
+                /* ----- RWE_USUARI ----- */
+                antMatchers("/usuarioEntidad/**/edit").hasAuthority(RWE_USUARI).
                 /* ----- RWE_ADMIN ----- */
-                        antMatchers("/entidad/permisos/**").hasAuthority(RWE_ADMIN).
+                antMatchers("/entidad/permisos/**").hasAuthority(RWE_ADMIN).
                 antMatchers("/entidad/procesarPendientes").hasAuthority(RWE_ADMIN).
-                antMatchers("/entidad/usuarios").hasAuthority(RWE_ADMIN).
+                antMatchers("/usuarioEntidad/**").hasAuthority(RWE_ADMIN).
                 antMatchers("/entidad/**/sincronizar").hasAuthority(RWE_ADMIN).
                 antMatchers("/entidad/**/actualizar").hasAuthority(RWE_ADMIN).
                 antMatchers("/entidad/procesarlibroorganismo/**").hasAuthority(RWE_ADMIN).
@@ -88,17 +91,16 @@ public class RegWeb3SecurityConfig extends WebSecurityConfigurerAdapter {
                 antMatchers("/cola/**").hasAuthority(RWE_ADMIN).
                 antMatchers("/pendiente/**").hasAuthority(RWE_ADMIN).
                 /* ----- RWE_SUPERADMIN y RWE_ADMIN ----- */
-                        antMatchers("/entidad/**/edit").hasAnyAuthority(RWE_SUPERADMIN,RWE_ADMIN).
+                antMatchers("/entidad/**/edit").hasAnyAuthority(RWE_SUPERADMIN,RWE_ADMIN).
                 antMatchers("/usuario/new").hasAnyAuthority(RWE_SUPERADMIN,RWE_ADMIN).
                 antMatchers("/propiedadGlobal/**").hasAnyAuthority(RWE_SUPERADMIN,RWE_ADMIN).
                 antMatchers("/plugin/**").hasAnyAuthority(RWE_SUPERADMIN,RWE_ADMIN).
                 antMatchers("/configuracion/**").hasAnyAuthority(RWE_SUPERADMIN,RWE_ADMIN).
-                /* ----- RWE_SUPERADMIN,  RWE_ADMIN y RWE_USUARI ----- */
-                        antMatchers("/usuario/**/edit").hasAnyAuthority(RWE_SUPERADMIN,RWE_ADMIN, RWE_USUARI).
+                /* ----- RWE_SUPERADMIN, RWE_ADMIN y RWE_USUARI ----- */
                 antMatchers("/informe/**").hasAnyAuthority(RWE_SUPERADMIN,RWE_ADMIN,RWE_USUARI).
                 antMatchers("/persona/**").hasAnyAuthority(RWE_SUPERADMIN,RWE_ADMIN,RWE_USUARI).
                 /* ----- RWE_USUARI ----- */
-                        antMatchers("/registroEntrada/**").hasAuthority(RWE_USUARI).
+                antMatchers("/registroEntrada/**").hasAuthority(RWE_USUARI).
                 antMatchers("/registroSalida/**").hasAuthority(RWE_USUARI).
                 antMatchers("/oficioRemision/**").hasAuthority(RWE_USUARI).
                 antMatchers("/plantilla/**").hasAuthority(RWE_USUARI).

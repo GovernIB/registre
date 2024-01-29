@@ -47,7 +47,7 @@ public class EntidadInterceptor extends HandlerInterceptorAdapter {
             Rol rolActivo = loginInfo.getRolActivo();
 
             // Listado usuarios de la entidad
-            if(url.equals("/entidad/usuarios")){
+            if(url.equals("/usuarioEntidad/list")){
                 if(!rolActivo.getNombre().equals(RegwebConstantes.RWE_ADMIN)){
                     log.info("Error de rol");
                     Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.rol"));

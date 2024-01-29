@@ -58,7 +58,7 @@
             <li class="submenu-complet"><a href="<c:url value="/oficina/list"/>"><i class="fa fa-home"></i> <spring:message code="oficina.listado"/></a></li>
             <li class="submenu-complet"><a href="<c:url value="/organismo/arbol"/>"><i class="fa fa-sitemap"></i> <spring:message code="regweb.organigrama"/></a></li>
             <li class="divider"></li>
-            <li class="submenu-complet"><a href="<c:url value="/entidad/usuarios"/>"><i class="fa fa-users"></i> <spring:message code="menu.usuarios"/></a></li>
+            <li class="submenu-complet"><a href="<c:url value="/usuarioEntidad/list"/>"><i class="fa fa-users"></i> <spring:message code="menu.usuarios"/></a></li>
             <li class="divider"></li>
             <li><a href="<c:url value="/entidad/descargas/list"/>"><i class="fa fa-refresh"></i> <spring:message code="organismo.sincronizaciones"/></a></li>
             <li><a href="<c:url value="/pendiente/list"/>"><i class="fa fa-refresh"></i> Pendientes de procesar</a></li>
