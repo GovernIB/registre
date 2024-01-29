@@ -25,6 +25,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.Date;
 
 
 /**
@@ -231,6 +232,7 @@ public class UsuarioController extends BaseController {
                     UsuarioEntidad usuarioEntidad = new UsuarioEntidad();
                     usuarioEntidad.setUsuario(usuario);
                     usuarioEntidad.setEntidad(getEntidadActiva(request));
+                    usuarioEntidad.setFechaAlta(new Date());
 
                     usuarioEntidadEjb.persist(usuarioEntidad);
 
