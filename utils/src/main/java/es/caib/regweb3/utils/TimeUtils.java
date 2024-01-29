@@ -63,4 +63,10 @@ public class TimeUtils {
         }
     }
 
+    public static String imprimeFecha(Date fecha, String formato) {
+
+        return new SimpleDateFormat(formato).format(fecha);
+
+    }
+
 }

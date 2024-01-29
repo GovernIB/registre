@@ -5,7 +5,7 @@ import es.caib.dir3caib.ws.api.oficina.OficinaTF;
 import es.caib.dir3caib.ws.api.oficina.RelacionOrganizativaOfiTF;
 import es.caib.dir3caib.ws.api.oficina.RelacionSirOfiTF;
 import es.caib.dir3caib.ws.api.unidad.Dir3CaibObtenerUnidadesWs;
-import es.caib.dir3caib.ws.api.unidad.UnidadTF;
+import es.caib.dir3caib.ws.api.unidad.UnidadWs;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.utils.Dir3CaibUtils;
@@ -13,7 +13,6 @@ import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 import es.caib.regweb3.utils.TimeUtils;
 import org.fundaciobit.genapp.common.i18n.I18NException;
-import org.hibernate.Hibernate;
 import org.jboss.ejb3.annotation.TransactionTimeout;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +23,6 @@ import javax.ejb.Stateless;
 import java.sql.Timestamp;
 import java.util.*;
 
-//import java.text.SimpleDateFormat;
 
 /**
  * Created 23/10/14 9:33
@@ -42,6 +40,7 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
     @EJB private CatEstadoEntidadLocal catEstadoEntidadEjb;
     @EJB private CatNivelAdministracionLocal catNivelAdministracionEjb;
     @EJB private CatProvinciaLocal catProvinciaEjb;
+    @EJB private CatIslaLocal catIslaEjb;
     @EJB private CatComunidadAutonomaLocal catComunidadAutonomaEjb;
     @EJB private RelacionSirOfiLocal relacionSirOfiEjb;
     @EJB private RelacionOrganizativaOfiLocal relacionOrganizativaOfiEjb;
@@ -57,6 +56,7 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
     //Caches
     private Map<Long, CatProvincia> cacheProvincia = new TreeMap<Long, CatProvincia>();
     private Map<Long, CatComunidadAutonoma> cacheComunidadAutonoma = new TreeMap<Long, CatComunidadAutonoma>();
+    private Map<Long, CatIsla> cacheIsla = new TreeMap<Long, CatIsla>();
     private Map<Long, CatNivelAdministracion> cacheNivelAdministracion = new TreeMap<Long, CatNivelAdministracion>();
     private Map<Long, CatPais> cachePais = new TreeMap<Long, CatPais>();
     private Map<String, CatEstadoEntidad> cacheEstadoEntidad = new TreeMap<String, CatEstadoEntidad>();
@@ -83,7 +83,7 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
         Dir3CaibObtenerUnidadesWs unidadesService = Dir3CaibUtils.getObtenerUnidadesService(PropiedadGlobalUtil.getDir3CaibServer(entidadId), PropiedadGlobalUtil.getDir3CaibUsername(entidadId), PropiedadGlobalUtil.getDir3CaibPassword(entidadId));
 
         // Obtenemos el arbol de Unidades
-        List<UnidadTF> arbol = unidadesService.obtenerArbolUnidades(entidad.getCodigoDir3(), fechaActualizacion, fechaSincronizacion);
+        List<UnidadWs> arbol = unidadesService.obtenerArbolUnidadesV2(entidad.getCodigoDir3(), fechaActualizacion, fechaSincronizacion);
 
         log.info("Organimos obtenidos de " + entidad.getNombre() + ": " + arbol.size());
 
@@ -93,17 +93,17 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
         // Procesamos el arbol de organismos obtenido
         if (!arbol.isEmpty()) {
 
-            for (UnidadTF unidadTF : arbol) {
+            for (UnidadWs unidadWs : arbol) {
 
-                sincronizarOrganismo(unidadTF, entidadId);
+                sincronizarOrganismo(unidadWs, entidadId);
             }
 
             // Sincronizamos los históricos del arbol de organismos obtenido
-            for (UnidadTF unidadTF : arbol) {
-                if (unidadTF != null) {
+            for (UnidadWs unidadWs : arbol) {
+                if (unidadWs != null) {
 
-                    Organismo organismo = organismoEjb.findByCodigoEntidadSinEstado(unidadTF.getCodigo(), entidadId);
-                    sincronizarHistoricosOrganismo(organismo, unidadTF, entidadId);
+                    Organismo organismo = organismoEjb.findByCodigoEntidadSinEstado(unidadWs.getCodigo(), entidadId);
+                    sincronizarHistoricosOrganismo(organismo, unidadWs, entidadId);
 
                     // Comprobamos si se ha extinguido y hay que realizar acciones en consecuencia
                     procesarExtinguido(organismo, entidad);
@@ -179,6 +179,7 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
         /* borramos cache */
         cacheEstadoEntidad.clear();
         cacheProvincia.clear();
+        cacheIsla.clear();
         cacheComunidadAutonoma.clear();
         cacheNivelAdministracion.clear();
         cachePais.clear();
@@ -191,14 +192,14 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
     }
 
     /**
-     * Crea un {@link es.caib.regweb3.model.Organismo} a partir de una UnidadTF y lo relaciona con su {@link es.caib.regweb3.model.Entidad}
+     * Crea un {@link es.caib.regweb3.model.Organismo} a partir de una UnidadWs y lo relaciona con su {@link es.caib.regweb3.model.Entidad}
      * Este método se emplea tanto en el proceso de sincronización como en el de actualización
      *
-     * @param unidadTF
+     * @param unidadWs
      * @param idEntidad
      * @throws I18NException
      */
-    private Organismo sincronizarOrganismo(UnidadTF unidadTF, Long idEntidad) throws I18NException {
+    private Organismo sincronizarOrganismo(UnidadWs unidadWs, Long idEntidad) throws I18NException {
 
 
         Entidad entidad = entidadEjb.findByIdLigero(idEntidad);
@@ -207,37 +208,36 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
 
         // Comprobamos que la unidad que nos envian no sea null
         // (ocurre en el caso de que actualicemos y no se haya actualizado en el origen)
-        if (unidadTF != null) {
-            log.info("ORGANISMO ACTUALIZADO/SINCRONIZADO: " + unidadTF.getCodigo() + " - " + unidadTF.getDenominacion());
+        if (unidadWs != null) {
+            log.info("ORGANISMO ACTUALIZADO/SINCRONIZADO: " + unidadWs.getCodigo() + " - " + unidadWs.getDenominacion());
             // Comprobamos primero si ya existe el organismo
 
-            organismo = organismoEjb.findByCodigoEntidadSinEstado(unidadTF.getCodigo(), idEntidad);
+            organismo = organismoEjb.findByCodigoEntidadSinEstado(unidadWs.getCodigo(), idEntidad);
 
             if (organismo == null) {
-                log.info("Nuevo organismo: " + unidadTF.getDenominacion());
+                log.info("Nuevo organismo: " + unidadWs.getDenominacion());
                 organismo = new Organismo();
-                procesarOrganismo(organismo, unidadTF, entidad);
+                procesarOrganismo(organismo, unidadWs, entidad);
 
                 //Guardamos el Organismo
                 organismo = organismoEjb.persist(organismo);
             } else { // Si existe hay que actualizarlo
-                Hibernate.initialize(organismo.getLibros());
-                procesarOrganismo(organismo, unidadTF, entidad);
+                procesarOrganismo(organismo, unidadWs, entidad);
             }
 
             // Es necesario que el organismo esté creado previamente.
             // Asignamos su Organismo Raíz
-            Organismo organismoRaiz = organismoEjb.findByCodigoEntidadSinEstado(unidadTF.getCodUnidadRaiz(), idEntidad);
+            Organismo organismoRaiz = organismoEjb.findByCodigoEntidadSinEstado(unidadWs.getCodUnidadRaiz(), idEntidad);
             organismo.setOrganismoRaiz(organismoRaiz);
 
 
             // Asignamos su Organismo Superior
-            Organismo organismoSuperior = organismoEjb.findByCodigoEntidadSinEstado(unidadTF.getCodUnidadSuperior(), idEntidad);
+            Organismo organismoSuperior = organismoEjb.findByCodigoEntidadSinEstado(unidadWs.getCodUnidadSuperior(), idEntidad);
             organismo.setOrganismoSuperior(organismoSuperior);
 
             // Asignamos su EDP Principal
-            if (StringUtils.isNotEmpty(unidadTF.getCodEdpPrincipal())) {
-                Organismo edpPrincipal = organismoEjb.findByCodigoEntidadSinEstado(unidadTF.getCodEdpPrincipal(), idEntidad);
+            if (StringUtils.isNotEmpty(unidadWs.getCodEdpPrincipal())) {
+                Organismo edpPrincipal = organismoEjb.findByCodigoEntidadSinEstado(unidadWs.getCodEdpPrincipal(), idEntidad);
                 organismo.setEdpPrincipal(edpPrincipal);
             }
 
@@ -428,15 +428,15 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
      * Método que sincroniza los históricos de un organismo. Se debe ejecutar después de sincronizarlos todos.
      *
      * @param organismo organismo al que guardar los históricos
-     * @param unidadTF  unidad transferida equivalente al organismo que nos proporciona los historicos.
+     * @param unidadWs  unidad transferida equivalente al organismo que nos proporciona los historicos.
      * @throws I18NException
      */
-    private void sincronizarHistoricosOrganismo(Organismo organismo, UnidadTF unidadTF, Long idEntidad) throws I18NException {
+    private void sincronizarHistoricosOrganismo(Organismo organismo, UnidadWs unidadWs, Long idEntidad) throws I18NException {
         // Inicializamos sus Historicos, ya la relación está a FetchType.LAZY
-        List<String> historicos = unidadTF.getHistoricosUO();
+        List<String> historicos = unidadWs.getHistoricosUO();
         Set<Organismo> historicosOrg = organismo.getHistoricoUO();
         if (!historicos.isEmpty()) {
-            log.info("UnidadTF : " + unidadTF.getCodigo() + " Historicos: " + historicos.size());
+            log.info("UnidadWs : " + unidadWs.getCodigo() + " Historicos: " + historicos.size());
 
         }
         // Si l'organisme no te històrics, inicialitzam la variable.
@@ -461,60 +461,62 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
      * Función que actualiza un conjunto de datos del organismo
      *
      * @param organismo organismo a actualizar
-     * @param unidadTF  datos de la unidad transferida desde dir3caib
+     * @param unidadWs  datos de la unidad transferida desde dir3caib
      * @param entidad   entidad que se está actualizando
      * @throws I18NException
      */
-    private void procesarOrganismo(Organismo organismo, UnidadTF unidadTF, Entidad entidad) throws I18NException {
+    private void procesarOrganismo(Organismo organismo, UnidadWs unidadWs, Entidad entidad) throws I18NException {
 
+        CatEstadoEntidad estado = cacheEstadoEntidad.get(unidadWs.getCodigoEstadoEntidad());
 
-        CatEstadoEntidad estado = cacheEstadoEntidad.get(unidadTF.getCodigoEstadoEntidad());
-
-        organismo.setCodigo(unidadTF.getCodigo());
+        organismo.setCodigo(unidadWs.getCodigo());
         organismo.setEstado(estado);
         organismo.setEntidad(entidad);
-        organismo.setDenominacion(unidadTF.getDenominacion());
-        organismo.setNivelJerarquico(unidadTF.getNivelJerarquico());
-        organismo.setEdp(unidadTF.isEsEdp());
-
+        organismo.setDenominacion(unidadWs.getDenominacion());
+        organismo.setNivelJerarquico(unidadWs.getNivelJerarquico());
+        organismo.setEdp(unidadWs.isEsEdp());
 
         //Nivel Administracion
-        CatNivelAdministracion nivelAdministracion = cacheNivelAdministracion.get(unidadTF.getNivelAdministracion());
+        CatNivelAdministracion nivelAdministracion = cacheNivelAdministracion.get(unidadWs.getNivelAdministracion());
         organismo.setNivelAdministracion(nivelAdministracion);
 
-        if (unidadTF.getCodAmbProvincia() != null) {
-            CatProvincia provincia = cacheProvincia.get(unidadTF.getCodAmbProvincia());
+        if (unidadWs.getCodAmbProvincia() != null) {
+            CatProvincia provincia = cacheProvincia.get(unidadWs.getCodAmbProvincia());
             organismo.setCodAmbProvincia(provincia);
 
         } else {
             organismo.setCodAmbProvincia(null);
         }
 
-        if (unidadTF.getCodAmbComunidad() != null) {
-            CatComunidadAutonoma comunidadAutonoma = cacheComunidadAutonoma.get(unidadTF.getCodAmbComunidad());
+        if (unidadWs.getCodAmbComunidad() != null) {
+            CatComunidadAutonoma comunidadAutonoma = cacheComunidadAutonoma.get(unidadWs.getCodAmbComunidad());
             organismo.setCodAmbComunidad(comunidadAutonoma);
 
         } else {
             organismo.setCodAmbComunidad(null);
         }
 
-        if (unidadTF.getCodigoAmbPais() != null) {
-            organismo.setCodPais(cachePais.get(unidadTF.getCodigoAmbPais()));
+        if(unidadWs.getCodAmbIsla() != null){
+            organismo.setIsla(cacheIsla.get(unidadWs.getCodAmbIsla()));
         }
-        if (StringUtils.isNotEmpty(unidadTF.getDescripcionLocalidad())) {
-            organismo.setLocalidad(catLocalidadEjb.findByNombre(unidadTF.getDescripcionLocalidad()));
+
+        if (unidadWs.getCodigoAmbPais() != null) {
+            organismo.setCodPais(cachePais.get(unidadWs.getCodigoAmbPais()));
         }
-        if (unidadTF.getCodigoTipoVia() != null) {
-            organismo.setTipoVia(cacheTipoVia.get(unidadTF.getCodigoTipoVia()));
+        if (StringUtils.isNotEmpty(unidadWs.getDescripcionLocalidad())) {
+            organismo.setLocalidad(catLocalidadEjb.findByNombre(unidadWs.getDescripcionLocalidad()));
         }
-        if (StringUtils.isNotEmpty(unidadTF.getNombreVia())) {
-            organismo.setNombreVia(unidadTF.getNombreVia());
+        if (unidadWs.getCodigoTipoVia() != null) {
+            organismo.setTipoVia(cacheTipoVia.get(unidadWs.getCodigoTipoVia()));
         }
-        if (StringUtils.isNotEmpty(unidadTF.getNumVia())) {
-            organismo.setNumVia(unidadTF.getNumVia());
+        if (StringUtils.isNotEmpty(unidadWs.getNombreVia())) {
+            organismo.setNombreVia(unidadWs.getNombreVia());
         }
-        if (StringUtils.isNotEmpty(unidadTF.getCodPostal())) {
-            organismo.setCodPostal(unidadTF.getCodPostal());
+        if (StringUtils.isNotEmpty(unidadWs.getNumVia())) {
+            organismo.setNumVia(unidadWs.getNumVia());
+        }
+        if (StringUtils.isNotEmpty(unidadWs.getCodPostal())) {
+            organismo.setCodPostal(unidadWs.getCodPostal());
         }
 
     }
@@ -633,6 +635,10 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
 
         for (CatProvincia ca : catProvinciaEjb.getAll()) {
             cacheProvincia.put(ca.getCodigoProvincia(), ca);
+        }
+
+        for (CatIsla isla : catIslaEjb.getAll()) {
+            cacheIsla.put(isla.getCodigoIsla(), isla);
         }
 
         for (CatComunidadAutonoma ca : catComunidadAutonomaEjb.getAll()) {

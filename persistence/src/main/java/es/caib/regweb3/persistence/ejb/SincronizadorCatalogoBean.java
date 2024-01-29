@@ -16,10 +16,7 @@ import org.slf4j.LoggerFactory;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 /**
  * Created 23/10/14 9:33
@@ -37,11 +34,24 @@ public class SincronizadorCatalogoBean implements SincronizadorCatalogoLocal {
     @EJB private CatPaisLocal catPaisEjb;
     @EJB private CatComunidadAutonomaLocal catComunidadAutonomaEjb;
     @EJB private CatProvinciaLocal catProvinciaEjb;
+    @EJB private CatIslaLocal catIslaEjb;
     @EJB private CatEntidadGeograficaLocal catEntidadGeograficaEjb;
     @EJB private CatLocalidadLocal catLocalidadEjb;
     @EJB private DescargaLocal descargaEjb;
     @EJB private CatServicioLocal catServicioEjb;
     @EJB private CatTipoViaLocal catTipoViaEjb;
+
+
+    private List<CatEstadoEntidad> estadosEntidad = new ArrayList<>();
+    private List<es.caib.dir3caib.ws.api.catalogo.CatNivelAdministracion> nivelesAdministracion = new ArrayList<>();
+    private List<es.caib.dir3caib.ws.api.catalogo.CatPais> paises = new ArrayList<>();
+    private List<CatComunidadAutonomaTF> comunidades = new ArrayList<>();
+    private List<CatProvinciaTF> provincias = new ArrayList<>();
+    private List<CatIslaWs> islas = new ArrayList<>();
+    private List<CatEntidadGeograficaTF> entidadesGeograficas = new ArrayList<>();
+    private List<CatLocalidadTF> localidades = new ArrayList<>();
+    private List<es.caib.dir3caib.ws.api.catalogo.Servicio> servicios = new ArrayList<>();
+    private List<es.caib.dir3caib.ws.api.catalogo.CatTipoVia> catTiposVia = new ArrayList<>();
 
     
     @Override
@@ -49,7 +59,8 @@ public class SincronizadorCatalogoBean implements SincronizadorCatalogoLocal {
 
         log.info("Inicio sincronizacion catalogo DIR3");
 
-        Dir3CaibObtenerCatalogosWs catalogosService = Dir3CaibUtils.getObtenerCatalogosService(PropiedadGlobalUtil.getDir3CaibServer(), PropiedadGlobalUtil.getDir3CaibUsername(), PropiedadGlobalUtil.getDir3CaibPassword());
+        // Obtenemos los catálogos de datos de Dir3Caib
+        obtenerCatalogosDir3Caib();
 
         /* CACHE */
         Map<Long, CatPais> cachePais = new TreeMap<Long, CatPais>();
@@ -57,10 +68,7 @@ public class SincronizadorCatalogoBean implements SincronizadorCatalogoLocal {
         Map<Long, CatComunidadAutonoma> cacheComunidadAutonoma = new TreeMap<Long, CatComunidadAutonoma>();
         Map<String, CatEntidadGeografica> cacheEntidadGeografica = new TreeMap<String, CatEntidadGeografica>();
 
-        // Obtenemos todos los CatEstadoEntidad
-
-        List<es.caib.dir3caib.ws.api.catalogo.CatEstadoEntidad> estadosEntidad = catalogosService.obtenerCatEstadoEntidad();
-
+        // Procesamos todos los CatEstadoEntidad
         for (es.caib.dir3caib.ws.api.catalogo.CatEstadoEntidad ceeRWE : estadosEntidad) {
             es.caib.regweb3.model.CatEstadoEntidad cee = new es.caib.regweb3.model.CatEstadoEntidad();
             cee.setCodigoEstadoEntidad(ceeRWE.getCodigoEstadoEntidad());
@@ -68,10 +76,7 @@ public class SincronizadorCatalogoBean implements SincronizadorCatalogoLocal {
             catEstadoEntidadEjb.persist(cee);
         }
 
-
-        //Obtenemos todos los CatNivelAdministracion
-        List<es.caib.dir3caib.ws.api.catalogo.CatNivelAdministracion> nivelesAdministracion = catalogosService.obtenerCatNivelAdministracion();
-
+        //Procesamos todos los CatNivelAdministracion
         for (es.caib.dir3caib.ws.api.catalogo.CatNivelAdministracion cnaRWE : nivelesAdministracion) {
             es.caib.regweb3.model.CatNivelAdministracion cna = new es.caib.regweb3.model.CatNivelAdministracion();
             cna.setCodigoNivelAdministracion(cnaRWE.getCodigoNivelAdministracion());
@@ -79,10 +84,7 @@ public class SincronizadorCatalogoBean implements SincronizadorCatalogoLocal {
             catNivelAdministracionEjb.persist(cna);
         }
 
-
-        //Obtenemos todos los CatPais
-        List<es.caib.dir3caib.ws.api.catalogo.CatPais> paises = catalogosService.obtenerCatPais();
-
+        //Procesamos todos los CatPais
         for (es.caib.dir3caib.ws.api.catalogo.CatPais paisRWE : paises) {
             es.caib.regweb3.model.CatPais cpais = new es.caib.regweb3.model.CatPais();
             cpais.setCodigoPais(paisRWE.getCodigoPais());
@@ -92,9 +94,7 @@ public class SincronizadorCatalogoBean implements SincronizadorCatalogoLocal {
 
         }
 
-        //Obtenemos todos los CatComunidadAutonoma
-        List<CatComunidadAutonomaTF> comunidades = catalogosService.obtenerCatComunidadAutonoma();
-
+        //Procesamos todos los CatComunidadAutonoma
         for (CatComunidadAutonomaTF comuniRWE : comunidades) {
             es.caib.regweb3.model.CatComunidadAutonoma ccomuni = new es.caib.regweb3.model.CatComunidadAutonoma();
             ccomuni.setCodigoComunidad(comuniRWE.getCodigoComunidad());
@@ -105,10 +105,7 @@ public class SincronizadorCatalogoBean implements SincronizadorCatalogoLocal {
             cacheComunidadAutonoma.put(comuniRWE.getCodigoComunidad(), ccomuni);
         }
 
-
-        //Obtenemos todos los CatProvincia
-        List<CatProvinciaTF> provincias = catalogosService.obtenerCatProvincia();
-
+        //Procesamos todos los CatProvincia
         for (CatProvinciaTF provinciaRWE : provincias) {
             es.caib.regweb3.model.CatProvincia cprovincia = new es.caib.regweb3.model.CatProvincia();
             cprovincia.setCodigoProvincia(provinciaRWE.getCodigoProvincia());
@@ -119,10 +116,17 @@ public class SincronizadorCatalogoBean implements SincronizadorCatalogoLocal {
             cacheProvincia.put(provinciaRWE.getCodigoProvincia(), cprovincia);
         }
 
+        //Procesamos todos los CatIsla
+        for (CatIslaWs catIslaWs : islas) {
+            es.caib.regweb3.model.CatIsla catIsla = new es.caib.regweb3.model.CatIsla();
+            catIsla.setCodigoIsla(catIslaWs.getCodigoIsla());
+            catIsla.setDescripcionIsla(catIslaWs.getDescripcionIsla());
+            CatProvincia catProvincia = cacheProvincia.get(catIslaWs.getCodigoProvincia());
+            catIsla.setProvincia(catProvincia);
+            catIslaEjb.persist(catIsla);
+        }
 
-        //Obtenemos todos los CatEntidadGeografica
-        List<CatEntidadGeograficaTF> entidadesGeograficas = catalogosService.obtenerCatEntidadGeografica();
-
+        //Procesamos todos los CatEntidadGeografica
         for (CatEntidadGeograficaTF entidadGeograficaRWE : entidadesGeograficas) {
             es.caib.regweb3.model.CatEntidadGeografica cEntidadGeografica = new es.caib.regweb3.model.CatEntidadGeografica();
             cEntidadGeografica.setCodigoEntidadGeografica(entidadGeograficaRWE.getCodigoEntidadGeografica());
@@ -131,19 +135,11 @@ public class SincronizadorCatalogoBean implements SincronizadorCatalogoLocal {
             cacheEntidadGeografica.put(entidadGeograficaRWE.getCodigoEntidadGeografica(), cEntidadGeografica);
         }
 
-
-        //Obtenemos todos los CatLocalidad
-        List<CatLocalidadTF> localidades = catalogosService.obtenerCatLocalidad();
-
+        //Procesamos todos los CatLocalidad
         for (CatLocalidadTF localidadRWE : localidades) {
-
-
-            //es.caib.regweb3.model.CatProvincia provincia = catProvinciaEjb.findByCodigo(localidadRWE.getCodigoProvincia());
-            //CatEntidadGeografica catEntidadGeografica = catEntidadGeograficaEjb.findByCodigo(localidadRWE.getCodigoEntidadGeografica());
 
             es.caib.regweb3.model.CatProvincia provincia = cacheProvincia.get(localidadRWE.getCodigoProvincia());
             CatEntidadGeografica catEntidadGeografica = cacheEntidadGeografica.get(localidadRWE.getCodigoEntidadGeografica());
-
 
             es.caib.regweb3.model.CatLocalidad clocalidad = new es.caib.regweb3.model.CatLocalidad();
             if (localidadRWE.getCodigoLocalidad() != null && localidadRWE.getDescripcionLocalidad() != null) {
@@ -156,20 +152,14 @@ public class SincronizadorCatalogoBean implements SincronizadorCatalogoLocal {
 
         }
 
-        //Obtenemos todos los CatServicio
-        List<es.caib.dir3caib.ws.api.catalogo.Servicio> servicios = catalogosService.obtenerCatServicio();
-
+        //Procesamos todos los CatServicio
         for (Servicio servicio : servicios) {
-
             es.caib.regweb3.model.CatServicio catServicio = new CatServicio(servicio.getCodServicio(), servicio.getDescServicio());
             catServicioEjb.persist(catServicio);
         }
 
-        //Obtenemos todos los CatTipoVia
-        List<es.caib.dir3caib.ws.api.catalogo.CatTipoVia> catTiposVia = catalogosService.obtenerCatTipoVia();
-
+        //Procesamos todos los CatTipoVia
         for (CatTipoVia catTipoVia : catTiposVia) {
-
             es.caib.regweb3.model.CatTipoVia tipoVia = new es.caib.regweb3.model.CatTipoVia(catTipoVia.getCodigoTipoVia(), catTipoVia.getDescripcionTipoVia());
             catTipoViaEjb.persist(tipoVia);
         }
@@ -191,18 +181,17 @@ public class SincronizadorCatalogoBean implements SincronizadorCatalogoLocal {
 
         log.info("Inicio actualizacion catalogo DIR3");
 
+        // Obtenemos los catálogos de datos de Dir3Caib
+        obtenerCatalogosDir3Caib();
+
         /* CACHE */
         Map<Long, CatPais> cachePais = cachePais();
         Map<Long, CatProvincia> cacheProvincia = cacheProvincia();
         Map<Long, CatComunidadAutonoma> cacheComunidadAutonoma = cacheComunidadAutonoma();
         Map<String, CatEntidadGeografica> cacheEntidadGeografica = cacheEntidadGeografica();
 
-        // Obtenemos el Service de los WS de Catalogos
-        Dir3CaibObtenerCatalogosWs catalogosService = Dir3CaibUtils.getObtenerCatalogosService(PropiedadGlobalUtil.getDir3CaibServer(), PropiedadGlobalUtil.getDir3CaibUsername(), PropiedadGlobalUtil.getDir3CaibPassword());
 
-        // Obtenemos todos los CatEstadoEntidad
-        List<CatEstadoEntidad> estadosEntidad = catalogosService.obtenerCatEstadoEntidad();
-
+        // Procesamos los estados
         for (CatEstadoEntidad ceeRWE : estadosEntidad) {
 
             es.caib.regweb3.model.CatEstadoEntidad cee = catEstadoEntidadEjb.findByCodigo(ceeRWE.getCodigoEstadoEntidad());
@@ -219,10 +208,7 @@ public class SincronizadorCatalogoBean implements SincronizadorCatalogoLocal {
         }
         log.info("CatEstadoEntidad procesadas: " + estadosEntidad.size());
 
-
-        //Obtenemos todos los CatNivelAdministracion
-        List<es.caib.dir3caib.ws.api.catalogo.CatNivelAdministracion> nivelesAdministracion = catalogosService.obtenerCatNivelAdministracion();
-
+        // Procesamos los estados
         for (es.caib.dir3caib.ws.api.catalogo.CatNivelAdministracion cnaRWE : nivelesAdministracion) {
 
             es.caib.regweb3.model.CatNivelAdministracion cna = catNivelAdministracionEjb.findByCodigo(cnaRWE.getCodigoNivelAdministracion());
@@ -236,14 +222,10 @@ public class SincronizadorCatalogoBean implements SincronizadorCatalogoLocal {
                 cna.setDescripcionNivelAdministracion(cnaRWE.getDescripcionNivelAdministracion());
                 catNivelAdministracionEjb.persist(cna);
             }
-
         }
         log.info("CatNivelAdministracion procesadas: " + nivelesAdministracion.size());
 
-
-        //Obtenemos todos los CatPais
-        List<es.caib.dir3caib.ws.api.catalogo.CatPais> paises = catalogosService.obtenerCatPais();
-
+        // Procesamos los paises
         for (es.caib.dir3caib.ws.api.catalogo.CatPais paisRWE : paises) {
 
             es.caib.regweb3.model.CatPais cpais = catPaisEjb.findByCodigo(paisRWE.getCodigoPais());
@@ -258,18 +240,14 @@ public class SincronizadorCatalogoBean implements SincronizadorCatalogoLocal {
                 cpais = catPaisEjb.persist(cpais);
                 cachePais.put(paisRWE.getCodigoPais(), cpais);
             }
-
         }
         log.info("CatPais procesadas: " + paises.size());
 
-        //Obtenemos todos los CatComunidadAutonoma
-        List<CatComunidadAutonomaTF> comunidades = catalogosService.obtenerCatComunidadAutonoma();
-
+        // Procesamos las comunidades
         for (CatComunidadAutonomaTF comuniRWE : comunidades) {
 
             es.caib.regweb3.model.CatComunidadAutonoma ccomuni = catComunidadAutonomaEjb.findByCodigo(comuniRWE.getCodigoComunidad());
             es.caib.regweb3.model.CatPais pais = cachePais.get(comuniRWE.getCodigoPais());
-
 
             if (ccomuni != null) { // Actualiza CatComunidadAutonoma
                 ccomuni.setDescripcionComunidad(comuniRWE.getDescripcionComunidad());
@@ -283,14 +261,10 @@ public class SincronizadorCatalogoBean implements SincronizadorCatalogoLocal {
                 ccomuni = catComunidadAutonomaEjb.persist(ccomuni);
                 cacheComunidadAutonoma.put(comuniRWE.getCodigoComunidad(), ccomuni);
             }
-
         }
         log.info("CatComunidadAutonoma procesadas: " + comunidades.size());
 
-
-        //Obtenemos todos los CatProvincia
-        List<CatProvinciaTF> provincias = catalogosService.obtenerCatProvincia();
-
+        // Procesamos las provincias
         for (CatProvinciaTF provinciaRWE : provincias) {
 
             es.caib.regweb3.model.CatProvincia cprovincia = catProvinciaEjb.findByCodigo(provinciaRWE.getCodigoProvincia());
@@ -308,13 +282,28 @@ public class SincronizadorCatalogoBean implements SincronizadorCatalogoLocal {
                 cprovincia = catProvinciaEjb.persist(cprovincia);
                 cacheProvincia.put(provinciaRWE.getCodigoProvincia(), cprovincia);
             }
-
         }
         log.info("CatProvincia procesadas: " + provincias.size());
 
-        //Obtenemos todos los CatEntidadGeografica
-        List<CatEntidadGeograficaTF> entidadesGeograficas = catalogosService.obtenerCatEntidadGeografica();
+        // Procesamos las islas
+        for (CatIslaWs catIslaWs : islas) {
+            CatIsla catIsla = catIslaEjb.findByCodigo(catIslaWs.getCodigoIsla());
+            CatProvincia catProvincia = cacheProvincia.get(catIslaWs.getCodigoProvincia());
 
+            if(catIsla != null){ // Actualiza CatIsla
+                catIsla.setDescripcionIsla(catIslaWs.getDescripcionIsla());
+                catIsla.setProvincia(catProvincia);
+            }else{
+                catIsla = new CatIsla();
+                catIsla.setCodigoIsla(catIslaWs.getCodigoIsla());
+                catIsla.setDescripcionIsla(catIslaWs.getDescripcionIsla());
+                catIsla.setProvincia(catProvincia);
+                catIslaEjb.persist(catIsla);
+            }
+        }
+        log.info("CatIsla procesadas: " + islas.size());
+
+        // Procesamos las entidades grográficas
         for (CatEntidadGeograficaTF entidadGeograficaRWE : entidadesGeograficas) {
 
             es.caib.regweb3.model.CatEntidadGeografica cEntidadGeografica = catEntidadGeograficaEjb.findByCodigo(entidadGeograficaRWE.getCodigoEntidadGeografica());
@@ -328,15 +317,10 @@ public class SincronizadorCatalogoBean implements SincronizadorCatalogoLocal {
                 cEntidadGeografica.setDescripcionEntidadGeografica(entidadGeograficaRWE.getDescripcionEntidadGeografica());
                 catEntidadGeograficaEjb.persist(cEntidadGeografica);
             }
-
         }
 
-
-        //Obtenemos todos los CatLocalidad
-        List<CatLocalidadTF> localidades = catalogosService.obtenerCatLocalidad();
-
+        // Procesamos las localidades
         for (CatLocalidadTF localidadRWE : localidades) {
-
 
             es.caib.regweb3.model.CatProvincia provincia = cacheProvincia.get(localidadRWE.getCodigoProvincia());
             CatEntidadGeografica catEntidadGeografica = cacheEntidadGeografica.get(localidadRWE.getCodigoEntidadGeografica());
@@ -362,9 +346,7 @@ public class SincronizadorCatalogoBean implements SincronizadorCatalogoLocal {
         }
         log.info("CatProvincia procesadas: " + localidades.size());
 
-        //Obtenemos todos los CatServicio
-        List<es.caib.dir3caib.ws.api.catalogo.Servicio> servicios = catalogosService.obtenerCatServicio();
-
+        // Procesamos los servicios
         for (Servicio servicio : servicios) {
 
             CatServicio cs = catServicioEjb.findByCodigo(servicio.getCodServicio());
@@ -377,15 +359,10 @@ public class SincronizadorCatalogoBean implements SincronizadorCatalogoLocal {
                 es.caib.regweb3.model.CatServicio catServicio = new CatServicio(servicio.getCodServicio(), servicio.getDescServicio());
                 catServicioEjb.persist(catServicio);
             }
-
-
         }
         log.info("CatServicio procesadas: " + servicios.size());
 
-
-        //Obtenemos todos los CatTipoVia
-        List<es.caib.dir3caib.ws.api.catalogo.CatTipoVia> catTiposVia = catalogosService.obtenerCatTipoVia();
-
+        // Procesamos los tipo vía
         for (CatTipoVia catTipoVia : catTiposVia) {
 
             es.caib.regweb3.model.CatTipoVia ctv = catTipoViaEjb.findByCodigo(catTipoVia.getCodigoTipoVia());
@@ -397,8 +374,6 @@ public class SincronizadorCatalogoBean implements SincronizadorCatalogoLocal {
                 es.caib.regweb3.model.CatTipoVia tipoVia = new es.caib.regweb3.model.CatTipoVia(catTipoVia.getCodigoTipoVia(), catTipoVia.getDescripcionTipoVia());
                 catTipoViaEjb.persist(tipoVia);
             }
-
-
         }
         log.info("CatTipoVia procesadas: " + catTiposVia.size());
 
@@ -418,7 +393,6 @@ public class SincronizadorCatalogoBean implements SincronizadorCatalogoLocal {
         descarga.setFechaImportacion(hoy);
 
         return descargaEjb.persist(descarga);
-
     }
 
 
@@ -427,7 +401,6 @@ public class SincronizadorCatalogoBean implements SincronizadorCatalogoLocal {
         for (CatPais ca : catPaisEjb.getAll()) {
             cachePais.put(ca.getCodigoPais(), ca);
         }
-        log.info(" Pais : " + cachePais.size());
         return cachePais;
     }
 
@@ -436,7 +409,6 @@ public class SincronizadorCatalogoBean implements SincronizadorCatalogoLocal {
         for (CatProvincia ca : catProvinciaEjb.getAll()) {
             cacheProvincia.put(ca.getCodigoProvincia(), ca);
         }
-        log.info(" Provincia : " + cacheProvincia.size());
         return cacheProvincia;
     }
 
@@ -445,7 +417,6 @@ public class SincronizadorCatalogoBean implements SincronizadorCatalogoLocal {
         for (CatComunidadAutonoma ca : catComunidadAutonomaEjb.getAll()) {
             cacheComunidadAutonoma.put(ca.getCodigoComunidad(), ca);
         }
-        log.info(" Comunidad Autonoma : " + cacheComunidadAutonoma.size());
         return cacheComunidadAutonoma;
     }
 
@@ -455,8 +426,43 @@ public class SincronizadorCatalogoBean implements SincronizadorCatalogoLocal {
         for (CatEntidadGeografica ca : catEntidadGeograficaEjb.getAll()) {
             cacheEntidadGeografica.put(ca.getCodigoEntidadGeografica(), ca);
         }
-        log.info(" Entidad Geografica : " + cacheEntidadGeografica.size());
         return cacheEntidadGeografica;
+    }
+
+    private void obtenerCatalogosDir3Caib() throws I18NException {
+
+        // Obtenemos el Service de los WS de Catalogos
+        Dir3CaibObtenerCatalogosWs catalogosService = Dir3CaibUtils.getObtenerCatalogosService(PropiedadGlobalUtil.getDir3CaibServer(), PropiedadGlobalUtil.getDir3CaibUsername(), PropiedadGlobalUtil.getDir3CaibPassword());
+
+        // Obtenemos todos los CatEstadoEntidad
+        estadosEntidad = catalogosService.obtenerCatEstadoEntidad();
+
+        //Obtenemos todos los CatNivelAdministracion
+        nivelesAdministracion = catalogosService.obtenerCatNivelAdministracion();
+
+        //Obtenemos todos los CatPais
+        paises = catalogosService.obtenerCatPais();
+
+        //Obtenemos todos los CatComunidadAutonoma
+        comunidades = catalogosService.obtenerCatComunidadAutonoma();
+
+        //Obtenemos todos los CatProvincia
+        provincias = catalogosService.obtenerCatProvincia();
+
+        //Obtenemos todos los CatIsla
+        islas = catalogosService.obtenerCatIsla();
+
+        //Obtenemos todos los CatEntidadGeografica
+        entidadesGeograficas = catalogosService.obtenerCatEntidadGeografica();
+
+        //Obtenemos todos los CatLocalidad
+        localidades = catalogosService.obtenerCatLocalidad();
+
+        //Obtenemos todos los CatServicio
+        servicios = catalogosService.obtenerCatServicio();
+
+        //Obtenemos todos los CatTipoVia
+        catTiposVia = catalogosService.obtenerCatTipoVia();
     }
 
 

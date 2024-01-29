@@ -76,6 +76,8 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
         Oficina oficina = em.find(Oficina.class, id);
         Hibernate.initialize(oficina.getOficinaResponsable());
         Hibernate.initialize(oficina.getOrganizativasOfi());
+        Hibernate.initialize(oficina.getLocalidad());
+        Hibernate.initialize(oficina.getIsla());
         return oficina;
     }
 
@@ -399,7 +401,7 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
     @Override
     @SuppressWarnings(value = "unchecked")
     public List<Oficina> responsableByEntidadEstado(Long idEntidad) throws I18NException {
-        Query q = em.createQuery("Select oficina.id, oficina.codigo, oficina.denominacion, oficina.organismoResponsable.id from Oficina as oficina where " +
+        Query q = em.createQuery("Select oficina from Oficina as oficina where " +
                 "oficina.organismoResponsable.entidad.id =:idEntidad and oficina.estado.codigoEstadoEntidad =:estado and " +
                 "oficina.oficinaResponsable.id = null order by oficina.codigo");
 
@@ -407,25 +409,14 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
         q.setParameter("estado", RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
         q.setHint("org.hibernate.readOnly", true);
 
-        List<Object[]> result = q.getResultList();
-        List<Oficina> oficinas = new ArrayList<Oficina>();
+        return q.getResultList();
 
-        for (Object[] object : result) {
-
-            Long idOficina = (Long) object[0];
-
-            Oficina oficina = new Oficina((Long) object[0], (String) object[1], (String) object[2], null, (Long) object[3], isSIRCompleto(idOficina));
-
-            oficinas.add(oficina);
-        }
-
-        return oficinas;
     }
 
     @Override
     @SuppressWarnings(value = "unchecked")
     public List<Oficina> dependienteByEntidadEstado(Long idEntidad) throws I18NException {
-        Query q = em.createQuery("Select oficina.id, oficina.codigo, oficina.denominacion, oficina.oficinaResponsable.id, oficina.organismoResponsable.id from Oficina as oficina where " +
+        Query q = em.createQuery("Select oficina from Oficina as oficina where " +
                 "oficina.organismoResponsable.entidad.id =:idEntidad and oficina.estado.codigoEstadoEntidad =:estado and " +
                 "oficina.oficinaResponsable.id != null order by oficina.codigo");
 
@@ -433,18 +424,8 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
         q.setParameter("estado", RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
         q.setHint("org.hibernate.readOnly", true);
 
-        List<Object[]> result = q.getResultList();
-        List<Oficina> oficinas = new ArrayList<Oficina>();
+        return q.getResultList();
 
-        for (Object[] object : result) {
-            Long idOficina = (Long) object[0];
-
-            Oficina oficina = new Oficina((Long) object[0], (String) object[1], (String) object[2], (Long) object[3], (Long) object[4], isSIRCompleto(idOficina));
-
-            oficinas.add(oficina);
-        }
-
-        return oficinas;
     }
 
     @Override
@@ -504,21 +485,6 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
         return q.getResultList().size() > 0;
     }
 
-
-    @Override
-    public Boolean isSIR(Long idOficina) throws I18NException {
-
-        Query q = em.createQuery("Select oficina.id from Oficina as oficina where " +
-                "oficina.id =:idOficina and oficina.estado.codigoEstadoEntidad=:vigente and " +
-                ":sir in elements(oficina.servicios)");
-
-        q.setParameter("idOficina", idOficina);
-        q.setParameter("vigente", RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
-        q.setParameter("sir", catServicioEjb.findByCodigo(RegwebConstantes.OFICINA_INTEGRADA_SIR));
-        q.setHint("org.hibernate.readOnly", true);
-
-        return q.getResultList().size() > 0;
-    }
 
     @Override
     public Boolean isSIRCompleto(Long idOficina) throws I18NException {
@@ -611,7 +577,7 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Paginacion busqueda(Integer pageNumber, Long idEntidad, String codigo, String denominacion, Long idCatEstadoEntidad) throws I18NException {
+    public Paginacion busqueda(Integer pageNumber, Long idEntidad, Oficina oficina, Boolean sir) throws I18NException {
 
         Query q;
         Query q2;
@@ -626,16 +592,42 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
 
         // Estado de la Oficina
         where.add(" oficina.estado.id = :idCatEstadoEntidad ");
-        parametros.put("idCatEstadoEntidad", idCatEstadoEntidad);
+        parametros.put("idCatEstadoEntidad", oficina.getEstado().getId());
 
-
-        if (StringUtils.isNotEmpty(codigo)) {
-            where.add(DataBaseUtils.like("oficina.codigo", "codigo", parametros, codigo));
+        // Código DIR3 de la Oficina
+        if (StringUtils.isNotEmpty(oficina.getCodigo())) {
+            where.add(DataBaseUtils.like("oficina.codigo", "codigo", parametros, oficina.getCodigo()));
         }
-        if (StringUtils.isNotEmpty(denominacion)) {
-            where.add(DataBaseUtils.like("oficina.denominacion", "denominacion", parametros, denominacion));
+        // Denominación DIR3 de la Oficina
+        if (StringUtils.isNotEmpty(oficina.getDenominacion())) {
+            where.add(DataBaseUtils.like("oficina.denominacion", "denominacion", parametros, oficina.getDenominacion()));
         }
 
+        // OAMR
+        if(oficina.getOamr() != null){
+            where.add(" oficina.oamr = :oamr ");
+            parametros.put("oamr", oficina.getOamr());
+        }
+
+        //Isla
+        if(oficina.getIsla().getId() != null){
+            where.add(" oficina.isla.id = :idIsla ");
+            parametros.put("idIsla", oficina.getIsla().getId());
+        }
+
+        // SIR
+        if(sir != null){
+            if(sir){
+                where.add(" (:sir in elements(oficina.servicios) or :sirEnvio in elements(oficina.servicios) or :sirRecepcion in elements(oficina.servicios)) ");
+            }else{
+                where.add(" (:sir not in elements(oficina.servicios) and :sirEnvio not in elements(oficina.servicios) and :sirRecepcion not in elements(oficina.servicios)) ");
+            }
+            parametros.put("sir", catServicioEjb.findByCodigo(RegwebConstantes.OFICINA_INTEGRADA_SIR));
+            parametros.put("sirRecepcion", catServicioEjb.findByCodigo(RegwebConstantes.OFICINA_INTEGRADA_SIR_RECEPCION));
+            parametros.put("sirEnvio", catServicioEjb.findByCodigo(RegwebConstantes.OFICINA_INTEGRADA_SIR_ENVIO));
+        }
+
+        // Parámetros
         if (parametros.size() != 0) {
             query.append("where ");
             int count = 0;
@@ -661,7 +653,6 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
             q = em.createQuery(query.toString());
         }
 
-
         Paginacion paginacion;
 
         if (pageNumber != null) { // Comprobamos si es una busqueda paginada o no
@@ -676,7 +667,12 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
             paginacion = new Paginacion(0, 0);
         }
 
-        paginacion.setListado(q.getResultList());
+        List<Oficina> oficinas = q.getResultList();
+        for(Oficina o:oficinas){
+            Hibernate.initialize(o.getLocalidad());
+            Hibernate.initialize(o.getIsla());
+        }
+        paginacion.setListado(oficinas);
 
         return paginacion;
 

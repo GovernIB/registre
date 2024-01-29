@@ -167,7 +167,7 @@ public class AdminController extends BaseController {
         ModelAndView mav = new ModelAndView("admin/oficinaList");
         Oficina oficina = busqueda.getOficina();
 
-        Paginacion paginacion = oficinaEjb.busqueda(busqueda.getPageNumber(), busqueda.getEntidad(), oficina.getCodigo(), oficina.getDenominacion(), oficina.getEstado().getId());
+        Paginacion paginacion = oficinaEjb.busqueda(busqueda.getPageNumber(), busqueda.getEntidad(), oficina, null);
 
         busqueda.setPageNumber(1);
         mav.addObject("paginacion", paginacion);

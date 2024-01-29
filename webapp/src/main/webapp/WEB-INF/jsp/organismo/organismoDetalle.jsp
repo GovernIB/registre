@@ -81,6 +81,15 @@
                                     <span class="label label-danger">No</span>
                                 </c:if>
                             </dd>
+                            <c:if test="${not empty organismo.codAmbComunidad}">
+                                <dt><i class="fa fa-map"></i> <spring:message code="organismo.buscador.comunidadAutonoma"/>: </dt> <dd> ${organismo.codAmbComunidad.descripcionComunidad}</dd>
+                            </c:if>
+                            <c:if test="${not empty organismo.codAmbProvincia}">
+                                <dt><i class="fa fa-home"></i> <spring:message code="oficina.provincia"/>: </dt> <dd> ${organismo.codAmbProvincia.descripcionProvincia}</dd>
+                            </c:if>
+                            <c:if test="${not empty organismo.isla}">
+                                <dt><i class="fa fa-map-marker"></i> <spring:message code="oficina.isla"/>: </dt> <dd> ${organismo.isla.descripcionIsla}</dd>
+                            </c:if>
 
                         </dl>
 

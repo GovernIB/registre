@@ -15,6 +15,8 @@ public class OficinaBusquedaForm implements Serializable {
     private Oficina oficina;
     private Long entidad;
     private Integer pageNumber;
+    private Boolean sir;
+    private Boolean exportarOficinas = false;
 
     public OficinaBusquedaForm() {
     }
@@ -23,6 +25,8 @@ public class OficinaBusquedaForm implements Serializable {
         this.oficina = oficina;
         this.entidad = entidad;
         this.pageNumber = pageNumber;
+        this.sir = null;
+        oficina.setOamr(null);
     }
 
     public Oficina getOficina() {
@@ -47,5 +51,21 @@ public class OficinaBusquedaForm implements Serializable {
 
     public void setPageNumber(Integer pageNumber) {
         this.pageNumber = pageNumber;
+    }
+
+    public Boolean getSir() {
+        return sir;
+    }
+
+    public void setSir(Boolean sir) {
+        this.sir = sir;
+    }
+
+    public Boolean getExportarOficinas() {
+        return exportarOficinas;
+    }
+
+    public void setExportarOficinas(Boolean exportarOficinas) {
+        this.exportarOficinas = exportarOficinas;
     }
 }

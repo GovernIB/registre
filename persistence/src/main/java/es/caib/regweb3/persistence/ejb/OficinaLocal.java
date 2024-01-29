@@ -267,15 +267,6 @@ public interface OficinaLocal extends BaseEjb<Oficina, Long> {
      */
     Boolean isSIREnvio(Long idOficina) throws I18NException;
 
-    /**
-     * Consulta si una Oficina es SIR (Servicio Integrada en SIR)
-     *
-     * @param idOficina
-     * @return
-     * @throws I18NException
-     */
-    Boolean isSIR(Long idOficina) throws I18NException;
-
 
     /**
      * Consulta si una Oficina es SIR Completa(tiene todos los servicios SIR: Integrada en SIR, SIR Envio, SIR Recepción)
@@ -299,12 +290,11 @@ public interface OficinaLocal extends BaseEjb<Oficina, Long> {
      * Realiza una busqueda de {@link es.caib.regweb3.model.Oficina} según los parámetros
      *
      * @param pageNumber
-     * @param codigo
-     * @param denominacion
+     * @param oficina
      * @return
      * @throws I18NException
      */
-    Paginacion busqueda(Integer pageNumber, Long idEntidad, String codigo, String denominacion, Long idCatEstadoEntidad) throws I18NException;
+    Paginacion busqueda(Integer pageNumber, Long idEntidad, Oficina oficina, Boolean sir) throws I18NException;
 
     /**
      *
