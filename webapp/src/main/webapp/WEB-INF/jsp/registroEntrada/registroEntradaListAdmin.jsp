@@ -86,10 +86,10 @@
                         <div class="col-xs-12">
                             <div class="col-xs-6 espaiLinies">
                                 <div class="col-xs-4 pull-left etiqueta_regweb">
-                                    <label for="registroEntrada.oficina.id" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.oficina.busqueda"/>" data-toggle="popover" disabled="true"><spring:message code="registro.oficinaRegistro"/></label>
+                                    <label for="registroEntrada.numeroRegistroFormateado" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.numero.busqueda"/>" data-toggle="popover"><spring:message code="registroEntrada.numeroRegistro.regweb"/></label>
                                 </div>
                                 <div class="col-xs-8">
-                                    <form:select path="registroEntrada.oficina.id" cssClass="chosen-select" disabled="true"/>
+                                    <form:input path="registroEntrada.numeroRegistroFormateado" cssClass="form-control"/> <form:errors path="registroEntrada.numeroRegistroFormateado" cssClass="help-block" element="span"/>
                                 </div>
                             </div>
 
@@ -117,13 +117,13 @@
                         </div>
 
 						<div class="col-xs-12">
-                            
+
                             <div class="col-xs-6 espaiLinies">
                                 <div class="col-xs-4 pull-left etiqueta_regweb">
-                                    <label for="registroEntrada.numeroRegistroFormateado" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.numero.busqueda"/>" data-toggle="popover"><spring:message code="registroEntrada.numeroRegistro"/></label>
+                                    <label for="registroEntrada.registroDetalle.numeroRegistroOrigen" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.numRegOrigen"/>" data-toggle="popover"><spring:message code="registroEntrada.numeroRegistroOrigen"/></label>
                                 </div>
                                 <div class="col-xs-8">
-                                    <form:input path="registroEntrada.numeroRegistroFormateado" cssClass="form-control"/> <form:errors path="registroEntrada.numeroRegistroFormateado" cssClass="help-block" element="span"/>
+                                    <form:input path="registroEntrada.registroDetalle.numeroRegistroOrigen" cssClass="form-control"/>
                                 </div>
                             </div>
                             <div class="col-xs-6 espaiLinies">
@@ -168,14 +168,14 @@
                          </div>
 
                                 <%--Comprueba si debe mostrar las opciones desplegadas o no--%>
-                        <c:if test="${empty registroEntradaBusqueda.registroEntrada.registroDetalle.tipoDocumentacionFisica &&
+                        <c:if test="${empty registroEntradaBusqueda.registroEntrada.oficina.id && empty registroEntradaBusqueda.registroEntrada.registroDetalle.tipoDocumentacionFisica &&
                             empty registroEntradaBusqueda.interessatDoc && empty registroEntradaBusqueda.interessatNom &&
                             empty registroEntradaBusqueda.interessatLli1 && empty registroEntradaBusqueda.interessatLli2 &&
                             empty registroEntradaBusqueda.organDestinatari && empty registroEntradaBusqueda.registroEntrada.registroDetalle.codigoSia &&
                             empty registroEntradaBusqueda.idUsuario && !registroEntradaBusqueda.registroEntrada.registroDetalle.presencial}">
                             <div id="demo" class="collapse">
                                 </c:if>
-                        <c:if test="${not empty registroEntradaBusqueda.registroEntrada.registroDetalle.tipoDocumentacionFisica ||
+                        <c:if test="${not empty registroEntradaBusqueda.registroEntrada.oficina.id || not empty registroEntradaBusqueda.registroEntrada.registroDetalle.tipoDocumentacionFisica ||
                             not empty registroEntradaBusqueda.interessatDoc || not empty registroEntradaBusqueda.interessatNom ||
                             not empty registroEntradaBusqueda.interessatLli1 || not empty registroEntradaBusqueda.interessatLli2 ||
                             not empty registroEntradaBusqueda.organDestinatari || not empty registroEntradaBusqueda.registroEntrada.registroDetalle.codigoSia ||
@@ -186,6 +186,14 @@
                             <div class="col-xs-12">
                                 <div class="col-xs-6 espaiLinies">
                                     <div class="col-xs-4 pull-left etiqueta_regweb">
+                                        <label for="registroEntrada.oficina.id" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.oficina.busqueda"/>" data-toggle="popover" disabled="true"><spring:message code="registro.oficinaRegistro"/></label>
+                                    </div>
+                                    <div class="col-xs-8">
+                                        <form:select path="registroEntrada.oficina.id" cssClass="chosen-select" disabled="true"/>
+                                    </div>
+                                </div>
+                                <div class="col-xs-6 espaiLinies">
+                                    <div class="col-xs-4 pull-left etiqueta_regweb">
                                         <label for="interessatNom" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.nombre.busqueda"/>" data-toggle="popover"><spring:message code="registroEntrada.nombreInteresado"/></label>
                                     </div>
                                     <div class="col-xs-8">
@@ -193,6 +201,9 @@
                                         <form:errors path="interessatNom" cssClass="help-block" element="span"/>
                                     </div>
                                 </div>
+                            </div>
+
+                            <div class="col-xs-12">
                                 <div class="col-xs-6 espaiLinies">
                                     <div class="col-xs-4 pull-left etiqueta_regweb">
                                         <label for="interessatLli1" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.apellido1.busqueda"/>" data-toggle="popover"><spring:message code="interesado.apellido1"/></label>
@@ -202,9 +213,6 @@
                                         <form:errors path="interessatLli1" cssClass="help-block" element="span"/>
                                     </div>
                                 </div>
-                            </div>
-
-                            <div class="col-xs-12">
                                 <div class="col-xs-6 espaiLinies">
                                     <div class="col-xs-4 pull-left etiqueta_regweb">
                                         <label for="interessatLli2" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.apellido2.busqueda"/>" data-toggle="popover"><spring:message code="interesado.apellido2"/></label>
@@ -214,6 +222,9 @@
                                         <form:errors path="interessatLli2" cssClass="help-block" element="span"/>
                                     </div>
                                 </div>
+                            </div>
+
+                            <div class="col-xs-12">
                                 <div class="col-xs-6 espaiLinies">
                                     <div class="col-xs-4 pull-left etiqueta_regweb">
                                         <label for="interessatDoc" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.documento.busqueda"/>" data-toggle="popover"><spring:message code="registroEntrada.docInteresado"/></label>
@@ -223,10 +234,6 @@
                                         <form:errors path="interessatDoc" cssClass="help-block" element="span"/>
                                     </div>
                                 </div>
-                            </div>
-
-                            <div class="col-xs-12">
-
                                 <div class="col-xs-6 espaiLinies">
                                     <div class="col-xs-4 pull-left etiqueta_regweb">
                                         <label for="registroEntrada.registroDetalle.tipoDocumentacionFisica" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.docFisica"/>" data-toggle="popover"><spring:message code="registroEntrada.tipoDocumentacionFisica"/></label>
@@ -240,7 +247,21 @@
                                         </form:select>
                                     </div>
                                 </div>
+                            </div>
 
+                            <div class="col-xs-12">
+                                <div class="col-xs-6 espaiLinies">
+                                    <div class="col-xs-4 pull-left etiqueta_regweb">
+                                        <label for="registroEntrada.registroDetalle.presencial" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.presencial"/>" data-toggle="popover"><spring:message code="registro.presencial"/></label>
+                                    </div>
+                                    <div class="col-xs-8">
+                                        <form:select path="registroEntrada.registroDetalle.presencial" cssClass="chosen-select">
+                                            <form:option value="" label="..."/>
+                                            <form:option value="true"><spring:message code="regweb.si"/></form:option>
+                                            <form:option value="false"><spring:message code="regweb.no"/></form:option>
+                                        </form:select>
+                                    </div>
+                                </div>
                                 <div class="col-xs-6 espaiLinies">
                                     <div class="col-xs-4 pull-left etiqueta_regweb">
                                         <label for="idUsuario" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.usuario.busqueda"/>" data-toggle="popover"><spring:message code="usuario.usuario"/></label>
@@ -254,21 +275,10 @@
                                         </form:select>
                                     </div>
                                 </div>
-                            </div>
 
+                            </div>
                             <div class="col-xs-12">
-                               <div class="col-xs-6 espaiLinies">
-                                    <div class="col-xs-4 pull-left etiqueta_regweb">
-                                        <label for="registroEntrada.registroDetalle.presencial" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.presencial"/>" data-toggle="popover"><spring:message code="registro.presencial"/></label>
-                                    </div>
-                                    <div class="col-xs-8">
-                                        <form:select path="registroEntrada.registroDetalle.presencial" cssClass="chosen-select">
-                                            <form:option value="" label="..."/>
-                                            <form:option value="true"><spring:message code="regweb.si"/></form:option>
-                                            <form:option value="false"><spring:message code="regweb.no"/></form:option>
-                                        </form:select>
-                                    </div>
-                                </div>
+
                                 <div class="col-xs-6 espaiLinies">
                                     <div class="col-xs-4 pull-left etiqueta_regweb">
                                         <label for="registroEntrada.registroDetalle.codigoSia" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.codigoSIA"/>" data-toggle="popover"><spring:message code="registroEntrada.codigoSIA"/></label>
@@ -293,7 +303,6 @@
                         </div>
 
 					 	<div class="row">
-
                             <div class="form-group col-xs-12">
                                 <div class="col-xs-1 boto-panel center">
                                     <button type="submit" class="btn btn-warning btn-sm" style="margin-left: 15px;">
@@ -301,7 +310,6 @@
                                     </button>
                                 </div>
                             </div>
-
 						</div>
 
                     </form:form>
@@ -406,11 +414,8 @@
                                     </c:import>
 
                                 </div>
-
                             </c:if>
-
                         </div>
-
                     </c:if>
                    </div>
                 </div>
@@ -457,20 +462,6 @@
         $("#demo").on("show.bs.collapse", function(){
             $(".masOpciones-info").html('<span class="fa fa-minus"></span> ' + traduccion['regweb.busquedaAvanzada']);
         });
-    });
-</script>
-
-<!-- Añade el color del libro activo o no activo -->
-<script type="text/javascript">
-    // Añade el color al libro al iniciar la pagina
-    document.addEventListener("DOMContentLoaded", function() {
-        $("#llibre_chosen").find("span").addClass($("#llibre option:selected").attr('class'));
-    }, false);
-
-    //Ejecuta cambio de colores al cambiar el libro del select
-    $(document).on('change', '#llibre', function(event) {
-        $("#llibre_chosen").find("span").removeClass("rojo");
-        $("#llibre_chosen").find("span").addClass($("#llibre option:selected").attr('class'));
     });
 </script>
 
