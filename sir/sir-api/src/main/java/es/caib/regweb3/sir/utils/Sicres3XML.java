@@ -224,10 +224,10 @@ public class Sicres3XML {
         Assert.isTrue(validarCodigoEntidadRegistral(fichero.getCodigoEntidadRegistralDestino()), "El campo 'CodigoEntidadRegistralDestino'del SegmentoDestino, no es valido");
 
         // Validar el código de unidad de tramitación de destino en DIR3
-        if (StringUtils.isNotBlank(fichero.getCodigoUnidadTramitacionDestino())) {
+        /*if (StringUtils.isNotBlank(fichero.getCodigoUnidadTramitacionDestino())) {
             Assert.isTrue(validarCodigoUnidadTramitacion(fichero.getCodigoUnidadTramitacionDestino()),
                     "El campo 'CodigoUnidadTramitacionDestino' del SegmentoDestino, no es valido o no existe en DIR3.");
-        }
+        }*/
 
         //log.info("SegmentoDestino validado!");
     }
