@@ -26,6 +26,7 @@ import java.util.Set;
         @Index(name = "RWE_ORGANI_CAUTON_FK_I", columnList = "CODAMBCOMUNIDAD"),
         @Index(name = "RWE_ORGANI_PAIS_FK_I", columnList = "PAIS"),
         @Index(name = "RWE_ORGANI_LOCALI_FK_I", columnList = "LOCALIDAD"),
+        @Index(name = "RWE_ORGANI_ISLA_FK_I", columnList = "ISLA"),
         @Index(name = "RWE_ORGANI_TVIA_FK_I", columnList = "TIPOVIA"),
         @Index(name = "RWE_ORGANI_PROVIN_FK_I", columnList = "CODAMBPROVINCIA")
 })
@@ -68,6 +69,8 @@ public class Organismo implements Serializable {
     private CatPais codPais;
     @XmlTransient
     private CatLocalidad localidad;
+    @XmlTransient
+    private CatIsla isla;
     @XmlTransient
     private CatTipoVia tipoVia;
     @XmlTransient
@@ -330,6 +333,17 @@ public class Organismo implements Serializable {
 
     public void setLocalidad(CatLocalidad localidad) {
         this.localidad = localidad;
+    }
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ISLA", foreignKey = @ForeignKey(name = "RWE_ORGANISMO_ISLA_FK"))
+    @JsonIgnore
+    public CatIsla getIsla() {
+        return isla;
+    }
+
+    public void setIsla(CatIsla isla) {
+        this.isla = isla;
     }
 
     @ManyToOne(fetch = FetchType.LAZY)

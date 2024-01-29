@@ -21,6 +21,7 @@ import java.util.Set;
 @Table(name = "RWE_OFICINA", indexes = {
         @Index(name = "RWE_OFICIN_ESTENT_FK_I", columnList = "ESTADO"),
         @Index(name = "RWE_OFICIN_PAIS_FK_I", columnList = "PAIS"),
+        @Index(name = "RWE_OFICIN_ISLA_FK_I", columnList = "ISLA"),
         @Index(name = "RWE_OFICIN_COMUNI_FK_I", columnList = "COMUNIDAD"),
         @Index(name = "RWE_OFICIN_LOCALI_FK_I", columnList = "LOCALIDAD"),
         @Index(name = "RWE_OFICIN_TVIA_FK_I", columnList = "TIPOVIA"),
@@ -53,6 +54,8 @@ public class Oficina implements Serializable {
     @XmlTransient
     private CatLocalidad localidad;
     @XmlTransient
+    private CatIsla isla;
+    @XmlTransient
     private CatTipoVia tipoVia;
     @XmlTransient
     private String nombreVia;
@@ -62,6 +65,8 @@ public class Oficina implements Serializable {
     private String codPostal;
     @XmlTransient
     private Set<CatServicio> servicios;
+    @XmlTransient
+    private Boolean oamr = false;
 
     @Transient
     private Boolean isSirRecepcion = false;
@@ -106,13 +111,13 @@ public class Oficina implements Serializable {
         this.organismoResponsable = new Organismo(organismoResponsable);
     }
 
-    public Oficina(Long id, String codigo, String denominacion, Long oficinaResponsable, Long organismoResponsable, Boolean isSir) {
+    public Oficina(Long id, String codigo, String denominacion, Long oficinaResponsable, Long organismoResponsable, Set<CatServicio> servicios) {
         this.id = id;
         this.codigo = codigo;
         this.denominacion = denominacion;
         this.oficinaResponsable = new Oficina(oficinaResponsable);
         this.organismoResponsable = new Organismo(organismoResponsable);
-        this.isSir = isSir;
+        this.servicios = servicios;
     }
 
     public Oficina(Long id, String codigo, String denominacion, Long organismoResponsable, String organismoResponsableCodigo, String organismoResponsableDenominacion) {
@@ -283,6 +288,17 @@ public class Oficina implements Serializable {
     }
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ISLA", foreignKey = @ForeignKey(name = "RWE_OFICINA_ISLA_FK"))
+    @JsonIgnore
+    public CatIsla getIsla() {
+        return isla;
+    }
+
+    public void setIsla(CatIsla isla) {
+        this.isla = isla;
+    }
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "TIPOVIA", foreignKey = @ForeignKey(name = "RWE_OFICINA_TIPOVIA_FK"))
     @JsonIgnore
     public CatTipoVia getTipoVia() {
@@ -336,6 +352,15 @@ public class Oficina implements Serializable {
         this.servicios = servicios;
     }
 
+    @Column(name = "OAMR", nullable = false)
+    public Boolean getOamr() {
+        return oamr;
+    }
+
+    public void setOamr(Boolean oamr) {
+        this.oamr = oamr;
+    }
+
     @Transient
     @JsonIgnore
     public Boolean getSirRecepcion() {
@@ -349,12 +374,16 @@ public class Oficina implements Serializable {
     @Transient
     @JsonIgnore
     public Boolean getSir() {
-        return isSir;
+        for (CatServicio servicio : servicios) {
+            if (servicio.getCodServicio().equals(RegwebConstantes.OFICINA_INTEGRADA_SIR) ||
+                    servicio.getCodServicio().equals(RegwebConstantes.OFICINA_INTEGRADA_SIR_ENVIO) ||
+                    servicio.getCodServicio().equals(RegwebConstantes.OFICINA_INTEGRADA_SIR_RECEPCION)) {
+                return true;
+            }
+        }
+        return false;
     }
 
-    public void setSir(Boolean sir) {
-        isSir = sir;
-    }
 
     @Transient
     @JsonIgnore
@@ -364,20 +393,6 @@ public class Oficina implements Serializable {
 
     public void setSirEnvio(Boolean sirEnvio) {
         isSirEnvio = sirEnvio;
-    }
-
-    @Transient
-    @JsonIgnore
-    public Boolean getOficinaSir() {
-
-        for (CatServicio servicio : servicios) {
-            if (servicio.getCodServicio().equals(RegwebConstantes.OFICINA_INTEGRADA_SIR) ||
-                    servicio.getCodServicio().equals(RegwebConstantes.OFICINA_INTEGRADA_SIR_ENVIO) ||
-                    servicio.getCodServicio().equals(RegwebConstantes.OFICINA_INTEGRADA_SIR_RECEPCION)) {
-                return true;
-            }
-        }
-        return false;
     }
 
     @Transient

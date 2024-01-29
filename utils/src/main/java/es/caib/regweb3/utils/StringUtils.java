@@ -169,4 +169,13 @@ public class StringUtils {
 
         return null;
     }
+
+    /**
+     * Retorna el literal de un Booleano
+     * @param activo
+     * @return
+     */
+    public static String toStringSiNo(Boolean activo){
+        return activo ? "Sí" : "No";
+    }
 }

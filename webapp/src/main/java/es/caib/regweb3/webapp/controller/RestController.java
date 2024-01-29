@@ -310,4 +310,14 @@ public class RestController extends BaseController {
         return getOficinasConsultaSalida(request, id);
     }
 
+    /**
+     * Obtiene las {@link es.caib.regweb3.model.Oficina} del Organismo seleccionado
+     */
+    @RequestMapping(value = "/obtenerOficinasEntidad", method = RequestMethod.GET)
+    public @ResponseBody
+    List<Oficina> obtenerOficinasEntidad(@RequestParam Long id, HttpServletRequest request) throws Exception {
+
+        return oficinaEjb.findByOrganismoResponsable(id);
+
+    }
 }
