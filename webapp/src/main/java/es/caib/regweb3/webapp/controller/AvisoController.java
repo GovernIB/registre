@@ -78,33 +78,27 @@ public class AvisoController extends BaseController {
             //mav.addObject("validos", registroEntradaEjb.getByOficinaEstadoCount(oficinaActiva.getId(), RegwebConstantes.REGISTRO_VALIDO));
 
             /* OFICIOS DE REMISIÓN */
-            if(entidadActiva.getOficioRemision()){
 
-                // OFICIOS PENDIENTES DE REMISIÓN ENTRADA
-                oficiosEntradaExternosPendientesRemision = oficioRemisionEntradaUtilsEjb.oficiosEntradaExternosPendientesRemisionCount(oficinaActiva.getId());
+            // OFICIOS PENDIENTES DE REMISIÓN ENTRADA
+            oficiosEntradaExternosPendientesRemision = oficioRemisionEntradaUtilsEjb.oficiosEntradaExternosPendientesRemisionCount(oficinaActiva.getId());
 
+            // OFICIOS PENDIENTES DE REMISIÓN SALIDA
+            oficiosSalidaExternosPendientesRemision = oficioRemisionSalidaUtilsEjb.oficiosSalidaPendientesRemisionCount(oficinaActiva.getId(), RegwebConstantes.EVENTO_OFICIO_EXTERNO);
 
-                // OFICIOS PENDIENTES DE REMISIÓN SALIDA
-                oficiosSalidaExternosPendientesRemision = oficioRemisionSalidaUtilsEjb.oficiosSalidaPendientesRemisionCount(oficinaActiva.getId(), RegwebConstantes.EVENTO_OFICIO_EXTERNO);
+            //mav.addObject("oficiosEntradaInternosPendientesRemision", oficiosEntradaInternosPendientesRemision);
+            mav.addObject("oficiosEntradaExternosPendientesRemision", oficiosEntradaExternosPendientesRemision);
+            //mav.addObject("oficiosSalidaInternosPendientesRemision", oficiosSalidaInternosPendientesRemision);
+            mav.addObject("oficiosSalidaExternosPendientesRemision", oficiosSalidaExternosPendientesRemision);
 
-
-                //mav.addObject("oficiosEntradaInternosPendientesRemision", oficiosEntradaInternosPendientesRemision);
-                mav.addObject("oficiosEntradaExternosPendientesRemision", oficiosEntradaExternosPendientesRemision);
-                //mav.addObject("oficiosSalidaInternosPendientesRemision", oficiosSalidaInternosPendientesRemision);
-                mav.addObject("oficiosSalidaExternosPendientesRemision", oficiosSalidaExternosPendientesRemision);
-
-                // OFICIOS PENDIENTES DE LLEGADA
-                mav.addObject("oficiosPendientesLlegada", oficioRemisionEjb.oficiosPendientesLlegadaCount(organismosOficinaActiva));
-            }
+            // OFICIOS PENDIENTES DE LLEGADA
+            mav.addObject("oficiosPendientesLlegada", oficioRemisionEjb.oficiosPendientesLlegadaCount(organismosOficinaActiva));
 
             // Registros de Entrada Rechazados o Reenviados por SIR
             if(entidadActiva.getSir() && oficinaActiva.getSirEnvio()) {
                 mav.addObject("entradasRechazadosReenviados", registroEntradaConsultaEjb.getSirRechazadosReenviadosCount(oficinaActiva.getId()));
                 mav.addObject("salidasRechazadasReenviadas", registroSalidaConsultaEjb.getSirRechazadosReenviadosCount(oficinaActiva.getId()));
             }
-
         }
-
 
         //log.info("TIEMPO CARGA Avisos: " + TimeUtils.formatElapsedTime(System.currentTimeMillis() - start));
         return mav;

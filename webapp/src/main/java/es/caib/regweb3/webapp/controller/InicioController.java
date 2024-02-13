@@ -69,27 +69,24 @@ public class InicioController extends BaseController{
             mav.addObject("reservas", registroEntradaConsultaEjb.getByOficinaEstado(oficinaActiva.getId(), RegwebConstantes.REGISTRO_RESERVA, RegwebConstantes.REGISTROS_PANTALLA_INICIO));
 
             /* OFICIOS PENDIENTES DE REMISIÓN */
-            if(entidadActiva.getOficioRemision()){
 
-                mav.addObject("organismosOficioRemisionEntradaExternos", oficioRemisionEntradaUtilsEjb.organismosEntradaPendientesRemisionExternosTipo(entidadActiva.getId(), oficinaActiva.getId(),  RegwebConstantes.EVENTO_OFICIO_EXTERNO, RegwebConstantes.REGISTROS_PANTALLA_INICIO));
+            mav.addObject("organismosOficioRemisionEntradaExternos", oficioRemisionEntradaUtilsEjb.organismosEntradaPendientesRemisionExternosTipo(entidadActiva.getId(), oficinaActiva.getId(),  RegwebConstantes.EVENTO_OFICIO_EXTERNO, RegwebConstantes.REGISTROS_PANTALLA_INICIO));
 
-                // Oficios de entrada SIR
-                if(entidadActiva.getSir() && oficinaActiva.getSirEnvio()) {
-                    mav.addObject("organismosOficioRemisionEntradaSir", oficioRemisionEntradaUtilsEjb.organismosEntradaPendientesRemisionExternosTipo(entidadActiva.getId(), oficinaActiva.getId(), RegwebConstantes.EVENTO_OFICIO_SIR, RegwebConstantes.REGISTROS_PANTALLA_INICIO));
-                }
+            // Oficios de entrada SIR
+            if(entidadActiva.getSir() && oficinaActiva.getSirEnvio()) {
+                mav.addObject("organismosOficioRemisionEntradaSir", oficioRemisionEntradaUtilsEjb.organismosEntradaPendientesRemisionExternosTipo(entidadActiva.getId(), oficinaActiva.getId(), RegwebConstantes.EVENTO_OFICIO_SIR, RegwebConstantes.REGISTROS_PANTALLA_INICIO));
+            }
 
-                // Obtenemos los Oficios pendientes de Llegada
-                mav.addObject("oficiosPendientesLlegada", oficioRemisionEjb.oficiosPendientesLlegada(organismosOficinaActiva, RegwebConstantes.REGISTROS_PANTALLA_INICIO));
+            // Obtenemos los Oficios pendientes de Llegada
+            mav.addObject("oficiosPendientesLlegada", oficioRemisionEjb.oficiosPendientesLlegada(organismosOficinaActiva, RegwebConstantes.REGISTROS_PANTALLA_INICIO));
 
 
-                // Obtenemos los Organismos que tienen Registros de salida pendientes de tramitar por medio de un Oficio de Revisión,
-                mav.addObject("organismosOficioRemisionSalidaExternos", oficioRemisionSalidaUtilsEjb.organismosSalidaPendientesRemisionTipo(entidadActiva.getId(), oficinaActiva.getId(), RegwebConstantes.EVENTO_OFICIO_EXTERNO, RegwebConstantes.REGISTROS_PANTALLA_INICIO));
+            // Obtenemos los Organismos que tienen Registros de salida pendientes de tramitar por medio de un Oficio de Revisión,
+            mav.addObject("organismosOficioRemisionSalidaExternos", oficioRemisionSalidaUtilsEjb.organismosSalidaPendientesRemisionTipo(entidadActiva.getId(), oficinaActiva.getId(), RegwebConstantes.EVENTO_OFICIO_EXTERNO, RegwebConstantes.REGISTROS_PANTALLA_INICIO));
 
-                // Oficios de salida SIR
-                if(entidadActiva.getSir() && oficinaActiva.getSirEnvio()) {
-                    mav.addObject("organismosOficioRemisionSalidaSir", oficioRemisionSalidaUtilsEjb.organismosSalidaPendientesRemisionTipo(entidadActiva.getId(), oficinaActiva.getId(), RegwebConstantes.EVENTO_OFICIO_SIR, RegwebConstantes.REGISTROS_PANTALLA_INICIO));
-                }
-
+            // Oficios de salida SIR
+            if(entidadActiva.getSir() && oficinaActiva.getSirEnvio()) {
+                mav.addObject("organismosOficioRemisionSalidaSir", oficioRemisionSalidaUtilsEjb.organismosSalidaPendientesRemisionTipo(entidadActiva.getId(), oficinaActiva.getId(), RegwebConstantes.EVENTO_OFICIO_SIR, RegwebConstantes.REGISTROS_PANTALLA_INICIO));
             }
 
             /* REGISTROS SIR */
@@ -136,11 +133,9 @@ public class InicioController extends BaseController{
         }
 
         // Comprobación de si se ha hecho alguna sincronización del Catálogo DIR3
-        if (isSuperAdmin(request) || isAdminEntidad(request)) {
-            if(descargaEjb.findByTipo(RegwebConstantes.CATALOGO) == null){
-                Mensaje.saveMessageAviso(request, I18NUtils.tradueix("catalogoDir3.catalogo.vacio"));
+        if ((isSuperAdmin(request) || isAdminEntidad(request)) && (descargaEjb.findByTipo(RegwebConstantes.CATALOGO) == null)){
 
-            }
+            Mensaje.saveMessageAviso(request, I18NUtils.tradueix("catalogoDir3.catalogo.vacio"));
         }
 
         // Si es SuperAdmin redireccionamos al listado de Entidades

@@ -225,7 +225,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         if (!registro.getEstado().equals(RegwebConstantes.REGISTRO_RESERVA)) {
 
             // Mensajes de limitaciones anexos si es oficio de remisión sir
-            if (entidadActiva.getOficioRemision() && (registro.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO) || registro.getEstado().equals(RegwebConstantes.REGISTRO_PENDIENTE_VISAR)) && (registro.getEvento().equals(RegwebConstantes.EVENTO_OFICIO_SIR))) {
+            if ((registro.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO) || registro.getEstado().equals(RegwebConstantes.REGISTRO_PENDIENTE_VISAR)) && (registro.getEvento().equals(RegwebConstantes.EVENTO_OFICIO_SIR))) {
                 initMensajeNotaInformativaAnexos(entidadActiva, model);
             }
 

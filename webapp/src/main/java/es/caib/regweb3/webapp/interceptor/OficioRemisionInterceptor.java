@@ -69,14 +69,6 @@ public class OficioRemisionInterceptor extends HandlerInterceptorAdapter {
             return false;
         }
 
-        // Comprobamos que la Entidad esté configurada para tramitar de Oficios de Remisión
-        if(!entidadActiva.getOficioRemision()){
-            log.info("La Entidad no esta configurada para tramitar Oficios de Remisión");
-            Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.oficioRemision.entidad"));
-            response.sendRedirect("/regweb3/aviso");
-            return false;
-        }
-
         // Comprobamos existe al menos un modelo de oficio de remisión
         List<ModeloOficioRemision> modelos = modeloOficioRemisionEjb.getByEntidad(entidadActiva.getId());
 

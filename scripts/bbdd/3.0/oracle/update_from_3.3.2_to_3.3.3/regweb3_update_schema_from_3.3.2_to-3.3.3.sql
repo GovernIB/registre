@@ -43,5 +43,9 @@ CREATE INDEX RWE_ANEXO_CUSTID_FK_I on RWE_ANEXO (CUSTODIAID) TABLESPACE REGWEB_I
 
 grant select, insert, delete, update on RWE_CATISLA to www_regweb;
 
+--Nuevo campo RWE_ENTIDAD
+ALTER TABLE RWE_ENTIDAD add (REG_SALIDAS_PERSONAS number(1,0) DEFAULT 1 not null);
+--Eliminar campo RWE_ENTIDAD Oficio Remisión
+ALTER TABLE RWE_ENTIDAD drop column OFICIOREMISION;
 
 
