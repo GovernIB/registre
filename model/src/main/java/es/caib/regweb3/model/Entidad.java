@@ -59,8 +59,6 @@ public class Entidad implements Serializable {
     @XmlTransient
     private Contador contadorSir;
     @XmlTransient
-    private Boolean oficioRemision = true;
-    @XmlTransient
     private Boolean activo = true;
     @XmlTransient
     private Boolean mantenimiento = false;
@@ -78,9 +76,10 @@ public class Entidad implements Serializable {
     private Integer posYsello;
     @XmlTransient
     private Long perfilCustodia;
-
     @XmlTransient
     private Libro libro;
+    @XmlTransient
+    private Boolean regSalidasPersonas = true;
 
 
     public Entidad() {
@@ -126,10 +125,9 @@ public class Entidad implements Serializable {
         this.posYsello = e.posYsello;
     }
 
-    public Entidad(Long id, String nombre, Boolean oficioRemision) {
+    public Entidad(Long id, String nombre) {
         this.id = id;
         this.nombre = nombre;
-        this.oficioRemision = oficioRemision;
     }
 
     @Id
@@ -312,15 +310,6 @@ public class Entidad implements Serializable {
         return sir;
     }
 
-    @Column(name = "OFICIOREMISION", nullable = false)
-    public Boolean getOficioRemision() {
-        return oficioRemision;
-    }
-
-    public void setOficioRemision(Boolean oficioRemision) {
-        this.oficioRemision = oficioRemision;
-    }
-
     public void setSir(Boolean sir) {
         this.sir = sir;
     }
@@ -388,6 +377,15 @@ public class Entidad implements Serializable {
 
     public void setLibro(Libro libro) {
         this.libro = libro;
+    }
+
+    @Column(name = "REG_SALIDAS_PERSONAS")
+    public Boolean getRegSalidasPersonas() {
+        return regSalidasPersonas;
+    }
+
+    public void setRegSalidasPersonas(Boolean regSalidasPersonas) {
+        this.regSalidasPersonas = regSalidasPersonas;
     }
 
     @Override
