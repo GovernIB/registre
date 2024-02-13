@@ -3,10 +3,11 @@ package es.caib.regweb3.webapp.validator;
 import es.caib.regweb3.model.Usuario;
 import es.caib.regweb3.model.UsuarioEntidad;
 import es.caib.regweb3.persistence.ejb.UsuarioLocal;
+import es.caib.regweb3.utils.DocumentoUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
+import es.caib.regweb3.utils.StringUtils;
+import es.caib.regweb3.utils.Validacion;
 import es.caib.regweb3.webapp.utils.LoginService;
-import org.fundaciobit.genapp.common.i18n.I18NException;
-import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,75 +56,53 @@ public class UsuarioEntidadValidator implements Validator {
             ValidationUtils.rejectIfEmptyOrWhitespace(errors, "usuario.documento", "error.valor.requerido", "El camp és obligatori");
 
             // Formato DNI
-            if (usuarioEntidad.getUsuario().getDocumento() != null && !usuarioEntidad.getUsuario().getDocumento().isEmpty()) {
+            if (StringUtils.isNotEmpty(usuarioEntidad.getUsuario().getDocumento())) {
 
-                String documento = usuarioEntidad.getUsuario().getDocumento();
-                String letras = "TRWAGMYFPDXBNJZSQVHLCKE";
-                int valor;
+                String documento = usuarioEntidad.getUsuario().getDocumento().toUpperCase();
+                Validacion validacionDocumento;
 
-                if (documento.length() == 9) {
-                    String numeroNif = documento.substring(0, documento.length() - 1);
-                    Boolean nifcorrecte = true;
-                    for (int i = 0; i < numeroNif.length(); i++) {
-                        if (!Character.isDigit(numeroNif.charAt(i))) {
-                            errors.rejectValue("usuario.documento", "usuario.dni.incorrecto", "El dni no té format correcte (8 DIGITS + LLETRA)");
-                            nifcorrecte = false;
-                            break;
-                        }
+                try {
+                    Long tipoDocumento;
+
+                    // Solo permitimos DNI o NIE
+                    if(documento.startsWith("Y") || documento.startsWith("Z") || documento.startsWith("X")){
+                        tipoDocumento = RegwebConstantes.TIPODOCUMENTOID_NIE_ID;
+                    }else{
+                        tipoDocumento = RegwebConstantes.TIPODOCUMENTOID_NIF_ID;
                     }
-                    if (nifcorrecte) {
-                        valor = Integer.parseInt(documento.substring(0, documento.length() - 1));
 
-                        if (!documento.endsWith("" + letras.charAt(valor % 23))) {
-                            errors.rejectValue("usuario.documento", "usuario.documento.letra", "Lletra de document incorrecta");
+                    validacionDocumento = DocumentoUtils.comprobarDocumento(documento, tipoDocumento);
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    validacionDocumento = new Validacion(Boolean.FALSE, "error.documento", "El document es erroni");
+                }
+
+                // Si es válido, coprobamos si ya existe previamente
+                if (validacionDocumento.getValido()) {
+                    boolean existe;
+                    try {
+
+                        if (usuarioEntidad.getUsuario().getId() != null) { // Se trata de una modificación
+                            existe = usuarioEjb.existeDocumentoEdit(documento, usuarioEntidad.getUsuario().getId());
+
+                        } else {
+                            existe = usuarioEjb.existeDocumentoNew(documento);
                         }
+                    }catch (Exception e){
+                        log.error("Error comprobando si usuario entidad ya existe: ", e);
+                        existe = true;
                     }
-                } else {
-                    errors.rejectValue("usuario.documento", "usuario.documento.largo", "Llargària de document incorrecta");
+
+                    if (existe) {
+                        errors.rejectValue("usuario.documento", "error.document.existe");
+                    }
+
+                }else{
+                    errors.rejectValue("usuario.documento", validacionDocumento.getCodigoError(), new String[]{documento}, "El dni no té format correcte (8 DIGITS + LLETRA)");
                 }
             }
 
-
-            try {
-
-                // Identificador único
-                if (usuarioEntidad.getUsuario().getIdentificador() != null && !usuarioEntidad.getUsuario().getIdentificador().isEmpty()) {
-
-                    if(!loginService.existeIdentificador(usuarioEntidad.getUsuario().getIdentificador())){
-                        errors.rejectValue("usuario.identificador", "usuario.identificador.no.existe", "L'identificador no existeix al sistema de usuaris");
-                    }
-
-                    if (usuarioEntidad.getUsuario().getId() != null) {  // Se trata de una modificación
-                        if (usuarioEjb.existeIdentificadorEdit(usuarioEntidad.getUsuario().getIdentificador(), usuarioEntidad.getUsuario().getId())) {
-                            errors.rejectValue("usuario.identificador", "error.identificador.existe", "L'identificador ja existeix");
-                        }
-
-                    } else {
-                        if (usuarioEjb.findByIdentificador(usuarioEntidad.getUsuario().getIdentificador()) != null) {
-                            errors.rejectValue("usuario.identificador", "error.identificador.existe", "L'identificador ja existeix");
-                        }
-                    }
-                }
-
-                // NIF único
-                if (usuarioEntidad.getUsuario().getDocumento() != null && usuarioEntidad.getUsuario().getDocumento().length() > 0) {
-
-                    if (usuarioEntidad.getUsuario().getId() != null) { // Se trata de una modificación
-                        if (usuarioEjb.existeDocumentioEdit(usuarioEntidad.getUsuario().getDocumento(), usuarioEntidad.getUsuario().getId())) {
-                            errors.rejectValue("usuario.documento", "usuario.documento.existe", "El documento ya existe ja existeix");
-                        }
-                    } else {
-                        if (usuarioEjb.findByDocumento(usuarioEntidad.getUsuario().getDocumento()) != null) {
-                            errors.rejectValue("usuario.documento", "usuario.documento.existe", "El documento ya existe ja existeix");
-                        }
-                    }
-
-                }
-            } catch(I18NException i18ne) {
-              log.error(I18NUtils.getMessage(i18ne), i18ne);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
         }
     }
 }

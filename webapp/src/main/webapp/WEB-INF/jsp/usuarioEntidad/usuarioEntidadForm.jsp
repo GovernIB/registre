@@ -79,7 +79,7 @@
                                         <form:label path="usuario.documento"><spring:message code="usuario.documento"/></form:label>
                                     </div>
                                     <div class="col-xs-8">
-                                        <form:input path="usuario.documento" cssClass="form-control"/> <form:errors path="usuario.documento" cssClass="help-block" element="span"/>
+                                        <form:input path="usuario.documento" cssClass="form-control mayusculas"/> <form:errors path="usuario.documento" cssClass="help-block" element="span"/>
                                     </div>
                                 </div>
                             </div>
@@ -102,28 +102,29 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-xs-12">
-                                <div class="form-group col-xs-6 espaiLinies senseMargeLat">
-                                    <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
-                                        <form:label path="codigoTrabajo"><spring:message code="usuario.codigoTrabajo"/></form:label>
-                                    </div>
-                                    <div class="col-xs-8">
-                                        <form:input path="codigoTrabajo" cssClass="form-control"/> <form:errors path="codigoTrabajo" cssClass="help-block" element="span"/>
-                                    </div>
-                                </div>
-
-                                <div class="form-group col-xs-6 espaiLinies senseMargeLat">
-                                    <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
-                                        <form:label path="nombreTrabajo"><spring:message code="usuario.nombreTrabajo"/></form:label>
-                                    </div>
-                                    <div class="col-xs-8">
-                                        <form:input path="nombreTrabajo" cssClass="form-control"/> <form:errors path="nombreTrabajo" cssClass="help-block" element="span"/>
-                                    </div>
-                                </div>
-                            </div>
 
                             <%--Solo usuario Tipo Persona--%>
                             <c:if test="${usuarioEntidad.usuario.tipoUsuario == 1 && loginInfo.rolActivo.nombre != 'RWE_USUARI'}">
+                                <div class="col-xs-12">
+                                    <div class="form-group col-xs-6 espaiLinies senseMargeLat">
+                                        <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                            <form:label path="codigoTrabajo"><spring:message code="usuario.codigoTrabajo"/></form:label>
+                                        </div>
+                                        <div class="col-xs-8">
+                                            <form:input path="codigoTrabajo" cssClass="form-control"/> <form:errors path="codigoTrabajo" cssClass="help-block" element="span"/>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group col-xs-6 espaiLinies senseMargeLat">
+                                        <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                            <form:label path="nombreTrabajo"><spring:message code="usuario.nombreTrabajo"/></form:label>
+                                        </div>
+                                        <div class="col-xs-8">
+                                            <form:input path="nombreTrabajo" cssClass="form-control"/> <form:errors path="nombreTrabajo" cssClass="help-block" element="span"/>
+                                        </div>
+                                    </div>
+                                </div>
+
                                 <div class="col-xs-12">
                                     <div class="form-group col-xs-6 espaiLinies senseMargeLat">
                                         <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
@@ -238,6 +239,34 @@
 </div> <!-- /container -->
 
 <c:import url="../modulos/pie.jsp"/>
+
+<script type="text/javascript">
+
+    $(document).ready(function() {
+
+        tipoUsuario();
+    });
+
+    function tipoUsuario() {
+        var tipoUsuario = ${usuarioEntidad.usuario.tipoUsuario};
+
+        if (tipoUsuario == <%=RegwebConstantes.TIPO_USUARIO_PERSONA%>) { //Persona
+            $('#usuario\\.documento').removeAttr("disabled", "disabled");
+            $('#usuario\\.apellido1').removeAttr("disabled", "disabled");
+            $('#usuario\\.apellido2').removeAttr("disabled", "disabled");
+        }
+
+        if (tipoUsuario == <%=RegwebConstantes.TIPO_USUARIO_APLICACION%>) { //Aplicación
+            $('#usuario\\.documento').val("");
+            $('#usuario\\.documento').attr("disabled", "disabled");
+            $('#usuario\\.apellido1').val("");
+            $('#usuario\\.apellido1').attr("disabled", "disabled");
+            $('#usuario\\.apellido2').val("");
+            $('#usuario\\.apellido2').attr("disabled", "disabled");
+        }
+    }
+
+</script>
 
 </body>
 </html>

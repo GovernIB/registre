@@ -1401,3 +1401,7 @@ pre {
 .esquerra{
     float: left;
 }
+
+.mayusculas{
+    text-transform: uppercase;
+}

@@ -94,7 +94,7 @@
                                     <form:label path="documento"><span class="text-danger">*</span> <spring:message code="usuario.documento"/></form:label>
                                 </div>
                                 <div class="col-xs-8">
-                                    <form:input path="documento" cssClass="form-control"/> <form:errors path="documento" cssClass="help-block" element="span"/>
+                                    <form:input path="documento" cssClass="form-control mayusculas"/> <form:errors path="documento" cssClass="help-block" element="span"/>
                                 </div>
                             </div>
                         </div>
@@ -170,7 +170,6 @@
 <c:import url="../modulos/pie.jsp"/>
 
 <script type="text/javascript">
-
 
     $(document).ready(function() {
 
