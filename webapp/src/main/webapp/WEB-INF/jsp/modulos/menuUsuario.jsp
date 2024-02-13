@@ -72,25 +72,23 @@
 </div>
 
 <%--Menú OFICIO REMISIÓN--%>
-<c:if test="${loginInfo.entidadActiva.oficioRemision}">
-    <div class="btn-group">
-        <button type="button" class="btn btn-success btn-sm dropdown-toggle" data-toggle="dropdown">
-            <spring:message code="menu.oficiosRemision"/> <span class="caret"></span>
-        </button>
-        <ul class="dropdown-menu">
-            <li><a href="<c:url value="/oficioRemision/list"/>"><i class="fa fa-envelope-o"></i> <spring:message code="oficioRemision.listado"/></a></li>
-            <li><a href="<c:url value="/oficioRemision/aceptados/list"/>"><i class="fa fa-envelope-open-o"></i> <spring:message code="oficioRemision.aceptados"/></a></li>
-            <li class="divider"></li>
+<div class="btn-group">
+    <button type="button" class="btn btn-success btn-sm dropdown-toggle" data-toggle="dropdown">
+        <spring:message code="menu.oficiosRemision"/> <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu">
+        <li><a href="<c:url value="/oficioRemision/list"/>"><i class="fa fa-envelope-o"></i> <spring:message code="oficioRemision.listado"/></a></li>
+        <li><a href="<c:url value="/oficioRemision/aceptados/list"/>"><i class="fa fa-envelope-open-o"></i> <spring:message code="oficioRemision.aceptados"/></a></li>
+        <li class="divider"></li>
 <%--        <li><a href="<c:url value="/oficioRemision/entradasPendientesRemision/2"/>"><i class="fa fa-mail-forward text-info"></i> <spring:message code="registroEntrada.oficiosRemision.internos"/></a></li>--%>
-            <li><a href="<c:url value="/oficioRemision/entradasPendientesRemision/3"/>"><i class="fa fa-mail-forward text-info"></i> <spring:message code="registroEntrada.oficiosRemision.externos"/></a></li>
-            <li class="divider"></li>
+        <li><a href="<c:url value="/oficioRemision/entradasPendientesRemision/3"/>"><i class="fa fa-mail-forward text-info"></i> <spring:message code="registroEntrada.oficiosRemision.externos"/></a></li>
+        <li class="divider"></li>
 <%--        <li><a href="<c:url value="/oficioRemision/salidasPendientesRemision/2"/>"><i class="fa fa-mail-forward text-danger"></i> <spring:message code="registroSalida.oficiosRemision.internos"/></a></li>--%>
-            <li><a href="<c:url value="/oficioRemision/salidasPendientesRemision/3"/>"><i class="fa fa-mail-forward text-danger"></i> <spring:message code="registroSalida.oficiosRemision.externos"/></a></li>
-            <li class="divider"></li>
-            <li><a href="<c:url value="/oficioRemision/pendientesLlegada/list"/>"><i class="fa fa-mail-reply"></i> <spring:message code="oficioRemision.pendientesLlegada"/></a></li>
-        </ul>
-    </div>
-</c:if>
+        <li><a href="<c:url value="/oficioRemision/salidasPendientesRemision/3"/>"><i class="fa fa-mail-forward text-danger"></i> <spring:message code="registroSalida.oficiosRemision.externos"/></a></li>
+        <li class="divider"></li>
+        <li><a href="<c:url value="/oficioRemision/pendientesLlegada/list"/>"><i class="fa fa-mail-reply"></i> <spring:message code="oficioRemision.pendientesLlegada"/></a></li>
+    </ul>
+</div>
 
 <%--Menú SIR--%>
 <c:if test="${loginInfo.entidadActiva.sir && (loginInfo.oficinaActiva.sirRecepcion || loginInfo.oficinaActiva.sirEnvio)}">
