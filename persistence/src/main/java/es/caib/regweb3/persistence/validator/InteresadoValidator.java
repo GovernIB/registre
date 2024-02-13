@@ -46,52 +46,38 @@ public class InteresadoValidator<T> extends AbstractRegWebValidator<T> {
             if (interesado.getTipo() != null) {
                 if (interesado.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_FISICA)) {
 
+                    rejectIfEmptyOrWhitespace(errors, __target__, "apellido1", "error.valor.requerido");
 
-                    rejectIfEmptyOrWhitespace(errors, __target__, "apellido1",
-                            "error.valor.requerido");
+                    if (!hasFieldErrors(errors, "apellido1") && (interesado.getApellido1().length() > 30)) {
+                        rejectValue(errors, "apellido1", "error.valor.maxlenght");
 
-                    if (!hasFieldErrors(errors, "apellido1")) {
-                        if (interesado.getApellido1().length() > 30) {
-                            rejectValue(errors, "apellido1", "error.valor.maxlenght");
-                        }
                     }
-
 
                     rejectIfEmptyOrWhitespace(errors, __target__, "nombre", "error.valor.requerido");
 
-                    if (!hasFieldErrors(errors, "nombre")) {
-                        if (interesado.getNombre().length() > 30) {
-                            rejectValue(errors, "nombre", "error.valor.maxlenght");
-                        }
+                    if (!hasFieldErrors(errors, "nombre") && (interesado.getNombre().length() > 30)) {
+                        rejectValue(errors, "nombre", "error.valor.maxlenght");
                     }
 
-                    if (!isNullOrEmpty(interesado.getApellido2())) {
-                        if (interesado.getApellido2().length() > 30) {
-                            rejectValue(errors, "apellido2", "error.valor.maxlenght");
-                        }
+                    if (!isNullOrEmpty(interesado.getApellido2()) && (interesado.getApellido2().length() > 30)) {
+                        rejectValue(errors, "apellido2", "error.valor.maxlenght");
                     }
-
                 }
 
                 // Validaciones si es Interesado Jurídica
                 if (interesado.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA)) {
-                    rejectIfEmptyOrWhitespace(errors, __target__, "razonSocial",
-                            "error.valor.requerido");
+                    rejectIfEmptyOrWhitespace(errors, __target__, "razonSocial", "error.valor.requerido");
                 }
 
                 // Validaciones si es ADMINISTRACION
                 if (interesado.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION)) {
-                    rejectIfEmptyOrWhitespace(errors, __target__, "razonSocial",
-                            "error.valor.requerido");
+                    rejectIfEmptyOrWhitespace(errors, __target__, "razonSocial", "error.valor.requerido");
                 }
             }
         }
 
         // Gestionamos las validaciones según el Canal escogido
-        if (interesado.getCanal() == null) {
-            //rejectIfEmptyOrWhitespace(errors, __target__, "canal", "error.valor.requerido","El camp és obligatori");
-        } else {
-
+        if (interesado.getCanal() != null) {
 
             if (interesado.getCanal().equals(RegwebConstantes.CANAL_DIRECCION_POSTAL)) {
 
@@ -233,10 +219,8 @@ public class InteresadoValidator<T> extends AbstractRegWebValidator<T> {
 
 
         //DIRECCIÓN
-        if (!isNullOrEmpty(interesado.getDireccion())) {
-            if (interesado.getDireccion().length() > 160) {
-                rejectValue(errors, "direccion", "error.valor.maxlenght");
-            }
+        if (!isNullOrEmpty(interesado.getDireccion()) && (interesado.getDireccion().length() > 160)) {
+            rejectValue(errors, "direccion", "error.valor.maxlenght");
         }
 
         //EMAIL

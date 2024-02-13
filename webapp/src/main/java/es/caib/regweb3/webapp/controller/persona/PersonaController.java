@@ -323,6 +323,6 @@ public class PersonaController extends BaseController {
     public void initBinder(WebDataBinder binder) {
 
         binder.setDisallowedFields("id");
-        binder.setValidator(this.personaValidator);
+        //binder.setValidator(this.personaValidator);
     }
 }

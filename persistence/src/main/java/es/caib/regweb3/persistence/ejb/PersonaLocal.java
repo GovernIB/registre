@@ -1,5 +1,6 @@
 package es.caib.regweb3.persistence.ejb;
 
+import es.caib.regweb3.model.Interesado;
 import es.caib.regweb3.model.Persona;
 import es.caib.regweb3.model.utils.ObjetoBasico;
 import es.caib.regweb3.persistence.utils.Paginacion;
@@ -136,6 +137,14 @@ public interface PersonaLocal extends BaseEjb<Persona, Long> {
      * @throws I18NException
      */
     List<Persona> findByDocumento(String documento, Long idEntidad) throws I18NException;
+
+    /**
+     * Actualiza los datos de una {@link es.caib.regweb3.model.Persona} a partir de un {@link es.caib.regweb3.model.Interesado}
+     * @param interesado
+     * @param idEntidad
+     * @throws I18NException
+     */
+    void actualizarPersona(Interesado interesado, Long idEntidad) throws I18NException;
 
     /**
      * Busca Personas duplicadas según su Documento

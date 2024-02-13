@@ -1,6 +1,7 @@
 package es.caib.regweb3.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 
@@ -378,6 +379,7 @@ public class Interesado implements Serializable {
 
     @ManyToOne()
     @JoinColumn(name = "LOCALIDAD", foreignKey = @ForeignKey(name = "RWE_INTERESADO_LOCALIDAD_FK"))
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     public CatLocalidad getLocalidad() {
         return localidad;
     }

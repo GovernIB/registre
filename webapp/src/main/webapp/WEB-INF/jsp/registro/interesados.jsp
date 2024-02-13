@@ -41,12 +41,10 @@
                 </div>
             </c:if>
 
-            <c:if test="${param.tipoRegistro == RegwebConstantes.REGISTRO_ENTRADA}">
+            <c:if test="${param.tipoRegistro == RegwebConstantes.REGISTRO_ENTRADA || loginInfo.entidadActiva.regSalidasPersonas}">
                 <div class="form-group col-xs-12">
                     <div class="col-xs-2 pull-left etiqueta_regweb control-label">
-                        <c:if test="${param.tipoRegistro == RegwebConstantes.REGISTRO_ENTRADA}">
-                            <label rel="popupAbajo" data-content="<spring:message code="registro.ayuda.tipoInteresado.entrada"/>" data-toggle="popover"><spring:message code="interesado.tipoInteresado"/></label>
-                        </c:if>
+                        <label rel="popupAbajo" data-content="<spring:message code="registro.ayuda.tipoInteresado.entrada"/>" data-toggle="popover"><spring:message code="interesado.tipoInteresado"/></label>
                     </div>
 
                     <div class="col-xs-10">
@@ -61,7 +59,7 @@
 
             <div class="form-group col-xs-12">
                 <div class="col-xs-2 pull-left etiqueta_regweb control-label">
-                    <c:if test="${param.tipoRegistro == RegwebConstantes.REGISTRO_ENTRADA}">
+                    <c:if test="${param.tipoRegistro == RegwebConstantes.REGISTRO_ENTRADA || loginInfo.entidadActiva.regSalidasPersonas}">
                         <label id="personaFisicaLabel" for="personaFisica" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.personaFisica"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="persona.fisica"/></label>
                         <label id="personaJuridicaLabel" for="personaJuridica" style="display: none;" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.personaJuridica"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="persona.juridica"/></label>
                     </c:if>
@@ -69,7 +67,7 @@
 
                 </div>
                 <div class="col-xs-6">
-                    <c:if test="${param.tipoRegistro == RegwebConstantes.REGISTRO_ENTRADA}">
+                    <c:if test="${param.tipoRegistro == RegwebConstantes.REGISTRO_ENTRADA || loginInfo.entidadActiva.regSalidasPersonas}">
                         <input id="personaFisica" name="personaFisica" type="text" class="form-control" placeholder="<spring:message code="persona.buscar.fisicas"/>" autocomplete="off"/>
                         <input id="personaJuridica" name="personaJuridica" type="text" class="form-control" style="display: none;" placeholder="<spring:message code="persona.buscar.juridicas"/>" autocomplete="off"/>
                     </c:if>
@@ -84,7 +82,7 @@
 
                 <%--Botones búsqueda--%>
                 <div class="col-xs-2 pull-right boto-panel center">
-                    <c:if test="${param.tipoRegistro == RegwebConstantes.REGISTRO_ENTRADA}">
+                    <c:if test="${param.tipoRegistro == RegwebConstantes.REGISTRO_ENTRADA || loginInfo.entidadActiva.regSalidasPersonas}">
                         <a id="buscarPersonaFisica" data-toggle="modal" href="#modalBuscadorPersonasFisicas" onclick="limpiarBusquedaPersona('Fisicas')" class="btn btn-warning btn-sm"><spring:message code="regweb.buscar"/></a>
                         <a id="buscarPersonaJuridica" data-toggle="modal" href="#modalBuscadorPersonasJuridicas" onclick="limpiarBusquedaPersona('Juridicas')" style="display: none;" class="btn btn-warning btn-sm"><spring:message code="regweb.buscar"/></a>
                     </c:if>
@@ -93,7 +91,7 @@
                        onclick="inicializarBuscador('#codNivelAdministracionOrganismoInteresado','#codComunidadAutonomaOrganismoInteresado','#provinciaOrganismoInteresado','#localidadOrganismoInteresado',${RegwebConstantes.nivelAdminAutonomica}, ${RegwebConstantes.COMUNIDAD_BALEARES}, 'OrganismoInteresado' );"
                        style="display: none;" class="btn btn-warning btn-sm"><spring:message code="regweb.buscar"/></a>
                 </div>
-                <c:if test="${param.tipoRegistro == RegwebConstantes.REGISTRO_ENTRADA}">
+                <c:if test="${param.tipoRegistro == RegwebConstantes.REGISTRO_ENTRADA || loginInfo.entidadActiva.regSalidasPersonas}">
                     <%--Botones nueva persona--%>
                     <div class="col-xs-2 pull-right boto-panel center">
                         <a id="nuevaPersonaFisica" data-toggle="modal" role="button" href="#modalInteresado" class="btn btn-warning btn-sm" onclick="nuevoInteresado('<spring:message code="persona.fisica.nueva"/>')"><spring:message code="regweb.nueva"/></a>
@@ -230,10 +228,10 @@ Mediante el archivo "busquedaorganismo.js" se implementa dicha búsqueda -->
     $(window).load(function() {
 
         actualizarCanalNotificacion();
-        <c:if test="${param.tipoRegistro == RegwebConstantes.REGISTRO_ENTRADA}">
+        <c:if test="${param.tipoRegistro == RegwebConstantes.REGISTRO_ENTRADA || loginInfo.entidadActiva.regSalidasPersonas}">
         mostrarPersonaFisica();
         </c:if>
-        <c:if test="${param.tipoRegistro == RegwebConstantes.REGISTRO_SALIDA}">
+        <c:if test="${param.tipoRegistro == RegwebConstantes.REGISTRO_SALIDA && !loginInfo.entidadActiva.regSalidasPersonas}">
         mostrarOrganismos();
         </c:if>
 
