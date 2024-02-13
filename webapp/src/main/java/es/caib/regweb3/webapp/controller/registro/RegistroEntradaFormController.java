@@ -115,6 +115,7 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
         registroEntrada.setOficina(oficina);
         registroEntrada.setLibro(getLibroEntidad(request));
         registroEntrada.getRegistroDetalle().setPresencial(true);
+        registroEntrada.getRegistroDetalle().setTipoDocumentacionFisica(RegwebConstantes.TIPO_DOCFISICA_NO_ACOMPANYA_DOC);
 
         //Eliminamos los posibles interesados de la Sesion
         eliminarVariableSesion(request, RegwebConstantes.SESSION_INTERESADOS_ENTRADA);
