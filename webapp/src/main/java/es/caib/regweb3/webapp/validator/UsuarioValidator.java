@@ -2,7 +2,9 @@ package es.caib.regweb3.webapp.validator;
 
 import es.caib.regweb3.model.Usuario;
 import es.caib.regweb3.persistence.ejb.UsuarioLocal;
+import es.caib.regweb3.utils.DocumentoUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
+import es.caib.regweb3.utils.Validacion;
 import es.caib.regweb3.webapp.utils.LoginService;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
@@ -56,29 +58,49 @@ public class UsuarioValidator implements Validator {
             // Formato DNI
             if (usuario.getDocumento() != null && !usuario.getDocumento().isEmpty()) {
 
-                String documento = usuario.getDocumento();
-                String letras = "TRWAGMYFPDXBNJZSQVHLCKE";
-                int valor;
+                String documento = usuario.getDocumento().toUpperCase();
+                Validacion validacionDocumento;
 
-                if (documento.length() == 9) {
-                    String numeroNif = documento.substring(0, documento.length() - 1);
-                    Boolean nifcorrecte = true;
-                    for (int i = 0; i < numeroNif.length(); i++) {
-                        if (!Character.isDigit(numeroNif.charAt(i))) {
-                            errors.rejectValue("documento", "usuario.dni.incorrecto", "El dni no té format correcte (8 DIGITS + LLETRA)");
-                            nifcorrecte = false;
-                            break;
-                        }
-                    }
-                    if (nifcorrecte) {
-                        valor = Integer.parseInt(documento.substring(0, documento.length() - 1));
+                try {
+                    Long tipoDocumento;
 
-                        if (!documento.endsWith("" + letras.charAt(valor % 23))) {
-                            errors.rejectValue("documento", "usuario.documento.letra", "Lletra de document incorrecta");
-                        }
+                    // Solo permitimos DNI o NIE
+                    if(documento.startsWith("Y") || documento.startsWith("Z") || documento.startsWith("X")){
+                        tipoDocumento = RegwebConstantes.TIPODOCUMENTOID_NIE_ID;
+                    }else{
+                        tipoDocumento = RegwebConstantes.TIPODOCUMENTOID_NIF_ID;
                     }
-                } else {
-                    errors.rejectValue("documento", "usuario.documento.largo", "Llargària de document incorrecta");
+
+                    validacionDocumento = DocumentoUtils.comprobarDocumento(documento, tipoDocumento);
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    validacionDocumento = new Validacion(Boolean.FALSE, "error.documento", "El document es erroni");
+                }
+
+                // Si es válido, coprobamos si ya existe previamente
+                if (validacionDocumento.getValido()) {
+                    boolean existe;
+                    try {
+
+                        if (usuario.getId() != null) { // Se trata de una modificación
+                            existe = usuarioEjb.existeDocumentoEdit(documento, usuario.getId());
+
+                        } else {
+                            existe = usuarioEjb.existeDocumentoNew(documento);
+                        }
+                    }catch (Exception e){
+                        log.error("Error comprobando si usuario entidad ya existe: ", e);
+                        existe = true;
+                    }
+
+                    if (existe) {
+                        errors.rejectValue("documento", "error.document.existe");
+                    }
+
+                }else{
+                    errors.rejectValue("documento", validacionDocumento.getCodigoError(), "El dni no té format correcte (8 DIGITS + LLETRA)");
+                    log.info("El formato del documento NO es correcto");
                 }
             }
 
@@ -102,23 +124,8 @@ public class UsuarioValidator implements Validator {
                             errors.rejectValue("identificador", "error.identificador.existe", "L'identificador ja existeix");
                         }
                     }
-
                 }
 
-                // NIF único
-                if (usuario.getDocumento() != null && usuario.getDocumento().length() > 0) {
-
-                    if (usuario.getId() != null) { // Se trata de una modificación
-                        if (usuarioEjb.existeDocumentioEdit(usuario.getDocumento(), usuario.getId())) {
-                            errors.rejectValue("documento", "usuario.documento.existe", "El documento ya existe ja existeix");
-                        }
-                    } else {
-                        if (usuarioEjb.findByDocumento(usuario.getDocumento()) != null) {
-                            errors.rejectValue("documento", "usuario.documento.existe", "El documento ya existe ja existeix");
-                        }
-                    }
-
-                }
             } catch(I18NException i18ne) {
               log.error(I18NUtils.getMessage(i18ne), i18ne);
             } catch (Exception e) {

@@ -60,6 +60,15 @@ public interface UsuarioLocal extends BaseEjb<Usuario, Long> {
     Boolean existeIdentificadorEdit(String identificador, Long idUsuario) throws I18NException;
 
     /**
+     * Comprueba si el documento dado existe en algún usuario
+     *
+     * @param documento
+     * @return
+     * @throws I18NException
+     */
+    Boolean existeDocumentoNew(String documento) throws I18NException;
+
+    /**
      * Comprueba si el documento dado existe en algún usuario excepto el selccionado.
      *
      * @param documento
@@ -67,7 +76,7 @@ public interface UsuarioLocal extends BaseEjb<Usuario, Long> {
      * @return
      * @throws I18NException
      */
-    Boolean existeDocumentioEdit(String documento, Long idUsuario) throws I18NException;
+    Boolean existeDocumentoEdit(String documento, Long idUsuario) throws I18NException;
 
     /**
      * Realiza una busqueda de {@link es.caib.regweb3.model.Usuario} según los parámetros

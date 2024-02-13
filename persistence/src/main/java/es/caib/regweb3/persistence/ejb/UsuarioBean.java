@@ -223,8 +223,18 @@ public class UsuarioBean extends BaseEjbJPA<Usuario, Long> implements UsuarioLoc
 
     }
 
+    public Boolean existeDocumentoNew(String documento) throws I18NException {
+        Query q = em.createQuery("Select usuario.id from Usuario as usuario where " +
+                "usuario.documento = :documento");
+
+        q.setParameter("documento", documento);
+        q.setHint("org.hibernate.readOnly", true);
+
+        return q.getResultList().size() > 0;
+    }
+
     @Override
-    public Boolean existeDocumentioEdit(String documento, Long idUsuario) throws I18NException {
+    public Boolean existeDocumentoEdit(String documento, Long idUsuario) throws I18NException {
         Query q = em.createQuery("Select usuario.id from Usuario as usuario where " +
                 "usuario.id != :idUsuario and usuario.documento = :documento");
 
