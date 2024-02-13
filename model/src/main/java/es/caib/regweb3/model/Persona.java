@@ -219,7 +219,7 @@ public class Persona implements Serializable {
         this.tipoDocumentoIdentificacion = tipoDocumentoIdentificacion;
     }
 
-    @Column(name = "DOCUMENTO", length = 17)
+    @Column(name = "DOCUMENTO", length = 17, unique = true)
     public String getDocumento() {
         return documento;
     }
@@ -362,6 +362,34 @@ public class Persona implements Serializable {
         }
 
         return personaJuridica;
+    }
+
+    @Transient
+    public void actualizarDeInteresado(Interesado interesado){
+        if (interesado.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_FISICA)) {
+            this.tipo = RegwebConstantes.TIPO_PERSONA_FISICA;
+
+        } else if (interesado.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA)) {
+            this.tipo = RegwebConstantes.TIPO_PERSONA_JURIDICA;
+        }
+
+        this.razonSocial = interesado.getRazonSocial();
+        this.nombre = interesado.getNombre();
+        this.apellido1 = interesado.getApellido1();
+        this.apellido2 = interesado.getApellido2();
+        this.tipoDocumentoIdentificacion = interesado.getTipoDocumentoIdentificacion();
+        this.documento = interesado.getDocumento();
+        this.pais = interesado.getPais();
+        this.provincia = interesado.getProvincia();
+        this.localidad = interesado.getLocalidad();
+        this.direccion = interesado.getDireccion();
+        this.cp = interesado.getCp();
+        this.email = interesado.getEmail();
+        this.telefono = interesado.getTelefono();
+        this.direccionElectronica = interesado.getDireccionElectronica();
+        this.canal = interesado.getCanal();
+        this.observaciones = interesado.getObservaciones();
+        this.guardarInteresado = interesado.isGuardarInteresado();
     }
 
     @Override
