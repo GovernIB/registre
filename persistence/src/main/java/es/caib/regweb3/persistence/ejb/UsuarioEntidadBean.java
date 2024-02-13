@@ -120,8 +120,15 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
 
             log.info("Usuario " + identificador + " no existe en la entidad, lo buscamos en el sistema de autentificación");
 
-            // Creamos el Usuario en el sistema
-            Usuario usuario = usuarioEjb.crearUsuario(identificador);
+            Usuario usuario;
+            try{
+                // Creamos el Usuario en el sistema
+                usuario = usuarioEjb.crearUsuario(identificador);
+            }catch (Exception e){
+                log.info("Ha ocurrido un error creando el usuario en regweb: " + e.getMessage());
+                throw new I18NException("Ha ocurrido un error creando el usuario en regweb");
+            }
+
             if (usuario != null) {
                 return persist(new UsuarioEntidad(null, usuario, idEntidad));
             }
@@ -321,7 +328,7 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
     @SuppressWarnings(value = "unchecked")
     public List<Entidad> getEntidadesByUsuario(Long idUsuario) throws I18NException {
 
-        Query q = em.createQuery("Select usuarioEntidad.entidad.id, usuarioEntidad.entidad.nombre, usuarioEntidad.entidad.oficioRemision from UsuarioEntidad as usuarioEntidad where " +
+        Query q = em.createQuery("Select usuarioEntidad.entidad.id, usuarioEntidad.entidad.nombre from UsuarioEntidad as usuarioEntidad where " +
                 "usuarioEntidad.usuario.id = :idUsuario and usuarioEntidad.entidad.activo = true and usuarioEntidad.activo = true order by usuarioEntidad.entidad.id");
 
         q.setParameter("idUsuario", idUsuario);
@@ -332,7 +339,7 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
         List<Object[]> result = q.getResultList();
 
         for (Object[] object : result) {
-            Entidad entidad = new Entidad((Long) object[0], (String) object[1], (Boolean) object[2]);
+            Entidad entidad = new Entidad((Long) object[0], (String) object[1]);
 
             entidades.add(entidad);
         }
