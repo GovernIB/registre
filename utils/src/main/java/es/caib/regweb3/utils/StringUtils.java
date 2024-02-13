@@ -26,7 +26,7 @@ public class StringUtils {
      * @return
      */
     public static boolean isEmpty(final String cadena) {
-        return cadena == null || cadena.length() == 0;
+        return cadena == null || cadena.isEmpty();
     }
 
     /**

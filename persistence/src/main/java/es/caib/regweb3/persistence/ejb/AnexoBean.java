@@ -287,11 +287,21 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
             anexo.setFechaCaptura(new Date());
 
+            // Si el anexo proviene del escáner
+            if(anexo.getScan()){
+                descripcion = "Nuevo anexo desde escaner";
+            }
+
             // Integración
             peticion.append("registro: ").append(registro.getNumeroRegistroFormateado()).append(System.getProperty("line.separator"));
-            peticion.append("tipoRegistro: ").append(tipoRegistro).append(System.getProperty("line.separator"));
+            if (tipoRegistro.equals(REGISTRO_ENTRADA)) {
+                peticion.append("tipoRegistro: ").append(RegwebConstantes.REGISTRO_ENTRADA_ESCRITO).append(System.getProperty("line.separator"));
+            } else {
+                peticion.append("tipoRegistro: ").append(RegwebConstantes.REGISTRO_SALIDA_ESCRITO).append(System.getProperty("line.separator"));
+            }
             peticion.append("oficina: ").append(registro.getOficina().getDenominacion()).append(System.getProperty("line.separator"));
             peticion.append("clase: ").append(custody.getClass().getName()).append(System.getProperty("line.separator"));
+            peticion.append("título anexo: ").append(anexo.getTitulo()).append(System.getProperty("line.separator"));
 
             // Validar firma del Anexo
             //Solo validamos si no es justificante, no es fichero tecnico y nos indican que se debe validar
