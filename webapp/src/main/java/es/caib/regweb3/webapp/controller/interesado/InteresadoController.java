@@ -270,21 +270,7 @@ public class InteresadoController extends BaseController{
                         interesado.setId(persona.getId());
                     break;
 
-                    case (int)RegwebConstantes.CONFIGURACION_PERSONA_CONFIRMAR_NUEVA_PERSONA: // Se pregunta antes de Guardar
-
-                        if(persona.isGuardarInteresado() && StringUtils.isNotEmpty(persona.getDocumento())){
-                            persona = personaEjb.guardarPersona(persona);
-                        }else{
-                            persona.setId((long)(Math.random()*10000));
-                        }
-
-                        interesado.setId(persona.getId());
-                    break;
-
-                    case 4: break; // todo:bbdd de terceros
-
                 }
-
 
                 // Se trata de un nuevo Registro, utilizamos la sesion.
                 if(idRegistroDetalle.equals("null")) {
@@ -427,10 +413,9 @@ public class InteresadoController extends BaseController{
                     }
 
                     actualizarInteresadoSesion(interesado, session, variableSesion);
-                }else{ // Edición de un registro, lo añadimos a la bbdd
+                }else{ // Edición de un registro, lo actualizamos en la bbdd
                     interesado.setRegistroDetalle(registroDetalleEjb.getReference(Long.valueOf(idRegistroDetalle)));
                     interesado = interesadoEjb.merge(interesado);
-                    Entidad entidadActiva = getEntidadActiva(request);
 
                     // Plug-in de Post-Proceso
                     interesadoEjb.postProcesoActualizarInteresado(interesado, Long.valueOf(idRegistroDetalle),tipoRegistro,entidadActiva.getId());
@@ -440,7 +425,10 @@ public class InteresadoController extends BaseController{
                 personaJson.setId(interesado.getId().toString());
 
                 // Generamos el nombre a mostrar según el tipo de persona
-                personaJson.setNombre(interesado.getNombreCompleto());
+                personaJson.setNombre(interesado.getNombreCompletoInforme());
+
+                // Actualizamos los datos modificados en la bbdd de Personas
+                personaEjb.actualizarPersona(interesado, entidadActiva.getId());
 
                 jsonResponse.setResult(personaJson);
 
@@ -932,7 +920,6 @@ public class InteresadoController extends BaseController{
 
         String variableSesion = (tipoRegistro.equals(REGISTRO_ENTRADA) ? RegwebConstantes.SESSION_INTERESADOS_ENTRADA:RegwebConstantes.SESSION_INTERESADOS_SALIDA);
 
-        log.info("Interesado: " + id);
         Interesado interesado = interesadoEjb.findById(id);
 
         if(interesado == null) {
@@ -941,7 +928,7 @@ public class InteresadoController extends BaseController{
 
         }
 
-        return  interesado;
+        return interesado;
     }
 
     /**

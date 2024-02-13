@@ -1,5 +1,7 @@
 package es.caib.regweb3.persistence.ejb;
 
+import es.caib.regweb3.model.Entidad;
+import es.caib.regweb3.model.Interesado;
 import es.caib.regweb3.model.Persona;
 import es.caib.regweb3.model.utils.ObjetoBasico;
 import es.caib.regweb3.persistence.utils.DataBaseUtils;
@@ -7,6 +9,7 @@ import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 import org.fundaciobit.genapp.common.i18n.I18NException;
+import org.hibernate.NonUniqueResultException;
 import org.jboss.ejb3.annotation.TransactionTimeout;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.util.ArrayList;
@@ -480,6 +484,29 @@ public class PersonaBean extends BaseEjbJPA<Persona, Long> implements PersonaLoc
         q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList();
+    }
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public void actualizarPersona(Interesado interesado, Long idEntidad) throws I18NException {
+
+        Query q = em.createQuery("Select persona from Persona as persona where " +
+                "persona.documento = :documento and persona.entidad.id = :idEntidad");
+        q.setParameter("documento", interesado.getDocumento());
+        q.setParameter("idEntidad", idEntidad);
+
+        try{
+            Persona persona = (Persona) q.getSingleResult();
+
+            persona.actualizarDeInteresado(interesado);
+            merge(persona);
+
+        }catch (NoResultException e){
+            Persona persona = new Persona(interesado);
+            persona.setEntidad(new Entidad(idEntidad));
+            persist(guardarPersona(persona));
+        }catch (NonUniqueResultException ignored){}
+
     }
 
     @Override
