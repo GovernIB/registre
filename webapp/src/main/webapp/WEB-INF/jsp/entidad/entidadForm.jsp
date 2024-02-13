@@ -215,35 +215,6 @@
                                                 </div>
                                             </div>
 
-                                            <div class="col-xs-12">
-                                                <div class="form-group col-xs-6 espaiLinies senseMargeLat">
-                                                    <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
-                                                        <form:label path="entidad.oficioRemision"><spring:message code="oficioRemision.oficioRemision"/></form:label>
-                                                    </div>
-                                                    <div class="col-xs-8">
-                                                        <form:checkbox path="entidad.oficioRemision"/>
-                                                    </div>
-                                                </div>
-                                                <div class="form-group col-xs-6 espaiLinies senseMargeLat">
-                                                    <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
-                                                        <form:label path="entidad.sir"><spring:message code="regweb.sir"/></form:label>
-                                                    </div>
-                                                    <div class="col-xs-8">
-                                                        <form:checkbox path="entidad.sir"/>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-xs-12">
-                                                <div class="form-group col-xs-6 espaiLinies senseMargeLat">
-                                                    <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
-                                                        <form:label path="entidad.mantenimiento"><spring:message code="entidad.mantenimiento"/></form:label>
-                                                    </div>
-                                                    <div class="col-xs-8">
-                                                        <form:checkbox path="entidad.mantenimiento"/>
-                                                    </div>
-                                                </div>
-                                            </div>
-
                                         </div>
                                         <!-- Fi datos -->
 
@@ -518,9 +489,34 @@
                                                     </div>
                                                 </div>
                                                 <div class="form-group col-xs-6 espaiLinies senseMargeLat">
-
+                                                    <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                                        <form:label path="entidad.sir"><spring:message code="regweb.sir"/></form:label>
+                                                    </div>
+                                                    <div class="col-xs-8">
+                                                        <form:checkbox path="entidad.sir"/>
+                                                    </div>
                                                 </div>
                                             </div>
+                                            <div class="col-xs-12">
+
+                                                <div class="form-group col-xs-6 espaiLinies senseMargeLat">
+                                                    <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                                        <label for="entidad.regSalidasPersonas" rel="popupAbajo" data-content="<spring:message code="entidad.ayuda.permitePersonas"/>" data-toggle="popover"><spring:message code="entidad.regSalidasPersonas"/></label>
+                                                    </div>
+                                                    <div class="col-xs-8">
+                                                        <form:checkbox path="entidad.regSalidasPersonas"/>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-xs-6 espaiLinies senseMargeLat">
+                                                    <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                                        <label for="entidad.mantenimiento" rel="popupAbajo" data-content="<spring:message code="entidad.ayuda.mantenimiento"/>" data-toggle="popover"><spring:message code="entidad.mantenimiento"/></label>
+                                                    </div>
+                                                    <div class="col-xs-8">
+                                                        <form:checkbox path="entidad.mantenimiento"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+
                                         </div>
                                         <!-- Fi Configuracion -->
 

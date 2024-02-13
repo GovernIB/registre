@@ -88,7 +88,7 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
     public Entidad findByIdLigero(Long idEntidad) throws I18NException {
 
         Query q = em.createQuery("Select entidad.id, entidad.codigoDir3, entidad.nombre, entidad.logoMenu, entidad.logoPie, entidad.configuracionPersona, " +
-                "entidad.sir, entidad.oficioRemision, entidad.mantenimiento, entidad.textoPie, entidad.colorMenu, entidad.numRegistro, entidad.libro, entidad.diasVisado, entidad.oficioRemision, entidad.perfilCustodia, entidad.sello, entidad.logoSello from Entidad as entidad LEFT JOIN entidad.logoMenu logoMenu LEFT JOIN entidad.logoPie logoPie LEFT JOIN entidad.logoSello where " +
+                "entidad.sir, entidad.mantenimiento, entidad.textoPie, entidad.colorMenu, entidad.numRegistro, entidad.libro, entidad.diasVisado, entidad.perfilCustodia, entidad.sello, entidad.logoSello, entidad.regSalidasPersonas from Entidad as entidad LEFT JOIN entidad.logoMenu logoMenu LEFT JOIN entidad.logoPie logoPie LEFT JOIN entidad.logoSello where " +
                 "entidad.id = :idEntidad");
 
         q.setParameter("idEntidad", idEntidad);
@@ -105,18 +105,16 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
             entidad.setLogoPie((Archivo) result.get(0)[4]);
             entidad.setConfiguracionPersona((Long) result.get(0)[5]);
             entidad.setSir((Boolean) result.get(0)[6]);
-            entidad.setOficioRemision((Boolean) result.get(0)[7]);
-            entidad.setMantenimiento((Boolean) result.get(0)[8]);
-            entidad.setTextoPie((String) result.get(0)[9]);
-            entidad.setColorMenu((String) result.get(0)[10]);
-            entidad.setNumRegistro((String) result.get(0)[11]);
-            entidad.setLibro((Libro) result.get(0)[12]);
-            entidad.setDiasVisado((Integer) result.get(0)[13]);
-            entidad.setOficioRemision((Boolean) result.get(0)[14]);
-            entidad.setPerfilCustodia((Long) result.get(0)[15]);
-            entidad.setSello((String) result.get(0)[16]);
-            entidad.setLogoSello((Archivo) result.get(0)[17]);
-
+            entidad.setMantenimiento((Boolean) result.get(0)[7]);
+            entidad.setTextoPie((String) result.get(0)[8]);
+            entidad.setColorMenu((String) result.get(0)[9]);
+            entidad.setNumRegistro((String) result.get(0)[10]);
+            entidad.setLibro((Libro) result.get(0)[11]);
+            entidad.setDiasVisado((Integer) result.get(0)[12]);
+            entidad.setPerfilCustodia((Long) result.get(0)[13]);
+            entidad.setSello((String) result.get(0)[14]);
+            entidad.setLogoSello((Archivo) result.get(0)[15]);
+            entidad.setRegSalidasPersonas((Boolean) result.get(0)[16]);
             return entidad;
         } else {
             return null;
@@ -292,7 +290,7 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
     @SuppressWarnings(value = "unchecked")
     public List<Entidad> getEntidadesAdministrador(Long idUsuario) throws I18NException {
 
-        Query q = em.createQuery("Select entidad.id, entidad.nombre, entidad.oficioRemision from Entidad as entidad, UsuarioEntidad as usuarioEntidad where usuarioEntidad in elements(entidad.administradores) " +
+        Query q = em.createQuery("Select entidad.id, entidad.nombre from Entidad as entidad, UsuarioEntidad as usuarioEntidad where usuarioEntidad in elements(entidad.administradores) " +
                 "and usuarioEntidad.usuario.id = :idUsuario and entidad.activo = true order by entidad.id");
 
         q.setParameter("idUsuario", idUsuario);
@@ -303,7 +301,7 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
         List<Object[]> result = q.getResultList();
 
         for (Object[] object : result) {
-            Entidad entidad = new Entidad((Long) object[0], (String) object[1], (Boolean) object[2]);
+            Entidad entidad = new Entidad((Long) object[0], (String) object[1]);
 
             entidades.add(entidad);
         }
@@ -315,7 +313,7 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
     @SuppressWarnings(value = "unchecked")
     public List<Entidad> getEntidadesPropietario(Long idUsuario) throws I18NException {
 
-        Query q = em.createQuery("Select entidad.id, entidad.nombre, entidad.oficioRemision from Entidad as entidad where entidad.propietario.id = :idUsuario " +
+        Query q = em.createQuery("Select entidad.id, entidad.nombre from Entidad as entidad where entidad.propietario.id = :idUsuario " +
                 "and entidad.activo = true order by entidad.id");
 
         q.setParameter("idUsuario", idUsuario);
@@ -326,7 +324,7 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
         List<Object[]> result = q.getResultList();
 
         for (Object[] object : result) {
-            Entidad entidad = new Entidad((Long) object[0], (String) object[1], (Boolean) object[2]);
+            Entidad entidad = new Entidad((Long) object[0], (String) object[1]);
 
             entidades.add(entidad);
         }
