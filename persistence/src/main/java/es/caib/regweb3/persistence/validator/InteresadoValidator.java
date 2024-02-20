@@ -34,46 +34,42 @@ public class InteresadoValidator<T> extends AbstractRegWebValidator<T> {
 
         Interesado interesado = (Interesado) __target__;
 
-        // TODO Verificar que existeix
-        // interesado.getTipoDocumentoIdentificacion().getId()
-
         // Validaciones si es Interesado Física
 
         if (interesado.getTipo() == null) {
-            rejectIfEmptyOrWhitespace(errors, __target__, "tipo",
-                    "error.valor.requerido");
+            rejectIfEmptyOrWhitespace(errors, __target__, "tipo", "error.valor.requerido");
+
         } else {
-            if (interesado.getTipo() != null) {
-                if (interesado.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_FISICA)) {
 
-                    rejectIfEmptyOrWhitespace(errors, __target__, "apellido1", "error.valor.requerido");
+            if (interesado.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_FISICA)) {
 
-                    if (!hasFieldErrors(errors, "apellido1") && (interesado.getApellido1().length() > 30)) {
-                        rejectValue(errors, "apellido1", "error.valor.maxlenght");
+                rejectIfEmptyOrWhitespace(errors, __target__, "apellido1", "error.valor.requerido");
 
-                    }
-
-                    rejectIfEmptyOrWhitespace(errors, __target__, "nombre", "error.valor.requerido");
-
-                    if (!hasFieldErrors(errors, "nombre") && (interesado.getNombre().length() > 30)) {
-                        rejectValue(errors, "nombre", "error.valor.maxlenght");
-                    }
-
-                    if (!isNullOrEmpty(interesado.getApellido2()) && (interesado.getApellido2().length() > 30)) {
-                        rejectValue(errors, "apellido2", "error.valor.maxlenght");
-                    }
+                if (!hasFieldErrors(errors, "apellido1") && (interesado.getApellido1().length() > 30)) {
+                    rejectValue(errors, "apellido1", "error.valor.maxlenght");
                 }
 
-                // Validaciones si es Interesado Jurídica
-                if (interesado.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA)) {
-                    rejectIfEmptyOrWhitespace(errors, __target__, "razonSocial", "error.valor.requerido");
+                rejectIfEmptyOrWhitespace(errors, __target__, "nombre", "error.valor.requerido");
+
+                if (!hasFieldErrors(errors, "nombre") && (interesado.getNombre().length() > 30)) {
+                    rejectValue(errors, "nombre", "error.valor.maxlenght");
                 }
 
-                // Validaciones si es ADMINISTRACION
-                if (interesado.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION)) {
-                    rejectIfEmptyOrWhitespace(errors, __target__, "razonSocial", "error.valor.requerido");
+                if (!isNullOrEmpty(interesado.getApellido2()) && (interesado.getApellido2().length() > 30)) {
+                    rejectValue(errors, "apellido2", "error.valor.maxlenght");
                 }
             }
+
+            // Validaciones si es Interesado Jurídica
+            if (interesado.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA)) {
+                rejectIfEmptyOrWhitespace(errors, __target__, "razonSocial", "error.valor.requerido");
+            }
+
+            // Validaciones si es ADMINISTRACION
+            if (interesado.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION)) {
+                rejectIfEmptyOrWhitespace(errors, __target__, "razonSocial", "error.valor.requerido");
+            }
+
         }
 
         // Gestionamos las validaciones según el Canal escogido
