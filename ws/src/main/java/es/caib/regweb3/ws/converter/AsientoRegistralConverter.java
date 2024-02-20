@@ -11,9 +11,7 @@ import es.caib.regweb3.ws.model.MetadatoWs;
 import es.caib.regweb3.ws.v3.impl.CommonConverter;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static es.caib.regweb3.utils.RegwebConstantes.*;
@@ -61,7 +59,7 @@ public class AsientoRegistralConverter extends CommonConverter {
       registroEntrada.setLibro(libro);
       registroDetalle.setExtracto(asientoRegistral.getResumen()); //Extracto
        registroDetalle.setTipoDocumentacionFisica(asientoRegistral.getTipoDocumentacionFisicaCodigo());
-       registroDetalle.setIdioma(asientoRegistral.getIdioma());
+       registroDetalle.setIdioma(getIdioma(asientoRegistral.getIdioma()));
        registroDetalle.setCodigoSia(String.valueOf(asientoRegistral.getCodigoSia()));
 
       if(StringUtils.isNotEmpty(asientoRegistral.getCodigoAsunto())){registroDetalle.setCodigoAsunto(getCodigoAsunto(asientoRegistral.getCodigoAsunto(), codigoAsuntoEjb));}
@@ -120,7 +118,7 @@ public class AsientoRegistralConverter extends CommonConverter {
       registroSalida.setLibro(libro);
        registroDetalle.setExtracto(asientoRegistral.getResumen());
        registroDetalle.setTipoDocumentacionFisica(asientoRegistral.getTipoDocumentacionFisicaCodigo());
-       registroDetalle.setIdioma(asientoRegistral.getIdioma());
+       registroDetalle.setIdioma(getIdioma(asientoRegistral.getIdioma()));
        registroDetalle.setCodigoSia(String.valueOf(asientoRegistral.getCodigoSia()));
 
       if (StringUtils.isNotEmpty(asientoRegistral.getCodigoAsunto())) {registroDetalle.setCodigoAsunto(getCodigoAsunto(asientoRegistral.getCodigoAsunto(), codigoAsuntoEjb));}
@@ -442,6 +440,19 @@ public class AsientoRegistralConverter extends CommonConverter {
 
          asientoRegistral.setInteresados(interesadosWs);
       }
+   }
+
+   /**
+    * Comprobamos que el idioma existe en la lista disponible, sino retornamos el valor 1=catalán
+    * @param idiomaRegistro
+    * @return
+    */
+   private static Long getIdioma(Long idiomaRegistro) {
+
+      return Arrays.stream(RegwebConstantes.IDIOMAS_REGISTRO)
+              .filter(i -> Objects.equals(i, idiomaRegistro))
+              .findFirst()
+              .orElse(1L);
    }
 
 }
