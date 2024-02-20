@@ -1666,7 +1666,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
     public RegistroEntrada aceptarRegistroSirEntrada(RegistroSir registroSir, Entidad entidad, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, List<CamposNTI> camposNTIs, Long idOrganismoDestino, Long codigoSia, String extracto)
             throws I18NException, I18NValidationException {
 
-        Libro libro = libroEjb.findById(idLibro);
+        Libro libro = libroEjb.getReference(idLibro);
 
         RegistroEntrada registroEntrada = new RegistroEntrada();
         registroEntrada.setUsuario(usuario);

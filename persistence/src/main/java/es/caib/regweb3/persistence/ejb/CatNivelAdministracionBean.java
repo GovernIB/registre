@@ -45,7 +45,9 @@ public class CatNivelAdministracionBean extends BaseEjbJPA<CatNivelAdministracio
     @SuppressWarnings(value = "unchecked")
     public List<CatNivelAdministracion> getAll() throws I18NException {
 
-        return  em.createQuery("Select catNivelAdministracion from CatNivelAdministracion as catNivelAdministracion order by catNivelAdministracion.id").getResultList();
+        return  em.createQuery("Select catNivelAdministracion from CatNivelAdministracion as catNivelAdministracion order by catNivelAdministracion.id")
+                .setHint("org.hibernate.cacheable", true)
+                .getResultList();
     }
 
     @Override

@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ResourceBundleMessageSource;
+import org.springframework.http.CacheControl;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.scheduling.TaskScheduler;
@@ -27,6 +28,7 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 @EnableWebMvc
 @Configuration
@@ -70,12 +72,12 @@ public class RegWeb3BackConfig extends WebMvcConfigurerAdapter {
 
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
 
-        registry.addResourceHandler("/css/**").addResourceLocations("/css/");
-        registry.addResourceHandler("/font-awesome/**").addResourceLocations("/font-awesome/");
-        registry.addResourceHandler("/img/**").addResourceLocations("/img/");
-        registry.addResourceHandler("/ico/**").addResourceLocations("/ico/");
-        registry.addResourceHandler("/js/**").addResourceLocations("/js/");
-        registry.addResourceHandler("/doc/**").addResourceLocations("/doc/");
+        registry.addResourceHandler("/css/**").addResourceLocations("/css/").setCacheControl(CacheControl.maxAge(30, TimeUnit.DAYS));
+        registry.addResourceHandler("/font-awesome/**").addResourceLocations("/font-awesome/").setCacheControl(CacheControl.maxAge(30, TimeUnit.DAYS));
+        registry.addResourceHandler("/img/**").addResourceLocations("/img/").setCacheControl(CacheControl.maxAge(30, TimeUnit.DAYS));
+        registry.addResourceHandler("/ico/**").addResourceLocations("/ico/").setCacheControl(CacheControl.maxAge(30, TimeUnit.DAYS));
+        registry.addResourceHandler("/js/**").addResourceLocations("/js/").setCacheControl(CacheControl.maxAge(30, TimeUnit.DAYS));
+        registry.addResourceHandler("/doc/**").addResourceLocations("/doc/").setCacheControl(CacheControl.maxAge(30, TimeUnit.DAYS));
     }
 
     @Override

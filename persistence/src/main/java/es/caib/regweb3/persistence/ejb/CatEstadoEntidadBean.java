@@ -45,7 +45,9 @@ public class CatEstadoEntidadBean extends BaseEjbJPA<CatEstadoEntidad, Long> imp
     @SuppressWarnings(value = "unchecked")
     public List<CatEstadoEntidad> getAll() throws I18NException {
 
-        return  em.createQuery("Select catEstadoEntidad from CatEstadoEntidad as catEstadoEntidad order by catEstadoEntidad.id").getResultList();
+        return em.createQuery("Select catEstadoEntidad from CatEstadoEntidad as catEstadoEntidad order by catEstadoEntidad.id")
+                .setHint("org.hibernate.cacheable", true)
+                .getResultList();
     }
 
     @Override

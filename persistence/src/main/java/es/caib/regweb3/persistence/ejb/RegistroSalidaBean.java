@@ -88,7 +88,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean implemen
             registroSalida.setEntidad(entidad);
 
             // Obtenemos el Número de registro
-            Libro libro = libroEjb.findById(registroSalida.getLibro().getId());
+            Libro libro = libroEjb.getReference(registroSalida.getLibro().getId());
             NumeroRegistro numeroRegistro = contadorEjb.incrementarContador(libro.getContadorSalida().getId());
             registroSalida.setNumeroRegistro(numeroRegistro.getNumero());
             registroSalida.setFecha(numeroRegistro.getFecha());

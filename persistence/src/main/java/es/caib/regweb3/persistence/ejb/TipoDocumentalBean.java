@@ -133,6 +133,7 @@ public class TipoDocumentalBean extends BaseEjbJPA<TipoDocumental, Long> impleme
 
         Query q = em.createQuery("Select tipoDocumental from TipoDocumental as tipoDocumental where tipoDocumental.entidad.id = :idEntidad");
         q.setParameter("idEntidad", idEntidad);
+        q.setHint("org.hibernate.cacheable", true);
         q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList();

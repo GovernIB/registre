@@ -45,7 +45,9 @@ public class CatPaisBean extends BaseEjbJPA<CatPais, Long> implements CatPaisLoc
     @SuppressWarnings(value = "unchecked")
     public List<CatPais> getAll() throws I18NException {
 
-        return  em.createQuery("Select catPais from CatPais as catPais order by catPais.descripcionPais").getResultList();
+        return  em.createQuery("Select catPais from CatPais as catPais order by catPais.descripcionPais")
+                .setHint("org.hibernate.cacheable", true)
+                .getResultList();
     }
 
     @Override

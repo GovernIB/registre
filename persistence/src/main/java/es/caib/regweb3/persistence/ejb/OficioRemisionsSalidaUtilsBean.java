@@ -513,7 +513,7 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
             RegistroSalida registroSalida = registroSalidaEjb.getConAnexosFull(oficio.getIdRegistro());
             List<Interesado> interesados = registroSalida.getRegistroDetalle().getInteresados();
             List<AnexoFull> anexos = registroSalida.getRegistroDetalle().getAnexosFull();
-            Libro libro = libroEjb.findById(usuario.getEntidad().getLibro().getId());
+            Libro libro = libroEjb.getReference(usuario.getEntidad().getLibro().getId());
 
             try{
                 // Detach de la sesion para poder duplicar el registro
