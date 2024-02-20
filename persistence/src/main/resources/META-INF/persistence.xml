@@ -91,6 +91,10 @@ http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd">
             <property name="hibernate.show_sql" value="false"/>
             <!--Permite tener @SequenceGenerator con el mismo nombre-->
             <property name="hibernate.jpa.compliance.global_id_generators" value="false"/>
+
+            <!-- Configuración del Second-Level cache -->
+            <property name="hibernate.cache.use_second_level_cache" value="true"/>
+            <property name="hibernate.cache.region.factory_class" value="org.hibernate.cache.ehcache.EhCacheRegionFactory"/>
         </properties>
 
     </persistence-unit>

@@ -45,7 +45,9 @@ public class CatComunidadAutonomaBean extends BaseEjbJPA<CatComunidadAutonoma, L
     @SuppressWarnings(value = "unchecked")
     public List<CatComunidadAutonoma> getAll() throws I18NException {
 
-        return  em.createQuery("Select catComunidadAutonoma from CatComunidadAutonoma as catComunidadAutonoma order by catComunidadAutonoma.id").getResultList();
+        return  em.createQuery("Select catComunidadAutonoma from CatComunidadAutonoma as catComunidadAutonoma order by catComunidadAutonoma.id")
+                .setHint("org.hibernate.cacheable", true)
+                .getResultList();
     }
 
     @Override

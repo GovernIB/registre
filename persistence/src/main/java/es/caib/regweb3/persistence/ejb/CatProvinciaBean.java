@@ -47,7 +47,9 @@ public class CatProvinciaBean extends BaseEjbJPA<CatProvincia, Long> implements 
     @SuppressWarnings(value = "unchecked")
     public List<CatProvincia> getAll() throws I18NException {
 
-        return  em.createQuery("Select catProvincia from CatProvincia as catProvincia order by catProvincia.descripcionProvincia").getResultList();
+        return  em.createQuery("Select catProvincia from CatProvincia as catProvincia order by catProvincia.descripcionProvincia")
+                .setHint("org.hibernate.cacheable", true)
+                .getResultList();
     }
 
     @Override
