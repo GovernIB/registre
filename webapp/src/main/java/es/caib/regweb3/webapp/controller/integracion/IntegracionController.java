@@ -98,8 +98,7 @@ public class IntegracionController extends BaseController {
     
 
     @ModelAttribute("tiposIntegracion")
-    public
-    Long[] tipos() {
+    public Long[] tipos() {
         if(Configuracio.isCAIB()){
             return RegwebConstantes.INTEGRACION_TIPOS_CAIB;
         }else{
@@ -108,8 +107,7 @@ public class IntegracionController extends BaseController {
     }
 
     @ModelAttribute("estados")
-    public
-    Long[] estados() {
+    public Long[] estados() {
         return RegwebConstantes.INTEGRACION_ESTADOS;
     }
     

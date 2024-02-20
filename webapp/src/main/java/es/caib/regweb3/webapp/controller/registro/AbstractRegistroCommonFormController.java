@@ -102,12 +102,12 @@ public abstract class AbstractRegistroCommonFormController extends BaseControlle
     }
 
     @ModelAttribute("tiposPersona")
-    public Long[] tiposPersona() throws Exception {
+    public Long[] tiposPersona()  {
         return RegwebConstantes.TIPOS_PERSONA;
     }
 
     @ModelAttribute("tiposInteresado")
-    public Long[] tiposInteresado() throws Exception {
+    public Long[] tiposInteresado()  {
         return  RegwebConstantes.TIPOS_INTERESADO;
     }
 
@@ -120,17 +120,17 @@ public abstract class AbstractRegistroCommonFormController extends BaseControlle
     }
 
     @ModelAttribute("transportes")
-    public Long[] transportes() throws Exception {
+    public Long[] transportes() {
         return RegwebConstantes.TRANSPORTES;
     }
 
     @ModelAttribute("tiposDocumentacionFisica")
-    public Long[] tiposDocumentacionFisica() throws Exception {
+    public Long[] tiposDocumentacionFisica() {
         return RegwebConstantes.TIPOS_DOCFISICA;
     }
 
     @ModelAttribute("tiposDocumento")
-    public long[] tiposDocumento() throws Exception {
+    public long[] tiposDocumento() {
         return RegwebConstantes.TIPOS_DOCUMENTOID;
     }
 
@@ -145,7 +145,7 @@ public abstract class AbstractRegistroCommonFormController extends BaseControlle
     }
 
     @ModelAttribute("canalesNotificacion")
-    public long[] canalesNotificacion() throws Exception {
+    public long[] canalesNotificacion() {
         return RegwebConstantes.CANALES_NOTIFICACION;
     }
 
@@ -160,7 +160,7 @@ public abstract class AbstractRegistroCommonFormController extends BaseControlle
     }
 
     @ModelAttribute("estados")
-    public Long[] estados() throws Exception {
+    public Long[] estados() {
         return RegwebConstantes.ESTADOS_REGISTRO;
     }
 }

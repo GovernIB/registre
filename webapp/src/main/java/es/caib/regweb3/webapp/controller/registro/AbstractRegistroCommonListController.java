@@ -15,8 +15,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
 import javax.ejb.EJB;
-import javax.servlet.http.HttpServletRequest;
-import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -63,16 +61,14 @@ public abstract class AbstractRegistroCommonListController extends BaseControlle
     }
 
     @ModelAttribute("tiposDocumentacionFisica")
-    public Long[] tiposDocumentacionFisica() throws Exception {
+    public Long[] tiposDocumentacionFisica() {
         return RegwebConstantes.TIPOS_DOCFISICA;
     }
 
 
     @ModelAttribute("estados")
-    public Long[] estados(HttpServletRequest request) throws Exception {
-
+    public Long[] estados() throws Exception {
         return RegwebConstantes.ESTADOS_REGISTRO;
-
     }
 
     /**
@@ -120,34 +116,6 @@ public abstract class AbstractRegistroCommonListController extends BaseControlle
         model.addAttribute("canalesNotificacion",RegwebConstantes.CANALES_NOTIFICACION);
         model.addAttribute("tiposDocumento", RegwebConstantes.TIPOS_DOCUMENTOID);
         model.addAttribute("organismosOficinaActiva",organismosOficinaActiva);
-    }
-
-    /**
-     * Función que elimina acentos y caracteres especiales de una cadena de texto.
-     *
-     * @param input
-     * @return cadena de texto limpia de acentos y c, sustituidos por "_" para facilitar busquedas.
-     */
-    public static String limpiarCaracteresEspeciales(String input) {
-
-        String output = null;
-
-        try {
-            output = new String(input.getBytes("ISO-8859-1"), "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-
-        // Cadena de caracteres original a sustituir.
-        String original = "áàäéèëíìïóòöúùuñÁÀÄÉÈËÍÌÏÓÒÖÚÙÜÑçÇ";
-        // Cadena de caracteres ASCII que reemplazarán los originales.
-        String ascii = "__________________________________";
-        for (int i = 0; i < original.length(); i++) {
-            // Reemplazamos los caracteres especiales.
-            output = output.replace(original.charAt(i), ascii.charAt(i));
-        }
-
-        return output;
     }
 
 }

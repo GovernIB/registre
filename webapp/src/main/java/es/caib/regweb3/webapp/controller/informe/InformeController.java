@@ -1925,11 +1925,6 @@ public class InformeController extends AbstractRegistroCommonFormController {
         mav.addObject("salidaIdiomaNombre", salidaIdiomaNombre);
     }
 
-    @ModelAttribute("estados")
-    public Long[] estados() throws Exception {
-        return RegwebConstantes.ESTADOS_REGISTRO;
-    }
-
     @InitBinder("informeOrganismoBusquedaForm")
     public void initBinderOrganismoRegistro(WebDataBinder binder) {
         CustomDateEditor dateEditor = new CustomDateEditor(formatDate, true);
