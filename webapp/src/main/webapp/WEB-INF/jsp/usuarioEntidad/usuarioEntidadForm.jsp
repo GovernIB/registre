@@ -22,7 +22,7 @@
             <div class="col-xs-12">
                 <ol class="breadcrumb">
                     <c:import url="../modulos/migadepan.jsp"/>
-                    <li><a href="<c:url value="/usuarioEntidad/list"/>" ><i class="fa fa-list-ul"></i> <spring:message code="usuario.usuarios"/></a></li>
+                    <c:if test="${loginInfo.rolActivo.nombre != 'RWE_USUARI'}"><li><a href="<c:url value="/usuarioEntidad/list"/>" ><i class="fa fa-list-ul"></i> <spring:message code="usuario.usuarios"/></a></li></c:if>
                     <li class="active"><i class="fa fa-pencil-square-o"></i>
                         <strong>
                             <spring:message code="usuario.editar"/>
@@ -104,7 +104,9 @@
                             </div>
 
                             <%--Solo usuario Tipo Persona--%>
-                            <c:if test="${usuarioEntidad.usuario.tipoUsuario == 1 && loginInfo.rolActivo.nombre != 'RWE_USUARI'}">
+                            <c:if test="${usuarioEntidad.usuario.tipoUsuario == 1}">
+                                <c:set var="rweUsuari" value="${loginInfo.rolActivo.nombre == 'RWE_USUARI'}"/>
+
                                 <div class="col-xs-12">
                                     <div class="form-group col-xs-6 espaiLinies senseMargeLat">
                                         <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
@@ -131,8 +133,8 @@
                                             <form:label path="categoria"><spring:message code="usuario.categoria"/></form:label>
                                         </div>
                                         <div class="col-xs-8">
-                                            <form:select path="categoria" cssClass="chosen-select">
-                                                <c:forEach var="categoria" items="${categorias}">
+                                            <form:select path="categoria" cssClass="chosen-select" disabled="${rweUsuari}">
+                                                <c:forEach var="categoria" items="${categorias}" >
                                                     <form:option value="${categoria}"><spring:message code="usuario.categoria.${categoria}"/></form:option>
                                                 </c:forEach>
                                             </form:select>
@@ -140,17 +142,20 @@
                                     </div>
 
                                     <div class="form-group col-xs-6 espaiLinies senseMargeLat">
-                                        <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
-                                            <form:label path="funcion"><spring:message code="usuario.funcion"/></form:label>
-                                        </div>
-                                        <div class="col-xs-8">
-                                            <form:select path="funcion" cssClass="chosen-select">
-                                               <c:forEach var="funcion" items="${funciones}">
-                                                    <form:option value="${funcion}"><spring:message code="usuario.funcion.${funcion}"/></form:option>
-                                                </c:forEach>
-                                            </form:select>
-                                        </div>
+                                        <c:if test="${loginInfo.rolActivo.nombre != 'RWE_USUARI'}">
+                                            <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                                <form:label path="funcion"><spring:message code="usuario.funcion"/></form:label>
+                                            </div>
+                                            <div class="col-xs-8">
+                                                <form:select path="funcion" cssClass="chosen-select">
+                                                   <c:forEach var="funcion" items="${funciones}">
+                                                        <form:option value="${funcion}"><spring:message code="usuario.funcion.${funcion}" /></form:option>
+                                                    </c:forEach>
+                                                </form:select>
+                                            </div>
+                                        </c:if>
                                     </div>
+
                                 </div>
                                 <div class="col-xs-12">
                                     <div class="form-group col-xs-6 espaiLinies senseMargeLat">
@@ -158,7 +163,7 @@
                                             <form:label path="clave"><spring:message code="usuario.clave"/></form:label>
                                         </div>
                                         <div class="col-xs-8">
-                                            <form:checkbox path="clave"/>
+                                            <form:checkbox path="clave" disabled="${rweUsuari}"/>
                                         </div>
                                     </div>
                                     <div class="form-group col-xs-6 espaiLinies senseMargeLat">
@@ -166,7 +171,7 @@
                                             <form:label path="bitcita"><spring:message code="usuario.bitcita"/></form:label>
                                         </div>
                                         <div class="col-xs-8">
-                                            <form:checkbox path="bitcita"/>
+                                            <form:checkbox path="bitcita" disabled="${rweUsuari}"/>
                                         </div>
                                     </div>
                                 </div>
@@ -176,7 +181,7 @@
                                             <form:label path="asistencia"><spring:message code="usuario.asistencia"/></form:label>
                                         </div>
                                         <div class="col-xs-8">
-                                            <form:checkbox path="asistencia"/>
+                                            <form:checkbox path="asistencia" disabled="${rweUsuari}"/>
                                         </div>
                                     </div>
                                     <div class="form-group col-xs-6 espaiLinies senseMargeLat">
@@ -184,7 +189,7 @@
                                             <form:label path="apodera"><spring:message code="usuario.apodera"/></form:label>
                                         </div>
                                         <div class="col-xs-8">
-                                            <form:checkbox path="apodera"/>
+                                            <form:checkbox path="apodera" disabled="${rweUsuari}"/>
                                         </div>
                                     </div>
                                 </div>
@@ -194,30 +199,33 @@
                                             <form:label path="notificacionEspontanea"><spring:message code="usuario.notificacionEspontanea"/></form:label>
                                         </div>
                                         <div class="col-xs-8">
-                                            <form:checkbox path="notificacionEspontanea"/>
+                                            <form:checkbox path="notificacionEspontanea" disabled="${rweUsuari}"/>
                                         </div>
                                     </div>
-
-                                    <div class="form-group col-xs-6 espaiLinies senseMargeLat">
-                                        <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
-                                            <form:label path="cai"><spring:message code="usuario.cai"/></form:label>
+                                    <c:if test="${loginInfo.rolActivo.nombre != 'RWE_USUARI'}">
+                                        <div class="form-group col-xs-6 espaiLinies senseMargeLat">
+                                            <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                                <form:label path="cai"><spring:message code="usuario.cai"/></form:label>
+                                            </div>
+                                            <div class="col-xs-8">
+                                                <form:input path="cai" cssClass="form-control" disabled="${rweUsuari}"/>
+                                            </div>
                                         </div>
-                                        <div class="col-xs-8">
-                                            <form:input path="cai" cssClass="form-control"/> <form:errors path="cai" cssClass="help-block" element="span"/>
-                                        </div>
-                                    </div>
+                                    </c:if>
                                 </div>
-
-                                <div class="col-xs-12">
-                                    <div class="form-group col-xs-6 espaiLinies senseMargeLat">
-                                        <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
-                                            <form:label path="observaciones"><spring:message code="usuario.observaciones"/></form:label>
-                                        </div>
-                                        <div class="col-xs-8">
-                                            <form:textarea path="observaciones" rows="3" cssClass="form-control"/>
+                                <c:if test="${loginInfo.rolActivo.nombre != 'RWE_USUARI'}">
+                                    <div class="col-xs-12">
+                                        <div class="form-group col-xs-6 espaiLinies senseMargeLat">
+                                            <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                                <form:label path="observaciones"><spring:message code="usuario.observaciones"/></form:label>
+                                            </div>
+                                            <div class="col-xs-8">
+                                                <form:textarea path="observaciones" rows="3" cssClass="form-control"/>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
+                                </c:if>
+
                             </c:if>
                         </div>
                     </div>
