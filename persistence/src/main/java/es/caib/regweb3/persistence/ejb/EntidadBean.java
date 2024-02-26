@@ -539,11 +539,6 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
     }
 
     @Override
-    public boolean isMultiEntidad() throws I18NException {
-        return em.createQuery("Select entidad.id from Entidad as entidad where entidad.sir = true order by entidad.id").getResultList().size() > 1;
-    }
-
-    @Override
     public Boolean isJustificanteCustodiadoLocal(Long idEntidad) throws I18NException {
 
         IDocumentCustodyPlugin documentCustodyPlugin = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE);

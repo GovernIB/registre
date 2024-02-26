@@ -166,7 +166,6 @@ public interface EntidadLocal extends BaseEjb<Entidad, Long> {
      *
      * @throws I18NException
      */
-    boolean isMultiEntidad() throws I18NException;
 
     /**
      * Comprueba si la Entidad tiene el plugin de Custodia Justificante DocumentCustody y lo consideraremos como "Custodiado Fake" a efectos prácticos (SIR, Distribución, etc..)
