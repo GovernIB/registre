@@ -344,7 +344,7 @@ public class FicheroIntercambioBean implements FicheroIntercambioLocal {
 
     private Oficina obtenerOficina(String codigo) throws I18NException {
 
-        if (multiEntidadEjb.isMultiEntidad()) {
+        if (multiEntidadEjb.isMultiEntidadSir()) {
             return oficinaEjb.findByCodigoMultiEntidad(codigo);
         } else {
             return oficinaEjb.findByCodigo(codigo);

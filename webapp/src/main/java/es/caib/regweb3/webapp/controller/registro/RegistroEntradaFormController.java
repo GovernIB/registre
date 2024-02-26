@@ -350,7 +350,7 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
             if (registroEntrada.getDestino() != null) { // Si se ha escogido un Organismo destino
 
                 Organismo organismo;
-                if(multiEntidadEjb.isMultiEntidad()) {
+                if(multiEntidadEjb.isMultiEntidadSir()) {
                     organismo = organismoEjb.findByCodigoMultiEntidad(registroEntrada.getDestino().getCodigo());
                 }else{
                     organismo = organismoEjb.findByCodigoEntidadLigero(registroEntrada.getDestino().getCodigo(), entidad.getId());

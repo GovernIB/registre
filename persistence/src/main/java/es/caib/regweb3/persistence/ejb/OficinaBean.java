@@ -154,7 +154,7 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
 
     @Override
     public Oficina findByMultiEntidad(String codigo) throws I18NException{
-        if(multiEntidadEjb.isMultiEntidad()){
+        if(multiEntidadEjb.isMultiEntidadSir()){
             return findByCodigoMultiEntidad(codigo);
         }else{
             return findByCodigo(codigo);
@@ -163,7 +163,7 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
 
     @Override
     public Oficina findByCodigoByEntidadMultiEntidad(String codigo, Long idEntidad) throws I18NException{
-        if(multiEntidadEjb.isMultiEntidad()){
+        if(multiEntidadEjb.isMultiEntidadSir()){
             return findByCodigoMultiEntidad(codigo);
         }else{
             return findByCodigoEntidad(codigo, idEntidad);

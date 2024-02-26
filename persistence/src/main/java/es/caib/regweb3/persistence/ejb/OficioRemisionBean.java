@@ -979,7 +979,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
         oficio.setOficioRemision(true);
 
         Organismo organismo;
-        if(multiEntidadEjb.isMultiEntidad()){
+        if(multiEntidadEjb.isMultiEntidadSir()){
             organismo = organismoEjb.findByCodigoMultiEntidad(codigoOrganismo);
         }else{
             organismo = organismoEjb.findByCodigoEntidadSinEstadoLigero(codigoOrganismo, idEntidad);

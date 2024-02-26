@@ -27,7 +27,7 @@ public class MultiEntidadBean implements MultiEntidadLocal {
 
 
     @Override
-    public boolean isMultiEntidad() throws I18NException {
+    public boolean isMultiEntidadSir() throws I18NException {
         return em.createQuery("Select entidad.id from Entidad as entidad where entidad.sir = true order by entidad.id").getResultList().size() > 1;
     }
 

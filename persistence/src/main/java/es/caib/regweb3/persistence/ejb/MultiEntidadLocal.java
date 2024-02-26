@@ -22,5 +22,5 @@ public interface MultiEntidadLocal {
      *
      * @throws I18NException
      */
-    boolean isMultiEntidad() throws I18NException;
+    boolean isMultiEntidadSir() throws I18NException;
 }

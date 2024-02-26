@@ -133,7 +133,7 @@ public class AsientoRegistralBean implements AsientoRegistralLocal {
 
                     //Obtenemos las oficinas SIR a las que va dirigido el registro de Salida
                     List<OficinaTF> oficinasSIR;
-                    if(multiEntidadEjb.isMultiEntidad()) {
+                    if(multiEntidadEjb.isMultiEntidadSir()) {
                         oficinasSIR = registroSalidaEjb.isOficioRemisionSirMultiEntidad(registroSalida, getOrganismosOficioRemisionSalida(organismoEjb.getOrganismosRegistro(registroSalida.getOficina())),
                                 registroSalida.getUsuario().getEntidad().getId());
                     }else{
