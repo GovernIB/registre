@@ -267,7 +267,7 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
 
                 if (oficina == null) { // Nueva oficina
 
-                    oficina = new Oficina(null, oficinaTF.getCodigo(), null);
+                    oficina = new Oficina(idEntidad, oficinaTF.getCodigo());
 
                     procesarOficina(oficina, oficinaTF, idEntidad); // Se procesa la oficina para asignar sus valores
 
@@ -279,13 +279,11 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
                     procesarOficina(oficina, oficinaTF, idEntidad); // Se procesa la oficina para asignar sus valores
                     oficinaEjb.merge(oficina);
                 }
-
             }
-
         }
 
         log.info("");
-        log.info("Oficinas creadas: " + oficinas.size());
+        log.info("Oficinas creadas/actualizadas: " + oficinas.size());
         log.info("");
     }
 
