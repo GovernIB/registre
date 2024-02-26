@@ -38,6 +38,8 @@ public class Oficina implements Serializable {
     @XmlElement
     private String codigo;
     @XmlTransient
+    private Entidad entidad;
+    @XmlTransient
     private CatEstadoEntidad estado;
     @XmlElement
     private String denominacion;
@@ -67,7 +69,6 @@ public class Oficina implements Serializable {
     private Set<CatServicio> servicios;
     @XmlTransient
     private Boolean oamr = false;
-
     @Transient
     private Boolean isSirRecepcion = false;
     @Transient
@@ -86,7 +87,8 @@ public class Oficina implements Serializable {
         this.id = id;
     }
 
-    public Oficina(String codigo) {
+    public Oficina(Long idEntidad, String codigo) {
+        this.entidad = new Entidad(idEntidad);
         this.codigo = codigo;
     }
 
@@ -161,6 +163,15 @@ public class Oficina implements Serializable {
         this.codigo = codigo;
     }
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ENTIDAD", foreignKey = @ForeignKey(name = "RWE_OFICINA_ENTIDAD_FK"))
+    public Entidad getEntidad() {
+        return entidad;
+    }
+
+    public void setEntidad(Entidad entidad) {
+        this.entidad = entidad;
+    }
 
     @ManyToOne()
     @JoinColumn(name = "ESTADO", foreignKey = @ForeignKey(name = "RWE_OFICINA_ESTADO_FK"))

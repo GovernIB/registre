@@ -350,13 +350,13 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Organismo> findByEntidadByEstado(Long entidad, String estado) throws I18NException {
+    public List<Organismo> findByEntidadLigero(Long entidad) throws I18NException {
 
         Query q = em.createQuery("Select organismo.id, organismo.codigo, organismo.denominacion from Organismo as organismo where " +
-                "organismo.entidad.id = :entidad and organismo.estado.codigoEstadoEntidad = :codigoEstado");
+                "organismo.entidad.id = :entidad and organismo.estado.codigoEstadoEntidad = :vigente");
 
         q.setParameter("entidad", entidad);
-        q.setParameter("codigoEstado", estado);
+        q.setParameter("vigente", RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
         q.setHint("org.hibernate.readOnly", true);
 
         List<Object[]> result = q.getResultList();

@@ -83,7 +83,7 @@ public class RegistroSalidaConverter extends CommonConverter {
             return null;
         }
 
-        Entidad entidad = registroSalida.getOficina().getOrganismoResponsable().getEntidad();
+        Entidad entidad = registroSalida.getEntidad();
 
         // Creamos los datos comunes mediante RegistroWs
         RegistroSalidaResponseWs registroWs = new RegistroSalidaResponseWs();

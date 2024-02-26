@@ -400,9 +400,9 @@ public class BaseController {
     public Set<Oficina> getOficinasOrigen(HttpServletRequest request) throws  Exception {
 
         if(multiEntidadEjb.isMultiEntidad()){
-            return new HashSet<Oficina>(oficinaEjb.findByEntidadByEstadoMultiEntidad(getEntidadActiva(request).getId(), RegwebConstantes.ESTADO_ENTIDAD_VIGENTE));
+            return new HashSet<Oficina>(oficinaEjb.findByEntidadMultiEntidad(getEntidadActiva(request).getId()));
         }else{
-            return new HashSet<Oficina>(oficinaEjb.findByEntidadByEstado(getEntidadActiva(request).getId(), RegwebConstantes.ESTADO_ENTIDAD_VIGENTE));
+            return new HashSet<Oficina>(oficinaEjb.findByEntidadLigero(getEntidadActiva(request).getId()));
         }
     }
 

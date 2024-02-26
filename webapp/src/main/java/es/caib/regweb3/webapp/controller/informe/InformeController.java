@@ -79,7 +79,7 @@ public class InformeController extends AbstractRegistroCommonFormController {
         model.addAttribute("usuariosEntidad", usuarioEntidadEjb.findByEntidad(getEntidadActiva(request).getId()));
         model.addAttribute("informeOrganismoBusquedaForm", informeOrganismoBusquedaForm);
         model.addAttribute("organismosConsulta", organismos(request));
-        model.addAttribute("oficinasRegistro", oficinaEjb.findByEntidadByEstado(getEntidadActiva(request).getId(),RegwebConstantes.ESTADO_ENTIDAD_VIGENTE));
+        model.addAttribute("oficinasRegistro", oficinaEjb.findByEntidadLigero(getEntidadActiva(request).getId()));
 
         return "informe/registrosOrganismo";
     }
@@ -1307,7 +1307,7 @@ public class InformeController extends AbstractRegistroCommonFormController {
 
         // Es Administrador de Entidad
         if(isAdminEntidad(request)){
-            oficinas = oficinaEjb.findByEntidadByEstado(getEntidadActiva(request).getId(), RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
+            oficinas = oficinaEjb.findByEntidadLigero(getEntidadActiva(request).getId());
         }
 
         return oficinas;

@@ -928,7 +928,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         RegistroSir registroSir = new RegistroSir();
 
         registroSir.setIndicadorPrueba(IndicadorPrueba.NORMAL);
-        registroSir.setEntidad(registroEntrada.getOficina().getOrganismoResponsable().getEntidad());
+        registroSir.setEntidad(registroEntrada.getEntidad());
 
         // Segmento De_Origen_O_Remitente
         registroSir.setCodigoEntidadRegistralOrigen(registroEntrada.getOficina().getCodigo());
@@ -937,8 +937,6 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         registroSir.setFechaRegistro(registroEntrada.getFecha());
         registroSir.setCodigoUnidadTramitacionOrigen(null);
         registroSir.setDecodificacionUnidadTramitacionOrigen(null);
-        //registroSir.setCodigoUnidadTramitacionOrigen(registroEntrada.getOficina().getOrganismoResponsable().getCodigo());
-        //registroSir.setDecodificacionUnidadTramitacionOrigen(registroEntrada.getOficina().getOrganismoResponsable().getDenominacion());
 
         // Segmento De_Destino
         registroSir.setCodigoEntidadRegistralDestino(registroDetalle.getCodigoEntidadRegistralDestino());
@@ -1004,8 +1002,8 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
 
         RegistroSir registroSir = new RegistroSir();
 
-        registroSir.setIndicadorPrueba(IndicadorPrueba.NORMAL); // todo Modificar cuando entremos en Producción
-        registroSir.setEntidad(registroSalida.getOficina().getOrganismoResponsable().getEntidad());
+        registroSir.setIndicadorPrueba(IndicadorPrueba.NORMAL);
+        registroSir.setEntidad(registroSalida.getEntidad());
 
         // Segmento De_Origen_O_Remitente
         registroSir.setCodigoEntidadRegistralOrigen(registroSalida.getOficina().getCodigo());

@@ -252,7 +252,7 @@
                             <c:if test="${not anexosEditar}">
                                 <c:import url="../registro/anexosLectura.jsp">
                                     <c:param name="tipoRegistro" value="${RegwebConstantes.REGISTRO_SALIDA}"/>
-                                    <c:param name="idEntidad" value="${registro.oficina.organismoResponsable.entidad.id}"/>
+                                    <c:param name="idEntidad" value="${registro.entidad.id}"/>
                                 </c:import>
                             </c:if>
                         </c:if>
