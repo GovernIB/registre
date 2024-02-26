@@ -38,6 +38,8 @@ public class Oficina implements Serializable {
     @XmlElement
     private String codigo;
     @XmlTransient
+    private Entidad entidad;
+    @XmlTransient
     private CatEstadoEntidad estado;
     @XmlElement
     private String denominacion;
@@ -66,16 +68,15 @@ public class Oficina implements Serializable {
     @XmlTransient
     private Set<CatServicio> servicios;
     @XmlTransient
+    private Boolean activaLibSir;
+    @XmlTransient
     private Boolean oamr = false;
-
     @Transient
     private Boolean isSirRecepcion = false;
     @Transient
     private Boolean isSirEnvio = false;
     @Transient
     private Boolean isSir = false;
-    @Transient
-    private Boolean isOficinaSir = false;
 
 
     public Oficina() {
@@ -86,7 +87,8 @@ public class Oficina implements Serializable {
         this.id = id;
     }
 
-    public Oficina(String codigo) {
+    public Oficina(Long idEntidad, String codigo) {
+        this.entidad = new Entidad(idEntidad);
         this.codigo = codigo;
     }
 
@@ -161,6 +163,15 @@ public class Oficina implements Serializable {
         this.codigo = codigo;
     }
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ENTIDAD", foreignKey = @ForeignKey(name = "RWE_OFICINA_ENTIDAD_FK"))
+    public Entidad getEntidad() {
+        return entidad;
+    }
+
+    public void setEntidad(Entidad entidad) {
+        this.entidad = entidad;
+    }
 
     @ManyToOne()
     @JoinColumn(name = "ESTADO", foreignKey = @ForeignKey(name = "RWE_OFICINA_ESTADO_FK"))
@@ -352,6 +363,16 @@ public class Oficina implements Serializable {
         this.servicios = servicios;
     }
 
+    @Column(name = "ACTIVALIBSIR")
+    @JsonIgnore
+    public Boolean getActivaLibSir() {
+        return activaLibSir;
+    }
+
+    public void setActivaLibSir(Boolean activaLibSir) {
+        this.activaLibSir = activaLibSir;
+    }
+
     @Column(name = "OAMR", nullable = false)
     public Boolean getOamr() {
         return oamr;
@@ -374,16 +395,12 @@ public class Oficina implements Serializable {
     @Transient
     @JsonIgnore
     public Boolean getSir() {
-        for (CatServicio servicio : servicios) {
-            if (servicio.getCodServicio().equals(RegwebConstantes.OFICINA_INTEGRADA_SIR) ||
-                    servicio.getCodServicio().equals(RegwebConstantes.OFICINA_INTEGRADA_SIR_ENVIO) ||
-                    servicio.getCodServicio().equals(RegwebConstantes.OFICINA_INTEGRADA_SIR_RECEPCION)) {
-                return true;
-            }
-        }
-        return false;
+        return isSir;
     }
 
+    public void setSir(Boolean sir) {
+        isSir = sir;
+    }
 
     @Transient
     @JsonIgnore
@@ -393,6 +410,20 @@ public class Oficina implements Serializable {
 
     public void setSirEnvio(Boolean sirEnvio) {
         isSirEnvio = sirEnvio;
+    }
+
+    @Transient
+    @JsonIgnore
+    public Boolean getOficinaSir() {
+
+        for (CatServicio servicio : servicios) {
+            if (servicio.getCodServicio().equals(RegwebConstantes.OFICINA_INTEGRADA_SIR) ||
+                    servicio.getCodServicio().equals(RegwebConstantes.OFICINA_INTEGRADA_SIR_ENVIO) ||
+                    servicio.getCodServicio().equals(RegwebConstantes.OFICINA_INTEGRADA_SIR_RECEPCION)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Transient

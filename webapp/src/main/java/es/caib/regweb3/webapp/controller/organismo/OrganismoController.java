@@ -350,8 +350,8 @@ public class OrganismoController extends BaseController {
         }
 
         // Lista las Oficinas según si son Responsables, Dependientes o Funcionales
-        List<Oficina> oficinasPrincipales = oficinaEjb.responsableByEntidadEstado(entidad.getId());
-        List<Oficina> oficinasAuxiliares = oficinaEjb.dependienteByEntidadEstado(entidad.getId());
+        List<Oficina> oficinasPrincipales = oficinaEjb.responsableByEntidad(entidad.getId());
+        List<Oficina> oficinasAuxiliares = oficinaEjb.dependienteByEntidad(entidad.getId());
 
         // Lista las Oficinas Organizativas
         List<RelacionOrganizativaOfi> relacionesOrganizativaOfi = relacionOrganizativaOfiEjb.organizativaByEntidadEstado(entidad.getId());

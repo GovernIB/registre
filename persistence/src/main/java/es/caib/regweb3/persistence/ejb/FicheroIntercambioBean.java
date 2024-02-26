@@ -333,7 +333,7 @@ public class FicheroIntercambioBean implements FicheroIntercambioLocal {
             Oficina oficina = obtenerOficina(codigoEntidadRegistralDestino);
 
             if (oficina != null) {
-                return oficina.getOrganismoResponsable().getEntidad();
+                return oficina.getEntidad();
             }
         }
 

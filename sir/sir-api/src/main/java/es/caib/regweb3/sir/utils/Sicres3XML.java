@@ -1303,7 +1303,7 @@ public class Sicres3XML {
         // Timestamp_Entrada
         //deOrigenORemitente.setTimestampEntrada(); // No es necesario
 
-        Entidad entidad = registro.getOficina().getOrganismoResponsable().getEntidad();
+        Entidad entidad = registro.getEntidad();
 
         // Codigo_Unidad_Tramitacion_Origen
         if (StringUtils.isNotBlank(entidad.getCodigoDir3())) {

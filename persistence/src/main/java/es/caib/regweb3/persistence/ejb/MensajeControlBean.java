@@ -463,7 +463,7 @@ public class MensajeControlBean extends BaseEjbJPA<MensajeControl, Long> impleme
         Oficina oficina = oficinaEjb.findByMultiEntidad(codigoEntidadRegistralDestino);
 
         if (oficina != null) {
-            entidad = oficina.getOrganismoResponsable().getEntidad();
+            entidad = oficina.getEntidad();
 
             if (!entidad.getActivo() || !entidad.getSir()) {
                 log.info("La Entidad de la oficina " + oficina.getDenominacion() + " no esta activa o no se ha activado su integracion con SIR");

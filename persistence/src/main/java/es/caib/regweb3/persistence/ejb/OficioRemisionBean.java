@@ -1017,7 +1017,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
     @SuppressWarnings(value = "unchecked")
     public Integer eliminarByEntidad(Long idEntidad) throws I18NException{
 
-        Query or = em.createQuery("select distinct(id) from OficioRemision where usuarioResponsable.entidad.id = :idEntidad");
+        Query or = em.createQuery("select distinct(id) from OficioRemision where entidad.id = :idEntidad");
         or.setParameter("idEntidad", idEntidad);
         List<Object> oficiosRemision =  or.getResultList();
 

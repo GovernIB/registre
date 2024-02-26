@@ -91,7 +91,7 @@ public class DistribucionGoibPlugin extends AbstractPluginProperties implements 
             registreAnotacio.setJustificant(getRegistreAnnexJustificante(registro.getRegistroDetalle().getJustificanteAnexoFull().getAnexo()));
 
             //Obtenemos la entidad y la unidad Administrativa a donde distribuir el registro
-            String entidadCodigo = registro.getOficina().getOrganismoResponsable().getEntidad().getCodigoDir3();
+            String entidadCodigo = registro.getEntidad().getCodigoDir3();
             String unidadAdministrativaCodigo = registro.getDestino().getCodigo();
 
             //Método donde se invoca al ws de DISTRIBUCIÓ para enviar el registro a la bustica correspondiente
@@ -215,8 +215,8 @@ public class DistribucionGoibPlugin extends AbstractPluginProperties implements 
         registreAnotacio.setOficinaDescripcio(re.getOficina().getDenominacion());
 
         //Entidad
-        registreAnotacio.setEntitatCodi(re.getOficina().getOrganismoResponsable().getEntidad().getCodigoDir3());
-        registreAnotacio.setEntitatDescripcio(re.getOficina().getOrganismoResponsable().getEntidad().getNombre());
+        registreAnotacio.setEntitatCodi(re.getEntidad().getCodigoDir3());
+        registreAnotacio.setEntitatDescripcio(re.getEntidad().getNombre());
 
         //Fecha
         c.setTime(re.getFecha());

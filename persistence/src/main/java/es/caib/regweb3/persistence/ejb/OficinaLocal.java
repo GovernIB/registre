@@ -171,11 +171,10 @@ public interface OficinaLocal extends BaseEjb<Oficina, Long> {
      * Obtiene las Oficinas cuya Entidad responsable es la indicada y tienen el estado indicado
      *
      * @param idEntidad
-     * @param estado
      * @return
      * @throws I18NException
      */
-    List<Oficina> findByEntidadByEstado(Long idEntidad, String estado) throws I18NException;
+    List<Oficina> findByEntidadLigero(Long idEntidad) throws I18NException;
 
 
     /**
@@ -183,11 +182,10 @@ public interface OficinaLocal extends BaseEjb<Oficina, Long> {
      * que en un entorno multientidad estan repetidas en la entidad que les da servicio.
      *
      * @param idEntidad
-     * @param estado
      * @return
      * @throws I18NException
      */
-    List<Oficina> findByEntidadByEstadoMultiEntidad(Long idEntidad, String estado) throws I18NException;
+    List<Oficina> findByEntidadMultiEntidad(Long idEntidad) throws I18NException;
 
     /**
      * Obtiene las Oficinas responsables cuya Entidad responsable es la indicada
@@ -196,7 +194,7 @@ public interface OficinaLocal extends BaseEjb<Oficina, Long> {
      * @return
      * @throws I18NException
      */
-    List<Oficina> responsableByEntidadEstado(Long idEntidad) throws I18NException;
+    List<Oficina> responsableByEntidad(Long idEntidad) throws I18NException;
 
     /**
      * Obtiene las Oficinas dependientes cuya Entidad responsable es la indicada
@@ -205,7 +203,7 @@ public interface OficinaLocal extends BaseEjb<Oficina, Long> {
      * @return
      * @throws I18NException
      */
-    List<Oficina> dependienteByEntidadEstado(Long idEntidad) throws I18NException;
+    List<Oficina> dependienteByEntidad(Long idEntidad) throws I18NException;
 
     /**
      * Retorna las Oficinas(Funcionales y Organizativas) que dan servicio a un Organismo,
@@ -302,6 +300,14 @@ public interface OficinaLocal extends BaseEjb<Oficina, Long> {
      * @throws Exception
      */
     Boolean gestionarOficinaLibSir(Long idOficina) throws Exception;
+
+     /** Obtiene el id de la Entidad a la que pertenece la Oficina
+     *
+     * @param codigo
+     * @return
+     * @throws I18NException
+     */
+    Long obtenerEntidad(String codigo) throws I18NException;
 
     /**
      * Obtiene las oficinas SIR desde dir3caib(via WS) de la unidad indicada en el código

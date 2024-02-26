@@ -296,7 +296,7 @@ public class RecepcionBean implements RecepcionLocal{
             }
 
             if(oficina != null){
-                return oficina.getOrganismoResponsable().getEntidad();
+                return oficina.getEntidad();
             }
         }
 

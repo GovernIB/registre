@@ -533,7 +533,7 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
             //Oficina ofiOrigen = oficinaEjb.findByCodigoEntidad(oficinaOrigen.getCodigo(), entidad.getId());
             Oficina ofiOrigen =oficinaEjb.findByCodigoByEntidadMultiEntidad(oficinaOrigen.getCodigo(), entidad.getId());
 
-            if (ofiOrigen == null || (!entidad.getId().equals(ofiOrigen.getOrganismoResponsable().getEntidad().getId())) ) { // Es externa
+            if (ofiOrigen == null || (!entidad.getId().equals(ofiOrigen.getEntidad().getId())) ) { // Es externa
 
                 registroEntrada.getRegistroDetalle().setOficinaOrigenExternoCodigo(registroEntrada.getRegistroDetalle().getOficinaOrigen().getCodigo());
                 if (registroEntrada.getId() != null) {//es una modificación

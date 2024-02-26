@@ -92,7 +92,7 @@ public class AdminController extends BaseController {
         try {
             organismo = organismoEjb.findByIdCompleto(organismoId);
 
-            model.addAttribute("organismos", organismoEjb.findByEntidadByEstado(organismo.getEntidad().getId(), RegwebConstantes.ESTADO_ENTIDAD_VIGENTE));
+            model.addAttribute("organismos", organismoEjb.findByEntidadLigero(organismo.getEntidad().getId()));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -110,7 +110,7 @@ public class AdminController extends BaseController {
 
 
         if (result.hasErrors()) { // Si hay errores volvemos a la vista del formulario
-            model.addAttribute("organismos", organismoEjb.findByEntidadByEstado(organismo.getEntidad().getId(), RegwebConstantes.ESTADO_ENTIDAD_VIGENTE));
+            model.addAttribute("organismos", organismoEjb.findByEntidadLigero(organismo.getEntidad().getId()));
 
             return "admin/organismoForm";
         } else { // Si no hay errores actualizamos el registro
@@ -188,8 +188,8 @@ public class AdminController extends BaseController {
         try {
             oficina = oficinaEjb.findById(oficinaId);
 
-            model.addAttribute("oficinas", oficinaEjb.findByEntidadByEstado(oficina.getOrganismoResponsable().getEntidad().getId(), RegwebConstantes.ESTADO_ENTIDAD_VIGENTE));
-            model.addAttribute("organismos", organismoEjb.findByEntidadByEstado(oficina.getOrganismoResponsable().getEntidad().getId(), RegwebConstantes.ESTADO_ENTIDAD_VIGENTE));
+            model.addAttribute("oficinas", oficinaEjb.findByEntidadLigero(oficina.getEntidad().getId()));
+            model.addAttribute("organismos", organismoEjb.findByEntidadLigero(oficina.getEntidad().getId()));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -207,8 +207,8 @@ public class AdminController extends BaseController {
 
 
         if (result.hasErrors()) { // Si hay errores volvemos a la vista del formulario
-            model.addAttribute("oficinas", oficinaEjb.findByEntidadByEstado(oficina.getOrganismoResponsable().getEntidad().getId(), RegwebConstantes.ESTADO_ENTIDAD_VIGENTE));
-            model.addAttribute("organismos", organismoEjb.findByEntidadByEstado(oficina.getOrganismoResponsable().getEntidad().getId(), RegwebConstantes.ESTADO_ENTIDAD_VIGENTE));
+            model.addAttribute("oficinas", oficinaEjb.findByEntidadLigero(oficina.getEntidad().getId()));
+            model.addAttribute("organismos", organismoEjb.findByEntidadLigero(oficina.getEntidad().getId()));
 
             return "admin/oficinaForm";
         } else { // Si no hay errores actualizamos el registro

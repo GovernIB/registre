@@ -443,7 +443,7 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
 
             Oficina ofiOrigen = oficinaEjb.findByCodigoByEntidadMultiEntidad(oficinaOrigen.getCodigo(), entidad.getId());
 
-            if (ofiOrigen == null || (!entidad.getId().equals(ofiOrigen.getOrganismoResponsable().getEntidad().getId())) ) { // Es externa
+            if (ofiOrigen == null || (!entidad.getId().equals(ofiOrigen.getEntidad().getId())) ) { // Es externa
                 registroSalida.getRegistroDetalle().setOficinaOrigenExternoCodigo(registroSalida.getRegistroDetalle().getOficinaOrigen().getCodigo());
                 if (registroSalida.getId() != null) {//es una modificación
                     registroSalida.getRegistroDetalle().setOficinaOrigenExternoDenominacion(registroSalida.getRegistroDetalle().getOficinaOrigenExternoDenominacion());

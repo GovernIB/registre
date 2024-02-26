@@ -48,4 +48,8 @@ ALTER TABLE RWE_ENTIDAD add (REG_SALIDAS_PERSONAS number(1,0) DEFAULT 1 not null
 --Eliminar campo RWE_ENTIDAD Oficio Remisión
 ALTER TABLE RWE_ENTIDAD drop column OFICIOREMISION;
 
+--Nuevo campo ENTIDAD en RWE_OFICINA
+alter table RWE_OFICINA add ENTIDAD number(19,0);
+alter table RWE_OFICINA add constraint RWE_OFICINA_ENTIDAD_FK foreign key (ENTIDAD) references RWE_ENTIDAD;
+
 

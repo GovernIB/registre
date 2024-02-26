@@ -115,8 +115,7 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
     @SuppressWarnings(value = "unchecked")
     public Oficina findByCodigo(String codigo) throws I18NException {
 
-        Query q = em.createQuery("Select oficina from Oficina as oficina where " +
-                "oficina.codigo = :codigo");
+        Query q = em.createQuery("Select oficina from Oficina as oficina where oficina.codigo = :codigo");
 
         q.setParameter("codigo", codigo);
         q.setHint("org.hibernate.readOnly", true);
@@ -176,8 +175,7 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
     @SuppressWarnings(value = "unchecked")
     public Oficina findByCodigoEntidadSinEstado(String codigo, Long idEntidad) throws I18NException {
 
-        Query q = em.createQuery("Select oficina from Oficina as oficina where " +
-                "oficina.codigo = :codigo and oficina.organismoResponsable.entidad.id=:idEntidad ");
+        Query q = em.createQuery("Select oficina from Oficina as oficina where oficina.codigo = :codigo and oficina.entidad.id=:idEntidad ");
 
         q.setParameter("codigo", codigo);
         q.setParameter("idEntidad", idEntidad);
@@ -213,7 +211,7 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
     public Oficina findByCodigoEntidad(String codigo, Long idEntidad) throws I18NException {
 
         Query q = em.createQuery("Select oficina from Oficina as oficina where " +
-                "oficina.codigo =:codigo and oficina.organismoResponsable.entidad.id = :idEntidad  and " +
+                "oficina.codigo =:codigo and oficina.entidad.id = :idEntidad  and " +
                 "oficina.estado.codigoEstadoEntidad =:vigente");
 
         q.setParameter("codigo", codigo);
@@ -321,7 +319,7 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
     @SuppressWarnings(value = "unchecked")
     public List<Oficina> findByEntidad(Long idEntidad) throws I18NException {
         Query q = em.createQuery("Select oficina from Oficina as oficina where " +
-                "oficina.organismoResponsable.entidad.id =:idEntidad");
+                "oficina.entidad.id =:idEntidad");
 
         q.setParameter("idEntidad", idEntidad);
         q.setHint("org.hibernate.readOnly", true);
@@ -338,7 +336,7 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
     public List<Oficina> findByEntidadReduce(Long entidad) throws I18NException {
 
         Query q = em.createQuery("Select oficina.id, oficina.denominacion from Oficina as oficina where " +
-           "oficina.organismoResponsable.entidad.id = :entidad");
+           "oficina.entidad.id = :entidad");
 
         q.setParameter("entidad", entidad);
         q.setHint("org.hibernate.readOnly", true);
@@ -356,13 +354,13 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Oficina> findByEntidadByEstado(Long idEntidad, String estado) throws I18NException {
+    public List<Oficina> findByEntidadLigero(Long idEntidad) throws I18NException {
 
         Query q = em.createQuery("Select oficina.id, oficina.codigo, oficina.denominacion from Oficina as oficina where " +
-                "oficina.organismoResponsable.entidad.id =:idEntidad and oficina.estado.codigoEstadoEntidad=:estado");
+                "oficina.entidad.id =:idEntidad and oficina.estado.codigoEstadoEntidad = :vigente");
 
         q.setParameter("idEntidad", idEntidad);
-        q.setParameter("estado", estado);
+        q.setParameter("vigente", RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
         q.setHint("org.hibernate.readOnly", true);
 
         List<Oficina> oficinas = new ArrayList<Oficina>();
@@ -379,9 +377,9 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Oficina> findByEntidadByEstadoMultiEntidad(Long idEntidad, String estado) throws I18NException{
+    public List<Oficina> findByEntidadMultiEntidad(Long idEntidad) throws I18NException{
 
-        List<Oficina> oficinas= findByEntidadByEstado(idEntidad,estado);
+        List<Oficina> oficinas = findByEntidadLigero(idEntidad);
         List<Oficina> oficinasAEliminar = new ArrayList<>();
 
         for(Oficina oficina: oficinas){
@@ -390,7 +388,7 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
             //Si la raiz es null(es parte de otra entidad) y la entidad del organismo responsable no es igual
             // a la entidad en la que estamos se debe eliminar la oficina porque significa que hay otra entidad
             // que le da servicio
-            if(raiz== null  && !oficina1.getOrganismoResponsable().getEntidad().getId().equals( idEntidad)){
+            if(raiz == null  && !oficina1.getEntidad().getId().equals(idEntidad)){
                 oficinasAEliminar.add(oficina);
             }
         }
@@ -400,9 +398,9 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Oficina> responsableByEntidadEstado(Long idEntidad) throws I18NException {
+    public List<Oficina> responsableByEntidad(Long idEntidad) throws I18NException {
         Query q = em.createQuery("Select oficina from Oficina as oficina where " +
-                "oficina.organismoResponsable.entidad.id =:idEntidad and oficina.estado.codigoEstadoEntidad =:estado and " +
+                "oficina.entidad.id =:idEntidad and oficina.estado.codigoEstadoEntidad =:estado and " +
                 "oficina.oficinaResponsable.id = null order by oficina.codigo");
 
         q.setParameter("idEntidad", idEntidad);
@@ -415,9 +413,9 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Oficina> dependienteByEntidadEstado(Long idEntidad) throws I18NException {
+    public List<Oficina> dependienteByEntidad(Long idEntidad) throws I18NException {
         Query q = em.createQuery("Select oficina from Oficina as oficina where " +
-                "oficina.organismoResponsable.entidad.id =:idEntidad and oficina.estado.codigoEstadoEntidad =:estado and " +
+                "oficina.entidad.id =:idEntidad and oficina.estado.codigoEstadoEntidad =:estado and " +
                 "oficina.oficinaResponsable.id != null order by oficina.codigo");
 
         q.setParameter("idEntidad", idEntidad);
@@ -534,7 +532,7 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
     public Integer eliminarByEntidad(Long idEntidad) throws I18NException {
 
 
-        List<?> oficinasRaiz = em.createQuery("Select distinct(id) from Oficina where organismoResponsable.entidad.id =:idEntidad and oficinaResponsable != null ").setParameter("idEntidad", idEntidad).getResultList();
+        List<?> oficinasRaiz = em.createQuery("Select distinct(id) from Oficina where entidad.id =:idEntidad and oficinaResponsable != null ").setParameter("idEntidad", idEntidad).getResultList();
         Integer total = oficinasRaiz.size();
 
         if (oficinasRaiz.size() > 0) {
@@ -553,7 +551,7 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
 
         }
 
-        List<?> oficinasAuxiliares = em.createQuery("Select distinct(id) from Oficina  where organismoResponsable.entidad.id =:idEntidad and oficinaResponsable is null ").setParameter("idEntidad", idEntidad).getResultList();
+        List<?> oficinasAuxiliares = em.createQuery("Select distinct(id) from Oficina  where entidad.id =:idEntidad and oficinaResponsable is null ").setParameter("idEntidad", idEntidad).getResultList();
         total = total + oficinasAuxiliares.size();
 
         if (oficinasAuxiliares.size() > 0) {
@@ -587,7 +585,7 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
         StringBuilder query = new StringBuilder("Select oficina from Oficina as oficina ");
 
         // Entidad a la que pertenece
-        where.add(" oficina.organismoResponsable.entidad.id = :idEntidad ");
+        where.add(" oficina.entidad.id = :idEntidad ");
         parametros.put("idEntidad", idEntidad);
 
         // Estado de la Oficina
@@ -610,7 +608,7 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
         }
 
         //Isla
-        if(oficina.getIsla().getId() != null){
+        if(oficina.getIsla() != null && oficina.getIsla().getId() != null){
             where.add(" oficina.isla.id = :idIsla ");
             parametros.put("idIsla", oficina.getIsla().getId());
         }
@@ -695,6 +693,22 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
         merge(oficina);
 
         return !oficina.getActivaLibSir();
+    }
+
+    /**
+     * Obtiene el id de la Entidad a la que pertenece la Oficina
+     *
+     * @param codigo
+     * @return
+     * @throws I18NException
+     */
+    public Long obtenerEntidad(String codigo) throws I18NException {
+        Query q = em.createQuery("Select oficina.entidad.id from Oficina as oficina where " +
+                "oficina.codigo =:codigo and oficina.entidad.sir = true");
+
+        q.setParameter("codigo", codigo);
+
+        return (Long) q.getSingleResult();
     }
 
 

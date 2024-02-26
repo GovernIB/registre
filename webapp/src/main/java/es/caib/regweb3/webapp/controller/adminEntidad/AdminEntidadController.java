@@ -104,7 +104,7 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
         }else{
             model.addAttribute("organosDestino", organismoEjb.getAllByEntidad(entidadActiva.getId()));
         }
-        model.addAttribute("oficinasRegistro",  oficinaEjb.findByEntidadByEstado(entidadActiva.getId(), RegwebConstantes.ESTADO_ENTIDAD_VIGENTE));
+        model.addAttribute("oficinasRegistro",  oficinaEjb.findByEntidadLigero(entidadActiva.getId()));
 
         // Obtenemos los usuarios de la Entidad
         model.addAttribute("usuariosEntidad", usuarioEntidadEjb.findByEntidad(entidadActiva.getId()));
@@ -130,7 +130,7 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
         }else{
             organosDestino = organismoEjb.getAllByEntidad(entidadActiva.getId());
         }
-        List<Oficina> oficinasRegistro = oficinaEjb.findByEntidadByEstado(entidadActiva.getId(),RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
+        List<Oficina> oficinasRegistro = oficinaEjb.findByEntidadLigero(entidadActiva.getId());
         List<UsuarioEntidad> usuariosEntidad = usuarioEntidadEjb.findByEntidad(entidadActiva.getId());
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
 
@@ -386,7 +386,7 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
 
         model.addAttribute("organosOrigen", organismoEjb.getPermitirUsuarios(entidadActiva.getId()));
         model.addAttribute("registroSalidaBusqueda", registroSalidaBusqueda);
-        model.addAttribute("oficinasRegistro",  oficinaEjb.findByEntidadByEstado(entidadActiva.getId(), RegwebConstantes.ESTADO_ENTIDAD_VIGENTE));
+        model.addAttribute("oficinasRegistro",  oficinaEjb.findByEntidadLigero(entidadActiva.getId()));
 
         // Obtenemos los usuarios de la Entidad
         model.addAttribute("usuariosEntidad", usuarioEntidadEjb.findByEntidad(getEntidadActiva(request).getId()));
@@ -405,7 +405,7 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
         Entidad entidadActiva = getEntidadActiva(request);
 
         List<Organismo> organosOrigen = organismoEjb.getPermitirUsuarios(entidadActiva.getId());
-        List<Oficina> oficinasRegistro = oficinaEjb.findByEntidadByEstado(entidadActiva.getId(),RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
+        List<Oficina> oficinasRegistro = oficinaEjb.findByEntidadLigero(entidadActiva.getId());
         List<UsuarioEntidad> usuariosEntidad = usuarioEntidadEjb.findByEntidad(entidadActiva.getId());
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
 
