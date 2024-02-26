@@ -143,7 +143,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean implem
             // Obtenemos el próximo evento del Registro
             if(!registroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_RESERVA)){
 
-                if(multiEntidadEjb.isMultiEntidad()) {
+                if(multiEntidadEjb.isMultiEntidadSir()) {
                     Long evento = proximoEventoEntradaMultiEntidad(registroEntrada, entidad, registroEntrada.getOficina().getId());
                     registroEntrada.setEvento(evento);
                 }else{
@@ -179,7 +179,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean implem
         registroEntrada = merge(registroEntrada);
 
         // Obtenemos el próximo evento del Registro
-        if(multiEntidadEjb.isMultiEntidad()) {
+        if(multiEntidadEjb.isMultiEntidadSir()) {
             Long evento = proximoEventoEntradaMultiEntidad(registroEntrada, entidad, registroEntrada.getOficina().getId());
             registroEntrada.setEvento(evento);
         }else{
@@ -430,7 +430,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean implem
 
         // Asignamos su evento
         if (registroEntrada.getEvento() != null) {
-            if(multiEntidadEjb.isMultiEntidad()) {
+            if(multiEntidadEjb.isMultiEntidadSir()) {
                 Long evento = proximoEventoEntradaMultiEntidad(registroEntrada, entidad, registroEntrada.getOficina().getId());
                 registroEntrada.setEvento(evento);
             }else{

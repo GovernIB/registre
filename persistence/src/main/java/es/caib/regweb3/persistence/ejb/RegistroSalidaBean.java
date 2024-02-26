@@ -132,7 +132,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean implemen
             }
 
             // Obtenemos el próximo evento del Registro
-            if(multiEntidadEjb.isMultiEntidad()) {
+            if(multiEntidadEjb.isMultiEntidadSir()) {
                 Long evento = proximoEventoSalidaMultiEntidad(registroSalida, entidad);
                 registroSalida.setEvento(evento);
             }else{
@@ -168,7 +168,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean implemen
         registroSalida = merge(registroSalida);
 
         // Obtenemos el próximo evento del Registro
-        if(multiEntidadEjb.isMultiEntidad()) {
+        if(multiEntidadEjb.isMultiEntidadSir()) {
             Long evento = proximoEventoSalidaMultiEntidad(registroSalida, entidad);
             registroSalida.setEvento(evento);
         }else{
@@ -340,7 +340,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean implemen
         RegistroSalida registroSalida = findById(idRegistro);
         Hibernate.initialize(registroSalida.getRegistroDetalle().getInteresados());
 
-        if(multiEntidadEjb.isMultiEntidad()) {
+        if(multiEntidadEjb.isMultiEntidadSir()) {
             Long evento = proximoEventoSalidaMultiEntidad(registroSalida, entidadActiva);
             registroSalida.setEvento(evento);
         }else{
@@ -366,7 +366,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean implemen
 
         // Asignamos su evento
         if (registroSalida.getEvento() != null) {
-            if(multiEntidadEjb.isMultiEntidad()) {
+            if(multiEntidadEjb.isMultiEntidadSir()) {
                 Long evento = proximoEventoSalidaMultiEntidad(registroSalida, entidad);
                 registroSalida.setEvento(evento);
             }else{

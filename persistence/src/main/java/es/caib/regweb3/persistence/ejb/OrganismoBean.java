@@ -435,7 +435,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
     @SuppressWarnings(value = "unchecked")
     public Organismo findByCodigoByEntidadMultiEntidad(String codigo, Long idEntidad) throws I18NException{
 
-        if (multiEntidadEjb.isMultiEntidad()) {
+        if (multiEntidadEjb.isMultiEntidadSir()) {
             return findByCodigoMultiEntidad(codigo);
         } else {
             return findByCodigoEntidadLigero(codigo, idEntidad);
@@ -450,7 +450,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
 
 
         Organismo organismo;
-        if (multiEntidadEjb.isMultiEntidad()) {
+        if (multiEntidadEjb.isMultiEntidadSir()) {
             organismo = findByCodigoMultiEntidad(codigo);
         } else {
             organismo = findByCodigoEntidadLigero(codigo, idEntidad);

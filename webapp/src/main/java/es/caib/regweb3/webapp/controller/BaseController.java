@@ -399,7 +399,7 @@ public class BaseController {
      */
     public Set<Oficina> getOficinasOrigen(HttpServletRequest request) throws  Exception {
 
-        if(multiEntidadEjb.isMultiEntidad()){
+        if(multiEntidadEjb.isMultiEntidadSir()){
             return new HashSet<Oficina>(oficinaEjb.findByEntidadMultiEntidad(getEntidadActiva(request).getId()));
         }else{
             return new HashSet<Oficina>(oficinaEjb.findByEntidadLigero(getEntidadActiva(request).getId()));
