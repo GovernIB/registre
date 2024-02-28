@@ -1,9 +1,13 @@
 package es.caib.regweb3.persistence.ejb;
 
+import es.caib.regweb3.model.IRegistro;
 import es.gob.ad.registros.sir.interService.bean.AsientoBean;
 import es.gob.ad.registros.sir.interService.exception.InterException;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 
 import javax.ejb.Local;
+import javax.xml.datatype.DatatypeConfigurationException;
+import java.text.ParseException;
 import java.util.List;
 
 /**
@@ -48,13 +52,7 @@ public interface LibSirLocal {
 
     AsientoBean consultaAsiento(String oficina, String cdIntercambio) throws InterException;
 
-    /**
-     * @param cdIntercambio
-     * @param idFichero
-     * @return
-     * @throws InterException
-     */
-    byte[] obtenerAnexoReferencia(String cdIntercambio, String idFichero) throws InterException;
+    byte[] contenidoAnexoBean(String oficina, String cdIntercambio, String IdFichero) throws InterException;
 
     /**
      * Envia un asiento al componente CIR a través de LIBSIR.
@@ -63,6 +61,17 @@ public interface LibSirLocal {
      * @throws InterException
      */
     String enviarAsiento(AsientoBean asientoBean) throws InterException;
+
+    /**
+     * Reenvia un registro a LIBSIR, en este caso aun no existe el AsientoBean en LIBSIR.
+     * @param registro
+     * @param tipoRegistro
+     * @throws InterException
+     * @throws I18NException
+     * @throws ParseException
+     * @throws DatatypeConfigurationException
+     */
+    void reenviarRegistro(IRegistro registro, Long tipoRegistro) throws InterException, I18NException, ParseException, DatatypeConfigurationException;
 
     /**
      * Reencola un asiento al componente CIR a través de LIBSIR.

@@ -489,6 +489,15 @@ public class AnexoScanController extends AnexoController {
             }
         }
 
+        //Al escanear un documento con DIGITALIB controlar que tenga un tamaño real y contenido. #649
+        //TODO PROBAR
+        for(ScanWebDocument docEscaneado: docsEscaneados){
+            if (docEscaneado.getScannedPlainFile().getLength()<=0 || docEscaneado.getScannedSignedFile().getLength()<=0){
+                log.error("S'ha produït un error desconegut en el procés d'escaneig. El fitxer està buit");
+                throw new I18NException("anexo.perfilscan.error", new I18NArgumentString("S'ha produït un error desconegut en el procés d'escaneig. El fitxer està buit)"));
+            }
+        }
+
         if (config != null) {
             // tancam tant si hem emprat com si no SCAN
             scanWebModuleEjb.closeScanWebProcess(request, scanWebID);

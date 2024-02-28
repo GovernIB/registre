@@ -2,10 +2,7 @@ package es.caib.regweb3.persistence.utils;
 
 import es.caib.dir3caib.ws.api.oficina.Dir3CaibObtenerOficinasWs;
 import es.caib.dir3caib.ws.api.oficina.OficinaTF;
-import es.caib.interdoc.ws.api.Fitxer;
-import es.caib.interdoc.ws.api.Metadada;
-import es.caib.interdoc.ws.api.ObtenerReferenciaRequestInfo;
-import es.caib.interdoc.ws.api.ObtenerReferenciaWs;
+import es.caib.interdoc.ws.api.*;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.sir.CanalNotificacion;
 import es.caib.regweb3.model.sir.TipoDocumento;
@@ -13,6 +10,7 @@ import es.caib.regweb3.model.sir.TipoDocumentoIdentificacion;
 import es.caib.regweb3.model.sir.TipoTransporte;
 import es.caib.regweb3.model.utils.*;
 import es.caib.regweb3.persistence.ejb.TipoDocumentalLocal;
+import es.caib.regweb3.persistence.integracion.ArxiuCaibUtils;
 import es.caib.regweb3.utils.Dir3CaibUtils;
 import es.caib.regweb3.utils.ReferenciaUnicaUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
@@ -41,6 +39,7 @@ import org.springframework.stereotype.Component;
 
 import javax.ejb.EJB;
 import javax.xml.datatype.DatatypeConfigurationException;
+import java.lang.Exception;
 import java.nio.charset.StandardCharsets;
 import java.sql.Timestamp;
 import java.text.DateFormat;
@@ -66,6 +65,9 @@ public class LibSirUtils {
 
     @Autowired
     IConsultaService consultaService;
+
+    @Autowired
+    ArxiuCaibUtils arxiuCaibUtils;
 
     @EJB(mappedName = TipoDocumentalLocal.JNDI_NAME)
     public TipoDocumentalLocal tipoDocumentalEjb;
@@ -335,7 +337,7 @@ public class LibSirUtils {
         anexoBean.setUrlRepositorio(anexo.getEndpointRFU());
 
         //METADATOS SICRES4
-        if (anexo.getMetadatosAnexos() != null) {
+        if (anexo.getMetadatosAnexos() != null) { //Si tiene metadatos
             Set<MetadatoAnexo> metadatoAnexoGeneral = anexo.getMetadatosAnexos().stream().filter(metadato -> metadato.getTipo().equals(METADATO_GENERAL)).collect(Collectors.toSet());
             Set<MetadatoAnexo> metadatoAnexoParticular = anexo.getMetadatosAnexos().stream().filter(metadato -> metadato.getTipo().equals(METADATO_PARTICULAR)).collect(Collectors.toSet());
             Set<OtrosMetadatos> otrosMetadatosAnexGeneral = metadatoAnexoGeneral.stream()
@@ -357,33 +359,36 @@ public class LibSirUtils {
             anexoBean.setOtrosMetadatosGenerales(otrosMetadatosAnexGeneral);
             anexoBean.setOtrosMetadatosParticulares(otrosMetadatosAnexParticular);
 
-            //METADATOS ENI //TODO Eliminar TipoMetadatos que está comentado cuando la versión 3.1.0 de LIBSIR funcione.
+            //METADATOS ENI
             Set<MetadatoAnexo> metadatosAnexoENI = anexo.getMetadatosAnexos().stream().filter(metadato -> metadato.getTipo().equals(METADATO_NTI)).collect(Collectors.toSet());
-            //TipoMetadatos tipoMetadatos = new TipoMetadatos();
             MetadatosEni metadatosEni = new TipoMetadatoImpl();
-            for (MetadatoAnexo metadatoAnexo : metadatosAnexoENI) {
+            if(metadatosAnexoENI!=null) { // TODO REVISAR CREO QUE NUNCA ENTRA
+                for (MetadatoAnexo metadatoAnexo : metadatosAnexoENI) {
 
-                String str = metadatoAnexo.getCampo();
+                    String str = metadatoAnexo.getCampo();
 
-                switch (str) {
-                    case "fechaCaptura":
-                        //tipoMetadatos.setFechaCaptura(DatatypeFactory.newInstance().newXMLGregorianCalendar(metadatoAnexo.getValor()));
-                        SimpleDateFormat formatter = new SimpleDateFormat(FORMATO_FECHA_SICRES4);
-                        metadatosEni.setFechaCapturaDate(formatter.parse(metadatoAnexo.getValor()));
-                        break;
-                    case "origenCiudadanoAdministracion":
-                        metadatosEni.setOrigenCiudadanoAdministracion(Boolean.parseBoolean(metadatoAnexo.getValor()));
-                       // tipoMetadatos.setOrigenCiudadanoAdministracion(Boolean.parseBoolean(metadatoAnexo.getValor()));
-                        break;
-                    case "tipoDocumental":
-                        metadatosEni.setTipoDocumentalENI(TipoDocumentalEnum.fromValue(metadatoAnexo.getValor()));
-                      //  tipoMetadatos.setTipoDocumental(TipoDocumental.fromValue(metadatoAnexo.getValor()));
-                        break;
+                    switch (str) {
+                        case "fechaCaptura":
+                            SimpleDateFormat formatter = new SimpleDateFormat(FORMATO_FECHA_SICRES4);
+                            metadatosEni.setFechaCapturaDate(formatter.parse(metadatoAnexo.getValor()));
+                            break;
+                        case "origenCiudadanoAdministracion":
+                            metadatosEni.setOrigenCiudadanoAdministracion(Boolean.parseBoolean(metadatoAnexo.getValor()));
+                            break;
+                        case "tipoDocumental":
+                            metadatosEni.setTipoDocumentalENI(TipoDocumentalEnum.fromValue(metadatoAnexo.getValor()));
+                            break;
+                    }
+
                 }
-
+                anexoBean.setTipoMetadatos(metadatosEni);
             }
+        }else{
+            MetadatosEni metadatosEni = new TipoMetadatoImpl();
+            metadatosEni.setFechaCapturaDate(anexo.getFechaCaptura());
+            metadatosEni.setOrigenCiudadanoAdministracion(Boolean.parseBoolean(anexo.getOrigenCiudadanoAdmin().toString()));
+            metadatosEni.setTipoDocumentalENI(TipoDocumentalEnum.fromValue(anexo.getTipoDocumental().getCodigoNTI()));
             anexoBean.setTipoMetadatos(metadatosEni);
-            //anexoBean.setTipoMetadatos(tipoMetadatos);
         }
 
         //Metadatos obligatorios SICRES4
@@ -462,11 +467,18 @@ public class LibSirUtils {
 
 
         Long canalPreferente = interesado.getCanal();
-        if (canalPreferente != -1) {
-            interesadoBean.setCanalPreferenteComunicacionInteresado(CODIGO_BY_CANALNOTIFICACION.get(canalPreferente));
-        }else{ // se debe indicar a null cuando no está informado
-            interesadoBean.setCanalPreferenteComunicacionInteresado(null);
+
+        if (!Objects.isNull(canalPreferente)) {
+            if(canalPreferente!=-1) {
+                interesadoBean.setCanalPreferenteComunicacionInteresado(CODIGO_BY_CANALNOTIFICACION_SICRES4.get(canalPreferente));
+            }
         }
+
+       if (!Objects.isNull(canalPreferente) && canalPreferente!=-1 ) {
+                interesadoBean.setCanalPreferenteComunicacionInteresado(CODIGO_BY_CANALNOTIFICACION_SICRES4.get(canalPreferente));
+        }else { //SEGUN INCIDENCIA 1945947 se debe asignar a null cuando no hay canal preferente.
+           interesadoBean.setCanalPreferenteComunicacionInteresado(null);
+       }
 
         //CAMPOS NUEVOS SICRES4
         interesadoBean.setSolicitaNotificacionEmailInteresado(interesado.getAvisoCorreoElectronico());
@@ -505,9 +517,9 @@ public class LibSirUtils {
             }
 
             canalPreferente = representante.getCanal();
-            if (canalPreferente !=-1) {
-                interesadoBean.setCanalPreferenteComunicacionRepresentante(CODIGO_BY_CANALNOTIFICACION.get(canalPreferente));
-            }else{// TODO PENDIENTE DE INCIDENCIA 1945947
+            if (!Objects.isNull(canalPreferente) && canalPreferente!=-1 ) {
+                    interesadoBean.setCanalPreferenteComunicacionRepresentante(CODIGO_BY_CANALNOTIFICACION_SICRES4.get(canalPreferente));
+            }else{// SEGUN INCIDENCIA 1945947 se debe asignar a null cuando no hay canal preferente.
                 interesadoBean.setCanalPreferenteComunicacionRepresentante(null);
             }
 
@@ -560,10 +572,10 @@ public class LibSirUtils {
         asientoBean.setDsExpone(registroDetalle.getExpone());
         asientoBean.setDsSolicita(registroDetalle.getSolicita());
 
-        //TODO CAMPOS NUEVOS SICRES4
+        //CAMPOS NUEVOS SICRES4
         asientoBean.setModoRegistro(registroDetalle.getPresencial() ? "01" : "02"); // 01 PRESENCIAL, 02 ELECTRÓNICO
         asientoBean.setCdSia(registroDetalle.getCodigoSia());
-        //TODO MIRAR SI EL DESTINO ESTA EN RFU.
+        // MIRAR SI EL DESTINO ESTA EN RFU.
         asientoBean.setReferenciaUnica(serviciosOfiService.isOficinaConRU((registroDetalle.getCodigoEntidadRegistralDestino())));
         //TODO PEDIR A EDU
         asientoBean.setCdIntercambioPrevio("????");
@@ -607,33 +619,101 @@ public class LibSirUtils {
         return null;
     }
 
-    public static String guardarDocumentoInterdoc(AnexoFull anexoFull, Long idEntidad, String documentoInteresado) throws I18NException {
+
+    public String guardarDocumentoInterdoc(AnexoFull anexoFull, Entidad entidad, String documentoInteresado, String receptor, String numeroRegistroFormateado, Date fechaRegistro, Long tipoRegistro ) throws I18NException {
 
         Anexo anexo = anexoFull.getAnexo();
-
+        Long idEntidad = entidad.getId();
         ObtenerReferenciaWs referenciaWs = ReferenciaUnicaUtils.getObtenerReferenciaService(PropiedadGlobalUtil.getInterDocServer(idEntidad), PropiedadGlobalUtil.getInterDocUsername(idEntidad), PropiedadGlobalUtil.getInterDocPassword(idEntidad));
 
         //Preparamos el objeto a enviar
         ObtenerReferenciaRequestInfo obtenerReferenciaRequestInfo = new ObtenerReferenciaRequestInfo();
         obtenerReferenciaRequestInfo.setAplicacioId(anexo.getRegistroDetalle().getAplicacion());
-        //TODO REVISAR SI SON OFICINAS O UNIDADES LO QUE SE TIENE QUE ENVIAR
-        obtenerReferenciaRequestInfo.setEmisor(anexo.getRegistroDetalle().getOficinaOrigen().getCodigo());
-        obtenerReferenciaRequestInfo.setReceptor(anexo.getRegistroDetalle().getCodigoEntidadRegistralDestino());
+        obtenerReferenciaRequestInfo.setEmisor(anexo.getRegistroDetalle().getOficinaOrigen().getOrganismoResponsable().getCodigo());
+        obtenerReferenciaRequestInfo.setReceptor(receptor);
+        obtenerReferenciaRequestInfo.setEntitatId(entidad.getCodigoDir3());
+
+        obtenerReferenciaRequestInfo.setOrigen(anexo.getOrigenCiudadanoAdmin().toString());
+        //TODO DESCOMENTAR CUANDO VOLVAMOS A GUARDAR VALIDEZ DOCUMENTO
+        obtenerReferenciaRequestInfo.setEstatElaboracio(RegwebConstantes.CODIGO_NTI_BY_TIPOVALIDEZDOCUMENTO.get(anexo.getValidezDocumento()));
+        obtenerReferenciaRequestInfo.setTipusDocumental(anexo.getTipoDocumental().getCodigoNTI());
+
 
         if (anexo.isJustificante()) {
             obtenerReferenciaRequestInfo.setUuid(anexo.getCustodiaID());
         } else {
-            //Preparamos el Documento a enviar
             Fitxer fitxer = new Fitxer();
-            fitxer.setData(anexoFull.getData());
-            fitxer.setDescripcio(anexoFull.getTituloCorto());
-            fitxer.setMime(anexoFull.getMime());
-            fitxer.setNom(anexoFull.getFileName());
+            Fitxer fitxerFirma = new Fitxer();
+            Firma firma = new Firma();
+
+            if (MODO_FIRMA_ANEXO_SINFIRMA == anexo.getModoFirma()) {
+                log.info("MODO SIN FIRMA");
+                //Preparamos el Documento a enviar
+                log.info("DATA " + anexoFull.getData());
+                log.info("SING DATA " + anexoFull.getSignData());
+                log.info("MIME "+ anexoFull.getMime());
+                log.info("FILE NAME "+ anexoFull.getFileName());
+                log.info("SIGN FILE NAME " + anexoFull.getSignFileName());
+                log.info("SIGN MIME "+ anexoFull.getSignMime());
+                fitxer.setData(anexoFull.getData());
+                fitxer.setDescripcio(anexoFull.getTituloCorto());
+                fitxer.setMime(anexoFull.getMime());
+                fitxer.setNom(anexoFull.getFileName());
+            }
+
+            if (MODO_FIRMA_ANEXO_ATTACHED == anexo.getModoFirma()) {
+                log.info("DATA " + anexoFull.getData());
+                log.info("SING DATA " + anexoFull.getSignData());
+                log.info("MIME "+ anexoFull.getMime());
+                log.info("FILE NAME "+ anexoFull.getFileName());
+                log.info("SIGN FILE NAME " + anexoFull.getSignFileName());
+                log.info("SIGN MIME "+ anexoFull.getSignMime());
+                //Preparamos el Documento a enviar
+                fitxer.setData(anexoFull.getSignData());
+                fitxer.setDescripcio(anexoFull.getSignaturaTituloCorto());
+                fitxer.setMime(anexoFull.getSignMime());
+                fitxer.setNom(anexoFull.getSignFileName());
+
+                firma.setFormat(anexoFull.transformarTipoFirma(anexo));
+                firma.setPerfil(anexo.getSignProfile());
+                obtenerReferenciaRequestInfo.setFirma(firma);
+
+            }
+
+            if (MODO_FIRMA_ANEXO_DETACHED == anexo.getModoFirma()) {
+                log.info("MODO FIRMA DETACHED");
+                log.info("DATA " + anexoFull.getData());
+                log.info("SING DATA " + anexoFull.getSignData());
+                log.info("MIME "+ anexoFull.getMime());
+                log.info("FILE NAME "+ anexoFull.getFileName());
+                log.info("SIGN FILE NAME " + anexoFull.getSignFileName());
+                log.info("SIGN MIME "+ anexoFull.getSignMime());
+
+                fitxer.setData(anexoFull.getData());
+                fitxer.setDescripcio(anexoFull.getTituloCorto());
+                fitxer.setMime(anexoFull.getMime());
+                fitxer.setNom(anexoFull.getFileName());
+
+                fitxerFirma.setData(anexoFull.getSignData());
+                fitxerFirma.setDescripcio(anexoFull.getSignaturaTituloCorto());
+                fitxerFirma.setMime(anexoFull.getSignMime());
+                fitxerFirma.setNom(anexoFull.getSignFileName());
+
+                firma.setFitxer(fitxerFirma);
+                firma.setFormat(anexoFull.transformarTipoFirma(anexo));
+                firma.setPerfil(anexo.getSignProfile());
+
+                obtenerReferenciaRequestInfo.setFirma(firma);
+
+            }
+
             obtenerReferenciaRequestInfo.setDocument(fitxer);
+
             //Se envia el documento/codigodir3 del interesado
             obtenerReferenciaRequestInfo.getInteressats().add(documentoInteresado);
-            obtenerReferenciaRequestInfo.setCsv("estoeselcsv");
-            //obtenerReferenciaRequestInfo.setCsv(anexoFull.getAnexo().getCsv());
+            //obtenerReferenciaRequestInfo.setCsv(new Timestamp(anexo.getFechaCaptura().getTime()).toString());
+            obtenerReferenciaRequestInfo.setCsv(anexoFull.getAnexo().getCsv());
+
 
             //ENVIO DE METADATOS NECESARIOS PARA ARCHIVO
             List<Metadata> metadatosAnexo = anexoFull.getMetadatas();
@@ -684,6 +764,43 @@ public class LibSirUtils {
             metadada.setValor(formatter.format(fecha.getTime()));
             obtenerReferenciaRequestInfo.getMetadades().add(metadada);
 
+            //Metadata eni:numero_asiento_registral
+            metadada = new Metadada();
+            metadada.setClau("eni:numero_asiento_registral");
+            metadada.setValor(numeroRegistroFormateado);
+            obtenerReferenciaRequestInfo.getMetadades().add(metadada);
+
+            //Metadata eni:fecha_asiento_registral
+            if (fechaRegistro != null) {
+                TimeZone tz = TimeZone.getTimeZone("UTC");
+                DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+                df.setTimeZone(tz);
+                metadada = new Metadada();
+                metadada.setClau("eni:fecha_asiento_registral");
+                metadada.setValor(df.format(fechaRegistro));
+                obtenerReferenciaRequestInfo.getMetadades().add(metadada);
+            }
+
+            //Metadata eni:codigo_oficina_registro
+            metadada = new Metadada();
+            metadada.setClau("eni:codigo_oficina_registro");
+            metadada.setValor(anexo.getRegistroDetalle().getOficinaOrigen().getCodigo());
+            obtenerReferenciaRequestInfo.getMetadades().add(metadada);
+
+            //Metadata eni:codigo_oficina_registro
+            metadada = new Metadada();
+            metadada.setClau("eni:tipo_asiento_registral");
+            metadada.setValor(arxiuCaibUtils.getTipoRegistroEni(tipoRegistro).toString());
+            obtenerReferenciaRequestInfo.getMetadades().add(metadada);
+
+
+            metadada = new Metadada();
+            metadada.setClau("eni:app_tramite_exp");
+            metadada.setValor(RegwebConstantes.APLICACION_NOMBRE);
+            obtenerReferenciaRequestInfo.getMetadades().add(metadada);
+
+
+
         }
 
         try {
@@ -691,21 +808,6 @@ public class LibSirUtils {
         } catch (Exception e) {
             throw new I18NException(e, "anexo.error.guardando.interdoc",
                     new I18NArgumentString(String.valueOf(anexoFull.getAnexo().getId())),
-                    new I18NArgumentString(e.getMessage()));
-        }
-
-
-    }
-
-    public static Fitxer obtenerDocumentoInterdoc(String referencia, String usuari, String clau, Long idEntidad) throws I18NException {
-
-        ObtenerReferenciaWs referenciaWs = ReferenciaUnicaUtils.getObtenerReferenciaService(PropiedadGlobalUtil.getInterDocServer(idEntidad), PropiedadGlobalUtil.getInterDocUsername(idEntidad), PropiedadGlobalUtil.getInterDocPassword(idEntidad));
-
-        try {
-            return referenciaWs.descarregarDocument(referencia, usuari, clau);
-        } catch (Exception e) {
-            throw new I18NException(e, "anexo.error.guardando.interdoc",
-                    new I18NArgumentString(referencia),
                     new I18NArgumentString(e.getMessage()));
         }
 
@@ -793,13 +895,12 @@ public class LibSirUtils {
             }
             registroSir.setExpone(asientoBean.getDsExpone());
             registroSir.setSolicita(asientoBean.getDsSolicita());
-            registroSir.setEstado(EstadoRegistroSir.getEstadoRegistroSir(asientoBean.getCdEstado())); // TODO DEFINIR NUEVOS ESTADOS LIBSIR
-            //TODO CAMPOS NUEVOS SICRES4
+            registroSir.setEstado(EstadoRegistroSir.getEstadoRegistroSir(asientoBean.getCdEstado()));
+            //CAMPOS NUEVOS SICRES4
             registroSir.setModoRegistro(asientoBean.getModoRegistro().substring(1));
             registroSir.setFechaRegistroPresentacion(asientoBean.getFeRgPresentacion());
             registroSir.setCodigoSia(asientoBean.getCdSia());
             registroSir.setReferenciaUnica(asientoBean.isReferenciaUnica()); //SI
-            //  asientoBean.getCdIntercambioPrevio();// Este campo irá en RE /RS /RDETALLE (Revisado Edu)
             registroSir.setCodigoUnidadtramitacionInicio(asientoBean.getCdUnTrInicio()); //Campos nuevos de internos y control SI SE AÑADE
             registroSir.setDecodificacionUnidadTramitacionInicio(asientoBean.getDsUnTrInicio());
 
@@ -922,7 +1023,7 @@ public class LibSirUtils {
             interesado.setCanalPreferenteComunicacionInteresado(CanalNotificacion.getCanalNotificacionValue(canalPreferente));
         }
 
-        //CAMPOS NUEVOS SICRES4 TODO AVISOS SMS Y CORREOELECTRONICO
+        //CAMPOS NUEVOS SICRES4 AVISOS SMS Y CORREOELECTRONICO
         interesado.setAvisoCorreoElectronicoInteresado(interesadoBean.isSolicitaNotificacionEmailInteresado());
         interesado.setAvisoNotificacionSMSInteresado(interesadoBean.isSolicitaNotificacionSMSInteresado());
         interesado.setReceptorNotificacionesInteresado(interesadoBean.isReceptorNotificacionInteresado());
@@ -953,7 +1054,7 @@ public class LibSirUtils {
             interesado.setCanalPreferenteComunicacionRepresentante(CanalNotificacion.getCanalNotificacionValue(canalPreferente));
         }
 
-        //CAMPOS NUEVOS SICRES4 TODO AVISOS SMS Y CORREOELECTRONICO
+        //CAMPOS NUEVOS SICRES4 AVISOS SMS Y CORREOELECTRONICO
         interesado.setAvisoCorreoElectronicoRepresentante(interesadoBean.isSolicitaNotificacionEmailRepresentante());
         interesado.setAvisoCorreoElectronicoRepresentante(interesadoBean.isSolicitaNotificacionSMSRepresentante());
         interesado.setReceptorNotificacionesRepresentante(interesadoBean.isReceptorNotificacionRepresentante());
@@ -1018,23 +1119,32 @@ public class LibSirUtils {
 
         DateFormat formatter = new SimpleDateFormat(FORMATO_FECHA_SICRES4);
 
-     //   if (tiposMetadato != null) { //TODO TEMPORAL DESCOMENTAR
-            //fechaCaptura
-           // metadatoAnexoSir = new MetadatoAnexoSir(METADATO_NTI, "fechaCaptura", formatter.format(tiposMetadato.getFechaCaptura().toGregorianCalendar().getTime()));
-            metadatoAnexoSir = new MetadatoAnexoSir(METADATO_NTI, "fechaCaptura", formatter.format(new Date()));
-            metadatosAnexos.add(metadatoAnexoSir);
+        if (tiposMetadato != null) { //TODO PROVAR CON METADATOS REALES QUE NOS ENVIEN
+            try {
+                //fechaCaptura
+                metadatoAnexoSir = new MetadatoAnexoSir(METADATO_NTI, "fechaCaptura", formatter.format(tiposMetadato.getFechaCapturaDate()));
+                // metadatoAnexoSir = new MetadatoAnexoSir(METADATO_NTI, "fechaCaptura", formatter.format(new Date()));
+                metadatosAnexos.add(metadatoAnexoSir);
 
-            //origenCiudadanoAdministracion
-          //  metadatoAnexoSir = new MetadatoAnexoSir(METADATO_NTI, "origenCiudadanoAdministracion", tiposMetadato.isOrigenCiudadanoAdministracion() ? "1" : "0");
-            metadatoAnexoSir = new MetadatoAnexoSir(METADATO_NTI, "origenCiudadanoAdministracion", "1");
-            metadatosAnexos.add(metadatoAnexoSir);
+                //origenCiudadanoAdministracion
+                metadatoAnexoSir = new MetadatoAnexoSir(METADATO_NTI, "origenCiudadanoAdministracion", tiposMetadato.isOrigenCiudadanoAdministracion() ? "1" : "0");
+                //  metadatoAnexoSir = new MetadatoAnexoSir(METADATO_NTI, "origenCiudadanoAdministracion", "1");
+                metadatosAnexos.add(metadatoAnexoSir);
 
-            //tipoDocumental
-           // metadatoAnexoSir = new MetadatoAnexoSir(METADATO_NTI, "tipoDocumental", tiposMetadato.getTipoDocumental().value());
-            metadatoAnexoSir = new MetadatoAnexoSir(METADATO_NTI, "tipoDocumental", "TD01");
-            metadatosAnexos.add(metadatoAnexoSir);
+                //tipoDocumental
+                metadatoAnexoSir = new MetadatoAnexoSir(METADATO_NTI, "tipoDocumental", tiposMetadato.getTipoDocumentalENI().value());
+                // metadatoAnexoSir = new MetadatoAnexoSir(METADATO_NTI, "tipoDocumental", "TD01");
+                metadatosAnexos.add(metadatoAnexoSir);
 
-      //  }
+                //Cogemos la validez del documento del metadato ENI Estado de Elaboración
+                anexo.setValidezDocumento(tiposMetadato.getEstadoElaboracionENI().getValorEstadoElaboracionEnum().value());
+                //anexo.setValidezDocumento(CODIGO_SICRES_BY_TIPOVALIDEZDOCUMENTO.get(TIPOVALIDEZDOCUMENTO_ORIGINAL));
+
+            }catch(ParseException pe){
+                throw new I18NException("Error parseando la fecha de captura");
+            }
+
+        }
 
         anexo.setMetadatosAnexos(metadatosAnexos);
         return anexo;

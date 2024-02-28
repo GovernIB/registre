@@ -296,6 +296,61 @@ public class RegWebAsientoRegistralTest extends RegWebTestUtils {
         }
     }
 
+    //Método que crea un registro de entrada con los parámetros del juego de pruebas de LIBSIR
+    @Test
+    public void crearAsientoEntradaSIR_IN_000() throws Exception {
+        //sin organismo origen, con 1 interesado, sin anexos
+
+        for (int i = 0; i < 1; i++) {
+
+            try {
+                AsientoRegistralWs asientoRegistralWs = getAsiento_to_LIBSIR( REGISTRO_ENTRADA, true, true, false);
+
+                asientoRegistralWs = asientoRegistralApi.crearAsientoRegistral(null,getTestEntidadCodigoDir3(),asientoRegistralWs,null,true,false);
+
+                printAsientoBasico(asientoRegistralWs);
+
+            } catch (WsI18NException e) {
+                String msg = WsClientUtils.toString(e);
+                System.out.println("Error WsI18NException: " + msg);
+                throw e;
+            } catch (WsValidationException e) {
+                String msg = WsClientUtils.toString(e);
+                System.out.println("Error WsValidationException: " + msg);
+                throw e;
+            }
+        }
+    }
+
+
+    //Método que crea un registro de salida con los parámetros del juego de pruebas de LIBSIR
+    @Test
+    public void crearAsientoSalidaSIR_IN_000() throws Exception {
+        //con organismo origen, 3 ficheros adjuntos
+
+        for (int i = 0; i < 1; i++) {
+
+            try {
+                AsientoRegistralWs asientoRegistralWs = getAsiento_to_LIBSIR( REGISTRO_SALIDA,false, true, true);
+
+                asientoRegistralWs = asientoRegistralApi.crearAsientoRegistral(null,getTestEntidadCodigoDir3(),asientoRegistralWs,null,true,false);
+
+                printAsientoBasico(asientoRegistralWs);
+
+            } catch (WsI18NException e) {
+                String msg = WsClientUtils.toString(e);
+                System.out.println("Error WsI18NException: " + msg);
+                throw e;
+            } catch (WsValidationException e) {
+                String msg = WsClientUtils.toString(e);
+                System.out.println("Error WsValidationException: " + msg);
+                throw e;
+            }
+        }
+    }
+
+
+
 
     @Test
     public void obtenerAsiento() throws Exception{
@@ -377,7 +432,7 @@ public class RegWebAsientoRegistralTest extends RegWebTestUtils {
     @Test
     public void obtenerJustificante() throws Exception{
 
-        JustificanteWs justificanteWs = asientoRegistralApi.obtenerJustificante(getTestEntidadCodigoDir3(),"L18E256/2020", RegwebConstantes.REGISTRO_ENTRADA);
+        JustificanteWs justificanteWs = asientoRegistralApi.obtenerJustificante(getTestEntidadCodigoDir3(),"GPRO-E-166/2023", RegwebConstantes.REGISTRO_ENTRADA);
 
         Assert.assertNotNull(justificanteWs.getJustificante());
 
@@ -412,11 +467,11 @@ public class RegWebAsientoRegistralTest extends RegWebTestUtils {
         }
     }
 
-    @Test //TODO Revisar este test porque no se crea oficio de remisión externo.
+    @Test
     public void obtenerOficioExterno() {
 
         try {
-            AsientoRegistralWs entrada = getAsiento_to_AdministracionExterna(REGISTRO_SALIDA, false);
+            AsientoRegistralWs entrada = getAsiento_to_AdministracionSir(REGISTRO_SALIDA, false);
             entrada = asientoRegistralApi.crearAsientoRegistral(null,getTestEntidadCodigoDir3(), entrada,TIPO_OPERACION_COMUNICACION,true,false);
 
             OficioWs oficio = asientoRegistralApi.obtenerOficioExterno(getTestEntidadCodigoDir3(),entrada.getNumeroRegistroFormateado());

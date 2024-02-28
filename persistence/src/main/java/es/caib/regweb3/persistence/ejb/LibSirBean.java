@@ -1,25 +1,30 @@
 package es.caib.regweb3.persistence.ejb;
 
 
+import es.caib.regweb3.model.IRegistro;
+import es.caib.regweb3.model.RegistroEntrada;
+import es.caib.regweb3.model.RegistroSalida;
+import es.caib.regweb3.persistence.utils.LibSirUtils;
+import es.caib.regweb3.sir.utils.Sicres3XML;
+import es.caib.regweb3.utils.RegwebConstantes;
 import es.gob.ad.registros.sir.interService.bean.AnexoBean;
 import es.gob.ad.registros.sir.interService.bean.AsientoBean;
 import es.gob.ad.registros.sir.interService.exception.InterException;
 import es.gob.ad.registros.sir.interService.service.*;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
 
 import javax.annotation.security.RunAs;
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.interceptor.Interceptors;
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
+import javax.xml.datatype.DatatypeConfigurationException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
-
-import static es.caib.regweb3.utils.Configuracio.getArchivosPath;
 
 /**
  * Created by DGMAD
@@ -35,12 +40,24 @@ public class LibSirBean implements LibSirLocal{
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
+    @EJB
+    private RegistroEntradaLocal registroEntradaEjb;
+    @EJB private RegistroSalidaLocal registroSalidaEjb;
+    @EJB private OficioRemisionLocal oficioRemisionEjb;
+    @EJB private OficioRemisionEntradaUtilsLocal oficioRemisionEntradaUtilsEjb;
+    @EJB private OficioRemisionSalidaUtilsLocal oficioRemisionSalidaUtilsEjb;
+
     @Autowired IEntradaService entradaService;
     @Autowired IConsultaService consultaService;
     @Autowired ISalidaService salidaService;
 
     @Autowired IAnexoService anexoService;
     @Autowired IEstadoAsientoService estadoAsientoervice;
+    @Autowired LibSirUtils libSirUtils;
+
+
+    private Sicres3XML sicres3XML = new Sicres3XML();
+    private WebServicesMethodsLocal webServicesMethodsEjb;
 
     @Override
     public void recibirAsiento(String registro, String firmaRegistro) throws InterException {
@@ -82,46 +99,14 @@ public class LibSirBean implements LibSirLocal{
     }
 
     @Override
-    public byte[] obtenerAnexoReferencia(String cdIntercambio, String idFichero) throws InterException {
-        byte[] data = null;
-
-        /** Eliminar cuando funcione */
-        AnexoBean anexoBean= new AnexoBean();
-
-        File enidoc = new File(getArchivosPath(), "enidocmadrid.xml");
-
-        byte[] enidocByte = null;
-        try{
-            enidocByte = Files.readAllBytes(enidoc.toPath());
-        }catch (IOException io){
-            io.printStackTrace();
+    public byte[] contenidoAnexoBean(String oficina, String cdIntercambio, String IdFichero) throws InterException{
+        AsientoBean asiento = consultaAsiento(oficina, cdIntercambio);
+        for(AnexoBean anexoBean: asiento.getAnexosBean()){
+            if(anexoBean.getIdentificadorFichero().equals(IdFichero)){
+                return anexoBean.getContenidoBean().getContenido();
+            }
         }
-     /** fin Eliminar cuando funcione */
-
-       // byte[] enidoc =  consultaService.getDocEniDescargadoIdFicheroYCdIntercambio(cdIntercambio, idFichero);
-
-        //byte[] eni =  anexoService.getEniFromCodIntercambioIdFichero(cdIntercambio, idFichero);
-        try{
-
-            anexoBean = anexoService.generaAnexoBeanFromDocEni(enidocByte);
-           // anexoBean = consultaService.descargarAnexoDeRepositorio(1041L);
-
-        }catch (Exception e){
-            e.printStackTrace();
-            log.info("Se ha producido un error al descargar el anexoBean ");
-        }
-        return anexoBean.getContenidoBean().getContenido();
-
-
-        /*LinkedHashMap<String, byte[]> anexos = new LinkedHashMap<>(anexoService.getEnisFromCodigoIntercambio(cdIntercambio));
-        if(anexos.size()>1){
-            data = anexos.entrySet().stream().findFirst().get().getValue();
-        }else{
-            data = anexos.entrySet().stream().findFirst().get().getValue();
-        }
-        log.info("XXXXXXXXXXXXXXXXXXXXX data " + data.length);
-
-        return data;*/
+        return null;
     }
 
 
@@ -131,6 +116,34 @@ public class LibSirBean implements LibSirLocal{
         salidaService.enviar(asientoBean);
         log.info("Enviado AsientoBean" + asientoBean.getNuRgOrigen() + " - " + asientoBean.getCdIntercambio());
         return asientoBean.getCdIntercambio();
+
+    }
+
+    /**
+     * Reenvia un registro que aún no se ha generado en LIBSIR
+     * @param registro
+     * @param tipoRegistro
+     * @throws InterException
+     * @throws I18NException
+     * @throws ParseException
+     * @throws DatatypeConfigurationException
+     */
+    @Override
+    public void reenviarRegistro(IRegistro registro, Long tipoRegistro) throws InterException, I18NException, ParseException, DatatypeConfigurationException {
+        AsientoBean asientoBean = null;
+        if(tipoRegistro.equals(RegwebConstantes.REGISTRO_ENTRADA)) {
+            RegistroEntrada registroEntrada = (RegistroEntrada)registro;
+             asientoBean = libSirUtils.transformarRegistroEntrada(registroEntrada);
+        }else if (tipoRegistro.equals(RegwebConstantes.REGISTRO_SALIDA)) {
+            RegistroSalida registroSalida = (RegistroSalida)registro;
+            asientoBean = libSirUtils.transformarRegistroSalida(registroSalida);
+        }
+        try {
+            salidaService.enviar(asientoBean);
+            log.info("Enviado AsientoBean" + asientoBean.getNuRgOrigen() + " - " + asientoBean.getCdIntercambio());
+        }catch (InterException ie){
+            throw ie;
+        }
 
     }
 

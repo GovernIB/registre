@@ -894,7 +894,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
                     metadades.add(new Metadata(MetadataConstants.ENI_ORIGEN, anexo.getOrigenCiudadanoAdmin()));
                 }
 
-                // Validez documento
+                // Validez documento // SICRES 4 NO APLICA PERO EN NTI SIGUE SIENDO OBLIGATORIO
                 if (anexo.getValidezDocumento() != null && anexo.getValidezDocumento() != -1) {
                     metadades.add(new Metadata("anexo.validezDocumento", I18NLogicUtils.tradueix(loc, "tipoValidezDocumento." + anexo.getValidezDocumento())));
                     metadades.add(new Metadata(MetadataConstants.ENI_ESTADO_ELABORACION, RegwebConstantes.CODIGO_NTI_BY_TIPOVALIDEZDOCUMENTO.get(anexo.getValidezDocumento())));
@@ -993,6 +993,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             //Asignamos los datos nuevos recibidos
             signature.setName(checkFileName(signature.getName(), "signature.bin"));
 
+            // AQUI CAMBIAMOS EL NOMBRE DEL ANEXO POR EL NOMBRE DE LA FIRMA. TODO COMENTAR CON EDU
             anexo.setNombreFichero(StringUtils.sustituirCaracteresProhibidosSIR(signature.getName(),'_'));
 
             final String mime = signature.getMime();

@@ -76,7 +76,7 @@ public class AsientoRegistralConverter extends CommonConverter {
 
       registroEntrada.setRegistroDetalle(registroDetalle);
 
-      System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX " + asientoRegistral.getMetadatos().size());
+
       if(asientoRegistral.getMetadatos()!=null) {
          Set<MetadatoRegistroEntrada> metadatos = asientoRegistral.getMetadatos().stream()
                  .map(metadato -> new MetadatoRegistroEntrada(metadato.getTipo(), metadato.getCampo(), metadato.getValor()) {

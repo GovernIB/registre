@@ -78,6 +78,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
     @EJB private SignatureServerLocal signatureServerEjb;
     @EJB private MetadatoRegistroSirLocal metadatoRegistroSirEjb;
     @EJB private MetadatoAnexoSirLocal metadatoAnexoSirEjb;
+    @EJB private LibSirLocal libsirEjb;
 
     @Autowired IConsultaService consultaService;
 
@@ -1574,7 +1575,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         List<Interesado> interesados = procesarInteresados(registroSir.getInteresados());
 
         // Anexos
-        List<AnexoFull> anexosFull = procesarAnexosRFU(registroSir);
+        List<AnexoFull> anexosFull = procesarAnexosRFU(registroSir,oficinaActiva.getCodigo());
 
         //METADATOS
         Set<MetadatoRegistroEntrada> metadatos = registroSir.getMetadatosRegistroSir().stream()
@@ -1990,18 +1991,18 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
      * @return
      * @throws I18NException
      */
-    private List<AnexoFull> procesarAnexosRFU(RegistroSir registroSir) throws I18NException, ParseException, InterException {
+    private List<AnexoFull> procesarAnexosRFU(RegistroSir registroSir, String oficina) throws I18NException, ParseException, InterException {
 
         List<AnexoFull> anexos = new ArrayList<>();
 
         for (AnexoSir anexoSir : registroSir.getAnexos()) {
-            anexos.add(transformarAnexoRFU(anexoSir, registroSir.getEntidad().getId(), anexoSir.getRegistroSir().getAplicacion(), registroSir.getIdentificadorIntercambio()));
+            anexos.add(transformarAnexoRFU(anexoSir, registroSir.getEntidad().getId(), anexoSir.getRegistroSir().getAplicacion(), registroSir.getIdentificadorIntercambio(),oficina));
         }
 
         return anexos;
     }
 
-    private AnexoFull transformarAnexoRFU(AnexoSir anexoSir, Long idEntidad, String aplicacion, String idIntercambio) throws I18NException, ParseException, InterException {
+    private AnexoFull transformarAnexoRFU(AnexoSir anexoSir, Long idEntidad, String aplicacion, String idIntercambio, String oficina) throws I18NException, ParseException, InterException {
 
         AnexoFull anexoFull = new AnexoFull();
         Anexo anexo = new Anexo(RegwebConstantes.PERFIL_CUSTODIA_DOCUMENT_CUSTODY);
@@ -2052,13 +2053,13 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         //LIBSIR
         if (anexoSir.getTipoFirma() != null) {
             anexo.setModoFirma(MODO_FIRMA_ANEXO_ATTACHED);
-            SignatureCustody sc = getSignatureCustodyRFU(anexoSir, idIntercambio);
+            SignatureCustody sc = getSignatureCustodyRFU(anexoSir, idIntercambio,oficina);
             anexoFull.setDocumentoCustody(null);
             anexoFull.setSignatureCustody(sc);
             anexoFull.setAnexo(anexo);
         } else {
             anexo.setModoFirma(RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA);
-            DocumentCustody dc = getDocumentCustodyRFU(anexoSir, idIntercambio);
+            DocumentCustody dc = getDocumentCustodyRFU(anexoSir, idIntercambio, oficina);
             anexoFull.setAnexo(anexo);
             anexoFull.setDocumentoCustody(dc);
         }
@@ -2072,7 +2073,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
      * @return
      * @throws I18NException
      */
-    private DocumentCustody getDocumentCustodyRFU(AnexoSir anexoSir, String idIntercambio) throws InterException {
+    private DocumentCustody getDocumentCustodyRFU(AnexoSir anexoSir, String idIntercambio, String oficina) throws InterException {
         if (log.isDebugEnabled()) {
             log.debug("  ------------------------------");
             log.debug(" anexoSir.getAnexo = " + anexoSir.getAnexo());
@@ -2081,7 +2082,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         DocumentCustody dc = null;
         if (anexoSir.getAnexo() != null) {
             dc = new DocumentCustody();
-            dc.setData(consultaService.getDocEniDescargadoIdFicheroYCdIntercambio(anexoSir.getIdentificadorFichero(), idIntercambio));
+            dc.setData(libsirEjb.contenidoAnexoBean(oficina,idIntercambio,anexoSir.getIdentificadorFichero()));
             dc.setMime(anexoSir.getTipoMIME());
             dc.setName(anexoSir.getNombreFichero());
         }
@@ -2094,7 +2095,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
      * @return
      * @throws I18NException
      */
-    private SignatureCustody getSignatureCustodyRFU(AnexoSir anexoSir, String idIntercambio) throws InterException {
+    private SignatureCustody getSignatureCustodyRFU(AnexoSir anexoSir, String idIntercambio, String oficina) throws InterException {
         if (log.isDebugEnabled()) {
             log.debug("  ------------------------------");
             log.debug(" anexoSir.getAnexo = " + anexoSir.getAnexo());
@@ -2102,9 +2103,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
 
         SignatureCustody sc = null;
         sc = new SignatureCustody();
-
-        //obtenemos el contenido a través del método de LIBSIR
-        byte[] anexoData = consultaService.getDocEniDescargadoIdFicheroYCdIntercambio(anexoSir.getIdentificadorFichero(), idIntercambio);
+        byte[] anexoData = libsirEjb.contenidoAnexoBean(oficina,idIntercambio,anexoSir.getIdentificadorFichero());
         sc.setData(anexoData);
 
         if (Base64.isBase64(anexoData)) {

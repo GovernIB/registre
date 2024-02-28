@@ -1,9 +1,7 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.*;
-import es.caib.regweb3.model.sir.Errores;
 import es.caib.regweb3.persistence.utils.*;
-import es.caib.regweb3.sir.core.excepcion.ValidacionException;
 import es.caib.regweb3.utils.CombineStream;
 import es.caib.regweb3.utils.ConvertirTexto;
 import es.caib.regweb3.utils.RegwebConstantes;
@@ -545,6 +543,26 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
         return q.getResultList();
     }
 
+    public List<Long> getEntradasByOficioRemisionIntercambio(String idIntercambio) throws I18NException{
+
+        Query q = em.createQuery("Select entrada.id from OficioRemision as oficioRemision inner join oficioRemision.registrosEntrada as entrada where oficioRemision.identificadorIntercambio = :idIntercambio ");
+
+        q.setParameter("idIntercambio", idIntercambio);
+        q.setHint("org.hibernate.readOnly", true);
+
+        return q.getResultList();
+    }
+
+    public List<Long> getSalidadByOficioRemisionIntercambio(String idIntercambio) throws I18NException{
+
+        Query q = em.createQuery("Select salida.id from OficioRemision as oficioRemision inner join oficioRemision.registrosSalida as salida where oficioRemision.identificadorIntercambio = :idIntercambio ");
+
+        q.setParameter("idIntercambio", idIntercambio);
+        q.setHint("org.hibernate.readOnly", true);
+
+        return q.getResultList();
+    }
+
     @Override
     @SuppressWarnings(value = "unchecked")
     public List<RegistroSalida> getSalidasByOficioRemision(Long idOficioRemision) throws I18NException{
@@ -855,7 +873,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
 
     }
 
-    public void marcarRechazadoOficioSir(OficioRemision oficio, String codigoEntidadRegistralOrigen, String tipoMensaje, String descripcionMensaje, String identificadorIntercambio) throws I18NException{
+    public void marcarRechazadoOficioSir(OficioRemision oficio, String codigoEntidadRegistralOrigen,String identificadorIntercambio) throws I18NException{
 
         log.info("Hemos recibido un  RECHAZO  a un envio nuestro");
 
@@ -874,8 +892,6 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
                     RegistroEntrada registroEntrada = oficio.getRegistrosEntrada().get(0);
                     // Actualizamos el registro de entrada
                     registroEntrada.setEstado(RegwebConstantes.REGISTRO_RECHAZADO);
-                    registroEntrada.getRegistroDetalle().setTipoAnotacion(tipoMensaje);
-                    registroEntrada.getRegistroDetalle().setDecodificacionTipoAnotacion(descripcionMensaje);
                     registroEntradaEjb.merge(registroEntrada);
 
                 } else if (oficio.getTipoOficioRemision().equals(RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA)) {
@@ -883,8 +899,6 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
                     RegistroSalida registroSalida = oficio.getRegistrosSalida().get(0);
                     // Actualizamos el registro de salida
                     registroSalida.setEstado(RegwebConstantes.REGISTRO_RECHAZADO);
-                    registroSalida.getRegistroDetalle().setTipoAnotacion(tipoMensaje);
-                    registroSalida.getRegistroDetalle().setDecodificacionTipoAnotacion(descripcionMensaje);
                     registroSalidaEjb.merge(registroSalida);
                 }
 
@@ -892,20 +906,14 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
                 oficio.setCodigoEntidadRegistralProcesado(codigoEntidadRegistralOrigen);
                 oficio.setEstado(RegwebConstantes.OFICIO_SIR_RECHAZADO);
                 oficio.setFechaEstado(new Date());
-                oficio.setTipoAnotacion(tipoMensaje);
-                oficio.setDecodificacionTipoAnotacion(descripcionMensaje);
                 merge(oficio);
 
                 log.info("El oficio de remision existia en el sistema, nos lo han rechazado: " + oficio.getIdentificadorIntercambio());
 
             } else if (oficio.getEstado() == RegwebConstantes.OFICIO_SIR_RECHAZADO) {
-
                 log.info("Se ha recibido un RECHAZO de un registroSir que ya esta devuelto" + identificadorIntercambio);
-                throw new ValidacionException(Errores.ERROR_0037, "Se ha recibido un RECHAZO de un registroSir que ya esta devuelto" + identificadorIntercambio);
-
             } else {
                 log.info("Se ha recibido un RECHAZO cuyo estado no lo permite: " + identificadorIntercambio);
-                throw new ValidacionException(Errores.ERROR_0037, "Se ha recibido un RECHAZO cuyo estado no lo permite: " + identificadorIntercambio);
             }
         }
     }

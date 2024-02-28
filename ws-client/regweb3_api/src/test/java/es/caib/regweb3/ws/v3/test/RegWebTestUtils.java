@@ -575,7 +575,8 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
      */
     public DatosInteresadoWs getAdministracionSir(){
        // return getAdministracion("Unidad Demoorve CCAA 1","A13010361");
-        return getAdministracion("Ayuntamiento de Onís","L01330432");
+        //return getAdministracion("Ayuntamiento de Onís","L01330432");
+        return getAdministracion("Ayuntamiento de Jun","L01181113");
     }
 
 
@@ -673,6 +674,8 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
 
             final String fichero = "pdf_sin_firma.pdf";
             anexoSinFirma.setTitulo("Anexo Sin Firma");
+            String original = CODIGO_SICRES_BY_TIPOVALIDEZDOCUMENTO.get(TIPOVALIDEZDOCUMENTO_ORIGINAL);
+            anexoSinFirma.setValidezDocumento(original);
             anexoSinFirma.setTipoDocumental(getTestAnexoTipoDocumental());
             String formulario = CODIGO_SICRES_BY_TIPO_ANEXO.get(TIPO_DOCUMENTO_FORMULARIO);
             anexoSinFirma.setTipoDocumento(formulario);
@@ -689,19 +692,7 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
 
             anexos.add(anexoSinFirma);
 
-            List<MetadatoWs> metadatos = new ArrayList<>();
-            MetadatoWs metadatoWs = new MetadatoWs();
-            metadatoWs.setCampo("Metadato 1");
-            metadatoWs.setValor("Valor del metadato1 ");
-            metadatoWs.setTipo(METADATO_GENERAL);
-
-            metadatos.add(metadatoWs);
-
-            MetadatoWs metadatoWs2 = new MetadatoWs();
-            metadatoWs2.setCampo("Metadato 2");
-            metadatoWs2.setValor("Valor del metadato2 ");
-            metadatoWs2.setTipo(METADATO_PARTICULAR);
-            metadatos.add(metadatoWs2);
+            List<MetadatoWs> metadatos = getMetadatoWs();
             anexoSinFirma.getMetadatos().addAll(metadatos);
 
         }
@@ -711,12 +702,10 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
         {
             AnexoWs anexoConFirmaAttached = new AnexoWs();
 
-            //anexoConFirmaAttached.setConfidencial(true);
-            //anexoConFirmaAttached.setHash("sdfsdfsdfsd".getBytes(StandardCharsets.UTF_8));
-            //anexoConFirmaAttached.setTamanoFichero(5684);
-
             final String fichero = "pdf_con_firma.pdf";
             anexoConFirmaAttached.setTitulo("Anexo Con Firma Attached");
+            String original = CODIGO_SICRES_BY_TIPOVALIDEZDOCUMENTO.get(TIPOVALIDEZDOCUMENTO_ORIGINAL);
+            anexoConFirmaAttached.setValidezDocumento(original);
             anexoConFirmaAttached.setTipoDocumental(getTestAnexoTipoDocumental());
             String formulario = CODIGO_SICRES_BY_TIPO_ANEXO.get(TIPO_DOCUMENTO_FORMULARIO);
             anexoConFirmaAttached.setTipoDocumento(formulario);
@@ -734,7 +723,33 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
             anexos.add(anexoConFirmaAttached);
         }
 
-        // Anexo con firma detached
+        {
+            AnexoWs anexoConFirmaAttachedXML = new AnexoWs();
+
+            final String fichero = "samplexml_signed.xsig";
+            anexoConFirmaAttachedXML.setTitulo("Anexo Con Firma Attached XML");
+            String original = CODIGO_SICRES_BY_TIPOVALIDEZDOCUMENTO.get(TIPOVALIDEZDOCUMENTO_ORIGINAL);
+            anexoConFirmaAttachedXML.setValidezDocumento(original);
+            anexoConFirmaAttachedXML.setTipoDocumental(getTestAnexoTipoDocumental());
+            String formulario = CODIGO_SICRES_BY_TIPO_ANEXO.get(TIPO_DOCUMENTO_FORMULARIO);
+            anexoConFirmaAttachedXML.setTipoDocumento(formulario);
+            anexoConFirmaAttachedXML.setOrigenCiudadanoAdmin(ANEXO_ORIGEN_CIUDADANO);
+            anexoConFirmaAttachedXML.setObservaciones("Observaciones de Marilen");
+
+            anexoConFirmaAttachedXML.setModoFirma(MODO_FIRMA_ANEXO_ATTACHED); // == 1
+            anexoConFirmaAttachedXML.setFechaCaptura(new Timestamp(new Date().getTime()));
+
+            // Fichero con firma
+            anexoConFirmaAttachedXML.setFicheroAnexado(RegWebTestUtils.constructFitxerFromResource(fichero));
+            anexoConFirmaAttachedXML.setNombreFicheroAnexado(fichero);
+            anexoConFirmaAttachedXML.setTipoMIMEFicheroAnexado(Utils.getMimeType(fichero));
+
+            anexos.add(anexoConFirmaAttachedXML);
+        }
+
+
+
+        // Anexo con firma detached no valida
         {
             AnexoWs anexoConFirmaDetached = new AnexoWs();
 
@@ -743,6 +758,8 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
             //anexoConFirmaDetached.setTamanoFichero(3000);
 
             anexoConFirmaDetached.setTitulo("Anexo Con Firma Detached");
+            String original = CODIGO_SICRES_BY_TIPOVALIDEZDOCUMENTO.get(TIPOVALIDEZDOCUMENTO_ORIGINAL);
+            anexoConFirmaDetached.setValidezDocumento(original);
             anexoConFirmaDetached.setTipoDocumental(getTestAnexoTipoDocumental());
             String formulario = CODIGO_SICRES_BY_TIPO_ANEXO.get(TIPO_DOCUMENTO_FORMULARIO);
             anexoConFirmaDetached.setTipoDocumento(formulario);
@@ -764,9 +781,11 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
             anexoConFirmaDetached.setNombreFirmaAnexada(firma);
             anexoConFirmaDetached.setTipoMIMEFirmaAnexada("application/octet-stream");
 
-            //anexos.add(anexoConFirmaDetached);
+            anexos.add(anexoConFirmaDetached);
 
         }
+
+
 
         //Anexo confidencial
         /*{
@@ -802,6 +821,150 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
         }*/
 
         return anexos;
+    }
+
+
+    protected List<AnexoWs> getAnexosLIBSIR() throws Exception {
+
+        List<AnexoWs> anexos = new ArrayList<AnexoWs>();
+
+        // Anexo sin firma
+        {
+            AnexoWs anexoSinFirma = new AnexoWs();
+
+
+            final String fichero = "pdf_sin_firma.pdf";
+            anexoSinFirma.setTitulo("Anexo Sin Firma");
+            String original = CODIGO_SICRES_BY_TIPOVALIDEZDOCUMENTO.get(TIPOVALIDEZDOCUMENTO_ORIGINAL);
+            anexoSinFirma.setValidezDocumento(original);
+            anexoSinFirma.setTipoDocumental(getTestAnexoTipoDocumental());
+            String formulario = CODIGO_SICRES_BY_TIPO_ANEXO.get(TIPO_DOCUMENTO_FORMULARIO);
+            anexoSinFirma.setTipoDocumento(formulario);
+            anexoSinFirma.setOrigenCiudadanoAdmin(ANEXO_ORIGEN_CIUDADANO);
+            anexoSinFirma.setObservaciones("Observacionesde anexo");
+
+            anexoSinFirma.setModoFirma(MODO_FIRMA_ANEXO_SINFIRMA); // == 0
+            anexoSinFirma.setFechaCaptura(new Timestamp(new Date().getTime()));
+
+            // Fichero
+            anexoSinFirma.setFicheroAnexado(RegWebTestUtils.constructFitxerFromResource(fichero));
+            anexoSinFirma.setNombreFicheroAnexado(fichero);
+            anexoSinFirma.setTipoMIMEFicheroAnexado(Utils.getMimeType(fichero));
+
+            anexos.add(anexoSinFirma);
+
+            List<MetadatoWs> metadatos = getMetadatoWs();
+            anexoSinFirma.getMetadatos().addAll(metadatos);
+
+        }
+
+        // Anexo con firma attached
+
+        {
+            AnexoWs anexoConFirmaAttached = new AnexoWs();
+
+            final String fichero = "pdf_con_firma.pdf";
+            anexoConFirmaAttached.setTitulo("Anexo Con Firma Attached");
+            String original = CODIGO_SICRES_BY_TIPOVALIDEZDOCUMENTO.get(TIPOVALIDEZDOCUMENTO_ORIGINAL);
+            anexoConFirmaAttached.setValidezDocumento(original);
+            anexoConFirmaAttached.setTipoDocumental(getTestAnexoTipoDocumental());
+            String formulario = CODIGO_SICRES_BY_TIPO_ANEXO.get(TIPO_DOCUMENTO_FORMULARIO);
+            anexoConFirmaAttached.setTipoDocumento(formulario);
+            anexoConFirmaAttached.setOrigenCiudadanoAdmin(ANEXO_ORIGEN_CIUDADANO);
+            anexoConFirmaAttached.setObservaciones("Observaciones de Marilen");
+
+            anexoConFirmaAttached.setModoFirma(MODO_FIRMA_ANEXO_ATTACHED); // == 1
+            anexoConFirmaAttached.setFechaCaptura(new Timestamp(new Date().getTime()));
+
+            // Fichero con firma
+            anexoConFirmaAttached.setFicheroAnexado(RegWebTestUtils.constructFitxerFromResource(fichero));
+            anexoConFirmaAttached.setNombreFicheroAnexado(fichero);
+            anexoConFirmaAttached.setTipoMIMEFicheroAnexado(Utils.getMimeType(fichero));
+
+            anexos.add(anexoConFirmaAttached);
+        }
+
+        {
+            AnexoWs anexoConFirmaAttached = new AnexoWs();
+
+            final String fichero = "pdf_con_firma.pdf";
+            anexoConFirmaAttached.setTitulo("Anexo Con Firma Attached 2");
+            String original = CODIGO_SICRES_BY_TIPOVALIDEZDOCUMENTO.get(TIPOVALIDEZDOCUMENTO_ORIGINAL);
+            anexoConFirmaAttached.setValidezDocumento(original);
+            anexoConFirmaAttached.setTipoDocumental(getTestAnexoTipoDocumental());
+            String formulario = CODIGO_SICRES_BY_TIPO_ANEXO.get(TIPO_DOCUMENTO_FORMULARIO);
+            anexoConFirmaAttached.setTipoDocumento(formulario);
+            anexoConFirmaAttached.setOrigenCiudadanoAdmin(ANEXO_ORIGEN_CIUDADANO);
+            anexoConFirmaAttached.setObservaciones("Observaciones de Marilen 2");
+
+            anexoConFirmaAttached.setModoFirma(MODO_FIRMA_ANEXO_ATTACHED); // == 1
+            anexoConFirmaAttached.setFechaCaptura(new Timestamp(new Date().getTime()));
+
+            // Fichero con firma
+            anexoConFirmaAttached.setFicheroAnexado(RegWebTestUtils.constructFitxerFromResource(fichero));
+            anexoConFirmaAttached.setNombreFicheroAnexado(fichero);
+            anexoConFirmaAttached.setTipoMIMEFicheroAnexado(Utils.getMimeType(fichero));
+
+            anexos.add(anexoConFirmaAttached);
+        }
+
+        {
+            AnexoWs anexoConFirmaDetached = new AnexoWs();
+
+            //anexoConFirmaDetached.setConfidencial(true);
+            //anexoConFirmaDetached.setHash("jyuushbdcjsabdoqbkacdcnoifw".getBytes(StandardCharsets.UTF_8));
+            //anexoConFirmaDetached.setTamanoFichero(3000);
+
+            anexoConFirmaDetached.setTitulo("Anexo Con Firma Detached");
+            String original = CODIGO_SICRES_BY_TIPOVALIDEZDOCUMENTO.get(TIPOVALIDEZDOCUMENTO_ORIGINAL);
+            anexoConFirmaDetached.setValidezDocumento(original);;
+            anexoConFirmaDetached.setTipoDocumental(getTestAnexoTipoDocumental());
+            String formulario = CODIGO_SICRES_BY_TIPO_ANEXO.get(TIPO_DOCUMENTO_FORMULARIO);
+            anexoConFirmaDetached.setTipoDocumento(formulario);
+            anexoConFirmaDetached.setOrigenCiudadanoAdmin(ANEXO_ORIGEN_CIUDADANO);
+            anexoConFirmaDetached.setObservaciones("Observaciones de Marilen");
+
+            anexoConFirmaDetached.setModoFirma(MODO_FIRMA_ANEXO_DETACHED); // == 2
+            anexoConFirmaDetached.setFechaCaptura(new Timestamp(new Date().getTime()));
+
+            // Fichero
+            final String fichero = "foto.jpg";
+            anexoConFirmaDetached.setFicheroAnexado(RegWebTestUtils.constructFitxerFromResource(fichero));
+            anexoConFirmaDetached.setNombreFicheroAnexado(fichero);
+            anexoConFirmaDetached.setTipoMIMEFicheroAnexado(Utils.getMimeType(fichero));
+
+            // Firma
+            final String firma = "fotosigneddetached.csig";
+            anexoConFirmaDetached.setFirmaAnexada(RegWebTestUtils.constructFitxerFromResource(firma));
+            anexoConFirmaDetached.setNombreFirmaAnexada(firma);
+            anexoConFirmaDetached.setTipoMIMEFirmaAnexada("application/octet-stream");
+
+            anexos.add(anexoConFirmaDetached);
+
+        }
+
+
+        return anexos;
+
+
+    }
+
+
+    private static List<MetadatoWs> getMetadatoWs() {
+        List<MetadatoWs> metadatos = new ArrayList<>();
+        MetadatoWs metadatoWs = new MetadatoWs();
+        metadatoWs.setCampo("Metadato 1");
+        metadatoWs.setValor("Valor del metadato1 ");
+        metadatoWs.setTipo(METADATO_GENERAL);
+
+        metadatos.add(metadatoWs);
+
+        MetadatoWs metadatoWs2 = new MetadatoWs();
+        metadatoWs2.setCampo("Metadato 2");
+        metadatoWs2.setValor("Valor del metadato2 ");
+        metadatoWs2.setTipo(METADATO_PARTICULAR);
+        metadatos.add(metadatoWs2);
+        return metadatos;
     }
 
     public static byte[] constructFitxerFromResource(String name) throws Exception {
@@ -1089,5 +1252,80 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
 
         return new Timestamp(cal.getTime().getTime());
     }
+
+    //LIBSIR
+
+    private AsientoRegistralWs getDatosComunesEntradaLIBSIR(Long tipoRegistro, boolean conOrganismoOrigen){
+
+        AsientoRegistralWs asiento = new AsientoRegistralWs();
+        asiento.setTipoRegistro(tipoRegistro);
+
+        asiento.setAplicacionTelematica("LOCAL-APP");
+        asiento.setCodigoAsunto(null);
+        asiento.setCodigoSia(getTestCodigoSia());
+        asiento.setCodigoUsuario(getTestUserName());
+        asiento.setEntidadCodigo(getTestEntidadCodigoDir3());
+
+        asiento.setEntidadRegistralOrigenCodigo(getTestOficinaOrigenCodigoDir3());
+        asiento.setExpone(getLoremIpsum());
+        asiento.setSolicita(getLoremIpsum());
+        asiento.setIdioma(RegwebConstantes.IDIOMA_CATALAN_ID);
+        asiento.setLibroCodigo(getTestDestinoLibro());
+        asiento.setPresencial(false);
+        if(REGISTRO_ENTRADA.equals(tipoRegistro)){
+            asiento.setResumen("SIR-IN-PR-11");
+        }else{
+            asiento.setResumen("SIR-IN-PR-012");
+        }
+        if(conOrganismoOrigen) {
+             asiento.setUnidadTramitacionOrigenCodigo(getTestOrigenCodigoDir3());
+        }
+        asiento.setUnidadTramitacionDestinoCodigo(getTestDestinoCodigoDir3());
+        asiento.setTipoDocumentacionFisicaCodigo(RegwebConstantes.TIPO_DOCFISICA_NO_ACOMPANYA_DOC);
+
+        asiento.setReferenciaExterna("FE4567Y");
+        asiento.setNumeroExpediente("34567Y/2019");
+        asiento.setTipoTransporte("01");
+        asiento.setObservaciones("Asientp prueba de envio SIR-IN-PR-001/003");
+
+        return asiento;
+    }
+
+    public AsientoRegistralWs getAsiento_to_LIBSIR(Long tipoRegistro, Boolean representante, Boolean anexos, Boolean conOrganismoOrigen) {
+
+        // Datos comunes
+        AsientoRegistralWs asiento = getDatosComunesEntradaLIBSIR(tipoRegistro, conOrganismoOrigen);
+
+        // Interesados
+        InteresadoWs interesadoWs = new InteresadoWs();
+
+        if(REGISTRO_ENTRADA.equals(tipoRegistro)){
+            interesadoWs.setInteresado(getPersonaFisica());
+        }else{
+            interesadoWs.setInteresado(getAdministracionSir());
+        }
+
+
+        // Representante persona fisica
+        if(representante){
+            interesadoWs.setRepresentante(getRepresentante(TIPO_INTERESADO_PERSONA_FISICA));
+        }
+
+        asiento.getInteresados().add(interesadoWs);
+
+        if(anexos){
+            try {
+                asiento.getAnexos().addAll(getAnexosLIBSIR());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        return asiento;
+    }
+
+
+
+
 
 }

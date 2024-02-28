@@ -68,6 +68,7 @@ public class Regweb3BusinessConfig {
         Properties hibernateProperties = new Properties();
 
         hibernateProperties.setProperty("hibernate.dialect", "org.hibernate.dialect.Oracle12cDialect");
+     //   hibernateProperties.setProperty("hibernate.show_sql", "true");
 
         return hibernateProperties;
     }

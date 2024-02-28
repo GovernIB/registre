@@ -501,24 +501,38 @@ public class SirController extends BaseController {
 
 
     /**
-     * Vuelve a reencolar un Intercambio, ya enviado previamente
+     * Vuelve a reencolar/reenviar un Intercambio, ya enviado previamente
+     *  Los intercambios se pueden reencolar o reenviar. Se reencolan si se produce un error cuando lo envia LIBSIR,
+     *  se reenvian cuando se ha producido un error en LIBSIR y no se ha creado el asientoBean en LIBSIR
      * @return
      * @throws Exception
      */
     @RequestMapping(value = "/reencolarIntercambio", method = RequestMethod.GET)
     @ResponseBody
     public Boolean reencolarIntercambio(@RequestParam String oficina, @RequestParam String idIntercambio )throws Exception {
-        log.info("LLEGO A REENCOLAR");
         try{
-            AsientoBean asiento =libSirEjb.consultaAsiento(oficina,idIntercambio);//TODO OJO ESTO DESCARGA LOS ANEXOS; NO ES MUY OPTIMO.
-            if(TipoEstadoEnum.PRAE.getCodigo().equals(asiento.getCdEstado()) || TipoEstadoEnum.PRARE.getCodigo().equals(asiento.getCdEstado())) {
-                libSirEjb.reencolarAsiento(oficina, idIntercambio);
+            AsientoBean asiento =libSirEjb.consultaAsiento(oficina,idIntercambio);
+            if(asiento!=null) { //Existe AsientoBean en LIBSIR
+                if (TipoEstadoEnum.PRAE.getCodigo().equals(asiento.getCdEstado()) || TipoEstadoEnum.PRARE.getCodigo().equals(asiento.getCdEstado())) {
+                    libSirEjb.reencolarAsiento(oficina, idIntercambio);
+                    return true;
+                }
+            }else{ //No se ha creado el asientoBean en LIBSIR
+
+                List<Long> registros = oficioRemisionEjb.getEntradasByOficioRemisionIntercambio(idIntercambio);
+                if(registros.size()>0){  //Oficio Remision Entrada
+                    RegistroEntrada registroEntrada = registroEntradaEjb.getConAnexosFull(registros.get(0));
+                    libSirEjb.reenviarRegistro(registroEntrada,RegwebConstantes.REGISTRO_ENTRADA);
+                }else{  //Oficio Remision Salida
+                    registros =  oficioRemisionEjb.getSalidadByOficioRemisionIntercambio(idIntercambio);
+                    RegistroSalida registroSalida = registroSalidaEjb.getConAnexosFull(registros.get(0));
+                    libSirEjb.reenviarRegistro(registroSalida, RegwebConstantes.REGISTRO_SALIDA);
+                }
+
+                return true;
             }
-
-            return true;
-
         }catch ( Exception e){
-            log.info("Error reencolando el intercambio..");
+            log.info("Error reencolando/reenviando el intercambio.." + e.getLocalizedMessage());
             e.printStackTrace();
         }
 

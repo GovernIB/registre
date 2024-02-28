@@ -763,7 +763,7 @@ public class ArxiuCaibUtils {
 
     }
 
-    private Integer getTipoRegistroEni(Long tipoRegistro) throws I18NException{
+    public Integer getTipoRegistroEni(Long tipoRegistro) throws I18NException{
 
         if (tipoRegistro.equals(RegwebConstantes.REGISTRO_ENTRADA)) {
             return 0;

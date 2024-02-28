@@ -14,6 +14,7 @@ import es.caib.regweb3.webapp.form.*;
 import es.caib.regweb3.webapp.utils.AnexoUtils;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import es.gob.ad.registros.sir.interService.bean.AsientoBean;
+import es.gob.ad.registros.sir.interService.exception.InterException;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
@@ -69,6 +70,10 @@ public class RegistroSirController extends BaseController {
 
     @EJB(mappedName = LibSirLocal.JNDI_NAME)
     private LibSirLocal libSirEjb;
+
+    @EJB(mappedName = SchedulerLocal.JNDI_NAME)
+    private SchedulerLocal schedulerEjb;
+
 
 
     /**
@@ -309,7 +314,8 @@ public class RegistroSirController extends BaseController {
 
         // Rechaza el RegistroSir
         try{
-            sirEnvioEjb.rechazarRegistroSir(registroSir, oficinaActiva, usuarioEntidad.getUsuario(), rechazarForm.getObservacionesRechazo());
+
+            sirEnvioEjb.rechazarRegistroSirLIBSIR(registroSir, oficinaActiva, usuarioEntidad.getUsuario(), rechazarForm.getObservacionesRechazo());
 
             Mensaje.saveMessageInfo(request, getMessage("registroSir.rechazo.ok"));
 
@@ -363,7 +369,8 @@ public class RegistroSirController extends BaseController {
         try{
             if(oficinaReenvio != null){//Si han seleccionado oficina de reenvio
                 //Reenviamos
-                sirEnvioEjb.reenviarRegistroSir(registroSir, oficinaReenvio, oficinaActiva,usuarioEntidad.getUsuario(),reenviarForm.getObservaciones());
+                sirEnvioEjb.reenviarRegistroSirLIBSIR(registroSir, oficinaReenvio, oficinaActiva,usuarioEntidad.getUsuario(),reenviarForm.getObservaciones());
+
             }
 
             Mensaje.saveMessageInfo(request, getMessage("registroSir.reenvio.ok"));
@@ -474,31 +481,74 @@ public class RegistroSirController extends BaseController {
     public void anexoRFU(@PathVariable("anexoSirIdFichero") String anexoSirIdFichero, @PathVariable("cdIntercambio") String cdIntercambio, HttpServletRequest request,
                          HttpServletResponse response) throws Exception, I18NException {
 
-
+        Oficina oficinaActiva = getOficinaActiva(request);
+        byte[] data = libSirEjb.contenidoAnexoBean(oficinaActiva.getCodigo(),cdIntercambio,anexoSirIdFichero);
         AnexoSir anexoSir = anexoSirEjb.findByIdFichero(anexoSirIdFichero);
 
-        byte[] data = libSirEjb.obtenerAnexoReferencia(cdIntercambio, anexoSirIdFichero);
-        log.info("Anexo " + data.length);
+        try {
+            AnexoUtils.download(anexoSir.getTipoMIME(), response, anexoSir.getNombreFichero(), data);
+        }catch (InterException ie){
+            ie.printStackTrace();
+        }
 
-        AnexoUtils.download(anexoSir.getTipoMIME(), response, anexoSir.getNombreFichero(), data);
 
 
     }
 
+    //TODO BORRAR SOLO PRUEBAS
     @RequestMapping(value = "/consultarAnexo", method = RequestMethod.GET)
     public String consultarAnexo(HttpServletRequest request,
                                  HttpServletResponse response) throws Exception, I18NException {
 
 
-        AsientoBean asiento = libSirEjb.consultaAsiento("O00006056", "O00002721_22_90000013");
-
+       // AsientoBean asiento = libSirEjb.consultaAsiento("O00006056", "O00002721_22_90000014");
+        AsientoBean asiento = libSirEjb.consultaAsiento("O00006056", "O00009347_23_80000279");
 
         Oficina oficina = oficinaEjb.findByMultiEntidad(asiento.getCdEnRgDestino());
-
-        RegistroSir registroSir = registroSirEjb.crearRegistroSir(asiento, oficina.getOrganismoResponsable().getEntidad());
+        RegistroSir registroSir = registroSirEjb.getRegistroSir(asiento.getCdIntercambio(),asiento.getCdEnRgDestino());
+        if(registroSir == null) {
+             registroSir = registroSirEjb.crearRegistroSir(asiento, oficina.getOrganismoResponsable().getEntidad());
+        }
 
 
         return "redirect:/registroSir/" + registroSir.getId() + "/detalle";
+    }
+
+    @RequestMapping(value = "/consultaPendientes", method = RequestMethod.GET)
+    public String consultarPendientes(HttpServletRequest request,
+                                 HttpServletResponse response) throws Exception, I18NException {
+
+
+        List<AsientoBean> asientos = libSirEjb.consultaAsientosPendientes(10);
+
+        for(AsientoBean asiento:asientos){
+            log.info(" " + asiento.getCdIntercambio());
+        }
+
+
+        log.info("ASIENTOS PENDIENTES " + asientos.size());
+
+
+        return "";
+    }
+
+    //TODO BORRAR SOLO PRUEBAS
+    @RequestMapping(value = "/procesarPendientes", method = RequestMethod.GET)
+    public String procesarPendientes(HttpServletRequest request, HttpServletResponse response) throws Exception, I18NException {
+
+        schedulerEjb.consultarAsientosPendientesSIR();
+
+        return "";
+    }
+
+    //TODO BORRAR SOLO PRUEBAS
+    @RequestMapping(value = "/reencolarPendientes", method = RequestMethod.GET)
+    public String reencolarPendientes(HttpServletRequest request,
+                                      HttpServletResponse response) throws Exception, I18NException {
+
+        schedulerEjb.reencolarAsientos();
+
+        return "";
     }
 
 

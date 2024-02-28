@@ -358,9 +358,10 @@ public class InteresadoController extends BaseController{
 
         Boolean isRepresentante = interesado.getIsRepresentante();
         JsonResponse jsonResponse = new JsonResponse();
+        Entidad entidadActiva = getEntidadActiva(request);
 
         // Validamos el interesado
-        interesado.setEntidad(getEntidadActiva(request).getId());
+        interesado.setEntidad(entidadActiva.getId());
         interesadoValidator.validate(interesado, result);
 
         //Validamos que haya al menos un interesado como receptor de Notificaciones (obligatorio en Sicres 4)

@@ -74,7 +74,7 @@ public interface SirEnvioLocal {
      * @param observaciones
      * @throws I18NException
      */
-    void reenviarIntercambio(Long tipoRegistro, Long idRegistro, Entidad entidad, Oficina oficinaReenvio, Oficina oficinaActiva, UsuarioEntidad usuario, String observaciones) throws I18NException, I18NValidationException;
+    void reenviarIntercambioLIBSIR(Long tipoRegistro, Long idRegistro, Entidad entidad, Oficina oficinaReenvio, Oficina oficinaActiva, UsuarioEntidad usuario, String observaciones) throws I18NException, I18NValidationException, ParseException, InterException, DatatypeConfigurationException;
 
     /**
      * Vuelve a enviar un intercambio que ya había sido enviado previamente
@@ -208,6 +208,6 @@ public interface SirEnvioLocal {
 
     Integer copiarDocumentacionERTE(List<Long> registros, Long idEntidad) throws I18NException;
 
-    List<AnexoFull> gestionAnexosInterdoc(RegistroDetalle registroDetalle, Long idEntidad) throws I18NException;
+    List<AnexoFull> gestionAnexosInterdoc(RegistroDetalle registroDetalle, Entidad entidad, String unTramitacionDestino, String numeroRegistroFormateado, Date fechaRegistro, Long tipoRegistro) throws I18NException;
 }
 

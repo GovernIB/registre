@@ -416,6 +416,16 @@ public class MensajeControlBean extends BaseEjbJPA<MensajeControl, Long> impleme
 
                 break;
 
+            case (RegwebConstantes.OFICIO_SIR_RECHAZADO):
+
+                if (!mensaje.getCodigoError().equals(Errores.ERROR_0039.getValue())) { // Solo modificamos su estado si no es un error 0039
+
+                    oficioRemisionEjb.modificarEstadoError(oficioRemision.getId(), RegwebConstantes.OFICIO_SIR_RECHAZADO_ERROR, mensaje.getCodigoError(), mensaje.getDescripcionMensaje());
+
+                }
+
+                break;
+
             case (RegwebConstantes.OFICIO_SIR_ENVIADO_ERROR):
             case (RegwebConstantes.OFICIO_SIR_REENVIADO_ERROR):
 

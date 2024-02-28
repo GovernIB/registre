@@ -121,6 +121,7 @@ public interface RegwebConstantes {
     /* -------------- FORMATOS --------------*/
     String FORMATO_FECHA = "dd/MM/yyyy";
     String FORMATO_FECHA_HORA = "dd/MM/yyyy HH:mm";
+    String FORMATO_FECHA_SICRES4 = "yyyyMMddHHmmssZ";
     Integer ANY = 2015;
 
     /* -------------- PERMISOS LIBRO REGISTROS --------------*/
@@ -185,11 +186,17 @@ public interface RegwebConstantes {
             TIPO_PERSONA_JURIDICA
     };
 
-
     /* -------------- TIPO INTERESADO --------------*/
     Long TIPO_INTERESADO_ADMINISTRACION = 1L;
     Long TIPO_INTERESADO_PERSONA_FISICA = 2L;
     Long TIPO_INTERESADO_PERSONA_JURIDICA = 3L;
+
+    Map<Long, String> TIPOS_PERSONA_SICRES4 = new HashMap<Long, String>() {{
+        put(TIPO_INTERESADO_ADMINISTRACION, "2" );
+        put(TIPO_INTERESADO_PERSONA_FISICA, "1");
+        put(TIPO_INTERESADO_PERSONA_JURIDICA, "2" );
+
+    }};
 
     Long[] TIPOS_INTERESADO = {
             TIPO_INTERESADO_PERSONA_FISICA,
@@ -202,7 +209,7 @@ public interface RegwebConstantes {
     Long TIPO_ANOTACION_PENDIENTE = 1L;
     Long TIPO_ANOTACION_ENVIO = 2L;
     Long TIPO_ANOTACION_REENVIO = 3L;
-    Long TIPO_ANOTACION_RECHAZO = 4L;
+    Long TIPO_ANOTACION_RECHAZO = 4L; //EN SICRES4 se ha eliminado
 
     Long[] TIPOS_ANOTACION = {
             TIPO_ANOTACION_PENDIENTE, TIPO_ANOTACION_ENVIO,
@@ -234,7 +241,8 @@ public interface RegwebConstantes {
     };
 
     Long[] TIPOS_VALIDEZDOCUMENTO_ARCHIVO = {
-            TIPOVALIDEZDOCUMENTO_COPIA
+            TIPOVALIDEZDOCUMENTO_COPIA,
+            TIPOVALIDEZDOCUMENTO_ORIGINAL
     };
 
     Long[] TIPOS_VALIDEZDOCUMENTO_SCAN = {
@@ -323,6 +331,7 @@ public interface RegwebConstantes {
     int OFICIO_SIR_RECHAZADO_ACK = 10;*/
     int OFICIO_SIR_DEVUELTO = 11;
     int OFICIO_SIR_RECHAZADO = 12;
+    int OFICIO_SIR_RECHAZADO_ERROR = 13;  //TODO REVISAR
     int OFICIO_ANULADO = 13;
 
     Integer[] ESTADOS_OFICIO_REMISION = {
@@ -440,9 +449,9 @@ public interface RegwebConstantes {
     String ENTIDAD_GEOGRAFICA_MUNICIPIO = "01";
 
     /* -------------- CANAL NOTIFICACIÓN --------------*/
-    Long CANAL_DIRECCION_POSTAL = 1L;
-    Long CANAL_DIRECCION_ELECTRONICA = 2L;
-    Long CANAL_COMPARECENCIA_ELECTRONICA = 3L;
+    Long CANAL_DIRECCION_POSTAL = 1L;  //NOTIFICACION EN PAPEL SICRES4
+    Long CANAL_DIRECCION_ELECTRONICA = 2L; //NOTIFICACION POR MEDIOS ELECTRÓNICOS SICRES4
+ //   Long CANAL_COMPARECENCIA_ELECTRONICA = 3L;
 
     /* --------------------TIPO PROPIEDAD GLOBAL ------------------------*/
     long TIPO_PROPIEDAD_GENERAL = 1L;
@@ -540,6 +549,8 @@ public interface RegwebConstantes {
     String REGISTRO_SALIDA_ESCRITO = "Sortida";
     String REGISTRO_ENTRADA_ESCRITO_CASTELLANO = "Entrada";
     String REGISTRO_SALIDA_ESCRITO_CASTELLANO = "Salida";
+    String REGISTRO_ENTRADA_LIBSIR = "0";
+    String REGISTRO_SALIDA_LIBSIR = "1";
 
     /* -------------- TIPO DOCUMENTO IDENTIFICACION --------------*/
     char TIPODOCUMENTOID_NIF = 'N';
@@ -581,18 +592,23 @@ public interface RegwebConstantes {
     /* -------------- CANAL NOTIFICACION --------------*/
     long CANALNOTIFICACION_DIRECCION_POSTAL = 1;
     long CANALNOTIFICACION_DIRECCION_ELECTRONICA_HABILITADA = 2;
-    long CANALNOTIFICACION_COMPARECENCIA_ELECTRONICA = 3;
+   // long CANALNOTIFICACION_COMPARECENCIA_ELECTRONICA = 3;
 
     long[] CANALES_NOTIFICACION = {
             CANALNOTIFICACION_DIRECCION_POSTAL,
-            CANALNOTIFICACION_DIRECCION_ELECTRONICA_HABILITADA,
-            CANALNOTIFICACION_COMPARECENCIA_ELECTRONICA
+            CANALNOTIFICACION_DIRECCION_ELECTRONICA_HABILITADA
+           // CANALNOTIFICACION_COMPARECENCIA_ELECTRONICA
     };
 
     Map<Long, String> CODIGO_BY_CANALNOTIFICACION = new HashMap<Long, String>() {{
         put(CANALNOTIFICACION_DIRECCION_POSTAL, "0" + CANALNOTIFICACION_DIRECCION_POSTAL);
         put(CANALNOTIFICACION_DIRECCION_ELECTRONICA_HABILITADA, "0" + CANALNOTIFICACION_DIRECCION_ELECTRONICA_HABILITADA);
-        put(CANALNOTIFICACION_COMPARECENCIA_ELECTRONICA, "0" + CANALNOTIFICACION_COMPARECENCIA_ELECTRONICA);
+       // put(CANALNOTIFICACION_COMPARECENCIA_ELECTRONICA, "0" + CANALNOTIFICACION_COMPARECENCIA_ELECTRONICA);
+    }};
+
+    Map<Long, String> CODIGO_BY_CANALNOTIFICACION_SICRES4 = new HashMap<Long, String>() {{
+        put(CANALNOTIFICACION_DIRECCION_POSTAL, Long.toString(CANALNOTIFICACION_DIRECCION_POSTAL));
+        put(CANALNOTIFICACION_DIRECCION_ELECTRONICA_HABILITADA, Long.toString(CANALNOTIFICACION_DIRECCION_ELECTRONICA_HABILITADA));
     }};
 
     Map<String, Long> CANALNOTIFICACION_BY_CODIGO = RegwebUtils.invert(CODIGO_BY_CANALNOTIFICACION);
@@ -666,6 +682,41 @@ public interface RegwebConstantes {
 
     Map<String, Long> TIPO_DOCUMENTO_BY_CODIGO_NTI
             = RegwebUtils.invert(CODIGO_SICRES_BY_TIPO_DOCUMENTO);
+
+
+
+    /* -------------TIPO ANEXO -------------------------*/
+    //SICRES4 (tipoAnexo del segmento Anexo, sustituye a tipoDocumento)
+    Long TIPO_ANEXO_JUSTIF_REG = 1L;
+    Long TIPO_ANEXO_DOC_ADJUNTO = 2L;
+    Long TIPO_ANEXO_OTRO = 3L;
+
+    /* -------------TIPO ANEXO SICRES4 -------------------------*/
+    //SICRES4 (tipoAnexo del segmento Anexo, sustituye a tipoDocumento)
+    String TIPO_ANEXO_JUSTIF_REG_SICRES4 = "01";
+    String TIPO_ANEXO_DOC_ADJUNTO_SICRES4 = "02";
+    String TIPO_ANEXO_OTRO_SICRES4 = "03";
+
+    Long[] TIPOS_ANEXO = {
+            TIPO_ANEXO_JUSTIF_REG,
+            TIPO_ANEXO_DOC_ADJUNTO,
+            TIPO_ANEXO_OTRO
+    };
+
+    Map<Long, String> CODIGO_SICRES_BY_TIPO_ANEXO = new HashMap<Long, String>() {{
+        put(TIPO_ANEXO_JUSTIF_REG, "0" + TIPO_ANEXO_JUSTIF_REG);
+        put(TIPO_ANEXO_DOC_ADJUNTO, "0" + TIPO_ANEXO_DOC_ADJUNTO);
+        put(TIPO_ANEXO_OTRO, "0" + TIPO_ANEXO_OTRO);
+    }};
+
+    Map<Long, String> TIPO_DOCUMENTO_TIPO_ANEXO = new HashMap<Long, String>() {{
+        put(TIPO_DOCUMENTO_FORMULARIO, TIPO_ANEXO_DOC_ADJUNTO_SICRES4);
+        put(TIPO_DOCUMENTO_DOC_ADJUNTO, TIPO_ANEXO_DOC_ADJUNTO_SICRES4);
+        put(TIPO_DOCUMENTO_FICHERO_TECNICO, TIPO_ANEXO_OTRO_SICRES4);
+    }};
+
+    Map<String, Long> TIPO_ANEXO_BY_CODIGO_NTI
+            = RegwebUtils.invert(CODIGO_SICRES_BY_TIPO_ANEXO);
 
 
     /* -------- TIPO DOCUMENTACION FISICA ---------- */
@@ -914,4 +965,9 @@ public interface RegwebConstantes {
             SESION_FINALIZADA,
             SESION_ERROR
     };
+
+    /* --------------METADATOS LIBSIR ---------------*/
+    Long METADATO_GENERAL= 0L;
+    Long METADATO_PARTICULAR = 1L;
+    Long METADATO_NTI = 2L;
 }

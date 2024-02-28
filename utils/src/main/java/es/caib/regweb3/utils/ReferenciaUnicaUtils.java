@@ -7,7 +7,6 @@ import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 import javax.xml.ws.BindingProvider;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -23,7 +22,7 @@ public class ReferenciaUnicaUtils {
     public static final Logger log = LoggerFactory.getLogger(ReferenciaUnicaUtils.class);
 
 
-    private static final String OBTENER_REFERENCIA_WS = "interdoc-ws-server/ObtenerReferenciaWsService/ObtenerReferenciaWs";
+    private static final String OBTENER_REFERENCIA_WS = "interdocapi/interna/protected/ObtenerReferenciaWs";
 
 
     /**

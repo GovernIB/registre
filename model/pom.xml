@@ -81,6 +81,12 @@
             <artifactId>jboss-jaxb-api_2.3_spec</artifactId>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>org.fundaciobit.pluginsib.validatesignature</groupId>
+            <artifactId>pluginsib-validatesignature-api</artifactId>
+            <version>${pluginsib-validatesignature-api}</version>
+            <scope>provided</scope>
+        </dependency>
 
     </dependencies>
 </project>

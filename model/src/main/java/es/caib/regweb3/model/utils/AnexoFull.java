@@ -9,6 +9,7 @@ import es.caib.regweb3.model.TipoDocumental;
 import es.caib.regweb3.utils.RegwebConstantes;
 import org.fundaciobit.plugins.documentcustody.api.DocumentCustody;
 import org.fundaciobit.plugins.documentcustody.api.SignatureCustody;
+import org.fundaciobit.plugins.validatesignature.api.ValidateSignatureConstants;
 import org.fundaciobit.pluginsib.core.utils.Metadata;
 
 import javax.persistence.Transient;
@@ -473,6 +474,46 @@ public class AnexoFull{
     public String getHash(){
 
         return org.apache.commons.codec.binary.StringUtils.newStringUtf8(anexo.getHash());
+    }
+
+
+    /**
+     * Transforma el Tipo Firma obtenido tras realizar la Validación de la Firma al código NTI correspondiente
+     * La transformación al tipo de Firma que espera DISTRIBUCIÓ se obtiene de la combinación de los siguientes campos de anexo
+     * getAnexo().getSignType() y getAnexo().getSignFormat();
+     *
+     * @param anexo
+     * @return
+     */
+    public  String transformarTipoFirma(Anexo anexo) {
+
+        if (ValidateSignatureConstants.SIGNTYPE_XAdES.equals(anexo.getSignType()) && (ValidateSignatureConstants.SIGNFORMAT_EXPLICIT_DETACHED.equals(anexo.getSignFormat())
+                || ValidateSignatureConstants.SIGNFORMAT_EXPLICIT_EXTERNALLY_DETACHED.equals(anexo.getSignFormat()))) {//TF02
+            return RegwebConstantes.CODIGO_NTI_BY_TIPOFIRMA.get(RegwebConstantes.TIPO_FIRMA_XADES_DETACHED_SIGNATURE);
+
+        } else if (ValidateSignatureConstants.SIGNTYPE_XAdES.equals(anexo.getSignType()) && (ValidateSignatureConstants.SIGNFORMAT_IMPLICIT_ENVELOPING_ATTACHED.equals(anexo.getSignFormat())
+                || ValidateSignatureConstants.SIGNFORMAT_IMPLICIT_ENVELOPED_ATTACHED.equals(anexo.getSignFormat()))) { //TF03
+            return RegwebConstantes.CODIGO_NTI_BY_TIPOFIRMA.get(RegwebConstantes.TIPO_FIRMA_XADES_ENVELOPE_SIGNATURE);
+
+        } else if (ValidateSignatureConstants.SIGNTYPE_CAdES.equals(anexo.getSignType()) && (ValidateSignatureConstants.SIGNFORMAT_EXPLICIT_DETACHED.equals(anexo.getSignFormat())
+                || ValidateSignatureConstants.SIGNFORMAT_EXPLICIT_EXTERNALLY_DETACHED.equals(anexo.getSignFormat()))) {//TF04
+            return RegwebConstantes.CODIGO_NTI_BY_TIPOFIRMA.get(RegwebConstantes.TIPO_FIRMA_CADES_DETACHED_EXPLICIT_SIGNATURE);
+
+        } else if (ValidateSignatureConstants.SIGNTYPE_CAdES.equals(anexo.getSignType()) && ValidateSignatureConstants.SIGNFORMAT_IMPLICIT_ENVELOPING_ATTACHED.equals(anexo.getSignFormat())) { //TF05
+            return RegwebConstantes.CODIGO_NTI_BY_TIPOFIRMA.get(RegwebConstantes.TIPO_FIRMA_CADES_ATTACHED_IMPLICIT_SIGNAUTRE);
+
+        } else if (ValidateSignatureConstants.SIGNTYPE_PAdES.equals(anexo.getSignType())) {//TF06
+            return RegwebConstantes.CODIGO_NTI_BY_TIPOFIRMA.get(RegwebConstantes.TIPO_FIRMA_PADES);
+
+        } else if (ValidateSignatureConstants.SIGNTYPE_ODF.equals(anexo.getSignType())) { //TF08
+            return RegwebConstantes.CODIGO_NTI_BY_TIPOFIRMA.get(RegwebConstantes.TIPO_FIRMA_ODF);
+
+        } else if (ValidateSignatureConstants.SIGNTYPE_OOXML.equals(anexo.getSignType())) { //TF09
+            return RegwebConstantes.CODIGO_NTI_BY_TIPOFIRMA.get(RegwebConstantes.TIPO_FIRMA_OOXML);
+        }
+
+
+        return null;
     }
 
 }

@@ -103,6 +103,10 @@ public interface OficioRemisionLocal extends BaseEjb<OficioRemision, Long> {
      */
     List<RegistroEntrada> getEntradasByOficioRemision(Long idOficioRemision) throws I18NException;
 
+    List<Long> getEntradasByOficioRemisionIntercambio(String idIntercambio) throws I18NException;
+
+    List<Long> getSalidadByOficioRemisionIntercambio(String idIntercambio) throws I18NException;
+
     /**
      * Obtiene los Oficios de Remisión de un determinado Estado y Entidad
      *
@@ -252,7 +256,7 @@ public interface OficioRemisionLocal extends BaseEjb<OficioRemision, Long> {
      */
     void aceptarOficioSir(OficioRemision oficio, String codigoEntidadRegistralOrigen, String decodificacionEntidadRegistralOrigen, String numeroRegistroDestino, Date fechaRegistroDestino) throws I18NException;
 
-    void marcarRechazadoOficioSir(OficioRemision oficio, String codigoEntidadRegistralOrigen, String tipoMensaje, String descripcionMensaje, String identificadorIntercambio) throws I18NException;
+    void marcarRechazadoOficioSir(OficioRemision oficio, String codigoEntidadRegistralOrigen, String identificadorIntercambio) throws I18NException;
 
     /**
      * Busca los Números de Registro Formateados de los Registros de Entrada que pertenecen a un OficioRemision

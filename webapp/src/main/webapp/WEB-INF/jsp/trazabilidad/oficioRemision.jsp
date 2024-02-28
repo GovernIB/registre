@@ -73,16 +73,19 @@
                 </p>
             </c:if>
 
-            <%--Tipo intercambio (Tipo anotación)  {Envío, Reenvío, Rechazo} --%>
-            <p>
-                <small><i class="fa fa-send"></i> <strong><spring:message code="registroSir.tipoIntercambio"/>: <spring:message code="registroSir.tipoAnotacion.${tipoAnotacion}"/></strong></small>
-            </p>
 
-            <%--Motivo intercambio (Descripción Tipo anotación) --%>
-            <c:if test="${tipoAnotacion != RegwebConstantes.TIPO_ANOTACION_ENVIO}">
+            <c:if test="${oficioRemision.estado != RegwebConstantes.OFICIO_SIR_RECHAZADO }"> <%-- SICRES4 se ha eliminado el tipoAnotacion RECHAZO --%>
+                <%--Tipo intercambio (Tipo anotación)  {Envío, Reenvío, Rechazo} --%>
                 <p>
-                    <small><i class="fa fa-file-text-o"></i> <strong><spring:message code="registroSir.motivo"/>:</strong> ${decodificacionTipoAnotacion}</small>
+                    <small><i class="fa fa-send"></i> <strong><spring:message code="registroSir.tipoIntercambio"/>: <spring:message code="registroSir.tipoAnotacion.${tipoAnotacion}"/></strong></small>
                 </p>
+
+                <%--Motivo intercambio (Descripción Tipo anotación) --%>
+                <c:if test="${tipoAnotacion != RegwebConstantes.TIPO_ANOTACION_ENVIO}">
+                    <p>
+                        <small><i class="fa fa-file-text-o"></i> <strong><spring:message code="registroSir.motivo"/>:</strong> ${decodificacionTipoAnotacion}</small>
+                    </p>
+                </c:if>
             </c:if>
 
             <%--Estado --%>
