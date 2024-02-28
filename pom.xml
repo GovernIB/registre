@@ -43,7 +43,7 @@
         <pluginsib.userinformation.api.version>3.0.0</pluginsib.userinformation.api.version>
         <pluginsib.userinformation.version>3.0.0-SNAPSHOT</pluginsib.userinformation.version>
         <pluginsib.userinformation-keycloak.version>3.0.0-SNAPSHOT</pluginsib.userinformation-keycloak.version>
-        <dir3caib-ws-api.version>1.1.0</dir3caib-ws-api.version>
+        <dir3caib-ws-api.version>1.1.1</dir3caib-ws-api.version>
         <carpeta-api-interna-client.version>1.1</carpeta-api-interna-client.version>
         <scanweb.api.version>4.0.0</scanweb.api.version>
         <cxf.version>3.3.3</cxf.version>
