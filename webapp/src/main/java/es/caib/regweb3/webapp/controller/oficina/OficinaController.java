@@ -155,6 +155,29 @@ public class OficinaController extends BaseController {
     }
 
     /**
+     * Carga el formulario para ver el detalle de un {@link es.caib.regweb3.model.RegistroEntrada}
+     */
+    @RequestMapping(value = "/{idOficina}/gestionarOficinaLibSir", method = RequestMethod.GET)
+    public String gestionarOficinaLibSir(@PathVariable Long idOficina, HttpServletRequest request) throws Exception{
+
+        try{
+            Boolean activa = oficinaEjb.gestionarOficinaLibSir(idOficina);
+
+            if(activa){
+                Mensaje.saveMessageInfo(request, getMessage("oficina.desactivarLibSir.ok"));
+            }else{
+                Mensaje.saveMessageInfo(request, getMessage("oficina.activarLibSir.ok"));
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
+            Mensaje.saveMessageError(request,getMessage("regweb.error.general"));
+        }
+
+        return "redirect:/oficina/"+idOficina+"/detalle";
+    }
+
+    /**
      * Exporta un listado de usuarios por Oficina
      */
     @RequestMapping(value = "/{idOficina}/usuarios", method = RequestMethod.GET)

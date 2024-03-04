@@ -83,8 +83,19 @@
                                     </c:forEach>
                                 </ul>
                             </dd>
-
                             <dt><i class="fa fa-home"></i> <spring:message code="oficina.localidad"/>: </dt> <dd> ${oficina.localidad.nombre}</dd>
+                            <dt><i class="fa fa-bookmark"></i> LIBSIR: </dt>
+                            <dd>
+                                <c:choose>
+                                    <c:when test="${oficina.activaLibSir}">
+                                        <span class="label label-success"><spring:message code="cola.activa" /></span>
+                                    </c:when>
+                                    <c:when test="${not oficina.activaLibSir}">
+                                        <span class="label label-danger">Inactiva</span>
+                                    </c:when>
+                                </c:choose>
+                            </dd>
+
                         </dl>
                     </div>
                     <form:form modelAttribute="oficina" method="post" cssClass="form-horizontal">
@@ -121,6 +132,19 @@
                             <input type="button" value="<spring:message code="regweb.cancelar"/>" onclick="goTo('<c:url value="/oficina/list"/>')" class="btn btn-danger btn-sm"/>
                         </div>
                     </form:form>
+                    <%--LIBSIR--%>
+                    <div class="panel-footer center">
+                        <div class="btn-group">
+                            <button type="button" onclick="confirm('<c:url value="/oficina/${oficina.id}/gestionarOficinaLibSir"/>', '<spring:message code="regweb.continuar" htmlEscape="true"/>')" class="btn btn-primary btn-sm">
+                                <c:if test="${oficina.activaLibSir}">
+                                    <spring:message code="oficina.desactivarLibSir"/>
+                                </c:if>
+                                <c:if test="${not oficina.activaLibSir}">
+                                    <spring:message code="oficina.activarLibSir"/>
+                                </c:if>
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
             <!-- Fin Panel Lateral -->
