@@ -479,8 +479,16 @@ public class AnexoScanController extends AnexoController {
 
         //Tratamiento de los documentos obtenidos del escaner
         if (scanWebResult != null && scanWebResult.getScannedDocuments().size() != 0) {
-
             docsEscaneados = scanWebResult.getScannedDocuments();
+            docsEscaneados.get(0).getScannedPlainFile().setLength(-1);
+            docsEscaneados.get(0).getScannedSignedFile().setLength(-1);
+            //Al escanear un documento con DIGITALIB controlar que tenga un tamaño real y contenido. #649
+            for(ScanWebDocument docEscaneado: docsEscaneados){
+                if (docEscaneado.getScannedPlainFile().getLength()<=0 && docEscaneado.getScannedSignedFile().getLength()<=0){
+                    log.error("S'ha produït un error desconegut en el procés d'escaneig. Qualque fitxer està buit");
+                    throw new I18NException("anexo.perfilscan.error", new I18NArgumentString("S'ha produït un error desconegut en el procés d'escaneig. Qualque fitxer està buit"));
+                }
+            }
 
         }else{
             if (scanWebResult.getScannedDocuments().size() == 0) {
