@@ -421,7 +421,12 @@ public class LibSirUtils {
                 if (anexoFull != null) {
                     es.gob.ad.registros.sir.interService.bean.AnexoBean anexoBean;
                     Anexo anexo = anexoFull.getAnexo();
-                    anexoBean = transformarAnexo(anexo, secuencia, identificadorIntercambio, anexoFull.getMime());
+                    //Arreglar el tipo Mime
+                    if(anexo.getModoFirma() == MODO_FIRMA_ANEXO_DETACHED){
+                        anexoBean = transformarAnexo(anexo, secuencia, identificadorIntercambio, anexoFull.getSignMime());
+                    }else{
+                        anexoBean = transformarAnexo(anexo, secuencia, identificadorIntercambio, anexoFull.getMime());
+                    }
                     secuencia++;
                     anexoBeans.add(anexoBean);
                 }
@@ -634,7 +639,6 @@ public class LibSirUtils {
         obtenerReferenciaRequestInfo.setEntitatId(entidad.getCodigoDir3());
 
         obtenerReferenciaRequestInfo.setOrigen(anexo.getOrigenCiudadanoAdmin().toString());
-        //TODO DESCOMENTAR CUANDO VOLVAMOS A GUARDAR VALIDEZ DOCUMENTO
         obtenerReferenciaRequestInfo.setEstatElaboracio(RegwebConstantes.CODIGO_NTI_BY_TIPOVALIDEZDOCUMENTO.get(anexo.getValidezDocumento()));
         obtenerReferenciaRequestInfo.setTipusDocumental(anexo.getTipoDocumental().getCodigoNTI());
 
@@ -711,7 +715,6 @@ public class LibSirUtils {
 
             //Se envia el documento/codigodir3 del interesado
             obtenerReferenciaRequestInfo.getInteressats().add(documentoInteresado);
-            //obtenerReferenciaRequestInfo.setCsv(new Timestamp(anexo.getFechaCaptura().getTime()).toString());
             obtenerReferenciaRequestInfo.setCsv(anexoFull.getAnexo().getCsv());
 
 
