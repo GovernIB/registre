@@ -19,4 +19,4 @@ alter table RWE_ANEXO_SIR add ENTIDAD int8;
 alter table RWE_ANEXO_SIR add constraint RWE_ANEXOSIR_ENTIDAD_FK foreign key (ENTIDAD) references RWE_ENTIDAD;
 
 --Nuevo campo usuario OAMR
-ALTER TABLE RWE_USUARIO_ENTIDAD add OAMR boolean DEFAULT 0 not null;
+ALTER TABLE RWE_USUARIO_ENTIDAD add OAMR boolean DEFAULT false not null;
