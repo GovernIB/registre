@@ -64,30 +64,35 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
         public void onStartPage(PdfWriter writer, Document document) {
 
             try{
-                // Regweb3
+
                 ClassLoader classLoader = getClass().getClassLoader();
-                InputStream fileRW = classLoader.getResourceAsStream("img/logo-regweb3.jpg");
                 PdfContentByte cb = writer.getDirectContent();
+
+                // Logo Entitat
+                Image logoGovern = Image.getInstance(rutaImatge);
+                if(logoGovern != null) {
+                    logoGovern.setAlignment(Element.ALIGN_LEFT);
+                    logoGovern.scaleToFit(fitWidth, fitHeight);
+                    logoGovern.setAbsolutePosition(35f, 780f);
+
+                    Paragraph parrafo = new Paragraph("");
+                    parrafo.setAlignment(Element.ALIGN_LEFT);
+                    document.add(parrafo);
+                    document.add(logoGovern);
+                }
+
+                // Logo REGWEB3
+                InputStream fileRW = classLoader.getResourceAsStream("img/logo-regweb3.jpg");
                 Image logoRW = Image.getInstance(cb, ImageIO.read(fileRW), 1);
-                logoRW.setAlignment(Element.ALIGN_LEFT);
-                logoRW.scaleToFit(100, 110);
-                logoRW.setAbsolutePosition(35f, 790f);
+                logoRW.setAlignment(Element.ALIGN_RIGHT);
+                logoRW.scaleToFit(80, 90);
+                logoRW.setAbsolutePosition(250f, 780f);
 
                 Paragraph parrafo = new Paragraph("");
                 parrafo.setAlignment(Element.ALIGN_LEFT);
                 document.add(parrafo);
                 document.add(logoRW);
-                // Logo Entitat
-                Image logoGovern = Image.getInstance(rutaImatge);
-                if(logoGovern != null) {
-                    logoGovern.setAlignment(Element.ALIGN_RIGHT);
-                    logoGovern.scaleToFit(fitWidth, fitHeight);
-                    logoGovern.setAbsolutePosition(160f, 780f);
-                    parrafo = new Paragraph("");
-                    parrafo.setAlignment(Element.ALIGN_LEFT);
-                    document.add(parrafo);
-                    document.add(logoGovern);
-                }
+
                 // Sir
                 if(sir) {
                     InputStream fileSIR = classLoader.getResourceAsStream("img/SIR_petit.jpg");
