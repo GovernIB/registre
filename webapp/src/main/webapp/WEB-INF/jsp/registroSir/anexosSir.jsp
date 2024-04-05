@@ -32,35 +32,23 @@
                     </c:if>
 
                     <c:if test="${not empty anexosSirFull}">
-                        <table id="anexos" class="table table-bordered table-hover table-striped tablePad2">
-                            <colgroup>
-                                <col>
-                                <col>
-                                <c:if test="${registroSir.estado == 'RECIBIDO'}">
-                                    <col>
-                                    <col>
-                                    <col>
-                                </c:if>
-                                <col>
-                                <col>
-                            </colgroup>
+                        <table id="anexos" class="table table-bordered table-hover table-striped">
                             <thead>
-                            <tr>
-                                <th><spring:message code="anexo.titulo"/></th>
-                                <%--<th><spring:message code="anexo.tamano"/></th>--%>
-                                <c:if test="${registroSir.estado == 'RECIBIDO'}">
-                                    <th><spring:message code="anexo.sir.validezDocumento"/></th>
-                                    <th><spring:message code="anexo.origen"/></th>
-                                    <th><spring:message code="anexo.tipoDocumental"/></th>
-                                </c:if>
-                                <th class="center">Doc</th>
-                                <th class="center">Firma</th>
-                            </tr>
+                                <tr>
+                                    <th><spring:message code="anexo.titulo"/></th>
+                                    <c:if test="${registroSir.estado == 'RECIBIDO'}">
+                                        <th><spring:message code="anexo.sir.validezDocumento"/></th>
+                                        <th><spring:message code="anexo.origen"/></th>
+                                        <th><spring:message code="anexo.tipoDocumental"/></th>
+                                    </c:if>
+                                    <th class="center" width="95"><spring:message code="regweb.acciones"/></th>
+                                </tr>
                             </thead>
 
                             <tbody>
 
                             <c:forEach var="anexo" items="${anexosSirFull}" varStatus="status">
+
                                 <tr id="anexo${anexo.documento.id}">
                                     <td class="ajustTamanySir">
                                         <a data-toggle="modal" href="#detalleAnexoSir${anexo.documento.id}">
@@ -72,7 +60,6 @@
                                             </c:if>
                                         </a>
                                     </td>
-                                    <%--<td>${anexo.documento.tamano} KB</td>--%>
 
                                         <%-- Gestionamos los campos NTI que no vienen informados por SICRES.
                                              Si el anexo es "FICHERO INTERNO" se deshabilitan los selects de los campos NTI
@@ -98,7 +85,6 @@
                                             <td class="ajustTamanySir"><spring:message code="tipoValidezDocumento.${RegwebConstantes.TIPOVALIDEZDOCUMENTO_BY_CODIGO_SICRES[anexo.documento.validezDocumento]}"/></td>
                                         </c:if>
 
-
                                         <td class="ajustTamanySir">
                                             <select id="camposNTIs[${status.index}].idOrigen" name="camposNTIs[${status.index}].idOrigen" class="chosen-select"
                                                     <c:if test="${anexo.documento.tipoDocumento == RegwebConstantes.CODIGO_SICRES_BY_TIPO_DOCUMENTO[RegwebConstantes.TIPO_DOCUMENTO_FICHERO_TECNICO] }">disabled</c:if>>
@@ -118,38 +104,54 @@
                                         </td>
                                     </c:if>
 
-                                    <c:if test="${not anexo.documento.purgado}">
-                                        <td class="center ajustTamanySir">
-                                            <a class="btn btn-success btn-sm" href="<c:url value="/archivo/${anexo.documento.anexo.id}"/>"
-                                                     target="_blank" title="<spring:message code="anexo.descargar"/>"><span class="fa fa-download"></span></a>
-                                        </td>
-                                    </c:if>
+                                   <%--BOTONERA ANEXO--%>
 
-                                    <c:if test="${anexo.documento.purgado}">
-                                        <td class="center ajustTamanySir">
-                                            <a href="javascript:void(0);" class="btn btn-success disabled btn-sm" title="<spring:message code="registroSir.anexo.eliminado"/>"><span class="fa fa-download"></span></a>
-                                        </td>
-                                    </c:if>
+                                    <td class="center">
+                                        <%--Anexos sin purgar--%>
+                                        <c:if test="${not anexo.documento.purgado}">
+                                            <%--Visor Anexo--%>
+                                            <c:if test="${anexo.documento.tipoMIME == RegwebConstantes.MIME_PDF}">
 
-                                    <td class="center ajustTamanySir">
-                                        <c:if test="${not empty anexo.firma}">
+                                                <a data-toggle="modal" class="btn btn-info btn-default btn-xs" href="#visorAnexo${anexo.documento.anexo.id}"
+                                                   title="<spring:message code="anexo.visualizar"/>"><span class="fa fa-search"></span></a>
 
-                                            <c:if test="${not anexo.documento.purgado}">
-                                                <a class="btn btn-info btn-default btn-sm" href="<c:url value="/archivo/${anexo.firma.anexo.id}"/>"
-                                                   target="_blank" title="<spring:message code="anexo.tipofirma.detached"/>"><span class="fa fa-download"></span></a>
+                                                <div id="visorAnexo${anexo.documento.anexo.id}" class="modal fade" role="dialog">
+                                                    <div class="modal-dialog modal-lg">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                                                                <h3 class="modal-title"><spring:message code="anexo.visualizar"/>: ${anexo.documento.nombreFichero}</h3>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <object type="${anexo.documento.tipoMIME}" data="<c:url value="/archivo/${anexo.documento.anexo.id}/false"/>" width="100%" height="700"></object>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
                                             </c:if>
-
-                                            <c:if test="${anexo.documento.purgado}">
-                                                <a href="javascript:void(0);" class="btn btn-info disabled btn-sm" title="<spring:message code="registroSir.anexo.eliminado"/>"><span class="fa fa-download"></span></a>
+                                            <%--Descarga Anexo--%>
+                                            <a class="btn btn-success btn-xs" href="<c:url value="/archivo/${anexo.documento.anexo.id}"/>" target="_blank" title="<spring:message code="anexo.descargar"/>"><span class="fa fa-download"></span></a>
+                                            <%--Descarga Firma--%>
+                                            <c:if test="${not empty anexo.firma}">
+                                                <a class="btn btn-info btn-xs" href="<c:url value="/archivo/${anexo.firma.anexo.id}"/>" target="_blank" title="<spring:message code="anexo.tipofirma.detached"/>"><span class="fa fa-key"></span></a>
                                             </c:if>
-
-
                                         </c:if>
+
+                                        <%--Anexos purgados--%>
+                                        <c:if test="${anexo.documento.purgado}">
+                                            <a href="javascript:void(0);" class="btn btn-success disabled btn-xs" title="<spring:message code="registroSir.anexo.eliminado"/>"><span class="fa fa-download"></span></a>
+                                            <c:if test="${not empty anexo.firma}">
+                                                <a href="javascript:void(0);" class="btn btn-info disabled btn-xs" title="<spring:message code="registroSir.anexo.eliminado"/>"><span class="fa fa-key"></span></a>
+                                            </c:if>
+                                        </c:if>
+
+                                        <%--Información de la firma (sin firma o attached)--%>
                                         <c:if test="${empty anexo.firma && anexo.tieneFirma}">
-                                            <p rel="popupAbajo" data-content="<spring:message code="anexo.tipofirma.attached"/>" data-toggle="popover"><span class="label label-success">Si</span></p>
+                                            <span class="label label-success" rel="popupAbajo" data-content="<spring:message code="anexo.tipofirma.attached"/>" data-toggle="popover"><i class="fa fa-key"></i></span>
                                         </c:if>
                                         <c:if test="${empty anexo.firma && !anexo.tieneFirma}">
-                                            <span class="label label-danger">No</span>
+                                            <span class="label label-danger" rel="popupAbajo" data-content="<spring:message code="anexo.tipofirma.sinfirma"/>" data-toggle="popover"><i class="fa fa-key"></i></span>
                                         </c:if>
                                     </td>
 
@@ -167,6 +169,7 @@
     </div>
 </div>
 
+<%--Detalle de cada anexo sir--%>
 <c:forEach var="anexoSir" items="${anexosSirFull}" varStatus="status">
 
     <div id="detalleAnexoSir${anexoSir.documento.id}" class="modal fade">

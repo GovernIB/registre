@@ -6,8 +6,7 @@
     <div class="modal-dialog modal-lg" id="formularioAnexo">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true" onclick="limpiarAnexoDetalle()">x
-                </button>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true" onclick="limpiarAnexoDetalle()">x</button>
                 <h3 id="anexoTitulo"></h3>
             </div>
 
@@ -132,5 +131,6 @@
     tradsanexo['tipoValidezDocumento.4'] = "<spring:message code='tipoValidezDocumento.4' javaScriptEscape='true' />";
     tradsanexo['anexo.origen.0'] = "<spring:message code='anexo.origen.0' javaScriptEscape='true' />";
     tradsanexo['anexo.origen.1'] = "<spring:message code='anexo.origen.1' javaScriptEscape='true' />";
+    tradsanexo['anexo.detalle'] = "<spring:message code='anexo.detalle' javaScriptEscape='true' />";
 
 </script>

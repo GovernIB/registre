@@ -17,7 +17,7 @@ function obtenerAnexo(idAnexo, idEntidad){
 
         success: function(anexoFull) {
 
-            $('#anexoTitulo').html(anexoFull.anexo.titulo);
+            $('#anexoTitulo').html(tradsanexo['anexo.detalle']+": "+anexoFull.anexo.titulo);
             $('#titulo').html(anexoFull.anexo.titulo);
             $('#validezDocumento').html(tradsanexo['tipoValidezDocumento.'+anexoFull.anexo.validezDocumento]);
             $('#tipoDocumento').html(tradsanexo['tipoDocumento.0'+anexoFull.anexo.tipoDocumento]);
@@ -67,6 +67,8 @@ function limpiarAnexoDetalle(){
     $('#perfilFirma').html('');
     $('#formatoFirma').html('');
     $('#nombreFichero').html('');
+    $('#hash').html('');
+    $('#tipoDocumental').html('');
 
 }
 

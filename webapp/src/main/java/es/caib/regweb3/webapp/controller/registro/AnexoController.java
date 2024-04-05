@@ -2,7 +2,10 @@ package es.caib.regweb3.webapp.controller.registro;
 
 import es.caib.plugins.arxiu.api.Document;
 import es.caib.plugins.arxiu.api.IArxiuPlugin;
-import es.caib.regweb3.model.*;
+import es.caib.regweb3.model.Anexo;
+import es.caib.regweb3.model.Entidad;
+import es.caib.regweb3.model.RegistroEntrada;
+import es.caib.regweb3.model.RegistroSalida;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.model.utils.AnexoSimple;
 import es.caib.regweb3.persistence.ejb.AnexoLocal;
@@ -290,33 +293,56 @@ public class AnexoController extends BaseController {
 
 
     /**
-     * Función que nos permite mostrar el contenido de un anexo
+     * Función que nos permite descargar un anexo
      *
      * @param anexoId identificador del anexo
      */
-    @RequestMapping(value = "/descargarDocumento/{anexoId}", method = RequestMethod.GET)
-    public void anexo(@PathVariable("anexoId") Long anexoId, HttpServletRequest request,
-                      HttpServletResponse response) throws Exception, I18NException {
+    @RequestMapping(value = "/descargar/{anexoId}", method = RequestMethod.GET)
+    public void descargar(@PathVariable("anexoId") Long anexoId, HttpServletRequest request, HttpServletResponse response) throws Exception, I18NException {
 
-        AnexoFull anexoFull = anexoEjb.getAnexoFullLigero(anexoId, getEntidadActiva(request).getId());
-        fullDownload(anexoFull.getAnexo(), anexoFull.getDocumentoCustody().getMime(), false, response, getEntidadActiva(request).getId(), false);
+        descargar(anexoId,true, request, response);
     }
 
     /**
-     * Función que nos permite mostrar el contenido de un firma de un anexo
+     * Función que nos permite descargar o visualizar un anexo
+     *
+     * @param anexoId identificador del anexo
+     * @param attachment Indica si el Content-Disposition será attachment o inline
+     */
+    @RequestMapping(value = "/descargar/{anexoId}/{attachment}", method = RequestMethod.GET)
+    public void descargar(@PathVariable("anexoId") Long anexoId, @PathVariable("attachment") Boolean attachment, HttpServletRequest request, HttpServletResponse response) throws Exception, I18NException {
+
+        AnexoFull anexoFull = anexoEjb.getAnexoFullLigero(anexoId, getEntidadActiva(request).getId());
+
+        if(anexoFull.getAnexo().getModoFirma() == RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA || anexoFull.getAnexo().getModoFirma() == RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED){
+
+            fullDownload(anexoFull.getAnexo(), anexoFull.getDocumentoCustody().getMime(), false, response, getEntidadActiva(request).getId(), false, attachment);
+
+        }else if(anexoFull.getAnexo().getModoFirma() == RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED) {
+
+            if (anexoFull.getSignatureCustody() == null) {//Api antigua, hay que descargar el document custody
+                fullDownload(anexoFull.getAnexo(), anexoFull.getDocumentoCustody().getMime(), false, response, getEntidadActiva(request).getId(), true, attachment);
+            } else {
+                fullDownload(anexoFull.getAnexo(), anexoFull.getSignatureCustody().getMime(), true, response, getEntidadActiva(request).getId(), true, attachment);
+            }
+        }
+
+    }
+
+    /**
+     * Función que nos permite mostrar el contenido de un firma detached de un anexo
      *
      * @param anexoId identificador del anexo
      */
-    @RequestMapping(value = "/descargarFirma/{anexoId}/{original}", method = RequestMethod.GET)
-    public void firma(@PathVariable("anexoId") Long anexoId, @PathVariable("original") Boolean original, HttpServletRequest request,
-                      HttpServletResponse response) throws Exception, I18NException {
+    @RequestMapping(value = "/descargarFirmaDetached/{anexoId}", method = RequestMethod.GET)
+    public void descargarFirmaDetached(@PathVariable("anexoId") Long anexoId, HttpServletRequest request, HttpServletResponse response) throws Exception, I18NException {
 
         AnexoFull anexo = anexoEjb.getAnexoFullLigero(anexoId, getEntidadActiva(request).getId());
         //Parche para la api de custodia antigua que se guardan los documentos firmados (modofirma == 1 Attached) en DocumentCustody.
         if (anexo.getSignatureCustody() == null) {//Api antigua, hay que descargar el document custody
-            fullDownload(anexo.getAnexo(), anexo.getDocumentoCustody().getMime(), false, response, getEntidadActiva(request).getId(), original);
+            fullDownload(anexo.getAnexo(), anexo.getDocumentoCustody().getMime(), false, response, getEntidadActiva(request).getId(), true, true);
         } else {
-            fullDownload(anexo.getAnexo(), anexo.getSignatureCustody().getMime(), true, response, getEntidadActiva(request).getId(), original);
+            fullDownload(anexo.getAnexo(), anexo.getSignatureCustody().getMime(), true, response, getEntidadActiva(request).getId(), true, true);
         }
 
     }
@@ -339,7 +365,7 @@ public class AnexoController extends BaseController {
 
         ScanWebPlainFile separador = scanWebModuleEjb.obtenerDocumentoSeparador(entidadActiva.getId(), languageUI);
 
-        download(separador.getMime(), response, separador.getName(),separador.getData());
+        download(separador.getMime(), response, separador.getName(),separador.getData(), true);
 
     }
 
@@ -366,7 +392,7 @@ public class AnexoController extends BaseController {
             Document justificante = arxiuCaibUtils.getDocumento(anexo.getCustodiaID(), null, true, original);
 
             if(justificante != null){
-                download(justificante.getContingut().getTipusMime(), response, justificante.getNom(),justificante.getContingut().getContingut());
+                download(justificante.getContingut().getTipusMime(), response, justificante.getNom(),justificante.getContingut().getContingut(), true);
             }else {
                 Mensaje.saveMessageError(request, getMessage("justificante.noExiste", anexo.getCustodiaID()));
                 response.sendRedirect("/regweb3/inici");
@@ -380,10 +406,10 @@ public class AnexoController extends BaseController {
             //Parche para la api de custodia antigua que se guardan los documentos firmados (modofirma == 1 Attached) en DocumentCustody.
             if (anexoFull.getSignatureCustody() == null) {//Api antigua, hay que descargar el document custody
                 fullDownload(anexoFull.getAnexo(), anexoFull.getDocumentoCustody().getMime(),
-                        false, response, getEntidadActiva(request).getId(), original);
+                        false, response, getEntidadActiva(request).getId(), original, true);
             } else {
                 fullDownload(anexoFull.getAnexo(), anexoFull.getSignatureCustody().getMime(),
-                        true, response, getEntidadActiva(request).getId(), original);
+                        true, response, getEntidadActiva(request).getId(), original, true);
             }
         }
     }
@@ -401,7 +427,7 @@ public class AnexoController extends BaseController {
      * Por tanto cuando vaya a recuperar un documento con firma antiguo, mirarà en SignatureCustody y no lo encontrará, por tanto controlamos ese caso y devolvemos false.
      * para poder ir a buscarlo a DocumentCustody, que es donde estará. (todo esto se hace en el método firma)
      */
-    private void fullDownload(Anexo anexo, String contentType, boolean firma, HttpServletResponse response, Long idEntidad, boolean original) {
+    private void fullDownload(Anexo anexo, String contentType, boolean firma, HttpServletResponse response, Long idEntidad, boolean original, boolean attachment) {
 
         String filename = null;
         OutputStream output;
@@ -429,7 +455,7 @@ public class AnexoController extends BaseController {
                     }
                 }
 
-                download(contentType, response, filename, data);
+                download(contentType, response, filename, data, attachment);
             }
         } catch (I18NException i18ne) {
             log.error(I18NUtils.getMessage(i18ne), i18ne);
@@ -455,7 +481,7 @@ public class AnexoController extends BaseController {
         String contentType = anexoForm.getDocumentoCustody().getMime();
         String filename = anexoForm.getDocumentoCustody().getName();
 
-        download(contentType, response, filename, data);
+        download(contentType, response, filename, data, true);
     }
 
 
@@ -471,7 +497,7 @@ public class AnexoController extends BaseController {
         String contentType = anexoForm.getSignatureCustody().getMime();
         String filename = anexoForm.getSignatureCustody().getName();
 
-        download(contentType, response, filename, data);
+        download(contentType, response, filename, data, true);
     }
 
     /**
@@ -653,21 +679,13 @@ public class AnexoController extends BaseController {
      */
     public void validadNombreFichero(AnexoForm anexoForm, BindingResult result){
 
-        if (anexoForm.getDocumentoFile() != null) {
-
-            if(StringUtils.indexOfAny(anexoForm.getDocumentoFile().getOriginalFilename(), RegwebConstantes.CARACTERES_NO_PERMITIDOS_ARXIU) != -1){
-                result.rejectValue("documentoFile", "error.caracteres.noPermitidos", new Object[]{Arrays.toString(RegwebConstantes.CARACTERES_NO_PERMITIDOS_ARXIU)}, I18NUtils.tradueix("error.caracteres.noPermitidos", Arrays.toString(RegwebConstantes.CARACTERES_NO_PERMITIDOS_ARXIU)));
-
-            }
+        if (anexoForm.getDocumentoFile() != null && (StringUtils.indexOfAny(anexoForm.getDocumentoFile().getOriginalFilename(), RegwebConstantes.CARACTERES_NO_PERMITIDOS_ARXIU) != -1)){
+            result.rejectValue("documentoFile", "error.caracteres.noPermitidos", new Object[]{Arrays.toString(RegwebConstantes.CARACTERES_NO_PERMITIDOS_ARXIU)}, I18NUtils.tradueix("error.caracteres.noPermitidos", Arrays.toString(RegwebConstantes.CARACTERES_NO_PERMITIDOS_ARXIU)));
         }
 
-        if (anexoForm.getFirmaFile() != null) {
-            if(StringUtils.indexOfAny(anexoForm.getFirmaFile().getOriginalFilename(), RegwebConstantes.CARACTERES_NO_PERMITIDOS_ARXIU) != -1){
-                result.rejectValue("firmaFile", "error.caracteres.noPermitidos", new Object[]{Arrays.toString(RegwebConstantes.CARACTERES_NO_PERMITIDOS_ARXIU)},I18NUtils.tradueix("error.caracteres.noPermitidos", Arrays.toString(RegwebConstantes.CARACTERES_NO_PERMITIDOS_ARXIU)));
-
-            }
+        if (anexoForm.getFirmaFile() != null && (StringUtils.indexOfAny(anexoForm.getFirmaFile().getOriginalFilename(), RegwebConstantes.CARACTERES_NO_PERMITIDOS_ARXIU) != -1)){
+            result.rejectValue("firmaFile", "error.caracteres.noPermitidos", new Object[]{Arrays.toString(RegwebConstantes.CARACTERES_NO_PERMITIDOS_ARXIU)},I18NUtils.tradueix("error.caracteres.noPermitidos", Arrays.toString(RegwebConstantes.CARACTERES_NO_PERMITIDOS_ARXIU)));
         }
-
     }
 
 
@@ -812,7 +830,7 @@ public class AnexoController extends BaseController {
      * @param data
      * @throws IOException
      */
-    private void download(String contentType, HttpServletResponse response, String filename, byte[] data) throws IOException, Exception {
+    private void download(String contentType, HttpServletResponse response, String filename, byte[] data, boolean attachment) throws IOException, Exception {
         OutputStream output;
 
         // Obtenemos el ContentType si el que nos indican es null
@@ -821,7 +839,7 @@ public class AnexoController extends BaseController {
         }
 
         response.setContentType(contentType);
-        response.setHeader("Content-Disposition", AnexoUtils.getContentDispositionHeader(true, filename));
+        response.setHeader("Content-Disposition", AnexoUtils.getContentDispositionHeader(attachment, filename));
         response.setContentLength(data.length);
 
         output = response.getOutputStream();
@@ -843,7 +861,6 @@ public class AnexoController extends BaseController {
     protected AnexoForm prepararAnexoForm(HttpServletRequest request, Long registroDetalleID, Long tipoRegistro, Long registroID, Boolean isOficioRemisionSir, Boolean scan) throws Exception {
 
         saveLastAnnexoAction(request, registroDetalleID, registroID, tipoRegistro, null, isOficioRemisionSir);
-        RegistroDetalle registroDetalle = registroDetalleEjb.findById(registroDetalleID);
 
         //Prepara el anexoForm con los datos
         AnexoForm anexoForm = new AnexoForm();

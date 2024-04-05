@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.activation.MimetypesFileTypeMap;
 import javax.ejb.EJB;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.FileInputStream;
@@ -32,7 +31,13 @@ public class ArchivoController extends BaseController{
     private ArchivoLocal archivoEjb;
 
     @RequestMapping(value = "/archivo/{archivoId}", method = RequestMethod.GET)
-    public void  archivo(@PathVariable("archivoId") Long archivoId, HttpServletRequest request, HttpServletResponse response)  {
+    public void  descargarArchivo(@PathVariable("archivoId") Long archivoId, HttpServletResponse response)  {
+
+        descargarArchivo(archivoId, true, response);
+    }
+
+    @RequestMapping(value = "/archivo/{archivoId}/{attachment}", method = RequestMethod.GET)
+    public void  descargarArchivo(@PathVariable("archivoId") Long archivoId, @PathVariable("attachment") Boolean attachment,HttpServletResponse response)  {
         Archivo archivo = null;
 
         try {
@@ -41,11 +46,11 @@ public class ArchivoController extends BaseController{
             e.printStackTrace();
         }
 
-        fullDownload(archivoId, archivo.getNombre(), archivo.getMime(), response);
+        fullDownload(archivoId, archivo.getNombre(), archivo.getMime(), response, attachment);
 
     }
 
-    public void fullDownload(Long archivoId, String filename, String contentType, HttpServletResponse response) {
+    public void fullDownload(Long archivoId, String filename, String contentType, HttpServletResponse response, boolean attachment) {
 
         FileInputStream input;
         OutputStream output;
@@ -62,7 +67,12 @@ public class ArchivoController extends BaseController{
                     contentType = mimeTypesMap.getContentType(file);
                 }
                 response.setContentType(contentType);
-                response.setHeader("Content-Disposition", "attachment; filename=\"" + filename + "\"");
+                if(attachment){
+                    response.setHeader("Content-Disposition", "attachment; filename=\"" + filename + "\"");
+                }else{
+                    response.setHeader("Content-Disposition", "inline; filename=\"" + filename + "\"");
+                }
+
                 response.setContentLength((int) file.length());
 
                 output = response.getOutputStream();

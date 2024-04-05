@@ -663,9 +663,9 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean implem
         List<AnexoFull> anexosFull = new ArrayList<AnexoFull>();
         for (Anexo anexo : anexos) {
             if(!anexo.isJustificante()){ // si no es Justificante, cargamos el AnexoFull
-                anexosFull.add(anexoEjb.getAnexoFull(anexo.getId(), idEntidad));
+                anexosFull.add(anexoEjb.getAnexoFull(anexo.getId(), idEntidad, false));
             }else if(justificante){
-                anexosFull.add(anexoEjb.getAnexoFull(anexo.getId(), idEntidad));
+                anexosFull.add(anexoEjb.getAnexoFull(anexo.getId(), idEntidad, false));
             }else {
                 anexosFull.add(new AnexoFull(anexo));
             }

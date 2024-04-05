@@ -68,10 +68,11 @@ public interface AnexoLocal extends BaseEjb<Anexo, Long> {
      *
      * @param anexoID
      * @param idEntidad
+     * @param ligero si es 'true', solo carga la información del anexo, no el contenido
      * @return
      * @throws I18NException
      */
-    AnexoFull getAnexoFull(Long anexoID, Long idEntidad) throws I18NException;
+    AnexoFull getAnexoFull(Long anexoID, Long idEntidad, boolean ligero) throws I18NException;
 
 
     AnexoFull actualizarAnexo(AnexoFull anexoFull, UsuarioEntidad usuarioEntidad, Entidad entidad, RegistroDetalle registroDetalle,
