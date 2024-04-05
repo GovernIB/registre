@@ -1036,7 +1036,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
 
         try{
 
-            AnexoFull anexo = anexoEjb.getAnexoFull(idAnexo, entidadActiva.getId());
+            AnexoFull anexo = anexoEjb.getAnexoFull(idAnexo, entidadActiva.getId(), false);
 
             if (anexo == null) {
                 throw new I18NException("anexo.noExiste", String.valueOf(idAnexo));
