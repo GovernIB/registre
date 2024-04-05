@@ -11,7 +11,7 @@ body { background-image:url(../img/background-pattern.png); color:#666666; paddi
 .well-white{
     background-color: #ffffff;
     box-shadow: #888888;
-    margin: 0px 20px;
+    margin: 0px 0px;
 }
 .alert-grey {
     max-width: 100%;

@@ -28,7 +28,7 @@
                     <img src="<c:url value="/archivo/${loginInfo.entidadActiva.logoPie.id}"/>" alt="${loginInfo.entidadActiva.nombre}" />
                 </c:if>
                 <c:if test="${loginInfo.entidadActiva.logoPie == null}">
-                    <img src="<c:url value="/img/govern-logo-neg.png"/>" width="129" height="30" alt="Govern de les Illes Balears" />
+                    <img src="<c:url value="/img/govern-logo-nou-peu.png"/>" width="123" height="48" alt="Govern de les Illes Balears" />
                 </c:if>
             </div>
         </c:if>
