@@ -43,6 +43,9 @@ public class RestController extends BaseController {
     @EJB(mappedName = CatProvinciaLocal.JNDI_NAME)
     private CatProvinciaLocal catProvinciaEjb;
 
+    @EJB(mappedName = CatPaisLocal.JNDI_NAME)
+    private CatPaisLocal catPaisEjb;
+
     @EJB(mappedName = CodigoAsuntoLocal.JNDI_NAME)
     private CodigoAsuntoLocal codigoAsuntoEjb;
 
@@ -195,7 +198,38 @@ public class RestController extends BaseController {
     public @ResponseBody
     InteresadoSir obtenerInteresadoSir(@RequestParam Long idInteresadoSir) throws Exception {
 
-        return interesadoSirEjb.findById(idInteresadoSir);
+        InteresadoSir interesadoSir = interesadoSirEjb.findById(idInteresadoSir);
+
+        if(interesadoSir.getCodigoPaisInteresado() !=null){
+            interesadoSir.setCodigoPaisInteresado(catPaisEjb.findByCodigo(Long.valueOf(interesadoSir.getCodigoPaisInteresado())).getDescripcionPais());
+        }
+
+        if(interesadoSir.getCodigoProvinciaInteresado() !=null){
+            String codigoProvincia = interesadoSir.getCodigoProvinciaInteresado();
+            interesadoSir.setCodigoProvinciaInteresado(catProvinciaEjb.findByCodigo(Long.valueOf(interesadoSir.getCodigoProvinciaInteresado())).getDescripcionProvincia());
+
+            if(interesadoSir.getCodigoMunicipioInteresado() !=null){
+                interesadoSir.setCodigoMunicipioInteresado(catLocalidadEjb.findByLocalidadProvincia(Long.valueOf(interesadoSir.getCodigoMunicipioInteresado()), Long.valueOf(codigoProvincia)).getNombre());
+            }
+        }
+
+        if(interesadoSir.getRepresentante()){
+
+            if(interesadoSir.getCodigoPaisRepresentante() !=null){
+                interesadoSir.setCodigoPaisRepresentante(catPaisEjb.findByCodigo(Long.valueOf(interesadoSir.getCodigoPaisRepresentante())).getDescripcionPais());
+            }
+
+            if(interesadoSir.getCodigoProvinciaRepresentante() !=null){
+                String codigoProvinciaRepresentante = interesadoSir.getCodigoProvinciaRepresentante();
+                interesadoSir.setCodigoProvinciaRepresentante(catProvinciaEjb.findByCodigo(Long.valueOf(interesadoSir.getCodigoProvinciaRepresentante())).getDescripcionProvincia());
+
+                if(interesadoSir.getCodigoMunicipioRepresentante() !=null){
+                    interesadoSir.setCodigoMunicipioRepresentante(catLocalidadEjb.findByLocalidadProvincia(Long.valueOf(interesadoSir.getCodigoMunicipioRepresentante()), Long.valueOf(codigoProvinciaRepresentante)).getNombre());
+                }
+            }
+        }
+
+        return interesadoSir;
     }
 
     /**
