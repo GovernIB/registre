@@ -19,7 +19,7 @@
 
     # Interdoc
 
-    mvn install:install-file -Dfile=interdoc-ws-api-1.0.0.jar -DgroupId=es.caib.interdoc -DartifactId=interdoc-ws-api -Dpackaging=jar
+    mvn install:install-file -Dfile=interdoc-ws-api.jar -DgroupId=es.caib.interdoc -DartifactId=interdoc-ws-api -Dversion=1.0.0 -Dpackaging=jar
 
 (0) Revisar si totes le spropietst de regweb3-property-service.xml són correctes.
 

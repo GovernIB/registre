@@ -32,7 +32,13 @@ public class ArchivoController extends BaseController{
     private ArchivoLocal archivoEjb;
 
     @RequestMapping(value = "/archivo/{archivoId}", method = RequestMethod.GET)
-    public void  archivo(@PathVariable("archivoId") Long archivoId, HttpServletRequest request, HttpServletResponse response)  {
+    public void  descargarArchivo(@PathVariable("archivoId") Long archivoId, HttpServletResponse response)  {
+
+        descargarArchivo(archivoId, true, response);
+    }
+
+    @RequestMapping(value = "/archivo/{archivoId}/{attachment}", method = RequestMethod.GET)
+    public void  descargarArchivo(@PathVariable("archivoId") Long archivoId, @PathVariable("attachment") Boolean attachment,HttpServletResponse response)  {
         Archivo archivo = null;
 
         try {
@@ -41,10 +47,9 @@ public class ArchivoController extends BaseController{
             e.printStackTrace();
         }
 
-        fullDownload(archivoId, archivo.getNombre(), archivo.getMime(), response);
+        fullDownload(archivoId, archivo.getNombre(), archivo.getMime(), response, attachment);
 
     }
-
 
     @RequestMapping(value = "/obtenerDocumentoReferencia/{archivoId}", method = RequestMethod.GET)
     public void obtenerDocumentoReferencia(@PathVariable("archivoId") Long archivoId, HttpServletRequest request, HttpServletResponse response) {
@@ -56,12 +61,12 @@ public class ArchivoController extends BaseController{
             e.printStackTrace();
         }
 
-        fullDownload(archivoId, archivo.getNombre(), archivo.getMime(), response);
+        fullDownload(archivoId, archivo.getNombre(), archivo.getMime(), response, true);
 
     }
 
+    public void fullDownload(Long archivoId, String filename, String contentType, HttpServletResponse response, boolean attachment) {
 
-    public void fullDownload(Long archivoId, String filename, String contentType, HttpServletResponse response) {
 
         FileInputStream input;
         OutputStream output;
@@ -78,7 +83,12 @@ public class ArchivoController extends BaseController{
                     contentType = mimeTypesMap.getContentType(file);
                 }
                 response.setContentType(contentType);
-                response.setHeader("Content-Disposition", "attachment; filename=\"" + filename + "\"");
+                if(attachment){
+                    response.setHeader("Content-Disposition", "attachment; filename=\"" + filename + "\"");
+                }else{
+                    response.setHeader("Content-Disposition", "inline; filename=\"" + filename + "\"");
+                }
+
                 response.setContentLength((int) file.length());
 
                 output = response.getOutputStream();

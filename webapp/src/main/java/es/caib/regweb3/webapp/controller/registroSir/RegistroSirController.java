@@ -486,7 +486,7 @@ public class RegistroSirController extends BaseController {
         AnexoSir anexoSir = anexoSirEjb.findByIdFichero(anexoSirIdFichero);
 
         try {
-            AnexoUtils.download(anexoSir.getTipoMIME(), response, anexoSir.getNombreFichero(), data);
+            AnexoUtils.download(anexoSir.getTipoMIME(), response, anexoSir.getNombreFichero(), data, true);
         }catch (InterException ie){
             ie.printStackTrace();
         }

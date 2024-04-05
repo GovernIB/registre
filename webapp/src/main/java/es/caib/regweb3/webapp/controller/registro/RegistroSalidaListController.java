@@ -216,9 +216,9 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
 
         // Anexos completo
         Boolean anexosEditar = (registro.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO) || registro.getEstado().equals(RegwebConstantes.REGISTRO_PENDIENTE_VISAR)) && registro.getRegistroDetalle().getPresencial() && permisoEditar && !tieneJustificante;
+        List<AnexoFull> anexos = anexoEjb.getByRegistroSalida(registro); //Inicializamos los anexos del registro de salida.
         if (anexosEditar) {
 
-            List<AnexoFull> anexos = anexoEjb.getByRegistroSalida(registro); //Inicializamos los anexos del registro de salida.
             initScanAnexos(entidadActiva, model); // Inicializa los atributos para escanear anexos
 
             // Si es SIR, se validan los tamaños y tipos de anexos
@@ -227,10 +227,10 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
                 model.addAttribute("erroresAnexosSir", AnexoUtils.validarAnexosSir(anexos));
             }
 
-            model.addAttribute("anexos", anexos);
             model.addAttribute("anexoDetachedPermitido", PropiedadGlobalUtil.getPermitirAnexosDetached(entidadActiva.getId()));
         }
         model.addAttribute("anexosEditar", anexosEditar);
+        model.addAttribute("anexos", anexos);
 
         // Interesados
         Boolean interesadosEditar = registro.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO) && registro.getRegistroDetalle().getPresencial() && permisoEditar && !tieneJustificante;

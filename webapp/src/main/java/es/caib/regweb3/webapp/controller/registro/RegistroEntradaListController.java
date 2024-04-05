@@ -231,9 +231,9 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
 
             // Anexos
             Boolean anexosEditar = (registro.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO) || registro.getEstado().equals(RegwebConstantes.REGISTRO_PENDIENTE_VISAR)) && registro.getRegistroDetalle().getPresencial() && permisoEditar && !tieneJustificante;
+            List<AnexoFull> anexos = anexoEjb.getByRegistroEntrada(registro); //Inicializamos los anexos del registro de entrada.
             if (anexosEditar) {
 
-                List<AnexoFull> anexos = anexoEjb.getByRegistroEntrada(registro); //Inicializamos los anexos del registro de entrada.
                 initScanAnexos(entidadActiva, model); // Inicializa los atributos para escanear anexos
 
                 // Si es SIR, se validan los tamaños y tipos de anexos
@@ -241,10 +241,11 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
 
                     model.addAttribute("erroresAnexosSir", AnexoUtils.validarAnexosSir(anexos));
                 }
-                model.addAttribute("anexos", anexos);
+
                 model.addAttribute("anexoDetachedPermitido", PropiedadGlobalUtil.getPermitirAnexosDetached(entidadActiva.getId()));
             }
             model.addAttribute("anexosEditar", anexosEditar);
+            model.addAttribute("anexos", anexos);
 
             // Interesados
             Boolean interesadosEditar = registro.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO) && registro.getRegistroDetalle().getPresencial() && permisoEditar && !tieneJustificante;
@@ -602,7 +603,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
 
         try {
 
-            RegistroEntrada registroEntrada = registroEntradaEjb.findByIdCompleto(idRegistro);
+            RegistroEntrada registroEntrada = registroEntradaEjb.findById(idRegistro);
             UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
 
             // Comprobamos si el RegistroEntrada tiene el estado anulado

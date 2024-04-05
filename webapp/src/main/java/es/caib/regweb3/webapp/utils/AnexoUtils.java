@@ -22,7 +22,6 @@ import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.CharsetEncoder;
 import java.nio.charset.CodingErrorAction;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -223,7 +222,7 @@ public class AnexoUtils {
      * @param data
      * @throws IOException
      */
-    public static void download(String contentType, HttpServletResponse response, String filename, byte[] data) throws IOException, Exception {
+    public static void download(String contentType, HttpServletResponse response, String filename, byte[] data, boolean attachment) throws IOException, Exception {
         OutputStream output;
 
         // Obtenemos el ContentType si el que nos indican es null
@@ -232,7 +231,7 @@ public class AnexoUtils {
         }
 
         response.setContentType(contentType);
-        response.setHeader("Content-Disposition", AnexoUtils.getContentDispositionHeader(true, filename));
+        response.setHeader("Content-Disposition", AnexoUtils.getContentDispositionHeader(attachment, filename));
         response.setContentLength(data.length);
 
         output = response.getOutputStream();
