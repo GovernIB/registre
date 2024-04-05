@@ -8,6 +8,7 @@ import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.persistence.utils.I18NLogicUtils;
 import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
+import es.caib.regweb3.utils.StringUtils;
 import org.apache.commons.io.FileUtils;
 import org.fundaciobit.genapp.common.i18n.*;
 import org.fundaciobit.plugins.documentcustody.api.AnnexCustody;
@@ -280,13 +281,13 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
             } catch (I18NException i18ne) {
                 input.getAnexo().setEstadoFirma(RegwebConstantes.ANEXO_FIRMA_ERROR);
                 if (i18ne.getCause() != null) {
-                    input.getAnexo().setMotivoNoValidacion(i18ne.getCause().toString());
+                    input.getAnexo().setMotivoNoValidacion(StringUtils.recortarCadena(i18ne.getCause().toString(),255));
                 }
                 return processError(i18ne, force);
             } catch (WebServiceException we) {
                 input.getAnexo().setEstadoFirma(RegwebConstantes.ANEXO_FIRMA_NOINFO);
                 if (we.getCause() != null) {
-                    input.getAnexo().setMotivoNoValidacion(we.getCause().toString());
+                    input.getAnexo().setMotivoNoValidacion(StringUtils.recortarCadena(we.getCause().toString(),255));
                 }
                 log.info("WebServiceException CheckDocument");
                 log.error(we.getMessage());
@@ -305,10 +306,10 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
             anexo.setFechaValidacion(new Date());
             anexo.setFirmaValida(resp.getValidationStatus().getStatus() == RegwebConstantes.ANEXO_FIRMA_VALIDA);
             if (resp.getValidationStatus().getStatus() == RegwebConstantes.ANEXO_FIRMA_INVALIDA) {//Indica que no es valida la firma
-                anexo.setMotivoNoValidacion(resp.getValidationStatus().getErrorMsg());
+                anexo.setMotivoNoValidacion(StringUtils.recortarCadena(resp.getValidationStatus().getErrorMsg(), 255));
             } else if (resp.getValidationStatus().getStatus() == RegwebConstantes.ANEXO_FIRMA_ERROR) {//Indica que ha habido una excepción en el proceso de validación
                 if (resp.getValidationStatus().getErrorException() != null) {
-                    anexo.setMotivoNoValidacion(resp.getValidationStatus().getErrorException().getCause().toString());
+                    anexo.setMotivoNoValidacion(StringUtils.recortarCadena(resp.getValidationStatus().getErrorException().getCause().toString(), 255));
                 }
             }
 
