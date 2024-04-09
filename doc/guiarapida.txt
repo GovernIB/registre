@@ -1,21 +1,26 @@
 (*) Instalar dependencias en repositorio local, situarse en el directorio /doc/libsir y ejecutar:
 
 
-   mvn install:install-file -Dfile=interService-3.1.1.jar -DgroupId=es.gob.ad.registros.sir -DartifactId=InterService -Dversion=3.1.1 -Dpackaging=jar -DpomFile=interService-3.1.1/META-INF/maven/es.gob.ad.registros.sir/interService/pom.xml -Dpackaging=jar
-   mvn install:install-file -Dfile=interService-api-3.1.1.jar -DgroupId=es.gob.ad.registros.sir -DartifactId=interService-api -Dversion=3.1.1 -Dpackaging=jar -DpomFile=interService-api-3.1.1/META-INF/maven/es.gob.ad.registros.sir/interService-api/pom.xml -Dpackaging=jar
-   mvn install:install-file -Dfile=dir3-3.1.0.jar -DgroupId=es.gob.ad.registros.sir.client -DartifactId=dir3 -Dversion=3.1.0 -Dpackaging=jar -DpomFile=dir3-3.1.0/META-INF/maven/es.gob.ad.registros.sir.client/dir3/pom.xml -Dpackaging=jar
-   mvn install:install-file -Dfile=sirCommons-3.1.1.jar -DgroupId=es.gob.ad.registros.sir -DartifactId=sirCommons -Dversion=3.1.1 -Dpackaging=jar -DpomFile=sirCommons-3.1.1/META-INF/maven/es.gob.ad.registros.sir/sirCommons/pom.xml -Dpackaging=jar
-   mvn install:install-file -Dfile=regage-3.1.1.jar -DgroupId=es.gob.ad.registros.sir.client -DartifactId=regage -Dversion=3.1.1 -Dpackaging=jar -DpomFile=regage-3.1.1/META-INF/maven/es.gob.ad.registros.sir.client/regage/pom.xml -Dpackaging=jar
-   mvn install:install-file -Dfile=libMetadatado-3.1.0.jar -DgroupId=es.gob.ad.registros.sir -DartifactId=libMetadatado -Dversion=3.1.0 -DpomFile=libMetadatado-3.1.0/META-INF/maven/es.gob.ad.registros.sir/libMetadatado/pom.xml -Dpackaging=jar
-   mvn install:install-file -Dfile=csvStorage-3.1.1.jar -DgroupId=es.gob.ad.registros.sir.client -DartifactId=csvStorage -Dversion=3.1.1 -DpomFile=csvStorage-3.1.1/META-INF/maven/es.gob.ad.registros.sir.client/csvStorage/pom.xml -Dpackaging=jar
-   mvn install:install-file -Dfile=interModel-api-3.1.0.jar -DgroupId=es.gob.ad.registros.sir -DartifactId=interModel-api -Dversion=3.1.0 -DpomFile=interModel-api-3.1.0/META-INF/maven/es.gob.ad.registros.sir/interModel-api/pom.xml -Dpackaging=jar
-   mvn install:install-file -Dfile=cirCct-3.1.0.jar -DgroupId=es.gob.ad.registros.sir.client -DartifactId=cirCct -Dversion=3.1.0 -DpomFile=cirCct-3.1.0/META-INF/maven/es.gob.ad.registros.sir.client/cirCct/pom.xml -Dpackaging=jar
-   mvn install:install-file -Dfile=interModel.ORACLE-3.1.1.jar -DgroupId=es.gob.ad.registros.sir -DartifactId=interModel.ORACLE -Dversion=3.1.1 -DpomFile=interModel.ORACLE-3.1.1/META-INF/maven/es.gob.ad.registros.sir/interModel.ORACLE/pom.xml -Dpackaging=jar
-   mvn install:install-file -Dfile=gestionEni-api-3.1.0.jar -DgroupId=es.gob.ad.registros.sir -DartifactId=gestionEni-api -Dversion=3.1.0 -DpomFile=gestionEni-api-3.1.0/META-INF/maven/es.gob.ad.registros.sir/gestionEni-api/pom.xml -Dpackaging=jar
-   mvn install:install-file -Dfile=sir-api-3.1.0.jar -DgroupId=es.gob.ad.registros.sir -DartifactId=sir-api -Dversion=3.1.0 -DpomFile=sir-api-3.1.0/META-INF/maven/es.gob.ad.registros.sir/sir-api/pom.xml -Dpackaging=jar
-   mvn install:install-file -Dfile=gestionEni-3.1.1.jar -DgroupId=es.gob.ad.registros.sir -DartifactId=gestionEni -Dversion=3.1.1 -DpomFile=gestionEni-3.1.1/META-INF/maven/es.gob.ad.registros.sir/gestionEni/pom.xml -Dpackaging=jar
-   mvn install:install-file -Dfile=interModel-3.1.1.jar -DgroupId=es.gob.ad.registros.sir -DartifactId=interModel -Dversion=3.1.1 -DpomFile=interModel-3.1.1/META-INF/maven/es.gob.ad.registros.sir/interModel/pom.xml -Dpackaging=jar
-   mvn install:install-file -Dfile=csvProductor-3.0.0.RELEASE3.jar -DgroupId=es.gob.ad.registros.sir.client -DartifactId=csvProductor -Dversion=3.0.0.RELEASE3 -DpomFile=csvProductor-3.0.0.RELEASE3/META-INF/maven/es.gob.ad.registros.sir.client/csvProductor/pom.xml -Dpackaging=jar
+  mvn install:install-file -Dfile=interService-3.2.0.jar -DgroupId=es.gob.ad.registros.sir -DartifactId=InterService -Dversion=3.2.0 -Dpackaging=jar -DpomFile=interService-3.2.0/META-INF/maven/es.gob.ad.registros.sir/interService/pom.xml -Dpackaging=jar
+  mvn install:install-file -Dfile=interService-api-3.2.0.jar -DgroupId=es.gob.ad.registros.sir -DartifactId=interService-api -Dversion=3.2.0 -Dpackaging=jar -DpomFile=interService-api-3.2.0/META-INF/maven/es.gob.ad.registros.sir/interService-api/pom.xml -Dpackaging=jar
+  mvn install:install-file -Dfile=dir3-3.1.0.jar -DgroupId=es.gob.ad.registros.sir.client -DartifactId=dir3 -Dversion=3.1.0 -Dpackaging=jar -DpomFile=dir3-3.1.0/META-INF/maven/es.gob.ad.registros.sir.client/dir3/pom.xml -Dpackaging=jar
+  mvn install:install-file -Dfile=sirCommons-3.1.1.jar -DgroupId=es.gob.ad.registros.sir -DartifactId=sirCommons -Dversion=3.1.1 -Dpackaging=jar -DpomFile=sirCommons-3.1.1/META-INF/maven/es.gob.ad.registros.sir/sirCommons/pom.xml -Dpackaging=jar
+  mvn install:install-file -Dfile=regage-3.1.1.jar -DgroupId=es.gob.ad.registros.sir.client -DartifactId=regage -Dversion=3.1.1 -Dpackaging=jar -DpomFile=regage-3.1.1/META-INF/maven/es.gob.ad.registros.sir.client/regage/pom.xml -Dpackaging=jar
+  mvn install:install-file -Dfile=libMetadatado-3.1.0.jar -DgroupId=es.gob.ad.registros.sir -DartifactId=libMetadatado -Dversion=3.1.0 -DpomFile=libMetadatado-3.1.0/META-INF/maven/es.gob.ad.registros.sir/libMetadatado/pom.xml -Dpackaging=jar
+  mvn install:install-file -Dfile=csvStorage-3.2.0.jar -DgroupId=es.gob.ad.registros.sir.client -DartifactId=csvStorage -Dversion=3.2.0 -DpomFile=csvStorage-3.2.0/META-INF/maven/es.gob.ad.registros.sir.client/csvStorage/pom.xml -Dpackaging=jar
+  mvn install:install-file -Dfile=interModel-api-3.1.1.jar -DgroupId=es.gob.ad.registros.sir -DartifactId=interModel-api -Dversion=3.1.1 -DpomFile=interModel-api-3.1.1/META-INF/maven/es.gob.ad.registros.sir/interModel-api/pom.xml -Dpackaging=jar
+  mvn install:install-file -Dfile=cirCct-3.1.0.jar -DgroupId=es.gob.ad.registros.sir.client -DartifactId=cirCct -Dversion=3.1.0 -DpomFile=cirCct-3.1.0/META-INF/maven/es.gob.ad.registros.sir.client/cirCct/pom.xml -Dpackaging=jar
+  mvn install:install-file -Dfile=interModel.ORACLE-3.1.2.jar -DgroupId=es.gob.ad.registros.sir -DartifactId=interModel.ORACLE -Dversion=3.1.2 -DpomFile=interModel.ORACLE-3.1.2/META-INF/maven/es.gob.ad.registros.sir/interModel.ORACLE/pom.xml -Dpackaging=jar
+  mvn install:install-file -Dfile=gestionEni-api-3.2.0.jar -DgroupId=es.gob.ad.registros.sir -DartifactId=gestionEni-api -Dversion=3.2.0 -DpomFile=gestionEni-api-3.2.0/META-INF/maven/es.gob.ad.registros.sir/gestionEni-api/pom.xml -Dpackaging=jar
+  mvn install:install-file -Dfile=sir-api-3.1.0.jar -DgroupId=es.gob.ad.registros.sir -DartifactId=sir-api -Dversion=3.1.0 -DpomFile=sir-api-3.1.0/META-INF/maven/es.gob.ad.registros.sir/sir-api/pom.xml -Dpackaging=jar
+  mvn install:install-file -Dfile=gestionEni-3.2.0.jar -DgroupId=es.gob.ad.registros.sir -DartifactId=gestionEni -Dversion=3.2.0 -DpomFile=gestionEni-3.2.0/META-INF/maven/es.gob.ad.registros.sir/gestionEni/pom.xml -Dpackaging=jar
+  mvn install:install-file -Dfile=interModel-3.1.2.jar -DgroupId=es.gob.ad.registros.sir -DartifactId=interModel -Dversion=3.1.2 -DpomFile=interModel-3.1.2/META-INF/maven/es.gob.ad.registros.sir/interModel/pom.xml -Dpackaging=jar
+  mvn install:install-file -Dfile=csvProductor-3.0.0.RELEASE3.jar -DgroupId=es.gob.ad.registros.sir.client -DartifactId=csvProductor -Dversion=3.0.0.RELEASE3 -DpomFile=csvProductor-3.0.0.RELEASE3/META-INF/maven/es.gob.ad.registros.sir.client/csvProductor/pom.xml -Dpackaging=jar
+
+  + copiar los siguientes poms al .m2 directamente
+  sirLibParent-3.2.0.pom
+  sirDependencies-3.2.0.pom
+
 
     # Interdoc
 
