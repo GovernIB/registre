@@ -471,14 +471,26 @@ public class RegistroSirController extends BaseController {
         return null;
     }
 
-
     /**
-     * Función que nos permite mostrar el contenido de un anexo de referencia unica
+     * Función que nos permite descargar un anexo de referencia unica
      *
      * @param anexoSirIdFichero identificador del anexo
      */
     @RequestMapping(value = "/descargarDocumentoRFU/{anexoSirIdFichero}/{cdIntercambio}", method = RequestMethod.GET)
-    public void anexoRFU(@PathVariable("anexoSirIdFichero") String anexoSirIdFichero, @PathVariable("cdIntercambio") String cdIntercambio, HttpServletRequest request,
+    public void descargarAnexoRFU(@PathVariable("anexoSirIdFichero") String anexoSirIdFichero, @PathVariable("cdIntercambio") String cdIntercambio, HttpServletRequest request,
+                         HttpServletResponse response) throws Exception, I18NException {
+
+        descargarAnexoRFU(anexoSirIdFichero, cdIntercambio, true, request, response);
+    }
+
+
+    /**
+     * Función que nos permite descargar o visualizar un anexo de referencia unica
+     *
+     * @param anexoSirIdFichero identificador del anexo
+     */
+    @RequestMapping(value = "/descargarDocumentoRFU/{anexoSirIdFichero}/{cdIntercambio}/{attachment}", method = RequestMethod.GET)
+    public void descargarAnexoRFU(@PathVariable("anexoSirIdFichero") String anexoSirIdFichero, @PathVariable("cdIntercambio") String cdIntercambio, @PathVariable("attachment") Boolean attachment, HttpServletRequest request,
                          HttpServletResponse response) throws Exception, I18NException {
 
         Oficina oficinaActiva = getOficinaActiva(request);
@@ -486,13 +498,10 @@ public class RegistroSirController extends BaseController {
         AnexoSir anexoSir = anexoSirEjb.findByIdFichero(anexoSirIdFichero);
 
         try {
-            AnexoUtils.download(anexoSir.getTipoMIME(), response, anexoSir.getNombreFichero(), data, true);
+            AnexoUtils.download(anexoSir.getTipoMIME(), response, anexoSir.getNombreFichero(), data, attachment);
         }catch (InterException ie){
             ie.printStackTrace();
         }
-
-
-
     }
 
     //TODO BORRAR SOLO PRUEBAS

@@ -71,10 +71,10 @@
                                             <%--Visor Anexo--%>
                                             <c:if test="${anexo.documento.tipoMIME == RegwebConstantes.MIME_PDF}">
 
-                                                <a data-toggle="modal" class="btn btn-info btn-default btn-xs" href="#visorAnexo${anexo.documento.anexo.id}"
+                                                <a data-toggle="modal" class="btn btn-info btn-default btn-xs" href="#visorAnexo${anexo.documento.id}"
                                                    title="<spring:message code="anexo.visualizar"/>"><span class="fa fa-search"></span></a>
 
-                                                <div id="visorAnexo${anexo.documento.anexo.id}" class="modal fade" role="dialog">
+                                                <div id="visorAnexo${anexo.documento.id}" class="modal fade" role="dialog">
                                                     <div class="modal-dialog modal-lg">
                                                         <div class="modal-content">
                                                             <div class="modal-header">
@@ -82,7 +82,8 @@
                                                                 <h3 class="modal-title"><spring:message code="anexo.visualizar"/>: ${anexo.documento.nombreFichero}</h3>
                                                             </div>
                                                             <div class="modal-body">
-                                                                <object type="${anexo.documento.tipoMIME}" data="<c:url value="/archivo/${anexo.documento.anexo.id}/false"/>" width="100%" height="700"></object>
+                                                                <%--<object type="${anexo.documento.tipoMIME}" data="<c:url value="/archivo/${anexo.documento.anexo.id}/false"/>" width="100%" height="700"></object>--%>
+                                                                <object type="${anexo.documento.tipoMIME}" data="<c:url value="/registroSir/descargarDocumentoRFU/${anexo.documento.identificadorFichero}/${registroSir.identificadorIntercambio}/false"/>" width="100%" height="700"></object>
                                                             </div>
                                                         </div>
                                                     </div>
