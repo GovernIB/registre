@@ -214,6 +214,9 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
         // Solo si no es una reserva de número
         if(!registro.getEstado().equals(RegwebConstantes.REGISTRO_RESERVA)){
 
+            // Anexos
+            model.addAttribute("anexos", anexoEjb.getByRegistroEntrada(registro)); //Inicializamos los anexos del registro de entrada.
+
             // Justificante
             if (tieneJustificante) {
                 Anexo justificante = registro.getRegistroDetalle().getJustificante();
@@ -482,6 +485,9 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
             String urlValidacion = anexoEjb.getUrlValidation(justificante,entidadActiva.getId());
             model.addAttribute("tieneUrlValidacion", StringUtils.isNotEmpty(urlValidacion));
         }
+
+        // Anexos
+        model.addAttribute("anexos", anexoEjb.getByRegistroSalida(registro)); //Inicializamos los anexos del registro de entrada.
 
         // Historicos
         model.addAttribute("historicos", historicoRegistroSalidaEjb.getByRegistroSalida(idRegistro));
