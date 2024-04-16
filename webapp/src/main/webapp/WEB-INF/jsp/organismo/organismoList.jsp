@@ -54,7 +54,7 @@
 
                                 <div class="form-group col-xs-6 espaiLinies senseMargeLat">
                                     <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
-                                        <form:label path="organismo.codigo"><spring:message code="organismo.buscador.codigo"/></form:label>
+                                        <form:label path="organismo.codigo"><spring:message code="organismo.codigo"/></form:label>
                                     </div>
                                     <div class="col-xs-8">
                                         <form:input path="organismo.codigo" cssClass="form-control"/>
