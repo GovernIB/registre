@@ -7,6 +7,7 @@ import es.caib.regweb3.model.utils.RegistroBasico;
 import es.caib.regweb3.persistence.utils.DataBaseUtils;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
+import es.caib.regweb3.persistence.utils.RegistroUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 import org.apache.log4j.Logger;
@@ -103,7 +104,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
         Query q2;
         Map<String, Object> parametros = new HashMap<String, Object>();
         List<String> where = new ArrayList<String>();
-        boolean busquedaInteresados = busquedaInteresados(interesadoNom, interesadoLli1, interesadoLli2, interesadoDoc);
+        boolean busquedaInteresados = RegistroUtils.busquedaInteresados(interesadoNom, interesadoLli1, interesadoLli2, interesadoDoc);
 
         StringBuilder queryBase = new StringBuilder("Select DISTINCT re.id, re.numeroRegistro, re.numeroRegistroFormateado, re.fecha, re.oficina, re.destino, re.destinoExternoCodigo, re.destinoExternoDenominacion, re.estado, re.usuario, " +
                 "re.registroDetalle.extracto, re.registroDetalle.reserva, re.registroDetalle.tipoDocumentacionFisica, re.registroDetalle.decodificacionTipoAnotacion, re.registroDetalle.presencial from RegistroEntrada as re LEFT JOIN re.destino destino ");
@@ -301,23 +302,19 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<RegistroBasico> getByOficinaEstado(Long idOficina, Long idEstado, Integer total) throws I18NException {
+    public List<RegistroBasico> getReservasByOficina(Long idOficina, Integer total) throws I18NException {
 
-        Query q;
+        Calendar fechaInicio = Calendar.getInstance(); // Obtiene la fecha de hoy
+        fechaInicio.add(Calendar.DATE,-180); // Le restamos 6 meses
 
-        String s = "re.registroDetalle.extracto ";
+        Query q = em.createQuery("Select re.id, re.numeroRegistroFormateado, re.fecha, re.libro.nombre, re.usuario.usuario.identificador, re.registroDetalle.reserva " +
+                "from RegistroEntrada as re where re.oficina.id = :idOficinaActiva and re.estado = :reserva and re.fecha >= :fechaInicio order by re.id desc");
 
-        if (idEstado.equals(RegwebConstantes.REGISTRO_RESERVA)) {
-            s = "re.registroDetalle.reserva ";
-        }
-
-        q = em.createQuery("Select re.id, re.numeroRegistroFormateado, re.fecha, re.libro.nombre, re.usuario.usuario.identificador, " + s +
-                "from RegistroEntrada as re where re.oficina.id = :idOficinaActiva and re.estado = :idEstado order by re.id desc");
-
-        q.setHint("org.hibernate.readOnly", true);
-        q.setMaxResults(total);
         q.setParameter("idOficinaActiva", idOficina);
-        q.setParameter("idEstado", idEstado);
+        q.setParameter("reserva", RegwebConstantes.REGISTRO_RESERVA);
+        q.setParameter("fechaInicio", fechaInicio.getTime());
+        q.setMaxResults(total);
+        q.setHint("org.hibernate.readOnly", true);
 
         return getRegistroBasicoList(q.getResultList());
 
@@ -740,15 +737,17 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
     @SuppressWarnings(value = "unchecked")
     public List<RegistroEntrada> getSirRechazadosReenviados(Long idEntidad, Long idOficina, Integer total) throws I18NException {
 
-        Query q;
+        Calendar fechaInicio = Calendar.getInstance(); // Obtiene la fecha de hoy
+        fechaInicio.add(Calendar.DATE,-180); // Le restamos 6 meses
 
-        q = em.createQuery("Select re.id, re.fecha, re.registroDetalle.decodificacionEntidadRegistralDestino," +
-                " re.estado, re.registroDetalle.decodificacionTipoAnotacion from RegistroEntrada as re where re.entidad.id = :idEntidad and re.oficina.id = :idOficinaActiva " +
-                "and (re.estado = :rechazado or re.estado = :reenviado) order by re.id desc");
+        Query q = em.createQuery("Select re.id, re.fecha, re.registroDetalle.decodificacionEntidadRegistralDestino," +
+                " re.estado, re.registroDetalle.decodificacionTipoAnotacion from RegistroEntrada as re where re.entidad.id = :idEntidad and re.oficina.id = :idOficinaActiva and" +
+                " re.fecha >= :fechaInicio and (re.estado = :rechazado or re.estado = :reenviado) order by re.id desc");
 
         q.setMaxResults(total);
         q.setParameter("idEntidad", idEntidad);
         q.setParameter("idOficinaActiva", idOficina);
+        q.setParameter("fechaInicio", fechaInicio.getTime());
         q.setParameter("rechazado", RegwebConstantes.REGISTRO_RECHAZADO);
         q.setParameter("reenviado", RegwebConstantes.REGISTRO_REENVIADO);
         q.setHint("org.hibernate.readOnly", true);
@@ -1091,17 +1090,6 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
         return q.getResultList();
     }
 
-    /**
-     * Comprueba si alguno de los valores de búsqueda referentes al Interesado se ha rellenado
-     * @param interesadoNom
-     * @param interesadoLli1
-     * @param interesadoLli2
-     * @param interesadoDoc
-     * @return
-     */
-    private boolean busquedaInteresados(String interesadoNom, String interesadoLli1, String interesadoLli2, String interesadoDoc) {
 
-        return StringUtils.isNotEmpty(interesadoNom) || StringUtils.isNotEmpty(interesadoLli1) || StringUtils.isNotEmpty(interesadoLli2) || StringUtils.isNotEmpty(interesadoDoc);
-    }
 
 }

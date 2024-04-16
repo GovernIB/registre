@@ -17,6 +17,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -254,16 +255,19 @@ public class TrazabilidadBean extends BaseEjbJPA<Trazabilidad, Long> implements 
     @SuppressWarnings(value = "unchecked")
     public List<RegistroEntrada> getPendientesDistribuirSir(Long idOficina, Long idEntidad, Integer total) throws I18NException {
 
+        Calendar fechaInicio = Calendar.getInstance(); // Obtiene la fecha de hoy
+        fechaInicio.add(Calendar.DATE,-180); // Le restamos 6 meses
+
         Query q = em.createQuery("Select t.registroEntradaDestino.id, t.registroEntradaDestino.numeroRegistroFormateado, " +
                 "t.registroEntradaDestino.fecha, t.registroEntradaDestino.registroDetalle.extracto from Trazabilidad as t " +
-                "where t.tipo = :recibido_sir and t.registroSir.entidad.id = :idEntidad and " +
-                "t.registroEntradaDestino.evento = :distribuir and " +
-                "t.registroEntradaDestino.oficina.id = :idOficina and " +
-                "t.registroEntradaDestino.estado = :registro_valido order by t.fecha");
+                "where t.tipo = :recibidoSir and t.registroSir.entidad.id = :idEntidad and " +
+                "t.registroEntradaDestino.evento = :distribuir and t.registroEntradaDestino.oficina.id = :idOficina and " +
+                "t.registroEntradaDestino.fecha >= :fechaInicio and t.registroEntradaDestino.estado = :registro_valido order by t.fecha");
 
-        q.setParameter("recibido_sir", RegwebConstantes.TRAZABILIDAD_RECIBIDO_SIR);
+        q.setParameter("recibidoSir", RegwebConstantes.TRAZABILIDAD_RECIBIDO_SIR);
         q.setParameter("idEntidad", idEntidad);
         q.setParameter("idOficina", idOficina);
+        q.setParameter("fechaInicio", fechaInicio.getTime());
         q.setParameter("registro_valido", RegwebConstantes.REGISTRO_VALIDO);
         q.setParameter("distribuir", RegwebConstantes.EVENTO_DISTRIBUIR);
         q.setHint("org.hibernate.readOnly", true);

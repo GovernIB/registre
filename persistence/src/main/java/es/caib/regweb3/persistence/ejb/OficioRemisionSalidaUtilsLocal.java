@@ -34,7 +34,7 @@ public interface OficioRemisionSalidaUtilsLocal {
      * @return
      * @throws I18NException
      */
-    LinkedHashSet<Organismo> organismosSalidaPendientesRemisionTipo(Long idEntidad, Long idOficina, Long tipoEvento, Integer total) throws I18NException;
+    LinkedHashSet<Organismo> organismosSalidaPendientesRemisionTipo(Long idEntidad, Long idOficina, Long tipoEvento, Integer total, Boolean fecha) throws I18NException;
 
     /**
      * Obtiene el total de Registros de Salida que están considerados Oficios de Remisión

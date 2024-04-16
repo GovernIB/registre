@@ -60,13 +60,13 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public LinkedHashSet<Organismo> organismosSalidaPendientesRemisionTipo(Long idEntidad, Long idOficina, Long tipoEvento, Integer total) throws I18NException {
+    public LinkedHashSet<Organismo> organismosSalidaPendientesRemisionTipo(Long idEntidad, Long idOficina, Long tipoEvento, Integer total, Boolean fecha) throws I18NException {
 
         String queryFecha = "";
-        String fecha = PropiedadGlobalUtil.getFechaOficiosSalida();
+        String fechaOficiosSalida = PropiedadGlobalUtil.getFechaOficiosSalida();
 
-        if (StringUtils.isNotEmpty(fecha)) {
-            queryFecha = " and rs.fecha >= :fecha";
+        if (StringUtils.isNotEmpty(fechaOficiosSalida) || fecha){
+            queryFecha = " and rs.fecha >= :fechaInicio";
         }
 
         // Obtenemos los Registros de Salida que son Oficio de remisión
@@ -78,8 +78,13 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
         q.setParameter("idEntidad", idEntidad);
         q.setParameter("idOficina", idOficina);
         q.setParameter("tipoEvento", tipoEvento);
-        if (StringUtils.isNotEmpty(fecha)) {
-            q.setParameter("fecha", TimeUtils.formateaFecha(fecha, RegwebConstantes.FORMATO_FECHA));
+
+        if (fecha){
+            Calendar fechaInicio = Calendar.getInstance(); // Obtiene la fecha de hoy
+            fechaInicio.add(Calendar.DATE,-180); // Le restamos 6 meses
+            q.setParameter("fechaInicio", fechaInicio.getTime());
+        } else if (StringUtils.isNotEmpty(fechaOficiosSalida)) {
+            q.setParameter("fechaInicio", TimeUtils.formateaFecha(fechaOficiosSalida, RegwebConstantes.FORMATO_FECHA));
         }
 
         if (total != null) {

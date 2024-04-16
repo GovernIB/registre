@@ -2,7 +2,6 @@ package es.caib.regweb3.webapp.controller;
 
 import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.model.Oficina;
-import es.caib.regweb3.model.Organismo;
 import es.caib.regweb3.model.UsuarioEntidad;
 import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.utils.RegwebConstantes;
@@ -16,7 +15,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
-import java.util.LinkedHashSet;
 
 /**
  * Created by Fundació BIT.
@@ -62,31 +60,21 @@ public class InicioController extends BaseController{
         // DASHBOARD OPERADOR
         if(isOperador(request) && oficinaActiva != null){
 
-            LinkedHashSet<Organismo> organismosOficinaActiva = new LinkedHashSet<Organismo>(getOrganismosOficinaActiva(request));
             UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
 
             /* RESERVA DE NÚMERO */
-            mav.addObject("reservas", registroEntradaConsultaEjb.getByOficinaEstado(oficinaActiva.getId(), RegwebConstantes.REGISTRO_RESERVA, RegwebConstantes.REGISTROS_PANTALLA_INICIO));
+            mav.addObject("reservas", registroEntradaConsultaEjb.getReservasByOficina(oficinaActiva.getId(), RegwebConstantes.REGISTROS_PANTALLA_INICIO));
 
             /* OFICIOS PENDIENTES DE REMISIÓN */
 
-            mav.addObject("organismosOficioRemisionEntradaExternos", oficioRemisionEntradaUtilsEjb.organismosEntradaPendientesRemisionExternosTipo(entidadActiva.getId(), oficinaActiva.getId(),  RegwebConstantes.EVENTO_OFICIO_EXTERNO, RegwebConstantes.REGISTROS_PANTALLA_INICIO));
-
             // Oficios de entrada SIR
             if(entidadActiva.getSir() && oficinaActiva.getSirEnvio()) {
-                mav.addObject("organismosOficioRemisionEntradaSir", oficioRemisionEntradaUtilsEjb.organismosEntradaPendientesRemisionExternosTipo(entidadActiva.getId(), oficinaActiva.getId(), RegwebConstantes.EVENTO_OFICIO_SIR, RegwebConstantes.REGISTROS_PANTALLA_INICIO));
+                mav.addObject("organismosOficioRemisionEntradaSir", oficioRemisionEntradaUtilsEjb.organismosEntradaPendientesRemisionExternosTipo(entidadActiva.getId(), oficinaActiva.getId(), RegwebConstantes.EVENTO_OFICIO_SIR, RegwebConstantes.REGISTROS_PANTALLA_INICIO, true));
             }
-
-            // Obtenemos los Oficios pendientes de Llegada
-            mav.addObject("oficiosPendientesLlegada", oficioRemisionEjb.oficiosPendientesLlegada(organismosOficinaActiva, RegwebConstantes.REGISTROS_PANTALLA_INICIO));
-
-
-            // Obtenemos los Organismos que tienen Registros de salida pendientes de tramitar por medio de un Oficio de Revisión,
-            mav.addObject("organismosOficioRemisionSalidaExternos", oficioRemisionSalidaUtilsEjb.organismosSalidaPendientesRemisionTipo(entidadActiva.getId(), oficinaActiva.getId(), RegwebConstantes.EVENTO_OFICIO_EXTERNO, RegwebConstantes.REGISTROS_PANTALLA_INICIO));
 
             // Oficios de salida SIR
             if(entidadActiva.getSir() && oficinaActiva.getSirEnvio()) {
-                mav.addObject("organismosOficioRemisionSalidaSir", oficioRemisionSalidaUtilsEjb.organismosSalidaPendientesRemisionTipo(entidadActiva.getId(), oficinaActiva.getId(), RegwebConstantes.EVENTO_OFICIO_SIR, RegwebConstantes.REGISTROS_PANTALLA_INICIO));
+                mav.addObject("organismosOficioRemisionSalidaSir", oficioRemisionSalidaUtilsEjb.organismosSalidaPendientesRemisionTipo(entidadActiva.getId(), oficinaActiva.getId(), RegwebConstantes.EVENTO_OFICIO_SIR, RegwebConstantes.REGISTROS_PANTALLA_INICIO, true));
             }
 
             /* REGISTROS SIR */
