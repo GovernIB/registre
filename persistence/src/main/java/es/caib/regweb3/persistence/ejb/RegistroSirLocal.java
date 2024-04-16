@@ -109,7 +109,7 @@ public interface RegistroSirLocal extends BaseEjb<RegistroSir, Long> {
      * @return
      * @throws I18NException
      */
-    Paginacion busqueda(Integer pageNumber, Date fechaInicio, Date fechaFin, RegistroSir registroSir, String oficinaSir, String estado, String entidad) throws I18NException;
+    Paginacion busqueda(Integer pageNumber, Date fechaInicio, Date fechaFin, RegistroSir registroSir, String interesadoNom, String interesadoLli1, String interesadoLli2, String interesadoDoc, String oficinaSir, String estado, String entidad) throws I18NException;
 
     /**
      * @param pageNumber
@@ -169,7 +169,6 @@ public interface RegistroSirLocal extends BaseEjb<RegistroSir, Long> {
     /**
      * Incrementa los reintentos
      * @param idRegistroSir
-     * @param reintentos
      * @throws I18NException
      */
     void incrementarReintentos(Long idRegistroSir) throws I18NException;

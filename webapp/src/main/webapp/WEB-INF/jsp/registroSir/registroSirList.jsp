@@ -121,6 +121,44 @@
                                 </div>
                             </div>
 
+                            <div class="col-xs-12">
+                                <div class="col-xs-6 espaiLinies">
+                                    <div class="col-xs-4 pull-left etiqueta_regweb">
+                                        <label for="interesadoSir.nombreInteresado" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.nombre.busqueda"/>" data-toggle="popover"><spring:message code="interesado.nombre"/></label>
+                                    </div>
+                                    <div class="col-xs-8">
+                                        <form:input path="interesadoSir.nombreInteresado" cssClass="form-control"/>
+                                    </div>
+                                </div>
+                                <div class="col-xs-6 espaiLinies">
+                                    <div class="col-xs-4 pull-left etiqueta_regweb">
+                                        <label for="interesadoSir.primerApellidoInteresado" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.apellido1.busqueda"/>" data-toggle="popover"><spring:message code="interesado.apellido1"/></label>
+                                    </div>
+                                    <div class="col-xs-8">
+                                        <form:input path="interesadoSir.primerApellidoInteresado" cssClass="form-control"/>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-xs-12">
+                                <div class="col-xs-6 espaiLinies">
+                                    <div class="col-xs-4 pull-left etiqueta_regweb">
+                                        <label for="interesadoSir.segundoApellidoInteresado" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.apellido2.busqueda"/>" data-toggle="popover"><spring:message code="interesado.apellido2"/></label>
+                                    </div>
+                                    <div class="col-xs-8">
+                                        <form:input path="interesadoSir.segundoApellidoInteresado" cssClass="form-control"/>
+                                    </div>
+                                </div>
+                                <div class="col-xs-6 espaiLinies">
+                                    <div class="col-xs-4 pull-left etiqueta_regweb">
+                                        <label for="interesadoSir.documentoIdentificacionInteresado" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.documento.busqueda"/>" data-toggle="popover"><spring:message code="interesado.documento"/></label>
+                                    </div>
+                                    <div class="col-xs-8">
+                                        <form:input path="interesadoSir.documentoIdentificacionInteresado" cssClass="form-control"/>
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="form-group col-xs-12">
                                 <button type="submit" class="btn btn-warning btn-sm"><spring:message code="regweb.buscar"/></button>
                             </div>

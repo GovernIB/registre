@@ -15,7 +15,10 @@ import es.caib.regweb3.utils.*;
 import es.caib.regweb3.webapp.controller.BaseController;
 import es.caib.regweb3.webapp.form.*;
 import es.caib.regweb3.webapp.utils.Mensaje;
+import org.apache.commons.io.IOUtils;
 import org.dom4j.Document;
+import org.dom4j.io.OutputFormat;
+import org.dom4j.io.XMLWriter;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,9 +30,8 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.OutputStream;
-import java.nio.charset.Charset;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.List;
 
@@ -410,7 +412,8 @@ public class SirController extends BaseController {
 
         RegistroSir registroSir = busqueda.getRegistroSir();
 
-        Paginacion paginacion = registroSirEjb.busqueda(busqueda.getPageNumber(), busqueda.getFechaInicio(), RegistroUtils.ajustarHoraBusqueda(busqueda.getFechaFin()), registroSir, registroSir.getCodigoEntidadRegistral(), busqueda.getEstado(),entidad.getCodigoDir3());
+        Paginacion paginacion = registroSirEjb.busqueda(busqueda.getPageNumber(), busqueda.getFechaInicio(), RegistroUtils.ajustarHoraBusqueda(busqueda.getFechaFin()), registroSir, busqueda.getInteresadoSir().getNombreInteresado(),
+                busqueda.getInteresadoSir().getPrimerApellidoInteresado(), busqueda.getInteresadoSir().getSegundoApellidoInteresado(), busqueda.getInteresadoSir().getDocumentoIdentificacionInteresado(), registroSir.getCodigoEntidadRegistral(), busqueda.getEstado(),entidad.getCodigoDir3());
 
         busqueda.setPageNumber(1);
 
@@ -640,17 +643,19 @@ public class SirController extends BaseController {
                 Document doc = sicres3XML.crearXMLFicheroIntercambioSICRES3(registroSir);
 
                 try {
-
+                    String ficheroIntercambio = prettyPrint(doc);
                     String filename = registroSir.getIdentificadorIntercambio()+".xml";
                     response.setContentType("text/xml");
                     response.setHeader("Content-Disposition", "attachment; filename=\"" + filename + "\"");
-                    response.setContentLength( doc.asXML().getBytes().length);
+                    response.setContentLength(ficheroIntercambio.length());
 
                     OutputStream output = response.getOutputStream();
-                    output.write(doc.asXML().getBytes(Charset.forName("UTF-8")));
-                    output.flush();
-                    output.close();
+                    InputStream input = new ByteArrayInputStream(ficheroIntercambio.getBytes(StandardCharsets.UTF_8));
 
+                    IOUtils.copy(input, output);
+
+                    input.close();
+                    output.close();
 
                 } catch (NumberFormatException e) {
                     log.info(e.getMessage());
@@ -663,6 +668,27 @@ public class SirController extends BaseController {
             e.printStackTrace();
         }
 
+    }
+
+    /**
+     * Obtiene el prettyPrint xml del Document
+     * @param document
+     * @return
+     */
+    public String prettyPrint(final Document document){
+
+        final StringWriter sw;
+
+        try {
+            final OutputFormat format = OutputFormat.createPrettyPrint();
+            sw = new StringWriter();
+            final XMLWriter writer = new XMLWriter(sw, format);
+            writer.write(document);
+        }
+        catch (Exception e) {
+            throw new RuntimeException("Error pretty printing xml:\n" + e);
+        }
+        return sw.toString();
     }
 
     /**

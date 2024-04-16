@@ -67,36 +67,26 @@
                                     <div class="table-responsive">
 
                                         <table class="table table-bordered table-hover table-striped tablesorter">
-                                            <colgroup>
-                                                <col>
-                                                <col>
-                                                <col>
-                                                <col>
-                                                <col>
-                                                <col>
-                                                <col>
-                                                <col>
-                                                <col width="51">
-                                            </colgroup>
                                             <thead>
-                                            <tr>
-                                                <th><spring:message code="registroSir.identificadorIntercambio"/></th>
-                                                <th><spring:message code="regweb.recibido"/></th>
-                                                <th><spring:message code="regweb.tipo"/></th>
-                                                <th><spring:message code="registroSir.oficinaOrigen"/></th>
-                                                <th><spring:message code="registroSir.oficinaDestino"/></th>
-                                                <th><spring:message code="registroSir.estado"/></th>
-                                                <th><spring:message code="registroSir.extracto"/></th>
-                                                <th>Doc</th>
-                                                <th class="center"><spring:message code="regweb.acciones"/></th>
-                                            </tr>
+                                                <tr>
+                                                    <%--<th><spring:message code="registroSir.identificadorIntercambio"/></th>--%>
+                                                    <th><spring:message code="regweb.recibido"/></th>
+                                                    <th><spring:message code="regweb.tipo"/></th>
+                                                    <th><spring:message code="registroSir.oficinaOrigen"/></th>
+                                                    <%--<th><spring:message code="registroSir.oficinaDestino"/></th>--%>
+                                                    <th><spring:message code="registroSir.estado"/></th>
+                                                    <th>Doc</th>
+                                                    <th><spring:message code="registroSir.extracto"/></th>
+                                                    <th><spring:message code="interesado.interesado"/></th>
+                                                    <th class="center"><spring:message code="regweb.acciones"/></th>
+                                                </tr>
                                             </thead>
 
                                             <tbody>
                                             <c:forEach var="registroSir" items="${paginacion.listado}" varStatus="status">
                                                 <c:set var="registroSir" value="${registroSir}" scope="request"/>
                                                 <tr>
-                                                    <td> ${registroSir.identificadorIntercambio}</td>
+                                                    <%--<td> ${registroSir.identificadorIntercambio}</td>--%>
                                                     <td><fmt:formatDate value="${registroSir.fechaRecepcion}" pattern="dd/MM/yyyy"/></td>
                                                     <td class="center">
                                                         <c:if test="${registroSir.tipoRegistro == 'ENTRADA'}">
@@ -108,11 +98,10 @@
                                                         </c:if>
                                                     </td>
                                                     <td>${registroSir.decodificacionEntidadRegistralOrigen}</td>
-                                                    <td>${registroSir.decodificacionEntidadRegistralDestino}</td>
+                                                    <%--<td>${registroSir.decodificacionEntidadRegistralDestino}</td>--%>
                                                     <td class="center">
-                                                        <c:import url="estadosRegistroSir.jsp" />
+                                                        <c:import url="estadosRegistroSir.jsp"/>
                                                     </td>
-                                                    <td>${registroSir.resumen}</td>
                                                     <td class="center">
                                                         <c:if test="${registroSir.documentacionFisica == RegwebConstantes.TIPO_DOCFISICA_NO_ACOMPANYA_DOC}">
                                                             <i class="fa fa-print text-verd"  title="<spring:message code="tipoDocumentacionFisica.${registroSir.documentacionFisica}"/>"></i>
@@ -124,6 +113,8 @@
                                                             <i class="fa fa-clipboard text-taronja" title="<spring:message code="tipoDocumentacionFisica.${registroSir.documentacionFisica}"/>"></i>
                                                         </c:if>
                                                     </td>
+                                                    <td>${registroSir.resumen}</td>
+                                                    <td>${registroSir.nombreInteresado}</td>
                                                     <td class="center">
                                                         <a class="btn btn-primary btn-sm" href="<c:url value="/registroSir/${registroSir.id}/detalle"/>" title="<spring:message code="registroSir.detalle"/>"><span class="fa fa-eye"></span></a>
                                                     </td>
