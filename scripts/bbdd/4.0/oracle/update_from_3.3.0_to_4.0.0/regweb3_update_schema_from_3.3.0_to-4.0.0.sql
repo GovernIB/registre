@@ -4,7 +4,7 @@ alter table RWE_ANEXO add RESUMEN varchar2(160 char);
 alter table RWE_ANEXO add ENDPOINTRFU varchar2(255 char);
 alter table RWE_ANEXO add IDENTIFRFU varchar2(4000 char);
 
---Cambio tamanyo ANEXOSIR
+--Cambio tamanyo RWE_ANEXO_SIR
 ALTER TABLE RWE_ANEXO_SIR MODIFY OBSERVACIONES varchar2(160 char);
 
 --Nuevas tablas metadatos
@@ -157,7 +157,7 @@ update RWE_REGISTRO_DETALLE set CODIGOSIA_temp = CODIGOSIA;
 ALTER TABLE RWE_REGISTRO_DETALLE DROP COLUMN CODIGOSIA;
 ALTER TABLE RWE_REGISTRO_DETALLE RENAME COLUMN CODIGOSIA_temp TO CODIGOSIA;
 
---Nuevos campos Interesado
+--Nuevos campos RWE_PERSONA
 alter table RWE_PERSONA add RECEPNOTIF number(1,0);
 alter table RWE_PERSONA add TLFMOVIL varchar2(20 char);
 alter table RWE_PERSONA add AVISONOTIFEMAIL number(1,0);

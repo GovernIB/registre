@@ -593,9 +593,10 @@ public class SchedulerBean implements SchedulerLocal {
         String descripcion = "";
         Entidad entidadActiva = null;
         try {
+            //consultamos los asientos que estan pendientes de procesar
             List<AsientoBean> asientosPendientes = libSirEjb.consultaAsientosPendientes(50);
 
-            //ENVIADOS
+            //Lista donde se guardan los datos de los asientos que se van a procesar posteriormente
             List<DatosRegistroProcesoBean> aProcesar= new ArrayList<>();
 
             for(AsientoBean asiento: asientosPendientes){
@@ -625,11 +626,8 @@ public class SchedulerBean implements SchedulerLocal {
                     }else{
                        if (EstadoRegistroSir.ACEPTADO.equals(registroSir.getEstado())) {
                            log.info("Se ha recibido un ASIENTO que ya ha sido aceptado previamente: " + registroSir.getIdentificadorIntercambio() + "lo marcamos como procesado");
-                           //Volvemos a recibir un asiento que ya hemos aceptado, marcamos como procesado
-                           DatosRegistroProcesoBean datosRegistroProcesoBean = new DatosRegistroProcesoBean();
-                           datosRegistroProcesoBean.setCdIntercambio(asiento.getCdIntercambio());
-                           datosRegistroProcesoBean.setCdEnRgProcesa(asiento.getCdEnRgProcesa());
-                           datosRegistroProcesoBean.setEstadoAplicacion(TipoEstadoEnum.R.getCodigo());
+                           //Volvemos a recibir un asiento que ya hemos aceptado, indicamos que ya ha sido procesado
+                           DatosRegistroProcesoBean datosRegistroProcesoBean = datosRegistroProcesado(asiento.getCdIntercambio(), asiento.getCdEnRgProcesa(), TipoEstadoEnum.R.getCodigo());
                            aProcesar.add(datosRegistroProcesoBean);
                        }else if(EstadoRegistroSir.RECIBIDO.equals(registroSir.getEstado())){
                            log.info("El RegistroSir " + registroSir.getIdentificadorIntercambio() + " ya se habia recibido anteriormente y está en estado pendiente de procesar");
@@ -642,16 +640,11 @@ public class SchedulerBean implements SchedulerLocal {
                     log.info("ENVIADO " + asiento.getCdIntercambio());
                     log.info("ENVIADOS ESTADO" + asiento.getCdEstado());
 
-
-
                     OficioRemision oficioRemision = oficioRemisionEjb.getByIdentificadorIntercambio(asiento.getCdIntercambio());
                     if(oficioRemision!=null) { log.info("Oficio SIR ID" + oficioRemision.getId());}
                     if(oficioRemision!=null) {
-
-                        DatosRegistroProcesoBean datosRegistroProcesoBean = new DatosRegistroProcesoBean();
-                        datosRegistroProcesoBean.setCdIntercambio(asiento.getCdIntercambio());
-                        datosRegistroProcesoBean.setCdEnRgProcesa(asiento.getCdEnRgProcesa());
-                        datosRegistroProcesoBean.setEstadoAplicacion(TipoEstadoEnum.EC.getCodigo());
+                        //Preparamos los datos para procesar
+                        DatosRegistroProcesoBean datosRegistroProcesoBean = datosRegistroProcesado(asiento.getCdIntercambio(), asiento.getCdEnRgProcesa(), TipoEstadoEnum.EC.getCodigo());
                         aProcesar.add(datosRegistroProcesoBean);
 
                         switch (oficioRemision.getEstado()) {
@@ -681,17 +674,13 @@ public class SchedulerBean implements SchedulerLocal {
                 if(TipoEstadoEnum.ERCH.getCodigo().equals(asiento.getCdEstado())) { //Rechazo de un asiento enviado (Enviado rechazado) //PROBADO OK
                     //Integraciones revisadas OK
                     OficioRemision oficioRemision = oficioRemisionEjb.getByIdentificadorIntercambio(asiento.getCdIntercambio());
-                    log.info("ERCH " + asiento.getCdIntercambio());
+                    log.info("XXXXXX ERCH " + asiento.getCdIntercambio());
                     // Oficio Remision: Ha sido enviado por nosotros a SIR
                     if (oficioRemision != null) { // Existe en el sistema
 
                         //Procesamos
-                        DatosRegistroProcesoBean datosRegistroProcesoBean = new DatosRegistroProcesoBean();
-                        datosRegistroProcesoBean.setCdIntercambio(asiento.getCdIntercambio());
-                        datosRegistroProcesoBean.setCdEnRgProcesa(asiento.getCdEnRgProcesa());
-                        datosRegistroProcesoBean.setEstadoAplicacion(TipoEstadoEnum.ERCH.getCodigo());
+                        DatosRegistroProcesoBean datosRegistroProcesoBean = datosRegistroProcesado(asiento.getCdIntercambio(), asiento.getCdEnRgProcesa(), TipoEstadoEnum.ERCH.getCodigo());
                         aProcesar.add(datosRegistroProcesoBean);
-
                         oficioRemisionEjb.marcarRechazadoOficioSir(oficioRemision,asiento.getCdEnRgOrigen(), asiento.getCdIntercambio());
 
                     }
@@ -710,15 +699,9 @@ public class SchedulerBean implements SchedulerLocal {
 
 
                     OficioRemision oficioRemision = oficioRemisionEjb.getByIdentificadorIntercambio(asiento.getCdIntercambio());
-
-
-
                      if(oficioRemision.getEstado() == RegwebConstantes.OFICIO_SIR_ENVIADO){
                         //PROCESAMOS
-                         DatosRegistroProcesoBean datosRegistroProcesoBean = new DatosRegistroProcesoBean();
-                         datosRegistroProcesoBean.setCdIntercambio(asiento.getCdIntercambio());
-                         datosRegistroProcesoBean.setCdEnRgProcesa(asiento.getCdEnRgProcesa());
-                         datosRegistroProcesoBean.setEstadoAplicacion(TipoEstadoEnum.EERR.getCodigo());
+                         DatosRegistroProcesoBean datosRegistroProcesoBean = datosRegistroProcesado(asiento.getCdIntercambio(), asiento.getCdEnRgProcesa(), TipoEstadoEnum.EERR.getCodigo());
                          aProcesar.add(datosRegistroProcesoBean);
 
                          //cambiamos estado a error
@@ -728,16 +711,13 @@ public class SchedulerBean implements SchedulerLocal {
                     integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_SIR, descripcion, peticion.toString(), null, null, System.currentTimeMillis() - inicio.getTime(), oficioRemision.getEntidad().getId(), asiento.getCdIntercambio());
                 }
 
-                if(TipoEstadoEnum.RC.getCodigo().equals(asiento.getCdEstado())){//- Recibido Confirmado: la confirmación de un registro recibido se ha enviado por la
+                if(TipoEstadoEnum.RC.getCodigo().equals(asiento.getCdEstado())){//- Recibido Confirmado: la confirmación de un registro recibido se ha enviado
                     //PROBADO Y OK
                     //plataforma SIR y se ha recibido su correspondiente ACK
                     RegistroSir registroSir = registroSirEjb.getByIdIntercambio(asiento.getCdIntercambio());
                     if(EstadoRegistroSir.ACEPTADO.equals(registroSir.getEstado())){
                         //PROCESAMOS
-                        DatosRegistroProcesoBean datosRegistroProcesoBean = new DatosRegistroProcesoBean();
-                        datosRegistroProcesoBean.setCdIntercambio(asiento.getCdIntercambio());
-                        datosRegistroProcesoBean.setCdEnRgProcesa(asiento.getCdEnRgProcesa());
-                        datosRegistroProcesoBean.setEstadoAplicacion(TipoEstadoEnum.RC.getCodigo());
+                        DatosRegistroProcesoBean datosRegistroProcesoBean = datosRegistroProcesado(asiento.getCdIntercambio(), asiento.getCdEnRgProcesa(), TipoEstadoEnum.RC.getCodigo());
                         aProcesar.add(datosRegistroProcesoBean);
                     }else{
                         log.info("No se puede confirmar el asiento (" + asiento.getCdIntercambio()+ ") - (" + TipoEstadoEnum.RC.getDescripcion()+ ")");
@@ -751,10 +731,7 @@ public class SchedulerBean implements SchedulerLocal {
                     RegistroSir registroSir = registroSirEjb.getByIdIntercambio(asiento.getCdIntercambio());
                     if(EstadoRegistroSir.ACEPTADO.equals(registroSir.getEstado())){
                         //PROCESAMOS
-                        DatosRegistroProcesoBean datosRegistroProcesoBean = new DatosRegistroProcesoBean();
-                        datosRegistroProcesoBean.setCdIntercambio(asiento.getCdIntercambio());
-                        datosRegistroProcesoBean.setCdEnRgProcesa(asiento.getCdEnRgProcesa());
-                        datosRegistroProcesoBean.setEstadoAplicacion(TipoEstadoEnum.RERR.getCodigo());
+                        DatosRegistroProcesoBean datosRegistroProcesoBean = datosRegistroProcesado(asiento.getCdIntercambio(), asiento.getCdEnRgProcesa(), TipoEstadoEnum.RERR.getCodigo());
                         aProcesar.add(datosRegistroProcesoBean);
                     }else{
                         log.info("Se ha producido un error en la confirmación del asiento (" + asiento.getCdIntercambio()+ ") - (" + TipoEstadoEnum.RERR.getDescripcion()+ ")");
@@ -766,12 +743,8 @@ public class SchedulerBean implements SchedulerLocal {
                     RegistroSir registroSir = registroSirEjb.getByIdIntercambio(asiento.getCdIntercambio()); //PROBADO Y OK
                     if(EstadoRegistroSir.REENVIADO.equals(registroSir.getEstado())){
                         //PROCESAMOS
-                        DatosRegistroProcesoBean datosRegistroProcesoBean = new DatosRegistroProcesoBean();
-                        datosRegistroProcesoBean.setCdIntercambio(asiento.getCdIntercambio());
-                        datosRegistroProcesoBean.setCdEnRgProcesa(asiento.getCdEnRgProcesa());
-                        datosRegistroProcesoBean.setEstadoAplicacion(TipoEstadoEnum.REERR.getCodigo());
+                        DatosRegistroProcesoBean datosRegistroProcesoBean = datosRegistroProcesado(asiento.getCdIntercambio(), asiento.getCdEnRgProcesa(), TipoEstadoEnum.REERR.getCodigo());
                         aProcesar.add(datosRegistroProcesoBean);
-
                         registroSirEjb.modificarEstadoNuevaTransaccion(registroSir.getId(), EstadoRegistroSir.REENVIADO_Y_ERROR);
 
                     }else{
@@ -801,6 +774,10 @@ public class SchedulerBean implements SchedulerLocal {
     }
 
 
+    /**
+     * Método que reencola los asientos que se encuentran en estados candidatos a ser reencolados
+     * @throws I18NException
+     */
     @Override
     public void reencolarAsientos() throws I18NException {
 
@@ -837,10 +814,8 @@ public class SchedulerBean implements SchedulerLocal {
     }
 
 
-
-
     /**
-     *
+     * Método que crea una integración de tipo Anotación para acción de SIR
      * @param asientoBean
      * @param peticion
      */
@@ -853,5 +828,20 @@ public class SchedulerBean implements SchedulerLocal {
         if(StringUtils.isNotEmpty(asientoBean.getDsTpAnotacion())){
             peticion.append("Motivo: ").append(asientoBean.getDsTpAnotacion()).append(System.getProperty("line.separator"));
         }
+    }
+
+    /**
+     * Método que devuelve un objeto DatosRegistroProcesoBean con los datos necesarios para marcar un registro como procesado
+     * @param cdIntercambio
+     * @param cdEnRgProcesa
+     * @param estadoAplicacion
+     * @return
+     */
+    private DatosRegistroProcesoBean datosRegistroProcesado(String cdIntercambio, String cdEnRgProcesa, String estadoAplicacion){
+        DatosRegistroProcesoBean datosRegistroProcesoBean = new DatosRegistroProcesoBean();
+        datosRegistroProcesoBean.setCdIntercambio(cdIntercambio);
+        datosRegistroProcesoBean.setCdEnRgProcesa(cdEnRgProcesa);
+        datosRegistroProcesoBean.setEstadoAplicacion(estadoAplicacion);
+        return datosRegistroProcesoBean;
     }
 }

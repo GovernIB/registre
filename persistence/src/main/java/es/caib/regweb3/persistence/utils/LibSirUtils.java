@@ -249,18 +249,6 @@ public class LibSirUtils {
                 asientoBean.setOtrosMetadatosParticulares(otrosMetadatosParticular);
             }
 
-            //INTERESADOS Irá siempre vacio, porque el destinatario va informado en el segmento DeDestino
-            /*List<Interesado> interesados = registroDetalle.getInteresados();
-            if (!interesados.isEmpty()) {
-                for (Interesado interesado : interesados) {
-                    if (interesado != null) {
-                        InteresadoBean interesadoBean = transformarInteresado(interesado);
-                        asientoBean.getInteresadosBean().add(interesadoBean);
-                    }
-                }
-            }*/
-
-
             asientoBean.setAnexosBean(transformarAnexos(registroSalida.getRegistroDetalle().getAnexosFull(), registroDetalle.getIdentificadorIntercambio()));
         }
         return asientoBean;
@@ -309,6 +297,16 @@ public class LibSirUtils {
     }
 
 
+    /**
+     * Transforma un anexo a un AnexoBean de la libreria SIR.
+     * @param anexo
+     * @param secuencia
+     * @param identificadorIntercambio
+     * @param tipoMime
+     * @return
+     * @throws DatatypeConfigurationException
+     * @throws ParseException
+     */
     private AnexoBean transformarAnexo(Anexo anexo, int secuencia, String identificadorIntercambio, String tipoMime) throws DatatypeConfigurationException, ParseException {
 
         es.gob.ad.registros.sir.interService.bean.AnexoBean anexoBean = new AnexoBean();
@@ -411,7 +409,14 @@ public class LibSirUtils {
         return anexoBean;
     }
 
-
+    /**
+     * Transforma una lista de Anexos a un Set de AnexoBean de la libreria SIR.
+     * @param anexosFull
+     * @param identificadorIntercambio
+     * @return
+     * @throws DatatypeConfigurationException
+     * @throws ParseException
+     */
     private Set<AnexoBean> transformarAnexos(List<AnexoFull> anexosFull, String identificadorIntercambio) throws DatatypeConfigurationException, ParseException {
 
         Set<AnexoBean> anexoBeans= new HashSet<>();
@@ -421,7 +426,7 @@ public class LibSirUtils {
                 if (anexoFull != null) {
                     es.gob.ad.registros.sir.interService.bean.AnexoBean anexoBean;
                     Anexo anexo = anexoFull.getAnexo();
-                    //Arreglar el tipo Mime
+                    //Especificamos el tipo MIME segun el tipo de firma
                     if(anexo.getModoFirma() == MODO_FIRMA_ANEXO_DETACHED){
                         anexoBean = transformarAnexo(anexo, secuencia, identificadorIntercambio, anexoFull.getSignMime());
                     }else{
@@ -436,6 +441,11 @@ public class LibSirUtils {
 
     }
 
+    /**
+     * Transforma un Interesado a un InteresadoBean de la libreria SIR.
+     * @param interesado
+     * @return InteresadoBean
+     */
     private InteresadoBean transformarInteresado(Interesado interesado) {
 
         //  InteresadoSir interesado = new InteresadoSir();
@@ -540,6 +550,13 @@ public class LibSirUtils {
         return interesadoBean;
     }
 
+
+    /**
+     * Transforma un RegistroDetalle a un parte de un AsientoBean de la libreria SIR.
+     * @param registroDetalle
+     * @param asientoBean
+     * @param organismo
+     */
     private void transformarRegistroDetalle(RegistroDetalle registroDetalle, AsientoBean asientoBean, Organismo organismo) {
 
         //Entidad Registral Destino
@@ -625,6 +642,18 @@ public class LibSirUtils {
     }
 
 
+    /**
+     * Guarda un documento en Interdoc (gestor de Referencias Únicas)
+     * @param anexoFull
+     * @param entidad
+     * @param documentoInteresado
+     * @param receptor
+     * @param numeroRegistroFormateado
+     * @param fechaRegistro
+     * @param tipoRegistro
+     * @return
+     * @throws I18NException
+     */
     public String guardarDocumentoInterdoc(AnexoFull anexoFull, Entidad entidad, String documentoInteresado, String receptor, String numeroRegistroFormateado, Date fechaRegistro, Long tipoRegistro ) throws I18NException {
 
         Anexo anexo = anexoFull.getAnexo();
@@ -651,14 +680,7 @@ public class LibSirUtils {
             Firma firma = new Firma();
 
             if (MODO_FIRMA_ANEXO_SINFIRMA == anexo.getModoFirma()) {
-                log.info("MODO SIN FIRMA");
-                //Preparamos el Documento a enviar
-                log.info("DATA " + anexoFull.getData());
-                log.info("SING DATA " + anexoFull.getSignData());
-                log.info("MIME "+ anexoFull.getMime());
-                log.info("FILE NAME "+ anexoFull.getFileName());
-                log.info("SIGN FILE NAME " + anexoFull.getSignFileName());
-                log.info("SIGN MIME "+ anexoFull.getSignMime());
+                //Preparamos el fitxer a enviar
                 fitxer.setData(anexoFull.getData());
                 fitxer.setDescripcio(anexoFull.getTituloCorto());
                 fitxer.setMime(anexoFull.getMime());
@@ -666,12 +688,6 @@ public class LibSirUtils {
             }
 
             if (MODO_FIRMA_ANEXO_ATTACHED == anexo.getModoFirma()) {
-                log.info("DATA " + anexoFull.getData());
-                log.info("SING DATA " + anexoFull.getSignData());
-                log.info("MIME "+ anexoFull.getMime());
-                log.info("FILE NAME "+ anexoFull.getFileName());
-                log.info("SIGN FILE NAME " + anexoFull.getSignFileName());
-                log.info("SIGN MIME "+ anexoFull.getSignMime());
                 //Preparamos el Documento a enviar
                 fitxer.setData(anexoFull.getSignData());
                 fitxer.setDescripcio(anexoFull.getSignaturaTituloCorto());
@@ -685,14 +701,7 @@ public class LibSirUtils {
             }
 
             if (MODO_FIRMA_ANEXO_DETACHED == anexo.getModoFirma()) {
-                log.info("MODO FIRMA DETACHED");
-                log.info("DATA " + anexoFull.getData());
-                log.info("SING DATA " + anexoFull.getSignData());
-                log.info("MIME "+ anexoFull.getMime());
-                log.info("FILE NAME "+ anexoFull.getFileName());
-                log.info("SIGN FILE NAME " + anexoFull.getSignFileName());
-                log.info("SIGN MIME "+ anexoFull.getSignMime());
-
+                // Preparamos el fitxer del documento, el fitxer de la firma y los datos de la firma a enviar
                 fitxer.setData(anexoFull.getData());
                 fitxer.setDescripcio(anexoFull.getTituloCorto());
                 fitxer.setMime(anexoFull.getMime());
@@ -817,9 +826,15 @@ public class LibSirUtils {
 
     }
 
-
+    /**
+     * Transforma un AsientoBean de la libreria LIBSIR a un RegistroSir
+     * @param asientoBean
+     * @param entidad
+     * @return
+     * @throws I18NException
+     * @throws InterException
+     */
     public static RegistroSir transformarAsientoBean(AsientoBean asientoBean, Entidad entidad) throws I18NException, InterException {
-        final SimpleDateFormat SDF = new SimpleDateFormat(FORMATO_FECHA_SICRES4);
 
         RegistroSir registroSir = null;
 
@@ -946,7 +961,7 @@ public class LibSirUtils {
             if (!anexosBean.isEmpty()) {
                 for (es.gob.ad.registros.sir.interService.bean.AnexoBean anexoBean : anexosBean) {
                     if (anexoBean != null) {
-                        AnexoSir anexo = transformarAnexoBean(anexoBean, asientoBean.getCdIntercambio());
+                        AnexoSir anexo = transformarAnexoBean(anexoBean);
                         registroSir.getAnexos().add(anexo);
                     }
                 }
@@ -998,6 +1013,12 @@ public class LibSirUtils {
         return interesadoSalida;
     }
 
+    /**
+     * Transforma un InteresadoBean de la libreria LIBSIR a un InteresadoSir
+     * @param interesadoBean
+     * @return
+     * @throws I18NException
+     */
     private static InteresadoSir transformarInteresadoBean(InteresadoBean interesadoBean) throws I18NException {
         InteresadoSir interesado = new InteresadoSir();
 
@@ -1068,8 +1089,14 @@ public class LibSirUtils {
         return interesado;
     }
 
-
-    private static AnexoSir transformarAnexoBean(AnexoBean anexoBean, String idIntercambio) throws I18NException, InterException {
+    /**
+     * Transforma un AnexoBean de la libreria LIBSIR a un AnexoSir
+     * @param anexoBean
+     * @return
+     * @throws I18NException
+     * @throws InterException
+     */
+    private static AnexoSir transformarAnexoBean(AnexoBean anexoBean) throws I18NException, InterException {
         AnexoSir anexo = new AnexoSir();
 
         anexo.setNombreFichero(es.caib.regweb3.utils.StringUtils.eliminarCaracteresProhibidosArxiu(anexoBean.getNombreFichero()));
@@ -1088,21 +1115,23 @@ public class LibSirUtils {
         anexo.setCodigoFormulario(anexoBean.getCodigoFormulario());
         anexo.setUrlRepositorio(anexoBean.getUrlRepositorio());
 
-        //FirmaBean
-        FirmaBean firmaBean = anexoBean.getFirmaBean();
-        if (firmaBean != null) {
+        //FirmasBean
+        for(FirmaBean firmaBean : anexoBean.getFirmasBean()){
+            if (firmaBean != null) {
 
-            anexo.setTipoFirma(firmaBean.getTipoFirma() != null ? firmaBean.getTipoFirma().value() : "");
-            if (firmaBean.getContenidoFirma() != null && firmaBean.getContenidoFirma().getCsv() != null) {
-                anexo.setCsv(firmaBean.getContenidoFirma().getCsv() != null ? firmaBean.getContenidoFirma().getCsv().getValorCSV() : "");
-                anexo.setRegulacionCsv(firmaBean.getContenidoFirma().getCsv() != null ? firmaBean.getContenidoFirma().getCsv().getRegulacionGeneracionCSV() : "");
-            }
-            if (firmaBean.getContenidoFirma() != null && firmaBean.getContenidoFirma().getFirmaConCertificadoBean() != null) {
-                anexo.setFirmaBase64(firmaBean.getContenidoFirma().getFirmaConCertificadoBean() != null ? firmaBean.getContenidoFirma().getFirmaConCertificadoBean().getFirmaBase64() : null);
-                //Incidencia 1900484
-                anexo.setReferenciaFirma(firmaBean.getContenidoFirma().getFirmaConCertificadoBean()!=null?(String)firmaBean.getContenidoFirma().getFirmaConCertificadoBean().getReferenciaFirma():"");
+                anexo.setTipoFirma(firmaBean.getTipoFirma() != null ? firmaBean.getTipoFirma().value() : "");
+                if (firmaBean.getContenidoFirma() != null && firmaBean.getContenidoFirma().getCsv() != null) {
+                    anexo.setCsv(firmaBean.getContenidoFirma().getCsv() != null ? firmaBean.getContenidoFirma().getCsv().getValorCSV() : "");
+                    anexo.setRegulacionCsv(firmaBean.getContenidoFirma().getCsv() != null ? firmaBean.getContenidoFirma().getCsv().getRegulacionGeneracionCSV() : "");
+                }
+                if (firmaBean.getContenidoFirma() != null && firmaBean.getContenidoFirma().getFirmaConCertificadoBean() != null) {
+                    anexo.setFirmaBase64(firmaBean.getContenidoFirma().getFirmaConCertificadoBean() != null ? firmaBean.getContenidoFirma().getFirmaConCertificadoBean().getFirmaBase64() : null);
+                    //Incidencia 1900484
+                    anexo.setReferenciaFirma(firmaBean.getContenidoFirma().getFirmaConCertificadoBean()!=null?(String)firmaBean.getContenidoFirma().getFirmaConCertificadoBean().getReferenciaFirma():"");
+                }
             }
         }
+
 
         //METADATOS SICRES4
         Set<MetadatoAnexoSir> metadatosAnexos = anexoBean.getOtrosMetadatosGenerales().stream()
