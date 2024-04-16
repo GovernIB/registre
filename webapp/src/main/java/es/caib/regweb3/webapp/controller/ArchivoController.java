@@ -31,12 +31,23 @@ public class ArchivoController extends BaseController{
     @EJB(mappedName =ArchivoLocal.JNDI_NAME)
     private ArchivoLocal archivoEjb;
 
+    /**
+     * Método que nos permite descargar un anexo
+     * @param archivoId
+     * @param response
+     */
     @RequestMapping(value = "/archivo/{archivoId}", method = RequestMethod.GET)
     public void  descargarArchivo(@PathVariable("archivoId") Long archivoId, HttpServletResponse response)  {
 
         descargarArchivo(archivoId, true, response);
     }
 
+    /**
+     * Método que nos permite descargar o visualizar un anexo
+     * @param archivoId
+     * @param attachment
+     * @param response
+     */
     @RequestMapping(value = "/archivo/{archivoId}/{attachment}", method = RequestMethod.GET)
     public void  descargarArchivo(@PathVariable("archivoId") Long archivoId, @PathVariable("attachment") Boolean attachment,HttpServletResponse response)  {
         Archivo archivo = null;
