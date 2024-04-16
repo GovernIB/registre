@@ -47,7 +47,6 @@ http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd">
         <class>es.caib.regweb3.model.PermisoOrganismoUsuario</class>
         <class>es.caib.regweb3.model.Persona</class>
         <class>es.caib.regweb3.model.Plugin</class>
-        <class>es.caib.regweb3.model.PreRegistro</class>
         <class>es.caib.regweb3.model.PropiedadGlobal</class>
         <class>es.caib.regweb3.model.RegistroDetalle</class>
         <class>es.caib.regweb3.model.RegistroEntrada</class>
