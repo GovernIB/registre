@@ -130,11 +130,14 @@ public class AnexoController extends BaseController {
                 }
             } catch (I18NValidationException i18n) {
                 log.error(i18n.getMessage(), i18n);
-                // TODO
                 Mensaje.saveMessageError(request, i18n.getMessage());
+                model.addAttribute("closeAndReload", "true");
+                return "registro/formularioAnexo";
             } catch (I18NException i18n) {
                 log.debug(i18n.getMessage(), i18n);
                 Mensaje.saveMessageError(request, I18NUtils.tradueix(i18n.getTraduccio()));
+                model.addAttribute("closeAndReload", "true");
+                return "registro/formularioAnexo";
             }
 
         }
