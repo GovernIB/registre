@@ -113,10 +113,10 @@ public class ExportarUsuariosExcel extends AbstractExcelView {
 
 
             //Título
-            sheet.addMergedRegion(CellRangeAddress.valueOf("$A$1:$N$1"));
+            sheet.addMergedRegion(CellRangeAddress.valueOf("$A$1:$R$1"));
             tittleCell.setCellValue(getMessage("usuario.exportar.lista"));
             tittleCell.setCellStyle(titulo);
-            sheet.addMergedRegion(CellRangeAddress.valueOf("$A$2:$N$2"));
+            sheet.addMergedRegion(CellRangeAddress.valueOf("$A$2:$R$2"));
 
             int rowNum = 1;
 
@@ -124,7 +124,7 @@ public class ExportarUsuariosExcel extends AbstractExcelView {
             header.setHeightInPoints(15);
 
             // Dades que se mostren d'un usuari
-            String[] capsalera = new String[]{"usuario.identificador", "usuario.nombre", "usuario.documento", "usuario.categoria","usuario.funcion","usuario.codigoTrabajo","usuario.nombreTrabajo","organismo.organismo", "oficina.oficina","usuario.observaciones", "usuario.fechaAlta", "usuario.cai", "usuario.email", "usuario.telefono"};
+            String[] capsalera = new String[]{"usuario.identificador", "usuario.nombre", "usuario.documento", "usuario.categoria","usuario.funcion","usuario.codigoTrabajo","usuario.nombreTrabajo","usuario.observaciones", "usuario.fechaAlta", "usuario.cai", "usuario.email", "usuario.telefono", "organismo.organismo","organismo.codigo", "oficina.oficina","oficina.codigo","oficina.oamr", "oficina.sir"};
 
             // DADES A MOSTRAR
             // Capçalera
@@ -180,47 +180,55 @@ public class ExportarUsuariosExcel extends AbstractExcelView {
                     row.createCell(6).setCellValue("");
                 }
 
-                // Organismo - Oficina
-                if(usuario.getUltimaOficina() != null){
-                    row.createCell(7).setCellValue(usuario.getUltimaOficina().getOrganismoResponsable().getDenominacion());
-                    row.createCell(8).setCellValue(usuario.getUltimaOficina().getDenominacion());
-                }else{
-                    row.createCell(7).setCellValue("");
-                    row.createCell(8).setCellValue("");
-                }
-
                 // Observaciones
                 if(usuario.getObservaciones() != null){
-                    row.createCell(9).setCellValue(usuario.getObservaciones());
+                    row.createCell(7).setCellValue(usuario.getObservaciones());
                 }else{
-                    row.createCell(9).setCellValue("");
+                    row.createCell(7).setCellValue("");
                 }
 
                 // Fecha alta
                 if(usuario.getFechaAlta() != null){
-                    row.createCell(10).setCellValue(new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(usuario.getFechaAlta()));
+                    row.createCell(8).setCellValue(new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(usuario.getFechaAlta()));
                 }else{
-                    row.createCell(10).setCellValue("");
+                    row.createCell(8).setCellValue("");
                 }
 
                 // CAI
                 if(usuario.getCai() != null){
-                    row.createCell(11).setCellValue(usuario.getCai());
+                    row.createCell(9).setCellValue(usuario.getCai());
                 }else{
-                    row.createCell(11).setCellValue("");
+                    row.createCell(9).setCellValue("");
                 }
 
                 // Mail
                 if(usuario.getUsuario().getEmail() != null){
-                    row.createCell(12).setCellValue(usuario.getUsuario().getEmail());
+                    row.createCell(10).setCellValue(usuario.getUsuario().getEmail());
                 }else{
-                    row.createCell(12).setCellValue("");
+                    row.createCell(10).setCellValue("");
                 }
                 // Teléfono
                 if(usuario.getTelefono() != null){
-                    row.createCell(13).setCellValue(usuario.getTelefono());
+                    row.createCell(11).setCellValue(usuario.getTelefono());
                 }else{
+                    row.createCell(11).setCellValue("");
+                }
+
+                // Organismo - Oficina
+                if(usuario.getUltimaOficina() != null){
+                    row.createCell(12).setCellValue(usuario.getUltimaOficina().getOrganismoResponsable().getDenominacion());
+                    row.createCell(13).setCellValue(usuario.getUltimaOficina().getOrganismoResponsable().getCodigo());
+                    row.createCell(14).setCellValue(usuario.getUltimaOficina().getDenominacion());
+                    row.createCell(15).setCellValue(usuario.getUltimaOficina().getCodigo());
+                    row.createCell(16).setCellValue(StringUtils.toStringSiNo(usuario.getUltimaOficina().getOamr()));
+                    row.createCell(17).setCellValue(StringUtils.toStringSiNo(usuario.getUltimaOficina().getSir()));
+                }else{
+                    row.createCell(12).setCellValue("");
                     row.createCell(13).setCellValue("");
+                    row.createCell(14).setCellValue("");
+                    row.createCell(15).setCellValue("");
+                    row.createCell(16).setCellValue("");
+                    row.createCell(17).setCellValue("");
                 }
 
                 // Aplicam estils a les cel·les
