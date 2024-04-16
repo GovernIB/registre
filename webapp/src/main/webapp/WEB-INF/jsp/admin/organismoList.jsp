@@ -70,7 +70,7 @@
 
                             <div class="form-group col-xs-6">
                                 <div class="col-xs-4 pull-left align-right"><spring:message
-                                        code="organismo.buscador.codigo"/></div>
+                                        code="organismo.codigo"/></div>
                                 <div class="col-xs-8">
                                     <form:input path="organismo.codigo" cssClass="form-control"/>
                                 </div>

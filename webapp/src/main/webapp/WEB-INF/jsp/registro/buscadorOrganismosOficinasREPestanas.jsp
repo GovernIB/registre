@@ -43,7 +43,7 @@ que se le indica -->
 
                                 <div class="col-xs-6">
                                     <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
-                                        <label for="codigoOrganismo${param.tipo}" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.codigo.organismo"/>" data-toggle="popover"><spring:message code="organismo.buscador.codigo"/></label>
+                                        <label for="codigoOrganismo${param.tipo}" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.codigo.organismo"/>" data-toggle="popover"><spring:message code="organismo.codigo"/></label>
                                     </div>
                                     <div class="col-xs-8">
                                         <input id="codigoOrganismo${param.tipo}" name="codigoOrganismo" class="form-control"

@@ -165,6 +165,7 @@ public class Oficina implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ENTIDAD", foreignKey = @ForeignKey(name = "RWE_OFICINA_ENTIDAD_FK"))
+    @JsonIgnore
     public Entidad getEntidad() {
         return entidad;
     }

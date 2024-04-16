@@ -176,7 +176,7 @@
                                                 <tr>
                                                     <th><spring:message code="organismo.denominacion"/></th>
                                                     <th>EDP</th>
-                                                    <th><spring:message code="organismo.buscador.codigo"/></th>
+                                                    <th><spring:message code="organismo.codigo"/></th>
                                                 </tr>
                                             </thead>
 
