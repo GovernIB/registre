@@ -477,6 +477,22 @@ public class AnexoScanController extends AnexoController {
         if (!scanWebResult.getScannedDocuments().isEmpty()) {
             docsEscaneados = scanWebResult.getScannedDocuments();
 
+            // Comprobar que los documentos escaneados son correctos
+            for(ScanWebDocument docEscaneado:docsEscaneados){
+                if(docEscaneado.getScannedPlainFile() != null && docEscaneado.getScannedSignedFile() == null && (docEscaneado.getScannedPlainFile().getLength() == 0)){
+                    throw new I18NException("anexo.error.nosizefile");
+                }
+                if(docEscaneado.getScannedPlainFile() == null && docEscaneado.getScannedSignedFile() != null && (docEscaneado.getScannedSignedFile().getLength() == 0)){
+                    throw new I18NException("anexo.error.nosizefile");
+                }
+                if(docEscaneado.getScannedPlainFile() == null && docEscaneado.getScannedSignedFile() == null){
+                    throw new I18NException("anexo.error.noscanedfiles");
+                }
+                if(docEscaneado.getScannedPlainFile() != null && docEscaneado.getScannedSignedFile() != null && (docEscaneado.getScannedPlainFile().getLength() == 0 && docEscaneado.getScannedSignedFile().getLength() == 0)) {
+                    throw new I18NException("anexo.error.nosizefile");
+                }
+            }
+
         }else if (scanWebResult.getScannedDocuments().isEmpty()) {
             throw new I18NException("anexo.error.noscanedfiles");
         }
