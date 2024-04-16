@@ -213,7 +213,7 @@ public class OficioRemisionController extends BaseController {
 
         OficioPendienteBusquedaForm oficioPendienteBusquedaForm = new OficioPendienteBusquedaForm(registroEntrada, 1);
 
-        model.addAttribute("organismosDestino", oficioRemisionEntradaUtilsEjb.organismosEntradaPendientesRemisionExternosTipo(entidad.getId(), oficinaActiva.getId(), tipoEvento, null));
+        model.addAttribute("organismosDestino", oficioRemisionEntradaUtilsEjb.organismosEntradaPendientesRemisionExternosTipo(entidad.getId(), oficinaActiva.getId(), tipoEvento, null, false));
         model.addAttribute("registroEntradaBusqueda", oficioPendienteBusquedaForm);
         model.addAttribute("anys", getAnys());
 
@@ -238,7 +238,7 @@ public class OficioRemisionController extends BaseController {
         busqueda.setPageNumber(1);
         mav.addObject("oficiosRemisionOrganismo", oficiosRemisionOrganismo);
         mav.addObject("paginacion", oficiosRemisionOrganismo.getPaginacion());
-        mav.addObject("organismosDestino", oficioRemisionEntradaUtilsEjb.organismosEntradaPendientesRemisionExternosTipo(entidadActiva.getId(), oficinaActiva.getId(), tipoEvento, null));
+        mav.addObject("organismosDestino", oficioRemisionEntradaUtilsEjb.organismosEntradaPendientesRemisionExternosTipo(entidadActiva.getId(), oficinaActiva.getId(), tipoEvento, null, false));
         mav.addObject("registroEntradaBusqueda", busqueda);
         mav.addObject("oficioRemisionForm", new OficioRemisionForm(RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA));
         mav.addObject("anys", getAnys());
@@ -263,7 +263,7 @@ public class OficioRemisionController extends BaseController {
         RegistroSalida registroSalida = new RegistroSalida();
         registroSalida.setOficina(oficinaActiva);
 
-        model.addAttribute("organismosDestino", oficioRemisionSalidaUtilsEjb.organismosSalidaPendientesRemisionTipo(entidadActiva.getId(), oficinaActiva.getId(), tipoEvento, null));
+        model.addAttribute("organismosDestino", oficioRemisionSalidaUtilsEjb.organismosSalidaPendientesRemisionTipo(entidadActiva.getId(), oficinaActiva.getId(), tipoEvento, null,false ));
         model.addAttribute("registroSalidaBusqueda", new OficioSalidaPendienteBusquedaForm(registroSalida, 1));
         model.addAttribute("anys", getAnys());
 
@@ -289,7 +289,7 @@ public class OficioRemisionController extends BaseController {
         busqueda.setPageNumber(1);
         mav.addObject("oficiosRemisionOrganismo", oficiosRemisionOrganismo);
         mav.addObject("paginacion", oficiosRemisionOrganismo.getPaginacion());
-        mav.addObject("organismosDestino", oficioRemisionSalidaUtilsEjb.organismosSalidaPendientesRemisionTipo(entidadActiva.getId(), oficinaActiva.getId(), tipoEvento, null));
+        mav.addObject("organismosDestino", oficioRemisionSalidaUtilsEjb.organismosSalidaPendientesRemisionTipo(entidadActiva.getId(), oficinaActiva.getId(), tipoEvento, null, false));
         mav.addObject("registroSalidaBusqueda", busqueda);
         mav.addObject("oficioRemisionForm", new OficioRemisionForm(RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA));
         mav.addObject("anys", getAnys());

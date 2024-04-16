@@ -483,15 +483,17 @@ public class RegistroSalidaConsultaBean implements RegistroSalidaConsultaLocal {
     @SuppressWarnings(value = "unchecked")
     public List<RegistroSalida> getSirRechazadosReenviados(Long idEntidad, Long idOficina, Integer total) throws I18NException {
 
-        Query q;
+        Calendar fechaInicio = Calendar.getInstance(); // Obtiene la fecha de hoy
+        fechaInicio.add(Calendar.DATE,-180); // Le restamos 6 meses
 
-        q = em.createQuery("Select rs.id, rs.fecha, rs.registroDetalle.decodificacionEntidadRegistralDestino," +
-                " rs.estado, rs.registroDetalle.decodificacionTipoAnotacion from RegistroSalida as rs where rs.entidad.id = :idEntidad and rs.oficina.id = :idOficinaActiva " +
-                "and (rs.estado = :rechazado or rs.estado = :reenviado) order by rs.id desc");
+        Query q = em.createQuery("Select rs.id, rs.fecha, rs.registroDetalle.decodificacionEntidadRegistralDestino," +
+                " rs.estado, rs.registroDetalle.decodificacionTipoAnotacion from RegistroSalida as rs where rs.entidad.id = :idEntidad and rs.oficina.id = :idOficinaActiva and" +
+                " rs.fecha >= :fechaInicio and (rs.estado = :rechazado or rs.estado = :reenviado) order by rs.id desc");
 
         q.setMaxResults(total);
         q.setParameter("idEntidad", idEntidad);
         q.setParameter("idOficinaActiva", idOficina);
+        q.setParameter("fechaInicio", fechaInicio.getTime());
         q.setParameter("rechazado", RegwebConstantes.REGISTRO_RECHAZADO);
         q.setParameter("reenviado", RegwebConstantes.REGISTRO_REENVIADO);
         q.setHint("org.hibernate.readOnly", true);

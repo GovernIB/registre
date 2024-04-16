@@ -38,10 +38,11 @@ public interface OficioRemisionEntradaUtilsLocal {
      * @param idOficina
      * @param tipoEvento
      * @param total
+     * @param fecha
      * @return
      * @throws I18NException
      */
-    List<Organismo> organismosEntradaPendientesRemisionExternosTipo(Long idEntidad, Long idOficina, Long tipoEvento, Integer total) throws I18NException;
+    List<Organismo> organismosEntradaPendientesRemisionExternosTipo(Long idEntidad, Long idOficina, Long tipoEvento, Integer total, Boolean fecha) throws I18NException;
 
 
     /**

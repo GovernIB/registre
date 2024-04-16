@@ -49,11 +49,11 @@ public interface RegistroEntradaConsultaLocal {
      * Busca los Registros de Entrada de una OficinaActiva en función de su estado.
      *
      * @param idOficina
-     * @param idEstado
+     * @param total
      * @return
      * @throws I18NException
      */
-    List<RegistroBasico> getByOficinaEstado(Long idOficina, Long idEstado, Integer total) throws I18NException;
+    List<RegistroBasico> getReservasByOficina(Long idOficina, Integer total) throws I18NException;
 
     /**
      *

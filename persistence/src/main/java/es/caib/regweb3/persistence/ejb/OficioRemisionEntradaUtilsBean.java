@@ -92,18 +92,27 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Organismo> organismosEntradaPendientesRemisionExternosTipo(Long idEntidad, Long idOficina, Long tipoEvento, Integer total) throws I18NException {
+    public List<Organismo> organismosEntradaPendientesRemisionExternosTipo(Long idEntidad, Long idOficina, Long tipoEvento, Integer total, Boolean fecha) throws I18NException {
+
+        Calendar fechaInicio = Calendar.getInstance(); // Obtiene la fecha de hoy
+        fechaInicio.add(Calendar.DATE,-180); // Le restamos 6 meses
 
         // Obtenemos los Organismos destinatarios EXTERNOS que tiene Oficios de Remision pendientes de tramitar
-        Query q;
-        q = em.createQuery("Select distinct re.destinoExternoCodigo, re.destinoExternoDenominacion from RegistroEntrada as re where " +
-                "re.entidad.id = :idEntidad and re.estado = :valido and re.oficina.id = :idOficina  and re.destino is null and re.evento = :tipoEvento ");
+        StringBuilder query = new StringBuilder("Select distinct re.destinoExternoCodigo, re.destinoExternoDenominacion from RegistroEntrada as re where " +
+                "re.entidad.id = :idEntidad and re.estado = :valido and re.oficina.id = :idOficina and re.destino is null and re.evento = :tipoEvento ");
+
+        if(fecha){
+            query.append("and re.fecha >= :fechaInicio");
+        }
+
+        Query q = em.createQuery(query.toString());
 
         // Parámetros
         q.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
         q.setParameter("idEntidad", idEntidad);
         q.setParameter("idOficina", idOficina);
         q.setParameter("tipoEvento", tipoEvento);
+        if(fecha){q.setParameter("fechaInicio", fechaInicio.getTime());}
         q.setHint("org.hibernate.readOnly", true);
 
         if (total != null) {
