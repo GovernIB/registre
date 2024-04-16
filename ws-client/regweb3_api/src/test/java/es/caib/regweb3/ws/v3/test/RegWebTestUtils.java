@@ -75,8 +75,16 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
         return testProperties.getProperty("test_entidad_dir3" + entorno);
     }
 
+    public static String getTestEntidadDenominacionDir3() {
+        return testProperties.getProperty("test_entidad_denominacion_dir3" + entorno);
+    }
+
     public static String getTestDestinoCodigoDir3() {
         return testProperties.getProperty("test_destino_dir3" + entorno);
+    }
+
+    public static String getTestDestinoDenominacionDir3() {
+        return testProperties.getProperty("test_destino_denominacion_dir3" + entorno);
     }
 
     public static String getTestOrigenCodigoDir3() {
@@ -490,22 +498,27 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
     public DatosInteresadoWs getPersonaFisica(){
 
         DatosInteresadoWs personaFisica = new DatosInteresadoWs();
+
         personaFisica.setTipoInteresado(TIPO_INTERESADO_PERSONA_FISICA);
         personaFisica.setTipoDocumentoIdentificacion("N");
         personaFisica.setDocumento("44328254D");
         personaFisica.setEmail("mgonzalez@fundaciobit.org");
         personaFisica.setNombre("Marilen");
         personaFisica.setApellido1("González");
+        personaFisica.setApellido2("Gómez");
         personaFisica.setCanal((long) 1);
+        personaFisica.setCodDirectoriosUnificados("223344556677");
         personaFisica.setDireccion("Calle Aragón, 24, 5ºD");
+        personaFisica.setDireccionElectronica("interesado@interesado.com");
         personaFisica.setLocalidad((long) 407);
+        personaFisica.setObservaciones("Interesado de tipo Persona Fisica");
         personaFisica.setPais((long) 724);
         personaFisica.setProvincia((long) 7);
         personaFisica.setCp("07010");
         personaFisica.setTelefonoMovil("678345123");
-       /* personaFisica.setReceptorNotificaciones(false);
+        personaFisica.setReceptorNotificaciones(false);
         personaFisica.setAvisoNotificacionSMS(true);
-        personaFisica.setAvisoCorreoElectronico(true);*/
+        personaFisica.setAvisoCorreoElectronico(true);
 
         return personaFisica;
     }
@@ -542,6 +555,10 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
             representante.setEmail("jdelatorre@gmail.com");
             representante.setNombre("Juanito");
             representante.setApellido1("De la torre");
+            representante.setApellido2("De la nube");
+            representante.setCodDirectoriosUnificados("112233445566");
+            representante.setDireccionElectronica("representante@representante.com");
+            representante.setObservaciones("Representante de tipo Persona Fisica");
             representante.setPais((long) 724);
             representante.setProvincia((long) 46);
             representante.setAvisoCorreoElectronico(false);
@@ -554,6 +571,9 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
             representante.setDocumento("A42539585");
             representante.setRazonSocial("Mercadona");
             representante.setEmail("info@mercadona.es");
+            representante.setCodDirectoriosUnificados("998877766543");
+            representante.setDireccionElectronica("representante2@representante.com");
+            representante.setObservaciones("Representante de tipo Persona Juridica");
             representante.setPais((long) 724);
             representante.setProvincia((long) 46);
             representante.setAvisoCorreoElectronico(false);
@@ -872,6 +892,7 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
             anexoConFirmaAttached.setTipoDocumento(formulario);
             anexoConFirmaAttached.setOrigenCiudadanoAdmin(ANEXO_ORIGEN_CIUDADANO);
             anexoConFirmaAttached.setObservaciones("Observaciones de Marilen");
+            anexoConFirmaAttached.setResumen("Anexo con firma attached");
 
             anexoConFirmaAttached.setModoFirma(MODO_FIRMA_ANEXO_ATTACHED); // == 1
             anexoConFirmaAttached.setFechaCaptura(new Timestamp(new Date().getTime()));
@@ -896,6 +917,7 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
             anexoConFirmaAttached.setTipoDocumento(formulario);
             anexoConFirmaAttached.setOrigenCiudadanoAdmin(ANEXO_ORIGEN_CIUDADANO);
             anexoConFirmaAttached.setObservaciones("Observaciones de Marilen 2");
+            anexoConFirmaAttached.setResumen("Resumen de anexo con firma attached 2");
 
             anexoConFirmaAttached.setModoFirma(MODO_FIRMA_ANEXO_ATTACHED); // == 1
             anexoConFirmaAttached.setFechaCaptura(new Timestamp(new Date().getTime()));
@@ -908,7 +930,7 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
             anexos.add(anexoConFirmaAttached);
         }
 
-        {
+       /* {
             AnexoWs anexoConFirmaDetached = new AnexoWs();
 
             //anexoConFirmaDetached.setConfidencial(true);
@@ -923,6 +945,7 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
             anexoConFirmaDetached.setTipoDocumento(formulario);
             anexoConFirmaDetached.setOrigenCiudadanoAdmin(ANEXO_ORIGEN_CIUDADANO);
             anexoConFirmaDetached.setObservaciones("Observaciones de Marilen");
+            anexoConFirmaDetached.setResumen("Resumen de anexo con firma detached");
 
             anexoConFirmaDetached.setModoFirma(MODO_FIRMA_ANEXO_DETACHED); // == 2
             anexoConFirmaDetached.setFechaCaptura(new Timestamp(new Date().getTime()));
@@ -941,7 +964,7 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
 
             anexos.add(anexoConFirmaDetached);
 
-        }
+        }*/
 
 
         return anexos;
@@ -1255,46 +1278,61 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
 
     //LIBSIR
 
-    private AsientoRegistralWs getDatosComunesEntradaLIBSIR(Long tipoRegistro, boolean conOrganismoOrigen){
+    private AsientoRegistralWs getDatosComunesEntradaLIBSIR(Long tipoRegistro, boolean conOrganismoOrigen, boolean conMetadatos){
 
         AsientoRegistralWs asiento = new AsientoRegistralWs();
         asiento.setTipoRegistro(tipoRegistro);
 
         asiento.setAplicacionTelematica("LOCAL-APP");
+
+        asiento.setCodigoAsunto("AS-001");
+        asiento.setCodigoAsuntoDenominacion("Asunto de prueba");
+
         asiento.setCodigoAsunto(null);
+
         asiento.setCodigoSia(getTestCodigoSia());
         asiento.setCodigoUsuario(getTestUserName());
         asiento.setEntidadCodigo(getTestEntidadCodigoDir3());
+        asiento.setEntidadDenominacion(getTestEntidadDenominacionDir3());
+
 
         asiento.setEntidadRegistralOrigenCodigo(getTestOficinaOrigenCodigoDir3());
         asiento.setExpone(getLoremIpsum());
         asiento.setSolicita(getLoremIpsum());
-        asiento.setIdioma(RegwebConstantes.IDIOMA_CATALAN_ID);
+        asiento.setIdioma(RegwebConstantes.IDIOMA_CASTELLANO_ID);
         asiento.setLibroCodigo(getTestDestinoLibro());
+        asiento.setMotivo("Motivo de prueba");
         asiento.setPresencial(false);
         if(REGISTRO_ENTRADA.equals(tipoRegistro)){
-            asiento.setResumen("SIR-IN-PR-11");
+            asiento.setResumen("SIR-GE-PR-002");
         }else{
-            asiento.setResumen("SIR-IN-PR-012");
+            asiento.setResumen("SIR-GE-PR-XXX");
         }
         if(conOrganismoOrigen) {
              asiento.setUnidadTramitacionOrigenCodigo(getTestOrigenCodigoDir3());
         }
-        asiento.setUnidadTramitacionDestinoCodigo(getTestDestinoCodigoDir3());
+        asiento.setReferenciaExterna("FE4567Y");
+        asiento.setSolicita(getLoremIpsum());
         asiento.setTipoDocumentacionFisicaCodigo(RegwebConstantes.TIPO_DOCFISICA_NO_ACOMPANYA_DOC);
 
-        asiento.setReferenciaExterna("FE4567Y");
         asiento.setNumeroExpediente("34567Y/2019");
         asiento.setTipoTransporte("01");
-        asiento.setObservaciones("Asientp prueba de envio SIR-IN-PR-001/003");
+        asiento.setNumeroTransporte("123456");
+        asiento.setObservaciones("Asiento prueba de envio SIR-IN-PR-001/003");
+        asiento.setUnidadTramitacionDestinoCodigo(getTestDestinoCodigoDir3());
+        asiento.setUnidadTramitacionDestinoDenominacion(getTestDestinoDenominacionDir3());
+
+        if(conMetadatos){
+            asiento.getMetadatos().addAll(getMetadatoWs());
+        }
 
         return asiento;
     }
 
-    public AsientoRegistralWs getAsiento_to_LIBSIR(Long tipoRegistro, Boolean representante, Boolean anexos, Boolean conOrganismoOrigen) {
+    public AsientoRegistralWs getAsiento_to_LIBSIR(Long tipoRegistro, boolean representante, boolean anexos, Boolean conOrganismoOrigen, boolean conMetadatos) {
 
         // Datos comunes
-        AsientoRegistralWs asiento = getDatosComunesEntradaLIBSIR(tipoRegistro, conOrganismoOrigen);
+        AsientoRegistralWs asiento = getDatosComunesEntradaLIBSIR(tipoRegistro, conOrganismoOrigen, conMetadatos);
 
         // Interesados
         InteresadoWs interesadoWs = new InteresadoWs();

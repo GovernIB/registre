@@ -296,61 +296,6 @@ public class RegWebAsientoRegistralTest extends RegWebTestUtils {
         }
     }
 
-    //Método que crea un registro de entrada con los parámetros del juego de pruebas de LIBSIR
-    @Test
-    public void crearAsientoEntradaSIR_IN_000() throws Exception {
-        //sin organismo origen, con 1 interesado, sin anexos
-
-        for (int i = 0; i < 1; i++) {
-
-            try {
-                AsientoRegistralWs asientoRegistralWs = getAsiento_to_LIBSIR( REGISTRO_ENTRADA, true, true, false);
-
-                asientoRegistralWs = asientoRegistralApi.crearAsientoRegistral(null,getTestEntidadCodigoDir3(),asientoRegistralWs,null,true,false);
-
-                printAsientoBasico(asientoRegistralWs);
-
-            } catch (WsI18NException e) {
-                String msg = WsClientUtils.toString(e);
-                System.out.println("Error WsI18NException: " + msg);
-                throw e;
-            } catch (WsValidationException e) {
-                String msg = WsClientUtils.toString(e);
-                System.out.println("Error WsValidationException: " + msg);
-                throw e;
-            }
-        }
-    }
-
-
-    //Método que crea un registro de salida con los parámetros del juego de pruebas de LIBSIR
-    @Test
-    public void crearAsientoSalidaSIR_IN_000() throws Exception {
-        //con organismo origen, 3 ficheros adjuntos
-
-        for (int i = 0; i < 1; i++) {
-
-            try {
-                AsientoRegistralWs asientoRegistralWs = getAsiento_to_LIBSIR( REGISTRO_SALIDA,false, true, true);
-
-                asientoRegistralWs = asientoRegistralApi.crearAsientoRegistral(null,getTestEntidadCodigoDir3(),asientoRegistralWs,null,true,false);
-
-                printAsientoBasico(asientoRegistralWs);
-
-            } catch (WsI18NException e) {
-                String msg = WsClientUtils.toString(e);
-                System.out.println("Error WsI18NException: " + msg);
-                throw e;
-            } catch (WsValidationException e) {
-                String msg = WsClientUtils.toString(e);
-                System.out.println("Error WsValidationException: " + msg);
-                throw e;
-            }
-        }
-    }
-
-
-
 
     @Test
     public void obtenerAsiento() throws Exception{
