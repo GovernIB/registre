@@ -741,6 +741,17 @@ public class RegistroSir implements Serializable {
         return resumenCorto;
     }
 
+    @Transient
+    public String getNombreInteresado(){
+
+        if(!getInteresados().isEmpty()){
+            return getInteresados().get(0).getNombreCompleto();
+        }else{
+            return "";
+        }
+
+    }
+
     @Override
     public int hashCode() {
         return id.hashCode();

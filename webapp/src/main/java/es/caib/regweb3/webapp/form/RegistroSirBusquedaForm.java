@@ -1,5 +1,6 @@
 package es.caib.regweb3.webapp.form;
 
+import es.caib.regweb3.model.InteresadoSir;
 import es.caib.regweb3.model.RegistroSir;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -14,6 +15,11 @@ import java.util.Date;
 public class RegistroSirBusquedaForm {
 
     private RegistroSir registroSir;
+    private InteresadoSir interesadoSir;
+    /*private String nombreInteresado;
+    private String primerApellidoInteresado;
+    private String segundoApellidoInteresado;
+    private String documentoIdentificacionInteresado;*/
     private Integer pageNumber;
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     private Date fechaInicio;
@@ -29,6 +35,7 @@ public class RegistroSirBusquedaForm {
         this.pageNumber = pageNumber;
         this.fechaInicio =  new Date();
         this.fechaFin =  new Date();
+        this.interesadoSir = new InteresadoSir();
     }
 
     public RegistroSir getRegistroSir() {
@@ -38,6 +45,46 @@ public class RegistroSirBusquedaForm {
     public void setRegistroSir(RegistroSir registroSir) {
         this.registroSir = registroSir;
     }
+
+    public InteresadoSir getInteresadoSir() {
+        return interesadoSir;
+    }
+
+    public void setInteresadoSir(InteresadoSir interesadoSir) {
+        this.interesadoSir = interesadoSir;
+    }
+
+    /*public String getNombreInteresado() {
+        return nombreInteresado;
+    }
+
+    public void setNombreInteresado(String nombreInteresado) {
+        this.nombreInteresado = nombreInteresado;
+    }
+
+    public String getPrimerApellidoInteresado() {
+        return primerApellidoInteresado;
+    }
+
+    public void setPrimerApellidoInteresado(String primerApellidoInteresado) {
+        this.primerApellidoInteresado = primerApellidoInteresado;
+    }
+
+    public String getSegundoApellidoInteresado() {
+        return segundoApellidoInteresado;
+    }
+
+    public void setSegundoApellidoInteresado(String segundoApellidoInteresado) {
+        this.segundoApellidoInteresado = segundoApellidoInteresado;
+    }
+
+    public String getDocumentoIdentificacionInteresado() {
+        return documentoIdentificacionInteresado;
+    }
+
+    public void setDocumentoIdentificacionInteresado(String documentoIdentificacionInteresado) {
+        this.documentoIdentificacionInteresado = documentoIdentificacionInteresado;
+    }*/
 
     public Integer getPageNumber() {
         return pageNumber;

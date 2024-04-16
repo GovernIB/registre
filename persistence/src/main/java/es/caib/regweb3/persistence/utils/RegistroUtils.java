@@ -341,4 +341,17 @@ public class RegistroUtils{
         return extension;
     }
 
+    /**
+     * Comprueba si alguno de los valores de búsqueda referentes al Interesado se ha rellenado
+     * @param interesadoNom
+     * @param interesadoLli1
+     * @param interesadoLli2
+     * @param interesadoDoc
+     * @return
+     */
+    public static boolean busquedaInteresados(String interesadoNom, String interesadoLli1, String interesadoLli2, String interesadoDoc) {
+
+        return StringUtils.isNotEmpty(interesadoNom) || StringUtils.isNotEmpty(interesadoLli1) || StringUtils.isNotEmpty(interesadoLli2) || StringUtils.isNotEmpty(interesadoDoc);
+    }
+
 }

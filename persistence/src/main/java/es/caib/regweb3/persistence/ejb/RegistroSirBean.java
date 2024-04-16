@@ -14,6 +14,7 @@ import es.caib.regweb3.sir.core.schema.types.Indicador_PruebaType;
 import es.caib.regweb3.sir.core.schema.types.Tipo_RegistroType;
 import es.caib.regweb3.sir.core.utils.FicheroIntercambio;
 import es.caib.regweb3.utils.Dir3CaibUtils;
+import es.caib.regweb3.utils.MimeTypeUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.gob.ad.registros.sir.interService.bean.AsientoBean;
 import es.gob.ad.registros.sir.interService.exception.InterException;
@@ -346,15 +347,21 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
     }
 
     @Override
-    public Paginacion busqueda(Integer pageNumber, Date fechaInicio, Date fechaFin, RegistroSir registroSir, String oficinaSir, String estado, String entidad) throws I18NException{
+    public Paginacion busqueda(Integer pageNumber, Date fechaInicio, Date fechaFin, RegistroSir registroSir, String interesadoNom, String interesadoLli1, String interesadoLli2, String interesadoDoc, String oficinaSir, String estado, String entidad) throws I18NException{
 
         Query q;
         Query q2;
         Map<String, Object> parametros = new HashMap<String, Object>();
         List<String> where = new ArrayList<String>();
+        boolean busquedaInteresados = RegistroUtils.busquedaInteresados(interesadoNom, interesadoLli1, interesadoLli2, interesadoDoc);
 
-        StringBuilder queryBase = new StringBuilder("Select rs.id, rs.decodificacionEntidadRegistralOrigen, rs.fechaRecepcion, rs.identificadorIntercambio, rs.numeroRegistro, rs.resumen, " +
+        StringBuilder queryBase = new StringBuilder("Select DISTINCT rs.id, rs.decodificacionEntidadRegistralOrigen, rs.fechaRecepcion, rs.identificadorIntercambio, rs.numeroRegistro, rs.resumen, " +
                 "rs.estado, rs.tipoRegistro, rs.codigoEntidadRegistralOrigen, rs.decodificacionEntidadRegistralOrigen, rs.codigoEntidadRegistralDestino, rs.decodificacionEntidadRegistralDestino, rs.aplicacion, rs.documentacionFisica, rs.numeroReintentos from RegistroSir as rs ");
+
+        // Si la búsqueda incluye referencias al interesado, hacemos la left outer join
+        if(busquedaInteresados){
+            queryBase.append("left outer join rs.interesados interesado ");
+        }
 
         StringBuilder query = new StringBuilder(queryBase);
 
@@ -366,7 +373,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
             where.add(" (rs.entidad.codigoDir3 = :entidad) "); parametros.put("entidad",entidad);
         }
 
-        if (registroSir.getResumen() != null && registroSir.getResumen().length() > 0) {
+        if (es.caib.regweb3.utils.StringUtils.isNotEmpty(registroSir.getResumen())) {
             where.add(DataBaseUtils.like("rs.resumen", "resumen", parametros, registroSir.getResumen()));
         }
 
@@ -390,6 +397,28 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
             where.add(DataBaseUtils.like("rs.aplicacion", "aplicacion", parametros, registroSir.getAplicacion()));
         }
 
+        // Nombre interesado
+        if (es.caib.regweb3.utils.StringUtils.isNotEmpty(interesadoNom)) {
+            where.add("((" + DataBaseUtils.like("interesado.nombreInteresado", "interesadoNom", parametros, interesadoNom) +
+                    ") or (" + DataBaseUtils.like("interesado.razonSocialInteresado", "interesadoNom", parametros, interesadoNom) + "))");
+        }
+
+        // Primer apellido interesado
+        if (es.caib.regweb3.utils.StringUtils.isNotEmpty(interesadoLli1)) {
+            where.add(DataBaseUtils.like("interesado.primerApellidoInteresado", "interesadoLli1", parametros, interesadoLli1));
+        }
+
+        // Segundo apellido interesado
+        if (es.caib.regweb3.utils.StringUtils.isNotEmpty(interesadoLli2)) {
+            where.add(DataBaseUtils.like("interesado.segundoApellidoInteresado", "interesadoLli2", parametros, interesadoLli2));
+        }
+
+        // Documento interesado
+        if (es.caib.regweb3.utils.StringUtils.isNotEmpty(interesadoDoc)) {
+            where.add(" (UPPER(interesado.documentoIdentificacionInteresado) LIKE UPPER(:interesadoDoc)) ");
+            parametros.put("interesadoDoc", "%" + interesadoDoc.trim() + "%");
+        }
+
         // Intervalo fechas
         where.add(" (rs.fechaRecepcion >= :fechaInicio  "); parametros.put("fechaInicio", fechaInicio);
         where.add(" rs.fechaRecepcion <= :fechaFin) "); parametros.put("fechaFin", fechaFin);
@@ -406,7 +435,10 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         }
 
         // Duplicamos la query solo para obtener los resultados totales
-        StringBuilder queryCount = new StringBuilder("Select count(rs.id) from RegistroSir as rs ");
+        StringBuilder queryCount = new StringBuilder("Select count(DISTINCT rs.id) from RegistroSir as rs ");
+        if(busquedaInteresados){
+            queryCount.append("left outer join rs.interesados interesado ");
+        }
         q2 = em.createQuery(query.toString().replaceAll(queryBase.toString(), queryCount.toString()));
 
         // añadimos el order by
@@ -472,8 +504,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         Map<String, Object> parametros = new HashMap<String, Object>();
         List<String> where = new ArrayList<String>();
 
-        StringBuilder queryBase = new StringBuilder("Select rs.id, rs.decodificacionEntidadRegistralOrigen, rs.decodificacionEntidadRegistralDestino, rs.fechaRecepcion, rs.identificadorIntercambio, rs.numeroRegistro, " +
-                "rs.resumen, rs.estado, rs.documentacionFisica, rs.tipoRegistro from RegistroSir as rs ");
+        StringBuilder queryBase = new StringBuilder("Select DISTINCT rs from RegistroSir as rs ");
 
         StringBuilder query = new StringBuilder(queryBase);
 
@@ -524,22 +555,9 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
             paginacion = new Paginacion(0, 0);
         }
 
-        List<Object[]> results = q.getResultList();
-        List<RegistroSir> registros = new ArrayList<>();
-
-        for (Object[] result : results) {
-            RegistroSir registro =  new RegistroSir();
-            registro.setId((Long) result[0]);
-            registro.setDecodificacionEntidadRegistralOrigen((String) result[1]);
-            registro.setDecodificacionEntidadRegistralDestino((String) result[2]);
-            registro.setFechaRecepcion((Date) result[3]);
-            registro.setIdentificadorIntercambio((String) result[4]);
-            registro.setNumeroRegistro((String)result[5]);
-            registro.setResumen((String) result[6]);
-            registro.setEstado((EstadoRegistroSir) result[7]);
-            registro.setDocumentacionFisica((String) result[8]);
-            registro.setTipoRegistro((TipoRegistro) result[9]);
-            registros.add(registro);
+        List<RegistroSir> registros = q.getResultList();
+        for (RegistroSir registroSir : registros) {
+            Hibernate.initialize(registroSir.getInteresados());
         }
 
         paginacion.setListado(registros);
@@ -896,10 +914,10 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
                         anexo.setHash(Base64.encodeBase64String(de_Anexo.getHash()));
                         //Si el tipo mime es null, se obtiene de la extensión del fichero
                         if (StringUtils.isEmpty(de_Anexo.getTipo_MIME())) {
-                            //String mime = MimeTypeUtils.getMimeTypeFileName(de_Anexo.getNombre_Fichero_Anexado());
-                            //if(mime.length() <= 20){
-                            //    anexo.setTipoMIME(mime);
-                            //}
+                            String mime = MimeTypeUtils.getMimeTypeFileName(anexo.getNombreFichero());
+                            if(mime.length() <= 20){
+                                anexo.setTipoMIME(mime);
+                            }
                         } else {
                             anexo.setTipoMIME(de_Anexo.getTipo_MIME());
                         }
