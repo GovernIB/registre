@@ -2,8 +2,8 @@
 
 ***Versions***
 
-> - Versió Estable: Tag [registre-3.1.4](../../tree/registre-3.1.4) (branca [registre-3.1](../../tree/registre-3.1))
-> - Versió en Desenvolupament: __registre-3.1.5__ (branca [registre-3.1](../../tree/registre-3.1))
+> - Versió Estable: Tag [registre-3.3.2](../../tree/registre-3.3.2) (branca [registre-3.3](../../tree/registre-3.3))
+> - Versió en Desenvolupament: __registre-3.3.3__ (branca [registre-3.3](../../tree/registre-3.3))
 
 ***Descripció***
 
@@ -11,7 +11,7 @@ Aplicació web de registre d'anotacions a llibres d'entrada i sortida
 
 ***Documentació***
 
-[Documentació de branca](https://github.com/GovernIB/registre/blob/registre-3.1/README.md#documentaci%C3%B3)
+[Documentació de branca](https://github.com/GovernIB/registre/blob/registre-3.3/README.md#documentaci%C3%B3)
 
 ***Característiques***
 
