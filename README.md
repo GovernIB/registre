@@ -2,7 +2,7 @@
 
 ***Versions***
 
-> - Versió Estable: Tag [registre-3.3.2](../../tree/registre-3.3.2) (branca [registre-3.3](../../tree/registre-3.3))
+> - Versió Estable: Tag [registre-3.3.3](../../tree/registre-3.3.3) (branca [registre-3.3](../../tree/registre-3.3))
 > - Versió en Desenvolupament: __registre-3.3.3__ (branca [registre-3.3](../../tree/registre-3.3))
 
 ***Descripció***
