@@ -5,13 +5,13 @@
 
     <parent>
         <groupId>es.caib.regweb3</groupId>
-        <version>3.3.3</version>
+        <version>3.3.4</version>
         <artifactId>plugin-postproceso</artifactId>
     </parent>
 
     <artifactId>plugin-postproceso-mock</artifactId>
     <packaging>jar</packaging>
-    <version>3.3.3</version>
+    <version>3.3.4</version>
 
     <name>RegWeb3 - Post Proceso Plugin - Mock</name>
 

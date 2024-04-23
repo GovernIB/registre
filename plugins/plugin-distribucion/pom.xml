@@ -6,11 +6,11 @@
     <parent>
         <groupId>es.caib.regweb3</groupId>
         <artifactId>regweb3-plugins</artifactId>
-        <version>3.3.3</version>
+        <version>3.3.4</version>
     </parent>
 
     <artifactId>plugin-distribucion</artifactId>
-    <version>3.3.3</version>
+    <version>3.3.4</version>
     <packaging>pom</packaging>
 
     <name>RegWeb3 - Distribucion Plugin</name>

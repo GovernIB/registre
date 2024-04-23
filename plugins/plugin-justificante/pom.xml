@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>plugin-justificante</artifactId>
-    <version>3.3.3</version>
+    <version>3.3.4</version>
     <packaging>pom</packaging>
 
     <name>RegWeb3 - Justificante Plugin</name>
@@ -12,7 +12,7 @@
     <parent>
         <groupId>es.caib.regweb3</groupId>
         <artifactId>regweb3-plugins</artifactId>
-        <version>3.3.3</version>
+        <version>3.3.4</version>
     </parent>
 
     <modules>

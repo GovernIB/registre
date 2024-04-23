@@ -5,13 +5,13 @@
 
     <parent>
         <groupId>es.caib.regweb3</groupId>
-        <version>3.3.3</version>
+        <version>3.3.4</version>
         <artifactId>plugin-justificante</artifactId>
     </parent>
 
     <artifactId>plugin-justificante-mock</artifactId>
     <packaging>jar</packaging>
-    <version>3.3.3</version>
+    <version>3.3.4</version>
 
     <name>RegWeb3 - Justificante Plugin - Mock</name>
 

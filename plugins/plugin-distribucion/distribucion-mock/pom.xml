@@ -5,13 +5,13 @@
 
     <parent>
         <groupId>es.caib.regweb3</groupId>
-        <version>3.3.3</version>
+        <version>3.3.4</version>
         <artifactId>plugin-distribucion</artifactId>
     </parent>
 
     <artifactId>plugin-distribucion-mock</artifactId>
     <packaging>jar</packaging>
-    <version>3.3.3</version>
+    <version>3.3.4</version>
 
     <name>RegWeb3 - Distribucion Plugin - Mock</name>
 
