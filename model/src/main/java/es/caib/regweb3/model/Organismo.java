@@ -114,6 +114,13 @@ public class Organismo implements Serializable {
         this.denominacion = denominacion;
     }
 
+    public Organismo(Long id, String codigo, String denominacion, CatEstadoEntidad estado) {
+        this.id = id;
+        this.codigo = codigo;
+        this.denominacion = denominacion;
+        this.estado = estado;
+    }
+
     public Organismo(Long id, String codigo, String denominacion, Boolean edp) {
         this.id = id;
         this.codigo = codigo;
