@@ -15,11 +15,6 @@
 
 <c:if test="${loginInfo.rolActivo.nombre == 'RWE_USUARI'}">
 
-    <%--Importamos el menú de avisos--%>
-    <c:if test="${param.avisos == true}">
-        <c:import url="/avisos"/>
-    </c:if>
-
     <c:if test="${fn:length(loginInfo.oficinasAcceso) >= 1}">
         <li><a rel="popupAbajo" data-content="${loginInfo.oficinaActiva.codigo}" <c:if test="${loginInfo.oficinaActiva.sirEnvio || loginInfo.oficinaActiva.sirRecepcion}">class="azul"</c:if> href="<c:url value="/inici"/>"><i class="fa fa-home"></i> ${loginInfo.oficinaActiva.denominacion} <c:if test="${loginInfo.oficinaActiva.oamr}"><i class="fa fa-star"></i></c:if></a></li>
     </c:if>

@@ -19,9 +19,7 @@
         <div class="row">
             <div class="col-xs-12">
                 <ol class="breadcrumb">
-                    <c:import url="../modulos/migadepan.jsp">
-                        <c:param name="avisos" value="${loginInfo.mostrarAvisos}"/> <%--Importamos el menú de avisos--%>
-                    </c:import>
+                    <c:import url="../modulos/migadepan.jsp"/>
                     <li class="active">
                         <i class="fa fa-list-ul"></i>
                         <strong>

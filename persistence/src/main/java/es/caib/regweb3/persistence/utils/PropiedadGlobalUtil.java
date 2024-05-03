@@ -617,18 +617,6 @@ public class PropiedadGlobalUtil {
 
 
     /**
-     * Retorna el valor de la propiedad que indica si mostraremos los avisos o no
-     * Propiedad: es.caib.regweb3.avisos
-     * @param idEntidad
-     * @return
-     */
-    public static Boolean getMostrarAvisos(Long idEntidad) {
-        final String partialPropertyName = "avisos";
-        return getBooleanByEntidad(idEntidad, partialPropertyName);
-
-    }
-
-    /**
      * Retorna el valor de la propiedad del Username de la Url de Validación
      * Propiedad: es.caib.regweb3.urlvalidation.username
      * @param idEntidad

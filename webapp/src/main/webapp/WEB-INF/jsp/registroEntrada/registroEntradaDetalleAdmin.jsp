@@ -20,9 +20,7 @@
         <div class="row">
              <div class="col-xs-12">
                  <ol class="breadcrumb">
-                     <c:import url="../modulos/migadepan.jsp">
-                         <c:param name="avisos" value="false"/>
-                     </c:import>
+                     <c:import url="../modulos/migadepan.jsp"/>
                     <li class="active"><i class="fa fa-pencil-square-o"></i> <spring:message code="registroEntrada.registroEntrada"/> ${registro.numeroRegistroFormateado}</li>
                  </ol>
              </div>

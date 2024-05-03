@@ -20,9 +20,7 @@
        <div class="row">
             <div class="col-xs-12">
                 <ol class="breadcrumb">
-                    <c:import url="../modulos/migadepan.jsp">
-                        <c:param name="avisos" value="${loginInfo.mostrarAvisos}"/>
-                    </c:import>
+                    <c:import url="../modulos/migadepan.jsp"/>
                     <li><a href="<c:url value="/oficioRemision/pendientesLlegada/list"/>" ><i class="fa fa-list"></i> <spring:message code="oficioRemision.pendientesLlegada"/></a></li>
                     <li class="active"><i class="fa fa-pencil-square-o"></i> <spring:message code="oficioRemision.oficioRemision"/> <fmt:formatDate value="${oficioRemision.fecha}" pattern="yyyy"/> / ${oficioRemision.numeroOficio}</li>
                 </ol>
