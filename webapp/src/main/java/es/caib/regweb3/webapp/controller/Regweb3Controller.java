@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.TreeSet;
 
 /**
  * Created by Fundació BIT.
@@ -82,11 +82,11 @@ public class Regweb3Controller extends BaseController {
     @RequestMapping(value = "/cambioOficina/{oficinaId}")
     public String cambioOficina(@PathVariable Long oficinaId, HttpServletRequest request)throws Exception {
 
-        LinkedHashSet<Oficina> oficinasAutenticado = getOficinasAcceso(request);
+        TreeSet<Oficina> oficinasAutenticado = getOficinasAcceso(request);
 
         try {
             Oficina oficinaNueva = oficinaEjb.findById(oficinaId);
-            if(oficinasAutenticado.contains(new Oficina(oficinaNueva.getId()))){
+            if(oficinasAutenticado.contains(oficinaNueva)){
                 loginService.asignarOficinaActiva(oficinaNueva, getLoginInfo(request));
                 log.info("Cambio Oficina activa: " + oficinaNueva.getDenominacion() + " - " + oficinaNueva.getCodigo());
             }else{

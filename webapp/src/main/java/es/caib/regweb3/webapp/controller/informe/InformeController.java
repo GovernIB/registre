@@ -1301,7 +1301,7 @@ public class InformeController extends AbstractRegistroCommonFormController {
 
         // Es operador
         if(isOperador(request)){
-            LinkedHashSet<Oficina> llistaOficines = getOficinasAcceso(request);
+            TreeSet<Oficina> llistaOficines = getOficinasAcceso(request);
             oficinas.addAll(llistaOficines);
         }
 
