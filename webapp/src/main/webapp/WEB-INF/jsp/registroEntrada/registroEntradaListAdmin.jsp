@@ -101,7 +101,7 @@
                                     <form:select path="organDestinatari" cssClass="chosen-select">
                                         <form:option value="" label="..."/>
                                         <c:forEach items="${organosDestino}" var="organismo">
-                                            <option value="${organismo.codigo}" <c:if test="${registroEntradaBusqueda.organDestinatari == organismo.codigo}">selected="selected"</c:if>>${organismo.denominacion}</option>
+                                            <option value="${organismo.codigo}" <c:if test="${registroEntradaBusqueda.organDestinatari == organismo.codigo}">selected="selected"</c:if> <c:if test="${organismo.estado.codigoEstadoEntidad != RegwebConstantes.ESTADO_ENTIDAD_VIGENTE}"> style="color:#a94442" </c:if>>${organismo.denominacion} <c:if test="${organismo.estado.codigoEstadoEntidad != RegwebConstantes.ESTADO_ENTIDAD_VIGENTE}"> (<spring:message code="unidad.estado.E"/>)</c:if></option>
                                         </c:forEach>
                                     </form:select>
                                     <form:errors path="organDestinatari" cssClass="help-block" element="span"/>
@@ -320,7 +320,6 @@
 
                             <c:if test="${empty paginacion.listado}">
                                 <div class="alert alert-grey alert-dismissable">
-                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
                                     <spring:message code="regweb.busqueda.vacio"/> <strong><spring:message code="registroEntrada.registroEntrada"/></strong>
                                 </div>
                             </c:if>

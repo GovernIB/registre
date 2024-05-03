@@ -129,7 +129,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
     @SuppressWarnings(value = "unchecked")
     public List<Organismo> getAllByEntidad(Long entidad) throws I18NException {
 
-        Query q = em.createQuery("Select organismo.id, organismo.codigo, organismo.denominacion from Organismo as organismo where " +
+        Query q = em.createQuery("Select organismo.id, organismo.codigo, organismo.denominacion, organismo.estado from Organismo as organismo where " +
                 "organismo.entidad.id = :entidad");
 
         q.setParameter("entidad", entidad);
@@ -139,7 +139,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
         List<Object[]> result = q.getResultList();
 
         for (Object[] object : result) {
-            Organismo organismo = new Organismo((Long) object[0], (String) object[1], (String) object[2]);
+            Organismo organismo = new Organismo((Long) object[0], (String) object[1], (String) object[2], (CatEstadoEntidad) object[3]);
             organismos.add(organismo);
         }
 
@@ -374,7 +374,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
     @SuppressWarnings(value = "unchecked")
     public Organismo findByCodigoMultiEntidad(String codigo) throws I18NException {
 
-        Query q = em.createQuery("Select organismo.id, organismo.codigo, organismo.denominacion, organismo.codAmbComunidad.id, organismo.estado.id, organismo.entidad.id from Organismo as organismo where organismo.codigo = :codigo order by organismo.id asc");
+        Query q = em.createQuery("Select organismo.id, organismo.codigo, organismo.denominacion, organismo.codAmbComunidad.id, organismo.estado, organismo.entidad.id from Organismo as organismo where organismo.codigo = :codigo order by organismo.id asc");
 
         q.setParameter("codigo", codigo);
 
@@ -384,7 +384,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
 
             Organismo organismo = new Organismo((Long) result.get(0)[0], (String) result.get(0)[1], (String) result.get(0)[2]);
             organismo.setCodAmbComunidad(new CatComunidadAutonoma((Long) result.get(0)[3]));
-            organismo.setEstado(catEstadoEntidadEjb.findById((Long) result.get(0)[4]));
+            organismo.setEstado((CatEstadoEntidad) result.get(0)[4]);
             organismo.setEntidad(new Entidad((Long) result.get(0)[5]));
             return organismo;
         } else if (result.size() > 1) { //Caso multientidad ( encuentra 2)
@@ -398,7 +398,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
                 if (raiz == null) {
                     Organismo organismo = new Organismo((Long) object[0], (String) object[1], (String) object[2]);
                     organismo.setCodAmbComunidad(new CatComunidadAutonoma((Long) object[3]));
-                    organismo.setEstado(catEstadoEntidadEjb.findById((Long) object[4]));
+                    organismo.setEstado((CatEstadoEntidad) object[4]);
                     organismo.setEntidad(new Entidad((Long) object[5]));
                     return organismo;
                 }
@@ -438,7 +438,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
         if (multiEntidadEjb.isMultiEntidadSir()) {
             return findByCodigoMultiEntidad(codigo);
         } else {
-            return findByCodigoEntidadLigero(codigo, idEntidad);
+            return findByCodigoEntidad(codigo, idEntidad);
         }
 
     }
