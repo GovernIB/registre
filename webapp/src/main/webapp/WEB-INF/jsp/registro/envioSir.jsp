@@ -27,9 +27,7 @@
         <div class="row">
             <div class="col-xs-12">
                 <ol class="breadcrumb">
-                    <c:import url="../modulos/migadepan.jsp">
-                        <c:param name="avisos" value="false"/> <%--Importamos el menú de avisos--%>
-                    </c:import>
+                    <c:import url="../modulos/migadepan.jsp"/>
                     <li class="active"><i class="fa fa-pencil-square-o"></i>
                         <c:if test="${tipoRegistro == RegwebConstantes.REGISTRO_ENTRADA}">
                             <spring:message code="registroEntrada.registroEntrada"/> ${registro.numeroRegistroFormateado}

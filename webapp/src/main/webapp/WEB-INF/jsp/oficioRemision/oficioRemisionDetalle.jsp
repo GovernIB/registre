@@ -20,9 +20,7 @@
        <div class="row">
             <div class="col-xs-12">
                 <ol class="breadcrumb">
-                    <c:import url="../modulos/migadepan.jsp">
-                        <c:param name="avisos" value="false"/> <%--Importamos el menú de avisos--%>
-                    </c:import>
+                    <c:import url="../modulos/migadepan.jsp"/>
                     <c:if test="${oficioRemision.oficina == loginInfo.oficinaActiva}">
                         <li><a href="<c:url value="/oficioRemision/list"/>" ><i class="fa fa-list"></i> <spring:message code="oficioRemision.listado"/></a></li>
                     </c:if>
