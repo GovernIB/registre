@@ -233,7 +233,7 @@ public class BaseController {
      * @return
      * @throws Exception
      */
-    protected LinkedHashSet<Oficina> getOficinasAcceso(HttpServletRequest request) throws Exception {
+    protected TreeSet<Oficina> getOficinasAcceso(HttpServletRequest request) throws Exception {
         return getLoginInfo(request).getOficinasAcceso();
     }
 

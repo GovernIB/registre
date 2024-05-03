@@ -118,8 +118,11 @@ public class LoginService {
     private Rol obtenerCredenciales(Usuario usuario, LoginInfo loginInfo, HttpServletRequest request) throws Exception {
 
         List<Rol> rolesUsuario = obtenerRolesWebUsuarioAutenticado(request);
-
-        log.info("Usuario autenticado: " + usuario.getNombreCompleto() + " - Roles: " + Arrays.toString(rolesUsuario.toArray()));
+        if(rolesUsuario != null){
+            log.info("Usuario autenticado: " + usuario.getNombreCompleto() + " - Roles: " + Arrays.toString(rolesUsuario.toArray()));
+        }else{
+            log.info("Usuario autenticado: " + usuario.getNombreCompleto() + " - Sin Roles Web ");
+        }
 
         // Actualizamos los Roles del usuario en la bbdd, según los obtenidos del sistema externo
         try {
@@ -326,7 +329,7 @@ public class LoginService {
         }
 
         // Comprobamos si el usuario tiene última Oficina utilizada.
-        if (loginInfo.getUsuarioEntidadActivo().getUltimaOficina() != null && loginInfo.getOficinasAcceso().contains(new Oficina(loginInfo.getUsuarioEntidadActivo().getUltimaOficina().getId()))) {
+        if (loginInfo.getUsuarioEntidadActivo().getUltimaOficina() != null && loginInfo.getOficinasAcceso().contains(oficinaEjb.findById(loginInfo.getUsuarioEntidadActivo().getUltimaOficina().getId()))) {
 
             asignarOficinaActiva(oficinaEjb.findById(loginInfo.getUsuarioEntidadActivo().getUltimaOficina().getId()), loginInfo);
 
@@ -541,7 +544,6 @@ public class LoginService {
         loginInfo.setUsuarioEntidadActivo(usuarioEntidadEjb.findByUsuarioEntidadActivo(loginInfo.getUsuarioAutenticado().getId(), entidad.getId()));
 
         loginInfo.setEnlaceDir3(PropiedadGlobalUtil.getEnlaceDir3(entidad.getId()));
-        loginInfo.setMostrarAvisos(PropiedadGlobalUtil.getMostrarAvisos(entidad.getId()));
         loginInfo.setAyudaUrl(PropiedadGlobalUtil.getAyudaUrl(entidad.getId()));
         loginInfo.setDir3Caib(new Dir3Caib(PropiedadGlobalUtil.getDir3CaibServer(entidad.getId()), PropiedadGlobalUtil.getDir3CaibUsername(entidad.getId()), PropiedadGlobalUtil.getDir3CaibPassword(entidad.getId())));
 

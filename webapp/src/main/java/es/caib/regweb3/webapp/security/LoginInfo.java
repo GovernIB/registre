@@ -2,6 +2,7 @@ package es.caib.regweb3.webapp.security;
 
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.utils.Dir3Caib;
+import es.caib.regweb3.webapp.utils.DenominacionComparador;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -32,7 +33,7 @@ public class LoginInfo {
     private List<Organismo> organismosConsultaEntrada;
     private List<Organismo> organismosConsultaSalida;
     private List<Organismo> organismosResponsable;
-    private LinkedHashSet<Oficina> oficinasAcceso;
+    private TreeSet<Oficina> oficinasAcceso;
     private LinkedHashSet<Oficina> oficinasRegistroEntrada;
     private LinkedHashSet<Oficina> oficinasRegistroSalida;
     private LinkedHashSet<Oficina> oficinasConsultaEntrada;
@@ -44,7 +45,6 @@ public class LoginInfo {
     private List<Plantilla> plantillasSalida;
     private Configuracion configuracion;
     private Boolean enlaceDir3 = false;
-    private Boolean mostrarAvisos;
     private String ayudaUrl = "";
     private Dir3Caib dir3Caib;
 
@@ -60,6 +60,7 @@ public class LoginInfo {
         organismosConsultaEntrada = new ArrayList<Organismo>();
         organismosConsultaSalida = new ArrayList<Organismo>();
         organismosResponsable = new ArrayList<Organismo>();
+        oficinasAcceso =  new TreeSet<>(new DenominacionComparador());
         oficinasRegistroEntrada = new LinkedHashSet<Oficina>();
         oficinasRegistroSalida = new LinkedHashSet<Oficina>();
         oficinasConsultaEntrada = new LinkedHashSet<Oficina>();
@@ -222,11 +223,11 @@ public class LoginInfo {
         this.organismosResponsable = organismosResponsable;
     }
 
-    public LinkedHashSet<Oficina> getOficinasAcceso() {
+    public TreeSet<Oficina> getOficinasAcceso() {
         return oficinasAcceso;
     }
 
-    public void setOficinasAcceso(LinkedHashSet<Oficina> oficinasAcceso) {
+    public void setOficinasAcceso(TreeSet<Oficina> oficinasAcceso) {
         this.oficinasAcceso = oficinasAcceso;
     }
 
@@ -314,14 +315,6 @@ public class LoginInfo {
         return rolActivo;
     }
 
-    public Boolean getMostrarAvisos() {
-        return mostrarAvisos;
-    }
-
-    public void setMostrarAvisos(Boolean mostrarAvisos) {
-        this.mostrarAvisos = mostrarAvisos;
-    }
-
     public String getAyudaUrl() {
         return ayudaUrl;
     }
@@ -378,7 +371,7 @@ public class LoginInfo {
         this.oficinasRegistroSalida = new LinkedHashSet<Oficina>();
         this.oficinasConsultaEntrada = new LinkedHashSet<Oficina>();
         this.oficinasConsultaSalida = new LinkedHashSet<Oficina>();
-        this.oficinasAcceso = new LinkedHashSet<Oficina>();
+        this.oficinasAcceso =  new TreeSet<>(new DenominacionComparador());
         this.oficinasResponsable= new LinkedHashSet<Oficina>();
         this.plantillasEntrada =  new ArrayList<Plantilla>();
         this.plantillasSalida =  new ArrayList<Plantilla>();
@@ -400,7 +393,7 @@ public class LoginInfo {
         this.oficinasRegistroSalida = new LinkedHashSet<Oficina>();
         this.oficinasConsultaEntrada = new LinkedHashSet<Oficina>();
         this.oficinasConsultaSalida = new LinkedHashSet<Oficina>();
-        this.oficinasAcceso = new LinkedHashSet<Oficina>();
+        this.oficinasAcceso = new TreeSet<>(new DenominacionComparador());
         this.oficinasResponsable= new LinkedHashSet<Oficina>();
         this.plantillasEntrada =  new ArrayList<Plantilla>();
         this.plantillasSalida =  new ArrayList<Plantilla>();
