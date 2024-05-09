@@ -165,10 +165,10 @@
         </dd>
     </c:if>--%>
 
-        <c:if test="${not empty registroSir.codigoSia}">
+        <%--<c:if test="${not empty registroSir.codigoSia}">
             <dt><i class="fa fa-barcode"></i> <spring:message code="registroEntrada.codigoSIA"/>:</dt>
             <dd> ${registroSir.codigoSia}</dd>
-        </c:if>
+        </c:if>--%>
 
         <c:if test="${not empty registroSir.documentacionFisica}">
             <dt><i class="fa fa-file"></i> <spring:message code="registroSir.tipoDocumentacionFisica"/>:</dt>

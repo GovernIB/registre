@@ -148,7 +148,7 @@ public interface SirEnvioLocal {
      * @param idIdioma
      * @return
      */
-    RegistroEntrada aceptarRegistroSir(RegistroSir registroSir, Entidad entidad, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, Long idOrganismoDestino, String emails, String motivo) throws I18NException, I18NValidationException, ParseException, InterException;
+    RegistroEntrada aceptarRegistroSir(RegistroSir registroSir, Entidad entidad, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, Long idOrganismoDestino, String codigoSia, String extracto,String emails, String motivo) throws I18NException, I18NValidationException, ParseException, InterException;
 
 
     /**

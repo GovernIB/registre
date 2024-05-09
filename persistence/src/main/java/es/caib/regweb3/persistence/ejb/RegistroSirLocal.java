@@ -246,7 +246,7 @@ public interface RegistroSirLocal extends BaseEjb<RegistroSir, Long> {
      * @throws I18NException
      * @throws I18NValidationException
      */
-    RegistroEntrada aceptarRegistroSirEntrada(RegistroSir registroSir, Entidad entidad, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, Long idOrganismoDestino) throws I18NException, I18NValidationException, ParseException, InterException;
+    RegistroEntrada aceptarRegistroSirEntrada(RegistroSir registroSir, Entidad entidad, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, Long idOrganismoDestino, String codigoSia, String extracto) throws I18NException, I18NValidationException, ParseException, InterException;
 
 
     RegistroSir crearRegistroSir(AsientoBean asientoBean, Entidad entidad) throws Exception;

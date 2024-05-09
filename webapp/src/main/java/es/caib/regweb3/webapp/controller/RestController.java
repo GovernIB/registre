@@ -8,6 +8,7 @@ import es.caib.regweb3.model.utils.ObjetoBasico;
 import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.utils.Dir3Caib;
 import es.caib.regweb3.utils.Dir3CaibUtils;
+import es.caib.regweb3.utils.StringUtils;
 import es.caib.regweb3.webapp.utils.LocalidadJson;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
@@ -200,30 +201,30 @@ public class RestController extends BaseController {
 
         InteresadoSir interesadoSir = interesadoSirEjb.findById(idInteresadoSir);
 
-        if(interesadoSir.getCodigoPaisInteresado() !=null){
+        if(StringUtils.isNotEmpty(interesadoSir.getCodigoPaisInteresado())){
             interesadoSir.setCodigoPaisInteresado(catPaisEjb.findByCodigo(Long.valueOf(interesadoSir.getCodigoPaisInteresado())).getDescripcionPais());
         }
 
-        if(interesadoSir.getCodigoProvinciaInteresado() !=null){
+        if(StringUtils.isNotEmpty(interesadoSir.getCodigoProvinciaInteresado())){
             String codigoProvincia = interesadoSir.getCodigoProvinciaInteresado();
             interesadoSir.setCodigoProvinciaInteresado(catProvinciaEjb.findByCodigo(Long.valueOf(interesadoSir.getCodigoProvinciaInteresado())).getDescripcionProvincia());
 
-            if(interesadoSir.getCodigoMunicipioInteresado() !=null){
+            if(StringUtils.isNotEmpty(interesadoSir.getCodigoMunicipioInteresado())){
                 interesadoSir.setCodigoMunicipioInteresado(catLocalidadEjb.findByLocalidadProvincia(Long.valueOf(interesadoSir.getCodigoMunicipioInteresado()), Long.valueOf(codigoProvincia)).getNombre());
             }
         }
 
         if(interesadoSir.getRepresentante()){
 
-            if(interesadoSir.getCodigoPaisRepresentante() !=null){
+            if(StringUtils.isNotEmpty(interesadoSir.getCodigoPaisRepresentante())){
                 interesadoSir.setCodigoPaisRepresentante(catPaisEjb.findByCodigo(Long.valueOf(interesadoSir.getCodigoPaisRepresentante())).getDescripcionPais());
             }
 
-            if(interesadoSir.getCodigoProvinciaRepresentante() !=null){
+            if(StringUtils.isNotEmpty(interesadoSir.getCodigoProvinciaRepresentante())){
                 String codigoProvinciaRepresentante = interesadoSir.getCodigoProvinciaRepresentante();
                 interesadoSir.setCodigoProvinciaRepresentante(catProvinciaEjb.findByCodigo(Long.valueOf(interesadoSir.getCodigoProvinciaRepresentante())).getDescripcionProvincia());
 
-                if(interesadoSir.getCodigoMunicipioRepresentante() !=null){
+                if(StringUtils.isNotEmpty(interesadoSir.getCodigoMunicipioRepresentante())){
                     interesadoSir.setCodigoMunicipioRepresentante(catLocalidadEjb.findByLocalidadProvincia(Long.valueOf(interesadoSir.getCodigoMunicipioRepresentante()), Long.valueOf(codigoProvinciaRepresentante)).getNombre());
                 }
             }

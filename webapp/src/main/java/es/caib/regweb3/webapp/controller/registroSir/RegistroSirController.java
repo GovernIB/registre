@@ -220,7 +220,7 @@ public class RegistroSirController extends BaseController {
 
                 model.addAttribute("libro",getLibroEntidad(request)); // Libro único
                 model.addAttribute("organismosOficinaActiva", getOrganismosOficinaActiva(request));
-                model.addAttribute("registrarForm", new RegistrarForm());
+                model.addAttribute("registrarForm", new RegistrarForm(registroSir.getResumen()));
                 model.addAttribute("pluginDistribucionEmail", distribucionEjb.isDistribucionPluginEmail(getEntidadActiva(request).getId()));
 
                 // Comprobamos que la unida de tramitación destino está VIGENTE
@@ -276,7 +276,7 @@ public class RegistroSirController extends BaseController {
         // Procesa el RegistroSir
         try{
 
-            RegistroEntrada registroEntrada = sirEnvioEjb.aceptarRegistroSir(registroSir, entidad, usuarioEntidad, oficinaActiva, registrarForm.getIdLibro(), registrarForm.getIdIdioma(), registrarForm.getIdOrganismoDestino(), registrarForm.getEmails(), registrarForm.getMotivo());
+            RegistroEntrada registroEntrada = sirEnvioEjb.aceptarRegistroSir(registroSir, entidad, usuarioEntidad, oficinaActiva, registrarForm.getIdLibro(), registrarForm.getIdIdioma(), registrarForm.getIdOrganismoDestino(), registrarForm.getCodigoSia().toString(), registrarForm.getExtracto(),registrarForm.getEmails(), registrarForm.getMotivo());
 
             variableReturn = "redirect:/registroEntrada/" + registroEntrada.getId() + "/detalle";
 

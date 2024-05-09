@@ -62,7 +62,6 @@
                                     <td class="ajustTamanySir"><spring:message code="tipoDocumento.${anexo.documento.tipoDocumento}"/></td>
                                     <td class="ajustTamanySir">${anexo.documento.resumen}</td>
                                     <td class="ajustTamanySir">${anexo.documento.codigoFormulario}</td>
-                                        <%-- TODO mostrar los metadatos asociados --%>
 
                                     <%--BOTONERA ANEXO--%>
                                     <td class="center">
@@ -71,10 +70,10 @@
                                             <%--Visor Anexo--%>
                                             <c:if test="${anexo.documento.tipoMIME == RegwebConstantes.MIME_PDF}">
 
-                                                <a data-toggle="modal" class="btn btn-info btn-default btn-xs" href="#visorAnexo${anexo.documento.id}"
+                                                <a data-toggle="modal" class="btn btn-info btn-default btn-xs" href="#visorAnexo${anexo.documento.anexo.id}"
                                                    title="<spring:message code="anexo.visualizar"/>"><span class="fa fa-search"></span></a>
 
-                                                <div id="visorAnexo${anexo.documento.id}" class="modal fade" role="dialog">
+                                                <div id="visorAnexo${anexo.documento.anexo.id}" class="modal fade" role="dialog">
                                                     <div class="modal-dialog modal-lg">
                                                         <div class="modal-content">
                                                             <div class="modal-header">
@@ -82,8 +81,12 @@
                                                                 <h3 class="modal-title"><spring:message code="anexo.visualizar"/>: ${anexo.documento.nombreFichero}</h3>
                                                             </div>
                                                             <div class="modal-body">
-                                                                <%--<object type="${anexo.documento.tipoMIME}" data="<c:url value="/archivo/${anexo.documento.anexo.id}/false"/>" width="100%" height="700"></object>--%>
-                                                                <object type="${anexo.documento.tipoMIME}" data="<c:url value="/registroSir/descargarDocumentoRFU/${anexo.documento.identificadorFichero}/${registroSir.identificadorIntercambio}/false"/>" width="100%" height="700"></object>
+                                                                <c:if test="${registroSir.libsir}">
+                                                                    <object type="${anexo.documento.tipoMIME}" data="<c:url value="/registroSir/descargarDocumentoRFU/${anexo.documento.identificadorFichero}/${registroSir.identificadorIntercambio}/false"/>" width="100%" height="700"></object>
+                                                                </c:if>
+                                                                <c:if test="${!registroSir.libsir}">
+                                                                    <object type="${anexo.documento.tipoMIME}" data="<c:url value="/archivo/${anexo.documento.anexo.id}/false"/>" width="100%" height="700"></object>
+                                                                </c:if>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -91,10 +94,20 @@
 
                                             </c:if>
                                             <%--Descarga Anexo--%>
-                                            <a class="btn btn-success btn-xs" href="<c:url value="/registroSir/descargarDocumentoRFU/${anexo.documento.identificadorFichero}/${registroSir.identificadorIntercambio}"/>" target="_blank" title="<spring:message code="anexo.descargar"/>"><span class="fa fa-download"></span></a>
+                                            <c:if test="${registroSir.libsir}">
+                                                <a class="btn btn-success btn-xs" href="<c:url value="/registroSir/descargarDocumentoRFU/${anexo.documento.identificadorFichero}/${registroSir.identificadorIntercambio}"/>" target="_blank" title="<spring:message code="anexo.descargar"/>"><span class="fa fa-download"></span></a>
+                                            </c:if>
+                                            <c:if test="${!registroSir.libsir}">
+                                               <a class="btn btn-success btn-xs" href="<c:url value="/archivo/${anexo.documento.anexo.id}"/>" target="_blank" title="<spring:message code="anexo.descargar"/>"><span class="fa fa-download"></span></a>
+                                            </c:if>
                                             <%--Descarga Firma--%>
                                             <c:if test="${not empty anexo.firma}">
-                                                <a class="btn btn-info btn-xs" href="<c:url value="/archivo/${anexo.firma.anexo.id}"/>" target="_blank" title="<spring:message code="anexo.tipofirma.detached"/>"><span class="fa fa-key"></span></a>
+                                                <c:if test="${registroSir.libsir}">
+                                                    <a class="btn btn-success btn-xs" href="<c:url value="/registroSir/descargarDocumentoRFU/${anexo.firma.identificadorFichero}/${registroSir.identificadorIntercambio}"/>" target="_blank" title="<spring:message code="anexo.descargar"/>"><span class="fa fa-download"></span></a>
+                                                </c:if>
+                                                <c:if test="${!registroSir.libsir}">
+                                                    <a class="btn btn-info btn-xs" href="<c:url value="/archivo/${anexo.firma.anexo.id}"/>" target="_blank" title="<spring:message code="anexo.tipofirma.detached"/>"><span class="fa fa-key"></span></a>
+                                                </c:if>
                                             </c:if>
                                         </c:if>
 

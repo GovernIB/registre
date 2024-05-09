@@ -1116,19 +1116,19 @@ public class LibSirUtils {
         anexo.setUrlRepositorio(anexoBean.getUrlRepositorio());
 
         //FirmasBean
-        for(FirmaBean firmaBean : anexoBean.getFirmasBean()){
-            if (firmaBean != null) {
+        FirmaBean firmaBean = anexoBean.getFirmaBean();
 
-                anexo.setTipoFirma(firmaBean.getTipoFirma() != null ? firmaBean.getTipoFirma().value() : "");
-                if (firmaBean.getContenidoFirma() != null && firmaBean.getContenidoFirma().getCsv() != null) {
-                    anexo.setCsv(firmaBean.getContenidoFirma().getCsv() != null ? firmaBean.getContenidoFirma().getCsv().getValorCSV() : "");
-                    anexo.setRegulacionCsv(firmaBean.getContenidoFirma().getCsv() != null ? firmaBean.getContenidoFirma().getCsv().getRegulacionGeneracionCSV() : "");
-                }
-                if (firmaBean.getContenidoFirma() != null && firmaBean.getContenidoFirma().getFirmaConCertificadoBean() != null) {
-                    anexo.setFirmaBase64(firmaBean.getContenidoFirma().getFirmaConCertificadoBean() != null ? firmaBean.getContenidoFirma().getFirmaConCertificadoBean().getFirmaBase64() : null);
-                    //Incidencia 1900484
-                    anexo.setReferenciaFirma(firmaBean.getContenidoFirma().getFirmaConCertificadoBean()!=null?(String)firmaBean.getContenidoFirma().getFirmaConCertificadoBean().getReferenciaFirma():"");
-                }
+        if (firmaBean != null) {
+
+            anexo.setTipoFirma(firmaBean.getTipoFirma() != null ? firmaBean.getTipoFirma().value() : "");
+            if (firmaBean.getContenidoFirma() != null && firmaBean.getContenidoFirma().getCsv() != null) {
+                anexo.setCsv(firmaBean.getContenidoFirma().getCsv() != null ? firmaBean.getContenidoFirma().getCsv().getValorCSV() : "");
+                anexo.setRegulacionCsv(firmaBean.getContenidoFirma().getCsv() != null ? firmaBean.getContenidoFirma().getCsv().getRegulacionGeneracionCSV() : "");
+            }
+            if (firmaBean.getContenidoFirma() != null && firmaBean.getContenidoFirma().getFirmaConCertificadoBean() != null) {
+                anexo.setFirmaBase64(firmaBean.getContenidoFirma().getFirmaConCertificadoBean() != null ? firmaBean.getContenidoFirma().getFirmaConCertificadoBean().getFirmaBase64() : null);
+                //Incidencia 1900484
+                anexo.setReferenciaFirma(firmaBean.getContenidoFirma().getFirmaConCertificadoBean()!=null?(String)firmaBean.getContenidoFirma().getFirmaConCertificadoBean().getReferenciaFirma():"");
             }
         }
 
@@ -1155,28 +1155,41 @@ public class LibSirUtils {
             try {
                 //fechaCaptura
                 metadatoAnexoSir = new MetadatoAnexoSir(METADATO_NTI, "fechaCaptura", formatter.format(tiposMetadato.getFechaCapturaDate()));
-                // metadatoAnexoSir = new MetadatoAnexoSir(METADATO_NTI, "fechaCaptura", formatter.format(new Date()));
                 metadatosAnexos.add(metadatoAnexoSir);
 
                 //origenCiudadanoAdministracion
                 metadatoAnexoSir = new MetadatoAnexoSir(METADATO_NTI, "origenCiudadanoAdministracion", tiposMetadato.isOrigenCiudadanoAdministracion() ? "1" : "0");
-                //  metadatoAnexoSir = new MetadatoAnexoSir(METADATO_NTI, "origenCiudadanoAdministracion", "1");
                 metadatosAnexos.add(metadatoAnexoSir);
 
                 //tipoDocumental
                 metadatoAnexoSir = new MetadatoAnexoSir(METADATO_NTI, "tipoDocumental", tiposMetadato.getTipoDocumentalENI().value());
-                // metadatoAnexoSir = new MetadatoAnexoSir(METADATO_NTI, "tipoDocumental", "TD01");
                 metadatosAnexos.add(metadatoAnexoSir);
 
                 //Cogemos la validez del documento del metadato ENI Estado de Elaboración
                 anexo.setValidezDocumento(tiposMetadato.getEstadoElaboracionENI().getValorEstadoElaboracionEnum().value());
-                //anexo.setValidezDocumento(CODIGO_SICRES_BY_TIPOVALIDEZDOCUMENTO.get(TIPOVALIDEZDOCUMENTO_ORIGINAL));
 
             }catch(ParseException pe){
                 throw new I18NException("Error parseando la fecha de captura");
             }
 
+        }else{ //SI no hay metadatos ENI, se crean los metadatos por defecto
+            metadatoAnexoSir = new MetadatoAnexoSir(METADATO_NTI, "fechaCaptura", formatter.format(new Date()));
+            metadatosAnexos.add(metadatoAnexoSir);
+
+            metadatoAnexoSir = new MetadatoAnexoSir(METADATO_NTI, "origenCiudadanoAdministracion", "1");
+            metadatosAnexos.add(metadatoAnexoSir);
+
+            metadatoAnexoSir = new MetadatoAnexoSir(METADATO_NTI, "tipoDocumental", "TD99");
+            metadatosAnexos.add(metadatoAnexoSir);
+
         }
+
+        //Si no hay validezDocumento, se pone por defecto ORIGINAL
+        if(anexo.getValidezDocumento()== null){
+            anexo.setValidezDocumento(CODIGO_SICRES_BY_TIPOVALIDEZDOCUMENTO.get(TIPOVALIDEZDOCUMENTO_ORIGINAL));
+        }
+
+
 
         anexo.setMetadatosAnexos(metadatosAnexos);
         return anexo;

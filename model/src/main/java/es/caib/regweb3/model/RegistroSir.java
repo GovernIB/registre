@@ -228,6 +228,9 @@ public class RegistroSir implements Serializable {
     private String decodificacionUnidadTramitacionInicio;
     private Set<MetadatoRegistroSir> metadatoRegistroSir;
 
+
+    private boolean libsir = false; //indica si el registro es gestionado por Libsir
+
     public RegistroSir() {
     }
 
@@ -700,6 +703,16 @@ public class RegistroSir implements Serializable {
 
     public void setReferenciaUnica(Boolean referenciaUnica) {
         this.referenciaUnica = referenciaUnica;
+    }
+
+
+    @Column(name = "LIBSIR")
+    public Boolean getLibsir() {
+        return libsir;
+    }
+
+    public void setLibsir(Boolean libsir) {
+        this.libsir = libsir;
     }
 
     @OneToMany(

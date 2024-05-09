@@ -1568,7 +1568,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
      * @throws I18NValidationException
      */
     @Override
-    public RegistroEntrada aceptarRegistroSirEntrada(RegistroSir registroSir, Entidad entidad, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, Long idOrganismoDestino)
+    public RegistroEntrada aceptarRegistroSirEntrada(RegistroSir registroSir, Entidad entidad, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, Long idOrganismoDestino,String codigoSia, String extracto)
             throws I18NException, I18NValidationException, ParseException, InterException {
 
         Libro libro = libroEjb.getReference(idLibro);
@@ -1587,7 +1587,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         registroEntrada.setDestinoExternoDenominacion(null);
 
         // RegistroDetalle
-        registroEntrada.setRegistroDetalle(getRegistroDetalle(registroSir, idIdioma));
+        registroEntrada.setRegistroDetalle(getRegistroDetalle(registroSir, idIdioma, codigoSia, extracto));
 
         // Interesados
         List<Interesado> interesados = procesarInteresados(registroSir.getInteresados());
@@ -1644,20 +1644,26 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
      * @return
      * @throws I18NException
      */
-    private RegistroDetalle getRegistroDetalle(RegistroSir registroSir, Long idIdioma) throws I18NException {
+    private RegistroDetalle getRegistroDetalle(RegistroSir registroSir, Long idIdioma, String codigoSia, String extracto) throws I18NException{
 
         RegistroDetalle registroDetalle = new RegistroDetalle();
 
         registroDetalle.setRecibidoSir(true);
-        if (registroSir.getModoRegistro().equals(ModoRegistro.getModoRegistroValue("PRESENCIAL"))) {
-            registroDetalle.setPresencial(true);
-        } else {
-            registroDetalle.setPresencial(false);
+        registroDetalle.setPresencial(false);
+        if(StringUtils.isNotEmpty(extracto)){
+            registroDetalle.setExtracto(extracto);
+        }else{
+            registroDetalle.setExtracto(registroSir.getResumen());
         }
         registroDetalle.setExtracto(registroSir.getResumen());
         registroDetalle.setTipoDocumentacionFisica(Long.valueOf(registroSir.getDocumentacionFisica()));
         registroDetalle.setIdioma(idIdioma);
-        registroDetalle.setCodigoSia(registroSir.getCodigoSia());// ahora con LIBSIR viene informado. Cogerlo de RegistroSIR
+        if(registroSir.getCodigoSia()!=null){
+            registroDetalle.setCodigoSia(registroSir.getCodigoSia());// ahora con LIBSIR viene informado. Cogerlo de RegistroSIR
+        }else{
+            registroDetalle.setCodigoSia(codigoSia);
+        }
+        // ahora con LIBSIR viene informado. Cogerlo de RegistroSIR
 
         registroDetalle.setCodigoAsunto(null);
 
@@ -1926,6 +1932,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
 
         RegistroSir registroSir = LibSirUtils.transformarAsientoBean(asientoBean, entidad);
         registroSir.setEstado(EstadoRegistroSir.RECIBIDO);
+        registroSir.setLibsir(true);
 
         try {
 
@@ -2052,9 +2059,11 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
                 SimpleDateFormat formatter = new SimpleDateFormat(FORMATO_FECHA_SICRES4);
                 anexo.setFechaCaptura(formatter.parse(metadatoAnexoSir.getValor()));
             }
-            //TODO VERSIONNTI
 
         }
+
+        anexo.setValidezDocumento(Long.parseLong(anexoSir.getValidezDocumento()));
+
 
         //SICRES4 campos nuevos
         anexo.setResumen(anexoSir.getResumen());

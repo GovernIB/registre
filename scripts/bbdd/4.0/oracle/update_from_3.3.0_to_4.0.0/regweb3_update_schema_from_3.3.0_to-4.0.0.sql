@@ -7,6 +7,9 @@ alter table RWE_ANEXO add IDENTIFRFU varchar2(4000 char);
 --Cambio tamanyo RWE_ANEXO_SIR
 ALTER TABLE RWE_ANEXO_SIR MODIFY OBSERVACIONES varchar2(160 char);
 
+--Cambio a  null del campo hash en RWE_ANEXO_SIR
+ALTER TABLE RWE_ANEXO_SIR MODIFY HASH NULL;
+
 --Nuevas tablas metadatos
 create table RWE_METADATO_ANEXO (
    ID number(19,0) not null,
@@ -166,3 +169,7 @@ ALTER TABLE RWE_PERSONA add CODDIRUNIF varchar2(21 char);
 
 --Nuevo campo en RWE_OFICINA
 ALTER TABLE RWE_OFICINA ADD ACTIVALIBSIR number(1,0) DEFAULT 0;
+
+--Nuevo campo en RWE_REGISTRO_SIR
+ALTER TABLE RWE_REGISTRO_SIR ADD LIBSIR number(1,0) DEFAULT 0;
+

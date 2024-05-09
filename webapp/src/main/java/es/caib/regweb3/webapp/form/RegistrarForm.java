@@ -17,10 +17,15 @@ public class RegistrarForm {
     private Long codigoSia;
     private String emails;
     private String motivo;
+    private String extracto;
 
 
     public RegistrarForm() {
 
+    }
+
+    public RegistrarForm(String extracto) {
+        this.extracto = extracto;
     }
 
     public Long getIdLibro() {
@@ -77,5 +82,13 @@ public class RegistrarForm {
 
     public void setMotivo(String motivo) {
         this.motivo = motivo;
+    }
+
+    public String getExtracto() {
+        return extracto;
+    }
+
+    public void setExtracto(String extracto) {
+        this.extracto = extracto;
     }
 }

@@ -463,7 +463,7 @@ public class SirEnvioBean implements SirEnvioLocal {
      * @throws I18NException
      */
     @Override
-    public RegistroEntrada aceptarRegistroSir(RegistroSir registroSir, Entidad entidad, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, Long idOrganismoDestino, String emails, String motivo)
+    public RegistroEntrada aceptarRegistroSir(RegistroSir registroSir, Entidad entidad, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, Long idOrganismoDestino, String codigoSia, String extracto,String emails, String motivo)
             throws I18NException, I18NValidationException, ParseException, InterException {
 
         Date inicio = new Date();
@@ -482,7 +482,7 @@ public class SirEnvioBean implements SirEnvioLocal {
 
         try {
             // Creamos y registramos el RegistroEntrada a partir del RegistroSir aceptado
-            registroEntrada = registroSirEjb.aceptarRegistroSirEntrada(registroSir, entidad, usuario, oficinaActiva, idLibro, idIdioma, idOrganismoDestino);
+            registroEntrada = registroSirEjb.aceptarRegistroSirEntrada(registroSir, entidad, usuario, oficinaActiva, idLibro, idIdioma, idOrganismoDestino, codigoSia,extracto);
 
             // Enviamos el Mensaje de Confirmación
             confirmarRegistroSirLIBSIR(registroSir, registroEntrada.getNumeroRegistroFormateado(), registroEntrada.getFecha());
@@ -1115,7 +1115,7 @@ public class SirEnvioBean implements SirEnvioLocal {
                 Organismo organismoDestino = organismoEjb.findByCodigoEntidadLigero(destino, entidad.getId());
 
                 //Aceptar el RegistroSir
-                RegistroEntrada registroEntrada = aceptarRegistroSir(registroSir, entidad, usuarioEntidad, oficina, idLibro, RegwebConstantes.IDIOMA_CASTELLANO_ID, organismoDestino.getId(), null, null);
+                RegistroEntrada registroEntrada = aceptarRegistroSir(registroSir, entidad, usuarioEntidad, oficina, idLibro, RegwebConstantes.IDIOMA_CASTELLANO_ID, organismoDestino.getId(), null, null, null, null);
 
                 // Copiamos cada anexo en la carpeta creada
                 for(AnexoSir anexoSir:registroSir.getAnexos()){
