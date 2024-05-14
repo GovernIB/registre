@@ -103,6 +103,23 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-xs-12">
+                                <div class="form-group col-xs-6 espaiLinies senseMargeLat">
+                                    <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                        <label for="rol"><spring:message code="usuario.roles"/></label>
+                                    </div>
+                                    <div class="col-xs-8">
+                                        <form:select path="rol" cssClass="chosen-select">
+                                            <form:option value="" label="..."/>
+                                            <c:forEach var="rol" items="${roles}">
+                                                <form:option value="${rol}"><spring:message code="rol.${rol}.nombre"/></form:option>
+                                            </c:forEach>
+                                            <form:option value="0"><spring:message code="rol.0.nombre"/></form:option>
+                                        </form:select>
+                                    </div>
+                                </div>
+                            </div>
+
 
                             <%--Comprueba si debe mostrar las opciones desplegadas o no--%>
                             <c:if test="${empty usuarioEntidadBusqueda.usuarioEntidad.categoria && empty usuarioEntidadBusqueda.usuarioEntidad.funcion && empty usuarioEntidadBusqueda.organismo.id

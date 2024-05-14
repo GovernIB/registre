@@ -350,7 +350,7 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Paginacion busqueda(Integer pageNumber, Long idEntidad, UsuarioEntidad usuarioEntidad, Long idOrganismo, Long permiso) throws I18NException {
+    public Paginacion busqueda(Integer pageNumber, Long idEntidad, UsuarioEntidad usuarioEntidad, Long idOrganismo, Long permiso, Long rol) throws I18NException {
 
         Query q;
         Query q2;
@@ -461,33 +461,44 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
             parametros.put("notificacionEspontanea", usuarioEntidad.getNotificacionEspontanea());
         }
 
+        //Rol
+        if(rol != null){
+            log.info("Rol seleccionado: " + rol);
+            switch (rol.intValue()){
+                case 1: where.add("usuarioEntidad.usuario.rwe_superadmin = true "); break;
+                case 2: where.add("usuarioEntidad.usuario.rwe_admin = true "); break;
+                case 3: where.add("usuarioEntidad.usuario.rwe_usuari = true "); break;
+                case 4: where.add("usuarioEntidad.usuario.rwe_ws_entrada = true "); break;
+                case 5: where.add("usuarioEntidad.usuario.rwe_ws_salida = true "); break;
+                case 6: where.add("usuarioEntidad.usuario.rwe_ws_ciudadano = true "); break;
+                case 7: where.add("usuarioEntidad.usuario.dib_user_rw = true "); break;
+                case 0: where.add("usuarioEntidad.usuario.rwe_usuari = false"); break;
+            }
+
+            //parametros.put("rol", true);
+        }
+        log.info("Where: " + where);
         where.add("usuarioEntidad.entidad.id = :idEntidad ");
         parametros.put("idEntidad", idEntidad);
         where.add("usuarioEntidad.activo = true ");
 
-        if (parametros.size() != 0) {
-            query.append("where ");
-            int count = 0;
-            for (String w : where) {
-                if (count != 0) {
-                    query.append(" and ");
-                }
-                query.append(w);
-                count++;
+        // Parámetros
+        query.append("where ");
+        int count = 0;
+        for (String w : where) {
+            if (count != 0) {
+                query.append(" and ");
             }
-            q2 = em.createQuery(query.toString().replaceAll("Select DISTINCT usuarioEntidad from UsuarioEntidad as usuarioEntidad", "Select count(DISTINCT usuarioEntidad.id) from UsuarioEntidad as usuarioEntidad "));
-            //query.append("order by usuarioEntidad.usuario.nombre, usuarioEntidad.usuario.apellido1");
-            q = em.createQuery(query.toString());
+            query.append(w);
+            count++;
+        }
+        q2 = em.createQuery(query.toString().replaceAll("Select DISTINCT usuarioEntidad from UsuarioEntidad as usuarioEntidad", "Select count(DISTINCT usuarioEntidad.id) from UsuarioEntidad as usuarioEntidad "));
+        //query.append("order by usuarioEntidad.usuario.nombre, usuarioEntidad.usuario.apellido1");
+        q = em.createQuery(query.toString());
 
-            for (Map.Entry<String, Object> param : parametros.entrySet()) {
-                q.setParameter(param.getKey(), param.getValue());
-                q2.setParameter(param.getKey(), param.getValue());
-            }
-
-        } else {
-            q2 = em.createQuery(query.toString().replaceAll("Select DISTINCT usuarioEntidad from UsuarioEntidad as usuarioEntidad", "Select count(DISTINCT usuarioEntidad.id) from UsuarioEntidad as usuarioEntidad "));
-            //query.append("order by usuarioEntidad.usuario.nombre, usuarioEntidad.usuario.apellido1");
-            q = em.createQuery(query.toString());
+        for (Map.Entry<String, Object> param : parametros.entrySet()) {
+            q.setParameter(param.getKey(), param.getValue());
+            q2.setParameter(param.getKey(), param.getValue());
         }
 
         Paginacion paginacion;
@@ -510,9 +521,7 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
         }
         paginacion.setListado(usuarios);
 
-
         return paginacion;
-
     }
 
     @Override

@@ -19,13 +19,15 @@ public class UsuarioEntidadBusquedaForm implements Serializable {
     private Integer pageNumber;
     private Boolean exportarUsuarios = false;
     private Boolean exportarPermisos = false;
+    private Long rol;
 
     public UsuarioEntidadBusquedaForm() {
     }
 
-    public UsuarioEntidadBusquedaForm(UsuarioEntidad usuarioEntidad, Integer pageNumber) {
+    public UsuarioEntidadBusquedaForm(UsuarioEntidad usuarioEntidad, Integer pageNumber, Long rol) {
         this.usuarioEntidad = usuarioEntidad;
         this.pageNumber = pageNumber;
+        this.rol = rol;
     }
 
     public UsuarioEntidad getUsuarioEntidad() {
@@ -74,5 +76,13 @@ public class UsuarioEntidadBusquedaForm implements Serializable {
 
     public void setExportarPermisos(Boolean exportarPermisos) {
         this.exportarPermisos = exportarPermisos;
+    }
+
+    public Long getRol() {
+        return rol;
+    }
+
+    public void setRol(Long rol) {
+        this.rol = rol;
     }
 }

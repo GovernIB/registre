@@ -99,6 +99,15 @@ public interface RegwebConstantes {
     String DIB_USER_RW = "DIB_USER_RW"; // Rol para realizar copias auténticas
     Long DIB_USER_ID = 7L;
 
+    long[] ROLES = {
+            RWE_SUPERADMIN_ID,
+            RWE_ADMIN_ID,
+            RWE_USUARI_ID,
+            RWE_WS_ENTRADA_ID,
+            RWE_WS_SALIDA_ID,
+            RWE_WS_CIUDADANO_ID,
+            DIB_USER_ID
+    };
 
     /* -------------- ESTADO ENTIDAD --------------*/
     String ESTADO_ENTIDAD_ANULADO = "A";
