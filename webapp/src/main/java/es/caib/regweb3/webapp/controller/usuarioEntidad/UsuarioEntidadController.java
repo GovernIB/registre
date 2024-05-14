@@ -57,12 +57,13 @@ public class UsuarioEntidadController extends BaseController {
         usuarioEntidad.setAsistencia(null);
         usuarioEntidad.setNotificacionEspontanea(null);
         usuarioEntidad.setBitcita(null);
-        UsuarioEntidadBusquedaForm usuarioEntidadBusqueda = new UsuarioEntidadBusquedaForm(usuarioEntidad, 1);
+        UsuarioEntidadBusquedaForm usuarioEntidadBusqueda = new UsuarioEntidadBusquedaForm(usuarioEntidad, 1, RegwebConstantes.RWE_USUARI_ID);
 
         model.addAttribute("usuarioEntidadBusqueda", usuarioEntidadBusqueda);
         model.addAttribute("entidad", entidad);
         model.addAttribute("organismos", organismoEjb.getPermitirUsuarios(entidad.getId()));
         model.addAttribute("permisos", RegwebConstantes.PERMISOS);
+        model.addAttribute("roles", RegwebConstantes.ROLES);
 
         return "usuarioEntidad/usuarioEntidadList";
     }
@@ -84,13 +85,13 @@ public class UsuarioEntidadController extends BaseController {
 
         if(busqueda.getExportarUsuarios()){ // Creamos un excel con los resultados
             mav = new ModelAndView("exportarUsuariosExcel");
-            Paginacion paginacion = usuarioEntidadEjb.busqueda(null, entidad.getId(), busqueda.getUsuarioEntidad(), organismo.getId(), busqueda.getPermiso());
+            Paginacion paginacion = usuarioEntidadEjb.busqueda(null, entidad.getId(), busqueda.getUsuarioEntidad(), organismo.getId(), busqueda.getPermiso(), busqueda.getRol());
 
             mav.addObject("resultados", paginacion);
 
         }else if(busqueda.getExportarPermisos()) { // Creamos un excel los permisos de los usuarios
             mav = new ModelAndView("exportarPermisosUsuariosExcel");
-            Paginacion paginacion = usuarioEntidadEjb.busqueda(null, entidad.getId(), busqueda.getUsuarioEntidad(), organismo.getId(), busqueda.getPermiso());
+            Paginacion paginacion = usuarioEntidadEjb.busqueda(null, entidad.getId(), busqueda.getUsuarioEntidad(), organismo.getId(), busqueda.getPermiso(), busqueda.getRol());
 
             mav.addObject("resultados", paginacion);
             mav.addObject("organismo", organismoEjb.findById(organismo.getId()));
@@ -98,13 +99,14 @@ public class UsuarioEntidadController extends BaseController {
         }else{ // Búsqueda normal
 
             Paginacion paginacion = usuarioEntidadEjb.busqueda(busqueda.getPageNumber(),
-                    entidad.getId(), busqueda.getUsuarioEntidad(), organismo.getId(), busqueda.getPermiso());
+                    entidad.getId(), busqueda.getUsuarioEntidad(), organismo.getId(), busqueda.getPermiso(), busqueda.getRol());
             busqueda.setPageNumber(1);
             mav.addObject("entidad", entidad);
             mav.addObject("paginacion", paginacion);
             mav.addObject("organismos", organismoEjb.getPermitirUsuarios(entidad.getId()));
             mav.addObject("usuarioEntidadBusqueda", busqueda);
             mav.addObject("permisos", RegwebConstantes.PERMISOS);
+            mav.addObject("roles", RegwebConstantes.ROLES);
         }
 
         return mav;
