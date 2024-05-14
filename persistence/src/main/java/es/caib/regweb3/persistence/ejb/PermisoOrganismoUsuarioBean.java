@@ -547,7 +547,7 @@ public class PermisoOrganismoUsuarioBean extends BaseEjbJPA<PermisoOrganismoUsua
     public List<UsuarioEntidad> getUsuariosPermiso(Set<Organismo> organismos, Long permiso) throws I18NException {
 
         Query q = em.createQuery("Select distinct pou.usuario from PermisoOrganismoUsuario as pou where " +
-                "pou.usuario.usuario.tipoUsuario = :persona and pou.organismo in (:organismos) and pou.activo = true and pou.permiso=:sir");
+                "pou.usuario.usuario.tipoUsuario = :persona and pou.usuario.usuario.rwe_admin = false and pou.organismo in (:organismos) and pou.activo = true and pou.permiso=:sir");
 
         q.setParameter("persona", RegwebConstantes.TIPO_USUARIO_PERSONA);
         q.setParameter("organismos", organismos);
