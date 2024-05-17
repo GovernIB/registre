@@ -45,7 +45,7 @@ public class FileSystemManager {
         } catch (FileNotFoundException e) {
             log.info("El archivo no se encuentro en el path indicado");
             e.printStackTrace();
-            throw new I18NException("El archivo no se encuentro en el path indicado");
+            throw new I18NException("error.exception");
         } catch (IOException e) {
             e.printStackTrace();
             throw new I18NException(e.getMessage());

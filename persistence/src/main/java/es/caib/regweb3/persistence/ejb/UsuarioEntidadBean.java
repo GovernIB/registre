@@ -126,7 +126,7 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
                 usuario = usuarioEjb.crearUsuario(identificador);
             }catch (Exception e){
                 log.info("Ha ocurrido un error creando el usuario en regweb: " + e.getMessage());
-                throw new I18NException("Ha ocurrido un error creando el usuario en regweb");
+                throw new I18NException("error.exception");
             }
 
             if (usuario != null) {

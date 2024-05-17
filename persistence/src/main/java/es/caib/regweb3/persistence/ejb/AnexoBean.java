@@ -158,7 +158,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
         } catch (Exception e) {
             log.error(e.getMessage(), e);
-            throw new I18NException(e, "anexo.error.obteniendo",
+            throw new I18NException(e, "º",
                     new I18NArgumentString(String.valueOf(anexoID)),
                     new I18NArgumentString(e.getMessage()));
 
@@ -1244,7 +1244,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
         } catch (Exception e) {
             e.printStackTrace();
-            throw new I18NException("S'ha produit un error eliminant la custodia de l'annex");
+            throw new I18NException("anexo.error.eliminar");
         }
 
     }
@@ -1280,7 +1280,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
             }catch (CustodyException c){
                 log.info("Error obteniendo el anexo: " + c.getMessage());
-                throw new I18NException("Error obteniendo el anexo");
+                throw new I18NException("anexo.error.obteniendo");
             }
 
         } else if (anexo.getPerfilCustodia().equals(RegwebConstantes.PERFIL_CUSTODIA_ARXIU)) {
@@ -1350,7 +1350,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
         }catch (CustodyException c){
             log.info("Error obteniendo el anexo: " + c.getMessage());
-            throw new I18NException("Error obteniendo el anexo");
+            throw new I18NException("anexo.error.obteniendo");
         }
 
         return null;
@@ -1375,7 +1375,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
         }catch (CustodyException c){
             log.info("Error obteniendo la informacion del documento: " + c.getMessage());
-            throw new I18NException("Error obteniendo la informacion del documento");
+            throw new I18NException("anexo.error.obteniendo");
         }
 
     }
@@ -1396,7 +1396,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             return custody.getSignatureInfoOnly(custodiaID);
         }catch (CustodyException c){
             log.info("Error obteniendo la informacion de la firma: " + c.getMessage());
-            throw new I18NException("Error obteniendo la informacion de la firma");
+            throw new I18NException("anexo.error.obteniendo");
         }
     }
 
@@ -1427,7 +1427,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
         }catch (CustodyException c){
             log.info("Error obteniendo la informacion de la firma: " + c.getMessage());
-            throw new I18NException("Error obteniendo la informacion de la firma");
+            throw new I18NException("anexo.error.obteniendo");
         }
     }
 
@@ -1465,7 +1465,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
         }catch (CustodyException c){
             log.info("Error obteniendo la firma del documento: " + c.getMessage());
-            throw new I18NException("Error obteniendo la firma del documento");
+            throw new I18NException("anexo.error.obteniendo");
         }
     }
 
@@ -1506,7 +1506,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
             }catch (CustodyException | NotSupportedCustodyException c){
                 log.info("Error eliminando el anexo: " + c.getMessage());
-                throw new I18NException("Error eliminando el anexo");
+                throw new I18NException("anexo.error.eliminar");
             }
         }
 
@@ -1547,7 +1547,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
             }catch (CustodyException c){
                 log.info("Error obteniendo la url de validacion del anexo: " + c.getMessage());
-                throw new I18NException("Error obteniendo la url de validacion del anexo");
+                throw new I18NException("anexo.error.obteniendo");
             }
 
         } else if (anexo.getPerfilCustodia().equals(RegwebConstantes.PERFIL_CUSTODIA_ARXIU)) {
@@ -1599,7 +1599,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
             }catch (CustodyException c){
                 log.info("Error obteniendo la url de validacion web del anexo: " + c.getMessage());
-                throw new I18NException("Error obteniendo la url de validacion web del anexo");
+                throw new I18NException("anexo.error.obteniendo");
             }
 
         } else if (anexo.getPerfilCustodia().equals(RegwebConstantes.PERFIL_CUSTODIA_ARXIU)) {
@@ -1753,7 +1753,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
         }catch (CustodyException | NotSupportedCustodyException c){
             log.info("Error obteniendo metadatos del anexo: " + c.getMessage());
-            throw new I18NException("Error obteniendo metadatos del anexo");
+            throw new I18NException("anexo.error.obteniendo");
         }
 
     }

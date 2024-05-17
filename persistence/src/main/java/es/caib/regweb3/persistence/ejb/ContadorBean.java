@@ -119,7 +119,7 @@ public class ContadorBean extends BaseEjbJPA<Contador, Long> implements Contador
             secuencia = String.format("%08d", numero.getNumero());
 
         } else if (secuencia.length() > 8) {
-            throw new I18NException("El valor de la secuencia obtenido del Contador no puede ser superior a 8");
+            throw new I18NException("error.secuencia.sir");
         }
 
         return secuencia;

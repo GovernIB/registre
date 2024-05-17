@@ -242,7 +242,7 @@ public class JustificanteMockPlugin extends AbstractPluginProperties implements 
 
         }catch (DocumentException | FileNotFoundException e){
             e.printStackTrace();
-            throw new I18NException("Error generando el pdf del justificante de entrada");
+            throw new I18NException("registro.justificante.error", registroEntrada.getNumeroRegistroFormateado());
         }
     }
 
@@ -365,7 +365,7 @@ public class JustificanteMockPlugin extends AbstractPluginProperties implements 
 
         }catch (DocumentException | FileNotFoundException e){
             e.printStackTrace();
-            throw new I18NException("Error generando el pdf del justificante de entrada");
+            throw new I18NException("registro.justificante.error", registroSalida.getNumeroRegistroFormateado());
         }
     }
 
