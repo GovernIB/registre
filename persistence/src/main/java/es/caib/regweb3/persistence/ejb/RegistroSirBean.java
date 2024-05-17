@@ -2408,8 +2408,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
             } else if (modoFirma ==  RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED) {
                 // Firma en document separat CAS 4
                 if (dc == null) {
-                    throw new I18NException("Aquesta firma "+ anexoSir.getIdentificadorFichero() +"  requereix el document original"
-                            + " i no s'ha enviat");
+                    throw new I18NException("error.firma.detached",  anexoSir.getIdentificadorFichero());
                 }
 
                 sc.setAttachedDocument(false);
@@ -2466,13 +2465,13 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         NodeList signsList = eSignature.getElementsByTagNameNS(
                 "http://www.w3.org/2000/09/xmldsig#", "Signature");
         if (signsList.getLength() == 0) {
-            throw new I18NException("No te firmes");
+            throw new I18NException("anexo.tipofirma.sinfirma");
         }
         Node signatureNode = signsList.item(0);
         try {
             xmlSignature = new XMLSignatureElement((Element) signatureNode).getXMLSignature();
         } catch (MarshalException e) {
-            throw new I18NException("marshal exception: " + e.getMessage());
+            throw new I18NException("error.desconegut" + e.getMessage());
         }
         List<?> references = xmlSignature.getSignedInfo().getReferences();
         for (int i = 0; i < references.size(); ++i) {

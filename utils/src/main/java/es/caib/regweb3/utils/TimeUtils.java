@@ -49,7 +49,7 @@ public class TimeUtils {
         try {
             return df.parse(formattedDate);
         } catch (ParseException e) {
-            throw new I18NException("Error parseando la fecha");
+            throw new I18NException("error.exception", e.getLocalizedMessage());
         }
     }
 
@@ -59,7 +59,7 @@ public class TimeUtils {
         try {
             return sdf.parse(fecha);
         } catch (ParseException e) {
-            throw new I18NException("Error parseando la fecha");
+            throw new I18NException("error.exception", e.getLocalizedMessage());
         }
     }
 

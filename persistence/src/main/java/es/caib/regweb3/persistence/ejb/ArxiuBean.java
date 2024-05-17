@@ -61,7 +61,7 @@ public class ArxiuBean implements ArxiuLocal{
                 String error = var23.getMessage();
                 if (reintents <= 0 || error == null || !error.contains("Proxy Error") || !error.contains("/services/closeFile")) {
                     integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_CERRAR_EXPEDIENTE, "Cerrar expediente", peticion.toString(), var23, null,System.currentTimeMillis() - inicio.getTime(), idEntidad, expediente.getName());
-                    throw new I18NException("Error no controlat al cerrarExpediente()");
+                    throw new I18NException("error.exception");
                 }
 
                 res = new Resultado();

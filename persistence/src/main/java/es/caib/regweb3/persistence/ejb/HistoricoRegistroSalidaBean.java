@@ -115,7 +115,7 @@ public class HistoricoRegistroSalidaBean extends BaseEjbJPA<HistoricoRegistroSal
             try {
                 registroEntradaOrigial = RegistroUtils.serilizarXml(registroSalida);
             } catch (JAXBException e) {
-                throw new I18NException("Error serializando el registro para crear un Historico");
+                throw new I18NException("error.serializando");
             }
             historico.setRegistroSalidaOriginal(registroEntradaOrigial);
         }
