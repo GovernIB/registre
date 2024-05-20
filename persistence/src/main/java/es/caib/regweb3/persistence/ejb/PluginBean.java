@@ -295,8 +295,7 @@ public class PluginBean extends BaseEjbJPA<Plugin, Long> implements PluginLocal 
 
         // Si no existe el plugin, retornamos null
         if (plugin == null) {
-            log.info("No existe ningun plugin de este tipo definido en el sistema", new Exception());
-            return null;
+            throw new I18NException("error.plugin.nodefinit");
         }
 
         // Obtenemos la clase del Plugin
@@ -309,7 +308,7 @@ public class PluginBean extends BaseEjbJPA<Plugin, Long> implements PluginLocal 
             try {
                 prop.load(new StringReader(plugin.getPropiedadesEntidad()));
             } catch (IOException e) {
-                throw new I18NException("Plugin: Errror obteniendo las propiedades de la entidad");
+                throw new I18NException("error.plugin.propiedades.entidad");
             }
         }
 
@@ -317,7 +316,7 @@ public class PluginBean extends BaseEjbJPA<Plugin, Long> implements PluginLocal 
             try {
                 prop.load(new StringReader(plugin.getPropiedadesAdmin()));
             } catch (IOException e) {
-                throw new I18NException("Plugin: Error obteniendo las propiedades de la aplicación");
+                throw new I18NException("error.plugin.propiedades.aplicacion");
             }
         }
 
@@ -345,7 +344,7 @@ public class PluginBean extends BaseEjbJPA<Plugin, Long> implements PluginLocal 
             try {
                 prop.load(new StringReader(plugin.getPropiedadesEntidad()));
             } catch (IOException e) {
-                throw new I18NException("Plugin: Error obteniendo las propiedades de la aplicación");
+                throw new I18NException("error.plugin.propiedades.entidad");
             }
         }
 
@@ -353,7 +352,7 @@ public class PluginBean extends BaseEjbJPA<Plugin, Long> implements PluginLocal 
             try {
                 prop.load(new StringReader(plugin.getPropiedadesAdmin()));
             } catch (IOException e) {
-                throw new I18NException("Plugin: Error obteniendo las propiedades de la aplicación");
+                throw new I18NException("error.plugin.propiedades.aplicacion");
             }
         }
 

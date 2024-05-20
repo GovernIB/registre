@@ -354,7 +354,7 @@ public class PlantillaBean extends BaseEjbJPA<Plantilla, Long> implements Planti
                         try{
                             plantilla.setRepro(RegistroUtils.serilizarXml(plantillaJson));
                         } catch (JAXBException e) {
-                            throw new I18NException("Error serializando la plantilla");
+                            throw new I18NException("error.serializando");
                         }
                         merge(plantilla);
                     }
@@ -371,7 +371,7 @@ public class PlantillaBean extends BaseEjbJPA<Plantilla, Long> implements Planti
                             try {
                                 plantilla.setRepro(RegistroUtils.serilizarXml(plantillaJson));
                             }catch (JAXBException e) {
-                                throw new I18NException("Error serializando la plantilla");
+                                throw new I18NException("error.serializando");
                             }
                             merge(plantilla);
                         }
@@ -393,7 +393,7 @@ public class PlantillaBean extends BaseEjbJPA<Plantilla, Long> implements Planti
                         try{
                             plantilla.setRepro(RegistroUtils.serilizarXml(plantillaJson));
                         }catch (JAXBException e) {
-                            throw new I18NException("Error serializando la plantilla");
+                            throw new I18NException("error.serializando");
                         }
                         merge(plantilla);
                     }
@@ -410,7 +410,7 @@ public class PlantillaBean extends BaseEjbJPA<Plantilla, Long> implements Planti
                             try{
                                 plantilla.setRepro(RegistroUtils.serilizarXml(plantillaJson));
                             }catch (JAXBException e) {
-                                throw new I18NException("Error serializando la plantilla");
+                                throw new I18NException("error.serializando");
                             }
                             merge(plantilla);
                         }
@@ -434,7 +434,7 @@ public class PlantillaBean extends BaseEjbJPA<Plantilla, Long> implements Planti
                 try{
                     plantilla.setRepro(RegistroUtils.serilizarXml(plantillaJson));
                 }catch (JAXBException e) {
-                    throw new I18NException("Error serializando la plantilla");
+                    throw new I18NException("error.serializando");
                 }
                 merge(plantilla);
             }
@@ -448,7 +448,7 @@ public class PlantillaBean extends BaseEjbJPA<Plantilla, Long> implements Planti
                 try{
                     plantilla.setRepro(RegistroUtils.serilizarXml(plantillaJson));
                 }catch (JAXBException e) {
-                    throw new I18NException("Error serializando la plantilla");
+                    throw new I18NException("error.serializando");
                 }
                 merge(plantilla);
             }

@@ -158,7 +158,7 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
         try {
             estampacion = this.getPropertyRequired(PROPERTY_CAIB_BASE + "estampacion");
         } catch (Exception e) {
-            throw new I18NException("La propiedad 'estampacion' no esta definida y es obligatoria");
+            throw new I18NException("justificante.propiedad.obligatoria", "estampación");
         }
         estampat = MessageFormat.format(estampacion, url, specialValue, csv);
 
@@ -255,7 +255,7 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
 
         }catch (DocumentException | FileNotFoundException e){
             e.printStackTrace();
-            throw new I18NException("Error generando el pdf del justificante de entrada");
+            throw new I18NException("registro.justificante.error", registroEntrada.getNumeroRegistroFormateado());
         }
     }
 
@@ -308,7 +308,7 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
 
         }catch (DocumentException | FileNotFoundException e){
             e.printStackTrace();
-            throw new I18NException("Error generando el pdf del justificante de salida");
+            throw new I18NException("registro.justificante.error", registroSalida.getNumeroRegistroFormateado());
         }
 
     }
