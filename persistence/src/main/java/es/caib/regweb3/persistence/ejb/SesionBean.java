@@ -155,7 +155,7 @@ public class SesionBean extends BaseEjbJPA<Sesion, Long> implements SesionLocal 
             merge(sesion);
 
         } else {
-            throw new I18NException("El idSesion no existe en el sistema");
+            throw new I18NException("sesion.noExiste", idSesion.toString());
         }
     }
 
