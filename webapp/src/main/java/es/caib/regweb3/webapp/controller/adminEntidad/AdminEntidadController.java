@@ -149,11 +149,6 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
 
         }else { // Si no hay errores realizamos la búsqueda
 
-            RegistroEntrada registroEntrada = busqueda.getRegistroEntrada();
-
-            // Ponemos la hora 23:59 a la fecha fin
-            Date fechaFin = RegistroUtils.ajustarHoraBusqueda(busqueda.getFechaFin());
-
             // Organismo origen seleccionado
             List<Long> organismos = new ArrayList<>();
             if(busqueda.getIdOrganismo() == null){
@@ -162,30 +157,42 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
                 organismos.add(busqueda.getIdOrganismo());
             }
 
-            //Búsqueda de registros
-            Paginacion paginacion = registroEntradaConsultaEjb.busqueda(busqueda.getPageNumber(), organismos,busqueda.getFechaInicio(), fechaFin, registroEntrada, busqueda.getInteressatNom(), busqueda.getInteressatLli1(), busqueda.getInteressatLli2(), busqueda.getInteressatDoc(), busqueda.getOrganDestinatari(), null, busqueda.getIdUsuario(), entidadActiva.getId());
+            if(!busqueda.getExportarRegistros()){ // Búsqueda normal
 
-            busqueda.setPageNumber(1);
-            mav.addObject("paginacion", paginacion);
+                //Búsqueda de registros
+                Paginacion paginacion = registroEntradaConsultaEjb.busqueda(busqueda.getPageNumber(), organismos,busqueda.getFechaInicio(), busqueda.getFechaFin(), busqueda.getRegistroEntrada(), busqueda.getInteressatNom(), busqueda.getInteressatLli1(), busqueda.getInteressatLli2(), busqueda.getInteressatDoc(), busqueda.getOrganDestinatari(), busqueda.getIdUsuario(), entidadActiva.getId());
 
-            // Alta en tabla LOPD
-            lopdEjb.insertarRegistros(paginacion, usuarioEntidad,entidadActiva.getLibro(), RegwebConstantes.REGISTRO_ENTRADA, RegwebConstantes.LOPD_LISTADO);
-        }
+                busqueda.setPageNumber(1);
+                mav.addObject("paginacion", paginacion);
 
-        // Comprobamos si el Organismo destinatario es externo, para añadirlo a la lista.
-        if (StringUtils.isNotEmpty(busqueda.getOrganDestinatari())) {
-            Organismo org = organismoEjb.findByCodigoByEntidadMultiEntidad(busqueda.getOrganDestinatari(), entidadActiva.getId());
-            if(org== null || !organosDestino.contains(org)){ //Es organismo externo, lo añadimos a la lista
-                organosDestino.add(new Organismo(null,busqueda.getOrganDestinatari(),busqueda.getOrganDestinatariNom()));
+                // Alta en tabla LOPD
+                lopdEjb.insertarRegistros(paginacion, usuarioEntidad,entidadActiva.getLibro(), RegwebConstantes.REGISTRO_ENTRADA, RegwebConstantes.LOPD_LISTADO);
+
+                // Comprobamos si el Organismo destinatario es externo, para añadirlo a la lista.
+                if (StringUtils.isNotEmpty(busqueda.getOrganDestinatari())) {
+                    Organismo org = organismoEjb.findByCodigoByEntidadMultiEntidad(busqueda.getOrganDestinatari(), entidadActiva.getId());
+                    if(org== null || !organosDestino.contains(org)){ //Es organismo externo, lo añadimos a la lista
+                        organosDestino.add(new Organismo(null,busqueda.getOrganDestinatari(),busqueda.getOrganDestinatariNom()));
+                    }
+                }
+
+                mav.addObject("organosDestino", organosDestino);
+                mav.addObject("organosOrigen", organosOrigen);
+                mav.addObject("usuariosEntidad",usuariosEntidad);
+                mav.addObject("oficinasRegistro", oficinasRegistro);
+                mav.addObject("registroEntradaBusqueda", busqueda);
+                mav.addObject("organDestinatari", busqueda.getOrganDestinatari());
+
+            }else{ // Creamos un excel con los resultados
+
+                //Búsqueda de registros
+                Paginacion paginacion = registroEntradaConsultaEjb.busqueda(null, organismos,busqueda.getFechaInicio(), busqueda.getFechaFin(), busqueda.getRegistroEntrada(), busqueda.getInteressatNom(), busqueda.getInteressatLli1(), busqueda.getInteressatLli2(), busqueda.getInteressatDoc(), busqueda.getOrganDestinatari(), busqueda.getIdUsuario(), entidadActiva.getId());
+
+                mav = new ModelAndView("exportarRegistrosExcel");
+                mav.addObject("resultados", paginacion);
+
             }
         }
-
-        mav.addObject("organosDestino", organosDestino);
-        mav.addObject("organosOrigen", organosOrigen);
-        mav.addObject("usuariosEntidad",usuariosEntidad);
-        mav.addObject("oficinasRegistro", oficinasRegistro);
-        mav.addObject("registroEntradaBusqueda", busqueda);
-        mav.addObject("organDestinatari", busqueda.getOrganDestinatari());
 
         return mav;
     }
