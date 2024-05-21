@@ -44,142 +44,141 @@
                     </div>
 
                     <c:url value="/adminEntidad/registroEntrada/busqueda" var="urlBusqueda" scope="request"/>
-                    <!--  con esta opcion tambien funciona  pero depende de  javascript onsubmit="document.charset = 'ISO-8859-1'"-->
-                     <form:form modelAttribute="registroEntradaBusqueda" action="${urlBusqueda}"  method="get" cssClass="form-horizontal">
-
+                    <form:form modelAttribute="registroEntradaBusqueda" action="${urlBusqueda}" method="get" cssClass="form-horizontal">
                         <form:hidden path="pageNumber"/>
+                        <form:hidden path="exportarRegistros"/>
 
                         <div class="panel-body">
                         
-                        <div class="col-xs-12">
-                            <div class="col-xs-6 espaiLinies">
-                                <div class="col-xs-4 pull-left etiqueta_regweb">
-                                    <label for="idOrganismo" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.organismo.busqueda"/>" data-toggle="popover"><spring:message code="organismo.organismo"/></label>
-                                </div>
-                                <div class="col-xs-8">
-                                    <form:select path="idOrganismo" cssClass="chosen-select" onchange="actualizarOficinas()">
-                                        <form:option value="" label="..."/>
-                                        <c:forEach var="organismo" items="${organosOrigen}">
-                                            <form:option value="${organismo.id}">${organismo.denominacion}</form:option>
-                                        </c:forEach>
-                                    </form:select>
-                                </div>
-                            </div>
-
-                            <div class="col-xs-6 espaiLinies">
-                                <div class="col-xs-4 pull-left etiqueta_regweb">
-                                    <label for="registroEntrada.estado" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.estado.busqueda"/>" data-toggle="popover"><spring:message code="registroEntrada.estado"/></label>
-                                </div>
-                                <div class="col-xs-8">
-                                    <form:select path="registroEntrada.estado" cssClass="chosen-select">
-                                        <form:option value="" label="..."/>
-                                        <c:forEach var="estado" items="${estados}">
-                                            <form:option value="${estado}"><spring:message code="registro.estado.${estado}"/></form:option>
-                                        </c:forEach>
-                                    </form:select>
-                                </div>
-                            </div>
-						</div>
-
-                        <div class="col-xs-12">
-                            <div class="col-xs-6 espaiLinies">
-                                <div class="col-xs-4 pull-left etiqueta_regweb">
-                                    <label for="registroEntrada.numeroRegistroFormateado" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.numero.busqueda"/>" data-toggle="popover"><spring:message code="registroEntrada.numeroRegistro.regweb"/></label>
-                                </div>
-                                <div class="col-xs-8">
-                                    <form:input path="registroEntrada.numeroRegistroFormateado" cssClass="form-control"/> <form:errors path="registroEntrada.numeroRegistroFormateado" cssClass="help-block" element="span"/>
-                                </div>
-                            </div>
-
-                            <div class="col-xs-6 espaiLinies">
-                                <div class="col-xs-4 pull-left etiqueta_regweb">
-                                    <label for="organDestinatari" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.destino.busqueda"/>" data-toggle="popover"><spring:message code="registroEntrada.organDestinatari"/></label>
-                                </div>
-                                <div class="col-xs-6">
-                                    <form:select path="organDestinatari" cssClass="chosen-select">
-                                        <form:option value="" label="..."/>
-                                        <c:forEach items="${organosDestino}" var="organismo">
-                                            <option value="${organismo.codigo}" <c:if test="${registroEntradaBusqueda.organDestinatari == organismo.codigo}">selected="selected"</c:if> <c:if test="${organismo.estado.codigoEstadoEntidad != RegwebConstantes.ESTADO_ENTIDAD_VIGENTE}"> style="color:#a94442" </c:if>>${organismo.denominacion} <c:if test="${organismo.estado.codigoEstadoEntidad != RegwebConstantes.ESTADO_ENTIDAD_VIGENTE}"> (<spring:message code="unidad.estado.E"/>)</c:if></option>
-                                        </c:forEach>
-                                    </form:select>
-                                    <form:errors path="organDestinatari" cssClass="help-block" element="span"/>
-                                    <form:hidden path="organDestinatariNom"/>
-                                </div>
-                                <div class="col-xs-2 boto-mesOpcions">
-                                    <a data-toggle="modal" role="button" href="#modalBuscadorlistaRegEntrada"
-                                       onclick="inicializarBuscador('#codNivelAdministracionlistaRegEntrada','#codComunidadAutonomalistaRegEntrada','#provincialistaRegEntrada','#localidadlistaRegEntrada',${RegwebConstantes.nivelAdminAutonomica}, ${RegwebConstantes.COMUNIDAD_BALEARES}, 'listaRegEntrada' );"
-                                       class="btn btn-info btn-sm"><spring:message code="regweb.buscar"/></a>
-                                </div>
-                            </div>
-
-                        </div>
-
-						<div class="col-xs-12">
-
-                            <div class="col-xs-6 espaiLinies">
-                                <div class="col-xs-4 pull-left etiqueta_regweb">
-                                    <label for="registroEntrada.registroDetalle.numeroRegistroOrigen" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.numRegOrigen"/>" data-toggle="popover"><spring:message code="registroEntrada.numeroRegistroOrigen"/></label>
-                                </div>
-                                <div class="col-xs-8">
-                                    <form:input path="registroEntrada.registroDetalle.numeroRegistroOrigen" cssClass="form-control"/>
-                                </div>
-                            </div>
-                            <div class="col-xs-6 espaiLinies">
-                                <div class="col-xs-4 pull-left etiqueta_regweb">
-                                    <label for="registroEntrada.registroDetalle.extracto" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.extracto.busqueda"/>" data-toggle="popover"><spring:message code="registroEntrada.extracto"/></label>
-                                </div>
-                                <div class="col-xs-8">
-                                    <form:input path="registroEntrada.registroDetalle.extracto" cssClass="form-control" maxlength="200" /> <form:errors path="registroEntrada.registroDetalle.extracto" cssClass="help-block" element="span"/>
-                                </div>
-                            </div>
-                            
-						</div>
-						<div class="col-xs-12">
-                            
-                            <div class="col-xs-6 espaiLinies">
-                                <div class="col-xs-4 pull-left etiqueta_regweb">
-                                    <label for="fechaInicio" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.inicio.busqueda"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="informe.fechaInicio"/></label>
-                                </div>
-                                <div class="col-xs-8" id="fechaInicio">
-                                    <div class="input-group date no-pad-right">
-                                        <form:input path="fechaInicio" type="text" cssClass="form-control"  maxlength="10" placeholder="dd/mm/yyyy" name="fechaInicio"/>
-                                        <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
+                            <div class="col-xs-12">
+                                <div class="col-xs-6 espaiLinies">
+                                    <div class="col-xs-4 pull-left etiqueta_regweb">
+                                        <label for="idOrganismo" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.organismo.busqueda"/>" data-toggle="popover"><spring:message code="organismo.organismo"/></label>
                                     </div>
-                                    <form:errors path="fechaInicio" cssClass="help-block" element="span"/>
-
-                                </div>
-                            </div>
-                            <div class="col-xs-6 espaiLinies">
-                                <div class="col-xs-4 pull-left etiqueta_regweb">
-                                    <label for="fechaFin" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.fin.busqueda"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="informe.fechaFin"/></label>
-                                </div>
-                                <div class="col-xs-8" id="fechaFin">
-                                    <div class="input-group date no-pad-right">
-                                        <form:input type="text" cssClass="form-control" path="fechaFin" maxlength="10" placeholder="dd/mm/yyyy" name="fechaFin"/>
-                                        <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
+                                    <div class="col-xs-8">
+                                        <form:select path="idOrganismo" cssClass="chosen-select" onchange="actualizarOficinas()">
+                                            <form:option value="" label="..."/>
+                                            <c:forEach var="organismo" items="${organosOrigen}">
+                                                <form:option value="${organismo.id}">${organismo.denominacion}</form:option>
+                                            </c:forEach>
+                                        </form:select>
                                     </div>
-                                    <form:errors path="fechaFin" cssClass="help-block" element="span"/>
+                                </div>
 
+                                <div class="col-xs-6 espaiLinies">
+                                    <div class="col-xs-4 pull-left etiqueta_regweb">
+                                        <label for="registroEntrada.estado" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.estado.busqueda"/>" data-toggle="popover"><spring:message code="registroEntrada.estado"/></label>
+                                    </div>
+                                    <div class="col-xs-8">
+                                        <form:select path="registroEntrada.estado" cssClass="chosen-select">
+                                            <form:option value="" label="..."/>
+                                            <c:forEach var="estado" items="${estados}">
+                                                <form:option value="${estado}"><spring:message code="registro.estado.${estado}"/></form:option>
+                                            </c:forEach>
+                                        </form:select>
+                                    </div>
                                 </div>
                             </div>
-                            
-                         </div>
+
+                            <div class="col-xs-12">
+                                <div class="col-xs-6 espaiLinies">
+                                    <div class="col-xs-4 pull-left etiqueta_regweb">
+                                        <label for="registroEntrada.numeroRegistroFormateado" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.numero.busqueda"/>" data-toggle="popover"><spring:message code="registroEntrada.numeroRegistro.regweb"/></label>
+                                    </div>
+                                    <div class="col-xs-8">
+                                        <form:input path="registroEntrada.numeroRegistroFormateado" cssClass="form-control"/> <form:errors path="registroEntrada.numeroRegistroFormateado" cssClass="help-block" element="span"/>
+                                    </div>
+                                </div>
+
+                                <div class="col-xs-6 espaiLinies">
+                                    <div class="col-xs-4 pull-left etiqueta_regweb">
+                                        <label for="organDestinatari" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.destino.busqueda"/>" data-toggle="popover"><spring:message code="registroEntrada.organDestinatari"/></label>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <form:select path="organDestinatari" cssClass="chosen-select">
+                                            <form:option value="" label="..."/>
+                                            <c:forEach items="${organosDestino}" var="organismo">
+                                                <option value="${organismo.codigo}" <c:if test="${registroEntradaBusqueda.organDestinatari == organismo.codigo}">selected="selected"</c:if> <c:if test="${organismo.estado.codigoEstadoEntidad != RegwebConstantes.ESTADO_ENTIDAD_VIGENTE}"> style="color:#a94442" </c:if>>${organismo.denominacion} <c:if test="${organismo.estado.codigoEstadoEntidad != RegwebConstantes.ESTADO_ENTIDAD_VIGENTE}"> (<spring:message code="unidad.estado.E"/>)</c:if></option>
+                                            </c:forEach>
+                                        </form:select>
+                                        <form:errors path="organDestinatari" cssClass="help-block" element="span"/>
+                                        <form:hidden path="organDestinatariNom"/>
+                                    </div>
+                                    <div class="col-xs-2 boto-mesOpcions">
+                                        <a data-toggle="modal" role="button" href="#modalBuscadorlistaRegEntrada"
+                                           onclick="inicializarBuscador('#codNivelAdministracionlistaRegEntrada','#codComunidadAutonomalistaRegEntrada','#provincialistaRegEntrada','#localidadlistaRegEntrada',${RegwebConstantes.nivelAdminAutonomica}, ${RegwebConstantes.COMUNIDAD_BALEARES}, 'listaRegEntrada' );"
+                                           class="btn btn-info btn-sm"><spring:message code="regweb.buscar"/></a>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="col-xs-12">
+
+                                <div class="col-xs-6 espaiLinies">
+                                    <div class="col-xs-4 pull-left etiqueta_regweb">
+                                        <label for="registroEntrada.registroDetalle.numeroRegistroOrigen" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.numRegOrigen"/>" data-toggle="popover"><spring:message code="registroEntrada.numeroRegistroOrigen"/></label>
+                                    </div>
+                                    <div class="col-xs-8">
+                                        <form:input path="registroEntrada.registroDetalle.numeroRegistroOrigen" cssClass="form-control"/>
+                                    </div>
+                                </div>
+                                <div class="col-xs-6 espaiLinies">
+                                    <div class="col-xs-4 pull-left etiqueta_regweb">
+                                        <label for="registroEntrada.registroDetalle.extracto" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.extracto.busqueda"/>" data-toggle="popover"><spring:message code="registroEntrada.extracto"/></label>
+                                    </div>
+                                    <div class="col-xs-8">
+                                        <form:input path="registroEntrada.registroDetalle.extracto" cssClass="form-control" maxlength="200" /> <form:errors path="registroEntrada.registroDetalle.extracto" cssClass="help-block" element="span"/>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="col-xs-12">
+
+                                <div class="col-xs-6 espaiLinies">
+                                    <div class="col-xs-4 pull-left etiqueta_regweb">
+                                        <label for="fechaInicio" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.inicio.busqueda"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="informe.fechaInicio"/></label>
+                                    </div>
+                                    <div class="col-xs-8" id="fechaInicio">
+                                        <div class="input-group date no-pad-right">
+                                            <form:input path="fechaInicio" type="text" cssClass="form-control"  maxlength="10" placeholder="dd/mm/yyyy" name="fechaInicio"/>
+                                            <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
+                                        </div>
+                                        <form:errors path="fechaInicio" cssClass="help-block" element="span"/>
+
+                                    </div>
+                                </div>
+                                <div class="col-xs-6 espaiLinies">
+                                    <div class="col-xs-4 pull-left etiqueta_regweb">
+                                        <label for="fechaFin" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.fin.busqueda"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="informe.fechaFin"/></label>
+                                    </div>
+                                    <div class="col-xs-8" id="fechaFin">
+                                        <div class="input-group date no-pad-right">
+                                            <form:input type="text" cssClass="form-control" path="fechaFin" maxlength="10" placeholder="dd/mm/yyyy" name="fechaFin"/>
+                                            <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
+                                        </div>
+                                        <form:errors path="fechaFin" cssClass="help-block" element="span"/>
+
+                                    </div>
+                                </div>
+
+                             </div>
 
                                 <%--Comprueba si debe mostrar las opciones desplegadas o no--%>
-                        <c:if test="${empty registroEntradaBusqueda.registroEntrada.oficina.id && empty registroEntradaBusqueda.registroEntrada.registroDetalle.tipoDocumentacionFisica &&
-                            empty registroEntradaBusqueda.interessatDoc && empty registroEntradaBusqueda.interessatNom &&
-                            empty registroEntradaBusqueda.interessatLli1 && empty registroEntradaBusqueda.interessatLli2 &&
-                            empty registroEntradaBusqueda.organDestinatari && empty registroEntradaBusqueda.registroEntrada.registroDetalle.codigoSia &&
-                            empty registroEntradaBusqueda.idUsuario && !registroEntradaBusqueda.registroEntrada.registroDetalle.presencial}">
-                            <div id="demo" class="collapse">
+                                <c:if test="${empty registroEntradaBusqueda.registroEntrada.oficina.id && empty registroEntradaBusqueda.registroEntrada.registroDetalle.tipoDocumentacionFisica &&
+                                    empty registroEntradaBusqueda.interessatDoc && empty registroEntradaBusqueda.interessatNom &&
+                                    empty registroEntradaBusqueda.interessatLli1 && empty registroEntradaBusqueda.interessatLli2 &&
+                                    empty registroEntradaBusqueda.organDestinatari && empty registroEntradaBusqueda.registroEntrada.registroDetalle.codigoSia &&
+                                    empty registroEntradaBusqueda.idUsuario && !registroEntradaBusqueda.registroEntrada.registroDetalle.presencial}">
+                                    <div id="demo" class="collapse">
+                                        </c:if>
+                                <c:if test="${not empty registroEntradaBusqueda.registroEntrada.oficina.id || not empty registroEntradaBusqueda.registroEntrada.registroDetalle.tipoDocumentacionFisica ||
+                                    not empty registroEntradaBusqueda.interessatDoc || not empty registroEntradaBusqueda.interessatNom ||
+                                    not empty registroEntradaBusqueda.interessatLli1 || not empty registroEntradaBusqueda.interessatLli2 ||
+                                    not empty registroEntradaBusqueda.organDestinatari || not empty registroEntradaBusqueda.registroEntrada.registroDetalle.codigoSia ||
+                                    not empty registroEntradaBusqueda.idUsuario || registroEntradaBusqueda.registroEntrada.registroDetalle.presencial}">
+                                    <div id="demo" class="collapse in">
                                 </c:if>
-                        <c:if test="${not empty registroEntradaBusqueda.registroEntrada.oficina.id || not empty registroEntradaBusqueda.registroEntrada.registroDetalle.tipoDocumentacionFisica ||
-                            not empty registroEntradaBusqueda.interessatDoc || not empty registroEntradaBusqueda.interessatNom ||
-                            not empty registroEntradaBusqueda.interessatLli1 || not empty registroEntradaBusqueda.interessatLli2 ||
-                            not empty registroEntradaBusqueda.organDestinatari || not empty registroEntradaBusqueda.registroEntrada.registroDetalle.codigoSia ||
-                            not empty registroEntradaBusqueda.idUsuario || registroEntradaBusqueda.registroEntrada.registroDetalle.presencial}">
-                            <div id="demo" class="collapse in">
-                        </c:if>
 
                             <div class="col-xs-12">
                                 <div class="col-xs-6 espaiLinies">
@@ -286,29 +285,32 @@
                                     </div>
                                 </div>
                             </div>
-
-                        </div>
-                        <div class="col-xs-12 pad-bottom15 mesOpcions">
-                            <a class="btn btn-info btn-xs pull-right masOpciones-info" data-toggle="collapse" data-target="#demo">
-                                <%--Comprueba si debe mostrar mas opciones o menos--%>
-                                <c:if test="${empty registroEntradaBusqueda.interessatDoc && empty registroEntradaBusqueda.interessatNom && empty registroEntradaBusqueda.organDestinatari && empty registroEntradaBusqueda.idUsuario && !registroEntradaBusqueda.registroEntrada.registroDetalle.presencial}">
-                                    <span class="fa fa-plus"></span> <spring:message code="regweb.busquedaAvanzada"/>
-                                </c:if>
-                                <c:if test="${not empty registroEntradaBusqueda.interessatDoc || not empty registroEntradaBusqueda.interessatNom || not empty registroEntradaBusqueda.organDestinatari || not empty registroEntradaBusqueda.idUsuario || registroEntradaBusqueda.registroEntrada.registroDetalle.presencial}">
-                                    <span class="fa fa-minus"></span> <spring:message code="regweb.busquedaAvanzada"/>
-                                </c:if>
-                            </a>
-                        </div>
-
-					 	<div class="row">
-                            <div class="form-group col-xs-12">
-                                <div class="col-xs-1 boto-panel center">
-                                    <button type="submit" class="btn btn-warning btn-sm" style="margin-left: 15px;">
-                                        <spring:message code="regweb.buscar"/>
-                                    </button>
-                                </div>
                             </div>
-						</div>
+                            <div class="col-xs-12 pad-bottom15 mesOpcions">
+                                <a class="btn btn-info btn-xs pull-right masOpciones-info" data-toggle="collapse" data-target="#demo">
+                                    <%--Comprueba si debe mostrar mas opciones o menos--%>
+                                    <c:if test="${empty registroEntradaBusqueda.interessatDoc && empty registroEntradaBusqueda.interessatNom && empty registroEntradaBusqueda.organDestinatari && empty registroEntradaBusqueda.idUsuario && !registroEntradaBusqueda.registroEntrada.registroDetalle.presencial}">
+                                        <span class="fa fa-plus"></span> <spring:message code="regweb.busquedaAvanzada"/>
+                                    </c:if>
+                                    <c:if test="${not empty registroEntradaBusqueda.interessatDoc || not empty registroEntradaBusqueda.interessatNom || not empty registroEntradaBusqueda.organDestinatari || not empty registroEntradaBusqueda.idUsuario || registroEntradaBusqueda.registroEntrada.registroDetalle.presencial}">
+                                        <span class="fa fa-minus"></span> <spring:message code="regweb.busquedaAvanzada"/>
+                                    </c:if>
+                                </a>
+                            </div>
+
+                            <div class="form-group col-xs-12">
+                                <input type="submit" value="<spring:message code="regweb.buscar"/>" class="btn btn-warning btn-sm"/>
+                                <input type="reset" value="<spring:message code="regweb.restablecer"/>" class="btn btn-sm"/>
+
+                                <c:if test="${not empty paginacion.listado}">
+
+                                    <div class="btn-group pull-right text12">
+                                        <button type="button" onclick="exportarRegistrosEntrada()" class="btn btn-success btn-sm">
+                                            <spring:message code="registro.exportar"/>
+                                        </button>
+                                    </div>
+                                </c:if>
+                            </div>
 
                     </form:form>
 
@@ -371,7 +373,7 @@
                                                     <td class="center"><fmt:formatDate value="${registro.fecha}" pattern="dd/MM/yyyy"/></td>
                                                     <td class="center">${registro.usuario.usuario.identificador}</td>
                                                     <td class="center"><label class="no-bold" rel="popupAbajo" data-content="${registro.oficina.denominacion}" data-toggle="popover">${registro.oficina.codigo}</label></td>
-                                                    <td>${(empty registro.destino)? registro.destinoExternoDenominacion : registro.destino.denominacion}</td>
+                                                    <td class="center">${(empty registro.destino)? registro.destinoExternoDenominacion : registro.destino.denominacion}</td>
                                                     <td class="center">
                                                         <c:import url="../registro/estadosRegistro.jsp">
                                                             <c:param name="estado" value="${registro.estado}"/>
@@ -441,6 +443,12 @@
     function actualizarOficinas(){
         <c:url var="obtenerOficinasEntrada" value="/adminEntidad/obtenerOficinas" />
         actualizarSelect('${obtenerOficinasEntrada}','#registroEntrada\\.oficina\\.id',$('#idOrganismo option:selected').val(),'${registroEntradaBusqueda.registroEntrada.oficina.id}',true,true);
+    }
+
+    function exportarRegistrosEntrada(){
+        $('#exportarRegistros').val(true);
+        $('#registroEntradaBusqueda').submit();
+        $('#exportarRegistros').val(false);
     }
 
     // Posicionamos el ratón en el campo indicado al cargar el modal
