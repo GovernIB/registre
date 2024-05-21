@@ -28,7 +28,7 @@
             </li>
         </c:if>
         <li class="submenu-complet"><a href="<c:url value="/registroEntrada/reserva"/>"><i class="fa fa-file-text-o"></i> <spring:message code="registroEntrada.reserva"/></a></li>
-        <li class="submenu-complet"><a href="<c:url value="/registroEntrada/list"/>"><i class="fa fa-search"></i> <spring:message code="registroEntrada.listado"/></a></li>
+        <li class="submenu-complet"><a href="<c:url value="/registroEntrada/list"/>"><i class="fa fa-search"></i> <spring:message code="registroEntrada.buscador"/></a></li>
         <li class="divider"></li>
         <c:if test="${loginInfo.entidadActiva.sir && loginInfo.oficinaActiva.sirRecepcion }">
             <li class="submenu-complet"><a href="<c:url value="/registroEntrada/pendientesDistribuirSir/list/1"/>"><i class="fa fa-sign-out"></i> <spring:message code="registroEntrada.pendientesDistribuir.sir"/></a></li>
@@ -67,7 +67,7 @@
                 </ul>
             </li>
         </c:if>
-        <li class="submenu-complet"><a href="<c:url value="/registroSalida/list"/>"><i class="fa fa-search"></i> <spring:message code="registroSalida.listado"/></a></li>
+        <li class="submenu-complet"><a href="<c:url value="/registroSalida/list"/>"><i class="fa fa-search"></i> <spring:message code="registroSalida.buscador"/></a></li>
     </ul>
 </div>
 
@@ -98,10 +98,10 @@
         </button>
         <ul class="dropdown-menu">
             <c:if test="${loginInfo.oficinaActiva.sirRecepcion}">
-                <li><a href="<c:url value="/registroSir/list"/>"><i class="fa fa-mail-reply"></i> <spring:message code="registroSir.recibidos"/></a></li>
+                <li><a href="<c:url value="/registroSir/list"/>"><i class="fa fa-mail-reply"></i> <spring:message code="registroSir.recibidos.buscador"/></a></li>
             </c:if>
             <c:if test="${loginInfo.oficinaActiva.sirEnvio}">
-                <li><a href="<c:url value="/registroSir/enviados"/>"><i class="fa fa-mail-forward"></i> <spring:message code="registroSir.enviados"/></a></li>
+                <li><a href="<c:url value="/registroSir/enviados"/>"><i class="fa fa-mail-forward"></i> <spring:message code="registroSir.enviados.buscador"/></a></li>
                 <li class="divider"></li>
                 <li><a href="<c:url value="/oficioRemision/entradasPendientesRemision/4"/>"><i class="fa fa-mail-forward text-info"></i> <spring:message code="registroEntrada.oficiosRemision.sir"/></a></li>
                 <li><a href="<c:url value="/oficioRemision/salidasPendientesRemision/4"/>"><i class="fa fa-mail-forward text-danger"></i> <spring:message code="registroSalida.oficiosRemision.sir"/></a></li>
