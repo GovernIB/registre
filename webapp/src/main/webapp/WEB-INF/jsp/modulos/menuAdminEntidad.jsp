@@ -95,8 +95,8 @@
             <li class="dropdown-submenu-left toggle-left">
                 <a href="javascript:void(0);"><i class="fa fa-chevron-left"></i> <spring:message code="registro.registros"/></a>
                 <ul class="dropdown-menu">
-                    <li><a href="<c:url value="/adminEntidad/registroEntrada/list"/>"><i class="fa fa-search"></i> <spring:message code="registroEntrada.listado"/></a></li>
-                    <li><a href="<c:url value="/adminEntidad/registroSalida/list"/>"><i class="fa fa-search"></i> <spring:message code="registroSalida.listado"/></a></li>
+                    <li><a href="<c:url value="/adminEntidad/registroEntrada/list"/>"><i class="fa fa-search"></i> <spring:message code="registroEntrada.buscador"/></a></li>
+                    <li><a href="<c:url value="/adminEntidad/registroSalida/list"/>"><i class="fa fa-search"></i> <spring:message code="registroSalida.buscador"/></a></li>
                 </ul>
             </li>
             <li class="divider"></li>
@@ -136,8 +136,8 @@
             <ul class="dropdown-menu">
                 <li class="submenu-complet"><a href="<c:url value="/integracion/list/4"/>"><i class="fa fa-gears"></i> <spring:message code="integracion.sir"/></a></li>
                 <li class="divider"></li>
-                <li class="submenu-complet"><a href="<c:url value="/sir/monitorEnviados"/>"><i class="fa fa-mail-forward"></i> <spring:message code="sir.envios"/></a></li>
-                <li class="submenu-complet"><a href="<c:url value="/sir/monitorRecibidos"/>"><i class="fa fa-mail-reply"></i> <spring:message code="sir.recibidos"/></a></li>
+                <li class="submenu-complet"><a href="<c:url value="/sir/monitorEnviados"/>"><i class="fa fa-mail-forward"></i> <spring:message code="registroSir.enviados.buscador"/></a></li>
+                <li class="submenu-complet"><a href="<c:url value="/sir/monitorRecibidos"/>"><i class="fa fa-mail-reply"></i> <spring:message code="registroSir.recibidos.buscador"/></a></li>
                 <li class="submenu-complet"><a href="<c:url value="/sir/mensajeControl/list"/>"><i class="fa fa-envelope-o"></i> <spring:message code="mensajeControl.mensajesControl"/></a></li>
                 <li class="divider"></li>
                 <li class="submenu-complet"><a href="<c:url value="/sir/pendientesDistribuir/list"/>"><i class="fa fa-sign-out"></i> <spring:message code="menu.pendientesDistribuir"/></a></li>
