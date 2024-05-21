@@ -210,7 +210,7 @@ public class RegistroUtils{
      * @return
      * @throws Exception
      */
-    public static Date ajustarHoraBusqueda(Date fecha) throws Exception{
+    public static Date ajustarHoraBusqueda(Date fecha) {
 
         Calendar calendarDate = Calendar.getInstance();
         calendarDate.setTime(fecha);
@@ -230,10 +230,10 @@ public class RegistroUtils{
      */
     public static String getIdiomaJustificante(IRegistro registro){
 
-        if(registro.getRegistroDetalle().getIdioma().equals(RegwebConstantes.IDIOMA_CASTELLANO_ID)){
-            return RegwebConstantes.IDIOMA_CASTELLANO_CODIGO;
-        }if(registro.getRegistroDetalle().getIdioma().equals(RegwebConstantes.IDIOMA_CASTELLANO_ID)){
+        if(registro.getRegistroDetalle().getIdioma().equals(RegwebConstantes.IDIOMA_CATALAN_ID)){
             return RegwebConstantes.IDIOMA_CATALAN_CODIGO;
+        }else if(registro.getRegistroDetalle().getIdioma().equals(RegwebConstantes.IDIOMA_CASTELLANO_ID)){
+            return RegwebConstantes.IDIOMA_CASTELLANO_CODIGO;
         } else{
             return Configuracio.getDefaultLanguage();
         }

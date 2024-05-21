@@ -1,7 +1,10 @@
 package es.caib.regweb3.persistence.ejb;
 
 
-import es.caib.regweb3.model.*;
+import es.caib.regweb3.model.Anexo;
+import es.caib.regweb3.model.Organismo;
+import es.caib.regweb3.model.RegistroEntrada;
+import es.caib.regweb3.model.UsuarioEntidad;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.model.utils.RegistroBasico;
 import es.caib.regweb3.persistence.utils.DataBaseUtils;
@@ -98,7 +101,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Paginacion busqueda(Integer pageNumber, List<Long> organismos, Date fechaInicio, Date fechaFin, RegistroEntrada re, String interesadoNom, String interesadoLli1, String interesadoLli2, String interesadoDoc, String organoDest, String observaciones, Long idUsuario, Long idEntidad) throws I18NException {
+    public Paginacion busqueda(Integer pageNumber, List<Long> organismos, Date fechaInicio, Date fechaFin, RegistroEntrada re, String interesadoNom, String interesadoLli1, String interesadoLli2, String interesadoDoc, String organoDest, Long idUsuario, Long idEntidad) throws I18NException {
 
         Query q;
         Query q2;
@@ -106,8 +109,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
         List<String> where = new ArrayList<String>();
         boolean busquedaInteresados = RegistroUtils.busquedaInteresados(interesadoNom, interesadoLli1, interesadoLli2, interesadoDoc);
 
-        StringBuilder queryBase = new StringBuilder("Select DISTINCT re.id, re.numeroRegistro, re.numeroRegistroFormateado, re.fecha, re.oficina, re.destino, re.destinoExternoCodigo, re.destinoExternoDenominacion, re.estado, re.usuario, " +
-                "re.registroDetalle.extracto, re.registroDetalle.reserva, re.registroDetalle.tipoDocumentacionFisica, re.registroDetalle.decodificacionTipoAnotacion, re.registroDetalle.presencial from RegistroEntrada as re LEFT JOIN re.destino destino ");
+        StringBuilder queryBase = new StringBuilder("Select DISTINCT re from RegistroEntrada as re LEFT JOIN re.destino destino ");
 
         // Si la búsqueda incluye referencias al interesado, hacemos la left outer join
         if(busquedaInteresados){
@@ -158,11 +160,6 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
             where.add(DataBaseUtils.like("re.registroDetalle.extracto", "extracto", parametros, re.getRegistroDetalle().getExtracto()));
         }
 
-        // Observaciones
-        if (StringUtils.isNotEmpty(observaciones)) {
-            where.add(DataBaseUtils.like("re.registroDetalle.observaciones", "observaciones", parametros, observaciones));
-        }
-
         // Usuario
         if (idUsuario != null) {
             where.add(" re.usuario.id = :idUsuario ");
@@ -172,8 +169,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
         // Nombre interesado
         if (StringUtils.isNotEmpty(interesadoNom)) {
             where.add("((" + DataBaseUtils.like("interessat.nombre", "interesadoNom", parametros, interesadoNom) +
-                    ") or (" + DataBaseUtils.like("interessat.razonSocial", "interesadoNom", parametros, interesadoNom) +
-                    "))");
+                    ") or (" + DataBaseUtils.like("interessat.razonSocial", "interesadoNom", parametros, interesadoNom) + "))");
         }
 
         // Primer apellido interesado
@@ -247,7 +243,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
         q2 = em.createQuery(query.toString().replaceAll(queryBase.toString(), queryCount.toString()));
 
         // añadimos el order by
-        query.append(" order by re.id desc");
+        query.append(" order by re.fecha desc");
         q = em.createQuery(query.toString());
 
         // Mapeamos los parámetros
@@ -271,31 +267,17 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
             paginacion = new Paginacion(0, 0);
         }
 
-        List<Object[]> results = q.getResultList();
-        List<RegistroEntrada> registros = new ArrayList<>();
+        List<RegistroEntrada> results = q.getResultList();
 
-        for (Object[] result : results) {
-            RegistroEntrada registro =  new RegistroEntrada();
-            registro.setId((Long) result[0]);
-            registro.setNumeroRegistro((Integer) result[1]);
-            registro.setNumeroRegistroFormateado((String) result[2]);
-            registro.setFecha((Date) result[3]);
-            registro.setOficina((Oficina)result[4]);
-            registro.setDestino((Organismo) result[5]);
-            registro.setDestinoExternoCodigo((String) result[6]);
-            registro.setDestinoExternoDenominacion((String) result[7]);
-            registro.setEstado((Long) result[8]);
-            registro.setUsuario((UsuarioEntidad) result[9]);
-            registro.getRegistroDetalle().setExtracto((String) result[10]);
-            registro.getRegistroDetalle().setReserva((String) result[11]);
-            registro.getRegistroDetalle().setTipoDocumentacionFisica((Long) result[12]);
-            registro.getRegistroDetalle().setDecodificacionTipoAnotacion((String) result[13]);
-            registro.getRegistroDetalle().setPresencial((Boolean) result[14]);
+        // Inicializamos los Interesados solo si es para el Excel
+        if(pageNumber == null){
 
-            registros.add(registro);
+            for(RegistroEntrada registroEntrada:results){
+                Hibernate.initialize(registroEntrada.getRegistroDetalle().getInteresados());
+            }
         }
 
-        paginacion.setListado(registros);
+        paginacion.setListado(results);
 
         return paginacion;
     }

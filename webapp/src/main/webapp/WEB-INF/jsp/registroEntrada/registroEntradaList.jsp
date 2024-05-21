@@ -291,12 +291,12 @@
                             <a class="btn btn-info btn-xs pull-right masOpciones-info" data-toggle="collapse" data-target="#demo">
                                 <%--Comprueba si debe mostrar mas opciones o menos--%>
                                 <c:if test="${empty registroEntradaBusqueda.interessatDoc && empty registroEntradaBusqueda.interessatNom
-                                && empty registroEntradaBusqueda.organDestinatari && empty registroEntradaBusqueda.observaciones && empty registroEntradaBusqueda.idUsuario &&
+                                && empty registroEntradaBusqueda.organDestinatari && empty registroEntradaBusqueda.idUsuario &&
                                 !registroEntradaBusqueda.registroEntrada.registroDetalle.presencial}">
                                     <span class="fa fa-plus"></span> <spring:message code="regweb.busquedaAvanzada"/>
                                 </c:if>
                                 <c:if test="${not empty registroEntradaBusqueda.interessatDoc || not empty registroEntradaBusqueda.interessatNom
-                                || not empty registroEntradaBusqueda.organDestinatari || not empty registroEntradaBusqueda.observaciones || not empty registroEntradaBusqueda.idUsuario ||
+                                || not empty registroEntradaBusqueda.organDestinatari || not empty registroEntradaBusqueda.idUsuario ||
                                 registroEntradaBusqueda.registroEntrada.registroDetalle.presencial}">
                                     <span class="fa fa-minus"></span> <spring:message code="regweb.busquedaAvanzada"/>
                                 </c:if>
@@ -381,7 +381,7 @@
                                                         <td class="center"><fmt:formatDate value="${registro.fecha}" pattern="dd/MM/yyyy"/></td>
                                                         <td class="center">${registro.usuario.usuario.identificador}</td>
                                                         <td class="center"><label class="no-bold" rel="popupAbajo" data-content="${registro.oficina.denominacion}" data-toggle="popover">${registro.oficina.codigo}</label></td>
-                                                        <td>${(empty registro.destino)? registro.destinoExternoDenominacion : registro.destino.denominacion}</td>
+                                                        <td class="center">${(empty registro.destino)? registro.destinoExternoDenominacion : registro.destino.denominacion}</td>
                                                         <c:if test="${registro.estado == RegwebConstantes.REGISTRO_RESERVA}">
                                                         <td>
                                                             <c:if test="${fn:length(registro.registroDetalle.reserva) <= 40}">

@@ -1,6 +1,7 @@
 package es.caib.regweb3.webapp.form;
 
 import es.caib.regweb3.model.RegistroEntrada;
+import es.caib.regweb3.persistence.utils.RegistroUtils;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -25,6 +26,7 @@ public class RegistroEntradaBusqueda implements Serializable {
     private String organDestinatariNom;
     private String observaciones;
     private Long idUsuario;
+    private Boolean exportarRegistros = false;
 
     public RegistroEntradaBusqueda() {}
 
@@ -70,7 +72,7 @@ public class RegistroEntradaBusqueda implements Serializable {
     }
 
     public void setFechaFin(Date fechaFin) {
-        this.fechaFin = fechaFin;
+        this.fechaFin = RegistroUtils.ajustarHoraBusqueda(fechaFin);
     }
 
 	public String getInteressatNom() {
@@ -131,5 +133,13 @@ public class RegistroEntradaBusqueda implements Serializable {
 
     public void setIdUsuario(Long idUsuario) {
         this.idUsuario = idUsuario;
+    }
+
+    public Boolean getExportarRegistros() {
+        return exportarRegistros;
+    }
+
+    public void setExportarRegistros(Boolean exportarRegistros) {
+        this.exportarRegistros = exportarRegistros;
     }
 }

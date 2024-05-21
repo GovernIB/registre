@@ -354,10 +354,10 @@
                                             <td class="center">${registro.usuario.usuario.identificador}</td>
                                             <td class="center"><label class="no-bold" rel="popupAbajo" data-content="${registro.oficina.denominacion}" data-toggle="popover">${registro.oficina.codigo}</label></td>
                                             <c:if test="${registro.origen != null}">
-                                                <td>${registro.origen.denominacion}</td>
+                                                <td class="center">${registro.origen.denominacion}</td>
                                             </c:if>
                                             <c:if test="${registro.origen == null}">
-                                                <td>${registro.origenExternoDenominacion}</td>
+                                                <td class="center">${registro.origenExternoDenominacion}</td>
                                             </c:if>
                                             <td>
                                                 <c:if test="${fn:length(registro.registroDetalle.extracto) <= 40}">

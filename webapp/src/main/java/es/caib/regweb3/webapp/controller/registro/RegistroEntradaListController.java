@@ -160,7 +160,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
             }
 
             //Búsqueda de registros
-            Paginacion paginacion = registroEntradaConsultaEjb.busqueda(busqueda.getPageNumber(), organismos, busqueda.getFechaInicio(), fechaFin, registroEntrada, busqueda.getInteressatNom(), busqueda.getInteressatLli1(), busqueda.getInteressatLli2(), busqueda.getInteressatDoc(), busqueda.getOrganDestinatari(), busqueda.getObservaciones(), busqueda.getIdUsuario(), entidadActiva.getId());
+            Paginacion paginacion = registroEntradaConsultaEjb.busqueda(busqueda.getPageNumber(), organismos, busqueda.getFechaInicio(), fechaFin, registroEntrada, busqueda.getInteressatNom(), busqueda.getInteressatLli1(), busqueda.getInteressatLli2(), busqueda.getInteressatDoc(), busqueda.getOrganDestinatari(), busqueda.getIdUsuario(), entidadActiva.getId());
 
             busqueda.setPageNumber(1);
             mav.addObject("paginacion", paginacion);

@@ -43,7 +43,7 @@ public interface RegistroEntradaConsultaLocal {
      * @return
      * @throws I18NException
      */
-    Paginacion busqueda(Integer pageNumber, List<Long> organismos, Date fechaInicio, Date fechaFin, RegistroEntrada registroEntrada, String interesadoNom, String interesadoDoc, String interesadoLli1, String interesadoLli2, String organoDest, String observaciones, Long idUsuario, Long idEntidad) throws I18NException;
+    Paginacion busqueda(Integer pageNumber, List<Long> organismos, Date fechaInicio, Date fechaFin, RegistroEntrada registroEntrada, String interesadoNom, String interesadoDoc, String interesadoLli1, String interesadoLli2, String organoDest, Long idUsuario, Long idEntidad) throws I18NException;
 
     /**
      * Busca los Registros de Entrada de una OficinaActiva en función de su estado.
