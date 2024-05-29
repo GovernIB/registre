@@ -4,6 +4,7 @@ import es.caib.regweb3.model.Anexo;
 import es.caib.regweb3.model.TipoDocumental;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.persistence.ejb.TipoDocumentalLocal;
+import es.caib.regweb3.utils.MimeTypeUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 import es.caib.regweb3.ws.model.AnexoWs;
@@ -58,8 +59,14 @@ public class AnexoConverter extends CommonConverter {
       if (StringUtils.isNotEmpty(anexoWs.getNombreFicheroAnexado()) && (anexoWs.getFicheroAnexado() != null && anexoWs.getFicheroAnexado().length > 0)) {
          doc = new DocumentCustody();
          doc.setData(anexoWs.getFicheroAnexado());
-         doc.setMime(anexoWs.getTipoMIMEFicheroAnexado());
          doc.setName(StringUtils.eliminarCaracteresProhibidosSIR(anexoWs.getNombreFicheroAnexado()));
+
+         // Si no hay mime indicado, lo obtenemos de la extensión del fichero
+         if (StringUtils.isNotEmpty(anexoWs.getTipoMIMEFicheroAnexado())){
+            doc.setMime(MimeTypeUtils.getMimeTypeFileName(anexoWs.getNombreFicheroAnexado()));
+         }else{
+            doc.setMime(anexoWs.getTipoMIMEFicheroAnexado());
+         }
       }
       anexoFull.setDocumentoCustody(doc);
       anexoFull.setDocumentoFileDelete(false);
