@@ -463,7 +463,6 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
 
         //Rol
         if(rol != null){
-            log.info("Rol seleccionado: " + rol);
             switch (rol.intValue()){
                 case 1: where.add("usuarioEntidad.usuario.rwe_superadmin = true "); break;
                 case 2: where.add("usuarioEntidad.usuario.rwe_admin = true "); break;
@@ -474,10 +473,8 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
                 case 7: where.add("usuarioEntidad.usuario.dib_user_rw = true "); break;
                 case 0: where.add("usuarioEntidad.usuario.rwe_usuari = false"); break;
             }
-
-            //parametros.put("rol", true);
         }
-        log.info("Where: " + where);
+
         where.add("usuarioEntidad.entidad.id = :idEntidad ");
         parametros.put("idEntidad", idEntidad);
         where.add("usuarioEntidad.activo = true ");
