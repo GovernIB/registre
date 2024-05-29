@@ -23,7 +23,6 @@ import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.fundaciobit.plugins.documentcustody.api.IDocumentCustodyPlugin;
 import org.fundaciobit.plugins.documentcustody.api.SignatureCustody;
 import org.fundaciobit.plugins.signature.api.FileInfoSignature;
-import org.fundaciobit.plugins.signatureserver.api.ISignatureServerPlugin;
 import org.fundaciobit.pluginsib.core.utils.Metadata;
 import org.fundaciobit.pluginsib.core.utils.MetadataConstants;
 import org.slf4j.Logger;
@@ -146,38 +145,17 @@ public class JustificanteBean implements JustificanteLocal {
             numRegFormat = registro.getNumeroRegistroFormateado();
 
             // Carregam el plugin de generació del pdf del Justificant
-            IJustificantePlugin justificantePlugin = (IJustificantePlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_JUSTIFICANTE);
-
-            // Comprova que existeix el plugin de justificant
-            if (justificantePlugin == null) {
-                // No s´ha definit cap plugin de Justificant. Consulti amb el seu Administrador.
-                throw new I18NException("error.plugin.nodefinit", new I18NArgumentCode("plugin.tipo.1"));
-            }
+            IJustificantePlugin justificantePlugin = (IJustificantePlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_JUSTIFICANTE, true);
 
             // Carregam el plugin de Custodia del Justificante
             if(custodiaDiferida){ // Se custodiará posteriomente mediante la Cola, ahora se guardará temporalmente en FileSystem
-                documentCustodyPlugin = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA_FS_JUSTIFICANTE);
+                documentCustodyPlugin = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA_FS_JUSTIFICANTE, true);
 
             }else{
-                documentCustodyPlugin = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE);
-            }
-
-            // Comprova que existeix el plugin de Custodia del Justificante
-            if (documentCustodyPlugin == null) {
-                // No s´ha definit cap plugin de Custòdia-Justificant. Consulti amb el seu Administrador.
-                throw new I18NException("error.plugin.nodefinit", new I18NArgumentCode("plugin.tipo.7"));
+                documentCustodyPlugin = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE, true);
             }
 
             peticion.append("clase: ").append(documentCustodyPlugin.getClass().getName()).append(System.getProperty("line.separator"));
-
-            // Cerca el Plugin de Justificant definit a les Propietats Globals
-            ISignatureServerPlugin signaturePlugin = (ISignatureServerPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_FIRMA_SERVIDOR);
-
-            // Comprova que existeix el plugin de signatura
-            if (signaturePlugin == null) {
-                // No s´ha definit cap plugin de Firma. Consulti amb el seu Administrador.
-                throw new I18NException("error.plugin.nodefinit", new I18NArgumentCode("plugin.tipo.4"));
-            }
 
             // Crea el anexo del justificante firmado
             Anexo anexo = crearAnexoJustificante(RegwebConstantes.PERFIL_CUSTODIA_DOCUMENT_CUSTODY, locale, registro.getRegistroDetalle(), entidad);
@@ -378,13 +356,7 @@ public class JustificanteBean implements JustificanteLocal {
     private Firma generarFirmarPdfJustificante(Entidad entidad, IRegistro registro, String idioma, StringBuilder peticion) throws I18NException {
 
         // Carregam el plugin del Justificant per generar el pdf
-        IJustificantePlugin justificantePlugin = (IJustificantePlugin) pluginEjb.getPlugin(entidad.getId(), RegwebConstantes.PLUGIN_JUSTIFICANTE);
-
-        // Comprova que existeix el plugin de justificant
-        if (justificantePlugin == null) {
-            // No s´ha definit cap plugin de Justificant. Consulti amb el seu Administrador.
-            throw new I18NException("error.plugin.nodefinit", new I18NArgumentCode("plugin.tipo.1"));
-        }
+        IJustificantePlugin justificantePlugin = (IJustificantePlugin) pluginEjb.getPlugin(entidad.getId(), RegwebConstantes.PLUGIN_JUSTIFICANTE, true);
 
         // Generamos el pdf del Justificante mediante el Plugin
         byte[] pdfJustificant;

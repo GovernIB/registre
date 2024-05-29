@@ -1,10 +1,12 @@
 package es.caib.regweb3.persistence.ejb;
 
+import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.model.Plugin;
-import es.caib.regweb3.plugins.distribucion.mock.DistribucionMockPlugin;
 import es.caib.regweb3.utils.RegwebConstantes;
+import org.fundaciobit.genapp.common.i18n.I18NArgumentCode;
 import org.fundaciobit.genapp.common.i18n.I18NArgumentString;
 import org.fundaciobit.genapp.common.i18n.I18NException;
+import org.fundaciobit.pluginsib.core.IPlugin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,11 +17,11 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.io.IOException;
 import java.io.StringReader;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
-//import org.fundaciobit.plugins.utils.PluginsManager;
 
 /**
  * Created by Fundació BIT.
@@ -33,6 +35,8 @@ public class PluginBean extends BaseEjbJPA<Plugin, Long> implements PluginLocal 
 
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
+
+    private static final Map<Long, IPlugin> pluginsCache = new HashMap<Long, IPlugin>();
 
     @PersistenceContext(unitName = "regweb3")
     private EntityManager em;
@@ -50,6 +54,21 @@ public class PluginBean extends BaseEjbJPA<Plugin, Long> implements PluginLocal 
         return em.find(Plugin.class, id);
     }
 
+    @Override
+    public Plugin merge(Plugin plugin) throws I18NException{
+
+        deleteOfCache(plugin.getId());
+
+        return super.merge(plugin);
+    }
+
+    @Override
+    public void remove(Plugin plugin) throws I18NException{
+
+        deleteOfCache(plugin.getId());
+
+        super.remove(plugin);
+    }
 
     @Override
     @SuppressWarnings(value = "unchecked")
@@ -162,7 +181,7 @@ public class PluginBean extends BaseEjbJPA<Plugin, Long> implements PluginLocal 
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Plugin> findByEntidadTipo(Long idEntidad, Long tipo) throws I18NException {
+    public Plugin findByEntidadTipo(Long idEntidad, Long tipo) throws I18NException {
 
         String entidadQuery;
 
@@ -172,7 +191,7 @@ public class PluginBean extends BaseEjbJPA<Plugin, Long> implements PluginLocal 
             entidadQuery = "p.entidad is null";
         }
 
-        Query q = em.createQuery("Select p from Plugin as p where " + entidadQuery + " and p.tipo = :tipo order by p.id");
+        Query q = em.createQuery("Select p from Plugin as p where " + entidadQuery + " and p.tipo = :tipo");
 
         if (idEntidad != null) {
             q.setParameter("idEntidad", idEntidad);
@@ -180,57 +199,98 @@ public class PluginBean extends BaseEjbJPA<Plugin, Long> implements PluginLocal 
         q.setParameter("tipo", tipo);
         q.setHint("org.hibernate.readOnly", true);
 
+        List<Plugin> plugins = q.getResultList();
+
+        return plugins != null && !plugins.isEmpty() ? plugins.get(0) : null;
+
+    }
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public Long findIdByEntidadTipo(Long idEntidad, Long tipo) throws I18NException {
+
+        String entidadQuery;
+
+        if (idEntidad != null) {
+            entidadQuery = "p.entidad = :idEntidad";
+        } else {
+            entidadQuery = "p.entidad is null";
+        }
+
+        Query q = em.createQuery("Select p.id from Plugin as p where " + entidadQuery + " and p.tipo = :tipo");
+
+        if (idEntidad != null) {
+            q.setParameter("idEntidad", idEntidad);
+        }
+        q.setParameter("tipo", tipo);
+        q.setHint("org.hibernate.readOnly", true);
+
+        List<Long> plugins = q.getResultList();
+
+        return plugins != null && !plugins.isEmpty() ? plugins.get(0) : null;
+
+    }
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public List<Long> getTiposPluginDefinidos(Entidad entidad) throws I18NException {
+
+        String entidadQuery = "p.entidad = :idEntidad";
+
+        if (entidad == null) {
+            entidadQuery = "p.entidad is null";
+        }
+
+        Query q = em.createQuery("Select p.tipo from Plugin as p where " + entidadQuery);
+
+        if (entidad != null) {
+            q.setParameter("idEntidad", entidad.getId());
+        }
+
+        q.setHint("org.hibernate.readOnly", true);
+
         return q.getResultList();
-
     }
 
     @Override
-    public Object getPlugin(Long idEntidad, Long tipoPlugin) throws I18NException {
+    public Object getPlugin(Long idEntidad, Long tipoPlugin, Boolean obligatorio) throws I18NException {
 
-        try {
-            List<Plugin> plugins;
+        // Obtenemos el id del Plugin
+        Long idPlugin = findIdByEntidadTipo(idEntidad, tipoPlugin);
 
-            plugins = findByEntidadTipo(idEntidad, tipoPlugin);
-
-            if (plugins.size() > 0) {
-                return cargarPlugin(plugins.get(0));
-            }
-        } catch (Exception e) {
-            throw new I18NException(e, "error.desconegut", new I18NArgumentString(e.getMessage()));
+        if(idPlugin == null && obligatorio){
+            throw new I18NException("error.plugin.nodefinit", new I18NArgumentCode("plugin.tipo."+tipoPlugin));
+        }else if(idPlugin == null){
+            return null;
         }
 
-        return null;
-    }
+        // Lo buscamos en la cache de plugins
+        IPlugin pluginInstance = getPluginFromCache(idPlugin);
 
-    @Override
-    public Object getPluginDistribucion(Long idEntidad) throws I18NException {
+        // Si no está lo cargamos y guardamos en la cache
+        if (pluginInstance == null) {
+            Plugin plugin = findByEntidadTipo(idEntidad, tipoPlugin);
 
-        try {
-            List<Plugin> plugins;
+            pluginInstance = cargarPlugin(plugin);
 
-            plugins = findByEntidadTipo(idEntidad, RegwebConstantes.PLUGIN_DISTRIBUCION);
-
-            if (plugins.size() > 0) {
-                return cargarPlugin(plugins.get(0));
-            }else{
-                return cargarPlugin(new Plugin(DistribucionMockPlugin.class.getName()));
+            if (pluginInstance == null) {
+                throw new I18NException("error.plugin.instanciando", plugin.getClase());
             }
-        } catch (Exception e) {
-            throw new I18NException(e, "error.desconegut", new I18NArgumentString(e.getMessage()));
+
+            addPluginToCache(idPlugin, pluginInstance);
         }
 
+        return pluginInstance;
     }
 
     @Override
     public Properties getPropertiesPlugin(Long idEntidad, Long tipoPlugin) throws I18NException {
 
         try {
-            List<Plugin> plugins;
+            Plugin plugin = findByEntidadTipo(idEntidad, tipoPlugin);
 
-            plugins = findByEntidadTipo(idEntidad, tipoPlugin);
-
-            if (plugins.size() > 0) {
-                return cargarPropiedades(plugins.get(0));
+            if (plugin != null) {
+                return cargarPropiedades(plugin);
             }
         } catch (Exception e) {
             throw new I18NException(e, "error.desconegut", new I18NArgumentString(e.getMessage()));
@@ -243,11 +303,10 @@ public class PluginBean extends BaseEjbJPA<Plugin, Long> implements PluginLocal 
     public boolean existPlugin(Long idEntidad, Long tipoPlugin) throws I18NException {
 
         try {
-            List<Plugin> plugins;
+            Plugin plugin = findByEntidadTipo(idEntidad, tipoPlugin);
 
-            plugins = findByEntidadTipo(idEntidad, tipoPlugin);
+            return (plugin != null);
 
-            return (plugins.size() > 0);
         } catch (Exception e) {
             throw new I18NException(e, "error.desconegut", new I18NArgumentString(e.getMessage()));
         }
@@ -255,30 +314,13 @@ public class PluginBean extends BaseEjbJPA<Plugin, Long> implements PluginLocal 
     }
 
     @Override
-    public List<Object> getPlugins(Long idEntidad, Long tipoPlugin) throws I18NException {
-
-        List<Plugin> plugins = findByEntidadTipo(idEntidad, tipoPlugin);
-
-        if (plugins.size() > 0) {
-
-            List<Object> pluginsCargados = new ArrayList<Object>();
-            for (Plugin plugin : plugins) {
-                pluginsCargados.add(cargarPlugin(plugin));
-            }
-
-            return pluginsCargados;
-        }
-
-        return null;
-    }
-
-    @Override
     public Integer eliminarByEntidad(Long idEntidad) throws I18NException {
 
-        List<?> plugins = em.createQuery("Select id from Plugin where entidad = :idEntidad").setParameter("idEntidad", idEntidad).getResultList();
+        List<Long> plugins = em.createQuery("Select id from Plugin where entidad = :idEntidad").setParameter("idEntidad", idEntidad).getResultList();
 
-        for (Object id : plugins) {
-            remove(findById((Long) id));
+        for (Long id : plugins) {
+            remove(findById(id));
+            deleteOfCache(id);
         }
 
         return plugins.size();
@@ -289,14 +331,9 @@ public class PluginBean extends BaseEjbJPA<Plugin, Long> implements PluginLocal 
      * @return
      * @throws I18NException
      */
-    private Object cargarPlugin(Plugin plugin) throws I18NException {
+    private IPlugin cargarPlugin(Plugin plugin) throws I18NException {
 
         String BASE_PACKAGE = RegwebConstantes.REGWEB3_PROPERTY_BASE;
-
-        // Si no existe el plugin, retornamos null
-        if (plugin == null) {
-            throw new I18NException("error.plugin.nodefinit");
-        }
 
         // Obtenemos la clase del Plugin
         String className = plugin.getClase().trim();
@@ -321,7 +358,7 @@ public class PluginBean extends BaseEjbJPA<Plugin, Long> implements PluginLocal 
         }
 
         // Carregant la classe
-        return org.fundaciobit.pluginsib.core.utils.PluginsManager.instancePluginByClassName(className, BASE_PACKAGE, prop);
+        return (IPlugin) org.fundaciobit.pluginsib.core.utils.PluginsManager.instancePluginByClassName(className, BASE_PACKAGE, prop);
     }
 
     /**
@@ -357,5 +394,39 @@ public class PluginBean extends BaseEjbJPA<Plugin, Long> implements PluginLocal 
         }
 
         return prop;
+    }
+
+    /**
+     * Añade una instancia de Plugin a la cache
+     * @param pluginID
+     * @param pluginInstance
+     */
+    private void addPluginToCache(Long pluginID, IPlugin pluginInstance) {
+        synchronized (pluginsCache) {
+            pluginsCache.put(pluginID, pluginInstance);
+        }
+    }
+
+    /**
+     * Obtiene una instancia de Plugin de la cache
+     * @param pluginID
+     * @return
+     */
+    private IPlugin getPluginFromCache(Long pluginID) {
+        synchronized (pluginsCache) {
+            return pluginsCache.get(pluginID);
+        }
+    }
+
+    /**
+     * Elimina una instancia de Plugin de la cache
+     * @param pluginID
+     * @return
+     */
+    private boolean deleteOfCache(Long pluginID) {
+        synchronized (pluginsCache) {
+            IPlugin p = pluginsCache.remove(pluginID);
+            return p != null;
+        }
     }
 }

@@ -632,7 +632,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean implemen
 
     @Override
     public void postProcesoActualizarRegistro(RegistroSalida rs, Long entidadId) throws I18NException {
-        IPostProcesoPlugin postProcesoPlugin = (IPostProcesoPlugin) pluginEjb.getPlugin(entidadId, RegwebConstantes.PLUGIN_POSTPROCESO);
+        IPostProcesoPlugin postProcesoPlugin = (IPostProcesoPlugin) pluginEjb.getPlugin(entidadId, RegwebConstantes.PLUGIN_POSTPROCESO, false);
         if (postProcesoPlugin != null) {
             postProcesoPlugin.actualizarRegistroSalida(rs);
         }
@@ -641,7 +641,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean implemen
 
     @Override
     public void postProcesoNuevoRegistro(RegistroSalida rs, Long entidadId) throws I18NException {
-        IPostProcesoPlugin postProcesoPlugin = (IPostProcesoPlugin) pluginEjb.getPlugin(entidadId, RegwebConstantes.PLUGIN_POSTPROCESO);
+        IPostProcesoPlugin postProcesoPlugin = (IPostProcesoPlugin) pluginEjb.getPlugin(entidadId, RegwebConstantes.PLUGIN_POSTPROCESO, false);
         if (postProcesoPlugin != null) {
             postProcesoPlugin.nuevoRegistroSalida(rs);
         }

@@ -419,7 +419,7 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
 
             } catch(I18NException i18ne) {
               log.error(I18NUtils.getMessage(i18ne), i18ne);
-              Mensaje.saveMessageError(request, getMessage("regweb.error.registro"));
+              Mensaje.saveMessageError(request, getMessage("regweb.error.registro") + I18NUtils.getMessage(i18ne));
               return "redirect:/inici";
             } catch (Exception e) {
                 e.printStackTrace();

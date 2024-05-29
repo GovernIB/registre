@@ -273,7 +273,7 @@ public class InteresadoBean extends BaseEjbJPA<Interesado, Long> implements Inte
     }
 
     public void postProcesoNuevoInteresado(Interesado interesado, Long idRegistroDetalle, Long tipoRegistro, Long entidadId) throws I18NException {
-        IPostProcesoPlugin postProcesoPlugin = (IPostProcesoPlugin) pluginEjb.getPlugin(entidadId, RegwebConstantes.PLUGIN_POSTPROCESO);
+        IPostProcesoPlugin postProcesoPlugin = (IPostProcesoPlugin) pluginEjb.getPlugin(entidadId, RegwebConstantes.PLUGIN_POSTPROCESO, false);
 
         if (postProcesoPlugin != null) {
             if (tipoRegistro.equals(REGISTRO_ENTRADA)) {
@@ -288,7 +288,7 @@ public class InteresadoBean extends BaseEjbJPA<Interesado, Long> implements Inte
     }
 
     public void postProcesoActualizarInteresado(Interesado interesado, Long idRegistroDetalle, Long tipoRegistro, Long entidadId) throws I18NException {
-        IPostProcesoPlugin postProcesoPlugin = (IPostProcesoPlugin) pluginEjb.getPlugin(entidadId, RegwebConstantes.PLUGIN_POSTPROCESO);
+        IPostProcesoPlugin postProcesoPlugin = (IPostProcesoPlugin) pluginEjb.getPlugin(entidadId, RegwebConstantes.PLUGIN_POSTPROCESO, false);
 
         if (postProcesoPlugin != null) {
             if (tipoRegistro.equals(REGISTRO_ENTRADA)) {
@@ -303,7 +303,7 @@ public class InteresadoBean extends BaseEjbJPA<Interesado, Long> implements Inte
     }
 
     public void postProcesoEliminarInteresado(Long idInteresado, Long idRegistroDetalle, Long tipoRegistro, Long entidadId) throws I18NException {
-        IPostProcesoPlugin postProcesoPlugin = (IPostProcesoPlugin) pluginEjb.getPlugin(entidadId, RegwebConstantes.PLUGIN_POSTPROCESO);
+        IPostProcesoPlugin postProcesoPlugin = (IPostProcesoPlugin) pluginEjb.getPlugin(entidadId, RegwebConstantes.PLUGIN_POSTPROCESO, false);
 
         if (postProcesoPlugin != null) {
             if (tipoRegistro.equals(REGISTRO_ENTRADA)) {

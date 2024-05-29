@@ -49,18 +49,24 @@
 
                         <div class="panel-body">
 
-                            <div class="form-group col-xs-12">
-                                <div class="col-xs-2 pull-left etiqueta_regweb control-label textEsq">
-                                    <form:label path="tipo"><spring:message code="plugin.tipo"/></form:label>
+                            <c:if test="${empty plugin.id}">
+                                <div class="form-group col-xs-12">
+                                    <div class="col-xs-2 pull-left etiqueta_regweb control-label textEsq">
+                                        <form:label path="tipo"><spring:message code="plugin.tipo"/></form:label>
+                                    </div>
+                                    <div class="col-xs-10">
+                                        <form:select path="tipo" cssClass="chosen-select">
+                                            <c:forEach items="${tiposDisponibles}" var="tipo">
+                                                <form:option value="${tipo}"><spring:message code="plugin.tipo.${tipo}" /></form:option>
+                                            </c:forEach>
+                                        </form:select>
+                                    </div>
                                 </div>
-                                <div class="col-xs-10">
-                                    <form:select path="tipo" cssClass="chosen-select">
-                                        <c:forEach items="${tiposPlugin}" var="tipo">
-                                            <form:option value="${tipo}"><spring:message code="plugin.tipo.${tipo}" /></form:option>
-                                        </c:forEach>
-                                    </form:select>
-                                </div>
-                            </div>
+                            </c:if>
+
+                            <c:if test="${not empty plugin.id}">
+                                <form:hidden path="tipo" value="${plugin.tipo}"/>
+                            </c:if>
 
                             <div class="form-group col-xs-12">
                                 <div class="col-xs-2 pull-left etiqueta_regweb control-label textEsq">

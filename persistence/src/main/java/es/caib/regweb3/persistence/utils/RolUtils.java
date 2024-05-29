@@ -46,7 +46,7 @@ public class RolUtils {
      */
     public List<Rol> obtenerRolesUserPlugin(String identificador) throws Exception, I18NException {
 
-        IUserInformationPlugin loginPlugin = (IUserInformationPlugin) pluginEjb.getPlugin(null,RegwebConstantes.PLUGIN_USER_INFORMATION);
+        IUserInformationPlugin loginPlugin = (IUserInformationPlugin) pluginEjb.getPlugin(null,RegwebConstantes.PLUGIN_USER_INFORMATION, true);
         RolesInfo rolesInfo = loginPlugin.getRolesByUsername(identificador);
 
         List<String> roles = new ArrayList<String>();

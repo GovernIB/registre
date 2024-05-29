@@ -11,6 +11,7 @@ import es.caib.regweb3.webapp.controller.BaseController;
 import es.caib.regweb3.webapp.form.PluginForm;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import es.caib.regweb3.webapp.validator.PluginValidator;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,7 +25,9 @@ import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by Fundació Bit
@@ -118,9 +121,15 @@ public class PluginController extends BaseController {
     public String nuevoPlugin(Model model, HttpServletRequest request) throws Exception {
 
         Entidad entidad = getEntidadActiva(request);
+
+        if(getTiposDisponiblesEntidad(request).isEmpty()){
+            Mensaje.saveMessageAviso(request, getMessage("plugin.definidos.todos"));
+            return "redirect:/plugin/list";
+        }
+
         Plugin plugin = null;
 
-        if (isSuperAdmin(request)) { // Si es SuperAdministrador, el plugin será para todo REGWEB3
+        if (isSuperAdmin(request)) { // Si es SuperAdministrador, el plugin será para REGWEB3
             plugin = new Plugin();
 
         } else if (isAdminEntidad(request)) { // Si es AdminEntidad, el plugin será solo para la Entidad
@@ -136,9 +145,7 @@ public class PluginController extends BaseController {
      * Guardar una nueva {@link Plugin}
      */
     @RequestMapping(value = "/new", method = RequestMethod.POST)
-    public String nuevoPlugin(@ModelAttribute Plugin plugin, BindingResult result,
-                               SessionStatus status, HttpServletRequest request) {
-
+    public String nuevoPlugin(@ModelAttribute Plugin plugin, BindingResult result, SessionStatus status, HttpServletRequest request) {
 
         pluginValidator.validate(plugin, result);
 
@@ -186,8 +193,7 @@ public class PluginController extends BaseController {
      * Editar una {@link Plugin}
      */
     @RequestMapping(value = "/{pluginId}/edit", method = RequestMethod.POST)
-    public String editarPlugin(@ModelAttribute @Valid Plugin plugin, BindingResult result,
-                                SessionStatus status, HttpServletRequest request) {
+    public String editarPlugin(@ModelAttribute @Valid Plugin plugin, BindingResult result, SessionStatus status, HttpServletRequest request) {
 
         pluginValidator.validate(plugin, result);
 
@@ -235,14 +241,33 @@ public class PluginController extends BaseController {
     }
 
     @ModelAttribute("tiposPlugin")
-    public
-    Long[] tiposPlugin() throws Exception {
+    public Long[] tiposPlugin() throws Exception {
 
         if(Configuracio.isCAIB()){
             return RegwebConstantes.TIPOS_PLUGIN_CAIB;
         }else{
             return RegwebConstantes.TIPOS_PLUGIN;
         }
+    }
+
+    @ModelAttribute("tiposDisponibles")
+    private List<Long> getTiposDisponiblesEntidad(HttpServletRequest request) throws I18NException {
+
+        List<Long> tiposDefinidos = pluginEjb.getTiposPluginDefinidos(getEntidadActiva(request));
+        List<Long> tiposDisponibles = new ArrayList<>();
+
+        if(Configuracio.isCAIB()){
+            tiposDisponibles = Arrays.stream(RegwebConstantes.TIPOS_PLUGIN_CAIB)
+                    .filter(element -> !tiposDefinidos.contains(element))
+                    .collect(Collectors.toList());
+
+        }else{
+            tiposDisponibles = Arrays.stream(RegwebConstantes.TIPOS_PLUGIN)
+                    .filter(element -> !tiposDefinidos.contains(element))
+                    .collect(Collectors.toList());
+        }
+
+        return tiposDisponibles;
     }
 
 

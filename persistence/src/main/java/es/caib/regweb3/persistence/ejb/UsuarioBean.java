@@ -6,6 +6,7 @@ import es.caib.regweb3.persistence.utils.DataBaseUtils;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
+import es.caib.regweb3.utils.StringUtils;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.pluginsib.userinformation.IUserInformationPlugin;
 import org.fundaciobit.pluginsib.userinformation.RolesInfo;
@@ -100,7 +101,7 @@ public class UsuarioBean extends BaseEjbJPA<Usuario, Long> implements UsuarioLoc
         // Si no existe, lo creamos
         if (usuario == null) {
 
-            IUserInformationPlugin loginPlugin = (IUserInformationPlugin) pluginEjb.getPlugin(null, RegwebConstantes.PLUGIN_USER_INFORMATION);
+            IUserInformationPlugin loginPlugin = (IUserInformationPlugin) pluginEjb.getPlugin(null, RegwebConstantes.PLUGIN_USER_INFORMATION, true);
             UserInfo regwebUserInfo = null;
             try {
                 regwebUserInfo = loginPlugin.getUserInfoByUserName(identificador);
@@ -111,7 +112,13 @@ public class UsuarioBean extends BaseEjbJPA<Usuario, Long> implements UsuarioLoc
             if (regwebUserInfo != null) { // Si el documento existe en el Sistema de autentificación
 
                 usuario = new Usuario();
-                usuario.setNombre(regwebUserInfo.getName());
+
+                // Nombre
+                if(StringUtils.isNotEmpty(regwebUserInfo.getName())){
+                    usuario.setNombre(regwebUserInfo.getName());
+                }else{
+                    usuario.setNombre(identificador);
+                }
 
                 //Idioma por defecto
                 Long idioma = RegwebConstantes.IDIOMA_ID_BY_CODIGO.get(Configuracio.getDefaultLanguage());

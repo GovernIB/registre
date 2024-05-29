@@ -2,7 +2,6 @@ package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.persistence.utils.ScanWebConfigRegWeb;
 import es.caib.regweb3.utils.RegwebConstantes;
-import org.fundaciobit.genapp.common.i18n.I18NArgumentString;
 import org.fundaciobit.genapp.common.i18n.I18NCommonUtils;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.pluginsib.scanweb.api.IScanWebPlugin;
@@ -46,9 +45,7 @@ public class ScanWebModuleEjb implements ScanWebModuleLocal {
         log.debug("SWM :: scanDocument: scanWebID = " + scanWebID);
 
         // El plugin existeix?
-        IScanWebPlugin scanWebPlugin;
-
-        scanWebPlugin = getInstanceByEntitatID(entitatID);
+        IScanWebPlugin scanWebPlugin = (IScanWebPlugin) pluginEjb.getPlugin(entitatID, RegwebConstantes.PLUGIN_SCAN, true);
 
         if (scanWebPlugin == null) {
             throw new I18NException("error.plugin.scanweb.noexist", String.valueOf(entitatID));
@@ -77,21 +74,9 @@ public class ScanWebModuleEjb implements ScanWebModuleLocal {
             return;
         }
 
-
         long entitatID = ss.getEntitatID();
 
-        // log.info(" TesterScanWebConfig ss = " + ss);
-        // log.info(" ScanWebConfig pluginID = ss.getPluginID(); =>  " + pluginID);
-
-        IScanWebPlugin scanWebPlugin;
-        try {
-            scanWebPlugin = getInstanceByEntitatID(entitatID);
-        } catch (Exception e) {
-            throw new I18NException(e, "error.plugin.scanweb.noexist", new I18NArgumentString(String.valueOf(entitatID)));
-        }
-        if (scanWebPlugin == null) {
-            throw new I18NException("error.plugin.scanweb.noexist", String.valueOf(entitatID));
-        }
+        IScanWebPlugin scanWebPlugin = (IScanWebPlugin) pluginEjb.getPlugin(entitatID, RegwebConstantes.PLUGIN_SCAN, true);
 
         if (isPost) {
             scanWebPlugin.requestPOST(absoluteRequestPluginBasePath, relativeRequestPluginBasePath,
@@ -122,8 +107,7 @@ public class ScanWebModuleEjb implements ScanWebModuleLocal {
         closeScanWebProcess(request, scanWebID, pss);
     }
 
-    private void closeScanWebProcess(HttpServletRequest request, String scanWebID,
-                                     ScanWebConfigRegWeb pss) {
+    private void closeScanWebProcess(HttpServletRequest request, String scanWebID, ScanWebConfigRegWeb pss) {
 
         Long entitatID = pss.getEntitatID();
 
@@ -134,7 +118,7 @@ public class ScanWebModuleEjb implements ScanWebModuleLocal {
 
             IScanWebPlugin scanWebPlugin = null;
             try {
-                scanWebPlugin = getInstanceByEntitatID(entitatID);
+                scanWebPlugin = (IScanWebPlugin) pluginEjb.getPlugin(entitatID, RegwebConstantes.PLUGIN_SCAN, true);
             } catch (I18NException e) {
                 log.error(I18NCommonUtils.tradueix(new Locale("ca"),
                         "error.plugin.scanweb.noexist", String.valueOf(entitatID)), e);
@@ -148,8 +132,7 @@ public class ScanWebModuleEjb implements ScanWebModuleLocal {
                 scanWebPlugin.endScanWebTransaction(scanWebID, request);
             } catch (Exception e) {
                 log.error(
-                        "Error borrant dades d'un Proces d'escaneig " + scanWebID + ": " + e.getMessage(),
-                        e);
+                        "Error borrant dades d'un Proces d'escaneig " + scanWebID + ": " + e.getMessage(), e);
             }
         }
         scanWebConfigMap.remove(scanWebID);
@@ -221,13 +204,7 @@ public class ScanWebModuleEjb implements ScanWebModuleLocal {
     @Override
     public Set<String> getDefaultFlags(ScanWebConfigRegWeb ss) throws I18NException {
 
-        IScanWebPlugin scanWebPlugin =
-                (IScanWebPlugin) pluginEjb.getPlugin(ss.getEntitatID(), RegwebConstantes.PLUGIN_SCAN);
-
-        if (scanWebPlugin == null) {
-
-            throw new I18NException("error.plugin.scanweb.noexist", String.valueOf(ss.getEntitatID()));
-        }
+        IScanWebPlugin scanWebPlugin = (IScanWebPlugin) pluginEjb.getPlugin(ss.getEntitatID(), RegwebConstantes.PLUGIN_SCAN, true);
 
         Set<String> supFlags = scanWebPlugin.getSupportedFlagsByScanType(ss.getScanWebRequest().getScanType());
 
@@ -235,31 +212,6 @@ public class ScanWebModuleEjb implements ScanWebModuleLocal {
 
     }
 
-
-    protected static Map<Long, IScanWebPlugin> pluginsByEntitat = new HashMap<Long, IScanWebPlugin>();
-
-    @Override
-    public IScanWebPlugin getInstanceByEntitatID(long entitatID) throws I18NException {
-
-        IScanWebPlugin p = pluginsByEntitat.get(entitatID);
-
-        if (p == null) {
-            //Object obj = pluginEjb.getPlugin(entitatID, RegwebConstantes.PLUGIN_SCAN);
-            Object obj = pluginEjb.getPlugin(entitatID, RegwebConstantes.PLUGIN_SCAN);
-
-            if (obj == null) {
-                // No te cap plugin definit
-                return null;
-            }
-
-            // AbstractScanWebPlugin plugin = (AbstractScanWebPlugin)obj;
-            //log.info("XYZ PROPERTYBASE " + plugin.getPropertyKeyBase());
-            pluginsByEntitat.put(entitatID, (IScanWebPlugin) obj);
-            p = pluginsByEntitat.get(entitatID);
-        }
-
-        return p;
-    }
 
     /**
      * Comprueba si la entidad tiene definido un tipo de escaneo vàlido
@@ -270,19 +222,10 @@ public class ScanWebModuleEjb implements ScanWebModuleLocal {
     @Override
     public boolean entitatTeScan(long entitatID) throws I18NException {
 
-        IScanWebPlugin plugin = getInstanceByEntitatID(entitatID);
+        IScanWebPlugin plugin = (IScanWebPlugin) pluginEjb.getPlugin(entitatID, RegwebConstantes.PLUGIN_SCAN, false);
 
         return plugin != null;
-    
-    /*
-    Long count = pluginEjb.getTotalByEntidad(entitatID, RegwebConstantes.PLUGIN_SCAN);
-    
-    if (count == 0) {
-      return false;
-    } else {
-      return true;
-    }
-    */
+
     }
 
 
@@ -295,7 +238,7 @@ public class ScanWebModuleEjb implements ScanWebModuleLocal {
     @Override
     public boolean entitatPermetScanMasiu(long entitatID) throws I18NException {
 
-        IScanWebPlugin plugin = getInstanceByEntitatID(entitatID);
+        IScanWebPlugin plugin = (IScanWebPlugin) pluginEjb.getPlugin(entitatID, RegwebConstantes.PLUGIN_SCAN, false);
 
         return plugin != null && plugin.isMassiveScanAllowed();
 
@@ -310,7 +253,7 @@ public class ScanWebModuleEjb implements ScanWebModuleLocal {
     @Override
     public ScanWebPlainFile obtenerDocumentoSeparador(long entitatID, String languageUI) throws I18NException {
 
-        IScanWebPlugin plugin = getInstanceByEntitatID(entitatID);
+        IScanWebPlugin plugin = (IScanWebPlugin) pluginEjb.getPlugin(entitatID, RegwebConstantes.PLUGIN_SCAN, true);
         try {
             if (entitatPermetScanMasiu(entitatID)) {
 
@@ -323,8 +266,5 @@ public class ScanWebModuleEjb implements ScanWebModuleLocal {
             throw new I18NException("error.plugin.scanweb.noseparador");
 
         }
-
     }
-
-
 }
