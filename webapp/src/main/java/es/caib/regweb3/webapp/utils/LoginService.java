@@ -454,7 +454,7 @@ public class LoginService {
      */
     public Usuario crearUsuario(String identificador) throws Exception, I18NException {
 
-        IUserInformationPlugin loginPlugin = (IUserInformationPlugin) pluginEjb.getPlugin(null, RegwebConstantes.PLUGIN_USER_INFORMATION);
+        IUserInformationPlugin loginPlugin = (IUserInformationPlugin) pluginEjb.getPlugin(null, RegwebConstantes.PLUGIN_USER_INFORMATION, true);
         UserInfo regwebUserInfo = loginPlugin.getUserInfoByUserName(identificador);
 
         if (regwebUserInfo != null) { // Si el documento no existe en REGWEB3
@@ -560,7 +560,7 @@ public class LoginService {
      * @throws Exception
      */
     public Boolean existeIdentificador(String identificador) throws Exception, I18NException {
-        IUserInformationPlugin loginPlugin = (IUserInformationPlugin) pluginEjb.getPlugin(null, RegwebConstantes.PLUGIN_USER_INFORMATION);
+        IUserInformationPlugin loginPlugin = (IUserInformationPlugin) pluginEjb.getPlugin(null, RegwebConstantes.PLUGIN_USER_INFORMATION, true);
         UserInfo regwebUserInfo = loginPlugin.getUserInfoByUserName(identificador);
 
         return regwebUserInfo != null;

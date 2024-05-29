@@ -243,7 +243,6 @@ public class EntidadController extends BaseController {
 
                 //Si no es administrador de entidad de la entidad, no la puede editar
                 if (!entidad.getId().equals(entidadActiva.getId())) {
-                    log.info("Error, editar entidad");
                     Mensaje.saveMessageError(request, getMessage("aviso.entidad.edit"));
                     return "redirect:/inici";
                 }
@@ -863,7 +862,7 @@ public class EntidadController extends BaseController {
      */
     private List<Usuario> propietarios() throws Exception, I18NException {
 
-        IUserInformationPlugin loginPlugin = (IUserInformationPlugin) pluginEjb.getPlugin(null, RegwebConstantes.PLUGIN_USER_INFORMATION);
+        IUserInformationPlugin loginPlugin = (IUserInformationPlugin) pluginEjb.getPlugin(null, RegwebConstantes.PLUGIN_USER_INFORMATION, true);
         String[] usuarios = loginPlugin.getUsernamesByRol(RegwebConstantes.RWE_ADMIN);
 
         List<Usuario> administradoresEntidad = new ArrayList<Usuario>();

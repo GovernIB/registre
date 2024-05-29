@@ -70,7 +70,7 @@ public class ArxiuController extends BaseController {
         Entidad entidad = getEntidadActiva(request);
 
         try {
-            ArxiuDigitalCAIBDocumentCustodyPlugin custody = (ArxiuDigitalCAIBDocumentCustodyPlugin) pluginEjb.getPlugin(entidad.getId(), RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE);
+            ArxiuDigitalCAIBDocumentCustodyPlugin custody = (ArxiuDigitalCAIBDocumentCustodyPlugin) pluginEjb.getPlugin(entidad.getId(), RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE, true);
 
             ApiArchivoDigital apiArxiu = custody.getApiArxiu(null);
 
@@ -191,7 +191,7 @@ public class ArxiuController extends BaseController {
 
             log.info("Asociando Justificante del expediente: " + idExpediente);
 
-            ArxiuDigitalCAIBDocumentCustodyPlugin custody = (ArxiuDigitalCAIBDocumentCustodyPlugin) pluginEjb.getPlugin(entidad.getId(), RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE);
+            ArxiuDigitalCAIBDocumentCustodyPlugin custody = (ArxiuDigitalCAIBDocumentCustodyPlugin) pluginEjb.getPlugin(entidad.getId(), RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE, true);
 
             ApiArchivoDigital apiArxiu = custody.getApiArxiu(null);
 
@@ -320,7 +320,7 @@ public class ArxiuController extends BaseController {
         Entidad entidad = getEntidadActiva(request);
 
         try {
-            ArxiuDigitalCAIBDocumentCustodyPlugin custody = (ArxiuDigitalCAIBDocumentCustodyPlugin) pluginEjb.getPlugin(entidad.getId(), RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE);
+            ArxiuDigitalCAIBDocumentCustodyPlugin custody = (ArxiuDigitalCAIBDocumentCustodyPlugin) pluginEjb.getPlugin(entidad.getId(), RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE, true);
 
             ApiArchivoDigital apiArxiu = custody.getApiArxiu(null);
 
@@ -387,7 +387,7 @@ public class ArxiuController extends BaseController {
         Entidad entidad = getEntidadActiva(request);
 
         try {
-            ArxiuDigitalCAIBDocumentCustodyPlugin custody = (ArxiuDigitalCAIBDocumentCustodyPlugin) pluginEjb.getPlugin(entidad.getId(), RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE);
+            ArxiuDigitalCAIBDocumentCustodyPlugin custody = (ArxiuDigitalCAIBDocumentCustodyPlugin) pluginEjb.getPlugin(entidad.getId(), RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE, true);
 
             ApiArchivoDigital apiArxiu = custody.getApiArxiu(null);
             Integer cerrados = 0;
@@ -440,7 +440,7 @@ public class ArxiuController extends BaseController {
 
             log.info("Cerrando el expediente: " + idExpediente);
 
-            ArxiuDigitalCAIBDocumentCustodyPlugin custody = (ArxiuDigitalCAIBDocumentCustodyPlugin) pluginEjb.getPlugin(entidad.getId(), RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE);
+            ArxiuDigitalCAIBDocumentCustodyPlugin custody = (ArxiuDigitalCAIBDocumentCustodyPlugin) pluginEjb.getPlugin(entidad.getId(), RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE, true);
 
             ApiArchivoDigital apiArxiu = custody.getApiArxiu(null);
 

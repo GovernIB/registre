@@ -59,7 +59,7 @@ public class ArxiuCaibUtils {
      */
     public IArxiuPlugin cargarPlugin(Long idEntidad) throws I18NException {
 
-        IArxiuPlugin iArxiuPlugin = (IArxiuPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_ARXIU_JUSTIFICANTE);
+        IArxiuPlugin iArxiuPlugin = (IArxiuPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_ARXIU_JUSTIFICANTE, true);
 
         setArxiuPlugin(iArxiuPlugin);
         setProperties(pluginEjb.getPropertiesPlugin(idEntidad, RegwebConstantes.PLUGIN_ARXIU_JUSTIFICANTE));

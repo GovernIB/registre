@@ -73,7 +73,7 @@ public class DistribucionBean implements DistribucionLocal {
 
         try {
             // Si es el plugin de email hay que asignar los valores.
-            IDistribucionPlugin plugin = (IDistribucionPlugin) pluginEjb.getPluginDistribucion(usuarioEntidad.getEntidad().getId());
+            IDistribucionPlugin plugin = (IDistribucionPlugin) pluginEjb.getPlugin(usuarioEntidad.getEntidad().getId(), RegwebConstantes.PLUGIN_DISTRIBUCION, true);
 
             // Montamos la petición de la integración
             peticion.append("usuario: ").append(re.getUsuario().getUsuario().getNombreIdentificador()).append(System.getProperty("line.separator"));
@@ -167,7 +167,7 @@ public class DistribucionBean implements DistribucionLocal {
         try {
 
             //Obtenermos plugin distribución
-            IDistribucionPlugin distribucionPlugin = (IDistribucionPlugin) pluginEjb.getPluginDistribucion(entidad.getId());
+            IDistribucionPlugin distribucionPlugin = (IDistribucionPlugin) pluginEjb.getPlugin(entidad.getId(), RegwebConstantes.PLUGIN_DISTRIBUCION, true);
 
             //Obtenemos el registro de entrada que se debe distribuir
             RegistroEntrada registroEntrada = null;
@@ -272,7 +272,7 @@ public class DistribucionBean implements DistribucionLocal {
         try {
 
             //Obtenermos plugin distribución
-            IDistribucionPlugin distribucionPlugin = (IDistribucionPlugin) pluginEjb.getPluginDistribucion(entidad.getId());
+            IDistribucionPlugin distribucionPlugin = (IDistribucionPlugin) pluginEjb.getPlugin(entidad.getId(), RegwebConstantes.PLUGIN_DISTRIBUCION, true);
 
             //Obtenemos el registro de entrada que se debe distribuir
             if(distribucionPlugin.getClass().getName().contains("DistribucionGoibPlugin")){
@@ -362,7 +362,7 @@ public class DistribucionBean implements DistribucionLocal {
     public Boolean isDistribucionPluginEmail(Long idEntidad) throws I18NException {
         try{
 
-            IDistribucionPlugin plugin =  (IDistribucionPlugin) pluginEjb.getPluginDistribucion(idEntidad);
+            IDistribucionPlugin plugin =  (IDistribucionPlugin)  pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_DISTRIBUCION, true);
             return plugin.getClass().getName().contains("DistribucionEmailPlugin");
 
         }catch (I18NException e){

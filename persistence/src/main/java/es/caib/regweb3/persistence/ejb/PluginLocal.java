@@ -1,5 +1,6 @@
 package es.caib.regweb3.persistence.ejb;
 
+import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.model.Plugin;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 
@@ -20,13 +21,30 @@ public interface PluginLocal extends BaseEjb<Plugin, Long> {
 
 
     /**
-     * Obtiene un {@link Plugin} determinado de una Entidad
+     * Obtiene un {@link Plugin} de un tipo determinado de una Entidad o general
      *
      * @param idEntidad
      * @return
      * @throws I18NException
      */
-    List<Plugin> findByEntidadTipo(Long idEntidad, Long tipo) throws I18NException;
+    Plugin findByEntidadTipo(Long idEntidad, Long tipo) throws I18NException;
+
+    /**
+     * Obtiene el id del {@link Plugin} de un tipo determinado de una Entidad o general
+     *
+     * @param idEntidad
+     * @return
+     * @throws I18NException
+     */
+    Long findIdByEntidadTipo(Long idEntidad, Long tipo) throws I18NException;
+
+    /**
+     * Obtiene los Tipos de plugin definidos en la Entidad o en REGWEB3
+     * @param entidad
+     * @return
+     * @throws I18NException
+     */
+    List<Long> getTiposPluginDefinidos(Entidad entidad) throws I18NException;
 
     /**
      * @param idEntidad
@@ -70,19 +88,11 @@ public interface PluginLocal extends BaseEjb<Plugin, Long> {
      *
      * @param idEntidad
      * @param tipoPlugin
+     * @param obligatorio
      * @return
      * @throws I18NException
      */
-    Object getPlugin(Long idEntidad, Long tipoPlugin) throws I18NException;
-
-    /**
-     * Obtiene en plugin de Distribución
-     *
-     * @param idEntidad
-     * @return
-     * @throws I18NException
-     */
-    Object getPluginDistribucion(Long idEntidad) throws I18NException;
+    Object getPlugin(Long idEntidad, Long tipoPlugin, Boolean obligatorio) throws I18NException;
 
     /**
      * Obtiene las Propiedades del plugin determinado
@@ -104,15 +114,5 @@ public interface PluginLocal extends BaseEjb<Plugin, Long> {
      * @throws I18NException
      */
     boolean existPlugin(Long idEntidad, Long tipoPlugin) throws I18NException;
-
-    /**
-     * Obtiene todos los plgins del tipo espeficicado
-     *
-     * @param idEntidad
-     * @param tipoPlugin
-     * @return
-     * @throws I18NException
-     */
-    List<Object> getPlugins(Long idEntidad, Long tipoPlugin) throws I18NException;
 
 }

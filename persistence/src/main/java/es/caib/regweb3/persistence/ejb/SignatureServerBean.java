@@ -9,7 +9,10 @@ import es.caib.regweb3.persistence.utils.I18NLogicUtils;
 import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.commons.io.FileUtils;
-import org.fundaciobit.genapp.common.i18n.*;
+import org.fundaciobit.genapp.common.i18n.I18NArgumentString;
+import org.fundaciobit.genapp.common.i18n.I18NCommonUtils;
+import org.fundaciobit.genapp.common.i18n.I18NException;
+import org.fundaciobit.genapp.common.i18n.I18NTranslation;
 import org.fundaciobit.plugins.documentcustody.api.AnnexCustody;
 import org.fundaciobit.plugins.documentcustody.api.DocumentCustody;
 import org.fundaciobit.plugins.documentcustody.api.SignatureCustody;
@@ -57,13 +60,7 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
                                              Long idEntidadActiva, StringBuilder peticion, String numeroRegistro, String fileName) throws I18NException {
 
         // Cerca el Plugin de Justificant definit a les Propietats Globals
-        ISignatureServerPlugin signaturePlugin = (ISignatureServerPlugin) pluginEjb.getPlugin(idEntidadActiva, RegwebConstantes.PLUGIN_FIRMA_SERVIDOR);
-
-        // Comprova que existegix el plugin de justificant
-        if (signaturePlugin == null) {
-            // No s´ha definit cap plugin de Firma. Consulti amb el seu Administrador.
-            throw new I18NException("error.plugin.nodefinit", new I18NArgumentCode("plugin.tipo.4"));
-        }
+        ISignatureServerPlugin signaturePlugin = (ISignatureServerPlugin) pluginEjb.getPlugin(idEntidadActiva, RegwebConstantes.PLUGIN_FIRMA_SERVIDOR, true);
 
         String reason = "FIRMA_JUSTIFICANT"; // Hem de canviar raó justificant????
 
@@ -94,13 +91,7 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
                                           Long idEntidadActiva, StringBuilder peticion, String numeroRegistro, String fileName) throws I18NException {
 
         // Cerca el Plugin de Justificant definit a les Propietats Globals
-        ISignatureServerPlugin signaturePlugin = (ISignatureServerPlugin) pluginEjb.getPlugin(idEntidadActiva, RegwebConstantes.PLUGIN_FIRMA_SERVIDOR);
-
-        // Comprova que existegix el plugin de justificant
-        if (signaturePlugin == null) {
-            // No s´ha definit cap plugin de Firma. Consulti amb el seu Administrador.
-            throw new I18NException("error.plugin.nodefinit", new I18NArgumentCode("plugin.tipo.4"));
-        }
+        ISignatureServerPlugin signaturePlugin = (ISignatureServerPlugin) pluginEjb.getPlugin(idEntidadActiva, RegwebConstantes.PLUGIN_FIRMA_SERVIDOR, true);
 
         String reason = "FIRMA_JUSTIFICANT"; // Hem de canviar raó justificant????
 
@@ -322,16 +313,9 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
      * @return
      * @throws I18NException
      */
-    protected ISignatureServerPlugin getInstanceSignatureServerPlugin(long idEntidad)
-            throws I18NException {
-        ISignatureServerPlugin signaturePlugin;
-        signaturePlugin = (ISignatureServerPlugin) pluginEjb.getPlugin(idEntidad,
-                RegwebConstantes.PLUGIN_FIRMA_SERVIDOR);
+    protected ISignatureServerPlugin getInstanceSignatureServerPlugin(long idEntidad) throws I18NException {
+        ISignatureServerPlugin signaturePlugin = (ISignatureServerPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_FIRMA_SERVIDOR, true);
 
-        if (signaturePlugin == null) {
-            // El plugin de Firma en servidor no s'ha definit. Consulti amb l'Administrador
-            throw new I18NException("error.plugin.nodefinit", new I18NArgumentCode("plugin.tipo.4"));
-        }
         return signaturePlugin;
     }
 
@@ -357,12 +341,7 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
                                                           DocumentCustody doc, Long idEntidad) throws I18NException {
         ValidateSignatureResponse resp;
 
-        //long start = System.currentTimeMillis();
-
-        // TODO CACHE DE PLUGIN!!!!!
-        IValidateSignaturePlugin validatePlugin;
-        validatePlugin = (IValidateSignaturePlugin) pluginEjb.getPlugin(idEntidad,
-                RegwebConstantes.PLUGIN_VALIDACION_FIRMAS);
+        IValidateSignaturePlugin validatePlugin = (IValidateSignaturePlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_VALIDACION_FIRMAS, false);
 
         if (validatePlugin == null) {// El plugin de Validació de Firmes no s'ha definit.
 
@@ -374,7 +353,6 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
             resp.setValidationStatus(validationStatus);
 
             return resp;
-            //throw new I18NException("error.plugin.nodefinit", new I18NArgumentCode("plugin.tipo.8"));
         }
 
         // Verificar que ofereix servei de informació de firmes

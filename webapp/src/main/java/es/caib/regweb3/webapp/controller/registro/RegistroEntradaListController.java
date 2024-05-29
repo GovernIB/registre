@@ -700,7 +700,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
 
         try {
 
-            IDistribucionPlugin distribucionPlugin = (IDistribucionPlugin) pluginEjb.getPluginDistribucion(entidadActiva.getId());
+            IDistribucionPlugin distribucionPlugin = (IDistribucionPlugin)  pluginEjb.getPlugin(entidadActiva.getId(), RegwebConstantes.PLUGIN_DISTRIBUCION, true);
             if(distribucionPlugin.getClass().getName().contains("DistribucionGoibPlugin")){
                 registroEntrada = registroEntradaEjb.getConAnexosFullDistribuir(idRegistro);
             }else{
