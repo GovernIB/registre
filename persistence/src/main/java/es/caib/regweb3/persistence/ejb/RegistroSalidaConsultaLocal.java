@@ -87,14 +87,6 @@ public interface RegistroSalidaConsultaLocal {
      */
     String findNumeroRegistroFormateadoByRegistroDetalle(Long idRegistroDetalle) throws I18NException;
 
-    /**
-     * Retorna el identificador del Libro al que pertenece el RegistroSalida
-     *
-     * @param idRegistroSalida
-     * @return
-     * @throws I18NException
-     */
-    Long getLibro(Long idRegistroSalida) throws I18NException;
 
     /**
      * Retorna el Organismo al que pertenece el RegistroSalida
@@ -124,16 +116,8 @@ public interface RegistroSalidaConsultaLocal {
      * @return
      * @throws I18NException
      */
-    List<RegistroSalida> getByLibrosEstado(int inicio, List<Organismo> organismos, Long idEstado) throws I18NException;
+    List<RegistroSalida> getByOrganismosEstado(int inicio, List<Organismo> organismos, Long idEstado) throws I18NException;
 
-    /**
-     * Busca los Registros de Salida de un Libro.
-     *
-     * @param idLibro
-     * @return
-     * @throws I18NException
-     */
-    Long getTotalByLibro(Long idLibro) throws I18NException;
 
     /**
      * Comprueba si un usuario tiene RegistroSalida

@@ -709,7 +709,7 @@ public class PropiedadGlobalUtil {
     }
 
     /**
-     * Devuelve el valor de la propiedad que indica si se generarán Comunicaciones a los usuarios de registro
+     * Devuelve el valor de la propiedad que indica si la Custodia de ls Justificantes será en diferido
      * Propiedad: es.caib.regweb3.comunicaciones.generar
      * @param idEntidad
      * @return

@@ -203,39 +203,6 @@ public class LibroController extends BaseController {
     }
 
     /**
-     * Eliminar un {@link es.caib.regweb3.model.Libro}
-     *//*
-    @RequestMapping(value = "/{idLibro}/{idOrganismo}/delete")
-    public String eliminarLibro(@PathVariable("idLibro") Long idLibro, @PathVariable("idOrganismo") Long idOrganismo, HttpServletRequest request) {
-
-        try {
-
-            Long registrosEntrada = registroEntradaConsultaEjb.getTotalByLibro(idLibro);
-            Long registrosSalida = registroSalidaConsultaEjb.getTotalByLibro(idLibro);
-
-            // Comprueba no tiene registros de entrada ni de salida
-            if(registrosEntrada==0 && registrosSalida==0){
-
-                // Elimina el Libro
-                log.info("Libro eliminado: " + libroEjb.eliminarLibro(idLibro));
-
-                Mensaje.saveMessageInfo(request, getMessage("regweb.eliminar.registro"));
-
-            } else{
-
-                Mensaje.saveMessageError(request, getMessage("error.libro.eliminar"));
-
-            }
-
-        } catch (Exception e) {
-            Mensaje.saveMessageError(request, getMessage("regweb.relaciones.registro"));
-            e.printStackTrace();
-        }
-
-        return "redirect:/libro/"+idOrganismo+"/libros";
-    }*/
-
-    /**
      * Inicializa los contadores del libro {@link es.caib.regweb3.model.Libro}
      */
     @RequestMapping(value = "/{libroId}/inicializar", method = RequestMethod.GET)

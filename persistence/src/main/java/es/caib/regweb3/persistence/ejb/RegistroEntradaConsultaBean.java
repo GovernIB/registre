@@ -402,7 +402,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<RegistroEntrada> getByLibrosEstado(int inicio, List<Organismo> organismos, Long idEstado) throws I18NException {
+    public List<RegistroEntrada> getByOrganismosEstado(int inicio, List<Organismo> organismos, Long idEstado) throws I18NException {
 
         Query q;
 
@@ -518,27 +518,6 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
         }
     }
 
-
-    @Override
-    @SuppressWarnings(value = "unchecked")
-    public Long getLibro(Long idRegistroEntrada) throws I18NException {
-
-        Query q;
-
-        q = em.createQuery("Select registroEntrada.libro.id from RegistroEntrada as registroEntrada where registroEntrada.id = :idRegistroEntrada ");
-
-        q.setParameter("idRegistroEntrada", idRegistroEntrada);
-        q.setHint("org.hibernate.readOnly", true);
-
-        List<Long> libros = q.getResultList();
-
-        if (libros.size() > 0) {
-            return libros.get(0);
-        } else {
-            return null;
-        }
-    }
-
     @Override
     @SuppressWarnings(value = "unchecked")
     public Organismo getOrganismo(Long idRegistroEntrada) throws I18NException {
@@ -619,20 +598,6 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
         return registros;
     }
 
-
-    @Override
-    public Long getTotalByLibro(Long idLibro) throws I18NException {
-
-        Query q;
-
-        q = em.createQuery("Select count(re.id) from RegistroEntrada as re where re.libro.id = :idLibro ");
-
-        q.setParameter("idLibro", idLibro);
-        q.setHint("org.hibernate.readOnly", true);
-
-        return (Long) q.getSingleResult();
-    }
-
     @Override
     public Boolean obtenerPorUsuario(Long idUsuarioEntidad) throws I18NException {
 
@@ -641,19 +606,6 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
         q = em.createQuery("Select count(re.id) from RegistroEntrada as re where re.usuario.id = :idUsuarioEntidad ");
 
         q.setParameter("idUsuarioEntidad", idUsuarioEntidad);
-        q.setHint("org.hibernate.readOnly", true);
-
-        return (Long) q.getSingleResult() > 0;
-    }
-
-    @Override
-    public Boolean tieneEstado(Long idRegistroEntrada, Long idEstado) throws I18NException {
-        Query q;
-
-        q = em.createQuery("Select count(re.id) from RegistroEntrada as re where re.id = :idRegistroEntrada and re.estado = :idEstado ");
-
-        q.setParameter("idRegistroEntrada", idRegistroEntrada);
-        q.setParameter("idEstado", idEstado);
         q.setHint("org.hibernate.readOnly", true);
 
         return (Long) q.getSingleResult() > 0;

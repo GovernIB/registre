@@ -333,27 +333,6 @@ public class RegistroSalidaConsultaBean implements RegistroSalidaConsultaLocal {
         }
     }
 
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public Long getLibro(Long idRegistroSalida) throws I18NException {
-
-        Query q;
-
-        q = em.createQuery("Select registroSalida.libro.id from RegistroSalida as registroSalida where registroSalida.id = :idRegistroSalida ");
-
-        q.setParameter("idRegistroSalida", idRegistroSalida);
-        q.setHint("org.hibernate.readOnly", true);
-
-        List<Long> libros = q.getResultList();
-
-        if (libros.size() > 0) {
-            return libros.get(0);
-        } else {
-            return null;
-        }
-    }
-
     @Override
     @SuppressWarnings(value = "unchecked")
     public Organismo getOrganismo(Long idRegistroSalida) throws I18NException {
@@ -391,7 +370,7 @@ public class RegistroSalidaConsultaBean implements RegistroSalidaConsultaLocal {
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<RegistroSalida> getByLibrosEstado(int inicio, List<Organismo> organismos, Long idEstado) throws I18NException {
+    public List<RegistroSalida> getByOrganismosEstado(int inicio, List<Organismo> organismos, Long idEstado) throws I18NException {
 
         Query q;
 
@@ -407,19 +386,6 @@ public class RegistroSalidaConsultaBean implements RegistroSalidaConsultaLocal {
 
         return q.getResultList();
 
-    }
-
-    @Override
-    public Long getTotalByLibro(Long idLibro) throws I18NException {
-
-        Query q;
-
-        q = em.createQuery("Select count(rs.id) from RegistroSalida as rs where rs.libro.id = :idLibro ");
-
-        q.setParameter("idLibro", idLibro);
-        q.setHint("org.hibernate.readOnly", true);
-
-        return (Long) q.getSingleResult();
     }
 
     @Override
