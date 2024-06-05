@@ -10,6 +10,7 @@ import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.persistence.utils.RegistroUtils;
 import es.caib.regweb3.persistence.utils.RespuestaDistribucion;
 import es.caib.regweb3.plugins.distribucion.IDistribucionPlugin;
+import es.caib.regweb3.plugins.distribucion.email.DistribucionEmailPlugin;
 import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
@@ -217,9 +218,16 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         model.addAttribute("isResponsableOrganismo", permisoOrganismoUsuarioEjb.isAdministradorOrganismo(usuarioEntidad.getId(),registro.getOficina().getOrganismoResponsable().getId()));
         model.addAttribute("permisoEditar", permisoEditar);
         model.addAttribute("permisoDistribuir", permisoOrganismoUsuarioEjb.tienePermiso(usuarioEntidad.getId(), registro.getOficina().getOrganismoResponsable().getId(), RegwebConstantes.PERMISO_DISTRIBUCION_REGISTRO, true));
-        model.addAttribute("pluginDistribucionEmail", distribucionEjb.isDistribucionPluginEmail(getEntidadActiva(request).getId()));
         model.addAttribute("tieneJustificante", tieneJustificante);
         model.addAttribute("maxReintentos", PropiedadGlobalUtil.getMaxReintentosSir(entidadActiva.getId()));
+
+        Boolean pluginDistribucionEmail = distribucionEjb.isDistribucionPluginEmail(getEntidadActiva(request).getId());
+        model.addAttribute("pluginDistribucionEmail", pluginDistribucionEmail);
+        if(pluginDistribucionEmail){
+            DistribucionEmailPlugin distribucionEmailPlugin = (DistribucionEmailPlugin) pluginEjb.getPlugin(entidadActiva.getId(), RegwebConstantes.PLUGIN_DISTRIBUCION, true);
+            model.addAttribute("distribucionEmailDefault", distribucionEmailPlugin.getPropertyEmailDefault());
+            model.addAttribute("distribucionAsuntoDefault", distribucionEmailPlugin.getPropertyMotivoDefault());
+        }
 
         // Solo si no es una reserva de número
         if (!registro.getEstado().equals(RegwebConstantes.REGISTRO_RESERVA)) {
@@ -509,7 +517,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
 
         if ((organismosResponsable != null && organismosResponsable.size() > 0)) {
 
-            List<RegistroEntrada> registrosEntrada = registroEntradaConsultaEjb.getByLibrosEstado((pageNumber - 1) * BaseEjbJPA.RESULTADOS_PAGINACION, organismosResponsable, RegwebConstantes.REGISTRO_PENDIENTE_VISAR);
+            List<RegistroEntrada> registrosEntrada = registroEntradaConsultaEjb.getByOrganismosEstado((pageNumber - 1) * BaseEjbJPA.RESULTADOS_PAGINACION, organismosResponsable, RegwebConstantes.REGISTRO_PENDIENTE_VISAR);
             Long totalVisarEntrada = registroEntradaConsultaEjb.getByLibrosEstadoCount(organismosResponsable, RegwebConstantes.REGISTRO_PENDIENTE_VISAR);
             Paginacion paginacion = new Paginacion(totalVisarEntrada.intValue(), pageNumber);
 
