@@ -95,7 +95,7 @@ public interface RegistroEntradaConsultaLocal {
      * @return
      * @throws I18NException
      */
-    List<RegistroEntrada> getByLibrosEstado(int inicio, List<Organismo> organismos, Long idEstado) throws I18NException;
+    List<RegistroEntrada> getByOrganismosEstado(int inicio, List<Organismo> organismos, Long idEstado) throws I18NException;
 
     /**
      * Busca los Registros de Entrada de un listado de Organismos en función de su estado.
@@ -151,15 +151,6 @@ public interface RegistroEntradaConsultaLocal {
 
 
     /**
-     * Retorna el identificador del Libro al que pertenece el RegistroEntrada
-     *
-     * @param idRegistroEntrada
-     * @return
-     * @throws I18NException
-     */
-    Long getLibro(Long idRegistroEntrada) throws I18NException;
-
-    /**
      * Retorna el Organismo al que pertenece el RegistroEntrada
      * @param idRegistroEntrada
      * @return
@@ -185,15 +176,6 @@ public interface RegistroEntradaConsultaLocal {
     Long queryCount(String query) throws I18NException;
 
     /**
-     * Busca los Registros de Entrada de un Libro.
-     *
-     * @param idLibro
-     * @return
-     * @throws I18NException
-     */
-    Long getTotalByLibro(Long idLibro) throws I18NException;
-
-    /**
      * Comprueba si un usuario tiene RegistroEntrada
      *
      * @param idUsuarioEntidad
@@ -202,15 +184,6 @@ public interface RegistroEntradaConsultaLocal {
      */
     Boolean obtenerPorUsuario(Long idUsuarioEntidad) throws I18NException;
 
-    /**
-     * Comprueba si un RegistroEntrada tiene un Estado en concreto
-     *
-     * @param idRegistroEntrada
-     * @param idEstado
-     * @return
-     * @throws I18NException
-     */
-    Boolean tieneEstado(Long idRegistroEntrada, Long idEstado) throws I18NException;
 
     /**
      * Obtiene un Registro de Entrada a partir de su IdentificadorIntercambio
