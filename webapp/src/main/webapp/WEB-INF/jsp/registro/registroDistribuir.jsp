@@ -3,43 +3,44 @@
 
 <%--Modal distribuir--%>
 <div id="distribuirModal" class="modal fade">
-    <spring:message code="registro.destinatarios.vacio"/>
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h3><spring:message code="regweb.distribuir"/></h3>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                <h3><spring:message code="distribuir.email"/></h3>
             </div>
 
             <div class="modal-body">
                 <div class="panel panel-info">
 
                     <div class="panel-heading">
-                        <h3 class="panel-title"><i class="fa fa-pencil-square-o"></i> <strong>
-                            <spring:message code="registro.destinatarios.listado"/></strong></h3>
+                        <h3 class="panel-title">
+                            <i class="fa fa-pencil-square-o"></i> <strong><spring:message code="registro.destinatarios.listado"/></strong>
+                        </h3>
                     </div>
 
                     <div class="panel-body">
-                        <form id="distribuirForm" method="post"  cssClass="form-horizontal" >
+                        <form id="distribuirForm" method="post" cssClass="form-horizontal" >
                             <!--Listado de emails -->
                             <div class="row">
-                                <div class="form-group col-xs-8">
-                                    <div class="col-xs-3 pull-left etiqueta_regweb control-label text-right">
+                                <div class="form-group col-xs-12">
+                                    <div class="col-xs-4 pull-left etiqueta_regweb control-label text-right">
                                         <label><span class="text-danger"> * </span><spring:message code="registroEntrada.emails.lista"/></label>
                                     </div>
-                                    <div class="col-xs-9" id="idEmails">
-                                        <textarea id="emails" name="emails" class="form-control" maxlength="256"></textarea>
+                                    <div class="col-xs-8" id="idEmails">
+                                        <textarea id="emails" name="emails" class="form-control" maxlength="256">${param.distribucionEmailDefault}</textarea>
                                         <span class="errors"></span>
                                     </div>
                                 </div>
                             </div>
 
                             <div class="row">
-                                <div class="form-group col-xs-8">
-                                    <div class="col-xs-3 pull-left etiqueta_regweb control-label text-right">
+                                <div class="form-group col-xs-12">
+                                    <div class="col-xs-4 pull-left etiqueta_regweb control-label text-right">
                                         <label><span class="text-danger"> * </span><spring:message code="registroEntrada.motivo"/></label>
                                     </div>
-                                    <div class="col-xs-9" id="idMotivo">
-                                        <textarea id="motivo" name="motivo" class="form-control" maxlength="80"></textarea>
+                                    <div class="col-xs-8" id="idMotivo">
+                                        <textarea id="motivo" name="motivo" class="form-control" maxlength="80">${param.distribucionAsuntoDefault}</textarea>
                                         <span class="errors"></span>
                                     </div>
                                 </div>
@@ -49,14 +50,7 @@
                                 <div class="form-group col-xs-12">
                                     <div class="col-xs-12">
                                         <input type="button" value="<spring:message code="regweb.distribuir"/>" class="btn btn-warning btn-sm" onclick="validarFormEmail(${param.aceptarRegistroSir})"/>
-
-                                        <c:if test="${tipoRegistro == RegwebConstantes.REGISTRO_ENTRADA}">
-                                            <input type="button" value="<spring:message code="regweb.cancelar"/>" onclick="goTo('<c:url value="/registroEntrada/${registro.id}/detalle"/>')" class="btn btn-sm"/>
-                                        </c:if>
-                                        <c:if test="${tipoRegistro == RegwebConstantes.REGISTRO_SALIDA}">
-                                            <input type="button" value="<spring:message code="regweb.cancelar"/>" onclick="goTo('<c:url value="/registroSalida/${registro.id}/detalle"/>')" class="btn btn-sm"/>
-                                        </c:if>
-
+                                        <button class="btn btn-sm" data-dismiss="modal" aria-hidden="true"><spring:message code="regweb.cerrar"/></button>
                                     </div>
                                 </div>
                             </div>
@@ -64,9 +58,7 @@
                             <input id="error" type="hidden" value="${errorObligatori}"/>
                         </form>
                     </div>
-
                 </div>
-
             </div>
         </div>
     </div>

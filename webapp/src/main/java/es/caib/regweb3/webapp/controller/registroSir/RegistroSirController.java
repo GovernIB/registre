@@ -74,6 +74,8 @@ public class RegistroSirController extends BaseController {
     @EJB(mappedName = SchedulerLocal.JNDI_NAME)
     private SchedulerLocal schedulerEjb;
 
+    @EJB(mappedName = PluginLocal.JNDI_NAME)
+    private PluginLocal pluginEjb;
 
 
     /**
@@ -211,6 +213,7 @@ public class RegistroSirController extends BaseController {
     public String detalleRegistroSir(@PathVariable Long idRegistroSir, Model model, HttpServletRequest request) throws Exception, I18NException {
 
         RegistroSir registroSir = registroSirEjb.findById(idRegistroSir);
+        Entidad entidadActiva = getEntidadActiva(request);
 
         // Si el registro sir cuyo estado es RECIBIDO
         if(registroSir.getEstado().equals(EstadoRegistroSir.RECIBIDO) && isOperador(request)){
@@ -221,7 +224,14 @@ public class RegistroSirController extends BaseController {
                 model.addAttribute("libro",getLibroEntidad(request)); // Libro único
                 model.addAttribute("organismosOficinaActiva", getOrganismosOficinaActiva(request));
                 model.addAttribute("registrarForm", new RegistrarForm(registroSir.getResumen()));
-                model.addAttribute("pluginDistribucionEmail", distribucionEjb.isDistribucionPluginEmail(getEntidadActiva(request).getId()));
+
+                Boolean pluginDistribucionEmail = distribucionEjb.isDistribucionPluginEmail(entidadActiva.getId());
+                model.addAttribute("pluginDistribucionEmail", pluginDistribucionEmail);
+                if(pluginDistribucionEmail){
+                    DistribucionEmailPlugin distribucionEmailPlugin = (DistribucionEmailPlugin) pluginEjb.getPlugin(entidadActiva.getId(), RegwebConstantes.PLUGIN_DISTRIBUCION, true);
+                    model.addAttribute("distribucionEmailDefault", distribucionEmailPlugin.getPropertyEmailDefault());
+                    model.addAttribute("distribucionAsuntoDefault", distribucionEmailPlugin.getPropertyMotivoDefault());
+                }
 
                 // Comprobamos que la unida de tramitación destino está VIGENTE
                 if(registroSir.getCodigoUnidadTramitacionDestino() !=null ){

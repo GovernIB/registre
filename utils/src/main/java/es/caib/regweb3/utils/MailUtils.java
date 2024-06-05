@@ -72,8 +72,15 @@ public class MailUtils {
 
     }
 
-
-    public static void enviarMailConAdjuntos(List<Attachment> attachments, String emailPara, String asunto, String cuerpo) throws Exception{
+    /**
+     * Envía un email con adjuntos
+     * @param attachments
+     * @param emailPara
+     * @param asunto
+     * @param cuerpo
+     * @throws Exception
+     */
+    public static void enviarMailConAdjuntos(List<Attachment> attachments, String emailPara, String asunto, StringBuilder cuerpo) throws Exception{
 
         InternetAddress addressFrom = new InternetAddress("noreply@caib.es", "REGWEB3");
 
@@ -82,7 +89,6 @@ public class MailUtils {
         Session session = (Session) ctx.lookup("java:/es.caib.regweb3.mail");
 
         Message message = new MimeMessage(session);
-
 
         // Set From: header field of the header.
         message.setFrom(addressFrom);
@@ -94,20 +100,17 @@ public class MailUtils {
         // Set Subject: header field
         message.setSubject(asunto);
 
-
         // Create the message part
         BodyPart messageBodyPart = new MimeBodyPart();
 
         // Now set the actual message
-        messageBodyPart.setContent(cuerpo, "text/html");
+        messageBodyPart.setContent(cuerpo.toString(), "text/html");
 
         // Create a multipart message
         Multipart multipart = new MimeMultipart();
 
         // Set text message part
         multipart.addBodyPart(messageBodyPart);
-
-
 
         //Añadimos los adjuntos que nos pasan
         for (Attachment attachment : attachments) {
@@ -118,14 +121,10 @@ public class MailUtils {
             multipart.addBodyPart(messageBodyPart);
         }
 
-
-
         // Send the complete message parts
         message.setContent(multipart);
 
-
         // Send message
         Transport.send(message);
-
     }
 }

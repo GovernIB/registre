@@ -315,6 +315,8 @@
 
 <c:import url="../registro/registroDistribuir.jsp">
     <c:param name="aceptarRegistroSir" value="true"/>
+    <c:param name="distribucionEmailDefault" value="${distribucionEmailDefault}"/>
+    <c:param name="distribucionAsuntoDefault" value="${distribucionAsuntoDefault}"/>
 </c:import>
 
 <script type="text/javascript" src="<c:url value="/js/busquedaorganismo.js"/>"></script>

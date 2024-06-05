@@ -346,6 +346,8 @@
     <%--Modal de distribución vial mail --%>
     <c:import url="../registro/registroDistribuir.jsp">
         <c:param name="aceptarRegistroSir" value="false"/>
+        <c:param name="distribucionEmailDefault" value="${distribucionEmailDefault}"/>
+        <c:param name="distribucionAsuntoDefault" value="${distribucionAsuntoDefault}"/>
     </c:import>
 
 </div>

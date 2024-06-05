@@ -453,7 +453,7 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
 
         if ((organismosResponsable != null && organismosResponsable.size() > 0)) {
 
-            List<RegistroSalida> registrosSalida = registroSalidaConsultaEjb.getByLibrosEstado((pageNumber - 1) * BaseEjbJPA.RESULTADOS_PAGINACION, organismosResponsable, RegwebConstantes.REGISTRO_PENDIENTE_VISAR);
+            List<RegistroSalida> registrosSalida = registroSalidaConsultaEjb.getByOrganismosEstado((pageNumber - 1) * BaseEjbJPA.RESULTADOS_PAGINACION, organismosResponsable, RegwebConstantes.REGISTRO_PENDIENTE_VISAR);
             Long totalVisarSalida = registroSalidaConsultaEjb.getByLibrosEstadoCount(organismosResponsable, RegwebConstantes.REGISTRO_PENDIENTE_VISAR);
             Paginacion paginacion = new Paginacion(totalVisarSalida.intValue(), pageNumber);
 
