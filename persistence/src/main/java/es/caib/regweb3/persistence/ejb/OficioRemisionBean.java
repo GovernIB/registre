@@ -701,12 +701,16 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
     @SuppressWarnings(value = "unchecked")
     public List<OficioRemision> getEnviadosSinAckMaxReintentos(Long idEntidad) throws I18NException {
 
+        Calendar fechaInicio = Calendar.getInstance(); // Obtiene la fecha de hoy
+        fechaInicio.add(Calendar.DATE,-180); // Le restamos 6 meses
+
         Query q = em.createQuery("Select oficioRemision.fecha, oficioRemision.identificadorIntercambio, oficioRemision.tipoOficioRemision from OficioRemision as oficioRemision where (oficioRemision.estado = :enviado or oficioRemision.estado = :reenviado) " +
-                "and oficioRemision.entidad.id = :idEntidad and oficioRemision.sir=true and oficioRemision.numeroReintentos = :maxReintentos");
+                "and oficioRemision.entidad.id = :idEntidad and oficioRemision.sir=true and oficioRemision.fecha >= :fechaInicio and oficioRemision.numeroReintentos = :maxReintentos");
 
         q.setParameter("enviado", RegwebConstantes.OFICIO_SIR_ENVIADO);
         q.setParameter("reenviado", RegwebConstantes.OFICIO_SIR_REENVIADO);
         q.setParameter("idEntidad", idEntidad);
+        q.setParameter("fechaInicio", fechaInicio.getTime());
         q.setParameter("maxReintentos", PropiedadGlobalUtil.getMaxReintentosSir(idEntidad));
         q.setMaxResults(5);
 
@@ -725,13 +729,17 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
     @SuppressWarnings(value = "unchecked")
     public List<OficioRemision> getEnviadosErrorMaxReintentos(Long idEntidad) throws I18NException {
 
+        Calendar fechaInicio = Calendar.getInstance(); // Obtiene la fecha de hoy
+        fechaInicio.add(Calendar.DATE,-180); // Le restamos 6 meses
+
         Query q = em.createQuery("Select oficioRemision.fecha, oficioRemision.identificadorIntercambio, oficioRemision.tipoOficioRemision from OficioRemision as oficioRemision where (oficioRemision.estado = :enviadoError or oficioRemision.estado = :reenviadoError) " +
-                "and oficioRemision.entidad.id = :idEntidad and oficioRemision.sir=true and oficioRemision.numeroReintentos = :maxReintentos");
+                "and oficioRemision.entidad.id = :idEntidad and oficioRemision.sir=true and oficioRemision.fecha >= :fechaInicio and oficioRemision.numeroReintentos = :maxReintentos");
 
         q.setParameter("enviadoError", RegwebConstantes.OFICIO_SIR_ENVIADO_ERROR);
         q.setParameter("reenviadoError", RegwebConstantes.OFICIO_SIR_REENVIADO_ERROR);
         q.setParameter("maxReintentos", PropiedadGlobalUtil.getMaxReintentosSir(idEntidad));
         q.setParameter("idEntidad", idEntidad);
+        q.setParameter("fechaInicio", fechaInicio.getTime());
         q.setMaxResults(5);
 
         List<OficioRemision> oficios =  new ArrayList<OficioRemision>();
