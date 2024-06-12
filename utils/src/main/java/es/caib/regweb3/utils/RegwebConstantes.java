@@ -449,7 +449,7 @@ public interface RegwebConstantes {
     String CATALOGO = "catalogo";
 
     /* -------------- PAIS --------------*/
-    Long PAIS_ESPAÑA = 724L;
+    Long PAIS_ESPANYA = 724L;
     Long nivelAdminAutonomica = 2L; // Administración Autonómica
     Long COMUNIDAD_BALEARES = 4L; // Comunidad Illes Balears
     Long PROVINCIA_BALEARES = 7L; // Illes Balears

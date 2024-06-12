@@ -164,6 +164,32 @@ public class RegWebAsientoRegistralLibSirTest extends RegWebTestUtils {
 
     @Test
     //Método que crea un registro de entrada con los parámetros del SIR-CER-12080-plan-pruebas-emision-recepcionSICRES4 de LIBSIR
+    public void crearAsientoEntradaSIRGE_PR_003() throws Exception {
+
+
+        for (int i = 0; i < 1; i++) {
+
+            try {
+                AsientoRegistralWs asientoRegistralWs = getAsiento_to_LIBSIRMaximo( REGISTRO_ENTRADA, false, true, true, true);
+
+                asientoRegistralWs = asientoRegistralApi.crearAsientoRegistral(null,getTestEntidadCodigoDir3(),asientoRegistralWs,null,false,false);
+
+                printAsientoBasico(asientoRegistralWs);
+
+            } catch (WsI18NException e) {
+                String msg = WsClientUtils.toString(e);
+                System.out.println("Error WsI18NException: " + msg);
+                throw e;
+            } catch (WsValidationException e) {
+                String msg = WsClientUtils.toString(e);
+                System.out.println("Error WsValidationException: " + msg);
+                throw e;
+            }
+        }
+    }
+
+    @Test
+    //Método que crea un registro de entrada con los parámetros del SIR-CER-12080-plan-pruebas-emision-recepcionSICRES4 de LIBSIR
     public void crearAsientoEntradaSIRGE_PR_019() throws Exception {
 
 
@@ -173,7 +199,7 @@ public class RegWebAsientoRegistralLibSirTest extends RegWebTestUtils {
                 AsientoRegistralWs asientoRegistralWs = getAsiento_to_LIBSIR( REGISTRO_ENTRADA, false, false
                         , true, true);
 
-                asientoRegistralWs = asientoRegistralApi.crearAsientoRegistral(null,getTestEntidadCodigoDir3(),asientoRegistralWs,null,true,false);
+                asientoRegistralWs = asientoRegistralApi.crearAsientoRegistral(null,getTestEntidadCodigoDir3(),asientoRegistralWs,null,false,false);
 
                 printAsientoBasico(asientoRegistralWs);
 
@@ -197,8 +223,8 @@ public class RegWebAsientoRegistralLibSirTest extends RegWebTestUtils {
         for (int i = 0; i < 1; i++) {
 
             try {
-                AsientoRegistralWs asientoRegistralWs = getAsiento_to_LIBSIR( REGISTRO_SALIDA, false, false
-                        , true, true);
+                AsientoRegistralWs asientoRegistralWs = getAsiento_to_LIBSIR( REGISTRO_SALIDA, false, true
+                        , false, true);
 
                 asientoRegistralWs = asientoRegistralApi.crearAsientoRegistral(null,getTestEntidadCodigoDir3(),asientoRegistralWs,null,true,false);
 

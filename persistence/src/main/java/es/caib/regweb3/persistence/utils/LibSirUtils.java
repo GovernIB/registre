@@ -9,6 +9,7 @@ import es.caib.regweb3.model.sir.TipoDocumento;
 import es.caib.regweb3.model.sir.TipoDocumentoIdentificacion;
 import es.caib.regweb3.model.sir.TipoTransporte;
 import es.caib.regweb3.model.utils.*;
+import es.caib.regweb3.persistence.ejb.OficioRemisionLocal;
 import es.caib.regweb3.persistence.ejb.TipoDocumentalLocal;
 import es.caib.regweb3.persistence.integracion.ArxiuCaibUtils;
 import es.caib.regweb3.utils.Dir3CaibUtils;
@@ -72,6 +73,9 @@ public class LibSirUtils {
     @EJB(mappedName = TipoDocumentalLocal.JNDI_NAME)
     public TipoDocumentalLocal tipoDocumentalEjb;
 
+    @EJB(mappedName = OficioRemisionLocal.JNDI_NAME)
+    public OficioRemisionLocal oficioRemisionEjb;
+
 
     /**
      * Transforma un registro de Entrada a un AsientoBean para enviarlo mediante la libreria SIR.
@@ -120,7 +124,8 @@ public class LibSirUtils {
             asientoBean.setDsUnTrInicio(RegistroUtils.obtenerDenominacionOficinaOrigen(registroDetalle, registroEntrada.getOficina().getDenominacion()));
 
             //Campos de registro detalle
-            transformarRegistroDetalle(registroDetalle, asientoBean, registroEntrada.getDestino());
+            transformarRegistroDetalle(registroDetalle, asientoBean, registroEntrada.getDestino(), registroEntrada.getNumeroRegistroFormateado(),
+                                       registroEntrada.getOficina().getOrganismoResponsable().getEntidad().getId());
 
             //METADATOS
             Set<MetadatoRegistroEntrada> metadatosRE = registroEntrada.getMetadatosRegistroEntrada();
@@ -221,7 +226,7 @@ public class LibSirUtils {
             asientoBean.setDsUnTrInicio(RegistroUtils.obtenerDenominacionOficinaOrigen(registroDetalle, registroSalida.getOficina().getDenominacion()));
 
             //Campos de registro detalle
-            transformarRegistroDetalle(registroDetalle, asientoBean, null);
+            transformarRegistroDetalle(registroDetalle, asientoBean, null,registroSalida.getNumeroRegistroFormateado(),registroSalida.getOficina().getOrganismoResponsable().getEntidad().getId());
 
             //METADATOS
             Set<MetadatoRegistroSalida> metadatosRS = registroSalida.getMetadatosRegistroSalida();
@@ -557,7 +562,7 @@ public class LibSirUtils {
      * @param asientoBean
      * @param organismo
      */
-    private void transformarRegistroDetalle(RegistroDetalle registroDetalle, AsientoBean asientoBean, Organismo organismo) {
+    private void transformarRegistroDetalle(RegistroDetalle registroDetalle, AsientoBean asientoBean, Organismo organismo, String numeroRegistroFormateado,Long idEntidad) throws I18NException{
 
         //Entidad Registral Destino
         asientoBean.setCdEnRgDestino(registroDetalle.getCodigoEntidadRegistralDestino());
@@ -599,8 +604,17 @@ public class LibSirUtils {
         asientoBean.setCdSia(registroDetalle.getCodigoSia());
         // MIRAR SI EL DESTINO ESTA EN RFU.
         asientoBean.setReferenciaUnica(serviciosOfiService.isOficinaConRU((registroDetalle.getCodigoEntidadRegistralDestino())));
-        //TODO PEDIR A EDU
-        asientoBean.setCdIntercambioPrevio("????");
+        //SI es un registro rectificado, tendrá el identificador de intercambio del registro original
+        String numRegistroOrigen = registroDetalle.getNumeroRegistroOrigen();
+        log.info("ORIGEN : " + numRegistroOrigen);
+        log.info("FORMATEADO : " + numeroRegistroFormateado);
+        if(!numRegistroOrigen.equals(numeroRegistroFormateado)){
+            log.info("Entro en Intercambio PREVIO:  " + oficioRemisionEjb.getByNumeroRegistroFormateado(numRegistroOrigen, idEntidad).getIdentificadorIntercambio());
+            asientoBean.setCdIntercambioPrevio(oficioRemisionEjb.getByNumeroRegistroFormateado(numRegistroOrigen, idEntidad).getIdentificadorIntercambio());
+        }else{
+            log.info("Entro en Intercambio PREVIO:  null");
+            asientoBean.setCdIntercambioPrevio("");
+        }
 
     }
 
@@ -670,6 +684,7 @@ public class LibSirUtils {
         obtenerReferenciaRequestInfo.setOrigen(anexo.getOrigenCiudadanoAdmin().toString());
         obtenerReferenciaRequestInfo.setEstatElaboracio(RegwebConstantes.CODIGO_NTI_BY_TIPOVALIDEZDOCUMENTO.get(anexo.getValidezDocumento()));
         obtenerReferenciaRequestInfo.setTipusDocumental(anexo.getTipoDocumental().getCodigoNTI());
+        obtenerReferenciaRequestInfo.setNumeroRegistre(numeroRegistroFormateado);
 
 
         if (anexo.isJustificante()) {
@@ -1116,19 +1131,19 @@ public class LibSirUtils {
         anexo.setUrlRepositorio(anexoBean.getUrlRepositorio());
 
         //FirmasBean
-        FirmaBean firmaBean = anexoBean.getFirmaBean();
-
-        if (firmaBean != null) {
-
-            anexo.setTipoFirma(firmaBean.getTipoFirma() != null ? firmaBean.getTipoFirma().value() : "");
-            if (firmaBean.getContenidoFirma() != null && firmaBean.getContenidoFirma().getCsv() != null) {
-                anexo.setCsv(firmaBean.getContenidoFirma().getCsv() != null ? firmaBean.getContenidoFirma().getCsv().getValorCSV() : "");
-                anexo.setRegulacionCsv(firmaBean.getContenidoFirma().getCsv() != null ? firmaBean.getContenidoFirma().getCsv().getRegulacionGeneracionCSV() : "");
-            }
-            if (firmaBean.getContenidoFirma() != null && firmaBean.getContenidoFirma().getFirmaConCertificadoBean() != null) {
-                anexo.setFirmaBase64(firmaBean.getContenidoFirma().getFirmaConCertificadoBean() != null ? firmaBean.getContenidoFirma().getFirmaConCertificadoBean().getFirmaBase64() : null);
-                //Incidencia 1900484
-                anexo.setReferenciaFirma(firmaBean.getContenidoFirma().getFirmaConCertificadoBean()!=null?(String)firmaBean.getContenidoFirma().getFirmaConCertificadoBean().getReferenciaFirma():"");
+        List<FirmaBean> firmasBean = anexoBean.getFirmasBean();
+        for(FirmaBean firmaBean: firmasBean) {
+            if (firmaBean != null) {
+                anexo.setTipoFirma(firmaBean.getTipoFirma() != null ? firmaBean.getTipoFirma().value() : "");
+                if (firmaBean.getContenidoFirma() != null && firmaBean.getContenidoFirma().getCsv() != null) {
+                    anexo.setCsv(firmaBean.getContenidoFirma().getCsv() != null ? firmaBean.getContenidoFirma().getCsv().getValorCSV() : "");
+                    anexo.setRegulacionCsv(firmaBean.getContenidoFirma().getCsv() != null ? firmaBean.getContenidoFirma().getCsv().getRegulacionGeneracionCSV() : "");
+                }
+                if (firmaBean.getContenidoFirma() != null && firmaBean.getContenidoFirma().getFirmaConCertificadoBean() != null) {
+                    anexo.setFirmaBase64(firmaBean.getContenidoFirma().getFirmaConCertificadoBean() != null ? firmaBean.getContenidoFirma().getFirmaConCertificadoBean().getFirmaBase64() : null);
+                    //Incidencia 1900484
+                    anexo.setReferenciaFirma(firmaBean.getContenidoFirma().getFirmaConCertificadoBean()!=null?(String)firmaBean.getContenidoFirma().getFirmaConCertificadoBean().getReferenciaFirma():"");
+                }
             }
         }
 
@@ -1169,7 +1184,7 @@ public class LibSirUtils {
                 anexo.setValidezDocumento(tiposMetadato.getEstadoElaboracionENI().getValorEstadoElaboracionEnum().value());
 
             }catch(ParseException pe){
-                throw new I18NException("Error parseando la fecha de captura");
+                throw new I18NException("error.parseando.fecha.captura");
             }
 
         }else{ //SI no hay metadatos ENI, se crean los metadatos por defecto

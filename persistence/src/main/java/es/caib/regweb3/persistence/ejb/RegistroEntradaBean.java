@@ -102,11 +102,13 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean implem
             registroEntrada.setNumeroRegistroFormateado(RegistroUtils.numeroRegistroFormateado(registroEntrada, libro, entidad));
 
             // Si no ha introducido ninguna fecha de Origen
+            log.info("Fecha Origen RECTIFICANDO: " + registroEntrada.getRegistroDetalle().getFechaOrigen());
             if (registroEntrada.getRegistroDetalle().getFechaOrigen() == null) {
                 registroEntrada.getRegistroDetalle().setFechaOrigen(registroEntrada.getFecha());
             }
 
             //Si no se ha espeficicado un NumeroRegistroOrigen, le asignamos el propio
+            log.info("NumeroRegistroOrigen : " + registroEntrada.getRegistroDetalle().getNumeroRegistroOrigen());
             if (StringUtils.isEmpty(registroEntrada.getRegistroDetalle().getNumeroRegistroOrigen())) {
 
                 registroEntrada.getRegistroDetalle().setNumeroRegistroOrigen(registroEntrada.getNumeroRegistroFormateado());
@@ -156,8 +158,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean implem
             Set<MetadatoRegistroEntrada> metadatosRE = registroEntrada.getMetadatosRegistroEntrada();
             if (metadatosRE != null && metadatosRE.size() > 0) {
                 for (MetadatoRegistroEntrada metadatoRegistroEntrada : metadatosRE) {
-                    metadatoRegistroEntrada.setRegistroEntrada(registroEntrada);
-                    metadatoRegistroEntradaEjb.persist(metadatoRegistroEntrada);
+                    metadatoRegistroEntradaEjb.guardarMetadatoRegistroEntrada(metadatoRegistroEntrada, registroEntrada);
                 }
             }
 
@@ -525,6 +526,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean implem
                 session.evict(registroEntrada);
                 session.evict(registroEntrada.getRegistroDetalle());
                 session.evict(registroEntrada.getRegistroDetalle().getInteresados());
+                session.evict(registroEntrada.getMetadatosRegistroEntrada());
             }catch (IllegalArgumentException iae){
                 // No hacemos nada: https://stackoverflow.com/questions/58016010/updating-to-hibernate-5-1-from-3-6-produce-non-entity-object-instance-passed-to
             }
@@ -537,6 +539,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean implem
             registroEntrada.setId(null);
             registroEntrada.getRegistroDetalle().setId(null);
             registroEntrada.getRegistroDetalle().setInteresados(null);
+            registroEntrada.setMetadatosRegistroEntrada(null);
 
             for (AnexoFull anexo : anexos) {
                 anexo.getAnexo().setId(null);

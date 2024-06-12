@@ -611,8 +611,9 @@ public class SchedulerBean implements SchedulerLocal {
                     descripcion = "Recepción Intercambio: ";
                     RegistroSir registroSir = registroSirEjb.getByIdIntercambio(asiento.getCdIntercambio());
                     if(registroSir == null){
-                        log.info("CASO REGISTRO RECIBIDO NUEVO   ");
+                        log.info("CASO REGISTRO RECIBIDO NUEVO " );
                         Oficina oficina = oficinaEjb.findByMultiEntidad(asiento.getCdEnRgDestino());
+                        Assert.notNull(oficina,"No existe ninguna Oficina a la que corresponda este envío");
                         Entidad entidad = oficina.getOrganismoResponsable().getEntidad();
                         Assert.notNull(entidad,"No existe ninguna Entidad a la que corresponda este envío");
                         Assert.isTrue(entidad.getActivo(), "La Entidad a la que va dirigida el Asiento Registral no está activa");
@@ -808,7 +809,7 @@ public class SchedulerBean implements SchedulerLocal {
             });
 
         }catch ( InterException ie){
-            throw new I18NException("Error consultando los asientos para ser reencolados ");
+            throw new I18NException("error.consultando.asientos.reencolados");
         }
 
     }

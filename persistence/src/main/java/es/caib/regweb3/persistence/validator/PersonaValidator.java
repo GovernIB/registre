@@ -94,24 +94,22 @@ public class PersonaValidator<T> extends AbstractRegWebValidator<T> {
                 } else {
 
                     try {
+
+                        log.info("Buscando país: " + persona.getPais().getId() + " - " + persona.getPais().getCodigoPais() + " - " + persona.getPais().getDescripcionPais());
                         CatPais pais = catPaisEjb.findById(persona.getPais().getId());
 
-                        if (pais.getCodigoPais().equals(RegwebConstantes.PAIS_ESPAÑA)) {
+                        // Validaciones si el país seleccionado es ESPAÑA
+                        if (pais.getCodigoPais().equals(RegwebConstantes.PAIS_ESPANYA)) {
 
-                            rejectIfEmptyOrWhitespace(errors, __target__, "cp", "error.valor.requerido");
-
-                            if (persona.getProvincia() == null || persona.getProvincia().getId() == -1) {
+                            if (persona.getProvincia() == null || persona.getProvincia().getId() == null || persona.getProvincia().getId() == -1) {
                                 rejectValue(errors, "provincia.id", "error.valor.requerido");
-
-                            } else { // Comprobamos la Localidad
-
-                                if (persona.getLocalidad() == null || persona.getProvincia().getId() == -1) {
-                                    rejectValue(errors, "localidad.id", "error.valor.requerido");
-                                }
                             }
-                        }else{
-                            persona.setProvincia(null);
-                            persona.setLocalidad(null);
+                            if (persona.getLocalidad() == null || persona.getLocalidad().getId() == null || persona.getLocalidad().getId() == -1) {
+                                rejectValue(errors, "localidad.id", "error.valor.requerido");
+                            }
+                            if (StringUtils.isEmpty(persona.getCp())) {
+                                rejectIfEmptyOrWhitespace(errors, __target__, "cp", "error.valor.requerido");
+                            }
                         }
 
                     } catch (Exception e) {
@@ -123,9 +121,7 @@ public class PersonaValidator<T> extends AbstractRegWebValidator<T> {
 
                 rejectIfEmptyOrWhitespace(errors, __target__, "direccionElectronica", "error.valor.requerido");
 
-            } /*else if (persona.getCanal().equals(RegwebConstantes.CANAL_COMPARECENCIA_ELECTRONICA)) {
-
-            }*/
+            }
 
         }
 

@@ -38,7 +38,7 @@ public class ReferenciaUnicaUtils {
             wsdlLocation = new URL(endpoint + "?wsdl");
             log.info("url " + wsdlLocation);
         } catch (MalformedURLException e) {
-            throw new I18NException("Error generando la url del servicio de Interdoc");
+            throw new I18NException("error.generando.url.servicio.interdoc");
         }
 
         ObtenerReferenciaWsService service = new ObtenerReferenciaWsService(wsdlLocation);

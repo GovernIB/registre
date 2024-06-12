@@ -171,6 +171,7 @@ alter table RWE_PERSONA add RECEPNOTIF bool;
 alter table RWE_PERSONA add TLFMOVIL varchar(20);
 alter table RWE_PERSONA add AVISONOTIFEMAIL bool;
 alter table RWE_PERSONA add AVISONOTIFSMS bool;
+ALTER TABLE RWE_PERSONA add CODDIRUNIF varchar(21);
 
 --Nuevo campo en RWE_OFICINA
 ALTER TABLE RWE_OFICINA add ACTIVALIBSIR bool DEFAULT false;

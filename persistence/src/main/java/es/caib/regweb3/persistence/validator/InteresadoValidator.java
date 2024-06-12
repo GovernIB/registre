@@ -1,5 +1,6 @@
 package es.caib.regweb3.persistence.validator;
 
+import es.caib.regweb3.model.CatPais;
 import es.caib.regweb3.model.Interesado;
 import es.caib.regweb3.persistence.ejb.CatPaisLocal;
 import es.caib.regweb3.persistence.ejb.InteresadoLocal;
@@ -75,23 +76,47 @@ public class InteresadoValidator<T> extends AbstractRegWebValidator<T> {
         }
 
         // Gestionamos las validaciones según el Canal escogido
-        if (interesado.getCanal() != null) {
-            if (!interesado.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA) && (interesado.getCanal().equals(RegwebConstantes.CANAL_DIRECCION_POSTAL))) {
+        if (interesado.getCanal() == null) {
+            //rejectIfEmptyOrWhitespace(errors, __target__, "canal", "error.valor.requerido","El camp és obligatori");
+        } else {
+
+            if (interesado.getCanal().equals(RegwebConstantes.CANAL_DIRECCION_POSTAL)) {
+
+                rejectIfEmptyOrWhitespace(errors, __target__, "direccion", "error.valor.requerido");
+
                 if (interesado.getPais() == null || interesado.getPais().getId() == null || interesado.getPais().getId() == -1) {
                     rejectValue(errors, "pais.id", "error.valor.requerido");
+                } else {
+
+                    try {
+
+                        log.info("Buscando país: " + interesado.getPais().getId() + " - " + interesado.getPais().getCodigoPais() + " - " + interesado.getPais().getDescripcionPais());
+                        log.info("Localidad: " + interesado.getLocalidad() + " - " + interesado.getNombre());
+                        log.info("Cp: " + interesado.getCp() + " - " + interesado.getNombre());
+                        CatPais pais = catPaisEjb.findById(interesado.getPais().getId());
+
+                        // Validaciones si el país seleccionado es ESPAÑA
+                        if (pais.getCodigoPais().equals(RegwebConstantes.PAIS_ESPANYA)) {
+
+                            if (interesado.getProvincia() == null || interesado.getProvincia().getId() == null || interesado.getProvincia().getId() == -1) {
+                                rejectValue(errors, "provincia.id", "error.valor.requerido");
+                            }
+                            if (interesado.getLocalidad() == null || interesado.getLocalidad().getId() == null || interesado.getLocalidad().getId() == -1) {
+                                rejectValue(errors, "localidad.id", "error.valor.requerido");
+                            }
+                            if (StringUtils.isEmpty(interesado.getCp())) {
+                                rejectIfEmptyOrWhitespace(errors, __target__, "cp", "error.valor.requerido");
+                            }
+                        }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
-                if (interesado.getProvincia() == null || interesado.getProvincia().getId() == null || interesado.getProvincia().getId() == -1) {
-                    rejectValue(errors, "provincia.id", "error.valor.requerido");
-                }
-                if (interesado.getLocalidad() == null || interesado.getLocalidad().getId() == null || interesado.getLocalidad().getId() == -1) {
-                    rejectValue(errors, "localidad.id", "error.valor.requerido");
-                }
-                if (StringUtils.isEmpty(interesado.getCp())) {
-                    rejectIfEmptyOrWhitespace(errors, __target__, "cp", "error.valor.requerido");
-                }
-                if (StringUtils.isEmpty(interesado.getDireccion())) {
-                    rejectIfEmptyOrWhitespace(errors, __target__, "direccion", "error.valor.requerido");
-                }
+
+            } else if (interesado.getCanal().equals(RegwebConstantes.CANAL_DIRECCION_ELECTRONICA)) {
+
+                rejectIfEmptyOrWhitespace(errors, __target__, "direccionElectronica", "error.valor.requerido");
             }
         }
 

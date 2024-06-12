@@ -144,7 +144,14 @@ public class SirEnvioBean implements SirEnvioLocal {
             registroDetalle.setOficinaOrigen(registroEntrada.getOficina());
             registroDetalle.setOficinaOrigenExternoCodigo(null);
             registroDetalle.setOficinaOrigenExternoDenominacion(null);
-            registroDetalle.setNumeroRegistroOrigen(registroEntrada.getNumeroRegistroFormateado());
+            registroDetalle.setFechaOrigen(registroEntrada.getFecha());
+            registroDetalle.setFechaOrigen(registroEntrada.getFecha());
+            if(registroDetalle.getNumeroRegistroOrigen() == null) {
+                registroDetalle.setNumeroRegistroOrigen(registroEntrada.getNumeroRegistroFormateado());
+            }
+            if(registroDetalle.getFechaOrigen() == null) {
+                registroDetalle.setFechaOrigen(registroEntrada.getFecha());
+            }
             registroDetalle.setFechaOrigen(registroEntrada.getFecha());
 
             //Guardar Anexos en interdoc
@@ -222,8 +229,12 @@ public class SirEnvioBean implements SirEnvioLocal {
 
             // Nos aseguramos que los campos origen sean los del registro, sobreescribiendo los posibles valores de un oficio interno
             registroDetalle.setOficinaOrigen(registroSalida.getOficina());
-            registroDetalle.setNumeroRegistroOrigen(registroSalida.getNumeroRegistroFormateado());
-            registroDetalle.setFechaOrigen(registroSalida.getFecha());
+            if(registroDetalle.getNumeroRegistroOrigen() == null) {
+                registroDetalle.setNumeroRegistroOrigen(registroSalida.getNumeroRegistroFormateado());
+            }
+            if(registroDetalle.getFechaOrigen() == null) {
+                registroDetalle.setFechaOrigen(registroSalida.getFecha());
+            }
 
             //Guardar Anexos en interdoc
             registroSalida.getRegistroDetalle().setAnexosFull(gestionAnexosInterdoc(registroSalida.getRegistroDetalle(), entidad,oficinaSirDestino.getCodUoResponsable(),registroSalida.getNumeroRegistroFormateado(), registroSalida.getFecha(),REGISTRO_SALIDA));

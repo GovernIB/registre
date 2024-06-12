@@ -3,6 +3,7 @@ package es.caib.regweb3.webapp.controller.registro;
 import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.persistence.ejb.RegistroDetalleLocal;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
+import es.caib.regweb3.utils.MimeTypeUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.utils.AnexoUtils;
 import es.caib.regweb3.webapp.utils.Mensaje;
@@ -179,7 +180,7 @@ public class AnexoFicheroController extends AnexoController {
             sc = new SignatureCustody();
 
             sc.setData(multipart.getBytes());
-            sc.setMime(multipart.getContentType());
+            sc.setMime(MimeTypeUtils.getMimeTypeFileName(multipart.getOriginalFilename()));// Lo cambiamos para que coja un tipo mime válido en LIBSIR
             sc.setName(multipart.getOriginalFilename());
             sc.setLength(multipart.getSize());
 
@@ -228,7 +229,7 @@ public class AnexoFicheroController extends AnexoController {
             dc = new DocumentCustody();
             CommonsMultipartFile multipart = anexoForm.getDocumentoFile();
             dc.setData(multipart.getBytes());
-            dc.setMime(multipart.getContentType());
+            dc.setMime(MimeTypeUtils.getMimeTypeFileName(multipart.getOriginalFilename())); // Lo cambiamos para que coja un tipo mime válido en LIBSIR
             dc.setName(multipart.getOriginalFilename());
             dc.setLength(multipart.getSize());
         }
