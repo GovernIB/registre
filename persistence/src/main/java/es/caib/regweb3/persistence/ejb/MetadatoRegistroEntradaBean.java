@@ -1,6 +1,7 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.MetadatoRegistroEntrada;
+import es.caib.regweb3.model.RegistroEntrada;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,5 +66,11 @@ public class MetadatoRegistroEntradaBean extends BaseEjbJPA<MetadatoRegistroEntr
         q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList();
+    }
+
+    @Override
+    public MetadatoRegistroEntrada guardarMetadatoRegistroEntrada(MetadatoRegistroEntrada metadatoRegistroEntrada, RegistroEntrada registroEntrada) throws I18NException {
+        metadatoRegistroEntrada.setRegistroEntrada(registroEntrada);
+        return persist(metadatoRegistroEntrada);
     }
 }

@@ -16,7 +16,7 @@ import java.io.Serializable;
                 @Index(name = "RWE_PROPIE_ENTIDA_FK_I", columnList = "ENTIDAD"),
         },
         uniqueConstraints = {
-                @UniqueConstraint(columnNames = {"CLAVE", "ENTIDAD"
+                @UniqueConstraint(name="RWE_PROPIEDADGLOBAL_CLA_ENT_UK", columnNames = {"CLAVE", "ENTIDAD"
                 })
         })
 @SequenceGenerator(name = "generator", sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
