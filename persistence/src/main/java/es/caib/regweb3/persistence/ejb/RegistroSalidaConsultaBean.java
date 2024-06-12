@@ -454,7 +454,7 @@ public class RegistroSalidaConsultaBean implements RegistroSalidaConsultaLocal {
 
         Query q = em.createQuery("Select rs.id, rs.fecha, rs.registroDetalle.decodificacionEntidadRegistralDestino," +
                 " rs.estado, rs.registroDetalle.decodificacionTipoAnotacion from RegistroSalida as rs where rs.entidad.id = :idEntidad and rs.oficina.id = :idOficinaActiva and" +
-                " rs.fecha >= :fechaInicio and (rs.estado = :rechazado or rs.estado = :reenviado) order by rs.id desc");
+                " rs.fecha >= :fechaInicio and rs.registroDetalle.presencial = true and (rs.estado = :rechazado or rs.estado = :reenviado) order by rs.id desc");
 
         q.setMaxResults(total);
         q.setParameter("idEntidad", idEntidad);
