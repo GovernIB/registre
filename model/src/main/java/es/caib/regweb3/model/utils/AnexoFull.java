@@ -7,6 +7,7 @@ import es.caib.plugins.arxiu.api.FirmaTipus;
 import es.caib.regweb3.model.Anexo;
 import es.caib.regweb3.model.TipoDocumental;
 import es.caib.regweb3.utils.RegwebConstantes;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.plugins.documentcustody.api.DocumentCustody;
 import org.fundaciobit.plugins.documentcustody.api.SignatureCustody;
 import org.fundaciobit.plugins.validatesignature.api.ValidateSignatureConstants;
@@ -362,22 +363,27 @@ public class AnexoFull{
     }
 
     @Transient
-    public void arxiuDocumentToCustody() {
+    public void arxiuDocumentToCustody() throws I18NException {
 
         getAnexo().setPerfilCustodia(RegwebConstantes.PERFIL_CUSTODIA_DOCUMENT_CUSTODY);
 
-        String custodyId = getAnexo().getCustodiaID() + "#" + getAnexo().getExpedienteID();
+        String custodyId = getAnexo().getCustodiaID() +"#"+getAnexo().getExpedienteID();
         getAnexo().setCustodiaID(custodyId);
 
-        SignatureCustody sc = new SignatureCustody();
-        sc.setData(getDocument().getContingut().getContingut());
-        sc.setLength(getDocument().getContingut().getTamany());
-        sc.setMime(getDocument().getContingut().getTipusMime());
-        sc.setName(getDocument().getNom());
-        sc.setSignatureType(getAnexo().getSignType());
-        sc.setAttachedDocument(null);
+        try{
+            SignatureCustody sc = new SignatureCustody();
+            sc.setData(getDocument().getContingut().getContingut());
+            sc.setLength(getDocument().getContingut().getTamany());
+            sc.setMime(getDocument().getContingut().getTipusMime());
+            sc.setName(getDocument().getNom());
+            sc.setSignatureType(getAnexo().getSignType());
+            sc.setAttachedDocument(null);
 
-        setSignatureCustody(sc);
+            setSignatureCustody(sc);
+        }catch (Exception e){
+            throw new I18NException("justificante.error.obteniendo");
+        }
+
     }
 
     @Transient
