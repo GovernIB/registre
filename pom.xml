@@ -56,7 +56,7 @@
         <!--<timestamp>${maven.build}</timestamp>-->
         <maven.build.timestamp.format>yyyy-MM-dd HH:mm</maven.build.timestamp.format>
         <!-- LIBSIR-->
-        <libsir.version>3.2.0</libsir.version>
+        <libsir.version>3.2.1</libsir.version>
         <libsir.groupId>es.gob.ad.registros.sir</libsir.groupId>
     </properties>
 
@@ -409,13 +409,13 @@
             <dependency>
                 <groupId>es.gob.ad.registros.sir</groupId>
                 <artifactId>sirCommons</artifactId>
-                <version>3.1.1</version>
+                <version>3.1.2</version>
             </dependency>
 
             <dependency>
                 <groupId>es.gob.ad.registros.sir</groupId>
                 <artifactId>interModel-api</artifactId>
-                <version>3.1.1</version>
+                <version>3.1.2</version>
             </dependency>
 
             <dependency>
