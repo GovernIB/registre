@@ -11,6 +11,7 @@ import es.caib.regweb3.persistence.ejb.RegistroDetalleLocal;
 import es.caib.regweb3.utils.ClientUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
+import org.fundaciobit.genapp.common.i18n.I18NArgumentString;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.plugins.validatesignature.api.ValidateSignatureConstants;
 import org.slf4j.Logger;
@@ -151,7 +152,7 @@ public class ArxiuCaibUtils {
             }
 
             e.printStackTrace();
-            throw new I18NException(e.getMessage());
+            throw new I18NException(e, "justificante.custodiando.error", new I18NArgumentString(e.getMessage()));
         }
 
         return new JustificanteArxiu(expediente, documento);
