@@ -15,7 +15,7 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "RWE_USUARIO_ENTIDAD")
-@SequenceGenerator(name="generator",sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
+@SequenceGenerator(name="generator",sequenceName = "RWE_USUARIOENTIDAD_SEQ", allocationSize = 1)
 @XmlRootElement(name = "usuarioEntidad")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class UsuarioEntidad implements Serializable{

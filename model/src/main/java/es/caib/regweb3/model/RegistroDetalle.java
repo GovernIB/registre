@@ -20,7 +20,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "RWE_REGISTRO_DETALLE")
-@SequenceGenerator(name = "generator", sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
+@SequenceGenerator(name = "generator", sequenceName = "RWE_REGISTRODETALLE_SEQ", allocationSize = 1)
 @XmlRootElement(name = "registroDetalle")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class RegistroDetalle implements Serializable {

@@ -17,7 +17,7 @@ import java.io.Serializable;
 @Table(name = "RWE_PERSONA", indexes = {
         @Index(name = "RWE_PERSONA_ENTIDAD_FK_I", columnList = "ENTIDAD")
 })
-@SequenceGenerator(name = "generator", sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
+@SequenceGenerator(name = "generator", sequenceName = "RWE_PERSONA_SEQ", allocationSize = 1)
 public class Persona implements Serializable {
 
     private Long id;

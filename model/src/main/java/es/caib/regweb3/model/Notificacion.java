@@ -18,7 +18,7 @@ import java.util.Date;
         @Index(name = "RWE_NOTIF_REMIT_FK_I", columnList = "REMITENTE"),
         @Index(name = "RWE_NOTIF_DEST_FK_I", columnList = "DESTINATARIO")
 })
-@SequenceGenerator(name = "generator", sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
+@SequenceGenerator(name = "generator", sequenceName = "RWE_NOTIFICACION_SEQ", allocationSize = 1)
 public class Notificacion implements Serializable {
 
     private Long id;

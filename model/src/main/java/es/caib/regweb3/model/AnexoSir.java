@@ -11,7 +11,7 @@ import java.util.Set;
  */
 @Entity
 @Table(name = "RWE_ANEXO_SIR")
-@SequenceGenerator(name="generator",sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
+@SequenceGenerator(name="generator",sequenceName = "RWE_ANEXOSIR_SEQ", allocationSize = 1)
 public class AnexoSir implements Serializable {
 
     // Id del anexo

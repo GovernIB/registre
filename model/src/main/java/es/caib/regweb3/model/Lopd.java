@@ -15,7 +15,7 @@ import java.util.Date;
 @Table(name = "RWE_LOPD", indexes = {
         @Index(name = "RWE_LOPD_LIBRO_FK_I", columnList = "LIBRO"),
         @Index(name = "RWE_LOPD_USUENT_FK_I", columnList = "USUARIO")})
-@SequenceGenerator(name = "generator", sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
+@SequenceGenerator(name = "generator", sequenceName = "RWE_LOPD_SEQ", allocationSize = 1)
 public class Lopd implements Serializable {
 
     private Long id;

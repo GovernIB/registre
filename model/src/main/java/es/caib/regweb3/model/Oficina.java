@@ -28,7 +28,7 @@ import java.util.Set;
         @Index(name = "RWE_OFICIN_ORGANI_FK_I", columnList = "ORGANISMORESPONSABLE"),
         @Index(name = "RWE_OFICIN_OFICIN_FK_I", columnList = "OFICINARESPONSABLE")
 })
-@SequenceGenerator(name = "generator", sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
+@SequenceGenerator(name = "generator", sequenceName = "RWE_OFICINA_SEQ", allocationSize = 1)
 @XmlRootElement(name = "oficina")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Oficina implements Serializable {

@@ -13,7 +13,7 @@ import java.io.Serializable;
  */
 @Entity
 @Table(name = "RWE_ARCHIVO")
-@SequenceGenerator(name="generator",sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
+@SequenceGenerator(name="generator",sequenceName = "RWE_ARCHIVO_SEQ", allocationSize = 1)
 public class Archivo implements Serializable {
 
     private Long id;
