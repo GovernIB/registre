@@ -112,7 +112,7 @@ public class DistribucionGoibPlugin extends AbstractPluginProperties implements 
             } else {
                 e.printStackTrace();
             }
-            throw new I18NException(e.getMessage());
+            throw new I18NException("registroEntrada.distribuir.error");
         }
 
     }
@@ -121,11 +121,7 @@ public class DistribucionGoibPlugin extends AbstractPluginProperties implements 
     @Override
     public Boolean getEnvioCola() throws I18NException {
         //Si no existe la propiedad o es true se envia  a la cola
-        if(getPropertyEnvioCola()== null || Boolean.parseBoolean(getPropertyEnvioCola())){
-            return true;
-        }else{
-            return false;
-        }
+        return getPropertyEnvioCola() == null || Boolean.parseBoolean(getPropertyEnvioCola());
     }
 
 
