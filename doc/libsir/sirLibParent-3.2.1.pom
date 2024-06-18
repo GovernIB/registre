@@ -1,0 +1,339 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>es.gob.ad.registros.sir</groupId>
+		<artifactId>sirDependencies</artifactId>
+		<!-- 	version para jdk 8 -> 4.X.X-JAVA_8 -->
+		<!-- 	version para jdk 7 -> 3.X.X        -->
+		<relativePath>../../../SIR-DEPENDENCIES/pom.xml</relativePath>
+		<version>3.2.2</version>
+	</parent>
+
+	<!-- 	version para jdk 8 -> 4.0.0-JAVA_8 -->
+	<!-- 	version para jdk 7 -> 3.1.0        -->
+	<version>3.2.1</version>
+
+	<artifactId>sirLibParent</artifactId>
+	<packaging>pom</packaging>
+
+	<modules>
+		<!-- Datos -->
+		<module>../SIR-InterModel</module>
+		<module>../SIR-InterModelOracle</module>
+		<module>../SIR-InterModelSqlServer</module>
+		<module>../SIR-InterModelMySql</module>
+		<!-- Libreria -->
+		<module>../SIR-InterService</module>
+	</modules>
+	
+	<properties>
+		<!-- jar SIR -->
+		<interModel-api.version>3.1.2</interModel-api.version>
+		<interService-api.version>3.2.2</interService-api.version>
+		<interModel.version>3.1.3</interModel.version>
+		<interModelMotoresBD.version>3.1.2</interModelMotoresBD.version>
+		<interModelOracle.version>${interModelMotoresBD.version}</interModelOracle.version>
+		<interModelSqlServer.version>${interModelMotoresBD.version}</interModelSqlServer.version>
+		<interModelMySql.version>${interModelMotoresBD.version}</interModelMySql.version>
+		<interService.version>${project.version}</interService.version>
+
+		<!-- rutas despliegue -->
+		<rutaDespliegue>/proyectos/SGAD/SIR/despliegue/libreria/Sicres4</rutaDespliegue>
+		<generated.version.title>3-2-1</generated.version.title>
+		<generated.version>3.2.1</generated.version>
+		<rutaInterModel>../</rutaInterModel>
+		<doclint>none</doclint>
+		<motorBD></motorBD>
+		<path.assembly.deploy>${rutaDespliegue}/${generated.version}/_ Libreria Intercambio SIR ${generated.version.title} -${motorBD}- - 99999 KB_ZIP</path.assembly.deploy>
+		<reportOutputDirectory>${path.assembly.deploy}</reportOutputDirectory>
+		<destDir>javadoc</destDir>
+		<path.assembly.deploy.lib>${path.assembly.deploy}/lib/</path.assembly.deploy.lib>
+
+		<!-- Variables de compilacion -->
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven-compiler-plugin.version>3.3</maven-compiler-plugin.version>
+		<maven-javadoc-plugin.version>3.2.0</maven-javadoc-plugin.version>
+		<maven-source-plugin.version>3.0.1</maven-source-plugin.version>
+		<maven-resources-plugin.7>3.2.0</maven-resources-plugin.7>
+		<maven-resources-plugin.8>3.3.1</maven-resources-plugin.8>
+		
+		<!-- Para el plugin dependency-check -->
+		<plugin.dependency-check-maven.version>7.2.1</plugin.dependency-check-maven.version>
+		<skip.dependency-check>true</skip.dependency-check>
+
+	</properties>
+
+	<dependencyManagement>
+		<dependencies>
+
+			<!-- L I B R E R I A S   D E L   P R O Y E C T O -->
+			<dependency>
+				<groupId>es.gob.ad.registros.sir</groupId>
+				<artifactId>interService-api</artifactId>
+				<version>${interService-api.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>es.gob.ad.registros.sir</groupId>
+				<artifactId>interModel-api</artifactId>
+				<version>${interModel-api.version}</version>
+			</dependency>
+			
+			<dependency>
+				<groupId>es.gob.ad.registros.sir</groupId>
+				<artifactId>interService</artifactId>
+				<version>${interService.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>es.gob.ad.registros.sir</groupId>
+				<artifactId>interModel</artifactId>
+				<version>${interModel.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>es.gob.ad.registros.sir</groupId>
+				<artifactId>interModel.ORACLE</artifactId>
+				<version>${interModelOracle.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>es.gob.ad.registros.sir</groupId>
+				<artifactId>interModel.SQLSERVER</artifactId>
+				<version>${interModelSqlServer.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>es.gob.ad.registros.sir</groupId>
+				<artifactId>interModel.MYSQL</artifactId>
+				<version>${interModelMySql.version}</version>
+			</dependency>
+		</dependencies>
+
+	</dependencyManagement>
+	<!-- OFICINA TECNICA Repositorio de distribución para el despliegue de los 
+		artefactos -->
+	<distributionManagement>
+		<repository>
+			<id>release</id>
+			<name>Nexus Release</name>
+			<url>https://artefactos-ic.scae.redsara.es/nexus/repository/ad-maven-release</url>
+		</repository>
+		<snapshotRepository>
+			<id>snapshot</id>
+			<name>Nexus Snapshot</name>
+			<url>https://artefactos-ic.scae.redsara.es/nexus/repository/ad-maven-snapshot</url>
+		</snapshotRepository>
+	</distributionManagement>
+	
+	<profiles>
+		<profile>
+			<id>oracle</id>
+			<properties>
+				<motorBD>ORACLE</motorBD>
+				<pathMotorBD>SIR-InterModelOracle</pathMotorBD>
+			</properties>
+		</profile>
+		<profile>
+			<id>mySql</id>
+			<properties>
+				<motorBD>MYSQL</motorBD>
+				<pathMotorBD>SIR-InterModelMySql</pathMotorBD>
+			</properties>
+		</profile>
+		<profile>
+			<id>sqlServer</id>
+			<properties>
+				<motorBD>SQLSERVER</motorBD>
+				<pathMotorBD>SIR-InterModelSqlServer</pathMotorBD>
+			</properties>
+		</profile>
+		
+		<profile>
+			<id>java8</id>
+			<activation>
+				<jdk>1.8</jdk>
+			</activation>
+			<properties>
+				<java.version>1.8</java.version>
+				<maven.compiler.target>${java.version}</maven.compiler.target>
+	    		<maven.compiler.source>${java.version}</maven.compiler.source>
+				<version.generated>${project.version}_jdk8</version.generated>
+				<maven-resources-plugin.version>${maven-resources-plugin.8}</maven-resources-plugin.version>
+			</properties>
+		</profile>
+		<profile>
+			<id>java7</id>
+			<activation>
+				<jdk>1.7</jdk>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+				<java.version>1.7</java.version>
+				<maven.compiler.target>${java.version}</maven.compiler.target>
+	    		<maven.compiler.source>${java.version}</maven.compiler.source>
+				<version.generated>${project.version}_jdk7</version.generated>
+				<maven-resources-plugin.version>${maven-resources-plugin.7}</maven-resources-plugin.version>
+			</properties>
+		</profile>
+		
+		
+	</profiles>
+
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>${maven-compiler-plugin.version}</version>
+				<configuration>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
+					<archive>
+						<manifest>
+							<addClasspath>true</addClasspath>
+						</manifest>
+					</archive>
+					<generatedSourcesDirectory>${basedir}/src/main/generated</generatedSourcesDirectory>
+				</configuration>
+			</plugin>
+<!-- 			<plugin> -->
+<!-- 				<artifactId>maven-jar-plugin</artifactId> -->
+<!-- 				<configuration> -->
+<!-- 					<outputDirectory>${path.assembly.deploy.lib}</outputDirectory> -->
+<!-- 				</configuration> -->
+<!-- 			</plugin> -->
+
+			<plugin>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>${maven-resources-plugin.version}</version>
+				<executions>
+					<execution>
+						<id>copy-properties</id>
+						<!-- here the phase you need -->
+						<phase>validate</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${path.assembly.deploy}/properties</outputDirectory>
+							<resources>
+								<resource>
+									<directory>src/main/resources/properties</directory>
+									<filtering>true</filtering>
+									<includes>
+										<include>configuracionDist.properties</include>
+										<include>serverRegage.properties</include>
+									</includes>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+					<execution>
+						<id>copy-Scripts_BBDD</id>
+						<!-- here the phase you need -->
+						<phase>validate</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${path.assembly.deploy}/Scripts_BBDD</outputDirectory>
+							<resources>
+								<resource>
+									<directory>${rutaInterModel}/${pathMotorBD}/Scripts_BBDD</directory>
+									<filtering>true</filtering>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+					<execution>
+						<id>copy-CHANGELOG</id>
+						<!-- here the phase you need -->
+						<phase>validate</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${path.assembly.deploy}</outputDirectory>
+							<resources>
+								<resource>
+									<directory>./</directory>
+									<filtering>true</filtering>
+									<includes>
+										<include>CHANGELOG.md</include>
+									</includes>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+					<execution>
+						<id>copy-libreria</id>
+						<!-- here the phase you need -->
+						<phase>install</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${path.assembly.deploy.lib}</outputDirectory>
+							<resources>
+								<resource>
+<!--									<directory>${settings.localRepository}</directory>-->
+									<directory>/proyectos/SGAD/SIR/despliegue/.m2/repository/es/gob/ad/registros/sir/interService/${interService.version}</directory>
+									<filtering>true</filtering>
+									<includes>
+										<include>interService-${interService.version}.jar</include>
+									</includes>
+<!--									<directory>${project.build.directory}</directory>-->
+<!--                                    <include>${project.build.finalName}.jar</include>-->
+ 
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>${maven-javadoc-plugin.version}</version>
+			</plugin>
+			
+			 <plugin>
+		        <groupId>org.apache.maven.plugins</groupId>
+		        <artifactId>maven-dependency-plugin</artifactId>
+		        <executions>
+		          <execution>
+		            <id>copy-dependencies</id>
+		            <phase>package</phase>
+		            <goals>
+		              <goal>copy-dependencies</goal>
+		            </goals>
+		            <configuration>
+		              <outputDirectory>${path.assembly.deploy.lib}/dependencias</outputDirectory>
+		              <excludeArtifactIds>**</excludeArtifactIds>
+		              <includeGroupIds>es.gob.ad.registros.sir</includeGroupIds>
+		            </configuration>
+		          </execution>
+		        </executions>
+		      </plugin>
+			
+<!-- 			<plugin> -->
+<!-- 				<groupId>org.owasp</groupId> -->
+<!-- 				<artifactId>dependency-check-maven</artifactId> -->
+<!-- 				<version>${plugin.dependency-check-maven.version}</version> -->
+<!-- 				<executions> -->
+<!-- 					<execution> -->
+<!-- 						<goals> -->
+<!-- 							<goal>check</goal> -->
+<!-- 						</goals> -->
+<!-- 					</execution> -->
+<!-- 				</executions> -->
+<!-- 				<configuration> -->
+<!-- 					<skip>${skip.dependency-check}</skip> -->
+<!-- 				</configuration> -->
+<!-- 			</plugin> -->
+		</plugins>
+	</build>
+</project>
