@@ -4,6 +4,27 @@ create sequence RWE_INT_SEQ start with 1 increment by  1;
 create sequence RWE_POU_SEQ start with 1 increment by  1;
 create sequence RWE_SESION_SEQ start with 1 increment by  1;
 create sequence RWE_SIR_SEQ start with 1 increment by  1;
+create sequence RWE_INTERESADO_SEQ start with 1 increment by  1;
+create sequence RWE_ANEXO_SEQ start with 1 increment by  1;
+create sequence RWE_ANEXOSIR_SEQ start with 1 increment by  1;
+create sequence RWE_ARCHIVO_SEQ start with 1 increment by  1;
+create sequence RWE_HRE_SEQ start with 1 increment by  1;
+create sequence RWE_HRS_SEQ start with 1 increment by  1;
+create sequence RWE_INTERESADOSIR_SEQ start with 1 increment by  1;
+create sequence RWE_LOPD_SEQ start with 1 increment by  1;
+create sequence RWE_NOTIFICACION_SEQ start with 1 increment by  1;
+create sequence RWE_OFICINA_SEQ start with 1 increment by  1;
+create sequence RWE_OFICIOREMISION_SEQ start with 1 increment by  1;
+create sequence RWE_ORGANISMO_SEQ start with 1 increment by  1;
+create sequence RWE_PERSONA_SEQ start with 1 increment by  1;
+create sequence RWE_REGISTRODETALLE_SEQ start with 1 increment by  1;
+create sequence RWE_REGISTROENTRADA_SEQ start with 1 increment by  1;
+create sequence RWE_REGISTROSALIDA_SEQ start with 1 increment by  1;
+create sequence RWE_REGISTROSIR_SEQ start with 1 increment by  1;
+create sequence RWE_TRAZABILIDAD_SEQ start with 1 increment by  1;
+create sequence RWE_TRAZABILIDADSIR_SEQ start with 1 increment by  1;
+create sequence RWE_USUARIO_SEQ start with 1 increment by  1;
+create sequence RWE_USUARIOENTIDAD_SEQ start with 1 increment by  1;
 
 create table RWE_ANEXO (
    ID number(19,0) not null,

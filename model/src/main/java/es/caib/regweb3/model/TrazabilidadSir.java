@@ -11,7 +11,7 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "RWE_TRAZABILIDAD_SIR")
-@SequenceGenerator(name = "generator", sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
+@SequenceGenerator(name = "generator", sequenceName = "RWE_TRAZABILIDADSIR_SEQ", allocationSize = 1)
 public class TrazabilidadSir implements Serializable {
 
     private Long id;

@@ -15,7 +15,7 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "RWE_HISTORICO_REGISTRO_SALIDA")
-@SequenceGenerator(name = "generator", sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
+@SequenceGenerator(name = "generator", sequenceName = "RWE_HRS_SEQ", allocationSize = 1)
 public class HistoricoRegistroSalida implements Serializable {
 
     private Long id;

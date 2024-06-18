@@ -26,7 +26,7 @@ import java.util.List;
         @Index(name = "RWE_INTERES_REPANT_FK_I", columnList = "REPRESENTANTE"),
         @Index(name = "RWE_INTERES_REGDET_FK_I", columnList = "REGISTRODETALLE")
 })
-@SequenceGenerator(name = "generator", sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
+@SequenceGenerator(name = "generator", sequenceName = "RWE_INTERESADO_SEQ", allocationSize = 1)
 @XmlRootElement(name = "interesado")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Interesado implements Serializable {

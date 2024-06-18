@@ -12,7 +12,7 @@ import java.io.Serializable;
  */
 @Entity
 @Table(name = "RWE_INTERESADO_SIR")
-@SequenceGenerator(name="generator",sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
+@SequenceGenerator(name="generator",sequenceName = "RWE_INTERESADOSIR_SEQ", allocationSize = 1)
 public class InteresadoSir implements Serializable {
 
     private Long id;

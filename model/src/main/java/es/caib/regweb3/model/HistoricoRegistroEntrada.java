@@ -19,7 +19,7 @@ import java.util.Date;
 @Table(name = "RWE_HISTORICO_REGISTRO_ENTRADA", indexes = {
         @Index(name = "RWE_HRE_REGENT_FK_I", columnList = "REGISTRO_ENTRADA"),
         @Index(name = "RWE_HRE_USUENT_FK_I", columnList = "USUARIO")})
-@SequenceGenerator(name = "generator", sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
+@SequenceGenerator(name = "generator", sequenceName = "RWE_HRE_SEQ", allocationSize = 1)
 public class HistoricoRegistroEntrada implements Serializable {
 
     private Long id;

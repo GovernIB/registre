@@ -17,7 +17,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "RWE_REGISTRO_SIR")
-@SequenceGenerator(name="generator",sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
+@SequenceGenerator(name="generator",sequenceName = "RWE_REGISTROSIR_SEQ", allocationSize = 1)
 public class RegistroSir implements Serializable {
 
     /**

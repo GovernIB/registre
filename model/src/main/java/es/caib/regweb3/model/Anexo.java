@@ -19,7 +19,7 @@ import java.util.List;
  */
 
 @Entity
-@SequenceGenerator(name = "generator", sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
+@SequenceGenerator(name = "generator", sequenceName = "RWE_ANEXO_SEQ", allocationSize = 1)
 @Table(name = "RWE_ANEXO",
         indexes = {
                 @Index(name = "RWE_ANEXO_TDOCAL_FK_I", columnList = "TDOCUMENTAL"),

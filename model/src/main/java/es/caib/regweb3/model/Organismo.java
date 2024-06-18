@@ -30,7 +30,7 @@ import java.util.Set;
         @Index(name = "RWE_ORGANI_TVIA_FK_I", columnList = "TIPOVIA"),
         @Index(name = "RWE_ORGANI_PROVIN_FK_I", columnList = "CODAMBPROVINCIA")
 })
-@SequenceGenerator(name = "generator", sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
+@SequenceGenerator(name = "generator", sequenceName = "RWE_ORGANISMO_SEQ", allocationSize = 1)
 @XmlRootElement(name = "organismo")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Organismo implements Serializable {

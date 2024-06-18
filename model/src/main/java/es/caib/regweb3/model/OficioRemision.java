@@ -18,7 +18,7 @@ import java.util.List;
         @Index(name = "RWE_OFIREM_OFICIN_FK_I", columnList = "OFICINA"),
         @Index(name = "RWE_OFIREM_USUARI_FK_I", columnList = "USUARIO")
 })
-@SequenceGenerator(name = "generator", sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
+@SequenceGenerator(name = "generator", sequenceName = "RWE_OFICIOREMISION_SEQ", allocationSize = 1)
 public class OficioRemision implements Serializable {
 
     private Long id;

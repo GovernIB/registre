@@ -13,7 +13,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "RWE_REGISTRO_ENTRADA")
-@SequenceGenerator(name = "generator", sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
+@SequenceGenerator(name = "generator", sequenceName = "RWE_REGISTROENTRADA_SEQ", allocationSize = 1)
 @XmlRootElement(name = "registroEntrada")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class RegistroEntrada implements IRegistro {
