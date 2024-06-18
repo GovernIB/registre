@@ -167,9 +167,143 @@ alter table RWE_PERSONA add AVISONOTIFEMAIL number(1,0);
 alter table RWE_PERSONA add AVISONOTIFSMS number(1,0);
 ALTER TABLE RWE_PERSONA add CODDIRUNIF varchar2(21 char);
 
+--Nuevo campo ENTIDAD en RWE_PENDIENTE
+alter table RWE_PENDIENTE add ENTIDAD number(19,0);
+alter table RWE_PENDIENTE add constraint RWE_PENDIE_ENTIDAD_FK foreign key (ENTIDAD) references RWE_ENTIDAD;
+
+--Nuevo campo EXTERNO en RWE_ORGANISMO
+ALTER TABLE RWE_ORGANISMO ADD EXTERNO number(1,0) DEFAULT 0;
+
+--Nuevo índice en la tabla RWE_INTERESADO
+create index RWE_INTERES_REGDET_FK_I on RWE_INTERESADO (REGISTRODETALLE);
+
 --Nuevo campo en RWE_OFICINA
 ALTER TABLE RWE_OFICINA ADD ACTIVALIBSIR number(1,0) DEFAULT 0;
 
 --Nuevo campo en RWE_REGISTRO_SIR
 ALTER TABLE RWE_REGISTRO_SIR ADD LIBSIR number(1,0) DEFAULT 0;
+
+--Eliminar campo RWE_USUARIO_ENTIDAD OAMR
+ALTER TABLE RWE_USUARIO_ENTIDAD drop column OAMR;
+
+--Nuevos campos RWE_USUARIO_ENTIDAD
+ALTER TABLE RWE_USUARIO_ENTIDAD add CATEGORIA number(19,0);
+ALTER TABLE RWE_USUARIO_ENTIDAD add FUNCION number(19,0);
+ALTER TABLE RWE_USUARIO_ENTIDAD add TELEFONO varchar2(255 char);
+ALTER TABLE RWE_USUARIO_ENTIDAD add CAI number(10,0);
+ALTER TABLE RWE_USUARIO_ENTIDAD add NOMBRETRABAJO varchar2(255 char);
+ALTER TABLE RWE_USUARIO_ENTIDAD add CODIGOTRABAJO varchar2(255 char);
+ALTER TABLE RWE_USUARIO_ENTIDAD add OBSERVACIONES varchar2(255 char);
+ALTER TABLE RWE_USUARIO_ENTIDAD add (clave number(1,0) DEFAULT 0 not null);
+ALTER TABLE RWE_USUARIO_ENTIDAD add (bitcita number(1,0) DEFAULT 0 not null);
+ALTER TABLE RWE_USUARIO_ENTIDAD add (asistencia number(1,0) DEFAULT 0 not null);
+ALTER TABLE RWE_USUARIO_ENTIDAD add (apodera number(1,0) DEFAULT 0 not null);
+ALTER TABLE RWE_USUARIO_ENTIDAD add (notificacion number(1,0) DEFAULT 0 not null);
+ALTER TABLE RWE_USUARIO_ENTIDAD ADD FECHAALTA timestamp;
+
+--Nueva tabla RWE_CATISLA
+CREATE TABLE RWE_CATISLA (
+                             ID number(19,0) not null,
+                             CODIGOISLA number(19,0) not null,
+                             DESCRIPCIONISLA varchar2(50 char) not null,
+                             PROVINCIA number(19,0)
+);
+ALTER TABLE RWE_CATISLA add constraint RWE_CATISLA_pk primary key (ID);
+ALTER TABLE RWE_CATISLA add constraint RWE_CATISLA_CATPROVIN_FK foreign key (PROVINCIA) references RWE_CATPROVINCIA;
+CREATE INDEX RWE_CATISL_CATPRO_FK_I on RWE_CATISLA (PROVINCIA) TABLESPACE REGWEB_INDEX;
+
+--Nuevos campos RWE_OFICINA
+ALTER TABLE RWE_OFICINA add (OAMR number(1,0) DEFAULT 0 not null);
+ALTER TABLE RWE_OFICINA add ISLA number(19,0);
+ALTER TABLE RWE_OFICINA add constraint RWE_OFICINA_ISLA_FK foreign key (ISLA) references RWE_CATISLA;
+CREATE INDEX RWE_OFICIN_ISLA_FK_I on RWE_OFICINA (ISLA) TABLESPACE REGWEB_INDEX;
+
+--Nuevo campo RWE_ORGANISMO
+ALTER TABLE RWE_ORGANISMO add ISLA number(19,0);
+ALTER TABLE RWE_ORGANISMO add constraint RWE_ORGANISMO_ISLA_FK foreign key (ISLA) references RWE_CATISLA;
+CREATE INDEX RWE_ORGANI_ISLA_FK_I on RWE_ORGANISMO (ISLA) TABLESPACE REGWEB_INDEX;
+
+-- Índice RWE_ANEXO
+CREATE INDEX RWE_ANEXO_CUSTID_FK_I on RWE_ANEXO (CUSTODIAID) TABLESPACE REGWEB_INDEX;
+
+--Nuevo campo RWE_ENTIDAD
+ALTER TABLE RWE_ENTIDAD add (REG_SALIDAS_PERSONAS number(1,0) DEFAULT 1 not null);
+--Eliminar campo RWE_ENTIDAD Oficio Remisión
+ALTER TABLE RWE_ENTIDAD drop column OFICIOREMISION;
+
+--Nuevo campo ENTIDAD en RWE_OFICINA
+alter table RWE_OFICINA add ENTIDAD number(19,0);
+alter table RWE_OFICINA add constraint RWE_OFICINA_ENTIDAD_FK foreign key (ENTIDAD) references RWE_ENTIDAD;
+
+
+--Nuevas secuencias inicializdas en el valor más grande de la tabla
+DECLARE
+interesado_id INTEGER;
+   anexo_id INTEGER;
+   anexoSir_id INTEGER;
+   archivo_id INTEGER;
+   hre_id INTEGER;
+   hrs_id INTEGER;
+   interesadoSir_id INTEGER;
+   lopd_id INTEGER;
+   notificacion_id INTEGER;
+   oficina_id INTEGER;
+   oficio_id INTEGER;
+   organismo_id INTEGER;
+   persona_id INTEGER;
+   registroDetalle_id INTEGER;
+   registroEntrada_id INTEGER;
+   registroSalida_id INTEGER;
+   registroSir_id INTEGER;
+   trazabilidad_id INTEGER;
+   trazabilidadSir_id INTEGER;
+   usuario_id INTEGER;
+   usuarioEntidad_id INTEGER;
+
+BEGIN
+SELECT MAX (id) INTO interesado_id FROM RWE_INTERESADO; interesado_id := interesado_id + 1;
+SELECT MAX (id) INTO anexo_id FROM RWE_ANEXO; anexo_id := anexo_id + 1;
+SELECT MAX (id) INTO anexoSir_id FROM RWE_ANEXO_SIR; anexoSir_id := anexoSir_id + 1;
+SELECT MAX (id) INTO archivo_id FROM RWE_ARCHIVO; archivo_id := archivo_id + 1;
+SELECT MAX (id) INTO hre_id FROM RWE_HISTORICO_REGISTRO_ENTRADA; hre_id := hre_id + 1;
+SELECT MAX (id) INTO hrs_id FROM RWE_HISTORICO_REGISTRO_SALIDA; hrs_id := hrs_id + 1;
+SELECT MAX (id) INTO interesadoSir_id FROM RWE_INTERESADO_SIR; interesadoSir_id := interesadoSir_id + 1;
+SELECT MAX (id) INTO lopd_id FROM RWE_LOPD; lopd_id := lopd_id + 1;
+SELECT MAX (id) INTO notificacion_id FROM RWE_NOTIFICACION; notificacion_id := notificacion_id + 1;
+SELECT MAX (id) INTO oficina_id FROM RWE_OFICINA; oficina_id := oficina_id + 1;
+SELECT MAX (id) INTO oficio_id FROM RWE_OFICIO_REMISION; oficio_id := oficio_id + 1;
+SELECT MAX (id) INTO organismo_id FROM RWE_ORGANISMO; organismo_id := organismo_id + 1;
+SELECT MAX (id) INTO persona_id FROM RWE_PERSONA; persona_id := persona_id + 1;
+SELECT MAX (id) INTO registroDetalle_id FROM RWE_REGISTRO_DETALLE; registroDetalle_id := registroDetalle_id + 1;
+SELECT MAX (id) INTO registroEntrada_id FROM RWE_REGISTRO_ENTRADA; registroEntrada_id := registroEntrada_id + 1;
+SELECT MAX (id) INTO registroSalida_id FROM RWE_REGISTRO_SALIDA; registroSalida_id := registroSalida_id + 1;
+SELECT MAX (id) INTO registroSir_id FROM RWE_REGISTRO_SIR; registroSir_id := registroSir_id + 1;
+SELECT MAX (id) INTO trazabilidad_id FROM RWE_TRAZABILIDAD; trazabilidad_id := trazabilidad_id + 1;
+SELECT MAX (id) INTO trazabilidadSir_id FROM RWE_TRAZABILIDAD_SIR; trazabilidadSir_id := trazabilidadSir_id + 1;
+SELECT MAX (id) INTO usuario_id FROM RWE_USUARIO; usuario_id := usuario_id + 1;
+SELECT MAX (id) INTO usuarioEntidad_id FROM RWE_USUARIO_ENTIDAD; usuarioEntidad_id := usuarioEntidad_id + 1;
+
+EXECUTE IMMEDIATE 'CREATE SEQUENCE RWE_INTERESADO_SEQ START WITH ' || interesado_id || ' INCREMENT BY 1';
+EXECUTE IMMEDIATE 'CREATE SEQUENCE RWE_ANEXO_SEQ START WITH ' || anexo_id || ' INCREMENT BY 1';
+EXECUTE IMMEDIATE 'CREATE SEQUENCE RWE_ANEXOSIR_SEQ START WITH ' || anexoSir_id || ' INCREMENT BY 1';
+EXECUTE IMMEDIATE 'CREATE SEQUENCE RWE_ARCHIVO_SEQ START WITH ' || archivo_id || ' INCREMENT BY 1';
+EXECUTE IMMEDIATE 'CREATE SEQUENCE RWE_HRE_SEQ START WITH ' || hre_id || ' INCREMENT BY 1';
+EXECUTE IMMEDIATE 'CREATE SEQUENCE RWE_HRS_SEQ START WITH ' || hrs_id || ' INCREMENT BY 1';
+EXECUTE IMMEDIATE 'CREATE SEQUENCE RWE_INTERESADOSIR_SEQ START WITH ' || interesadoSir_id || ' INCREMENT BY 1';
+EXECUTE IMMEDIATE 'CREATE SEQUENCE RWE_LOPD_SEQ START WITH ' || lopd_id || ' INCREMENT BY 1';
+EXECUTE IMMEDIATE 'CREATE SEQUENCE RWE_NOTIFICACION_SEQ START WITH ' || notificacion_id || ' INCREMENT BY 1';
+EXECUTE IMMEDIATE 'CREATE SEQUENCE RWE_OFICINA_SEQ START WITH ' || oficina_id || ' INCREMENT BY 1';
+EXECUTE IMMEDIATE 'CREATE SEQUENCE RWE_OFICIOREMISION_SEQ START WITH ' || oficio_id || ' INCREMENT BY 1';
+EXECUTE IMMEDIATE 'CREATE SEQUENCE RWE_ORGANISMO_SEQ START WITH ' || organismo_id || ' INCREMENT BY 1';
+EXECUTE IMMEDIATE 'CREATE SEQUENCE RWE_PERSONA_SEQ START WITH ' || persona_id || ' INCREMENT BY 1';
+EXECUTE IMMEDIATE 'CREATE SEQUENCE RWE_REGISTRODETALLE_SEQ START WITH ' || registroDetalle_id || ' INCREMENT BY 1';
+EXECUTE IMMEDIATE 'CREATE SEQUENCE RWE_REGISTROENTRADA_SEQ START WITH ' || registroEntrada_id || ' INCREMENT BY 1';
+EXECUTE IMMEDIATE 'CREATE SEQUENCE RWE_REGISTROSALIDA_SEQ START WITH ' || registroSalida_id || ' INCREMENT BY 1';
+EXECUTE IMMEDIATE 'CREATE SEQUENCE RWE_REGISTROSIR_SEQ START WITH ' || registroSir_id || ' INCREMENT BY 1';
+EXECUTE IMMEDIATE 'CREATE SEQUENCE RWE_TRAZABILIDAD_SEQ START WITH ' || trazabilidad_id || ' INCREMENT BY 1';
+EXECUTE IMMEDIATE 'CREATE SEQUENCE RWE_TRAZABILIDADSIR_SEQ START WITH ' || trazabilidadSir_id || ' INCREMENT BY 1';
+EXECUTE IMMEDIATE 'CREATE SEQUENCE RWE_USUARIO_SEQ START WITH ' || usuario_id || ' INCREMENT BY 1';
+EXECUTE IMMEDIATE 'CREATE SEQUENCE RWE_USUARIOENTIDAD_SEQ START WITH ' || usuarioEntidad_id || ' INCREMENT BY 1';
+END;
+/
 

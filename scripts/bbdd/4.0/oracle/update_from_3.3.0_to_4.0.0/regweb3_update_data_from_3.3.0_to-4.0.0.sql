@@ -8,4 +8,7 @@ update RWE_PERSONA SET RECEPNOTIF= 0 where RECEPNOTIF is null;
 update RWE_PERSONA SET AVISONOTIFEMAIL= 0 where AVISONOTIFEMAIL is null;
 update RWE_PERSONA SET AVISONOTIFSMS= 0 where AVISONOTIFSMS is null;
 
+-- Indicar la Entidad de cada Oficina
+update rwe_oficina set entidad = ? where organismoresponsable in (select id from rwe_organismo where entidad = ?);
+
 
