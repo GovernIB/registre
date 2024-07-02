@@ -14,7 +14,7 @@ public class RegistrarForm {
     private Long idIdioma;
     private List<CamposNTI> camposNTIs;
     private Long idOrganismoDestino;
-    private Long codigoSia;
+    private String codigoSia;
     private String emails;
     private String motivo;
     private String extracto;
@@ -60,11 +60,11 @@ public class RegistrarForm {
         this.idOrganismoDestino = idOrganismoDestino;
     }
 
-    public Long getCodigoSia() {
+    public String getCodigoSia() {
         return codigoSia;
     }
 
-    public void setCodigoSia(Long codigoSia) {
+    public void setCodigoSia(String codigoSia) {
         this.codigoSia = codigoSia;
     }
 
