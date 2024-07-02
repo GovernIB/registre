@@ -922,9 +922,9 @@ public class LibSirUtils {
             //Entidad Registral Inicio
             registroSir.setCodigoEntidadRegistralInicio(asientoBean.getCdEnRgInicio());
             if (StringUtils.isNotEmpty(asientoBean.getDsEnRgInicio())) {
-                registroSir.setDecodificacionEntidadRegistralOrigen(asientoBean.getDsEnRgInicio());
+                registroSir.setDecodificacionEntidadRegistralInicio(asientoBean.getDsEnRgInicio());
             } else {
-                registroSir.setDecodificacionEntidadRegistralOrigen(Dir3CaibUtils.denominacion(PropiedadGlobalUtil.getDir3CaibServer(entidad.getId()), asientoBean.getCdEnRgInicio(), RegwebConstantes.OFICINA));
+                registroSir.setDecodificacionEntidadRegistralInicio(Dir3CaibUtils.denominacion(PropiedadGlobalUtil.getDir3CaibServer(entidad.getId()), asientoBean.getCdEnRgInicio(), RegwebConstantes.OFICINA));
             }
             registroSir.setExpone(asientoBean.getDsExpone());
             registroSir.setSolicita(asientoBean.getDsSolicita());
