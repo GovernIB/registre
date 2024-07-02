@@ -172,7 +172,7 @@ public class RegistroEntrada implements IRegistro {
         this.destino = destino;
     }
 
-    @Column(name = "DESTEXTCOD", length = 9)
+    @Column(name = "DESTEXTCOD", length = 21)
     public String getDestinoExternoCodigo() {
         return destinoExternoCodigo;
     }

@@ -313,7 +313,7 @@ public class Anexo implements Serializable {
         this.entidad = entidad;
     }
 
-    @Column(name = "OBSERVACIONES", length = 50)
+    @Column(name = "OBSERVACIONES", length = 160)
     public String getObservaciones() {
         return observaciones;
     }

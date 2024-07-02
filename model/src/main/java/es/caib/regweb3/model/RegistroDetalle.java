@@ -296,7 +296,7 @@ public class RegistroDetalle implements Serializable {
         this.oficinaOrigen = oficinaOrigen;
     }
 
-    @Column(name = "OFICINAEXTERNO", length = 9)
+    @Column(name = "OFICINAEXTERNO", length = 21)
     public String getOficinaOrigenExternoCodigo() {
         return oficinaOrigenExternoCodigo;
     }

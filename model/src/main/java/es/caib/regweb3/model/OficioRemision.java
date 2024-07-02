@@ -193,7 +193,7 @@ public class OficioRemision implements Serializable {
         this.fechaEstado = fechaEstado;
     }
 
-    @Column(name = "DESTINOEXTERNOCODIGO", length = 9)
+    @Column(name = "DESTINOEXTERNOCODIGO", length = 21)
     public String getDestinoExternoCodigo() {
         return destinoExternoCodigo;
     }

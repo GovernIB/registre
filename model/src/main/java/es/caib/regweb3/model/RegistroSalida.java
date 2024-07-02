@@ -173,7 +173,7 @@ public class RegistroSalida implements IRegistro {
         this.origen = origen;
     }
 
-    @Column(name = "DESTEXTCOD", length = 9)
+    @Column(name = "DESTEXTCOD", length = 21)
     public String getOrigenExternoCodigo() {
         return origenExternoCodigo;
     }
