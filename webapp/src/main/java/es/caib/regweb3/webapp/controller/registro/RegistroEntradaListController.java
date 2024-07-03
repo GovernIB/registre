@@ -35,10 +35,11 @@ import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.LinkedHashSet;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
+
+import static es.caib.regweb3.utils.RegwebConstantes.METADATO_GENERAL;
+import static es.caib.regweb3.utils.RegwebConstantes.METADATO_PARTICULAR;
 
 /**
  * Created by Fundació BIT.
@@ -283,6 +284,17 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
 
             // Trazabilidad
             model.addAttribute("trazabilidades", trazabilidadEjb.getByRegistroEntrada(registro.getId()));
+
+            // Metadatos
+            Set<MetadatoRegistroEntrada> metadatosRE = registro.getMetadatosRegistroEntrada();
+
+            if(metadatosRE!=null) {
+                Set<MetadatoRegistroEntrada> metadatoREGeneral = metadatosRE.stream().filter(metadato -> metadato.getTipo().equals(METADATO_GENERAL)).collect(Collectors.toSet());
+                Set<MetadatoRegistroEntrada> metadatoREParticular = metadatosRE.stream().filter(metadato -> metadato.getTipo().equals(METADATO_PARTICULAR)).collect(Collectors.toSet());
+
+                model.addAttribute("metadatosGenerales", metadatoREGeneral);
+                model.addAttribute("metadatosParticulares", metadatoREParticular);
+            }
         }
 
         // Posicion sello

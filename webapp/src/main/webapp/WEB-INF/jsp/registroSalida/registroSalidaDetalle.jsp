@@ -231,7 +231,9 @@
                     <c:if test="${not empty historicos && registro.estado != RegwebConstantes.REGISTRO_RESERVA}">
                         <li><a href="#modificaciones" data-toggle="tab"><i class="fa fa-pencil-square-o"></i> <spring:message code="regweb.modificaciones"/></a></li>
                     </c:if>
-
+                    <c:if test="${not empty registro.metadatosRegistroSalida}">
+                        <li><a href="#metadatos" data-toggle="tab"><i class="fa fa-file-text-o"></i> <spring:message code="regweb.metadades"/></a></li>
+                    </c:if>
                 </ul>
 
                 <div id="contenido" class="tab-content contentDanger">
@@ -293,6 +295,15 @@
                     <c:if test="${not empty historicos && registro.estado != RegwebConstantes.REGISTRO_RESERVA}">
                         <div class="tab-pane" id="modificaciones">
                             <c:import url="../registro/modificaciones.jsp">
+                                <c:param name="tipoRegistro" value="${RegwebConstantes.REGISTRO_SALIDA}"/>
+                            </c:import>
+                        </div>
+                    </c:if>
+
+                    <!-- METADATOS -->
+                    <c:if test="${not empty registro.metadatosRegistroSalida}">
+                        <div class="tab-pane" id="metadatos">
+                            <c:import url="../registro/metadatos.jsp">
                                 <c:param name="tipoRegistro" value="${RegwebConstantes.REGISTRO_SALIDA}"/>
                             </c:import>
                         </div>

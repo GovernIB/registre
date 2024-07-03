@@ -34,10 +34,11 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.LinkedHashSet;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
+
+import static es.caib.regweb3.utils.RegwebConstantes.METADATO_GENERAL;
+import static es.caib.regweb3.utils.RegwebConstantes.METADATO_PARTICULAR;
 
 /**
  * Created by Fundació BIT.
@@ -257,6 +258,17 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
 
         // Trazabilidad
         model.addAttribute("trazabilidades", trazabilidadEjb.getByRegistroSalida(registro.getId()));
+
+        // Metadatos
+        Set<MetadatoRegistroSalida> metadatosRS = registro.getMetadatosRegistroSalida();
+
+        if(metadatosRS!=null) {
+            Set<MetadatoRegistroSalida> metadatoRSGeneral = metadatosRS.stream().filter(metadato -> metadato.getTipo().equals(METADATO_GENERAL)).collect(Collectors.toSet());
+            Set<MetadatoRegistroSalida> metadatoRSParticular = metadatosRS.stream().filter(metadato -> metadato.getTipo().equals(METADATO_PARTICULAR)).collect(Collectors.toSet());
+
+            model.addAttribute("metadatosGenerales", metadatoRSGeneral);
+            model.addAttribute("metadatosParticulares", metadatoRSParticular);
+        }
 
         // Posicion sello
         if (entidadActiva.getPosXsello() != null && entidadActiva.getPosYsello() != null) {
