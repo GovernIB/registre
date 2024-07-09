@@ -210,7 +210,7 @@ public class AnexoScanController extends AnexoController {
             //Documentos obtenidos del scan
             List<ScanWebDocument> documentosEscaneados = obtenerDocumentosEscaneados(request, anexoForm.getRegistroID());
 
-            log.info("Documentos escaneados: " + documentosEscaneados.size());
+            log.debug("Documentos escaneados: " + documentosEscaneados.size());
 
             //Fijamos el número total de documentos escaneados
             anexoForm.setNumAnexosRecibidos(documentosEscaneados.size());
@@ -357,10 +357,6 @@ public class AnexoScanController extends AnexoController {
         // Hem de modificar el Modo de Firma segons el que ens hagin enviat des de SCAN
         dc = documento.getScannedPlainFile();
         sc = documento.getScannedSignedFile();
-
-        if (sc != null) {
-            log.info(sc.getName());
-        }
 
         anexoForm.getAnexo().setScan(true);
 
