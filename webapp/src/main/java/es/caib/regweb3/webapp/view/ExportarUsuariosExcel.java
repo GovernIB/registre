@@ -113,10 +113,10 @@ public class ExportarUsuariosExcel extends AbstractExcelView {
 
 
             //Título
-            sheet.addMergedRegion(CellRangeAddress.valueOf("$A$1:$R$1"));
+            sheet.addMergedRegion(CellRangeAddress.valueOf("$A$1:$S$1"));
             tittleCell.setCellValue(getMessage("usuario.exportar.lista"));
             tittleCell.setCellStyle(titulo);
-            sheet.addMergedRegion(CellRangeAddress.valueOf("$A$2:$R$2"));
+            sheet.addMergedRegion(CellRangeAddress.valueOf("$A$2:$S$2"));
 
             int rowNum = 1;
 
@@ -124,7 +124,7 @@ public class ExportarUsuariosExcel extends AbstractExcelView {
             header.setHeightInPoints(15);
 
             // Dades que se mostren d'un usuari
-            String[] capsalera = new String[]{"usuario.identificador", "usuario.nombre", "usuario.documento", "usuario.categoria","usuario.funcion","usuario.codigoTrabajo","usuario.nombreTrabajo","usuario.observaciones", "usuario.fechaAlta", "usuario.cai", "usuario.email", "usuario.telefono", "organismo.organismo","organismo.codigo", "oficina.oficina","oficina.codigo","oficina.oamr", "oficina.sir"};
+            String[] capsalera = new String[]{"usuario.identificador", "usuario.nombre", "usuario.documento", "usuario.categoria","usuario.funcion","usuario.codigoTrabajo","usuario.nombreTrabajo","usuario.observaciones", "usuario.fechaAlta", "usuario.cai", "usuario.email", "usuario.telefono","usuario.externo", "organismo.organismo","organismo.codigo", "oficina.oficina","oficina.codigo","oficina.oamr", "oficina.sir"};
 
             // DADES A MOSTRAR
             // Capçalera
@@ -214,21 +214,24 @@ public class ExportarUsuariosExcel extends AbstractExcelView {
                     row.createCell(11).setCellValue("");
                 }
 
+                // Externo
+                row.createCell(12).setCellValue(StringUtils.toStringSiNo(usuario.getExterno()));
+
                 // Organismo - Oficina
                 if(usuario.getUltimaOficina() != null){
-                    row.createCell(12).setCellValue(usuario.getUltimaOficina().getOrganismoResponsable().getDenominacion());
-                    row.createCell(13).setCellValue(usuario.getUltimaOficina().getOrganismoResponsable().getCodigo());
-                    row.createCell(14).setCellValue(usuario.getUltimaOficina().getDenominacion());
-                    row.createCell(15).setCellValue(usuario.getUltimaOficina().getCodigo());
-                    row.createCell(16).setCellValue(StringUtils.toStringSiNo(usuario.getUltimaOficina().getOamr()));
-                    row.createCell(17).setCellValue(StringUtils.toStringSiNo(usuario.getUltimaOficina().getSir()));
+                    row.createCell(13).setCellValue(usuario.getUltimaOficina().getOrganismoResponsable().getDenominacion());
+                    row.createCell(14).setCellValue(usuario.getUltimaOficina().getOrganismoResponsable().getCodigo());
+                    row.createCell(15).setCellValue(usuario.getUltimaOficina().getDenominacion());
+                    row.createCell(16).setCellValue(usuario.getUltimaOficina().getCodigo());
+                    row.createCell(17).setCellValue(StringUtils.toStringSiNo(usuario.getUltimaOficina().getOamr()));
+                    row.createCell(18).setCellValue(StringUtils.toStringSiNo(usuario.getUltimaOficina().getSir()));
                 }else{
-                    row.createCell(12).setCellValue("");
                     row.createCell(13).setCellValue("");
                     row.createCell(14).setCellValue("");
                     row.createCell(15).setCellValue("");
                     row.createCell(16).setCellValue("");
                     row.createCell(17).setCellValue("");
+                    row.createCell(18).setCellValue("");
                 }
 
                 // Aplicam estils a les cel·les

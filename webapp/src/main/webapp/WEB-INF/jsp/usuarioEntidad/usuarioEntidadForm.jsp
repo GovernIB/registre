@@ -217,6 +217,14 @@
                                     <div class="col-xs-12">
                                         <div class="form-group col-xs-6 espaiLinies senseMargeLat">
                                             <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                                <form:label path="externo"><spring:message code="usuario.externo"/></form:label>
+                                            </div>
+                                            <div class="col-xs-8">
+                                                <form:checkbox path="externo" disabled="${rweUsuari}"/>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-xs-6 espaiLinies senseMargeLat">
+                                            <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
                                                 <form:label path="observaciones"><spring:message code="usuario.observaciones"/></form:label>
                                             </div>
                                             <div class="col-xs-8">

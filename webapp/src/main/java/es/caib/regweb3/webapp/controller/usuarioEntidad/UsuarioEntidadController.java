@@ -57,7 +57,8 @@ public class UsuarioEntidadController extends BaseController {
         usuarioEntidad.setAsistencia(null);
         usuarioEntidad.setNotificacionEspontanea(null);
         usuarioEntidad.setBitcita(null);
-        UsuarioEntidadBusquedaForm usuarioEntidadBusqueda = new UsuarioEntidadBusquedaForm(usuarioEntidad, 1, RegwebConstantes.RWE_USUARI_ID);
+        usuarioEntidad.setExterno(false);
+        UsuarioEntidadBusquedaForm usuarioEntidadBusqueda = new UsuarioEntidadBusquedaForm(usuarioEntidad, 1);
 
         model.addAttribute("usuarioEntidadBusqueda", usuarioEntidadBusqueda);
         model.addAttribute("entidad", entidad);

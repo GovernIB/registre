@@ -24,10 +24,9 @@ public class UsuarioEntidadBusquedaForm implements Serializable {
     public UsuarioEntidadBusquedaForm() {
     }
 
-    public UsuarioEntidadBusquedaForm(UsuarioEntidad usuarioEntidad, Integer pageNumber, Long rol) {
+    public UsuarioEntidadBusquedaForm(UsuarioEntidad usuarioEntidad, Integer pageNumber) {
         this.usuarioEntidad = usuarioEntidad;
         this.pageNumber = pageNumber;
-        this.rol = rol;
     }
 
     public UsuarioEntidad getUsuarioEntidad() {
