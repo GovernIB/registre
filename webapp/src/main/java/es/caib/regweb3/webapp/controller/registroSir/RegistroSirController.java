@@ -32,6 +32,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import static es.caib.regweb3.utils.RegwebConstantes.METADATO_GENERAL;
+import static es.caib.regweb3.utils.RegwebConstantes.METADATO_PARTICULAR;
 
 /**
  * Created by Fundació BIT.
@@ -258,6 +263,17 @@ public class RegistroSirController extends BaseController {
         model.addAttribute("anexosSirFull",componerAnexoSirFull(registroSir.getAnexos()));
         model.addAttribute("rechazarForm", new RechazarForm());
         model.addAttribute("reenviarForm", new ReenviarForm());
+
+        // Metadatos
+        Set<MetadatoRegistroSir> metadatosRegistroSir = registroSir.getMetadatosRegistroSir();
+
+        if(metadatosRegistroSir!=null) {
+            Set<MetadatoRegistroSir> metadatoRSirGeneral = metadatosRegistroSir.stream().filter(metadato -> metadato.getTipo().equals(METADATO_GENERAL)).collect(Collectors.toSet());
+            Set<MetadatoRegistroSir> metadatoRSirParticular = metadatosRegistroSir.stream().filter(metadato -> metadato.getTipo().equals(METADATO_PARTICULAR)).collect(Collectors.toSet());
+
+            model.addAttribute("metadatosGenerales", metadatoRSirGeneral);
+            model.addAttribute("metadatosParticulares", metadatoRSirParticular);
+        }
 
         return "registroSir/registroSirDetalle";
     }

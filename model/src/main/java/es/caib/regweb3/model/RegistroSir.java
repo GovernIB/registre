@@ -226,7 +226,7 @@ public class RegistroSir implements Serializable {
     private Boolean referenciaUnica;
     private String codigoUnidadtramitacionInicio;
     private String decodificacionUnidadTramitacionInicio;
-    private Set<MetadatoRegistroSir> metadatoRegistroSir;
+    private Set<MetadatoRegistroSir> metadatosRegistroSir;
 
 
     private boolean libsir = false; //indica si el registro es gestionado por Libsir
@@ -716,17 +716,17 @@ public class RegistroSir implements Serializable {
     }
 
     @OneToMany(
-            fetch = FetchType.LAZY,
+            fetch = FetchType.EAGER,
             mappedBy = "registroSir",
             cascade = {CascadeType.ALL},
             targetEntity = MetadatoRegistroSir.class
     )
     public Set<MetadatoRegistroSir> getMetadatosRegistroSir() {
-        return metadatoRegistroSir;
+        return metadatosRegistroSir;
     }
 
     public void setMetadatosRegistroSir(Set<MetadatoRegistroSir> metadatoRegistroSir) {
-        this.metadatoRegistroSir = metadatoRegistroSir;
+        this.metadatosRegistroSir = metadatoRegistroSir;
     }
 
 

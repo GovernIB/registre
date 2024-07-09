@@ -195,6 +195,9 @@
                     <c:if test="${not empty trazabilidades}">
                         <li><a href="#trazabilidad" data-toggle="tab"><i class="fa fa-clock-o fa-fw"></i> <spring:message code="registroEntrada.trazabilidad"/></a></li>
                     </c:if>
+                    <c:if test="${not empty registroSir.metadatosRegistroSir}">
+                        <li><a href="#metadatos" data-toggle="tab"><i class="fa fa-file-text-o"></i> <spring:message code="regweb.metadades"/></a></li>
+                    </c:if>
                 </ul>
 
                 <div id="contenido" class="tab-content contentPrimary">
@@ -248,6 +251,13 @@
                                     <c:param name="adminEntidad" value="false"/>
                                 </c:import>
                             </c:if>
+                        </div>
+                    </c:if>
+
+                    <!-- METADATOS -->
+                    <c:if test="${not empty registroSir.metadatosRegistroSir}">
+                        <div class="tab-pane" id="metadatos">
+                            <c:import url="../registroSir/metadatos.jsp"/>
                         </div>
                     </c:if>
                 </div>
