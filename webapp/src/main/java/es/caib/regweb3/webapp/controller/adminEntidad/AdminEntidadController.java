@@ -149,6 +149,9 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
 
         }else { // Si no hay errores realizamos la búsqueda
 
+            // Ponemos la hora 23:59 a la fecha fin
+            Date fechaFin = RegistroUtils.ajustarHoraBusqueda(busqueda.getFechaFin());
+
             // Organismo origen seleccionado
             List<Long> organismos = new ArrayList<>();
             if(busqueda.getIdOrganismo() == null){
@@ -160,7 +163,7 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
             if(!busqueda.getExportarRegistros()){ // Búsqueda normal
 
                 //Búsqueda de registros
-                Paginacion paginacion = registroEntradaConsultaEjb.busqueda(busqueda.getPageNumber(), organismos,busqueda.getFechaInicio(), busqueda.getFechaFin(), busqueda.getRegistroEntrada(), busqueda.getInteressatNom(), busqueda.getInteressatLli1(), busqueda.getInteressatLli2(), busqueda.getInteressatDoc(), busqueda.getOrganDestinatari(), busqueda.getIdUsuario(), entidadActiva.getId());
+                Paginacion paginacion = registroEntradaConsultaEjb.busqueda(busqueda.getPageNumber(), organismos,busqueda.getFechaInicio(), fechaFin, busqueda.getRegistroEntrada(), busqueda.getInteressatNom(), busqueda.getInteressatLli1(), busqueda.getInteressatLli2(), busqueda.getInteressatDoc(), busqueda.getOrganDestinatari(), busqueda.getIdUsuario(), entidadActiva.getId());
 
                 busqueda.setPageNumber(1);
                 mav.addObject("paginacion", paginacion);
@@ -186,7 +189,7 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
             }else{ // Creamos un excel con los resultados
 
                 //Búsqueda de registros
-                Paginacion paginacion = registroEntradaConsultaEjb.busqueda(null, organismos,busqueda.getFechaInicio(), busqueda.getFechaFin(), busqueda.getRegistroEntrada(), busqueda.getInteressatNom(), busqueda.getInteressatLli1(), busqueda.getInteressatLli2(), busqueda.getInteressatDoc(), busqueda.getOrganDestinatari(), busqueda.getIdUsuario(), entidadActiva.getId());
+                Paginacion paginacion = registroEntradaConsultaEjb.busqueda(null, organismos,busqueda.getFechaInicio(), fechaFin, busqueda.getRegistroEntrada(), busqueda.getInteressatNom(), busqueda.getInteressatLli1(), busqueda.getInteressatLli2(), busqueda.getInteressatDoc(), busqueda.getOrganDestinatari(), busqueda.getIdUsuario(), entidadActiva.getId());
 
                 mav = new ModelAndView("exportarRegistrosExcel");
                 mav.addObject("resultados", paginacion);

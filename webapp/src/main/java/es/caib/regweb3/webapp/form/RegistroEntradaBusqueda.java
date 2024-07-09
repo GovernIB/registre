@@ -1,7 +1,6 @@
 package es.caib.regweb3.webapp.form;
 
 import es.caib.regweb3.model.RegistroEntrada;
-import es.caib.regweb3.persistence.utils.RegistroUtils;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -72,7 +71,7 @@ public class RegistroEntradaBusqueda implements Serializable {
     }
 
     public void setFechaFin(Date fechaFin) {
-        this.fechaFin = RegistroUtils.ajustarHoraBusqueda(fechaFin);
+        this.fechaFin = fechaFin;
     }
 
 	public String getInteressatNom() {
