@@ -1,0 +1,2 @@
+-- Marcar usuarios externos
+update RWE_USUARIO_ENTIDAD set externo=1 where ultimaoficina is null and usuario in (select id from rwe_usuario where tipousuario = 1 and rwe_usuari=0 and rwe_admin=0 and rwe_superadmin=0);
