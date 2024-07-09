@@ -243,7 +243,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
         q2 = em.createQuery(query.toString().replaceAll(queryBase.toString(), queryCount.toString()));
 
         // añadimos el order by
-        query.append(" order by re.fecha desc");
+        query.append(" order by re.id desc");
         q = em.createQuery(query.toString());
 
         // Mapeamos los parámetros

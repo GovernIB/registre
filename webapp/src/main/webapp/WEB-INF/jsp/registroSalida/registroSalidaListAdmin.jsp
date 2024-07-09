@@ -307,38 +307,26 @@
                             <div class="table-responsive">
 
                                 <table class="table table-bordered table-hover table-striped tablesorter">
-                                    <colgroup>
-                                        <col width="80">
-                                        <col>
-                                        <col width="80">
-                                        <col>
-                                        <col>
-                                        <col>
-                                        <col>
-                                        <col>
-                                        <col>
-                                        <col width="50">
-                                    </colgroup>
+
                                     <thead>
-                                    <tr>
-                                        <th class="center"><spring:message code="regweb.numero"/></th>
-                                        <th class="center"><spring:message code="registroSalida.fecha"/></th>
-                                        <th class="center"><spring:message code="registroSalida.usuario"/></th>
-                                        <th class="center"><spring:message code="registroSalida.oficina"/></th>
-                                        <th class="center"><spring:message code="registroSalida.origen"/></th>
-                                        <th class="center"><spring:message code="registroSalida.extracto"/></th>
-                                        <th class="center"><spring:message code="registroSalida.estado"/></th>
-                                        <th class="center">Doc.</th>
-                                        <th class="center"><spring:message code="registro.presencial"/></th>
-                                        <th class="center"><spring:message code="regweb.acciones"/></th>
-                                    </tr>
+                                        <tr>
+                                            <th class="center"><spring:message code="regweb.numero"/></th>
+                                            <th class="center"><spring:message code="registroSalida.fecha"/></th>
+                                            <th class="center"><spring:message code="registroSalida.usuario"/></th>
+                                            <th class="center"><spring:message code="registroSalida.oficina"/></th>
+                                            <th class="center"><spring:message code="registroSalida.origen"/></th>
+                                            <th class="center"><spring:message code="registroSalida.estado"/></th>
+                                            <th class="center">Doc.</th>
+                                            <th class="center"><spring:message code="registro.presencial"/></th>
+                                            <th class="center"><spring:message code="regweb.acciones"/></th>
+                                        </tr>
                                     </thead>
 
                                     <tbody>
                                     <c:forEach var="registro" items="${paginacion.listado}" varStatus="status">
                                         <tr>
                                             <td>${registro.numeroRegistroFormateado}</td>
-                                            <td class="center"><fmt:formatDate value="${registro.fecha}" pattern="dd/MM/yyyy"/></td>
+                                            <td class="center"><fmt:formatDate value="${registro.fecha}" pattern="dd/MM/yyyy HH:mm:ss"/></td>
                                             <td class="center">${registro.usuario.usuario.identificador}</td>
                                             <td class="center"><label class="no-bold" rel="popupAbajo" data-content="${registro.oficina.denominacion}" data-toggle="popover">${registro.oficina.codigo}</label></td>
                                             <c:if test="${registro.origen != null}">
@@ -347,14 +335,6 @@
                                             <c:if test="${registro.origen == null}">
                                                 <td class="center">${registro.origenExternoDenominacion}</td>
                                             </c:if>
-                                            <td>
-                                                <c:if test="${fn:length(registro.registroDetalle.extracto) <= 40}">
-                                                    <c:out value="${registro.registroDetalle.extracto}" escapeXml="true"/>
-                                                </c:if>
-                                                <c:if test="${fn:length(registro.registroDetalle.extracto) > 40}">
-                                                    <p rel="popupArriba" data-content="<c:out value="${registro.registroDetalle.extracto}" escapeXml="true"/>" data-toggle="popover"><c:out value="${registro.registroDetalle.extractoCorto}" escapeXml="true"/></p>
-                                                </c:if>
-                                            </td>
                                             <td class="center">
                                                 <c:import url="../registro/estadosRegistro.jsp">
                                                     <c:param name="estado" value="${registro.estado}"/>
