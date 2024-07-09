@@ -56,6 +56,8 @@ public class UsuarioEntidad implements Serializable{
     private Boolean notificacionEspontanea = false;
     @XmlTransient
     private Date fechaAlta;
+    @XmlTransient
+    private Boolean externo = false;
 
     public UsuarioEntidad() {
     }
@@ -68,6 +70,13 @@ public class UsuarioEntidad implements Serializable{
         this.id = id;
         this.usuario = usuario;
         this.entidad = new Entidad(idEntidad);
+    }
+
+    public UsuarioEntidad(Usuario usuario, Long idEntidad, Boolean externo) {
+        this.usuario = usuario;
+        this.externo = externo;
+        this.entidad = new Entidad(idEntidad);
+        this.fechaAlta = new Date();
     }
 
     public UsuarioEntidad(Long id, Long idUsuario, String identificadorUsuario) {
@@ -248,6 +257,15 @@ public class UsuarioEntidad implements Serializable{
 
     public void setFechaAlta(Date fechaAlta) {
         this.fechaAlta = fechaAlta;
+    }
+
+    @Column(name="EXTERNO", nullable = false)
+    public Boolean getExterno() {
+        return externo;
+    }
+
+    public void setExterno(Boolean externo) {
+        this.externo = externo;
     }
 
     @Transient

@@ -124,14 +124,17 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
             try{
                 // Creamos el Usuario en el sistema
                 usuario = usuarioEjb.crearUsuario(identificador);
+
+                // Creamos el UsuarioEntidad, marcado como externo
+                if (usuario != null) {
+                    return persist(new UsuarioEntidad(usuario, idEntidad, true));
+                }
+
             }catch (Exception e){
                 log.info("Ha ocurrido un error creando el usuario en regweb: " + e.getMessage());
                 throw new I18NException("error.exception");
             }
 
-            if (usuario != null) {
-                return persist(new UsuarioEntidad(null, usuario, idEntidad));
-            }
         }
 
         return usuarioEntidad;
@@ -386,7 +389,6 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
             where.add(" upper(usuarioEntidad.usuario.documento) like upper(:documento) ");
             parametros.put("documento", "%" + usuarioEntidad.getUsuario().getDocumento().toLowerCase() + "%");
         }
-
         // Tipo Usuario
         if (usuarioEntidad.getUsuario().getTipoUsuario() != null) {
             where.add("usuarioEntidad.usuario.tipoUsuario = :tipoUsuario ");
@@ -459,6 +461,12 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
         if (usuarioEntidad.getNotificacionEspontanea() != null) {
             where.add("usuarioEntidad.notificacionEspontanea = :notificacionEspontanea ");
             parametros.put("notificacionEspontanea", usuarioEntidad.getNotificacionEspontanea());
+        }
+
+        // Externo
+        if (usuarioEntidad.getExterno() != null) {
+            where.add("usuarioEntidad.externo = :externo ");
+            parametros.put("externo", usuarioEntidad.getExterno());
         }
 
         //Rol

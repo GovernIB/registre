@@ -118,6 +118,18 @@
                                         </form:select>
                                     </div>
                                 </div>
+                                <div class="form-group col-xs-6 espaiLinies senseMargeLat">
+                                    <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                        <form:label path="usuarioEntidad.externo"><spring:message code="usuario.externo"/></form:label>
+                                    </div>
+                                    <div class="col-xs-8">
+                                        <form:select path="usuarioEntidad.externo" cssClass="chosen-select">
+                                            <form:option value="" label="..."/>
+                                            <form:option value="true"><spring:message code="regweb.si"/></form:option>
+                                            <form:option value="false"><spring:message code="regweb.no"/></form:option>
+                                        </form:select>
+                                    </div>
+                                </div>
                             </div>
 
 
@@ -346,11 +358,11 @@
                                                 <thead>
                                                     <tr>
                                                         <th><spring:message code="regweb.nombre"/></th>
+                                                        <th><spring:message code="usuario.identificador"/></th>
+                                                        <th><spring:message code="usuario.tipo.corto"/></th>
                                                         <c:if test="${usuarioEntidadBusqueda.usuarioEntidad.usuario.tipoUsuario != 2}">
                                                             <th><spring:message code="oficina.oficina"/></th>
                                                         </c:if>
-                                                        <th><spring:message code="usuario.identificador"/></th>
-                                                        <th><spring:message code="usuario.tipo.corto"/></th>
                                                         <th><spring:message code="usuario.roles"/></th>
                                                         <th class="center"><spring:message code="regweb.acciones"/></th>
                                                     </tr>
@@ -360,9 +372,6 @@
                                                 <c:forEach var="usuarioEntidad" items="${paginacion.listado}">
                                                     <tr>
                                                         <td>${usuarioEntidad.nombreCompleto}</td>
-                                                        <c:if test="${usuarioEntidadBusqueda.usuarioEntidad.usuario.tipoUsuario != 2}">
-                                                            <td>${usuarioEntidad.ultimaOficina.denominacion} <c:if test="${usuarioEntidad.ultimaOficina.oamr}"><i class="fa fa-star"></i></c:if></td>
-                                                        </c:if>
                                                         <td>${usuarioEntidad.usuario.identificador}</td>
                                                         <td>
                                                             <c:if test="${usuarioEntidad.usuario.tipoUsuario == 1}">
@@ -372,6 +381,9 @@
                                                                 <span class="label label-danger"><spring:message code="usuario.tipo.2"/></span>
                                                             </c:if>
                                                         </td>
+                                                        <c:if test="${usuarioEntidadBusqueda.usuarioEntidad.usuario.tipoUsuario != 2}">
+                                                            <td>${usuarioEntidad.ultimaOficina.denominacion} <c:if test="${usuarioEntidad.ultimaOficina.oamr}"><i class="fa fa-star"></i></c:if></td>
+                                                        </c:if>
                                                         <td>
                                                             <c:if test="${usuarioEntidad.usuario.rwe_superadmin}">
                                                                 <span class="label label-success" rel="popupAbajo" data-content="<strong><spring:message code="rol.1.nombre"/>:</strong> <spring:message code="rol.1.descripcion"/>" data-toggle="popover"><i class="fa fa-institution"></i></span>
