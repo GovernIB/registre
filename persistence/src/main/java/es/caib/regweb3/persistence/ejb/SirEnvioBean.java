@@ -241,9 +241,9 @@ public class SirEnvioBean implements SirEnvioLocal {
             Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService(PropiedadGlobalUtil.getDir3CaibServer(entidad.getId()), PropiedadGlobalUtil.getDir3CaibUsername(entidad.getId()), PropiedadGlobalUtil.getDir3CaibPassword(entidad.getId()));
             OficinaTF oficinaSirDestino = oficinasService.obtenerOficina(codigoOficinaSir, null, null);
 
-            log.info("----------------------------------------------------------------------------------------------");
-            log.info("Enviando FicheroIntercambio del registro: " + registro.getNumeroRegistroFormateado() + " mediante SIR a: " + oficinaSirDestino.getDenominacion());
-            log.info("");
+            log.debug("----------------------------------------------------------------------------------------------");
+            log.debug("Enviando FicheroIntercambio del registro: " + registro.getNumeroRegistroFormateado() + " mediante SIR a: " + oficinaSirDestino.getDenominacion());
+            log.debug("");
 
             if (tipoRegistro.equals(RegwebConstantes.REGISTRO_ENTRADA)) {
 
@@ -290,9 +290,9 @@ public class SirEnvioBean implements SirEnvioLocal {
                 integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_SIR, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - inicio.getTime(), entidad.getId(), registroSir.getIdentificadorIntercambio());
             }
 
-            log.info("");
-            log.info("Fin enviando FicheroIntercambio del registro: " + registroSir.getNumeroRegistro());
-            log.info("----------------------------------------------------------------------------------------------");
+            log.debug("");
+            log.debug("Fin enviando FicheroIntercambio del registro: " + registroSir.getNumeroRegistro());
+            log.debug("----------------------------------------------------------------------------------------------");
 
         } catch (I18NValidationException | I18NException s) {
             s.printStackTrace();
@@ -368,9 +368,9 @@ public class SirEnvioBean implements SirEnvioLocal {
                 RegistroSalida registroSalida = registroSalidaEjb.findByIdCompleto(idRegistro);
                 RegistroDetalle registroDetalle = registroSalida.getRegistroDetalle();
 
-                log.info("----------------------------------------------------------------------------------------------");
-                log.info("Enviando FicheroIntercambio del registro: " + registroSalida.getNumeroRegistroFormateado() + " mediante SIR a: " + oficinaReenvio.getDenominacion());
-                log.info("");
+                log.debug("----------------------------------------------------------------------------------------------");
+                log.debug("Enviando FicheroIntercambio del registro: " + registroSalida.getNumeroRegistroFormateado() + " mediante SIR a: " + oficinaReenvio.getDenominacion());
+                log.debug("");
 
                 // Actualizamos el Registro con campos SIR
                 registroDetalle.setIndicadorPrueba(IndicadorPrueba.NORMAL);
@@ -421,9 +421,9 @@ public class SirEnvioBean implements SirEnvioLocal {
             // Integración
             integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_SIR, descripcion, peticion.toString(), System.currentTimeMillis() - inicio.getTime(), registroSir.getEntidad().getId(), registroSir.getIdentificadorIntercambio());
 
-            log.info("");
-            log.info("Fin reenviando FicheroIntercambio del registro: " + registroSir.getNumeroRegistro());
-            log.info("----------------------------------------------------------------------------------------------");
+            log.debug("");
+            log.debug("Fin reenviando FicheroIntercambio del registro: " + registroSir.getNumeroRegistro());
+            log.debug("----------------------------------------------------------------------------------------------");
 
         } catch (I18NException | I18NValidationException e) {
             e.printStackTrace();
@@ -493,9 +493,9 @@ public class SirEnvioBean implements SirEnvioLocal {
         peticion.append("Destino: ").append(registroSir.getDecodificacionEntidadRegistralDestino()).append(System.getProperty("line.separator"));
         peticion.append("Usuario: ").append(usuario.getNombreCompleto()).append(System.getProperty("line.separator"));
 
-        log.info("----------------------------------------------------------------------------------------------");
-        log.info("Reenviando intercambio: " + registroSir.getNumeroRegistro() + " mediante SIR a: " + oficinaReenvio.getDenominacion());
-        log.info("");
+        log.debug("----------------------------------------------------------------------------------------------");
+        log.debug("Reenviando intercambio: " + registroSir.getNumeroRegistro() + " mediante SIR a: " + oficinaReenvio.getDenominacion());
+        log.debug("");
 
         try {
 
@@ -546,9 +546,9 @@ public class SirEnvioBean implements SirEnvioLocal {
             // Integracion
             integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_SIR, descripcion, peticion.toString(), System.currentTimeMillis() - inicio.getTime(), registroSir.getEntidad().getId(), registroSir.getIdentificadorIntercambio());
 
-            log.info("");
-            log.info("Fin reenviando intercambio: " + registroSir.getNumeroRegistro());
-            log.info("----------------------------------------------------------------------------------------------");
+            log.debug("");
+            log.debug("Fin reenviando intercambio: " + registroSir.getNumeroRegistro());
+            log.debug("----------------------------------------------------------------------------------------------");
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -577,9 +577,9 @@ public class SirEnvioBean implements SirEnvioLocal {
         peticion.append("Destino: ").append(registroSir.getDecodificacionEntidadRegistralDestino()).append(System.getProperty("line.separator"));
         peticion.append("Usuario: ").append(usuario.getNombreCompleto()).append(System.getProperty("line.separator"));
 
-        log.info("----------------------------------------------------------------------------------------------");
-        log.info("Rechazando intercambio: " + registroSir.getNumeroRegistro() + " mediante SIR a: " + registroSir.getDecodificacionEntidadRegistralInicio());
-        log.info("");
+        log.debug("----------------------------------------------------------------------------------------------");
+        log.debug("Rechazando intercambio: " + registroSir.getNumeroRegistro() + " mediante SIR a: " + registroSir.getDecodificacionEntidadRegistralInicio());
+        log.debug("");
 
         try {
 
@@ -628,9 +628,9 @@ public class SirEnvioBean implements SirEnvioLocal {
             // Integracion
             integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_SIR, descripcion, peticion.toString(), System.currentTimeMillis() - inicio.getTime(), registroSir.getEntidad().getId(), registroSir.getIdentificadorIntercambio());
 
-            log.info("");
-            log.info("Fin rechazando intercambio: " + registroSir.getNumeroRegistro());
-            log.info("----------------------------------------------------------------------------------------------");
+            log.debug("");
+            log.debug("Fin rechazando intercambio: " + registroSir.getNumeroRegistro());
+            log.debug("----------------------------------------------------------------------------------------------");
 
         } catch (Exception e) {
             e.printStackTrace();
