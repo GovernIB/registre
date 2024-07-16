@@ -42,3 +42,7 @@ select setval('RWE_TRAZABILIDAD_SEQ',  (SELECT MAX(id) from RWE_TRAZABILIDAD) + 
 select setval('RWE_TRAZABILIDADSIR_SEQ',  (SELECT MAX(id) from RWE_TRAZABILIDAD_SIR) + 1);
 select setval('RWE_USUARIO_SEQ',  (SELECT MAX(id) from RWE_USUARIO) + 1);
 select setval('RWE_USUARIOENTIDAD_SEQ',  (SELECT MAX(id) from RWE_USUARIO_ENTIDAD) + 1);
+
+
+--Nuevos campos RWE_USUARIO_ENTIDAD
+ALTER TABLE RWE_USUARIO_ENTIDAD add externo bool DEFAULT false not null;
