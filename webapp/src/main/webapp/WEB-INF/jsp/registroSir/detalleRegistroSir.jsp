@@ -207,7 +207,7 @@
         <dt><i class="fa fa-newspaper-o"></i> <spring:message
                 code="registroSir.expediente"/>:
         </dt>
-        <dd> ${registroSir.numeroExpediente}</dd>
+        <dd class="amagarCampLLarg"> ${registroSir.numeroExpediente}</dd>
     </c:if>
 
     <c:if test="${not empty registroSir.tipoTransporte}">
@@ -218,7 +218,7 @@
 
     <c:if test="${not empty registroSir.observacionesApunte}">
         <dt><i class="fa fa-file-text-o"></i> <spring:message code="registroSir.observaciones"/>: </dt>
-        <dd> ${registroSir.observacionesApunte}</dd>
+        <dd class="amagarCampLLarg"> ${registroSir.observacionesApunte}</dd>
     </c:if>
 
     <c:if test="${not empty registroSir.aplicacion}">

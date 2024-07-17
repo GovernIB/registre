@@ -992,15 +992,15 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
         custodyParameters.put("anexoFull", anexoFull);
         custodyParameters.put("usuarioEntidad", usuarioEntidad);
 
-        Interesado interesado = registro.getRegistroDetalle().getInteresados().get(0);
-        custodyParameters.put("ciudadano_nombre", interesado.getNombreCompleto());
-
-        String documentAdministratiu = interesado.getDocumento();
-        if (documentAdministratiu == null) {
-            documentAdministratiu = interesado.getCodigoDir3();
+        if(registro.getRegistroDetalle().getInteresados()!= null && registro.getRegistroDetalle().getInteresados().size() > 0) {
+            Interesado interesado = registro.getRegistroDetalle().getInteresados().get(0);
+            custodyParameters.put("ciudadano_nombre", interesado.getNombreCompleto());
+            String documentAdministratiu = interesado.getDocumento();
+            if (documentAdministratiu == null) {
+                documentAdministratiu = interesado.getCodigoDir3();
+            }
+            custodyParameters.put("ciudadano_idadministrativo", documentAdministratiu);
         }
-
-        custodyParameters.put("ciudadano_idadministrativo", documentAdministratiu);
 
         return custodyParameters;
     }

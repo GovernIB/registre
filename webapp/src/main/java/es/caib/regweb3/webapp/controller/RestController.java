@@ -21,10 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 /**
  * Created by Fundació BIT.
@@ -271,6 +268,18 @@ public class RestController extends BaseController {
     AnexoFull obtenerAnexo(@RequestParam Long idAnexo, @RequestParam Long idEntidad ) throws Exception, I18NException {
 
         return anexoEjb.getAnexoFullLigero(idAnexo, idEntidad);
+    }
+
+    /**
+     * Obtiene un list de {@link es.caib.regweb3.model.MetadatoAnexo}
+     */
+    @RequestMapping(value = "/obtenerMetadatosAnexo", method = RequestMethod.GET)
+    public @ResponseBody
+    Set<MetadatoAnexo> obtenerMetadatosAnexo(@RequestParam Long idAnexo, @RequestParam Long idEntidad ) throws Exception, I18NException {
+
+        AnexoFull anexoFull = anexoEjb.getAnexoFullLigero(idAnexo, idEntidad);
+
+        return anexoFull.getAnexo().getMetadatosAnexos();
     }
 
     /**

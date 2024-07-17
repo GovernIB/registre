@@ -3,109 +3,125 @@
 
 <div id="detalleAnexo" class="modal fade">
 
-    <div class="modal-dialog modal-lg" id="formularioAnexo">
+    <div class="modal-dialog modal-lg detalleAnexo" id="formularioAnexo">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true" onclick="limpiarAnexoDetalle()">x</button>
                 <h3 id="anexoTitulo"></h3>
             </div>
 
-            <div class="modal-body">
+            <ul class="nav nav-tabs" id="tabAnexo">
+                <li class="active"><a href="#tabDetalleAnexo" data-toggle="tab"><h4 id="detalleAnexoTitulo"><spring:message code="anexo.detalle"/></h4></a></li>
 
-                <div class="form-group col-xs-6">
-                    <div class="col-xs-5 pull-left etiqueta_regweb control-label">
-                        <label><spring:message code="anexo.titulo"/></label>
-                    </div>
-                    <div class="col-xs-7" id="titulo"></div>
-                </div>
-                <div class="form-group col-xs-6">
-                    <div class="col-xs-5 pull-left etiqueta_regweb control-label">
-                        <label ><spring:message code="anexo.validezDocumento"/></label>
-                    </div>
-                    <div class="col-xs-7" id="validezDocumento"></div>
-                </div>
+                <li><a href="#tabMetadatos" data-toggle="tab"><h4><spring:message code="regweb.metadades"/></h4></a></li>
 
-                <div class="form-group col-xs-6">
-                    <div class="col-xs-5 pull-left etiqueta_regweb control-label">
-                        <label><spring:message code="anexo.tipoDocumento"/></label>
-                    </div>
-                    <div class="col-xs-7" id="tipoDocumento"></div>
-                </div>
+            </ul>
 
-                <div class="form-group col-xs-6">
-                    <div class="col-xs-5 pull-left etiqueta_regweb control-label">
-                        <label><spring:message code="anexo.tipoDocumental"/></label>
-                    </div>
-                    <div class="col-xs-7" id="tipoDocumental"></div>
-                </div>
+            <div class="tab-content" id='content'>
+                <div class="tab-pane active" id="tabDetalleAnexo">
+                    <div class="modal-body">
 
-                <div class="form-group col-xs-6">
-                    <div class="col-xs-5 pull-left etiqueta_regweb control-label">
-                        <label><spring:message code="anexo.origen"/></label>
-                    </div>
-                    <div class="col-xs-7" id="origen"></div>
-                </div>
-
-                <div class="form-group col-xs-6">
-                    <div class="col-xs-5 pull-left etiqueta_regweb control-label">
-                        <label><spring:message code="anexo.observaciones"/></label>
-                    </div>
-                    <div class="col-xs-7" id="observacionesAnexo"></div>
-                </div>
-
-                <div class="form-group col-xs-6">
-                    <div class="col-xs-5 pull-left etiqueta_regweb control-label">
-                        <label><spring:message code="anexo.escaneado"/></label>
-                    </div>
-                    <div class="col-xs-7" id="escaneado"></div>
-                </div>
-
-                <div class="form-group col-xs-6">
-                    <div class="col-xs-5 pull-left etiqueta_regweb control-label">
-                        <label><spring:message code="anexo.mime"/></label>
-                    </div>
-                    <div class="col-xs-7" id="mime"></div>
-                </div>
-
-                <div class="form-group col-xs-6">
-                    <div class="col-xs-5 pull-left etiqueta_regweb control-label">
-                        <label><spring:message code="anexo.nombre.fichero"/></label>
-                    </div>
-                    <div class="col-xs-7" id="nombreFichero"></div>
-                </div>
-
-                <div class="form-group col-xs-10">
-                    <div class="col-xs-3 pull-left etiqueta_regweb control-label">
-                        <label><spring:message code="anexo.hash"/></label>
-                    </div>
-                    <div class="col-xs-9" id="hash"></div>
-                </div>
-
-                <div id="firmaInformacion">
-                    <div class="form-group col-xs-6">
-                        <div class="col-xs-5 pull-left etiqueta_regweb control-label">
-                            <label><spring:message code="anexo.tipoFirma"/></label>
+                        <div class="form-group col-xs-6">
+                            <div class="col-xs-5 pull-left etiqueta_regweb control-label">
+                                <label><spring:message code="anexo.titulo"/></label>
+                            </div>
+                            <div class="col-xs-7" id="titulo"></div>
                         </div>
-                        <div class="col-xs-7" id="tipoFirma"></div>
-                    </div>
-                    <div class="form-group col-xs-6">
-                        <div class="col-xs-5 pull-left etiqueta_regweb control-label">
-                            <label><spring:message code="anexo.perfilFirma"/></label>
+                        <div class="form-group col-xs-6">
+                            <div class="col-xs-5 pull-left etiqueta_regweb control-label">
+                                <label ><spring:message code="anexo.validezDocumento"/></label>
+                            </div>
+                            <div class="col-xs-7" id="validezDocumento"></div>
                         </div>
-                        <div class="col-xs-7" id="perfilFirma"></div>
-                    </div>
-                    <div class="form-group col-xs-6">
-                        <div class="col-xs-5 pull-left etiqueta_regweb control-label">
-                            <label><spring:message code="anexo.formatoFirma"/></label>
+
+                        <div class="form-group col-xs-6">
+                            <div class="col-xs-5 pull-left etiqueta_regweb control-label">
+                                <label><spring:message code="anexo.tipoDocumento"/></label>
+                            </div>
+                            <div class="col-xs-7" id="tipoDocumento"></div>
                         </div>
-                        <div class="col-xs-7" id="formatoFirma"></div>
+
+                        <div class="form-group col-xs-6">
+                            <div class="col-xs-5 pull-left etiqueta_regweb control-label">
+                                <label><spring:message code="anexo.tipoDocumental"/></label>
+                            </div>
+                            <div class="col-xs-7" id="tipoDocumental"></div>
+                        </div>
+
+                        <div class="form-group col-xs-6">
+                            <div class="col-xs-5 pull-left etiqueta_regweb control-label">
+                                <label><spring:message code="anexo.origen"/></label>
+                            </div>
+                            <div class="col-xs-7" id="origen"></div>
+                        </div>
+
+                        <div class="form-group col-xs-6">
+                            <div class="col-xs-5 pull-left etiqueta_regweb control-label">
+                                <label><spring:message code="anexo.observaciones"/></label>
+                            </div>
+                            <div class="col-xs-7" id="observacionesAnexo"></div>
+                        </div>
+
+                        <div class="form-group col-xs-6">
+                            <div class="col-xs-5 pull-left etiqueta_regweb control-label">
+                                <label><spring:message code="anexo.escaneado"/></label>
+                            </div>
+                            <div class="col-xs-7" id="escaneado"></div>
+                        </div>
+
+                        <div class="form-group col-xs-6">
+                            <div class="col-xs-5 pull-left etiqueta_regweb control-label">
+                                <label><spring:message code="anexo.mime"/></label>
+                            </div>
+                            <div class="col-xs-7" id="mime"></div>
+                        </div>
+
+                        <div class="form-group col-xs-6">
+                            <div class="col-xs-5 pull-left etiqueta_regweb control-label">
+                                <label><spring:message code="anexo.nombre.fichero"/></label>
+                            </div>
+                            <div class="col-xs-7" id="nombreFichero"></div>
+                        </div>
+
+                        <div class="form-group col-xs-10">
+                            <div class="col-xs-3 pull-left etiqueta_regweb control-label">
+                                <label><spring:message code="anexo.hash"/></label>
+                            </div>
+                            <div class="col-xs-9" id="hash"></div>
+                        </div>
+
+                        <div id="firmaInformacion">
+                            <div class="form-group col-xs-6">
+                                <div class="col-xs-5 pull-left etiqueta_regweb control-label">
+                                    <label><spring:message code="anexo.tipoFirma"/></label>
+                                </div>
+                                <div class="col-xs-7" id="tipoFirma"></div>
+                            </div>
+                            <div class="form-group col-xs-6">
+                                <div class="col-xs-5 pull-left etiqueta_regweb control-label">
+                                    <label><spring:message code="anexo.perfilFirma"/></label>
+                                </div>
+                                <div class="col-xs-7" id="perfilFirma"></div>
+                            </div>
+                            <div class="form-group col-xs-6">
+                                <div class="col-xs-5 pull-left etiqueta_regweb control-label">
+                                    <label><spring:message code="anexo.formatoFirma"/></label>
+                                </div>
+                                <div class="col-xs-7" id="formatoFirma"></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
+                <div class="tab-pane" id="tabMetadatos">
+                    <div class="modal-body">
+                        <!-- Metadatos se monta dinamicamente por javascript-->
+                        <div id="metadatos"></div>
 
-
-                <div class="clearfix"></div>
-
+                    </div>
+                </div>
             </div>
+
+
             <div class="modal-footer">
                 <button class="btn btn-sm" data-dismiss="modal" aria-hidden="true" onclick="limpiarAnexoDetalle()">
                     <spring:message code="regweb.cerrar"/></button>
@@ -120,6 +136,7 @@
 
     var urlCargarAnexo = '<c:url value="/rest/obtenerAnexo"/>';
     var urlTipoDocumental = '<c:url value="/rest/obtenerTipoDocumental"/>';
+    var urlMetadatosAnexo = '<c:url value="/rest/obtenerMetadatosAnexo"/>';
 
     var tradsanexo = new Array();
     tradsanexo['tipoDocumento.01'] = "<spring:message code='tipoDocumento.01' javaScriptEscape='true' />";

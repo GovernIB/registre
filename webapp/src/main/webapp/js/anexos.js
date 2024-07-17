@@ -17,7 +17,7 @@ function obtenerAnexo(idAnexo, idEntidad){
 
         success: function(anexoFull) {
 
-            $('#anexoTitulo').html(tradsanexo['anexo.detalle']+": "+anexoFull.anexo.titulo);
+            $('#anexoTitulo').html(anexoFull.anexo.titulo);
             $('#titulo').html(anexoFull.anexo.titulo);
             $('#validezDocumento').html(tradsanexo['tipoValidezDocumento.'+anexoFull.anexo.validezDocumento]);
             $('#tipoDocumento').html(tradsanexo['tipoDocumento.0'+anexoFull.anexo.tipoDocumento]);
@@ -46,8 +46,56 @@ function obtenerAnexo(idAnexo, idEntidad){
             }else{
                 $('#firmaInformacion').hide();
             }
+
+            $('#tabDetalleAnexo' + ' a:first').tab('show');
+
+            // Obtenemos los metadatos del anexo
+            obtenerMetadatos(idAnexo, idEntidad);
+
+
         }
     });
+}
+
+
+
+/**
+ * Obtiene los metadatos de un anexo
+ * @param url donde hacer la petición ajax
+ * @param id
+ * @param elemento
+ * @return Texto con la traducción del elmento solicitado
+ */
+function obtenerMetadatos(idAnexo, idEntidad){
+    jQuery.ajax({
+        url: urlMetadatosAnexo,
+        data: { idAnexo: idAnexo, idEntidad: idEntidad},
+        type: "GET",
+        dataType: 'json',
+        contentType: 'application/json',
+        success: function(metadatosList) {
+            // Pintamos los resultados en el div correspondiente
+            $('#metadatos').html("EStoy en la nueva función");
+
+            console.log(metadatosList);
+
+            if(metadatosList.length > 0) {
+                var html = '';
+                for (var i = 0; i < metadatosList.length; i++) {
+                    html += '<div class="form-group col-xs-12">\n' +
+                        '        <div class="col-xs-3  pull-left  etiqueta_regweb control-label">\n' +
+                        '            <label>' + metadatosList[i].campo + ':</label> </div>\n' +
+                        '        <div class="col-xs-9 ajustTamanySir" >' + metadatosList[i].valor + '</div>\n'+
+                        '        </div>\n';
+
+                }
+
+                $('#metadatos').html(html);
+
+            }
+
+        }
+    }) ;
 }
 
 /**

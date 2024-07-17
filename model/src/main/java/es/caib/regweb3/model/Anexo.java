@@ -102,7 +102,7 @@ public class Anexo implements Serializable {
     //SICRES4
     private String resumen;
     private String codigoFormulario;
-    private Set<MetadatoAnexo> metadatoAnexos;
+    private Set<MetadatoAnexo> metadatosAnexos;
 
 
     //Referencia Única
@@ -524,11 +524,11 @@ public class Anexo implements Serializable {
     )
     @JsonIgnore
     public Set<MetadatoAnexo> getMetadatosAnexos() {
-        return metadatoAnexos;
+        return metadatosAnexos;
     }
 
     public void setMetadatosAnexos(Set<MetadatoAnexo> metadatoAnexos) {
-        this.metadatoAnexos = metadatoAnexos;
+        this.metadatosAnexos = metadatoAnexos;
     }
 
     @Column(name = "ENDPOINTRFU")

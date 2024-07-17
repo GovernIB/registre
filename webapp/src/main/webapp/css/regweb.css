@@ -1405,3 +1405,15 @@ pre {
 .mayusculas{
     text-transform: uppercase;
 }
+
+.amagarCampLLarg{
+    overflow: hidden;
+}
+
+.detalleAnexo .modal-header{
+    border-bottom: none;
+}
+
+.detalleAnexo .modal-footer{
+    border-top: none;
+}

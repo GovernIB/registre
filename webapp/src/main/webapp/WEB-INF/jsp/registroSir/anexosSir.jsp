@@ -145,7 +145,7 @@
 <%--Detalle de cada anexo sir--%>
 <c:forEach var="anexoSir" items="${anexosSirFull}" varStatus="status">
 
-    <div id="detalleAnexoSir${anexoSir.documento.id}" class="modal fade">
+    <div id="detalleAnexoSir${anexoSir.documento.id}" class="modal fade detalleAnexo">
 
         <div class="modal-dialog modal-lg" id="formularioAnexo">
             <div class="modal-content">
@@ -154,67 +154,88 @@
                     <h3>${anexoSir.documento.nombreFichero}</h3>
                 </div>
 
-                <div class="modal-body">
+                <ul class="nav nav-tabs" id="tabAnexoSir">
+                    <li class="active"><a href="#tabDetalleAnexoSir" data-toggle="tab"><h4 id="detalleAnexoSirTitulo"><spring:message code="anexo.detalle"/></h4></a></li>
 
-                    <div class="form-group col-xs-6">
-                        <div class="col-xs-5 pull-left etiqueta_regweb control-label">
-                            <label><spring:message code="anexo.titulo"/></label>
-                        </div>
-                        <div class="col-xs-7">${anexoSir.documento.nombreFichero}</div>
-                    </div>
+                    <li><a href="#tabMetadatosSir" data-toggle="tab"><h4><spring:message code="regweb.metadades"/></h4></a></li>
 
-                    <c:if test="${not empty anexoSir.documento.validezDocumento}">
-                        <div class="form-group col-xs-6">
-                            <div class="col-xs-5 pull-left etiqueta_regweb control-label">
-                                <label ><spring:message code="anexo.validezDocumento"/></label>
+                </ul>
+
+
+
+                <div class="tab-content" id='content'>
+                    <div class="tab-pane active" id="tabDetalleAnexoSir">
+                        <div class="modal-body">
+                            <div class="form-group col-xs-6">
+                                <div class="col-xs-5 pull-left etiqueta_regweb control-label">
+                                    <label><spring:message code="anexo.titulo"/></label>
+                                </div>
+                                <div class="col-xs-7">${anexoSir.documento.nombreFichero}</div>
                             </div>
-                            <div class="col-xs-7"><spring:message code="tipoValidezDocumento.${RegwebConstantes.TIPOVALIDEZDOCUMENTO_BY_CODIGO_SICRES[anexoSir.documento.validezDocumento]}"/></div>
-                        </div>
-                    </c:if>
 
-                    <div class="form-group col-xs-6">
-                        <div class="col-xs-5 pull-left etiqueta_regweb control-label">
-                            <label><spring:message code="anexo.tipoDocumento"/></label>
+                            <c:if test="${not empty anexoSir.documento.validezDocumento}">
+                                <div class="form-group col-xs-6">
+                                    <div class="col-xs-5 pull-left etiqueta_regweb control-label">
+                                        <label ><spring:message code="anexo.validezDocumento"/></label>
+                                    </div>
+                                    <div class="col-xs-7"><spring:message code="tipoValidezDocumento.${RegwebConstantes.TIPOVALIDEZDOCUMENTO_BY_CODIGO_SICRES[anexoSir.documento.validezDocumento]}"/></div>
+                                </div>
+                            </c:if>
+
+                            <div class="form-group col-xs-6">
+                                <div class="col-xs-5 pull-left etiqueta_regweb control-label">
+                                    <label><spring:message code="anexo.tipoDocumento"/></label>
+                                </div>
+                                <div class="col-xs-7"><spring:message code="tipoDocumento.${anexoSir.documento.tipoDocumento}"/></div>
+                            </div>
+
+                                <%-- <div class="form-group col-xs-6">
+                                     <div class="col-xs-5 pull-left etiqueta_regweb control-label">
+                                         <label><spring:message code="anexo.tamano"/></label>
+                                     </div>
+                                     <div class="col-xs-7">${anexoSir.documento.tamano} KB</div>
+                                 </div>--%>
+
+                            <div class="form-group col-xs-6">
+                                <div class="col-xs-5 pull-left etiqueta_regweb control-label">
+                                    <label><spring:message code="anexo.observaciones"/></label>
+                                </div>
+                                <div class="col-xs-7">${anexoSir.documento.observaciones}</div>
+                            </div>
+
+                            <div class="form-group col-xs-6">
+                                <div class="col-xs-5 pull-left etiqueta_regweb control-label">
+                                    <label><spring:message code="anexo.mime"/></label>
+                                </div>
+                                <div class="col-xs-7">${anexoSir.documento.tipoMIME}</div>
+                            </div>
+
+                            <div class="form-group col-xs-6">
+                                <div class="col-xs-5 pull-left etiqueta_regweb control-label">
+                                    <label><spring:message code="anexoSir.identificadorFichero"/></label>
+                                </div>
+                                <div class="col-xs-7">${anexoSir.documento.identificadorFichero}</div>
+                            </div>
+                       <%-- <div class="clearfix"></div>--%>
                         </div>
-                        <div class="col-xs-7"><spring:message code="tipoDocumento.${anexoSir.documento.tipoDocumento}"/></div>
                     </div>
-
-                        <%-- <div class="form-group col-xs-6">
-                             <div class="col-xs-5 pull-left etiqueta_regweb control-label">
-                                 <label><spring:message code="anexo.tamano"/></label>
-                             </div>
-                             <div class="col-xs-7">${anexoSir.documento.tamano} KB</div>
-                         </div>--%>
-
-                    <div class="form-group col-xs-6">
-                        <div class="col-xs-5 pull-left etiqueta_regweb control-label">
-                            <label><spring:message code="anexo.observaciones"/></label>
+                    <div class="tab-pane" id="tabMetadatosSir">
+                        <div class="modal-body">
+                            <!-- Metadatos se monta dinamicamente por javascript-->
+                            <c:forEach items="${anexoSir.documento.metadatosAnexos}" var="metadatoSir">
+                                <div class="form-group col-xs-12">
+                                    <div class="col-xs-3  pull-left  etiqueta_regweb control-label">
+                                        <label>${metadatoSir.campo}: </label> </div>
+                                    <div class="col-xs-9 ajustTamanySir" >${metadatoSir.valor}</div>
+                                </div>
+                            </c:forEach>
                         </div>
-                        <div class="col-xs-7">${anexoSir.documento.observaciones}</div>
                     </div>
-
-                    <div class="form-group col-xs-6">
-                        <div class="col-xs-5 pull-left etiqueta_regweb control-label">
-                            <label><spring:message code="anexo.mime"/></label>
-                        </div>
-                        <div class="col-xs-7">${anexoSir.documento.tipoMIME}</div>
-                    </div>
-
-                    <div class="form-group col-xs-6">
-                        <div class="col-xs-5 pull-left etiqueta_regweb control-label">
-                            <label><spring:message code="anexoSir.identificadorFichero"/></label>
-                        </div>
-                        <div class="col-xs-7">${anexoSir.documento.identificadorFichero}</div>
-                    </div>
-
-                    <div class="clearfix"></div>
-
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-sm" data-dismiss="modal" aria-hidden="true">
                         <spring:message code="regweb.cerrar"/></button>
                 </div>
-
             </div>
         </div>
     </div>

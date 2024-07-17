@@ -213,19 +213,65 @@ public class RegistroSir implements Serializable {
      */
     private List<InteresadoSir> interesados = null;
 
+    /**
+     * Fecha de recepción del RegistroSir.
+     */
     private Date fechaRecepcion;
+
+    /**
+     * fecha Estado del RegistroSir.
+     */
     private Date fechaEstado;
+    /**
+     * Número de reintentos.
+     */
     private Integer numeroReintentos = 0;
+
+    /**
+     * Código de error.
+     */
     private String codigoError;
+
+    /**
+     * Descripción del error.
+     */
     private String descripcionError;
 
     //SICRES4
+
+    /**
+     * Modo de registro.
+     */
     private String modoRegistro; // isPresencial
+
+    /**
+     * Código SIA.
+     */
     private String codigoSia;
+
+    /**
+     * Fecha de registro de presentación.
+     */
     private Date fechaRegistroPresentacion;
+
+    /**
+     * Referencia única.
+     */
     private Boolean referenciaUnica;
+
+    /**
+     * Código único de la unidad de tramitación de inicio
+     */
     private String codigoUnidadtramitacionInicio;
+
+    /**
+     * Descripción de la unidad de tramitación de inicio
+     */
     private String decodificacionUnidadTramitacionInicio;
+
+    /**
+     * Metadatos del registro
+     */
     private Set<MetadatoRegistroSir> metadatosRegistroSir;
 
 

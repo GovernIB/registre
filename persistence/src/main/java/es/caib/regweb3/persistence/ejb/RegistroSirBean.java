@@ -2049,15 +2049,17 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
 
         // SICRES 4 Campos NTI vienen informados como metadatos
         for (MetadatoAnexoSir metadatoAnexoSir : anexoSir.getMetadatosAnexos()) {
-            if (metadatoAnexoSir.getCampo().equals("origenCiudadanoAdministracion")) {
-                anexo.setOrigenCiudadanoAdmin(Integer.valueOf(metadatoAnexoSir.getValor()));
+            if (metadatoAnexoSir.getCampo().equals("OrigenCiudadanoAdministracion")) {
+                anexo.setOrigenCiudadanoAdmin(metadatoAnexoSir.getValor().equals("true")?1:0);
+               // anexo.setOrigenCiudadanoAdmin(Integer.valueOf(metadatoAnexoSir.getValor()));
             }
-            if (metadatoAnexoSir.getCampo().equals("tipoDocumental")) {
+            if (metadatoAnexoSir.getCampo().equals("TipoDocumental")) {
                 anexo.setTipoDocumental(tipoDocumentalEjb.findByCodigoEntidad(metadatoAnexoSir.getValor(), idEntidad));
             }
-            if (metadatoAnexoSir.getCampo().equals("fechaCaptura")) {
-                SimpleDateFormat formatter = new SimpleDateFormat(FORMATO_FECHA_SICRES4);
-                anexo.setFechaCaptura(formatter.parse(metadatoAnexoSir.getValor()));
+            if (metadatoAnexoSir.getCampo().equals("FechaCaptura")) {
+                SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+                anexo.setFechaCaptura(inputFormat.parse(metadatoAnexoSir.getValor()));
+
             }
 
         }

@@ -1158,46 +1158,7 @@ public class LibSirUtils {
                 }).collect(Collectors.toSet()));
 
 
-        // LIBSIR estos son los metadatos ENI (documentoElectrónico)
-        MetadatosEni tiposMetadato = anexoBean.getTipoMetadatos();
-       // TipoMetadatos tiposMetadato = anexoBean.getTipoMetadatos();
-
-        MetadatoAnexoSir metadatoAnexoSir;
-
-        DateFormat formatter = new SimpleDateFormat(FORMATO_FECHA_SICRES4);
-
-        if (tiposMetadato != null) { //TODO PROVAR CON METADATOS REALES QUE NOS ENVIEN
-            try {
-                //fechaCaptura
-                metadatoAnexoSir = new MetadatoAnexoSir(METADATO_NTI, "fechaCaptura", formatter.format(tiposMetadato.getFechaCapturaDate()));
-                metadatosAnexos.add(metadatoAnexoSir);
-
-                //origenCiudadanoAdministracion
-                metadatoAnexoSir = new MetadatoAnexoSir(METADATO_NTI, "origenCiudadanoAdministracion", tiposMetadato.isOrigenCiudadanoAdministracion() ? "1" : "0");
-                metadatosAnexos.add(metadatoAnexoSir);
-
-                //tipoDocumental
-                metadatoAnexoSir = new MetadatoAnexoSir(METADATO_NTI, "tipoDocumental", tiposMetadato.getTipoDocumentalENI().value());
-                metadatosAnexos.add(metadatoAnexoSir);
-
-                //Cogemos la validez del documento del metadato ENI Estado de Elaboración
-                anexo.setValidezDocumento(tiposMetadato.getEstadoElaboracionENI().getValorEstadoElaboracionEnum().value());
-
-            }catch(ParseException pe){
-                throw new I18NException("error.parseando.fecha.captura");
-            }
-
-        }else{ //SI no hay metadatos ENI, se crean los metadatos por defecto
-            metadatoAnexoSir = new MetadatoAnexoSir(METADATO_NTI, "fechaCaptura", formatter.format(new Date()));
-            metadatosAnexos.add(metadatoAnexoSir);
-
-            metadatoAnexoSir = new MetadatoAnexoSir(METADATO_NTI, "origenCiudadanoAdministracion", "1");
-            metadatosAnexos.add(metadatoAnexoSir);
-
-            metadatoAnexoSir = new MetadatoAnexoSir(METADATO_NTI, "tipoDocumental", "TD99");
-            metadatosAnexos.add(metadatoAnexoSir);
-
-        }
+        //NOTA: con la versión 3.2.1 de lIBSIR los metadatos eni los envian como metadatos generales.
 
         //Si no hay validezDocumento, se pone por defecto ORIGINAL
         if(anexo.getValidezDocumento()== null){
