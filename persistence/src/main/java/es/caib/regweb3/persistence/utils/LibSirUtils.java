@@ -948,7 +948,6 @@ public class LibSirUtils {
 
             registroSir.setMetadatosRegistroSir(metadatos);
 
-
             //INTERESADOS
             Set<es.gob.ad.registros.sir.interService.bean.InteresadoBean> interesadosBean = asientoBean.getInteresadosBean();
             if (!interesadosBean.isEmpty()) {
@@ -968,6 +967,12 @@ public class LibSirUtils {
                         }
 
                     }
+                }
+            } else {
+                if (asientoBean.getCdTpRegistro().equals(TipoRegistro.SALIDA.getValue())) {
+
+                    // Creamos uno a partir de la Entidad destino
+                    registroSir.getInteresados().add(crearInteresadoJuridicoAsientoBean(asientoBean.getCdUnTrDestino(), asientoBean.getDsUnTrDestino(), asientoBean.getCdEnRgDestino(), entidad.getId()));
                 }
             }
 
