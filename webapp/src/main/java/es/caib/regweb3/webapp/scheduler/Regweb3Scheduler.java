@@ -281,13 +281,13 @@ public class Regweb3Scheduler {
 
     /**
      * Qué hace: obtiene los asientos que se reciben via SIR
-     * Cuando lo hace: cada 15 minutos
+     * Cuando lo hace: cada 1 minuto
      */
-    @Scheduled(fixedDelay = 900000)
+    @Scheduled(fixedDelay = 60000)
     public void consultarAsientosPendientes(){
 
         try {
-
+            log.info("YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY");
             schedulerEjb.consultarAsientosPendientesSIR();
 
         } catch (Exception e) {

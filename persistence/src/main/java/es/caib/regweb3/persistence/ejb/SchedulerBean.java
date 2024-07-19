@@ -594,7 +594,7 @@ public class SchedulerBean implements SchedulerLocal {
         Entidad entidadActiva = null;
         try {
             //consultamos los asientos que estan pendientes de procesar
-            List<AsientoBean> asientosPendientes = libSirEjb.consultaAsientosPendientes(50);
+            List<AsientoBean> asientosPendientes = libSirEjb.consultaAsientosPendientes(260);
 
             //Lista donde se guardan los datos de los asientos que se van a procesar posteriormente
             List<DatosRegistroProcesoBean> aProcesar= new ArrayList<>();
@@ -602,8 +602,6 @@ public class SchedulerBean implements SchedulerLocal {
             for(AsientoBean asiento: asientosPendientes){
 
                 log.info("Asiento CDINTERCAMBIO   " + asiento.getCdIntercambio());
-                log.info("Asiento Estado   " + asiento.getCdEstado());
-                log.info("Asiento Destino " + asiento.getCdEnRgDestino());
 
 
                 if(TipoEstadoEnum.R.getCodigo().equals(asiento.getCdEstado())){ //Recibido //PROBADO OK
