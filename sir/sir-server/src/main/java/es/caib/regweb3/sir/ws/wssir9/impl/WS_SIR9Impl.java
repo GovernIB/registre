@@ -61,7 +61,8 @@ public class WS_SIR9Impl implements WS_SIR9_PortType {
 
     @Override
     @WebMethod(operationName = "envioMensajeDatosControlAAplicacion")
-    public RespuestaWS envioMensajeDatosControlAAplicacion(@WebParam(name = "value0")String mensaje, @WebParam(name = "value1")String firma) {
+   // public RespuestaWS envioMensajeDatosControlAAplicacion(@WebParam(name = "value0")String mensaje, @WebParam(name = "value1")String firma) {
+    public RespuestaWS envioMensajeDatosControlAAplicacion(@WebParam(name = "mensaje")String mensaje, @WebParam(name = "firma")String firma) {
 
         RespuestaWS respuestaWS = null;
 
