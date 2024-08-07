@@ -130,7 +130,7 @@ create table RWE_METADATO_REGSIR (
     CAMPO varchar2(80 char),
     TIPO number(19,0),
     VALOR varchar2(4000 char),
-    REGISTRO_SIR number(19,0) not null,
+    REGISTRO_SIR number(19,0),
     primary key (ID)
 );
 alter table RWE_METADATO_REGSIR
@@ -143,7 +143,7 @@ create table RWE_METADATO_ANEXO_SIR (
     CAMPO varchar2(80 char),
     TIPO number(19,0),
     VALOR varchar2(4000 char),
-    ANEXO_SIR number(19,0) not null,
+    ANEXO_SIR number(19,0),
     primary key (ID)
 );
 
