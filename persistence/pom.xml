@@ -80,7 +80,6 @@
         <dependency>
             <groupId>es.caib.regweb3</groupId>
             <artifactId>plugin-distribucion-mock</artifactId>
-            <version>${project.version}</version>
         </dependency>
 
         <dependency>
@@ -193,14 +192,12 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
-            <version>${spring.version}</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-beans</artifactId>
-            <version>${spring.version}</version>
             <scope>provided</scope>
         </dependency>
 
@@ -221,6 +218,7 @@
             <artifactId>interModel.ORACLE</artifactId>
             <scope>provided</scope>
         </dependency>
+
         <dependency>
             <groupId>es.gob.ad.registros.sir</groupId>
             <artifactId>interModel-api</artifactId>

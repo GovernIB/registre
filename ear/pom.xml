@@ -41,6 +41,203 @@
                             <scm-revision>${buildNumber}</scm-revision>
                         </manifestEntries>
                     </archive>
+                    
+                    <packagingExcludes>
+            
+            
+                        <!-- Requereix afegir mòdul 'javax.activation.api' a jboss-deployment-structure.xml -->
+                         **/activation*redhat*.jar,
+                        <!-- Requereix afegir mòdul 'org.apache.james.mime4j' a jboss-deployment-structure.xml -->
+                         **/apache-mime4j*redhat*.jar,
+                        <!-- Requereix afegir mòdul 'asm.asm' a jboss-deployment-structure.xml -->
+                         **/asm*redhat*.jar,
+                         **/asm-util*redhat*.jar,
+                        <!-- Requereix afegir mòdul 'org.bouncycastle' a jboss-deployment-structure.xml -->
+                         **/bcprov-jdk15on*redhat*.jar,
+                         **/bcmail-jdk15on*redhat*.jar,
+                         **/bcpkix-jdk15on*redhat*.jar,
+                        <!-- Requereix afegir mòdul 'net.bytebuddy' a jboss-deployment-structure.xml -->
+                         **/byte-buddy*redhat*.jar,
+                        <!-- Requereix afegir mòdul 'com.fasterxml.classmate' a jboss-deployment-structure.xml -->
+                         **/classmate*redhat*.jar,
+                        <!-- Requereix afegir mòdul 'org.apache.commons.beanutils' a jboss-deployment-structure.xml -->
+                         **/commons-beanutils*redhat*.jar,
+                        <!-- Requereix afegir mòdul 'org.apache.commons.codec' a jboss-deployment-structure.xml -->
+                         **/commons-codec*redhat*.jar,
+                        <!-- Requereix afegir mòdul 'org.apache.commons.collections' a jboss-deployment-structure.xml -->
+                         **/commons-collections*redhat*.jar,
+                        <!-- Requereix afegir mòdul 'org.apache.commons.io' a jboss-deployment-structure.xml -->
+                         **/commons-io*redhat*.jar,
+                        <!-- Requereix afegir mòdul 'org.apache.commons.lang' a jboss-deployment-structure.xml -->
+                         **/commons-lang*redhat*.jar,
+                        <!-- Requereix afegir mòdul 'org.apache.commons.lang3' a jboss-deployment-structure.xml -->
+                         **/commons-lang3*redhat*.jar,
+                        <!-- Requereix afegir mòdul 'org.opensaml' a jboss-deployment-structure.xml -->
+                         **/opensaml-core*redhat*.jar,
+                         **/opensaml-profile-api*redhat*.jar,
+                         **/opensaml-saml-api*redhat*.jar,
+                         **/opensaml-saml-impl*redhat*.jar,
+                         **/opensaml-security-api*redhat*.jar,
+                         **/opensaml-security-impl*redhat*.jar,
+                         **/opensaml-soap-api*redhat*.jar,
+                         **/opensaml-xacml-api*redhat*.jar,
+                         **/opensaml-xacml-impl*redhat*.jar,
+                         **/opensaml-xacml-saml-api*redhat*.jar,
+                         **/opensaml-xacml-saml-impl*redhat*.jar,
+                         **/opensaml-xmlsec-api*redhat*.jar,
+                         **/opensaml-xmlsec-impl*redhat*.jar,
+                         **/cryptacular*redhat*.jar,
+                         **/java-support*redhat*.jar,
+                        <!-- Requereix afegir mòdul 'org.apache.cxf' a jboss-deployment-structure.xml -->
+                         **/cxf-core*redhat*.jar,
+                         **/cxf-rt-features-logging*redhat*.jar,
+                        <!-- Requereix afegir mòdul 'org.apache.cxf.impl' a jboss-deployment-structure.xml -->
+                         **/cxf-rt-bindings-coloc*redhat*.jar,
+                         **/cxf-rt-bindings-soap*redhat*.jar,
+                         **/cxf-rt-bindings-xml*redhat*.jar,
+                         **/cxf-rt-databinding-aegis*redhat*.jar,
+                         **/cxf-rt-databinding-jaxb*redhat*.jar,
+                         **/cxf-rt-features-clustering*redhat*.jar,
+                         **/cxf-rt-frontend-jaxws*redhat*.jar,
+                         **/cxf-rt-frontend-simple*redhat*.jar,
+                         **/cxf-rt-management*redhat*.jar,
+                         **/cxf-rt-security*redhat*.jar,
+                         **/cxf-rt-security-saml*redhat*.jar,
+                         **/cxf-rt-transports-http*redhat*.jar,
+                         **/cxf-rt-transports-http-hc*redhat*.jar,
+                         **/cxf-rt-transports-jms*redhat*.jar,
+                         **/cxf-rt-transports-local*redhat*.jar,
+                         **/cxf-rt-wsdl*redhat*.jar,
+                         **/cxf-rt-ws-addr*redhat*.jar,
+                         **/cxf-rt-ws-mex*redhat*.jar,
+                         **/cxf-rt-ws-policy*redhat*.jar,
+                         **/cxf-rt-ws-rm*redhat*.jar,
+                         **/cxf-tools-common*redhat*.jar,
+                         **/cxf-tools-java2ws*redhat*.jar,
+                         **/cxf-tools-validator*redhat*.jar,
+                         **/cxf-tools-wsdlto-core*redhat*.jar,
+                         **/cxf-tools-wsdlto-databinding-jaxb*redhat*.jar,
+                         **/cxf-tools-wsdlto-frontend-jaxws*redhat*.jar,
+                         **/cxf-services-ws-discovery-api*redhat*.jar,
+                         **/cxf-xjc-boolean*redhat*.jar,
+                         **/cxf-xjc-bug986*redhat*.jar,
+                         **/cxf-xjc-dv*redhat*.jar,
+                         **/cxf-xjc-ts*redhat*.jar,
+                         **/cxf-xjc-runtime*redhat*.jar,
+                        <!-- Requereix afegir mòdul 'org.apache.cxf.ws-security' a jboss-deployment-structure.xml -->
+                         **/cxf-rt-ws-security*redhat*.jar,
+                        <!-- Requereix afegir mòdul 'com.sun.xml.fastinfoset' a jboss-deployment-structure.xml -->
+                         **/FastInfoset*redhat*.jar,
+                        <!-- Requereix afegir mòdul 'com.google.guava' a jboss-deployment-structure.xml -->
+                         **/guava*redhat*.jar,
+                        <!-- Requereix afegir mòdul 'org.hibernate.commons-annotations' a jboss-deployment-structure.xml -->
+                         **/hibernate-commons-annotations*redhat*.jar,
+                        <!-- Requereix afegir mòdul 'org.hibernate' a jboss-deployment-structure.xml -->
+                         **/hibernate-core*redhat*.jar,
+                         **/hibernate-envers*redhat*.jar,
+                        <!-- Requereix afegir mòdul 'org.apache.httpcomponents.core' a jboss-deployment-structure.xml -->
+                         **/httpclient*redhat*.jar,
+                         **/httpcore*redhat*.jar,
+                        <!-- Requereix afegir mòdul 'com.sun.istack' a jboss-deployment-structure.xml -->
+                         **/istack-commons-runtime*redhat*.jar,
+                         **/istack-commons-tools*redhat*.jar,
+                        <!-- Requereix afegir mòdul 'com.fasterxml.jackson.core.jackson-annotations' a jboss-deployment-structure.xml -->
+                         **/jackson-annotations*redhat*.jar,
+                        <!-- Requereix afegir mòdul 'com.fasterxml.jackson.core.jackson-core' a jboss-deployment-structure.xml -->
+                         **/jackson-core*redhat*.jar,
+                        <!-- Requereix afegir mòdul 'org.codehaus.jackson.jackson-core-asl' a jboss-deployment-structure.xml -->
+                         **/jackson-core-asl*redhat*.jar,
+                        <!-- Requereix afegir mòdul 'com.github.fge.jackson-coreutils' a jboss-deployment-structure.xml -->
+                         **/jackson-coreutils*redhat*.jar,
+                        <!-- Requereix afegir mòdul 'com.fasterxml.jackson.core.jackson-databind' a jboss-deployment-structure.xml -->
+                         **/jackson-databind*redhat*.jar,
+                        <!-- Requereix afegir mòdul 'com.fasterxml.jackson.datatype.jackson-datatype-jsr310' a jboss-deployment-structure.xml -->
+                         **/jackson-datatype-jsr310*redhat*.jar,
+                        <!-- Requereix afegir mòdul 'com.fasterxml.jackson.jaxrs.jackson-jaxrs-json-provider' a jboss-deployment-structure.xml -->
+                         **/jackson-jaxrs-json-provider*redhat*.jar,
+                         **/jackson-jaxrs-base*redhat*.jar,
+                         **/jackson-module-jaxb-annotations*redhat*.jar,
+                        <!-- Requereix afegir mòdul 'org.jboss.jandex' a jboss-deployment-structure.xml -->
+                         **/jandex*redhat*.jar,
+                        <!-- Requereix afegir mòdul 'org.apache.ws.security' a jboss-deployment-structure.xml -->
+                         **/wss4j-bindings*redhat*.jar,
+                         **/wss4j-policy*redhat*.jar,
+                         **/wss4j-ws-security-common*redhat*.jar,
+                         **/wss4j-ws-security-dom*redhat*.jar,
+                         **/wss4j-ws-security-policy-stax*redhat*.jar,
+                         **/wss4j-ws-security-stax*redhat*.jar,
+                         **/jasypt*redhat*.jar,
+                        <!-- Requereix afegir mòdul 'org.javassist' a jboss-deployment-structure.xml -->
+                         **/javassist*redhat*.jar,
+                        <!-- Requereix afegir mòdul 'javax.json.bind.api' a jboss-deployment-structure.xml -->
+                         **/javax.json.bind-api*redhat*.jar,
+                        <!-- Requereix afegir mòdul 'javax.mail.api' a jboss-deployment-structure.xml -->
+                         **/javax.mail*redhat*.jar,
+                        <!-- Requereix afegir mòdul 'javax.persistence.api' a jboss-deployment-structure.xml -->
+                         **/javax.persistence-api*redhat*.jar,
+                        <!-- Requereix afegir mòdul 'com.sun.xml.bind' a jboss-deployment-structure.xml -->
+                         **/jaxb-runtime*redhat*.jar,
+                         **/jaxb-xjc*redhat*.jar,
+                         **/jaxb-jxc*redhat*.jar,
+                         **/codemodel*redhat*.jar,
+                         **/rngom*redhat*.jar,
+                        <!-- Requereix afegir mòdul 'javax.annotation.api' a jboss-deployment-structure.xml -->
+                         **/jboss-annotations-api_1.3_spec*redhat*.jar,
+                        <!-- Requereix afegir mòdul 'javax.xml.bind.api' a jboss-deployment-structure.xml -->
+                         **/jboss-jaxb-api_2.3_spec*redhat*.jar,
+                        <!-- Requereix afegir mòdul 'javax.ws.rs.api' a jboss-deployment-structure.xml -->
+                         **/jboss-jaxrs-api_2.1_spec*redhat*.jar,
+                        <!-- Requereix afegir mòdul 'org.jboss.logging' a jboss-deployment-structure.xml -->
+                         **/jboss-logging*redhat*.jar,
+                        <!-- Requereix afegir mòdul 'javax.transaction.api' a jboss-deployment-structure.xml -->
+                         **/jboss-transaction-api_1.2_spec*redhat*.jar,
+                        <!-- Requereix afegir mòdul 'net.jcip' a jboss-deployment-structure.xml -->
+                         **/jcip-annotations*redhat*.jar,
+                        <!-- Requereix afegir mòdul 'org.joda.time' a jboss-deployment-structure.xml -->
+                         **/joda-time*redhat*.jar,
+                        <!-- Requereix afegir mòdul 'com.github.fge.json-patch' a jboss-deployment-structure.xml -->
+                         **/json-patch*redhat*.jar,
+                        <!-- Requereix afegir mòdul 'org.apache.neethi' a jboss-deployment-structure.xml -->
+                         **/neethi*redhat*.jar,
+                        <!-- Requereix afegir mòdul 'org.reactivestreams' a jboss-deployment-structure.xml -->
+                         **/reactive-streams*redhat*.jar,
+                        <!-- Requereix afegir mòdul 'org.jboss.resteasy.resteasy-jaxrs' a jboss-deployment-structure.xml -->
+                         **/resteasy-jaxrs*redhat*.jar,
+                         **/resteasy-client*redhat*.jar,
+                         **/resteasy-client-microprofile*redhat*.jar,
+                        <!-- Requereix afegir mòdul 'org.jboss.resteasy.resteasy-jackson2-provider' a jboss-deployment-structure.xml -->
+                         **/resteasy-jackson2-provider*redhat*.jar,
+                        <!-- Requereix afegir mòdul 'org.jboss.resteasy.resteasy-jaxb-provider' a jboss-deployment-structure.xml -->
+                         **/resteasy-jaxb-provider*redhat*.jar,
+                        <!-- Requereix afegir mòdul 'org.jboss.resteasy.resteasy-multipart-provider' a jboss-deployment-structure.xml -->
+                         **/resteasy-multipart-provider*redhat*.jar,
+                        <!-- Requereix afegir mòdul 'org.codehaus.woodstox' a jboss-deployment-structure.xml -->
+                         **/woodstox-core*redhat*.jar,
+                         **/stax2-api*redhat*.jar,
+                        <!-- Requereix afegir mòdul 'com.sun.xml.txw2' a jboss-deployment-structure.xml -->
+                         **/txw2*redhat*.jar,
+                        <!-- Requereix afegir mòdul 'javax.validation.api' a jboss-deployment-structure.xml -->
+                         **/validation-api*redhat*.jar,
+                        <!-- Requereix afegir mòdul 'javax.wsdl4j.api' a jboss-deployment-structure.xml -->
+                         **/wsdl4j*redhat*.jar,
+                        <!-- Requereix afegir mòdul 'org.apache.xml-resolver' a jboss-deployment-structure.xml -->
+                         **/xml-resolver*redhat*.jar,
+                        <!-- Requereix afegir mòdul 'org.apache.ws.xmlschema' a jboss-deployment-structure.xml -->
+                         **/xmlschema-core*redhat*.jar,
+                        <!-- Requereix afegir mòdul 'org.apache.santuario.xmlsec' a jboss-deployment-structure.xml -->
+                         **/xmlsec*redhat*.jar,
+                         
+                        
+                         **/jackson-jaxrs*redhat*.jar,
+                        <!-- Requereix afegir mòdul 'org.codehaus.jackson.jackson-mapper-asl' a jboss-deployment-structure.xml -->
+                         **/jackson-mapper-asl*redhat*.jar,
+                        <!-- Requereix afegir mòdul 'org.codehaus.jackson.jackson-xc' a jboss-deployment-structure.xml -->
+                         **/jackson-xc*redhat*.jar,
+                        <!-- Requereix afegir mòdul 'org.codehaus.jettison' a jboss-deployment-structure.xml -->
+                         **/jettison*redhat*.jar,
+
+
+                    </packagingExcludes>
 
                     <modules>
 
@@ -97,7 +294,6 @@
         <dependency>
             <groupId>org.fundaciobit.pluginsib.documentcustody</groupId>
             <artifactId>pluginsib-documentcustody-api</artifactId>
-            <version>${documentcustody.api.version}</version>
         </dependency>
 
         <dependency>
@@ -287,7 +483,6 @@
         <dependency>
             <groupId>org.fundaciobit.pluginsib.core</groupId>
             <artifactId>pluginsib-core</artifactId>
-            <version>${pluginsib-core.version}</version>
         </dependency>
 
         <dependency>
@@ -324,13 +519,11 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
-            <version>${spring.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-beans</artifactId>
-            <version>${spring.version}</version>
         </dependency>
 
         <dependency>
@@ -346,7 +539,40 @@
         <dependency>
             <groupId>es.gob.ad.registros.sir</groupId>
             <artifactId>interModel.ORACLE</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.hibernate</groupId>
+                    <artifactId>hibernate-core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>javax.activation</groupId>
+                    <artifactId>javax.activation-api</artifactId>
+                    <!-- javax.activation:javax.activation-api:jar:1.2.0 -->
+                </exclusion>
+            </exclusions>
         </dependency>
+
+        <!-- Afegir mòdul i eliminar jar de l'exclussion de interModel.ORACLE -->
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <scope>provided</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>javax.activation</groupId>
+                    <artifactId>javax.activation-api</artifactId>
+                    <!-- javax.activation:javax.activation-api:jar:1.2.0 -->
+                </exclusion>
+            </exclusions>
+        </dependency>
+        
+        
+        <!-- Afegir mòdul i eliminar jar de l'exclussion de interModel.ORACLE -->
+        <dependency>
+             <groupId>javax.activation</groupId>
+             <artifactId>activation</artifactId>
+        </dependency>
+
 
         <!--<dependency>
             <groupId>org.apache.commons</groupId>
@@ -436,7 +662,6 @@
         <dependency>
             <groupId>com.itextpdf</groupId>
             <artifactId>itextpdf</artifactId>
-            <version>${itext.version}</version>
         </dependency>
 
 
