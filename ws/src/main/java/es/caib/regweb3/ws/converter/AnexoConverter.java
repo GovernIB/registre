@@ -12,8 +12,8 @@ import es.caib.regweb3.ws.model.AnexoWs;
 import es.caib.regweb3.ws.model.MetadatoWs;
 import es.caib.regweb3.ws.v3.impl.CommonConverter;
 import org.fundaciobit.genapp.common.i18n.I18NException;
-import org.fundaciobit.plugins.documentcustody.api.DocumentCustody;
-import org.fundaciobit.plugins.documentcustody.api.SignatureCustody;
+import org.fundaciobit.pluginsib.documentcustody.api.DocumentCustody;
+import org.fundaciobit.pluginsib.documentcustody.api.SignatureCustody;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

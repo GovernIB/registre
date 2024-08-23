@@ -4,7 +4,7 @@ import es.caib.regweb3.model.Interesado;
 import es.caib.regweb3.model.RegistroEntrada;
 import es.caib.regweb3.model.RegistroSalida;
 import org.fundaciobit.genapp.common.i18n.I18NException;
-import org.fundaciobit.pluginsib.core.IPlugin;
+import org.fundaciobit.pluginsib.core.v3.IPluginIB;
 
 /**
  * Created by Fundació BIT.
@@ -12,9 +12,9 @@ import org.fundaciobit.pluginsib.core.IPlugin;
  * @author mgonzalez
  *
  */
-public interface IPostProcesoPlugin extends IPlugin {
+public interface IPostProcesoPlugin extends IPluginIB {
 
-    public static final String POSTPROCESO_BASE_PROPERTY = IPLUGIN_BASE_PROPERTIES + "postproceso.";
+    public static final String POSTPROCESO_BASE_PROPERTY = IPLUGINSIB_BASE_PROPERTIES + "postproceso.";
 
 
     /**

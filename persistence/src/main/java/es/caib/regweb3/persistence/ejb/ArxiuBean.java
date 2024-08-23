@@ -7,8 +7,8 @@ import es.caib.arxiudigital.apirest.facade.resultados.Resultado;
 import es.caib.arxiudigital.apirest.facade.resultados.ResultadoBusqueda;
 import es.caib.regweb3.utils.RegwebConstantes;
 import org.fundaciobit.genapp.common.i18n.I18NException;
-import org.fundaciobit.plugins.documentcustody.api.CustodyException;
-import org.fundaciobit.plugins.documentcustody.arxiudigitalcaib.ArxiuDigitalCAIBDocumentCustodyPlugin;
+import org.fundaciobit.pluginsib.documentcustody.api.CustodyException;
+import org.fundaciobit.pluginsib.documentcustody.arxiudigitalcaib.ArxiuDigitalCAIBDocumentCustodyPlugin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

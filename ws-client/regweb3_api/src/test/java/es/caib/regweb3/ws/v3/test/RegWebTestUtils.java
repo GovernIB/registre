@@ -5,7 +5,6 @@ import es.caib.regweb3.ws.api.v3.*;
 import es.caib.regweb3.ws.api.v3.utils.I18NUtils;
 import org.apache.commons.io.IOUtils;
 import org.fundaciobit.genapp.common.utils.Utils;
-import org.fundaciobit.plugins.utils.XTrustProvider;
 
 import javax.xml.ws.BindingProvider;
 import java.io.File;
@@ -181,7 +180,7 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
         final String endpoint = getEndPoint(REGWEB3_ASIENTO_REGISTRAL);
 
         if(endpoint.startsWith("https")){
-            XTrustProvider.install();
+            //XTrustProvider.install();
         }
 
         final URL wsdl = new URL(endpoint + "?wsdl");

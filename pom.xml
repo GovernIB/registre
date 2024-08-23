@@ -30,22 +30,17 @@
         <junit.version>4.13.1</junit.version>
         <itext.version>5.4.5</itext.version>
         <dom4j.version>1.6.1</dom4j.version>
-        <pluginsib-arxiu-caib.version>2.0.26</pluginsib-arxiu-caib.version>
-        <documentcustody.api.version>4.0.1</documentcustody.api.version>
-        <documentcustody-filesystem.version>4.0.2</documentcustody-filesystem.version>
-        <plugin-documentcustody-arxiudigitalcaib.version>4.0.3</plugin-documentcustody-arxiudigitalcaib.version>
         <genapp.version>2.0.0-SNAPSHOT</genapp.version>
-        <pluginsib-core.version>2.0.0</pluginsib-core.version>
-        <pluginsib-validatesignature-api>2.1.0-SNAPSHOT</pluginsib-validatesignature-api>
-        <pluginsib-signatureserver-api>3.1.0-SNAPSHOT</pluginsib-signatureserver-api>
-        <pluginsib-signatureserver-miniappletinserver>3.0.0</pluginsib-signatureserver-miniappletinserver>
-        <pluginsib-signatureserver-afirmaserver>3.1.0-SNAPSHOT</pluginsib-signatureserver-afirmaserver>
-        <pluginsib.userinformation.api.version>3.0.0</pluginsib.userinformation.api.version>
-        <pluginsib.userinformation.version>3.0.0-SNAPSHOT</pluginsib.userinformation.version>
-        <pluginsib.userinformation-keycloak.version>3.0.0-SNAPSHOT</pluginsib.userinformation-keycloak.version>
+        <pluginsib.arxiu.version>3.0.0-SNAPSHOT</pluginsib.arxiu.version>
+        <pluginsib.documentcustody.version>5.0.0-SNAPSHOT</pluginsib.documentcustody.version>
+        <pluginsib.core.version>3.0.0-SNAPSHOT</pluginsib.core.version>
+        <pluginsib.validatesignature.version>3.0.0-SNAPSHOT</pluginsib.validatesignature.version>
+        <pluginsib.signatureserver.version>4.0.0-SNAPSHOT</pluginsib.signatureserver.version>
+        <pluginsib.userinformation.version>4.0.0-SNAPSHOT</pluginsib.userinformation.version>
+        <pluginsib.scanweb.version>5.0.0-SNAPSHOT</pluginsib.scanweb.version>
+        <pluginsib.utils.version>3.0.0-SNAPSHOT</pluginsib.utils.version>
         <dir3caib-ws-api.version>1.1.1</dir3caib-ws-api.version>
         <carpeta-api-interna-client.version>1.1</carpeta-api-interna-client.version>
-        <scanweb.api.version>4.0.0</scanweb.api.version>
         <cxf.version>3.3.3</cxf.version>
         <pluginsib-validatesignature-afirmacxf.version>2.1.0-SNAPSHOT</pluginsib-validatesignature-afirmacxf.version>
         <slf4j.version>1.7.22.redhat-2</slf4j.version>
@@ -91,32 +86,20 @@
                 <version>${project.version}</version>
                 <type>ejb</type>
             </dependency>
-           <!-- <dependency>
-                <groupId>es.caib.regweb3</groupId>
-                <artifactId>regweb3-ws-server</artifactId>
-                <version>${project.version}</version>
-                <type>ejb</type>
-            </dependency>-->
-
             <dependency>
                 <groupId>es.caib.regweb3</groupId>
                 <artifactId>regweb3-webapp</artifactId>
                 <version>${project.version}</version>
                 <type>war</type>
             </dependency>
-
             <dependency>
                 <groupId>es.caib.regweb3</groupId>
                 <artifactId>regweb3-ws</artifactId>
                 <version>${project.version}</version>
                 <type>war</type>
             </dependency>
+
             <!-- ======== PLUGINS =========== -->
-            <dependency>
-                <groupId>org.fundaciobit.pluginsib.core</groupId>
-                <artifactId>pluginsib-core</artifactId>
-                <version>${pluginsib-core.version}</version>
-            </dependency>
             <dependency>
                 <groupId>es.caib.regweb3</groupId>
                 <artifactId>plugin-distribucion-api</artifactId>
@@ -288,6 +271,18 @@
                 <version>4.4.1</version>
             </dependency>
 
+            <dependency>
+                <groupId>com.github.joschi.jackson</groupId>
+                <artifactId>jackson-datatype-threetenbp</artifactId>
+                <version>2.9.10</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.codehaus.woodstox</groupId>
+                <artifactId>woodstox-core-asl</artifactId>
+                <version>4.4.1</version>
+            </dependency>
+
             <!-- Spring -->
             <dependency>
                 <groupId>org.springframework</groupId>
@@ -336,11 +331,29 @@
                 <version>${spring-security.version}</version>
             </dependency>
 
-            <!--Plugins IB-->
+            <!-- ============= Plugins IB ============= -->
+            <dependency>
+                <groupId>org.fundaciobit.pluginsib.core.v3</groupId>
+                <artifactId>pluginsib-core</artifactId>
+                <version>${pluginsib.core.version}</version>
+            </dependency>
+
             <dependency>
                 <groupId>org.fundaciobit.pluginsib.documentcustody</groupId>
                 <artifactId>pluginsib-documentcustody-api</artifactId>
-                <version>${documentcustody.api.version}</version>
+                <version>${pluginsib.documentcustody.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.fundaciobit.pluginsib.documentcustody</groupId>
+                <artifactId>pluginsib-documentcustody-filesystem</artifactId>
+                <version>${pluginsib.documentcustody.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.fundaciobit.pluginsib.documentcustody</groupId>
+                <artifactId>pluginsib-documentcustody-arxiudigitalcaib</artifactId>
+                <version>${pluginsib.documentcustody.version}</version>
             </dependency>
 
             <dependency>

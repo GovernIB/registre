@@ -64,7 +64,6 @@
         <dependency>
             <groupId>org.fundaciobit.pluginsib.documentcustody</groupId>
             <artifactId>pluginsib-documentcustody-api</artifactId>
-            <version>${documentcustody.api.version}</version>
             <scope>provided</scope>
         </dependency>
 
@@ -87,7 +86,7 @@
         <dependency>
             <groupId>org.fundaciobit.pluginsib.validatesignature</groupId>
             <artifactId>pluginsib-validatesignature-api</artifactId>
-            <version>2.0.0</version>
+            <version>${pluginsib.validatesignature.version}</version>
             <scope>provided</scope>
         </dependency>
 
@@ -98,11 +97,11 @@
         </dependency>
 
         <dependency>
-            <groupId>org.fundaciobit.pluginsib.core</groupId>
+            <groupId>org.fundaciobit.pluginsib.core.v3</groupId>
             <artifactId>pluginsib-core</artifactId>
-            <version>${pluginsib-core.version}</version>
             <scope>provided</scope>
         </dependency>
+
     </dependencies>
 
 </project>

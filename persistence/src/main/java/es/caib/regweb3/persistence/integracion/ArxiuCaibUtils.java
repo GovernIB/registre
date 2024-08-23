@@ -1,6 +1,5 @@
 package es.caib.regweb3.persistence.integracion;
 
-import es.caib.plugins.arxiu.api.*;
 import es.caib.regweb3.model.Anexo;
 import es.caib.regweb3.model.IRegistro;
 import es.caib.regweb3.model.Interesado;
@@ -13,7 +12,7 @@ import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 import org.fundaciobit.genapp.common.i18n.I18NArgumentString;
 import org.fundaciobit.genapp.common.i18n.I18NException;
-import org.fundaciobit.plugins.validatesignature.api.ValidateSignatureConstants;
+import org.fundaciobit.pluginsib.validatesignature.api.ValidateSignatureConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;

@@ -299,13 +299,12 @@
         <dependency>
             <groupId>org.fundaciobit.pluginsib.documentcustody</groupId>
             <artifactId>pluginsib-documentcustody-filesystem</artifactId>
-            <version>${documentcustody-filesystem.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.fundaciobit.pluginsib.documentcustody</groupId>
             <artifactId>pluginsib-documentcustody-alfresco</artifactId>
-            <version>${documentcustody.api.version}</version>
+            <version>${pluginsib.documentcustody.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.slf4j</groupId>
@@ -321,10 +320,10 @@
                 </exclusion>
             </exclusions>
         </dependency>
+
         <dependency>
             <groupId>org.fundaciobit.pluginsib.documentcustody</groupId>
             <artifactId>pluginsib-documentcustody-arxiudigitalcaib</artifactId>
-            <version>${plugin-documentcustody-arxiudigitalcaib.version}</version>
         </dependency>
         <!-- ============= FIN PLUGINS DE CUSTODIA ========== -->
 
@@ -332,7 +331,7 @@
         <dependency>
             <groupId>org.fundaciobit.pluginsib.userinformation</groupId>
             <artifactId>pluginsib-userinformation-api</artifactId>
-            <version>${pluginsib.userinformation.api.version}</version>
+            <version>${pluginsib.userinformation.version}</version>
         </dependency>
 
         <dependency>
@@ -350,14 +349,73 @@
         <dependency>
             <groupId>org.fundaciobit.pluginsib.userinformation</groupId>
             <artifactId>pluginsib-userinformation-keycloak</artifactId>
-            <version>${pluginsib.userinformation-keycloak.version}</version>
+            <version>${pluginsib.userinformation.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
-        <!-- ======== API DE PLUGIN DE SCANWEB =========== -->
+        <!-- ======== PLUGINS DE SCANWEB: DWTWAIN, DIGITALIB, MASSIVE  =========== -->
+        <dependency>
+            <groupId>org.fundaciobit.pluginsib.scanweb</groupId>
+            <artifactId>pluginsib-scanweb-dynamicwebtwain</artifactId>
+            <version>${pluginsib.scanweb.version}</version>
+        </dependency>
+
         <dependency>
             <groupId>org.fundaciobit.pluginsib.scanweb</groupId>
             <artifactId>pluginsib-scanweb-api</artifactId>
-            <version>${scanweb.api.version}</version>
+            <version>${pluginsib.scanweb.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.fundaciobit.pluginsib.scanweb</groupId>
+            <artifactId>pluginsib-scanweb-digitalib</artifactId>
+            <version>${pluginsib.scanweb.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.sun.jersey</groupId>
+                    <artifactId>jersey-json</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.fundaciobit.pluginsib.scanweb</groupId>
+            <artifactId>pluginsib-scanweb-digitalibmassive</artifactId>
+            <version>${pluginsib.scanweb.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.sun.jersey</groupId>
+                    <artifactId>jersey-json</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!-- incluimos la dependencia jersey porque si no da un error de json -->
+        <dependency>
+            <groupId>com.sun.jersey</groupId>
+            <artifactId>jersey-json</artifactId>
+            <version>1.19</version>
+
+            <!-- Añadimos estas exclusiones para que funcione el plugin de afirmaserver-->
+            <exclusions>
+                <exclusion>
+                    <groupId>javax.xml.bind</groupId>
+                    <artifactId>jaxb-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.sun.xml.bind</groupId>
+                    <artifactId>jaxb-impl</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>javax.xml.stream</groupId>
+                    <artifactId>stax-api</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!-- ===== PLUGINS DE VALIDACIO/INFORMACIO DE FIRMES ===== -->
@@ -365,13 +423,13 @@
         <dependency>
             <groupId>org.fundaciobit.pluginsib.validatesignature</groupId>
             <artifactId>pluginsib-validatesignature-api</artifactId>
-            <version>${pluginsib-validatesignature-api}</version>
+            <version>${pluginsib.validatesignature.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.fundaciobit.pluginsib.validatesignature</groupId>
             <artifactId>pluginsib-validatesignature-afirmacxf</artifactId>
-            <version>${pluginsib-validatesignature-afirmacxf.version}</version>
+            <version>${pluginsib.validatesignature.version}</version>
 
             <exclusions>
                 <exclusion>
@@ -417,19 +475,13 @@
         <dependency>
             <groupId>org.fundaciobit.pluginsib.signatureserver</groupId>
             <artifactId>pluginsib-signatureserver-api</artifactId>
-            <version>${pluginsib-signatureserver-api}</version>
+            <version>${pluginsib.signatureserver.version}</version>
         </dependency>
-
-        <!--<dependency>
-            <groupId>org.fundaciobit.pluginsib.signatureserver</groupId>
-            <artifactId>pluginsib-signatureserver-miniappletinserver</artifactId>
-            <version>${pluginsib-signatureserver-miniappletinserver}</version>
-        </dependency>-->
 
         <dependency>
             <groupId>org.fundaciobit.pluginsib.signatureserver</groupId>
             <artifactId>pluginsib-signatureserver-afirmaserver</artifactId>
-            <version>${pluginsib-signatureserver-afirmaserver}</version>
+            <version>${pluginsib.signatureserver.version}</version>
 
             <exclusions>
                 <exclusion>
@@ -481,7 +533,7 @@
         </dependency>
 
         <dependency>
-            <groupId>org.fundaciobit.pluginsib.core</groupId>
+            <groupId>org.fundaciobit.pluginsib.core.v3</groupId>
             <artifactId>pluginsib-core</artifactId>
         </dependency>
 
@@ -667,137 +719,5 @@
 
 
     </dependencies>
-
-
-    <profiles>
-
-        <!-- ========== PLUGIN DE SCAN DE IECISA =========== -->
-        <profile>
-            <id>iecisascanweb</id>
-            <dependencies>
-                <dependency>
-                    <groupId>org.fundaciobit.pluginsib.scanweb</groupId>
-                    <artifactId>pluginsib-scanweb-iecisascanweb-plugin</artifactId>
-                    <version>4.0.0</version>
-                </dependency>
-            </dependencies>
-        </profile>
-
-
-        <!-- ====== PLUGIN DE SCAN DE DynamicWebTwain (DWT) ====== -->
-        <profile>
-            <id>dwtscanweb</id>
-            <dependencies>
-                <dependency>
-                    <groupId>org.fundaciobit.pluginsib.scanweb</groupId>
-                    <artifactId>pluginsib-scanweb-dynamicwebtwain</artifactId>
-                    <version>4.0.0</version>
-                </dependency>
-            </dependencies>
-        </profile>
-
-        <!-- ========== PLUGIN DE SCAN DE DIGITALIB =========== -->
-        <profile>
-            <id>digitalibscanweb</id>
-            <dependencies>
-                <dependency>
-                    <groupId>org.fundaciobit.pluginsib.scanweb</groupId>
-                    <artifactId>pluginsib-scanweb-digitalib</artifactId>
-                    <version>4.0.1</version>
-                    <exclusions>
-                        <exclusion>
-                            <groupId>com.sun.jersey</groupId>
-                            <artifactId>jersey-json</artifactId>
-                        </exclusion>
-                    </exclusions>
-                </dependency>
-                <!-- incluimos la dependencia jersey porque si no da un error de json -->
-                <dependency>
-                    <groupId>com.sun.jersey</groupId>
-                    <artifactId>jersey-json</artifactId>
-                    <version>1.19</version>
-
-                    <!-- Añadimos estas exclusiones para que funcione el plugin de afirmaserver-->
-                    <exclusions>
-                        <exclusion>
-                            <groupId>javax.xml.bind</groupId>
-                            <artifactId>jaxb-api</artifactId>
-                        </exclusion>
-                        <exclusion>
-                            <groupId>com.sun.xml.bind</groupId>
-                            <artifactId>jaxb-impl</artifactId>
-                        </exclusion>
-                        <exclusion>
-                            <groupId>javax.xml.stream</groupId>
-                            <artifactId>stax-api</artifactId>
-                        </exclusion>
-                    </exclusions>
-
-                </dependency>
-
-
-                <dependency>
-                    <groupId>org.codehaus.jackson</groupId>
-                    <artifactId>jackson-jaxrs</artifactId>
-                    <version>1.9.9</version>
-                </dependency>
-                <dependency>
-                    <groupId>org.codehaus.jackson</groupId>
-                    <artifactId>jackson-xc</artifactId>
-                </dependency>
-            </dependencies>
-        </profile>
-
-        <!-- ========== PLUGIN DE SCAN DE DIGITALIB MASSIVE =========== -->
-        <profile>
-            <id>digitalibmassivescanweb</id>
-            <dependencies>
-                <dependency>
-                    <groupId>org.fundaciobit.pluginsib.scanweb</groupId>
-                    <artifactId>pluginsib-scanweb-digitalibmassive</artifactId>
-                    <version>4.0.0</version>
-                    <exclusions>
-                        <exclusion>
-                            <groupId>com.sun.jersey</groupId>
-                            <artifactId>jersey-json</artifactId>
-                        </exclusion>
-                    </exclusions>
-                </dependency>
-                <!-- incluimos la dependencia jersey porque si no da un error de json -->
-                <dependency>
-                    <groupId>com.sun.jersey</groupId>
-                    <artifactId>jersey-json</artifactId>
-                    <version>1.19</version>
-
-                    <!-- Añadimos estas exclusiones para que funcione el plugin de afirmaserver-->
-                    <exclusions>
-                        <exclusion>
-                            <groupId>javax.xml.bind</groupId>
-                            <artifactId>jaxb-api</artifactId>
-                        </exclusion>
-                        <exclusion>
-                            <groupId>com.sun.xml.bind</groupId>
-                            <artifactId>jaxb-impl</artifactId>
-                        </exclusion>
-                        <exclusion>
-                            <groupId>javax.xml.stream</groupId>
-                            <artifactId>stax-api</artifactId>
-                        </exclusion>
-                    </exclusions>
-
-                </dependency>
-
-                <dependency>
-                    <groupId>org.codehaus.jackson</groupId>
-                    <artifactId>jackson-jaxrs</artifactId>
-                </dependency>
-                <dependency>
-                    <groupId>org.codehaus.jackson</groupId>
-                    <artifactId>jackson-xc</artifactId>
-                </dependency>
-            </dependencies>
-        </profile>
-
-    </profiles>
 
 </project>

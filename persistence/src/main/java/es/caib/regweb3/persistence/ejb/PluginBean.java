@@ -6,7 +6,7 @@ import es.caib.regweb3.utils.RegwebConstantes;
 import org.fundaciobit.genapp.common.i18n.I18NArgumentCode;
 import org.fundaciobit.genapp.common.i18n.I18NArgumentString;
 import org.fundaciobit.genapp.common.i18n.I18NException;
-import org.fundaciobit.pluginsib.core.IPlugin;
+import org.fundaciobit.pluginsib.core.v3.IPluginIB;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,7 +36,7 @@ public class PluginBean extends BaseEjbJPA<Plugin, Long> implements PluginLocal 
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
-    private static final Map<Long, IPlugin> pluginsCache = new HashMap<Long, IPlugin>();
+    private static final Map<Long, IPluginIB> pluginsCache = new HashMap<Long, IPluginIB>();
 
     @PersistenceContext(unitName = "regweb3")
     private EntityManager em;
@@ -265,7 +265,7 @@ public class PluginBean extends BaseEjbJPA<Plugin, Long> implements PluginLocal 
         }
 
         // Lo buscamos en la cache de plugins
-        IPlugin pluginInstance = getPluginFromCache(idPlugin);
+        IPluginIB pluginInstance = getPluginFromCache(idPlugin);
 
         // Si no está lo cargamos y guardamos en la cache
         if (pluginInstance == null) {
@@ -331,7 +331,7 @@ public class PluginBean extends BaseEjbJPA<Plugin, Long> implements PluginLocal 
      * @return
      * @throws I18NException
      */
-    private IPlugin cargarPlugin(Plugin plugin) throws I18NException {
+    private IPluginIB cargarPlugin(Plugin plugin) throws I18NException {
 
         String BASE_PACKAGE = RegwebConstantes.REGWEB3_PROPERTY_BASE;
 
@@ -358,7 +358,7 @@ public class PluginBean extends BaseEjbJPA<Plugin, Long> implements PluginLocal 
         }
 
         // Carregant la classe
-        return (IPlugin) org.fundaciobit.pluginsib.core.utils.PluginsManager.instancePluginByClassName(className, BASE_PACKAGE, prop);
+        return (IPluginIB) org.fundaciobit.pluginsib.core.v3.utils.PluginsManager.instancePluginByClassName(className, BASE_PACKAGE, prop);
     }
 
     /**
@@ -401,7 +401,7 @@ public class PluginBean extends BaseEjbJPA<Plugin, Long> implements PluginLocal 
      * @param pluginID
      * @param pluginInstance
      */
-    private void addPluginToCache(Long pluginID, IPlugin pluginInstance) {
+    private void addPluginToCache(Long pluginID, IPluginIB pluginInstance) {
         synchronized (pluginsCache) {
             pluginsCache.put(pluginID, pluginInstance);
         }
@@ -412,7 +412,7 @@ public class PluginBean extends BaseEjbJPA<Plugin, Long> implements PluginLocal 
      * @param pluginID
      * @return
      */
-    private IPlugin getPluginFromCache(Long pluginID) {
+    private IPluginIB getPluginFromCache(Long pluginID) {
         synchronized (pluginsCache) {
             return pluginsCache.get(pluginID);
         }
@@ -425,7 +425,7 @@ public class PluginBean extends BaseEjbJPA<Plugin, Long> implements PluginLocal 
      */
     private boolean deleteOfCache(Long pluginID) {
         synchronized (pluginsCache) {
-            IPlugin p = pluginsCache.remove(pluginID);
+            IPluginIB p = pluginsCache.remove(pluginID);
             return p != null;
         }
     }

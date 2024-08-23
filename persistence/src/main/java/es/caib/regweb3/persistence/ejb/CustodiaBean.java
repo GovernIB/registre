@@ -1,7 +1,7 @@
 package es.caib.regweb3.persistence.ejb;
 
 
-import es.caib.plugins.arxiu.api.Firma;
+import es.caib.pluginsib.arxiu.api.Firma;
 import es.caib.regweb3.model.Anexo;
 import es.caib.regweb3.model.Cola;
 import es.caib.regweb3.model.IRegistro;
