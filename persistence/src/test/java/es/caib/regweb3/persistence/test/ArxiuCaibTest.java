@@ -1,6 +1,7 @@
 package es.caib.regweb3.persistence.test;
 
 
+import es.caib.pluginsib.arxiu.api.*;
 import es.caib.regweb3.utils.RegwebConstantes;
 import org.fundaciobit.pluginsib.signature.api.FileInfoSignature;
 import org.junit.BeforeClass;

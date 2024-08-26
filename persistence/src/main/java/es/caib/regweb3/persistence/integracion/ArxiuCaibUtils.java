@@ -1,5 +1,6 @@
 package es.caib.regweb3.persistence.integracion;
 
+import es.caib.pluginsib.arxiu.api.*;
 import es.caib.regweb3.model.Anexo;
 import es.caib.regweb3.model.IRegistro;
 import es.caib.regweb3.model.Interesado;
@@ -361,7 +362,7 @@ public class ArxiuCaibUtils {
     }
 
     /**
-     * Obtiene el CSV de un {@link es.caib.plugins.arxiu.api.Document}
+     * Obtiene el CSV de un {@link es.caib.pluginsib.arxiu.api.Document}
      * @param identificadorDocumento
      * @return
      * @throws I18NException
@@ -371,7 +372,7 @@ public class ArxiuCaibUtils {
     }
 
     /**
-     * Obtiene la Url de Printable (CSV incrustado) {@link es.caib.plugins.arxiu.api.Document}
+     * Obtiene la Url de Printable (CSV incrustado) {@link es.caib.pluginsib.arxiu.api.Document}
      * @param identificadorDocumento
      * @return
      * @throws I18NException
@@ -600,7 +601,7 @@ public class ArxiuCaibUtils {
     }
 
     /**
-     * Genera un {@link es.caib.plugins.arxiu.api.Document} a partir de los parámetros
+     * Genera un {@link es.caib.pluginsib.arxiu.api.Document} a partir de los parámetros
      * @param registro
      * @param tipoRegistro
      * @param anexoFull
@@ -713,7 +714,7 @@ public class ArxiuCaibUtils {
 
 
     /**
-     * Obtiene una {@link es.caib.plugins.arxiu.api.Firma} a partir de los parámetros
+     * Obtiene una {@link es.caib.pluginsib.arxiu.api.Firma} a partir de los parámetros
      * @param anexoFull
      * @return
      * @throws I18NException
