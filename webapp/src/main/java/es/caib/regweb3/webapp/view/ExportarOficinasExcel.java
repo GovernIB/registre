@@ -5,6 +5,7 @@ import es.caib.regweb3.model.PermisoOrganismoUsuario;
 import es.caib.regweb3.model.UsuarioEntidad;
 import es.caib.regweb3.persistence.ejb.PermisoOrganismoUsuarioLocal;
 import es.caib.regweb3.persistence.utils.Paginacion;
+import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 import es.caib.regweb3.utils.TimeUtils;
 import org.apache.poi.hssf.usermodel.*;
@@ -268,9 +269,17 @@ public class ExportarOficinasExcel extends AbstractExcelView {
                     // Permiso
                     List<PermisoOrganismoUsuario> permisos = permisoOrganismoUsuarioEjb.findByUsuarioOrganismo(usuario.getId(), oficina.getOrganismoResponsable().getId());
                     int j = 13;
-                    for(PermisoOrganismoUsuario pou:permisos){
-                        row.createCell(j).setCellValue(toStringSiNo(pou.getActivo()));
-                        j++;
+
+                    if(!permisos.isEmpty()){
+                        for(PermisoOrganismoUsuario pou:permisos){
+                            row.createCell(j).setCellValue(toStringSiNo(pou.getActivo()));
+                            j++;
+                        }
+                    }else{ // Si no tiene permisos, lo indicamos
+                        for (int p = 0; p < RegwebConstantes.PERMISOS.length; p++) {
+                            row.createCell(j).setCellValue(toStringSiNo(false));
+                            j++;
+                        }
                     }
 
                     // Aplicam estils a les cel·les
