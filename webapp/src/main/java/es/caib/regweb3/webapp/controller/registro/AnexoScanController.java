@@ -14,10 +14,10 @@ import es.caib.regweb3.webapp.utils.Mensaje;
 import org.fundaciobit.genapp.common.i18n.I18NArgumentString;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
-import org.fundaciobit.plugins.documentcustody.api.DocumentCustody;
-import org.fundaciobit.plugins.documentcustody.api.SignatureCustody;
-import org.fundaciobit.pluginsib.core.utils.Metadata;
-import org.fundaciobit.pluginsib.core.utils.MetadataConstants;
+import org.fundaciobit.pluginsib.core.v3.utils.Metadata;
+import org.fundaciobit.pluginsib.core.v3.utils.MetadataConstants;
+import org.fundaciobit.pluginsib.documentcustody.api.DocumentCustody;
+import org.fundaciobit.pluginsib.documentcustody.api.SignatureCustody;
 import org.fundaciobit.pluginsib.scanweb.api.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -60,8 +60,10 @@ public class AnexoScanController extends AnexoController {
 
         //Obtenemos la url que nos pasa el jsp por parámetro
         String scanwebAbsoluteurl= request.getParameter("scanweb_absoluteurl");
+        log.info("scanwebAbsoluteurl: " + scanwebAbsoluteurl);
         //Cogemos solo hasta el contexto web.
         String scanwebAbsoluteurlBase = getUrlBaseFromFullUrl(request,scanwebAbsoluteurl);
+        log.info("scanwebAbsoluteurlBase: " + scanwebAbsoluteurlBase);
         //La guardamos en sessión para que la use ScanRequestServlet
         request.getSession().setAttribute("scanwebAbsoluteurlBase", scanwebAbsoluteurlBase);
 
@@ -87,8 +89,10 @@ public class AnexoScanController extends AnexoController {
         //Obtenemos la url que nos pasa el jsp por parámetro.
         // Esto sustituye a la propiedad global es.caib.regweb3.scanweb.absoluteurl
         String scanwebAbsoluteurl= request.getParameter("scanweb_absoluteurl");
+        log.info("Masivo scanwebAbsoluteurl: " + scanwebAbsoluteurl);
         //Cogemos solo hasta el contexto web.
         String scanwebAbsoluteurlBase = getUrlBaseFromFullUrl(request,scanwebAbsoluteurl);
+        log.info("Masivo scanwebAbsoluteurlBase: " + scanwebAbsoluteurlBase);
         //La guardamos en sessión para que la use ScanRequestServlet
         request.getSession().setAttribute("scanwebAbsoluteurlBase", scanwebAbsoluteurlBase);
 
@@ -260,6 +264,7 @@ public class AnexoScanController extends AnexoController {
             final String scanWebID = String.valueOf(registroID);
 
             String urlToPluginWebPage = initializeScan(request, entitatID, scanWebID, languageUI, scanwebAbsoluteurlBase);
+            log.info("urlToPluginWebPage: " + urlToPluginWebPage);
             model.addAttribute("urlToPluginWebPage", urlToPluginWebPage);
         }
 

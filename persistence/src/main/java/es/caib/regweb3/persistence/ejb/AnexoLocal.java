@@ -6,8 +6,8 @@ import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.model.utils.AnexoSimple;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
-import org.fundaciobit.plugins.documentcustody.api.DocumentCustody;
-import org.fundaciobit.plugins.documentcustody.api.SignatureCustody;
+import org.fundaciobit.pluginsib.documentcustody.api.DocumentCustody;
+import org.fundaciobit.pluginsib.documentcustody.api.SignatureCustody;
 
 import javax.ejb.Local;
 import java.util.List;

@@ -1,10 +1,10 @@
 package es.caib.regweb3.persistence.ejb;
 
 
-import es.caib.plugins.arxiu.api.Document;
-import es.caib.plugins.arxiu.api.DocumentContingut;
-import es.caib.plugins.arxiu.api.Firma;
-import es.caib.plugins.arxiu.api.IArxiuPlugin;
+import es.caib.pluginsib.arxiu.api.Document;
+import es.caib.pluginsib.arxiu.api.DocumentContingut;
+import es.caib.pluginsib.arxiu.api.Firma;
+import es.caib.pluginsib.arxiu.api.IArxiuPlugin;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.persistence.integracion.ArxiuCaibUtils;
@@ -20,11 +20,11 @@ import org.fundaciobit.genapp.common.i18n.I18NArgumentCode;
 import org.fundaciobit.genapp.common.i18n.I18NArgumentString;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
-import org.fundaciobit.plugins.documentcustody.api.IDocumentCustodyPlugin;
-import org.fundaciobit.plugins.documentcustody.api.SignatureCustody;
-import org.fundaciobit.plugins.signature.api.FileInfoSignature;
-import org.fundaciobit.pluginsib.core.utils.Metadata;
-import org.fundaciobit.pluginsib.core.utils.MetadataConstants;
+import org.fundaciobit.pluginsib.core.v3.utils.Metadata;
+import org.fundaciobit.pluginsib.core.v3.utils.MetadataConstants;
+import org.fundaciobit.pluginsib.documentcustody.api.IDocumentCustodyPlugin;
+import org.fundaciobit.pluginsib.documentcustody.api.SignatureCustody;
+import org.fundaciobit.pluginsib.signature.api.FileInfoSignature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -270,7 +270,11 @@ public class JustificanteBean implements JustificanteLocal {
             // Integración
             peticion.append("usuario: ").append(usuarioEntidad.getUsuario().getNombreIdentificador()).append(System.getProperty("line.separator"));
             peticion.append("registro: ").append(registro.getNumeroRegistroFormateado()).append(System.getProperty("line.separator"));
-            peticion.append("tipoRegistro: ").append(tipoRegistro).append(System.getProperty("line.separator"));
+            if (tipoRegistro.equals(REGISTRO_ENTRADA)) {
+                peticion.append("tipoRegistro: ").append(RegwebConstantes.REGISTRO_ENTRADA_ESCRITO).append(System.getProperty("line.separator"));
+            } else {
+                peticion.append("tipoRegistro: ").append(RegwebConstantes.REGISTRO_SALIDA_ESCRITO).append(System.getProperty("line.separator"));
+            }
             peticion.append("idioma: ").append(idioma).append(System.getProperty("line.separator"));
             peticion.append("oficina: ").append(registro.getOficina().getDenominacion()).append(System.getProperty("line.separator"));
 

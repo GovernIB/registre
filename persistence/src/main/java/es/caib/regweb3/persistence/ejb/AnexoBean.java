@@ -1,6 +1,6 @@
 package es.caib.regweb3.persistence.ejb;
 
-import es.caib.plugins.arxiu.api.Document;
+import es.caib.pluginsib.arxiu.api.Document;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.model.utils.AnexoSimple;
@@ -15,11 +15,11 @@ import org.apache.commons.lang.time.DateUtils;
 import org.fundaciobit.genapp.common.i18n.I18NArgumentString;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
-import org.fundaciobit.plugins.documentcustody.api.*;
-import org.fundaciobit.pluginsib.core.utils.ISO8601;
-import org.fundaciobit.pluginsib.core.utils.Metadata;
-import org.fundaciobit.pluginsib.core.utils.MetadataConstants;
-import org.fundaciobit.pluginsib.core.utils.MetadataFormatException;
+import org.fundaciobit.pluginsib.core.v3.utils.ISO8601;
+import org.fundaciobit.pluginsib.core.v3.utils.Metadata;
+import org.fundaciobit.pluginsib.core.v3.utils.MetadataConstants;
+import org.fundaciobit.pluginsib.core.v3.utils.MetadataFormatException;
+import org.fundaciobit.pluginsib.documentcustody.api.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -158,7 +158,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
         } catch (Exception e) {
             log.error(e.getMessage(), e);
-            throw new I18NException(e, "º",
+            throw new I18NException(e, "anexo.error.obteniendo",
                     new I18NArgumentString(String.valueOf(anexoID)),
                     new I18NArgumentString(e.getMessage()));
 

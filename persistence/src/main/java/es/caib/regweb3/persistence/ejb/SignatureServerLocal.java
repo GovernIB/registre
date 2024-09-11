@@ -1,10 +1,10 @@
 package es.caib.regweb3.persistence.ejb;
 
-import es.caib.plugins.arxiu.api.Firma;
+import es.caib.pluginsib.arxiu.api.Firma;
 import es.caib.regweb3.model.utils.AnexoFull;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NTranslation;
-import org.fundaciobit.plugins.documentcustody.api.SignatureCustody;
+import org.fundaciobit.pluginsib.documentcustody.api.SignatureCustody;
 
 import javax.ejb.Local;
 import java.util.List;

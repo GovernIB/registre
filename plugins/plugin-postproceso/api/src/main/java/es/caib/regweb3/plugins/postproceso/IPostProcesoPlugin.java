@@ -4,7 +4,7 @@ import es.caib.regweb3.model.Interesado;
 import es.caib.regweb3.model.RegistroEntrada;
 import es.caib.regweb3.model.RegistroSalida;
 import org.fundaciobit.genapp.common.i18n.I18NException;
-import org.fundaciobit.pluginsib.core.IPlugin;
+import org.fundaciobit.pluginsib.core.v3.IPluginIB;
 
 /**
  * Created by Fundació BIT.
@@ -12,9 +12,9 @@ import org.fundaciobit.pluginsib.core.IPlugin;
  * @author mgonzalez
  *
  */
-public interface IPostProcesoPlugin extends IPlugin {
+public interface IPostProcesoPlugin extends IPluginIB {
 
-    public static final String POSTPROCESO_BASE_PROPERTY = IPLUGIN_BASE_PROPERTIES + "postproceso.";
+    public static final String POSTPROCESO_BASE_PROPERTY = IPLUGINSIB_BASE_PROPERTIES + "postproceso.";
 
 
     /**
@@ -23,7 +23,7 @@ public interface IPostProcesoPlugin extends IPlugin {
      * @return
      * @throws I18NException
      */
-    public void nuevoRegistroEntrada(RegistroEntrada registroEntrada) throws I18NException;
+    void nuevoRegistroEntrada(RegistroEntrada registroEntrada) throws I18NException;
 
     /**
      * crear un registro nuevo
@@ -31,7 +31,7 @@ public interface IPostProcesoPlugin extends IPlugin {
      * @return
      * @throws I18NException
      */
-    public void nuevoRegistroSalida(RegistroSalida registroSalida) throws I18NException;
+    void nuevoRegistroSalida(RegistroSalida registroSalida) throws I18NException;
 
 
     /**
@@ -40,7 +40,7 @@ public interface IPostProcesoPlugin extends IPlugin {
      * @return
      * @throws I18NException
      */
-    public void actualizarRegistroEntrada(RegistroEntrada registroEntrada) throws I18NException;
+    void actualizarRegistroEntrada(RegistroEntrada registroEntrada) throws I18NException;
 
     /**
      * actualizar un registro
@@ -48,7 +48,7 @@ public interface IPostProcesoPlugin extends IPlugin {
      * @return
      * @throws I18NException
      */
-    public void actualizarRegistroSalida(RegistroSalida registroSalida) throws I18NException;
+    void actualizarRegistroSalida(RegistroSalida registroSalida) throws I18NException;
 
 
 
@@ -59,7 +59,7 @@ public interface IPostProcesoPlugin extends IPlugin {
      * @return
      * @throws I18NException
      */
-    public void nuevoInteresadoEntrada(Interesado interesado, String numeroEntrada) throws I18NException;
+    void nuevoInteresadoEntrada(Interesado interesado, String numeroEntrada) throws I18NException;
 
 
 
@@ -70,7 +70,7 @@ public interface IPostProcesoPlugin extends IPlugin {
      * @return
      * @throws I18NException
      */
-    public void nuevoInteresadoSalida(Interesado interesado, String numeroSalida) throws I18NException;
+    void nuevoInteresadoSalida(Interesado interesado, String numeroSalida) throws I18NException;
 
     /**
      * actualizar interesado
@@ -79,7 +79,7 @@ public interface IPostProcesoPlugin extends IPlugin {
      * @return
      * @throws I18NException
      */
-    public void actualizarInteresadoEntrada(Interesado interesado, String numeroEntrada) throws I18NException;
+    void actualizarInteresadoEntrada(Interesado interesado, String numeroEntrada) throws I18NException;
 
     /**
      * actualizar interesado
@@ -88,7 +88,7 @@ public interface IPostProcesoPlugin extends IPlugin {
      * @return
      * @throws I18NException
      */
-    public void actualizarInteresadoSalida(Interesado interesado, String numeroSalida) throws I18NException;
+    void actualizarInteresadoSalida(Interesado interesado, String numeroSalida) throws I18NException;
 
     /**
      * eliminar interesado
@@ -97,7 +97,7 @@ public interface IPostProcesoPlugin extends IPlugin {
      * @return
      * @throws I18NException
      */
-    public void eliminarInteresadoEntrada(Long idInteresado, String numeroEntrada) throws I18NException;
+    void eliminarInteresadoEntrada(Long idInteresado, String numeroEntrada) throws I18NException;
 
     /**
      * eliminar interesado
@@ -106,7 +106,7 @@ public interface IPostProcesoPlugin extends IPlugin {
      * @return
      * @throws I18NException
      */
-    public void eliminarInteresadoSalida(Long idInteresado, String numeroSalida) throws I18NException;
+    void eliminarInteresadoSalida(Long idInteresado, String numeroSalida) throws I18NException;
 
 
 }

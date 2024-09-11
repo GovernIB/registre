@@ -1,7 +1,7 @@
 package es.caib.regweb3.persistence.integracion;
 
 
-import es.caib.plugins.arxiu.api.ContingutArxiu;
+import es.caib.pluginsib.arxiu.api.ContingutArxiu;
 
 public class JustificanteArxiu {
 

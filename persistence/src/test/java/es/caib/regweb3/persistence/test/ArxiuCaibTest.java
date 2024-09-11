@@ -1,10 +1,9 @@
 package es.caib.regweb3.persistence.test;
 
 
-import es.caib.plugins.arxiu.api.*;
+import es.caib.pluginsib.arxiu.api.*;
 import es.caib.regweb3.utils.RegwebConstantes;
-import org.fundaciobit.plugins.signature.api.FileInfoSignature;
-import org.fundaciobit.pluginsib.core.utils.XTrustProvider;
+import org.fundaciobit.pluginsib.signature.api.FileInfoSignature;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -27,8 +26,7 @@ public class ArxiuCaibTest {
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
         testProperties.load(new FileInputStream("test.properties"));
-        iArxiuPlugin =  (IArxiuPlugin) org.fundaciobit.pluginsib.core.utils.PluginsManager.instancePluginByClassName(getTestArxiuClass(), RegwebConstantes.REGWEB3_PROPERTY_BASE, testProperties);
-        XTrustProvider.install();
+        iArxiuPlugin =  (IArxiuPlugin) org.fundaciobit.pluginsib.core.v3.utils.PluginsManager.instancePluginByClassName(getTestArxiuClass(), RegwebConstantes.REGWEB3_PROPERTY_BASE, testProperties);
     }
 
     @Test

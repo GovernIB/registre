@@ -2,7 +2,7 @@ package es.caib.regweb3.plugins.distribucion;
 
 import es.caib.regweb3.model.RegistroEntrada;
 import org.fundaciobit.genapp.common.i18n.I18NException;
-import org.fundaciobit.pluginsib.core.IPlugin;
+import org.fundaciobit.pluginsib.core.v3.IPluginIB;
 
 import java.util.Locale;
 
@@ -12,9 +12,9 @@ import java.util.Locale;
  * @author earrivi
  *         Date: 27/10/2015
  */
-public interface IDistribucionPlugin extends IPlugin {
+public interface IDistribucionPlugin extends IPluginIB {
 
-    public static final String DISTRIBUCION_BASE_PROPERTY = IPLUGIN_BASE_PROPERTIES + "distribucion.";
+    public static final String DISTRIBUCION_BASE_PROPERTY = IPLUGINSIB_BASE_PROPERTIES + "distribucion.";
 
 
     /**

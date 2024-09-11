@@ -10,10 +10,10 @@ import es.caib.regweb3.utils.StringUtils;
 import org.apache.commons.codec.binary.Base64;
 import org.fundaciobit.genapp.common.i18n.I18NCommonUtils;
 import org.fundaciobit.genapp.common.i18n.I18NException;
-import org.fundaciobit.plugins.validatesignature.api.ValidateSignatureConstants;
-import org.fundaciobit.pluginsib.core.utils.AbstractPluginProperties;
-import org.fundaciobit.pluginsib.core.utils.Metadata;
-import org.fundaciobit.pluginsib.core.utils.MetadataConstants;
+import org.fundaciobit.pluginsib.core.v3.utils.AbstractPluginProperties;
+import org.fundaciobit.pluginsib.core.v3.utils.Metadata;
+import org.fundaciobit.pluginsib.core.v3.utils.MetadataConstants;
+import org.fundaciobit.pluginsib.validatesignature.api.ValidateSignatureConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -109,9 +109,8 @@ public class DistribucionGoibPlugin extends AbstractPluginProperties implements 
             if (StringUtils.isNotEmpty(e.getMessage()) && e.getMessage().contains("ja ha estat donada")) {
                 log.info("Consideramos que la anotacion : " + registro.getNumeroRegistroFormateado() + "  ya existe y la marcamos como Distribuida");
                 return true;
-            } else {
-                e.printStackTrace();
             }
+            e.printStackTrace();
             throw new I18NException("registroEntrada.distribuir.error");
         }
 

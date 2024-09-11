@@ -1,6 +1,6 @@
 package es.caib.regweb3.persistence.integracion;
 
-import es.caib.plugins.arxiu.api.*;
+import es.caib.pluginsib.arxiu.api.*;
 import es.caib.regweb3.model.Anexo;
 import es.caib.regweb3.model.IRegistro;
 import es.caib.regweb3.model.Interesado;
@@ -13,7 +13,7 @@ import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 import org.fundaciobit.genapp.common.i18n.I18NArgumentString;
 import org.fundaciobit.genapp.common.i18n.I18NException;
-import org.fundaciobit.plugins.validatesignature.api.ValidateSignatureConstants;
+import org.fundaciobit.pluginsib.validatesignature.api.ValidateSignatureConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -362,7 +362,7 @@ public class ArxiuCaibUtils {
     }
 
     /**
-     * Obtiene el CSV de un {@link es.caib.plugins.arxiu.api.Document}
+     * Obtiene el CSV de un {@link es.caib.pluginsib.arxiu.api.Document}
      * @param identificadorDocumento
      * @return
      * @throws I18NException
@@ -372,7 +372,7 @@ public class ArxiuCaibUtils {
     }
 
     /**
-     * Obtiene la Url de Printable (CSV incrustado) {@link es.caib.plugins.arxiu.api.Document}
+     * Obtiene la Url de Printable (CSV incrustado) {@link es.caib.pluginsib.arxiu.api.Document}
      * @param identificadorDocumento
      * @return
      * @throws I18NException
@@ -382,7 +382,7 @@ public class ArxiuCaibUtils {
     }
 
     /**
-     * Obtiene la Url de la Web Validacion CSV {@link es.caib.plugins.arxiu.api.Document}
+     * Obtiene la Url de la Web Validacion CSV {@link es.caib.pluginsib.arxiu.api.Document}
      * @param identificadorDocumento
      * @return
      * @throws I18NException
@@ -509,7 +509,7 @@ public class ArxiuCaibUtils {
 
 
     /**
-     * Genera un {@link es.caib.plugins.arxiu.api.Expedient} a partir de los parámetros
+     * Genera un {@link es.caib.pluginsib.arxiu.api.Expedient} a partir de los parámetros
      * @param identificador
      * @param nombre
      * @param ntiIdentificador
@@ -557,7 +557,7 @@ public class ArxiuCaibUtils {
     }
 
     /**
-     * Genera un {@link es.caib.plugins.arxiu.api.Document} que representa un Justificante
+     * Genera un {@link es.caib.pluginsib.arxiu.api.Document} que representa un Justificante
      * @param registro
      * @param tipoRegistro
      * @param firma
@@ -601,7 +601,7 @@ public class ArxiuCaibUtils {
     }
 
     /**
-     * Genera un {@link es.caib.plugins.arxiu.api.Document} a partir de los parámetros
+     * Genera un {@link es.caib.pluginsib.arxiu.api.Document} a partir de los parámetros
      * @param registro
      * @param tipoRegistro
      * @param anexoFull
@@ -713,7 +713,7 @@ public class ArxiuCaibUtils {
 
 
     /**
-     * Obtiene una {@link es.caib.plugins.arxiu.api.Firma} a partir de los parámetros
+     * Obtiene una {@link es.caib.pluginsib.arxiu.api.Firma} a partir de los parámetros
      * @param anexoFull
      * @return
      * @throws I18NException
@@ -798,7 +798,7 @@ public class ArxiuCaibUtils {
     }
 
     /**
-     * Obtiene un {@link es.caib.plugins.arxiu.api.FirmaPerfil} a partir de los parámetros
+     * Obtiene un {@link es.caib.pluginsib.arxiu.api.FirmaPerfil} a partir de los parámetros
      * @param singProfile
      * @return
      * @throws I18NException
@@ -832,7 +832,7 @@ public class ArxiuCaibUtils {
     }
 
     /**
-     * Obtiene un {@link es.caib.plugins.arxiu.api.FirmaTipus} a partir de los parámetros
+     * Obtiene un {@link es.caib.pluginsib.arxiu.api.FirmaTipus} a partir de los parámetros
      * @param anexo
      * @return
      * @throws I18NException
@@ -870,7 +870,7 @@ public class ArxiuCaibUtils {
     }
 
     /**
-     * Obtiene un {@link es.caib.plugins.arxiu.api.DocumentFormat} a partir de los parámetros
+     * Obtiene un {@link es.caib.pluginsib.arxiu.api.DocumentFormat} a partir de los parámetros
      * @param extension
      * @return
      */

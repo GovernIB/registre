@@ -1,16 +1,16 @@
 package es.caib.regweb3.model.utils;
 
-import es.caib.plugins.arxiu.api.Document;
-import es.caib.plugins.arxiu.api.Firma;
-import es.caib.plugins.arxiu.api.FirmaPerfil;
-import es.caib.plugins.arxiu.api.FirmaTipus;
+import es.caib.pluginsib.arxiu.api.Document;
+import es.caib.pluginsib.arxiu.api.Firma;
+import es.caib.pluginsib.arxiu.api.FirmaPerfil;
+import es.caib.pluginsib.arxiu.api.FirmaTipus;
 import es.caib.regweb3.model.Anexo;
 import es.caib.regweb3.model.TipoDocumental;
 import es.caib.regweb3.utils.RegwebConstantes;
 import org.fundaciobit.genapp.common.i18n.I18NException;
-import org.fundaciobit.plugins.documentcustody.api.DocumentCustody;
-import org.fundaciobit.plugins.documentcustody.api.SignatureCustody;
-import org.fundaciobit.pluginsib.core.utils.Metadata;
+import org.fundaciobit.pluginsib.core.v3.utils.Metadata;
+import org.fundaciobit.pluginsib.documentcustody.api.DocumentCustody;
+import org.fundaciobit.pluginsib.documentcustody.api.SignatureCustody;
 
 import javax.persistence.Transient;
 import java.util.List;

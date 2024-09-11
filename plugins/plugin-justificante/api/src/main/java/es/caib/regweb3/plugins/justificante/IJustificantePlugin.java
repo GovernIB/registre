@@ -3,7 +3,7 @@ package es.caib.regweb3.plugins.justificante;
 import es.caib.regweb3.model.RegistroEntrada;
 import es.caib.regweb3.model.RegistroSalida;
 import org.fundaciobit.genapp.common.i18n.I18NException;
-import org.fundaciobit.pluginsib.core.IPlugin;
+import org.fundaciobit.pluginsib.core.v3.IPluginIB;
 
 /**
  * Created by Fundació BIT.
@@ -11,9 +11,9 @@ import org.fundaciobit.pluginsib.core.IPlugin;
  * Date: 01/03/2017
  *
  */
-public interface IJustificantePlugin extends IPlugin {
+public interface IJustificantePlugin extends IPluginIB {
 
-    public static final String JUSTIFICANTE_BASE_PROPERTY = IPLUGIN_BASE_PROPERTIES + "justificante.";
+    public static final String JUSTIFICANTE_BASE_PROPERTY = IPLUGINSIB_BASE_PROPERTIES + "justificante.";
 
     /**
      * Metodo que genera el justificante de un registro de entrada.
