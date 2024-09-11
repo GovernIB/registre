@@ -220,94 +220,82 @@
                                     <div class="table-responsive overVisible">
 
                                         <table class="table table-bordered table-hover table-striped tablesorter">
-                                            <colgroup>
-                                                <col>
-                                                <col>
-                                                <col>
-                                                <col>
-                                                <col>
-                                                <col>
-                                                <col>
-                                                <col>
-                                                <col>
-                                                <col width="51">
-                                            </colgroup>
                                             <thead>
-                                            <tr>
-                                                <th class="center"><spring:message code="registroSir.identificadorIntercambio"/></th>
-                                                <th><spring:message code="registroSir.fechaRecepcion"/></th>
-                                                <th class="center"><spring:message code="regweb.tipo"/></th>
-                                                <th class="center"><spring:message code="regweb.origen"/></th>
-                                                <th class="center"><spring:message code="registroSir.oficinaDestino"/></th>
-                                                <th class="center"><spring:message code="registroSir.aplicacion"/></th>
-                                                <th class="center"><spring:message code="registroSir.estado"/></th>
-                                                <th>Doc</th>
-                                                <th><spring:message code="oficioRemision.reintentos"/></th>
-                                                <th class="center"><spring:message code="regweb.acciones"/></th>
-                                            </tr>
+                                                <tr>
+                                                    <th class="center"><spring:message code="registroSir.identificadorIntercambio"/></th>
+                                                    <th><spring:message code="registroSir.fechaRecepcion"/></th>
+                                                    <th class="center"><spring:message code="regweb.tipo"/></th>
+                                                    <th class="center"><spring:message code="regweb.origen"/></th>
+                                                    <th class="center"><spring:message code="registroSir.oficinaDestino"/></th>
+                                                    <th class="center"><spring:message code="registroSir.aplicacion"/></th>
+                                                    <th class="center"><spring:message code="registroSir.estado"/></th>
+                                                    <th>Doc</th>
+                                                    <th><spring:message code="oficioRemision.reintentos"/></th>
+                                                    <th class="center"><spring:message code="regweb.acciones"/></th>
+                                                </tr>
                                             </thead>
 
                                             <tbody>
-                                            <c:forEach var="registroSir" items="${paginacion.listado}" varStatus="status">
-                                                <c:set var="registroSir" value="${registroSir}" scope="request"/>
-                                                <tr>
-                                                    <td> ${registroSir.identificadorIntercambio}</td>
-                                                    <td><fmt:formatDate value="${registroSir.fechaRecepcion}" pattern="dd/MM/yyyy HH:mm:ss"/></td>
-                                                    <td class="center">
-                                                        <c:if test="${registroSir.tipoRegistro == 'ENTRADA'}">
-                                                            <span class="label label-info"><spring:message code="registroSir.entrada"/></span>
-                                                        </c:if>
+                                                <c:forEach var="registroSir" items="${paginacion.listado}" varStatus="status">
+                                                    <c:set var="registroSir" value="${registroSir}" scope="request"/>
+                                                    <tr>
+                                                        <td> ${registroSir.identificadorIntercambio}</td>
+                                                        <td><fmt:formatDate value="${registroSir.fechaRecepcion}" pattern="dd/MM/yyyy HH:mm:ss"/></td>
+                                                        <td class="center">
+                                                            <c:if test="${registroSir.tipoRegistro == 'ENTRADA'}">
+                                                                <span class="label label-info"><spring:message code="registroSir.entrada"/></span>
+                                                            </c:if>
 
-                                                        <c:if test="${registroSir.tipoRegistro == 'SALIDA'}">
-                                                            <span class="label label-danger"><spring:message code="registroSir.salida"/></span>
-                                                        </c:if>
-                                                    </td>
-                                                    <td><label class="no-bold" rel="popupAbajo" data-content="${registroSir.codigoEntidadRegistralOrigen}" data-toggle="popover">${registroSir.decodificacionEntidadRegistralOrigen}</label></td>
-                                                    <td><label class="no-bold" rel="popupAbajo" data-content="${registroSir.codigoEntidadRegistralDestino}" data-toggle="popover">${registroSir.decodificacionEntidadRegistralDestino}</label></td>
-                                                    <td>${registroSir.aplicacion}</td>
-                                                    <td class="center">
-                                                        <c:import url="../registroSir/estadosRegistroSir.jsp" />
-                                                    </td>
-                                                    <td class="center">
-                                                        <c:if test="${registroSir.documentacionFisica == RegwebConstantes.TIPO_DOCFISICA_NO_ACOMPANYA_DOC}">
-                                                            <i class="fa fa-print text-verd"  title="<spring:message code="tipoDocumentacionFisica.${registroSir.documentacionFisica}"/>"></i>
-                                                        </c:if>
-                                                        <c:if test="${registroSir.documentacionFisica == RegwebConstantes.TIPO_DOCFISICA_ACOMPANYA_DOC_REQUERIDA}">
-                                                            <i class="fa fa-file-text text-vermell" title="<spring:message code="tipoDocumentacionFisica.${registroSir.documentacionFisica}"/>"></i>
-                                                        </c:if>
-                                                        <c:if test="${registroSir.documentacionFisica == RegwebConstantes.TIPO_DOCFISICA_ACOMPANYA_DOC_COMPLEMENTARIA}">
-                                                            <i class="fa fa-clipboard text-taronja" title="<spring:message code="tipoDocumentacionFisica.${registroSir.documentacionFisica}"/>"></i>
-                                                        </c:if>
-                                                    </td>
-                                                    <td class="center">${registroSir.numeroReintentos}</td>
-                                                    <td class="center">
-                                                        <div class="btn-group pull-right text12">
-                                                            <button type="button" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown">
-                                                                <spring:message code="regweb.acciones"/> <span class="caret"></span>
-                                                            </button>
-                                                            <ul class="dropdown-menu dropdown">
-                                                                <li><a href="<c:url value="/sir/${registroSir.identificadorIntercambio}/detalle"/>" target="_blank"><spring:message code="idIntercambio.detalle"/></a></li>
-                                                                <li><a href="<c:url value="/registroSir/${registroSir.id}/detalle"/>" target="_blank"><spring:message code="registroSir.detalle"/></a></li>
-                                                                <c:if test="${registroSir.estado == 'RECIBIDO' || registroSir.estado == 'REENVIADO' || registroSir.estado == 'RECHAZADO'}">
-                                                                    <li><a data-toggle="modal" role="button" href="#eliminarModal" onclick="limpiarModalEliminar(${registroSir.id});"><spring:message code="registroSir.eliminar"/></a></li>
-                                                                </c:if>
-                                                                <li class="divider"></li>
-                                                                <li><a href="javascript:void(0);" onclick='confirm("javascript:enviarACK(${registroSir.id})","<spring:message code="regweb.confirmar.enviarMensaje" htmlEscape="true"/>")'><spring:message code="mensajeControl.enviar.ACK"/></a></li>
-                                                                <c:if test="${registroSir.estado == 'ACEPTADO'}">
-                                                                    <li><a href="javascript:void(0);" onclick='confirm("javascript:enviarConfirmacion(${registroSir.id})","<spring:message code="regweb.confirmar.enviarMensaje" htmlEscape="true"/>")'><spring:message code="mensajeControl.enviar.confirmacion"/></a></li>
-                                                                </c:if>
-                                                                <c:if test="${registroSir.estado == 'REENVIADO' || registroSir.estado == 'REENVIADO_Y_ERROR' || registroSir.estado == 'RECHAZADO' || registroSir.estado == 'RECHAZADO_Y_ERROR'}">
-                                                                    <li><a href="javascript:void(0);" onclick='confirm("javascript:reintentarEnvioRegistroSir(${registroSir.id})","<spring:message code="regweb.confirmar.enviarIntercambio" htmlEscape="true"/>")'><spring:message code="intercambio.reenviar"/></a></li>
-                                                                </c:if>
-                                                                <c:if test="${registroSir.estado != 'ACEPTADO'}">
-                                                                    <c:url value="/sir/registroSir/reiniciar" var="urlReiniciar"/>
-                                                                    <li><a href="javascript:void(0);" onclick="reiniciarContador('${registroSir.id}','${urlReiniciar}')"><spring:message code="registroSir.reiniciar"/></a></li>
-                                                                </c:if>
-                                                            </ul>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            </c:forEach>
+                                                            <c:if test="${registroSir.tipoRegistro == 'SALIDA'}">
+                                                                <span class="label label-danger"><spring:message code="registroSir.salida"/></span>
+                                                            </c:if>
+                                                        </td>
+                                                        <td><label class="no-bold" rel="popupAbajo" data-content="${registroSir.codigoEntidadRegistralOrigen}" data-toggle="popover">${registroSir.decodificacionEntidadRegistralOrigen}</label></td>
+                                                        <td><label class="no-bold" rel="popupAbajo" data-content="${registroSir.codigoEntidadRegistralDestino}" data-toggle="popover">${registroSir.decodificacionEntidadRegistralDestino}</label></td>
+                                                        <td>${registroSir.aplicacion}</td>
+                                                        <td class="center">
+                                                            <c:import url="../registroSir/estadosRegistroSir.jsp" />
+                                                        </td>
+                                                        <td class="center">
+                                                            <c:if test="${registroSir.documentacionFisica == RegwebConstantes.TIPO_DOCFISICA_NO_ACOMPANYA_DOC}">
+                                                                <i class="fa fa-print text-verd"  title="<spring:message code="tipoDocumentacionFisica.${registroSir.documentacionFisica}"/>"></i>
+                                                            </c:if>
+                                                            <c:if test="${registroSir.documentacionFisica == RegwebConstantes.TIPO_DOCFISICA_ACOMPANYA_DOC_REQUERIDA}">
+                                                                <i class="fa fa-file-text text-vermell" title="<spring:message code="tipoDocumentacionFisica.${registroSir.documentacionFisica}"/>"></i>
+                                                            </c:if>
+                                                            <c:if test="${registroSir.documentacionFisica == RegwebConstantes.TIPO_DOCFISICA_ACOMPANYA_DOC_COMPLEMENTARIA}">
+                                                                <i class="fa fa-clipboard text-taronja" title="<spring:message code="tipoDocumentacionFisica.${registroSir.documentacionFisica}"/>"></i>
+                                                            </c:if>
+                                                        </td>
+                                                        <td class="center">${registroSir.numeroReintentos}</td>
+                                                        <td class="center">
+                                                            <div class="btn-group pull-right text12">
+                                                                <button type="button" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown">
+                                                                    <spring:message code="regweb.acciones"/> <span class="caret"></span>
+                                                                </button>
+                                                                <ul class="dropdown-menu dropdown">
+                                                                    <li><a href="<c:url value="/sir/${registroSir.identificadorIntercambio}/detalle"/>" target="_blank"><spring:message code="idIntercambio.detalle"/></a></li>
+                                                                    <li><a href="<c:url value="/registroSir/${registroSir.id}/detalle"/>" target="_blank"><spring:message code="registroSir.detalle"/></a></li>
+                                                                    <c:if test="${registroSir.estado == 'RECIBIDO' || registroSir.estado == 'REENVIADO' || registroSir.estado == 'RECHAZADO'}">
+                                                                        <li><a data-toggle="modal" role="button" href="#eliminarModal" onclick="limpiarModalEliminar(${registroSir.id});"><spring:message code="registroSir.eliminar"/></a></li>
+                                                                    </c:if>
+                                                                    <li class="divider"></li>
+                                                                    <li><a href="javascript:void(0);" onclick='confirm("javascript:enviarACK(${registroSir.id})","<spring:message code="regweb.confirmar.enviarMensaje" htmlEscape="true"/>")'><spring:message code="mensajeControl.enviar.ACK"/></a></li>
+                                                                    <c:if test="${registroSir.estado == 'ACEPTADO'}">
+                                                                        <li><a href="javascript:void(0);" onclick='confirm("javascript:enviarConfirmacion(${registroSir.id})","<spring:message code="regweb.confirmar.enviarMensaje" htmlEscape="true"/>")'><spring:message code="mensajeControl.enviar.confirmacion"/></a></li>
+                                                                    </c:if>
+                                                                    <c:if test="${registroSir.estado == 'REENVIADO' || registroSir.estado == 'REENVIADO_Y_ERROR' || registroSir.estado == 'RECHAZADO' || registroSir.estado == 'RECHAZADO_Y_ERROR'}">
+                                                                        <li><a href="javascript:void(0);" onclick='confirm("javascript:reintentarEnvioRegistroSir(${registroSir.id})","<spring:message code="regweb.confirmar.enviarIntercambio" htmlEscape="true"/>")'><spring:message code="intercambio.reenviar"/></a></li>
+                                                                    </c:if>
+                                                                    <c:if test="${registroSir.estado != 'ACEPTADO'}">
+                                                                        <c:url value="/sir/registroSir/reiniciar" var="urlReiniciar"/>
+                                                                        <li><a href="javascript:void(0);" onclick="reiniciarContador('${registroSir.id}','${urlReiniciar}')"><spring:message code="registroSir.reiniciar"/></a></li>
+                                                                    </c:if>
+                                                                </ul>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </c:forEach>
                                             </tbody>
                                         </table>
 
