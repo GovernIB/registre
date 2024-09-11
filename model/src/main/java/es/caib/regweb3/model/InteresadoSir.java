@@ -11,7 +11,7 @@ import java.io.Serializable;
  * Created by earrivi on 26/11/2015.
  */
 @Entity
-@Table(name = "RWE_INTERESADO_SIR")
+@Table(name = "RWE_INTERESADO_SIR", indexes = {@Index(name = "RWE_INTERESADOSIR_REGSIR_FK_I", columnList = "REGISTRO_SIR")})
 @SequenceGenerator(name="generator",sequenceName = "RWE_INTERESADOSIR_SEQ", allocationSize = 1)
 public class InteresadoSir implements Serializable {
 

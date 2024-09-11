@@ -16,7 +16,9 @@ import java.util.List;
  * Implementación de un RegistroSir de intercambio
  */
 @Entity
-@Table(name = "RWE_REGISTRO_SIR")
+@Table(name = "RWE_REGISTRO_SIR", indexes = {
+        @Index(name = "RWE_REGISTRO_CER_FK_I", columnList = "COD_ENT_REG"),
+        @Index(name = "RWE_REGISTRO_ESTADO_FK_I", columnList = "ESTADO")})
 @SequenceGenerator(name="generator",sequenceName = "RWE_REGISTROSIR_SEQ", allocationSize = 1)
 public class RegistroSir implements Serializable {
 
