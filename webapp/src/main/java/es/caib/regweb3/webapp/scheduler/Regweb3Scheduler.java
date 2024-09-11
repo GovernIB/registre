@@ -43,6 +43,13 @@ public class Regweb3Scheduler {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        try {
+            schedulerEjb.purgarSesionesWs();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -142,7 +149,6 @@ public class Regweb3Scheduler {
      * Cuando lo hace: Cada 30 minutos desde las 01:00 hasta las 06:00
      */
     @Scheduled(cron = "0 0/30 1,2,3,4,5,6 * * *")
-    //@Scheduled(fixedDelay = 180000) // 3 minutos
     public void distribucionAutomatica(){
 
         try {
