@@ -119,6 +119,7 @@ public class RegWeb3BackConfig extends WebMvcConfigurerAdapter {
         registry.addInterceptor(notificacionInterceptor()).addPathPatterns("/notificacion/**");
         registry.addInterceptor(pluginInterceptor()).addPathPatterns("/plugin/**");
         registry.addInterceptor(propiedadGlobalInterceptor()).addPathPatterns("/propiedadGlobal/**");
+        registry.addInterceptor(propiedadGlobalInterceptor()).addPathPatterns("/permisos/**");
 
         registry.addInterceptor(localeChangeInterceptor());
 
@@ -256,6 +257,9 @@ public class RegWeb3BackConfig extends WebMvcConfigurerAdapter {
 
     @Bean
     PropiedadGlobalInterceptor propiedadGlobalInterceptor() {return new PropiedadGlobalInterceptor();}
+
+    @Bean
+    PermisosInterceptor permisosInterceptor() {return new PermisosInterceptor();}
 
 
     /* Views */
