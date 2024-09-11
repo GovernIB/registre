@@ -319,31 +319,19 @@
                             <div class="table-responsive">
 
                                 <table class="table table-bordered table-hover table-striped tablesorter">
-                                    <colgroup>
-                                        <col width="80">
-                                        <col>
-                                        <col width="80">
-                                        <col>
-                                        <col>
-                                        <col>
-                                        <col>
-                                        <col>
-                                        <col>
-                                        <col width="125">
-                                    </colgroup>
                                     <thead>
-                                    <tr>
-                                        <th class="center"><spring:message code="regweb.numero"/></th>
-                                        <th class="center"><spring:message code="registroSalida.fecha"/></th>
-                                        <th class="center"><spring:message code="registroSalida.usuario"/></th>
-                                        <th class="center"><spring:message code="registroSalida.oficina"/></th>
-                                        <th class="center"><spring:message code="registroSalida.origen"/></th>
-                                        <th class="center"><spring:message code="registroSalida.extracto"/></th>
-                                        <th class="center"><spring:message code="registroSalida.estado"/></th>
-                                        <th class="center">Doc.</th>
-                                        <th class="center"><spring:message code="registro.presencial"/></th>
-                                        <th class="center"><spring:message code="regweb.acciones"/></th>
-                                    </tr>
+                                        <tr>
+                                            <th class="center"><spring:message code="regweb.numero"/></th>
+                                            <th class="center"><spring:message code="registroSalida.fecha"/></th>
+                                            <th class="center"><spring:message code="registroSalida.usuario"/></th>
+                                            <th class="center"><spring:message code="registroSalida.oficina"/></th>
+                                            <th class="center"><spring:message code="registroSalida.origen"/></th>
+                                            <th class="center"><spring:message code="registroSalida.extracto"/></th>
+                                            <th class="center"><spring:message code="registroSalida.estado"/></th>
+                                            <th class="center">Doc.</th>
+                                            <th class="center"><spring:message code="registro.presencial"/></th>
+                                            <th class="center"><spring:message code="regweb.acciones"/></th>
+                                        </tr>
                                     </thead>
 
                                     <tbody>
@@ -393,24 +381,25 @@
                                                 </c:if>
                                             </td>
                                             <td class="center">
-                                                <%--Botón detalle--%>
-                                                <a class="btn btn-info btn-sm" href="<c:url value="/registroSalida/${registro.id}/detalle"/>" title="<spring:message code="registroSalida.detalle"/>"><span class="fa fa-eye"></span></a>
+                                                <p>
+                                                    <%--Botón detalle--%>
+                                                    <a class="btn btn-info btn-sm" href="<c:url value="/registroSalida/${registro.id}/detalle"/>" title="<spring:message code="registroSalida.detalle"/>"><span class="fa fa-eye"></span></a>
 
-                                                <%--Botón editar--%>
-                                                <c:if test="${registro.estado == RegwebConstantes.REGISTRO_VALIDO && registro.registroDetalle.presencial && permisoEditar}">
-                                                    <a class="btn btn-warning btn-sm" href="<c:url value="/registroSalida/${registro.id}/edit"/>" title="<spring:message code="regweb.editar"/>"><span class="fa fa-pencil"></span></a>
-                                                </c:if>
+                                                    <%--Botón editar--%>
+                                                    <c:if test="${registro.estado == RegwebConstantes.REGISTRO_VALIDO && registro.registroDetalle.presencial && permisoEditar}">
+                                                        <a class="btn btn-warning btn-sm" href="<c:url value="/registroSalida/${registro.id}/edit"/>" title="<spring:message code="regweb.editar"/>"><span class="fa fa-pencil"></span></a>
+                                                    </c:if>
 
-                                                <%--Botón anular--%>
-                                                <c:if test="${(registro.estado == RegwebConstantes.REGISTRO_VALIDO || registro.estado == RegwebConstantes.REGISTRO_PENDIENTE_VISAR) && permisoEditar}">
-                                                    <a data-toggle="modal" role="button" href="#anularModal" onclick="limpiarModalAnulacion(${registro.id});" class="btn btn-danger btn-sm"><span class="fa fa-thumbs-o-down"></span></a>
-                                                </c:if>
+                                                    <%--Botón anular--%>
+                                                    <c:if test="${(registro.estado == RegwebConstantes.REGISTRO_VALIDO || registro.estado == RegwebConstantes.REGISTRO_PENDIENTE_VISAR) && permisoEditar}">
+                                                        <a data-toggle="modal" role="button" href="#anularModal" onclick="limpiarModalAnulacion(${registro.id});" class="btn btn-danger btn-sm" title="<spring:message code="regweb.anular"/>"><span class="fa fa-thumbs-o-down"></span></a>
+                                                    </c:if>
 
-                                                <%--Botón activar--%>
-                                                <c:if test="${registro.estado == RegwebConstantes.REGISTRO_ANULADO && permisoEditar}">
-                                                    <a class="btn btn-primary btn-sm" onclick='javascript:confirm("<c:url value="/registroSalida/${registro.id}/activar"/>","<spring:message code="regweb.confirmar.activar" htmlEscape="true"/>")' href="javascript:void(0);" title="<spring:message code="regweb.activar"/>"><span class="fa fa-thumbs-o-up"></span></a>
-                                                </c:if>
-
+                                                    <%--Botón activar--%>
+                                                    <c:if test="${registro.estado == RegwebConstantes.REGISTRO_ANULADO && permisoEditar}">
+                                                        <a class="btn btn-primary btn-sm" onclick='javascript:confirm("<c:url value="/registroSalida/${registro.id}/activar"/>","<spring:message code="regweb.confirmar.activar" htmlEscape="true"/>")' href="javascript:void(0);" title="<spring:message code="regweb.activar"/>"><span class="fa fa-thumbs-o-up"></span></a>
+                                                    </c:if>
+                                                </p>
                                             </td>
                                         </tr>
                                     </c:forEach>

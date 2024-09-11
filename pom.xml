@@ -31,6 +31,7 @@
         <itext.version>5.4.5</itext.version>
         <dom4j.version>1.6.1</dom4j.version>
         <genapp.version>2.0.0-SNAPSHOT</genapp.version>
+        <pluginsib.core-old.version>2.0.0</pluginsib.core-old.version>
         <pluginsib.arxiu.version>3.0.0-SNAPSHOT</pluginsib.arxiu.version>
         <pluginsib.documentcustody.version>5.0.0-SNAPSHOT</pluginsib.documentcustody.version>
         <pluginsib.core.version>3.0.0-SNAPSHOT</pluginsib.core.version>
@@ -336,6 +337,12 @@
                 <groupId>org.fundaciobit.pluginsib.core.v3</groupId>
                 <artifactId>pluginsib-core</artifactId>
                 <version>${pluginsib.core.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.fundaciobit.pluginsib.core</groupId>
+                <artifactId>pluginsib-core</artifactId>
+                <version>${pluginsib.core-old.version}</version>
             </dependency>
 
             <dependency>

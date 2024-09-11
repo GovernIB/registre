@@ -177,27 +177,18 @@
                                         <div class="table-responsive overVisible">
 
                                             <table class="table table-bordered table-hover table-striped tablesorter">
-                                                <colgroup>
-                                                    <col>
-                                                    <col>
-                                                    <col>
-                                                    <col>
-                                                    <col>
-                                                    <col>
-                                                    <col>
-                                                    <col width="51">
-                                                </colgroup>
+
                                                 <thead>
-                                                <tr>
-                                                    <th><spring:message code="registroSir.identificadorIntercambio"/></th>
-                                                    <th><spring:message code="oficioRemision.fecha"/></th>
-                                                    <th class="center"><spring:message code="oficioRemision.tipo"/></th>
-                                                    <th class="center"><spring:message code="oficioRemision.oficina"/></th>
-                                                    <th class="center"><spring:message code="oficioRemision.organismoDestino"/></th>
-                                                    <th class="center"><spring:message code="oficioRemision.estado"/></th>
-                                                    <th><spring:message code="oficioRemision.reintentos"/></th>
-                                                    <th class="center"><spring:message code="regweb.acciones"/></th>
-                                                </tr>
+                                                    <tr>
+                                                        <th><spring:message code="registroSir.identificadorIntercambio"/></th>
+                                                        <th><spring:message code="oficioRemision.fecha"/></th>
+                                                        <th class="center"><spring:message code="oficioRemision.tipo"/></th>
+                                                        <th class="center"><spring:message code="oficioRemision.oficina"/></th>
+                                                        <th class="center"><spring:message code="oficioRemision.organismoDestino"/></th>
+                                                        <th class="center"><spring:message code="oficioRemision.estado"/></th>
+                                                        <th><spring:message code="oficioRemision.reintentos"/></th>
+                                                        <th class="center"><spring:message code="regweb.acciones"/></th>
+                                                    </tr>
                                                 </thead>
 
                                                 <tbody>
