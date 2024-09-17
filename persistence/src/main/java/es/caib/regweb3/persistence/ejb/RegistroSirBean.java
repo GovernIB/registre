@@ -1655,7 +1655,6 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         }else{
             registroDetalle.setExtracto(registroSir.getResumen());
         }
-        registroDetalle.setExtracto(registroSir.getResumen());
         registroDetalle.setTipoDocumentacionFisica(Long.valueOf(registroSir.getDocumentacionFisica()));
         registroDetalle.setIdioma(idIdioma);
         if(registroSir.getCodigoSia()!=null){
