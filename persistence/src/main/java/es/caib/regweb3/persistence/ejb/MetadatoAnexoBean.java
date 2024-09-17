@@ -18,7 +18,7 @@ import java.util.List;
  * 18/11/2022
  */
 @Stateless(name = "MetadatoAnexoEJB")
-@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI"})
+@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI", "RWE_WS_ENTRADA", "RWE_WS_SALIDA", "RWE_WS_CIUDADANO"})
 public class MetadatoAnexoBean extends BaseEjbJPA<MetadatoAnexo, Long> implements MetadatoAnexoLocal {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());

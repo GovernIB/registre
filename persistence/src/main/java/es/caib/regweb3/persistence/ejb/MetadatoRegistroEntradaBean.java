@@ -19,7 +19,7 @@ import java.util.List;
  * 18/11/2022
  */
 @Stateless(name = "MetadatoRegistroEntradaEJB")
-@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI"})
+@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI","RWE_WS_ENTRADA", "RWE_WS_SALIDA", "RWE_WS_CIUDADANO"})
 public class MetadatoRegistroEntradaBean extends BaseEjbJPA<MetadatoRegistroEntrada, Long> implements MetadatoRegistroEntradaLocal {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
