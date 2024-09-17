@@ -16,6 +16,7 @@ import es.gob.ad.registros.sir.interService.bean.ResultadoRegistroProcesoBean;
 import es.gob.ad.registros.sir.interService.exception.InterException;
 import es.gob.ad.registros.sir.interService.service.IConsultaService;
 import es.gob.ad.registros.sir.interService.service.ISalidaService;
+import es.gob.ad.registros.sir.interService.service.OficinaService;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.jboss.ejb3.annotation.TransactionTimeout;
 import org.slf4j.Logger;
@@ -92,6 +93,7 @@ public class SchedulerBean implements SchedulerLocal {
 
     @Autowired IConsultaService consultaService;
     @Autowired ISalidaService salidaService;
+    @Autowired OficinaService oficinaService;
 
 
     @Override
@@ -601,10 +603,12 @@ public class SchedulerBean implements SchedulerLocal {
 
             for(AsientoBean asiento: asientosPendientes){
 
-                log.info("Asiento CDINTERCAMBIO   " + asiento.getCdIntercambio());
+               // log.info("Asiento CDINTERCAMBIO   " + asiento.getCdIntercambio());
 
+                //Recibido || ENVIO INTERNO (MULTIENTIDAD)   //PROBADO OK
+                if(TipoEstadoEnum.R.getCodigo().equals(asiento.getCdEstado()) ||
+                   TipoEstadoEnum.PRC.getCodigo().equals(asiento.getCdEstado()) && oficinaService.comprobarOficinaMismaInstalacion(1,asiento.getCdEnRgDestino()) && distintaEntidad(asiento.getCdEnRgProcesa(),asiento.getCdEnRgDestino()) ){
 
-                if(TipoEstadoEnum.R.getCodigo().equals(asiento.getCdEstado())){ //Recibido //PROBADO OK
                     inicio = new Date();
                     descripcion = "Recepción Intercambio: ";
                     RegistroSir registroSir = registroSirEjb.getByIdIntercambio(asiento.getCdIntercambio());
@@ -842,5 +846,19 @@ public class SchedulerBean implements SchedulerLocal {
         datosRegistroProcesoBean.setCdEnRgProcesa(cdEnRgProcesa);
         datosRegistroProcesoBean.setEstadoAplicacion(estadoAplicacion);
         return datosRegistroProcesoBean;
+    }
+
+    private boolean distintaEntidad(String cdEnRgProcesa, String cdEnRgDestino) throws I18NException {
+
+        Oficina oficinaDestino = oficinaEjb.findByMultiEntidad(cdEnRgDestino);
+        Oficina oficinaProcesa = oficinaEjb.findByMultiEntidad(cdEnRgProcesa);
+      /*  log.info("OFICINA DESTINO " + oficinaDestino.getEntidad().getNombre());
+        log.info("OFICINA PROCESA " + oficinaProcesa.getEntidad().getNombre());*/
+        if(oficinaDestino != null && oficinaProcesa != null){
+            return !oficinaProcesa.getEntidad().equals(oficinaDestino.getEntidad());
+        }else{
+            return false;
+        }
+
     }
 }
