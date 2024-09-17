@@ -271,7 +271,8 @@
                 </configuration>
             </plugin>
 
-            <!--<plugin>
+            <!-- NO BORRAR PORQUE SE UTILIZA PARA COMPILAR EL MODELO DE DATOS Y QUE COJA LOS CAMBIOS CUANDO USAMOS EL SQLGENERATOR-->
+          <!--  <plugin>
                 <artifactId>maven-jar-plugin</artifactId>
                 <executions>
                     <execution>
