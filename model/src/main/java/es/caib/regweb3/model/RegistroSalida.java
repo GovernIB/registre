@@ -96,7 +96,7 @@ public class RegistroSalida implements IRegistro {
                           String numeroRegistroOrigen, Date fechaOrigen, String origenExternoDenominacion, Long idOrigen,
                           String denominacionOrigen, Long tipoDocumentacionFisica, Long idioma, String observaciones, Long estado,
                           String expediente, Long idCodigoAsunto, String referenciaExterna, Long transporte, String numeroTransporte,
-                          Long idRegistroDetalle, String origenExternoCodigo, List<Interesado> interesados) {
+                          Long idRegistroDetalle, Long codigoSia, String aplicacion, Boolean presencial, String origenExternoCodigo, List<Interesado> interesados) {
 
         this.id = idRegistro;
         this.numeroRegistro = numeroRegistro;
@@ -108,7 +108,7 @@ public class RegistroSalida implements IRegistro {
         this.origen = new Organismo(idOrigen, denominacionOrigen);
         this.registroDetalle = new RegistroDetalle(idRegistroDetalle, extracto, idOficinaOrigen, denominacionOficinaOrigen,
                 numeroRegistroOrigen, fechaOrigen, tipoDocumentacionFisica, idioma, observaciones, expediente, idCodigoAsunto,
-                referenciaExterna, transporte, numeroTransporte, interesados);
+                referenciaExterna, transporte, numeroTransporte, codigoSia, aplicacion, presencial, interesados);
         this.libro = new Libro(idLibro, nombreLibro, null, null, null);
         this.oficina = new Oficina(idOficina, null, denominacionOficina);
     }

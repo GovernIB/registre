@@ -6,6 +6,7 @@ import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.persistence.utils.RegistroUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
+import es.caib.regweb3.utils.StringUtils;
 import es.caib.regweb3.utils.TimeUtils;
 import es.caib.regweb3.webapp.controller.registro.AbstractRegistroCommonFormController;
 import es.caib.regweb3.webapp.form.*;
@@ -103,7 +104,6 @@ public class InformeController extends AbstractRegistroCommonFormController {
 
         Set<String> campos = informeOrganismoBusquedaForm.getCampos();
 
-
         // Obtener los registros del Organismo
         ArrayList<ArrayList<String>> registrosOrganismo = new ArrayList<ArrayList<String>>();
 
@@ -173,6 +173,24 @@ public class InformeController extends AbstractRegistroCommonFormController {
                     } else if (valorCamp.equals("exped")) {
                         if (registroEntrada.getRegistroDetalle().getExpediente() != null) {
                             registrosOrganismo.get(i).add(registroEntrada.getRegistroDetalle().getExpediente());
+                        } else {
+                            registrosOrganismo.get(i).add("");
+                        }
+                    } else if (valorCamp.equals("codsia")) {
+                        if (registroEntrada.getRegistroDetalle().getCodigoSia() != null) {
+                            registrosOrganismo.get(i).add(registroEntrada.getRegistroDetalle().getCodigoSia().toString());
+                        } else {
+                            registrosOrganismo.get(i).add("");
+                        }
+                    } else if (valorCamp.equals("aplica")) {
+                        if (registroEntrada.getRegistroDetalle().getAplicacion() != null) {
+                            registrosOrganismo.get(i).add(registroEntrada.getRegistroDetalle().getAplicacion());
+                        } else {
+                            registrosOrganismo.get(i).add("");
+                        }
+                    } else if (valorCamp.equals("presen")) {
+                        if (registroEntrada.getRegistroDetalle().getPresencial() != null) {
+                            registrosOrganismo.get(i).add(StringUtils.toStringSiNo(registroEntrada.getRegistroDetalle().getPresencial()));
                         } else {
                             registrosOrganismo.get(i).add("");
                         }
@@ -317,12 +335,6 @@ public class InformeController extends AbstractRegistroCommonFormController {
                         } else {
                             registrosOrganismo.get(i).add("");
                         }
-                    } else if (valorCamp.equals("aplic")) {
-                        if (registroEntrada.getRegistroDetalle().getAplicacion() != null) {
-                            registrosOrganismo.get(i).add(registroEntrada.getRegistroDetalle().getAplicacion());
-                        } else {
-                            registrosOrganismo.get(i).add("");
-                        }
                     }
                 }
             }
@@ -374,6 +386,24 @@ public class InformeController extends AbstractRegistroCommonFormController {
                     } else if (valorCamp.equals("exped")) {
                         if (registroSalida.getRegistroDetalle().getExpediente() != null) {
                             registrosOrganismo.get(i).add(registroSalida.getRegistroDetalle().getExpediente());
+                        } else {
+                            registrosOrganismo.get(i).add("");
+                        }
+                    } else if (valorCamp.equals("codsia")) {
+                        if (registroSalida.getRegistroDetalle().getCodigoSia() != null) {
+                            registrosOrganismo.get(i).add(registroSalida.getRegistroDetalle().getCodigoSia().toString());
+                        } else {
+                            registrosOrganismo.get(i).add("");
+                        }
+                    } else if (valorCamp.equals("aplica")) {
+                        if (registroSalida.getRegistroDetalle().getAplicacion() != null) {
+                            registrosOrganismo.get(i).add(registroSalida.getRegistroDetalle().getAplicacion());
+                        } else {
+                            registrosOrganismo.get(i).add("");
+                        }
+                    } else if (valorCamp.equals("presen")) {
+                        if (registroSalida.getRegistroDetalle().getPresencial() != null) {
+                            registrosOrganismo.get(i).add(StringUtils.toStringSiNo(registroSalida.getRegistroDetalle().getPresencial()));
                         } else {
                             registrosOrganismo.get(i).add("");
                         }
@@ -511,12 +541,6 @@ public class InformeController extends AbstractRegistroCommonFormController {
                                 }
                             }
                             registrosOrganismo.get(i).add(mailInteressats.toString());
-                        } else {
-                            registrosOrganismo.get(i).add("");
-                        }
-                    } else if (valorCamp.equals("aplic")) {
-                        if (registroSalida.getRegistroDetalle().getAplicacion() != null) {
-                            registrosOrganismo.get(i).add(registroSalida.getRegistroDetalle().getAplicacion());
                         } else {
                             registrosOrganismo.get(i).add("");
                         }

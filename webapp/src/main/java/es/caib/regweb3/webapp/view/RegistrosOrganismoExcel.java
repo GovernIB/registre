@@ -1,6 +1,7 @@
 package es.caib.regweb3.webapp.view;
 
 import es.caib.regweb3.utils.RegwebConstantes;
+import es.caib.regweb3.utils.StringUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -82,7 +83,6 @@ public class RegistrosOrganismoExcel extends AbstractExcelView {
         paramCerca.setVerticalAlignment(CellStyle.VERTICAL_CENTER);
         paramCerca.setFont(paramCercaFuente);
 
-
         //Estilo cabecera
         HSSFCellStyle cabecera;
         org.apache.poi.ss.usermodel.Font cabeceraFuente = workbook.createFont();
@@ -153,13 +153,13 @@ public class RegistrosOrganismoExcel extends AbstractExcelView {
         }
 
         //Título
-        sheet.addMergedRegion(CellRangeAddress.valueOf("$A$1:$G$1"));
+        sheet.addMergedRegion(CellRangeAddress.valueOf("$A$1:$M$1"));
         tittleCell.setCellValue(getMessage("informe.organismos"));
         tittleCell.setCellStyle(titulo);
-        sheet.addMergedRegion(CellRangeAddress.valueOf("$A$2:$G$2"));
+        sheet.addMergedRegion(CellRangeAddress.valueOf("$A$2:$M$2"));
         criterioCell.setCellValue(getMessage("informe.criteris"));
         criterioCell.setCellStyle(titulo);
-        sheet.addMergedRegion(CellRangeAddress.valueOf("$A$3:$G$3"));
+        sheet.addMergedRegion(CellRangeAddress.valueOf("$A$3:$M$3"));
 
         //Tabla criterios de busqueda
         String[] nomCriteris = {"informe.tipo", "informe.fechaInicio", "informe.fechaFin", "informe.numRegistro", "informe.extracte",
@@ -173,32 +173,47 @@ public class RegistrosOrganismoExcel extends AbstractExcelView {
             nomCriteris = (String[]) ArrayUtils.add(nomCriteris, "informe.organOrig");
         }
 
+        // Etiquetas de los criterios de búsqueda
         int rowCriterio = 4;
         HSSFRow headerCriterio = sheet.createRow(rowCriterio++);
         headerCriterio.setHeightInPoints(15);
+        int j = 0;
         for (int i = 0; i < nomCriteris.length; i++){
-            HSSFCell columna = headerCriterio.createCell(i);
-            columna.setCellValue(getMessage(nomCriteris[i]));
-            columna.setCellStyle(cabecera);
+
+            if(StringUtils.isNotEmpty(valorCriteris[i])){
+                HSSFCell columna = headerCriterio.createCell(j);
+                columna.setCellValue(getMessage(nomCriteris[i]));
+                columna.setCellStyle(cabecera);
+                j++;
+            }
         }
 
+        // Valores de los criterios de búsqueda
         HSSFRow valorCriterio = sheet.createRow(rowCriterio);
+        j = 0;
         for (int g = 0; g < nomCriteris.length; g++) {
-            valorCriterio.createCell(g).setCellValue(valorCriteris[g]);
+            if(StringUtils.isNotEmpty(valorCriteris[g])){
+                valorCriterio.createCell(j).setCellValue(valorCriteris[g]);
+                j++;
+            }
+
         }
         // Aplicamos el estilo a las celdas
+        j = 0;
         for (int g = 0; g < nomCriteris.length; g++) {
-            valorCriterio.getCell(g).setCellStyle(fila);
+            if(StringUtils.isNotEmpty(valorCriteris[g])){
+                valorCriterio.getCell(j).setCellStyle(fila);
+                j++;
+            }
         }
-
 
         HSSFRow resultatRow = sheet.createRow(7);
         resultatRow.setHeightInPoints(15);
         HSSFCell resultatCell = resultatRow.createCell(0);
-        sheet.addMergedRegion(CellRangeAddress.valueOf("$A$7:$G$7"));
+        sheet.addMergedRegion(CellRangeAddress.valueOf("$A$7:$M$7"));
         resultatCell.setCellValue(getMessage("informe.resultats"));
         resultatCell.setCellStyle(titulo);
-        sheet.addMergedRegion(CellRangeAddress.valueOf("$A$8:$G$8"));
+        sheet.addMergedRegion(CellRangeAddress.valueOf("$A$8:$M$8"));
 
         //////////////Registros////////////////
         // Creamos la fila para la cabecera
@@ -224,6 +239,15 @@ public class RegistrosOrganismoExcel extends AbstractExcelView {
                     h = h + 1;
                 }else if (valorCamp.equals("exped")) {
                     columnas[h] = getMessage("informe.expediente");
+                    h = h + 1;
+                }else if (valorCamp.equals("codsia")) {
+                    columnas[h] = getMessage("informe.sia");
+                    h = h + 1;
+                }else if (valorCamp.equals("aplica")) {
+                    columnas[h] = getMessage("informe.aplicacion");
+                    h = h + 1;
+                }else if (valorCamp.equals("presen")) {
+                    columnas[h] = getMessage("informe.presencial");
                     h = h + 1;
                 }else if (valorCamp.equals("extra")) {
                     columnas[h] = getMessage("informe.extracto");
@@ -281,9 +305,6 @@ public class RegistrosOrganismoExcel extends AbstractExcelView {
                     h = h + 1;
                 }else if (valorCamp.equals("intMa")) {
                     columnas[h] = getMessage("informe.interesadoMail");
-                    h = h + 1;
-                }else if (valorCamp.equals("aplic")) {
-                    columnas[h] = getMessage("informe.aplicacion");
                     h = h + 1;
                 }
             }
