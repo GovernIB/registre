@@ -162,7 +162,7 @@ public class RegistroDetalle implements Serializable {
      */
     public RegistroDetalle(Long idRegistroDetalle, String extracto, Long idOficinaOrigen, String denominacionOficinaOrigen,
                            String numeroRegistroOrigen, Date fechaOrigen, Long tipoDocumentacionFisica, Long idioma, String observaciones, String expediente,
-                           Long idCodigoAsunto, String referenciaExterna, Long transporte, String numeroTransporte, List<Interesado> interesados) {
+                           Long idCodigoAsunto, String referenciaExterna, Long transporte, String numeroTransporte, Long codigoSia, String aplicacion, Boolean presencial, List<Interesado> interesados) {
 
         this.id = idRegistroDetalle;
         this.extracto = extracto;
@@ -177,6 +177,9 @@ public class RegistroDetalle implements Serializable {
         this.referenciaExterna = referenciaExterna;
         this.transporte = transporte;
         this.numeroTransporte = numeroTransporte;
+        this.codigoSia = codigoSia;
+        this.aplicacion = aplicacion;
+        this.presencial = presencial;
         this.interesados = interesados;
     }
 

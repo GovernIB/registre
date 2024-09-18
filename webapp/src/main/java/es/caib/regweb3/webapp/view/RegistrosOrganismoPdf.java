@@ -192,6 +192,21 @@ public class RegistrosOrganismoPdf extends AbstractIText5PdfView {
                         cell4.setBackgroundColor(BaseColor.LIGHT_GRAY);
                         cell4.setHorizontalAlignment(Element.ALIGN_CENTER);
                         table.addCell(cell4);
+                    }else if (valorCamp.equals("codsia")) {
+                        PdfPCell cell4 = new PdfPCell(new Paragraph(getMessage("informe.sia"), font10Bold));
+                        cell4.setBackgroundColor(BaseColor.LIGHT_GRAY);
+                        cell4.setHorizontalAlignment(Element.ALIGN_CENTER);
+                        table.addCell(cell4);
+                    }else if (valorCamp.equals("aplica")) {
+                        PdfPCell cell4 = new PdfPCell(new Paragraph(getMessage("informe.aplicacio"), font10Bold));
+                        cell4.setBackgroundColor(BaseColor.LIGHT_GRAY);
+                        cell4.setHorizontalAlignment(Element.ALIGN_CENTER);
+                        table.addCell(cell4);
+                    }else if (valorCamp.equals("presen")) {
+                        PdfPCell cell4 = new PdfPCell(new Paragraph(getMessage("informe.presencial"), font10Bold));
+                        cell4.setBackgroundColor(BaseColor.LIGHT_GRAY);
+                        cell4.setHorizontalAlignment(Element.ALIGN_CENTER);
+                        table.addCell(cell4);
                     }else if (valorCamp.equals("extra")) {
                         PdfPCell cell5 = new PdfPCell(new Paragraph(getMessage("informe.extracto"), font10Bold));
                         cell5.setBackgroundColor(BaseColor.LIGHT_GRAY);
@@ -285,11 +300,6 @@ public class RegistrosOrganismoPdf extends AbstractIText5PdfView {
                         cell22.setBackgroundColor(BaseColor.LIGHT_GRAY);
                         cell22.setHorizontalAlignment(Element.ALIGN_CENTER);
                         table.addCell(cell22);
-                    }else if (valorCamp.equals("aplic")) {
-                        PdfPCell cell23 = new PdfPCell(new Paragraph(getMessage("informe.aplicacion"), font10Bold));
-                        cell23.setBackgroundColor(BaseColor.LIGHT_GRAY);
-                        cell23.setHorizontalAlignment(Element.ALIGN_CENTER);
-                        table.addCell(cell23);
                     }
                 }
             }

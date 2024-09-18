@@ -58,8 +58,8 @@
                                         </div>
                                         <div class="col-xs-8">
                                             <form:select path="formato" cssClass="chosen-select">
-                                                <form:option value="pdf" default="default"><spring:message code="regweb.formato.pdf" /></form:option>
-                                                <form:option value="excel"><spring:message code="regweb.formato.excel"/></form:option>
+                                                <form:option value="excel" default="default"><spring:message code="regweb.formato.excel"/></form:option>
+                                                <form:option value="pdf"><spring:message code="regweb.formato.pdf" /></form:option>
                                             </form:select>
                                         </div>
                                     </div>
@@ -71,14 +71,10 @@
                                             <label for="idOrganismo" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.libro.libroRegistro"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="organismo.organismos"/></label>
                                         </div>
                                         <div class="col-xs-8" id="organismosDiv">
-                                            <c:if test="${fn:length(organismosConsulta) eq 1}">
-                                                <form:select path="idOrganismo" items="${organismosConsulta}" itemValue="id" itemLabel="denominacion" cssClass="chosen-select" />
-                                            </c:if>
-                                            <c:if test="${fn:length(organismosConsulta) gt 1}">
-                                                <spring:message code="informe.organismo.select" var="varOrganismosConsulta"/>
-                                                <form:select data-placeholder="${varOrganismosConsulta}" path="idOrganismo" items="${organismosConsulta}" itemValue="id" itemLabel="denominacion" cssClass="chosen-select" />
-                                            </c:if>
-                                            <span id="organismosErrors"></span>
+                                            <form:select path="idOrganismo" cssClass="chosen-select">
+                                                <form:option value="" label="..."/>
+                                                <form:options items="${organismosConsulta}" itemValue="id" itemLabel="denominacion"/>
+                                            </form:select>
                                         </div>
                                     </div>
                                     <div class="form-group col-xs-6 espaiLinies senseMargeLat campos1">
@@ -88,29 +84,31 @@
                                         <div class="col-xs-8" id="campos">
                                             <spring:message code="informe.campos" var="varCampos"/>
                                             <form:select data-placeholder="${varCampos}" multiple="true" cssClass="chosen-select" id="campos" path="campos" name="campos">
-                                                <form:option value="llibr" selected="selected"><spring:message code="registroEntrada.libro"/></form:option>
+
                                                 <form:option value="ofici" selected="selected"><spring:message code="registroEntrada.oficina"/></form:option>
                                                 <form:option value="anyRe" selected="selected"><spring:message code="registroEntrada.anyRegistro"/></form:option>
                                                 <form:option value="data" selected="selected"><spring:message code="registroEntrada.dataRegistre"/></form:option>
                                                 <form:option value="numRe" selected="selected"><spring:message code="registroEntrada.numeroRegistro"/></form:option>
+                                                <form:option value="estat" selected="selected"><spring:message code="registroEntrada.estado"/></form:option>
                                                 <form:option value="extra" selected="selected"><spring:message code="registroEntrada.extracto"/></form:option>
-                                                <%--<form:option value="tipAs" selected="selected"><spring:message code="registroEntrada.tipoAsunto"/></form:option>--%>
                                                 <form:option value="nomIn" selected="selected"><spring:message code="registroEntrada.interesados"/></form:option>
-                                                <form:option value="orgOr" selected="selected"><spring:message code="registroEntrada.oficinaOrigen"/></form:option>
-                                                <form:option value="numOr" selected="selected"><spring:message code="registroEntrada.numeroRegistroOrigen"/></form:option>
-                                                <form:option value="datOr" selected="selected"><spring:message code="registroEntrada.dataOrigen"/></form:option>
                                                 <form:option value="orgDe" selected="selected"><spring:message code="registroEntrada.destinoOrigen"/></form:option>
                                                 <form:option value="docFi" selected="selected"><spring:message code="registroEntrada.documentacionFisica"/></form:option>
-                                                <form:option value="idiom" selected="selected"><spring:message code="registroEntrada.idioma"/></form:option>
-                                                <form:option value="obser" selected="selected"><spring:message code="registroEntrada.observaciones"/></form:option>
-                                                <form:option value="estat" selected="selected"><spring:message code="registroEntrada.estado"/></form:option>
+                                                <form:option value="codsia" selected="selected"><spring:message code="registroEntrada.codigoSIA"/></form:option>
+                                                <form:option value="aplica" selected="selected"><spring:message code="registroEntrada.aplicacion"/></form:option>
+                                                <form:option value="presen" selected="selected"><spring:message code="registro.presencial"/></form:option>
                                                 <form:option value="exped" selected="selected"><spring:message code="registroEntrada.expediente"/></form:option>
+                                                <form:option value="obser"><spring:message code="registroEntrada.observaciones"/></form:option>
+                                                <form:option value="llibr"><spring:message code="registroEntrada.libro"/></form:option>
+                                                <form:option value="orgOr"><spring:message code="registroEntrada.oficinaOrigen"/></form:option>
+                                                <form:option value="numOr"><spring:message code="registroEntrada.numeroRegistroOrigen"/></form:option>
+                                                <form:option value="datOr"><spring:message code="registroEntrada.dataOrigen"/></form:option>
                                                 <form:option value="codAs"><spring:message code="registroEntrada.codigoAsunto"/></form:option>
                                                 <form:option value="refEx"><spring:message code="registroEntrada.referenciaExterna"/></form:option>
                                                 <form:option value="trans"><spring:message code="registroEntrada.transporte"/></form:option>
                                                 <form:option value="numTr"><spring:message code="registroEntrada.numTransporte"/></form:option>
                                                 <form:option value="intMa"><spring:message code="interesado.email"/></form:option>
-                                                <form:option value="aplic"><spring:message code="registroEntrada.aplicacion"/></form:option>
+                                                <form:option value="idiom"><spring:message code="registroEntrada.idioma"/></form:option>
                                             </form:select>
                                             <span id="camposErrors"></span>
                                         </div>
@@ -394,138 +392,104 @@ function actualizarOrganismos(tipo){
 <!-- VALIDADOR DE FORMULARI -->
 <script type="text/javascript">
 
-//Valida los libros seleccionados (libros, nombre del libro)
-function organismosSeleccionados(select, camp) {
+    //Valida los campos seleccionados (campos, nombre del campo)
+    function camposSeleccionados(select, camp) {
     var variable = '';
     var htmlBuit = '';
-    // Valor de los libros
+    // Valor de los campos
     var value = $(select).val();
-    var numOrganismos = 0;
+    var numCampos = 0;
     if (value!=null && value!=""){
-        // Número de los organismos en el select
-        numOrganismos = value.length;
+        // Número de los campos en el select
+        numCampos = value.length;
     }
-    // Si hay menos de un libro seleccionado, retorna error
-    if (numOrganismos<1){
-        variable = "#" + camp + " span#organismosErrors";
-        htmlBuit = "<span id='organismosErrors' class='help-block'>És obligatori elegir al manco 1 organisme</span>";
+    // Si hay menos de dos campos seleccionados, retorna error
+    if (numCampos<2){
+        variable = "#" + camp + " span#camposErrors";
+        htmlBuit = "<span id='camposErrors' class='help-block'>És obligatori elegir almanco 2 camps</span>";
         $(variable).html(htmlBuit);
-        $(variable).parents(".organismos1").addClass("has-error");
+        $(variable).parents(".campos1").addClass("has-error");
         $('ul.chosen-choices').css('border-color','#a94442');
         return false;
     }else{
         variable = "#" + camp + " span:contains('elegir')";
         $(variable).removeClass("help-block");
-        $(variable).parents(".organismos1").removeClass("has-error");
-        htmlBuit = "<span id='organismosErrors'></span>";
+        $(variable).parents(".campos1").removeClass("has-error");
+        htmlBuit = "<span id='camposErrors'></span>";
         $(variable).html(htmlBuit);
         $('ul.chosen-choices').css('border-color','#aaa');
         return true;
     }
-}
-
-//Valida los campos seleccionados (campos, nombre del campo)
-function camposSeleccionados(select, camp) {
-var variable = '';
-var htmlBuit = '';
-// Valor de los campos
-var value = $(select).val();
-var numCampos = 0;
-if (value!=null && value!=""){
-    // Número de los campos en el select
-    numCampos = value.length;
-}
-// Si hay menos de dos campos seleccionados, retorna error
-if (numCampos<2){
-    variable = "#" + camp + " span#camposErrors";
-    htmlBuit = "<span id='camposErrors' class='help-block'>És obligatori elegir almanco 2 camps</span>";
-    $(variable).html(htmlBuit);
-    $(variable).parents(".campos1").addClass("has-error");
-    $('ul.chosen-choices').css('border-color','#a94442');
-    return false;
-}else{
-    variable = "#" + camp + " span:contains('elegir')";
-    $(variable).removeClass("help-block");
-    $(variable).parents(".campos1").removeClass("has-error");
-    htmlBuit = "<span id='camposErrors'></span>";
-    $(variable).html(htmlBuit);
-    $('ul.chosen-choices').css('border-color','#aaa');
-    return true;
-}
-}
-
-// Valida el formuario si las fechas Inicio y Fin son correctas, hay almenos 2 campos seleccionados, hay un Libro seleccionado
-function validaFormulario(form) {
-    var fechaInicio = true;
-    var fechaFin = true;
-    var organismos = true;
-    var campos = true;
-    var fechas = true;
-    // Valida el formato de Fecha de Inicio
-    if (!validaFecha(form.fechaInicio, 'fechaInicio')) {
-        fechaInicio = false;
     }
-    // Valida el formato de Fecha de Fin
-    if (!validaFecha(form.fechaFin, 'fechaFin')) {
-        fechaFin = false;
-    }
-    // Si las Fechas son correctas, Valida el Fecha Inicio y Fecha Fin menor o igual que fecha actual, Fecha Inicio menor o igual que Fecha Fin
-    if((fechaInicio)&&(fechaFin)){
-        if (!validaFechasConjuntas(form.fechaInicio, form.fechaFin, 'fechaInicio', 'fechaFin')) {
-            fechas = false;
+
+    // Valida el formuario si las fechas Inicio y Fin son correctas, hay almenos 2 campos seleccionados, hay un Libro seleccionado
+    function validaFormulario(form) {
+        var fechaInicio = true;
+        var fechaFin = true;
+        var organismos = true;
+        var campos = true;
+        var fechas = true;
+        // Valida el formato de Fecha de Inicio
+        if (!validaFecha(form.fechaInicio, 'fechaInicio')) {
+            fechaInicio = false;
         }
+        // Valida el formato de Fecha de Fin
+        if (!validaFecha(form.fechaFin, 'fechaFin')) {
+            fechaFin = false;
+        }
+        // Si las Fechas son correctas, Valida el Fecha Inicio y Fecha Fin menor o igual que fecha actual, Fecha Inicio menor o igual que Fecha Fin
+        if((fechaInicio)&&(fechaFin)){
+            if (!validaFechasConjuntas(form.fechaInicio, form.fechaFin, 'fechaInicio', 'fechaFin')) {
+                fechas = false;
+            }
+        }
+        // Valida los campos seleccionados
+        if (!camposSeleccionados(form.campos, 'campos')){
+            campos = false;
+        }
+        // Si todos los campos son correctos, hace el submit
+        return (fechaInicio) && (fechaFin) && (organismos) && (campos) && (fechas);
     }
-    // Valida los libros seleccionados
-    if (!organismosSeleccionados(form.idOrganismo, 'organismosDiv')){
-        organismos = false;
-    }
-    // Valida los campos seleccionados
-    if (!camposSeleccionados(form.campos, 'campos')){
-        campos = false;
-    }
-    // Si todos los campos son correctos, hace el submit
-    return (fechaInicio) && (fechaFin) && (organismos) && (campos) && (fechas);
-}
 
 </script>
 
 <script type="text/javascript">
-function actualizarOrganismosTodos(url, idSelect, seleccion, valorSelected, todos){
-    var html = '';
-    if(seleccion != '-1'){
-        jQuery.ajax({
-            url: url,
-            type: 'GET',
-            dataType: 'json',
-            data: { id: seleccion },
-            contentType: 'application/json',
-            success: function(result) {
-                if(todos){html = '';}
-                var len = result.length;
-                var selected='';
-                for ( var i = 0; i < len; i++) {
-                    selected='';
-                    if(result.length == 1){
-                        selected = 'selected="selected"';
+    function actualizarOrganismosTodos(url, idSelect, seleccion, valorSelected, todos){
+        var html = '';
+        if(seleccion != '-1'){
+            jQuery.ajax({
+                url: url,
+                type: 'GET',
+                dataType: 'json',
+                data: { id: seleccion },
+                contentType: 'application/json',
+                success: function(result) {
+                    if(todos){html = '';}
+                    var len = result.length;
+                    var selected='';
+                    for ( var i = 0; i < len; i++) {
+                        selected='';
+                        if(result.length == 1){
+                            selected = 'selected="selected"';
+                        }
+                        html += '<option '+selected+' value="' + result[i].id + '">'
+                        + result[i].denominacion + '</option>';
                     }
-                    html += '<option '+selected+' value="' + result[i].id + '">'
-                    + result[i].denominacion + '</option>';
-                }
-                html += '</option>';
+                    html += '</option>';
 
-                if(len != 0){
-                    $(idSelect).html(html);
-                    $(idSelect).attr("disabled",false).trigger("chosen:updated");
-                }else if(len==0){
-                    var html='';
-                    $(idSelect).html(html);
-                    $(idSelect).attr("disabled",true).trigger("chosen:updated");
+                    if(len != 0){
+                        $(idSelect).html(html);
+                        $(idSelect).attr("disabled",false).trigger("chosen:updated");
+                    }else if(len==0){
+                        var html='';
+                        $(idSelect).html(html);
+                        $(idSelect).attr("disabled",true).trigger("chosen:updated");
+                    }
                 }
-            }
-        });
+            });
 
+        }
     }
-}
 </script>
 
 <!-- Cambia la imagen de la búsqueda avanzada-->
