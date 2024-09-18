@@ -88,6 +88,8 @@ public class Entidad implements Serializable {
     @XmlTransient
     private Libro libro;
     
+    @XmlTransient
+    private Long ultimaEjecucionVerificacionAnexos;
 
     public Entidad() {
       super();
@@ -397,7 +399,18 @@ public class Entidad implements Serializable {
         this.libro = libro;
     }
 
-    @Override
+    @Column(name = "ULTIMA_EJECUCION_VERIF_ANEXOS")
+    public Long getUltimaEjecucionVerificacionAnexos() {
+		return ultimaEjecucionVerificacionAnexos;
+	}
+
+
+	public void setUltimaEjecucionVerificacionAnexos(Long ultimaEjecucionVerificacionAnexos) {
+		this.ultimaEjecucionVerificacionAnexos = ultimaEjecucionVerificacionAnexos;
+	}
+
+
+	@Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;

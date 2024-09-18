@@ -140,27 +140,42 @@ public class RegistroSirHelperBean extends BaseEjbJPA<RegistroSir, Long> impleme
 				
 				try {
 					progreso.addInfo(TipoInfo.INFO, "Consultando ámbito creación a partir del registro origen [numeroRegistro=" + apunteRegistroBusquedaFiltrado.getNuRegistro() + ", numeroRegistroOrigen=" + apunteRegistroBusquedaFiltrado.getNuRegistroOrigen() + "]");
+					
+					log.info("Consultando ámbito creación a partir del registro origen [numeroRegistro=" + apunteRegistroBusquedaFiltrado.getNuRegistro() + ", numeroRegistroOrigen=" + apunteRegistroBusquedaFiltrado.getNuRegistroOrigen() + "]");
+					
 					String usuariResponsable = null;
 					// Consulta ámbito creación registro entidad externa (origen registro)
 					RegistroSir registroGeiserConsultaOrigen = new RegistroSir();
 					registroGeiserConsultaOrigen.setNumeroRegistro(apunteRegistroBusquedaFiltrado.getNuRegistroOrigen());
 					registroGeiserConsultaOrigen.setCodigoEntidadRegistralOrigen(apunteRegistroBusquedaFiltrado.getCdAmbitoOrigen());
 					RespuestaConsultaGeiser consultaRegistrosEntExterna = pluginHelper.postProcesoConsultarRegistroSirGeiser(registroGeiserConsultaOrigen, entidadId);
-					
+					Date fechaPresentacion = null;
 					List<ApunteRegistro> registrosEntidadExterna = consultaRegistrosEntExterna.getApuntes();
 					if (!registrosEntidadExterna.isEmpty()) {
 						for (ApunteRegistro apunteRegistroEntExterna : registrosEntidadExterna) {
+							log.info("Fecha presentación registro destino: " + apunteRegistroBusquedaFiltrado.getFechaPresentacion());
+							log.info("Fecha registro origen: " + apunteRegistroEntExterna.getFechaRegistro());
+							
 							if (apunteRegistroEntExterna.getNuRegistro().equals(apunteRegistroBusquedaFiltrado.getNuRegistroOrigen())) { // Si está relacionado con el registro externo
 								// Recuperamos el ámbito de creación del registro externo y asignarlo al registro aceptado en destino
 								registroSir.setCodigoEntidadRegistralOrigen(apunteRegistroEntExterna.getCdAmbitoOrigen());
 								registroSir.setDecodificacionEntidadRegistralOrigen(apunteRegistroEntExterna.getNombreAmbitoOrigen());
-								registroSir.setFechaRegistroOrigen(apunteRegistroEntExterna.getFechaRegistro());
+								// Guarda la fecha origen del registro origen si viene informada, sino, coge la fecha de presentación del registro destino como fecha origen
+								if (apunteRegistroEntExterna.getFechaRegistro() != null)
+									registroSir.setFechaRegistroOrigen(apunteRegistroEntExterna.getFechaRegistro());
+								else
+									registroSir.setFechaRegistroOrigen(apunteRegistroBusquedaFiltrado.getFechaPresentacion());
+								
+								fechaPresentacion = apunteRegistroBusquedaFiltrado.getFechaPresentacion();
+								
 								usuariResponsable = apunteRegistroEntExterna.getNombreUsuario();
 								registroSir.setNombreUsuario(usuariResponsable);
+							} else if (apunteRegistroEntExterna.getNuRegistro().equals(apunteRegistroBusquedaFiltrado.getNuRegistro())) {
+								fechaPresentacion = apunteRegistroBusquedaFiltrado.getFechaPresentacion();
 							}
 						}
 					}
-						Oficina oficinaOrigenIntern = oficinaEjb.findByCodigoEntidad(registroSir.getCodigoUnidadTramitacionOrigen(), entidadId);
+					Oficina oficinaOrigenIntern = oficinaEjb.findByCodigoEntidad(registroSir.getCodigoUnidadTramitacionOrigen(), entidadId);
 					// Solo crear el asiento recibido en la oficina (se duplica al confirmer y enviar registro a la entidad)
 					if (oficinaOrigenIntern == null) { 
 						List<InteresadoSir> interesadosSir = registroSir.getInteresados();
@@ -231,8 +246,12 @@ public class RegistroSirHelperBean extends BaseEjbJPA<RegistroSir, Long> impleme
 							
 							String usuari = pluginHelper.getUsuarioResponsableCreacionRegistros(entidadId);
 							UsuarioEntidad usuarioEntidad = usuarioEntidadEjb.findByIdentificador(usuari);
+							
+							log.info("Fecha origen registro SIR: " + registroSir.getFechaRegistroOrigen());
+							
 							generarRegistroEntradaRegistroSirGeiser(
 									registroSir, 
+									fechaPresentacion,
 									usuarioEntidad,
 									oficinaDestino, 
 									usuarioEntidad.getEntidad().getLibro().getId(), 
@@ -299,6 +318,7 @@ public class RegistroSirHelperBean extends BaseEjbJPA<RegistroSir, Long> impleme
     
     private RegistroEntrada generarRegistroEntradaRegistroSirGeiser(
     		RegistroSir registroSir, 
+    		Date fechaPresentacion,
     		UsuarioEntidad usuario, 
     		Oficina oficinaActiva, 
     		Long idLibro, 
@@ -327,6 +347,11 @@ public class RegistroSirHelperBean extends BaseEjbJPA<RegistroSir, Long> impleme
 
         // RegistroDetalle
         registroEntrada.setRegistroDetalle(getRegistroDetalle(registroSir, idIdioma));
+        
+        log.info("Fecha presentación como fecha origen: " + fechaPresentacion);
+        
+        // Fecha presentación registro como fecha origen
+        registroEntrada.getRegistroDetalle().setFechaOrigen(fechaPresentacion);
         
         // Interesados
         List<Interesado> interesados = procesarInteresados(registroSir.getInteresados());

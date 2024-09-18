@@ -3,9 +3,14 @@ package es.caib.regweb3.persistence.ejb;
 import es.caib.dir3caib.ws.api.oficina.OficinaTF;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.AnexoFull;
+import es.caib.regweb3.persistence.utils.I18NLogicUtils;
 import es.caib.regweb3.persistence.utils.JustificanteReferencia;
+import es.caib.regweb3.persistence.utils.MailUtils;
+import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.persistence.utils.RegistroUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
+import es.caib.regweb3.utils.StringUtils;
+
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
@@ -13,8 +18,13 @@ import org.jboss.ejb3.annotation.SecurityDomain;
 import org.jboss.ejb3.common.proxy.plugins.async.AsyncUtils;
 
 import javax.ejb.*;
+import javax.mail.Message;
+import javax.mail.internet.InternetAddress;
+
+import java.io.UnsupportedEncodingException;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 import static es.caib.regweb3.utils.RegwebConstantes.*;
@@ -146,7 +156,7 @@ public class AsientoRegistralBean implements AsientoRegistralLocal {
                     }
 
                     //No tiene oficinas en SIR
-                    if (oficinasSIR.isEmpty()) {
+                    if (oficinasSIR == null || oficinasSIR.isEmpty()) {
                         //TODO hay que crear el oficio externo???
                         //Creamos el justificante del registroSalida y lo marcamos como REGISTRO_OFICIO_EXTERNO
                         crearJustificanteCambioEstado(registroSalida, REGISTRO_OFICIO_EXTERNO);
@@ -231,6 +241,44 @@ public class AsientoRegistralBean implements AsientoRegistralLocal {
         }
     }
 
+	@Override
+	public void notificarAdministradores(Entidad entidad, String codigoDir3, String interesadoDoc) {
+		Set<UsuarioEntidad> usuariosANotificar = entidad.getAdministradores();
+		Locale locale = new Locale(RegwebConstantes.IDIOMA_CATALAN_CODIGO);
+		String entorno = PropiedadGlobalUtil.getEntorno();
+		String usuarioJira = PropiedadGlobalUtil.getEmailUsuarioJira();
+		
+		String[] argsEntorno = {entorno != null ? entorno : "PRO"};
+        String asunto = I18NLogicUtils.tradueix(locale, "comunicacio.sir.error.mail.asunto", argsEntorno);
+
+        String[] args = {interesadoDoc, codigoDir3, entidad.getNombre()};
+        String mensajeTexto = I18NLogicUtils.tradueix(locale, "comunicacio.sir.error.mail.cuerpo", args);
+
+        //Enviamos el mail a todos los usuarios
+        InternetAddress addressFrom;
+		try {
+			addressFrom = new InternetAddress(RegwebConstantes.APLICACION_EMAIL, RegwebConstantes.APLICACION_NOMBRE);
+        
+			for (UsuarioEntidad usuarioEntidad : usuariosANotificar) {
+				Usuario usuario = usuarioEntidad.getUsuario();
+	            if (StringUtils.isNotEmpty(usuario.getEmail())) {
+	            	MailUtils.enviaMail(asunto, mensajeTexto, addressFrom, Message.RecipientType.TO, usuario.getEmail());
+	            }
+			}
+			
+			if (usuarioJira != null && ! usuarioJira.isEmpty()) {
+				MailUtils.enviaMail(asunto, mensajeTexto, addressFrom, Message.RecipientType.TO, usuarioJira);
+			}
+			
+		} catch (UnsupportedEncodingException e) {
+			log.error("Hi ha hagut un error preparant correu 'notificarAdministradores' sobre una comunicació SIR: " + e.getMessage());
+			e.printStackTrace();
+		} catch (Exception e) {
+			log.error("Hi ha hagut un error enviant el correu 'notificarAdministradores': " + e.getMessage());
+			e.printStackTrace();
+		}
+	}
+
     /**
      * Transforma un conjunto de organismos a un conjunto de strings con los códigos de los organismos
      *
@@ -259,4 +307,5 @@ public class AsientoRegistralBean implements AsientoRegistralLocal {
         //Cambiar estado
         registroSalidaEjb.cambiarEstado(registroSalida.getId(), estado);
     }
+
 }

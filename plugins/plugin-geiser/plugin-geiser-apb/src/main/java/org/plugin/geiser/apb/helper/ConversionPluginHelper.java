@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import org.plugin.geiser.apb.GeiserApbPlugin;
 import org.plugin.geiser.api.AnexoG;
 import org.plugin.geiser.api.ApunteRegistro;
 import org.plugin.geiser.api.CanalNotificacion;
@@ -32,7 +33,8 @@ import org.plugin.geiser.api.TipoFirma;
 import org.plugin.geiser.api.TipoRespuesta;
 import org.plugin.geiser.api.TipoTransporte;
 import org.plugin.geiser.api.ValidezDocumento;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import es.gob.minhap.geiser.rgeco.ws.client.registro.types.*;
@@ -276,7 +278,8 @@ public class ConversionPluginHelper {
 					public AnexoType convert(AnexoG source, Type<? extends AnexoType> destinationType) {
 						AnexoType target = new AnexoType();
 						String titulo = source.getTitulo();
-						target.setNombre(titulo);
+						//Envios TSJB
+						target.setNombre(renameTitle(titulo));
 						if (source.getValidezDocumento() != null)
 							target.setValidez(ValidezDocumentoEnum.valueOf(source.getValidezDocumento().name()));
 						if (source.getTipoDocumentoAnexo() != null)
@@ -359,9 +362,9 @@ public class ConversionPluginHelper {
 						target.setTimestampRegistradoHasta(source.getFechaRegistroFinal());
 						target.setCdOrganoDestino(source.getCdOrganoDestino());
 						if (source.getTipoAsiento() != null)
-							target.setTipoAsiento(TipoAsientoEnum.fromValue(source.getTipoAsiento().name()));
+							target.setTipoAsiento(source.getTipoAsiento().name());
 						if (source.getEstado() != null)
-							target.setEstado(EstadoAsientoEnum.valueOf(source.getEstado().name()));
+							target.setEstado(source.getEstado().name());
 						
 						return target;
 					}
@@ -372,9 +375,9 @@ public class ConversionPluginHelper {
 					public PeticionBusquedaEstadoTramitacionType convert(PeticionBusquedaTramitGeiser source, Type<? extends PeticionBusquedaEstadoTramitacionType> destinationType) {
 						PeticionBusquedaEstadoTramitacionType target = new PeticionBusquedaEstadoTramitacionType();
 						target.setNuRegistro(source.getNuRegistro());
-						if (source.getTipoDocumentoInteresadoRepre() != null)
-							target.setTipoIdentificadorInteresadoRepresentante(convertir(source.getTipoDocumentoInteresadoRepre(), TipoIdentificacionEnum.class));
-						target.setIdentificadorInteresadoRepresentante(source.getDocumentoInteresadoRepre());
+//						if (source.getTipoDocumentoInteresadoRepre() != null)
+//							target.setTipoIdentificadorInteresadoRepresentante(convertir(source.getTipoDocumentoInteresadoRepre(), TipoIdentificacionEnum.class));
+//						target.setIdentificadorInteresadoRepresentante(source.getDocumentoInteresadoRepre());
 						target.setIncluirEnviadosSIR(source.isIncluirEnviosSir());
 //						target.setTimestampRegistradoDesde(source.getFechaRegistroInicio().toString());
 //						target.setTimestampRegistradoHasta(source.getFechaRegistroFinal().toString());
@@ -422,8 +425,10 @@ public class ConversionPluginHelper {
 								Date fechaEstado = sdf.parse(source.getTimestampConfirmadoRechazado());
 								target.setFechaEstado(fechaEstado);
 							}
-							Date fechaRegistro = sdf.parse(source.getTimestampRegistrado());
-							target.setFechaRegistro(fechaRegistro);
+							if (source.getTimestampRegistrado() != null) {
+								Date fechaRegistro = sdf.parse(source.getTimestampRegistrado());
+								target.setFechaRegistro(fechaRegistro);
+							}
 						} catch (ParseException e) {
 							throw new GeiserPluginException("Ha habido un error interpretando la respuesta de GEISER");
 						}
@@ -455,11 +460,21 @@ public class ConversionPluginHelper {
 						target.setNuRegistroOrigen(source.getNuRegistroOrigen());
 						target.setEstado(EstadoRegistro.valueOf(source.getEstado().name()));
 						try {
+							logger.debug("Fecha registro: " + source.getTimestampRegistrado()  + " [nuRegistro=" + source.getNuRegistro() + "]");
 							SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
 							Date fechaRegistro = sdf.parse(source.getTimestampRegistrado());
 							target.setFechaRegistro(fechaRegistro);
 						} catch (ParseException e) {
 							throw new GeiserPluginException("Ha habido un error interpretando la respuesta de GEISER");
+						}
+						
+						try {
+							logger.debug("Fecha presentación: " + source.getTimestampPresentado()  + " [nuRegistro=" + source.getNuRegistro() + "]");
+							SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+							Date fechaPresentacion = sdf.parse(source.getTimestampPresentado());
+							target.setFechaPresentacion(fechaPresentacion);
+						} catch (ParseException e) {
+							logger.error("Ha habido un error interpretando la respuesta de GEISER", e.getMessage());
 						}
 						target.setTimeStampRegistro(source.getTimestampRegistrado());
 						target.setResumen(source.getResumen());
@@ -577,5 +592,10 @@ public class ConversionPluginHelper {
 	private MapperFacade getMapperFacade() {
 		return mapperFactory.getMapperFacade();
 	}
-
+	
+	private String renameTitle(String fileName) {
+    	return fileName.replaceAll("_dnot_\\d{8}T\\d{8}", "_dnot").replaceAll("_dnot.xml_\\d{8}T\\d{8}", "_dnot");
+    }
+	
+	private static final Logger logger = LoggerFactory.getLogger(ConversionPluginHelper.class);
 }

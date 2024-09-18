@@ -11,7 +11,9 @@ public class ApunteRegistro {
 
 	private String nuRegistro;
 	private String nuRegistroOrigen;
+	private Date fechaPresentacion;
 	private Date fechaRegistro;
+	private String timeStampPresentado;
 	private String timeStampRegistro;
 	private TipoAsiento tipoAsiento;
 	private String resumen;

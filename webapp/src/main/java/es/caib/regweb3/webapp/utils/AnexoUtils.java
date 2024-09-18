@@ -190,7 +190,7 @@ public class AnexoUtils {
         // Preparam el nom suggerit en UTF-8
         // No podem emprar URLEncoder.encode perquè només és per paràmetres http i
         // converteix els espais a "+" enlloc de a "%20"
-        String utf8filename = UriUtils.encodePath(filename, "UTF-8");
+        String utf8filename = UriUtils.encodePath(filename, "UTF-8").replace(",", "%2C");
 
         // Asseguram que el filename suggerit en ISO-8859-1 no té caràcters incompatibles
         CharsetEncoder charsetEncoder = ISO_8859_1.newEncoder();

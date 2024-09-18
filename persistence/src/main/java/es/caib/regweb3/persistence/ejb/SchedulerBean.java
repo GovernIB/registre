@@ -1,24 +1,33 @@
 package es.caib.regweb3.persistence.ejb;
 
-import es.caib.regweb3.model.Entidad;
-import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
-import es.caib.regweb3.persistence.utils.Semaforo;
-import es.caib.regweb3.persistence.utils.SemaforoSchedulerConsultaEstado;
-import es.caib.regweb3.persistence.utils.SemaforoSchedulerConsultaIdRecibidos;
-import es.caib.regweb3.persistence.utils.SemaforoSchedulerConsultaRecibidos;
-import es.caib.regweb3.persistence.utils.SemaforoSchedulerVerificacionFirmaAnexos;
-import es.caib.regweb3.utils.RegwebConstantes;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+
+import javax.annotation.security.RunAs;
+import javax.ejb.EJB;
+import javax.ejb.Stateless;
+import javax.mail.Message;
+import javax.mail.internet.InternetAddress;
+
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.jboss.ejb3.annotation.SecurityDomain;
 import org.jboss.ejb3.annotation.TransactionTimeout;
 
-import javax.annotation.security.RunAs;
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
-
-import java.util.Date;
-import java.util.List;
+import es.caib.regweb3.model.Entidad;
+import es.caib.regweb3.model.Usuario;
+import es.caib.regweb3.model.UsuarioEntidad;
+import es.caib.regweb3.persistence.utils.I18NLogicUtils;
+import es.caib.regweb3.persistence.utils.MailUtils;
+import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
+import es.caib.regweb3.persistence.utils.SemaforoSchedulerConsultaEstado;
+import es.caib.regweb3.persistence.utils.SemaforoSchedulerConsultaIdRecibidos;
+import es.caib.regweb3.persistence.utils.SemaforoSchedulerConsultaRecibidos;
+import es.caib.regweb3.persistence.utils.SemaforoSchedulerVerificacionFirmaAnexos;
+import es.caib.regweb3.utils.RegwebConstantes;
+import es.caib.regweb3.utils.StringUtils;
 
 /**
  * Created by Fundació BIT.
@@ -47,6 +56,7 @@ public class SchedulerBean implements SchedulerLocal{
     @EJB private ColaLocal colaEjb;
     @EJB private CustodiaLocal custodiaEjb;
     @EJB private RegistroSirLocal registroSirEjb;
+
     
     @Override
     public void purgarIntegraciones() throws Exception{
@@ -465,6 +475,7 @@ public class SchedulerBean implements SchedulerLocal{
     }
     
     @Override
+    @TransactionTimeout(value = 3000)  // 50 minutos
     public void actualizarEnviosSIR() throws Exception, I18NException {
         List<Entidad> entidades = entidadEjb.getEntidadesSir();
 
@@ -494,7 +505,7 @@ public class SchedulerBean implements SchedulerLocal{
                 log.info("------------- SIR: Consultando registros SIR recibidos de " + entidad.getNombre() + " -------------");
                 log.info(" ");
                 synchronized (SemaforoSchedulerConsultaRecibidos.class) {
-                	registroSirEjb.recuperarRegistrosSirGEISER(entidad, null, null);
+                	registroSirEjb.recuperarRegistrosSirGEISER(entidad, null, null, true);
                 }
 			}
 			log.info("------------- SIR: Registros SIR recibidos actualizados " + " -------------");
@@ -505,6 +516,7 @@ public class SchedulerBean implements SchedulerLocal{
 	}
 	
 	@Override
+	@TransactionTimeout(value = 7200)  // 120 minutos
 	public void actualizarIdEnviosSirRecibidos() throws Exception, I18NException {
 
 		List<Entidad> entidades = entidadEjb.getEntidadesSir();
@@ -526,13 +538,15 @@ public class SchedulerBean implements SchedulerLocal{
 
 		for (Entidad entidad : entidades) {
 			log.info(" ");
-			log.info("------------- SIR: Actualizando identificadores intercambio envios SIR de " + entidad.getNombre() + " -------------");
+			log.info("------------- ANEXOS: Validación firma anexos Sistra: " + entidad.getNombre() + " -------------");
 			log.info(" ");
 			synchronized (SemaforoSchedulerVerificacionFirmaAnexos.class) {
 				anexoEjb.actualizarAnexosSistraPendientesVerificacionFirma(entidad.getId());
 			}
 		}
-		log.info("------------- SIR: Identificadores intercambio registros SIR recibidos actualizados " + " -------------");
+		
+		log.info("------------- ANEXOS: Validación firma anexos Sistra finalizada " + " -------------");
+
 	}
 	
 	/** Tiempo cron algunas tareas en segundo plano**/
@@ -574,6 +588,54 @@ public class SchedulerBean implements SchedulerLocal{
 	@Override
 	public Long getCronTareaRetardoActualizacionAnexosPendientesVerificacionFirma() {
 		return PropiedadGlobalUtil.getCronTareaRetardoActualizacionAnexosPendientesVerificacionFirma();
+	}
+	
+	@Override
+	public void enviarCorreoVerificacionAnexosBloqueada() throws Exception {
+		String entorno = PropiedadGlobalUtil.getEntorno();
+		Locale locale = new Locale(RegwebConstantes.IDIOMA_CATALAN_CODIGO);
+		
+		// Asunto
+        String[] argsEntorno = {entorno != null ? entorno : "PRO"};
+        String asunto = I18NLogicUtils.tradueix(locale, "verificacion.mail.asunto", argsEntorno);
+        
+        // Obtenemos los usuarios a los que hay que enviarles el mail
+        List<Usuario> usuariosANotificar = new ArrayList<Usuario>();
+
+        List<Entidad> entidades = entidadEjb.getAll();
+        
+        for (Entidad entidad : entidades) {
+            // Propietario Entidad
+            usuariosANotificar.add(entidad.getPropietario());
+
+            // Administradores Entidad
+            for (UsuarioEntidad usuarioEntidad : entidad.getAdministradores()) {
+                usuariosANotificar.add(usuarioEntidad.getUsuario());
+            }
+		}
+        
+        //Montamos el mensaje del mail
+        String mensajeTexto = I18NLogicUtils.tradueix(locale, "verificacion.mail.cuerpo");
+        
+        //Enviamos el mail a todos los usuarios
+        InternetAddress addressFrom = new InternetAddress(RegwebConstantes.APLICACION_EMAIL, RegwebConstantes.APLICACION_NOMBRE);
+        
+        for (Usuario usuario : usuariosANotificar) {
+
+            if (StringUtils.isNotEmpty(usuario.getEmail())) {
+
+                try {
+
+                    MailUtils.enviaMail(asunto, mensajeTexto, addressFrom, Message.RecipientType.TO, usuario.getEmail());
+                } catch (Exception e) {
+                    //Si se produce una excepción continuamos con el proceso.
+                    log.error("Se ha producido un excepcion enviando mail");
+                    e.printStackTrace();
+                }
+
+            }
+        }
+        
 	}
 	
 }

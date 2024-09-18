@@ -93,6 +93,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
     @EJB private RegistroEntradaConsultaLocal registroEntradaConsultaEjb;
     @EJB private RegistroSalidaConsultaLocal registroSalidaConsultaEjb;
     @EJB private UsuarioEntidadLocal usuarioEntidadEjb;
+    @EJB private RegistroDetalleLocal registroDetalleEjb;
     
     public static Map<Long, ProgresoActualitzacion> progresoActualitzacion = new HashMap<Long, ProgresoActualitzacion>();
     
@@ -240,7 +241,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
 	}
     
     @Override
-    public Integer recuperarRegistrosSirGEISER(Entidad entidad, Date inicio, Date fin) throws Exception, I18NException {
+    public Integer recuperarRegistrosSirGEISER(Entidad entidad, Date inicio, Date fin, boolean scheduled) throws Exception, I18NException {
     	String fechaInicio = null;
 		String fechaFin = null;
 		Integer total = 0;
@@ -331,7 +332,8 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
 						progreso.addInfo(TipoInfo.WARNING, "No se han encontrado registros para las fechas introducidas");
 					}
     	    	}
-				updateFechaInicioProximaBusqueda(entidadId, fechaFin);
+    	    	if (scheduled)
+    	    		updateFechaInicioProximaBusqueda(entidadId, fechaFin);
     	    }
     	    progreso.setProgreso(100);
     	} catch (RecuperacionRegistroException ex) {
@@ -1137,6 +1139,105 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         return registroSir;
     }
 
+    
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    @Override
+    public RegistroSir transformarRegistroSalidaAndCrearRegistroSir(RegistroSalida registroSalida, UsuarioEntidad usuario) throws Exception, I18NException{
+    	// Transformamos el RegistroSalida en un RegistroSir        
+        RegistroSir registroSir = new RegistroSir();
+        RegistroDetalle registroDetalle = registroDetalleEjb.getReference(registroSalida.getRegistroDetalle().getId());
+
+        registroSir.setIndicadorPrueba(IndicadorPrueba.NORMAL); // todo Modificar cuando entremos en Producción
+        registroSir.setEntidad(registroSalida.getOficina().getOrganismoResponsable().getEntidad());
+
+        // Segmento De_Origen_O_Remitente
+        registroSir.setCodigoEntidadRegistralOrigen(registroSalida.getOficina().getCodigo());
+        registroSir.setDecodificacionEntidadRegistralOrigen(registroSalida.getOficina().getDenominacion());
+        registroSir.setNumeroRegistro(registroSalida.getNumeroRegistroFormateado());
+        registroSir.setFechaRegistro(registroSalida.getFecha());
+        registroSir.setCodigoUnidadTramitacionOrigen(registroSalida.getOficina().getOrganismoResponsable().getCodigo());
+        registroSir.setDecodificacionUnidadTramitacionOrigen(registroSalida.getOficina().getOrganismoResponsable().getDenominacion());
+
+        // Segmento De_Destino
+        registroSir.setCodigoEntidadRegistral(registroDetalle.getCodigoEntidadRegistralDestino());
+        registroSir.setCodigoEntidadRegistralDestino(registroDetalle.getCodigoEntidadRegistralDestino());
+        registroSir.setDecodificacionEntidadRegistralDestino(registroDetalle.getDecodificacionEntidadRegistralDestino());
+        registroSir.setCodigoUnidadTramitacionDestino(obtenerCodigoUnidadTramitacionDestino(registroDetalle));
+        String destinoExternoDecodificacion = obtenerDenominacionUnidadTramitacionDestino(registroDetalle);
+        if(es.caib.regweb3.utils.StringUtils.isNotEmpty(destinoExternoDecodificacion)) {
+            registroSir.setDecodificacionUnidadTramitacionDestino(destinoExternoDecodificacion);
+        }else{
+            registroSir.setDecodificacionUnidadTramitacionDestino(null);
+        }
+
+        // Segmento De_Asunto
+        registroSir.setResumen(registroDetalle.getExtracto());
+        /*if(registroSalida.getDestino() != null){ //todo Revisar
+            TraduccionCodigoAsunto tra = (TraduccionCodigoAsunto) registroDetalle.getCodigoAsunto().getTraduccion(RegwebConstantes.IDIOMA_CASTELLANO_CODIGO);
+            registroSir.setCodigoAsunto(tra.getNombre());
+        }*/
+        registroSir.setReferenciaExterna(registroDetalle.getReferenciaExterna());
+        registroSir.setNumeroExpediente(registroDetalle.getExpediente());
+
+        // Segmento De_Internos_Control
+        registroSir.setTipoTransporte(CODIGO_SICRES_BY_TRANSPORTE.get(registroDetalle.getTransporte()));
+        registroSir.setNumeroTransporte(registroDetalle.getNumeroTransporte());
+        registroSir.setNombreUsuario(registroSalida.getUsuario().getNombreCompleto());
+        registroSir.setContactoUsuario(registroSalida.getUsuario().getUsuario().getEmail());
+        registroSir.setIdentificadorIntercambio(registroDetalle.getIdentificadorIntercambio());
+        registroSir.setAplicacion(registroDetalle.getAplicacion());
+        registroSir.setTipoAnotacion(registroDetalle.getTipoAnotacion());
+        registroSir.setDecodificacionTipoAnotacion(registroDetalle.getDecodificacionTipoAnotacion());
+        registroSir.setTipoRegistro(TipoRegistro.SALIDA);
+        registroSir.setDocumentacionFisica(String.valueOf(registroDetalle.getTipoDocumentacionFisica()));
+        registroSir.setObservacionesApunte(registroDetalle.getObservaciones());
+        registroSir.setCodigoEntidadRegistralInicio(obtenerCodigoOficinaOrigen(registroDetalle, registroSalida.getOficina().getCodigo()));
+        registroSir.setDecodificacionEntidadRegistralInicio(obtenerDenominacionOficinaOrigen(registroDetalle, registroSalida.getOficina().getDenominacion()));
+
+        // Segmento De_Formulario_Genérico
+        registroSir.setExpone(registroDetalle.getExpone());
+        registroSir.setSolicita(registroDetalle.getSolicita());
+
+        // Segmento De_Interesados: Irá siempre vacio, porque el destinatario va informado en el segmento DeDestino
+        // Necesario para consultar el id intercambio de GEISER
+        registroSir.setInteresados(procesarInteresadosSir(registroDetalle.getInteresados()));
+
+        // Segmento De_Anexos
+
+        // Firmar anexos
+        Locale locale = new Locale(RegwebConstantes.CODIGO_BY_IDIOMA_ID.get(registroSalida.getUsuario().getUsuario().getIdioma()));
+
+        List<AnexoFull> anexosfirmados = signatureServerEjb.firmarAnexosEnvioSir(registroDetalle.getAnexosFull(),registroSalida.getUsuario().getEntidad().getId(),locale,true, registroSalida.getNumeroRegistroFormateado());
+
+        registroSir.setAnexos(transformarAnexosSir(anexosfirmados, registroSir.getIdentificadorIntercambio()));
+
+
+        //Registro interno en GEISER
+    	registroSir.setDocumentoUsuario(usuario.getUsuario().getDocumento());
+
+    	registroSir.setNumeroRegistro(registroSalida.getNumeroRegistroFormateado());
+    	registroSir.setFechaRegistro(registroSalida.getFecha());
+    	
+    	registroSir.setEstado(EstadoRegistroSir.ENVIADO_PENDIENTE_CONFIRMACION); // Temporal
+    	
+    	persist(registroSir);
+    	
+    	if (registroSir.getInteresados() != null) {
+			for (InteresadoSir interesadoSir : registroSir.getInteresados()) {
+				interesadoSir.setRegistroSir(registroSir);
+				interesadoSirEjb.merge(interesadoSir);
+			}
+		}
+		if (registroSir.getAnexos() != null) {
+			for (AnexoSir anexoSir : registroSir.getAnexos()) {
+				anexoSir.setRegistroSir(registroSir);
+				anexoSirEjb.merge(anexoSir);
+			}
+		}
+		
+    	return registroSir;
+    }
+    
     @Override
     @SuppressWarnings(value = "unchecked")
     public List<Long> getEnviadosSinAck(Long idEntidad) throws Exception{
@@ -1243,13 +1344,38 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
 			q.setParameter("tramite", EstadoRegistroSir.EN_TRAMITE);
 			q.setParameter("proceso", EstadoRegistroSir.ENVIO_PROCESO);
 			q.setParameter("reenviado", EstadoRegistroSir.REENVIADO);
-			
-			q.setParameter("entradaSirFinalizados", entradaSirFinalizados);
-			q.setParameter("salidaSirFinalizados", salidaSirFinalizados);
-			
+
 			q.setParameter("reintentos", maxReintentos);
 			
-			return q.getResultList();
+			int batchSize = 500; // Número de elementos por lote
+
+			List<Long> finalResults = new ArrayList<>();
+
+			int totalBatches = Math.max(
+			    (int) Math.ceil((double) entradaSirFinalizados.size() / batchSize),
+			    (int) Math.ceil((double) salidaSirFinalizados.size() / batchSize)
+			);
+			
+			for (int i = 0; i < totalBatches; i++) {
+			    int fromIndex = i * batchSize;
+			    int toIndexEntrada = Math.min(fromIndex + batchSize, entradaSirFinalizados.size());
+			    int toIndexSalida = Math.min(fromIndex + batchSize, salidaSirFinalizados.size());
+
+			    if (fromIndex < toIndexEntrada || fromIndex == toIndexEntrada) {
+			    	List<String> entradaBatch = entradaSirFinalizados.subList(fromIndex, toIndexEntrada);
+			    	q.setParameter("entradaSirFinalizados", entradaBatch);
+			    }
+			    
+			    if (fromIndex < toIndexSalida || fromIndex == toIndexSalida) {
+			    	List<String> salidaBatch = salidaSirFinalizados.subList(fromIndex, toIndexSalida);
+			    	q.setParameter("salidaSirFinalizados", salidaBatch);
+			    }
+			    
+
+				finalResults.addAll(q.getResultList());
+			}
+			
+			return finalResults; 
 		}
 		return new ArrayList<Long>();
 	}
@@ -1731,9 +1857,16 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
     	Locale locale = new Locale(RegwebConstantes.IDIOMA_CATALAN_CODIGO);
 		// Obtenemos los usuarios a los que hay que enviarles el mail
         List<Usuario> usuariosANotificar = new ArrayList<Usuario>();
-        String entorno = PropiedadGlobalUtil.getEntorno();
+        String entorno = null;
+        
+        try {
+        	entorno = PropiedadGlobalUtil.getEntorno();
+        } catch (Exception e) {
+        	log.error("Se ha producido un error recuperando la propiedad 'es.caib.regweb3.entorno' de la base de datos, procedemos a recuperar de files");
+        	entorno = getEntornoSystem();
+		}
+                
     	try {
-
             // Propietario Entidad
             usuariosANotificar.add(entidad.getPropietario());
 
@@ -1765,6 +1898,10 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         }
     }
 
+    public static String getEntornoSystem() {
+        return  System.getProperty(RegwebConstantes.REGWEB3_PROPERTY_BASE + "entorno");
+    }
+    
     /**
      * Obtiene la Extensión de un Fichero a partir de su nombre
      *
@@ -2001,6 +2138,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
     	Properties properties = new Properties();
     	String fechaInicio = null;
 		try {
+			log.debug("Recuperando fecha próxima inicio búsqueda registros SIR...");
 			if (path == null || path == "") {
 				path = "/opt/files/";
 			}
@@ -2008,8 +2146,8 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
 			properties.load(new FileInputStream(file));
 			fechaInicio = properties.getProperty("busqueda.sir.fecha.fechaInicio");
 		} catch (Exception ex) {
-			log.error("Error en la lectura de la fecha de inicio de búsqeuda", ex);
-			ex.printStackTrace();
+			log.error("Error en la lectura de la fecha de inicio de búsqueda registros SIR", ex);
+			throw new RuntimeException("Error en la lectura de la fecha de inicio de búsqueda registros SIR: " + ex.getMessage());
 		}
 		return fechaInicio;
     }

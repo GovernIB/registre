@@ -3,6 +3,7 @@ package es.caib.regweb3.webapp.scheduler;
 
 import es.caib.regweb3.persistence.ejb.PropiedadGlobalLocal;
 import es.caib.regweb3.persistence.ejb.SchedulerLocal;
+import es.caib.regweb3.persistence.utils.MonitorTareas;
 import es.caib.regweb3.utils.Configuracio;
 
 import org.apache.log4j.Logger;
@@ -45,6 +46,9 @@ public class Regweb3Scheduler implements SchedulingConfigurer {
     
     @Autowired
     TaskScheduler taskScheduler;
+
+    @Autowired
+    MonitorTareas monitorTareas;
     
     private Boolean[] primeraVez = {Boolean.TRUE};
 
@@ -444,6 +448,13 @@ public class Regweb3Scheduler implements SchedulingConfigurer {
                     public void run() {
                     	try {
                     		schedulerEjb.actualizarAnexosPendientesVerificacionFirma();
+                    		
+
+                    		log.info("------------- ANEXOS: Actualización fecha última ejecución -------------");
+                    		// Actualizar última ejecución
+                    		monitorTareas.actualizarUltimaEjecucion();
+                    		
+                    		log.info("------------- ANEXOS: Fecha última ejecución finalizada " + " -------------");
 						} catch (Exception e) {
 							e.printStackTrace();
 						} catch (I18NException e) {

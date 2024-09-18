@@ -891,6 +891,11 @@ public class PropiedadGlobalUtil {
         return getString(partialPropertyName);
     }
     
+    public static String getEmailUsuarioJira() {
+        final String partialPropertyName = "jira.usuario.email";
+        return getString(partialPropertyName);
+    }
+    
     /**
      * Retorna el valor de la propiedad fecha.inicio.busqueda.path global.
      * Propiedad: es.caib.regweb3.fecha.inicio.busqueda.path
@@ -900,6 +905,12 @@ public class PropiedadGlobalUtil {
     public static String getFechaInicioBusquedaSirRecibidosPath(Long idEntidad) {
         final String partialPropertyName = "fecha.inicio.busqueda.path";
         return getStringByEntidad(idEntidad, partialPropertyName);
+    }
+    
+    public static String getFechaUltimaVerificacionFirmaAnexosPath() {
+        final String partialPropertyName = "fecha.ultima.ejecucion.path";
+        
+        return System.getProperty(RegwebConstantes.REGWEB3_PROPERTY_BASE + partialPropertyName);
     }
     
     public static boolean getEnvioEmailErrorGeiser() {

@@ -363,6 +363,8 @@ public class AsientoRegistralConverter extends CommonConverter {
          if (asientoRegistral.getEstado().equals(RegwebConstantes.REGISTRO_OFICIO_ACEPTADO)) {
 
             OficioRemision oficioRemision = oficioRemisionEjb.getByIdentificadorIntercambio(registroDetalle.getIdentificadorIntercambio(), asientoRegistral.getEntidadRegistralInicioCodigo());
+            if (oficioRemision == null && asientoRegistral.getNumeroRegistroFormateado() != null)
+            	oficioRemision = oficioRemisionEjb.getByNumeroRegistroFormateado(asientoRegistral.getNumeroRegistroFormateado(), entidad.getCodigoDir3());
             if (oficioRemision != null) {
                asientoRegistral.setFechaRegistroDestino(oficioRemision.getFechaEntradaDestino());
                asientoRegistral.setNumeroRegistroDestino(oficioRemision.getNumeroRegistroEntradaDestino());
@@ -376,6 +378,8 @@ public class AsientoRegistralConverter extends CommonConverter {
             asientoRegistral.setMotivo(registro.getRegistroDetalle().getDecodificacionTipoAnotacion());
 
             OficioRemision oficioRemision = oficioRemisionEjb.getByIdentificadorIntercambio(registroDetalle.getIdentificadorIntercambio(), asientoRegistral.getEntidadRegistralInicioCodigo());
+            if (oficioRemision == null && asientoRegistral.getNumeroRegistroFormateado() != null)
+            	oficioRemision = oficioRemisionEjb.getByNumeroRegistroFormateado(asientoRegistral.getNumeroRegistroFormateado(), entidad.getCodigoDir3());
             if (oficioRemision != null) {
                asientoRegistral.setCodigoEntidadRegistralProcesado(oficioRemision.getCodigoEntidadRegistralProcesado());
                if(StringUtils.isNotEmpty(oficioRemision.getDecodificacionEntidadRegistralProcesado())){
@@ -388,6 +392,8 @@ public class AsientoRegistralConverter extends CommonConverter {
             asientoRegistral.setMotivo(registro.getRegistroDetalle().getDecodificacionTipoAnotacion());
 
             OficioRemision oficioRemision = oficioRemisionEjb.getByIdentificadorIntercambio(registroDetalle.getIdentificadorIntercambio(), asientoRegistral.getEntidadRegistralInicioCodigo());
+            if (oficioRemision == null && asientoRegistral.getNumeroRegistroFormateado() != null)
+            	oficioRemision = oficioRemisionEjb.getByNumeroRegistroFormateado(asientoRegistral.getNumeroRegistroFormateado(), entidad.getCodigoDir3());
             if (oficioRemision != null) {
                asientoRegistral.setCodigoEntidadRegistralProcesado(oficioRemision.getCodigoEntidadRegistralProcesado());
                if(StringUtils.isNotEmpty(oficioRemision.getDecodificacionEntidadRegistralProcesado())){

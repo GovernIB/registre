@@ -164,4 +164,12 @@ public interface EntidadLocal extends BaseEjb<Entidad, Long> {
      */
     boolean isMultiEntidad() throws Exception;
 
+    /**
+     * Guarda en bbdd la última ejecución de la tarea que verifica la firma de los anexos
+     * @param currentTimeMillis
+     */
+	void updateUltimaEjecucionVerificacionAnexos(Long idEntidad, long currentTimeMillis);
+	
+	long obtenerUltimaEjecuciónVerificacionAnexos(Long idEntidad);
+
 }

@@ -149,5 +149,7 @@ public interface SchedulerLocal {
 	Long getCronTareaPeriodoActualizacionAnexosPendientesVerificacionFirma();
 
 	Long getCronTareaRetardoActualizacionAnexosPendientesVerificacionFirma();
+
+	void enviarCorreoVerificacionAnexosBloqueada() throws Exception;
 }
 

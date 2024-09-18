@@ -15,6 +15,7 @@ import es.caib.regweb3.model.RegistroEntrada;
 import es.caib.regweb3.model.RegistroSalida;
 import es.caib.regweb3.model.RegistroSir;
 import es.caib.regweb3.model.Sesion;
+import es.caib.regweb3.model.Usuario;
 import es.caib.regweb3.model.UsuarioEntidad;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.model.utils.AnexoSimple;
@@ -27,7 +28,9 @@ import es.caib.regweb3.persistence.ejb.RegistroEntradaConsultaLocal;
 import es.caib.regweb3.persistence.ejb.RegistroSalidaConsultaLocal;
 import es.caib.regweb3.persistence.ejb.SesionLocal;
 import es.caib.regweb3.persistence.ejb.SirEnvioLocal;
+import es.caib.regweb3.persistence.utils.I18NLogicUtils;
 import es.caib.regweb3.persistence.utils.JustificanteReferencia;
+import es.caib.regweb3.persistence.utils.MailUtils;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.persistence.utils.RegistroUtils;
@@ -72,9 +75,13 @@ import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
+import javax.mail.Message;
+import javax.mail.internet.InternetAddress;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import static es.caib.regweb3.utils.RegwebConstantes.RWE_WS_CIUDADANO;
 import static es.caib.regweb3.utils.RegwebConstantes.RWE_WS_ENTRADA;
@@ -1136,18 +1143,38 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
 		InteresadoWs interesasdoWs = asientoRegistral.getInteresados().get(0);
 		Long tipoInteresado = interesasdoWs.getInteresado().getTipoInteresado();
 		String codigoDir3 = interesasdoWs.getInteresado().getDocumento();
+		
 		// Comunicación a una administración
 		if (REGISTRO_SALIDA.equals(asientoRegistral.getTipoRegistro())
 				&& TIPO_OPERACION_COMUNICACION.equals(tipoOperacion)
 				&& tipoInteresado.equals(TIPO_INTERESADO_ADMINISTRACION)) {
+
+			log.info("[CLIENT-COMUNICACIO]: Tipus operació: " + tipoOperacion);
+			log.info("[CLIENT-COMUNICACIO]: Tipus interessat: " + tipoInteresado);
+			log.info("[CLIENT-COMUNICACIO]: Destí: " + codigoDir3);
+			
 			boolean destinoExterno = organismoEjb.findByCodigoEntidadSinEstadoLigero(codigoDir3, entidadActiva.getId()) == null;
+			
+			log.info("[CLIENT-COMUNICACIO]: Destí extern: " + destinoExterno);
+			log.info("[CLIENT-COMUNICACIO]: Entitat SIR (" + entidadActiva.getCodigoDir3() + "): " + entidadActiva.getSir());
+			log.info("[CLIENT-COMUNICACIO]: Oficina SIR (" + oficina.getCodigo() + "): " + oficinaEjb.isSIREnvio(oficina.getId()));
+			
 			// Administración externa y SIR
 			if (destinoExterno && entidadActiva.getSir() && oficinaEjb.isSIREnvio(oficina.getId())) {
 				List<OficinaTF> oficinasSIR = obtenerOficinasSir(codigoDir3);
 
 				if (oficinasSIR != null && !oficinasSIR.isEmpty()) {
+					log.info("[CLIENT-COMUNICACIO]: Destí extern SIR: true");
 					return true;
 				}
+				log.info("[CLIENT-COMUNICACIO]: Destí extern SIR: false");
+				//ISSUE #3216: S'ha detectat que Regweb, en algunes comunicacions SIR, està identificant l'administració destinatària com "NO SIR"
+				// quan en realitat està a SIR. S'han de realizar les següents modificacions per tal de poder identificar l'origen del problema
+				// i també mantenir a l'administrador informat de la situació de la comunicació.
+				//
+				// 1) Avisant a informàtica amb un jira
+				// 2) Avisant a l'administrador de registre amb un correu
+				asientoRegistralEjb.notificarAdministradores(entidadActiva, codigoDir3, interesasdoWs.getInteresado().getDocumento());
 			}
 		}
 		return false;

@@ -528,4 +528,17 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
         return em.createQuery("Select entidad.id from Entidad as entidad where entidad.sir = true order by entidad.id").getResultList().size() > 1;
     }
 
+	@Override
+	public void updateUltimaEjecucionVerificacionAnexos(Long idEntidad, long ultimaEjecucionVerificacionAnexos) {
+		em.createQuery("update from Entidad set ultimaEjecucionVerificacionAnexos =:ultimaEjecucionVerificacionAnexos where id =:idEntidad").setParameter("idEntidad", idEntidad).setParameter("ultimaEjecucionVerificacionAnexos", ultimaEjecucionVerificacionAnexos).executeUpdate();
+	}
+
+	@Override
+	public long obtenerUltimaEjecuciónVerificacionAnexos(Long idEntidad) {
+		Query q = em.createQuery("Select entidad.ultimaEjecucionVerificacionAnexos from Entidad as entidad where id =:idEntidad").setParameter("idEntidad", idEntidad);
+		
+		return (Long) q.getSingleResult();
+		
+	}
+
 }

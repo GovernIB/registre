@@ -409,6 +409,13 @@ public class SirEnvioBean implements SirEnvioLocal {
     			Long registroSirId = registroSirEjb.getRegistroSirByNumeroRegistro(
     					registroSalida.getNumeroRegistro(), 
     					oficioRemision.getCodigoEntidadRegistralDestino());
+    			
+    			// Arregla bug registres sir sense entrada a rwe_registro_sir
+    			if (registroSirId == null) {
+    				RegistroSir registroSirFromSalida = registroSirEjb.transformarRegistroSalidaAndCrearRegistroSir(registroSalida, usuario);
+    				registroSirId = registroSirFromSalida.getId();
+    			}
+    			
     			RegistroSir registroSir = registroSirEjb.findById(registroSirId);
 			    if (registroSir != null) {
 			    	descripcion += "\n  [MANUAL] Actualizando estado envío SIR (idEnvioSir=" + registroSir.getId() + ")";
@@ -500,7 +507,7 @@ public class SirEnvioBean implements SirEnvioLocal {
     }
 
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    @TransactionTimeout(value = 3000)  // 30 minutos
+    @TransactionTimeout(value = 3000)  // 50 minutos
     @Override
     public void actualizarEnviosSir(Entidad entidad) throws Exception {
     	long tiempo = System.currentTimeMillis();
@@ -627,7 +634,8 @@ public class SirEnvioBean implements SirEnvioLocal {
     }
 
 	@Override
-	@TransactionTimeout(value = 3000)  // 30 minutos
+	@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+	@TransactionTimeout(value = 7200)  // 120 minutos
 	public void actualizarIdEnviosSirRecibidos(Entidad entidad) throws Exception, I18NException {
 		StringBuilder peticion = new StringBuilder();
 		long tiempo = System.currentTimeMillis();
@@ -688,13 +696,18 @@ public class SirEnvioBean implements SirEnvioLocal {
     			  if (oficioRemision != null) {
     				  oficioRemisionEjb.actualizarIdentificadorIntercambio(oficioRemision.getId(), identificadorIntercambio);
     				  
-    				  for (RegistroEntrada registroEntrada: oficioRemision.getRegistrosEntrada()) {
-    					  if (registroEntrada.getNumeroRegistro().equals(registroSir.getNumeroRegistro()))
-    						  registroEntrada.getRegistroDetalle().setIdentificadorIntercambio(identificadorIntercambio);
+    				  if (oficioRemision.getRegistrosEntrada() != null) {
+	    				  for (RegistroEntrada registroEntrada: oficioRemision.getRegistrosEntrada()) {
+	    					  if (registroEntrada.getNumeroRegistro().equals(registroSir.getNumeroRegistro()))
+	    						  registroEntrada.getRegistroDetalle().setIdentificadorIntercambio(identificadorIntercambio);
+	    				  }
     				  }
-    				  for (RegistroSalida registroSalida: oficioRemision.getRegistrosSalida()) {
-    					  if (registroSalida.getNumeroRegistro().equals(registroSir.getNumeroRegistro()))
-    						  registroSalida.getRegistroDetalle().setIdentificadorIntercambio(identificadorIntercambio);
+    				  
+    				  if (oficioRemision.getRegistrosSalida() != null) {
+	    				  for (RegistroSalida registroSalida: oficioRemision.getRegistrosSalida()) {
+	    					  if (registroSalida.getNumeroRegistro().equals(registroSir.getNumeroRegistro()))
+	    						  registroSalida.getRegistroDetalle().setIdentificadorIntercambio(identificadorIntercambio);
+	    				  }
     				  }
     			  }
     		  }
@@ -864,8 +877,8 @@ public class SirEnvioBean implements SirEnvioLocal {
 		          }
 	        	}
 	        }
-	        em.flush();
     	}	
+        em.flush();
     }
     
 }

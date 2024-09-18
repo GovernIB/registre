@@ -30,6 +30,7 @@ import org.fundaciobit.pluginsib.core.utils.Metadata;
 import org.fundaciobit.pluginsib.core.utils.MetadataConstants;
 import org.fundaciobit.pluginsib.core.utils.MetadataFormatException;
 import org.jboss.ejb3.annotation.SecurityDomain;
+import org.jboss.ejb3.annotation.TransactionTimeout;
 import org.plugin.geiser.api.AnexoGSample;
 import org.plugin.geiser.api.PeticionConsultaGeiser;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -1792,6 +1793,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
 	@SuppressWarnings("unchecked")
 	@Override
+	@TransactionTimeout(value = 3000)  // 50 minutos
 	public void actualizarAnexosSistraPendientesVerificacionFirma(Long idEntidad) throws I18NException, CustodyException, NotSupportedCustodyException, MetadataFormatException {
 		// Recuperar anexos recibidos de Sistra y sin verificar si viene firmado (firmaverificada = false)	
 		Query qs = em.createQuery("Select anexo from Anexo as anexo where anexo.firmaverificada = false and modoFirma = :modofirma order by anexo.id");
@@ -1801,7 +1803,12 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 		log.info("------------------------------------------------------------");
 		for (Anexo anexo : anexos) {
 			log.info("=====Verificación automática de la firma del anexo " + anexo.getId() + " iniciada");
-			anexoHelper.actualizarAnexoSistraPendienteVerificacionFirma(anexo, idEntidad);
+			try {
+				anexoHelper.actualizarAnexoSistraPendienteVerificacionFirma(anexo, idEntidad);
+			} catch (Exception e) {
+				log.error("=====Ha habido un error en la verificación automática de la firma del anexo " + anexo.getId());
+				e.printStackTrace();
+			}
 			log.info("=====Ha finalizado la verificación automática de la firma del anexo " + anexo.getId());
 		}
 		log.info("------------------------------------------------------------");

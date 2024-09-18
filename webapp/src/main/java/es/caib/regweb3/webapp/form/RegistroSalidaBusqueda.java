@@ -25,7 +25,7 @@ public class RegistroSalidaBusqueda implements Serializable {
     private String organOrigenNom;
     private String observaciones;
     private String usuario;
-    private boolean pendienteGeiser = true;
+    private boolean pendienteGeiser = false;
     
     public RegistroSalidaBusqueda() {}
 

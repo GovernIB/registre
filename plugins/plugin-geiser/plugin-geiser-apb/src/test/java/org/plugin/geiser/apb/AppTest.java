@@ -14,12 +14,16 @@ public class AppTest {
 	@Test
     public void formatDate() throws ParseException {
 		try {
-			//22-09-2021 11:19:56
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddhhmmss");
-			System.out.println(sdf.parse("20210922111956"));
+			String nomAntic = "prova_dnot_20230809T11564939.xml";
+			System.out.println(renameTitle(nomAntic));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
     }
+	
+	private String renameTitle(String fileName) {
+    	return fileName.replaceAll("_dnot_\\d{8}T\\d{8}", "_dnot");
+    }
+
 
 }

@@ -224,7 +224,7 @@ public interface RegistroSirLocal extends BaseEjb<RegistroSir, Long> {
 	 * @throws Exception
 	 * @throws I18NException 
 	 */
-	Integer recuperarRegistrosSirGEISER(Entidad entidad, Date inicio, Date fin) throws Exception, I18NException;
+	Integer recuperarRegistrosSirGEISER(Entidad entidad, Date inicio, Date fin, boolean scheduled) throws Exception, I18NException;
 
 	/**
 	 * Recupera registros SIR recibidos sin identificador de intercambio
@@ -252,4 +252,8 @@ public interface RegistroSirLocal extends BaseEjb<RegistroSir, Long> {
 	ProgresoActualitzacion getProgresoRecuperacionRegistrosSir(Long entidadId);
 	
 	public void actualizarReintentosRegistroSir(Long idRegistroSir) throws Exception;
+
+
+	RegistroSir transformarRegistroSalidaAndCrearRegistroSir(RegistroSalida registroSalida, UsuarioEntidad usuario)
+			throws Exception, I18NException;
 }

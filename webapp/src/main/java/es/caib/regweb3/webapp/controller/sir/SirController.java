@@ -859,7 +859,7 @@ public class SirController extends BaseController {
 		try {
 			mensajesSb = new StringBuilder();
 			synchronized (SemaforoSchedulerConsultaRecibidos.class) {
-				total = registroSirEjb.recuperarRegistrosSirGEISER(entidad, busqueda.getFechaInicioImportacion(), busqueda.getFechaFinImportacion());
+				total = registroSirEjb.recuperarRegistrosSirGEISER(entidad, busqueda.getFechaInicioImportacion(), busqueda.getFechaFinImportacion(), false);
 			}
 	        
 			if (total > 0) {

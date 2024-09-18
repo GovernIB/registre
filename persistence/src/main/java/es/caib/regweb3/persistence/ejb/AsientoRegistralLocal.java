@@ -105,5 +105,19 @@ public interface AsientoRegistralLocal {
      * @throws I18NValidationException
      */
     RegistroSalida procesarRegistroSalida(Long tipoOperacion, RegistroSalida registroSalida) throws I18NException, Exception, I18NValidationException;
+    
+    /**
+     * Notifica a los administradores de un posible problema detectando la oficina destino en SIR
+     * @param interesadoDoc 
+     * @param codigoDir3 
+     *
+     * @param tipoOperacion
+     * @param registroSalida
+     * @return
+     * @throws I18NException
+     * @throws Exception
+     * @throws I18NValidationException
+     */
+    void notificarAdministradores(Entidad entidad, String codigoDir3, String interesadoDoc);
 }
 
