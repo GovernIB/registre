@@ -133,8 +133,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean implemen
                     Set<MetadatoAnexo> metadatosAnexo = anexoFullCreado.getAnexo().getMetadatosAnexos();
                     if (metadatosAnexo != null && metadatosAnexo.size() > 0) {
                         for (MetadatoAnexo metadatoAnexo : metadatosAnexo) {
-                            metadatoAnexo.setAnexo(anexoFullCreado.getAnexo());
-                            metadatoAnexoEjb.persist(metadatoAnexo);
+                            metadatoAnexoEjb.guardarMetadatoAnexo(metadatoAnexo, anexoFullCreado.getAnexo());
                         }
                     }
                 }
@@ -142,12 +141,11 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean implemen
             }
 
             //Procesamos los metadatos
-            //guardamos los metadatos del Registro de Entrada
+            //guardamos los metadatos del Registro de Salida
             Set<MetadatoRegistroSalida> metadatosRS = registroSalida.getMetadatosRegistroSalida();
             if (metadatosRS != null && metadatosRS.size() > 0) {
                 for (MetadatoRegistroSalida metadatoRegistroSalida : metadatosRS) {
-                    metadatoRegistroSalida.setRegistroSalida(registroSalida);
-                    metadatoRegistroSalidaEjb.persist(metadatoRegistroSalida);
+                    metadatoRegistroSalidaEjb.guardarMetadatoRegistroSalida(metadatoRegistroSalida, registroSalida);
                 }
             }
 

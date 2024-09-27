@@ -144,8 +144,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean implem
                     Set<MetadatoAnexo> metadatosAnexo = anexoFullCreado.getAnexo().getMetadatosAnexos();
                     if (metadatosAnexo != null && metadatosAnexo.size() > 0) {
                         for (MetadatoAnexo metadatoAnexo : metadatosAnexo) {
-                            metadatoAnexo.setAnexo(anexoFullCreado.getAnexo());
-                            metadatoAnexoEjb.persist(metadatoAnexo);
+                            metadatoAnexoEjb.guardarMetadatoAnexo(metadatoAnexo, anexoFullCreado.getAnexo());
                         }
                     }
                 }
