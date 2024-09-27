@@ -1286,7 +1286,7 @@ public class SirEnvioBean implements SirEnvioLocal {
             log.info("ANEXO " + anexoFull.getSignFileName());
             if(anexoFull.getAnexo().getIdentificadorRFU()==null) {//Solo lo guardamos si no lo hemos guardado previamente
                 String identificadorRFU = libSirUtils.guardarDocumentoInterdoc(anexoFull, entidad, documento, unTramitacionDestino, numeroRegistroFormateado,fechaRegistro, tipoRegistro);
-                log.info("IDENTIFICADOR RFU DEVUELTO " + identificadorRFU);
+                //log.info("IDENTIFICADOR RFU DEVUELTO " + identificadorRFU);
 
                 anexoFull.getAnexo().setIdentificadorRFU(identificadorRFU);
                 log.info("ID anexo" + anexoFull.getAnexo().getId());
