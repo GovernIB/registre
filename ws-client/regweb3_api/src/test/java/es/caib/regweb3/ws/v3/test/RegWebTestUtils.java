@@ -505,18 +505,18 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
         personaFisica.setNombre("Marilen");
         personaFisica.setApellido1("González");
         personaFisica.setApellido2("Gómez");
-        //personaFisica.setCanal((long) 1);
+        personaFisica.setCanal((long) 2);
         personaFisica.setCodDirectoriosUnificados("223344556677");
-       // personaFisica.setDireccion("Calle Aragón, 24, 5ºD");
+        personaFisica.setDireccion("Calle Aragón, 24, 5ºD");
         personaFisica.setDireccionElectronica("interesado@interesado.com");
         personaFisica.setObservaciones("Interesado de tipo Persona Fisica");
-       // personaFisica.setPais((long) 705); Slovenia
+        // personaFisica.setPais((long) 705); //Slovenia
         personaFisica.setPais((long) 724);
         personaFisica.setProvincia((long) 7);
         personaFisica.setLocalidad((long) 407);
         personaFisica.setCp("07010");
         personaFisica.setTelefonoMovil("678345123");
-        personaFisica.setReceptorNotificaciones(true);
+        personaFisica.setReceptorNotificaciones(false);
         personaFisica.setAvisoNotificacionSMS(true);
         personaFisica.setAvisoCorreoElectronico(true);
 
@@ -532,7 +532,7 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
         personaFisica.setTipoDocumentoIdentificacion("N");
         personaFisica.setDocumento("44328254D");
         personaFisica.setEmail("mgonzalez@fundaciobit.org");
-        personaFisica.setNombre("MarilenMarilenMarilenMarilen M");
+        personaFisica.setNombre("M@rilenMarilenMarilenMarilen M");
         personaFisica.setApellido1("González González  Gon\"#$%()*");
         personaFisica.setApellido2("GómezGómezGómez");
         personaFisica.setCanal((long) 1);
@@ -540,7 +540,7 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
         personaFisica.setDireccion("Calle Aragón, 24, 5ºD  dddddddd ~¡¢£¤¥¦§¨©ª«¬ lfdskjgfdklsjgfdklsjgfdklsjgfkl lfkdjgslkdfjgfdksl lksfdñsfjjgh lfdskjgfdklsjgfdklsjgfdklsjgfkl lfkdjgslkdfjgfdksl");
         personaFisica.setDireccionElectronica("interesadoooooooooooooooooooooooooooooo@interesado.com");
         personaFisica.setLocalidad((long) 407);
-        personaFisica.setObservaciones("Interesado de tipo Persona FisicaInteresado de tipo Persona FisicaInteresado de tipo Persona FisicaInteresado de tipo Persona FisicaInteresado de tipo Persona F");
+        personaFisica.setObservaciones("Interesado de tipo Persona FisicaInteresado de tipo Persona FisicaInteresado de tipo Persona FisicaInteresado de tipo Persona FisicaInteresado de tipo Pàáâãäå F");
         personaFisica.setPais((long) 724);
         personaFisica.setProvincia((long) 7);
         personaFisica.setCp("07010");
@@ -561,7 +561,7 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
         DatosInteresadoWs personaJuridica = new DatosInteresadoWs();
         personaJuridica.setTipoInteresado(TIPO_INTERESADO_PERSONA_JURIDICA);
         personaJuridica.setTipoDocumentoIdentificacion(String.valueOf(TIPODOCUMENTOID_CIF));
-        personaJuridica.setDocumento("A42539585");
+        personaJuridica.setDocumento("H33752080");
         personaJuridica.setRazonSocial("Mercadona");
         personaJuridica.setEmail("info@mercadona.es");
         personaJuridica.setPais((long) 724);
@@ -572,7 +572,7 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
 
         // TODO ELIMINAR CUAndo se arregle libsir (Solo dirección)
         personaJuridica.setCanal((long) 2);
-        personaJuridica.setDireccionElectronica("info@mercadona.es");
+       // personaJuridica.setDireccionElectronica("info@mercadona.es");
         personaJuridica.setTelefonoMovil("678345123");
         personaJuridica.setLocalidad((long) 407);
         personaJuridica.setPais((long) 724);
@@ -596,15 +596,16 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
             representante.setApellido1("De la torre");
             representante.setApellido2("De la nube");
             representante.setCodDirectoriosUnificados("112233445566");
-            representante.setDireccionElectronica("representante@representante.com");
+          //  representante.setDireccionElectronica("representante@representante.com");
             representante.setTelefonoMovil("678345123");
             representante.setObservaciones("Representante de tipo Persona Fisica");
             representante.setCanal((long) 2);
-            representante.setPais((long) 705);
+         //   representante.setPais((long) 705);
            // representante.setPais((long) 724);
            // representante.setProvincia((long) 7);
-           // representante.setLocalidad((long) 407);
-           // representante.setCp("07010");
+          //  representante.setDireccion("c/ ricardo forteza, 45");
+          //  representante.setLocalidad((long) 407);
+          //  representante.setCp("07010");
             representante.setAvisoCorreoElectronico(true);
             representante.setAvisoNotificacionSMS(true);
             representante.setReceptorNotificaciones(true);
@@ -907,7 +908,7 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
             String original = CODIGO_SICRES_BY_TIPOVALIDEZDOCUMENTO.get(TIPOVALIDEZDOCUMENTO_ORIGINAL);
             anexoSinFirma.setValidezDocumento(original);
             anexoSinFirma.setTipoDocumental(getTestAnexoTipoDocumental());
-            String formulario = CODIGO_SICRES_BY_TIPO_ANEXO.get(TIPO_DOCUMENTO_FORMULARIO);
+            String formulario = CODIGO_SICRES_BY_TIPO_ANEXO.get(TIPO_DOCUMENTO_DOC_ADJUNTO);
             anexoSinFirma.setTipoDocumento(formulario);
             anexoSinFirma.setOrigenCiudadanoAdmin(ANEXO_ORIGEN_CIUDADANO);
             anexoSinFirma.setObservaciones("Observacionesde anexoObservacionesde anexoObservac");
@@ -929,7 +930,7 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
 
         // Anexo con firma attached
 
-        /*{
+        {
             AnexoWs anexoConFirmaAttached = new AnexoWs();
 
             final String fichero = "pdf_con_firma.pdf";
@@ -952,9 +953,9 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
             anexoConFirmaAttached.setTipoMIMEFicheroAnexado(Utils.getMimeType(fichero));
 
             anexos.add(anexoConFirmaAttached);
-        }*/
+        }
 
-        {
+       /* {
             AnexoWs anexoConFirmaAttached = new AnexoWs();
 
             final String fichero = "pdf_con_firma.pdf";
@@ -977,7 +978,7 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
             anexoConFirmaAttached.setTipoMIMEFicheroAnexado(Utils.getMimeType(fichero));
 
             anexos.add(anexoConFirmaAttached);
-        }
+        }*/
 
        /* {
             AnexoWs anexoConFirmaDetached = new AnexoWs();
@@ -1042,8 +1043,8 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
     private static List<MetadatoWs> getMetadatoWsMaximo() {
         List<MetadatoWs> metadatos = new ArrayList<>();
         MetadatoWs metadatoWs = new MetadatoWs();
-        metadatoWs.setCampo("Metadato 1 Metadato 1 Metadato 1 Metadato 1 Metadato 1 Metadato 1 Metadato 1 Met");
-        metadatoWs.setValor("Valor del metadato1Valor del metadato1Valor del metadato1Valor del metadato1Valor del metadato1Valor del metadato1Valor del metadato1Valor del metadato1 ");
+        metadatoWs.setCampo("Metadato 1 Metadato 1 Metadato 1 Metadato 1 Metadato 1 Metadato 1 Metadatoñòóôõö");
+        metadatoWs.setValor("Valor del metadato1Valor del metadato1Valor del metadato1Valor del metadato1Valor del metadato1Valor del metadato1Valor del ÛÜÝÞßàto1Valor del metadato1 ");
         metadatoWs.setTipo(METADATO_GENERAL);
 
         metadatos.add(metadatoWs);
@@ -1368,9 +1369,9 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
         asiento.setIdioma(RegwebConstantes.IDIOMA_CASTELLANO_ID);
         asiento.setLibroCodigo(getTestDestinoLibro());
         asiento.setMotivo("Motivo de prueba");
-        asiento.setPresencial(false);
+        asiento.setPresencial(true);
         if(REGISTRO_ENTRADA.equals(tipoRegistro)){
-            asiento.setResumen("SIR-GE-PR-002");
+            asiento.setResumen("SIR-GE-PR-06X");
         }else{
             asiento.setResumen("SIR-GE-PR-XXX");
         }
@@ -1378,12 +1379,13 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
              asiento.setUnidadTramitacionOrigenCodigo(getTestOrigenCodigoDir3());
         }
         asiento.setReferenciaExterna("FE4567Y");
-        //asiento.setTipoDocumentacionFisicaCodigo(RegwebConstantes.TIPO_DOCFISICA_NO_ACOMPANYA_DOC);
-        asiento.setTipoDocumentacionFisicaCodigo(RegwebConstantes.TIPO_DOCFISICA_ACOMPANYA_DOC_REQUERIDA);
+        asiento.setTipoDocumentacionFisicaCodigo(RegwebConstantes.TIPO_DOCFISICA_NO_ACOMPANYA_DOC);
+        //asiento.setTipoDocumentacionFisicaCodigo(RegwebConstantes.TIPO_DOCFISICA_ACOMPANYA_DOC_COMPLEMENTARIA);
+      // asiento.setTipoDocumentacionFisicaCodigo(RegwebConstantes.TIPO_DOCFISICA_ACOMPANYA_DOC_REQUERIDA);
 
 
         asiento.setNumeroExpediente("34567Y/2019");
-        asiento.setTipoTransporte("03");
+        asiento.setTipoTransporte("08");
         asiento.setNumeroTransporte("123456");
         asiento.setObservaciones("Asiento prueba de envio SIR-GE-PR-XXX");
         asiento.setUnidadTramitacionDestinoCodigo(getTestDestinoCodigoDir3());
@@ -1405,7 +1407,7 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
         asiento.setAplicacionTelematica("LOCAL-APP");
 
         asiento.setCodigoAsunto("AS-001");
-        asiento.setCodigoAsuntoDenominacion("Asunto de prueba sssAsunto de prueba Asunto de prueba Asunto de prueba Asunto de prueba Asunto de pruebaAsunto de prueba Asunto de prueba Asunto de prueba Asunto de prueba Asunto de prueba Asunto de prueba Asunto de prueba Asunto de pruebaAsunto de prueba");
+        asiento.setCodigoAsuntoDenominacion("Asunto de prueba sssAsunto de prueba Asunto de prueba Asunto de prueba Asunto de prueba Asunto de pruebaAsunto de prueba Asunto de prueba Asunto de prueba Asunto de prueba Asunto de prueba Asunto de prueba Asunto de prueba Asunto de pruebaAsunto de pu%ª^¨");
 
         //asiento.setCodigoAsunto(null);
 
@@ -1423,18 +1425,18 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
         asiento.setMotivo(getLoremIpsum());
         asiento.setPresencial(false);
 
-        asiento.setResumen("SIR-GE-PR-003 [\\]^_mmmmmgmmmmmmmmmmmmmmmmmmmmmmmmm cdddddddddddddddddddddddddddddddddd bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm cdddddddddddddddddddddddddddddddddd bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb dddddddddd");
+        asiento.setResumen("SIR-GE-PR-002--013 [\\]^_mmmmmmmmmmmmmmmmmmmmmmmmm cdddddddddddddddddddddddddddddddddd bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm cdddddddddddddddddddddddddddddddddd bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb dddddddddd");
 
         if(conOrganismoOrigen) {
             asiento.setUnidadTramitacionOrigenCodigo(getTestOrigenCodigoDir3());
         }
-        asiento.setReferenciaExterna("FE4567FE4567FE45");
+        asiento.setReferenciaExterna("FE4567FE4567F{|}");
         asiento.setTipoDocumentacionFisicaCodigo(RegwebConstantes.TIPO_DOCFISICA_NO_ACOMPANYA_DOC);
 
-        asiento.setNumeroExpediente("34567Y/2019-34567Y/2019-34567Y/2019-34567Y/2019-34567Y/2019-34567Y/2019-34567Y/2");
+        asiento.setNumeroExpediente("34567Y/2019-34567Y/2019-34567Y/2019-34567Y/2019-34567Y/20¡¢£¤¥¦§¨©ª«¬ ®¯°±²³´µ¶");
         asiento.setTipoTransporte("01");
         asiento.setNumeroTransporte("12345612345612345612");
-        asiento.setObservaciones("Asiento prueba de envio SIR-GE-PR-003" );
+        asiento.setObservaciones("Asient¸¹º»¼½¾¿Àde envio SIR-GE-PR-003" );
         asiento.setUnidadTramitacionDestinoCodigo(getTestDestinoCodigoDir3());
         asiento.setUnidadTramitacionDestinoDenominacion(getTestDestinoDenominacionDir3());
 
@@ -1454,8 +1456,8 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
         InteresadoWs interesadoWs = new InteresadoWs();
 
         if(REGISTRO_ENTRADA.equals(tipoRegistro)){
-            interesadoWs.setInteresado(getPersonaFisica());
-          //  interesadoWs.setInteresado(getPersonaJuridica());
+           //interesadoWs.setInteresado(getPersonaFisica());
+            interesadoWs.setInteresado(getPersonaJuridica());
         }else{
             interesadoWs.setInteresado(getAdministracionSir());
         }
@@ -1464,6 +1466,7 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
         // Representante persona fisica
         if(representante){
             interesadoWs.setRepresentante(getRepresentante(TIPO_INTERESADO_PERSONA_JURIDICA));
+           // interesadoWs.setRepresentante(getRepresentante(TIPO_INTERESADO_PERSONA_FISICA));
 
         }
 

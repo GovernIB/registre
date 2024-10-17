@@ -27,7 +27,8 @@ public class RegWebAsientoRegistralLibSirTest extends RegWebTestUtils {
        // setEntorno("_localhost_PRO");
         //setEntorno("_registre3");
         //setEntorno("_proves");
-        setEntorno("_localhost");
+    //   setEntorno("_localhost");
+        setEntorno("_dev");
         asientoRegistralApi = getAsientoRegistralApi();
     }
 
@@ -190,13 +191,14 @@ public class RegWebAsientoRegistralLibSirTest extends RegWebTestUtils {
 
     @Test
     //Método que crea un registro de entrada con los parámetros del SIR-CER-12080-plan-pruebas-emision-recepcionSICRES4 de LIBSIR
+    // CASO SIR-GE-PR-052 ( desde web no se puede crear, ojo al crearlo via WS, está mal)
     public void crearAsientoEntradaSIRGE_PR_019() throws Exception {
 
 
         for (int i = 0; i < 1; i++) {
 
             try {
-                AsientoRegistralWs asientoRegistralWs = getAsiento_to_LIBSIR( REGISTRO_ENTRADA, false, false
+                AsientoRegistralWs asientoRegistralWs = getAsiento_to_LIBSIR( REGISTRO_ENTRADA, false, true
                         , true, true);
 
                 asientoRegistralWs = asientoRegistralApi.crearAsientoRegistral(null,getTestEntidadCodigoDir3(),asientoRegistralWs,null,false,false);
@@ -223,7 +225,7 @@ public class RegWebAsientoRegistralLibSirTest extends RegWebTestUtils {
         for (int i = 0; i < 1; i++) {
 
             try {
-                AsientoRegistralWs asientoRegistralWs = getAsiento_to_LIBSIR( REGISTRO_SALIDA, false, true
+                AsientoRegistralWs asientoRegistralWs = getAsiento_to_LIBSIR( REGISTRO_SALIDA, false, false
                         , false, true);
 
                 asientoRegistralWs = asientoRegistralApi.crearAsientoRegistral(null,getTestEntidadCodigoDir3(),asientoRegistralWs,null,true,false);
