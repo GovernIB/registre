@@ -543,6 +543,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean implem
             for (AnexoFull anexo : anexos) {
                 anexo.getAnexo().setId(null);
                 anexo.getAnexo().setJustificante(false);
+                anexo.getAnexo().setMetadatosAnexos(null);
             }
             registroEntrada.getRegistroDetalle().setAnexos(new ArrayList<Anexo>());
 
