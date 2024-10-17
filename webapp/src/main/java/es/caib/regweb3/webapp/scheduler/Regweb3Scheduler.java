@@ -287,9 +287,10 @@ public class Regweb3Scheduler {
 
     /**
      * Qué hace: obtiene los asientos que se reciben via SIR
-     * Cuando lo hace: cada 1 minuto
+     * Cuando lo hace: cada 10 minuto
      */
-    @Scheduled(fixedDelay = 60000)
+    //@Scheduled(fixedDelay = 60000)
+    @Scheduled(cron = "0 0/10 8,9,10,11,12,13,14 * * *")
     public void consultarAsientosPendientes(){
 
         try {
