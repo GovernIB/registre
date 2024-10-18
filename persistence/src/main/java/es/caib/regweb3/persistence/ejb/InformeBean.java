@@ -40,7 +40,7 @@ public class InformeBean implements InformeLocal {
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<RegistroEntrada> buscaRegistroEntradasOrganismo(Date fechaInicio, Date fechaFin, String numeroRegistroFormateado, String interesadoNom, String interesadoLli1, String interesadoLli2, String interesadoDoc, Boolean anexos, String observaciones, String extracto, String usuario, Long idOrganismo, Long estado, Long idOficina, String organoDest, Long idEntidad, Boolean mostraInteressats) throws I18NException {
+    public List<RegistroEntrada> buscaRegistroEntradasOrganismo(Date fechaInicio, Date fechaFin, String numeroRegistroFormateado, String interesadoNom, String interesadoLli1, String interesadoLli2, String interesadoDoc, Boolean anexos, String observaciones, String extracto, String usuario, Long idOrganismo, Long estado, Boolean tieneCodigoSia, Long idOficina, String organoDest, Long idEntidad, Boolean mostraInteressats) throws I18NException {
 
         Query q;
         Map<String, Object> parametros = new HashMap<String, Object>();
@@ -141,6 +141,15 @@ public class InformeBean implements InformeLocal {
         if(idOrganismo != null){
             where.add(" registroEntrada.oficina.organismoResponsable.id = :idOrganismo");
             parametros.put("idOrganismo", idOrganismo);
+        }
+
+        // Tiene Código SIA
+        if(tieneCodigoSia != null){
+            if(tieneCodigoSia){
+                where.add(" registroEntrada.registroDetalle.codigoSia is not null");
+            }else {
+                where.add(" registroEntrada.registroDetalle.codigoSia is null");
+            }
         }
 
         // Buscamos registros de entrada con anexos
@@ -278,7 +287,7 @@ public class InformeBean implements InformeLocal {
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<RegistroSalida> buscaRegistroSalidasOrganismo(Date fechaInicio, Date fechaFin, String numRegistroFormateado, String interesadoNom, String interesadoLli1, String interesadoLli2, String interesadoDoc, Boolean anexos, String observaciones, String extracto, String usuario, Long idOrganismo, Long estado, Long idOficina, String organoOrig, Long idEntidad, Boolean mostraInteressats) throws I18NException {
+    public List<RegistroSalida> buscaRegistroSalidasOrganismo(Date fechaInicio, Date fechaFin, String numRegistroFormateado, String interesadoNom, String interesadoLli1, String interesadoLli2, String interesadoDoc, Boolean anexos, String observaciones, String extracto, String usuario, Long idOrganismo, Long estado, Boolean tieneCodigoSia, Long idOficina, String organoOrig, Long idEntidad, Boolean mostraInteressats) throws I18NException {
 
         Query q;
         Map<String, Object> parametros = new HashMap<String, Object>();
@@ -377,6 +386,15 @@ public class InformeBean implements InformeLocal {
         //Organismo
         where.add(" registroSalida.oficina.organismoResponsable.id = :idOrganismo");
         parametros.put("idOrganismo", idOrganismo);
+
+        // Tiene Código SIA
+        if(tieneCodigoSia != null){
+            if(tieneCodigoSia){
+                where.add(" registroSalida.registroDetalle.codigoSia is not null");
+            }else {
+                where.add(" registroSalida.registroDetalle.codigoSia is null");
+            }
+        }
 
         // Buscamos registros de entrada con anexos
         if (anexos) {

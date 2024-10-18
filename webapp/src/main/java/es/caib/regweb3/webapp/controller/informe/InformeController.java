@@ -145,7 +145,7 @@ public class InformeController extends AbstractRegistroCommonFormController {
                     informeOrganismoBusquedaForm.getInteressatLli1(), informeOrganismoBusquedaForm.getInteressatLli2(), informeOrganismoBusquedaForm.getInteressatDoc(),
                     informeOrganismoBusquedaForm.getAnexos(), informeOrganismoBusquedaForm.getObservaciones(),
                     informeOrganismoBusquedaForm.getExtracto(), informeOrganismoBusquedaForm.getUsuario(), informeOrganismoBusquedaForm.getIdOrganismo(),
-                    informeOrganismoBusquedaForm.getEstado(), idOficina, codigoOrganDest, usuarioEntidad.getEntidad().getId(), mostraInteressats);
+                    informeOrganismoBusquedaForm.getEstado(), informeOrganismoBusquedaForm.getTieneCodigoSia(), idOficina, codigoOrganDest, usuarioEntidad.getEntidad().getId(), mostraInteressats);
             Long end = System.currentTimeMillis();
             log.info("Tiempo informeEjb.buscaLibroRegistroEntradas: " + TimeUtils.formatElapsedTime(end - start));
 
@@ -356,7 +356,7 @@ public class InformeController extends AbstractRegistroCommonFormController {
                     informeOrganismoBusquedaForm.getInteressatLli1(), informeOrganismoBusquedaForm.getInteressatLli2(), informeOrganismoBusquedaForm.getInteressatDoc(),
                     informeOrganismoBusquedaForm.getAnexos(), informeOrganismoBusquedaForm.getObservaciones(),
                     informeOrganismoBusquedaForm.getExtracto(), informeOrganismoBusquedaForm.getUsuario(), informeOrganismoBusquedaForm.getIdOrganismo(),
-                    informeOrganismoBusquedaForm.getEstado(), idOficina, codigoOrganDest, usuarioEntidad.getEntidad().getId(), mostraInteressats);
+                    informeOrganismoBusquedaForm.getEstado(), informeOrganismoBusquedaForm.getTieneCodigoSia(), idOficina, codigoOrganDest, usuarioEntidad.getEntidad().getId(), mostraInteressats);
 
 
             for (int i = 0; i < registrosSalida.size(); i++) {

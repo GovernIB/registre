@@ -32,6 +32,7 @@ public class InformeOrganismoBusquedaForm {
     private String numeroRegistroFormateado;
     private Long estado;
     private Long idOficina;
+    private Boolean tieneCodigoSia;
 
     public InformeOrganismoBusquedaForm(Date fechaInicio, Date fechaFin, Long tipo, String formato, Set<String> campos, String usuario,
                                         List<Organismo> organismos, Boolean anexos, String interessatNom, String interessatLli1, String interessatLli2,
@@ -162,4 +163,11 @@ public class InformeOrganismoBusquedaForm {
 
     public void setIdOficina(Long idOficina) { this.idOficina = idOficina; }
 
+    public Boolean getTieneCodigoSia() {
+        return tieneCodigoSia;
+    }
+
+    public void setTieneCodigoSia(Boolean tieneCodigoSia) {
+        this.tieneCodigoSia = tieneCodigoSia;
+    }
 }
