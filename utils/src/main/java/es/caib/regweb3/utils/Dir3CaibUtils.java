@@ -49,7 +49,7 @@ public class Dir3CaibUtils {
         try {
             wsdlLocation = new URL(endpoint + "?wsdl");
         } catch (MalformedURLException e) {
-            throw new I18NException("Error generando la url del servicio de Dir3Caib");
+            throw new I18NException("error.dir3caib");
         }
 
         Dir3CaibObtenerUnidadesWsService service = new Dir3CaibObtenerUnidadesWsService(wsdlLocation);
@@ -73,7 +73,7 @@ public class Dir3CaibUtils {
         try {
             wsdlLocation = new URL(endpoint + "?wsdl");
         } catch (MalformedURLException e) {
-            throw new I18NException("Error generando la url del servicio de Dir3Caib");
+            throw new I18NException("error.dir3caib");
         }
 
         Dir3CaibObtenerCatalogosWsService service = new Dir3CaibObtenerCatalogosWsService(wsdlLocation);
@@ -97,7 +97,7 @@ public class Dir3CaibUtils {
         try {
             wsdlLocation = new URL(endpoint + "?wsdl");
         } catch (MalformedURLException e) {
-            throw new I18NException("Error generando la url del servicio de Dir3Caib");
+            throw new I18NException("error.dir3caib");
         }
 
         Dir3CaibObtenerOficinasWsService service = new Dir3CaibObtenerOficinasWsService(wsdlLocation);
