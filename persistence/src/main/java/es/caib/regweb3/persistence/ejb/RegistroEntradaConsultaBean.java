@@ -499,6 +499,24 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
         }
     }
 
+    @Override
+    public String getNumeroRegistroFormateado(Long idRegistro) throws I18NException {
+
+        Query q = em.createQuery("Select numeroRegistroFormateado from RegistroEntrada where id = :idRegistro");
+
+        q.setParameter("idRegistro", idRegistro);
+        q.setHint("org.hibernate.readOnly", true);
+
+        List<String> registro = q.getResultList();
+
+        if (registro.size() == 1) {
+            return registro.get(0);
+        } else {
+            return null;
+        }
+    }
+
+    @Override
     public String findNumeroRegistroFormateadoByRegistroDetalle(Long idRegistroDetalle) throws I18NException {
 
         Query q = em.createQuery("Select registroEntrada.numeroRegistroFormateado "

@@ -76,6 +76,13 @@ public interface RegistroSalidaConsultaLocal {
      */
     RegistroSalida findByNumeroRegistroFormateadoCompleto(Long idEntidad, String numeroRegistroFormateado) throws I18NException;
 
+    /**
+     * Devuelve el numero de registro formateado a partir del idRegistro
+     * @param idRegistro
+     * @return
+     * @throws I18NException
+     */
+    String getNumeroRegistroFormateado(Long idRegistro) throws I18NException;
 
     /**
      * Devuelve el numero de registro formateado a partir de un registro detalle.
