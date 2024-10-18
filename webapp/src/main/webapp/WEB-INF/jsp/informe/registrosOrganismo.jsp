@@ -313,6 +313,20 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="col-xs-12">
+                                        <div class="col-xs-6 espaiLinies">
+                                            <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                                <label for="tieneCodigoSia" rel="popupAbajo" data-toggle="popover"><spring:message code="registroEntrada.codigoSIA"/></label>
+                                            </div>
+                                            <div class="col-xs-8">
+                                                <form:select path="tieneCodigoSia" cssClass="chosen-select">
+                                                    <form:option value="" label="..."/>
+                                                    <form:option value="true"><spring:message code="regweb.si"/></form:option>
+                                                    <form:option value="false"><spring:message code="regweb.no"/></form:option>
+                                                </form:select>
+                                            </div>
+                                        </div>
+                                    </div>
 
                                 </div>
                                 <div class="col-xs-12 pad-bottom15 mesOpcions">

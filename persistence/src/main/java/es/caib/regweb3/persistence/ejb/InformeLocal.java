@@ -42,7 +42,7 @@ public interface InformeLocal {
      * @return
      * @throws I18NException
      */
-    List<RegistroEntrada> buscaRegistroEntradasOrganismo(Date fechaInicio, Date fechaFin, String numeroRegistroFormateado, String interesadoNom, String interesadoLli1, String interesadoLli2, String interesadoDoc, Boolean anexos, String observaciones, String usuario, String extracto, Long idOrganismo, Long estado, Long idOficina, String organoDest, Long idEntidad, Boolean mostraInteressats) throws I18NException;
+    List<RegistroEntrada> buscaRegistroEntradasOrganismo(Date fechaInicio, Date fechaFin, String numeroRegistroFormateado, String interesadoNom, String interesadoLli1, String interesadoLli2, String interesadoDoc, Boolean anexos, String observaciones, String usuario, String extracto, Long idOrganismo, Long estado, Boolean tieneCodigoSia, Long idOficina, String organoDest, Long idEntidad, Boolean mostraInteressats) throws I18NException;
 
     /**
      * Busca los Registros de Salida en función de varios parámetros
@@ -65,7 +65,7 @@ public interface InformeLocal {
      * @return
      * @throws I18NException
      */
-    List<RegistroSalida> buscaRegistroSalidasOrganismo(Date fechaInicio, Date fechaFin, String numRegistroFormateado, String interesadoNom, String interesadoLli1, String interesadoLli2, String interesadoDoc, Boolean anexos, String observaciones, String usuario, String extracto, Long idOrganismo, Long estado, Long idOficina, String organoOrig, Long idEntidad, Boolean mostraInteressats) throws I18NException;
+    List<RegistroSalida> buscaRegistroSalidasOrganismo(Date fechaInicio, Date fechaFin, String numRegistroFormateado, String interesadoNom, String interesadoLli1, String interesadoLli2, String interesadoDoc, Boolean anexos, String observaciones, String usuario, String extracto, Long idOrganismo, Long estado, Boolean tieneCodigoSia, Long idOficina, String organoOrig, Long idEntidad, Boolean mostraInteressats) throws I18NException;
 
     /**
      * Busca los Registros de Entrada que no estén anulados ni pendientes en función de la una fecha inicio, una fecha fin, de la Entidad Activa
