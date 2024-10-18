@@ -2,7 +2,6 @@ package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.Interesado;
 import es.caib.regweb3.model.Persona;
-import es.caib.regweb3.model.utils.ObjetoBasico;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 
@@ -126,7 +125,7 @@ public interface PersonaLocal extends BaseEjb<Persona, Long> {
      * @return
      * @throws I18NException
      */
-    List<ObjetoBasico> busquedaPersonas(String q, Long tipoPersona, Long idEntidad) throws I18NException;
+    List<Persona> busquedaPersonas(String q, Long tipoPersona, Long idEntidad) throws I18NException;
 
     /**
      * Busca las Personas con un mismo Documento de una Entidad determinada

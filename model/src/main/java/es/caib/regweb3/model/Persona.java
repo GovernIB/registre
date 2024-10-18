@@ -15,7 +15,8 @@ import java.io.Serializable;
  */
 @Entity
 @Table(name = "RWE_PERSONA", indexes = {
-        @Index(name = "RWE_PERSONA_ENTIDAD_FK_I", columnList = "ENTIDAD")
+        @Index(name = "RWE_PERSONA_ENTIDAD_FK_I", columnList = "ENTIDAD"),
+        @Index(name = "RWE_PERSONA_DOC_I", columnList = "DOCUMENTO")
 })
 @SequenceGenerator(name = "generator", sequenceName = "RWE_PERSONA_SEQ", allocationSize = 1)
 public class Persona implements Serializable {
@@ -368,6 +369,18 @@ public class Persona implements Serializable {
         this.guardarInteresado = guardarInteresado;
     }
 
+
+    @Transient
+    public String getNombreCompleto(){
+
+        if(getTipo().equals(RegwebConstantes.TIPO_PERSONA_FISICA)){
+            return getNombrePersonaFisica();
+        }else if(getTipo().equals(RegwebConstantes.TIPO_PERSONA_JURIDICA)){
+            return getNombrePersonaJuridica();
+        }
+
+        return "";
+    }
 
     @Transient
     public String getNombrePersonaFisica() {
