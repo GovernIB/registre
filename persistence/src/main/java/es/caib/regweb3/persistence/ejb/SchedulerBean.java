@@ -54,42 +54,20 @@ public class SchedulerBean implements SchedulerLocal {
 
     @EJB private SirEnvioLocal sirEnvioEjb;
     @EJB private EntidadLocal entidadEjb;
-    @EJB
-    private ContadorLocal contadorEjb;
-    @EJB
-    private IntegracionLocal integracionEjb;
-    @EJB
-    private ArxiuLocal arxiuEjb;
-    @EJB
-    private AnexoSirLocal anexoSirEjb;
-    @EJB
-    private AnexoLocal anexoEjb;
-    @EJB
-    private NotificacionLocal notificacionEjb;
-    @EJB
-    private DistribucionLocal distribucionEjb;
-    @EJB
-    private SesionLocal sesionEjb;
-    @EJB
-    private ColaLocal colaEjb;
-    @EJB
-    private CustodiaLocal custodiaEjb;
-    @EJB
-    private LibSirLocal libSirEjb;
-    @EJB
-    private RegistroSirLocal registroSirEjb;
-    @EJB
-    private OficinaLocal oficinaEjb;
-    @EJB
-    private OficioRemisionLocal oficioRemisionEjb;
-    @EJB
-    private TrazabilidadSirLocal trazabilidadSirEjb;
-    @EJB
-    private RegistroEntradaLocal registroEntradaEjb;
-    @EJB
-    private RegistroSalidaLocal registroSalidaEjb;
-    @EJB
-    private MensajeControlLocal mensajeControlEjb;
+    @EJB private ContadorLocal contadorEjb;
+    @EJB private IntegracionLocal integracionEjb;
+    @EJB private ArxiuLocal arxiuEjb;
+    @EJB private AnexoSirLocal anexoSirEjb;
+    @EJB private AnexoLocal anexoEjb;
+    @EJB private NotificacionLocal notificacionEjb;
+    @EJB private DistribucionLocal distribucionEjb;
+    @EJB private SesionLocal sesionEjb;
+    @EJB private ColaLocal colaEjb;
+    @EJB private CustodiaLocal custodiaEjb;
+    @EJB private LibSirLocal libSirEjb;
+    @EJB private RegistroSirLocal registroSirEjb;
+    @EJB private OficinaLocal oficinaEjb;
+    @EJB private OficioRemisionLocal oficioRemisionEjb;
 
     @Autowired IConsultaService consultaService;
     @Autowired ISalidaService salidaService;
@@ -592,7 +570,7 @@ public class SchedulerBean implements SchedulerLocal {
         StringBuilder peticion = new StringBuilder();
         long tiempo = System.currentTimeMillis();
         Date inicio = null;
-        String descripcion = "";
+        String descripcion = " Consultar asientos pendientes SIR";
         Entidad entidadActiva = null;
         try {
             //consultamos los asientos que estan pendientes de procesar
@@ -773,6 +751,8 @@ public class SchedulerBean implements SchedulerLocal {
             }
         } catch (Exception e) {
             log.error("Error obteniendo asientos SIR pendientes ...", e);
+            //integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_SCHEDULERS, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - tiempo, entidadActiva.getId(), "");
+
         }
     }
 

@@ -140,6 +140,14 @@ public interface RegistroEntradaConsultaLocal {
     RegistroEntrada findByNumeroAnyoLibro(int numero, int anyo, String libro) throws I18NException;
 
     /**
+     * Devuelve el numero de registro formateado a partir del idRegistro
+     * @param idRegistro
+     * @return
+     * @throws I18NException
+     */
+    String getNumeroRegistroFormateado(Long idRegistro) throws I18NException;
+
+    /**
      * Devuelve el numero de registro formateado a partir de un registro detalle.
      * Se necesita para el plug-in postproceso para pasarselo cuando creamos interesados.
      *

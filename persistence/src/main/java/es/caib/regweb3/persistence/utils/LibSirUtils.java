@@ -17,16 +17,11 @@ import es.caib.regweb3.utils.ReferenciaUnicaUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.gob.ad.registros.sir.gestionEni.bean.ContenidoBean;
 import es.gob.ad.registros.sir.gestionEni.bean.FirmaBean;
-import es.gob.ad.registros.sir.gestionEni.bean.documento.MetadatosEni;
-import es.gob.ad.registros.sir.gestionEni.bean.documento.TipoMetadatoImpl;
-import es.gob.ad.registros.sir.gestionEni.bean.metadato.TipoDocumentalEnum;
 import es.gob.ad.registros.sir.interService.bean.AnexoBean;
 import es.gob.ad.registros.sir.interService.bean.AsientoBean;
 import es.gob.ad.registros.sir.interService.bean.InteresadoBean;
 import es.gob.ad.registros.sir.interService.bean.OtrosMetadatos;
 import es.gob.ad.registros.sir.interService.exception.InterException;
-import es.gob.ad.registros.sir.interService.interSincroDIR3.service.IServiciosOfiService;
-import es.gob.ad.registros.sir.interService.service.IConsultaService;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
 import org.fundaciobit.genapp.common.i18n.I18NArgumentString;
@@ -60,12 +55,6 @@ import static es.caib.regweb3.utils.RegwebConstantes.*;
 public class LibSirUtils {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
-
-    @Autowired
-    IServiciosOfiService serviciosOfiService;
-
-    @Autowired
-    IConsultaService consultaService;
 
     @Autowired
     ArxiuCaibUtils arxiuCaibUtils;
@@ -361,37 +350,6 @@ public class LibSirUtils {
 
             anexoBean.setOtrosMetadatosGenerales(otrosMetadatosAnexGeneral);
             anexoBean.setOtrosMetadatosParticulares(otrosMetadatosAnexParticular);
-
-            //METADATOS ENI
-            Set<MetadatoAnexo> metadatosAnexoENI = anexo.getMetadatosAnexos().stream().filter(metadato -> metadato.getTipo().equals(METADATO_NTI)).collect(Collectors.toSet());
-            MetadatosEni metadatosEni = new TipoMetadatoImpl();
-            if(metadatosAnexoENI!=null) { // TODO REVISAR CREO QUE NUNCA ENTRA
-                for (MetadatoAnexo metadatoAnexo : metadatosAnexoENI) {
-
-                    String str = metadatoAnexo.getCampo();
-
-                    switch (str) {
-                        case "fechaCaptura":
-                            SimpleDateFormat formatter = new SimpleDateFormat(FORMATO_FECHA_SICRES4);
-                            metadatosEni.setFechaCapturaDate(formatter.parse(metadatoAnexo.getValor()));
-                            break;
-                        case "origenCiudadanoAdministracion":
-                            metadatosEni.setOrigenCiudadanoAdministracion(Boolean.parseBoolean(metadatoAnexo.getValor()));
-                            break;
-                        case "tipoDocumental":
-                            metadatosEni.setTipoDocumentalENI(TipoDocumentalEnum.fromValue(metadatoAnexo.getValor()));
-                            break;
-                    }
-
-                }
-                anexoBean.setTipoMetadatos(metadatosEni);
-            }
-        }else{
-            MetadatosEni metadatosEni = new TipoMetadatoImpl();
-            metadatosEni.setFechaCapturaDate(anexo.getFechaCaptura());
-            metadatosEni.setOrigenCiudadanoAdministracion(Boolean.parseBoolean(anexo.getOrigenCiudadanoAdmin().toString()));
-            metadatosEni.setTipoDocumentalENI(TipoDocumentalEnum.fromValue(anexo.getTipoDocumental().getCodigoNTI()));
-            anexoBean.setTipoMetadatos(metadatosEni);
         }
 
         //Metadatos obligatorios SICRES4
@@ -603,7 +561,7 @@ public class LibSirUtils {
         asientoBean.setModoRegistro(registroDetalle.getPresencial() ? "01" : "02"); // 01 PRESENCIAL, 02 ELECTRÓNICO
         asientoBean.setCdSia(registroDetalle.getCodigoSia());
         // MIRAR SI EL DESTINO ESTA EN RFU.
-        asientoBean.setReferenciaUnica(serviciosOfiService.isOficinaConRU((registroDetalle.getCodigoEntidadRegistralDestino())));
+        //asientoBean.setReferenciaUnica(serviciosOfiService.isOficinaConRU((registroDetalle.getCodigoEntidadRegistralDestino())));
         //SI es un registro rectificado, tendrá el identificador de intercambio del registro original
         String numRegistroOrigen = registroDetalle.getNumeroRegistroOrigen();
         log.info("ORIGEN : " + numRegistroOrigen);

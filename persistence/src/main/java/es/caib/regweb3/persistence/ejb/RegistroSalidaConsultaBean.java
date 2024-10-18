@@ -311,6 +311,22 @@ public class RegistroSalidaConsultaBean implements RegistroSalidaConsultaLocal {
     }
 
 
+    @Override
+    public String getNumeroRegistroFormateado(Long idRegistro) throws I18NException {
+
+        Query q = em.createQuery("Select numeroRegistroFormateado from RegistroSalida where id = :idRegistro");
+
+        q.setParameter("idRegistro", idRegistro);
+        q.setHint("org.hibernate.readOnly", true);
+
+        List<String> registro = q.getResultList();
+
+        if (registro.size() == 1) {
+            return registro.get(0);
+        } else {
+            return null;
+        }
+    }
 
     @Override
     @SuppressWarnings("unchecked")

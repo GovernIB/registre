@@ -5,12 +5,14 @@ import es.caib.regweb3.model.IRegistro;
 import es.caib.regweb3.model.RegistroEntrada;
 import es.caib.regweb3.model.RegistroSalida;
 import es.caib.regweb3.persistence.utils.LibSirUtils;
-import es.caib.regweb3.sir.utils.Sicres3XML;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.gob.ad.registros.sir.interService.bean.AnexoBean;
 import es.gob.ad.registros.sir.interService.bean.AsientoBean;
 import es.gob.ad.registros.sir.interService.exception.InterException;
-import es.gob.ad.registros.sir.interService.service.*;
+import es.gob.ad.registros.sir.interService.service.IAnexoService;
+import es.gob.ad.registros.sir.interService.service.IConsultaService;
+import es.gob.ad.registros.sir.interService.service.IEntradaService;
+import es.gob.ad.registros.sir.interService.service.ISalidaService;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,8 +20,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
 
 import javax.annotation.security.RunAs;
-import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.interceptor.Interceptors;
 import javax.xml.datatype.DatatypeConfigurationException;
 import java.text.ParseException;
@@ -36,28 +39,19 @@ import java.util.List;
 @Stateless(name = "LibSirEJB")
 @RunAs("RWE_USUARI")
 @Interceptors(SpringBeanAutowiringInterceptor.class)
+@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 public class LibSirBean implements LibSirLocal{
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
-
-    @EJB
-    private RegistroEntradaLocal registroEntradaEjb;
-    @EJB private RegistroSalidaLocal registroSalidaEjb;
-    @EJB private OficioRemisionLocal oficioRemisionEjb;
-    @EJB private OficioRemisionEntradaUtilsLocal oficioRemisionEntradaUtilsEjb;
-    @EJB private OficioRemisionSalidaUtilsLocal oficioRemisionSalidaUtilsEjb;
 
     @Autowired IEntradaService entradaService;
     @Autowired IConsultaService consultaService;
     @Autowired ISalidaService salidaService;
 
     @Autowired IAnexoService anexoService;
-    @Autowired IEstadoAsientoService estadoAsientoervice;
+    //@Autowired IEstadoAsientoService estadoAsientoervice;
     @Autowired LibSirUtils libSirUtils;
 
-
-    private Sicres3XML sicres3XML = new Sicres3XML();
-    private WebServicesMethodsLocal webServicesMethodsEjb;
 
     @Override
     public void recibirAsiento(String registro, String firmaRegistro) throws InterException {
@@ -158,12 +152,12 @@ public class LibSirBean implements LibSirLocal{
 
     @Override
     public void marcarErrorTecnicoAsiento(String oficina, String cdIntercambio) throws InterException{
-        estadoAsientoervice.marcarAsientoErrorTecnico(oficina, cdIntercambio);
+        //estadoAsientoService.marcarAsientoErrorTecnico(oficina, cdIntercambio);
     }
 
     @Override
     public void desmarcarErrorTecnicoAsiento(String oficina, String cdIntercambio) throws InterException{
-        estadoAsientoervice.desmarcarAsientoErrorTecnico(oficina, cdIntercambio);
+        //estadoAsientoService.desmarcarAsientoErrorTecnico(oficina, cdIntercambio);
     }
 
 }
