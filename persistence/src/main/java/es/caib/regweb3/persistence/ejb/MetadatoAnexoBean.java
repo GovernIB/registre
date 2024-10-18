@@ -1,5 +1,6 @@
 package es.caib.regweb3.persistence.ejb;
 
+import es.caib.regweb3.model.Anexo;
 import es.caib.regweb3.model.MetadatoAnexo;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.slf4j.Logger;
@@ -65,5 +66,11 @@ public class MetadatoAnexoBean extends BaseEjbJPA<MetadatoAnexo, Long> implement
         q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList();
+    }
+
+    @Override
+    public MetadatoAnexo guardarMetadatoAnexo(MetadatoAnexo metadatoAnexo, Anexo anexo) throws I18NException {
+        metadatoAnexo.setAnexo(anexo);
+        return persist(metadatoAnexo);
     }
 }

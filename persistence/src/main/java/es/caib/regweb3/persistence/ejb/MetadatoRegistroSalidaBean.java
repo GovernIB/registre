@@ -1,6 +1,7 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.MetadatoRegistroSalida;
+import es.caib.regweb3.model.RegistroSalida;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,5 +66,11 @@ public class MetadatoRegistroSalidaBean extends BaseEjbJPA<MetadatoRegistroSalid
         q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList();
+    }
+
+    @Override
+    public MetadatoRegistroSalida guardarMetadatoRegistroSalida(MetadatoRegistroSalida metadatoRegistroSalida, RegistroSalida registroSalida) throws I18NException {
+        metadatoRegistroSalida.setRegistroSalida(registroSalida);
+        return persist(metadatoRegistroSalida);
     }
 }

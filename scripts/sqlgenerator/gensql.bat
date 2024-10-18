@@ -3,3 +3,4 @@ REM mvn exec:java  -Dexec.mainClass="org.fundaciobit.genapp.gensql.IndexGenerato
 
 REM mvn exec:java  -Dexec.mainClass="org.fundaciobit.genapp.gensql.SqlGenerator" -Dexec.args="regweb3 %1%"
 mvn exec:java -Dexec.mainClass="org.fundaciobit.genapp.sqlgenerator.SqlGenerator" -Dexec.args="regweb3 regweb3PULocal %1%"
+REM mvn exec:java -Dsqlgenerator.oracle.generatelob=true -Dexec.mainClass="org.fundaciobit.genapp.sqlgenerator.SqlGenerator" -Dexec.args="regweb3 regweb3PULocal %1%"

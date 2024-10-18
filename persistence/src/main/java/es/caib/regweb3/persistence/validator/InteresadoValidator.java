@@ -114,9 +114,6 @@ public class InteresadoValidator<T> extends AbstractRegWebValidator<T> {
                     }
                 }
 
-            } else if (interesado.getCanal().equals(RegwebConstantes.CANAL_DIRECCION_ELECTRONICA)) {
-
-                rejectIfEmptyOrWhitespace(errors, __target__, "direccionElectronica", "error.valor.requerido");
             }
         }
 
