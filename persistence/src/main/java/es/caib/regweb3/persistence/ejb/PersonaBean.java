@@ -3,7 +3,6 @@ package es.caib.regweb3.persistence.ejb;
 import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.model.Interesado;
 import es.caib.regweb3.model.Persona;
-import es.caib.regweb3.model.utils.ObjetoBasico;
 import es.caib.regweb3.persistence.utils.DataBaseUtils;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.utils.RegwebConstantes;
@@ -412,7 +411,7 @@ public class PersonaBean extends BaseEjbJPA<Persona, Long> implements PersonaLoc
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<ObjetoBasico> busquedaPersonas(String text, Long tipoPersona, Long idEntidad) throws I18NException {
+    public List<Persona> busquedaPersonas(String text, Long tipoPersona, Long idEntidad) throws I18NException {
         Query q;
         String queryBase = "";
 
@@ -420,14 +419,14 @@ public class PersonaBean extends BaseEjbJPA<Persona, Long> implements PersonaLoc
         Map<String, Object> parametros = new HashMap<String, Object>();
 
         if (tipoPersona.equals(RegwebConstantes.TIPO_PERSONA_FISICA)) {
-            queryBase = "Select persona.id, CONCAT(persona.nombre,' ',persona.apellido1,' ', persona.apellido2,' - ', persona.documento) as completo from Persona as persona ";
+            queryBase = "Select persona.id, persona.nombre, persona.apellido1, persona.apellido2, persona.documento from Persona as persona ";
             where.add(DataBaseUtils.like("persona.documento", "text", parametros, text));
             //where.add(DataBaseUtils.like("CONCAT(persona.nombre,' ',persona.apellido1,' ',persona.apellido2,' - ', persona.documento)", "text", parametros, text));
             where.add(" persona.tipo = :tipoPersona ");
             parametros.put("tipoPersona", RegwebConstantes.TIPO_PERSONA_FISICA);
 
         } else if (tipoPersona.equals(RegwebConstantes.TIPO_PERSONA_JURIDICA)) {
-            queryBase = "Select persona.id, CONCAT(persona.razonSocial,' - ', persona.documento) as completo from Persona as persona ";
+            queryBase = "Select persona.id, persona.razonSocial, persona.documento from Persona as persona ";
             where.add(DataBaseUtils.like("persona.documento", "text", parametros, text));
 
             //where.add(DataBaseUtils.like("CONCAT(persona.razonSocial,' - ', persona.documento)", "text", parametros, text));
@@ -462,13 +461,21 @@ public class PersonaBean extends BaseEjbJPA<Persona, Long> implements PersonaLoc
         q.setHint("org.hibernate.readOnly", true);
 
         List<Object[]> result = q.getResultList();
-        List<ObjetoBasico> personas = new ArrayList<ObjetoBasico>();
+        List<Persona> personas = new ArrayList<Persona>();
+        if (tipoPersona.equals(RegwebConstantes.TIPO_PERSONA_FISICA)) {
+            for (Object[] object : result) {
+                Persona persona = new Persona((Long) object[0], (String) object[1], (String) object[2], (String) object[3], (String) object[4],RegwebConstantes.TIPO_PERSONA_FISICA);
 
-        for (Object[] object : result) {
-            ObjetoBasico persona = new ObjetoBasico((Long) object[0], (String) object[1]);
+                personas.add(persona);
+            }
+        } else if (tipoPersona.equals(RegwebConstantes.TIPO_PERSONA_JURIDICA)) {
+            for (Object[] object : result) {
+                Persona persona = new Persona((Long) object[0], (String) object[1], (String) object[2],RegwebConstantes.TIPO_PERSONA_JURIDICA);
 
-            personas.add(persona);
+                personas.add(persona);
+            }
         }
+
         return personas;
     }
 
