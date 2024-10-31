@@ -206,7 +206,7 @@ public class Entidad implements Serializable {
     }
 
     @ManyToMany(targetEntity = UsuarioEntidad.class, fetch = FetchType.EAGER)
-    @JoinTable(name = "RWE_ENTIDAD_USUENT", foreignKey = @ForeignKey(name = "RWE_USU_ADM_ENTIDAD_FK"),
+    @JoinTable(name = "RWE_ENTIDAD_USUENT", foreignKey = @ForeignKey(name = "RWE_USU_ADM_ENTIDAD_FK"), inverseForeignKey = @ForeignKey(name = "RWE_ENTIDAD_USUENT_FK"),
             joinColumns = {@JoinColumn(name = "IDENTIDAD")}, inverseJoinColumns = {@JoinColumn(name = "IDUSUENT")})
     @OrderBy("id")
     public Set<UsuarioEntidad> getAdministradores() {

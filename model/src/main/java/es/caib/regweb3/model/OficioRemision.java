@@ -124,6 +124,7 @@ public class OficioRemision implements Serializable {
 
     @ManyToMany(targetEntity = RegistroEntrada.class, fetch = FetchType.LAZY)
     @JoinTable(name = "RWE_OFIREM_REGENT", foreignKey = @ForeignKey(name = "RWE_REGENT_OFIREM_FK"),
+            inverseForeignKey = @ForeignKey(name = "RWE_OFIREM_REGENT_FK"),
             joinColumns = {@JoinColumn(name = "IDOFIREM")}, inverseJoinColumns = {@JoinColumn(name = "IDREGENT")})
     @OrderBy("id")
     public List<RegistroEntrada> getRegistrosEntrada() {
@@ -136,6 +137,7 @@ public class OficioRemision implements Serializable {
 
     @ManyToMany(targetEntity = RegistroSalida.class, fetch = FetchType.LAZY)
     @JoinTable(name = "RWE_OFIREM_REGSAL", foreignKey = @ForeignKey(name = "RWE_REGSAL_OFIREM_FK"),
+            inverseForeignKey = @ForeignKey(name = "RWE_OFIREM_REGSAL_FK"),
             joinColumns = {@JoinColumn(name = "IDOFIREM")}, inverseJoinColumns = {@JoinColumn(name = "IDREGSAL")})
     @OrderBy("id")
     public List<RegistroSalida> getRegistrosSalida() {
