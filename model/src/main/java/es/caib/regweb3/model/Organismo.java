@@ -392,6 +392,7 @@ public class Organismo implements Serializable {
 
     @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     @JoinTable(name = "RWE_HISTORICOUO", foreignKey = @ForeignKey(name = "RWE_ORG_ORG_HISTANTE_FK"),
+            inverseForeignKey = @ForeignKey(name = "RWE_ORG_ORG_HISTULT_FK"),
             joinColumns = @JoinColumn(name = "CODANTERIOR"), inverseJoinColumns = @JoinColumn(name = "CODULTIMA"))
     @JsonIgnore
     public Set<Organismo> getHistoricoUO() {

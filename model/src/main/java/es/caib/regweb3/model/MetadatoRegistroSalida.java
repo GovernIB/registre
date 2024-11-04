@@ -8,7 +8,8 @@ import javax.persistence.*;
  * 26/10/2022
  */
 @Entity
-@Table(name = "RWE_METADATO_REGSAL")
+@Table(name = "RWE_METADATO_REGSAL" ,
+        uniqueConstraints = { @UniqueConstraint(name = "RWE_METRSAL_ID_UK", columnNames = { "ID"}) })
 @SequenceGenerator(name = "generator", sequenceName = "RWE_MTDRS_SEQ", allocationSize = 1)
 public class MetadatoRegistroSalida extends Metadato {
 
@@ -26,7 +27,7 @@ public class MetadatoRegistroSalida extends Metadato {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "generator")
-    @Column(name = "ID", unique = true)
+    @Column(name = "ID")
     public Long getId() {
         return id;
     }

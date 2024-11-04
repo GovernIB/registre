@@ -353,6 +353,7 @@ public class Oficina implements Serializable {
 
     @ManyToMany(targetEntity = CatServicio.class, fetch = FetchType.EAGER)
     @JoinTable(name = "RWE_OFICINA_SERVICIO", foreignKey = @ForeignKey(name = "RWE_SERVICIO_OFICINA_FK"),
+            inverseForeignKey = @ForeignKey(name = "RWE_OFICINA_SERVICIO_FK"),
             joinColumns = {@JoinColumn(name = "IDOFICINA")}, inverseJoinColumns = {@JoinColumn(name = "IDSERVICIO")})
     @OrderBy("id")
     @JsonIgnore
