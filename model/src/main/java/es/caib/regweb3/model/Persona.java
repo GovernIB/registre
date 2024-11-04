@@ -14,10 +14,12 @@ import java.io.Serializable;
  * Date: 6/02/14
  */
 @Entity
-@Table(name = "RWE_PERSONA", indexes = {
-        @Index(name = "RWE_PERSONA_ENTIDAD_FK_I", columnList = "ENTIDAD"),
-        @Index(name = "RWE_PERSONA_DOC_I", columnList = "DOCUMENTO")
-})
+@Table(name = "RWE_PERSONA",
+        indexes = {
+                @Index(name = "RWE_PERSONA_ENTIDAD_FK_I", columnList = "ENTIDAD"),
+                @Index(name = "RWE_PERSONA_DOC_I", columnList = "DOCUMENTO")},
+        uniqueConstraints = {
+                @UniqueConstraint(name = "RWE_PERSONA_DOC_UK", columnNames = { "DOCUMENTO"}) })
 @SequenceGenerator(name = "generator", sequenceName = "RWE_PERSONA_SEQ", allocationSize = 1)
 public class Persona implements Serializable {
 
@@ -231,7 +233,7 @@ public class Persona implements Serializable {
         this.tipoDocumentoIdentificacion = tipoDocumentoIdentificacion;
     }
 
-    @Column(name = "DOCUMENTO", length = 17, unique = true)
+    @Column(name = "DOCUMENTO", length = 17)
     public String getDocumento() {
         return documento;
     }

@@ -9,7 +9,7 @@ import java.io.Serializable;
  * @author mgonzalez
  */
 @Entity
-@Table(name = "RWE_CATESTADOENTIDAD")
+@Table(name = "RWE_CATESTADOENTIDAD",  uniqueConstraints = { @UniqueConstraint(name = "RWE_CATEST_COD_UK", columnNames = { "CODIGOESTADOENTIDAD"}) })
 @SequenceGenerator(name = "generator", sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
 public class CatEstadoEntidad implements Serializable {
 
@@ -38,7 +38,7 @@ public class CatEstadoEntidad implements Serializable {
     }
 
 
-    @Column(name = "CODIGOESTADOENTIDAD", nullable = false, length = 2, unique = true)
+    @Column(name = "CODIGOESTADOENTIDAD", nullable = false, length = 2)
     public String getCodigoEstadoEntidad() {
         return codigoEstadoEntidad;
     }

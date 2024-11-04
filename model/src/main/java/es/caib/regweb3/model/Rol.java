@@ -10,7 +10,7 @@ import java.io.Serializable;
  * Date: 6/02/14
  */
 @Entity
-@Table(name = "RWE_ROL")
+@Table(name = "RWE_ROL", uniqueConstraints = { @UniqueConstraint(name = "RWE_ROL_NOMBRE_UK", columnNames = { "NOMBRE"}) })
 @SequenceGenerator(name = "generator", sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
 public class Rol implements Serializable {
 
@@ -41,7 +41,7 @@ public class Rol implements Serializable {
         this.id = id;
     }
 
-    @Column(name = "NOMBRE", nullable = false, unique = true)
+    @Column(name = "NOMBRE", nullable = false)
     public String getNombre() {
         return nombre;
     }
