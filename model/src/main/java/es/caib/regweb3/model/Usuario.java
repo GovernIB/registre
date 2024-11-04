@@ -16,7 +16,7 @@ import java.util.List;
  * Date: 6/02/14
  */
 @Entity
-@Table(name = "RWE_USUARIO")
+@Table(name = "RWE_USUARIO", uniqueConstraints = { @UniqueConstraint(name = "RWE_USU_IDENT_UK", columnNames = { "IDENTIFICADOR"}) })
 @SequenceGenerator(name = "generator", sequenceName = "RWE_USUARIO_SEQ", allocationSize = 1)
 @XmlRootElement(name = "usuario")
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -143,7 +143,7 @@ public class Usuario implements Serializable {
         this.email = email;
     }
 
-    @Column(name = "IDENTIFICADOR", nullable = false, unique = true)
+    @Column(name = "IDENTIFICADOR", nullable = false/*, unique = true*/)
     public String getIdentificador() {
         return identificador;
     }

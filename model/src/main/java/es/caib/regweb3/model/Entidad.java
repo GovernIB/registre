@@ -15,8 +15,11 @@ import java.util.Set;
  * Date: 16/01/14
  */
 @Entity
-@Table(name = "RWE_ENTIDAD", indexes =
-@Index(name = "RWE_ENTIDA_PRO_FK_I", columnList = "PROPIETARIO"))
+@Table(name = "RWE_ENTIDAD",
+        indexes =
+            @Index(name = "RWE_ENTIDA_PRO_FK_I", columnList = "PROPIETARIO"),
+        uniqueConstraints = {
+            @UniqueConstraint(name = "RWE_ENTIDAD_CODDIR3_UK", columnNames = { "CODIGODIR3"}) })
 @SequenceGenerator(name = "generator", sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
 @XmlRootElement(name = "entidad")
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -177,7 +180,7 @@ public class Entidad implements Serializable {
         this.descripcion = descripcion;
     }
 
-    @Column(name = "CODIGODIR3", nullable = false, unique = true)
+    @Column(name = "CODIGODIR3", nullable = false)
     public String getCodigoDir3() {
         return codigoDir3;
     }

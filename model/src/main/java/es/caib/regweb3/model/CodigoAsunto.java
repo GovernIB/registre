@@ -16,7 +16,7 @@ import java.util.Map;
  * Date: 19/03/14
  */
 @Entity
-@Table(name = "RWE_CODIGOASUNTO", uniqueConstraints= @UniqueConstraint(columnNames={"CODIGO"}))
+@Table(name = "RWE_CODIGOASUNTO", uniqueConstraints= @UniqueConstraint(name="RWE_CODIGOASUNTO_COD_UK", columnNames={"CODIGO"}))
 @SequenceGenerator(name="generator",sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
 @XmlRootElement(name = "codigoAsunto")
 @XmlAccessorType(XmlAccessType.FIELD)
