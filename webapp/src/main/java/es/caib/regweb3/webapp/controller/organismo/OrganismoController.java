@@ -11,13 +11,18 @@ import es.caib.regweb3.utils.TimeUtils;
 import es.caib.regweb3.webapp.controller.BaseController;
 import es.caib.regweb3.webapp.form.OrganismoBusquedaForm;
 import es.caib.regweb3.webapp.utils.Mensaje;
+import org.fundaciobit.genapp.common.i18n.I18NException;
+import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.util.LinkedHashSet;
 import java.util.List;
 
@@ -58,6 +63,7 @@ public class OrganismoController extends BaseController {
         organismo.setEstado(catEstadoEntidadEjb.findByCodigo(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE));
         organismo.setPermiteUsuarios(null);
         organismo.setExterno(null);
+        organismo.setConfidencial(null);
 
         OrganismoBusquedaForm organismoBusqueda = new OrganismoBusquedaForm(organismo, 1);
 
@@ -120,6 +126,38 @@ public class OrganismoController extends BaseController {
 
         return "organismo/organismoDetalle";
 
+    }
+
+    /**
+     * Editar una {@link es.caib.regweb3.model.Organismo}
+     */
+    @RequestMapping(value = "/{idOrganismo}/detalle", method = RequestMethod.POST)
+    public String editarOficina(@ModelAttribute @Valid Organismo organismo, BindingResult result, SessionStatus status, HttpServletRequest request) {
+
+
+        if (result.hasErrors()) { // Si hay errores volvemos a la vista del formulario
+
+            return "organismo/organismoDetalle";
+        }else { // Si no hay errores actualizamos el registro
+
+            try {
+
+                organismoEjb.merge(organismo);
+
+                Mensaje.saveMessageInfo(request, getMessage("regweb.actualizar.registro"));
+            } catch(I18NException i18ne) {
+                log.error(I18NUtils.getMessage(i18ne), i18ne);
+                Mensaje.saveMessageError(request, getMessage("regweb.error.registro"));
+            } catch (Exception e) {
+                e.printStackTrace();
+                Mensaje.saveMessageError(request, getMessage("regweb.error.registro"));
+            }
+
+            status.setComplete();
+
+            return "redirect:/organismo/list";
+
+        }
     }
 
     /**

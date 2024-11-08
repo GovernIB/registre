@@ -169,12 +169,14 @@ public class PermisosController extends BaseController {
             organismosActivos.remove(organismoAsignado);
         }
 
-        // Asignamos todos los Organismos al usuario
+        // Asignamos todos los Organismos al usuario, que no estén marcados como Confidenciales
         for(Organismo organismo: organismosActivos){
-            permisoOrganismoUsuarioEjb.crearPermisosUsuarioOrganismo(usuarioEntidad, organismo);
+            if(!organismo.getConfidencial()){
+                permisoOrganismoUsuarioEjb.crearPermisosUsuarioOrganismo(usuarioEntidad, organismo);
+            }
         }
 
-        Mensaje.saveMessageInfo(request, getMessage("usuario.asignar.permisos.ok"));
+        Mensaje.saveMessageInfo(request, getMessage("usuario.asignarTodos.permisos.ok"));
 
         return "redirect:/permisos/"+idUsuarioEntidad;
 

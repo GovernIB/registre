@@ -56,7 +56,12 @@
                                         <form:label path="organismosActivos"><spring:message code="organismo.organismos"/></form:label>
                                     </div>
                                     <div class="col-xs-6">
-                                        <form:select id="organismosActivos" path="organismosActivos"  items="${organismosActivos}" itemValue="id" itemLabel="denominacion" cssClass="chosen-select"/>
+                                        <form:select path="organismosActivos" id="organismosActivos" cssClass="chosen-select">
+                                            <c:forEach items="${organismosActivos}" var="organismo">
+                                                <form:option value="${organismo.id}">${organismo.denominacion}</form:option>
+                                            </c:forEach>
+                                        </form:select>
+
                                     </div>
                                     <div class="col-xs-1">
                                         <button class="btn btn-warning btn-sm" onclick="asignarOrganismo()"><spring:message code="permisos.asignar"/></button>
@@ -135,14 +140,23 @@
 
 <script type="text/javascript">
 
-    function asignarOrganismo(){
+    const organismos = new Map();
+    <c:forEach items="${organismosActivos}" var="organismo">
+        organismos.set('${organismo.id}', ${organismo.confidencial});
+    </c:forEach>
+
+    function asignarOrganismo() {
 
         var idOrganismo = $('#organismosActivos option:selected').val();
-        var url = '<c:url value="/permisos/${permisoOrganismoUsuarioForm.usuarioEntidad.id}"/>/'+idOrganismo+'/asignar';
-        document.location.href=url;
+        var url = '<c:url value="/permisos/${permisoOrganismoUsuarioForm.usuarioEntidad.id}"/>/' + idOrganismo + '/asignar';
+        if(organismos.get(idOrganismo) == true){
+            confirm(url, "<spring:message code="organismo.confidencial.activar" htmlEscape="true"/>");
+        }else{
+            document.location.href = url;
+        }
     }
 
-    function asignarOrganismosTodos(){
+    function asignarOrganismosTodos() {
 
         var url = '<c:url value="/permisos/${permisoOrganismoUsuarioForm.usuarioEntidad.id}"/>/asignarTodos';
         document.location.href=url;
