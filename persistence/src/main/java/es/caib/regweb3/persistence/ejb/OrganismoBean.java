@@ -573,6 +573,11 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
             where.add(" organismo.externo = :externo ");
             parametros.put("externo",organismo.getExterno());
         }
+        // Confidencial
+        if(organismo.getConfidencial() != null){
+            where.add(" organismo.confidencial = :confidencial ");
+            parametros.put("confidencial",organismo.getConfidencial());
+        }
 
 
         // Añadimos la Entidad
@@ -738,7 +743,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
      */
     public void desactivarUsuarios(Long idOrganismo) throws I18NException {
 
-        em.createQuery("update from Organismo set permiteUsuarios = false where id  =:idOrganismo")
+        em.createQuery("update from Organismo set permiteUsuarios = false, confidencial= false where id  =:idOrganismo")
                 .setParameter("idOrganismo", idOrganismo).executeUpdate();
 
     }
@@ -790,7 +795,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
     @SuppressWarnings(value = "unchecked")
     public List<Organismo> getPermitirUsuarios(Long entidad) throws I18NException {
 
-        Query q = em.createQuery("Select organismo.id, organismo.codigo, organismo.denominacion from Organismo as organismo where " +
+        Query q = em.createQuery("Select organismo.id, organismo.codigo, organismo.denominacion, organismo.confidencial from Organismo as organismo where " +
                 "organismo.entidad.id = :entidad and organismo.permiteUsuarios = true and organismo.estado.codigoEstadoEntidad = :vigente");
 
         q.setParameter("entidad", entidad);
@@ -802,6 +807,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
 
         for (Object[] object : result) {
             Organismo organismo = new Organismo((Long) object[0], (String) object[1], (String) object[2]);
+            organismo.setConfidencial((Boolean) object[3]);
             organismos.add(organismo);
         }
 

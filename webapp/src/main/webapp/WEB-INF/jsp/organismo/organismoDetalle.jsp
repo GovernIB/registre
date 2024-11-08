@@ -22,7 +22,7 @@
                  <ol class="breadcrumb">
                      <c:import url="../modulos/migadepan.jsp"/>
                      <li><a href="<c:url value="/organismo/list"/>"><i class="fa fa-list-ul"></i>  <spring:message code="organismo.organismos"/></a></li>
-                    <li class="active"><i class="fa fa-home"></i> ${organismo.denominacion}</li>
+                     <li class="active"><i class="fa fa-home"></i> ${organismo.denominacion}</li>
                  </ol>
              </div>
         </div>
@@ -81,6 +81,15 @@
                                     <span class="label label-danger">No</span>
                                 </c:if>
                             </dd>
+                            <dt><i class="fa fa-eye-slash"></i> <spring:message code="organismo.confidencial"/>: </dt>
+                            <dd>
+                                <c:if test="${organismo.confidencial == true}">
+                                    <span class="label label-success">Si</span>
+                                </c:if>
+                                <c:if test="${organismo.confidencial == false}">
+                                    <span class="label label-danger">No</span>
+                                </c:if>
+                            </dd>
                             <c:if test="${not empty organismo.codAmbComunidad}">
                                 <dt><i class="fa fa-map"></i> <spring:message code="organismo.buscador.comunidadAutonoma"/>: </dt> <dd> ${organismo.codAmbComunidad.descripcionComunidad}</dd>
                             </c:if>
@@ -92,11 +101,45 @@
                             </c:if>
 
                         </dl>
-
                     </div>
+                    <form:form modelAttribute="organismo" method="post" cssClass="form-horizontal">
+                        <div class="panel-footer">
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <div class="col-xs-12">
+                                        <div class="col-xs-5 pull-left etiqueta_regweb control-label textEsq">
+                                            <label for="externo"> <spring:message code="organismo.externo"/></label>
+                                        </div>
+                                        <div class="col-xs-7">
+                                            <form:select path="externo" cssClass="chosen-select">
+                                                <form:option value="true"><spring:message code="regweb.si"/></form:option>
+                                                <form:option value="false"><spring:message code="regweb.no"/></form:option>
+                                            </form:select>
+                                        </div>
+                                    </div>
+                                    <c:if test="${organismo.permiteUsuarios}">
+                                        <div class="col-xs-12">
+                                            <div class="col-xs-5 pull-left etiqueta_regweb control-label textEsq">
+                                                <label for="confidencial"> <spring:message code="organismo.confidencial"/></label>
+                                            </div>
+                                            <div class="col-xs-7">
+                                                <form:select path="confidencial" cssClass="chosen-select">
+                                                    <form:option value="true"><spring:message code="regweb.si"/></form:option>
+                                                    <form:option value="false"><spring:message code="regweb.no"/></form:option>
+                                                </form:select>
+                                            </div>
+                                        </div>
+                                    </c:if>
+                                </div>
+                            </div>
 
+                        </div>
+                        <div class="panel-footer center">
+                            <input type="submit" value="<spring:message code="regweb.guardar"/>" onclick="" class="btn btn-warning btn-sm"/>
+                            <input type="button" value="<spring:message code="regweb.cancelar"/>" onclick="goTo('<c:url value="/oficina/list"/>')" class="btn btn-danger btn-sm"/>
+                        </div>
+                    </form:form>
                 </div>
-
             </div>
             <!-- Fin Panel Lateral -->
 

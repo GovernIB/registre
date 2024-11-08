@@ -101,6 +101,18 @@
                                         </form:select>
                                     </div>
                                 </div>
+                                <div class="form-group col-xs-6 espaiLinies senseMargeLat">
+                                    <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                        <form:label path="organismo.confidencial"><spring:message code="organismo.confidencial"/></form:label>
+                                    </div>
+                                    <div class="col-xs-8">
+                                        <form:select path="organismo.confidencial" cssClass="chosen-select">
+                                            <form:option value="" label="..."/>
+                                            <form:option value="true"><spring:message code="regweb.si"/></form:option>
+                                            <form:option value="false"><spring:message code="regweb.no"/></form:option>
+                                        </form:select>
+                                    </div>
+                                </div>
 
                             </div>
 
@@ -149,7 +161,7 @@
                                             <tbody>
                                                 <c:forEach var="organismo" items="${paginacion.listado}">
                                                     <tr>
-                                                        <td>${organismo.denominacion}</td>
+                                                        <td>${organismo.denominacion} <c:if test="${organismo.confidencial}"><i class="fa fa-eye-slash"></i></c:if></td>
                                                         <td>${organismo.codigo}</td>
                                                         <td>
                                                             <c:if test="${not empty organismo.organismoSuperior}">

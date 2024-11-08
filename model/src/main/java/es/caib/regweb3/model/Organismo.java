@@ -85,6 +85,8 @@ public class Organismo implements Serializable {
     private Boolean permiteUsuarios = false; // Permite asociar usuarios
     @XmlTransient
     private Boolean externo = false; // Indica que no se permite registrar
+    @XmlTransient
+    private Boolean confidencial = false;
 
 
     public Organismo() {
@@ -134,37 +136,6 @@ public class Organismo implements Serializable {
         this.denominacion = denominacion;
         this.organismoSuperior = new Organismo(organismoSuperior);
         this.edp = edp;
-    }
-
-    public Organismo(Long id, String codigo, String denominacion, List<Libro> libros) {
-        this.id = id;
-        this.codigo = codigo;
-        this.denominacion = denominacion;
-        this.libros = libros;
-    }
-
-    public Organismo(Organismo organismo) {
-        this.id = organismo.getId();
-        this.codigo = organismo.getCodigo();
-        this.entidad = organismo.getEntidad();
-        this.libros = organismo.getLibros();
-        this.nivelJerarquico = organismo.getNivelJerarquico();
-        this.estado = organismo.getEstado();
-        this.organismoSuperior = organismo.getOrganismoSuperior();
-        this.organismoRaiz = organismo.getOrganismoRaiz();
-        this.edp = organismo.getEdp();
-        this.edpPrincipal = organismo.getEdpPrincipal();
-        this.denominacion = organismo.getDenominacion();
-        this.nivelAdministracion = organismo.getNivelAdministracion();
-        this.codAmbComunidad = organismo.getCodAmbComunidad();
-        this.codAmbProvincia = organismo.getCodAmbProvincia();
-        this.codPais = organismo.getCodPais();
-        this.localidad = organismo.getLocalidad();
-        this.tipoVia = organismo.getTipoVia();
-        this.nombreVia = organismo.getNombreVia();
-        this.numVia = organismo.getNumVia();
-        this.codPostal = organismo.getCodPostal();
-        this.historicoUO = organismo.getHistoricoUO();
     }
 
     @Id
@@ -420,6 +391,15 @@ public class Organismo implements Serializable {
 
     public void setExterno(Boolean externo) {
         this.externo = externo;
+    }
+
+    @Column(name = "CONFIDENCIAL")
+    public Boolean getConfidencial() {
+        return confidencial;
+    }
+
+    public void setConfidencial(Boolean confidencial) {
+        this.confidencial = confidencial;
     }
 
     @Transient

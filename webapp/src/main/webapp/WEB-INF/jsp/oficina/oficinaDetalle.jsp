@@ -75,6 +75,7 @@
                                     <span class="label label-danger"><spring:message code="regweb.no"/></span>
                                 </c:if>
                             </dd>
+                            <dt><i class="fa fa-home"></i> <spring:message code="oficina.localidad"/>: </dt> <dd> ${oficina.localidad.nombre}</dd>
                             <dt><i class="fa fa-list-ul"></i> <spring:message code="oficina.servicios"/>: </dt>
                             <dd> <br>
                                 <ul>
@@ -114,14 +115,16 @@
                                             </form:select>
                                         </div>
                                     </div>
-                                    <div class="col-xs-5 pull-left etiqueta_regweb control-label textEsq">
-                                        <label for="oamr"> <spring:message code="oficina.oamr"/></label>
-                                    </div>
-                                    <div class="col-xs-7">
-                                        <form:select path="oamr" cssClass="chosen-select">
-                                            <form:option value="true"><spring:message code="regweb.si"/></form:option>
-                                            <form:option value="false"><spring:message code="regweb.no"/></form:option>
-                                        </form:select>
+                                    <div class="col-xs-12">
+                                        <div class="col-xs-5 pull-left etiqueta_regweb control-label textEsq">
+                                            <label for="oamr"> <spring:message code="oficina.oamr"/></label>
+                                        </div>
+                                        <div class="col-xs-7">
+                                            <form:select path="oamr" cssClass="chosen-select">
+                                                <form:option value="true"><spring:message code="regweb.si"/></form:option>
+                                                <form:option value="false"><spring:message code="regweb.no"/></form:option>
+                                            </form:select>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
