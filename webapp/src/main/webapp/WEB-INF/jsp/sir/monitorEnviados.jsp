@@ -47,6 +47,7 @@
                         <div class="panel-body">
                             <form:form modelAttribute="oficioRemisionBusqueda" method="post" cssClass="form-horizontal">
                                 <form:hidden path="pageNumber"/>
+                                <form:hidden path="reiniciarIntentos"/>
 
                                 <div class="col-xs-12">
                                     <div class="col-xs-6 espaiLinies">
@@ -142,6 +143,15 @@
 
                                 <div class="form-group col-xs-12">
                                     <button type="submit" class="btn btn-warning btn-sm"><spring:message code="regweb.buscar"/></button>
+                                    <input type="reset" value="<spring:message code="regweb.restablecer"/>" class="btn btn-sm"/>
+
+                                    <c:if test="${not empty paginacion.listado && (oficioRemisionBusqueda.estadoOficioRemision == RegwebConstantes.OFICIO_SIR_ENVIADO || oficioRemisionBusqueda.estadoOficioRemision == RegwebConstantes.OFICIO_SIR_REENVIADO)}">
+                                        <div class="btn-group pull-right text12">
+                                            <button type="button" onclick="reiniciarIntentosSir()" class="btn btn-success btn-sm">
+                                                <spring:message code="registroSir.reiniciar"/>
+                                            </button>
+                                        </div>
+                                    </c:if>
                                 </div>
                             </form:form>
 
@@ -302,6 +312,11 @@
 <c:import url="../modulos/pie.jsp"/>
 
 <script type="text/javascript">
+    function reiniciarIntentosSir(){
+        $('#reiniciarIntentos').val(true);
+        $('#oficioRemisionBusqueda').submit();
+    }
+
     var urlReenviarIntercambio = '<c:url value="/sir/reenviarIntercambio"/>';
     var tradsSir = [];
     tradsSir['registroSir.reiniciar.ok'] = "<spring:message code='registroSir.reiniciar.ok' javaScriptEscape='true' />";

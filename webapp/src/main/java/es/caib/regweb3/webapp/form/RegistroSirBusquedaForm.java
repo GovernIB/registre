@@ -26,6 +26,7 @@ public class RegistroSirBusquedaForm {
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     private Date fechaFin;
     private String estado;
+    private Boolean reiniciarIntentos = false;
 
 
     public RegistroSirBusquedaForm() {}
@@ -113,4 +114,12 @@ public class RegistroSirBusquedaForm {
     public String getEstado() { return estado; }
 
     public void setEstado(String estado) { this.estado = estado; }
+
+    public Boolean getReiniciarIntentos() {
+        return reiniciarIntentos;
+    }
+
+    public void setReiniciarIntentos(Boolean reiniciarIntentos) {
+        this.reiniciarIntentos = reiniciarIntentos;
+    }
 }

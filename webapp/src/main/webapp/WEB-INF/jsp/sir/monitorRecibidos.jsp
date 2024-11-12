@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/WEB-INF/jsp/modulos/includes.jsp" %>
+<%@ page import="es.caib.regweb3.model.utils.EstadoRegistroSir" %>
 
 <!DOCTYPE html>
 <html lang="ca">
@@ -43,6 +44,7 @@
 
                     <form:form modelAttribute="registroSirBusqueda" method="post" cssClass="form-horizontal">
                         <form:hidden path="pageNumber"/>
+                        <form:hidden path="reiniciarIntentos"/>
 
                         <div class="panel-body">
 
@@ -188,6 +190,15 @@
 
                             <div class="form-group col-xs-12">
                                 <button type="submit" class="btn btn-warning btn-sm"><spring:message code="regweb.buscar"/></button>
+                                <input type="reset" value="<spring:message code="regweb.restablecer"/>" class="btn btn-sm"/>
+
+                                <c:if test="${not empty paginacion.listado && (registroSirBusqueda.estado == EstadoRegistroSir.REENVIADO.value || registroSirBusqueda.estado == EstadoRegistroSir.RECHAZADO.value)}">
+                                    <div class="btn-group pull-right text12">
+                                        <button type="button" onclick="reiniciarIntentosSir()" class="btn btn-success btn-sm">
+                                            <spring:message code="registroSir.reiniciar"/>
+                                        </button>
+                                    </div>
+                                </c:if>
                             </div>
                     </form:form>
 
@@ -322,6 +333,11 @@
 <c:import url="eliminarRegistroSir.jsp"/>
 
 <script type="text/javascript">
+
+    function reiniciarIntentosSir(){
+        $('#reiniciarIntentos').val(true);
+        $('#registroSirBusqueda').submit();
+    }
 
     var urlEnviarACK = '<c:url value="/sir/enviarACK"/>';
     var urlEnviarConfirmacion = '<c:url value="/sir/enviarConfirmacion"/>';

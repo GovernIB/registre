@@ -20,6 +20,7 @@ import org.dom4j.Document;
 import org.dom4j.io.OutputFormat;
 import org.dom4j.io.XMLWriter;
 import org.fundaciobit.genapp.common.i18n.I18NException;
+import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -366,16 +367,33 @@ public class SirController extends BaseController {
         // Ajustam la dataFi per a que ens trobi els oficis del mateix dia
         busqueda.setFechaFin(RegistroUtils.ajustarHoraBusqueda(busqueda.getFechaFin()));
         Entidad entidadActiva = getEntidadActiva(request);
-        Paginacion paginacion = oficioRemisionEjb.busqueda(busqueda.getPageNumber(), busqueda.getIdOrganismo(), busqueda.getFechaInicio(), busqueda.getFechaFin(),null, oficioRemision, busqueda.getDestinoOficioRemision(), busqueda.getEstadoOficioRemision(), busqueda.getTipoOficioRemision(), true, entidadActiva.getId());
 
-        busqueda.setPageNumber(1);
-        mav.addObject("paginacion", paginacion);
-        mav.addObject("estadosOficioRemision", RegwebConstantes.ESTADOS_OFICIO_REMISION_SIR);
-        mav.addObject("tiposOficioRemision", RegwebConstantes.TIPOS_OFICIO_REMISION);
-        mav.addObject("organismos", organismoEjb.getPermitirUsuarios(getEntidadActiva(request).getId()));
-        mav.addObject("oficioRemisionBusqueda", busqueda);
+        if(!busqueda.getReiniciarIntentos()){ // Búsqueda normal
 
-        return mav;
+            Paginacion paginacion = oficioRemisionEjb.busqueda(busqueda.getPageNumber(), busqueda.getIdOrganismo(), busqueda.getFechaInicio(), busqueda.getFechaFin(),null, oficioRemision, busqueda.getDestinoOficioRemision(), busqueda.getEstadoOficioRemision(), busqueda.getTipoOficioRemision(), true, entidadActiva.getId());
+
+            busqueda.setPageNumber(1);
+            mav.addObject("paginacion", paginacion);
+            mav.addObject("estadosOficioRemision", RegwebConstantes.ESTADOS_OFICIO_REMISION_SIR);
+            mav.addObject("tiposOficioRemision", RegwebConstantes.TIPOS_OFICIO_REMISION);
+            mav.addObject("organismos", organismoEjb.getPermitirUsuarios(getEntidadActiva(request).getId()));
+            mav.addObject("oficioRemisionBusqueda", busqueda);
+
+            return mav;
+
+        }else { // Reiniciar intentos
+            Paginacion paginacion = oficioRemisionEjb.busqueda(null, busqueda.getIdOrganismo(), busqueda.getFechaInicio(), busqueda.getFechaFin(),null, oficioRemision, busqueda.getDestinoOficioRemision(), busqueda.getEstadoOficioRemision(), busqueda.getTipoOficioRemision(), true, entidadActiva.getId());
+
+            // Reiniciar el contador de todos los oficios
+            for (int i = 0; i<paginacion.getListado().size(); i++){
+               OficioRemision oficio = (OficioRemision) paginacion.getListado().get(i);
+               oficioRemisionEjb.reiniciarIntentos(oficio.getId());
+            }
+
+            Mensaje.saveMessageInfo(request, I18NUtils.tradueix("sir.reintentos.reiniciar", String.valueOf(paginacion.getListado().size())));
+
+            return new ModelAndView("redirect:/sir/monitorEnviados");
+        }
     }
 
 
@@ -410,22 +428,42 @@ public class SirController extends BaseController {
         ModelAndView mav = new ModelAndView("sir/monitorRecibidos");
         Entidad entidad = getEntidadActiva(request);
 
-        RegistroSir registroSir = busqueda.getRegistroSir();
 
-        Paginacion paginacion = registroSirEjb.busqueda(busqueda.getPageNumber(), busqueda.getFechaInicio(), RegistroUtils.ajustarHoraBusqueda(busqueda.getFechaFin()), registroSir, busqueda.getInteresadoSir().getNombreInteresado(),
-                busqueda.getInteresadoSir().getPrimerApellidoInteresado(), busqueda.getInteresadoSir().getSegundoApellidoInteresado(), busqueda.getInteresadoSir().getDocumentoIdentificacionInteresado(), registroSir.getCodigoEntidadRegistral(), busqueda.getEstado(),entidad.getCodigoDir3());
+        if(!busqueda.getReiniciarIntentos()) { // Búsqueda normal
 
-        busqueda.setPageNumber(1);
+            RegistroSir registroSir = busqueda.getRegistroSir();
 
-        mav.addObject("estados", EstadoRegistroSir.values());
-        mav.addObject("tipos", TipoRegistro.values());
-        mav.addObject("paginacion", paginacion);
-        mav.addObject("registroSirBusqueda", busqueda);
-        mav.addObject("anys", getAnys());
-        mav.addObject("oficinasSir", oficinaEjb.oficinasSIREntidad(entidad.getId()));
-        mav.addObject("eliminarForm", new EliminarForm());
+            Paginacion paginacion = registroSirEjb.busqueda(busqueda.getPageNumber(), busqueda.getFechaInicio(), RegistroUtils.ajustarHoraBusqueda(busqueda.getFechaFin()), registroSir, busqueda.getInteresadoSir().getNombreInteresado(),
+                    busqueda.getInteresadoSir().getPrimerApellidoInteresado(), busqueda.getInteresadoSir().getSegundoApellidoInteresado(), busqueda.getInteresadoSir().getDocumentoIdentificacionInteresado(), registroSir.getCodigoEntidadRegistral(), busqueda.getEstado(),entidad.getCodigoDir3());
 
-        return mav;
+            busqueda.setPageNumber(1);
+
+            mav.addObject("estados", EstadoRegistroSir.values());
+            mav.addObject("tipos", TipoRegistro.values());
+            mav.addObject("paginacion", paginacion);
+            mav.addObject("registroSirBusqueda", busqueda);
+            mav.addObject("anys", getAnys());
+            mav.addObject("oficinasSir", oficinaEjb.oficinasSIREntidad(entidad.getId()));
+            mav.addObject("eliminarForm", new EliminarForm());
+
+            return mav;
+
+        }else{ // Reiniciar intentos
+
+            Paginacion paginacion = registroSirEjb.busqueda(null, busqueda.getFechaInicio(), RegistroUtils.ajustarHoraBusqueda(busqueda.getFechaFin()), busqueda.getRegistroSir(), busqueda.getInteresadoSir().getNombreInteresado(),
+                    busqueda.getInteresadoSir().getPrimerApellidoInteresado(), busqueda.getInteresadoSir().getSegundoApellidoInteresado(), busqueda.getInteresadoSir().getDocumentoIdentificacionInteresado(), busqueda.getRegistroSir().getCodigoEntidadRegistral(), busqueda.getEstado(),entidad.getCodigoDir3());
+
+            // Reiniciar el contador de todos los intercambios
+            for (int i = 0; i<paginacion.getListado().size(); i++){
+                RegistroSir registroSir = (RegistroSir) paginacion.getListado().get(i);
+                registroSirEjb.reiniciarIntentos(registroSir.getId());
+            }
+
+            Mensaje.saveMessageInfo(request, I18NUtils.tradueix("sir.reintentos.reiniciar", String.valueOf(paginacion.getListado().size())));
+
+            return new ModelAndView("redirect:/sir/monitorRecibidos");
+        }
+
 
     }
 
