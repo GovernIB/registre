@@ -23,6 +23,7 @@ public class OficioRemisionBusquedaForm {
     private Long destinoOficioRemision;
     private Long tipoOficioRemision;
     private Integer estadoOficioRemision;
+    private Boolean reiniciarIntentos = false;
 
 
     public OficioRemisionBusquedaForm() {
@@ -105,5 +106,13 @@ public class OficioRemisionBusquedaForm {
 
     public void setEstadoOficioRemision(Integer estadoOficioRemision) {
         this.estadoOficioRemision = estadoOficioRemision;
+    }
+
+    public Boolean getReiniciarIntentos() {
+        return reiniciarIntentos;
+    }
+
+    public void setReiniciarIntentos(Boolean reiniciarIntentos) {
+        this.reiniciarIntentos = reiniciarIntentos;
     }
 }

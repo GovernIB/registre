@@ -1,7 +1,6 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.dir3caib.ws.api.oficina.ContactoTF;
-import es.caib.dir3caib.ws.api.oficina.Dir3CaibObtenerOficinasWs;
 import es.caib.dir3caib.ws.api.oficina.OficinaTF;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.sir.MensajeControl;
@@ -16,7 +15,6 @@ import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.sir.ejb.EmisionLocal;
 import es.caib.regweb3.sir.ejb.MensajeLocal;
 import es.caib.regweb3.utils.Configuracio;
-import es.caib.regweb3.utils.Dir3CaibUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 import org.fundaciobit.genapp.common.i18n.I18NException;
@@ -88,7 +86,7 @@ public class SirEnvioBean implements SirEnvioLocal {
      * @throws I18NException
      */
     @Override
-    public RegistroEntrada crearIntercambioEntrada(RegistroEntrada registroEntrada, Entidad entidad, Oficina oficinaActiva, UsuarioEntidad usuario, OficinaTF oficinaSirDestino)
+    public RegistroEntrada crearIntercambioEntrada(RegistroEntrada registroEntrada, Entidad entidad, Oficina oficinaActiva, UsuarioEntidad usuario, Oficina oficinaSirDestino)
             throws I18NException, I18NValidationException {
 
         OficioRemision oficioRemision = null;
@@ -156,7 +154,7 @@ public class SirEnvioBean implements SirEnvioLocal {
      * @throws I18NException
      */
     @Override
-    public RegistroSalida crearIntercambioSalida(RegistroSalida registroSalida, Entidad entidad, Oficina oficinaActiva, UsuarioEntidad usuario, OficinaTF oficinaSirDestino)
+    public RegistroSalida crearIntercambioSalida(RegistroSalida registroSalida, Entidad entidad, Oficina oficinaActiva, UsuarioEntidad usuario, Oficina oficinaSirDestino)
             throws I18NException, I18NValidationException {
 
         OficioRemision oficioRemision = null;
@@ -216,13 +214,13 @@ public class SirEnvioBean implements SirEnvioLocal {
      * @param registro
      * @param oficinaActiva
      * @param usuario
-     * @param codigoOficinaSir
+     * @param oficinaSirDestino
      * @return
      * @throws I18NException
      * @throws I18NException
      */
     @Override
-    public OficioRemision enviarIntercambio(Long tipoRegistro, IRegistro registro, Entidad entidad, Oficina oficinaActiva, UsuarioEntidad usuario, String codigoOficinaSir)
+    public OficioRemision enviarIntercambio(Long tipoRegistro, IRegistro registro, Entidad entidad, Oficina oficinaActiva, UsuarioEntidad usuario, Oficina oficinaSirDestino)
             throws I18NException, I18NValidationException {
 
         OficioRemision oficioRemision = null;
@@ -230,16 +228,12 @@ public class SirEnvioBean implements SirEnvioLocal {
 
         Date inicio = new Date();
         StringBuilder peticion = new StringBuilder();
-        String descripcion = "Envío intercambio a " + codigoOficinaSir;
+        String descripcion = "Envío intercambio a " + oficinaSirDestino.getCodigo();
         peticion.append("TipoAnotación: ").append(TipoAnotacion.ENVIO.getName()).append(System.getProperty("line.separator"));
         peticion.append("Usuario: ").append(usuario.getNombreCompleto()).append(System.getProperty("line.separator"));
         peticion.append("Número registro: ").append(registro.getNumeroRegistroFormateado()).append(System.getProperty("line.separator"));
 
         try {
-
-            // OficinaSir destino
-            Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService(PropiedadGlobalUtil.getDir3CaibServer(entidad.getId()), PropiedadGlobalUtil.getDir3CaibUsername(entidad.getId()), PropiedadGlobalUtil.getDir3CaibPassword(entidad.getId()));
-            OficinaTF oficinaSirDestino = oficinasService.obtenerOficina(codigoOficinaSir, null, null);
 
             log.debug("----------------------------------------------------------------------------------------------");
             log.debug("Enviando FicheroIntercambio del registro: " + registro.getNumeroRegistroFormateado() + " mediante SIR a: " + oficinaSirDestino.getDenominacion());
@@ -251,7 +245,7 @@ public class SirEnvioBean implements SirEnvioLocal {
                 RegistroEntrada registroEntrada = (RegistroEntrada) registro;
                 registroEntrada = crearIntercambioEntrada(registroEntrada, entidad, oficinaActiva, usuario, oficinaSirDestino);
 
-                // Añadimos los anexos cargados anteriormente, para no tener que volver a hacerlo
+                // Añadimos los anexos cargados anteriormente, para no tener que volver a obtenerlos
                 registroEntrada.getRegistroDetalle().setAnexosFull(registro.getRegistroDetalle().getAnexosFull());
 
                 //Transformamos el registro de Entrada a RegistroSir
@@ -263,14 +257,13 @@ public class SirEnvioBean implements SirEnvioLocal {
                 RegistroSalida registroSalida = (RegistroSalida) registro;
                 registroSalida = crearIntercambioSalida(registroSalida, entidad, oficinaActiva, usuario, oficinaSirDestino);
 
-                // Añadimos los anexos cargados anteriormente, para no tener que volver a hacerlo
+                // Añadimos los anexos cargados anteriormente, para no tener que volver a obtenerlos
                 registroSalida.getRegistroDetalle().setAnexosFull(registro.getRegistroDetalle().getAnexosFull());
 
                 // Transformamos el RegistroSalida en un RegistroSir
                 registroSir = registroSirEjb.transformarRegistroSalida(registroSalida);
 
             }
-
 
             try{
                 inicio = new Date();

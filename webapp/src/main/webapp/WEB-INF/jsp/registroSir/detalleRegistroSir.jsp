@@ -1,6 +1,13 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/WEB-INF/jsp/modulos/includes.jsp" %>
 
+<c:if test="${param.tipo == 'registroSir'}">
+    <c:set value="divider-primary" var="divider"/>
+</c:if>
+<c:if test="${param.tipo == 'intercambio'}">
+    <c:set value="divider-warning" var="divider"/>
+</c:if>
+
 <dl class="detalle_registro">
 
     <%--Oficina Inicio--%>
@@ -15,7 +22,7 @@
                 </c:if>
                     ${registroSir.codigoEntidadRegistralInicio}
             </dd>
-            <hr class="divider-primary">
+            <hr class="${divider}">
         </c:if>
 
     </c:if>
@@ -43,7 +50,7 @@
         <dd><span class="label label-danger"><spring:message code="registroSir.salida"/></span></dd>
     </c:if>
 
-    <hr class="divider-primary">
+    <hr class="${divider}">
 
     <c:if test="${loginInfo.rolActivo.nombre == 'RWE_ADMIN'}">
         <%--Oficina Donde se recibió el registro originalmente--%>
@@ -54,7 +61,7 @@
                 ${registroSir.codigoEntidadRegistral}
             </c:if>
         </dd>
-        <hr class="divider-primary">
+        <hr class="${divider}">
     </c:if>
 
     <%--Unidad Tramitación Origen--%>
@@ -79,7 +86,7 @@
         ${registroSir.codigoEntidadRegistralOrigen}
     </dd>
 
-    <hr class="divider-primary">
+    <hr class="${divider}">
 
     <%--Unidad Tramitación Destino--%>
     <c:if test="${not empty registroSir.codigoUnidadTramitacionDestino}">
@@ -105,7 +112,7 @@
                 ${registroSir.codigoEntidadRegistralDestino}
         </dd>
     </c:if>
-    <hr class="divider-primary">
+    <hr class="${divider}">
 
     <c:if test="${not empty registroSir.nombreUsuario}">
         <dt><i class="fa fa-user"></i> <spring:message code="usuario.usuario"/>: </dt>

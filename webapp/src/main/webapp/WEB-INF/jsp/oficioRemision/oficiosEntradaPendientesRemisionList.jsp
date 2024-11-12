@@ -373,6 +373,7 @@
                                                                 </div>
                                                             </div>
                                                             <input type="hidden" id="oficinaSIRCodigo" name="oficinaSIRCodigo" value="${(oficiosRemisionOrganismo.oficinasSIR[0]).codigo}"/>
+                                                            <input type="hidden" id="oficinaSIRDenominacion" name="oficinaSIRDenominacion" value="${(oficiosRemisionOrganismo.oficinasSIR[0]).denominacion}"/>
                                                         </c:if>
 
                                                         <!-- Más de 1 Oficina SIR -->

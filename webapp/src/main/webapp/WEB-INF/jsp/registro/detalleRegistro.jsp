@@ -8,6 +8,9 @@
 <c:if test="${param.tipoRegistro == RegwebConstantes.REGISTRO_SALIDA}">
     <c:set value="divider-danger" var="divider"/>
 </c:if>
+<c:if test="${param.tipoRegistro == 'intercambio'}">
+    <c:set value="divider-warning" var="divider"/>
+</c:if>
 
 <dt><i class="fa fa-home"></i> <spring:message code="oficina.oficina"/>: </dt> <dd> ${registro.oficina.denominacion}</dd>
 <dt><i class="fa fa-clock-o"></i> <spring:message code="regweb.fecha"/>: </dt> <dd> <fmt:formatDate value="${registro.fecha}" pattern="dd/MM/yyyy HH:mm:ss"/></dd>

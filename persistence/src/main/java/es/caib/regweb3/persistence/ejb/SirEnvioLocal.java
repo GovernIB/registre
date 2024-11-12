@@ -1,6 +1,5 @@
 package es.caib.regweb3.persistence.ejb;
 
-import es.caib.dir3caib.ws.api.oficina.OficinaTF;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.sir.MensajeControl;
 import es.caib.regweb3.model.utils.CamposNTI;
@@ -31,7 +30,7 @@ public interface SirEnvioLocal {
      * @throws I18NException
      * @throws I18NException
      */
-    RegistroEntrada crearIntercambioEntrada(RegistroEntrada registroEntrada, Entidad entidad,Oficina oficinaActiva, UsuarioEntidad usuario, OficinaTF oficinaSirDestino)
+    RegistroEntrada crearIntercambioEntrada(RegistroEntrada registroEntrada, Entidad entidad,Oficina oficinaActiva, UsuarioEntidad usuario, Oficina oficinaSirDestino)
             throws I18NException, I18NValidationException;
 
     /**
@@ -43,7 +42,7 @@ public interface SirEnvioLocal {
      * @throws I18NException
      * @throws I18NException
      */
-    RegistroSalida crearIntercambioSalida(RegistroSalida registroSalida, Entidad entidad, Oficina oficinaActiva, UsuarioEntidad usuario, OficinaTF oficinaSirDestino)
+    RegistroSalida crearIntercambioSalida(RegistroSalida registroSalida, Entidad entidad, Oficina oficinaActiva, UsuarioEntidad usuario, Oficina oficinaSirDestino)
             throws I18NException, I18NValidationException;
 
     /**
@@ -52,11 +51,11 @@ public interface SirEnvioLocal {
      * @param registro
      * @param oficinaActiva
      * @param usuario
-     * @param codigoOficinaSir
+     * @param oficinaSirDestino
      * @throws I18NException
      * @throws I18NException
      */
-    OficioRemision enviarIntercambio(Long tipoRegistro, IRegistro registro, Entidad entidad, Oficina oficinaActiva, UsuarioEntidad usuario, String codigoOficinaSir)
+    OficioRemision enviarIntercambio(Long tipoRegistro, IRegistro registro, Entidad entidad, Oficina oficinaActiva, UsuarioEntidad usuario, Oficina oficinaSirDestino)
             throws I18NException, I18NValidationException;
 
     /**

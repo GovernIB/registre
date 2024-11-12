@@ -50,13 +50,7 @@
 
             <!--Oficina destino -->
             <c:if test="${not empty oficioRemision.decodificacionEntidadRegistralDestino}">
-                <c:if test="${not empty oficioRemision.contactosEntidadRegistralDestino}">
-                    <p id="contactosOficina" data-content="${oficioRemision.contactosEntidadRegistralDestino}" data-toggle="popover" style="cursor:help" rel="popupDerecha">
-                    <small><i class="fa fa-exchange"></i> <strong><spring:message code="oficioRemision.oficinaSirDestino"/>:</strong> ${oficioRemision.decodificacionEntidadRegistralDestino} (${oficioRemision.codigoEntidadRegistralDestino})</small></p>
-                </c:if>
-                <c:if test="${empty oficioRemision.contactosEntidadRegistralDestino}">
-                    <p><small><i class="fa fa-exchange"></i> <strong><spring:message code="oficioRemision.oficinaSirDestino"/>:</strong> ${oficioRemision.decodificacionEntidadRegistralDestino} (${oficioRemision.codigoEntidadRegistralDestino})</small></p>
-                </c:if>
+                <p><small><i class="fa fa-exchange"></i> <strong><spring:message code="oficioRemision.oficinaSirDestino"/>:</strong> <a href="<c:url value="${loginInfo.dir3Caib.server}/oficina/${oficioRemision.codigoEntidadRegistralDestino}/detall"/>" target="_blank">${oficioRemision.decodificacionEntidadRegistralDestino} (${oficioRemision.codigoEntidadRegistralDestino})</a></small></p>
             </c:if>
 
             <%--Identificador intercambio--%>

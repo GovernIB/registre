@@ -225,10 +225,7 @@
                                     <p><i class="fa fa-institution"></i> <strong><spring:message code="organismo.organismo"/>:</strong> ${oficioRemision.destinoExternoDenominacion}</p>
                                     <c:if test="${not empty oficioRemision.decodificacionEntidadRegistralDestino}">
 
-                                        <p><i class="fa fa-home"></i> <strong><spring:message code="oficina.oficina"/>:</strong>${oficioRemision.decodificacionEntidadRegistralDestino} (${oficioRemision.codigoEntidadRegistralDestino})</p>
-                                        <c:if test="${not empty oficioRemision.contactosEntidadRegistralDestino}">
-                                            <div class="alert alert-grey"><small>${oficioRemision.contactosEntidadRegistralDestino}</small></div>
-                                        </c:if>
+                                        <p><i class="fa fa-home"></i> <strong><spring:message code="oficina.oficina"/>:</strong> <a href="<c:url value="${loginInfo.dir3Caib.server}/oficina/${oficioRemision.codigoEntidadRegistralDestino}/detall"/>" target="_blank">${oficioRemision.decodificacionEntidadRegistralDestino} (${oficioRemision.codigoEntidadRegistralDestino})</a></p>
 
                                     </c:if>
 

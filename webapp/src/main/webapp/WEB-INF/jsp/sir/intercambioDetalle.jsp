@@ -55,7 +55,9 @@
 
                             <div class="panel-body">
                                 <c:set var="registroSir" value="${trazabilidadesSir[0].registroSir}" scope="request"/>
-                                <c:import url="../registroSir/detalleRegistroSir.jsp"/>
+                                <c:import url="../registroSir/detalleRegistroSir.jsp">
+                                    <c:param name="tipo" value="intercambio"/>
+                                </c:import>
                             </div>
                             <%--BOTONERA--%>
                             <div class="panel-footer center">
@@ -90,7 +92,7 @@
 
                                         <%--Detalle registro--%>
                                         <c:import url="../registro/detalleRegistro.jsp">
-                                            <c:param name="tipoRegistro" value="${RegwebConstantes.REGISTRO_ENTRADA}"/>
+                                            <c:param name="tipoRegistro" value="intercambio"/>
                                         </c:import>
 
                                         <%--Reintentos--%>
@@ -141,7 +143,7 @@
 
                                         <%--Detalle registro--%>
                                         <c:import url="../registro/detalleRegistro.jsp">
-                                            <c:param name="tipoRegistro" value="${RegwebConstantes.REGISTRO_SALIDA}"/>
+                                            <c:param name="tipoRegistro" value="intercambio"/>
                                         </c:import>
 
                                         <%--Reintentos--%>
@@ -196,12 +198,7 @@
                             <div class="panel-body">
                                 <p><i class="fa fa-institution"></i> <strong><spring:message code="organismo.organismo"/>:</strong> ${trazabilidades[0].oficioRemision.destinoExternoDenominacion}</p>
                                 <c:if test="${not empty trazabilidades[0].oficioRemision.decodificacionEntidadRegistralDestino}">
-
-                                    <p><i class="fa fa-home"></i> <strong><spring:message code="oficina.oficina"/>:</strong>${trazabilidades[0].oficioRemision.decodificacionEntidadRegistralDestino} (${trazabilidades[0].oficioRemision.codigoEntidadRegistralDestino})</p>
-                                    <c:if test="${not empty trazabilidades[0].oficioRemision.contactosEntidadRegistralDestino}">
-                                        <div class="alert alert-grey"><small>${trazabilidades[0].oficioRemision.contactosEntidadRegistralDestino}</small></div>
-                                    </c:if>
-
+                                    <p><i class="fa fa-home"></i> <strong><spring:message code="oficina.oficina"/>:</strong> <a href="<c:url value="${loginInfo.dir3Caib.server}/oficina/${trazabilidades[0].oficioRemision.codigoEntidadRegistralDestino}/detall"/>" target="_blank">${trazabilidades[0].oficioRemision.decodificacionEntidadRegistralDestino} (${trazabilidades[0].oficioRemision.codigoEntidadRegistralDestino})</a></p>
                                 </c:if>
 
                                 <c:if test="${not empty trazabilidades[0].oficioRemision.fechaEstado && trazabilidades[0].oficioRemision.estado == RegwebConstantes.OFICIO_ACEPTADO}">

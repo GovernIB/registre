@@ -1,7 +1,6 @@
 package es.caib.regweb3.persistence.ejb;
 
 
-import es.caib.dir3caib.ws.api.oficina.OficinaTF;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.OficioPendienteLlegada;
 import es.caib.regweb3.persistence.utils.OficiosRemisionOrganismo;
@@ -92,7 +91,7 @@ public interface OficioRemisionSalidaUtilsLocal {
      * @throws I18NException
      * @throws I18NValidationException
      */
-    OficioRemision crearOficioRemisionSIR(RegistroSalida registroSalida,Entidad entidad, Oficina oficinaActiva, UsuarioEntidad usuarioEntidad, OficinaTF oficinaSirDestino)
+    OficioRemision crearOficioRemisionSIR(RegistroSalida registroSalida,Entidad entidad, Oficina oficinaActiva, UsuarioEntidad usuarioEntidad, Oficina oficinaSirDestino)
             throws I18NException, I18NValidationException;
 
     /**

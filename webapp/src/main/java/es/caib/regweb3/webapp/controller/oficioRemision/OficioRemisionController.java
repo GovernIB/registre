@@ -548,8 +548,8 @@ public class OficioRemisionController extends BaseController {
                         }
 
                         // Enviamos el Fichero de datos de intercambio al nodo SIR
-                        sirEnvioEjb.enviarIntercambio(RegwebConstantes.REGISTRO_ENTRADA, registroEntrada, entidad, getOficinaActiva(request), usuarioEntidad,
-                                oficioRemisionForm.getOficinaSIRCodigo());
+                        Oficina oficinaSirDestino = new Oficina(null, oficioRemisionForm.getOficinaSIRCodigo(), oficioRemisionForm.getOficinaSIRDenominacion());
+                        sirEnvioEjb.enviarIntercambio(RegwebConstantes.REGISTRO_ENTRADA, registroEntrada, entidad, getOficinaActiva(request), usuarioEntidad, oficinaSirDestino);
 
                     }
                 }
@@ -601,8 +601,8 @@ public class OficioRemisionController extends BaseController {
                         }
 
                         // Enviamos el Fichero de datos de intercambio al nodo SIR
-                        sirEnvioEjb.enviarIntercambio(RegwebConstantes.REGISTRO_SALIDA, registroSalida, entidad, getOficinaActiva(request), usuarioEntidad,
-                                oficioRemisionForm.getOficinaSIRCodigo());
+                        Oficina oficinaSirDestino = new Oficina(null, oficioRemisionForm.getOficinaSIRCodigo(), oficioRemisionForm.getOficinaSIRDenominacion());
+                        sirEnvioEjb.enviarIntercambio(RegwebConstantes.REGISTRO_SALIDA, registroSalida, entidad, getOficinaActiva(request), usuarioEntidad, oficinaSirDestino);
 
                     }
                 }

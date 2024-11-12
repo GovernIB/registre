@@ -11,7 +11,6 @@ import es.caib.regweb3.model.utils.OficioPendienteLlegada;
 import es.caib.regweb3.persistence.utils.OficiosRemisionOrganismo;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
-import es.caib.regweb3.persistence.utils.RegistroUtils;
 import es.caib.regweb3.utils.*;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
@@ -434,7 +433,7 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
     }
 
     @Override
-    public OficioRemision crearOficioRemisionSIR(RegistroSalida registroSalida, Entidad entidad, Oficina oficinaActiva, UsuarioEntidad usuarioEntidad, OficinaTF oficinaSirDestino)
+    public OficioRemision crearOficioRemisionSIR(RegistroSalida registroSalida, Entidad entidad, Oficina oficinaActiva, UsuarioEntidad usuarioEntidad, Oficina oficinaSirDestino)
             throws I18NException, I18NValidationException {
 
         // Creamos el OficioRemision
@@ -456,7 +455,7 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
         oficioRemision.setRegistrosEntrada(null);
         oficioRemision.setCodigoEntidadRegistralDestino(oficinaSirDestino.getCodigo());
         oficioRemision.setDecodificacionEntidadRegistralDestino(StringUtils.recortarCadena(oficinaSirDestino.getDenominacion(),80));
-        oficioRemision.setContactosEntidadRegistralDestino(RegistroUtils.getContactosOficinaSir(oficinaSirDestino));
+        //oficioRemision.setContactosEntidadRegistralDestino(RegistroUtils.getContactosOficinaSir(oficinaSirDestino));
         oficioRemision.setTipoAnotacion(TipoAnotacion.ENVIO.getValue());
         oficioRemision.setDecodificacionTipoAnotacion(TipoAnotacion.ENVIO.getName());
 

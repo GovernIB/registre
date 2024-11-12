@@ -47,7 +47,9 @@
                     <div class="panel-body">
 
                         <%--DETALLE REGISTRO SIR--%>
-                        <c:import url="detalleRegistroSir.jsp"/>
+                        <c:import url="detalleRegistroSir.jsp">
+                            <c:param name="tipo" value="registroSir"/>
+                        </c:import>
 
                     </div>
 

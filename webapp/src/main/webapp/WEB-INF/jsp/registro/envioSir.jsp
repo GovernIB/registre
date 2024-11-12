@@ -87,9 +87,7 @@
                                             <!-- Gestión de sustitutos -->
                                             <!-- Si hay sustitutos es que el organismo al que va dirigido está extinguido -->
                                             <c:if test="${fn:length(sustitutos) > 1}">
-                                                <p><span class="text-vermell ">
-                                                        <strong><spring:message code="registroSir.organismo.destino.extinguido"/> ${destino.denominacion}</strong>
-                                                </span></p>
+                                                <p><span class="text-vermell"><strong><spring:message code="registroSir.organismo.destino.extinguido"/> ${destino.denominacion}</strong></span></p>
                                             </c:if>
 
                                             <!-- Sustitutos -->
@@ -116,6 +114,7 @@
                                             <c:if test="${fn:length(oficinasSIR) == 1}">
                                                    <p><strong><i class="fa fa-home"></i> <spring:message code="oficina.destino"/>:</strong> ${oficinasSIR[0].denominacion} (${oficinasSIR[0].codigo})</p>
                                                    <input type="hidden" id="oficinaSIRCodigo" name="oficinaSIRCodigo" value="${oficinasSIR[0].codigo}"/>
+                                                   <input type="hidden" id="oficinaSIRDenominacion" name="oficinaSIRDenominacion" value="${oficinasSIR[0].denominacion}"/>
                                             </c:if>
                                             <!-- Más de 1 Oficina SIR -->
                                             <c:if test="${fn:length(oficinasSIR) > 1}">
@@ -189,11 +188,11 @@
                 url = '<c:url value="/registroSalida/${registro.id}/enviarSir"/>';
                 urlDetalle ='<c:url value="/registroSalida/${registro.id}/detalle"/>';
             }
-            
-            $.ajax({
+
+            $('#envioSirForm').ajaxSubmit({
                 url: url,
                 type:'POST',
-                data: {oficinaSIRCodigo: $("#oficinaSIRCodigo").val()},
+                /*data: {oficinaSIRCodigo: $("#oficinaSIRCodigo").val()},*/
                 beforeSend: function(objeto){
                     waitingDialog.show('<spring:message code="registroSir.enviando" javaScriptEscape='true'/>', {dialogSize: 'm', progressType: 'primary'});
                 },

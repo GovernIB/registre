@@ -157,7 +157,7 @@ public class AsientoRegistralBean implements AsientoRegistralLocal {
 
                             // Crear el intercambio, posteriormente se enviará
                             registroSalida = sirEnvioEjb.crearIntercambioSalida(registroSalida, entidad, registroSalida.getOficina(),
-                                    registroSalida.getUsuario(), oficinasSIR.get(0));
+                                    registroSalida.getUsuario(), new Oficina(null, oficinasSIR.get(0).getCodigo(), oficinasSIR.get(0).getDenominacion()));
 
                             registroSalida.setEstado(REGISTRO_OFICIO_SIR);
                             registroSalida.getRegistroDetalle().setIdentificadorIntercambio(registroSalida.getRegistroDetalle().getIdentificadorIntercambio());

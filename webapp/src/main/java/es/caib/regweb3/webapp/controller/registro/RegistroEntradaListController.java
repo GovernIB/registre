@@ -362,8 +362,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
      */
     @RequestMapping(value = "/{idRegistro}/enviarSir", method = RequestMethod.POST)
     @ResponseBody
-    public JsonResponse enviarSir(@ModelAttribute EnvioSirForm envioSirForm, @PathVariable Long idRegistro, String oficinaSIRCodigo,
-                                  HttpServletRequest request) throws Exception {
+    public JsonResponse enviarSir(@ModelAttribute EnvioSirForm envioSirForm, @PathVariable Long idRegistro, HttpServletRequest request) throws Exception {
 
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
 
@@ -382,7 +381,8 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
             }
 
             // Enviar el Intercambio
-            sirEnvioEjb.enviarIntercambio(RegwebConstantes.REGISTRO_ENTRADA, registroEntrada, entidad, getOficinaActiva(request), usuarioEntidad, oficinaSIRCodigo);
+            Oficina oficinaSir = new Oficina(null, envioSirForm.getOficinaSIRCodigo(),envioSirForm.getOficinaSIRDenominacion());
+            sirEnvioEjb.enviarIntercambio(RegwebConstantes.REGISTRO_ENTRADA, registroEntrada, entidad, getOficinaActiva(request), usuarioEntidad, oficinaSir);
 
             Mensaje.saveMessageInfo(request, getMessage("registroEntrada.envioSir.ok"));
             jsonResponse.setStatus("SUCCESS");
