@@ -1,14 +1,18 @@
 package es.caib.regweb3.webapp.scheduler;
 
 
-import es.caib.regweb3.persistence.ejb.PropiedadGlobalLocal;
-import es.caib.regweb3.persistence.ejb.SchedulerLocal;
-import es.caib.regweb3.persistence.utils.MonitorTareas;
-import es.caib.regweb3.utils.Configuracio;
+import java.util.Date;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
+
+import javax.ejb.EJB;
 
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
-
+import org.springframework.beans.factory.DisposableBean;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.TaskScheduler;
@@ -21,10 +25,10 @@ import org.springframework.scheduling.config.ScheduledTaskRegistrar;
 import org.springframework.scheduling.support.PeriodicTrigger;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.concurrent.TimeUnit;
-
-import javax.ejb.EJB;
+import es.caib.regweb3.persistence.ejb.PropiedadGlobalLocal;
+import es.caib.regweb3.persistence.ejb.SchedulerLocal;
+import es.caib.regweb3.persistence.utils.MonitorTareas;
+import es.caib.regweb3.utils.Configuracio;
 
 /**
  * Created by Fundació BIT,  Limit Tecnologies.
@@ -35,7 +39,7 @@ import javax.ejb.EJB;
 @Service
 @Configuration
 @EnableScheduling
-public class Regweb3Scheduler implements SchedulingConfigurer {
+public class Regweb3Scheduler implements SchedulingConfigurer, InitializingBean, DisposableBean {
 
     protected final Logger log = Logger.getLogger(getClass());
 
@@ -50,8 +54,16 @@ public class Regweb3Scheduler implements SchedulingConfigurer {
     @Autowired
     MonitorTareas monitorTareas;
     
-    private Boolean[] primeraVez = {Boolean.TRUE};
+    private ScheduledExecutorService executorService;
+    
+    private ScheduledFuture<?> scheduledFuture;
+    
+    private Boolean primeraVez = Boolean.TRUE;
 
+    public Regweb3Scheduler() {
+        this.executorService = Executors.newSingleThreadScheduledExecutor();
+    }
+    
     /**
      * Qué hace: Purga las sesiones ws
      * Cuando lo hace: cada 60 minutos
@@ -327,46 +339,75 @@ public class Regweb3Scheduler implements SchedulingConfigurer {
 //		}
 //    }
     
+    @Override
+    public void afterPropertiesSet() {
+        // Configura el retardo inicial y el periodo de repetición en milisegundos
+        Long initialDelay = schedulerEjb.getCronTareaRetardoActualizacionEnviosSir();
+        Long period = schedulerEjb.getCronTareaPeriodoActualizacionEnviosSir();
+
+        scheduledFuture = executorService.scheduleAtFixedRate(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    schedulerEjb.actualizarEnviosSIR();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } catch (I18NException e) {
+					e.printStackTrace();
+				}
+            }
+        }, initialDelay, period, TimeUnit.MILLISECONDS);
+    }
+
+    @Override
+    public void destroy() {
+        if (scheduledFuture != null && !scheduledFuture.isCancelled()) {
+            scheduledFuture.cancel(true);
+        }
+        executorService.shutdown();
+    }
+    
+    
 	@Override
 	public void configureTasks(ScheduledTaskRegistrar taskRegistrar) {
 		taskRegistrar.setScheduler(taskScheduler);
 		
 		// Actualiza el estado de los envíos SIR con el nuevo estaado de GEISER. Solo actualiza estado envíos con estado no final.
         ////////////////////////////////////////////////////////////////
-        taskRegistrar.addTriggerTask(
-                new Runnable() {
-                    @Override
-                    public void run() {
-                    	try {
-							schedulerEjb.actualizarEnviosSIR();
-						} catch (Exception e) {
-							e.printStackTrace();
-						} catch (I18NException e) {
-							e.printStackTrace();
-						}
-                    }
-                },
-                new Trigger() {
-                    @Override
-                    public Date nextExecutionTime(TriggerContext triggerContext) {
-						Long periodo = schedulerEjb.getCronTareaPeriodoActualizacionEnviosSir();
-						if (periodo != null) {
-							PeriodicTrigger trigger = new PeriodicTrigger(periodo, TimeUnit.MILLISECONDS);
-							trigger.setFixedRate(true);
-							// Només la primera vegada que s'executa
-							Long actualizarEnviosSirInitialDelayLong = 0L;
-							if (primeraVez[0]) {
-								actualizarEnviosSirInitialDelayLong = schedulerEjb.getCronTareaRetardoActualizacionEnviosSir();
-								primeraVez[0] = false;
-							}
-							trigger.setInitialDelay(actualizarEnviosSirInitialDelayLong);
-							Date nextExecution = trigger.nextExecutionTime(triggerContext);
-							return nextExecution;
-						}
-						return null;
-                    }
-                }
-        );
+//        taskRegistrar.addTriggerTask(
+//                new Runnable() {
+//                    @Override
+//                    public void run() {
+//                    	try {
+//							schedulerEjb.actualizarEnviosSIR();
+//						} catch (Exception e) {
+//							e.printStackTrace();
+//						} catch (I18NException e) {
+//							e.printStackTrace();
+//						}
+//                    }
+//                },
+//                new Trigger() {
+//                    @Override
+//                    public Date nextExecutionTime(TriggerContext triggerContext) {
+//						Long periodo = schedulerEjb.getCronTareaPeriodoActualizacionEnviosSir();
+//						if (periodo != null) {
+//							PeriodicTrigger trigger = new PeriodicTrigger(periodo, TimeUnit.MILLISECONDS);
+//							trigger.setFixedRate(true);
+//							// Només la primera vegada que s'executa
+//							Long actualizarEnviosSirInitialDelayLong = 0L;
+//							if (primeraVez[0]) {
+//								actualizarEnviosSirInitialDelayLong = schedulerEjb.getCronTareaRetardoActualizacionEnviosSir();
+//								primeraVez[0] = false;
+//							}
+//							trigger.setInitialDelay(actualizarEnviosSirInitialDelayLong);
+//							Date nextExecution = trigger.nextExecutionTime(triggerContext);
+//							return nextExecution;
+//						}
+//						return null;
+//                    }
+//                }
+//        );
         // Consulta a GEISER los registros SIR recibidos y los crea en Regweb.
         ////////////////////////////////////////////////////////////////
         taskRegistrar.addTriggerTask(
@@ -391,9 +432,9 @@ public class Regweb3Scheduler implements SchedulingConfigurer {
 							trigger.setFixedRate(true);
 							// Només la primera vegada que s'executa
 							Long registrarEnviosPendientesInitialDelayLong = 0L;
-							if (primeraVez[0]) {
+							if (primeraVez) {
 								registrarEnviosPendientesInitialDelayLong = schedulerEjb.getCronTareaRetardoActualizacionEnviosRecibidosSir();
-								primeraVez[0] = false;
+								primeraVez = false;
 							}
 							trigger.setInitialDelay(registrarEnviosPendientesInitialDelayLong);
 							Date nextExecution = trigger.nextExecutionTime(triggerContext);
@@ -427,9 +468,9 @@ public class Regweb3Scheduler implements SchedulingConfigurer {
 							trigger.setFixedRate(true);
 							// Només la primera vegada que s'executa
 							Long actualizarIdEnvioSirInitialDelayLong = 0L;
-							if (primeraVez[0]) {
+							if (primeraVez) {
 								actualizarIdEnvioSirInitialDelayLong = schedulerEjb.getCronTareaRetardoActualizacionIdEnviosRecibidosSir();
-								primeraVez[0] = false;
+								primeraVez = false;
 							}
 							trigger.setInitialDelay(actualizarIdEnvioSirInitialDelayLong);
 							Date nextExecution = trigger.nextExecutionTime(triggerContext);
@@ -471,9 +512,9 @@ public class Regweb3Scheduler implements SchedulingConfigurer {
 							trigger.setFixedRate(true);
 							// Només la primera vegada que s'executa
 							Long actualizarFirmaAnexosPendientesVerInitialDelayLong = 0L;
-							if (primeraVez[0]) {
+							if (primeraVez) {
 								actualizarFirmaAnexosPendientesVerInitialDelayLong = schedulerEjb.getCronTareaRetardoActualizacionAnexosPendientesVerificacionFirma();
-								primeraVez[0] = false;
+								primeraVez = false;
 							}
 							trigger.setInitialDelay(actualizarFirmaAnexosPendientesVerInitialDelayLong);
 							Date nextExecution = trigger.nextExecutionTime(triggerContext);
