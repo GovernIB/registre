@@ -17,6 +17,7 @@ import org.jboss.ejb3.annotation.SecurityDomain;
 import org.jboss.ejb3.annotation.TransactionTimeout;
 
 import es.caib.regweb3.model.Entidad;
+import es.caib.regweb3.model.RegistroSir;
 import es.caib.regweb3.model.Usuario;
 import es.caib.regweb3.model.UsuarioEntidad;
 import es.caib.regweb3.persistence.utils.I18NLogicUtils;
@@ -475,7 +476,7 @@ public class SchedulerBean implements SchedulerLocal{
     }
     
     @Override
-    @TransactionTimeout(value = 3000)  // 50 minutos
+    @TransactionTimeout(value = 14400)  // 4h
     public void actualizarEnviosSIR() throws Exception, I18NException {
         List<Entidad> entidades = entidadEjb.getEntidadesSir();
 
@@ -484,7 +485,32 @@ public class SchedulerBean implements SchedulerLocal{
             log.info("------------- SIR: Actualizando estado envios SIR de " + entidad.getNombre() + " -------------");
             log.info(" ");
             synchronized (SemaforoSchedulerConsultaEstado.class) {
-            	sirEnvioEjb.actualizarEnviosSir(entidad);
+  	            // RegistrosSir con estado no final
+            	long tiempo = System.currentTimeMillis();
+            	List<Long> registrosSirIds = new ArrayList<Long>();
+            	String descripcionPar = "";
+            	try {
+        			descripcionPar = "Recuperando envíos SIR con estado no final...";
+            		registrosSirIds = registroSirEjb.getRegistrosSirPendientes(entidad.getId(), PropiedadGlobalUtil.getMaxReintentActualizacionEnviosSir());
+            	} catch (Exception e) {
+        			integracionEjb.addIntegracionError(
+        					RegwebConstantes.INTEGRACION_SIR, 
+        					descripcionPar, 
+        					"Ha habido un error recuperando los registros SIR pendientes", 
+        					e, 
+        					null, 
+        					System.currentTimeMillis() - tiempo, 
+        					entidad.getId(), 
+        					null);
+				}
+            	log.info("------------- SIR: Se han encontrado " + registrosSirIds.size() + " envíos SIR pendientes -------------");
+    			for (Long registroSirId : registrosSirIds) {
+    				log.debug("------------- SIR: Actualizando envío SIR " + registroSirId + " -------------");
+    				
+    				sirEnvioEjb.actualizarEnvioSir(entidad, registroSirId);
+    				
+    				log.debug("------------- SIR: Envío SIR " + registroSirId + " actualizado con éxito -------------");
+    			}
             }
         }
         log.info("------------- SIR: Registros SIR enviados actualizados " + " -------------");

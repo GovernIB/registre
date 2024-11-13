@@ -509,55 +509,40 @@ public class SirEnvioBean implements SirEnvioLocal {
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     @TransactionTimeout(value = 3000)  // 50 minutos
     @Override
-    public void actualizarEnviosSir(Entidad entidad) throws Exception {
+    public void actualizarEnvioSir(Entidad entidad, Long registroSirId) throws Exception {
     	long tiempo = System.currentTimeMillis();
-    	String descripcionPar = "";
 		try {
-			descripcionPar = "Recuperando envíos SIR con estado no final...";
-//          // RegistrosSir con estado no final
-			List<Long> registrosSirIds = registroSirEjb.getRegistrosSirPendientes(entidad.getId(), PropiedadGlobalUtil.getMaxReintentActualizacionEnviosSir());
-			for (Long registroSirId : registrosSirIds) {
-				StringBuilder peticion = new StringBuilder();
-		    	String descripcion = "Actualizando estado envío SIR (idEnvioSir=" + registroSirId + ")";
-				try {
-					RegistroSir registroSir = registroSirEjb.findById(registroSirId);
-			        peticion.append("Número registro: ").append(registroSir.getNumeroRegistro()).append(System.getProperty("line.separator"));
-			        OficioRemision oficioRemision = oficioRemisionEjb.getByNumeroRegistro(
-			        		registroSir.getNumeroRegistro(), 
-			            	entidad.getCodigoDir3());
-			        if (oficioRemision != null) {
-			        	peticion.append("ID Oficio remisión: ").append(oficioRemision.getId()).append(System.getProperty("line.separator"));
-						actualizarEnvioSir(registroSir, entidad, oficioRemision, true);
-			        } else {
-			        	throw new RuntimeException("No s'ha trobat cap ofici remisió relacionat amb el registre: " + registroSir.getNumeroRegistro());
-			        }
-				} catch (Exception e) {
-					registroSirEjb.actualizarReintentosRegistroSir(registroSirId);
-					e.printStackTrace();
-					integracionEjb.addIntegracionError(
-							RegwebConstantes.INTEGRACION_SIR, 
-							descripcion, 
-							peticion.toString(), 
-							e, 
-							null, 
-							System.currentTimeMillis() - tiempo, 
-							entidad.getId(), 
-							null);
-				} catch (I18NException e) {
-					e.printStackTrace();
-				}
+			StringBuilder peticion = new StringBuilder();
+	    	String descripcion = "Actualizando estado envío SIR (idEnvioSir=" + registroSirId + ")";
+			try {
+				RegistroSir registroSir = registroSirEjb.findById(registroSirId);
+		        peticion.append("Número registro: ").append(registroSir.getNumeroRegistro()).append(System.getProperty("line.separator"));
+		        OficioRemision oficioRemision = oficioRemisionEjb.getByNumeroRegistro(
+		        		registroSir.getNumeroRegistro(), 
+		            	entidad.getCodigoDir3());
+		        if (oficioRemision != null) {
+		        	peticion.append("ID Oficio remisión: ").append(oficioRemision.getId()).append(System.getProperty("line.separator"));
+					actualizarEnvioSir(registroSir, entidad, oficioRemision, true);
+		        } else {
+		        	throw new RuntimeException("No s'ha trobat cap ofici remisió relacionat amb el registre: " + registroSir.getNumeroRegistro());
+		        }
+			} catch (Exception e) {
+				registroSirEjb.actualizarReintentosRegistroSir(registroSirId);
+				e.printStackTrace();
+				integracionEjb.addIntegracionError(
+						RegwebConstantes.INTEGRACION_SIR, 
+						descripcion, 
+						peticion.toString(), 
+						e, 
+						null, 
+						System.currentTimeMillis() - tiempo, 
+						entidad.getId(), 
+						null);
+			} catch (I18NException e) {
+				e.printStackTrace();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			integracionEjb.addIntegracionError(
-					RegwebConstantes.INTEGRACION_SIR, 
-					descripcionPar, 
-					"Ha habido un error actualizando el estado de los registros SIR", 
-					e, 
-					null, 
-					System.currentTimeMillis() - tiempo, 
-					entidad.getId(), 
-					null);
 			throw e;
 		}
     }

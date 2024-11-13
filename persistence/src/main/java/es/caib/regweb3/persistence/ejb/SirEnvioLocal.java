@@ -102,7 +102,7 @@ public interface SirEnvioLocal {
 	 * @throws Exception
 	 * @throws I18NException
 	 */
-	void actualizarEnviosSir(Entidad entidad) throws Exception, I18NException;
+	void actualizarEnvioSir(Entidad entidad, Long registroSirId) throws Exception, I18NException;
 
 	/**
 	 * Actualiza el estado de los envíos SIR de un oficio de remisión

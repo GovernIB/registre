@@ -38,11 +38,18 @@
 			<artifactId>GeiserRGECO-client</artifactId>
 			<version>v2.2.6</version>
 		</dependency>
-		-->
+		
 		<dependency>
 			<groupId>es.mpt.sgtic.geiser</groupId>
 			<artifactId>GeiserRGECO-client</artifactId>
 			<version>v3.0.3</version>
+		</dependency>
+		-->
+		
+		<dependency>
+			<groupId>es.mpt.sgtic.geiser</groupId>
+			<artifactId>GeiserRGECO-client</artifactId>
+			<version>v3.0.6</version>
 		</dependency>
 	</dependencies>
 	<!--  

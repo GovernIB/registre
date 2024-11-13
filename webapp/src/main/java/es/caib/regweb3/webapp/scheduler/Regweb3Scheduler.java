@@ -35,11 +35,12 @@ import es.caib.regweb3.utils.Configuracio;
  *
  * @author earrivi, Limit Tecnologies <limit@limit.es>
  * 
+ *  InitializingBean, DisposableBean
  */
 @Service
 @Configuration
 @EnableScheduling
-public class Regweb3Scheduler implements SchedulingConfigurer, InitializingBean, DisposableBean {
+public class Regweb3Scheduler implements SchedulingConfigurer {
 
     protected final Logger log = Logger.getLogger(getClass());
 
@@ -339,33 +340,33 @@ public class Regweb3Scheduler implements SchedulingConfigurer, InitializingBean,
 //		}
 //    }
     
-    @Override
-    public void afterPropertiesSet() {
-        // Configura el retardo inicial y el periodo de repetición en milisegundos
-        Long initialDelay = schedulerEjb.getCronTareaRetardoActualizacionEnviosSir();
-        Long period = schedulerEjb.getCronTareaPeriodoActualizacionEnviosSir();
-
-        scheduledFuture = executorService.scheduleAtFixedRate(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    schedulerEjb.actualizarEnviosSIR();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                } catch (I18NException e) {
-					e.printStackTrace();
-				}
-            }
-        }, initialDelay, period, TimeUnit.MILLISECONDS);
-    }
-
-    @Override
-    public void destroy() {
-        if (scheduledFuture != null && !scheduledFuture.isCancelled()) {
-            scheduledFuture.cancel(true);
-        }
-        executorService.shutdown();
-    }
+//    @Override
+//    public void afterPropertiesSet() {
+//        // Configura el retardo inicial y el periodo de repetición en milisegundos
+//        Long initialDelay = schedulerEjb.getCronTareaRetardoActualizacionEnviosSir();
+//        Long period = schedulerEjb.getCronTareaPeriodoActualizacionEnviosSir();
+//
+//        scheduledFuture = executorService.scheduleAtFixedRate(new Runnable() {
+//            @Override
+//            public void run() {
+//                try {
+//                    schedulerEjb.actualizarEnviosSIR();
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                } catch (I18NException e) {
+//					e.printStackTrace();
+//				}
+//            }
+//        }, initialDelay, period, TimeUnit.MILLISECONDS);
+//    }
+//
+//    @Override
+//    public void destroy() {
+//        if (scheduledFuture != null && !scheduledFuture.isCancelled()) {
+//            scheduledFuture.cancel(true);
+//        }
+//        executorService.shutdown();
+//    }
     
     
 	@Override
@@ -374,40 +375,40 @@ public class Regweb3Scheduler implements SchedulingConfigurer, InitializingBean,
 		
 		// Actualiza el estado de los envíos SIR con el nuevo estaado de GEISER. Solo actualiza estado envíos con estado no final.
         ////////////////////////////////////////////////////////////////
-//        taskRegistrar.addTriggerTask(
-//                new Runnable() {
-//                    @Override
-//                    public void run() {
-//                    	try {
-//							schedulerEjb.actualizarEnviosSIR();
-//						} catch (Exception e) {
-//							e.printStackTrace();
-//						} catch (I18NException e) {
-//							e.printStackTrace();
-//						}
-//                    }
-//                },
-//                new Trigger() {
-//                    @Override
-//                    public Date nextExecutionTime(TriggerContext triggerContext) {
-//						Long periodo = schedulerEjb.getCronTareaPeriodoActualizacionEnviosSir();
-//						if (periodo != null) {
-//							PeriodicTrigger trigger = new PeriodicTrigger(periodo, TimeUnit.MILLISECONDS);
-//							trigger.setFixedRate(true);
-//							// Només la primera vegada que s'executa
-//							Long actualizarEnviosSirInitialDelayLong = 0L;
-//							if (primeraVez[0]) {
-//								actualizarEnviosSirInitialDelayLong = schedulerEjb.getCronTareaRetardoActualizacionEnviosSir();
-//								primeraVez[0] = false;
-//							}
-//							trigger.setInitialDelay(actualizarEnviosSirInitialDelayLong);
-//							Date nextExecution = trigger.nextExecutionTime(triggerContext);
-//							return nextExecution;
-//						}
-//						return null;
-//                    }
-//                }
-//        );
+        taskRegistrar.addTriggerTask(
+                new Runnable() {
+                    @Override
+                    public void run() {
+                    	try {
+							schedulerEjb.actualizarEnviosSIR();
+						} catch (Exception e) {
+							e.printStackTrace();
+						} catch (I18NException e) {
+							e.printStackTrace();
+						}
+                    }
+                },
+                new Trigger() {
+                    @Override
+                    public Date nextExecutionTime(TriggerContext triggerContext) {
+						Long periodo = schedulerEjb.getCronTareaPeriodoActualizacionEnviosSir();
+						if (periodo != null) {
+							PeriodicTrigger trigger = new PeriodicTrigger(periodo, TimeUnit.MILLISECONDS);
+							trigger.setFixedRate(true);
+							// Només la primera vegada que s'executa
+							Long actualizarEnviosSirInitialDelayLong = 0L;
+							if (primeraVez) {
+								actualizarEnviosSirInitialDelayLong = schedulerEjb.getCronTareaRetardoActualizacionEnviosSir();
+								primeraVez = false;
+							}
+							trigger.setInitialDelay(actualizarEnviosSirInitialDelayLong);
+							Date nextExecution = trigger.nextExecutionTime(triggerContext);
+							return nextExecution;
+						}
+						return null;
+                    }
+                }
+        );
         // Consulta a GEISER los registros SIR recibidos y los crea en Regweb.
         ////////////////////////////////////////////////////////////////
         taskRegistrar.addTriggerTask(

@@ -18,5 +18,6 @@ public class EstadoTramitacion {
 	private EstadoTramit estado;
 	private Date fechaEstado;
 	private List<String> identificadorIntercambioSIR;
+	private String motivoRechazo;
 	
 }
