@@ -19,7 +19,7 @@ import java.io.Serializable;
             @Index(name = "RWE_PERSONA_ENTIDAD_FK_I", columnList = "ENTIDAD"),
             @Index(name = "RWE_PERSONA_DOC_I", columnList = "DOCUMENTO")},
         uniqueConstraints = {
-            @UniqueConstraint(name = "RWE_PERSONA_DOC_UK", columnNames = { "DOCUMENTO"}) })
+            @UniqueConstraint(name = "RWE_PERSONA_DOC_ENT_UK", columnNames = { "DOCUMENTO", "ENTIDAD"}) })
 @SequenceGenerator(name = "generator", sequenceName = "RWE_PERSONA_SEQ", allocationSize = 1)
 public class Persona implements Serializable {
 

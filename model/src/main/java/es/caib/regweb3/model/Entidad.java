@@ -19,7 +19,7 @@ import java.util.Set;
         indexes =
             @Index(name = "RWE_ENTIDA_PRO_FK_I", columnList = "PROPIETARIO"),
         uniqueConstraints = {
-            @UniqueConstraint(name = "RWE_ENTIDAD_CODDIR3_UK", columnNames = { "CODIGODIR3"}) })
+            @UniqueConstraint(name = "RWE_ENTIDAD_CODIGODIR3_UK", columnNames = { "CODIGODIR3"}) })
 @SequenceGenerator(name = "generator", sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
 @XmlRootElement(name = "entidad")
 @XmlAccessorType(XmlAccessType.FIELD)
