@@ -1,0 +1,425 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="https://administracionelectronica.gob.es/notifica/ws/lema/1.0/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:lre="http://administracion.gob.es/punto-unico-notificaciones/localizaRealizadas" xmlns:cre="http://administracion.gob.es/punto-unico-notificaciones/consultaRealizadas" xmlns:xop="http://www.w3.org/2004/08/xop/include" name="GDRealizadasWs" targetNamespace="https://administracionelectronica.gob.es/notifica/ws/lema/1.0/">
+
+	
+
+	<wsdl:types>
+		<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://administracion.gob.es/punto-unico-notificaciones/localizaRealizadas" xmlns:lre="http://administracion.gob.es/punto-unico-notificaciones/localizaRealizadas" elementFormDefault="qualified">
+
+			<element name="LocalizaRealizadas" type="lre:LocalizaRealizadas"/>
+			<complexType name="LocalizaRealizadas">
+				<sequence>
+					<element name="nifTitular" type="lre:Nif" minOccurs="0"/>
+					<element name="nifDestinatario" type="lre:Nif" minOccurs="0"/>
+					<element name="codigoDestino" type="xsd:string" minOccurs="0"/>
+					<element name="fechaDesde" type="xsd:dateTime" minOccurs="0"/>
+					<element name="fechaHasta" type="xsd:dateTime" minOccurs="0"/>
+					<element name="tipoEnvio" type="lre:TipoEnvio" minOccurs="0"/>
+					<element name="pagina" type="xsd:integer" minOccurs="0"/>
+					<element name="opcionesLocalizaRealizadas" type="lre:Opciones" minOccurs="0"/>
+				</sequence>
+			</complexType>
+
+			<simpleType name="Nif">
+				<restriction base="xsd:string">
+					<maxLength value="9"/>
+					<minLength value="9"/>
+				</restriction>
+			</simpleType>
+
+			<complexType name="Opcion">
+				<simpleContent>
+					<extension base="xsd:string">
+						<attribute name="tipo" type="xsd:string" use="required"/>
+					</extension>
+				</simpleContent>
+			</complexType>
+
+			<complexType name="Opciones">
+				<sequence maxOccurs="100">
+					<element name="opcion" type="lre:Opcion" minOccurs="0" maxOccurs="unbounded"/>
+				</sequence>
+			</complexType>
+
+			<simpleType name="TipoEnvio">
+				<annotation>
+					<documentation>
+						Valor 1 para las Comunicaciones, Valor 2 para las Notificaciones
+					</documentation>
+				</annotation>
+				<restriction base="xsd:string">
+					<enumeration value="1"/>
+					<enumeration value="2"/>
+				</restriction>
+			</simpleType>
+
+			<element name="RespuestaLocalizaRealizadas" type="lre:RespuestaLocalizaRealizadas"/>
+			<complexType name="RespuestaLocalizaRealizadas">
+				<sequence>
+					<element name="codigoRespuesta" type="xsd:string"/>
+					<element name="descripcionRespuesta" type="xsd:string"/>
+					<element name="nifPeticion" type="lre:Nif"/>
+					<element name="envios" type="lre:Envios" minOccurs="0"/>
+					<element name="totalPaginas" type="xsd:integer"/>
+					<element name="paginaActual" type="xsd:integer"/>
+					<element name="opcionesRespuestaLocalizaRealizadas" type="lre:Opciones" minOccurs="0"/>
+				</sequence>
+			</complexType>
+
+			<complexType name="Envios">
+				<sequence>
+					<element name="item" type="lre:Envio" minOccurs="0" maxOccurs="unbounded"/>
+				</sequence>
+			</complexType>
+
+			<complexType name="CodigoSia">
+				<sequence>
+					<element name="codigo" type="xsd:string"/>
+				</sequence>
+			</complexType>
+
+			<complexType name="DescripcionSia">
+				<sequence>
+					<element name="descripcion" type="xsd:string"/>
+				</sequence>
+			</complexType>
+
+			<complexType name="Sia">
+				<sequence>
+					<element name="codigo" type="xsd:string"/>
+					<element name="descripcion" type="xsd:string" minOccurs="0"/>
+				</sequence>
+			</complexType>
+
+			<complexType name="Envio">
+				<sequence>
+					<element name="identificador" type="xsd:string"/>
+					<element name="codigoOrigen" type="xsd:string"/>
+					<element name="concepto">
+						<simpleType>
+							<restriction base="xsd:string">
+								<whiteSpace value="preserve"/>
+								<maxLength value="255"/>
+							</restriction>
+						</simpleType>
+					</element>
+					<element name="descripcion" minOccurs="0">
+						<simpleType>
+							<restriction base="xsd:string">
+								<whiteSpace value="preserve"/>
+								<maxLength value="1000"/>
+							</restriction>
+						</simpleType>
+					</element>
+					<element name="organismoEmisor" type="lre:Organismo"/>
+					<element name="organismoEmisorRaiz" type="lre:Organismo"/>
+					<element name="fechaPuestaDisposicion" type="xsd:dateTime"/>
+					<element name="tipoEnvio" type="lre:TipoEnvio"/>
+					<element name="postal" type="xsd:boolean"/>
+					<element name="codigoProcedimiento" type="lre:Sia" minOccurs="0"/>
+					<element name="estado" type="lre:Estado"/>
+					<element name="vinculo" type="lre:Vinculo"/>
+					<element name="titular" type="lre:Persona"/>
+					<element name="receptor" type="lre:Receptor" minOccurs="0"/>
+					<element name="metadatosPublicos" minOccurs="0">
+						<simpleType>
+							<restriction base="string">
+								<whiteSpace value="preserve"/>
+							</restriction>
+						</simpleType>
+					</element>
+					<element name="referenciaPdfAcuse" minOccurs="0" type="xsd:string"/>
+					<element name="csvResguardo" minOccurs="0" type="xsd:string"/>
+					<element name="opcionesEnvio" type="lre:Opciones" minOccurs="0"/>
+				</sequence>
+			</complexType>
+
+			<complexType name="Receptor">
+				<sequence>
+					<element name="nombreReceptor" type="xsd:string"/>
+					<element name="nifReceptor" type="xsd:string"/>
+					<element name="nombreRepresentante" type="xsd:string" minOccurs="0"/>
+					<element name="nifRepresentante" type="xsd:string" minOccurs="0"/>
+				</sequence>
+			</complexType>
+
+			<complexType name="Organismo">
+				<sequence>
+					<element name="codigoOrganismo">
+						<simpleType>
+							<restriction base="xsd:string">
+								<length value="9"/>
+							</restriction>
+						</simpleType>
+					</element>
+					<element name="nombreOrganismo">
+						<simpleType>
+							<restriction base="xsd:string">
+								<maxLength value="255"/>
+							</restriction>
+						</simpleType>
+					</element>
+					<element name="nifOrganismo" type="lre:Nif" minOccurs="0"/>
+				</sequence>
+			</complexType>
+
+			<simpleType name="Estado">
+				<restriction base="xsd:string">
+					<enumeration value="ACEPTADA"/>
+					<enumeration value="RECHAZADA"/>
+					<enumeration value="EXPIRADA"/>
+					<enumeration value="REALIZADA_TEU"/>
+					<enumeration value="LEIDA"/>
+				</restriction>
+			</simpleType>
+
+			<simpleType name="Vinculo">
+				<annotation>
+					<documentation>
+						1-Titular
+						2-Destinatario
+						3-Apoderado
+						4-Funcionario
+						5-Otro
+					</documentation>
+				</annotation>
+				<restriction base="xsd:string">
+					<enumeration value="1"/>
+					<enumeration value="2"/>
+					<enumeration value="3"/>
+					<enumeration value="4"/>
+					<enumeration value="5"/>
+				</restriction>
+			</simpleType>
+
+			<simpleType name="CodigoOrganismo">
+				<restriction base="xsd:string">
+					<pattern value="([A-Z]{1}[A-Z0-9]{1}[0-9]{7})"/>
+					<maxLength value="9"/>
+					<minLength value="9"/>
+				</restriction>
+			</simpleType>
+
+			<complexType name="Persona">
+				<sequence>
+					<element name="nombreTitular" type="xsd:string"/>
+					<element name="nifTitular" type="xsd:string" minOccurs="0"/>
+					<element name="codigoDIR3" type="lre:CodigoOrganismo" minOccurs="0"/>
+					<element name="codigoDIRe" type="xsd:string" minOccurs="0"/>
+					<element name="descripcionEntidad" type="xsd:string" minOccurs="0"/>
+				</sequence>
+			</complexType>
+		</schema>
+
+		<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://administracion.gob.es/punto-unico-notificaciones/consultaRealizadas" xmlns:cre="http://administracion.gob.es/punto-unico-notificaciones/consultaRealizadas" xmlns:xmime="http://www.w3.org/2005/05/xmlmime" elementFormDefault="qualified">
+			<element name="ConsultaRealizadas" type="cre:ConsultaRealizadas"/>
+			<complexType name="ConsultaRealizadas">
+				<sequence>
+					<element name="identificador" type="cre:Identificador"/>
+					<element name="codigoOrigen" type="xsd:integer"/>
+					<element name="nifPeticion" type="cre:Nif"/>
+					<element name="nombrePeticion" type="xsd:string"/>
+					<element name="concepto" type="cre:Concepto"/>
+					<element minOccurs="0" name="opcionesConsultaRealizadas" type="cre:Opciones"/>
+				</sequence>
+			</complexType>
+
+			<simpleType name="Identificador">
+				<restriction base="xsd:string">
+					<maxLength value="255"/>
+					<whiteSpace value="preserve"/>
+				</restriction>
+			</simpleType>
+
+			<simpleType name="Nif">
+				<restriction base="xsd:string">
+					<maxLength value="9"/>
+					<minLength value="9"/>
+				</restriction>
+			</simpleType>
+
+			<simpleType name="Concepto">
+				<restriction base="xsd:string">
+					<minLength value="1"/>
+					<maxLength value="255"/>
+				</restriction>
+			</simpleType>
+
+			<complexType name="Opciones">
+				<sequence>
+					<element name="opcion" type="cre:Opcion" minOccurs="0" maxOccurs="unbounded"/>
+				</sequence>
+			</complexType>
+
+			<complexType name="Opcion">
+				<simpleContent>
+					<extension base="string">
+						<attribute name="tipo" type="string" use="required"/>
+					</extension>
+				</simpleContent>
+			</complexType>
+
+			<element name="RespuestaConsultaRealizadas" type="cre:RespuestaConsultaRealizadas"/>
+			<complexType name="ContenidoMtomInfo">
+				<sequence>
+					<element name="contenido" type="cre:Contenido" xmime:expectedContentTypes="application/octet-stream"/>
+					<element name="tipoMIME" type="xsd:string"/>
+				</sequence>
+			</complexType>
+
+			<xsd:import namespace="http://www.w3.org/2004/08/xop/include" schemaLocation="include.xsd"/>
+
+			<!-- Se modifica la definición a efectos de la validación XSD pero se sigue esperando un octect-stream -->
+			<xsd:complexType name="Contenido" mixed="true">
+				<xsd:sequence>
+					<xsd:element ref="xop:Include"/>
+				</xsd:sequence>
+				<attribute name="contentType" type="string" use="required"/>
+			</xsd:complexType>
+
+			<complexType name="Sia">
+				<sequence>
+					<element name="codigo" type="xsd:string"/>
+					<element name="descripcion" type="xsd:string" minOccurs="0"/>
+				</sequence>
+			</complexType>
+
+			<complexType name="RespuestaConsultaRealizadas">
+				<sequence>
+					<element name="codigoRespuesta" type="xsd:string"/>
+					<element name="descripcionRespuesta" type="xsd:string"/>
+					<element name="identificador" type="cre:Identificador"/>
+					<element name="codigoOrigen" type="xsd:string"/>
+					<element name="postal" type="xsd:boolean"/>
+					<element name="codigoProcedimiento" type="cre:Sia" minOccurs="0"/>
+					<element name="fechaUltimoEstado" type="xsd:dateTime"/>
+					<element minOccurs="0" name="documento" type="cre:DetalleDocumento"/>
+					<element minOccurs="0" name="anexos" type="cre:Anexos"/>
+					<element minOccurs="0" name="opcionesRespuestaConsultaRealizadas" type="cre:Opciones"/>
+				</sequence>
+			</complexType>
+
+			<complexType name="DetalleDocumento">
+				<sequence>
+					<element name="nombre" minOccurs="0" type="cre:NombreDocumento"/>
+					<element name="contenido" minOccurs="0" type="cre:ContenidoMtomInfo"/>
+					<element name="hashDocumento" minOccurs="0" type="cre:HashDocumento"/>
+					<element name="mimeType" minOccurs="0" type="xsd:string"/>
+					<element name="metadatos" minOccurs="0" type="xsd:string"/>
+					<element name="enlaceDocumento" minOccurs="0" type="xsd:string"/>
+					<element name="csvResguardo" minOccurs="0" type="xsd:string"/>
+				</sequence>
+			</complexType>
+
+			<complexType name="Anexos">
+				<choice>
+					<element name="anexosReferencia" type="cre:AnexosReferencia"/>
+					<element name="anexosUrl" type="cre:AnexosUrl"/>
+				</choice>
+			</complexType>
+
+			<complexType name="AnexosUrl">
+				<sequence>
+					<element name="anexoUrl" type="cre:AnexoUrl" maxOccurs="5"/>
+				</sequence>
+			</complexType>
+
+			<complexType name="AnexosReferencia">
+				<sequence>
+					<element name="anexoReferencia" type="cre:AnexoReferencia" maxOccurs="5"/>
+				</sequence>
+			</complexType>
+
+			<complexType name="AnexoUrl">
+				<complexContent>
+					<extension base="cre:DetalleAnexo">
+						<sequence>
+							<element name="enlaceDocumento" type="xsd:string"/>
+						</sequence>
+					</extension>
+				</complexContent>
+			</complexType>
+			<complexType name="AnexoReferencia">
+				<complexContent>
+					<extension base="cre:DetalleAnexo">
+						<sequence>
+							<element name="referenciaDocumento" type="xsd:string"/>
+						</sequence>
+					</extension>
+				</complexContent>
+			</complexType>
+			<complexType name="DetalleAnexo">
+				<sequence>
+					<element name="nombre" type="xsd:string"/>
+					<element name="mimeType" type="xsd:string"/>
+				</sequence>
+			</complexType>
+			<simpleType name="NombreDocumento">
+				<restriction base="xsd:string">
+					<whiteSpace value="preserve"/>
+					<maxLength value="100"/>
+				</restriction>
+			</simpleType>
+
+			<complexType name="HashDocumento">
+				<sequence>
+					<element name="hash" type="xsd:string"/>
+					<element name="algoritmoHash" type="xsd:string"/>
+				</sequence>
+			</complexType>
+		</schema>
+
+	</wsdl:types>
+
+	<wsdl:portType name="GDRealizadasWsPortType">
+		<wsdl:operation name="LocalizaRealizadas">
+			<wsdl:input message="tns:LocalizaRealizadasRequest"/>
+			<wsdl:output message="tns:LocalizaRealizadasResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="ConsultaRealizadas">
+			<wsdl:input message="tns:ConsultaRealizadasRequest"/>
+			<wsdl:output message="tns:ConsultaRealizadasResponse"/>
+		</wsdl:operation>
+	</wsdl:portType>
+
+	<wsdl:message name="LocalizaRealizadasRequest">
+		<wsdl:part name="LocalizaRealizadas" element="lre:LocalizaRealizadas"/>
+	</wsdl:message>
+	<wsdl:message name="LocalizaRealizadasResponse">
+		<wsdl:part name="RespuestaLocalizaRealizadas" element="lre:RespuestaLocalizaRealizadas"/>
+	</wsdl:message>
+	<wsdl:message name="ConsultaRealizadasRequest">
+		<wsdl:part name="ConsultaRealizadas" element="cre:ConsultaRealizadas"/>
+	</wsdl:message>
+	<wsdl:message name="ConsultaRealizadasResponse">
+		<wsdl:part name="RespuestaConsultaRealizadas" element="cre:RespuestaConsultaRealizadas"/>
+	</wsdl:message>
+
+	<wsdl:service name="GDRealizadasWsService">
+		<wsdl:port name="GDRealizadasWsPort" binding="tns:GDRealizadasWsBinding">
+			<soap:address location="https://se-gd-dehuws.redsara.es/ws/v1/realizadas"/>
+		</wsdl:port>
+	</wsdl:service>
+
+	<wsdl:binding name="GDRealizadasWsBinding" type="tns:GDRealizadasWsPortType">
+		<soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+		<wsdl:operation name="LocalizaRealizadas">
+			<soap:operation soapAction="https://administracionelectronica.gob.es/notifica/ws/lema/LocalizaRealizadas"/>
+			<wsdl:input>
+				<soap:body use="literal" parts="LocalizaRealizadas" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" parts="RespuestaLocalizaRealizadas" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="ConsultaRealizadas">
+			<soap:operation soapAction="https://administracionelectronica.gob.es/notifica/ws/lema/ConsultaRealizadas"/>
+			<wsdl:input>
+				<soap:body use="literal" parts="ConsultaRealizadas" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" parts="RespuestaConsultaRealizadas" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+</wsdl:definitions>

@@ -69,12 +69,12 @@
 
             <div id="anexosdiv" class="">
 
-                <c:if test="${empty anexos}">
+                <c:if test="${empty anexos && ! registro.anexosPendientes}">
                     <div class="alert alert-grey alert-dismissable">
                         <strong><spring:message code="regweb.listado.vacio"/> <spring:message code="anexo.anexo"/></strong>
                     </div>
                 </c:if>
-
+                
                 <c:if test="${not empty erroresAnexosSir}">
                     <div class="alert alert-danger">
                         <c:forEach var="errorAnexoSir" items="${erroresAnexosSir}">
@@ -608,6 +608,26 @@
         confirm("<c:url value="/anexo/delete"/>/" + idRegistroDetalle + "/" + tipoRegistro + "/" + idRegistro + "/" + idAnexo, mensaje);
 
     }
+    
+    function sincronizarAnexosNotificacion(url){
+
+        $.ajax({
+            url:url,
+            type:'POST',
+            beforeSend: function(objeto){
+                waitingDialog.show('<spring:message code="remesa.anexos.sincronizando" javaScriptEscape='true'/>', {dialogSize: 'm', progressType: 'info'});
+            },
+            success:function(respuesta){
+                if(respuesta.status == 'SUCCESS'){
+                    goTo('<c:url value="/registroEntrada/${registro.id}/detalle"/>');
+                }else if(respuesta.status == 'FAIL') {
+                    mensajeError('#mensajes', respuesta.error);
+                    waitingDialog.hide();
+                }
+            }
+        });
+
+	}
 
 </script>
 

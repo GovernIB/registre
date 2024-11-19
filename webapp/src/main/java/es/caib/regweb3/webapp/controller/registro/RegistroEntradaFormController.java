@@ -105,7 +105,8 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
         model.addAttribute("oficinasOrigen", oficinasOrigen);
         model.addAttribute("origenPlantilla", true);
         model.addAttribute("ultimosOrganismos",  registroEntradaConsultaEjb.ultimosOrganismosRegistro(getUsuarioEntidadActivo(request)));
-
+        model.addAttribute("esRemesa", false);
+        
         return "registroEntrada/registroEntradaForm";
     }
 
@@ -149,7 +150,8 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
         model.addAttribute("organismosOficinaActiva", getOrganismosOficinaActiva(request));
         model.addAttribute("oficinasOrigen",  oficinasOrigen);
         model.addAttribute("ultimosOrganismos",  registroEntradaConsultaEjb.ultimosOrganismosRegistro(getUsuarioEntidadActivo(request)));
-
+        model.addAttribute("esRemesa", false);
+        
         return "registroEntrada/registroEntradaForm";
     }
 
@@ -231,7 +233,8 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
                 }
             }
             model.addAttribute("oficinasOrigen", oficinasOrigen);
-
+            model.addAttribute("esRemesa", false);
+            
             return "registroEntrada/registroEntradaForm";
         }else{ // Si no hay errores guardamos el registro
 
@@ -361,7 +364,8 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
         model.addAttribute(usuario);
         model.addAttribute(oficina);
         model.addAttribute("registroEntrada",registroEntrada);
-
+        model.addAttribute("esRemesa", false);
+        
         return "registroEntrada/registroEntradaForm";
     }
 
@@ -444,7 +448,8 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
                 }
             }
             model.addAttribute("oficinasOrigen", oficinasOrigen);
-
+            model.addAttribute("esRemesa", false);
+            
             return "registroEntrada/registroEntradaForm";
         }else { // Si no hay errores actualizamos el registro
 

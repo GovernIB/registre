@@ -742,7 +742,15 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         q.executeUpdate();
 
     }
-    
+
+	@Override
+	public void updateAnexosPendientes(Long idRegistroEntrada, boolean pendientes) throws Exception {
+        Query q = em.createQuery("update RegistroEntrada set anexosPendientes = :pendientes where id = :idRegistroEntrada");
+        q.setParameter("idRegistroEntrada", idRegistroEntrada);
+        q.setParameter("pendientes", pendientes);
+        q.executeUpdate();
+	}
+
     @Override
     public RegistroEntrada getConAnexosFull(Long id) throws Exception, I18NException {
 

@@ -525,5 +525,42 @@ public class Regweb3Scheduler implements SchedulingConfigurer {
                     }
                 }
         );
+        
+        // Localiza notificaciones y comunicacione pendientes
+        ////////////////////////////////////////////////////////////////
+        taskRegistrar.addTriggerTask(
+                new Runnable() {
+                    @Override
+                    public void run() {
+                    	try {
+                    		schedulerEjb.localizarIGuardarNotificaciones();
+						} catch (Exception e) {
+							e.printStackTrace();
+						} catch (I18NException e) {
+							e.printStackTrace();
+						}
+                    }
+                },
+                new Trigger() {
+                    @Override
+                    public Date nextExecutionTime(TriggerContext triggerContext) {
+						Long periodo = schedulerEjb.getCronTareaPeriodoConsultaNotificacionesDehu();
+						if (periodo != null) {
+							PeriodicTrigger trigger = new PeriodicTrigger(periodo, TimeUnit.MILLISECONDS);
+							trigger.setFixedRate(true);
+							// Només la primera vegada que s'executa
+							Long localizaNotificacionesPendientesInitialDelayLong = 0L;
+							if (primeraVez[0]) {
+								localizaNotificacionesPendientesInitialDelayLong = schedulerEjb.getCronTareaRetardoConsultaNotificacionesDehu();
+								primeraVez[0] = false;
+							}
+							trigger.setInitialDelay(localizaNotificacionesPendientesInitialDelayLong);
+							Date nextExecution = trigger.nextExecutionTime(triggerContext);
+							return nextExecution;
+						}
+						return null;
+                    }
+                }
+        );
 	}
 }

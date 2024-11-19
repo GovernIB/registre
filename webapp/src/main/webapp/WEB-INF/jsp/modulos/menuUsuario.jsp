@@ -120,6 +120,11 @@
     </div>
 </c:if>
 
+<%--Menú DEHú--%>
+<div class="btn-group">
+    <a href="<c:url value="/remesa/list"/>" class="btn btn-danger btn-sm"><spring:message code="menu.dehu"/> <i class="fa fa-file-o"></i></a>
+</div>
+
 <%--Menú ADMINISTRACIÓN--%>
 <div class="btn-group">
     <button type="button" class="btn btn-warning btn-sm dropdown-toggle" data-toggle="dropdown">

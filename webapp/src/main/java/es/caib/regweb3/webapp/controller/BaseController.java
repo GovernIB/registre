@@ -58,8 +58,7 @@ public class BaseController {
 
     @EJB(mappedName = "regweb3/OrganismoEJB/local")
     public OrganismoLocal organismoEjb;
-
-
+    
     /**
      * Retorna la información del UsuarioAutenticado
      * @param request

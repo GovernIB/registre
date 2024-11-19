@@ -72,12 +72,12 @@
                                 <%--Si no se ha generado el justificante y el registro no está ANULADO, muestra el boton para generarlo --%>
                                 <c:if test="${!tieneJustificante && idJustificante == null && registro.estado != RegwebConstantes.REGISTRO_ANULADO && puedeEditar && not empty registro.registroDetalle.interesados}">
                                     <div class="btn-group">
-                                        <button type="button" class="btn btn-warning btn-sm dropdown-toggle" data-toggle="dropdown">
+                                        <button type="button" class="btn btn-warning btn-sm dropdown-toggle" data-toggle="dropdown" >
                                             <spring:message code="justificante.boton"/> <span class="caret"></span>
                                         </button>
                                         <ul class="dropdown-menu">
-                                            <li class="submenu-complet"><a onclick="crearJustificante('<c:url value="/registroEntrada/${idRegistro}/justificante/ca"/>')" onmouseover="this.style.cursor='pointer';"><spring:message code="regweb.catalan"/></a></li>
-                                            <li class="submenu-complet"><a onclick="crearJustificante('<c:url value="/registroEntrada/${idRegistro}/justificante/es"/>')" onmouseover="this.style.cursor='pointer';"><spring:message code="regweb.castellano"/></a></li>
+                                            <li class="submenu-complet ${registro.anexosPendientes ? 'href-disabled' : ''}"><a onclick="crearJustificante('<c:url value="/registroEntrada/${idRegistro}/justificante/ca"/>')" onmouseover="this.style.cursor='pointer';"><spring:message code="regweb.catalan"/></a></li>
+                                            <li class="submenu-complet ${registro.anexosPendientes ? 'href-disabled' : ''}"><a onclick="crearJustificante('<c:url value="/registroEntrada/${idRegistro}/justificante/es"/>')" onmouseover="this.style.cursor='pointer';"><spring:message code="regweb.castellano"/></a></li>
                                         </ul>
                                     </div>
                                 </c:if>
@@ -116,7 +116,7 @@
                             <div class="panel-footer center">
 
 		                        <c:choose>
-		                        <c:when test="${(registro.evento == RegwebConstantes.EVENTO_DISTRIBUIR && puedeDistribuir && not empty registro.registroDetalle.interesados && anexosVerificados)}">
+		                        <c:when test="${(registro.evento == RegwebConstantes.EVENTO_DISTRIBUIR && puedeDistribuir && not empty registro.registroDetalle.interesados && anexosVerificados && !registro.anexosPendientes)}">
 		                        
 	                                <c:if test="${distribuirRipea}">
 	
@@ -139,7 +139,7 @@
 	                                </c:if>
 
 		                        </c:when>
-		                        <c:when test="${(registro.evento == RegwebConstantes.EVENTO_DISTRIBUIR && puedeDistribuir && not empty registro.registroDetalle.interesados && !anexosVerificados)}">
+		                        <c:when test="${(registro.evento == RegwebConstantes.EVENTO_DISTRIBUIR && puedeDistribuir && not empty registro.registroDetalle.interesados && (!anexosVerificados || registro.anexosPendientes))}">
 		                        	<button type="button" class="btn btn-success btn-sm btn-block" title="<spring:message code="anexos.estado.pendiente"/>" disabled="true"><spring:message code="regweb.distribuir"/></button>
 		                        </c:when>
 		                        </c:choose>

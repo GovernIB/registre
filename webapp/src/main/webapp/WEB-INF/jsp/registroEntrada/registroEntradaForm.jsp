@@ -311,17 +311,173 @@
                        </div>
                    </div>
                </div>
+               
+               <c:if test="${esRemesa}">
+	               <!-- Anexos -->
+	               <div class="col-xs-12">
+	               		<div class="panel panel-info">
+					
+					        <div class="panel-heading">
+					            <h3 class="panel-title">
+					                <i class="fa fa-user"></i>
+					                <strong>
+					                    <spring:message code="menu.anexos"/>
+					                </strong>
+					            </h3>
+					        </div>
+					
+					        <div class="panel-body">					        
+						        <c:if test="${errorAnexos}">
+					                <div class="alert alert-danger alert-dismissable">
+					                    <strong><spring:message code="registroEntrada.anexos"/>.</strong> <spring:message code="registroEntrada.anexos.error"/>
+					                </div>
+					            </c:if>
+			               		<c:forEach items="${registroEntrada.registroDetalle.anexos}" var="anexo" varStatus="loop">
+			               			<div><strong>Anexo ${loop.index + 1}: </strong></div>
+				               		<div class="form-group col-xs-12">
+					               		<div class="col-xs-6">
+				                            <div class="col-xs-3 pull-left etiqueta_regweb12 control-label textEsq">
+				                                <label for="registroDetalle.anexos[${loop.index}]" rel="popupAbajo" data-content="<spring:message code="anexo.nombre.fichero"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="anexo.nombre.fichero"/></label>
+				                            </div>
+				                            <div class="col-xs-9">
+				                                <form:input path="registroDetalle.anexos[${loop.index}].titulo" cssClass="form-control" maxlength="50"/> <form:errors path="registroDetalle.anexos[${loop.index}].titulo" cssClass="help-block" element="span"/>
+				                            </div>
+				                        </div>
+				                        <div class="col-xs-6">
+				                            <div class="col-xs-3 pull-left etiqueta_regweb12 control-label textEsq">
+				                                <label for="registroDetalle.anexos[${loop.index}]" rel="popupAbajo" data-content="<spring:message code="anexo.nombre.fichero"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="anexo.nombre.fichero"/></label>
+				                            </div>
+				                            <div class="col-xs-9">
+				                                <form:input path="registroDetalle.anexos[${loop.index}].nombreFichero" cssClass="form-control" maxlength="50"/> <form:errors path="registroDetalle.anexos[${loop.index}].nombreFichero" cssClass="help-block" element="span"/>
+				                            </div>
+				                        </div>
+			                        </div>
+			                        <div class="form-group col-xs-12">
+				                       <div class="col-xs-6">
+				                          <div class="col-xs-3 pull-left etiqueta_regweb12 control-label textEsq">
+				                              <label for="registroDetalle.anexos[${loop.index}].origenCiudadanoAdmin" rel="popupAbajo" data-content="<spring:message code="anexo.origen"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="anexo.origen"/></label>
+				                          </div>
+				                          <div class="col-xs-9">
+				                              <form:select path="registroDetalle.anexos[${loop.index}].origenCiudadanoAdmin" class="chosen-select">
+				                                 <form:option value=""></form:option>
+                                    			 <form:option value="0"><spring:message code="anexo.origen.ciudadano"/></form:option>
+                                    			 <form:option value="1"><spring:message code="anexo.origen.administracion"/></form:option>
+				                              </form:select>
+				                          </div>
+				                       </div>
+			                        	<div class="col-xs-6">
+				                           <div class="col-xs-3 pull-left etiqueta_regweb12 control-label textEsq">
+				                               <label for="registroDetalle.anexos[${loop.index}].tipoDocumento" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.tipoDocumentoAnexo"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="anexo.tipoDocumento"/></label>
+				                           </div>
+				                           <div class="col-xs-9">
+				                               <form:select path="registroDetalle.anexos[${loop.index}].tipoDocumento" class="chosen-select">
+				                                   <c:forEach items="${tiposDocumentoAnexo}" var="tipoDocumento">
+				                                       <form:option value="${tipoDocumento}"><spring:message code="tipoDocumento.0${tipoDocumento}"/></form:option>
+				                                   </c:forEach>
+				                               </form:select>
+				                           </div>
+				                        </div>
+			                        </div>
+			                        <div class="form-group col-xs-12">
+				                       <div class="col-xs-6">
+				                          <div class="col-xs-3 pull-left etiqueta_regweb12 control-label textEsq">
+				                              <label for="tipoDocumental" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.tipoDocumental"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="anexo.tipoDocumental"/></label>
+				                          </div>
+				                          <div class="col-xs-9">
+				                              <form:select path="registroDetalle.anexos[${loop.index}].tipoDocumental.id" class="chosen-select">
+				                                   	 <form:option value=""></form:option>
+				                                 <c:forEach items="${tiposDocumental}" var="tipoDocumental">
+				                                     <form:option value="${tipoDocumental.id}"><i:trad value="${tipoDocumental}" property="nombre"/></form:option>
+				                                 </c:forEach>
+				                              </form:select>
+				                          </div>
+				                       </div>
+			                        	<div class="col-xs-6">
+				                           <div class="col-xs-3 pull-left etiqueta_regweb12 control-label textEsq">
+				                               <label for="registroDetalle.anexos[${loop.index}].validezDocumento" rel="popupAbajo" data-content="<spring:message code="anexo.validezDocumento"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="anexo.validezDocumento"/></label>
+				                           </div>
+				                           <div class="col-xs-9 radioButton">
+				                               <c:forEach items="${tiposValidezDocumento}" var="validezDocumento">
+				                                     <label class="radio">
+				                                         <c:if test="${validezDocumento == RegwebConstantes.TIPOVALIDEZDOCUMENTO_COPIA}">
+				                                             <form:radiobutton  path="registroDetalle.anexos[${loop.index}].validezDocumento"  value="${validezDocumento}" data-parsley-required="true" data-parsley-multiple="BuyAgain" data-parsley-id="1481"  checked = "checked"/><span class="text12"> <spring:message code="tipoValidezDocumento.${validezDocumento}"/></span>
+				                                         </c:if>
+				                                         <c:if test="${validezDocumento != RegwebConstantes.TIPOVALIDEZDOCUMENTO_COPIA}">
+				                                             <form:radiobutton  path="registroDetalle.anexos[${loop.index}].validezDocumento"  value="${validezDocumento}" data-parsley-required="true" data-parsley-multiple="BuyAgain" data-parsley-id="1481" /><span class="text12"> <spring:message code="tipoValidezDocumento.${validezDocumento}"/></span>
+				                                         </c:if>
+				                                      </label>
+			                                    </c:forEach>
+				                           </div>
+				                        </div>
+			                        </div>
+			                        <div class="form-group col-xs-12">
+			                        </div>
+		                        </c:forEach>
+	                        </div>
+	              		</div>
+	               </div>
+               </c:if>
                </form:form>
 
                <!-- INTERESADOS -->
-               <c:if test="${empty registroEntrada.id || registroEntrada.estado == RegwebConstantes.REGISTRO_RESERVA}">
+               <c:if test="${(empty registroEntrada.id || registroEntrada.estado == RegwebConstantes.REGISTRO_RESERVA) && !esRemesa}">
                    <c:set var="registro" value="${registroEntrada}"/>
                    <c:import url="../registro/interesados.jsp">
                        <c:param name="tipoRegistro" value="${RegwebConstantes.REGISTRO_ENTRADA}"/>
                        <%--<c:param name="comunidad" value="${comunidad.codigoComunidad}"/>--%>
                    </c:import>
                </c:if>
+               
+               <c:if test="${(empty registroEntrada.id || registroEntrada.estado == RegwebConstantes.REGISTRO_RESERVA) && esRemesa}">
+					<div class="col-xs-12">
 
+					    <div class="panel panel-info">
+					
+					        <div class="panel-heading">
+					            <h3 class="panel-title">
+					                <i class="fa fa-user"></i>
+					                <strong>
+					                    <spring:message code="interesado.interesados"/>
+					                </strong>
+					            </h3>
+					        </div>
+					
+					        <div class="panel-body">
+					        	<c:forEach items="${interesados}" var="interesado">
+									<div class="form-group col-xs-12">
+										<div class="col-xs-2 pull-left etiqueta_regweb control-label">
+											<label rel="popupAbajo"
+												data-content="<spring:message code="registro.ayuda.tipoInteresado.entrada"/>"
+												data-toggle="popover"><spring:message
+													code="interesado.tipoInteresado" /></label>
+										</div>
+										<div class="col-xs-10">
+											<input type="radio" name="tipoInteresado"
+												value="${interesado.tipo}"
+												<c:if test="${interesado.tipo == RegwebConstantes.TIPO_INTERESADO_PERSONA_FISICA}">checked</c:if>
+												disabled="disabled" checked>
+											<spring:message code="interesado.tipo.${interesado.tipo}" />
+										</div>
+									</div>
+
+									<div class="form-group col-xs-12">
+										<div class="col-xs-2 pull-left etiqueta_regweb control-label">
+											<label id="organismoInteresadoLabel"
+												for="organismoInteresado" rel="popupAbajo"
+												data-content="<spring:message code="registro.ayuda.organoInteresado"/>"
+												data-toggle="popover">
+												<spring:message code="interesado.organismo" /></label>
+										</div>
+										<div class="col-xs-10">
+											<strong>${interesado.codigoDir3} -
+												${interesado.nombre}</strong>
+										</div>
+									</div>
+								</c:forEach>
+					        </div>
+					     </div>
+					</div>
+			   </c:if>
                <!-- Botonera -->
                <div class="col-xs-12">
                    <button type="button" class="btn btn-warning btn-sm" onclick="doForm('#registroEntrada')">

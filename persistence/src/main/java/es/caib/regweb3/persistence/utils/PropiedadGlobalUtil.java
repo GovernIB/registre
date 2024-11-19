@@ -896,6 +896,12 @@ public class PropiedadGlobalUtil {
         return getString(partialPropertyName);
     }
     
+    public static String getDehuDocumentsPath() {
+        final String partialPropertyName = "documents.dehu.path";
+
+        return getString(partialPropertyName);
+    }
+    
     /**
      * Retorna el valor de la propiedad fecha.inicio.busqueda.path global.
      * Propiedad: es.caib.regweb3.fecha.inicio.busqueda.path
@@ -907,6 +913,17 @@ public class PropiedadGlobalUtil {
         return getStringByEntidad(idEntidad, partialPropertyName);
     }
     
+    /**
+     * Retorna el valor de la propiedad fecha.inicio.busqueda.path global.
+     * Propiedad: es.caib.regweb3.fecha.inicio.busqueda.path
+     * @param idEntidad
+     * @return
+     */
+    public static String getFechaInicioBusquedaNotificacionesPath(Long idEntidad) {
+        final String partialPropertyName = "fecha.inicio.busqueda.notificaciones.path";
+        return getStringByEntidad(idEntidad, partialPropertyName);
+    }
+    
     public static String getFechaUltimaVerificacionFirmaAnexosPath() {
         final String partialPropertyName = "fecha.ultima.ejecucion.path";
         
@@ -915,6 +932,11 @@ public class PropiedadGlobalUtil {
     
     public static boolean getEnvioEmailErrorGeiser() {
         final String partialPropertyName = "enviar.mail.error.geiser";
+        return getBoolean(partialPropertyName);
+    }
+    
+    public static boolean getEnvioEmailResultadoLema() {
+        final String partialPropertyName = "enviar.mail.resultado.lema";
         return getBoolean(partialPropertyName);
     }
     
@@ -966,4 +988,14 @@ public class PropiedadGlobalUtil {
 		final String partialPropertyName =  "cron.actualizacion.anexos.pendientes.verificacion.firma.retardo";
     	return getLong(partialPropertyName);
 	}
+	
+    public static Long getCronTareaPeriodoConsultaNotificacionesDehu() {
+    	final String partialPropertyName =  "cron.localizacion.notificaciones.dehu.periodo";
+    	return getLong(partialPropertyName);
+    }
+    
+    public static Long getCronTareaRetardoConsultaNotificacionesDehu() {
+    	final String partialPropertyName =  "cron.localizacion.notificaciones.dehu.retardo";
+    	return getLong(partialPropertyName);
+    }
 }

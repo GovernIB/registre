@@ -818,6 +818,23 @@ $(function() {
     });
 });
 
+$(function() {
+    $('#fechaImportacion').datetimepicker({
+        language: 'ca',
+        format: 'DD/MM/YYYY',
+        pickTime: false,
+        useMinutes: false,
+        useSeconds: false,
+        useCurrent: false,
+        icons: {
+            time: 'fa fa-clock-o',
+            date: 'fa fa-calendar',
+            up: 'fa fa-chevron-up',
+            down: 'fa fa-chevron-down'
+        }
+    });
+});
+
 
 /**
  * Elimina la etiqueta de Error al campo pasado por parámetro

@@ -102,4 +102,24 @@ public class MonitorTareas {
 		return fechaEjecucionDate;
 	}
 
+	public void updateFechaInicioProximaLocalizacionNotificaciones(Long idEntidad, String fechaFinActual) {
+		String path = PropiedadGlobalUtil.getFechaInicioBusquedaNotificacionesPath(idEntidad);
+		Properties properties = new Properties();
+		File file;
+		try {
+			properties.setProperty("busqueda.notificaciones.fecha.fechaInicio", fechaFinActual);
+			if (path == null || path == "") {
+				path = "/opt/files/";
+			}
+			file = new File(path + "/lema.properties");
+			OutputStream out = new FileOutputStream(file);
+
+			DefaultPropertiesPersister p = new DefaultPropertiesPersister();
+			p.store(properties, out, "Fecha inicio próximo búsqueda notificaciones y comunicaciones pendientes.");
+		} catch (Exception ex) {
+			log.error("Error a la hora de escribir el fichero config", ex);
+			ex.printStackTrace();
+		}
+	}
+	
 }

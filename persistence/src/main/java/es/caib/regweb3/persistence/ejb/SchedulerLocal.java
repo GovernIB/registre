@@ -151,5 +151,12 @@ public interface SchedulerLocal {
 	Long getCronTareaRetardoActualizacionAnexosPendientesVerificacionFirma();
 
 	void enviarCorreoVerificacionAnexosBloqueada() throws Exception;
+
+	void localizarIGuardarNotificaciones() throws Exception, I18NException;
+	
+	/** Tiempo ejecución localización notificaciones y comunicaciones DEHú**/
+	Long getCronTareaPeriodoConsultaNotificacionesDehu();
+	
+	Long getCronTareaRetardoConsultaNotificacionesDehu();
 }
 

@@ -283,4 +283,6 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
 
 	void marcarRectificado(Long idRegistro);
 
+	void updateAnexosPendientes(Long idRegistroEntrada, boolean pendientes) throws Exception;
+
 }

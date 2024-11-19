@@ -192,6 +192,11 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
             <bean class="es.caib.regweb3.webapp.interceptor.PropiedadGlobalInterceptor"/>
         </mvc:interceptor>
 
+        <!--Interceptor para las remesas -->
+        <mvc:interceptor>
+            <mvc:mapping path="/remesa/**"/>
+            <bean class="es.caib.regweb3.webapp.interceptor.RemesaInterceptor"/>
+        </mvc:interceptor>
 
         <!-- Configuración de Idioma -->
         <bean id="localeChangeInterceptor" class="es.caib.regweb3.webapp.interceptor.RegWebLocaleChangeInterceptor">

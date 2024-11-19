@@ -46,7 +46,9 @@ public class RegistroEntrada implements IRegistro {
     @XmlElement
     private RegistroDetalle registroDetalle;
 
-
+    @XmlElement
+    private boolean anexosPendientes;
+    
     /**
      * 
      */
@@ -230,8 +232,16 @@ public class RegistroEntrada implements IRegistro {
         this.estado = estado;
     }
 
+    @Column(name="ANEXOS_PENDIENTES", nullable=false)
+    public boolean isAnexosPendientes() {
+		return anexosPendientes;
+	}
 
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+	public void setAnexosPendientes(boolean anexosPendientes) {
+		this.anexosPendientes = anexosPendientes;
+	}
+
+	@ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "REGISTRO_DETALLE")
     @ForeignKey(name = "RWE_REGENT_REGDET_FK")
     public RegistroDetalle getRegistroDetalle() {

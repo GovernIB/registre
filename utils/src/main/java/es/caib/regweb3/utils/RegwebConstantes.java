@@ -774,6 +774,7 @@ public interface RegwebConstantes {
     Long PLUGIN_CUSTODIA_FS_JUSTIFICANTE = 9L;
     Long PLUGIN_ARXIU_JUSTIFICANTE = 10L;
     Long PLUGIN_GEISER = 11L;
+    Long PLUGIN_LEMA = 12L;
     
     Long[] TIPOS_PLUGIN = {
             PLUGIN_CUSTODIA_ANEXOS,
@@ -786,7 +787,8 @@ public interface RegwebConstantes {
             PLUGIN_CUSTODIA_JUSTIFICANTE,
             PLUGIN_VALIDACION_FIRMAS,
             PLUGIN_ARXIU_JUSTIFICANTE,
-            PLUGIN_GEISER
+            PLUGIN_GEISER,
+            PLUGIN_LEMA
     };
 
     Long[] TIPOS_PLUGIN_CAIB = {
@@ -861,6 +863,23 @@ public interface RegwebConstantes {
             NOTIFICACION_ESTADO_LEIDA
     };
 
+    /* ------------ REMESA -----------------------*/
+    
+    String REMESA_ESTADO_REG_PENDIENTE = "PENDIENTE";
+    String REMESA_ESTADO_REG_LEIDA = "LEIDA";
+    String REMESA_ESTADO_REG_REGISTRADA = "REGISTRADA";
+
+    String[] REMESA_REGWEB_ESTADOS = {
+    		REMESA_ESTADO_REG_PENDIENTE,
+    		REMESA_ESTADO_REG_LEIDA,
+    		REMESA_ESTADO_REG_REGISTRADA
+    };
+    
+    String REMESA_ENV_ESTADO_PENDIENTE = "PENDIENTE";
+    String REMESA_ENV_ESTADO_ACEPTADA = "ACEPTADA";
+    
+    String LEMA_RESPUESTA_OK = "200";
+    
     /* ------------ COLA -------------------------*/
 
     Long COLA_DISTRIBUCION = 0L;

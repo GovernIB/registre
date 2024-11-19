@@ -20,6 +20,10 @@ public class MimeTypeUtils {
         return getMimeTypeFileName("fichero." + extension);
     }
 
+    public static String getExtensionFileName(String fileName) {
+        return MimeUtil.getExtension(fileName);
+    }
+    
     public static String getMimeTypeFileName(String fileName) {
         Collection<?> mimeTypes = MimeUtil.getMimeTypes(fileName.toLowerCase());
         return getMostSpecificMimeType(mimeTypes);

@@ -564,6 +564,23 @@
       <artifactId>plugin-geiser-mock</artifactId>
       <version>${project.version}</version>
     </dependency>
+    
+    	<!-- ============================================ -->
+    <!-- ======== PLUGINS LEMA =========== -->
+    <!-- ============================================ -->
+
+	<dependency>
+		<groupId>es.caib.regweb3</groupId>
+		<artifactId>plugin-lema-api</artifactId>
+		<version>${project.version}</version>
+	</dependency>
+
+	<dependency>
+		<groupId>es.caib.regweb3</groupId>
+		<artifactId>plugin-lema-apb</artifactId>
+		<version>${project.version}</version>
+	</dependency>
+
   </dependencies>
 
 

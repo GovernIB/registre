@@ -1,0 +1,34 @@
+package org.plugin.lema.api;
+
+import java.math.BigInteger;
+import java.util.List;
+
+import javax.xml.datatype.XMLGregorianCalendar;
+
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+public class EnvioRealizada {
+
+	protected String identificador;
+	protected BigInteger codigoOrigen;
+	protected String concepto;
+	protected String descripcion;
+	protected Organismo organismoEmisor;
+	protected Organismo organismoEmisorRaiz;
+	protected XMLGregorianCalendar fechaPuestaDisposicion;
+	protected String tipoEnvio;
+	protected BigInteger vinculo;
+	protected Persona titular;
+	protected String metadatosPublicos;
+	protected List<Opcion> opcionesEnvio;
+	protected boolean postal;
+	protected Sia codigoProcedimiento;
+	protected Estado estado;
+	protected Receptor receptor;
+	protected String referenciaPdfAcuse;
+	protected String csvResguardo;
+	
+}

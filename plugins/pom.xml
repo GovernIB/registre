@@ -20,7 +20,8 @@
         <module>plugin-justificante</module>
         <module>plugin-postproceso</module>
     	<module>plugin-geiser</module>
-  	</modules>
+    <module>plugin-lema</module>
+  </modules>
     <repositories>
         <repository>
             <id>maven-nuxeo</id>

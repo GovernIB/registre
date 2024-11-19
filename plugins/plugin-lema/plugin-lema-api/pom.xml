@@ -1,0 +1,100 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>es.caib.regweb3</groupId>
+		<artifactId>plugin-lema</artifactId>
+		<version>3.2.4</version>
+	</parent>
+
+	<artifactId>plugin-lema-api</artifactId>
+	<name>plugin-lema-api</name>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.18.12</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.fundaciobit.pluginsib.core</groupId>
+			<artifactId>pluginsib-core</artifactId>
+			<version>2.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-codec</groupId>
+			<artifactId>commons-codec</artifactId>
+			<version>1.5</version>
+			<scope>provided</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>jaxws-maven-plugin</artifactId>
+				<version>2.4.1</version>
+				<executions>
+					<execution>
+						<id>generate-reports-ws-localiza</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>wsimport</goal>
+						</goals>
+						<configuration>
+							<bindingFiles>
+								<bindingFile>${basedir}/wsdl/bindings.xml</bindingFile>
+							</bindingFiles>
+							<wsdlUrls>
+								<wsdlUrl>${basedir}/wsdl/lema.wsdl</wsdlUrl>
+							</wsdlUrls>
+							<xdebug>true</xdebug>
+							<packageName>org.plugin.lema.api.ws</packageName>
+							<xjcArgs>
+								<xjcArg>-XautoNameResolution</xjcArg>
+							</xjcArgs>
+							<verbose>true</verbose>
+							<sourceDestDir>${basedir}/src/main/java</sourceDestDir>
+						</configuration>
+					</execution>
+					<execution>
+						<id>generate-reports-ws-localiza-realizadas</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>wsimport</goal>
+						</goals>
+						<configuration>
+							<bindingFiles>
+								<bindingFile>${basedir}/wsdl/bindings_realizadas.xml</bindingFile>
+							</bindingFiles>
+							<wsdlUrls>
+								<wsdlUrl>${basedir}/wsdl/realizadas.wsdl</wsdlUrl>
+							</wsdlUrls>
+							<xdebug>true</xdebug>
+							<packageName>org.plugin.lema.api.realizadas.ws</packageName>
+							<xjcArgs>
+								<xjcArg>-XautoNameResolution</xjcArg>
+							</xjcArgs>
+							<verbose>true</verbose>
+							<sourceDestDir>${basedir}/src/main/java</sourceDestDir>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<!-- <plugin> <groupId>org.apache.cxf</groupId> <artifactId>cxf-codegen-plugin</artifactId> 
+				<version>${cxf.version}</version> <executions> <execution> <goals> <goal>wsdl2java</goal> 
+				</goals> </execution> </executions> <configuration> <wsdlOptions> <wsdlOption> 
+				<wsdl>${basedir}/wsdl/lema.wsdl</wsdl> <extraargs> <extaarg>-client</extaarg> 
+				<extaarg>-verbose</extaarg> <extraarg>-autoNameResolution</extraarg> </extraargs> 
+				<packagenames> <packagename>org.plugin.lema.api.ws</packagename> </packagenames> 
+				</wsdlOption> </wsdlOptions> </configuration> </plugin> -->
+		</plugins>
+	</build>
+</project>

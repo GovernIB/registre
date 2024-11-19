@@ -1,0 +1,123 @@
+CREATE TABLE RWE_REMESA
+(
+    ID							NUMBER(19,0) NOT NULL,
+    CONCEPTO					VARCHAR2(255 CHAR) NOT NULL,
+    DESCRIPCION					VARCHAR2(1000 CHAR),
+    IDENTIFICADOR				VARCHAR2(20 CHAR) NOT NULL,
+    CODIGO_ORIGEN 				NUMBER(1) NOT NULL,
+    TIPO						NUMBER(1) NOT NULL,
+    ORGANO_EMISOR_CODIGO    	VARCHAR2(9 CHAR) NOT NULL,
+    ORGANO_EMISOR_NOMBRE		VARCHAR2(255 CHAR) NOT NULL,
+    FECHA_PUESTA_DISPOSICION	DATE NOT NULL,
+    TITULAR_NIF					VARCHAR2(9 CHAR),
+    TITULAR_NOMBRE				VARCHAR2(255 CHAR),
+    ENTIDAD_CODIGO				VARCHAR2(9),
+    ENTIDAD_NOMBRE				VARCHAR2(255),
+    ESTADO						VARCHAR2(10 CHAR) NOT NULL,
+    ESTADO_NOTIFICA				VARCHAR2(30 CHAR) NOT NULL,
+    CODIGO_PROCEDIMIENTO		VARCHAR2(9 CHAR),
+    REINTENTOS_LECTURA			NUMBER(1) DEFAULT 3 NOT NULL,
+    REGISTRO       				NUMBER(19,0),
+    ENTIDAD        				NUMBER(19,0) NOT NULL
+);
+
+CREATE INDEX RWE_REMESA_CONCE_I ON RWE_REMESA(CONCEPTO);
+
+CREATE INDEX RWE_REMESA_IDENT_I ON RWE_REMESA(IDENTIFICADOR);
+
+CREATE INDEX RWE_REMESA_TIPO_I ON RWE_REMESA(TIPO);
+
+CREATE INDEX RWE_REMESA_EMISOR_CODI_I ON RWE_REMESA(ORGANO_EMISOR_CODIGO);
+
+CREATE INDEX RWE_REMESA_EMISOR_NOM_I ON RWE_REMESA(ORGANO_EMISOR_NOMBRE);
+
+CREATE INDEX RWE_REMESA_TITULAR_NIF_I ON RWE_REMESA(TITULAR_NIF);
+
+CREATE INDEX RWE_REMESA_TITULAR_NOM_I ON RWE_REMESA(TITULAR_NOMBRE);
+
+CREATE INDEX RWE_REMESA_FECHA_PUEST_I ON RWE_REMESA(FECHA_PUESTA_DISPOSICION);
+
+CREATE INDEX RWE_REMESA_ESTADO_I ON RWE_REMESA(ESTADO);
+
+CREATE INDEX RWE_REMESA_ESTADO_NOTIF_I ON RWE_REMESA(ESTADO_NOTIFICA);
+
+CREATE INDEX RWE_REMESA_ENTIDAD_FK_I on RWE_REMESA (ENTIDAD);
+
+ALTER TABLE RWE_REMESA
+	ADD CONSTRAINT RWE_REMESA_PK PRIMARY KEY (ID);
+	
+ALTER TABLE RWE_REMESA
+    ADD CONSTRAINT RWE_REMESA_ENTIDAD_FK
+        FOREIGN KEY (ENTIDAD)
+            REFERENCES RWE_ENTIDAD;
+
+ALTER TABLE RWE_REMESA
+    ADD CONSTRAINT RWE_REMESA_REGISTRO_FK
+        FOREIGN KEY (REGISTRO)
+            REFERENCES RWE_REGISTRO_ENTRADA;
+            
+CREATE TABLE RWE_REMESA_ACUSE
+(
+    ID							NUMBER(19,0) NOT NULL,
+    NOMBRE						VARCHAR2(255),
+    MIME_TYPE					VARCHAR2(255),
+    METADATOS					VARCHAR2(1000),
+    REFERENCIA					BLOB,
+    CSV_RESGUARDO				VARCHAR2(1000),
+    REMESA						NUMBER(19,0) NOT NULL
+);
+
+CREATE INDEX RWE_REMESA_ACUSE_METAD_I ON RWE_REMESA_ACUSE(METADATOS);
+
+ALTER TABLE RWE_REMESA_ACUSE
+	ADD CONSTRAINT RWE_REMESA_ACUSE_PK PRIMARY KEY (ID);
+	
+ALTER TABLE RWE_REMESA_ACUSE
+    ADD CONSTRAINT RWE_REMESA_ACUSE_REMESA_FK
+        FOREIGN KEY (REMESA)
+            REFERENCES RWE_REMESA;
+            
+CREATE TABLE RWE_REMESA_ANEXO
+(
+    ID							NUMBER(19,0) NOT NULL,
+    ENLACE_DOCUMENTO						VARCHAR2(255),
+    REFERENCIA					BLOB,
+    REMESA						NUMBER(19,0) NOT NULL,
+    PRIMARY KEY (ID)
+);
+
+CREATE INDEX RWE_REMESA_ANEXO_ENLAC_I ON RWE_REMESA_ANEXO(ENLACE_DOCUMENTO);
+
+ALTER TABLE RWE_REMESA_ANEXO
+    ADD CONSTRAINT RWE_REMESA_ANEXO_REMESA_FK
+        FOREIGN KEY (REMESA)
+            REFERENCES RWE_REMESA;
+
+ALTER TABLE RWE_REGISTRO_ENTRADA ADD ANEXOS_PENDIENTES NUMBER(1,0) DEFAULT 0;
+
+INSERT INTO RWE_PROPIEDADGLOBAL (ID, CLAVE, DESCRIPCION, ENTIDAD, TIPO, VALOR) VALUES (RWE_ALL_SEQ.nextVal,'es.caib.regweb3.fecha.inicio.busqueda.notificaciones.path','Ubicación del fichero con la próxima fecha de consulta de notificaciones pendientes',null,1,'/opt/files');
+
+INSERT INTO RWE_PROPIEDADGLOBAL (ID, CLAVE, DESCRIPCION, ENTIDAD, TIPO, VALOR) VALUES (RWE_ALL_SEQ.nextVal,'es.caib.regweb3.cron.localizacion.notificaciones.dehu.periodo','Tiempo inicial consulta notificaciones DEHú',null,1,600000); --10min
+
+INSERT INTO RWE_PROPIEDADGLOBAL (ID, CLAVE, DESCRIPCION, ENTIDAD, TIPO, VALOR) VALUES (RWE_ALL_SEQ.nextVal,'es.caib.regweb3.cron.localizacion.notificaciones.dehu.retardo','Retardo entre cada consulta (localiza) notificaciones DEHú',null,1,600000); --10min
+
+INSERT INTO RWE_PROPIEDADGLOBAL (ID, CLAVE, DESCRIPCION, ENTIDAD, TIPO, VALOR) VALUES (RWE_ALL_SEQ.nextVal,'es.caib.regweb3.enviar.mail.resultado.lema','Enviar correo con el resultado de consulta notificaciones DEHú',null,1,1);
+
+INSERT INTO RWE_PLUGIN (ID, ACTIVO, CLASE, DESCRIPCION, ENTIDAD, NOMBRE, PROPIEDADES_ADMIN, PROPIEDADES_ENTIDAD, TIPO) VALUES (
+	RWE_ALL_SEQ.nextVal,
+	1,
+	'org.plugin.lema.apb.LemaApbPlugin',
+	'Integració DEHú',
+	16,
+	'Integració DEHú',
+	NULL,
+	'es.caib.regweb3.plugins.lema.apb.service.localiza.wsdl=https://se-dehuws.redsara.es/wsdl/GD_Dehu/v2/Gd-Dehu-Ws_se.wsdl
+	#es.caib.regweb3.plugins.lema.apb.service.localiza.wsdl=https://se-gd-dehuws.redsara.es/ws/v2/lema?wsdl
+	es.caib.regweb3.plugins.lema.apb.service.localiza.realizadas.wsdl=https://se-gd-dehuws.redsara.es/ws/v1/realizadas?wsdl
+	es.caib.regweb3.plugins.lema.apb.keystore.file=/home/jamal/projects/registre-apb/registre-geiser/plugins/plugin-lema/plugin-lema-apb/src/main/resources/doc/lema_pre.jks
+	es.caib.regweb3.plugins.lema.apb.keystore.type=JKS
+	es.caib.regweb3.plugins.lema.apb.keystore.alias=auth
+	es.caib.regweb3.plugins.lema.apb.keystore.pass=apb1234
+	es.caib.regweb3.plugins.lema.apb.titular.nif=Q0767004E
+	es.caib.regweb3.plugins.lema.apb.receptor.nif=Q0767004E
+	es.caib.regweb3.plugins.lema.apb.usuarios.aviso=jamalj@limit.es,jamalj@limit.es',12);

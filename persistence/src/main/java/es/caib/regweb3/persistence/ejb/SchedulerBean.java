@@ -26,6 +26,7 @@ import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.persistence.utils.SemaforoSchedulerConsultaEstado;
 import es.caib.regweb3.persistence.utils.SemaforoSchedulerConsultaIdRecibidos;
 import es.caib.regweb3.persistence.utils.SemaforoSchedulerConsultaRecibidos;
+import es.caib.regweb3.persistence.utils.SemaforoSchedulerLocalizaPendientes;
 import es.caib.regweb3.persistence.utils.SemaforoSchedulerVerificacionFirmaAnexos;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
@@ -57,6 +58,7 @@ public class SchedulerBean implements SchedulerLocal{
     @EJB private ColaLocal colaEjb;
     @EJB private CustodiaLocal custodiaEjb;
     @EJB private RegistroSirLocal registroSirEjb;
+    @EJB private RemesaConsultaLocal remesaConsultaEjb;
 
     
     @Override
@@ -575,6 +577,31 @@ public class SchedulerBean implements SchedulerLocal{
 
 	}
 	
+	@Override
+	public void localizarIGuardarNotificaciones() throws Exception, I18NException {
+		List<Entidad> entidades = entidadEjb.getAll();
+		StringBuilder peticion = new StringBuilder();
+        long tiempo = System.currentTimeMillis();
+        String descripcion = "Localizar y guardar notificaciones y comunicaciones pendientes.";
+        Entidad entidadActiva = null;
+		try {
+			for (Entidad entidad : entidades) {
+				//Integración
+                entidadActiva = entidad;
+                log.info(" ");
+                log.info("------------- LEMA: Consultando notificaciones/comunicaciones pendientes de " + entidad.getNombre() + " -------------");
+                log.info(" ");
+                synchronized (SemaforoSchedulerLocalizaPendientes.class) {
+                	remesaConsultaEjb.localizaGuardaNotificaciones(entidad);
+                }
+			}
+			log.info("------------- LEMA: Las notificaciones y comunicaciones pendientes han sido localizadas y guardadas " + " -------------");
+		} catch (Exception e) {
+			log.error("Error c...", e);
+            integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_SCHEDULERS, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - tiempo, entidadActiva.getId(), "");
+		}
+	}
+	
 	/** Tiempo cron algunas tareas en segundo plano**/
 	@Override
 	public Long getCronTareaPeriodoActualizacionEnviosSir() {
@@ -614,6 +641,16 @@ public class SchedulerBean implements SchedulerLocal{
 	@Override
 	public Long getCronTareaRetardoActualizacionAnexosPendientesVerificacionFirma() {
 		return PropiedadGlobalUtil.getCronTareaRetardoActualizacionAnexosPendientesVerificacionFirma();
+	}
+	
+	@Override
+	public Long getCronTareaPeriodoConsultaNotificacionesDehu() {
+		return PropiedadGlobalUtil.getCronTareaPeriodoConsultaNotificacionesDehu();
+	}
+
+	@Override
+	public Long getCronTareaRetardoConsultaNotificacionesDehu() {
+		return PropiedadGlobalUtil.getCronTareaRetardoConsultaNotificacionesDehu();
 	}
 	
 	@Override

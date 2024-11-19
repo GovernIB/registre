@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jaxws:bindings
+	xmlns:jaxws="http://java.sun.com/xml/ns/jaxws"
+	xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
+	xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	wsdlLocation="realizadas.wsdl" version="2.0">
+
+	<jaxws:package
+		name="es.gob.administracion.dehu.gd" />
+	<jaxws:enableWrapperStyle>false</jaxws:enableWrapperStyle>
+	<jaxws:enableAsyncMapping>false</jaxws:enableAsyncMapping>
+
+</jaxws:bindings>
