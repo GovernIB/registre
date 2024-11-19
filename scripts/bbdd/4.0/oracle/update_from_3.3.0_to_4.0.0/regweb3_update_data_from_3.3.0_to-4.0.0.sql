@@ -7,3 +7,6 @@ update RWE_INTERESADO SET AVISONOTIFSMS= 0 where AVISONOTIFSMS is null;
 update RWE_PERSONA SET RECEPNOTIF= 0 where RECEPNOTIF is null;
 update RWE_PERSONA SET AVISONOTIFEMAIL= 0 where AVISONOTIFEMAIL is null;
 update RWE_PERSONA SET AVISONOTIFSMS= 0 where AVISONOTIFSMS is null;
+
+-- Eliminar todas las personas cuyo documento seal null
+delete from rwe_persona where documento is null;
