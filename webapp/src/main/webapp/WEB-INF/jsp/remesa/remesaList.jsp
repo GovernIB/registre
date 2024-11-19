@@ -20,7 +20,7 @@
                 <div class="col-xs-12">
                     <ol class="breadcrumb">
                         <c:import url="../modulos/migadepan.jsp"/>
-                        <li class="active"><i class="fa fa-envelope"></i> <spring:message code="remesa.remesas"/> de ${loginInfo.usuarioAutenticado.nombreCompleto}</li>
+                        <li class="active"><i class="fa fa-envelope"></i> <strong><spring:message code="remesa.buscador"/></strong></li>
                     </ol>
                 </div>
             </div><!-- /.row -->
@@ -101,27 +101,28 @@
 		                                    <form:select path="remesa.estado" cssClass="chosen-select">
 		                                        <form:option value="" label="..."/>
 		                                        <c:forEach var="estado" items="${estados}">
-		                                            <form:option value="${estado}"><spring:message code="remesa.list.estado.${estado}"/></form:option>
+		                                            <form:option value="${estado}">
+		                                            	<spring:message code="remesa.list.estado.${estado}"/>
+		                                            </form:option>
 		                                        </c:forEach>
 		                                    </form:select>
 		                                </div>
 		                            </div>
 		                        </div>
 	                        
-	                        </div>
-	                        
 						 	<div class="row">
 	
 	                            <div class="form-group col-xs-12">
 	                                <div class="col-xs-1 boto-panel center">
-	                                    <button type="submit" class="btn btn-warning btn-sm" style="margin-left: 15px;">
+	                                    <button type="submit" id="btnFiltrar" class="btn btn-warning btn-sm" style="margin-left: 15px;">
 	                                        <spring:message code="regweb.buscar"/>
 	                                    </button>
 	                                </div>
 	                            </div>
 	
 							</div>
-						</form:form>
+							
+							
 						
 						 <c:if test="${paginacion != null}">
 
@@ -160,13 +161,14 @@
                                                     </colgroup>
                                                     <thead>
                                                         <tr>
-                                                            <th class="center"><spring:message code="remesa.list.tipo"/></th>
+                                                            <th class="center" width="8%"><spring:message code="remesa.list.tipo"/></th>
                                                             <th class="center"><spring:message code="remesa.list.extracto"/></th>
-                                                            <th class="center"><spring:message code="remesa.list.fecha.disposicion"/></th>
-                                                            <th class="center"><spring:message code="remesa.list.emisor"/></th>
-                                                            <th class="center"><spring:message code="remesa.list.titular"/></th>
-                                                            <th class="center"><spring:message code="remesa.list.estado"/></th>
-                                                            <th class="center"><spring:message code="remesa.list.estado.notifica"/></th>
+                                                            <th class="center" width="17%"><spring:message code="remesa.list.fecha.disposicion"/></th>
+                                                            <th class="center" width="15%"><spring:message code="remesa.list.emisor"/></th>
+                                                            <th class="center" width="10%"><spring:message code="remesa.list.estado"/></th>
+                                                            <th class="center" width="10%"><spring:message code="remesa.list.usuario"/></th>
+                                                            <th class="center" width="12%"><spring:message code="remesa.list.estado.notifica"/></th>
+                                                            <th class="center" width="5%"><spring:message code="regweb.acciones"/></th>
                                                         </tr>
                                                     </thead>
 
@@ -180,31 +182,36 @@
                                                                 	<fmt:formatDate value="${remesa.fechaPuestaDisposicion}" pattern="dd/MM/yyyy"/>
                                                                 </td>
                                                                 <td class="center">${remesa.organoEmisorCodigo} - ${remesa.organoEmisorNombre}</td>
-                                                                <td class="center">${remesa.titularNif} - ${remesa.titularNombre}</td>                                                                
                                                                 <td class="center"><spring:message code="remesa.list.estado.${remesa.estado}"/></td>
+                                                                <td class="center">${remesa.usuario.nombreCompleto}</td>
                                                                 <td class="center"><spring:message code="remesa.list.estado.notifica.${remesa.estadoNotifica}"/></td>
-                                                                
                                                                 <td class="center">
                                                                 	<c:choose>
                                                                 		<c:when test="${remesa.estado == 'PENDIENTE'}">
-                                                                			<span class="fa fa-exclamation-triangle ${remesa.reintentosLectura == 1 ? 'text-danger' : 'text-warning'}"
+                                                                			<span class="fa ${remesa.reintentosLectura == 1 ? 'fa-warning text-danger' : 'fa-envelope text-warning'}"
 																					title="<spring:message code="${remesa.reintentosLectura > 0 ? 'remesa.list.reintentos.comentario' : 'remesa.list.reintentos.agotados.comentario'}"/>"> ${remesa.reintentosLectura}
 																			</span>
 		                                                                	 <a data-toggle="modal" role="button" href="#modalConfirmacionNotificacion"
 		                                      									onclick="inicializarModalNotificacion('${remesa.identificador}', false);"
-		                                      									class="btn btn-warning btn-sm ${remesa.reintentosLectura == 0 ? 'href-disabled' : ''}"><span class="fa fa-envelope"></span>
+		                                      									class="btn btn-warning btn-sm ${remesa.reintentosLectura == 0 ? 'href-disabled' : ''}"
+		                                      									title="<spring:message code="remesa.list.comparecer.title"/>">
+		                                      									<span class="fa fa-envelope"></span>
 		                                      								</a>	
                                                                 		</c:when>
                                                                 		<c:when test="${remesa.estado == 'REGISTRADA'}">
 																			<a class="btn btn-info btn-sm"
 																				href="<c:url value="/registroEntrada/${remesa.registro.id}/detalle"/>"
-																				title="<spring:message code="registroEntrada.detalle"/>"><span
-																				class="fa fa-eye"></span></a>
+																				title="<spring:message code="remesa.list.registro.title"/>">
+																				<span class="fa fa-eye"></span>
+																			</a>
 																		</c:when>
                                                                 		<c:otherwise>
 	                                                                		<a data-toggle="modal" role="button" href="#modalConfirmacionNotificacion"
 		                                      									onclick="inicializarModalNotificacion('${remesa.identificador}', true);"
-		                                      									class="btn btn-success btn-sm"><span class="fa fa-file"></span></a>
+		                                      									class="btn btn-success btn-sm"
+		                                      									title="<spring:message code="remesa.list.registrar.title"/>">
+		                                      									<span class="fa fa-file"></span>
+		                                      								</a>
                                                                 		</c:otherwise>
                                                                 	</c:choose>
                                                                 </td>
@@ -227,6 +234,10 @@
                                 </div>
 
                             </c:if>
+                            
+	                        </div>
+	                        
+						</form:form>
 					</div>
 				</div>
 	        </div>
@@ -247,10 +258,10 @@
 		const nextButton = document.getElementById('next');
 		let totalDocumentos = 0;
 		let currentIndex = 0;
-
+		
 	    $(document).ready(function() {
-	    	
 		    $('#btnLeerNotificacion').click(function() {
+		    	localStorage.setItem("isLoadingRemesa", true);
 		    	$('#loading').show();
 		    	$('#remesa-btn-lectura').hide();
 		    	
@@ -261,17 +272,28 @@
 		            method: 'POST',
 		            success: function(response) {
 		            	$('#loading').hide();
+			    		refrescar();
 		            	
-		            	cargarDetalleNotificacion(response);	
+		            	cargarDetalleNotificacion(response);
 		            },
 		            error: function(XMLHttpRequest, textStatus, errorThrown) {
 		            	$('#loading').hide();
 		            	$('#remesa-btn-lectura').show();
 		                $('#errorNotificacion').text('Ocurrió un error al intentar leer la notificación.').show();
+		            },
+		            complete: function() {
+		            	localStorage.removeItem("isLoadingRemesa");
 		            }
 		        });
 		    });
+
 	    });
+	    
+	    function refrescar() {
+	    	$('#modalConfirmacionNotificacion').on('hidden.bs.modal', function () {
+	    		location.reload();
+		    });
+	    }
 	    
 	    function consultarRealizada() {
 	    	$('#loading').show();
@@ -363,26 +385,28 @@
 	        return day + '/' + month + '/' + year;
 		}
 		
-		prevButton.addEventListener('click', () => {
-		  if (currentIndex > 0) {
-		    currentIndex--;
-		    updateCarousel();
-		  } else {
-			  currentIndex = totalDocumentos;
-			  updateCarousel();
-		  }
-		});
-
-		nextButton.addEventListener('click', () => {
-		  if (currentIndex < totalDocumentos) {
-		    currentIndex++;
-		    updateCarousel();
-		  } else {
-			  currentIndex = 0;
-			  updateCarousel();
-		  }
-		});
-
+		if (prevButton && nextButton) {
+			prevButton.addEventListener('click', () => {
+			  if (currentIndex > 0) {
+			    currentIndex--;
+			    updateCarousel();
+			  } else {
+				  currentIndex = totalDocumentos;
+				  updateCarousel();
+			  }
+			});
+	
+			nextButton.addEventListener('click', () => {
+			  if (currentIndex < totalDocumentos) {
+			    currentIndex++;
+			    updateCarousel();
+			  } else {
+				  currentIndex = 0;
+				  updateCarousel();
+			  }
+			});
+		}
+		
 		function updateCarousel() {
 		  wrapper.style.transform = 'translateX(-' + currentIndex * 100 + '%)';
 		}

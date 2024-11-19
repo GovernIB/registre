@@ -53,6 +53,8 @@ public class OficioRemision implements Serializable {
 
     private String contactosEntidadRegistralDestino;
 
+    private String motivoRechazo;
+    
     public OficioRemision() {
     }
 
@@ -313,6 +315,15 @@ public class OficioRemision implements Serializable {
     public void setDecodificacionEntidadRegistralProcesado(String decodificacionEntidadRegistralProcesado) {
         this.decodificacionEntidadRegistralProcesado = decodificacionEntidadRegistralProcesado;
     }
+    
+    @Column(name = "MOTIVO_RECHAZO")
+    public String getMotivoRechazo() {
+		return motivoRechazo;
+	}
+
+	public void setMotivoRechazo(String motivoRechazo) {
+		this.motivoRechazo = motivoRechazo;
+	}
 
     @Override
     public boolean equals(Object o) {

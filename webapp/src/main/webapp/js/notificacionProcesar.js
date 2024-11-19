@@ -1,4 +1,9 @@
 function inicializarModalNotificacion(identificador, registrar) {
+	var isLoading = localStorage.getItem("isLoadingRemesa");
+	debugger
+	if (isLoading)
+		return;
+
     $('#identificadorNotificacion').val(identificador);
 
 	// Vaciar datos remesa anterior

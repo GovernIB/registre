@@ -10,12 +10,14 @@ import lombok.Setter;
 @Getter @Setter
 public class LocalizaRequest {
 
-    protected String nifTitular;
-    protected String nifDestinatario;
-    protected String codigoDestino;
-    protected Date fechaDesde;
-    protected Date fechaHasta;
-    protected BigInteger tipoEnvio;
-    protected List<Opcion> opcionesLocaliza;
+	private String nifTitular;
+	private String nifDestinatario;
+	private String codigoDestino;
+	private Date fechaDesde;
+	private Date fechaHasta;
+	private BigInteger tipoEnvio;
+	private List<Opcion> opcionesLocaliza;
+    
+	private AuthenticationDto authentication;
     
 }

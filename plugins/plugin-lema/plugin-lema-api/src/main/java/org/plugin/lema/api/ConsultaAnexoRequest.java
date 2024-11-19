@@ -11,5 +11,7 @@ public class ConsultaAnexoRequest {
 	private String identificador;
 	private Integer codigoOrigen;
 	private byte[] referenciaAnexo;
+	
+	private AuthenticationDto authentication;
 
 }

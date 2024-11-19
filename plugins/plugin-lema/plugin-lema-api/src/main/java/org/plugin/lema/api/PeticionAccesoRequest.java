@@ -11,5 +11,7 @@ public class PeticionAccesoRequest {
 	private String nifReceptor;
 	private String nombreReceptor;
 	private Integer codigoOrigen;
+
+	private AuthenticationDto authentication;
 	
 }

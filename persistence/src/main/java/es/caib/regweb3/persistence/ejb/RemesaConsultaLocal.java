@@ -29,4 +29,6 @@ public interface RemesaConsultaLocal {
 	public Long remesasPendientes(Long idEntidad) throws Exception;
 
 	public void localizaGuardaNotificaciones(Entidad entidad) throws I18NException, Exception;
+
+	public List<Remesa> getByEntidadAndEstado(Long idEntidad, String estado) throws Exception;
 }

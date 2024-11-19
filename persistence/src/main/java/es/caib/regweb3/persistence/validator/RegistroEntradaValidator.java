@@ -1,9 +1,16 @@
 package es.caib.regweb3.persistence.validator;
 
+import es.caib.regweb3.model.Anexo;
 import es.caib.regweb3.model.RegistroDetalle;
 import es.caib.regweb3.model.RegistroEntrada;
+import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
+
+import java.util.Arrays;
+import java.util.List;
+
 import org.apache.log4j.Logger;
+import org.fundaciobit.genapp.common.i18n.I18NArgumentString;
 import org.fundaciobit.genapp.common.query.Field;
 import org.fundaciobit.genapp.common.validation.IValidatorResult;
 
@@ -48,6 +55,47 @@ public class RegistroEntradaValidator<T> extends AbstractRegWebValidator<T> {
 
         if(registroDetalle.getObservaciones() != null && registroDetalle.getObservaciones().length() > 50){
             rejectValue(errors,"registroDetalle.observaciones","error.valor.maxlenght");
+        }
+        
+        // Anexos LEMA
+        List<Anexo> anexos = registroDetalle.getAnexos();
+        if (anexos != null) {
+        	for (int i = 0; i < anexos.size(); i++) {
+        		
+        		if (anexos.get(i).getValidezDocumento() == null) {
+                    rejectValue(errors, "registroDetalle.anexos[" + i + "].validezDocumento", "error.valor.requerido"); // , "El camp és obligatori"
+                }
+
+                if (anexos.get(i).getTipoDocumento() == null || anexos.get(i).getTipoDocumento().equals((long) -1)) {
+                    rejectValue(errors, "registroDetalle.anexos[" + i + "].tipoDocumento", "error.valor.requerido"); // , "El camp és obligatori"
+                }
+                
+        		if (anexos.get(i).getTipoDocumental() == null || anexos.get(i).getTipoDocumental().getId() == null ) {
+    	            rejectValue(errors, "registroDetalle.anexos[" + i + "].tipoDocumental", "error.valor.requerido");
+    	        } else {
+    	            if (anexos.get(i).getTipoDocumental().getId() == -1) {
+    	                rejectValue(errors, "registroDetalle.anexos[" + i + "].tipoDocumental", "error.valor.requerido");
+    	            }
+    	        }
+        		
+        		if (anexos.get(i).getOrigenCiudadanoAdmin() == null) {
+    	            rejectValue(errors, "registroDetalle.anexos[" + i + "].origenCiudadanoAdmin", "error.valor.requerido");
+    	        } else if (anexos.get(i).getOrigenCiudadanoAdmin() != 0 && anexos.get(i).getOrigenCiudadanoAdmin() != 1) {
+    	            rejectValue(errors, "registroDetalle.anexos[" + i + "].origenCiudadanoAdmin", "error.valor.inesperado.origen");
+    	        }
+        		
+        		rejectIfEmptyOrWhitespace(errors, __target__, "registroDetalle.anexos[" + i + "].titulo", "error.valor.requerido");
+
+        		rejectIfEmptyOrWhitespace(errors, __target__, "registroDetalle.anexos[" + i + "].nombreFichero", "error.valor.requerido");
+        		
+                if (anexos.get(i).getTitulo() != null && anexos.get(i).getTitulo().length() > 200) {
+                    rejectValue(errors, "registroDetalle.anexos[" + i + "].titulo", "error.valor.maxlenght");
+                }
+                
+                if (anexos.get(i).getNombreFichero() != null && anexos.get(i).getNombreFichero().length() > 200) {
+                    rejectValue(errors, "registroDetalle.anexos[" + i + "].nombreFichero", "error.valor.maxlenght");
+                }
+			}
         }
 
         if(registroDetalle.getNumeroRegistroOrigen() != null && registroDetalle.getNumeroRegistroOrigen().length() > 256){

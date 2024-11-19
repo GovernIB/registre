@@ -44,6 +44,7 @@ import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.model.RegistroEntrada;
 import es.caib.regweb3.model.Remesa;
 import es.caib.regweb3.model.RemesaAcuse;
+import es.caib.regweb3.model.Usuario;
 import es.caib.regweb3.persistence.utils.DehuDocumentManager;
 import es.caib.regweb3.persistence.utils.LemaPluginHelper;
 import es.caib.regweb3.persistence.utils.LemaUtils;
@@ -139,7 +140,8 @@ public class RemesaBean extends BaseEjbJPA<Remesa, Long> implements RemesaLocal 
 					RegwebConstantes.REMESA_ENV_ESTADO_PENDIENTE,
 					null,
 					3,
-					entidad);
+					entidad,
+					null);
 
 			persist(remesa);
 			
@@ -267,20 +269,21 @@ public class RemesaBean extends BaseEjbJPA<Remesa, Long> implements RemesaLocal 
 			Remesa remesa = findByIdentificador(identificador);
 			RemesaAcuse acuseInfo = remesaAcuseEjb.findByRemesa(remesa.getId());
 					
-			request.setIdentificador(identificador);
-			request.setCodigoOrigen(remesa.getCodigoOrigen());
-			IdentificadorAcuseRecibo identificadorAcuse = new IdentificadorAcuseRecibo();
-			identificadorAcuse.setCsvResguardo(acuseInfo.getCsvResguardo());
-			identificadorAcuse.setReferencia(acuseInfo.getReferencia());
-			request.setIdentificadorAcuse(identificadorAcuse);
-			
-			response = pluginHelper.consultaAcuseRecibo(request, entidad);
-			
-			Contenido contenido = response.getAcuseRecibo().getContenido();
-			if (contenido != null) {
-				guardarDocumento(identificador, response.getAcuseRecibo().getNombreAcuse(), contenido);
+			if (acuseInfo != null) {
+				request.setIdentificador(identificador);
+				request.setCodigoOrigen(remesa.getCodigoOrigen());
+				IdentificadorAcuseRecibo identificadorAcuse = new IdentificadorAcuseRecibo();
+				identificadorAcuse.setCsvResguardo(acuseInfo.getCsvResguardo());
+				identificadorAcuse.setReferencia(acuseInfo.getReferencia());
+				request.setIdentificadorAcuse(identificadorAcuse);
+				
+				response = pluginHelper.consultaAcuseRecibo(request, entidad);
+				
+				Contenido contenido = response.getAcuseRecibo().getContenido();
+				if (contenido != null) {
+					guardarDocumento(identificador, response.getAcuseRecibo().getNombreAcuse(), contenido);
+				}
 			}
-			
 		} catch (LemaPluginException | I18NException i18ne) {
 			log.error("Error consulta acuse de recibo de la notificación con identificador: " + identificador);
 			i18ne.printStackTrace();
@@ -297,7 +300,7 @@ public class RemesaBean extends BaseEjbJPA<Remesa, Long> implements RemesaLocal 
 	}
 	
 	@Override
-	public PeticionAccesoResponse lecturaNotificacion(String identificador, Entidad entidad) throws I18NException, Exception {
+	public PeticionAccesoResponse lecturaNotificacion(String identificador, Usuario usuarioActual, Entidad entidad) throws I18NException, Exception {
 		PeticionAccesoRequest request = new PeticionAccesoRequest();
 		PeticionAccesoResponse response = new PeticionAccesoResponse();
 		try {
@@ -319,11 +322,14 @@ public class RemesaBean extends BaseEjbJPA<Remesa, Long> implements RemesaLocal 
 				
 				if (response.getDocumento() != null) {
 					DetalleDocumento detalle = response.getDocumento();
-					remesaAcuseEjb.crearReferenciaAcuse(
-							detalle.getReferenciaPdfAcuse(), 
-							detalle.getCsvResguardo(), 
-							remesa);
-					// Guardar documento notificación
+					
+					// Guardar datos acceso obtención certificación remesa
+					if (detalle.getCsvResguardo() != null || detalle.getReferenciaPdfAcuse() != null)
+						remesaAcuseEjb.crearReferenciaAcuse(
+								detalle.getReferenciaPdfAcuse(), 
+								detalle.getCsvResguardo(), 
+								remesa);
+					// Guardar documento remesa
 					Contenido contenido = detalle.getContenido();
 					if (contenido != null) {
 						String nombreDocumento = "Notificación_" + identificador + "." + MimeTypeUtils.getExtensionFileName(detalle.getNombre());
@@ -333,14 +339,14 @@ public class RemesaBean extends BaseEjbJPA<Remesa, Long> implements RemesaLocal 
 					}
 				}
 				
-				// Guardar anexos notificación
+				// Guardar anexos remesa
 				try {
 					consultaGuardaAnexos(entidad, response.getAnexos(), remesa);
 				} catch (Exception e) {
 					log.error("Ha habido un error guardando los anexos de la notificación con identificador: " + identificador);
 				}
 				
-				// Guardar acuse recibo notificación
+				// Guardar acuse recibo remesa
 				try {
 					consultaGuardaAcuseRecibo(identificador, entidad);
 				} catch (Exception e) {
@@ -348,6 +354,8 @@ public class RemesaBean extends BaseEjbJPA<Remesa, Long> implements RemesaLocal 
 				}
 				
 				actualizarReintentosLectura(remesa.getId());
+				
+				remesa.setUsuario(usuarioActual);
 				
 				em.flush();
 			} 
@@ -402,6 +410,17 @@ public class RemesaBean extends BaseEjbJPA<Remesa, Long> implements RemesaLocal 
 	
 	@Override
 	@TransactionTimeout(value = 1200) // 20 minutos
+	public void actualizarEstado(String identificador, String estado) throws Exception {
+
+		Query q = em.createQuery("update Remesa set estado=:estado where identificador = :identificador");
+		q.setParameter("estado", estado);
+		q.setParameter("identificador", identificador);
+		q.executeUpdate();
+		
+	}
+	
+	@Override
+	@TransactionTimeout(value = 1200) // 20 minutos
 	public void actualizarEstadoRegistrada(String identificador, Long registroId, String estado) throws Exception {
 
 		RegistroEntrada registro = registroEntradaEjb.findById(registroId);
@@ -425,6 +444,7 @@ public class RemesaBean extends BaseEjbJPA<Remesa, Long> implements RemesaLocal 
 		q.executeUpdate();
 	}
     
+	@TransactionTimeout(value = 1200) // 20 minutos
     public void actualizarReintentosLectura(Long idRemesa) throws Exception {
         Query q = em.createQuery("update Remesa set reintentosLectura = reintentosLectura-1 where id = :idRemesa");
         q.setParameter("idRemesa", idRemesa);
@@ -436,8 +456,8 @@ public class RemesaBean extends BaseEjbJPA<Remesa, Long> implements RemesaLocal 
     	boolean documentExists = documentManager.documentExists(identificador, nombre);
 		
 		if (! documentExists) {
-			if (contenido.getHref() != null)
-				contenidoBytes = getBytesFromDataHandler(contenido.getHref());
+			if (contenido.getBase64() != null)
+				contenidoBytes = Base64.decodeBase64(contenido.getBase64()); //getBytesFromDataHandler(contenido.getHref());
 			else
 				contenidoBytes = serializeToBase64(contenido.getContenido().getContent());
 			
@@ -454,6 +474,7 @@ public class RemesaBean extends BaseEjbJPA<Remesa, Long> implements RemesaLocal 
 				remesaAnexoEjb.crearReferenciaAnexo(enlace.getEnlaceDocumento(), null, remesa);
 			}
 			for (ReferenciaDocumento referencia : anexos.getReferenciaDocumentos()) {
+				
 				remesaAnexoEjb.crearReferenciaAnexo(null, referencia.getReferenciaDocumento(), remesa);
 				
 				// Consulta anexo referenciado

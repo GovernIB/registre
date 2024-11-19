@@ -9,12 +9,8 @@ import org.plugin.lema.api.ConsultaAcuseReciboRequest;
 import org.plugin.lema.api.ConsultaAcuseReciboResponse;
 import org.plugin.lema.api.ConsultaAnexoRequest;
 import org.plugin.lema.api.ConsultaAnexoResponse;
-import org.plugin.lema.api.ConsultaRealizadaRequest;
-import org.plugin.lema.api.ConsultaRealizadaResponse;
 import org.plugin.lema.api.ILemaPlugin;
 import org.plugin.lema.api.LemaPluginException;
-import org.plugin.lema.api.LocalizaRealizadaResponse;
-import org.plugin.lema.api.LocalizaRealizadasRequest;
 import org.plugin.lema.api.LocalizaRequest;
 import org.plugin.lema.api.LocalizaResponse;
 import org.plugin.lema.api.PeticionAccesoRequest;
@@ -105,7 +101,7 @@ public class LemaPluginHelper {
 		return respuesta;
 	}
 
-	public String getUsuariosAdicionales(String propietat, Entidad entidad) throws I18NException {
+	public String getCorreosAviso(String propietat, Entidad entidad) throws I18NException {
 		String respuesta = null;
     	ILemaPlugin lemaPlugin = getILemaPlugin(entidad.getId());
         if (lemaPlugin != null) {

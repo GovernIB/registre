@@ -69,9 +69,12 @@ public class GeiserApbPlugin extends AbstractPluginProperties implements IGeiser
     }
     
 	@Override
-	public RespuestaRegistroGeiser registrar(PeticionRegistroGeiser peticion) throws GeiserPluginException {
+	public RespuestaRegistroGeiser registrar(PeticionRegistroGeiser peticion, boolean forzarExcepcion) throws GeiserPluginException {
 		ResultadoRegistroType resultado = new ResultadoRegistroType();
 		try {
+			if (forzarExcepcion)
+				throw new GeiserPluginException("[GEISER] Ha habido un problema realizando el proceso de registro. TEST ");
+			
 			AuthenticationType authentication = initAuthentication(
 					getPropertyCdAmbito(), 
 					peticion.getUsuario());

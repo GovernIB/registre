@@ -146,7 +146,7 @@ function confirmRW(url, mensaje) {
 }
 
 // Muestra el cuadro de confirmación para realizar una acción sobre un registro
-function confirm(url, mensaje) {
+function confirm(url, mensaje, comentario) {
 
     var confirmModal = 
       $("<div class=\"modal fade\">" +
@@ -159,8 +159,8 @@ function confirm(url, mensaje) {
 
           "<div class=\"modal-body\">" +
             "<p>"+mensaje+"</p>" +
+		  	(comentario ? "<p style=\"font-style: italic;font-size: 12px;\">" + comentario + "</p>" : "") +
           "</div>" +
-
           "<div class=\"modal-footer\">" +
               "<button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\">No</button>"+
               "<button type=\"button\" id=\"okButton\" class=\"btn btn-danger\">Sí</button>"+
@@ -835,6 +835,39 @@ $(function() {
     });
 });
 
+$(function() {
+    $('#fechaPuestaDisposicionDesde').datetimepicker({
+        language: 'ca',
+        format: 'DD/MM/YYYY',
+        pickTime: false,
+        useMinutes: false,
+        useSeconds: false,
+        useCurrent: false,
+        icons: {
+            time: 'fa fa-clock-o',
+            date: 'fa fa-calendar',
+            up: 'fa fa-chevron-up',
+            down: 'fa fa-chevron-down'
+        }
+    });
+});
+
+$(function() {
+    $('#fechaPuestaDisposicionHasta').datetimepicker({
+        language: 'ca',
+        format: 'DD/MM/YYYY',
+        pickTime: false,
+        useMinutes: false,
+        useSeconds: false,
+        useCurrent: false,
+        icons: {
+            time: 'fa fa-clock-o',
+            date: 'fa fa-calendar',
+            up: 'fa fa-chevron-up',
+            down: 'fa fa-chevron-down'
+        }
+    });
+});
 
 /**
  * Elimina la etiqueta de Error al campo pasado por parámetro

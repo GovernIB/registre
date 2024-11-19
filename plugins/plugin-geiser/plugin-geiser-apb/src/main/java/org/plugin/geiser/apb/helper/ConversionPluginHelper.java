@@ -437,6 +437,7 @@ public class ConversionPluginHelper {
 						target.setNuRegistroInterno(source.getNuRegistroInterno());
 						target.setNuRegistroOrigen(source.getNuRegistroOrigen());
 						target.setTipoAsiento(TipoAsiento.valueOf(source.getTipoAsiento().name()));
+						target.setMotivoRechazo(source.getMotivoRechazo());
 						return target;
 					}
 				});

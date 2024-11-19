@@ -306,7 +306,6 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
             anexo.setEstadoFirma(resp.getValidationStatus().getStatus());
             anexo.setFechaValidacion(new Date());
             anexo.setFirmaValida(resp.getValidationStatus().getStatus() == RegwebConstantes.ANEXO_FIRMA_VALIDA);
-            anexo.setFirmaverificada(true);
             if(resp.getValidationStatus().getStatus() == RegwebConstantes.ANEXO_FIRMA_INVALIDA){//Indica que no es valida la firma
                 anexo.setMotivoNoValidacion(resp.getValidationStatus().getErrorMsg());
             }else if(resp.getValidationStatus().getStatus() == RegwebConstantes.ANEXO_FIRMA_ERROR){//Indica que ha habido una excepción en el proceso de validación

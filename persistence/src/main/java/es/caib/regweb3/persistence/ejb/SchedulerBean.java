@@ -1,13 +1,18 @@
 package es.caib.regweb3.persistence.ejb;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Properties;
 
 import javax.annotation.security.RunAs;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import javax.interceptor.Interceptors;
 import javax.mail.Message;
 import javax.mail.internet.InternetAddress;
 
@@ -15,12 +20,15 @@ import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.jboss.ejb3.annotation.SecurityDomain;
 import org.jboss.ejb3.annotation.TransactionTimeout;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
 
 import es.caib.regweb3.model.Entidad;
-import es.caib.regweb3.model.RegistroSir;
+import es.caib.regweb3.model.Remesa;
 import es.caib.regweb3.model.Usuario;
 import es.caib.regweb3.model.UsuarioEntidad;
 import es.caib.regweb3.persistence.utils.I18NLogicUtils;
+import es.caib.regweb3.persistence.utils.LemaPluginHelper;
 import es.caib.regweb3.persistence.utils.MailUtils;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.persistence.utils.SemaforoSchedulerConsultaEstado;
@@ -41,6 +49,7 @@ import es.caib.regweb3.utils.StringUtils;
 @Stateless(name = "SchedulerEJB")
 @SecurityDomain("seycon")
 @RunAs("RWE_USUARI")
+@Interceptors(SpringBeanAutowiringInterceptor.class)
 public class SchedulerBean implements SchedulerLocal{
 
     protected final Logger log = Logger.getLogger(getClass());
@@ -60,8 +69,10 @@ public class SchedulerBean implements SchedulerLocal{
     @EJB private RegistroSirLocal registroSirEjb;
     @EJB private RemesaConsultaLocal remesaConsultaEjb;
 
+    @Autowired
+    private LemaPluginHelper lemaPluginHelper;
     
-    @Override
+	@Override
     public void purgarIntegraciones() throws Exception{
 
         List<Entidad> entidades = entidadEjb.getAll();
@@ -654,6 +665,11 @@ public class SchedulerBean implements SchedulerLocal{
 	}
 	
 	@Override
+	public String getHoraEnvioCorreoNotificacionesDehu() {
+		return PropiedadGlobalUtil.getHoraEnvioCorreoNotificacionesDehu();
+	}
+	
+	@Override
 	public void enviarCorreoVerificacionAnexosBloqueada() throws Exception {
 		String entorno = PropiedadGlobalUtil.getEntorno();
 		Locale locale = new Locale(RegwebConstantes.IDIOMA_CATALAN_CODIGO);
@@ -700,5 +716,87 @@ public class SchedulerBean implements SchedulerLocal{
         }
         
 	}
+
+	@Override
+	public void enviarCorreoInformandoPendientes() throws Exception {
+		if (isEnvioEmailResultadoLemaEnabled()) {
+			String entorno = PropiedadGlobalUtil.getEntorno();
+			Locale locale = new Locale(RegwebConstantes.IDIOMA_CATALAN_CODIGO);
+	        String[] argsEntorno = {entorno != null ? entorno : "PRO"};
+	        String asunto = I18NLogicUtils.tradueix(locale, "registro.lema.remesas.pendientes.mail.asunto", argsEntorno);
+	        
+	        InternetAddress addressFrom = new InternetAddress(RegwebConstantes.APLICACION_EMAIL, RegwebConstantes.APLICACION_NOMBRE);
+	        List<Entidad> entidades = entidadEjb.getAll();
+	        
+	        for (Entidad entidad : entidades) {
+	        	try {
+					StringBuilder cuerpo = construirCuerpoMensaje(entidad, locale);
+
+					if (cuerpo.length() > 0) {
+						// Obtenemos los usuarios a los que hay que enviarles el mail
+						String correos = lemaPluginHelper.getCorreosAviso("usuarios.aviso", entidad);
+	
+						if (StringUtils.isNotEmpty(correos)) {
+							String[] correosAviso = correos.split(",");
+	
+							for (String correo : correosAviso) {
+								MailUtils.enviaMail(
+										asunto, 
+										cuerpo.toString(), 
+										addressFrom, 
+										Message.RecipientType.TO,
+										correo);
+							}
+	
+						}
+					}
+					
+				} catch (I18NException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		} else {
+			log.warn("El envío de correo de notificaciones pendientes está inactivo");
+		}
+	}
+	
+	private StringBuilder construirCuerpoMensaje(Entidad entidad, Locale locale) throws Exception {
+		StringBuilder cuerpo = new StringBuilder();
+		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+		List<Remesa> remesasPendientes = remesaConsultaEjb.getByEntidadAndEstado(
+				entidad.getId(), 
+				RegwebConstantes.REMESA_ESTADO_REG_PENDIENTE);
+		
+		if (remesasPendientes != null && remesasPendientes.size() > 0) {
+			String[] args = {
+				String.valueOf(remesasPendientes.size()),
+				entidad.getNombre()
+			};
+			String mensajeTexto = I18NLogicUtils.tradueix(locale, "registro.lema.remesas.pendientes.mail.cuerpo", args);
+			cuerpo.append(mensajeTexto);
+			
+			int index = 1;
+			for (Remesa remesa : remesasPendientes) {
+				String[] args2 = {
+					String.valueOf(index),
+					I18NLogicUtils.tradueix(locale, "registro.lema.remesa.tipo." + remesa.getTipo()),
+					remesa.getConcepto(),
+					sdf.format(remesa.getFechaPuestaDisposicion()),
+					remesa.getOrganoEmisorCodigo() + " - " + remesa.getOrganoEmisorNombre()
+				};
+				
+				mensajeTexto = I18NLogicUtils.tradueix(locale, "registro.lema.remesas.pendientes.mail.cuerpo.detalle", args2);
+				cuerpo.append(mensajeTexto);
+				
+				index++;
+			}
+		}
+		return cuerpo;
+	}
+	
+    private boolean isEnvioEmailResultadoLemaEnabled() {
+    	return PropiedadGlobalUtil.getEnvioEmailResultadoLema();
+    }
 	
 }

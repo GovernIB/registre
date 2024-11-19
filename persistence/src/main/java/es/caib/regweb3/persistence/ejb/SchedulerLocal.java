@@ -158,5 +158,9 @@ public interface SchedulerLocal {
 	Long getCronTareaPeriodoConsultaNotificacionesDehu();
 	
 	Long getCronTareaRetardoConsultaNotificacionesDehu();
+
+	String getHoraEnvioCorreoNotificacionesDehu();
+
+	void enviarCorreoInformandoPendientes() throws Exception;
 }
 

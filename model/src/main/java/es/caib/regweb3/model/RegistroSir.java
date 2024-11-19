@@ -226,6 +226,7 @@ public class RegistroSir implements Serializable {
 
     private Date fechaRegistroOrigen;
 
+    private String motivoRechazo;
     
     private Date fechaRecepcion;
     private Date fechaEstado;
@@ -598,8 +599,16 @@ public class RegistroSir implements Serializable {
         this.solicita = solicita;
     }
 
+    @Column(name = "MOTIVO_RECHAZO")
+    public String getMotivoRechazo() {
+		return motivoRechazo;
+	}
 
-    @OneToMany(cascade= CascadeType.ALL,targetEntity=AnexoSir.class, mappedBy="registroSir")
+	public void setMotivoRechazo(String motivoRechazo) {
+		this.motivoRechazo = motivoRechazo;
+	}
+
+	@OneToMany(cascade= CascadeType.ALL,targetEntity=AnexoSir.class, mappedBy="registroSir")
     @LazyCollection(value= LazyCollectionOption.TRUE)
     public List<AnexoSir> getAnexos() {
         if (anexos == null) {

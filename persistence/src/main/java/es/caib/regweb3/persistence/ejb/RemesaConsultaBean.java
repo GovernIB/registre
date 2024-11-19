@@ -122,6 +122,20 @@ public class RemesaConsultaBean extends BaseEjbJPA<Remesa, Long> implements Reme
 		return q.getResultList();
 
 	}
+	
+	@Override
+	@SuppressWarnings(value = "unchecked")
+	public List<Remesa> getByEntidadAndEstado(Long idEntidad, String estado) throws Exception {
+
+		Query q = em.createQuery(
+				"Select remesa from Remesa as remesa where remesa.entidad.id = :idEntidad and remesa.estado = :estado order by remesa.id");
+		q.setParameter("idEntidad", idEntidad);
+		q.setParameter("estado", estado);
+		q.setHint("org.hibernate.readOnly", true);
+
+		return q.getResultList();
+
+	}
 
 	@Override
 	public Paginacion busqueda(Integer pageNumber, Remesa remesa, String emisor, Date fechaPuestaDisposicionDesde,
@@ -145,14 +159,14 @@ public class RemesaConsultaBean extends BaseEjbJPA<Remesa, Long> implements Reme
 		}
 
 		if (StringUtils.isNotEmpty(emisor)) {
-			where.add("(remesa.organoEmisorCodigo like :emisor or remesa.organoEmisorNombre like :emisor) ");
-			parametros.put("emisor", '%' + emisor + '%');
+			where.add("(LOWER(remesa.organoEmisorCodigo) like :emisor or LOWER(remesa.organoEmisorNombre) like :emisor) ");
+			parametros.put("emisor", '%' + emisor.toLowerCase() + '%');
 		}
 
 		// Concepto
 		if (StringUtils.isNotEmpty(remesa.getConcepto())) {
-			where.add("remesa.concepto like :concepto ");
-			parametros.put("concepto", '%' + remesa.getConcepto() + '%');
+			where.add("LOWER(remesa.concepto) like :concepto ");
+			parametros.put("concepto", '%' + remesa.getConcepto().toLowerCase() + '%');
 		}
 
 		// Estado
@@ -267,14 +281,14 @@ public class RemesaConsultaBean extends BaseEjbJPA<Remesa, Long> implements Reme
 				if (notificacionesError == 0)
 					updateFechaInicioProximaLocalizacion(entidad.getId(), LemaUtils.convertDateToString(fechaHasta));
 
-				if (isEnvioEmailResultadoLemaEnabled()) {
-					enviarEmailResumen(
-							envios.size(), 
-							notificacionesError, 
-							LemaUtils.getEmailFormat(fechaDesde), 
-							LemaUtils.getEmailFormat(fechaHasta), 
-							entidad);
-				}
+//				if (isEnvioEmailResultadoLemaEnabled() && envios.size() > 0) {
+//					enviarEmailResumen(
+//							envios.size(), 
+//							notificacionesError, 
+//							LemaUtils.getEmailFormat(fechaDesde), 
+//							LemaUtils.getEmailFormat(fechaHasta), 
+//							entidad);
+//				}
 			}
 		} catch (LemaPluginException | I18NException i18ne) {
 			log.error("Ha habido un error lozalizando las notificaciones en DEHú");
@@ -330,76 +344,72 @@ public class RemesaConsultaBean extends BaseEjbJPA<Remesa, Long> implements Reme
 		}
 	}
 	
-    private void enviarEmailResumen(
-    		int totalNotificaciones, 
-    		int totalNotificacionesError, 
-    		String fechaDesde, 
-    		String fechaHasta,
-			Entidad entidad) {
-    	Locale locale = new Locale(RegwebConstantes.IDIOMA_CATALAN_CODIGO);
-		// Obtenemos los usuarios a los que hay que enviarles el mail
-        List<Usuario> usuariosANotificar = new ArrayList<Usuario>();
-        String entorno = PropiedadGlobalUtil.getEntorno();
-    	try {
-
-            // Propietario Entidad
-            usuariosANotificar.add(entidad.getPropietario());
-
-            // Administradores Entidad
-            for (UsuarioEntidad usuarioEntidad : entidad.getAdministradores()) {
-                usuariosANotificar.add(usuarioEntidad.getUsuario());
-            }
-
-            // Asunto
-            String[] argsEntorno = {entorno != null ? entorno : "PRO"};
-            String asunto = I18NLogicUtils.tradueix(locale, "registro.lema.resultado.consulta.mail.asunto", argsEntorno);
-
-            String[] args = {
-            		String.valueOf(totalNotificaciones), 
-            		String.valueOf(totalNotificaciones - totalNotificacionesError), 
-            		fechaDesde,
-            		fechaHasta,
-            		getPeriodoConsultaNotificaciones(),
-            		entidad.getNombre()};
-            String mensajeTexto = I18NLogicUtils.tradueix(locale, "registro.lema.resultado.consulta.mail.cuerpo", args);
-
-            //Enviamos el mail a todos los usuarios
-            InternetAddress addressFrom = new InternetAddress(RegwebConstantes.APLICACION_EMAIL, RegwebConstantes.APLICACION_NOMBRE);
-
-    		String usuariosAvisoAdicionales = pluginHelper.getUsuariosAdicionales("usuarios.aviso", entidad);
-    		if (StringUtils.isNotEmpty(usuariosAvisoAdicionales)) {
-    			String[] usuariosAvisoAdicionalesArr = usuariosAvisoAdicionales.split(",");
-    			
-    			for (String usuarioAviso : usuariosAvisoAdicionalesArr) {
-        			MailUtils.enviaMail(asunto, mensajeTexto, addressFrom, Message.RecipientType.TO, usuarioAviso);
-				}
-    		
-    		}
-    		
-    		for (Usuario usuario : usuariosANotificar) {
-
-                if (StringUtils.isNotEmpty(usuario.getEmail())) {
-                	MailUtils.enviaMail(asunto, mensajeTexto, addressFrom, Message.RecipientType.TO, usuario.getEmail());
-                }
-    		}
-    		
-        } catch (Exception e) {
-;            log.error("Se ha producido una excepcion enviando email informando de un error recepción SIR");
-            e.printStackTrace();
-        } catch (I18NException e) {
-        	 log.error("Ha habido un error recuperando los destinatarios del plugin de LEMA");
-			e.printStackTrace();
-		}
-    }
+//    private void enviarEmailResumen(
+//    		int totalNotificaciones, 
+//    		int totalNotificacionesError, 
+//    		String fechaDesde, 
+//    		String fechaHasta,
+//			Entidad entidad) {
+//    	Locale locale = new Locale(RegwebConstantes.IDIOMA_CATALAN_CODIGO);
+//		// Obtenemos los usuarios a los que hay que enviarles el mail
+//        List<Usuario> usuariosANotificar = new ArrayList<Usuario>();
+//        String entorno = PropiedadGlobalUtil.getEntorno();
+//    	try {
+//
+//            // Propietario Entidad
+//            usuariosANotificar.add(entidad.getPropietario());
+//
+//            // Administradores Entidad
+//            for (UsuarioEntidad usuarioEntidad : entidad.getAdministradores()) {
+//                usuariosANotificar.add(usuarioEntidad.getUsuario());
+//            }
+//
+//            // Asunto
+//            String[] argsEntorno = {entorno != null ? entorno : "PRO"};
+//            String asunto = I18NLogicUtils.tradueix(locale, "registro.lema.resultado.consulta.mail.asunto", argsEntorno);
+//
+//            String[] args = {
+//            		String.valueOf(totalNotificaciones), 
+//            		String.valueOf(totalNotificaciones - totalNotificacionesError), 
+//            		fechaDesde,
+//            		fechaHasta,
+//            		getPeriodoConsultaNotificaciones(),
+//            		entidad.getNombre()};
+//            String mensajeTexto = I18NLogicUtils.tradueix(locale, "registro.lema.resultado.consulta.mail.cuerpo", args);
+//
+//            //Enviamos el mail a todos los usuarios
+//            InternetAddress addressFrom = new InternetAddress(RegwebConstantes.APLICACION_EMAIL, RegwebConstantes.APLICACION_NOMBRE);
+//
+//    		String usuariosAvisoAdicionales = pluginHelper.getUsuariosAdicionales("usuarios.aviso", entidad);
+//    		if (StringUtils.isNotEmpty(usuariosAvisoAdicionales)) {
+//    			String[] usuariosAvisoAdicionalesArr = usuariosAvisoAdicionales.split(",");
+//    			
+//    			for (String usuarioAviso : usuariosAvisoAdicionalesArr) {
+//        			MailUtils.enviaMail(asunto, mensajeTexto, addressFrom, Message.RecipientType.TO, usuarioAviso);
+//				}
+//    		
+//    		}
+//    		
+//    		for (Usuario usuario : usuariosANotificar) {
+//
+//                if (StringUtils.isNotEmpty(usuario.getEmail())) {
+//                	MailUtils.enviaMail(asunto, mensajeTexto, addressFrom, Message.RecipientType.TO, usuario.getEmail());
+//                }
+//    		}
+//    		
+//        } catch (Exception e) {
+//            log.error("Se ha producido una excepcion enviando email informando de un error recepción SIR");
+//            e.printStackTrace();
+//        } catch (I18NException e) {
+//        	log.error("Ha habido un error recuperando los destinatarios del plugin de LEMA");
+//			e.printStackTrace();
+//		}
+//    }
     
     private String getPeriodoConsultaNotificaciones () {
     	Long periodoConsultaNotificaciones = PropiedadGlobalUtil.getCronTareaPeriodoConsultaNotificacionesDehu();
     	
     	return String.valueOf(periodoConsultaNotificaciones != null ? (periodoConsultaNotificaciones / (1000 * 60)) : "");
-    }
-    
-    private boolean isEnvioEmailResultadoLemaEnabled() {
-    	return PropiedadGlobalUtil.getEnvioEmailResultadoLema();
-    }
+    }   
 	
 }

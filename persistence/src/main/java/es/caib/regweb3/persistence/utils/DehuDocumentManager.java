@@ -107,6 +107,6 @@ public class DehuDocumentManager {
 	
 	private String getBaseDirectory() {
 		String baseDirectory = PropiedadGlobalUtil.getDehuDocumentsPath();
-		return baseDirectory != null ? baseDirectory : "/home/jamal/servers/files";
+		return baseDirectory != null ? baseDirectory : "/opt/lema-proxy/files";
 	}
 }

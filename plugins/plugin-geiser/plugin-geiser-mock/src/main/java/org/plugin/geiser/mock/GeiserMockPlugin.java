@@ -52,7 +52,7 @@ public class GeiserMockPlugin extends AbstractPluginProperties implements IGeise
     }
     
 	@Override
-	public RespuestaRegistroGeiser registrar(PeticionRegistroGeiser peticion) throws GeiserPluginException {
+	public RespuestaRegistroGeiser registrar(PeticionRegistroGeiser peticion, boolean forzarExcepcion) throws GeiserPluginException {
 		ResultadoRegistroType resultado = new ResultadoRegistroType();
 		try {
 			RespuestaType respuesta = new RespuestaType();

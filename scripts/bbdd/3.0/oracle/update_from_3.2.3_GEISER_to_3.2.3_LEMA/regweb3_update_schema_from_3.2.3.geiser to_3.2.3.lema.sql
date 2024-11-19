@@ -1,3 +1,6 @@
+ALTER TABLE RWE_REGISTRO_SIR ADD MOTIVO_RECHAZO VARCHAR2(255 CHAR);
+ALTER TABLE RWE_OFICIO_REMISION ADD MOTIVO_RECHAZO VARCHAR2(255 CHAR);
+
 CREATE TABLE RWE_REMESA
 (
     ID							NUMBER(19,0) NOT NULL,
@@ -13,11 +16,12 @@ CREATE TABLE RWE_REMESA
     TITULAR_NOMBRE				VARCHAR2(255 CHAR),
     ENTIDAD_CODIGO				VARCHAR2(9),
     ENTIDAD_NOMBRE				VARCHAR2(255),
-    ESTADO						VARCHAR2(10 CHAR) NOT NULL,
+    ESTADO						VARCHAR2(30 CHAR) NOT NULL,
     ESTADO_NOTIFICA				VARCHAR2(30 CHAR) NOT NULL,
     CODIGO_PROCEDIMIENTO		VARCHAR2(9 CHAR),
     REINTENTOS_LECTURA			NUMBER(1) DEFAULT 3 NOT NULL,
     REGISTRO       				NUMBER(19,0),
+    USUARIO                		NUMBER(19,0),
     ENTIDAD        				NUMBER(19,0) NOT NULL
 );
 
@@ -41,15 +45,22 @@ CREATE INDEX RWE_REMESA_ESTADO_I ON RWE_REMESA(ESTADO);
 
 CREATE INDEX RWE_REMESA_ESTADO_NOTIF_I ON RWE_REMESA(ESTADO_NOTIFICA);
 
+CREATE INDEX RWE_REMESA_USUARIO_FK_I on RWE_REMESA (USUARIO);
+
 CREATE INDEX RWE_REMESA_ENTIDAD_FK_I on RWE_REMESA (ENTIDAD);
 
 ALTER TABLE RWE_REMESA
 	ADD CONSTRAINT RWE_REMESA_PK PRIMARY KEY (ID);
-	
+
 ALTER TABLE RWE_REMESA
     ADD CONSTRAINT RWE_REMESA_ENTIDAD_FK
         FOREIGN KEY (ENTIDAD)
             REFERENCES RWE_ENTIDAD;
+            
+ALTER TABLE RWE_REMESA
+    ADD CONSTRAINT RWE_REMESA_USUARIO_FK
+        FOREIGN KEY (USUARIO)
+            REFERENCES RWE_USUARIO;
 
 ALTER TABLE RWE_REMESA
     ADD CONSTRAINT RWE_REMESA_REGISTRO_FK
@@ -103,6 +114,9 @@ INSERT INTO RWE_PROPIEDADGLOBAL (ID, CLAVE, DESCRIPCION, ENTIDAD, TIPO, VALOR) V
 
 INSERT INTO RWE_PROPIEDADGLOBAL (ID, CLAVE, DESCRIPCION, ENTIDAD, TIPO, VALOR) VALUES (RWE_ALL_SEQ.nextVal,'es.caib.regweb3.enviar.mail.resultado.lema','Enviar correo con el resultado de consulta notificaciones DEHú',null,1,1);
 
+INSERT INTO RWE_PROPIEDADGLOBAL (ID, CLAVE, DESCRIPCION, ENTIDAD, TIPO, VALOR) VALUES (RWE_ALL_SEQ.nextVal,'es.caib.regweb3.notificaciones.pendientes.aviso.hora','Hora enviament correu informació remeses pendents',null,1,'08:40');
+
+
 INSERT INTO RWE_PLUGIN (ID, ACTIVO, CLASE, DESCRIPCION, ENTIDAD, NOMBRE, PROPIEDADES_ADMIN, PROPIEDADES_ENTIDAD, TIPO) VALUES (
 	RWE_ALL_SEQ.nextVal,
 	1,
@@ -111,13 +125,13 @@ INSERT INTO RWE_PLUGIN (ID, ACTIVO, CLASE, DESCRIPCION, ENTIDAD, NOMBRE, PROPIED
 	16,
 	'Integració DEHú',
 	NULL,
-	'es.caib.regweb3.plugins.lema.apb.service.localiza.wsdl=https://se-dehuws.redsara.es/wsdl/GD_Dehu/v2/Gd-Dehu-Ws_se.wsdl
-	#es.caib.regweb3.plugins.lema.apb.service.localiza.wsdl=https://se-gd-dehuws.redsara.es/ws/v2/lema?wsdl
-	es.caib.regweb3.plugins.lema.apb.service.localiza.realizadas.wsdl=https://se-gd-dehuws.redsara.es/ws/v1/realizadas?wsdl
-	es.caib.regweb3.plugins.lema.apb.keystore.file=/home/jamal/projects/registre-apb/registre-geiser/plugins/plugin-lema/plugin-lema-apb/src/main/resources/doc/lema_pre.jks
+	'es.caib.regweb3.plugins.lema.apb.proxy.endpoint=http://localhost:8081/lema-proxy/api
+	es.caib.regweb3.plugins.lema.apb.service.localiza.endpoint=https://se-gd-dehuws.redsara.es/ws/v2/lema
+	es.caib.regweb3.plugins.lema.apb.keystore.file=/opt/files/lema_auth.jks
 	es.caib.regweb3.plugins.lema.apb.keystore.type=JKS
 	es.caib.regweb3.plugins.lema.apb.keystore.alias=auth
-	es.caib.regweb3.plugins.lema.apb.keystore.pass=apb1234
-	es.caib.regweb3.plugins.lema.apb.titular.nif=Q0767004E
-	es.caib.regweb3.plugins.lema.apb.receptor.nif=Q0767004E
-	es.caib.regweb3.plugins.lema.apb.usuarios.aviso=jamalj@limit.es,jamalj@limit.es',12);
+	es.caib.regweb3.plugins.lema.apb.keystore.pass=12345
+	es.caib.regweb3.plugins.lema.apb.titular.nif=*******
+	es.caib.regweb3.plugins.lema.apb.receptor.nif=*******
+	es.caib.regweb3.plugins.lema.apb.usuarios.aviso=jamalj@limit.es,jamalj@limit.es',
+	12);

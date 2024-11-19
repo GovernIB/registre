@@ -202,8 +202,10 @@ public interface RegistroSirLocal extends BaseEjb<RegistroSir, Long> {
      * @param identificadorIntercambio
      * @throws Exception
      */
-	void actualizarIdentificadorIntercambio(Long idRegistroSir, String identificadorIntercambio) throws Exception;
+	void actualizarIdentificadorIntercambio(Long idRegistroSir, String identificadorIntercambio, String motivoRechazo) throws Exception;
 
+	void actualizarMotivoRechazo(Long idRegistroSir, String motivoRechazo) throws Exception;
+	
 	/**
      * Obtiene un RegistroSir a partir de los parámetros
      * @param numeroRegistro

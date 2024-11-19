@@ -1,9 +1,12 @@
 package es.caib.regweb3.webapp.controller.remesa;
 
+import static es.caib.regweb3.utils.RegwebConstantes.REGISTRO_ENTRADA;
+
 import java.io.File;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -15,14 +18,11 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.io.FilenameUtils;
 import org.fundaciobit.genapp.common.i18n.I18NException;
-import org.fundaciobit.genapp.common.i18n.I18NTranslation;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
-import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
 import org.fundaciobit.plugins.documentcustody.api.DocumentCustody;
-import org.plugin.lema.api.ConsultaRealizadaResponse;
-import org.plugin.lema.api.DocumentoLegal;
-import org.plugin.lema.api.PeticionAccesoResponse;
+import org.fundaciobit.plugins.documentcustody.api.SignatureCustody;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
@@ -47,6 +47,7 @@ import es.caib.regweb3.model.Organismo;
 import es.caib.regweb3.model.RegistroEntrada;
 import es.caib.regweb3.model.Remesa;
 import es.caib.regweb3.model.TipoDocumental;
+import es.caib.regweb3.model.Usuario;
 import es.caib.regweb3.model.UsuarioEntidad;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.model.utils.DocumentoNotificacion;
@@ -63,7 +64,6 @@ import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.persistence.utils.RegistroUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.controller.registro.AbstractRegistroCommonFormController;
-import es.caib.regweb3.webapp.controller.registro.AnexoForm;
 import es.caib.regweb3.webapp.form.RemesaBusqueda;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import es.caib.regweb3.webapp.validator.RegistroEntradaWebValidator;
@@ -117,12 +117,40 @@ public class RemesaListController extends AbstractRegistroCommonFormController {
      */
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public String list(Model model, HttpServletRequest request) throws Exception {
+        Entidad entidadActiva = getEntidadActiva(request);
+        Remesa remesa = new Remesa();
+    	Calendar calendar = Calendar.getInstance();
+        Date fechaHasta = calendar.getTime();
+        
+        calendar.add(Calendar.DAY_OF_MONTH, -30); // Restar 30 días
+        Date fechaDesde = calendar.getTime();
+        
+        remesa.setEstado(RegwebConstantes.REMESA_ENV_ESTADO_PENDIENTE);
+        
+        RemesaBusqueda remesaBusqueda = new RemesaBusqueda(remesa, null, null, null, 1);
+        remesaBusqueda.setFechaPuestaDisposicionDesde(fechaDesde);
+        remesaBusqueda.setFechaPuestaDisposicionHasta(fechaHasta);
+        
+        Date fechaPuestaDisposicionHasta = null;
+        if (remesaBusqueda.getFechaPuestaDisposicionHasta() != null)
+			fechaPuestaDisposicionHasta = RegistroUtils.ajustarHoraBusqueda(remesaBusqueda.getFechaPuestaDisposicionHasta());
+        
 
-        RemesaBusqueda remesaBusqueda = new RemesaBusqueda(null, null, null, null, 1);
-        remesaBusqueda.setFechaPuestaDisposicionDesde(new Date());
-        remesaBusqueda.setFechaPuestaDisposicionHasta(new Date());
+        
+        // Búsqueda de remesas
+     	Paginacion paginacion = remesaConsultaEjb.busqueda(
+     			remesaBusqueda.getPageNumber(), 
+     			remesa,
+     			null,
+     			remesaBusqueda.getFechaPuestaDisposicionDesde(),
+     			fechaPuestaDisposicionHasta,
+     			entidadActiva.getId());
+
+     	remesaBusqueda.setPageNumber(1);
+     	
+     	model.addAttribute("paginacion", paginacion);
         model.addAttribute("remesaBusqueda", remesaBusqueda);
-
+     		
         return "remesa/remesaList";
     }
 
@@ -138,11 +166,8 @@ public class RemesaListController extends AbstractRegistroCommonFormController {
 
 		Entidad entidadActiva = getEntidadActiva(request);
 
-		Date fechaPuestaDisposicionDesde = null;
 		Date fechaPuestaDisposicionHasta = null;
 		// Ponemos la hora 23:59 a la fecha
-		if (busqueda.getFechaPuestaDisposicionDesde() != null)
-			fechaPuestaDisposicionDesde = RegistroUtils.ajustarHoraBusqueda(busqueda.getFechaPuestaDisposicionDesde());
 		if (busqueda.getFechaPuestaDisposicionHasta() != null)
 			fechaPuestaDisposicionHasta = RegistroUtils.ajustarHoraBusqueda(busqueda.getFechaPuestaDisposicionHasta());
 
@@ -151,7 +176,7 @@ public class RemesaListController extends AbstractRegistroCommonFormController {
 				busqueda.getPageNumber(), 
 				busqueda.getRemesa(),
 				busqueda.getEmisor(),
-				fechaPuestaDisposicionDesde,
+				busqueda.getFechaPuestaDisposicionDesde(),
 				fechaPuestaDisposicionHasta,
 				entidadActiva.getId());
 
@@ -172,9 +197,10 @@ public class RemesaListController extends AbstractRegistroCommonFormController {
         	
         	if (remesa.getReintentosLectura() == 0)
         		throw new RuntimeException("Superado el número de reintentos de lectura, consulte el administrador");
-        	
+        	Usuario usuarioActual = getUsuarioAutenticado(request);
         	remesaEjb.lecturaNotificacion(
         		identificador, 
+        		usuarioActual,
         		entidad);
         	
         	List<File> documentos = documentManager.getDocuments(identificador);
@@ -252,14 +278,8 @@ public class RemesaListController extends AbstractRegistroCommonFormController {
         }else{
             oficinasOrigen = new LinkedHashSet<>(getOficinasOrigen(request));
         }
-
-    	Remesa remesa = remesaEjb.findByIdentificador(identificador);
         RegistroEntrada registroEntrada = new RegistroEntrada();
-        registroEntrada.getRegistroDetalle().setExtracto(remesa.getConcepto());
-        registroEntrada.getRegistroDetalle().setTipoDocumentacionFisica(3L);
-        if (remesa.getCodigoProcedimiento() != null)
-        	registroEntrada.getRegistroDetalle().setCodigoSia(Long.valueOf(remesa.getCodigoProcedimiento()));
-        
+    
         registroEntrada.setOficina(oficina);
         try {
 	        String organoDestinoDefecto = PropiedadGlobalUtil.getOrganoDestinoPorDefecto(entidad.getId());
@@ -277,50 +297,9 @@ public class RemesaListController extends AbstractRegistroCommonFormController {
         model.addAttribute(getUsuarioAutenticado(request));
         model.addAttribute(oficina);
         
-        List<Interesado> interesados = cargarInteresados(remesa);
-        
-//        try {
-//			remesaEjb.consultaGuardaAcuseRecibo(identificador, entidad);
-//		} catch (I18NException | Exception e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-        
-        // Inicializar anexos registro entrada
-    	List<File> documentos = documentManager.getDocuments(identificador);
-    	if (documentos != null) {
-    		List<Anexo> anexos = new ArrayList<Anexo>();
-    		for (File documento : documentos) {
-    			Anexo anexo = new Anexo();
-				String nombre = documento.getName();
-				
-				anexo.setNombreFichero(nombre);
-				anexo.setTitulo(nombre);
-				if (nombre != null && nombre.contains("CERTIFICACION_PDF"))
-					anexo.setTipoDocumental(new TipoDocumental("26"));
-				else
-					anexo.setTipoDocumental(new TipoDocumental("24"));
-	            anexo.setTipoDocumento(RegwebConstantes.TIPO_DOCUMENTO_DOC_ADJUNTO);
-	            anexo.setValidezDocumento(RegwebConstantes.TIPOVALIDEZDOCUMENTO_ORIGINAL);
-	            anexo.setOrigenCiudadanoAdmin(RegwebConstantes.ANEXO_ORIGEN_ADMINISTRACION);
-	            
-	            anexos.add(anexo);
-			}
-    		
-    		registroEntrada.getRegistroDetalle().setAnexos(anexos);
-    	}
-    	HttpSession session = request.getSession();
-    	session.removeAttribute("errorAnexos");
-    	
-        model.addAttribute("interesados",interesados);
-        model.addAttribute("registroEntrada",registroEntrada);
-        model.addAttribute("organismosOficinaActiva", getOrganismosOficinaActiva(request));
+        cargarFormularioRegistro(model, registroEntrada, request, identificador);
+
         model.addAttribute("oficinasOrigen",  oficinasOrigen);
-        model.addAttribute("ultimosOrganismos",  registroEntradaConsultaEjb.ultimosOrganismosRegistro(getUsuarioEntidadActivo(request)));
-        model.addAttribute("esRemesa", true);
-        model.addAttribute("tiposDocumental", tipoDocumentalEjb.getByEntidad(getEntidadActiva(request).getId()));
-        model.addAttribute("tiposDocumentoAnexo", RegwebConstantes.TIPOS_DOCUMENTO);
-        model.addAttribute("tiposValidezDocumento", RegwebConstantes.TIPOS_VALIDEZDOCUMENTO);
         
         return "registroEntrada/registroEntradaForm";
     }
@@ -346,6 +325,8 @@ public class RemesaListController extends AbstractRegistroCommonFormController {
 
         if (result.hasErrors() || !destinoValido) { // Si hay errores volvemos a la vista del formulario
 
+        	cargarFormularioRegistro(model, registroEntrada, request, identificador);
+        	
             if (!destinoValido) {
             	 model.addAttribute("destinoNoValido", true);
             }
@@ -412,10 +393,28 @@ public class RemesaListController extends AbstractRegistroCommonFormController {
 
                 // Crear anexos i interesados relacionados con el registro de entrada
                 List<Interesado> interesados = cargarInteresados(remesa);
+                
+                // Crear lista anexosFull para guardar en archivo DocumentCustordy y SignatureCustody
                 List<AnexoFull> anexosFull = cargarAnexosFullRemesa(request, identificador, registroEntrada, entidad);
                 
+                // Vacias anexos registro entrada para crearlos después del registro de entrada
+                registroEntrada.getRegistroDetalle().setAnexos(null);
+                
                 // Guardamos el RegistroEntrada
-                registroEntrada = registroEntradaEjb.registrarEntrada(registroEntrada, usuarioEntidad, interesados, anexosFull, false, true);
+                registroEntrada = registroEntradaEjb.registrarEntrada(registroEntrada, usuarioEntidad, interesados, null, false, true);
+                
+                // Crear y guardar anexos
+                for (AnexoFull anexoFull : anexosFull) {
+                    anexoFull.getAnexo().setRegistroDetalle(registroEntrada.getRegistroDetalle());
+                    AnexoFull anexoFullCreado;
+                    if(!anexoFull.getAnexo().getConfidencial()){
+                        anexoFullCreado = anexoEjb.crearAnexo(anexoFull, usuarioEntidad, registroEntrada.getId(), REGISTRO_ENTRADA, null, true);
+                    }else{
+                        anexoFullCreado = anexoEjb.crearAnexoConfidencial(anexoFull, usuarioEntidad, registroEntrada.getId(), REGISTRO_ENTRADA);
+                    }
+                    registroEntrada.getRegistroDetalle().getAnexos().add(anexoFullCreado.getAnexo());
+                }
+
 
                 remesaEjb.actualizarEstadoRegistrada(identificador, registroEntrada.getId(), RegwebConstantes.REMESA_ESTADO_REG_REGISTRADA);      
                 
@@ -446,6 +445,58 @@ public class RemesaListController extends AbstractRegistroCommonFormController {
         }
     }
     
+    private void cargarFormularioRegistro(Model model, RegistroEntrada registroEntrada, HttpServletRequest request, String identificador) throws Exception {
+    	Remesa remesa = remesaEjb.findByIdentificador(identificador);
+        registroEntrada.getRegistroDetalle().setExtracto(remesa.getConcepto());
+        registroEntrada.getRegistroDetalle().setTipoDocumentacionFisica(3L);
+        if (remesa.getCodigoProcedimiento() != null)
+        	registroEntrada.getRegistroDetalle().setCodigoSia(Long.valueOf(remesa.getCodigoProcedimiento()));
+        
+    	List<Interesado> interesados = cargarInteresados(remesa);
+         
+         // Inicializar anexos registro entrada
+     	List<File> documentos = documentManager.getDocuments(identificador);
+     	if (documentos != null) {
+     		List<Anexo> anexos = new ArrayList<Anexo>();
+     		for (File documento : documentos) {
+     			Anexo anexo = new Anexo();
+ 				String nombre = documento.getName();
+ 				
+ 				if (nombre != null) {
+ 					anexo.setTitulo(FilenameUtils.removeExtension(nombre));
+ 					anexo.setNombreFichero(nombre);
+ 				
+	 				if (nombre.contains("CERTIFICACION_PDF"))
+	 					anexo.setTipoDocumental(new TipoDocumental("24829"));
+	 				else
+	 					anexo.setTipoDocumental(new TipoDocumental("24825"));
+ 				}
+ 				
+ 	            anexo.setTipoDocumento(RegwebConstantes.TIPO_DOCUMENTO_DOC_ADJUNTO);
+ 	            anexo.setValidezDocumento(RegwebConstantes.TIPOVALIDEZDOCUMENTO_ORIGINAL);
+ 	            anexo.setOrigenCiudadanoAdmin(RegwebConstantes.ANEXO_ORIGEN_ADMINISTRACION);
+ 	            
+ 	            anexos.add(anexo);
+ 			}
+     		
+     		registroEntrada.getRegistroDetalle().setAnexos(anexos);
+     	}
+     	HttpSession session = request.getSession();
+     	session.removeAttribute("errorAnexos");
+     	
+        model.addAttribute("interesados",interesados);
+         
+
+         
+        model.addAttribute("registroEntrada",registroEntrada);
+        model.addAttribute("organismosOficinaActiva", getOrganismosOficinaActiva(request));
+        model.addAttribute("ultimosOrganismos",  registroEntradaConsultaEjb.ultimosOrganismosRegistro(getUsuarioEntidadActivo(request)));
+        model.addAttribute("esRemesa", true);
+        model.addAttribute("tiposDocumental", tipoDocumentalEjb.getByEntidad(getEntidadActiva(request).getId()));
+        model.addAttribute("tiposDocumentoAnexo", RegwebConstantes.TIPOS_DOCUMENTO);
+        model.addAttribute("tiposValidezDocumento", RegwebConstantes.TIPOS_VALIDEZDOCUMENTO);
+    }
+    
     private List<Interesado> cargarInteresados(Remesa remesa) {
         List<Interesado> interesados = new ArrayList<Interesado>();
         Interesado interesado = new Interesado();
@@ -454,13 +505,13 @@ public class RemesaListController extends AbstractRegistroCommonFormController {
             interesado.setTipoDocumentoIdentificacion(2L); // 1-NIF 2-CIF
             interesado.setDocumento(remesa.getTitularNif());
             interesado.setCodigoDir3(remesa.getEntidadCodigo());
-            interesado.setNombre(remesa.getTitularNombre());
+            interesado.setRazonSocial(remesa.getTitularNombre());
             interesados.add(interesado);
         } else {
-            interesado.setTipo(2L); // 1- Adm 2- P.Fisica 3- Juridica
-            interesado.setTipoDocumentoIdentificacion(1L); // 1-NIF 2-CIF
+            interesado.setTipo(3L); // 1- Adm 2- P.Fisica 3- Juridica
+            interesado.setTipoDocumentoIdentificacion(2L); // 1-NIF 2-CIF
             interesado.setDocumento(remesa.getTitularNif());
-            interesado.setNombre(remesa.getTitularNombre());
+            interesado.setRazonSocial(remesa.getTitularNombre());
             interesados.add(interesado);
         }
         
@@ -504,10 +555,26 @@ public class RemesaListController extends AbstractRegistroCommonFormController {
 			            
 			        	anexoFull.setAnexo(anexo);
 			        	anexoFull.setDocumentoCustody(documentoCustody);
-
-			            anexosFull.add(anexoFull);
 			            
 			            validarFirmaAnexo(entidad, registroEntrada, anexoFull);
+			            
+			            int modoFirma = getModoFirma(anexoFull.getAnexo());
+			            
+			            anexo.setModoFirma(modoFirma);
+			            
+			            if (RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED == modoFirma || RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED == modoFirma) {
+			            	SignatureCustody signatureCustody = new SignatureCustody();
+			            	signatureCustody.setData(contenido);
+			            	signatureCustody.setLength(contenido.length);
+			            	signatureCustody.setMime(mimeType);
+			            	signatureCustody.setName(nombre);
+				        	anexoFull.setSignatureCustody(signatureCustody);
+				        	
+//				        	if (RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED == modoFirma) // Només informar firma si és attached
+//				        		anexoFull.setDocumentoCustody(null);
+			            }
+
+			            anexosFull.add(anexoFull);
 			        }
 		        }
                 
@@ -535,6 +602,21 @@ public class RemesaListController extends AbstractRegistroCommonFormController {
 			log.error("Ha habido un error verificando la firma de un documento de notificación: " + e.getMessage());
 			e.printStackTrace();
 		}
+	}
+	
+	private int getModoFirma(Anexo anexo) {
+		if ((anexo.getFirmaValida() != null && anexo.getFirmaValida()) && anexo.getSignType() != null) {
+			switch (anexo.getSignType()) {
+			case "PAdES":
+			case "CAdES":
+			case "XAdES":
+				return RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED;
+			default:
+				return RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED;
+			}
+		}
+		
+		return RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA;
 	}
     
     private boolean verificarDestinoSeleccionado(Organismo destino, Entidad entidad) {

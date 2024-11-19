@@ -1404,11 +1404,23 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
 	
 	@Override
     @SuppressWarnings(value = "unchecked")
-    public void actualizarIdentificadorIntercambio(Long idRegistroSir, String identificadorIntercambio) throws Exception {
+    public void actualizarIdentificadorIntercambio(Long idRegistroSir, String identificadorIntercambio, String motivoRechazo) throws Exception {
 
-        Query q = em.createQuery("update RegistroSir set identificadorIntercambio=:identificadorIntercambio where id = :idRegistroSir");
+        Query q = em.createQuery("update RegistroSir set identificadorIntercambio=:identificadorIntercambio, motivoRechazo = :motivoRechazo where id = :idRegistroSir");
         q.setParameter("identificadorIntercambio", identificadorIntercambio);
         q.setParameter("idRegistroSir", idRegistroSir);
+        q.setParameter("motivoRechazo", motivoRechazo);
+        q.executeUpdate();
+
+    }
+	
+	@Override
+    @SuppressWarnings(value = "unchecked")
+    public void actualizarMotivoRechazo(Long idRegistroSir, String motivoRechazo) throws Exception {
+
+        Query q = em.createQuery("update RegistroSir set motivoRechazo = :motivoRechazo where id = :idRegistroSir");
+        q.setParameter("idRegistroSir", idRegistroSir);
+        q.setParameter("motivoRechazo", motivoRechazo);
         q.executeUpdate();
 
     }

@@ -998,4 +998,9 @@ public class PropiedadGlobalUtil {
     	final String partialPropertyName =  "cron.localizacion.notificaciones.dehu.retardo";
     	return getLong(partialPropertyName);
     }
+
+	public static String getHoraEnvioCorreoNotificacionesDehu() {
+		final String partialPropertyName =  "notificaciones.pendientes.aviso.hora";
+    	return getString(partialPropertyName);
+	}
 }

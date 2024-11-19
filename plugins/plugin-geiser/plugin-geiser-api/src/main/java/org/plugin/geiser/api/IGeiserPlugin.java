@@ -18,7 +18,7 @@ public interface IGeiserPlugin extends IPlugin {
 	 * 
 	 * @throws GeiserPluginException
 	 */
-	public RespuestaRegistroGeiser registrar(PeticionRegistroGeiser peticion) throws GeiserPluginException;
+	public RespuestaRegistroGeiser registrar(PeticionRegistroGeiser peticion, boolean forzarExcepcion) throws GeiserPluginException;
 	
 	/**
 	 * Operación que permite crear un asiento registral en GEISER con los datos recibidos en la petición y hacer de forma automática un envío como si se hiciese desde la aplicación.

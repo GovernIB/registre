@@ -337,18 +337,20 @@
 				               		<div class="form-group col-xs-12">
 					               		<div class="col-xs-6">
 				                            <div class="col-xs-3 pull-left etiqueta_regweb12 control-label textEsq">
-				                                <label for="registroDetalle.anexos[${loop.index}]" rel="popupAbajo" data-content="<spring:message code="anexo.nombre.fichero"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="anexo.nombre.fichero"/></label>
+				                                <label for="registroDetalle.anexos[${loop.index}].titulo" rel="popupAbajo" data-content="<spring:message code="anexo.nombre.titulo"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="anexo.nombre.titulo"/></label>
 				                            </div>
 				                            <div class="col-xs-9">
-				                                <form:input path="registroDetalle.anexos[${loop.index}].titulo" cssClass="form-control" maxlength="50"/> <form:errors path="registroDetalle.anexos[${loop.index}].titulo" cssClass="help-block" element="span"/>
+				                                <form:input path="registroDetalle.anexos[${loop.index}].titulo" cssClass="form-control" maxlength="50"/>
+				                                <form:errors path="registroDetalle.anexos[${loop.index}].titulo" cssClass="label label-danger"/>
 				                            </div>
 				                        </div>
 				                        <div class="col-xs-6">
 				                            <div class="col-xs-3 pull-left etiqueta_regweb12 control-label textEsq">
-				                                <label for="registroDetalle.anexos[${loop.index}]" rel="popupAbajo" data-content="<spring:message code="anexo.nombre.fichero"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="anexo.nombre.fichero"/></label>
+				                                <label for="registroDetalle.anexos[${loop.index}].nombreFichero" rel="popupAbajo" data-content="<spring:message code="anexo.nombre.fichero"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="anexo.nombre.fichero"/></label>
 				                            </div>
 				                            <div class="col-xs-9">
-				                                <form:input path="registroDetalle.anexos[${loop.index}].nombreFichero" cssClass="form-control" maxlength="50"/> <form:errors path="registroDetalle.anexos[${loop.index}].nombreFichero" cssClass="help-block" element="span"/>
+				                                <form:input path="registroDetalle.anexos[${loop.index}].nombreFichero" cssClass="form-control" maxlength="50"/>
+				                                <form:errors path="registroDetalle.anexos[${loop.index}].nombreFichero" cssClass="label label-danger"/>
 				                            </div>
 				                        </div>
 			                        </div>
@@ -363,6 +365,7 @@
                                     			 <form:option value="0"><spring:message code="anexo.origen.ciudadano"/></form:option>
                                     			 <form:option value="1"><spring:message code="anexo.origen.administracion"/></form:option>
 				                              </form:select>
+				                              <form:errors path="registroDetalle.anexos[${loop.index}].origenCiudadanoAdmin" cssClass="label label-danger"/>
 				                          </div>
 				                       </div>
 			                        	<div class="col-xs-6">
@@ -375,6 +378,7 @@
 				                                       <form:option value="${tipoDocumento}"><spring:message code="tipoDocumento.0${tipoDocumento}"/></form:option>
 				                                   </c:forEach>
 				                               </form:select>
+				                               <form:errors path="registroDetalle.anexos[${loop.index}].tipoDocumento" cssClass="label label-danger"/>
 				                           </div>
 				                        </div>
 			                        </div>
@@ -385,11 +389,12 @@
 				                          </div>
 				                          <div class="col-xs-9">
 				                              <form:select path="registroDetalle.anexos[${loop.index}].tipoDocumental.id" class="chosen-select">
-				                                   	 <form:option value=""></form:option>
+				                                 <form:option value=""></form:option>
 				                                 <c:forEach items="${tiposDocumental}" var="tipoDocumental">
 				                                     <form:option value="${tipoDocumental.id}"><i:trad value="${tipoDocumental}" property="nombre"/></form:option>
 				                                 </c:forEach>
 				                              </form:select>
+				                              <form:errors path="registroDetalle.anexos[${loop.index}].tipoDocumental.id" cssClass="label label-danger"/>
 				                          </div>
 				                       </div>
 			                        	<div class="col-xs-6">
@@ -407,6 +412,7 @@
 				                                         </c:if>
 				                                      </label>
 			                                    </c:forEach>
+			                                    <form:errors path="registroDetalle.anexos[${loop.index}].validezDocumento" cssClass="label label-danger"/>
 				                           </div>
 				                        </div>
 			                        </div>
@@ -454,7 +460,7 @@
 										<div class="col-xs-10">
 											<input type="radio" name="tipoInteresado"
 												value="${interesado.tipo}"
-												<c:if test="${interesado.tipo == RegwebConstantes.TIPO_INTERESADO_PERSONA_FISICA}">checked</c:if>
+												<c:if test="${interesado.tipo == RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA}">checked</c:if>
 												disabled="disabled" checked>
 											<spring:message code="interesado.tipo.${interesado.tipo}" />
 										</div>
@@ -466,11 +472,10 @@
 												for="organismoInteresado" rel="popupAbajo"
 												data-content="<spring:message code="registro.ayuda.organoInteresado"/>"
 												data-toggle="popover">
-												<spring:message code="interesado.organismo" /></label>
+												<spring:message code="interesado.nombre" /></label>
 										</div>
 										<div class="col-xs-10">
-											<strong>${interesado.codigoDir3} -
-												${interesado.nombre}</strong>
+											<strong>${not empty interesado.codigoDir3 ? interesado.codigoDir3 : interesado.documento} - ${interesado.razonSocial}</strong>
 										</div>
 									</div>
 								</c:forEach>

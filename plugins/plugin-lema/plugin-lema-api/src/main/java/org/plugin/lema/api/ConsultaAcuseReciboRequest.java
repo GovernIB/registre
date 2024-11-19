@@ -12,4 +12,6 @@ public class ConsultaAcuseReciboRequest {
 	private Integer codigoOrigen;
 	private IdentificadorAcuseRecibo identificadorAcuse;
 
+	private AuthenticationDto authentication;
+	
 }

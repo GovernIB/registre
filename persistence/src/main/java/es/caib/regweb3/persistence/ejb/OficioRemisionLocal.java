@@ -278,4 +278,6 @@ public interface OficioRemisionLocal extends BaseEjb<OficioRemision, Long> {
 
 	void actualizarEntradaDestino(Long idOficio, String numeroRegistroEntradaDestino, Date fechaEntradaDestino,
 			String codigoEntidadRegistralProcesado, String decodificacionEntidadRegistralProcesado) throws Exception;
+
+	void actualizarMotivoRechazo(Long id, String motivoRechazo) throws Exception;
 }

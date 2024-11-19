@@ -758,6 +758,17 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
     }
     
 	@Override
+    @SuppressWarnings(value = "unchecked")
+    public void actualizarMotivoRechazo(Long idOficioRemision, String motivoRechazo) throws Exception {
+
+        Query q = em.createQuery("update OficioRemision set motivoRechazo = :motivoRechazo where id = :idOficioRemision");
+        q.setParameter("idOficioRemision", idOficioRemision);
+        q.setParameter("motivoRechazo", motivoRechazo);
+        q.executeUpdate();
+
+    }
+    
+	@Override
 	public void actualizarDestinoExterno(Long idOficio, String codEntidadRegistralDest, String descEntidadRegistralDest,
 			String codDestinoExterno, String descDestinoExterno) throws Exception {
 		

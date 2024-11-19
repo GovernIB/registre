@@ -68,6 +68,7 @@ public class Remesa implements Serializable {
     
     private Entidad entidad;
 
+    private Usuario usuario;
     
     private List<DocumentoNotificacion> documentosRecibidos = new ArrayList<DocumentoNotificacion>();
     
@@ -76,7 +77,7 @@ public class Remesa implements Serializable {
 
 	public Remesa(String concepto, String descripcion, String identificador, Integer codigoOrigen, Integer tipo, String organoEmisorCodigo,
 			String organoEmisorNombre, Date fechaPuestaDisposicion, String titularNif, String titularNombre, String entidadCodigo, String entidadNombre, 
-			String estado, String estadoNotifica, String codigoProcedimiento, Integer reintentosLectura, Entidad entidad) {
+			String estado, String estadoNotifica, String codigoProcedimiento, Integer reintentosLectura, Entidad entidad, Usuario usuario) {
 		super();
 		this.concepto = concepto;
 		this.descripcion = descripcion;
@@ -95,6 +96,7 @@ public class Remesa implements Serializable {
 		this.codigoProcedimiento = codigoProcedimiento;
 		this.reintentosLectura = reintentosLectura;
 		this.entidad = entidad;
+		this.usuario = usuario;
 	}
 
 	@Id
@@ -282,6 +284,18 @@ public class Remesa implements Serializable {
         this.entidad = entidad;
     }
 
+	@ManyToOne(optional = true)
+    @JoinColumn(name = "USUARIO")
+    @ForeignKey(name = "RWE_REMESA_Usuario_FK")
+    @JsonIgnore
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
+    
     @Transient
 	public List<DocumentoNotificacion> getDocumentosRecibidos() {
 		return documentosRecibidos;

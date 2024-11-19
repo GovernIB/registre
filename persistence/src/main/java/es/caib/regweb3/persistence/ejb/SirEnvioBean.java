@@ -677,9 +677,13 @@ public class SirEnvioBean implements SirEnvioLocal {
     		  // Identificador intercambio a veces no disponible al momento (consultar con una scheduled)  
     		  if (estadoTramitacion != null && !estadoTramitacion.isEmpty() && !estadoTramitacion.get(0).getIdentificadorIntercambioSIR().isEmpty()) {
     			  String identificadorIntercambio = estadoTramitacion.get(0).getIdentificadorIntercambioSIR().get(0);
-    			  registroSirEjb.actualizarIdentificadorIntercambio(registroSir.getId(), identificadorIntercambio);
+    			  String motivoRechazo = estadoTramitacion.get(0).getMotivoRechazo();
+    			  
+    			  registroSirEjb.actualizarIdentificadorIntercambio(registroSir.getId(), identificadorIntercambio, motivoRechazo);
+    			  
     			  if (oficioRemision != null) {
-    				  oficioRemisionEjb.actualizarIdentificadorIntercambio(oficioRemision.getId(), identificadorIntercambio);
+    				  oficioRemisionEjb.actualizarIdentificadorIntercambio(oficioRemision.getId(), identificadorIntercambio);  
+        			  oficioRemisionEjb.actualizarMotivoRechazo(oficioRemision.getId(), motivoRechazo);
     				  
     				  if (oficioRemision.getRegistrosEntrada() != null) {
 	    				  for (RegistroEntrada registroEntrada: oficioRemision.getRegistrosEntrada()) {
@@ -791,6 +795,16 @@ public class SirEnvioBean implements SirEnvioLocal {
 		        		  oficioRemisionEjb.modificarFechaEstado(oficioRemision.getId(), fechaEstado);
 	        		  } else {
 	        			  oficioRemisionEjb.modificarFechaEstado(oficioRemision.getId(), null); // No mostrar fecha estado si no la devuelve GEISER
+	        		  }
+	        		  
+	        		  try {
+		        		  if (estadoTramitacion != null && !estadoTramitacion.isEmpty() && estadoTramitacion.get(0).getMotivoRechazo() != null) {
+		        			  String motivoRechazo = estadoTramitacion.get(0).getMotivoRechazo();
+		        			  registroSirEjb.actualizarMotivoRechazo(registroSir.getId(), motivoRechazo);
+		        			  oficioRemisionEjb.actualizarMotivoRechazo(oficioRemision.getId(), motivoRechazo);
+		        		  }
+	        		  } catch (Exception e) {
+						log.error("Ha habido un error actualizando el motivo de rechazo (idRegistroSir=" + registroSir.getId() + ")");
 	        		  }
 	        		  oficioRemisionEjb.actualizarEntradaDestino(
 	        				  oficioRemision.getId(), 

@@ -144,7 +144,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
             if (registroSalida.getEvento() != RegwebConstantes.EVENTO_OFICIO_SIR && enviarGeiser) {
 	            try {
 		            //Registro interno en GEISER
-		            RespuestaRegistroGeiser respuesta = pluginHelper.postProcesoNuevoRegistroGeiser(registroSalida, usuarioEntidad);
+		            RespuestaRegistroGeiser respuesta = pluginHelper.postProcesoNuevoRegistroGeiser(registroSalida, usuarioEntidad, false);
 		            if (respuesta != null) {
 		            	registroSalida.setNumeroRegistro(respuesta.getNuRegistro());
 		            	registroSalida.setNumeroRegistroFormateado(respuesta.getNuRegistro());

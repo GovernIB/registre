@@ -28,7 +28,10 @@ que se le indica -->
                 </div>
                 
                 <div id="remesa-btn-lectura" class="wizard-step">
-                    <a type="button" class="btn btn-primary" id="btnLeerNotificacion"><spring:message code="remesa.modal.boton.leer"/></a>
+                    <a type="button" class="btn btn-primary" id="btnLeerNotificacion">
+                    	<span class="fa fa-eye"></span>
+                    	<spring:message code="remesa.modal.boton.leer"/>
+                    </a>
                 </div>
 
                 <div id="remesa-resumen" class="wizard-step">

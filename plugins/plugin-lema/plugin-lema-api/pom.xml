@@ -34,9 +34,10 @@
 			<scope>provided</scope>
 		</dependency>
 	</dependencies>
-
+	
 	<build>
 		<plugins>
+			<!-- 
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>jaxws-maven-plugin</artifactId>
@@ -88,6 +89,7 @@
 					</execution>
 				</executions>
 			</plugin>
+			 -->
 			<!-- <plugin> <groupId>org.apache.cxf</groupId> <artifactId>cxf-codegen-plugin</artifactId> 
 				<version>${cxf.version}</version> <executions> <execution> <goals> <goal>wsdl2java</goal> 
 				</goals> </execution> </executions> <configuration> <wsdlOptions> <wsdlOption> 

@@ -1,7 +1,11 @@
 package es.caib.regweb3.webapp.scheduler;
 
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -22,6 +26,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.scheduling.annotation.SchedulingConfigurer;
 import org.springframework.scheduling.config.ScheduledTaskRegistrar;
+import org.springframework.scheduling.support.CronTrigger;
 import org.springframework.scheduling.support.PeriodicTrigger;
 import org.springframework.stereotype.Service;
 
@@ -550,9 +555,9 @@ public class Regweb3Scheduler implements SchedulingConfigurer {
 							trigger.setFixedRate(true);
 							// Només la primera vegada que s'executa
 							Long localizaNotificacionesPendientesInitialDelayLong = 0L;
-							if (primeraVez[0]) {
+							if (primeraVez) {
 								localizaNotificacionesPendientesInitialDelayLong = schedulerEjb.getCronTareaRetardoConsultaNotificacionesDehu();
-								primeraVez[0] = false;
+								primeraVez = false;
 							}
 							trigger.setInitialDelay(localizaNotificacionesPendientesInitialDelayLong);
 							Date nextExecution = trigger.nextExecutionTime(triggerContext);
@@ -562,5 +567,49 @@ public class Regweb3Scheduler implements SchedulingConfigurer {
                     }
                 }
         );
+        
+        taskRegistrar.addTriggerTask(
+                new Runnable() {
+                    @Override
+                    public void run() {
+                    	try {
+                    		log.info("------------- LEMA: Envío correo remesas pendientes de procesar -------------");
+                    		
+                    		schedulerEjb.enviarCorreoInformandoPendientes();
+                    		
+                    		log.info("------------- LEMA: Envío correo remesas pendientes de procesar finalizado -------------");
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+                    }
+                },
+                new Trigger() {
+                    @Override
+                    public Date nextExecutionTime(TriggerContext triggerContext) {
+                    	String horaEjecucionStr = schedulerEjb.getHoraEnvioCorreoNotificacionesDehu();
+                        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+                        Calendar calendar = Calendar.getInstance();
+                        try {
+                        	if (horaEjecucionStr != null)
+                        		calendar.setTime(sdf.parse(horaEjecucionStr));
+                        	else
+                        		calendar.setTime(sdf.parse("12:00"));
+						} catch (ParseException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+
+                        // Generamos la expresión cron
+                        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+                        int minute = calendar.get(Calendar.MINUTE);
+                        
+                        String horaExecucio = String.format("0 %d %d * * ?", minute, hour); // Expresión cron
+                        
+                    	CronTrigger cronTrigger = new CronTrigger(horaExecucio, TimeZone.getTimeZone("Europe/Madrid"));
+                        return cronTrigger.nextExecutionTime(triggerContext);
+                    }
+                }
+        );
+        
 	}
 }
