@@ -1,12 +1,17 @@
 package es.caib.regweb3.webapp.controller.usuarioEntidad;
 
+import es.caib.regweb3.model.Archivo;
 import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.model.Organismo;
 import es.caib.regweb3.model.UsuarioEntidad;
+import es.caib.regweb3.persistence.ejb.ArchivoLocal;
+import es.caib.regweb3.persistence.utils.FileSystemManager;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.controller.BaseController;
 import es.caib.regweb3.webapp.form.UsuarioEntidadBusquedaForm;
+import es.caib.regweb3.webapp.form.UsuarioEntidadForm;
+import es.caib.regweb3.webapp.utils.ArchivoFormManager;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import es.caib.regweb3.webapp.validator.UsuarioEntidadValidator;
 import org.fundaciobit.genapp.common.i18n.I18NException;
@@ -22,18 +27,20 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.Date;
 
 /**
  * Created by Fundació BIT.
- * Controller que gestiona todas las operaciones con {@link Entidad}
+ * Controller que gestiona todas las operaciones con {@link UsuarioEntidad}
  *
  * @author earrivi
  * Date: 11/02/14
  */
 @Controller
-@SessionAttributes(types = UsuarioEntidad.class)
+@SessionAttributes(types = UsuarioEntidadForm.class)
 @RequestMapping(value = "/usuarioEntidad")
 public class UsuarioEntidadController extends BaseController {
 
@@ -41,6 +48,9 @@ public class UsuarioEntidadController extends BaseController {
 
     @Autowired
     private UsuarioEntidadValidator usuarioEntidadValidator;
+
+    @EJB(mappedName = ArchivoLocal.JNDI_NAME)
+    private ArchivoLocal archivoEjb;
 
 
     /**
@@ -120,6 +130,8 @@ public class UsuarioEntidadController extends BaseController {
     @RequestMapping(value = "/{idUsuarioEntidad}/edit", method = RequestMethod.GET)
     public String editarUsuarioEntidad(@PathVariable("idUsuarioEntidad") Long idUsuarioEntidad, Model model, HttpServletRequest request) throws I18NException {
 
+        UsuarioEntidadForm usuarioEntidadForm = new UsuarioEntidadForm();
+
         if(isOperador(request)){ //Si es Operador, solo puede modificar su usuario.
             UsuarioEntidad usuarioAutenticado = getUsuarioEntidadActivo(request);
 
@@ -133,11 +145,12 @@ public class UsuarioEntidadController extends BaseController {
 
         try {
             usuarioEntidad = usuarioEntidadEjb.findById(idUsuarioEntidad);
+            usuarioEntidadForm.setUsuarioEntidad(usuarioEntidad);
         }catch (Exception e) {
             e.printStackTrace();
         }
 
-        model.addAttribute(usuarioEntidad);
+        model.addAttribute(usuarioEntidadForm);
 
         return "usuarioEntidad/usuarioEntidadForm";
     }
@@ -146,9 +159,9 @@ public class UsuarioEntidadController extends BaseController {
      * Editar un {@link es.caib.regweb3.model.UsuarioEntidad}
      */
     @RequestMapping(value = "/{idUsuarioEntidad}/edit", method = RequestMethod.POST)
-    public String editarUsuarioEntidad(@ModelAttribute @Valid UsuarioEntidad usuarioEntidad, BindingResult result, SessionStatus status, HttpServletRequest request) {
+    public String editarUsuarioEntidad(@ModelAttribute @Valid UsuarioEntidadForm usuarioEntidadForm, BindingResult result, SessionStatus status, HttpServletRequest request) {
 
-        usuarioEntidadValidator.validate(usuarioEntidad, result);
+        usuarioEntidadValidator.validate(usuarioEntidadForm, result);
 
         if (result.hasErrors()) { // Si hay errores volvemos a la vista del formulario
 
@@ -156,8 +169,37 @@ public class UsuarioEntidadController extends BaseController {
         }else { // Si no hay errores actualizamos el registro
 
             try {
+                UsuarioEntidad usuarioEntidad = usuarioEntidadForm.getUsuarioEntidad();
+                Archivo certificadoExistente = usuarioEntidadEjb.findById(usuarioEntidadForm.getUsuarioEntidad().getId()).getCertificadoCurso();
+                Boolean eliminarCertificado = false;
 
+                // Gestión Certificado
+                if(usuarioEntidadForm.getCertificadoCurso() != null && !usuarioEntidadForm.getCertificadoCurso().isEmpty()){
+                    // Guardamos el nuevo certificado
+                    ArchivoFormManager afm = new ArchivoFormManager(archivoEjb, usuarioEntidadForm.getCertificadoCurso(), RegwebConstantes.ARCHIVOS_LOCATION_PROPERTY);
+                    usuarioEntidad.setCertificadoCurso(afm.prePersist(null));
+                    usuarioEntidad.setFechaCertificado(new Date());
+
+                    // Actualizamos el usuario
+                    usuarioEntidadEjb.merge(usuarioEntidad);
+
+                    if(certificadoExistente != null){
+                        eliminarCertificado = true;
+                    }
+
+                }else if(usuarioEntidadForm.isBorrarCertificado()){ // Se ha marcado la eliminación del certificado
+                    eliminarCertificado = true;
+                    usuarioEntidad.setCertificadoCurso(null);
+                    usuarioEntidad.setFechaCertificado(null);
+                }
+
+                // Actualizamos el usuario
                 usuarioEntidadEjb.merge(usuarioEntidad);
+
+                if(eliminarCertificado){
+                    FileSystemManager.eliminarArchivo(certificadoExistente.getId());
+                    archivoEjb.remove(certificadoExistente);
+                }
 
                 Mensaje.saveMessageInfo(request, getMessage("regweb.actualizar.registro"));
             } catch(I18NException i18ne) {

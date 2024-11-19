@@ -7,6 +7,7 @@ import es.caib.regweb3.utils.DocumentoUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 import es.caib.regweb3.utils.Validacion;
+import es.caib.regweb3.webapp.form.UsuarioEntidadForm;
 import es.caib.regweb3.webapp.utils.LoginService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,17 +44,18 @@ public class UsuarioEntidadValidator implements Validator {
     @Override
     public void validate(Object o, Errors errors) {
 
-        UsuarioEntidad usuarioEntidad = (UsuarioEntidad)o;
+        UsuarioEntidadForm usuarioEntidadForm = (UsuarioEntidadForm)o;
+        UsuarioEntidad usuarioEntidad = usuarioEntidadForm.getUsuarioEntidad();
 
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "usuario.nombre", "error.valor.requerido", "El camp és obligatori");
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "usuario.email", "error.valor.requerido", "El camp és obligatori");
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "usuario.identificador", "error.valor.requerido", "El camp és obligatori");
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "usuarioEntidad.usuario.nombre", "error.valor.requerido", "El camp és obligatori");
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "usuarioEntidad.usuario.email", "error.valor.requerido", "El camp és obligatori");
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "usuarioEntidad.usuario.identificador", "error.valor.requerido", "El camp és obligatori");
 
         //Validaciones si es Usuario Persona
         if(usuarioEntidad.getUsuario().getTipoUsuario() != null && usuarioEntidad.getUsuario().getTipoUsuario().equals(RegwebConstantes.TIPO_USUARIO_PERSONA)) {
 
-            ValidationUtils.rejectIfEmptyOrWhitespace(errors, "usuario.apellido1", "error.valor.requerido", "El camp és obligatori");
-            ValidationUtils.rejectIfEmptyOrWhitespace(errors, "usuario.documento", "error.valor.requerido", "El camp és obligatori");
+            ValidationUtils.rejectIfEmptyOrWhitespace(errors, "usuarioEntidad.usuario.apellido1", "error.valor.requerido", "El camp és obligatori");
+            ValidationUtils.rejectIfEmptyOrWhitespace(errors, "usuarioEntidad.usuario.documento", "error.valor.requerido", "El camp és obligatori");
 
             // Formato DNI
             if (StringUtils.isNotEmpty(usuarioEntidad.getUsuario().getDocumento())) {
@@ -95,11 +97,11 @@ public class UsuarioEntidadValidator implements Validator {
                     }
 
                     if (existe) {
-                        errors.rejectValue("usuario.documento", "error.document.existe");
+                        errors.rejectValue("usuarioEntidad.usuario.documento", "error.document.existe");
                     }
 
                 }else{
-                    errors.rejectValue("usuario.documento", validacionDocumento.getCodigoError(), new String[]{documento}, "El dni no té format correcte (8 DIGITS + LLETRA)");
+                    errors.rejectValue("usuarioEntidad.usuario.documento", validacionDocumento.getCodigoError(), new String[]{documento}, "El dni no té format correcte (8 DIGITS + LLETRA)");
                 }
             }
 

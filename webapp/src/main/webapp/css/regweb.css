@@ -496,7 +496,7 @@ input[readonly] {
     cursor: text !important;
 }
 .arxiu_actual {
-    margin: 6px 0px 0px;
+    margin: 4px 0px 0px;
 }
 input[readonlyGris] {
     background-color: #eee !important;
