@@ -58,6 +58,10 @@ public class UsuarioEntidad implements Serializable{
     private Date fechaAlta;
     @XmlTransient
     private Boolean externo = false;
+    @XmlTransient
+    private Archivo certificadoCurso;
+    @XmlTransient
+    private Date fechaCertificado;
 
     public UsuarioEntidad() {
     }
@@ -266,6 +270,25 @@ public class UsuarioEntidad implements Serializable{
 
     public void setExterno(Boolean externo) {
         this.externo = externo;
+    }
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "CERTIFICADO", foreignKey = @ForeignKey(name = "RWE_USUENT_CERTIFICADO_FK"))
+    public Archivo getCertificadoCurso() {
+        return certificadoCurso;
+    }
+
+    public void setCertificadoCurso(Archivo certificadoCurso) {
+        this.certificadoCurso = certificadoCurso;
+    }
+
+    @Column(name="FECHA_CERTIFICADO")
+    public Date getFechaCertificado() {
+        return fechaCertificado;
+    }
+
+    public void setFechaCertificado(Date fechaCertificado) {
+        this.fechaCertificado = fechaCertificado;
     }
 
     @Transient
