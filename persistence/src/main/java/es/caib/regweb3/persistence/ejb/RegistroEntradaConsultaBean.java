@@ -350,21 +350,26 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
         Query q;
         Query q2;
 
+        Calendar fechaInicio = Calendar.getInstance(); // Obtiene la fecha de hoy
+        fechaInicio.add(Calendar.YEAR,-1); // Le restamos 1 año
+
         q = em.createQuery("Select re from RegistroEntrada as re where re.entidad.id = :idEntidad and re.oficina.id = :idOficinaActiva " +
-                "and re.estado = :idEstado and re.evento = :distribuir and re.registroDetalle.presencial = true order by re.fecha desc");
+                "and re.estado = :idEstado and re.evento = :distribuir and re.registroDetalle.presencial = true and re.fecha >= :fechaInicio order by re.fecha desc");
 
         q.setParameter("idEntidad", idEntidad);
         q.setParameter("idOficinaActiva", idOficinaActiva);
         q.setParameter("idEstado", RegwebConstantes.REGISTRO_VALIDO);
         q.setParameter("distribuir", RegwebConstantes.EVENTO_DISTRIBUIR);
+        q.setParameter("fechaInicio", fechaInicio.getTime()); // Solo obtenemos los del último año
 
         q2 = em.createQuery("Select count(re.id) from RegistroEntrada as re where re.entidad.id = :idEntidad and re.oficina.id = :idOficinaActiva " +
-                "and re.estado = :idEstado and re.evento = :distribuir and re.registroDetalle.presencial = true");
+                "and re.estado = :idEstado and re.evento = :distribuir and re.registroDetalle.presencial = true and re.fecha >= :fechaInicio");
 
         q2.setParameter("idEntidad", idEntidad);
         q2.setParameter("idOficinaActiva", idOficinaActiva);
         q2.setParameter("idEstado", RegwebConstantes.REGISTRO_VALIDO);
         q2.setParameter("distribuir", RegwebConstantes.EVENTO_DISTRIBUIR);
+        q2.setParameter("fechaInicio", fechaInicio.getTime());  // Solo obtenemos los del último año
 
         Paginacion paginacion;
 

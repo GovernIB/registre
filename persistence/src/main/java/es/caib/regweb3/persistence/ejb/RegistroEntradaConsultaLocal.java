@@ -66,7 +66,7 @@ public interface RegistroEntradaConsultaLocal {
     Paginacion getByOficinaEstadoPaginado(Integer pageNumber, Long idEntidad, Long idOficinaActiva, Long idEstado) throws I18NException;
 
     /**
-     * Registros pendientes de distribuir
+     * Registros pendientes de distribuir del último año
      * @param pageNumber
      * @param idEntidad
      * @param idOficinaActiva

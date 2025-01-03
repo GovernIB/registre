@@ -30,9 +30,9 @@
         <li class="submenu-complet"><a href="<c:url value="/registroEntrada/reserva"/>"><i class="fa fa-file-text-o"></i> <spring:message code="registroEntrada.reserva"/></a></li>
         <li class="submenu-complet"><a href="<c:url value="/registroEntrada/list"/>"><i class="fa fa-search"></i> <spring:message code="registroEntrada.buscador"/></a></li>
         <li class="divider"></li>
-        <c:if test="${loginInfo.entidadActiva.sir && loginInfo.oficinaActiva.sirRecepcion }">
+        <%--<c:if test="${loginInfo.entidadActiva.sir && loginInfo.oficinaActiva.sirRecepcion }">
             <li class="submenu-complet"><a href="<c:url value="/registroEntrada/pendientesDistribuirSir/list/1"/>"><i class="fa fa-sign-out"></i> <spring:message code="registroEntrada.pendientesDistribuir.sir"/></a></li>
-        </c:if>
+        </c:if>--%>
         <li class="submenu-complet"><a href="<c:url value="/registroEntrada/pendientesDistribuir/list/1"/>"><i class="fa fa-sign-out"></i> <spring:message code="registroEntrada.pendientesDistribuir"/></a></li>
         <li class="submenu-complet"><a href="<c:url value="/registroEntrada/reservas/list/1"/>"><i class="fa fa-file-text-o"></i> <spring:message code="registroEntrada.reservas"/></a></li>
         <li class="submenu-complet"><a href="<c:url value="/registroEntrada/pendientesVisar/list/1"/>"><i class="fa fa-check-square-o"></i> <spring:message code="registroEntrada.pendientesVisar"/></a></li>
@@ -149,11 +149,6 @@
                     </c:if>
                 </ul>
             </li>
-        </c:if>
-
-        <c:if test="${loginInfo.registrosMigrados}">
-            <li class="divider"></li>
-            <li class="submenu-complet"><a href="<c:url value="/registroMigrado/list"/>"><i class="fa fa-exchange"></i> <spring:message code="registroMigrado.consultaRegistro"/></a></li>
         </c:if>
 
         <c:if test="${loginInfo.enlaceDir3}">
