@@ -124,6 +124,10 @@ public class InicioInterceptor extends HandlerInterceptorAdapter {
                         }
 
                     }
+                    // Mensaje de la Oficina Activa al usuario
+                    if(loginInfo.getOficinaActiva() != null){
+                        Mensaje.saveMessageInfo(request, I18NUtils.tradueix("aviso.oficinaActiva.inicio", loginInfo.getOficinaActiva().getDenominacion()));
+                    }
                 }
 
                 // Rutas que se saltarán las comprobaciones

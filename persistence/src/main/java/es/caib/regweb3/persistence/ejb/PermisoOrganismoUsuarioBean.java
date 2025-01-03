@@ -290,19 +290,44 @@ public class PermisoOrganismoUsuarioBean extends BaseEjbJPA<PermisoOrganismoUsua
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Organismo> getOrganismosRegistro(Long idUsuarioEntidad) throws I18NException {
+    public List<Organismo> getOrganismosRegistroEntrada(Long idUsuarioEntidad) throws I18NException {
 
         Query q = em.createQuery("Select distinct pou.organismo.id, pou.organismo.codigo, pou.organismo.denominacion from PermisoOrganismoUsuario as pou where " +
                 "pou.usuario.id = :idUsuarioEntidad and pou.organismo.estado.id = :vigente and " +
-                "pou.organismo.permiteUsuarios = true and pou.activo = true and (pou.permiso=:registrarEntrada or pou.permiso=:registrarSalida or " +
-                "pou.permiso=:modificacionEntrada or pou.permiso=:modificacionSalida) " +
+                "pou.organismo.permiteUsuarios = true and pou.activo = true and (pou.permiso=:registrarEntrada or pou.permiso=:modificacionEntrada) " +
                 " order by pou.organismo.id");
 
         q.setParameter("idUsuarioEntidad", idUsuarioEntidad);
         q.setParameter("vigente", catEstadoEntidadEjb.findByCodigo(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE).getId());
         q.setParameter("registrarEntrada", RegwebConstantes.PERMISO_REGISTRO_ENTRADA);
-        q.setParameter("registrarSalida", RegwebConstantes.PERMISO_REGISTRO_SALIDA);
         q.setParameter("modificacionEntrada", RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_ENTRADA);
+        q.setHint("org.hibernate.readOnly", true);
+
+        List<Organismo> organismos = new ArrayList<Organismo>();
+
+        List<Object[]> result = q.getResultList();
+
+        for (Object[] object : result) {
+
+            organismos.add(new Organismo((Long) object[0], (String) object[1], (String) object[2]));
+        }
+
+        return organismos;
+
+    }
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public List<Organismo> getOrganismosRegistroSalida(Long idUsuarioEntidad) throws I18NException {
+
+        Query q = em.createQuery("Select distinct pou.organismo.id, pou.organismo.codigo, pou.organismo.denominacion from PermisoOrganismoUsuario as pou where " +
+                "pou.usuario.id = :idUsuarioEntidad and pou.organismo.estado.id = :vigente and " +
+                "pou.organismo.permiteUsuarios = true and pou.activo = true and (pou.permiso=:registrarSalida or pou.permiso=:modificacionSalida) " +
+                " order by pou.organismo.id");
+
+        q.setParameter("idUsuarioEntidad", idUsuarioEntidad);
+        q.setParameter("vigente", catEstadoEntidadEjb.findByCodigo(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE).getId());
+        q.setParameter("registrarSalida", RegwebConstantes.PERMISO_REGISTRO_SALIDA);
         q.setParameter("modificacionSalida", RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_SALIDA);
         q.setHint("org.hibernate.readOnly", true);
 
@@ -321,9 +346,9 @@ public class PermisoOrganismoUsuarioBean extends BaseEjbJPA<PermisoOrganismoUsua
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public LinkedHashSet<Oficina> getOficinasRegistro(Long idUsuarioEntidad) throws I18NException {
+    public LinkedHashSet<Oficina> getOficinasRegistroEntrada(Long idUsuarioEntidad) throws I18NException {
 
-        List<Organismo> organismos = getOrganismosRegistro(idUsuarioEntidad);
+        List<Organismo> organismos = getOrganismosRegistroEntrada(idUsuarioEntidad);
 
         return oficinaEjb.oficinasServicio(organismos, false);
 
@@ -331,16 +356,50 @@ public class PermisoOrganismoUsuarioBean extends BaseEjbJPA<PermisoOrganismoUsua
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Organismo> getOrganismosConsulta(Long idUsuarioEntidad) throws I18NException {
+    public LinkedHashSet<Oficina> getOficinasRegistroSalida(Long idUsuarioEntidad) throws I18NException {
+
+        List<Organismo> organismos = getOrganismosRegistroSalida(idUsuarioEntidad);
+
+        return oficinaEjb.oficinasServicio(organismos, false);
+
+    }
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public List<Organismo> getOrganismosConsultaEntrada(Long idUsuarioEntidad) throws I18NException {
 
         Query q = em.createQuery("Select distinct pou.organismo.id, pou.organismo.codigo, pou.organismo.denominacion from PermisoOrganismoUsuario as pou where " +
                 "pou.usuario.id = :idUsuarioEntidad and pou.organismo.estado.id = :vigente and pou.organismo.permiteUsuarios = true and " +
-                "pou.activo = true and (pou.permiso=:consultaEntrada or pou.permiso=:consultaSalida)" +
-                " order by pou.organismo.id");
+                "pou.activo = true and pou.permiso=:consultaEntrada order by pou.organismo.id");
 
         q.setParameter("idUsuarioEntidad", idUsuarioEntidad);
         q.setParameter("vigente", catEstadoEntidadEjb.findByCodigo(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE).getId());
         q.setParameter("consultaEntrada", RegwebConstantes.PERMISO_CONSULTA_REGISTRO_ENTRADA);
+        q.setHint("org.hibernate.readOnly", true);
+
+        List<Organismo> organismos = new ArrayList<Organismo>();
+
+        // Obtenemos los Organismos con los ue el usuario tiene permisos de consulta de entrada
+        List<Object[]> result = q.getResultList();
+
+        for (Object[] object : result) {
+
+            organismos.add(new Organismo((Long) object[0], (String) object[1], (String) object[2]));
+        }
+
+        return organismos;
+    }
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public List<Organismo> getOrganismosConsultaSalida(Long idUsuarioEntidad) throws I18NException {
+
+        Query q = em.createQuery("Select distinct pou.organismo.id, pou.organismo.codigo, pou.organismo.denominacion from PermisoOrganismoUsuario as pou where " +
+                "pou.usuario.id = :idUsuarioEntidad and pou.organismo.estado.id = :vigente and pou.organismo.permiteUsuarios = true and " +
+                "pou.activo = true and pou.permiso=:consultaSalida order by pou.organismo.id");
+
+        q.setParameter("idUsuarioEntidad", idUsuarioEntidad);
+        q.setParameter("vigente", catEstadoEntidadEjb.findByCodigo(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE).getId());
         q.setParameter("consultaSalida", RegwebConstantes.PERMISO_CONSULTA_REGISTRO_SALIDA);
         q.setHint("org.hibernate.readOnly", true);
 
@@ -359,9 +418,49 @@ public class PermisoOrganismoUsuarioBean extends BaseEjbJPA<PermisoOrganismoUsua
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public LinkedHashSet<Oficina> getOficinasConsulta(Long idUsuarioEntidad) throws I18NException {
+    public List<Organismo> getOrganismosRegistroUsuario(Long idUsuarioEntidad) throws I18NException {
 
-        List<Organismo> organismos = getOrganismosConsulta(idUsuarioEntidad);
+        Query q = em.createQuery("Select distinct pou.organismo.id, pou.organismo.codigo, pou.organismo.denominacion from PermisoOrganismoUsuario as pou where " +
+                "pou.usuario.id = :idUsuarioEntidad and pou.organismo.estado.id = :vigente and " +
+                "pou.organismo.permiteUsuarios = true and pou.activo = true and (pou.permiso=:registrarEntrada or pou.permiso=:modificacionEntrada or " +
+                "pou.permiso=:registrarSalida or pou.permiso=:modificacionSalida) " +
+                " order by pou.organismo.id");
+
+        q.setParameter("idUsuarioEntidad", idUsuarioEntidad);
+        q.setParameter("vigente", catEstadoEntidadEjb.findByCodigo(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE).getId());
+        q.setParameter("registrarEntrada", RegwebConstantes.PERMISO_REGISTRO_ENTRADA);
+        q.setParameter("modificacionEntrada", RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_ENTRADA);
+        q.setParameter("registrarSalida", RegwebConstantes.PERMISO_REGISTRO_SALIDA);
+        q.setParameter("modificacionSalida", RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_SALIDA);
+        q.setHint("org.hibernate.readOnly", true);
+
+        List<Organismo> organismos = new ArrayList<Organismo>();
+
+        List<Object[]> result = q.getResultList();
+
+        for (Object[] object : result) {
+
+            organismos.add(new Organismo((Long) object[0], (String) object[1], (String) object[2]));
+        }
+
+        return organismos;
+
+    }
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public LinkedHashSet<Oficina> getOficinasConsultaEntrada(Long idUsuarioEntidad) throws I18NException {
+
+        List<Organismo> organismos = getOrganismosConsultaEntrada(idUsuarioEntidad);
+
+        return oficinaEjb.oficinasServicio(organismos, false);
+    }
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public LinkedHashSet<Oficina> getOficinasConsultaSalida(Long idUsuarioEntidad) throws I18NException {
+
+        List<Organismo> organismos = getOrganismosConsultaSalida(idUsuarioEntidad);
 
         return oficinaEjb.oficinasServicio(organismos, false);
     }
@@ -371,6 +470,15 @@ public class PermisoOrganismoUsuarioBean extends BaseEjbJPA<PermisoOrganismoUsua
     public LinkedHashSet<Oficina> getOficinasResponsable(Long idUsuarioEntidad) throws I18NException {
 
         List<Organismo> organismos = getOrganismosPermiso(idUsuarioEntidad, RegwebConstantes.PERMISO_RESPONSABLE_OFICINA);
+
+        return oficinaEjb.oficinasServicio(organismos, false);
+    }
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public LinkedHashSet<Oficina> getOficinasRegistroUsuario(Long idUsuarioEntidad) throws I18NException {
+
+        List<Organismo> organismos = getOrganismosRegistroUsuario(idUsuarioEntidad);
 
         return oficinaEjb.oficinasServicio(organismos, false);
     }
@@ -667,9 +775,9 @@ public class PermisoOrganismoUsuarioBean extends BaseEjbJPA<PermisoOrganismoUsua
         }
 
         // Oficina
-        if (usuarioEntidad.getUltimaOficina() != null && usuarioEntidad.getUltimaOficina().getId() !=null) {
-            where.add("pou.usuario.ultimaOficina.id = :ultimaOficina ");
-            parametros.put("ultimaOficina", usuarioEntidad.getUltimaOficina().getId());
+        if (usuarioEntidad.getOficinaSolicitada() != null && usuarioEntidad.getOficinaSolicitada().getId() !=null) {
+            where.add("pou.usuario.oficinaSolicitada.id = :oficinaSolicitada ");
+            parametros.put("oficinaSolicitada", usuarioEntidad.getOficinaSolicitada().getId());
         }
 
         // Función

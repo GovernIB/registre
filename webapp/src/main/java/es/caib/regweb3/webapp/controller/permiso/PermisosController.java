@@ -224,6 +224,7 @@ public class PermisosController extends BaseController {
             } else {
                 // Desactivamos este usuario de la Entidad
                 usuarioEntidad.setActivo(false);
+                usuarioEntidad.setOficinaSolicitada(null);
                 usuarioEntidadEjb.merge(usuarioEntidad);
 
                 Mensaje.saveMessageInfo(request, getMessage("usuario.desactivado"));

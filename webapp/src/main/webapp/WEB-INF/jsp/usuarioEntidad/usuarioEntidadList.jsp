@@ -191,10 +191,10 @@
 
                                 <div class="form-group col-xs-6 espaiLinies senseMargeLat">
                                     <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
-                                        <label for="usuarioEntidad.ultimaOficina.id"><spring:message code="oficina.oficina"/></label>
+                                        <label for="usuarioEntidad.oficinaSolicitada.id"><spring:message code="oficina.oficina"/></label>
                                     </div>
                                     <div class="col-xs-8">
-                                        <form:select path="usuarioEntidad.ultimaOficina.id" cssClass="chosen-select" disabled="true"/>
+                                        <form:select path="usuarioEntidad.oficinaSolicitada.id" cssClass="chosen-select" disabled="true"/>
                                     </div>
                                 </div>
                             </div>
@@ -361,7 +361,7 @@
                                                         <th><spring:message code="usuario.identificador"/></th>
                                                         <th><spring:message code="usuario.tipo.corto"/></th>
                                                         <c:if test="${usuarioEntidadBusqueda.usuarioEntidad.usuario.tipoUsuario != 2}">
-                                                            <th><spring:message code="oficina.oficina"/></th>
+                                                            <th><spring:message code="usuario.oficinaSolicitada"/></th>
                                                         </c:if>
                                                         <th><spring:message code="usuario.roles"/></th>
                                                         <th class="center"><spring:message code="regweb.acciones"/></th>
@@ -382,7 +382,7 @@
                                                             </c:if>
                                                         </td>
                                                         <c:if test="${usuarioEntidadBusqueda.usuarioEntidad.usuario.tipoUsuario != 2}">
-                                                            <td>${usuarioEntidad.ultimaOficina.denominacion} <c:if test="${usuarioEntidad.ultimaOficina.oamr}"><i class="fa fa-star"></i></c:if></td>
+                                                            <td>${usuarioEntidad.oficinaSolicitada.denominacion} <c:if test="${usuarioEntidad.oficinaSolicitada.oamr}"><i class="fa fa-star"></i></c:if></td>
                                                         </c:if>
                                                         <td>
                                                             <c:if test="${usuarioEntidad.usuario.rwe_superadmin}">
@@ -469,7 +469,7 @@
     // Actualizar oficinas
     function actualizarOficinas(){
         <c:url var="obtenerOficinasEntidad" value="/rest/obtenerOficinasEntidad" />
-        actualizarSelect('${obtenerOficinasEntidad}','#usuarioEntidad\\.ultimaOficina\\.id',$('#organismo\\.id option:selected').val(),'${usuarioEntidadBusqueda.usuarioEntidad.ultimaOficina.id}',true,true);
+        actualizarSelect('${obtenerOficinasEntidad}','#usuarioEntidad\\.oficinaSolicitada\\.id',$('#organismo\\.id option:selected').val(),'${usuarioEntidadBusqueda.usuarioEntidad.oficinaSolicitada.id}',true,true);
     }
 
     <!-- Cambia la imagen de la búsqueda avanzada-->

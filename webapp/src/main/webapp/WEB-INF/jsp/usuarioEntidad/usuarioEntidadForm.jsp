@@ -156,6 +156,32 @@
                                     </div>
 
                                 </div>
+                                <c:if test="${loginInfo.rolActivo.nombre != 'RWE_USUARI'}">
+                                    <div class="col-xs-12">
+                                        <div class="form-group col-xs-6 espaiLinies senseMargeLat">
+                                            <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                                <form:label path="usuarioEntidad.oficinaSolicitada.id"><spring:message code="usuario.oficinaSolicitada"/></form:label>
+                                            </div>
+                                            <div class="col-xs-8">
+                                                <form:select path="usuarioEntidad.oficinaSolicitada.id" cssClass="chosen-select">
+                                                    <form:option value="" label="..."/>
+                                                    <c:forEach var="oficina" items="${oficinasUsuario}" >
+                                                        <form:option value="${oficina.id}">${oficina.denominacion}</form:option>
+                                                    </c:forEach>
+                                                </form:select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-xs-6 espaiLinies senseMargeLat">
+                                            <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                                <form:label path="usuarioEntidad.cai"><spring:message code="usuario.cai"/></form:label>
+                                            </div>
+                                            <div class="col-xs-8">
+                                                <form:input path="usuarioEntidad.cai" cssClass="form-control" disabled="${rweUsuari}"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </c:if>
+
                                 <div class="col-xs-12">
                                     <div class="form-group col-xs-6 espaiLinies senseMargeLat">
                                         <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
@@ -201,16 +227,6 @@
                                             <form:checkbox path="usuarioEntidad.notificacionEspontanea" disabled="${rweUsuari}"/>
                                         </div>
                                     </div>
-                                    <c:if test="${loginInfo.rolActivo.nombre != 'RWE_USUARI'}">
-                                        <div class="form-group col-xs-6 espaiLinies senseMargeLat">
-                                            <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
-                                                <form:label path="usuarioEntidad.cai"><spring:message code="usuario.cai"/></form:label>
-                                            </div>
-                                            <div class="col-xs-8">
-                                                <form:input path="usuarioEntidad.cai" cssClass="form-control" disabled="${rweUsuari}"/>
-                                            </div>
-                                        </div>
-                                    </c:if>
                                 </div>
                                 <c:if test="${loginInfo.rolActivo.nombre != 'RWE_USUARI'}">
                                     <div class="col-xs-12">
@@ -232,7 +248,6 @@
                                         </div>
                                     </div>
                                 </c:if>
-
                                 <div class="col-xs-12">
                                     <c:if test="${not empty usuarioEntidadForm.usuarioEntidad.certificadoCurso}">
                                         <div class="form-group col-xs-6 espaiLinies senseMargeLat">

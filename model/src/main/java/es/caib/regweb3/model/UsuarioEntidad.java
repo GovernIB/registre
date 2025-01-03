@@ -29,7 +29,7 @@ public class UsuarioEntidad implements Serializable{
     @XmlTransient
     private Boolean activo = true;
     @XmlTransient
-    private Oficina ultimaOficina;
+    private Oficina oficinaSolicitada;
     @XmlTransient
     private Long categoria;
     @XmlTransient
@@ -135,15 +135,15 @@ public class UsuarioEntidad implements Serializable{
         this.activo = activo;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ULTIMAOFICINA", foreignKey = @ForeignKey(name = "RWE_USUENT_OFICINA_FK"))
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "OFICINA_SOLICITADA", foreignKey = @ForeignKey(name = "RWE_USUENT_OFICINA_FK"))
     @JsonIgnore
-    public Oficina getUltimaOficina() {
-        return ultimaOficina;
+    public Oficina getOficinaSolicitada() {
+        return oficinaSolicitada;
     }
 
-    public void setUltimaOficina(Oficina ultimaOficina) {
-        this.ultimaOficina = ultimaOficina;
+    public void setOficinaSolicitada(Oficina oficinaSolicitada) {
+        this.oficinaSolicitada = oficinaSolicitada;
     }
 
     @Column(name="CATEGORIA")

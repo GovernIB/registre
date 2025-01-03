@@ -129,13 +129,22 @@ public interface PermisoOrganismoUsuarioLocal extends BaseEjb<PermisoOrganismoUs
     List<Organismo> getOrganismosPermiso(Long idUsuarioEntidad, Long idPermiso) throws I18NException;
 
     /**
-     * Retorna los {@link Oficina} en los que un UsuarioEntidad puede Registrar
+     * Retorna los {@link Oficina} en los que un UsuarioEntidad puede Registrar entradas
      *
      * @param idUsuarioEntidad
      * @return
      * @throws I18NException
      */
-    LinkedHashSet<Oficina> getOficinasRegistro(Long idUsuarioEntidad) throws I18NException;
+    LinkedHashSet<Oficina> getOficinasRegistroEntrada(Long idUsuarioEntidad) throws I18NException;
+
+    /**
+     * Retorna los {@link Oficina} en los que un UsuarioEntidad puede Registrar salidas
+     *
+     * @param idUsuarioEntidad
+     * @return
+     * @throws I18NException
+     */
+    LinkedHashSet<Oficina> getOficinasRegistroSalida(Long idUsuarioEntidad) throws I18NException;
 
     /**
      * Retorna los {@link Oficina} en los que un UsuarioEntidad tiene acceso según el permiso dado
@@ -148,31 +157,66 @@ public interface PermisoOrganismoUsuarioLocal extends BaseEjb<PermisoOrganismoUs
     LinkedHashSet<Oficina> getOficinasPermiso(Long idUsuarioEntidad, Long idPermiso) throws I18NException;
 
     /**
-     * Obtiene los Organismos donde el UsuarioEntidad puede registrar
+     * Obtiene los Organismos donde el UsuarioEntidad puede registrar entradas
      *
      * @param idUsuarioEntidad
      * @return
      * @throws I18NException
      */
-    List<Organismo> getOrganismosRegistro(Long idUsuarioEntidad) throws I18NException;
+    List<Organismo> getOrganismosRegistroEntrada(Long idUsuarioEntidad) throws I18NException;
 
     /**
-     * Obtiene los Organismos donde el UsuarioEntidad puede consultar
+     * Obtiene los Organismos donde el UsuarioEntidad puede registrar salidas
      *
      * @param idUsuarioEntidad
      * @return
      * @throws I18NException
      */
-    List<Organismo> getOrganismosConsulta(Long idUsuarioEntidad) throws I18NException;
+    List<Organismo> getOrganismosRegistroSalida(Long idUsuarioEntidad) throws I18NException;
 
     /**
-     * Retorna los {@link Oficina} en los que un UsuarioEntidad puede Consultar
+     * Obtiene los Organismos donde el UsuarioEntidad puede consultar entradas
      *
      * @param idUsuarioEntidad
      * @return
      * @throws I18NException
      */
-    LinkedHashSet<Oficina> getOficinasConsulta(Long idUsuarioEntidad) throws I18NException;
+    List<Organismo> getOrganismosConsultaEntrada(Long idUsuarioEntidad) throws I18NException;
+
+    /**
+     * Obtiene los Organismos donde el UsuarioEntidad puede consultar salidas
+     *
+     * @param idUsuarioEntidad
+     * @return
+     * @throws I18NException
+     */
+    List<Organismo> getOrganismosConsultaSalida(Long idUsuarioEntidad) throws I18NException;
+
+    /**
+     * Retorna los {@link Organismo} en los que un UsuarioEntidad tiene algún permiso de registro o consulta
+     * @param idUsuarioEntidad
+     * @return
+     * @throws I18NException
+     */
+    List<Organismo> getOrganismosRegistroUsuario(Long idUsuarioEntidad) throws I18NException;
+
+    /**
+     * Retorna los {@link Oficina} en los que un UsuarioEntidad puede Consultar entradas
+     *
+     * @param idUsuarioEntidad
+     * @return
+     * @throws I18NException
+     */
+    LinkedHashSet<Oficina> getOficinasConsultaEntrada(Long idUsuarioEntidad) throws I18NException;
+
+    /**
+     * Retorna los {@link Oficina} en los que un UsuarioEntidad puede Consultar salidas
+     *
+     * @param idUsuarioEntidad
+     * @return
+     * @throws I18NException
+     */
+    LinkedHashSet<Oficina> getOficinasConsultaSalida(Long idUsuarioEntidad) throws I18NException;
 
     /**
      * Retorna los {@link Oficina} a los que un UsuarioEntidad tiene acceso SIR
@@ -191,6 +235,14 @@ public interface PermisoOrganismoUsuarioLocal extends BaseEjb<PermisoOrganismoUs
      * @throws I18NException
      */
     LinkedHashSet<Oficina> getOficinasResponsable(Long idUsuarioEntidad) throws I18NException;
+
+    /**
+     * Retorna las {@link Oficina} en los que un UsuarioEntidad puede Registrar
+     * @param idUsuarioEntidad
+     * @return
+     * @throws I18NException
+     */
+    LinkedHashSet<Oficina> getOficinasRegistroUsuario(Long idUsuarioEntidad) throws I18NException;
 
     /**
      * Comprueba si un usuario tiene un permiso en un grupo de organismos
