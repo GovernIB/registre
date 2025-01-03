@@ -271,17 +271,11 @@ public class LoginService {
      */
     private void asignarOficinas(LoginInfo loginInfo) throws Exception {
 
-        // Obtenemos los Organismos donde el usuario puede Registrar entradas y de ahí las oficinas que dan servicio
-        List<Organismo> organismosRegistroEntrada = permisoOrganismoUsuarioEjb.getOrganismosPermiso(loginInfo.getUsuarioEntidadActivo().getId(), RegwebConstantes.PERMISO_REGISTRO_ENTRADA);
-        LinkedHashSet<Oficina> oficinasRegistroEntrada = oficinaEjb.oficinasServicio(organismosRegistroEntrada, false);
+        // Obtenemos las Oficinas donde el usuario puede Registrar entradas
+        loginInfo.setOficinasRegistroEntrada(permisoOrganismoUsuarioEjb.getOficinasRegistroEntrada(loginInfo.getUsuarioEntidadActivo().getId()));
 
-        loginInfo.setOficinasRegistroEntrada(oficinasRegistroEntrada);
-
-        // Obtenemos los Organismos donde el usuario puede Registrar salidas y de ahí las oficinas que dan servicio
-        List<Organismo> organismosRegistroSalida = permisoOrganismoUsuarioEjb.getOrganismosPermiso(loginInfo.getUsuarioEntidadActivo().getId(), RegwebConstantes.PERMISO_REGISTRO_SALIDA);
-        LinkedHashSet<Oficina> oficinasRegistroSalida = oficinaEjb.oficinasServicio(organismosRegistroSalida, false);
-
-        loginInfo.setOficinasRegistroSalida(oficinasRegistroSalida);
+        // Obtenemos las Oficinas donde el usuario puede Registrar salidas
+        loginInfo.setOficinasRegistroSalida(permisoOrganismoUsuarioEjb.getOficinasRegistroSalida(loginInfo.getUsuarioEntidadActivo().getId()));
 
         // Obtenemos los Organismos donde el usuario puede consultar entradas y de ahí las oficinas que dan servicio
         List<Organismo> organismosConsultaEntrada = permisoOrganismoUsuarioEjb.getOrganismosPermiso(loginInfo.getUsuarioEntidadActivo().getId(), RegwebConstantes.PERMISO_CONSULTA_REGISTRO_ENTRADA);
@@ -297,16 +291,9 @@ public class LoginService {
         loginInfo.setOrganismosConsultaSalida(organismosConsultaSalida);
         loginInfo.setOficinasConsultaSalida(oficinasConsultaSalida);
 
-
         // Creamos la lista de Oficinas en las que el usuario puede situarse
-        loginInfo.getOficinasAcceso().addAll(oficinasRegistroEntrada);
-        loginInfo.getOficinasAcceso().addAll(oficinasRegistroSalida);
-
-        // Si el usuario no puede registrar, añadimos las oficinas donde pueda consultar
-        if(loginInfo.getOficinasAcceso().size() == 0){
-            loginInfo.getOficinasAcceso().addAll(oficinasConsultaEntrada);
-            loginInfo.getOficinasAcceso().addAll(oficinasConsultaSalida);
-        }
+        loginInfo.getOficinasAcceso().addAll(loginInfo.getOficinasRegistroEntrada());
+        loginInfo.getOficinasAcceso().addAll(loginInfo.getOficinasRegistroSalida());
 
         // Obtenemos los Organismos donde el UsuarioEntidad es responsable
         loginInfo.setOrganismosResponsable(permisoOrganismoUsuarioEjb.getOrganismosAdministrados(loginInfo.getUsuarioEntidadActivo().getId()));
@@ -328,10 +315,10 @@ public class LoginService {
             }
         }
 
-        // Comprobamos si el usuario tiene última Oficina utilizada.
-        if (loginInfo.getUsuarioEntidadActivo().getUltimaOficina() != null && loginInfo.getOficinasAcceso().contains(oficinaEjb.findById(loginInfo.getUsuarioEntidadActivo().getUltimaOficina().getId()))) {
+        // Comprobamos si el usuario tiene Oficina solicitada.
+        if (loginInfo.getUsuarioEntidadActivo().getOficinaSolicitada() != null && loginInfo.getOficinasAcceso().contains(oficinaEjb.findById(loginInfo.getUsuarioEntidadActivo().getOficinaSolicitada().getId()))) {
 
-            asignarOficinaActiva(oficinaEjb.findById(loginInfo.getUsuarioEntidadActivo().getUltimaOficina().getId()), loginInfo);
+            asignarOficinaActiva(oficinaEjb.findById(loginInfo.getUsuarioEntidadActivo().getOficinaSolicitada().getId()), loginInfo);
 
         } else if (loginInfo.getOficinasAcceso().size() > 0) {
 
@@ -363,9 +350,6 @@ public class LoginService {
                 loginInfo.getOficinaActiva().setSirRecepcion(oficinaEjb.isSIRRecepcion(loginInfo.getOficinaActiva().getId()));
                 loginInfo.getOficinaActiva().setSirEnvio(oficinaEjb.isSIREnvio(loginInfo.getOficinaActiva().getId()));
             }
-
-            // Actualizamos la última Oficina del Usuario
-            usuarioEntidadEjb.actualizarOficinaUsuario(loginInfo.getUsuarioEntidadActivo().getId(), loginInfo.getOficinaActiva().getId());
         } else {
 
             // Guardamos  la nueva OficinaActiva

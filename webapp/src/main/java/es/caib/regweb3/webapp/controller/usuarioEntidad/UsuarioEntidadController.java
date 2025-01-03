@@ -151,6 +151,7 @@ public class UsuarioEntidadController extends BaseController {
         }
 
         model.addAttribute(usuarioEntidadForm);
+        model.addAttribute("oficinasUsuario", permisoOrganismoUsuarioEjb.getOficinasRegistroUsuario(idUsuarioEntidad));
 
         return "usuarioEntidad/usuarioEntidadForm";
     }
@@ -159,17 +160,23 @@ public class UsuarioEntidadController extends BaseController {
      * Editar un {@link es.caib.regweb3.model.UsuarioEntidad}
      */
     @RequestMapping(value = "/{idUsuarioEntidad}/edit", method = RequestMethod.POST)
-    public String editarUsuarioEntidad(@ModelAttribute @Valid UsuarioEntidadForm usuarioEntidadForm, BindingResult result, SessionStatus status, HttpServletRequest request) {
+    public String editarUsuarioEntidad(@ModelAttribute @Valid UsuarioEntidadForm usuarioEntidadForm,Model model, BindingResult result, SessionStatus status, HttpServletRequest request) throws I18NException{
 
         usuarioEntidadValidator.validate(usuarioEntidadForm, result);
 
         if (result.hasErrors()) { // Si hay errores volvemos a la vista del formulario
-
+            model.addAttribute("oficinasUsuario", permisoOrganismoUsuarioEjb.getOficinasRegistroUsuario(usuarioEntidadForm.getUsuarioEntidad().getId()));
             return "usuarioEntidad/usuarioEntidadForm";
         }else { // Si no hay errores actualizamos el registro
 
             try {
                 UsuarioEntidad usuarioEntidad = usuarioEntidadForm.getUsuarioEntidad();
+
+                // Controlamos que la Oficina solicitada sea null
+                if(RegwebConstantes.TIPO_USUARIO_PERSONA.equals(usuarioEntidad.getUsuario().getTipoUsuario()) && usuarioEntidad.getOficinaSolicitada().getId() == null){
+                    usuarioEntidad.setOficinaSolicitada(null);
+                }
+
                 Archivo certificadoExistente = usuarioEntidadEjb.findById(usuarioEntidadForm.getUsuarioEntidad().getId()).getCertificadoCurso();
                 Boolean eliminarCertificado = false;
 

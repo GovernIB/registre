@@ -8,7 +8,6 @@ import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 import org.fundaciobit.genapp.common.i18n.I18NException;
-import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -410,9 +409,9 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
         }
 
         // Oficina
-        if (usuarioEntidad.getUltimaOficina() != null && usuarioEntidad.getUltimaOficina().getId() !=null) {
-            where.add("usuarioEntidad.ultimaOficina.id = :ultimaOficina ");
-            parametros.put("ultimaOficina", usuarioEntidad.getUltimaOficina().getId());
+        if (usuarioEntidad.getOficinaSolicitada() != null && usuarioEntidad.getOficinaSolicitada().getId() !=null) {
+            where.add("usuarioEntidad.oficinaSolicitada.id = :oficinaSolicitada ");
+            parametros.put("oficinaSolicitada", usuarioEntidad.getOficinaSolicitada().getId());
         }
 
         // Función
@@ -520,11 +519,7 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
             paginacion = new Paginacion(0, 0);
         }
 
-        List<UsuarioEntidad> usuarios = q.getResultList();
-        for (UsuarioEntidad ue : usuarios) {
-            Hibernate.initialize(ue.getUltimaOficina());
-        }
-        paginacion.setListado(usuarios);
+        paginacion.setListado(q.getResultList());
 
         return paginacion;
     }
@@ -559,7 +554,7 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
     @Override
     public void actualizarOficinaUsuario(Long idUsuario, Long idOficina) throws I18NException {
 
-        Query q = em.createQuery("Update UsuarioEntidad set ultimaOficina.id = :idOficina where id = :idUsuario");
+        Query q = em.createQuery("Update UsuarioEntidad set oficinaSolicitada.id = :idOficina where id = :idUsuario");
 
         q.setParameter("idOficina", idOficina);
         q.setParameter("idUsuario", idUsuario);
@@ -612,7 +607,7 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
     public List<UsuarioEntidad> getUsuariosOficina(Long idEntidad, Long idOficina) throws I18NException {
 
         Query q = em.createQuery("Select usuarioEntidad from UsuarioEntidad as usuarioEntidad where " +
-                "usuarioEntidad.entidad.id = :idEntidad and usuarioEntidad.activo = true and usuarioEntidad.ultimaOficina.id = :idOficina order by usuarioEntidad.usuario.apellido1");
+                "usuarioEntidad.entidad.id = :idEntidad and usuarioEntidad.activo = true and usuarioEntidad.oficinaSolicitada.id = :idOficina order by usuarioEntidad.usuario.apellido1");
 
         q.setParameter("idEntidad", idEntidad);
         q.setParameter("idOficina", idOficina);
@@ -625,7 +620,7 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
     @SuppressWarnings(value = "unchecked")
     public List<UsuarioEntidad> getOAMRByEntidad(Long idEntidad) throws I18NException {
         Query q = em.createQuery("Select usuarioEntidad from UsuarioEntidad as usuarioEntidad where " +
-                "usuarioEntidad.entidad.id = :idEntidad and usuarioEntidad.activo = true and usuarioEntidad.usuario.rwe_usuari = true and usuarioEntidad.ultimaOficina.oamr = true");
+                "usuarioEntidad.entidad.id = :idEntidad and usuarioEntidad.activo = true and usuarioEntidad.usuario.rwe_usuari = true and usuarioEntidad.oficinaSolicitada.oamr = true");
 
         q.setParameter("idEntidad", idEntidad);
         q.setHint("org.hibernate.readOnly", true);
