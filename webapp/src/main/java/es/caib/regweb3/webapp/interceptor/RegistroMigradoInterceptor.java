@@ -35,8 +35,8 @@ public class RegistroMigradoInterceptor extends HandlerInterceptorAdapter {
             Rol rolActivo = loginInfo.getRolActivo();
             Boolean tieneRegistrosMigrados = loginInfo.getRegistrosMigrados();
 
-            // Comprobamos que el usuario dispone del Rol RWE_USUARI o Rol RWE_ADMIN
-            if(!(rolActivo.getNombre().equals(RegwebConstantes.RWE_USUARI)||rolActivo.getNombre().equals(RegwebConstantes.RWE_ADMIN))){
+            // Comprobamos que el usuario dispone del Rol Rol RWE_ADMIN
+            if(!(rolActivo.getNombre().equals(RegwebConstantes.RWE_ADMIN))){
                 log.info("Error de rol");
                 Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.rol"));
                 response.sendRedirect("/regweb3/aviso");
@@ -49,29 +49,6 @@ public class RegistroMigradoInterceptor extends HandlerInterceptorAdapter {
                 if(!tieneRegistrosMigrados){
                     log.info("Aviso: No hi ha Registres Migrats");
                     Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.registroMigrado.list"));
-                    response.sendRedirect("/regweb3/aviso");
-                    return false;
-                }
-
-            }
-
-            // Comprobaciones previas al detalle de un Registro Migrado
-            if(url.contains("detalle")){
-
-                if(!rolActivo.getNombre().equals(RegwebConstantes.RWE_USUARI)){
-                    log.info("Error de rol");
-                    Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.rol"));
-                    response.sendRedirect("/regweb3/aviso");
-                    return false;
-                }
-            }
-
-            // Comprobaciones previas de un Registro Migrado Lopd
-            if(url.contains("lopd")){
-
-                if(!rolActivo.getNombre().equals(RegwebConstantes.RWE_ADMIN)){
-                    log.info("Error de rol");
-                    Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.rol"));
                     response.sendRedirect("/regweb3/aviso");
                     return false;
                 }

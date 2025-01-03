@@ -36,80 +36,85 @@
     <div class="panel panel-warning">
 
         <div class="panel-heading">
-            <h3 class="panel-title"><i class="fa fa-search"></i><strong><spring:message code="registroMigrado.buscador"/></strong> </h3>
+            <h3 class="panel-title"><i class="fa fa-search"></i> <strong><spring:message code="registroMigrado.buscador"/></strong> </h3>
         </div>
 
         <form:form modelAttribute="registroMigradoBusqueda" method="post" cssClass="form-horizontal">
             <form:hidden path="pageNumber"/>
 
             <div class="panel-body">
-                <div class="form-group col-xs-6">
-                    <div class="col-xs-4"><span class="text-danger">*</span> <spring:message code="registroMigrado.tipoRegistro"/></div>
-                    <div class="col-xs-8">
-                        <form:select path="registroMigrado.tipoRegistro" cssClass="chosen-select" multiple="false">
-                            <form:option path="registroMigrado.tipoRegistro" value="true"><spring:message code="informe.entrada"/></form:option>
-                            <form:option path="registroMigrado.tipoRegistro" value="false"><spring:message code="informe.salida"/></form:option>
-                        </form:select>
-                    </div>
-                </div>
-                <div class="form-group col-xs-6">
-                    <div class="col-xs-4"><span class="text-danger">*</span> <spring:message code="registroMigrado.oficina"/></div>
-                    <div class="col-xs-8">
-                        <form:select path="registroMigrado.codigoOficina" cssClass="chosen-select">
-                            <c:forEach var="oficinaMigrado" items="${oficinasMigrado}" varStatus="status">
-                                <form:option path="registroMigrado.codigoOficina" value="${oficinaMigrado[0]}">${oficinaMigrado[1]}</form:option>
-                            </c:forEach>
-                        </form:select>
-                    </div>
-                </div>
-                <div class="form-group col-xs-6">
-                    <div class="col-xs-4 "><spring:message code="registroMigrado.ano"/></div>
-                    <div class="col-xs-8">
-                        <form:input path="anoRegistro" type="text" cssClass="form-control" maxlength="4"/><form:errors path="anoRegistro" cssClass="help-block" element="span"/>
-                    </div>
-                </div>
-                <div class="form-group col-xs-6">
-                    <div class="col-xs-4 "><spring:message code="registroMigrado.numero"/></div>
-                    <div class="col-xs-8">
-                        <form:input path="numeroRegistro" type="text" cssClass="form-control" maxlength="5"/><form:errors path="numeroRegistro" cssClass="help-block" element="span"/>
-                    </div>
-                </div>
-                <div class="form-group col-xs-6">
-                    <div class="col-xs-4"><spring:message code="informe.fechaInicio"/></div>
-                    <div class="col-xs-8" id="fechaInicio">
-                        <div class="input-group date no-pad-right">
-                            <form:input path="fechaInicio" type="text" cssClass="form-control"  maxlength="10" placeholder="dd/mm/yyyy" name="fechaInicio"/>
-                            <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
+                <div class="col-xs-12">
+                    <div class="col-xs-6 espaiLinies">
+                        <div class="col-xs-4 etiqueta_regweb"><form:label path="registroMigrado.tipoRegistro"><spring:message code="registroMigrado.tipoRegistro"/></form:label></div>
+                        <div class="col-xs-8">
+                            <form:select path="registroMigrado.tipoRegistro" cssClass="chosen-select" multiple="false">
+                                <form:option value="true"><spring:message code="informe.entrada"/></form:option>
+                                <form:option value="false"><spring:message code="informe.salida"/></form:option>
+                            </form:select>
                         </div>
-                        <form:errors path="fechaInicio" cssClass="help-block" element="span"/>
                     </div>
-                </div>
-                <div class="form-group col-xs-6">
-                    <div class="col-xs-4"><spring:message code="informe.fechaFin"/></div>
-                    <div class="col-xs-8" id="fechaFin">
-                        <div class="input-group date no-pad-right">
-                            <form:input type="text" cssClass="form-control" path="fechaFin" maxlength="10" placeholder="dd/mm/yyyy" name="fechaFin"/>
-                            <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
+                    <div class="col-xs-6 espaiLinies">
+                        <div class="col-xs-4 etiqueta_regweb"><form:label path="registroMigrado.codigoOficina"><spring:message code="registroMigrado.oficina"/></form:label></div>
+                        <div class="col-xs-8">
+                            <form:select path="registroMigrado.codigoOficina" cssClass="chosen-select">
+                                <c:forEach var="oficinaMigrado" items="${oficinasMigrado}" varStatus="status">
+                                    <form:option value="${oficinaMigrado[0]}">${oficinaMigrado[1]}</form:option>
+                                </c:forEach>
+                            </form:select>
                         </div>
-                        <form:errors path="fechaFin" cssClass="help-block" element="span"/>
-
                     </div>
                 </div>
-                <div class="form-group col-xs-6">
-                    <div class="col-xs-4 "><spring:message code="registroMigrado.extracto"/></div>
-                    <div class="col-xs-8">
-                        <form:input path="registroMigrado.extracto" cssClass="form-control" maxlength="200"/> <form:errors path="registroMigrado.extracto" cssClass="help-block" element="span"/>
+                <div class="col-xs-12">
+                    <div class="col-xs-6 espaiLinies">
+                        <div class="col-xs-4 etiqueta_regweb"><form:label path="anoRegistro"><spring:message code="registroMigrado.ano"/></form:label></div>
+                        <div class="col-xs-8">
+                            <form:input path="anoRegistro" type="text" cssClass="form-control" maxlength="4"/><form:errors path="anoRegistro" cssClass="help-block" element="span"/>
+                        </div>
+                    </div>
+                    <div class="col-xs-6 espaiLinies">
+                        <div class="col-xs-4 etiqueta_regweb"><form:label path="numeroRegistro"><spring:message code="registroMigrado.numero"/></form:label></div>
+                        <div class="col-xs-8">
+                            <form:input path="numeroRegistro" type="text" cssClass="form-control" maxlength="5"/><form:errors path="numeroRegistro" cssClass="help-block" element="span"/>
+                        </div>
                     </div>
                 </div>
-                <div class="form-group col-xs-6">
-                    <div class="col-xs-4">
-                        <spring:message code="registroMigrado.remitentDestinatari"/></div>
-                    <div class="col-xs-8">
-                        <form:input path="registroMigrado.descripcionRemitenteDestinatario" type="text" cssClass="form-control"/><form:errors path="registroMigrado.descripcionRemitenteDestinatario" cssClass="help-block" element="span"/>
+                <div class="col-xs-12">
+                    <div class="col-xs-6 espaiLinies">
+                        <div class="col-xs-4 etiqueta_regweb"><form:label path="fechaInicio"><spring:message code="informe.fechaInicio"/></form:label></div>
+                        <div class="col-xs-8" id="fechaInicio">
+                            <div class="input-group date no-pad-right">
+                                <form:input path="fechaInicio" type="text" cssClass="form-control"  maxlength="10" placeholder="dd/mm/yyyy" name="fechaInicio"/>
+                                <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
+                            </div>
+                            <form:errors path="fechaInicio" cssClass="help-block" element="span"/>
+                        </div>
+                    </div>
+                    <div class="col-xs-6 espaiLinies">
+                        <div class="col-xs-4 etiqueta_regweb"><form:label path="fechaFin"><spring:message code="informe.fechaFin"/></form:label></div>
+                        <div class="col-xs-8" id="fechaFin">
+                            <div class="input-group date no-pad-right">
+                                <form:input type="text" cssClass="form-control" path="fechaFin" maxlength="10" placeholder="dd/mm/yyyy" name="fechaFin"/>
+                                <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
+                            </div>
+                            <form:errors path="fechaFin" cssClass="help-block" element="span"/>
+
+                        </div>
                     </div>
                 </div>
-
-
+                <div class="col-xs-12">
+                    <div class="col-xs-6 espaiLinies">
+                        <div class="col-xs-4 etiqueta_regweb"><form:label path="registroMigrado.extracto"><spring:message code="registroMigrado.extracto"/></form:label></div>
+                        <div class="col-xs-8">
+                            <form:input path="registroMigrado.extracto" cssClass="form-control" maxlength="200"/> <form:errors path="registroMigrado.extracto" cssClass="help-block" element="span"/>
+                        </div>
+                    </div>
+                    <div class="col-xs-6 espaiLinies">
+                        <div class="col-xs-4 etiqueta_regweb"><form:label path="registroMigrado.descripcionRemitenteDestinatario"><spring:message code="registroMigrado.remitentDestinatari"/></form:label></div>
+                        <div class="col-xs-8">
+                            <form:input path="registroMigrado.descripcionRemitenteDestinatario" type="text" cssClass="form-control"/><form:errors path="registroMigrado.descripcionRemitenteDestinatario" cssClass="help-block" element="span"/>
+                        </div>
+                    </div>
+                </div>
                 <div class="form-group col-xs-12">
                     <button type="submit" class="btn btn-warning btn-sm"><spring:message code="regweb.buscar"/></button>
                 </div>
@@ -137,7 +142,8 @@
                                 <spring:message code="regweb.resultados"/> <strong>${paginacion.totalResults}</strong> <spring:message code="registroMigrado.registroMigrados"/>
                             </c:if>
 
-                            <p class="pull-right"><spring:message code="regweb.pagina"/> <strong>${paginacion.currentIndex}</strong> de ${paginacion.totalPages}</p>
+                            <%--Select de "Ir a página"--%>
+                            <c:import url="../modulos/paginas.jsp"/>
                         </div>
 
                         <div class="table-responsive">
@@ -151,63 +157,60 @@
                                     <col>
                                     <col>
                                     <col>
-                                    <col>
-                                    <col>
                                     <col width="100">
                                 </colgroup>
                                 <thead>
-                                <tr>
-                                    <th><spring:message code="registroMigrado.fecha"/></th>
-                                    <th><spring:message code="registroMigrado.numero"/></th>
-                                    <th><spring:message code="registroMigrado.oficina"/></th>
-                                    <th><spring:message code="registroMigrado.fechaDocumento"/></th>
-                                    <th><spring:message code="registroMigrado.tipoDocumento"/></th>
-                                    <th><spring:message code="registroMigrado.tipoRegistro"/></th>
-                                    <c:if test="${registroMigradoBusqueda.registroMigrado.tipoRegistro}">
-                                        <th><spring:message code="registroMigrado.remitente"/></th>
-                                    </c:if>
-                                    <c:if test="${!registroMigradoBusqueda.registroMigrado.tipoRegistro}">
-                                        <th><spring:message code="registroMigrado.destinatario"/></th>
-                                    </c:if>
-                                    <c:if test="${registroMigradoBusqueda.registroMigrado.tipoRegistro}">
-                                        <th><spring:message code="registroMigrado.destinatario"/></th>
-                                    </c:if>
-                                    <c:if test="${!registroMigradoBusqueda.registroMigrado.tipoRegistro}">
-                                        <th><spring:message code="registroMigrado.emisor"/></th>
-                                    </c:if>
-                                    <th><spring:message code="registroMigrado.extracto"/></th>
-                                    <th class="center"><spring:message code="regweb.acciones"/></th>
-                                </tr>
+                                    <tr>
+                                        <th><spring:message code="registroMigrado.fecha"/></th>
+                                        <th><spring:message code="registroMigrado.numero"/></th>
+                                        <th><spring:message code="registroMigrado.oficina"/></th>
+                                        <%--<th><spring:message code="registroMigrado.fechaDocumento"/></th>--%>
+                                        <%--<th><spring:message code="registroMigrado.tipoDocumento"/></th>--%>
+                                        <th><spring:message code="registroMigrado.tipoRegistro"/></th>
+                                        <c:if test="${registroMigradoBusqueda.registroMigrado.tipoRegistro}">
+                                            <th><spring:message code="registroMigrado.remitente"/></th>
+                                        </c:if>
+                                        <c:if test="${!registroMigradoBusqueda.registroMigrado.tipoRegistro}">
+                                            <th><spring:message code="registroMigrado.destinatario"/></th>
+                                        </c:if>
+                                        <c:if test="${registroMigradoBusqueda.registroMigrado.tipoRegistro}">
+                                            <th><spring:message code="registroMigrado.destinatario"/></th>
+                                        </c:if>
+                                        <c:if test="${!registroMigradoBusqueda.registroMigrado.tipoRegistro}">
+                                            <th><spring:message code="registroMigrado.emisor"/></th>
+                                        </c:if>
+                                        <th><spring:message code="registroMigrado.extracto"/></th>
+                                        <th class="center"><spring:message code="regweb.acciones"/></th>
+                                    </tr>
                                 </thead>
 
                                 <tbody>
-                                <c:forEach var="registroMigrado" items="${paginacion.listado}" varStatus="status">
-                                    <tr>
-                                        <td><fmt:formatDate value="${registroMigrado.fechaRegistro}" pattern="dd/MM/yyyy"/></td>
-                                        <td>${registroMigrado.numero}</td>
-                                        <td>${registroMigrado.denominacionOficinaFisica}</td>
-                                        <td>${registroMigrado.fechaDocumento}</td>
-                                        <td>${registroMigrado.tipoDocumento}</td>
-                                        <c:if test="${registroMigrado.tipoRegistro}">
-                                            <td><spring:message code="informe.entrada"/></td>
-                                        </c:if>
-                                        <c:if test="${!registroMigrado.tipoRegistro}">
-                                            <td><spring:message code="informe.salida"/></td>
-                                        </c:if>
-                                        <td>${registroMigrado.descripcionRemitenteDestinatario}</td>
-                                        <td>${registroMigrado.descripcionOrganismoDestinatarioEmisor}</td>
-                                        <td>${registroMigrado.extracto}</td>
+                                    <c:forEach var="registroMigrado" items="${paginacion.listado}" varStatus="status">
+                                        <tr>
+                                            <td><fmt:formatDate value="${registroMigrado.fechaRegistro}" pattern="dd/MM/yyyy"/></td>
+                                            <td>${registroMigrado.numero}</td>
+                                            <td>${registroMigrado.denominacionOficina}</td>
+                                           <%-- <td>${registroMigrado.fechaDocumento}</td>--%>
+                                            <%--<td>${registroMigrado.tipoDocumento}</td>--%>
+                                            <td class="center">
+                                                <c:if test="${registroMigrado.tipoRegistro}">
+                                                    <span class="label label-info"><spring:message code="registroSir.entrada"/></span>
+                                                </c:if>
 
-                                        <td class="center">
-                                            <c:if test="${loginInfo.rolActivo.nombre == 'RWE_USUARI'}">
-                                                <a class="btn btn-info btn-sm" href="<c:url value="/registroMigrado/${registroMigrado.id}/detalle"/>" title="<spring:message code="registroMigrado.detalle"/>"><span class="fa fa-eye"></span></a>
-                                            </c:if>
-                                            <c:if test="${loginInfo.rolActivo.nombre == 'RWE_ADMIN'}">
-                                                <a class="btn btn-warning btn-sm" href="<c:url value="/registroMigrado/${registroMigrado.id}/lopd"/>" title="<spring:message code="registroMigrado.lopd"/>"><span class="fa fa-lock"></span></a>
-                                            </c:if>
-                                        </td>
-                                    </tr>
-                                </c:forEach>
+                                                <c:if test="${!registroMigrado.tipoRegistro}">
+                                                    <span class="label label-danger"><spring:message code="registroSir.salida"/></span>
+                                                </c:if>
+                                            </td>
+                                            <td>${registroMigrado.descripcionRemitenteDestinatario}</td>
+                                            <td>${registroMigrado.descripcionOrganismoDestinatarioEmisor}</td>
+                                            <td>${registroMigrado.extracto}</td>
+
+                                            <td class="center">
+                                                <a class="btn btn-info btn-sm" target="_blank" href="<c:url value="/registroMigrado/${registroMigrado.id}/detalle"/>" title="<spring:message code="registroMigrado.detalle"/>"><span class="fa fa-eye"></span></a>
+                                                <a class="btn btn-warning btn-sm" target="_blank" href="<c:url value="/registroMigrado/${registroMigrado.id}/lopd"/>" title="<spring:message code="registroMigrado.lopd"/>"><span class="fa fa-lock"></span></a>
+                                            </td>
+                                        </tr>
+                                    </c:forEach>
                                 </tbody>
                             </table>
 

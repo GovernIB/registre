@@ -12,6 +12,14 @@
 
 <c:import url="../modulos/menu.jsp"/>
 
+<%--CONFIGURACIONES SEGÚN EL TIPO DE REGISTRO--%>
+<c:if test="${registroMigrado.tipoRegistro}">
+    <c:set var="color" value="info"/>
+</c:if>
+<c:if test="${!registroMigrado.tipoRegistro}">
+    <c:set var="color" value="danger"/>
+</c:if>
+
 <div class="row-fluid container main">
 
     <div class="well well-white">
@@ -20,12 +28,13 @@
         <div class="row">
             <div class="col-xs-12">
                 <ol class="breadcrumb">
+                    <c:import url="../modulos/migadepan.jsp"/>
                     <li><a href="<c:url value="/registroMigrado/list"/>" ><i class="fa fa-list"></i> <spring:message code="registroMigrado.listado"/></a></li>
                     <c:if test="${registroMigrado.tipoRegistro}">
-                        <li class="active"><i class="fa fa-pencil-square-o"></i> <spring:message code="registroMigrado.registroMigrado"/> <spring:message code="informe.entrada"/> ${registroMigrado.denominacionOficina}-${registroMigrado.numero}-${registroMigrado.ano}</li>
+                        <li class="active"><i class="fa fa-pencil-square-o"></i> <spring:message code="registroMigrado.registroMigrado.entrada"/> ${registroMigrado.numero}/${registroMigrado.ano}</li>
                     </c:if>
                     <c:if test="${!registroMigrado.tipoRegistro}">
-                        <li class="active"><i class="fa fa-pencil-square-o"></i> <spring:message code="registroMigrado.registroMigrado"/> <spring:message code="informe.salida"/> ${registroMigrado.denominacionOficina}-${registroMigrado.numero}-${registroMigrado.ano}</li>
+                        <li class="active"><i class="fa fa-pencil-square-o"></i> <spring:message code="registroMigrado.registroMigrado.salida"/> ${registroMigrado.numero}/${registroMigrado.ano}</li>
                     </c:if>
                 </ol>
             </div>
@@ -33,211 +42,168 @@
 
         <div class="row">
 
-            <div class="col-xs-12">
+            <!-- Panel Lateral -->
+            <div class="col-xs-4">
 
-                <%--Registro Migrado de ENTRADA --%>
-                <c:if test="${registroMigrado.tipoRegistro}">
-
-                    <div class="panel panel-info">
-                        <div class="panel-heading">
-                            <h3 class="panel-title"><i class="fa fa-pencil-square-o"></i>
-                                <strong>
-                                    <spring:message code="registroMigrado.registroMigrado"/> <spring:message code="informe.entrada"/> ${registroMigrado.denominacionOficina}-${registroMigrado.numero}-${registroMigrado.ano}
-                                </strong>
-                            </h3>
-                        </div>
-                        <div class="panel-body">
-                            <div class="form-group col-xs-12">
-                                <div class="col-xs-12"><i class="fa fa-institution"></i> <strong><spring:message code="entidad.entidad"/>:</strong> ${registroMigrado.entidad.nombre}</div>
-                            </div>
-                            <div class="form-group col-xs-12">
-                                <div class="col-xs-6"><i class="fa fa-clock-o"></i> <strong><spring:message code="registroMigrado.fechaEntrada"/>:</strong> <fmt:formatDate value="${registroMigrado.fechaRegistro}" pattern="dd/MM/yyyy"/></div>
-                                <div class="col-xs-3"><i class="fa fa-clock-o"></i> <strong><spring:message code="registroMigrado.hora"/>:</strong> <fmt:formatDate value="${registroMigrado.fechaRegistro}" pattern="HH:mm:ss"/></div>
-                                <div class="col-xs-3"><i class="fa fa-bookmark"></i> <strong><spring:message code="registroMigrado.entradaAnulada"/>:</strong>
-                                    <c:if test="${!registroMigrado.anulado}">
-                                        <span class="label label-success"><spring:message code="regweb.no"/></span>
-                                    </c:if>
-                                    <c:if test="${registroMigrado.anulado}">
-                                        <span class="label label-danger"><spring:message code="regweb.si"/></span>
-                                    </c:if>
-                                </div>
-                            </div>
-                            <div class="form-group col-xs-12">
-                                <div class="col-xs-6"><i class="fa fa-briefcase"></i> <strong><spring:message code="registroMigrado.oficina"/>:</strong> ${registroMigrado.codigoOficina}-${registroMigrado.denominacionOficina} / ${registroMigrado.codigoOficinaFisica}-${registroMigrado.denominacionOficinaFisica}</div>
-                                <div class="col-xs-3"><i class="fa fa-asterisk"></i> <strong><spring:message code="registroMigrado.numeroRegistro"/>:</strong> ${registroMigrado.numero} / ${registroMigrado.ano}</div>
-                                <c:if test="${not empty registroMigrado.fechaVisado}">
-                                    <div class="col-xs-3"><i class="fa fa-clock-o"></i> <strong><spring:message code="registroMigrado.fechaVisado"/>:</strong> <fmt:formatDate value="${registroMigrado.fechaVisado}" pattern="dd/MM/yyyy HH:mm:ss"/></div>
-                                </c:if>
-                            </div>
-                            <%--<div class="form-group col-xs-12">
-                                <div class="col-xs-12"><i class="fa fa-gears"></i> <strong><spring:message code="registroEntrada.aplicacion"/>:</strong> <spring:message code="registroMigrado.aplicacion"/></div>
-                            </div>--%>
-                        </div>
-
-                            <div class="panel-heading-migrado">
-                                <h3 class="panel-title">
-                                    <strong> <spring:message code="registroMigrado.datosDocumento"/></strong>
-                                </h3>
-                            </div>
-                            <div class="panel-body">
-                                <div class="form-group col-xs-12">
-                                    <div class="col-xs-4"><i class="fa fa-calendar"></i> <strong><spring:message code="regweb.fecha"/>:</strong> <fmt:formatDate value="${registroMigrado.fechaDocumento}" pattern="dd/MM/yyyy"/></div>
-                                    <div class="col-xs-4"><i class="fa fa-file-o"></i> <strong><spring:message code="registroMigrado.tipoDocumento"/>:</strong> ${registroMigrado.descripcionDocumento}</div>
-                                    <div class="col-xs-4"><i class="fa fa-language"></i> <strong><spring:message code="registroMigrado.idioma"/>:</strong> ${registroMigrado.descripcionIdiomaDocumento}</div>
-                                </div>
-                                <div class="form-group col-xs-12">
-                                    <div class="col-xs-12"><i class="fa fa-mail-forward"></i> <strong><spring:message code="registroMigrado.remitente"/>:</strong> ${registroMigrado.descripcionRemitenteDestinatario}</div>
-                                </div>
-                                <div class="form-group col-xs-12">
-                                    <div class="col-xs-12"><i class="fa fa-location-arrow"></i> <strong><spring:message code="registroMigrado.procedencia"/>:</strong> ${registroMigrado.procedenciaDestinoGeografico}</div>
-                                </div>
-                                <div class="form-group col-xs-12">
-                                    <div class="col-xs-4"><i class="fa fa-tag"></i> <strong><spring:message code="registroMigrado.numeroSalida"/>:</strong>
-                                        <c:if test="${(not empty registroMigrado.numeroEntradaSalida) && (registroMigrado.numeroEntradaSalida != 0)}">
-                                            ${registroMigrado.numeroEntradaSalida} / ${registroMigrado.anoEntradaSalida}
-                                        </c:if>
-                                    </div>
-                                    <div class="col-xs-4"><i class="fa fa-exchange"></i> <strong><spring:message code="registroMigrado.organismoDestinatario"/>:</strong> ${registroMigrado.descripcionOrganismoDestinatarioEmisor}</div>
-                                </div>
-                            </div>
-
-                            <div class="panel-heading-migrado">
-                                <h3 class="panel-title">
-                                    <strong> <spring:message code="registroMigrado.datosExtracto"/></strong>
-                                </h3>
-                            </div>
-                            <div class="panel-body">
-                                <div class="form-group col-xs-12">
-                                    <div class="col-xs-4"><i class="fa fa-language"></i> <strong><spring:message code="registroMigrado.idioma"/>:</strong> ${registroMigrado.nombreIdiomaExtracto}</div>
-                                    <div class="col-xs-4"><i class="fa fa-save"></i> <strong><spring:message code="registroMigrado.numeroDisquet"/>:</strong> ${registroMigrado.numeroDisquet}</div>
-                                    <div class="col-xs-4"><i class="fa fa-envelope-o"></i> <strong><spring:message code="registroMigrado.numeroCorreo"/>:</strong> ${registroMigrado.numeroCorreo}</div>
-                                </div>
-                                <div class="form-group col-xs-12">
-                                    <div class="col-xs-12"><i class="fa fa-file-text-o"></i> <strong><spring:message code="registroMigrado.extracto"/>:</strong> ${registroMigrado.extracto}</div>
-                                </div>
-                                <c:if test="${not empty registroMigrado.emailRemitente}">
-                                    <div class="form-group col-xs-12">
-                                        <div class="col-xs-12"><i class="fa fa-at"></i> <strong><spring:message code="registroMigrado.emailRemitente"/>:</strong> ${registroMigrado.emailRemitente}</div>
-                                    </div>
-                                </c:if>
-                                <c:if test="${not empty registroMigrado.infoAdicional}">
-                                    <div class="form-group col-xs-12">
-                                        <div class="col-xs-12"><i class="fa fa-info-circle"></i> <strong><spring:message code="registroMigrado.infoAdicional"/>:</strong> ${registroMigrado.infoAdicional}</div>
-                                    </div>
-                                </c:if>
-                            </div>
-
+                <div class="panel panel-${color}">
+                    <div class="panel-heading">
+                        <h3 class="panel-title"><i class="fa fa-file-o"></i>
+                            <strong> <spring:message code="registroMigrado.registroMigrado"/> ${registroMigrado.numero}/${registroMigrado.ano}</strong>
+                        </h3>
                     </div>
 
-                </c:if>
+                    <div class="panel-body">
 
-                <%--Registro Migrado de SALIDA --%>
-                    <c:if test="${!registroMigrado.tipoRegistro}">
+                        <%--DETALLE REGISTRO--%>
+                        <dl class="detalle_registro">
+                            <dt><i class="fa fa-home"></i> <spring:message code="oficina.oficina"/>: </dt> <dd> ${registroMigrado.codigoOficina}-${registroMigrado.denominacionOficina} / ${registroMigrado.codigoOficinaFisica}-${registroMigrado.denominacionOficinaFisica}</dd>
+                            <dt><i class="fa fa-calendar"></i> <spring:message code="regweb.fecha"/>: </dt> <dd> <fmt:formatDate value="${registroMigrado.fechaRegistro}" pattern="dd/MM/yyyy HH:mm:ss"/></dd>
+                            <dt><i class="fa fa-book"></i> <spring:message code="registroMigrado.numeroRegistro"/>: </dt> <dd> ${registroMigrado.numero} / ${registroMigrado.ano}</dd>
+                            <dt><i class="fa fa-institution"></i> <spring:message code="registroEntrada.organismoDestino"/>: </dt> <dd>${registroMigrado.descripcionOrganismoDestinatarioEmisor}</dd>
+                            <dt><i class="fa fa-bookmark"></i>
+                                <c:if test="${registroMigrado.tipoRegistro}"> <%--Registro de entrada--%>
+                                    <spring:message code="registroMigrado.entradaAnulada"/>:
+                                </c:if>
 
-                        <div class="panel panel-danger">
-                            <div class="panel-heading">
-                                <h3 class="panel-title"><i class="fa fa-pencil-square-o"></i>
-                                    <strong>
-                                        <spring:message code="registroMigrado.registroMigrado"/> <spring:message code="informe.salida"/> ${registroMigrado.denominacionOficina}-${registroMigrado.numero}-${registroMigrado.ano}
-                                    </strong>
-                                </h3>
+                                <c:if test="${!registroMigrado.tipoRegistro}"><%--Registro de salida--%>
+                                    <spring:message code="registroMigrado.salidaAnulada"/>:
+                                </c:if>
+                            </dt>
+                            <dd>
+                                <c:if test="${!registroMigrado.anulado}">
+                                    <span class="label label-success"><spring:message code="regweb.no"/></span>
+                                </c:if>
+                                <c:if test="${registroMigrado.anulado}">
+                                    <span class="label label-danger"><spring:message code="regweb.si"/></span>
+                                </c:if>
+                            </dd>
+                            <c:if test="${not empty registroMigrado.fechaVisado}">
+                                <dt><i class="fa fa-clock-o"></i> <spring:message code="registroMigrado.fechaVisado"/>: </dt> <dd><fmt:formatDate value="${registroMigrado.fechaVisado}" pattern="dd/MM/yyyy HH:mm:ss"/></dd>
+                            </c:if>
+                        </dl>
+                    </div>
+
+                    <%--Botonera--%>
+                    <div class="panel-footer center">
+                        <div class="btn-group">
+                            <div class="btn-group"><button type="button" onclick="goToNewPage('<c:url value="/registroMigrado/${registroMigrado.id}/lopd"/>')" class="btn btn-warning btn-sm"><spring:message code="registroMigrado.lopd"/></button></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <%--Panel central--%>
+            <div class="col-xs-8">
+
+                <div class="col-xs-12">
+                    <div class="panel panel-${color}">
+
+                        <div class="panel-heading">
+                            <h3 class="panel-title"><i class="fa fa-user-circle-o"></i> <strong><spring:message code="registroMigrado.datosDocumento"/></strong></h3>
+                        </div>
+
+                        <div class="panel-body">
+                            <div class="form-group col-xs-12">
+                                <div class="col-xs-6"><i class="fa fa-file-o"></i> <strong><spring:message code="registroMigrado.tipoDocumento"/>:</strong> ${registroMigrado.descripcionDocumento}</div>
+                                <div class="col-xs-6"><i class="fa fa-calendar"></i> <strong><spring:message code="regweb.fecha"/>:</strong> <fmt:formatDate value="${registroMigrado.fechaDocumento}" pattern="dd/MM/yyyy"/></div>
                             </div>
-                            <div class="panel-body">
-                                <div class="form-group col-xs-12">
-                                    <div class="col-xs-12"><i class="fa fa-institution"></i> <strong><spring:message code="entidad.entidad"/>:</strong> ${registroMigrado.entidad.nombre}</div>
-                                </div>
-                                <div class="form-group col-xs-12">
-                                    <div class="col-xs-6"><i class="fa fa-clock-o"></i> <strong><spring:message code="registroMigrado.fechaSalida"/>:</strong> <fmt:formatDate value="${registroMigrado.fechaRegistro}" pattern="dd/MM/yyyy"/></div>
-                                    <div class="col-xs-3"><i class="fa fa-clock-o"></i> <strong><spring:message code="registroMigrado.hora"/>:</strong> <fmt:formatDate value="${registroMigrado.fechaRegistro}" pattern="HH:mm:ss"/></div>
-                                    <div class="col-xs-3"><i class="fa fa-bookmark"></i> <strong><spring:message code="registroMigrado.salidaAnulada"/>:</strong>
-                                        <c:if test="${!registroMigrado.anulado}">
-                                            <span class="label label-success"><spring:message code="regweb.no"/></span>
-                                        </c:if>
-                                        <c:if test="${registroMigrado.anulado}">
-                                            <span class="label label-danger"><spring:message code="regweb.si"/></span>
-                                        </c:if>
-                                    </div>
-                                </div>
-                                <div class="form-group col-xs-12">
-                                    <div class="col-xs-6"><i class="fa fa-briefcase"></i> <strong><spring:message code="registroMigrado.oficina"/>:</strong> ${registroMigrado.codigoOficina}-${registroMigrado.denominacionOficina} / ${registroMigrado.codigoOficinaFisica}-${registroMigrado.denominacionOficinaFisica}</div>
-                                    <div class="col-xs-3"><i class="fa fa-asterisk"></i> <strong><spring:message code="registroMigrado.numeroRegistro"/>:</strong> ${registroMigrado.numero}/${registroMigrado.ano}</div>
-                                    <c:if test="${not empty registroMigrado.fechaVisado}">
-                                        <div class="col-xs-3"><i class="fa fa-clock-o"></i> <strong><spring:message code="registroMigrado.fechaVisado"/>:</strong> <fmt:formatDate value="${registroMigrado.fechaVisado}" pattern="dd/MM/yyyy HH:mm:ss"/></div>
+                            <div class="form-group col-xs-12">
+                                <div class="col-xs-6"><i class="fa fa-language"></i> <strong><spring:message code="registroMigrado.idioma"/>:</strong> ${registroMigrado.descripcionIdiomaDocumento}</div>
+                                <div class="col-xs-6"><i class="fa fa-tag"></i>
+
+                                    <c:if test="${registroMigrado.tipoRegistro}"> <%--Registro de entrada--%>
+                                        <strong><spring:message code="registroMigrado.numeroSalida"/>:</strong>
+                                    </c:if>
+
+                                    <c:if test="${!registroMigrado.tipoRegistro}"><%--Registro de salida--%>
+                                        <strong><spring:message code="registroMigrado.numeroEntrada"/>:</strong>
+                                    </c:if>
+
+                                    <c:if test="${(not empty registroMigrado.numeroEntradaSalida) && (registroMigrado.numeroEntradaSalida != 0)}">
+                                        ${registroMigrado.numeroEntradaSalida} / ${registroMigrado.anoEntradaSalida}
                                     </c:if>
                                 </div>
-                                <div class="form-group col-xs-12">
-                                    <div class="col-xs-12"><i class="fa fa-gears"></i> <strong><spring:message code="registroEntrada.aplicacion"/>:</strong> <spring:message code="registroMigrado.aplicacion"/></div>
-                                </div>
                             </div>
+                            <div class="form-group col-xs-12">
+                                <div class="col-xs-6"><i class="fa fa-mail-forward"></i>
+                                    <c:if test="${registroMigrado.tipoRegistro}"> <%--Registro de entrada--%>
+                                        <strong><spring:message code="registroMigrado.remitente"/>:</strong>
+                                    </c:if>
 
-                            <div class="panel-heading-migrado">
-                                <h3 class="panel-title">
-                                    <strong> <spring:message code="registroMigrado.datosDocumento"/></strong>
-                                </h3>
-                            </div>
-                            <div class="panel-body">
-                                <div class="form-group col-xs-12">
-                                    <div class="col-xs-4"><i class="fa fa-calendar"></i> <strong><spring:message code="regweb.fecha"/>:</strong> <fmt:formatDate value="${registroMigrado.fechaDocumento}" pattern="dd/MM/yyyy"/></div>
-                                    <div class="col-xs-4"><i class="fa fa-file-o"></i> <strong><spring:message code="registroMigrado.tipoDocumento"/>:</strong> ${registroMigrado.descripcionDocumento}</div>
-                                    <div class="col-xs-4"><i class="fa fa-language"></i> <strong><spring:message code="registroMigrado.idioma"/>:</strong> ${registroMigrado.descripcionIdiomaDocumento}</div>
-                                </div>
-                                <div class="form-group col-xs-12">
-                                    <div class="col-xs-12"><i class="fa fa-mail-forward"></i> <strong><spring:message code="registroMigrado.destinatario"/>:</strong> ${registroMigrado.descripcionRemitenteDestinatario}</div>
-                                </div>
-                                <div class="form-group col-xs-12">
-                                    <div class="col-xs-12"><i class="fa fa-location-arrow"></i> <strong><spring:message code="registroMigrado.destino"/>:</strong> ${registroMigrado.procedenciaDestinoGeografico}</div>
-                                </div>
-                                <div class="form-group col-xs-12">
-                                    <div class="col-xs-4"><i class="fa fa-tag"></i> <strong><spring:message code="registroMigrado.numeroEntrada"/>:</strong>
-                                        <c:if test="${(not empty registroMigrado.numeroEntradaSalida) && (registroMigrado.numeroEntradaSalida != 0)}">
-                                            ${registroMigrado.numeroEntradaSalida} / ${registroMigrado.anoEntradaSalida}
-                                        </c:if>
-                                    </div>
-                                    <div class="col-xs-4"><i class="fa fa-exchange"></i> <strong><spring:message code="registroMigrado.organismoEmisor"/>:</strong> ${registroMigrado.descripcionOrganismoDestinatarioEmisor}</div>
-                                </div>
-                            </div>
+                                    <c:if test="${!registroMigrado.tipoRegistro}"><%--Registro de salida--%>
+                                        <strong><spring:message code="registroMigrado.destinatario"/>:</strong>
+                                    </c:if>
 
-                            <div class="panel-heading-migrado">
-                                <h3 class="panel-title">
-                                    <strong> <spring:message code="registroMigrado.datosExtracto"/></strong>
-                                </h3>
+                                    ${registroMigrado.descripcionRemitenteDestinatario}
+                                </div>
+                                <div class="col-xs-6"><i class="fa fa-location-arrow"></i>
+
+                                    <c:if test="${registroMigrado.tipoRegistro}"> <%--Registro de entrada--%>
+                                        <strong><spring:message code="registroMigrado.procedencia"/>:</strong>
+                                    </c:if>
+
+                                    <c:if test="${!registroMigrado.tipoRegistro}"><%--Registro de salida--%>
+                                        <strong><spring:message code="registroMigrado.destino"/>:</strong>
+                                    </c:if>
+
+                                    ${registroMigrado.procedenciaDestinoGeografico}</div>
                             </div>
-                            <div class="panel-body">
-                                <div class="form-group col-xs-12">
-                                    <div class="col-xs-4"><i class="fa fa-language"></i> <strong><spring:message code="registroMigrado.idioma"/>:</strong> ${registroMigrado.nombreIdiomaExtracto}</div>
-                                    <div class="col-xs-4"><i class="fa fa-save"></i> <strong><spring:message code="registroMigrado.numeroDisquet"/>:</strong> ${registroMigrado.numeroDisquet}</div>
-                                    <div class="col-xs-4"><i class="fa fa-envelope-o"></i> <strong><spring:message code="registroMigrado.numeroCorreo"/>:</strong> ${registroMigrado.numeroCorreo}</div>
+                            <div class="form-group col-xs-12">
+                                <div class="col-xs-12"><i class="fa fa-exchange"></i>
+                                    <c:if test="${registroMigrado.tipoRegistro}"> <%--Registro de entrada--%>
+                                        <strong><spring:message code="registroMigrado.organismoDestinatario"/>:</strong>
+                                    </c:if>
+
+                                    <c:if test="${!registroMigrado.tipoRegistro}"><%--Registro de salida--%>
+                                        <strong><spring:message code="registroMigrado.organismoEmisor"/>:</strong>
+                                    </c:if>
+
+                                    ${registroMigrado.descripcionOrganismoDestinatarioEmisor}
                                 </div>
-                                <div class="form-group col-xs-12">
-                                    <div class="col-xs-12"><i class="fa fa-file-text-o"></i> <strong><spring:message code="registroMigrado.extracto"/>:</strong> ${registroMigrado.extracto}</div>
-                                </div>
-                                <c:if test="${not empty registroMigrado.emailRemitente}">
-                                    <div class="form-group col-xs-12">
-                                        <div class="col-xs-12"><i class="fa fa-at"></i> <strong><spring:message code="registroMigrado.emailRemitente"/>:</strong> ${registroMigrado.emailRemitente}</div>
-                                    </div>
-                                </c:if>
-                                <c:if test="${not empty registroMigrado.infoAdicional}">
-                                    <div class="form-group col-xs-12">
-                                        <div class="col-xs-12"><i class="fa fa-info-circle"></i> <strong><spring:message code="registroMigrado.infoAdicional"/>:</strong> ${registroMigrado.infoAdicional}</div>
-                                    </div>
-                                </c:if>
+
                             </div>
 
                         </div>
+                    </div>
 
-                    </c:if>
+                    <div class="panel panel-${color}">
 
+                        <div class="panel-heading">
+                            <h3 class="panel-title"><i class="fa fa-file-text-o"></i> <strong><spring:message code="registroMigrado.datosExtracto"/></strong></h3>
+                        </div>
+
+                        <div class="panel-body">
+                            <div class="form-group col-xs-12">
+                                <div class="col-xs-12"><i class="fa fa-file-text-o"></i> <strong><spring:message code="registroMigrado.extracto"/>:</strong> ${registroMigrado.extracto}</div>
+                            </div>
+                            <div class="form-group col-xs-12">
+                                <div class="col-xs-4"><i class="fa fa-save"></i> <strong><spring:message code="registroMigrado.numeroDisquet"/>:</strong> ${registroMigrado.numeroDisquet}</div>
+                                <div class="col-xs-4"><i class="fa fa-envelope-o"></i> <strong><spring:message code="registroMigrado.numeroCorreo"/>:</strong> ${registroMigrado.numeroCorreo}</div>
+                                <div class="col-xs-4"><i class="fa fa-language"></i> <strong><spring:message code="registroMigrado.idioma"/>:</strong> ${registroMigrado.nombreIdiomaExtracto}</div>
+                            </div>
+
+                            <c:if test="${not empty registroMigrado.emailRemitente}">
+                                <div class="form-group col-xs-12">
+                                    <div class="col-xs-12"><i class="fa fa-at"></i> <strong><spring:message code="registroMigrado.emailRemitente"/>:</strong> ${registroMigrado.emailRemitente}</div>
+                                </div>
+                            </c:if>
+                            <c:if test="${not empty registroMigrado.infoAdicional}">
+                                <div class="form-group col-xs-12">
+                                    <div class="col-xs-12"><i class="fa fa-info-circle"></i> <strong><spring:message code="registroMigrado.infoAdicional"/>:</strong> ${registroMigrado.infoAdicional}</div>
+                                </div>
+                            </c:if>
+                            <c:if test="${not empty registroMigrado.otros}">
+                                <div class="form-group col-xs-12">
+                                    <div class="col-xs-12"><i class="fa fa-info-circle"></i> <strong><spring:message code="registroMigrado.otros"/>:</strong> ${registroMigrado.otros}</div>
+                                </div>
+                            </c:if>
+
+                        </div>
+                    </div>
+                </div>
             </div>
-
-            <div class="col-xs-8 pull-right">
-                <c:import url="../modulos/mensajes.jsp"/>
-            </div>
-
         </div>
-
     </div>
-
-</div>
 
 <c:import url="../modulos/pie.jsp"/>
 

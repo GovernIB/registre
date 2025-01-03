@@ -231,60 +231,6 @@
 
                     </c:if>
 
-                    <!-- VISADOS SOBRE EL REGISTRO MIGRADO -->
-                    <c:if test="${registroMigrado.tipoRegistro}">
-                    <div class="alert-lopd alert-info alert-dismissable">
-                        </c:if>
-                        <c:if test="${!registroMigrado.tipoRegistro}">
-                        <div class="alert-lopd alert-danger alert-dismissable">
-                            </c:if>
-                            <strong><spring:message code="regweb.visado"/></strong>
-                        </div>
-
-                        <c:if test="${empty visados}">
-                            <div class="alert alert-grey alert-dismissable">
-                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                                <spring:message code="regweb.busqueda.vacio"/>
-                            </div>
-                        </c:if>
-
-                        <c:if test="${not empty visados}">
-
-                            <div class="table-responsive">
-
-                                <table class="table table-bordered table-hover table-striped tablesorter">
-                                    <colgroup>
-                                        <col>
-                                        <col>
-                                        <col>
-                                        <col>
-                                    </colgroup>
-                                    <thead>
-                                    <tr>
-                                        <th><spring:message code="registroEntrada.fecha"/></th>
-                                        <th><spring:message code="visado.fecha.modificacion"/></th>
-                                        <th><spring:message code="visado.acceso"/></th>
-                                        <th><spring:message code="usuario.usuario"/></th>
-                                    </tr>
-                                    </thead>
-
-                                    <tbody>
-                                    <c:forEach var="modificacionLopdMigrado" items="${visados}" varStatus="status">
-                                        <tr>
-                                            <td><fmt:formatDate value="${modificacionLopdMigrado.fecha}" pattern="dd/MM/yyyy HH:mm"/></td>
-                                            <td><fmt:formatDate value="${modificacionLopdMigrado.fechaModificacion}" pattern="dd/MM/yyyy HH:mm"/></td>
-                                            <td>${modificacionLopdMigrado.tipoAcceso}</td>
-                                            <td>${modificacionLopdMigrado.usuario}</td>
-                                        </tr>
-                                    </c:forEach>
-                                    </tbody>
-                                </table>
-
-                            </div>
-
-                        </c:if>
-
-                </div>
             </div>
 
         </div>

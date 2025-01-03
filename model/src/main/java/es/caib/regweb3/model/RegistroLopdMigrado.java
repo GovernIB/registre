@@ -9,7 +9,7 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "RWE_REGISTROLOPD_MIGRADO")
-@SequenceGenerator(name = "generator", sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
+@SequenceGenerator(name = "generator", sequenceName = "RWE_REGISTRO_LOPD_MIGRADO_SEQ", allocationSize = 1)
 public class RegistroLopdMigrado implements Serializable {
 
     private Long id;

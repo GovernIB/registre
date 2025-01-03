@@ -23,7 +23,7 @@ import java.util.Set;
         uniqueConstraints = {
                 @UniqueConstraint(name="RWE_REGISTRO_MIGRADO_UK", columnNames = {"ANO", "NUMERO", "CODOFICINA", "TREGISTRO", "IDENTIDAD"})
         })
-@SequenceGenerator(name = "generator", sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
+@SequenceGenerator(name = "generator", sequenceName = "RWE_REGISTRO_MIGRADO_SEQ", allocationSize = 1)
 public class RegistroMigrado implements Serializable {
 
     public static final boolean TIPOREGISTRO_ENTRADA = true;
@@ -299,7 +299,7 @@ public class RegistroMigrado implements Serializable {
         this.procedenciaDestinoGeograficoFuera = procedenciaDestinoGeograficoFuera;
     }
 
-    @Column(name = "PRODESGEO", nullable = false, length = 50)
+    @Column(name = "PRODESGEO", nullable = true, length = 50)
     public String getProcedenciaDestinoGeografico() {
         return procedenciaDestinoGeografico;
     }
