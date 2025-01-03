@@ -1,6 +1,8 @@
 package es.caib.regweb3.webapp.controller.migrado;
 
-import es.caib.regweb3.model.*;
+import es.caib.regweb3.model.Entidad;
+import es.caib.regweb3.model.RegistroMigrado;
+import es.caib.regweb3.model.UsuarioEntidad;
 import es.caib.regweb3.persistence.ejb.ModificacionLopdMigradoLocal;
 import es.caib.regweb3.persistence.ejb.RegistroLopdMigradoLocal;
 import es.caib.regweb3.persistence.ejb.RegistroMigradoLocal;
@@ -26,7 +28,6 @@ import javax.servlet.http.HttpSession;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 /**
  * Created by Fundació BIT.
@@ -172,7 +173,6 @@ public class RegistroMigradoController extends BaseController {
     @RequestMapping(value = "/{idRegistroMigrado}/lopd", method = RequestMethod.GET)
     public String informeRegistroLopd(Model model, @PathVariable Long idRegistroMigrado, HttpServletRequest request)throws Exception {
 
-        HttpSession session = request.getSession();
         Entidad entidadActiva = getEntidadActiva(request);
 
         // Añade la información del Registro Migrado
@@ -193,26 +193,10 @@ public class RegistroMigradoController extends BaseController {
         }
 
         model.addAttribute("registroMigrado", registroMigrado);
-
-        // Registros Migrados Listados y Consultados
-        Long numRegistroMigrado = idRegistroMigrado;
-
-        List<ModificacionLopdMigrado> visados = modificacionLopdMigradoEjb.getByRegistroMigrado(numRegistroMigrado);
-        model.addAttribute("visados", visados);
-
-        RegistroLopdMigrado registroCreado = registroLopdMigradoEjb.getCreacion(numRegistroMigrado, RegwebConstantes.LOPDMIGRADO_CREACION);
-        model.addAttribute("registroCreado", registroCreado);
-
-        List<RegistroLopdMigrado> modificaciones = registroLopdMigradoEjb.getByRegistroMigrado(numRegistroMigrado, RegwebConstantes.LOPDMIGRADO_MODIFICACION);
-        model.addAttribute("modificaciones", modificaciones);
-
-        List<RegistroLopdMigrado> consultas = registroLopdMigradoEjb.getByRegistroMigrado(numRegistroMigrado, RegwebConstantes.LOPDMIGRADO_CONSULTA);
-        model.addAttribute("consultas", consultas);
-
-        List<RegistroLopdMigrado> listados = registroLopdMigradoEjb.getByRegistroMigrado(numRegistroMigrado, RegwebConstantes.LOPDMIGRADO_LISTADO);
-        model.addAttribute("listados", listados);
-
-        model.addAttribute("numRegistro", numRegistroMigrado);
+        model.addAttribute("registroCreado", registroLopdMigradoEjb.getCreacion(idRegistroMigrado, RegwebConstantes.LOPDMIGRADO_CREACION));
+        model.addAttribute("modificaciones", registroLopdMigradoEjb.getByRegistroMigrado(idRegistroMigrado, RegwebConstantes.LOPDMIGRADO_MODIFICACION));
+        model.addAttribute("consultas", registroLopdMigradoEjb.getByRegistroMigrado(idRegistroMigrado, RegwebConstantes.LOPDMIGRADO_CONSULTA));
+        model.addAttribute("listados", registroLopdMigradoEjb.getByRegistroMigrado(idRegistroMigrado, RegwebConstantes.LOPDMIGRADO_LISTADO));
 
         return "registroMigrado/registroLopdMigrado";
     }
