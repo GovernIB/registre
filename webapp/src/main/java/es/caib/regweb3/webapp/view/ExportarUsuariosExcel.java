@@ -88,7 +88,7 @@ public class ExportarUsuariosExcel extends AbstractExcelView {
             int rowNum = 0;
 
             // Dades que se mostren d'un usuari
-            String[] capsalera = new String[]{"usuario.identificador", "usuario.nombre", "usuario.documento", "usuario.email", "organismo.organismo","organismo.codigo", "oficina.oficina","oficina.codigo","oficina.oamr", "oficina.sir", "usuario.categoria","usuario.funcion","usuario.codigoTrabajo","usuario.nombreTrabajo", "usuario.fechaAlta", "usuario.cai", "usuario.telefono","usuario.externo","usuario.clave","usuario.bitcita", "usuario.asistencia", "usuario.apodera", "usuario.notificacionEspontanea","usuario.certificado","usuario.observaciones"};
+            String[] capsalera = new String[]{"usuario.identificador", "usuario.nombre", "usuario.documento", "usuario.email", "organismo.organismo","organismo.codigo", "usuario.oficinaSolicitada","oficina.codigo","oficina.oamr", "oficina.sir", "usuario.categoria","usuario.funcion","usuario.codigoTrabajo","usuario.nombreTrabajo", "usuario.fechaAlta", "usuario.cai", "usuario.telefono","usuario.externo","usuario.clave","usuario.bitcita", "usuario.asistencia", "usuario.apodera", "usuario.notificacionEspontanea","usuario.certificado","usuario.observaciones"};
 
             // DADES A MOSTRAR
             // Capçalera
@@ -126,13 +126,13 @@ public class ExportarUsuariosExcel extends AbstractExcelView {
                     row.createCell(3).setCellValue("");
                 }
                 // Organismo - Oficina
-                if(usuario.getUltimaOficina() != null){
-                    row.createCell(4).setCellValue(usuario.getUltimaOficina().getOrganismoResponsable().getDenominacion());
-                    row.createCell(5).setCellValue(usuario.getUltimaOficina().getOrganismoResponsable().getCodigo());
-                    row.createCell(6).setCellValue(usuario.getUltimaOficina().getDenominacion());
-                    row.createCell(7).setCellValue(usuario.getUltimaOficina().getCodigo());
-                    row.createCell(8).setCellValue(StringUtils.toStringSiNo(usuario.getUltimaOficina().getOamr()));
-                    row.createCell(9).setCellValue(StringUtils.toStringSiNo(usuario.getUltimaOficina().getSir()));
+                if(usuario.getOficinaSolicitada() != null){
+                    row.createCell(4).setCellValue(usuario.getOficinaSolicitada().getOrganismoResponsable().getDenominacion());
+                    row.createCell(5).setCellValue(usuario.getOficinaSolicitada().getOrganismoResponsable().getCodigo());
+                    row.createCell(6).setCellValue(usuario.getOficinaSolicitada().getDenominacion());
+                    row.createCell(7).setCellValue(usuario.getOficinaSolicitada().getCodigo());
+                    row.createCell(8).setCellValue(StringUtils.toStringSiNo(usuario.getOficinaSolicitada().getOamr()));
+                    row.createCell(9).setCellValue(StringUtils.toStringSiNo(usuario.getOficinaSolicitada().getSir()));
                 }else{
                     row.createCell(4).setCellValue("");
                     row.createCell(5).setCellValue("");

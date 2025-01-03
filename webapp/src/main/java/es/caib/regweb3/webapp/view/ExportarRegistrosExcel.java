@@ -124,7 +124,7 @@ public class ExportarRegistrosExcel extends AbstractExcelView {
             header.setHeightInPoints(15);
 
             // Dades que se mostren d'una oficina
-            String[] capsalera = new String[]{"regweb.numero", "registroEntrada.fecha", "registroEntrada.oficina", "organismo.destino.corto","registroEntrada.estado","registroEntrada.extracto", "registro.presencial", "interesado.interesado"};
+            String[] capsalera = new String[]{"regweb.numero", "registroEntrada.fecha", "registroEntrada.oficina", "organismo.destino.corto","registroEntrada.estado","registroEntrada.extracto", "registro.presencial", "interesado.interesado", "usuario.usuario"};
 
             // DADES A MOSTRAR
             // Capçalera
@@ -167,6 +167,7 @@ public class ExportarRegistrosExcel extends AbstractExcelView {
                 }else{
                     row.createCell(7).setCellValue("");
                 }
+                row.createCell(8).setCellValue(registroEntrada.getUsuario().getNombreCompleto());
 
                 // Aplicam estils a les cel·les
                 for (int g = 0; g < capsalera.length; g++) {
