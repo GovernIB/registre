@@ -45,7 +45,9 @@
                         <dl class="detalle_registro">
 
                             <dt><i class="fa fa-home"></i> <spring:message code="entidad.codigoDir3"/>: </dt> <dd> ${organismo.codigo}</dd>
-                            <dt><i class="fa fa-institution"></i> <spring:message code="organismo.superior"/>: </dt> <dd> ${organismo.organismoSuperior.denominacion}</dd>
+                            <c:if test="${not empty organismo.organismoSuperior}">
+                                <dt><i class="fa fa-institution"></i> <spring:message code="organismo.superior"/>: </dt> <dd> ${organismo.organismoSuperior.denominacion}</dd>
+                            </c:if>
                             <dt><i class="fa fa-institution"></i> <spring:message code="organismo.edp"/>: </dt>
                             <dd>
                                 <c:if test="${organismo.edp == true}">
