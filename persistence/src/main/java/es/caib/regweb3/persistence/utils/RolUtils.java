@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import javax.ejb.EJB;
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -79,5 +80,38 @@ public class RolUtils {
 
             usuarioEjb.actualizarRoles(usuario, obtenerRolesUserPlugin(usuario.getIdentificador()));
         }
+    }
+
+    /**
+     * Obtiene los Roles Web del usuario autenticado
+     *
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    public List<Rol> obtenerRolesWebUsuarioAutenticado(HttpServletRequest request) throws Exception {
+
+        List<Rol> rolesUsuario = null;
+
+        List<String> roles = new ArrayList<String>();
+
+        if (request.isUserInRole(RegwebConstantes.RWE_SUPERADMIN)) {
+            roles.add(RegwebConstantes.RWE_SUPERADMIN);
+        }
+        if (request.isUserInRole(RegwebConstantes.RWE_ADMIN)) {
+            roles.add(RegwebConstantes.RWE_ADMIN);
+        }
+        if (request.isUserInRole(RegwebConstantes.RWE_USUARI)) {
+            roles.add(RegwebConstantes.RWE_USUARI);
+        }
+        if (request.isUserInRole(RegwebConstantes.DIB_USER_RW)) {
+            roles.add(RegwebConstantes.DIB_USER_RW);
+        }
+
+        if (roles.size() > 0) {
+            rolesUsuario = rolEjb.getByRol(roles);
+        }
+
+        return rolesUsuario;
     }
 }

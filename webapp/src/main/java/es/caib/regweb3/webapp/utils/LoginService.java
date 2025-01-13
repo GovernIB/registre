@@ -117,17 +117,17 @@ public class LoginService {
      */
     private Rol obtenerCredenciales(Usuario usuario, LoginInfo loginInfo, HttpServletRequest request) throws Exception {
 
-        List<Rol> rolesUsuario = obtenerRolesWebUsuarioAutenticado(request);
+        List<Rol> rolesUsuario = rolUtils.obtenerRolesWebUsuarioAutenticado(request);
         if(rolesUsuario != null){
             log.info("Usuario autenticado: " + usuario.getNombreCompleto() + " - Roles: " + Arrays.toString(rolesUsuario.toArray()));
         }else{
             log.info("Usuario autenticado: " + usuario.getNombreCompleto() + " - Sin Roles Web ");
         }
 
-        // Actualizamos los Roles del usuario en la bbdd, según los obtenidos del sistema externo
+        // Actualizamos los Roles del usuario en la bbdd
         try {
-            List<Rol> roles = rolUtils.obtenerRolesUserPlugin(usuario.getIdentificador());
-            usuarioEjb.actualizarRoles(usuario, roles);
+
+            usuarioEjb.actualizarRoles(usuario, rolesUsuario);
         } catch (I18NException e) {
             e.printStackTrace();
             log.info("Ha ocurrido un error actualizando los roles del usuario: " + usuario.getIdentificador());
@@ -548,36 +548,6 @@ public class LoginService {
         UserInfo regwebUserInfo = loginPlugin.getUserInfoByUserName(identificador);
 
         return regwebUserInfo != null;
-    }
-
-    /**
-     * Obtiene los Roles Web del usuario autenticado
-     *
-     * @param request
-     * @return
-     * @throws Exception
-     */
-    private List<Rol> obtenerRolesWebUsuarioAutenticado(HttpServletRequest request) throws Exception {
-
-        List<Rol> rolesUsuario = null;
-
-        List<String> roles = new ArrayList<String>();
-
-        if (request.isUserInRole(RegwebConstantes.RWE_SUPERADMIN)) {
-            roles.add(RegwebConstantes.RWE_SUPERADMIN);
-        }
-        if (request.isUserInRole(RegwebConstantes.RWE_ADMIN)) {
-            roles.add(RegwebConstantes.RWE_ADMIN);
-        }
-        if (request.isUserInRole(RegwebConstantes.RWE_USUARI)) {
-            roles.add(RegwebConstantes.RWE_USUARI);
-        }
-
-        if (roles.size() > 0) {
-            rolesUsuario = rolEjb.getByRol(roles);
-        }
-
-        return rolesUsuario;
     }
 }
 

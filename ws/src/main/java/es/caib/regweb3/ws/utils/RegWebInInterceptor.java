@@ -1,8 +1,10 @@
 package es.caib.regweb3.ws.utils;
 
 import es.caib.regweb3.model.Entidad;
+import es.caib.regweb3.model.Rol;
 import es.caib.regweb3.model.Usuario;
 import es.caib.regweb3.persistence.utils.I18NLogicUtils;
+import es.caib.regweb3.persistence.utils.RolUtils;
 import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.cxf.interceptor.Fault;
@@ -16,10 +18,9 @@ import org.apache.cxf.service.model.BindingOperationInfo;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.fundaciobit.genapp.common.ws.WsI18NException;
-import org.fundaciobit.pluginsib.userinformation.IUserInformationPlugin;
-import org.fundaciobit.pluginsib.userinformation.RolesInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
@@ -37,6 +38,9 @@ import java.util.Locale;
 public class RegWebInInterceptor extends AbstractPhaseInterceptor<Message> {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
+
+    @Autowired
+    private RolUtils rolUtils;
 
     public RegWebInInterceptor() {
         // Veure https://cxf.apache.org/docs/interceptors.html
@@ -56,6 +60,8 @@ public class RegWebInInterceptor extends AbstractPhaseInterceptor<Message> {
         }
 
         String userapp = context.getUserPrincipal().getName();
+        HttpServletRequest hsr = (HttpServletRequest) message.get("HTTP.REQUEST");
+        List<String> roles =  new ArrayList<>();
 
         if (logEnable) {
             log.info(" ------------------ RegWebWSInInterceptor  --------------");
@@ -66,11 +72,6 @@ public class RegWebInInterceptor extends AbstractPhaseInterceptor<Message> {
 
                 log.info("  + Method NAME = " + method.getName() + " --  Method CLASS = " + method.getDeclaringClass());
 
-                HttpServletRequest hsr = (HttpServletRequest) message.get("HTTP.REQUEST");
-
-                List<String> roles =  new ArrayList<>();
-                if (hsr.isUserInRole(RegwebConstantes.RWE_SUPERADMIN)) roles.add(RegwebConstantes.RWE_SUPERADMIN);
-                if (hsr.isUserInRole(RegwebConstantes.RWE_ADMIN)) roles.add(RegwebConstantes.RWE_ADMIN);
                 if (hsr.isUserInRole(RegwebConstantes.RWE_USUARI)) roles.add(RegwebConstantes.RWE_USUARI);
                 if (hsr.isUserInRole(RegwebConstantes.RWE_WS_ENTRADA)) roles.add(RegwebConstantes.RWE_WS_ENTRADA);
                 if (hsr.isUserInRole(RegwebConstantes.RWE_WS_SALIDA)) roles.add(RegwebConstantes.RWE_WS_SALIDA);
@@ -130,12 +131,8 @@ public class RegWebInInterceptor extends AbstractPhaseInterceptor<Message> {
 
         // Actualizamos los Roles del usuario aplicación
         try {
-
-            IUserInformationPlugin loginPlugin = (IUserInformationPlugin) EjbManager.getPluginEJB().getPlugin(null, RegwebConstantes.PLUGIN_USER_INFORMATION, true);
-            RolesInfo rolesInfo = loginPlugin.getRolesByUsername(usuariAplicacio.getIdentificador());
-
-            EjbManager.getUsuarioEJB().actualizarRolesWs(usuariAplicacio, rolesInfo);
-
+            List<Rol> rolesUsuario = EjbManager.getRolEJB().getByRol(roles);
+            EjbManager.getUsuarioEJB().actualizarRoles(usuariAplicacio, rolesUsuario);
 
         } catch (Exception e) {
             e.printStackTrace();
