@@ -1,6 +1,7 @@
 package es.caib.regweb3.ws.utils;
 
 import es.caib.regweb3.persistence.ejb.PluginLocal;
+import es.caib.regweb3.persistence.ejb.RolLocal;
 import es.caib.regweb3.persistence.ejb.UsuarioEntidadLocal;
 import es.caib.regweb3.persistence.ejb.UsuarioLocal;
 import org.slf4j.Logger;
@@ -18,6 +19,7 @@ public final class EjbManager {
 
     protected static UsuarioEntidadLocal usuariEntitatEjb;
     protected static UsuarioLocal usuariEjb;
+    protected static RolLocal rolEjb;
     protected static PluginLocal pluginEjb;
 
 
@@ -40,6 +42,17 @@ public final class EjbManager {
 
         }
         return usuariEjb;
+
+    }
+
+    public static RolLocal getRolEJB() throws Exception {
+
+        if (rolEjb == null) {
+
+            rolEjb = (RolLocal) new InitialContext().lookup(RolLocal.JNDI_NAME);
+
+        }
+        return rolEjb;
 
     }
 
