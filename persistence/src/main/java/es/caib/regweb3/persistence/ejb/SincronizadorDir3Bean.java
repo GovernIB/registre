@@ -129,6 +129,8 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
 
             // Obtenemos todas las oficinas de la entidad.
             List<OficinaTF> oficinasTF = oficinasService.obtenerArbolOficinas(entidad.getCodigoDir3(), fechaActualizacion, fechaSincronizacion);
+            log.info("Oficinas obtenidas de " + entidad.getNombre() + ": " + oficinasTF.size());
+
             todasOficinasEntidad.addAll(oficinasTF);
 
             // Procesamos todas las oficinas de la entidad
@@ -172,8 +174,8 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
             entidadEjb.marcarEntidadMantenimiento(entidadId, false);
         //}
 
-        log.info(" REGWEB3 ORGANISMOS ACTUALIZADOS:  " + arbol.size());
-        log.info(" REGWEB3 OFICINAS ACTUALIZADAS:  " + oficinasActualizadas);
+        log.info(" REGWEB3 ORGANISMOS SINCRONIZADOS:  " + arbol.size());
+        log.info(" REGWEB3 OFICINAS SINCRONIZADAS:  " + oficinasActualizadas);
 
 
         /* borramos cache */
@@ -209,19 +211,19 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
         // Comprobamos que la unidad que nos envian no sea null
         // (ocurre en el caso de que actualicemos y no se haya actualizado en el origen)
         if (unidadWs != null) {
-            log.info("ORGANISMO ACTUALIZADO/SINCRONIZADO: " + unidadWs.getCodigo() + " - " + unidadWs.getDenominacion());
             // Comprobamos primero si ya existe el organismo
 
             organismo = organismoEjb.findByCodigoEntidadSinEstado(unidadWs.getCodigo(), idEntidad);
 
             if (organismo == null) {
-                log.info("Nuevo organismo: " + unidadWs.getDenominacion());
+                log.info("Nuevo organismo: " + unidadWs.getDenominacion()+ " - " + unidadWs.getDenominacion());
                 organismo = new Organismo();
                 procesarOrganismo(organismo, unidadWs, entidad);
 
                 //Guardamos el Organismo
                 organismo = organismoEjb.persist(organismo);
             } else { // Si existe hay que actualizarlo
+                log.info("Actualizar organismo: " + unidadWs.getDenominacion());
                 procesarOrganismo(organismo, unidadWs, entidad);
             }
 
@@ -240,7 +242,6 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
                 Organismo edpPrincipal = organismoEjb.findByCodigoEntidadSinEstado(unidadWs.getCodEdpPrincipal(), idEntidad);
                 organismo.setEdpPrincipal(edpPrincipal);
             }
-
 
             // Actualizamos el Organismo
             organismo = organismoEjb.merge(organismo);
@@ -266,6 +267,7 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
                 Oficina oficina = oficinaEjb.findByCodigoEntidadSinEstado(oficinaTF.getCodigo(), idEntidad);
 
                 if (oficina == null) { // Nueva oficina
+                    log.info("Nueva oficina: " + oficinaTF.getCodigo()+ " - " + oficinaTF.getDenominacion());
 
                     oficina = new Oficina(idEntidad, oficinaTF.getCodigo());
 
@@ -275,15 +277,17 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
                     oficinaEjb.persist(oficina);
 
                 } else { // Actualización oficina
-
+                    log.info("Actualizar oficina: " + oficinaTF.getCodigo()+ " - " + oficinaTF.getDenominacion());
                     procesarOficina(oficina, oficinaTF, idEntidad); // Se procesa la oficina para asignar sus valores
+
+                    // Actualizamos la Oficina
                     oficinaEjb.merge(oficina);
                 }
             }
         }
 
         log.info("");
-        log.info("Oficinas creadas/actualizadas: " + oficinas.size());
+        log.info("Oficinas sincronizadas: " + oficinas.size());
         log.info("");
     }
 
@@ -357,7 +361,7 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
 
                         relacionOrganizativaOfi.setOrganismo(organismoOrg);
 
-                        log.info("Relacion ORG entre " + oficina.getDenominacion() + " - " + organismoOrg.getDenominacion());
+                        log.info("Relacion ORG creada entre " + oficina.getDenominacion() + " y " + organismoOrg.getDenominacion());
                         relacionOrganizativaOfiEjb.persist(relacionOrganizativaOfi);
 
                     }
@@ -408,7 +412,7 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
 
                         relacionSirOfi.setOrganismo(organismoOrg);
 
-                        log.info("Relacion SIR entre " + oficina.getDenominacion() + " - " + organismoOrg.getDenominacion());
+                        log.info("Relacion SIR creada entre " + oficina.getDenominacion() + " y " + organismoOrg.getDenominacion());
                         relacionSirOfiEjb.persist(relacionSirOfi);
 
                     }
@@ -541,11 +545,9 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
         if (oficinaTF.getCodigoComunidad() != null) {
             oficina.setCodComunidad(cacheComunidadAutonoma.get(oficinaTF.getCodigoComunidad()));
         }
-
         if (StringUtils.isNotEmpty(oficinaTF.getDescripcionLocalidad())) {
             oficina.setLocalidad(catLocalidadEjb.findByNombre(oficinaTF.getDescripcionLocalidad()));
         }
-
         if (oficinaTF.getCodigoTipoVia() != null) {
             oficina.setTipoVia(cacheTipoVia.get(oficinaTF.getCodigoTipoVia()));
         }
@@ -559,8 +561,11 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
             oficina.setCodPostal(oficinaTF.getCodPostal());
         }
 
-        if (oficinaTF.getServicios() != null && oficinaTF.getServicios().size() > 0) {
+        if (oficinaTF.getServicios() != null && !oficinaTF.getServicios().isEmpty()) {
 
+            if(oficina.getId() != null){
+                oficinaEjb.eliminarServicios(oficina.getId());
+            }
             Set<CatServicio> servicios = new HashSet<CatServicio>();
 
             for (Long servicio : oficinaTF.getServicios()) {

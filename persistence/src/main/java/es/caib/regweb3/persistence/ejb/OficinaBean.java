@@ -698,17 +698,14 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
     /**
      * Obtiene el id de la Entidad a la que pertenece la Oficina
      *
-     * @param codigo
+     * @param idOficina
      * @return
      * @throws I18NException
      */
-    public Long obtenerEntidad(String codigo) throws I18NException {
-        Query q = em.createQuery("Select oficina.entidad.id from Oficina as oficina where " +
-                "oficina.codigo =:codigo and oficina.entidad.sir = true");
+    public void eliminarServicios(Long idOficina) throws I18NException {
 
-        q.setParameter("codigo", codigo);
+        em.createNativeQuery("delete from RWE_OFICINA_SERVICIO WHERE IDOFICINA = :idOficina ").setParameter("idOficina", idOficina).executeUpdate();
 
-        return (Long) q.getSingleResult();
     }
 
 

@@ -302,12 +302,13 @@ public interface OficinaLocal extends BaseEjb<Oficina, Long> {
     Boolean gestionarOficinaLibSir(Long idOficina) throws Exception;
 
      /** Obtiene el id de la Entidad a la que pertenece la Oficina
+     * Elimina los servicios de una Oficina
      *
-     * @param codigo
+     * @param idOficina
      * @return
      * @throws I18NException
      */
-    Long obtenerEntidad(String codigo) throws I18NException;
+    void eliminarServicios(Long idOficina) throws I18NException;
 
     /**
      * Obtiene las oficinas SIR desde dir3caib(via WS) de la unidad indicada en el código
