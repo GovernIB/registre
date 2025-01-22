@@ -189,7 +189,7 @@ public class ColaController extends BaseController {
 
                 // Marcamos como distribuido el Registro
                 RegistroEntrada registroEntrada = registroEntradaEjb.findById(elemento.getIdObjeto());
-                registroEntradaEjb.marcarDistribuido(registroEntrada, usuarioEntidad, I18NUtils.tradueix("distribucion.cola"));
+                registroEntradaEjb.marcarDistribuido(registroEntrada, usuarioEntidad, I18NUtils.tradueix("distribucion.cola"), null);
 
             }else if(elemento.getTipo().equals(RegwebConstantes.COLA_CUSTODIA)){
                 // Marcamos el elemento como procesado

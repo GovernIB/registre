@@ -96,7 +96,7 @@ public class DistribucionBean implements DistribucionLocal {
                 respuestaDistribucion.setEncolado(encolado);
             }else{ // Distribución inmediata
                 Entidad entidad = entidadEjb.findByIdLigero(usuarioEntidad.getEntidad().getId());
-                distribuido = distribuirRegistro(entidad, usuarioEntidad, RegwebConstantes.INTEGRACION_DISTRIBUCION, descripcion, re, plugin, peticion, inicio);
+                distribuido = distribuirRegistro(entidad, usuarioEntidad, RegwebConstantes.INTEGRACION_DISTRIBUCION, descripcion, re, plugin, emails,peticion, inicio);
                 respuestaDistribucion.setDistribuido(distribuido);
             }
 
@@ -183,7 +183,7 @@ public class DistribucionBean implements DistribucionLocal {
             peticion.append("oficina: ").append(registroEntrada.getOficina().getDenominacion()).append(System.getProperty("line.separator"));
             peticion.append("plugin: ").append(distribucionPlugin.getClass().getName()).append(System.getProperty("line.separator"));
 
-            distribuido = distribuirRegistro(entidad, usuarioEntidad, tipoIntegracion, I18NLogicUtils.tradueix(new Locale(Configuracio.getDefaultLanguage()), "distribucion.cola"), registroEntrada, distribucionPlugin,peticion,inicio);
+            distribuido = distribuirRegistro(entidad, usuarioEntidad, tipoIntegracion, I18NLogicUtils.tradueix(new Locale(Configuracio.getDefaultLanguage()), "distribucion.cola"), registroEntrada, distribucionPlugin,null, peticion,inicio);
 
             if (distribuido) { //Si la distribución ha ido bien
                 colaEjb.procesarElemento(elemento);
@@ -234,7 +234,7 @@ public class DistribucionBean implements DistribucionLocal {
      * @return
      * @throws I18NException
      */
-    private Boolean distribuirRegistro(Entidad entidad, UsuarioEntidad usuarioEntidad, Long tipoIntegracion, String descripcion, RegistroEntrada registroEntrada, IDistribucionPlugin distribucionPlugin, StringBuilder peticion, Date inicio) throws I18NException, I18NValidationException {
+    private Boolean distribuirRegistro(Entidad entidad, UsuarioEntidad usuarioEntidad, Long tipoIntegracion, String descripcion, RegistroEntrada registroEntrada, IDistribucionPlugin distribucionPlugin, String observaciones, StringBuilder peticion, Date inicio) throws I18NException, I18NValidationException {
 
         Boolean distribuido = false;
 
@@ -242,7 +242,7 @@ public class DistribucionBean implements DistribucionLocal {
         distribuido = distribuirRegistroEntrada(entidad, registroEntrada, distribucionPlugin);
 
         if (distribuido) { //Si la distribución ha ido bien
-            registroEntradaEjb.marcarDistribuido(registroEntrada, usuarioEntidad, descripcion);
+            registroEntradaEjb.marcarDistribuido(registroEntrada, usuarioEntidad, descripcion, observaciones);
             integracionEjb.addIntegracionOk(inicio, tipoIntegracion, descripcion, peticion.toString(), System.currentTimeMillis() - inicio.getTime(), registroEntrada.getUsuario().getEntidad().getId(), registroEntrada.getNumeroRegistroFormateado());
         }
 

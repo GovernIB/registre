@@ -444,12 +444,13 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean implem
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    public void marcarDistribuido(RegistroEntrada registroEntrada, UsuarioEntidad usuarioEntidad, String descripcion) throws I18NException {
+    public void marcarDistribuido(RegistroEntrada registroEntrada, UsuarioEntidad usuarioEntidad, String descripcion, String observaciones) throws I18NException {
 
         // CREAMOS LA TRAZABILIDAD
         Trazabilidad trazabilidad = new Trazabilidad();
         trazabilidad.setOficioRemision(null);
         trazabilidad.setFecha(new Date());
+        trazabilidad.setObservaciones(observaciones);
         trazabilidad.setTipo(RegwebConstantes.TRAZABILIDAD_DISTRIBUCION);
         trazabilidad.setRegistroEntradaOrigen(registroEntrada);
         trazabilidad.setRegistroSalida(null);

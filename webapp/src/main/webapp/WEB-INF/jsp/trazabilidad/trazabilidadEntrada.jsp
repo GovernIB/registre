@@ -212,6 +212,9 @@
                                         <c:param name="estado" value="${trazabilidad.registroEntradaOrigen.estado}"/>
                                     </c:import>
                                 </small></p>
+                                <c:if test="${not empty trazabilidad.observaciones}">
+                                    <p><small><i class="fa-file-text-o"></i> <strong><spring:message code="registroEntrada.observaciones"/>:</strong> ${trazabilidad.observaciones}</small></p>
+                                </c:if>
                             </div>
                         </div>
                     </li>
