@@ -38,6 +38,12 @@ public interface SchedulerLocal {
      *
      * @throws I18NException
      */
+    void reintentarIntercambiosSinConfirmacion() throws I18NException;
+
+    /**
+     *
+     * @throws I18NException
+     */
     void reintentarReenviosRechazosSinAck() throws I18NException;
 
     /**

@@ -135,13 +135,22 @@ public interface OficioRemisionLocal extends BaseEjb<OficioRemision, Long> {
     Paginacion getByOficinaEstadoPaginado(Integer pageNumber, Long idOficinaActiva, Integer idEstado) throws I18NException;
 
     /**
-     * Obtiene los Oficios de Remisión que han de reintentar su envío al componente CIR
+     * Obtiene los Oficios de Remisión sin ACK que han de reintentar su envío al componente CIR
      *
      * @param idEntidad
      * @return
      * @throws I18NException
      */
     List<Long> getEnviadosSinAck(Long idEntidad) throws I18NException;
+
+    /**
+     * Obtiene los Oficios de Remisión sin CONFIRMACIÓN que han de reintentar su envío al componente CIR
+     *
+     * @param idEntidad
+     * @return
+     * @throws I18NException
+     */
+    List<Long> getEnviadosSinConfirmacion(Long idEntidad) throws I18NException;
 
     /**
      * @param idEntidad

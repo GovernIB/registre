@@ -459,7 +459,7 @@ public class SirEnvioBean implements SirEnvioLocal {
             enviarMensajeConfirmacion(registroSir, registroEntrada.getNumeroRegistroFormateado(), registroEntrada.getFecha());
 
             // Distribuimos el Registro de Entrada si así se ha indicado
-            distribucionEjb.distribuir(registroEntrada, usuario, I18NLogicUtils.tradueix(new Locale(Configuracio.getDefaultLanguage()), "distribucion.automatica"), emails, motivo);
+            distribucionEjb.distribuir(registroEntrada, usuario, I18NLogicUtils.tradueix(new Locale(Configuracio.getDefaultLanguage()), "distribucion.oficina"), emails, motivo);
 
             // Integracion
             integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_SIR, descripcion, peticion.toString(), System.currentTimeMillis() - inicio.getTime(), registroSir.getEntidad().getId(), registroSir.getIdentificadorIntercambio());
@@ -739,7 +739,7 @@ public class SirEnvioBean implements SirEnvioLocal {
 
             if (!oficios.isEmpty()) {
 
-                log.info("Hay " + oficios.size() + " Oficios de Remision pendientes de volver a enviar al nodo CIR");
+                log.info("Hay " + oficios.size() + " Oficios de Remision sin ACK pendientes de volver a enviar al nodo CIR");
 
                 // Volvemos a enviar los OficiosRemision
                 for (Long idOficio : oficios) {
@@ -748,7 +748,48 @@ public class SirEnvioBean implements SirEnvioLocal {
                 }
 
             } else {
-                log.info("No hay Oficios de Remision pendientes de volver a enviar al nodo CIR");
+                log.info("No hay Oficios de Remision sin ACK pendientes de volver a enviar al nodo CIR");
+            }
+
+            integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_SCHEDULERS, descripcion, peticion.toString(), System.currentTimeMillis() - inicio.getTime(), entidad.getId(), "");
+
+
+        } catch (I18NException e) {
+            log.info("Error al reintenar el envio de registros sin confirmacion");
+            e.printStackTrace();
+            integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_SCHEDULERS, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - inicio.getTime(), entidad.getId(), "");
+        }
+    }
+
+    @Override
+    public void reintentarIntercambiosSinConfirmacion(Entidad entidad) throws I18NException {
+
+        StringBuilder peticion = new StringBuilder();
+
+        String descripcion = "Reintentar intercambios sin CONFIRMACIÓN";
+        Date inicio = new Date();
+
+        try {
+
+            peticion.append("entidad: ").append(entidad.getNombre()).append(System.getProperty("line.separator"));
+
+            // OficiosRemision pendientes de volver a intentar su envío
+            List<Long> oficios = oficioRemisionEjb.getEnviadosSinConfirmacion(entidad.getId());
+
+            peticion.append("total oficios: ").append(oficios.size()).append(System.getProperty("line.separator"));
+
+            if (!oficios.isEmpty()) {
+
+                log.info("Hay " + oficios.size() + " Oficios de Remision sin CONFIRMACIÓN pendientes de volver a enviar al nodo CIR");
+
+                // Volvemos a enviar los OficiosRemision
+                for (Long idOficio : oficios) {
+                    OficioRemision oficioRemision = oficioRemisionEjb.findById(idOficio);
+                    reintentarEnvioOficioRemision(oficioRemision, RegwebConstantes.INTEGRACION_SCHEDULERS);
+                }
+
+            } else {
+                log.info("No hay Oficios de Remision sin CONFIRMACIÓN pendientes de volver a enviar al nodo CIR");
             }
 
             integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_SCHEDULERS, descripcion, peticion.toString(), System.currentTimeMillis() - inicio.getTime(), entidad.getId(), "");

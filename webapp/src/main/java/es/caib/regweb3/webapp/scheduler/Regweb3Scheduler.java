@@ -100,6 +100,21 @@ public class Regweb3Scheduler {
     }
 
     /**
+     * Qué hace: Reintenta enviar los Intercambios SIR sin CONFIRMACION
+     * Cuando lo hace: Cada 5 minutos desde las 01:00 hasta las 06:00
+      */
+    @Scheduled(cron = "0 0/5 1,2,3,4,5,6 * * *") //
+    public void reintentarIntercambiosSinConfirmacion(){
+
+        try {
+            schedulerEjb.reintentarIntercambiosSinConfirmacion();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
      * Qué hace: Reintenta enviar los reenvios/rechazos SIR sin ACK
      * Cuando lo hace: cada 30 minutos, a los 5 minutos de iniciarse el servidor.
      */
@@ -145,7 +160,7 @@ public class Regweb3Scheduler {
     }
 
     /**
-     * Qué hace: Envía a la cola de distribución los registros que cumples con los requisitos
+     * Qué hace: Envía a la cola de distribución los registros que cumplen con los requisitos
      * Cuando lo hace: Cada 30 minutos desde las 01:00 hasta las 06:00
      */
     @Scheduled(cron = "0 0/30 1,2,3,4,5,6 * * *")
@@ -216,9 +231,9 @@ public class Regweb3Scheduler {
 
     /**
      * Qué hace: purga los anexos de los registros distribuidos
-     * Cuando lo hace: Cada 5 minutos desde las 01:00 hasta las 06:00
+     * Cuando lo hace: Cada 3 minutos desde las 01:00 hasta las 06:00
      */
-    @Scheduled(cron = "0 0/5 1,2,3,4,5,6 * * *") //
+    @Scheduled(cron = "0 0/3 1,2,3,4,5,6 * * *") //
     public void purgarAnexosDistribuidos(){
 
         try {
