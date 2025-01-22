@@ -23,6 +23,7 @@ public class Trazabilidad implements Serializable {
     private RegistroSalida registroSalidaRectificado;
     private RegistroSir registroSir;
     private Date fecha;
+    private String observaciones;
 
     public Trazabilidad() {
     }
@@ -119,6 +120,15 @@ public class Trazabilidad implements Serializable {
 
     public void setFecha(Date fecha) {
         this.fecha = fecha;
+    }
+
+    @Column(name = "OBSERVACIONES", length = 2000, nullable = true)
+    public String getObservaciones() {
+        return observaciones;
+    }
+
+    public void setObservaciones(String observaciones) {
+        this.observaciones = observaciones;
     }
 
     @Override

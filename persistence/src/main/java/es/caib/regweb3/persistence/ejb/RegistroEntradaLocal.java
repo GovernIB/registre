@@ -181,7 +181,7 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      * @param descripcion
      * @throws I18NException
      */
-    void marcarDistribuido(RegistroEntrada registroEntrada, UsuarioEntidad usuarioEntidad, String descripcion) throws I18NException;
+    void marcarDistribuido(RegistroEntrada registroEntrada, UsuarioEntidad usuarioEntidad, String descripcion, String observaciones) throws I18NException;
 
 
     /**
