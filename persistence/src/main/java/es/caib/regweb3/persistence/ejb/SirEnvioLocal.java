@@ -118,6 +118,14 @@ public interface SirEnvioLocal {
     void reintentarIntercambiosSinAck(Entidad entidad) throws I18NException;
 
     /**
+     * Renintenta los envíos a SIR sin CONFIRMACIÓN.
+     *
+     * @param entidad
+     * @throws I18NException
+     */
+    void reintentarIntercambiosSinConfirmacion(Entidad entidad) throws I18NException;
+
+    /**
      * Reintenta los Reenvios/Rechazos sin ACK
      * @param entidad
      * @throws I18NException

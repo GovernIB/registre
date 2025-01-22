@@ -226,6 +226,19 @@ public class SchedulerBean implements SchedulerLocal {
     }
 
     @Override
+    public void reintentarIntercambiosSinConfirmacion() throws I18NException {
+
+        List<Entidad> entidades = entidadEjb.getEntidadesSir();
+
+        for(Entidad entidad: entidades) {
+            log.info(" ");
+            log.info("------------- SIR: Reintentando intercambios sin CONFIRMACION de " + entidad.getNombre() + " -------------");
+            log.info(" ");
+            sirEnvioEjb.reintentarIntercambiosSinConfirmacion(entidad);
+        }
+    }
+
+    @Override
     public void reintentarReenviosRechazosSinAck() throws I18NException {
 
         List<Entidad> entidades = entidadEjb.getEntidadesSir();

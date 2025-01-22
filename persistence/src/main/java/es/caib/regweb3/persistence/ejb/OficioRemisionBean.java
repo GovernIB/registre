@@ -680,6 +680,21 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
 
     @Override
     @SuppressWarnings(value = "unchecked")
+    public List<Long> getEnviadosSinConfirmacion(Long idEntidad) throws I18NException {
+
+        Query q = em.createQuery("Select oficioRemision.id from OficioRemision as oficioRemision where oficioRemision.estado = :enviadoACK " +
+                "and oficioRemision.entidad.id = :idEntidad and oficioRemision.sir=true and oficioRemision.numeroReintentos < :maxReintentos order by id");
+
+        q.setParameter("enviadoACK", RegwebConstantes.OFICIO_SIR_ENVIADO_ACK);
+        q.setParameter("idEntidad", idEntidad);
+        q.setParameter("maxReintentos", PropiedadGlobalUtil.getMaxReintentosSir(idEntidad));
+        q.setMaxResults(25);
+
+        return q.getResultList();
+    }
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
     public List<Long> getEnviadosConError(Long idEntidad) throws I18NException {
 
         Query q = em.createQuery("Select oficioRemision.id from OficioRemision as oficioRemision where oficioRemision.entidad.id = :idEntidad and oficioRemision.sir=true " +
