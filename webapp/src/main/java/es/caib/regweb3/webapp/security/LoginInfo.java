@@ -2,6 +2,7 @@ package es.caib.regweb3.webapp.security;
 
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.utils.Dir3Caib;
+import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.utils.DenominacionComparador;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
@@ -180,6 +181,9 @@ public class LoginInfo {
     }
 
     public void setRolesAutenticado(List<Rol> rolesAutenticado) {
+
+        rolesAutenticado.removeIf(rol -> rol.getId().equals(RegwebConstantes.DIB_USER_ID)); // Eliminamos el ROL RWE_DIB_USER si lo tiene
+
         this.rolesAutenticado = rolesAutenticado;
     }
 
