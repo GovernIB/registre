@@ -131,10 +131,10 @@ public class LoginService {
         } catch (I18NException e) {
             e.printStackTrace();
             log.info("Ha ocurrido un error actualizando los roles del usuario: " + usuario.getIdentificador());
-            throw new Exception("a ocurrido un error actualizando los roles del usuario");
+            throw new Exception("Ha ocurrido un error actualizando los roles del usuario");
         }
 
-        // Almacenamos los Roles Web que dispone el usuario.
+        // Almacenamos los Roles Web que dispone el usuario, excepto DIB_USER
         loginInfo.setRolesAutenticado(rolesUsuario);
 
         // Almacenamos el RolActivo del usuario.
