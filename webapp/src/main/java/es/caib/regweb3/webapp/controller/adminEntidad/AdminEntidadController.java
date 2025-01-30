@@ -241,8 +241,10 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
 
             // Trazabilidad
             model.addAttribute("trazabilidades", trazabilidadEjb.getByRegistroEntrada(registro.getId()));
-
             model.addAttribute("isResponsableOrganismo", permisoOrganismoUsuarioEjb.isAdministradorOrganismo(usuarioEntidad.getId(),registro.getOficina().getOrganismoResponsable().getId()));
+
+            //Integraciones
+            model.addAttribute("integraciones", integracionEjb.getByEntidadNumReg(entidadActiva.getId(), registro.getNumeroRegistroFormateado()));
 
         }
 
@@ -504,8 +506,10 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
 
         // Trazabilidad
         model.addAttribute("trazabilidades", trazabilidadEjb.getByRegistroSalida(registro.getId()));
-
         model.addAttribute("isResponsableOrganismo", permisoOrganismoUsuarioEjb.isAdministradorOrganismo(usuarioEntidad.getId(),registro.getOficina().getOrganismoResponsable().getId()));
+
+        //Integraciones
+        model.addAttribute("integraciones", integracionEjb.getByEntidadNumReg(entidadActiva.getId(), registro.getNumeroRegistroFormateado()));
 
         // Alta en tabla LOPD
         lopdEjb.altaLopd(registro.getNumeroRegistro(), registro.getFecha(), registro.getLibro().getId(), usuarioEntidad.getId(), RegwebConstantes.REGISTRO_SALIDA, RegwebConstantes.LOPD_CONSULTA);

@@ -30,7 +30,7 @@
             <div class="row">
                 <div class="col-xs-12">
 
-                    <ul class="nav nav-tabs" role="tablist">
+                    <ul class="nav nav-tabs nav-collapse" role="tablist">
 
                         <c:forEach items="${tiposCola}" var="tipoCola">
                             <li <c:if test="${tipo == tipoCola.id}">class="active"</c:if>>
