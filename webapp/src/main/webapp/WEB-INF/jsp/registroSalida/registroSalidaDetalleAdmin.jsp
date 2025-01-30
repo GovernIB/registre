@@ -140,6 +140,9 @@
                     <c:if test="${tieneJustificante}">
                         <li><a href="#justificante" data-toggle="tab"><i class="fa fa-file-text-o"></i> <spring:message code="justificante.boton"/></a></li>
                     </c:if>
+                    <c:if test="${not empty integraciones}">
+                        <li><a href="#integraciones" data-toggle="tab"><i class="fa fa-gears"></i> <spring:message code="integracion.integraciones"/></a></li>
+                    </c:if>
                 </ul>
 
                 <div id="contenido" class="tab-content contentDanger">
@@ -210,6 +213,57 @@
                             </div>
                         </div>
                     </c:if>
+
+                    <%--INTEGRACIONEs--%>
+                    <c:if test="${not empty integraciones}">
+                        <div class="tab-pane" id="integraciones">
+                            <div class="col-xs-12">
+
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-hover table-striped tablesorter">
+
+                                        <thead>
+                                        <tr>
+                                            <th><spring:message code="integracion.fecha"/></th>
+                                            <th class="center"><spring:message code="integracion.tipo"/></th>
+                                            <th><spring:message code="integracion.descripcion"/></th>
+                                            <th><spring:message code="integracion.tiempo"/></th>
+                                            <th class="center"><spring:message code="integracion.estado"/></th>
+                                            <th><spring:message code="integracion.error"/></th>
+                                            <th class="center"><spring:message code="regweb.acciones"/></th>
+                                        </tr>
+                                        </thead>
+
+                                        <tbody>
+                                        <c:forEach var="integracion" items="${integraciones}">
+                                            <tr>
+                                                <td><fmt:formatDate value="${integracion.fecha}" pattern="dd/MM/yyyy HH:mm:ss"/></td>
+                                                <td class="center"><span class="label label-warning"><spring:message code="integracion.tipo.${integracion.tipo}" /></span> </td>
+                                                <td>${integracion.descripcion}</td>
+                                                <td>${integracion.tiempoFormateado}</td>
+                                                <td class="center">
+                                                    <c:if test="${integracion.estado == 0}"><span class="label label-success"><span class="fa fa-check"></span>  Ok</span></c:if>
+                                                    <c:if test="${integracion.estado == 1}"><span class="label label-danger"><span class="fa fa-warning"></span> Error</span></c:if>
+                                                </td>
+                                                <td>
+                                                    <c:if test="${fn:length(integracion.error) <= 50}">
+                                                        ${integracion.error}
+                                                    </c:if>
+                                                    <c:if test="${fn:length(integracion.error) > 50}">
+                                                        ${integracion.errorCorto}
+                                                    </c:if>
+                                                </td>
+                                                <td class="center">
+                                                    <a class="btn btn-warning btn-sm" data-toggle="modal" role="button" href="#infoIntegracion" onclick="infoIntegracion('${integracion.id}')" title="<spring:message code="regweb.info"/>"><span class="fa fa-info-circle"></span></a>
+                                                </td>
+                                            </tr>
+                                        </c:forEach>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </c:if>
                 </div>
             </div>
 
@@ -222,11 +276,12 @@
         <c:param name="tipoRegistro" value="${RegwebConstantes.REGISTRO_SALIDA}"/>
     </c:import>
 
+    <%--Modal Detalle Integración--%>
+    <c:import url="../integracion/detalleIntegracion.jsp"/>
+
 </div>
 
 <c:import url="../modulos/pie.jsp"/>
-
-<script type="text/javascript" src="<c:url value="/js/integracion.js"/>"></script>
 
 <script type="text/javascript">
 

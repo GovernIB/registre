@@ -20,8 +20,7 @@ function infoIntegracion(idIntegracion){
             $('#fecha').html(result.fechaFormateada);
             $('#descripcionIntegracion').html(result.descripcion);
             $('#tiempo').html(result.tiempoFormateado);
-            $("#tipo").html(tradsIntegracion['integracion.tipo.'+result.tipo]);
-
+            $('#tipo').html('<span class="label label-warning">'+tradsIntegracion['integracion.tipo.'+result.tipo]+'</span>');
             if(result.estado === 0){
                 $('#estadoIntegracion').html('<span class="label label-success"><span class="fa fa-check"></span>  Ok</span>');
             }else if(result.estado === 1){
