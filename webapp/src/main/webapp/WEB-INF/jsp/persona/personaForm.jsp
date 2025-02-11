@@ -239,6 +239,18 @@
                                 </div>
                             </div>
 
+                            <div class="col-xs-12">
+                                <div class="col-xs-6 espaiLinies">
+                                    <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                        <label for="observaciones" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.observaciones"/>" data-toggle="popover"> <spring:message code="persona.observaciones"/></label>
+                                    </div>
+                                    <div class="col-xs-8">
+                                        <form:textarea path="observaciones" cssClass="form-control" cols="3" maxlength="160"/> <form:errors path="observaciones" cssClass="help-block" element="span"/>
+                                    </div>
+                                </div>
+
+                            </div>
+
                     </div>
 
                 </div>

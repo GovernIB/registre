@@ -218,7 +218,7 @@ public class PersonaValidator<T> extends AbstractRegWebValidator<T> {
         }
 
         //OBSERVACIONES
-        if (!isNullOrEmpty(persona.getObservaciones()) && persona.getObservaciones().length() > 80) {
+        if (!isNullOrEmpty(persona.getObservaciones()) && persona.getObservaciones().length() > 160) {
             rejectValue(errors, "observaciones", "error.valor.maxlenght");
         }
 
