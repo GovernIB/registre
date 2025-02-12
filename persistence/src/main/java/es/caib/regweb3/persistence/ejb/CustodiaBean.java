@@ -102,7 +102,7 @@ public class CustodiaBean implements CustodiaLocal {
 
         } catch (I18NException e) {
             log.info("Error custodiando justificante de la Cola: " + elemento.getDescripcionObjeto());
-            e.printStackTrace();
+            //e.printStackTrace();
             error = hora + e.getMessage();
             colaEjb.actualizarElementoCola(elemento, idEntidad, error);
             // Añadimos el error a la integración
