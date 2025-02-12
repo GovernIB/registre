@@ -567,7 +567,7 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
                     taulaInteresado.addCell(new Paragraph(tradueixMissatge(locale,"justificante.organismo"), lletraGovern9bold));
                     taulaInteresado.addCell(new Paragraph(interesado.getRazonSocial(), lletraGovern8));
                 }
-                // Pais
+                /*// Pais
                 if(interesado.getPais() != null) {
                     i += 1;
                     taulaInteresado.addCell(new Paragraph(tradueixMissatge(locale,"justificante.pais"), lletraGovern9bold));
@@ -621,7 +621,7 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
                     i += 1;
                     taulaInteresado.addCell(new Paragraph(tradueixMissatge(locale, "justificante.observaciones"), lletraGovern9bold));
                     taulaInteresado.addCell(new Paragraph(interesado.getObservaciones(), lletraGovern8));
-                }
+                }*/
                 // Completa la cel·la buida
                 if(!esPar(i)) {
                     taulaInteresado.addCell("");
@@ -686,7 +686,7 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
                                 taulaRepresentant.addCell(new Paragraph(tradueixMissatge(locale,"justificante.organismo"), lletraGovern9bold));
                                 taulaRepresentant.addCell(new Paragraph(representante.getRazonSocial(), lletraGovern8));
                             }
-                            // Pais
+                            /*// Pais
                             if(representante.getPais() != null) {
                                 i += 1;
                                 taulaRepresentant.addCell(new Paragraph(tradueixMissatge(locale,"justificante.pais"), lletraGovern9bold));
@@ -740,7 +740,7 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
                                 i += 1;
                                 taulaRepresentant.addCell(new Paragraph(tradueixMissatge(locale, "justificante.observaciones"), lletraGovern9bold));
                                 taulaRepresentant.addCell(new Paragraph(representante.getObservaciones(), lletraGovern8));
-                            }
+                            }*/
                             if(!esPar(i)) {
                                 // Completa la cel·la buida
                                 taulaRepresentant.addCell("");
