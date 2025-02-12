@@ -780,7 +780,7 @@ public class SirEnvioBean implements SirEnvioLocal {
 
             if (!oficios.isEmpty()) {
 
-                log.info("Hay " + oficios.size() + " Oficios de Remision sin CONFIRMACIÓN pendientes de volver a enviar al nodo CIR");
+                log.info("Hay " + oficios.size() + " Oficios de Remision sin CONFIRMACION pendientes de volver a enviar al nodo CIR");
 
                 // Volvemos a enviar los OficiosRemision
                 for (Long idOficio : oficios) {
@@ -789,7 +789,7 @@ public class SirEnvioBean implements SirEnvioLocal {
                 }
 
             } else {
-                log.info("No hay Oficios de Remision sin CONFIRMACIÓN pendientes de volver a enviar al nodo CIR");
+                log.info("No hay Oficios de Remision sin CONFIRMACION pendientes de volver a enviar al nodo CIR");
             }
 
             integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_SCHEDULERS, descripcion, peticion.toString(), System.currentTimeMillis() - inicio.getTime(), entidad.getId(), "");
@@ -1006,9 +1006,10 @@ public class SirEnvioBean implements SirEnvioLocal {
         peticion.append("Origen: ").append(oficio.getOficina().getDenominacion()).append(System.getProperty("line.separator"));
         peticion.append("Destino: ").append(oficio.getDecodificacionEntidadRegistralDestino()).append(System.getProperty("line.separator"));
 
-        if (oficio.getTipoOficioRemision().equals(RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA)) {
+        try {
 
-            try {
+            if (oficio.getTipoOficioRemision().equals(RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA)) {
+
                 log.info("Reintentando intercambio OficioRemisionSir entrada " + oficio.getIdentificadorIntercambio() + " a " + oficio.getDecodificacionEntidadRegistralDestino() + " (" + oficio.getCodigoEntidadRegistralDestino() + ")");
 
                 RegistroEntrada registroEntrada = registroEntradaEjb.getConAnexosFull(oficio.getRegistrosEntrada().get(0).getId());
@@ -1040,20 +1041,8 @@ public class SirEnvioBean implements SirEnvioLocal {
                     integracionEjb.addIntegracionError(tipoIntegracion, descripcion, peticion.toString(), null, I18NLogicUtils.tradueix(new Locale(Configuracio.getDefaultLanguage()), "registro.justificante.noCustodiado"), System.currentTimeMillis() - inicio.getTime(), oficio.getUsuarioResponsable().getEntidad().getId(), oficio.getIdentificadorIntercambio());
                 }
 
-            }catch (I18NException e){
-                e.printStackTrace();
-                integracionEjb.addIntegracionError(tipoIntegracion, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - inicio.getTime(), oficio.getUsuarioResponsable().getEntidad().getId(), oficio.getIdentificadorIntercambio());
+            } else if (oficio.getTipoOficioRemision().equals(RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA)) {
 
-                // Solo lanzamos la Excepción si no se trata del SCHEDULER
-                if(tipoIntegracion.equals(RegwebConstantes.INTEGRACION_SIR)){
-                    throw e;
-                }
-            }
-
-
-        } else if (oficio.getTipoOficioRemision().equals(RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA)) {
-
-            try {
                 log.info("Reintentando intercambio OficioRemisionSir salida " + oficio.getIdentificadorIntercambio() + " a " + oficio.getDecodificacionEntidadRegistralDestino() + " (" + oficio.getCodigoEntidadRegistralDestino() + ")");
 
 
@@ -1086,14 +1075,18 @@ public class SirEnvioBean implements SirEnvioLocal {
                     integracionEjb.addIntegracionError(tipoIntegracion, descripcion, peticion.toString(), null, I18NLogicUtils.tradueix(new Locale(Configuracio.getDefaultLanguage()), "registro.justificante.noCustodiado"), System.currentTimeMillis() - inicio.getTime(), oficio.getUsuarioResponsable().getEntidad().getId(), oficio.getIdentificadorIntercambio());
                 }
 
-            }catch (I18NException e){
-                e.printStackTrace();
-                integracionEjb.addIntegracionError(tipoIntegracion, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - inicio.getTime(), oficio.getUsuarioResponsable().getEntidad().getId(), oficio.getIdentificadorIntercambio());
+            }
+        }catch (I18NException e){
+            log.info("Error reintentando el envio de un intercambio: " + e.getLocalizedMessage());
+            //ree.printStackTrace();
+            integracionEjb.addIntegracionError(tipoIntegracion, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - inicio.getTime(), oficio.getUsuarioResponsable().getEntidad().getId(), oficio.getIdentificadorIntercambio());
 
-                // Solo lanzamos la Excepción si no se trata del SCHEDULER
-                if(tipoIntegracion.equals(RegwebConstantes.INTEGRACION_SIR)){
-                    throw e;
-                }
+            // Incrementamos los reintentos, aunque falle, así no bloqueamos la cola
+            oficioRemisionEjb.incrementarReintentos(oficio.getId(),oficio.getNumeroReintentos() + 1);
+
+            // Solo lanzamos la Excepción si no se trata del SCHEDULER
+            if(tipoIntegracion.equals(RegwebConstantes.INTEGRACION_SIR)){
+                throw e;
             }
         }
 

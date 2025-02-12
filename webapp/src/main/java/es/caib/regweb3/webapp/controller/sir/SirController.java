@@ -268,45 +268,44 @@ public class SirController extends BaseController {
     }
 
     /**
-     * Controller temporal para confirmar Oficios enviados a SIR
+     * Controller para confirmar Oficios enviados a SIR
      */
-    @RequestMapping(value = "/{idIntercambio}/confirmar", method = RequestMethod.GET)
-    public String marcarConfirmacion(@PathVariable String idIntercambio, HttpServletRequest request) throws Exception {
+    @RequestMapping(value = "/{idOficioRemision}/confirmar", method = RequestMethod.GET)
+    public String confirmarIntercambio(@PathVariable Long idOficioRemision, HttpServletRequest request) throws Exception {
 
         Entidad entidad = getEntidadActiva(request);
         Dir3Caib dir3Caib = getLoginInfo(request).getDir3Caib();
 
-        OficioRemision oficioRemision = oficioRemisionEjb.getByIdentificadorIntercambio(idIntercambio);
+        OficioRemision oficioRemision = oficioRemisionEjb.findById(idOficioRemision);
 
-        List<MensajeControl> mensajes = mensajeControlEjb.getByIdentificadorIntercambio(idIntercambio, entidad.getId());
+        if(oficioRemision.getEstado() == RegwebConstantes.OFICIO_SIR_ENVIADO || oficioRemision.getEstado() == RegwebConstantes.OFICIO_SIR_ENVIADO_ACK){
 
-        try{
+            try{
+                List<MensajeControl> mensajes = mensajeControlEjb.getByIdentificadorIntercambio(oficioRemision.getIdentificadorIntercambio(), entidad.getId());
 
-            for (MensajeControl mensaje:mensajes) {
-                if(mensaje.getTipoMensaje().equals(TipoMensaje.CONFIRMACION.getValue())){
+                for (MensajeControl mensaje:mensajes) {
 
-                    oficioRemision.setCodigoEntidadRegistralProcesado(mensaje.getCodigoEntidadRegistralOrigen());
-                    oficioRemision.setDecodificacionEntidadRegistralProcesado(Dir3CaibUtils.denominacion(dir3Caib.getServer(), mensaje.getCodigoEntidadRegistralOrigen(), RegwebConstantes.OFICINA));
-                    oficioRemision.setNumeroRegistroEntradaDestino(mensaje.getNumeroRegistroEntradaDestino());
-                    oficioRemision.setFechaEntradaDestino(mensaje.getFechaEntradaDestino());
-                    oficioRemision.setEstado(RegwebConstantes.OFICIO_ACEPTADO);
-                    oficioRemision.setFechaEstado(mensaje.getFechaEntradaDestino());
-                    oficioRemisionEjb.merge(oficioRemision);
+                    if(mensaje.getTipoMensaje().equals(TipoMensaje.CONFIRMACION.getValue())){
 
-                    Mensaje.saveMessageInfo(request,"Se ha marcado como confirmado el oficio de remisión");
+                        // Confirmamos el intercambio
+                        oficioRemisionEjb.aceptarOficioSir(oficioRemision,mensaje.getCodigoEntidadRegistralOrigen(),Dir3CaibUtils.denominacion(dir3Caib.getServer(),
+                                mensaje.getCodigoEntidadRegistralOrigen(), RegwebConstantes.OFICINA),mensaje.getNumeroRegistroEntradaDestino(),mensaje.getFechaEntradaDestino());
 
-                    break;
+                        Mensaje.saveMessageInfo(request,"Se ha marcado como confirmado el oficio de remisión");
+
+                        return "redirect:/sir/"+oficioRemision.getIdentificadorIntercambio()+"/detalle";
+                    }
                 }
-            }
-            Mensaje.saveMessageAviso(request,"No existe ningún mensaje de confirmación para este Oficio");
 
-        }catch (Exception e){
-            e.printStackTrace();
-            Mensaje.saveMessageInfo(request,"Ha ocurrido un error confirmado el Oficio: " + e.getMessage());
+            }catch (Exception e){
+                e.printStackTrace();
+                Mensaje.saveMessageInfo(request,"Ha ocurrido un error confirmado el Oficio: " + e.getMessage());
+            }
         }
 
+        Mensaje.saveMessageAviso(request,"El Oficino no tiene el estado esperado o no existe ningún mensaje de confirmación para este Oficio");
 
-        return "redirect:/inici";
+        return "redirect:/sir/"+oficioRemision.getIdentificadorIntercambio()+"/detalle";
     }
 
 

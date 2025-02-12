@@ -338,6 +338,9 @@
 
                                             <c:if test="${mensajeControl.tipoMensaje == RegwebConstantes.MENSAJE_CONTROL_CONFIRMACION}">
                                                 <span class="label label-success" rel="popupAbajo" data-content="<fmt:formatDate value="${mensajeControl.fechaEntradaDestino}" pattern="dd/MM/yyyy HH:mm:ss"/> - <c:out value="${mensajeControl.numeroRegistroEntradaDestino}" escapeXml="true"/>" data-toggle="popover"><i class="fa fa-barcode fa-fw"></i> <spring:message code="mensajeControl.tipo.03"/></span>
+                                                <c:if test="${trazabilidades[0].oficioRemision.estado == RegwebConstantes.OFICIO_SIR_ENVIADO_ACK || trazabilidades[0].oficioRemision.estado == RegwebConstantes.OFICIO_SIR_ENVIADO}">
+                                                    <div class="btn-group"><button type="button" onclick='confirm("<c:url value="/sir/${trazabilidades[0].oficioRemision.id}/confirmar"/>","<spring:message code="intercambio.confirmar.confirmacion" htmlEscape="true"/>")' class="btn btn-success btn-xs btn-block" title="<spring:message code="regweb.confirmar"/>"><i class="fa fa-check fa-fw"></i></button></div>
+                                                </c:if>
                                             </c:if>
 
                                             <%--Tipo Comunicación--%>
