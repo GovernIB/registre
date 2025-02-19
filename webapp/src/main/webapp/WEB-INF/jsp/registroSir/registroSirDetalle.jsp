@@ -177,6 +177,14 @@
                             </div>
                         </div>
                     </c:if>
+
+                    <%--Botonera para ADMIN--%>
+                    <c:if test="${loginInfo.rolActivo.nombre == 'RWE_ADMIN'}">
+                        <div class="panel-footer center">
+                            <div class="btn-group"><button type="button" onclick="goToNewPage('<c:url value="/sir/recibido/${registroSir.id}/detalle"/>')" class="btn btn-primary btn-sm"><spring:message code="idIntercambio.detalle"/></button></div>
+                        </div>
+
+                    </c:if>
                 </div>
 
             </div>

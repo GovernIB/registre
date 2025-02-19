@@ -57,7 +57,7 @@
             <c:if test="${loginInfo.rolActivo.nombre == 'RWE_ADMIN'}">
                 <p>
                     <small><i class="fa fa-qrcode"></i> <strong><spring:message code="registroSir.identificadorIntercambio"/>:</strong>
-                        <a target="_blank" href="<c:url value="/sir/${oficioRemision.identificadorIntercambio}/detalle"/>">${oficioRemision.identificadorIntercambio}</a>
+                        <a target="_blank" href="<c:url value="/sir/enviado/${oficioRemision.id}/detalle"/>">${oficioRemision.identificadorIntercambio}</a>
                     </small>
                 </p>
             </c:if>

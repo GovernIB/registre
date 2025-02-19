@@ -107,13 +107,13 @@ public class TrazabilidadBean extends BaseEjbJPA<Trazabilidad, Long> implements 
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Trazabilidad> getByIdIntercambio(String idIntercambio, Long idEntidad) throws I18NException {
+    public List<Trazabilidad> getByIdIntercambio(String idIntercambio, Long idOficioRemision) throws I18NException {
 
         Query q = em.createQuery("Select DISTINCT t from Trazabilidad as t " +
-                "where t.oficioRemision.identificadorIntercambio = :idIntercambio and t.oficioRemision.entidad.id = :idEntidad order by t.fecha ");
+                "where t.oficioRemision.identificadorIntercambio = :idIntercambio and t.oficioRemision.id = :idOficioRemision order by t.fecha ");
 
         q.setParameter("idIntercambio", idIntercambio);
-        q.setParameter("idEntidad", idEntidad);
+        q.setParameter("idOficioRemision", idOficioRemision);
         q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList();

@@ -274,7 +274,7 @@
                                                                         <spring:message code="regweb.acciones"/> <span class="caret"></span>
                                                                     </button>
                                                                     <ul class="dropdown-menu dropdown">
-                                                                        <li><a href="<c:url value="/sir/${oficioRemision.identificadorIntercambio}/detalle"/>" target="_blank"><spring:message code="idIntercambio.detalle"/></a></li>
+                                                                        <li><a href="<c:url value="/sir/enviado/${oficioRemision.id}/detalle"/>" target="_blank"><spring:message code="idIntercambio.detalle"/></a></li>
                                                                         <li><a href="<c:url value="/sir/${oficioRemision.id}/ficheroIntercambio"/>"><spring:message code="registroSir.ficheroIntercambio"/></a></li>
                                                                         <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_SIR_ENVIADO || oficioRemision.estado == RegwebConstantes.OFICIO_SIR_ENVIADO_ACK || oficioRemision.estado == RegwebConstantes.OFICIO_SIR_RECHAZADO
                                                                         || oficioRemision.estado == RegwebConstantes.OFICIO_SIR_REENVIADO || oficioRemision.estado == RegwebConstantes.OFICIO_SIR_REENVIADO_ACK || oficioRemision.estado == RegwebConstantes.OFICIO_SIR_ENVIADO_ERROR}">

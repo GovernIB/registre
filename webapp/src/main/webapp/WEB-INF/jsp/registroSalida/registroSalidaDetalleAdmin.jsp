@@ -117,9 +117,9 @@
                         </div>
 
                         <%--Botón detalle Intercambio SIR--%>
-                        <c:if test="${not empty registro.registroDetalle.identificadorIntercambio}">
+                        <%--<c:if test="${not empty registro.registroDetalle.identificadorIntercambio}">
                             <div class="btn-group"><button type="button" onclick="goToNewPage('<c:url value="/sir/${registro.registroDetalle.identificadorIntercambio}/detalle"/>')" class="btn btn-primary btn-sm"><spring:message code="idIntercambio.detalle"/></button></div>
-                        </c:if>
+                        </c:if>--%>
 
                     </div>
                 </div>

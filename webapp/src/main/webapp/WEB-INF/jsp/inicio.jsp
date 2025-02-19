@@ -151,7 +151,7 @@
                                                                     </c:if>
                                                                 </td>
                                                                 <td>
-                                                                    <a href="<c:url value="/sir/${oficioRemision.identificadorIntercambio}/detalle"/>" target="_blank" title="<spring:message code="idIntercambio.detalle"/>">${oficioRemision.identificadorIntercambio}</a>
+                                                                    <a href="<c:url value="/sir/enviado/${oficioRemision.id}/detalle"/>" target="_blank" title="<spring:message code="idIntercambio.detalle"/>">${oficioRemision.identificadorIntercambio}</a>
                                                                 </td>
                                                             </tr>
                                                         </c:forEach>
@@ -197,7 +197,7 @@
                                                                     </c:if>
                                                                 </td>
                                                                 <td>
-                                                                    <a href="<c:url value="/sir/${oficioRemision.identificadorIntercambio}/detalle"/>" target="_blank" title="<spring:message code="idIntercambio.detalle"/>">${oficioRemision.identificadorIntercambio}</a>
+                                                                    <a href="<c:url value="/sir/enviado/${oficioRemision.id}/detalle"/>" target="_blank" title="<spring:message code="idIntercambio.detalle"/>">${oficioRemision.identificadorIntercambio}</a>
                                                                 </td>
                                                             </tr>
                                                         </c:forEach>

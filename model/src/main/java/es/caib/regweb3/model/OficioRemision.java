@@ -56,7 +56,8 @@ public class OficioRemision implements Serializable {
     public OficioRemision() {
     }
 
-    public OficioRemision(Date fecha, String identificadorIntercambio, Long tipoOficioRemision) {
+    public OficioRemision(Long id, Date fecha, String identificadorIntercambio, Long tipoOficioRemision) {
+        this.id = id;
         this.tipoOficioRemision = tipoOficioRemision;
         this.fecha = fecha;
         this.identificadorIntercambio = identificadorIntercambio;

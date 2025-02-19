@@ -28,7 +28,7 @@
         </c:if>
         <p>
             <small class="text-muted"><i class="fa fa-barcode"></i> <strong><spring:message code="registroSir.identificadorIntercambio"/>:</strong>
-                <a target="_blank" href="<c:url value="/sir/${registroSir.identificadorIntercambio}/detalle"/>">${registroSir.identificadorIntercambio}</a>
+                <a target="_blank" href="<c:url value="/sir/recibido/${registroSir.id}/detalle"/>">${registroSir.identificadorIntercambio}</a>
             </small>
         </p>
         <p><small class="text-muted"><i class="fa fa-gears"></i> <strong><spring:message code="registroSir.aplicacion"/>:</strong> ${registroSir.aplicacion}</small></p>

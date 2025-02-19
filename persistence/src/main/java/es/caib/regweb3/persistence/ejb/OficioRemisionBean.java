@@ -699,7 +699,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
         Calendar fechaInicio = Calendar.getInstance(); // Obtiene la fecha de hoy
         fechaInicio.add(Calendar.DATE,-180); // Le restamos 6 meses
 
-        Query q = em.createQuery("Select oficioRemision.fecha, oficioRemision.identificadorIntercambio, oficioRemision.tipoOficioRemision from OficioRemision as oficioRemision where (oficioRemision.estado = :enviado or oficioRemision.estado = :reenviado) " +
+        Query q = em.createQuery("Select oficioRemision.id, oficioRemision.fecha, oficioRemision.identificadorIntercambio, oficioRemision.tipoOficioRemision from OficioRemision as oficioRemision where (oficioRemision.estado = :enviado or oficioRemision.estado = :reenviado) " +
                 "and oficioRemision.entidad.id = :idEntidad and oficioRemision.sir=true and oficioRemision.fecha >= :fechaInicio and oficioRemision.numeroReintentos = :maxReintentos");
 
         q.setParameter("enviado", RegwebConstantes.OFICIO_SIR_ENVIADO);
@@ -713,8 +713,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
         List<Object[]> result = q.getResultList();
 
         for (Object[] object : result){
-            OficioRemision oficio = new OficioRemision((Date)object[0],(String)object[1],(Long)object[2]);
-            oficios.add(oficio);
+            oficios.add(new OficioRemision((Long)object[0], (Date)object[1], (String)object[2], (Long)object[3]));
         }
 
         return oficios;
@@ -727,7 +726,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
         Calendar fechaInicio = Calendar.getInstance(); // Obtiene la fecha de hoy
         fechaInicio.add(Calendar.DATE,-180); // Le restamos 6 meses
 
-        Query q = em.createQuery("Select oficioRemision.fecha, oficioRemision.identificadorIntercambio, oficioRemision.tipoOficioRemision from OficioRemision as oficioRemision where (oficioRemision.estado = :enviadoError or oficioRemision.estado = :reenviadoError) " +
+        Query q = em.createQuery("Select oficioRemision.id, oficioRemision.fecha, oficioRemision.identificadorIntercambio, oficioRemision.tipoOficioRemision from OficioRemision as oficioRemision where (oficioRemision.estado = :enviadoError or oficioRemision.estado = :reenviadoError) " +
                 "and oficioRemision.entidad.id = :idEntidad and oficioRemision.sir=true and oficioRemision.fecha >= :fechaInicio and oficioRemision.numeroReintentos = :maxReintentos");
 
         q.setParameter("enviadoError", RegwebConstantes.OFICIO_SIR_ENVIADO_ERROR);
@@ -741,8 +740,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
         List<Object[]> result = q.getResultList();
 
         for (Object[] object : result){
-            OficioRemision oficio = new OficioRemision((Date)object[0],(String)object[1],(Long)object[2]);
-            oficios.add(oficio);
+            oficios.add(new OficioRemision((Long)object[0], (Date)object[1], (String)object[2], (Long)object[3]));
         }
 
         return oficios;

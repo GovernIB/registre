@@ -31,10 +31,11 @@ public interface TrazabilidadSirLocal extends BaseEjb<TrazabilidadSir, Long> {
      * Obtiene todas las TrazabilidadesSir a partir de un Identificador Intercambio
      *
      * @param idIntercambio
+     * @param idRegistroSir
      * @return
      * @throws I18NException
      */
-    List<TrazabilidadSir> getByIdIntercambio(String idIntercambio, Long idEntidad) throws I18NException;
+    List<TrazabilidadSir> getByIdIntercambio(String idIntercambio,Long idRegistroSir) throws I18NException;
 
     /**
      * Obtiene la TrazabilidadSir de un RegistroSir aceptado

@@ -42,7 +42,7 @@ public interface TrazabilidadLocal extends BaseEjb<Trazabilidad, Long> {
      * @return
      * @throws I18NException
      */
-    List<Trazabilidad> getByIdIntercambio(String idIntercambio, Long idEntidad) throws I18NException;
+    List<Trazabilidad> getByIdIntercambio(String idIntercambio, Long idOficioRemision) throws I18NException;
 
     /**
      * Obtiene la Trazabilidad de un RegistroSalida

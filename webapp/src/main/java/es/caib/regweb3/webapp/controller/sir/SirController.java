@@ -310,24 +310,43 @@ public class SirController extends BaseController {
 
 
     /**
-     * Carga el formulario para ver el detalle de un IdentificadorIntercambio
+     * Carga el formulario para ver el detalle de un Intercambio recibido
      */
-    @RequestMapping(value = "/{idIntercambio}/detalle", method = RequestMethod.GET)
-    public String detalleIdentificadorIntercambio(@PathVariable String idIntercambio, Model model, HttpServletRequest request) throws Exception {
+    @RequestMapping(value = "/recibido/{idRegistroSir}/detalle", method = RequestMethod.GET)
+    public String intercambioRecibidoDetalle(@PathVariable Long idRegistroSir, Model model, HttpServletRequest request) throws Exception {
 
         Entidad entidad = getEntidadActiva(request);
+        RegistroSir registroSir = registroSirEjb.findById(idRegistroSir);
 
-        List<TrazabilidadSir> trazabilidadesSir = trazabilidadSirEjb.getByIdIntercambio(idIntercambio, entidad.getId());
-        List<Trazabilidad> trazabilidades = trazabilidadEjb.getByIdIntercambio(idIntercambio, entidad.getId());
-        List<MensajeControl> mensajes = mensajeControlEjb.getByIdentificadorIntercambio(idIntercambio, entidad.getId());
+        List<TrazabilidadSir> trazabilidadesSir = trazabilidadSirEjb.getByIdIntercambio(registroSir.getIdentificadorIntercambio(), idRegistroSir);
+        List<MensajeControl> mensajes = mensajeControlEjb.getByIdentificadorIntercambio(registroSir.getIdentificadorIntercambio(), entidad.getId());
 
         model.addAttribute("trazabilidadesSir", trazabilidadesSir);
-        model.addAttribute("trazabilidades", trazabilidades);
         model.addAttribute("mensajes", mensajes);
-        model.addAttribute("idIntercambio", idIntercambio);
+        model.addAttribute("registroSir", registroSir);
         model.addAttribute("integracion", new BasicForm());
 
-        return "sir/intercambioDetalle";
+        return "sir/intercambioRecibidoDetalle";
+    }
+
+    /**
+     * Carga el formulario para ver el detalle de un Intercambio enviado
+     */
+    @RequestMapping(value = "/enviado/{idOficioRemision}/detalle", method = RequestMethod.GET)
+    public String intercambioEnviadoDetalle(@PathVariable Long idOficioRemision, Model model, HttpServletRequest request) throws Exception {
+
+        Entidad entidad = getEntidadActiva(request);
+        OficioRemision oficioRemision = oficioRemisionEjb.findById(idOficioRemision);
+
+        List<Trazabilidad> trazabilidades = trazabilidadEjb.getByIdIntercambio(oficioRemision.getIdentificadorIntercambio(), idOficioRemision);
+        List<MensajeControl> mensajes = mensajeControlEjb.getByIdentificadorIntercambio(oficioRemision.getIdentificadorIntercambio(), entidad.getId());
+
+        model.addAttribute("trazabilidades", trazabilidades);
+        model.addAttribute("mensajes", mensajes);
+        model.addAttribute("oficioRemision", oficioRemision);
+        model.addAttribute("integracion", new BasicForm());
+
+        return "sir/intercambioEnviadoDetalle";
     }
 
     /**

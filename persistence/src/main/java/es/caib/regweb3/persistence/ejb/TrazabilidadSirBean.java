@@ -86,13 +86,13 @@ public class TrazabilidadSirBean extends BaseEjbJPA<TrazabilidadSir, Long> imple
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<TrazabilidadSir> getByIdIntercambio(String idIntercambio, Long idEntidad) throws I18NException {
+    public List<TrazabilidadSir> getByIdIntercambio(String idIntercambio, Long idRegistroSir) throws I18NException {
 
         Query q = em.createQuery("Select DISTINCT trazabilidadSir from TrazabilidadSir as trazabilidadSir " +
-                "where trazabilidadSir.registroSir.identificadorIntercambio = :idIntercambio and registroSir.entidad.id = :idEntidad order by trazabilidadSir.id");
+                "where registroSir.identificadorIntercambio = :idIntercambio and registroSir.id = :idRegistroSir order by trazabilidadSir.id");
 
         q.setParameter("idIntercambio", idIntercambio);
-        q.setParameter("idEntidad", idEntidad);
+        q.setParameter("idRegistroSir", idRegistroSir);
         q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList();
