@@ -94,7 +94,7 @@ public class RegistroEntrada implements IRegistro {
                            String numeroRegistroOrigen, Date fechaOrigen, String destinoExternoDenominacion, Long idDestino,
                            String denominacionDestino, Long tipoDocumentacionFisica, Long idioma, String observaciones, Long estado,
                            String expediente, Long idCodigoAsunto, String referenciaExterna, Long transporte, String numeroTransporte,
-                           Long idRegistroDetalle, Long codigoSia, String aplicacion, Boolean presencial, String destinoExternoCodigo, List<Interesado> interesados) {
+                           Long idRegistroDetalle, String codigoSia, String aplicacion, Boolean presencial, String destinoExternoCodigo, List<Interesado> interesados) {
 
         this.id = idRegistro;
         this.numeroRegistro = numeroRegistro;
