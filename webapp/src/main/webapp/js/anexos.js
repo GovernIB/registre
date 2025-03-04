@@ -75,9 +75,7 @@ function obtenerMetadatos(idAnexo, idEntidad){
         contentType: 'application/json',
         success: function(metadatosList) {
             // Pintamos los resultados en el div correspondiente
-            $('#metadatos').html("EStoy en la nueva función");
-
-            console.log(metadatosList);
+            $('#metadatos').html(tradsanexo['anexo.metadatos.vacio']);
 
             if(metadatosList.length > 0) {
                 var html = '';

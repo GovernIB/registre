@@ -149,5 +149,6 @@
     tradsanexo['anexo.origen.0'] = "<spring:message code='anexo.origen.0' javaScriptEscape='true' />";
     tradsanexo['anexo.origen.1'] = "<spring:message code='anexo.origen.1' javaScriptEscape='true' />";
     tradsanexo['anexo.detalle'] = "<spring:message code='anexo.detalle' javaScriptEscape='true' />";
+    tradsanexo['anexo.metadatos.vacio'] = "<spring:message code='anexo.metadatos.vacio' javaScriptEscape='true' />";
 
 </script>
