@@ -126,6 +126,8 @@ public interface SchedulerLocal {
      */
     void purgarProcesadosColas() throws I18NException;
 
+    void procesarAsientosPendientesSIR() throws I18NException;
+
     void consultarAsientosPendientesSIR() throws I18NException;
 
     void reencolarAsientos() throws I18NException;

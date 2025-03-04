@@ -98,6 +98,13 @@
         </button>
         <ul class="dropdown-menu">
             <c:if test="${loginInfo.oficinaActiva.sirRecepcion}">
+                <li><a href="<c:url value="/registroSir/consultarRecibidosNuevos"/>"><i class="fa fa-mail-reply"></i> Recibidos Pendientes Procesar</a></li>
+            </c:if>
+            <c:if test="${loginInfo.oficinaActiva.sirRecepcion}">
+                <li><a href="<c:url value="/registroSir/procesarNoProcesados"/>"><i class="fa fa-mail-reply"></i> Procesar No Procesados</a></li>
+            </c:if>
+            <li class="divider"></li>
+            <c:if test="${loginInfo.oficinaActiva.sirRecepcion}">
                 <li><a href="<c:url value="/registroSir/list"/>"><i class="fa fa-mail-reply"></i> <spring:message code="registroSir.recibidos.buscador"/></a></li>
             </c:if>
             <c:if test="${loginInfo.oficinaActiva.sirEnvio}">

@@ -645,7 +645,7 @@ public interface RegwebConstantes {
     int ANEXO_IDENTIFICADOR_MAXLENGTH_SIR = 50;
 
     /* ---------------ANEXO LIMITACIONES SIR ----------*/
-    String[] ANEXO_EXTENSIONES_SIR = new String[]{"jpg", "jpeg", "odt", "odp", "ods", "odg", "docx", "xlsx", "pptx", "pdf", "png", "rtf", "svg", "tiff", "txt", "xml", "csig", "xsig","csv"};
+    String[] ANEXO_EXTENSIONES_SIR = new String[]{"jpg", "jpeg", "odt", "odp", "ods", "odg", "docx", "xlsx", "pptx", "pdf", "png", "rtf", "svg", "tiff", "txt", "xml", "csig", "xsig","csv","html","htm", "mhtm", "mhtml", "css"};
 
     int    ANEXO_NUMEROMAX_SIR = 5;
     Long   ANEXO_TAMANOMAX_SIR = 10485760L;
@@ -982,4 +982,7 @@ public interface RegwebConstantes {
     Long METADATO_GENERAL= 0L;
     Long METADATO_PARTICULAR = 1L;
     Long METADATO_NTI = 2L;
+
+    int MAX_ASIENTOS_SIR_PROCESAR = 30;
+
 }

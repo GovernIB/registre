@@ -15,6 +15,7 @@ import es.caib.regweb3.webapp.form.*;
 import es.caib.regweb3.webapp.utils.AnexoUtils;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import es.gob.ad.registros.sir.interService.bean.AsientoBean;
+import es.gob.ad.registros.sir.interService.bean.IntercambiosPendientesProcesar;
 import es.gob.ad.registros.sir.interService.exception.InterException;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
@@ -34,6 +35,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static es.caib.regweb3.utils.RegwebConstantes.METADATO_GENERAL;
 import static es.caib.regweb3.utils.RegwebConstantes.METADATO_PARTICULAR;
@@ -551,33 +553,27 @@ public class RegistroSirController extends BaseController {
         return "redirect:/registroSir/" + registroSir.getId() + "/detalle";
     }
 
-    @RequestMapping(value = "/consultaPendientes", method = RequestMethod.GET)
-    public String consultarPendientes(HttpServletRequest request,
-                                 HttpServletResponse response) throws Exception, I18NException {
-
-
-        List<AsientoBean> asientos = libSirEjb.consultaAsientosPendientes(10);
-
-        for(AsientoBean asiento:asientos){
-            log.info(" " + asiento.getCdIntercambio());
-        }
-
-
-        log.info("ASIENTOS PENDIENTES " + asientos.size());
-
-
-        return "";
-    }
-
-    //TODO BORRAR SOLO PRUEBAS
-    @RequestMapping(value = "/procesarPendientes", method = RequestMethod.GET)
-    public String procesarPendientes(HttpServletRequest request, HttpServletResponse response) throws Exception, I18NException {
+    //TODO OPCION PARA LA CERTIFICACION ( ELIMINAR DESPUES)
+    @RequestMapping(value = "/consultarRecibidosNuevos", method = RequestMethod.GET)
+    public String consultarRecibidosNuevos(HttpServletRequest request, HttpServletResponse response) throws Exception, I18NException {
 
         schedulerEjb.consultarAsientosPendientesSIR();
 
-        return "";
+        Mensaje.saveMessageInfo(request, "Proceso de consulta terminado" );
+
+        return "redirect:/inici";
     }
 
+    //TODO OPCION PARA LA CERTIFICACION ( ELIMINAR DESPUES)
+    @RequestMapping(value = "/procesarNoProcesados", method = RequestMethod.GET)
+    public String procesarNoProcesados(HttpServletRequest request, HttpServletResponse response) throws Exception, I18NException {
+
+        schedulerEjb.procesarAsientosPendientesSIR();
+
+        Mensaje.saveMessageInfo(request, "Proceso de procesar terminado" );
+
+        return "redirect:/inici";
+    }
     //TODO BORRAR SOLO PRUEBAS
     @RequestMapping(value = "/reencolarPendientes", method = RequestMethod.GET)
     public String reencolarPendientes(HttpServletRequest request,
@@ -586,6 +582,27 @@ public class RegistroSirController extends BaseController {
         schedulerEjb.reencolarAsientos();
 
         return "";
+    }
+
+
+    //TODO BORRAR diferencias entre métodos  consultar pendientes
+    @RequestMapping(value = "/consultarPendientes", method = RequestMethod.GET)
+    public String consultarPendientes(HttpServletRequest request, HttpServletResponse response) throws Exception, InterException {
+
+        List<String> oficinas = Stream.of("O00001586", "O00033944", "O00006056").collect(Collectors.toList());
+        List<IntercambiosPendientesProcesar> intercambios = libSirEjb.consultarCambiosEstadoPendientesProcesar(300,oficinas);
+        log.info("INTERCAMBIOS: "+ intercambios.size());
+        intercambios.forEach(intercambio ->
+            log.info("INTERCAMBIO: "+ intercambio.getCdIntercambio() + " - " + intercambio.getCdEstado() + " - " + intercambio.getCdEnRgDestino()));
+
+
+        try {
+            List <AsientoBean> asientos = libSirEjb.consultarAsientosPendientes(300);
+            asientos.forEach(asiento -> log.info("ASIENTO: "+ asiento.getCdIntercambio() + " - " + asiento.getCdEstado() + " - " + asiento.getCdEnRgDestino()));
+        } catch (InterException e) {
+            throw new RuntimeException(e);
+        }
+        return "redirect:/inici";
     }
 
 

@@ -305,12 +305,30 @@ public class Regweb3Scheduler {
      * Cuando lo hace: cada 10 minuto
      */
     //@Scheduled(fixedDelay = 60000)
-    @Scheduled(cron = "0 0/10 8,9,10,11,12,13,14 * * *")
+    @Scheduled(cron = "0 0/2 8,9,10,11,12,13,14,15,16 * * *")
     public void consultarAsientosPendientes(){
 
         try {
             log.info("YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY");
-            schedulerEjb.consultarAsientosPendientesSIR();
+           // schedulerEjb.consultarAsientosPendientesSIR();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    /**
+     * Qué hace: obtiene los asientos que se reciben via SIR
+     * Cuando lo hace: cada 10 minuto
+     */
+    //@Scheduled(fixedDelay = 60000)
+    @Scheduled(cron = "0 0/25 13,16,17,18,19,20,21,22,23 * * *")
+    public void procesarAsientosPendientes(){
+
+        try {
+            log.info("ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ");
+            schedulerEjb.procesarAsientosPendientesSIR();
 
         } catch (Exception e) {
             e.printStackTrace();

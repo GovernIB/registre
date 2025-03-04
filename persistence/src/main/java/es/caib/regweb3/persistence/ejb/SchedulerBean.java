@@ -576,6 +576,171 @@ public class SchedulerBean implements SchedulerLocal {
         }
     }
 
+    @Override
+    public void procesarAsientosPendientesSIR() throws I18NException {
+
+        StringBuilder peticion = new StringBuilder();
+        long tiempo = System.currentTimeMillis();
+        Date inicio = null;
+        String descripcion = " Consultar asientos pendientes SIR";
+        Entidad entidadActiva = null;
+
+
+        try {
+
+            List<DatosRegistroProcesoBean> aProcesar = new ArrayList<>();
+
+            Long start = System.currentTimeMillis();
+            List<AsientoBean> asientosPendientes = libSirEjb.consultaAsientosPendientesProcesar();
+            Long end = System.currentTimeMillis();
+
+            log.info("Tiempo PPPPPPPPPPPPPPPPPPPP: " + (end-start));
+            log.info("asientos A Procesar: ", asientosPendientes.size());
+            for (AsientoBean asiento : asientosPendientes) {
+                if (TipoEstadoEnum.EC.getCodigo().equals(asiento.getCdEstado())) { //Enviado y confirmado PROBADO OK
+                    log.info("ENVIADO " + asiento.getCdIntercambio());
+                    log.info("ENVIADOS ESTADO" + asiento.getCdEstado());
+
+                    OficioRemision oficioRemision = oficioRemisionEjb.getByIdentificadorIntercambio(asiento.getCdIntercambio());
+                    if (oficioRemision != null) {
+                        log.info("Oficio SIR ID" + oficioRemision.getId());
+                    }
+                    if (oficioRemision != null) {
+                        //Preparamos los datos para procesar
+                        DatosRegistroProcesoBean datosRegistroProcesoBean = datosRegistroProcesado(asiento.getCdIntercambio(), asiento.getCdEnRgProcesa(), TipoEstadoEnum.EC.getCodigo());
+                        aProcesar.add(datosRegistroProcesoBean);
+
+                        switch (oficioRemision.getEstado()) {
+
+                            case RegwebConstantes.OFICIO_SIR_ENVIADO:
+                           /* case RegwebConstantes.OFICIO_SIR_ENVIADO_ACK:
+                            case RegwebConstantes.OFICIO_SIR_ENVIADO_ERROR:*/
+                            case RegwebConstantes.OFICIO_SIR_REENVIADO:
+                           /* case RegwebConstantes.OFICIO_SIR_REENVIADO_ACK:
+                            case RegwebConstantes.OFICIO_SIR_REENVIADO_ERROR:*/
+
+                                oficioRemisionEjb.aceptarOficioSir(oficioRemision, asiento.getCdEnRgDestino(), asiento.getDsEnRgDestino(), asiento.getCdEnRgOrigen(), asiento.getFeEntradaDestino());
+                                break;
+
+                            case (RegwebConstantes.OFICIO_ACEPTADO):
+                                log.info("Se ha recibido un mensaje de confirmación duplicado");
+                                break;
+
+                            default:
+                                log.info("El RegistroSir no tiene el estado necesario para ser Confirmado: " + oficioRemision.getIdentificadorIntercambio());
+                                //throw new ValidacionException(Errores.ERROR_0037, "El RegistroSir no tiene el estado necesario para ser Confirmado: " + oficioRemision.getIdentificadorIntercambio());
+                        }
+                    }
+                }
+
+
+                //Aqui tratamos el caso en que nos rechazan un asiento
+                if (TipoEstadoEnum.ERCH.getCodigo().equals(asiento.getCdEstado())) { //Rechazo de un asiento enviado (Enviado rechazado) //PROBADO OK
+                    //Integraciones revisadas OK
+                    OficioRemision oficioRemision = oficioRemisionEjb.getByIdentificadorIntercambio(asiento.getCdIntercambio());
+                    log.info("XXXXXX ERCH " + asiento.getCdIntercambio());
+                    // Oficio Remision: Ha sido enviado por nosotros a SIR
+                    if (oficioRemision != null) { // Existe en el sistema
+
+                        //Procesamos
+                        DatosRegistroProcesoBean datosRegistroProcesoBean = datosRegistroProcesado(asiento.getCdIntercambio(), asiento.getCdEnRgProcesa(), TipoEstadoEnum.ERCH.getCodigo());
+                        aProcesar.add(datosRegistroProcesoBean);
+                        oficioRemisionEjb.marcarRechazadoOficioSir(oficioRemision, asiento.getCdEnRgOrigen(), asiento.getCdIntercambio());
+
+                    }
+
+                }
+
+
+                //TODO Aclarar: A partir de aquí son casos que he puesto yo (Marilen) pero no tengo claro si se tienen que procesar (segun manual solo devolverá los casos de arriba, pg 11 Manual de Integración)???
+                if (TipoEstadoEnum.EERR.getCodigo().equals(asiento.getCdEstado())) {//Enviado Erróneo: se ha producido un error en el envío del registro.
+                    //PROBADO OK
+                    inicio = new Date();
+                    descripcion = "Recepción Error en Envio: " + TipoEstadoEnum.EERR.getCodigo();
+                    peticion.append("IdentificadorIntercambio: ").append(asiento.getCdIntercambio()).append(System.getProperty("line.separator"));
+                    peticion.append("Origen: ").append(asiento.getCdEnRgOrigen()).append(System.getProperty("line.separator"));
+                    peticion.append("Destino: ").append(asiento.getCdEnRgDestino()).append(System.getProperty("line.separator"));
+                    peticion.append("Descripcion: ").append(TipoEstadoEnum.EERR.getDescripcion()).append(System.getProperty("line.separator"));
+
+
+                    OficioRemision oficioRemision = oficioRemisionEjb.getByIdentificadorIntercambio(asiento.getCdIntercambio());
+                    if (oficioRemision.getEstado() == RegwebConstantes.OFICIO_SIR_ENVIADO) {
+                        //PROCESAMOS
+                        DatosRegistroProcesoBean datosRegistroProcesoBean = datosRegistroProcesado(asiento.getCdIntercambio(), asiento.getCdEnRgProcesa(), TipoEstadoEnum.EERR.getCodigo());
+                        aProcesar.add(datosRegistroProcesoBean);
+
+                        //cambiamos estado a error
+                        oficioRemisionEjb.modificarEstadoError(oficioRemision.getId(), RegwebConstantes.OFICIO_SIR_ENVIADO_ERROR, TipoMensaje.ERROR.getName(), TipoMensaje.ERROR.getValue());
+                    }
+
+                    integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_SIR, descripcion, peticion.toString(), null, null, System.currentTimeMillis() - inicio.getTime(), oficioRemision.getEntidad().getId(), asiento.getCdIntercambio());
+                }
+
+                if (TipoEstadoEnum.RC.getCodigo().equals(asiento.getCdEstado())) {//- Recibido Confirmado: la confirmación de un registro recibido se ha enviado
+                    //PROBADO Y OK
+                    //plataforma SIR y se ha recibido su correspondiente ACK
+                    RegistroSir registroSir = registroSirEjb.getByIdIntercambio(asiento.getCdIntercambio());
+                    if (EstadoRegistroSir.ACEPTADO.equals(registroSir.getEstado())) {
+                        //PROCESAMOS
+                        DatosRegistroProcesoBean datosRegistroProcesoBean = datosRegistroProcesado(asiento.getCdIntercambio(), asiento.getCdEnRgProcesa(), TipoEstadoEnum.RC.getCodigo());
+                        aProcesar.add(datosRegistroProcesoBean);
+                    } else {
+                        log.info("No se puede confirmar el asiento (" + asiento.getCdIntercambio() + ") - (" + TipoEstadoEnum.RC.getDescripcion() + ")");
+                    }
+
+                }
+
+
+                if (TipoEstadoEnum.RERR.getCodigo().equals(asiento.getCdEstado())) { // Recibido Confirmado Erróneo: se ha producido un error en la confirmación del registro PROBADO OK
+                    //PROBADO Y OK
+                    RegistroSir registroSir = registroSirEjb.getByIdIntercambio(asiento.getCdIntercambio());
+                    if (EstadoRegistroSir.ACEPTADO.equals(registroSir.getEstado())) {
+                        //PROCESAMOS
+                        DatosRegistroProcesoBean datosRegistroProcesoBean = datosRegistroProcesado(asiento.getCdIntercambio(), asiento.getCdEnRgProcesa(), TipoEstadoEnum.RERR.getCodigo());
+                        aProcesar.add(datosRegistroProcesoBean);
+                    } else {
+                        log.info("Se ha producido un error en la confirmación del asiento (" + asiento.getCdIntercambio() + ") - (" + TipoEstadoEnum.RERR.getDescripcion() + ")");
+                    }
+                }
+
+
+                if (TipoEstadoEnum.REERR.getCodigo().equals(asiento.getCdEstado())) {// Reenviado Erróneo: se ha producido un error en el reenvío del registro.
+                    RegistroSir registroSir = registroSirEjb.getByIdIntercambio(asiento.getCdIntercambio()); //PROBADO Y OK
+                    if (EstadoRegistroSir.REENVIADO.equals(registroSir.getEstado())) {
+                        //PROCESAMOS
+                        DatosRegistroProcesoBean datosRegistroProcesoBean = datosRegistroProcesado(asiento.getCdIntercambio(), asiento.getCdEnRgProcesa(), TipoEstadoEnum.REERR.getCodigo());
+                        aProcesar.add(datosRegistroProcesoBean);
+                        registroSirEjb.modificarEstadoNuevaTransaccion(registroSir.getId(), EstadoRegistroSir.REENVIADO_Y_ERROR);
+
+                    } else {
+                        log.info("Se ha producido un error en el reenvio del asiento (" + asiento.getCdIntercambio() + ") - (" + TipoEstadoEnum.REERR.getDescripcion() + ")");
+                    }
+                }
+
+            }
+
+            //Marcamos como procesados los enviados
+            ResultadoRegistroProcesoBean resultado = consultaService.procesar(aProcesar);
+            if (resultado != null) {
+                if (resultado.getRegistrosProcesados() != null) {
+                    resultado.getRegistrosProcesados().forEach((v) -> log.error(("Intercambio procesado :" + v)));
+                }
+                if (resultado.getRegistrosErrorProceso() != null) {
+                    resultado.getRegistrosErrorProceso().forEach((k, v) -> log.error(("Error producido : " + k + " - " + v)));
+                    // Els errors que retorna son (he mirat el codi del mètode)
+                    //0075=[{0}] no puede ser procesado porque no se encuentra en estado {1}.
+                    //0076=[{0}] no tiene ningún estado pendiente de procesar para la oficina {1}.
+
+                }
+            }
+
+        } catch (Exception e) {
+            log.error("Error obteniendo asientos SIR pendientes ...", e);
+        }
+
+    }
+
+
 
     @Override
     public void consultarAsientosPendientesSIR() throws I18NException {
@@ -586,19 +751,33 @@ public class SchedulerBean implements SchedulerLocal {
         String descripcion = " Consultar asientos pendientes SIR";
         Entidad entidadActiva = null;
         try {
-            //consultamos los asientos que estan pendientes de procesar
-            List<AsientoBean> asientosPendientes = libSirEjb.consultaAsientosPendientes(260);
+            //consultamos los asientos que se han recibido
+            Long start = System.currentTimeMillis();
+            List<AsientoBean> asientosPendientes = libSirEjb.consultaAsientosPendientesEstado(50, TipoEstadoEnum.R.getCodigo());
+            //List<AsientoBean> asientosPendientes = libSirEjb.consultarAsientosPendientes(500);
+           /* NO FUNCIONA DA UN ERROR DE CLASES EN LIBSIR   List<Entidad> entidades = entidadEjb.getAll();
+            for(Entidad entidad : entidades){
+                List<Oficina> oficinas = oficinaEjb.findByEntidadLigero(entidad.getId());
+                List<String> oficinasString = oficinas.stream().map(Oficina::getCodigo).collect(toList());
+                List<IntercambiosPendientesProcesar> pendientesProcesar = libSirEjb.consultarAsientosPendientesProcesar(260, oficinasString);
+                log.info("XXXXXXX PENDIENTES PROCESAR " + pendientesProcesar.size() + " - " + entidad.getNombre());
+            }*/
+            Long end = System.currentTimeMillis();
+
+            log.info("Tiempo FFFFFFFFFFFFFFFFFFFFFFFFF: " + (end-start));
+            log.info("asientosRecibidos: ", asientosPendientes.size());
 
             //Lista donde se guardan los datos de los asientos que se van a procesar posteriormente
             List<DatosRegistroProcesoBean> aProcesar= new ArrayList<>();
 
             for(AsientoBean asiento: asientosPendientes){
 
-               // log.info("Asiento CDINTERCAMBIO   " + asiento.getCdIntercambio());
+                log.info("Asiento CDINTERCAMBIO   " + asiento.getCdIntercambio()  + "ESTADO : " + asiento.getCdEstado());
 
                 //Recibido || ENVIO INTERNO (MULTIENTIDAD)   //PROBADO OK
                 if(TipoEstadoEnum.R.getCodigo().equals(asiento.getCdEstado()) ||
                    TipoEstadoEnum.PRC.getCodigo().equals(asiento.getCdEstado()) && oficinaService.comprobarOficinaMismaInstalacion(1,asiento.getCdEnRgDestino()) && distintaEntidad(asiento.getCdEnRgProcesa(),asiento.getCdEnRgDestino()) ){
+
 
                     inicio = new Date();
                     descripcion = "Recepción Intercambio: ";
@@ -630,137 +809,6 @@ public class SchedulerBean implements SchedulerLocal {
                        }
                     }
                 }
-                if(TipoEstadoEnum.EC.getCodigo().equals(asiento.getCdEstado())){ //Enviado y confirmado PROBADO OK
-                    log.info("ENVIADO " + asiento.getCdIntercambio());
-                    log.info("ENVIADOS ESTADO" + asiento.getCdEstado());
-
-                    OficioRemision oficioRemision = oficioRemisionEjb.getByIdentificadorIntercambio(asiento.getCdIntercambio());
-                    if(oficioRemision!=null) { log.info("Oficio SIR ID" + oficioRemision.getId());}
-                    if(oficioRemision!=null) {
-                        //Preparamos los datos para procesar
-                        DatosRegistroProcesoBean datosRegistroProcesoBean = datosRegistroProcesado(asiento.getCdIntercambio(), asiento.getCdEnRgProcesa(), TipoEstadoEnum.EC.getCodigo());
-                        aProcesar.add(datosRegistroProcesoBean);
-
-                        switch (oficioRemision.getEstado()) {
-
-                            case RegwebConstantes.OFICIO_SIR_ENVIADO:
-                           /* case RegwebConstantes.OFICIO_SIR_ENVIADO_ACK:
-                            case RegwebConstantes.OFICIO_SIR_ENVIADO_ERROR:*/
-                            case RegwebConstantes.OFICIO_SIR_REENVIADO:
-                           /* case RegwebConstantes.OFICIO_SIR_REENVIADO_ACK:
-                            case RegwebConstantes.OFICIO_SIR_REENVIADO_ERROR:*/
-
-                                oficioRemisionEjb.aceptarOficioSir(oficioRemision, asiento.getCdEnRgDestino(), asiento.getDsEnRgDestino(), asiento.getCdEnRgOrigen(), asiento.getFeEntradaDestino());
-                                break;
-
-                            case (RegwebConstantes.OFICIO_ACEPTADO):
-                                log.info("Se ha recibido un mensaje de confirmación duplicado");
-                                break;
-
-                            default:
-                                log.info("El RegistroSir no tiene el estado necesario para ser Confirmado: " + oficioRemision.getIdentificadorIntercambio());
-                                //throw new ValidacionException(Errores.ERROR_0037, "El RegistroSir no tiene el estado necesario para ser Confirmado: " + oficioRemision.getIdentificadorIntercambio());
-                        }
-                    }
-                }
-
-                //Aqui tratamos el caso en que nos rechazan un asiento
-                if(TipoEstadoEnum.ERCH.getCodigo().equals(asiento.getCdEstado())) { //Rechazo de un asiento enviado (Enviado rechazado) //PROBADO OK
-                    //Integraciones revisadas OK
-                    OficioRemision oficioRemision = oficioRemisionEjb.getByIdentificadorIntercambio(asiento.getCdIntercambio());
-                    log.info("XXXXXX ERCH " + asiento.getCdIntercambio());
-                    // Oficio Remision: Ha sido enviado por nosotros a SIR
-                    if (oficioRemision != null) { // Existe en el sistema
-
-                        //Procesamos
-                        DatosRegistroProcesoBean datosRegistroProcesoBean = datosRegistroProcesado(asiento.getCdIntercambio(), asiento.getCdEnRgProcesa(), TipoEstadoEnum.ERCH.getCodigo());
-                        aProcesar.add(datosRegistroProcesoBean);
-                        oficioRemisionEjb.marcarRechazadoOficioSir(oficioRemision,asiento.getCdEnRgOrigen(), asiento.getCdIntercambio());
-
-                    }
-
-                }
-
-                //TODO Aclarar: A partir de aquí son casos que he puesto yo (Marilen) pero no tengo claro si se tienen que procesar (segun manual solo devolverá los casos de arriba, pg 11 Manual de Integración)???
-                if(TipoEstadoEnum.EERR.getCodigo().equals(asiento.getCdEstado())){//Enviado Erróneo: se ha producido un error en el envío del registro.
-                    //PROBADO OK
-                    inicio= new Date();
-                    descripcion = "Recepción Error en Envio: " + TipoEstadoEnum.EERR.getCodigo();
-                    peticion.append("IdentificadorIntercambio: ").append(asiento.getCdIntercambio()).append(System.getProperty("line.separator"));
-                    peticion.append("Origen: ").append(asiento.getCdEnRgOrigen()).append(System.getProperty("line.separator"));
-                    peticion.append("Destino: ").append(asiento.getCdEnRgDestino()).append(System.getProperty("line.separator"));
-                    peticion.append("Descripcion: ").append(TipoEstadoEnum.EERR.getDescripcion()).append(System.getProperty("line.separator"));
-
-
-                    OficioRemision oficioRemision = oficioRemisionEjb.getByIdentificadorIntercambio(asiento.getCdIntercambio());
-                     if(oficioRemision.getEstado() == RegwebConstantes.OFICIO_SIR_ENVIADO){
-                        //PROCESAMOS
-                         DatosRegistroProcesoBean datosRegistroProcesoBean = datosRegistroProcesado(asiento.getCdIntercambio(), asiento.getCdEnRgProcesa(), TipoEstadoEnum.EERR.getCodigo());
-                         aProcesar.add(datosRegistroProcesoBean);
-
-                         //cambiamos estado a error
-                         oficioRemisionEjb.modificarEstadoError(oficioRemision.getId(), RegwebConstantes.OFICIO_SIR_ENVIADO_ERROR, TipoMensaje.ERROR.getName(), TipoMensaje.ERROR.getValue());
-                     }
-
-                    integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_SIR, descripcion, peticion.toString(), null, null, System.currentTimeMillis() - inicio.getTime(), oficioRemision.getEntidad().getId(), asiento.getCdIntercambio());
-                }
-
-                if(TipoEstadoEnum.RC.getCodigo().equals(asiento.getCdEstado())){//- Recibido Confirmado: la confirmación de un registro recibido se ha enviado
-                    //PROBADO Y OK
-                    //plataforma SIR y se ha recibido su correspondiente ACK
-                    RegistroSir registroSir = registroSirEjb.getByIdIntercambio(asiento.getCdIntercambio());
-                    if(EstadoRegistroSir.ACEPTADO.equals(registroSir.getEstado())){
-                        //PROCESAMOS
-                        DatosRegistroProcesoBean datosRegistroProcesoBean = datosRegistroProcesado(asiento.getCdIntercambio(), asiento.getCdEnRgProcesa(), TipoEstadoEnum.RC.getCodigo());
-                        aProcesar.add(datosRegistroProcesoBean);
-                    }else{
-                        log.info("No se puede confirmar el asiento (" + asiento.getCdIntercambio()+ ") - (" + TipoEstadoEnum.RC.getDescripcion()+ ")");
-                    }
-
-                }
-
-
-                if(TipoEstadoEnum.RERR.getCodigo().equals(asiento.getCdEstado())){ // Recibido Confirmado Erróneo: se ha producido un error en la confirmación del registro PROBADO OK
-                   //PROBADO Y OK
-                    RegistroSir registroSir = registroSirEjb.getByIdIntercambio(asiento.getCdIntercambio());
-                    if(EstadoRegistroSir.ACEPTADO.equals(registroSir.getEstado())){
-                        //PROCESAMOS
-                        DatosRegistroProcesoBean datosRegistroProcesoBean = datosRegistroProcesado(asiento.getCdIntercambio(), asiento.getCdEnRgProcesa(), TipoEstadoEnum.RERR.getCodigo());
-                        aProcesar.add(datosRegistroProcesoBean);
-                    }else{
-                        log.info("Se ha producido un error en la confirmación del asiento (" + asiento.getCdIntercambio()+ ") - (" + TipoEstadoEnum.RERR.getDescripcion()+ ")");
-                    }
-                }
-
-
-                if(TipoEstadoEnum.REERR.getCodigo().equals(asiento.getCdEstado())){// Reenviado Erróneo: se ha producido un error en el reenvío del registro.
-                    RegistroSir registroSir = registroSirEjb.getByIdIntercambio(asiento.getCdIntercambio()); //PROBADO Y OK
-                    if(EstadoRegistroSir.REENVIADO.equals(registroSir.getEstado())){
-                        //PROCESAMOS
-                        DatosRegistroProcesoBean datosRegistroProcesoBean = datosRegistroProcesado(asiento.getCdIntercambio(), asiento.getCdEnRgProcesa(), TipoEstadoEnum.REERR.getCodigo());
-                        aProcesar.add(datosRegistroProcesoBean);
-                        registroSirEjb.modificarEstadoNuevaTransaccion(registroSir.getId(), EstadoRegistroSir.REENVIADO_Y_ERROR);
-
-                    }else{
-                        log.info("Se ha producido un error en el reenvio del asiento (" + asiento.getCdIntercambio()+ ") - (" + TipoEstadoEnum.REERR.getDescripcion()+ ")");
-                    }
-                }
-            }
-
-
-            //Marcamos como procesados los enviados
-           ResultadoRegistroProcesoBean resultado = consultaService.procesar(aProcesar);
-            if (resultado != null) {
-                if(resultado.getRegistrosProcesados()!=null){
-                    resultado.getRegistrosProcesados().forEach((v) -> log.error(("Intercambio procesado :" + v)));
-                }
-                if(resultado.getRegistrosErrorProceso()!=null){
-                    resultado.getRegistrosErrorProceso().forEach((k, v) -> log.error(("Error producido : " + k + " - " + v)));
-                    // Els errors que retorna son (he mirat el codi del mètode)
-                    //0075=[{0}] no puede ser procesado porque no se encuentra en estado {1}.
-                    //0076=[{0}] no tiene ningún estado pendiente de procesar para la oficina {1}.
-
-                }
             }
         } catch (Exception e) {
             log.error("Error obteniendo asientos SIR pendientes ...", e);
@@ -771,7 +819,7 @@ public class SchedulerBean implements SchedulerLocal {
 
 
     /**
-     * Método que reencola los asientos que se encuentran en estados candidatos a ser reencolados
+     * Función que reencola los asientos que se encuentran en estados candidatos a ser reencolados
      * @throws I18NException
      */
     @Override
@@ -794,7 +842,7 @@ public class SchedulerBean implements SchedulerLocal {
             Map<String, List<String>> asientosPorCdEnProcesa = asientos.stream()
                     .collect(groupingBy(AsientoBean::getCdEnRgProcesa, Collectors.mapping(AsientoBean::getCdIntercambio, toList())));
 
-            //LLamamos al método de libsir para que sean reencolados.
+            //LLamamos a la función de libsir para que sean reencolados.
             asientosPorCdEnProcesa.forEach((k, v) -> {
                 try {
                     salidaService.reencolar(k, v);
@@ -845,8 +893,6 @@ public class SchedulerBean implements SchedulerLocal {
 
         Oficina oficinaDestino = oficinaEjb.findByMultiEntidad(cdEnRgDestino);
         Oficina oficinaProcesa = oficinaEjb.findByMultiEntidad(cdEnRgProcesa);
-      /*  log.info("OFICINA DESTINO " + oficinaDestino.getEntidad().getNombre());
-        log.info("OFICINA PROCESA " + oficinaProcesa.getEntidad().getNombre());*/
         if(oficinaDestino != null && oficinaProcesa != null){
             return !oficinaProcesa.getEntidad().equals(oficinaDestino.getEntidad());
         }else{

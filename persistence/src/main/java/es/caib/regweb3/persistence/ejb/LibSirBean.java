@@ -1,18 +1,18 @@
 package es.caib.regweb3.persistence.ejb;
 
 
+import es.caib.dir3caib.ws.api.oficina.OficinaTF;
 import es.caib.regweb3.model.IRegistro;
 import es.caib.regweb3.model.RegistroEntrada;
 import es.caib.regweb3.model.RegistroSalida;
 import es.caib.regweb3.persistence.utils.LibSirUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
+import es.gob.ad.registros.sir.interModel.dao.enums.TipoEstadoEnum;
 import es.gob.ad.registros.sir.interService.bean.AnexoBean;
 import es.gob.ad.registros.sir.interService.bean.AsientoBean;
+import es.gob.ad.registros.sir.interService.bean.IntercambiosPendientesProcesar;
 import es.gob.ad.registros.sir.interService.exception.InterException;
-import es.gob.ad.registros.sir.interService.service.IAnexoService;
-import es.gob.ad.registros.sir.interService.service.IConsultaService;
-import es.gob.ad.registros.sir.interService.service.IEntradaService;
-import es.gob.ad.registros.sir.interService.service.ISalidaService;
+import es.gob.ad.registros.sir.interService.service.*;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +28,8 @@ import javax.xml.datatype.DatatypeConfigurationException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Created by DGMAD
@@ -44,12 +46,17 @@ public class LibSirBean implements LibSirLocal{
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
+    //Estados de los asientos de LIBSIR que se deben procesar
+    protected final List<String> ESTADOS_A_PROCESAR = Stream.of(TipoEstadoEnum.EC.getCodigo(), TipoEstadoEnum.ERCH.getCodigo(), TipoEstadoEnum.EERR.getCodigo(), TipoEstadoEnum.RERR.getCodigo(), TipoEstadoEnum.REERR.getCodigo()).collect(Collectors.toList());
+
     @Autowired IEntradaService entradaService;
     @Autowired IConsultaService consultaService;
     @Autowired ISalidaService salidaService;
+    @Autowired IAsientoService asientoService;
+    @Autowired UtilService utilService;
 
     @Autowired IAnexoService anexoService;
-    //@Autowired IEstadoAsientoService estadoAsientoervice;
+    @Autowired IEstadoAsientoService estadoAsientoService;
     @Autowired LibSirUtils libSirUtils;
 
 
@@ -67,11 +74,12 @@ public class LibSirBean implements LibSirLocal{
     }
 
     @Override
-    public List<AsientoBean> consultaAsientosPendientes(int maxResults) throws InterException {
-        List<String> estados = new ArrayList<>();
-        estados.add("R");
-        List<AsientoBean> pendientes = consultaService.consultarAsientosPendientes(maxResults);
-        log.info("XXXXXXX PENDIENTES" + pendientes.size());
+    public List<AsientoBean> consultaAsientosPendientesProcesar() throws InterException {
+
+        //TODO REVISAR SI SE HACE CON ESTOS ESTADO o Con la función "consultarAsientosPendientes() que los trae todos).
+        List<AsientoBean> pendientes = consultaService.consultarAsientosPendientesPorEstado(RegwebConstantes.MAX_ASIENTOS_SIR_PROCESAR, ESTADOS_A_PROCESAR);
+
+        log.info("XXXXXXX PENDIENTES PROCESAR " + pendientes.size());
         return pendientes;
     }
 
@@ -83,6 +91,16 @@ public class LibSirBean implements LibSirLocal{
         List<AsientoBean> pendientes = consultaService.consultarAsientosPendientesPorEstado(maxResults, estados);
         log.info("XXXXXXX PENDIENTES POR ESTADO: " + estado +" -  " + pendientes.size());
         return pendientes;
+    }
+
+    @Override
+    public List<IntercambiosPendientesProcesar> consultarCambiosEstadoPendientesProcesar(int maxResults, List<String> oficinas) throws InterException{
+        return consultaService.consultarCambiosEstadoPendientesProcesar(maxResults, oficinas);
+    }
+
+    @Override
+    public List<AsientoBean> consultarAsientosPendientes(int maxResults) throws InterException{
+        return consultaService.consultarAsientosPendientes(maxResults);
     }
 
     @Override
@@ -107,6 +125,30 @@ public class LibSirBean implements LibSirLocal{
     @Override
     public String enviarAsiento(AsientoBean asientoBean) throws InterException{
 
+//        libSirUtils.datosAsientoBean(asientoBean);
+//
+//        if (StringUtil.isCadenaVacia(asientoBean.getCdIntercambio())) {
+//            throw new InterException(CatErrorAppEnum.E0089);
+//        } else if (asientoBean.isReferenciaUnica() == null) {
+//            throw new InterException(CatErrorAppEnum.E0122);
+//        } else if (asientoService.existeCodigoIntercambio(asientoBean.getCdIntercambio())) {
+//            throw new InterException(CatErrorAppEnum.E0094);
+//        } else if (asientoBean.getFeRgOrigen() == null) {
+//            throw new InterException(CatErrorAppEnum.E0091);
+//        } else if (asientoBean.getFeRgOrigen().after(utilService.getFechaSistemaMasUnDia())) {
+//            throw new InterException(CatErrorAppEnum.E0082);
+//        } else if (StringUtil.isCadenaVacia(asientoBean.getNuRgOrigen())) {
+//            throw new InterException(CatErrorAppEnum.E0090);
+//        } else if (StringUtil.isCadenaVacia(Objects.toString(asientoBean.getFeRgPresentacion(), (String)null))) {
+//            throw new InterException(CatErrorAppEnum.E0159);
+//        } else if (asientoBean.getFeRgPresentacion().after(utilService.getFechaSistemaMasUnDia())) {
+//            throw new InterException(CatErrorAppEnum.E0140);
+//        } /*else if (!this.existeJustificante(asientoBean.getAnexosBean())) {
+//            throw new InterException(CatErrorAppEnum.E0093);
+//        }*/
+
+
+
         salidaService.enviar(asientoBean);
         log.info("Enviado AsientoBean" + asientoBean.getNuRgOrigen() + " - " + asientoBean.getCdIntercambio());
         return asientoBean.getCdIntercambio();
@@ -123,14 +165,15 @@ public class LibSirBean implements LibSirLocal{
      * @throws DatatypeConfigurationException
      */
     @Override
-    public void reenviarRegistro(IRegistro registro, Long tipoRegistro) throws InterException, I18NException, ParseException, DatatypeConfigurationException {
+    public void reenviarRegistro(IRegistro registro, Long tipoRegistro, OficinaTF oficinaSirDestino) throws InterException, I18NException, ParseException, DatatypeConfigurationException {
         AsientoBean asientoBean = null;
+
         if(tipoRegistro.equals(RegwebConstantes.REGISTRO_ENTRADA)) {
             RegistroEntrada registroEntrada = (RegistroEntrada)registro;
-             asientoBean = libSirUtils.transformarRegistroEntrada(registroEntrada);
+             asientoBean = libSirUtils.transformarRegistroEntrada(registroEntrada, oficinaSirDestino);
         }else if (tipoRegistro.equals(RegwebConstantes.REGISTRO_SALIDA)) {
             RegistroSalida registroSalida = (RegistroSalida)registro;
-            asientoBean = libSirUtils.transformarRegistroSalida(registroSalida);
+            asientoBean = libSirUtils.transformarRegistroSalida(registroSalida, oficinaSirDestino);
         }
         try {
             salidaService.enviar(asientoBean);
@@ -152,12 +195,12 @@ public class LibSirBean implements LibSirLocal{
 
     @Override
     public void marcarErrorTecnicoAsiento(String oficina, String cdIntercambio) throws InterException{
-        //estadoAsientoService.marcarAsientoErrorTecnico(oficina, cdIntercambio);
+        estadoAsientoService.marcarAsientoErrorTecnico(oficina, cdIntercambio);
     }
 
     @Override
     public void desmarcarErrorTecnicoAsiento(String oficina, String cdIntercambio) throws InterException{
-        //estadoAsientoService.desmarcarAsientoErrorTecnico(oficina, cdIntercambio);
+        estadoAsientoService.desmarcarAsientoErrorTecnico(oficina, cdIntercambio);
     }
 
 }

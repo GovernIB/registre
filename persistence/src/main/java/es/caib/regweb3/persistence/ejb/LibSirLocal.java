@@ -1,7 +1,9 @@
 package es.caib.regweb3.persistence.ejb;
 
+import es.caib.dir3caib.ws.api.oficina.OficinaTF;
 import es.caib.regweb3.model.IRegistro;
 import es.gob.ad.registros.sir.interService.bean.AsientoBean;
+import es.gob.ad.registros.sir.interService.bean.IntercambiosPendientesProcesar;
 import es.gob.ad.registros.sir.interService.exception.InterException;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 
@@ -37,10 +39,13 @@ public interface LibSirLocal {
 
 
     /**
-     * @param maxResults
      * @throws InterException
      */
-    List<AsientoBean> consultaAsientosPendientes(int maxResults) throws InterException;
+    List<AsientoBean> consultaAsientosPendientesProcesar() throws InterException;
+
+    List<IntercambiosPendientesProcesar> consultarCambiosEstadoPendientesProcesar(int maxResults, List<String> oficinas) throws InterException;
+
+    List<AsientoBean> consultarAsientosPendientes(int maxResults) throws InterException;
 
 
     /**
@@ -71,7 +76,7 @@ public interface LibSirLocal {
      * @throws ParseException
      * @throws DatatypeConfigurationException
      */
-    void reenviarRegistro(IRegistro registro, Long tipoRegistro) throws InterException, I18NException, ParseException, DatatypeConfigurationException;
+    void reenviarRegistro(IRegistro registro, Long tipoRegistro, OficinaTF oficinaSirDestino) throws InterException, I18NException, ParseException, DatatypeConfigurationException;
 
     /**
      * Reencola un asiento al componente CIR a través de LIBSIR.

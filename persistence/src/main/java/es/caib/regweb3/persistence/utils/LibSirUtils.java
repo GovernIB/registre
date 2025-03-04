@@ -73,7 +73,7 @@ public class LibSirUtils {
      * @return
      * @throws I18NException
      */
-    public AsientoBean transformarRegistroEntrada(RegistroEntrada registroEntrada) throws I18NException, DatatypeConfigurationException, InterException, ParseException {
+    public AsientoBean transformarRegistroEntrada(RegistroEntrada registroEntrada,  OficinaTF oficinaSirDestino) throws I18NException, DatatypeConfigurationException, InterException, ParseException {
 
         RegistroDetalle registroDetalle = registroEntrada.getRegistroDetalle();
 
@@ -114,7 +114,7 @@ public class LibSirUtils {
 
             //Campos de registro detalle
             transformarRegistroDetalle(registroDetalle, asientoBean, registroEntrada.getDestino(), registroEntrada.getNumeroRegistroFormateado(),
-                                       registroEntrada.getOficina().getOrganismoResponsable().getEntidad().getId());
+                                       registroEntrada.getOficina().getOrganismoResponsable().getEntidad().getId(),oficinaSirDestino);
 
             //METADATOS
             Set<MetadatoRegistroEntrada> metadatosRE = registroEntrada.getMetadatosRegistroEntrada();
@@ -169,7 +169,7 @@ public class LibSirUtils {
      * @return
      * @throws I18NException
      */
-    public AsientoBean transformarRegistroSalida(RegistroSalida registroSalida) throws I18NException, DatatypeConfigurationException, ParseException {
+    public AsientoBean transformarRegistroSalida(RegistroSalida registroSalida,  OficinaTF oficinaSirDestino) throws I18NException, DatatypeConfigurationException, ParseException {
 
         RegistroDetalle registroDetalle = registroSalida.getRegistroDetalle();
 
@@ -215,7 +215,7 @@ public class LibSirUtils {
             asientoBean.setDsUnTrInicio(RegistroUtils.obtenerDenominacionOficinaOrigen(registroDetalle, registroSalida.getOficina().getDenominacion()));
 
             //Campos de registro detalle
-            transformarRegistroDetalle(registroDetalle, asientoBean, null,registroSalida.getNumeroRegistroFormateado(),registroSalida.getOficina().getOrganismoResponsable().getEntidad().getId());
+            transformarRegistroDetalle(registroDetalle, asientoBean, null,registroSalida.getNumeroRegistroFormateado(),registroSalida.getOficina().getOrganismoResponsable().getEntidad().getId(), oficinaSirDestino);
 
             //METADATOS
             Set<MetadatoRegistroSalida> metadatosRS = registroSalida.getMetadatosRegistroSalida();
@@ -321,7 +321,9 @@ public class LibSirUtils {
         //Referencia Única del anexo
         ContenidoBean contenidoBean = new ContenidoBean();
         contenidoBean.setContenido(anexo.getIdentificadorRFU().getBytes(StandardCharsets.UTF_8));
-        contenidoBean.setNombreFormato(tipoMime);
+        if (tipoMime != null && tipoMime.length() <= ANEXO_TIPOMIME_MAXLENGTH_SIR) {
+            contenidoBean.setNombreFormato(tipoMime);
+        }
         anexoBean.setContenidoBean(contenidoBean);
 
 
@@ -520,7 +522,7 @@ public class LibSirUtils {
      * @param asientoBean
      * @param organismo
      */
-    private void transformarRegistroDetalle(RegistroDetalle registroDetalle, AsientoBean asientoBean, Organismo organismo, String numeroRegistroFormateado,Long idEntidad) throws I18NException{
+    private void transformarRegistroDetalle(RegistroDetalle registroDetalle, AsientoBean asientoBean, Organismo organismo, String numeroRegistroFormateado,Long idEntidad, OficinaTF oficinaSirDestino) throws I18NException{
 
         //Entidad Registral Destino
         asientoBean.setCdEnRgDestino(registroDetalle.getCodigoEntidadRegistralDestino());
@@ -560,8 +562,13 @@ public class LibSirUtils {
         //CAMPOS NUEVOS SICRES4
         asientoBean.setModoRegistro(registroDetalle.getPresencial() ? "01" : "02"); // 01 PRESENCIAL, 02 ELECTRÓNICO
         asientoBean.setCdSia(registroDetalle.getCodigoSia());
-        // MIRAR SI EL DESTINO ESTA EN RFU.
-        //asientoBean.setReferenciaUnica(serviciosOfiService.isOficinaConRU((registroDetalle.getCodigoEntidadRegistralDestino())));
+
+        //TODO PONER BIEN LA RFU
+        // asientoBean.setReferenciaUnica(oficinaSirDestino.isReferenciaUnica());
+        asientoBean.setReferenciaUnica(Dir3CaibUtils.oficinaReferenciaUnica(PropiedadGlobalUtil.getDir3CaibServer(idEntidad), oficinaSirDestino.getCodigo()));
+       // asientoBean.setReferenciaUnica(false);
+log.info("REFERENCIA UNICA: XXXXXXXXXXX" + asientoBean.isReferenciaUnica());
+
         //SI es un registro rectificado, tendrá el identificador de intercambio del registro original
         String numRegistroOrigen = registroDetalle.getNumeroRegistroOrigen();
         log.info("ORIGEN : " + numRegistroOrigen);
@@ -950,7 +957,7 @@ public class LibSirUtils {
         return registroSir;
     }
 
-    /**
+        /**
      * Crea un Interesado tipo Persona Juridica a partir del Código Unidad De Gestión de destino o si no está informado,
      * a partir del Código Entidad Registral de destino
      *
@@ -1133,4 +1140,76 @@ public class LibSirUtils {
         anexo.setMetadatosAnexos(metadatosAnexos);
         return anexo;
     }
+
+
+
+
+
+    /*public void datosAsientoBean (AsientoBean asientoBean){
+        log.info("Datos AsientoBean");
+
+
+        //Entidad Registral Destino
+        log.info("CdEnRgDestino " +asientoBean.getCdEnRgDestino());
+        log.info("DsEnRgDestino " +asientoBean.getDsEnRgDestino());
+
+        log.info("DsResumen " +asientoBean.getDsResumen());
+        log.info("CdAsunto " +asientoBean.getCdAsunto());
+
+        log.info("RfExterna " +asientoBean.getRfExterna());
+        log.info("NuExpediente " +asientoBean.getNuExpediente());
+        log.info("CdTpTransporte " +asientoBean.getCdTpTransporte());
+        log.info("NuTransporte " +asientoBean.getNuTransporte());
+        log.info("CdIntercambio " +asientoBean.getCdIntercambio());
+        log.info("ApVersion " +asientoBean.getApVersion());
+        log.info("CdTpAnotacion " +asientoBean.getCdTpAnotacion());
+        log.info("DsTpAnotacion " +asientoBean.getDsTpAnotacion());
+
+        log.info("FeRgOrigen " + asientoBean.getFeRgOrigen());
+        log.info("NuRgOrigen " + asientoBean.getNuRgOrigen());
+        log.info("FeRgPresentacion " + asientoBean.getFeRgPresentacion());
+
+
+
+        log.info("CdDocFisica " +asientoBean.getCdDocFisica());
+
+        log.info("DsObservaciones " +asientoBean.getDsObservaciones());
+
+        //Indicador de Prueba
+        log.info("CdInPrueba " +asientoBean.getCdInPrueba());
+
+
+        //Expone / Solicita
+        log.info("DsExpone " +asientoBean.getDsExpone());
+        log.info("DsSolicita " +asientoBean.getDsSolicita());
+
+        //CAMPOS NUEVOS SICRES4
+        log.info("ModoRegistro " +asientoBean.getModoRegistro()); // 01 PRESENCIAL, 02 ELECTRÓNICO
+        log.info("CdSia " +asientoBean.getCdSia());
+
+        log.info("isReferenciaUnica " + asientoBean.isReferenciaUnica());
+        //SI es un registro rectificado, tendrá el identificador de intercambio del registro original
+
+        log.info("CdIntercambioPrevio " +asientoBean.getCdIntercambioPrevio());
+
+        log.info("isParaIntercambiar " +asientoBean.isParaIntercambiar());
+
+        for(AnexoBean anexoBean : asientoBean.getAnexosBean()){
+            log.info("NombreFormato " +anexoBean.getContenidoBean().getNombreFormato());
+            log.info("NombreFormato " + Arrays.toString(anexoBean.getContenidoBean().getContenido()));
+            log.info("CodigoFormulario " +anexoBean.getCodigoFormulario());
+            log.info("IdentificadorFichero " +anexoBean.getIdentificadorFichero());
+            log.info("IdentificadorDocumentoFirmado " +anexoBean.getIdentificadorDocumentoFirmado());
+            log.info("NombreFichero " +anexoBean.getNombreFichero());
+            log.info("Observaciones " +anexoBean.getObservaciones());
+        //    log.info(" " +anexoBean.getOtrosMetadatosGenerales().size());
+        //    log.info(" " +anexoBean.getOtrosMetadatosParticulares().size());
+            log.info("tResumen " +anexoBean.getResumen());
+            log.info("TipoAnexo " +anexoBean.getTipoAnexo());
+            log.info("TamanioFichero " +anexoBean.getTamanioFichero());
+            //log.info(anexoBean.getTipoMetadatos().getIdentificador());
+            log.info("UrlRepositorio " +anexoBean.getUrlRepositorio());
+
+        }
+    }*/
 }
