@@ -312,7 +312,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean implem
             result = q.getResultList();
         }
 
-        if(result.size()>0){ // Si hay buscamos las oficinas SIR
+        if(result.size()>0) { // Si hay buscamos las oficinas SIR
             String codigoDir3 = result.get(0);
             Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService(PropiedadGlobalUtil.getDir3CaibServer(idEntidad), PropiedadGlobalUtil.getDir3CaibUsername(idEntidad), PropiedadGlobalUtil.getDir3CaibPassword(idEntidad));
 

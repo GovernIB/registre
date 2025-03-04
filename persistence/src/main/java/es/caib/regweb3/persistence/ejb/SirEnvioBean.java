@@ -1,7 +1,6 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.dir3caib.ws.api.oficina.ContactoTF;
-import es.caib.dir3caib.ws.api.oficina.Dir3CaibObtenerOficinasWs;
 import es.caib.dir3caib.ws.api.oficina.OficinaTF;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.sir.MensajeControl;
@@ -17,7 +16,6 @@ import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.sir.ejb.EmisionLocal;
 import es.caib.regweb3.sir.ejb.MensajeLocal;
 import es.caib.regweb3.utils.Configuracio;
-import es.caib.regweb3.utils.Dir3CaibUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 import es.gob.ad.registros.sir.interService.bean.AsientoBean;
@@ -93,6 +91,7 @@ public class SirEnvioBean implements SirEnvioLocal {
     @EJB private LibSirLocal libsirEjb;
     @EJB private AnexoLocal anexoEjb;
     @EJB private EntidadLocal entidadEjb;
+    @EJB private JustificanteLocal justificanteEjb;
 
 
     @Autowired ArxiuCaibUtils arxiuCaibUtils;
@@ -145,7 +144,6 @@ public class SirEnvioBean implements SirEnvioLocal {
             registroDetalle.setOficinaOrigenExternoCodigo(null);
             registroDetalle.setOficinaOrigenExternoDenominacion(null);
             registroDetalle.setFechaOrigen(registroEntrada.getFecha());
-            registroDetalle.setFechaOrigen(registroEntrada.getFecha());
             if(registroDetalle.getNumeroRegistroOrigen() == null) {
                 registroDetalle.setNumeroRegistroOrigen(registroEntrada.getNumeroRegistroFormateado());
             }
@@ -158,13 +156,13 @@ public class SirEnvioBean implements SirEnvioLocal {
             registroEntrada.getRegistroDetalle().setAnexosFull(gestionAnexosInterdoc(registroEntrada.getRegistroDetalle(), entidad, oficinaSirDestino.getCodUoResponsable(), registroEntrada.getNumeroRegistroFormateado(),registroEntrada.getFecha(),RegwebConstantes.REGISTRO_ENTRADA));
 
             // Crear y registrar el Oficio de remisión
-            oficioRemision = oficioRemisionEntradaUtilsEjb.crearOficioRemisionSIR(registroEntrada, entidad, oficinaActiva, usuario, oficinaSirDestino);
+           oficioRemision = oficioRemisionEntradaUtilsEjb.crearOficioRemisionSIR(registroEntrada, entidad, oficinaActiva, usuario, oficinaSirDestino);
 
             // Actualizamos el registro
             registroEntradaEjb.merge(registroEntrada);
 
             //Transformar a AsientoBean
-            asientoBean = libSirUtils.transformarRegistroEntrada(registroEntrada);
+            asientoBean = libSirUtils.transformarRegistroEntrada(registroEntrada,oficinaSirDestino);
 
             // Integración
             peticion.append("IdentificadorIntercambio: ").append(asientoBean.getCdIntercambio()).append(System.getProperty("line.separator"));
@@ -179,7 +177,7 @@ public class SirEnvioBean implements SirEnvioLocal {
             log.info("Fin enviando FicheroIntercambio del registro: " + registroEntrada.getNumeroRegistroFormateado());
             log.info("----------------------------------------------------------------------------------------------");
 
-        } catch (I18NValidationException | I18NException | InterException  s) {
+        } catch (I18NException | InterException  s) {
             s.printStackTrace();
             integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_SIR, descripcion, peticion.toString(), s, null, System.currentTimeMillis() - inicio.getTime(), entidad.getId(), registroEntrada.getNumeroRegistroFormateado());
             ejbContext.setRollbackOnly();
@@ -245,8 +243,9 @@ public class SirEnvioBean implements SirEnvioLocal {
             // Actualizamos el registro
             registroSalidaEjb.merge(registroSalida);
 
+
             //Transformar a AsientoBean
-            asientoBean = libSirUtils.transformarRegistroSalida(registroSalida);
+            asientoBean = libSirUtils.transformarRegistroSalida(registroSalida, oficinaSirDestino);
 
             // Integración
             peticion.append("IdentificadorIntercambio: ").append(asientoBean.getCdIntercambio()).append(System.getProperty("line.separator"));
@@ -261,7 +260,7 @@ public class SirEnvioBean implements SirEnvioLocal {
             log.info("Fin enviando FicheroIntercambio del registro: " + registroSalida.getNumeroRegistroFormateado());
             log.info("----------------------------------------------------------------------------------------------");
 
-        } catch (I18NValidationException | I18NException | InterException  s) {
+        } catch (I18NException | InterException  s) {
             s.printStackTrace();
             integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_SIR, descripcion, peticion.toString(), s, null, System.currentTimeMillis() - inicio.getTime(), entidad.getId(), registroSalida.getNumeroRegistroFormateado());
             ejbContext.setRollbackOnly();
@@ -276,13 +275,14 @@ public class SirEnvioBean implements SirEnvioLocal {
      * @param registro
      * @param oficinaActiva
      * @param usuario
-     * @param codigoOficinaSir
+     * @param oficinaSirDestino
      * @return
      * @throws I18NException
      * @throws I18NException
      */
     @Override
-    public OficioRemision enviarIntercambio(Long tipoRegistro, IRegistro registro, Entidad entidad, Oficina oficinaActiva, UsuarioEntidad usuario, String codigoOficinaSir)
+    public OficioRemision enviarIntercambio(Long tipoRegistro, IRegistro registro, Entidad entidad, Oficina oficinaActiva, UsuarioEntidad usuario, OficinaTF oficinaSirDestino)
+
             throws I18NException, I18NValidationException, DatatypeConfigurationException, InterException, ParseException {
 
         OficioRemision oficioRemision = null;
@@ -290,16 +290,12 @@ public class SirEnvioBean implements SirEnvioLocal {
 
         Date inicio = new Date();
         StringBuilder peticion = new StringBuilder();
-        String descripcion = "Envío intercambio a " + codigoOficinaSir;
+        String descripcion = "Envío intercambio a " +  oficinaSirDestino.getCodigo();
         peticion.append("TipoAnotación: ").append(TipoAnotacion.ENVIO.getName()).append(System.getProperty("line.separator"));
         peticion.append("Usuario: ").append(usuario.getNombreCompleto()).append(System.getProperty("line.separator"));
         peticion.append("Número registro: ").append(registro.getNumeroRegistroFormateado()).append(System.getProperty("line.separator"));
 
         try {
-
-            // OficinaSir destino
-            Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService(PropiedadGlobalUtil.getDir3CaibServer(entidad.getId()), PropiedadGlobalUtil.getDir3CaibUsername(entidad.getId()), PropiedadGlobalUtil.getDir3CaibPassword(entidad.getId()));
-            OficinaTF oficinaSirDestino = oficinasService.obtenerOficina(codigoOficinaSir, null, null);
 
             log.info("----------------------------------------------------------------------------------------------");
             log.info("Enviando FicheroIntercambio del registro: " + registro.getNumeroRegistroFormateado() + " mediante SIR a: " + oficinaSirDestino.getDenominacion());
@@ -356,6 +352,7 @@ public class SirEnvioBean implements SirEnvioLocal {
             if (tipoRegistro.equals(REGISTRO_ENTRADA)) {
 
                 RegistroEntrada registroEntrada = registroEntradaEjb.findByIdCompleto(idRegistro);
+
                 RegistroDetalle registroDetalle = registroEntrada.getRegistroDetalle();
 
                 peticion.append("Número registro: ").append(registroEntrada.getNumeroRegistroFormateado()).append(System.getProperty("line.separator"));
@@ -388,14 +385,20 @@ public class SirEnvioBean implements SirEnvioLocal {
                 oficioRemision.setTipoAnotacion(TipoAnotacion.REENVIO.getValue());
                 oficioRemision.setDecodificacionTipoAnotacion(observaciones);
 
-                // Transformamos el RegistroEntrada en un RegistroSir
-                //registroSir = registroSirEjb.transformarRegistroEntrada(registroEntrada);
-                asientoBean = libSirUtils.transformarRegistroEntrada(registroEntrada);
+                // Transformamos el RegistroEntrada en un AsientoBean
+                OficinaTF oficinaSirDestino = new OficinaTF();
+                oficinaSirDestino.setCodigo(oficinaReenvio.getCodigo());
+                oficinaSirDestino.setDenominacion(oficinaReenvio.getDenominacion());
+                oficinaSirDestino.setCodUoResponsable(oficinaReenvio.getOrganismoResponsable().getCodigo());
+
+                asientoBean = libSirUtils.transformarRegistroEntrada(registroEntrada,oficinaSirDestino);
 
             } else if (tipoRegistro.equals(REGISTRO_SALIDA)) {
 
-                RegistroSalida registroSalida = registroSalidaEjb.findByIdCompleto(idRegistro);
+
+                RegistroSalida registroSalida = registroSalidaEjb.getConAnexosFull(idRegistro);
                 RegistroDetalle registroDetalle = registroSalida.getRegistroDetalle();
+
 
                 log.info("----------------------------------------------------------------------------------------------");
                 log.info("Enviando FicheroIntercambio del registro: " + registroSalida.getNumeroRegistroFormateado() + " mediante SIR a: " + oficinaReenvio.getDenominacion());
@@ -424,8 +427,13 @@ public class SirEnvioBean implements SirEnvioLocal {
                 oficioRemision.setDecodificacionEntidadRegistralDestino(oficinaReenvio.getDenominacion());
 
                 // Transformamos el RegistroSalida en un RegistroSir
-                //registroSir = registroSirEjb.transformarRegistroSalida(registroSalida);
-                asientoBean = libSirUtils.transformarRegistroSalida(registroSalida);
+                OficinaTF oficinaSirDestino = new OficinaTF();
+                oficinaSirDestino.setCodigo(oficinaReenvio.getCodigo());
+                oficinaSirDestino.setDenominacion(oficinaReenvio.getDenominacion());
+                oficinaSirDestino.setCodUoResponsable(oficinaReenvio.getOrganismoResponsable().getCodigo());
+                //oficinaSirDestino.setReferenciaUnica(oficinaReenvio.getReferenciaUnica());
+
+                asientoBean = libSirUtils.transformarRegistroSalida(registroSalida, oficinaSirDestino );
 
             }
 

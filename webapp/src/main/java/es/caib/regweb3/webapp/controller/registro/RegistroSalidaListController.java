@@ -365,8 +365,13 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
                 AnexoFull anexoFull = justificanteEjb.crearJustificante(entidad, usuarioEntidad, registroSalida, RegwebConstantes.REGISTRO_SALIDA, Configuracio.getDefaultLanguage());
                 registroSalida.getRegistroDetalle().getAnexosFull().add(anexoFull);
             }
+           // OficinaSir oficinaSir = new OficinaSir();
+            OficinaTF oficinaSir = new OficinaTF();
+            oficinaSir.setCodigo(envioSirForm.getOficinaSIRCodigo());
+            oficinaSir.setDenominacion(envioSirForm.getOficinaSIRDenominacion());
+            oficinaSir.setCodUoResponsable(envioSirForm.getOficinaUoResponsable());
 
-            sirEnvioEjb.enviarIntercambio(RegwebConstantes.REGISTRO_SALIDA, registroSalida, entidad, getOficinaActiva(request), usuarioEntidad, oficinaSIRCodigo);
+            sirEnvioEjb.enviarIntercambio(RegwebConstantes.REGISTRO_SALIDA, registroSalida, entidad, getOficinaActiva(request), usuarioEntidad, oficinaSir);
 
             Mensaje.saveMessageInfo(request, getMessage("registroSalida.envioSir.ok"));
             jsonResponse.setStatus("SUCCESS");
@@ -376,7 +381,7 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
             jsonResponse.setStatus("FAIL");
             jsonResponse.setError(getMessage("registroSir.error.envio") + ": " + e.getMessage());
             e.printStackTrace();
-        }catch (Exception ie) {
+        } catch (Exception ie) {
             log.info(getMessage("registroSir.error.envio"));
             jsonResponse.setStatus("FAIL");
             jsonResponse.setError(getMessage("registroSir.error.envio") + ": " + ie.getMessage());

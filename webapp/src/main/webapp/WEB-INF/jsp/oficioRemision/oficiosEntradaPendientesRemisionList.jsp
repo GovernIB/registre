@@ -373,6 +373,8 @@
                                                                 </div>
                                                             </div>
                                                             <input type="hidden" id="oficinaSIRCodigo" name="oficinaSIRCodigo" value="${(oficiosRemisionOrganismo.oficinasSIR[0]).codigo}"/>
+                                                            <input type="hidden" id="oficinaSIRDenominacion" name="oficinaSIRDenominacion" value="${(oficiosRemisionOrganismo.oficinasSIR[0]).denominacion}"/>
+                                                            <input type="hidden" id="oficinaUoResponsable" name="oficinaUoResponsable" value="${(oficiosRemisionOrganismo.oficinasSIR[0]).codUoResponsable}"/>
                                                         </c:if>
 
                                                         <!-- Más de 1 Oficina SIR -->

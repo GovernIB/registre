@@ -16,6 +16,9 @@ public class OficioRemisionForm {
     private String organismoExternoCodigo;
     private String organismoExternoDenominacion;
     private String oficinaSIRCodigo;
+    private String oficinaSIRDenominacion;
+    private String oficinaUoResponsable;
+
 
     public OficioRemisionForm() {
     }
@@ -70,5 +73,21 @@ public class OficioRemisionForm {
 
     public void setOficinaSIRCodigo(String oficinaSIRCodigo) {
         this.oficinaSIRCodigo = oficinaSIRCodigo;
+    }
+
+    public String getOficinaSIRDenominacion() {
+        return oficinaSIRDenominacion;
+    }
+
+    public void setOficinaSIRDenominacion(String oficinaSIRDenominacion) {
+        this.oficinaSIRDenominacion = oficinaSIRDenominacion;
+    }
+
+    public String getOficinaUoResponsable() {
+        return oficinaUoResponsable;
+    }
+
+    public void setOficinaUoResponsable(String oficinaUoResponsable) {
+        this.oficinaUoResponsable = oficinaUoResponsable;
     }
 }

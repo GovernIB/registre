@@ -114,8 +114,13 @@
                                             <!-- Oficina Sir destinataria -->
                                             <!-- Una sola oficina SIR -->
                                             <c:if test="${fn:length(oficinasSIR) == 1}">
-                                                   <p><strong><i class="fa fa-home"></i> <spring:message code="oficina.destino"/>:</strong> ${oficinasSIR[0].denominacion} (${oficinasSIR[0].codigo})</p>
+                                            <div class="form-group">
+                                            </div>
+                                                  <p><strong><i class="fa fa-home"></i> <spring:message code="oficina.destino"/>:</strong> ${oficinasSIR[0].denominacion} (${oficinasSIR[0].codigo})</p>
+                                                   <input type="hidden" id="oficinaUoResponsable" name="oficinaUoResponsable" value="${oficinasSIR[0].codUoResponsable}"/>
                                                    <input type="hidden" id="oficinaSIRCodigo" name="oficinaSIRCodigo" value="${oficinasSIR[0].codigo}"/>
+                                                   <input type="hidden" id="oficinaSIRDenominacion" name="oficinaSIRDenominacion" value="${oficinasSIR[0].denominacion}"/>
+
                                             </c:if>
                                             <!-- Más de 1 Oficina SIR -->
                                             <c:if test="${fn:length(oficinasSIR) > 1}">
@@ -189,11 +194,11 @@
                 url = '<c:url value="/registroSalida/${registro.id}/enviarSir"/>';
                 urlDetalle ='<c:url value="/registroSalida/${registro.id}/detalle"/>';
             }
-            
-            $.ajax({
+
+            $('#envioSirForm').ajaxSubmit({
                 url: url,
                 type:'POST',
-                data: {oficinaSIRCodigo: $("#oficinaSIRCodigo").val()},
+               /* data: $('#envioSirForm').serialize(),*/
                 beforeSend: function(objeto){
                     waitingDialog.show('<spring:message code="registroSir.enviando" javaScriptEscape='true'/>', {dialogSize: 'm', progressType: 'primary'});
                 },

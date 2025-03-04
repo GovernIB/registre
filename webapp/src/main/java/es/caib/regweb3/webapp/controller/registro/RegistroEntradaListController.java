@@ -340,6 +340,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
             UnidadTF destino = organismoEjb.obtenerDestinoExterno(destinoExterno, entidadActiva.getId());
             mav.addObject("destino", destino);
             List<OficinaTF> oficinasSIR = new ArrayList<OficinaTF>();
+
             //Si está extinguido obtenemos sus sustitutos(con oficinas SIR) de dir3caib
             if (destino.getCodigoEstadoEntidad().equals(RegwebConstantes.ESTADO_ENTIDAD_EXTINGUIDO)) {
                 List<UnidadTF> sustitutos = organismoEjb.obtenerSustitutosExternosSIR(destino.getCodigo(), entidadActiva.getId());
@@ -352,6 +353,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
                 }
                 mav.addObject("sustitutos", sustitutos);
             } else { //Obtenemos las oficinas SIR desde dir3caib
+
                 oficinasSIR = oficinaEjb.obtenerOficinasSir(destino.getCodigo(), getLoginInfo(request).getDir3Caib());
                 if (oficinasSIR.isEmpty()) {
                     log.info("Este registro no se puede enviar via SIR, no tiene oficinas");
@@ -374,8 +376,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
      */
     @RequestMapping(value = "/{idRegistro}/enviarSir", method = RequestMethod.POST)
     @ResponseBody
-    public JsonResponse enviarSir(@ModelAttribute EnvioSirForm envioSirForm, @PathVariable Long idRegistro, String oficinaSIRCodigo,
-                                  HttpServletRequest request) throws Exception {
+    public JsonResponse enviarSir(@ModelAttribute EnvioSirForm envioSirForm, @PathVariable Long idRegistro, HttpServletRequest request) throws Exception {
 
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
 
@@ -394,7 +395,12 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
             }
 
             // Enviar el Intercambio
-            sirEnvioEjb.enviarIntercambio(RegwebConstantes.REGISTRO_ENTRADA, registroEntrada, entidad, getOficinaActiva(request), usuarioEntidad, oficinaSIRCodigo);
+            OficinaTF oficinaSir = new OficinaTF();
+            oficinaSir.setCodigo(envioSirForm.getOficinaSIRCodigo());
+            oficinaSir.setDenominacion(envioSirForm.getOficinaSIRDenominacion());
+            oficinaSir.setCodUoResponsable(envioSirForm.getOficinaUoResponsable());
+
+            sirEnvioEjb.enviarIntercambio(RegwebConstantes.REGISTRO_ENTRADA, registroEntrada, entidad, getOficinaActiva(request), usuarioEntidad, oficinaSir);
 
             Mensaje.saveMessageInfo(request, getMessage("registroEntrada.envioSir.ok"));
             jsonResponse.setStatus("SUCCESS");

@@ -255,9 +255,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean implemen
 
         // Si se trata de un OficioRemisionExterno, comprobamos si el destino tiene Oficinas Sir
         if (StringUtils.isNotEmpty(codigoDir3) && isOficioRemisionExterno(registroSalida, organismos)) {
-
             Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService(PropiedadGlobalUtil.getDir3CaibServer(idEntidad), PropiedadGlobalUtil.getDir3CaibUsername(idEntidad), PropiedadGlobalUtil.getDir3CaibPassword(idEntidad));
-
             return oficinasService.obtenerOficinasSIRUnidad(codigoDir3);
         }
 

@@ -318,4 +318,14 @@ public interface OficinaLocal extends BaseEjb<Oficina, Long> {
      * @throws I18NException
      */
     List<OficinaTF> obtenerOficinasSir(String codigo, Dir3Caib dir3caib) throws I18NException;
+
+
+    /**
+     * Obtiene la oficina desde dir3caib(via WS) del código indicado
+     * @param codigo
+     * @param dir3caib
+     * @return
+     * @throws I18NException
+     */
+    OficinaTF obtenerOficina(String codigo, Dir3Caib dir3caib) throws I18NException;
 }

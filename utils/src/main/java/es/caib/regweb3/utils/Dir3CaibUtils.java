@@ -35,6 +35,9 @@ public class Dir3CaibUtils {
     private static final String OFICINA_DENOMINACION = "/rest/oficina/denominacion";
     private static final String UNIDAD_EXISTE = "/rest/unidad/existe";
     private static final String OFICINA_EXISTE = "/rest/oficina/existe";
+    private static final String OFICINA_REFERENCIA_UNICA = "/rest/oficina/referenciaUnica";
+
+
 
     private static final Long TIMEOUT = 500000L;
 
@@ -202,6 +205,48 @@ public class Dir3CaibUtils {
         return existe;
 
     }
+
+    /**
+     * Obtiene si la oficina de codigoDir3  tiene referencia única
+     *
+     * @param codigoDir3
+     * @return
+     * @throws Exception
+     */
+    public static Boolean oficinaReferenciaUnica(String server, String codigoDir3) {
+
+        String url = server + OFICINA_REFERENCIA_UNICA;
+        Boolean referenciaUnica;
+
+        // Parámetro codigo
+        url = url + "?codigo=" + codigoDir3;
+
+        HttpClient httpClient = HttpClient.newBuilder().build();
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .GET()
+                .uri(URI.create(url))
+                .build();
+
+        try {
+            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+            if(response.statusCode() == 200){
+                referenciaUnica = Boolean.valueOf(response.body());
+            }else{
+                referenciaUnica = false;
+            }
+
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+            log.info("Error obteniendo si es referencia única: " + codigoDir3);
+            return null;
+        }
+
+        return referenciaUnica;
+
+    }
+
+
 
     private static void configAddressUserPasswordTimeout(String usr, String pwd, String endpoint, Long timeout, Object api) {
 

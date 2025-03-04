@@ -722,4 +722,13 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
         return oficinasService.obtenerOficinasSIRUnidad(codigo);
 
     }
+
+
+    @Override
+    public OficinaTF obtenerOficina(String codigo, Dir3Caib dir3caib) throws I18NException {
+        Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService(dir3caib.getServer(), dir3caib.getUser(), dir3caib.getPassword());
+        return oficinasService.obtenerOficina(codigo,null,null);
+
+    }
+
 }

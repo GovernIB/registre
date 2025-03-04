@@ -156,8 +156,9 @@ public class AsientoRegistralBean implements AsientoRegistralLocal {
                             crearJustificante(entidad, registroSalida.getUsuario(), registroSalida, RegwebConstantes.REGISTRO_SALIDA, RegistroUtils.getIdiomaJustificante(registroSalida));
 
                             // Crear el intercambio, posteriormente se enviará
+                            OficinaTF oficinaTF =  oficinasSIR.get(0);
                             sirEnvioEjb.crearIntercambioSalida(registroSalida, entidad, registroSalida.getOficina(),
-                                    registroSalida.getUsuario(), oficinasSIR.get(0));
+                                    registroSalida.getUsuario(), oficinaTF);
 
                             registroSalida.setEstado(REGISTRO_OFICIO_SIR);
                             registroSalida.getRegistroDetalle().setIdentificadorIntercambio(registroSalida.getRegistroDetalle().getIdentificadorIntercambio());

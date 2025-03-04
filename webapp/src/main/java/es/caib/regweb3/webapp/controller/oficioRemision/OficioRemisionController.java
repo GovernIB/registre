@@ -1,5 +1,6 @@
 package es.caib.regweb3.webapp.controller.oficioRemision;
 
+import es.caib.dir3caib.ws.api.oficina.OficinaTF;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.model.utils.RegistroBasico;
@@ -549,8 +550,11 @@ public class OficioRemisionController extends BaseController {
                         }
 
                         // Enviamos el Fichero de datos de intercambio al nodo SIR
-                        sirEnvioEjb.enviarIntercambio(RegwebConstantes.REGISTRO_ENTRADA, registroEntrada, entidad, getOficinaActiva(request), usuarioEntidad,
-                                oficioRemisionForm.getOficinaSIRCodigo());
+                        OficinaTF oficinaSir = new OficinaTF();
+                        oficinaSir.setCodigo(oficioRemisionForm.getOficinaSIRCodigo());
+                        oficinaSir.setDenominacion(oficioRemisionForm.getOficinaSIRDenominacion());
+                        oficinaSir.setCodUoResponsable(oficioRemisionForm.getOficinaUoResponsable());
+                        sirEnvioEjb.enviarIntercambio(RegwebConstantes.REGISTRO_ENTRADA, registroEntrada, entidad, getOficinaActiva(request), usuarioEntidad,oficinaSir);
 
                     }
                 }
@@ -602,8 +606,11 @@ public class OficioRemisionController extends BaseController {
                         }
 
                         // Enviamos el Fichero de datos de intercambio al nodo SIR
-                        sirEnvioEjb.enviarIntercambio(RegwebConstantes.REGISTRO_SALIDA, registroSalida, entidad, getOficinaActiva(request), usuarioEntidad,
-                                oficioRemisionForm.getOficinaSIRCodigo());
+                        OficinaTF oficinaSir = new OficinaTF();
+                        oficinaSir.setCodigo(oficioRemisionForm.getOficinaSIRCodigo());
+                        oficinaSir.setDenominacion(oficioRemisionForm.getOficinaSIRDenominacion());
+                        oficinaSir.setCodUoResponsable(oficioRemisionForm.getOficinaUoResponsable());
+                        sirEnvioEjb.enviarIntercambio(RegwebConstantes.REGISTRO_SALIDA, registroSalida, entidad, getOficinaActiva(request), usuarioEntidad, oficinaSir);
 
                     }
                 }
@@ -621,7 +628,7 @@ public class OficioRemisionController extends BaseController {
             log.info(" Error enviant a SIR: " + I18NUtils.getMessage(ve), ve);
             Mensaje.saveMessageError(request, getMessage("registroSir.error.envio") + ": " + ve.getMessage());
             return new ModelAndView(redirect);
-        }  catch (InterException ie) {
+        } catch (InterException ie) {
             log.info(" Error enviant a SIR : " + ie.getMessage(), ie);
             Mensaje.saveMessageError(request, getMessage("registroSir.error.envio") + ": " + ie.getMessage());
             return new ModelAndView(redirect);

@@ -9,7 +9,9 @@ public class EnvioSirForm {
 
     private Long idRegistro;
     private String oficinaSIRCodigo;
+    private String oficinaSIRDenominacion;
     private String destinoSIRCodigo;
+    private String oficinaUoResponsable;
 
 
     public EnvioSirForm() {
@@ -33,11 +35,28 @@ public class EnvioSirForm {
         this.oficinaSIRCodigo = oficinaSIRCodigo;
     }
 
+   public String getOficinaSIRDenominacion() {
+        return oficinaSIRDenominacion;
+    }
+
+    public void setOficinaSIRDenominacion(String oficinaSIRDenominacion) {
+        this.oficinaSIRDenominacion = oficinaSIRDenominacion;
+    }
+
     public String getDestinoSIRCodigo() {
         return destinoSIRCodigo;
     }
 
     public void setDestinoSIRCodigo(String destinoSIRCodigo) {
         this.destinoSIRCodigo = destinoSIRCodigo;
+    }
+
+
+    public String getOficinaUoResponsable() {
+        return oficinaUoResponsable;
+    }
+
+    public void setOficinaUoResponsable(String oficinaUoResponsable) {
+        this.oficinaUoResponsable = oficinaUoResponsable;
     }
 }

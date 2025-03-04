@@ -57,11 +57,11 @@ public interface SirEnvioLocal {
      * @param registro
      * @param oficinaActiva
      * @param usuario
-     * @param codigoOficinaSir
+     * @param oficinaSirDestino
      * @throws I18NException
      * @throws I18NException
      */
-    OficioRemision enviarIntercambio(Long tipoRegistro, IRegistro registro, Entidad entidad, Oficina oficinaActiva, UsuarioEntidad usuario, String codigoOficinaSir)
+    OficioRemision enviarIntercambio(Long tipoRegistro, IRegistro registro, Entidad entidad, Oficina oficinaActiva, UsuarioEntidad usuario, OficinaTF oficinaSirDestino)
             throws I18NException, I18NValidationException, DatatypeConfigurationException, InterException, ParseException;
 
     /**
