@@ -16,7 +16,7 @@ import java.util.List;
  * Date: 6/02/14
  */
 @Entity
-@Table(name = "RWE_USUARIO", uniqueConstraints = { @UniqueConstraint(name = "RWE_USU_IDENT_UK", columnNames = { "IDENTIFICADOR"}) })
+@Table(name = "RWE_USUARIO", uniqueConstraints = { @UniqueConstraint(name = "RWE_USUARIO_IDENTIFICADOR_UK", columnNames = { "IDENTIFICADOR"}) })
 @SequenceGenerator(name = "generator", sequenceName = "RWE_USUARIO_SEQ", allocationSize = 1)
 @XmlRootElement(name = "usuario")
 @XmlAccessorType(XmlAccessType.FIELD)

@@ -21,7 +21,7 @@ import java.util.Set;
                 @Index(name = "RWE_REGMIG_REMDES_I", columnList = "DESREMDES"),
         },
         uniqueConstraints = {
-                @UniqueConstraint(name="RWE_REGISTRO_MIGRADO_UK", columnNames = {"ANO", "NUMERO", "CODOFICINA", "TREGISTRO", "IDENTIDAD"})
+                @UniqueConstraint(name="RWE_REGMIGRADO_AN_NUM_OF_UK", columnNames = {"ANO", "NUMERO", "CODOFICINA", "TREGISTRO", "IDENTIDAD"})
         })
 @SequenceGenerator(name = "generator", sequenceName = "RWE_REGISTRO_MIGRADO_SEQ", allocationSize = 1)
 public class RegistroMigrado implements Serializable {

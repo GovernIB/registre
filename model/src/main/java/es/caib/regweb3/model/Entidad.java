@@ -19,7 +19,7 @@ import java.util.Set;
         indexes =
             @Index(name = "RWE_ENTIDA_PRO_FK_I", columnList = "PROPIETARIO"),
         uniqueConstraints = {
-            @UniqueConstraint(name = "RWE_ENTIDAD_CODDIR3_UK", columnNames = { "CODIGODIR3"}) })
+            @UniqueConstraint(name = "RWE_ENTIDAD_CODIGODIR3_UK", columnNames = { "CODIGODIR3"}) })
 @SequenceGenerator(name = "generator", sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
 @XmlRootElement(name = "entidad")
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -210,7 +210,7 @@ public class Entidad implements Serializable {
 
     @ManyToMany(targetEntity = UsuarioEntidad.class, fetch = FetchType.EAGER)
     @JoinTable(name = "RWE_ENTIDAD_USUENT", foreignKey = @ForeignKey(name = "RWE_USU_ADM_ENTIDAD_FK"),
-            inverseForeignKey = @ForeignKey(name = "RWE_ENTIDAD_USUENT_FK"),
+            inverseForeignKey = @ForeignKey(name = "RWE_ENTIDAD_USU_ADM_FK"),
             joinColumns = {@JoinColumn(name = "IDENTIDAD")}, inverseJoinColumns = {@JoinColumn(name = "IDUSUENT")})
     @OrderBy("id")
     public Set<UsuarioEntidad> getAdministradores() {
