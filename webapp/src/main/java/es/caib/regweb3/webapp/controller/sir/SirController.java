@@ -1,5 +1,6 @@
 package es.caib.regweb3.webapp.controller.sir;
 
+import es.caib.dir3caib.ws.api.oficina.OficinaTF;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.sir.MensajeControl;
 import es.caib.regweb3.model.sir.TipoMensaje;
@@ -512,7 +513,9 @@ public class SirController extends BaseController {
      */
     @RequestMapping(value = "/reencolarIntercambio", method = RequestMethod.GET)
     @ResponseBody
-    public Boolean reencolarIntercambio(@RequestParam String oficina, @RequestParam String idIntercambio )throws Exception {
+    public Boolean reencolarIntercambio(@RequestParam String oficina, @RequestParam String idIntercambio, HttpServletRequest request )throws Exception {
+        OficinaTF oficinaSirDestino = oficinaEjb.obtenerOficina(oficina,getLoginInfo(request).getDir3Caib());
+
         try{
             AsientoBean asiento =libSirEjb.consultaAsiento(oficina,idIntercambio);
             if(asiento!=null) { //Existe AsientoBean en LIBSIR
@@ -525,11 +528,11 @@ public class SirController extends BaseController {
                 List<Long> registros = oficioRemisionEjb.getEntradasByOficioRemisionIntercambio(idIntercambio);
                 if(registros.size()>0){  //Oficio Remision Entrada
                     RegistroEntrada registroEntrada = registroEntradaEjb.getConAnexosFull(registros.get(0));
-                    libSirEjb.reenviarRegistro(registroEntrada,RegwebConstantes.REGISTRO_ENTRADA);
+                    libSirEjb.reenviarRegistro(registroEntrada,RegwebConstantes.REGISTRO_ENTRADA, oficinaSirDestino);
                 }else{  //Oficio Remision Salida
                     registros =  oficioRemisionEjb.getSalidadByOficioRemisionIntercambio(idIntercambio);
                     RegistroSalida registroSalida = registroSalidaEjb.getConAnexosFull(registros.get(0));
-                    libSirEjb.reenviarRegistro(registroSalida, RegwebConstantes.REGISTRO_SALIDA);
+                    libSirEjb.reenviarRegistro(registroSalida, RegwebConstantes.REGISTRO_SALIDA, oficinaSirDestino);
                 }
 
                 return true;
