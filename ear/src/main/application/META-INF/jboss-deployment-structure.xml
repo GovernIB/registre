@@ -84,6 +84,15 @@
             <module name="org.codehaus.jackson.jackson-xc" export="TRUE"/>
             <module name="org.codehaus.jettison" export="TRUE"/>
 
+            <module name="com.sun.xml.messaging.saaj" export="TRUE"/>
+            <module name="javax.jws.api" export="TRUE"/>
+            <module name="javax.xml.soap.api" export="TRUE"/>
+            <module name="javax.xml.ws.api" export="TRUE"/>
+            <module name="org.jboss.logging.commons.logging" export="TRUE"/>
+            <module name="org.jboss.resteasy.resteasy-jackson-provider" export="TRUE"/>
+            <module name="org.apache.log4j" export="TRUE"/>
+
+
         </dependencies>
     </deployment>
 
