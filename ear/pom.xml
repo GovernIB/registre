@@ -47,6 +47,8 @@
             
                         <!-- Requereix afegir mòdul 'javax.activation.api' a jboss-deployment-structure.xml -->
                          **/activation*redhat*.jar,
+                        <!-- Requereix afegir mòdul javax.activation.api a jboss-deployment-structure.xml -->
+                        **/javax.activation-api*.jar,
                         <!-- Requereix afegir mòdul 'org.apache.james.mime4j' a jboss-deployment-structure.xml -->
                          **/apache-mime4j*redhat*.jar,
                         <!-- Requereix afegir mòdul 'asm.asm' a jboss-deployment-structure.xml -->
@@ -179,6 +181,9 @@
                          **/jaxb-runtime*redhat*.jar,
                          **/jaxb-xjc*redhat*.jar,
                          **/jaxb-jxc*redhat*.jar,
+                         **/jaxb-api*.jar,
+                         **/jaxb-xjc*.jar,
+                         **/jaxb-jxc*.jar,
                          **/codemodel*redhat*.jar,
                          **/rngom*redhat*.jar,
                         <!-- Requereix afegir mòdul 'javax.annotation.api' a jboss-deployment-structure.xml -->
@@ -235,6 +240,31 @@
                          **/jackson-xc*redhat*.jar,
                         <!-- Requereix afegir mòdul 'org.codehaus.jettison' a jboss-deployment-structure.xml -->
                          **/jettison*redhat*.jar,
+                         **/jaxws-rt*.jar,
+
+
+
+                        <!-- Requereix afegir mòdul 'com.sun.xml.messaging.saaj' a jboss-deployment-structure.xml -->
+                        **/saaj-impl*redhat*.jar,
+                        <!-- Requereix afegir mòdul 'javax.jws.api' a jboss-deployment-structure.xml -->
+                        **/jsr181-api*redhat*.jar,
+                        <!-- Requereix afegir mòdul 'javax.xml.soap.api' a jboss-deployment-structure.xml -->
+                        **/jboss-saaj-api_1.3_spec*redhat*.jar,
+                        <!-- Requereix afegir mòdul 'javax.xml.ws.api' a jboss-deployment-structure.xml -->
+                        **/jboss-jaxws-api_2.3_spec*redhat*.jar,
+                        <!-- Requereix afegir mòdul 'org.jboss.logging.commons.logging' a jboss-deployment-structure.xml -->
+                        **/commons-logging-jboss-logging*redhat*.jar,
+                        <!-- Requereix afegir mòdul 'org.jboss.resteasy.resteasy-jackson-provider' a jboss-deployment-structure.xml -->
+                        **/resteasy-jackson-provider*redhat*.jar,
+                        <!-- Requereix afegir mòdul org.apache.log4j a jboss-deployment-structure.xml -->
+                        **/log4j-*.jar,
+
+                        <!-- Requereix afegir mòdul javax.ws.rs.api a jboss-deployment-structure.xml -->
+                        **/jsr311-api-*.jar,
+
+                        <!-- Requereix afegir mòdul org.apache.commons.io a jboss-deployment-structure.xml -->
+                        **/org.apache.commons.io*.jar
+
 
 
                     </packagingExcludes>
@@ -303,26 +333,6 @@
 
         <dependency>
             <groupId>org.fundaciobit.pluginsib.documentcustody</groupId>
-            <artifactId>pluginsib-documentcustody-alfresco</artifactId>
-            <version>${pluginsib.documentcustody.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.slf4j</groupId>
-                    <artifactId>slf4j-api</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>javax.xml.stream</groupId>
-                    <artifactId>stax-api</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>xpp3</groupId>
-                    <artifactId>xpp3</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
-        <dependency>
-            <groupId>org.fundaciobit.pluginsib.documentcustody</groupId>
             <artifactId>pluginsib-documentcustody-arxiudigitalcaib</artifactId>
         </dependency>
         <!-- ============= FIN PLUGINS DE CUSTODIA ========== -->
@@ -355,8 +365,14 @@
                     <groupId>commons-logging</groupId>
                     <artifactId>commons-logging</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>org.jvnet.staxex</groupId>
+                    <artifactId>stax-ex</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
+
+
 
         <!-- ======== PLUGINS DE SCANWEB: DWTWAIN, DIGITALIB, MASSIVE  =========== -->
         <dependency>
@@ -583,54 +599,6 @@
             <artifactId>spring-orm</artifactId>
         </dependency>
 
-        <!--LIBSIR-->
-        <dependency>
-            <groupId>es.gob.ad.registros.sir</groupId>
-            <artifactId>InterService</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>es.gob.ad.registros.sir</groupId>
-            <artifactId>interModel.ORACLE</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.hibernate</groupId>
-                    <artifactId>hibernate-core</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>javax.activation</groupId>
-                    <artifactId>javax.activation-api</artifactId>
-                    <!-- javax.activation:javax.activation-api:jar:1.2.0 -->
-                </exclusion>
-            </exclusions>
-        </dependency>
-
-        <!-- Afegir mòdul i eliminar jar de l'exclussion de interModel.ORACLE -->
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-core</artifactId>
-            <scope>provided</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>javax.activation</groupId>
-                    <artifactId>javax.activation-api</artifactId>
-                    <!-- javax.activation:javax.activation-api:jar:1.2.0 -->
-                </exclusion>
-            </exclusions>
-        </dependency>
-        
-        
-        <!-- Afegir mòdul i eliminar jar de l'exclussion de interModel.ORACLE -->
-        <dependency>
-             <groupId>javax.activation</groupId>
-             <artifactId>activation</artifactId>
-        </dependency>
-
-
-        <!--<dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-dbcp2</artifactId>
-        </dependency>-->
-
         <dependency>
             <groupId>es.caib.regweb3</groupId>
             <artifactId>regweb3-utils</artifactId>
@@ -705,10 +673,10 @@
         </dependency>
 
         <!--Carpeta-->
-        <dependency>
+       <!-- <dependency>
             <groupId>es.caib.carpeta</groupId>
             <artifactId>carpeta-api-interna-client</artifactId>
-        </dependency>
+        </dependency>-->
 
         <!-- iText -->
         <dependency>

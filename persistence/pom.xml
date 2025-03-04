@@ -40,7 +40,17 @@
                     <groupId>org.jboss.logging</groupId>
                     <artifactId>jboss-logging</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>javax.activation</groupId>
+                    <artifactId>javax.activation-api</artifactId>
+                </exclusion>
             </exclusions>
+        </dependency>
+
+        <!-- Afegim dependencia perque exclusion de hibernate-core -->
+        <dependency>
+            <groupId>javax.activation</groupId>
+            <artifactId>activation</artifactId>
         </dependency>
 
         <dependency>
@@ -169,9 +179,26 @@
         <dependency>
             <groupId>es.caib.carpeta</groupId>
             <artifactId>carpeta-api-interna-client</artifactId>
-            <scope>provided</scope>
+            <version>${carpeta-api-interna-client.version}</version>
+            <!-- Ho podem excloure ja que ho tenim a pluginsib-documentcustody-alfresco, pluginsib-userinformation-keycloak -->
+            <exclusions>
+                <exclusion>
+                    <groupId>com.google.code.findbugs</groupId>
+                    <artifactId>jsr305</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.jvnet.staxex</groupId>
+                    <artifactId>stax-ex</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
+        <!-- Això és l'exclusion de carpeta-api-interna-client i es perque entra en conflicte amb LIBSIR -->
+        <dependency>
+            <groupId>org.jvnet.staxex</groupId>
+            <artifactId>stax-ex</artifactId>
+            <version>1.8.3</version>
+        </dependency>
 
 
         <!-- Dependències de test -->
@@ -200,7 +227,7 @@
         </dependency>
 
         <!--LIBSIR-->
-        <dependency>
+       <!-- <dependency>
             <groupId>es.gob.ad.registros.sir</groupId>
             <artifactId>InterService</artifactId>
             <scope>provided</scope>
@@ -215,23 +242,114 @@
             <groupId>es.gob.ad.registros.sir</groupId>
             <artifactId>interModel-api</artifactId>
             <scope>provided</scope>
-        </dependency>
+        </dependency>-->
 
-        <!--<dependency>
-            <groupId>org.jboss.ejb3</groupId>
-            <artifactId>jboss-ejb3-common</artifactId>
-            <version>1.0.2</version>
+
+
+        <dependency>
+            <groupId>es.gob.ad.registros.sir</groupId>
+            <artifactId>InterService</artifactId>
+            <version>${libsir.version}</version>
             <exclusions>
                 <exclusion>
-                    <groupId>javassist</groupId>
-                    <artifactId>javassist</artifactId>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
                 </exclusion>
                 <exclusion>
-                    <groupId>sun-jaxb</groupId>
-                    <artifactId>jaxb-api</artifactId>
+                    <groupId>xerces</groupId>
+                    <artifactId>xercesImpl</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-web</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>javax.activation</groupId>
+                    <artifactId>javax.activation-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.sun.activation</groupId>
+                    <artifactId>jakarta.activation</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.sun.xml.ws</groupId>
+                    <artifactId>release-documentation</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.sun.xml.ws</groupId>
+                    <artifactId>samples</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>-->
+        </dependency>
+
+
+
+
+        <!-- las incluimos porque no estan y les hemos hecho un exclusion en la dependencia de InterService -->
+        <dependency>
+            <groupId>com.sun.xml.ws</groupId>
+            <artifactId>release-documentation</artifactId>
+            <version>2.3.3</version>
+            <type>pom</type>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.xml.ws</groupId>
+            <artifactId>samples</artifactId>
+            <version>2.3.3</version>
+            <type>pom</type>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.sun.org.apache.xml.internal/resolver -->
+        <dependency>
+            <groupId>com.sun.org.apache.xml.internal</groupId>
+            <artifactId>resolver</artifactId>
+            <version>20050927</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>es.gob.ad.registros.sir</groupId>
+            <artifactId>gestionEni</artifactId>
+            <version>${libsir.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-web</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>es.gob.ad.registros.sir</groupId>
+            <artifactId>sirCommons</artifactId>
+            <version>3.1.3</version>
+        </dependency>
+
+        <dependency>
+            <groupId>es.gob.ad.registros.sir</groupId>
+            <artifactId>interModel-api</artifactId>
+            <version>3.1.3</version>
+        </dependency>
+
+        <dependency>
+            <groupId>es.gob.ad.registros.sir</groupId>
+            <artifactId>interModel.ORACLE</artifactId>
+            <version>3.1.2</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>antlr</groupId>
+                    <artifactId>antlr</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-web</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
 
         <dependency>
             <groupId>net.java.xades</groupId>

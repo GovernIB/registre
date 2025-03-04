@@ -255,13 +255,6 @@
             <scope>provided</scope>
         </dependency>
 
-        <!--LIBSIR-->
-        <dependency>
-            <groupId>es.gob.ad.registros.sir</groupId>
-            <artifactId>InterService</artifactId>
-            <scope>provided</scope>
-        </dependency>
-
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
