@@ -613,7 +613,7 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
                     taulaInteresado.addCell(new Paragraph(interesado.getDireccionElectronica(), lletraGovern8));
                 }*/
                 // Observacions
-                if(StringUtils.isNotEmpty(interesado.getObservaciones())) {
+               /* if(StringUtils.isNotEmpty(interesado.getObservaciones())) {
                     i += 1;
                     taulaInteresado.addCell(new Paragraph(tradueixMissatge(locale, "justificante.observaciones"), lletraGovern9bold));
                     taulaInteresado.addCell(new Paragraph(interesado.getObservaciones(), lletraGovern8));
@@ -733,7 +733,7 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
                                 taulaRepresentant.addCell(new Paragraph(representante.getDireccionElectronica(), lletraGovern8));
                             }*/
                             // Observacions
-                            if(StringUtils.isNotEmpty(representante.getObservaciones())) {
+                           /* if(StringUtils.isNotEmpty(representante.getObservaciones())) {
                                 i += 1;
                                 taulaRepresentant.addCell(new Paragraph(tradueixMissatge(locale, "justificante.observaciones"), lletraGovern9bold));
                                 taulaRepresentant.addCell(new Paragraph(representante.getObservaciones(), lletraGovern8));
