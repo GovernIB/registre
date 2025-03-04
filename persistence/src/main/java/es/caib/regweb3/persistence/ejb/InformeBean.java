@@ -277,7 +277,7 @@ public class InformeBean implements InformeLocal {
                     (Long) object[3], (String) object[4], (Date) object[5], (Integer) object[6], (String) object[7], (String) object[8],
                     (Long) object[9], (String) object[10], (String) object[11], (Date) object[12], (String) object[13], (Long) object[14],
                     (String) object[15], (Long) object[16], (Long) object[17], (String) object[18], (Long) object[19], (String) object[20],
-                    (Long) object[21], (String) object[22], (Long) object[23], (String) object[24], (Long) object[25], (Long) object[26], (String) object[27], (Boolean) object[28], (String) object[29], interesados);
+                    (Long) object[21], (String) object[22], (Long) object[23], (String) object[24], (Long) object[25], (String) object[26], (String) object[27], (Boolean) object[28], (String) object[29], interesados);
 
             registrosEntrada.add(registroEntrada);
         }
@@ -522,7 +522,7 @@ public class InformeBean implements InformeLocal {
                     (Long) object[3], (String) object[4], (Date) object[5], (Integer) object[6], (String) object[7], (String) object[8],
                     (Long) object[9], (String) object[10], (String) object[11], (Date) object[12], (String) object[13], (Long) object[14],
                     (String) object[15], (Long) object[16], (Long) object[17], (String) object[18], (Long) object[19], (String) object[20],
-                    (Long) object[21], (String) object[22], (Long) object[23], (String) object[24], (Long) object[25],(Long) object[26], (String) object[27], (Boolean) object[28], (String) object[29], interesados);
+                    (Long) object[21], (String) object[22], (Long) object[23], (String) object[24], (Long) object[25],(String) object[26], (String) object[27], (Boolean) object[28], (String) object[29], interesados);
 
             registrosSalida.add(registroSalida);
 
