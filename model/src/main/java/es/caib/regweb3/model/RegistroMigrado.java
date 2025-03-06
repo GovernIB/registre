@@ -173,7 +173,7 @@ public class RegistroMigrado implements Serializable {
         this.extracto = extracto;
     }
 
-    @Column(name = "FECHADOC", nullable = false)
+    @Column(name = "FECHADOC")
     public Date getFechaDocumento() {
         return fechaDocumento;
     }
