@@ -32,3 +32,6 @@ UPDATE RWE_DESCARGA set tipo = 1 where tipo2='unidad';
 UPDATE RWE_DESCARGA set tipo = 2 where tipo2='oficina';
 UPDATE RWE_DESCARGA set tipo = 3 where tipo2='catalogo';
 ALTER TABLE RWE_DESCARGA DROP COLUMN tipo2;
+
+--Modificaciones campos RWE_REGISTRO_MIGRADO
+alter table RWE_REGISTRO_MIGRADO MODIFY FECHADOC null;
