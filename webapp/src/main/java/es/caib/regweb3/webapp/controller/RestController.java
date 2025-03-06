@@ -73,6 +73,9 @@ public class RestController extends BaseController {
     @EJB(mappedName = ColaLocal.JNDI_NAME)
     private ColaLocal colaEjb;
 
+    @EJB(mappedName = DescargaLocal.JNDI_NAME)
+    private DescargaLocal descargaEjb;
+
 
     @RequestMapping(value = "/busquedaPersonas/{tipoPersona}", method = RequestMethod.POST)
     public @ResponseBody List<Persona> busquedaPersonas(@PathVariable Long tipoPersona, @RequestParam String query, HttpServletRequest request) throws Exception {
@@ -250,6 +253,16 @@ public class RestController extends BaseController {
     Integracion obtenerIntegracion(@RequestParam Long idIntegracion) throws Exception {
 
         return integracionEjb.findById(idIntegracion);
+    }
+
+    /**
+     * Obtiene un {@link es.caib.regweb3.model.Descarga}
+     */
+    @RequestMapping(value = "/obtenerSincronizacion", method = RequestMethod.GET)
+    public @ResponseBody
+    Descarga obtenerSincronizacion(@RequestParam Long idSincronizacion) throws Exception {
+
+        return descargaEjb.findById(idSincronizacion);
     }
 
     /**

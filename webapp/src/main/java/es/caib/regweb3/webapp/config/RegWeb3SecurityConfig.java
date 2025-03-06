@@ -76,10 +76,7 @@ public class RegWeb3SecurityConfig extends WebSecurityConfigurerAdapter {
                 antMatchers("/usuarioEntidad/**/edit").hasAnyAuthority(RWE_ADMIN,RWE_USUARI).
                 /* ----- RWE_ADMIN ----- */
                 antMatchers("/entidad/permisos/**").hasAuthority(RWE_ADMIN).
-                antMatchers("/entidad/procesarPendientes").hasAuthority(RWE_ADMIN).
                 antMatchers("/usuarioEntidad/**").hasAuthority(RWE_ADMIN).
-                antMatchers("/entidad/**/sincronizar").hasAuthority(RWE_ADMIN).
-                antMatchers("/entidad/**/actualizar").hasAuthority(RWE_ADMIN).
                 antMatchers("/entidad/procesarlibroorganismo/**").hasAuthority(RWE_ADMIN).
                 antMatchers("/tipoAsunto/**").hasAuthority(RWE_ADMIN).
                 antMatchers("/usuario/existeUsuario").hasAuthority(RWE_ADMIN).
@@ -90,6 +87,7 @@ public class RegWeb3SecurityConfig extends WebSecurityConfigurerAdapter {
                 antMatchers("/sir/**").hasAuthority(RWE_ADMIN).
                 antMatchers("/cola/**").hasAuthority(RWE_ADMIN).
                 antMatchers("/pendiente/**").hasAuthority(RWE_ADMIN).
+                antMatchers("/sincronizacion/**").hasAuthority(RWE_ADMIN).
                 /* ----- RWE_SUPERADMIN y RWE_ADMIN ----- */
                 antMatchers("/entidad/**/edit").hasAnyAuthority(RWE_SUPERADMIN,RWE_ADMIN).
                 antMatchers("/usuario/new").hasAnyAuthority(RWE_SUPERADMIN,RWE_ADMIN).

@@ -50,7 +50,7 @@ public class Dir3Controller extends BaseController {
         }
 
         ModelAndView mav = new ModelAndView("catalogoDir3/catalogoDir3List");
-        Descarga ultimaDescarga = descargaEjb.findByTipo(RegwebConstantes.CATALOGO);
+        Descarga ultimaDescarga = descargaEjb.findByTipo(RegwebConstantes.DESCARGA_CATALOGO);
 
         mav.addObject("descarga", ultimaDescarga);
 

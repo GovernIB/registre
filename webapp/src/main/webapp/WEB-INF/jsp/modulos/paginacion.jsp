@@ -3,8 +3,17 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
-
 <c:if test="${paginacion.totalPages > 1}">
+    <c:url var="urlBase" value="/${param.entidad}/list/" />
+    <script type="text/javascript">
+
+        //Gestionamos el Select de "Ir a Página"
+        $('#irPagina').change(
+            function() {
+                goTo('${urlBase}'+$(this).val());
+            });
+    </script>
+
     <div class="col-xs-12">
         <c:url var="firstUrl" value="/${param.entidad}/list/1" />
         <c:url var="lastUrl" value="/${param.entidad}/list/${paginacion.totalPages}" />

@@ -26,6 +26,6 @@ public interface SincronizadorDir3Local {
      * @return
      * @throws I18NException
      */
-    int sincronizarActualizar(Long entidadId, Timestamp fechaActualizacion, Timestamp fechaSincronizacion) throws I18NException;
+    void sincronizarActualizar(Long entidadId, Timestamp fechaActualizacion, Timestamp fechaSincronizacion) throws I18NException;
 
 }

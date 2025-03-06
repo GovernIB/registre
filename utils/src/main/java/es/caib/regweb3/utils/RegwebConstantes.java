@@ -437,7 +437,10 @@ public interface RegwebConstantes {
     /* -------------- DESCARGA TIPOS --------------*/
     String UNIDAD = "unidad";
     String OFICINA = "oficina";
-    String CATALOGO = "catalogo";
+
+    Integer DESCARGA_UNIDAD = 1;
+    Integer DESCARGA_OFICINA = 2;
+    Integer DESCARGA_CATALOGO = 3;
 
     /* -------------- PAIS --------------*/
     Long PAIS_ESPAÑA = 724L;

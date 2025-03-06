@@ -1,7 +1,7 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.dir3caib.ws.api.oficina.Dir3CaibObtenerOficinasWs;
-import es.caib.dir3caib.ws.api.oficina.OficinaTF;
+import es.caib.dir3caib.ws.api.oficina.OficinaWs;
 import es.caib.dir3caib.ws.api.oficina.RelacionOrganizativaOfiTF;
 import es.caib.dir3caib.ws.api.oficina.RelacionSirOfiTF;
 import es.caib.dir3caib.ws.api.unidad.Dir3CaibObtenerUnidadesWs;
@@ -64,7 +64,7 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
     private Map<Long, CatServicio> cacheServicio = new TreeMap<Long, CatServicio>();
 
     /**
-     * Método que sincroniza o actualiza una entidad de regweb3 desde dir3caib. Lo hace en función de si se indica la
+     * Función que sincroniza o actualiza una entidad de regweb3 desde dir3caib. Lo hace en función de si se indica la
      * fecha de actualización o no. Si no se indica se sincroniza y si se indica se actualiza
      *
      * @param entidadId           entidad a tratar
@@ -75,31 +75,32 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
      */
     @Override
     @TransactionTimeout(value = 1800)  // 30 minutos
-    public int sincronizarActualizar(Long entidadId, Timestamp fechaActualizacion, Timestamp fechaSincronizacion) throws I18NException {
+    public void sincronizarActualizar(Long entidadId, Timestamp fechaActualizacion, Timestamp fechaSincronizacion) throws I18NException {
 
         Entidad entidad = entidadEjb.findByIdLigero(entidadId);
+        List<String> sincronizados = new ArrayList<String>();
 
         // Obtenemos el Service de los WS de Unidades
         Dir3CaibObtenerUnidadesWs unidadesService = Dir3CaibUtils.getObtenerUnidadesService(PropiedadGlobalUtil.getDir3CaibServer(entidadId), PropiedadGlobalUtil.getDir3CaibUsername(entidadId), PropiedadGlobalUtil.getDir3CaibPassword(entidadId));
 
         // Obtenemos el arbol de Unidades
-        List<UnidadWs> arbol = unidadesService.obtenerArbolUnidadesV2(entidad.getCodigoDir3(), fechaActualizacion, fechaSincronizacion);
+        List<UnidadWs> unidadesWs = unidadesService.obtenerArbolUnidadesV2(entidad.getCodigoDir3(), fechaActualizacion, fechaSincronizacion);
 
-        log.info("Organimos obtenidos de " + entidad.getNombre() + ": " + arbol.size());
+        log.info("Organimos obtenidos de " + entidad.getNombre() + ": " + unidadesWs.size());
 
         /*  CACHES */
         inicializarCaches();
 
         // Procesamos el arbol de organismos obtenido
-        if (!arbol.isEmpty()) {
+        if (!unidadesWs.isEmpty()) {
 
-            for (UnidadWs unidadWs : arbol) {
-
+            for (UnidadWs unidadWs : unidadesWs) {
                 sincronizarOrganismo(unidadWs, entidadId);
+                sincronizados.add((StringUtils.isNotEmpty(unidadWs.getDenomLenguaCooficial())) ? unidadWs.getDenomLenguaCooficial() : unidadWs.getDenominacion());
             }
 
             // Sincronizamos los históricos del arbol de organismos obtenido
-            for (UnidadWs unidadWs : arbol) {
+            for (UnidadWs unidadWs : unidadesWs) {
                 if (unidadWs != null) {
 
                     Organismo organismo = organismoEjb.findByCodigoEntidadSinEstado(unidadWs.getCodigo(), entidadId);
@@ -109,49 +110,49 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
                     procesarExtinguido(organismo, entidad);
                 }
             }
-
         }
 
         // Creamos la descarga de Unidades
-        nuevaDescarga(RegwebConstantes.UNIDAD, entidad);
+        nuevaDescarga(RegwebConstantes.DESCARGA_UNIDAD, entidad, Arrays.toString(sincronizados.toArray()));
 
         log.info("");
         log.info("Finalizada la importacion de Organismos");
         log.info("");
 
-        Set<OficinaTF> todasOficinasEntidad = new HashSet<OficinaTF>();
-        int oficinasActualizadas = 0;
-
-        if (arbol.size() > 0 || fechaActualizacion != null) {// obtenemos las oficinas en caso de actualizacion o en caso de sincro sin han venido organismos.
+        if (!unidadesWs.isEmpty() || fechaActualizacion != null) {// obtenemos las oficinas en caso de actualizacion o en caso de sincro sin han venido organismos.
 
             // Obtenemos el Service de los WS de Oficinas
             Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService(PropiedadGlobalUtil.getDir3CaibServer(entidadId), PropiedadGlobalUtil.getDir3CaibUsername(entidadId), PropiedadGlobalUtil.getDir3CaibPassword(entidadId));
 
             // Obtenemos todas las oficinas de la entidad.
-            List<OficinaTF> oficinasTF = oficinasService.obtenerArbolOficinas(entidad.getCodigoDir3(), fechaActualizacion, fechaSincronizacion);
-            log.info("Oficinas obtenidas de " + entidad.getNombre() + ": " + oficinasTF.size());
+            List<OficinaWs> oficinasWS = oficinasService.obtenerArbolOficinasV2(entidad.getCodigoDir3(), fechaActualizacion, fechaSincronizacion);
+            log.info("Oficinas obtenidas de " + entidad.getNombre() + ": " + oficinasWS.size());
 
-            todasOficinasEntidad.addAll(oficinasTF);
+            sincronizados.clear();
 
-            // Procesamos todas las oficinas de la entidad
-            crearActualizarOficinas(todasOficinasEntidad, entidadId);
-            // asignamos su oficina responsable a todas las oficinas de la entidad,
-            // ya que al haberlas creado en el paso previo nos aseguramos de que la encuentra.
-            asignarOficinasResponsables(todasOficinasEntidad, entidadId);
-            // creamos las relaciones organizativas de todas las oficinas de la entidad
-            crearRelacionesOrganizativas(todasOficinasEntidad, entidadId);
-            // creamos las relaciones sir de todas las oficinas de la entidad
-            crearRelacionesSir(todasOficinasEntidad, entidadId);
+            // Procesamos las oficinas obtenidas
+            if (!oficinasWS.isEmpty()) {
 
+                // Procesamos todas las oficinas de la entidad
+                for (OficinaWs oficinaWs : oficinasWS) {
+                    sincronizarOficinas(oficinaWs, entidadId);
+                    sincronizados.add((StringUtils.isNotEmpty(oficinaWs.getDenomLenguaCooficial())) ? oficinaWs.getDenomLenguaCooficial() : oficinaWs.getDenominacion());
+                }
 
-            oficinasActualizadas += todasOficinasEntidad.size();
+                // asignamos su oficina responsable a todas las oficinas de la entidad,
+                // ya que al haberlas creado en el paso previo nos aseguramos de que la encuentra.
+                asignarOficinasResponsables(oficinasWS, entidadId);
+                // creamos las relaciones organizativas de todas las oficinas de la entidad
+                crearRelacionesOrganizativas(oficinasWS, entidadId);
+                // creamos las relaciones sir de todas las oficinas de la entidad
+                crearRelacionesSir(oficinasWS, entidadId);
+            }
 
-
-            nuevaDescarga(RegwebConstantes.OFICINA, entidad);
+            // Creamos la descarga de Oficinas
+            nuevaDescarga(RegwebConstantes.DESCARGA_OFICINA, entidad, Arrays.toString(sincronizados.toArray()));
 
             // En el siguiente for se revisa que organismos con libros que son vigentes han podido quedar sin oficinas y guardarlos como pendientes.
             //Pueden quedar sin oficinas al borrarselas o quitarles las únicas relaciones organizativas que tengan.
-
 
             // Obtenemos los organismos vigentes de la entidad que tienen libros
             List<Organismo> vigentes = organismoEjb.getPermitirUsuarios(entidadId);
@@ -165,18 +166,13 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
                     pendienteEjb.persist(new Pendiente(entidad,organismo.getId(), false, RegwebConstantes.ESTADO_ENTIDAD_VIGENTE));
                     log.info("Pendiente procesar: Organismo sin oficinas que le den servicio: " + organismo.getDenominacion());
                 }
-
             }
+
+            log.info(" REGWEB3 ORGANISMOS SINCRONIZADOS:  " + unidadesWs.size());
+            log.info(" REGWEB3 OFICINAS SINCRONIZADAS:  " + oficinasWS.size());
         }
-        //Si no hay pendientes de procesar desactivamos el mantenimiento de la entidad
-        // porque ya ha acabado el proceso de sincronización
-        //if (pendienteEjb.findPendientesProcesar(entidadId).isEmpty()) {
-            entidadEjb.marcarEntidadMantenimiento(entidadId, false);
-        //}
 
-        log.info(" REGWEB3 ORGANISMOS SINCRONIZADOS:  " + arbol.size());
-        log.info(" REGWEB3 OFICINAS SINCRONIZADAS:  " + oficinasActualizadas);
-
+        entidadEjb.marcarEntidadMantenimiento(entidadId, false);
 
         /* borramos cache */
         cacheEstadoEntidad.clear();
@@ -188,21 +184,17 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
         cacheTipoVia.clear();
         cacheServicio.clear();
 
-        return arbol.size();
-
-
     }
 
     /**
      * Crea un {@link es.caib.regweb3.model.Organismo} a partir de una UnidadWs y lo relaciona con su {@link es.caib.regweb3.model.Entidad}
-     * Este método se emplea tanto en el proceso de sincronización como en el de actualización
+     * Esta función se emplea tanto en el proceso de sincronización como en el de actualización
      *
      * @param unidadWs
      * @param idEntidad
      * @throws I18NException
      */
     private Organismo sincronizarOrganismo(UnidadWs unidadWs, Long idEntidad) throws I18NException {
-
 
         Entidad entidad = entidadEjb.findByIdLigero(idEntidad);
 
@@ -211,19 +203,19 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
         // Comprobamos que la unidad que nos envian no sea null
         // (ocurre en el caso de que actualicemos y no se haya actualizado en el origen)
         if (unidadWs != null) {
-            // Comprobamos primero si ya existe el organismo
 
+            // Comprobamos primero si ya existe el organismo
             organismo = organismoEjb.findByCodigoEntidadSinEstado(unidadWs.getCodigo(), idEntidad);
 
             if (organismo == null) {
-                log.info("Nuevo organismo: " + unidadWs.getDenominacion()+ " - " + unidadWs.getDenominacion());
+                log.info("Nuevo organismo: " + unidadWs.getCodigo()+ " - " + (StringUtils.isNotEmpty(unidadWs.getDenomLenguaCooficial()) ? unidadWs.getDenomLenguaCooficial() : unidadWs.getDenominacion()));
                 organismo = new Organismo();
                 procesarOrganismo(organismo, unidadWs, entidad);
 
                 //Guardamos el Organismo
                 organismo = organismoEjb.persist(organismo);
             } else { // Si existe hay que actualizarlo
-                log.info("Actualizar organismo: " + unidadWs.getDenominacion());
+                log.info("Actualizar organismo: " + (StringUtils.isNotEmpty(unidadWs.getDenomLenguaCooficial()) ? unidadWs.getDenomLenguaCooficial() : unidadWs.getDenominacion()));
                 procesarOrganismo(organismo, unidadWs, entidad);
             }
 
@@ -253,65 +245,58 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
     }
 
     /**
-     * Este método crea todas las oficinas recibidas. Se guardan denominación, estado y organismo responsable
+     * Esta función crea todas las oficinas recibidas. Se guardan denominación, estado y organismo responsable
      *
-     * @param oficinas conjunto de oficinas recibidas de una entidad
+     * @param oficinaWs a sincronizar
      * @throws I18NException
      */
-    private void crearActualizarOficinas(Set<OficinaTF> oficinas, Long idEntidad) throws I18NException {
+    private void sincronizarOficinas(OficinaWs oficinaWs, Long idEntidad) throws I18NException {
 
-        for (OficinaTF oficinaTF : oficinas) {
+        if (oficinaWs != null) {
 
-            if (oficinaTF != null) {
+            Oficina oficina = oficinaEjb.findByCodigoEntidadSinEstado(oficinaWs.getCodigo(), idEntidad);
 
-                Oficina oficina = oficinaEjb.findByCodigoEntidadSinEstado(oficinaTF.getCodigo(), idEntidad);
+            if (oficina == null) { // Nueva oficina
+                log.info("Nueva oficina: " + oficinaWs.getCodigo()+ " - " + (StringUtils.isNotEmpty(oficinaWs.getDenomLenguaCooficial()) ? oficinaWs.getDenomLenguaCooficial() : oficinaWs.getDenominacion()));
 
-                if (oficina == null) { // Nueva oficina
-                    log.info("Nueva oficina: " + oficinaTF.getCodigo()+ " - " + oficinaTF.getDenominacion());
+                oficina = new Oficina(idEntidad, oficinaWs.getCodigo());
 
-                    oficina = new Oficina(idEntidad, oficinaTF.getCodigo());
+                procesarOficina(oficina, oficinaWs, idEntidad); // Se procesa la oficina para asignar sus valores
 
-                    procesarOficina(oficina, oficinaTF, idEntidad); // Se procesa la oficina para asignar sus valores
+                // Guardamos la Oficina
+                oficinaEjb.persist(oficina);
 
-                    // Guardamos la Oficina
-                    oficinaEjb.persist(oficina);
+            } else { // Actualización oficina
+                log.info("Actualizar oficina: " + oficinaWs.getCodigo()+ " - " + (StringUtils.isNotEmpty(oficinaWs.getDenomLenguaCooficial()) ? oficinaWs.getDenomLenguaCooficial() : oficinaWs.getDenominacion()));
+                procesarOficina(oficina, oficinaWs, idEntidad); // Se procesa la oficina para asignar sus valores
 
-                } else { // Actualización oficina
-                    log.info("Actualizar oficina: " + oficinaTF.getCodigo()+ " - " + oficinaTF.getDenominacion());
-                    procesarOficina(oficina, oficinaTF, idEntidad); // Se procesa la oficina para asignar sus valores
-
-                    // Actualizamos la Oficina
-                    oficinaEjb.merge(oficina);
-                }
+                // Actualizamos la Oficina
+                oficinaEjb.merge(oficina);
             }
         }
-
-        log.info("");
-        log.info("Oficinas sincronizadas: " + oficinas.size());
-        log.info("");
     }
 
     /**
-     * En este método se asigna la oficina responsable a la lista de oficinas recibidas.
+     * Esta función se asigna la oficina responsable a la lista de oficinas recibidas.
      *
      * @param oficinas
      * @throws I18NException
      */
-    private void asignarOficinasResponsables(Set<OficinaTF> oficinas, Long idEntidad) throws I18NException {
+    private void asignarOficinasResponsables(List<OficinaWs> oficinas, Long idEntidad) throws I18NException {
 
-        for (OficinaTF oficinaTF : oficinas) {
+        for (OficinaWs oficinaWs : oficinas) {
 
-            if (oficinaTF != null) {
-                Oficina oficina = oficinaEjb.findByCodigoEntidadSinEstado(oficinaTF.getCodigo(), idEntidad);
+            if (oficinaWs != null) {
+                Oficina oficina = oficinaEjb.findByCodigoEntidadSinEstado(oficinaWs.getCodigo(), idEntidad);
 
                 // OficinaResponsable
-                if (oficinaTF.getCodOfiResponsable() != null) {
-                    Oficina oficinaResponsable = oficinaEjb.findByCodigoEntidadSinEstado(oficinaTF.getCodOfiResponsable(), idEntidad);
+                if (oficinaWs.getCodOfiResponsable() != null) {
+                    Oficina oficinaResponsable = oficinaEjb.findByCodigoEntidadSinEstado(oficinaWs.getCodOfiResponsable(), idEntidad);
                     if (oficinaResponsable != null) {
                         oficina.setOficinaResponsable(oficinaResponsable);
                         oficinaEjb.merge(oficina);
                     } else {
-                        log.info("TIENE OFICINA RESPONSABLE, PERO NO LA ENCUENTRA: " + oficinaTF.getCodOfiResponsable());
+                        log.info("TIENE OFICINA RESPONSABLE, PERO NO LA ENCUENTRA: " + oficinaWs.getCodOfiResponsable());
                     }
                 } else {
                     oficina.setOficinaResponsable(null);
@@ -328,21 +313,19 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
      * @param oficinas oficinas de la entidad
      * @throws I18NException
      */
-    private void crearRelacionesOrganizativas(Set<OficinaTF> oficinas, Long idEntidad) throws I18NException {
+    private void crearRelacionesOrganizativas(List<OficinaWs> oficinas, Long idEntidad) throws I18NException {
 
         log.info("RELACIONES ORGANIZATIVAS");
         log.info("");
 
-        for (OficinaTF oficinaTF : oficinas) {
+        for (OficinaWs oficinaWs : oficinas) {
 
-            if (oficinaTF != null) {
+            if (oficinaWs != null && oficinaWs.getOrganizativasOfi() != null) {
 
-                if (oficinaTF.getOrganizativasOfi() != null) {
+                    List<RelacionOrganizativaOfiTF> relacionOrganizativaOfiTFList = oficinaWs.getOrganizativasOfi();
+                    Oficina oficina = oficinaEjb.findByCodigoEntidadSinEstado(oficinaWs.getCodigo(), idEntidad);
 
-                    List<RelacionOrganizativaOfiTF> relacionOrganizativaOfiTFList = oficinaTF.getOrganizativasOfi();
-                    Oficina oficina = oficinaEjb.findByCodigoEntidadSinEstado(oficinaTF.getCodigo(), idEntidad);
-
-                    log.info("Relaciones organizativas " + oficinaTF.getDenominacion() + " - " + oficinaTF.getCodigo() + ": " + relacionOrganizativaOfiTFList.size());
+                    log.info("Relaciones organizativas " + (StringUtils.isNotEmpty(oficinaWs.getDenomLenguaCooficial()) ? oficinaWs.getDenomLenguaCooficial() : oficinaWs.getDenominacion()) + " - " + oficinaWs.getCodigo() + ": " + relacionOrganizativaOfiTFList.size());
 
                     //Borramos las relaciones existentes para el caso de la actualizacion
                     log.info("Relaciones ORG eliminadas: " + relacionOrganizativaOfiEjb.deleteByOficinaEntidad(oficina.getId()));
@@ -361,14 +344,14 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
 
                         relacionOrganizativaOfi.setOrganismo(organismoOrg);
 
-                        log.info("Relacion ORG creada entre " + oficina.getDenominacion() + " y " + organismoOrg.getDenominacion());
+                        log.info("Relacion ORG creada entre " + (StringUtils.isNotEmpty(oficinaWs.getDenomLenguaCooficial()) ? oficinaWs.getDenomLenguaCooficial() : oficinaWs.getDenominacion()) + " y " + organismoOrg.getDenominacion());
                         relacionOrganizativaOfiEjb.persist(relacionOrganizativaOfi);
 
                     }
 
                 }
 
-            }
+
             log.info("");
         }
     }
@@ -379,21 +362,21 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
      * @param oficinas oficinas de la entidad
      * @throws I18NException
      */
-    private void crearRelacionesSir(Set<OficinaTF> oficinas, Long idEntidad) throws I18NException {
+    private void crearRelacionesSir(List<OficinaWs> oficinas, Long idEntidad) throws I18NException {
 
         log.info("RELACIONES SIR");
         log.info("");
 
-        for (OficinaTF oficinaTF : oficinas) {
+        for (OficinaWs oficinaWs : oficinas) {
 
-            if (oficinaTF != null) {
+            if (oficinaWs != null) {
 
-                if (oficinaTF.getSirOfi() != null) {
+                if (oficinaWs.getSirOfi() != null) {
 
-                    List<RelacionSirOfiTF> relacionSirOfiTFList = oficinaTF.getSirOfi();
-                    Oficina oficina = oficinaEjb.findByCodigoEntidadSinEstado(oficinaTF.getCodigo(), idEntidad);
+                    List<RelacionSirOfiTF> relacionSirOfiTFList = oficinaWs.getSirOfi();
+                    Oficina oficina = oficinaEjb.findByCodigoEntidadSinEstado(oficinaWs.getCodigo(), idEntidad);
 
-                    log.info("Relaciones SIR " + oficinaTF.getDenominacion() + " - " + oficinaTF.getCodigo() + ": " + relacionSirOfiTFList.size());
+                    log.info("Relaciones SIR " + (StringUtils.isNotEmpty(oficinaWs.getDenomLenguaCooficial()) ? oficinaWs.getDenomLenguaCooficial() : oficinaWs.getDenominacion()) + " - " + oficinaWs.getCodigo() + ": " + relacionSirOfiTFList.size());
 
                     //Borramos las relaciones existentes para el caso de la actualizacion
                     log.info("Relaciones SIR eliminadas: " + relacionSirOfiEjb.deleteByOficinaEntidad(oficina.getId()));
@@ -474,7 +457,7 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
         organismo.setCodigo(unidadWs.getCodigo());
         organismo.setEstado(estado);
         organismo.setEntidad(entidad);
-        organismo.setDenominacion(unidadWs.getDenominacion());
+        organismo.setDenominacion((StringUtils.isNotEmpty(unidadWs.getDenomLenguaCooficial())) ? unidadWs.getDenomLenguaCooficial() : unidadWs.getDenominacion());
         organismo.setNivelJerarquico(unidadWs.getNivelJerarquico());
         organismo.setEdp(unidadWs.isEsEdp());
 
@@ -527,48 +510,48 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
      * Función que actualiza el estado y el organismo responsable de una oficina
      *
      * @param oficina   oficina a tratar
-     * @param oficinaTF oficina transferida desde dir3caib
+     * @param oficinaWs oficina transferida desde dir3caib
      * @throws I18NException
      */
-    private void procesarOficina(Oficina oficina, OficinaTF oficinaTF, Long idEntidad) throws I18NException {
+    private void procesarOficina(Oficina oficina, OficinaWs oficinaWs, Long idEntidad) throws I18NException {
 
-        oficina.setDenominacion(oficinaTF.getDenominacion());
-        oficina.setEstado(cacheEstadoEntidad.get(oficinaTF.getEstado()));
+        oficina.setDenominacion((StringUtils.isNotEmpty(oficinaWs.getDenomLenguaCooficial()) ? oficinaWs.getDenomLenguaCooficial() : oficinaWs.getDenominacion()));
+        oficina.setEstado(cacheEstadoEntidad.get(oficinaWs.getEstado()));
 
 
-        Organismo organismoResponsable = organismoEjb.findByCodigoEntidadSinEstado(oficinaTF.getCodUoResponsable(), idEntidad);
+        Organismo organismoResponsable = organismoEjb.findByCodigoEntidadSinEstado(oficinaWs.getCodUoResponsable(), idEntidad);
         oficina.setOrganismoResponsable(organismoResponsable);
 
-        if (oficinaTF.getCodigoPais() != null) {
-            oficina.setCodPais(cachePais.get(oficinaTF.getCodigoPais()));
+        if (oficinaWs.getCodigoPais() != null) {
+            oficina.setCodPais(cachePais.get(oficinaWs.getCodigoPais()));
         }
-        if (oficinaTF.getCodigoComunidad() != null) {
-            oficina.setCodComunidad(cacheComunidadAutonoma.get(oficinaTF.getCodigoComunidad()));
+        if (oficinaWs.getCodigoComunidad() != null) {
+            oficina.setCodComunidad(cacheComunidadAutonoma.get(oficinaWs.getCodigoComunidad()));
         }
-        if (StringUtils.isNotEmpty(oficinaTF.getDescripcionLocalidad())) {
-            oficina.setLocalidad(catLocalidadEjb.findByNombre(oficinaTF.getDescripcionLocalidad()));
+        if (StringUtils.isNotEmpty(oficinaWs.getDescripcionLocalidad())) {
+            oficina.setLocalidad(catLocalidadEjb.findByNombre(oficinaWs.getDescripcionLocalidad()));
         }
-        if (oficinaTF.getCodigoTipoVia() != null) {
-            oficina.setTipoVia(cacheTipoVia.get(oficinaTF.getCodigoTipoVia()));
+        if (oficinaWs.getCodigoTipoVia() != null) {
+            oficina.setTipoVia(cacheTipoVia.get(oficinaWs.getCodigoTipoVia()));
         }
-        if (StringUtils.isNotEmpty(oficinaTF.getNombreVia())) {
-            oficina.setNombreVia(oficinaTF.getNombreVia());
+        if (StringUtils.isNotEmpty(oficinaWs.getNombreVia())) {
+            oficina.setNombreVia(oficinaWs.getNombreVia());
         }
-        if (StringUtils.isNotEmpty(oficinaTF.getNumVia())) {
-            oficina.setNumVia(oficinaTF.getNumVia());
+        if (StringUtils.isNotEmpty(oficinaWs.getNumVia())) {
+            oficina.setNumVia(oficinaWs.getNumVia());
         }
-        if (StringUtils.isNotEmpty(oficinaTF.getCodPostal())) {
-            oficina.setCodPostal(oficinaTF.getCodPostal());
+        if (StringUtils.isNotEmpty(oficinaWs.getCodPostal())) {
+            oficina.setCodPostal(oficinaWs.getCodPostal());
         }
 
-        if (oficinaTF.getServicios() != null && !oficinaTF.getServicios().isEmpty()) {
+        if (oficinaWs.getServicios() != null && !oficinaWs.getServicios().isEmpty()) {
 
             if(oficina.getId() != null){
                 oficinaEjb.eliminarServicios(oficina.getId());
             }
             Set<CatServicio> servicios = new HashSet<CatServicio>();
 
-            for (Long servicio : oficinaTF.getServicios()) {
+            for (Long servicio : oficinaWs.getServicios()) {
                 servicios.add(cacheServicio.get(servicio));
             }
 
@@ -585,11 +568,12 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
      *
      * @param tipo    indica organismo o oficina.
      * @param entidad entidad descargada
+     * @param elementos Unidades u Oficinas sincronizadas
      * @throws I18NException
      */
-    private void nuevaDescarga(String tipo, Entidad entidad) throws I18NException {
+    private void nuevaDescarga(Integer tipo, Entidad entidad, String elementos) throws I18NException {
 
-        Descarga descarga = new Descarga(new Date(), tipo, entidad);
+        Descarga descarga = new Descarga(new Date(), tipo, entidad, elementos);
 
         descargaEjb.persist(descarga);
     }

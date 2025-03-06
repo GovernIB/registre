@@ -169,9 +169,8 @@ public class SincronizadorCatalogoBean implements SincronizadorCatalogoLocal {
         // Guardamos los datos de la ultima descarga
         Descarga descarga = new Descarga();
         descarga.setEntidad(null);
-        descarga.setTipo(RegwebConstantes.CATALOGO);
-        Date hoy = new Date();
-        descarga.setFechaImportacion(hoy);
+        descarga.setTipo(RegwebConstantes.DESCARGA_CATALOGO);
+        descarga.setFechaImportacion(new Date());
 
         return descargaEjb.persist(descarga);
     }
@@ -387,10 +386,9 @@ public class SincronizadorCatalogoBean implements SincronizadorCatalogoLocal {
 
         // Guardamos los datos de la ultima descarga
         Descarga descarga = new Descarga();
-        descarga.setTipo(RegwebConstantes.CATALOGO);
+        descarga.setTipo(RegwebConstantes.DESCARGA_CATALOGO);
         descarga.setEntidad(null);
-        Date hoy = new Date();
-        descarga.setFechaImportacion(hoy);
+        descarga.setFechaImportacion(new Date());
 
         return descargaEjb.persist(descarga);
     }
