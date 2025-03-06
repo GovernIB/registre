@@ -126,7 +126,7 @@ public class EntidadInterceptor extends HandlerInterceptorAdapter {
             // Sincronizar/Actualizar organismos
             if((url.contains("actualizar") || url.contains("sincronizar"))){
                 if(rolActivo.getNombre().equals(RegwebConstantes.RWE_ADMIN)) {
-                    Descarga catalogo = descargaEjb.findByTipo(RegwebConstantes.CATALOGO);
+                    Descarga catalogo = descargaEjb.findByTipo(RegwebConstantes.DESCARGA_CATALOGO);
                     if (catalogo == null) {
                         Mensaje.saveMessageAviso(request, I18NUtils.tradueix("catalogoDir3.catalogo.vacio"));
                         response.sendRedirect("/regweb3/aviso");

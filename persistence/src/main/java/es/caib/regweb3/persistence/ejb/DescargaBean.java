@@ -43,7 +43,7 @@ public class DescargaBean extends BaseEjbJPA<Descarga, Long> implements Descarga
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Descarga findByTipo(String tipo) throws I18NException {
+    public Descarga findByTipo(Integer tipo) throws I18NException {
         Query q = em.createQuery("select descarga from Descarga as descarga where descarga.tipo=:tipo order by descarga.id desc");
         q.setParameter("tipo", tipo);
         q.setHint("org.hibernate.readOnly", true);
@@ -59,7 +59,7 @@ public class DescargaBean extends BaseEjbJPA<Descarga, Long> implements Descarga
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Descarga ultimaDescarga(String tipo, Long idEntidad) throws I18NException {
+    public Descarga ultimaDescarga(Integer tipo, Long idEntidad) throws I18NException {
 
         Query q = em.createQuery("select descarga from Descarga as descarga where descarga.tipo = :tipo and descarga.entidad.id = :idEntidad order by descarga.id desc");
 
@@ -77,7 +77,7 @@ public class DescargaBean extends BaseEjbJPA<Descarga, Long> implements Descarga
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Descarga findByTipoEntidadInverse(String tipo, Long idEntidad) throws I18NException {
+    public Descarga primeraDescarga(Integer tipo, Long idEntidad) throws I18NException {
 
         Query q = em.createQuery("select descarga from Descarga as descarga where descarga.tipo=:tipo and descarga.entidad.id = :idEntidad order by descarga.id asc");
 
@@ -144,7 +144,7 @@ public class DescargaBean extends BaseEjbJPA<Descarga, Long> implements Descarga
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public void deleteByTipo(String tipo) throws I18NException {
+    public void deleteByTipo(Integer tipo) throws I18NException {
 
         Query query = em.createQuery("delete from Descarga as descarga where descarga.tipo=:tipo");
         query.setParameter("tipo", tipo);

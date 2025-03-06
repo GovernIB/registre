@@ -45,7 +45,7 @@ public class  OrganismoInterceptor extends HandlerInterceptorAdapter {
 
             if(rolActivo.getNombre().equals(RegwebConstantes.RWE_ADMIN)) {
                 // Comprobamos que el catalogo ha sido sincronizado al menos una vez
-                Descarga catalogo = descargaEjb.findByTipo(RegwebConstantes.CATALOGO);
+                Descarga catalogo = descargaEjb.findByTipo(RegwebConstantes.DESCARGA_CATALOGO);
                 if (catalogo == null) {
                     Mensaje.saveMessageAviso(request, I18NUtils.tradueix("catalogoDir3.catalogo.vacio"));
                     response.sendRedirect("/regweb3/aviso");

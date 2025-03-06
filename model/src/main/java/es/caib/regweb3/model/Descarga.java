@@ -5,8 +5,12 @@
 package es.caib.regweb3.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.Type;
+
 import javax.persistence.*;
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 
@@ -14,26 +18,26 @@ import java.util.Date;
  * @author mgonzalez
  * @author anadal (index)
  */
+@Entity
 @Table(name = "RWE_DESCARGA", indexes =
 @Index(name = "RWE_DESCAR_ENTIDA_FK_I", columnList = "ENTIDAD"))
-@Entity
 @SequenceGenerator(name = "generator", sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
 public class Descarga implements Serializable {
 
     private Long id;
-    private Date fechaInicio;
-    private Date fechaFin;
     private Date fechaImportacion;
-    private String tipo;
+    private Integer tipo;
     private Entidad entidad;
+    private String elementos;
 
     public Descarga() {
     }
 
-    public Descarga(Date fechaImportacion, String tipo, Entidad entidad) {
+    public Descarga(Date fechaImportacion, Integer tipo, Entidad entidad, String elementos) {
         this.fechaImportacion = fechaImportacion;
         this.tipo = tipo;
         this.entidad = entidad;
+        this.elementos = elementos;
     }
 
     @Column(name = "ID", nullable = false, length = 3)
@@ -47,24 +51,6 @@ public class Descarga implements Serializable {
         this.id = id;
     }
 
-    @Column(name = "FECHAINICIO")
-    public Date getFechaInicio() {
-        return fechaInicio;
-    }
-
-    public void setFechaInicio(Date fechaInicio) {
-        this.fechaInicio = fechaInicio;
-    }
-
-    @Column(name = "FECHAFIN")
-    public Date getFechaFin() {
-        return fechaFin;
-    }
-
-    public void setFechaFin(Date fechaFin) {
-        this.fechaFin = fechaFin;
-    }
-
     @Column(name = "FECHAIMPORTACION")
     public Date getFechaImportacion() {
         return fechaImportacion;
@@ -75,16 +61,17 @@ public class Descarga implements Serializable {
     }
 
     @Column(name = "TIPO")
-    public String getTipo() {
+    public Integer getTipo() {
         return tipo;
     }
 
-    public void setTipo(String tipo) {
+    public void setTipo(Integer tipo) {
         this.tipo = tipo;
     }
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ENTIDAD", foreignKey =@ForeignKey(name = "RWE_DESCARGA_ENTIDAD_FK"))
+    @JsonIgnore
     public Entidad getEntidad() {
         return entidad;
     }
@@ -93,4 +80,19 @@ public class Descarga implements Serializable {
         this.entidad = entidad;
     }
 
+    @Lob
+    @Type(type = "org.hibernate.type.TextType")
+    @Column(name = "ELEMENTOS", length = 2147483647)
+    public String getElementos() {
+        return elementos;
+    }
+
+    public void setElementos(String elementos) {
+        this.elementos = elementos;
+    }
+
+    @Transient
+    public String getFechaFormateada() {
+        return new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(fechaImportacion);
+    }
 }

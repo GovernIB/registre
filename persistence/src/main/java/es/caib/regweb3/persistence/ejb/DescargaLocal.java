@@ -25,7 +25,7 @@ public interface DescargaLocal extends BaseEjb<Descarga, Long> {
      * @return
      * @throws I18NException
      */
-    Descarga findByTipo(String tipo) throws I18NException;
+    Descarga findByTipo(Integer tipo) throws I18NException;
 
     /**
      * Obtiene el valor de la última descarga de un tipo y de una entidad
@@ -34,7 +34,7 @@ public interface DescargaLocal extends BaseEjb<Descarga, Long> {
      * @return la descarga encontrada
      * @throws I18NException
      */
-    Descarga ultimaDescarga(String tipo, Long idEntidad) throws I18NException;
+    Descarga ultimaDescarga(Integer tipo, Long idEntidad) throws I18NException;
 
     /**
      * Obtiene el valor de la primera descarga de un tipo y de una entidad
@@ -44,7 +44,7 @@ public interface DescargaLocal extends BaseEjb<Descarga, Long> {
      * @return la descarga encontrada
      * @throws I18NException
      */
-    Descarga findByTipoEntidadInverse(String tipo, Long idEntidad) throws I18NException;
+    Descarga primeraDescarga(Integer tipo, Long idEntidad) throws I18NException;
 
     /**
      * Calcula el total por entidad
@@ -65,7 +65,12 @@ public interface DescargaLocal extends BaseEjb<Descarga, Long> {
      */
     List<Descarga> getPaginationByEntidad(int inicio, Long idEntidad) throws I18NException;
 
-    void deleteByTipo(String tipo) throws I18NException;
+    /**
+     *
+     * @param tipo
+     * @throws I18NException
+     */
+    void deleteByTipo(Integer tipo) throws I18NException;
 
     /**
      * Obtiene las descargas de una entidad ordenadas por código;

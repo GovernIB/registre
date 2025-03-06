@@ -297,7 +297,7 @@
                 confirmModal.modal("hide");
 
                 $.ajax({
-                    url:'<c:url value="/entidad/${entidad.id}/sincronizar"/>',
+                    url:'<c:url value="/sincronizacion/${entidad.id}/sincronizar"/>',
                     type:'GET',
                     beforeSend: function(objeto){
                         waitingDialog.show('<spring:message code="organismo.organigrama.sincronizando" javaScriptEscape='true'/>', {dialogSize: 'm', progressType: 'success'});
@@ -323,7 +323,7 @@
             confirmModal.find("#okButton").click(function(event) {
                 confirmModal.modal("hide");
 
-                goTo('<c:url value="/entidad/${entidad.id}/actualizar"/>');
+                goTo('<c:url value="/sincronizacion/${entidad.id}/actualizar"/>');
             });
         });
     });

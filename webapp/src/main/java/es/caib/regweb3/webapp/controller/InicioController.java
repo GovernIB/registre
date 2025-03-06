@@ -121,7 +121,7 @@ public class InicioController extends BaseController{
         }
 
         // Comprobación de si se ha hecho alguna sincronización del Catálogo DIR3
-        if ((isSuperAdmin(request) || isAdminEntidad(request)) && (descargaEjb.findByTipo(RegwebConstantes.CATALOGO) == null)){
+        if ((isSuperAdmin(request) || isAdminEntidad(request)) && (descargaEjb.findByTipo(RegwebConstantes.DESCARGA_CATALOGO) == null)){
 
             Mensaje.saveMessageAviso(request, I18NUtils.tradueix("catalogoDir3.catalogo.vacio"));
         }
