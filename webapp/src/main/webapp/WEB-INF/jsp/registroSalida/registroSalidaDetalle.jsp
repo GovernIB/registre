@@ -203,9 +203,9 @@
                         </c:if>
 
                         <%--Botón reenviar--%>
-                        <c:if test="${(registro.estado == RegwebConstantes.REGISTRO_RECHAZADO || registro.estado == RegwebConstantes.REGISTRO_REENVIADO) && permisoEditar}">
+                       <%-- <c:if test="${(registro.estado == RegwebConstantes.REGISTRO_RECHAZADO || registro.estado == RegwebConstantes.REGISTRO_REENVIADO) && permisoEditar}">
                             <div class="btn-group"><button type="button" onclick='javascript:goTo("<c:url value="/registroSalida/${registro.id}/reenviar"/>")' class="btn btn-success btn-sm"><spring:message code="registro.boton.reenviar"/></button></div>
-                        </c:if>
+                        </c:if>--%>
 
                         <%--Botón rectificar--%>
                         <c:if test="${(registro.estado == RegwebConstantes.REGISTRO_ANULADO || registro.estado == RegwebConstantes.REGISTRO_RECHAZADO) && permisoEditar}">
@@ -232,7 +232,7 @@
                         <li><a href="#modificaciones" data-toggle="tab"><i class="fa fa-pencil-square-o"></i> <spring:message code="regweb.modificaciones"/></a></li>
                     </c:if>
                     <c:if test="${not empty registro.metadatosRegistroSalida}">
-                        <li><a href="#metadatos" data-toggle="tab"><i class="fa fa-file-text-o"></i> <spring:message code="regweb.metadades"/></a></li>
+                        <li><a href="#metadatosRegistro" data-toggle="tab"><i class="fa fa-file-text-o"></i> <spring:message code="regweb.metadades"/></a></li>
                     </c:if>
                 </ul>
 
@@ -302,7 +302,7 @@
 
                     <!-- METADATOS -->
                     <c:if test="${not empty registro.metadatosRegistroSalida}">
-                        <div class="tab-pane" id="metadatos">
+                        <div class="tab-pane" id="metadatosRegistro">
                             <c:import url="../registro/metadatos.jsp">
                                 <c:param name="tipoRegistro" value="${RegwebConstantes.REGISTRO_SALIDA}"/>
                             </c:import>

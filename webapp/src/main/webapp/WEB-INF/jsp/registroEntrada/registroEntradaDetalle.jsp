@@ -234,9 +234,9 @@
                         </c:if>
 
                         <%--Botón reenviar--%>
-                        <c:if test="${(registro.estado == RegwebConstantes.REGISTRO_RECHAZADO || registro.estado == RegwebConstantes.REGISTRO_REENVIADO) && permisoEditar}">
+                       <%-- <c:if test="${(registro.estado == RegwebConstantes.REGISTRO_RECHAZADO || registro.estado == RegwebConstantes.REGISTRO_REENVIADO) && permisoEditar}">
                             <div class="btn-group"><button type="button" onclick='javascript:goTo("<c:url value="/registroEntrada/${registro.id}/reenviar"/>")' class="btn btn-success btn-sm"><spring:message code="registro.boton.reenviar"/></button></div>
-                        </c:if>
+                        </c:if>--%>
 
                         <%--Botón rectificar--%>
                         <c:if test="${(registro.estado == RegwebConstantes.REGISTRO_ANULADO || registro.estado == RegwebConstantes.REGISTRO_RECHAZADO) && permisoEditar}">
