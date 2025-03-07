@@ -265,7 +265,7 @@
                             <li><a href="#modificaciones" data-toggle="tab"><i class="fa fa-pencil-square-o"></i> <spring:message code="regweb.modificaciones"/></a></li>
                         </c:if>
                         <c:if test="${not empty registro.metadatosRegistroEntrada}">
-                            <li><a href="#metadatos" data-toggle="tab"><i class="fa fa-file-text-o"></i> <spring:message code="regweb.metadades"/></a></li>
+                            <li><a href="#metadatosRegistro" data-toggle="tab"><i class="fa fa-file-text-o"></i> <spring:message code="regweb.metadades"/></a></li>
                         </c:if>
                     </ul>
 
@@ -332,7 +332,7 @@
                         </c:if>
                         <!-- METADATOS -->
                         <c:if test="${not empty registro.metadatosRegistroEntrada}">
-                            <div class="tab-pane" id="metadatos">
+                            <div class="tab-pane" id="metadatosRegistro">
                                 <c:import url="../registro/metadatos.jsp">
                                     <c:param name="tipoRegistro" value="${RegwebConstantes.REGISTRO_ENTRADA}"/>
                                 </c:import>
