@@ -397,7 +397,14 @@ public class Oficina implements Serializable {
     @Transient
     @JsonIgnore
     public Boolean getSir() {
-        return isSir;
+        for (CatServicio servicio : servicios) {
+            if (servicio.getCodServicio().equals(RegwebConstantes.OFICINA_INTEGRADA_SIR) ||
+                    servicio.getCodServicio().equals(RegwebConstantes.OFICINA_INTEGRADA_SIR_ENVIO) ||
+                    servicio.getCodServicio().equals(RegwebConstantes.OFICINA_INTEGRADA_SIR_RECEPCION)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void setSir(Boolean sir) {
@@ -414,19 +421,7 @@ public class Oficina implements Serializable {
         isSirEnvio = sirEnvio;
     }
 
-    @Transient
-    @JsonIgnore
-    public Boolean getOficinaSir() {
 
-        for (CatServicio servicio : servicios) {
-            if (servicio.getCodServicio().equals(RegwebConstantes.OFICINA_INTEGRADA_SIR) ||
-                    servicio.getCodServicio().equals(RegwebConstantes.OFICINA_INTEGRADA_SIR_ENVIO) ||
-                    servicio.getCodServicio().equals(RegwebConstantes.OFICINA_INTEGRADA_SIR_RECEPCION)) {
-                return true;
-            }
-        }
-        return false;
-    }
 
     @Transient
     public String getNombre() {
