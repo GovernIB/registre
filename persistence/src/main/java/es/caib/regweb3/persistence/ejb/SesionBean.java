@@ -183,7 +183,7 @@ public class SesionBean extends BaseEjbJPA<Sesion, Long> implements SesionLocal 
     private void purgarSesionesIniciadas(Long idEntidad) throws I18NException {
 
         Calendar hoy = Calendar.getInstance(); //obtiene la fecha de hoy
-        hoy.add(Calendar.MINUTE, -PropiedadGlobalUtil.getSesionMinutosPurgadoIniciadas(idEntidad)); //el -X indica que se le restaran X minutos
+        hoy.add(Calendar.DATE, -PropiedadGlobalUtil.getSesionDiasPurgado(idEntidad)); //el -X indica que se le restaran X días
 
         List<?> result = em.createQuery("select distinct(s.id) from Sesion as s where s.usuario.entidad.id = :idEntidad and s.estado = :iniciada and s.fecha <= :fecha")
                 .setParameter("idEntidad", idEntidad)
@@ -197,7 +197,7 @@ public class SesionBean extends BaseEjbJPA<Sesion, Long> implements SesionLocal 
     private void purgarSesionesNoIniciadas(Long idEntidad) throws I18NException {
 
         Calendar hoy = Calendar.getInstance(); //obtiene la fecha de hoy
-        hoy.add(Calendar.MINUTE, -PropiedadGlobalUtil.getSesionMinutosPurgadoNoIniciadas(idEntidad)); //el -X indica que se le restaran X minutos
+        hoy.add(Calendar.DATE, -PropiedadGlobalUtil.getSesionDiasPurgado(idEntidad)); //el -X indica que se le restaran X días
 
         List<?> result = em.createQuery("select distinct(s.id) from Sesion as s where s.usuario.entidad.id = :idEntidad and s.estado = :no_iniciada and s.fecha <= :fecha")
                 .setParameter("idEntidad", idEntidad)
@@ -210,7 +210,7 @@ public class SesionBean extends BaseEjbJPA<Sesion, Long> implements SesionLocal 
     private void purgarSesionesErrorFinalidadas(Long idEntidad) throws I18NException {
 
         Calendar hoy = Calendar.getInstance(); //obtiene la fecha de hoy
-        hoy.add(Calendar.MINUTE, -PropiedadGlobalUtil.getSesionMinutosPurgadoFinalizadas(idEntidad)); //el -X indica que se le restaran X minutos
+        hoy.add(Calendar.DATE, -PropiedadGlobalUtil.getSesionDiasPurgado(idEntidad)); //el -X indica que se le restaran X días
 
         List<?> result = em.createQuery("select distinct(s.id) from Sesion as s where s.usuario.entidad.id = :idEntidad and (s.estado = :error or s.estado = :finalizada) and s.fecha <= :fecha")
                 .setParameter("idEntidad", idEntidad)
