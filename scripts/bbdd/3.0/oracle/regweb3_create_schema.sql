@@ -683,7 +683,7 @@ create sequence RWE_USUARIOENTIDAD_SEQ start with 1 increment by  1;
         DESREMDES varchar2(160 char) not null,
         MAILREMITENTE varchar2(50 char),
         EXTRACTO varchar2(2000 char) not null,
-        FECHADOC timestamp not null,
+        FECHADOC timestamp null,
         FECHAREG timestamp not null,
         FECHAVIS timestamp,
         infoAdicional varchar2(255 char),
