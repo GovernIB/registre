@@ -306,7 +306,7 @@ public class ArxiuCaibUtils {
         Expedient expediente = generarExpediente(null,
                 nombreExpediente,
                 null,
-                Arrays.asList(registro.getOficina().getCodigo()),
+                Arrays.asList(registro.getOficina().getOrganismoResponsable().getCodigo()),
                 new Date(),
                 codigoProcedimiento,
                 ExpedientEstat.OBERT,
@@ -575,7 +575,7 @@ public class ArxiuCaibUtils {
         DocumentMetadades metadades = new DocumentMetadades();
         metadades.setIdentificador(null);
         metadades.setSerieDocumental(serieDocumental);
-        metadades.setOrgans(Arrays.asList(registro.getOficina().getCodigo()));
+        metadades.setOrgans(Arrays.asList(registro.getOficina().getOrganismoResponsable().getCodigo()));
         metadades.setDataCaptura(new Date());
 
         metadades.setOrigen(ContingutOrigen.ADMINISTRACIO);
@@ -619,7 +619,7 @@ public class ArxiuCaibUtils {
         DocumentMetadades metadades = new DocumentMetadades();
         metadades.setIdentificador(null);
         metadades.setSerieDocumental(serieDocumental);
-        metadades.setOrgans(Arrays.asList(registro.getOficina().getCodigo()));
+        metadades.setOrgans(Arrays.asList(registro.getOficina().getOrganismoResponsable().getCodigo()));
         metadades.setDataCaptura(anexoFull.getAnexo().getFechaCaptura());
 
         // Metadata Origen
