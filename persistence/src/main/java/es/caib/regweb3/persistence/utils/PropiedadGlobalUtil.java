@@ -51,54 +51,21 @@ public class PropiedadGlobalUtil {
 
     /**
      * Retorna el valor de la propiedad de la entidad indicada.
-     * Propiedad: es.caib.regweb3.sesion.minutosPurgado.iniciadas
+     * Propiedad: es.caib.regweb3.sesion.diasPurgado
      * @param idEntidad
      * @return
      */
-    public static Integer getSesionMinutosPurgadoIniciadas(Long idEntidad) {
-        final String partialPropertyName = "sesion.minutosPurgado.iniciadas";
+    public static Integer getSesionDiasPurgado(Long idEntidad) {
+        final String partialPropertyName = "sesion.diasPurgado";
         Integer valor = getIntegerByEntidad(idEntidad, partialPropertyName);
 
         // Valor global si no existeix el de per entitat
         if (valor == null) {
-            valor = 60;
+            valor = 10;
         }
         return valor;
     }
 
-    /**
-     * Retorna el valor de la propiedad de la entidad indicada.
-     * Propiedad: es.caib.regweb3.sesion.minutosPurgado.finalizadas
-     * @param idEntidad
-     * @return
-     */
-    public static Integer getSesionMinutosPurgadoFinalizadas(Long idEntidad) {
-        final String partialPropertyName = "sesion.minutosPurgado.finalizadas";
-        Integer valor = getIntegerByEntidad(idEntidad, partialPropertyName);
-
-        // Valor global si no existeix el de per entitat
-        if (valor == null) {
-            valor = 60;
-        }
-        return valor;
-    }
-
-    /**
-     * Retorna el valor de la propiedad de la entidad indicada.
-     * Propiedad: es.caib.regweb3.sesion.minutosPurgado.noIniciadas
-     * @param idEntidad
-     * @return
-     */
-    public static Integer getSesionMinutosPurgadoNoIniciadas(Long idEntidad) {
-        final String partialPropertyName = "sesion.minutosPurgado.noIniciadas";
-        Integer valor = getIntegerByEntidad(idEntidad, partialPropertyName);
-
-        // Valor global si no existeix el de per entitat
-        if (valor == null) {
-            valor = 60;
-        }
-        return valor;
-    }
 
     /**
      * Retorna el valor de la propiedad Results per page de la entidad indicada.
