@@ -262,7 +262,7 @@ public class ArxiuCaibUtils {
             metadadesDoc.setDataCaptura(documentFS.getDocumentMetadades().getDataCaptura());
             metadadesDoc.setOrigen(ContingutOrigen.ADMINISTRACIO);
             metadadesDoc.setEstatElaboracio(DocumentEstatElaboracio.ORIGINAL);
-            metadadesDoc.setTipusDocumental(DocumentTipus.ALTRES);
+            metadadesDoc.setTipusDocumental(DocumentTipus.JUSTIFICANT_RECEPCIO);
             metadadesDoc.setExtensio(DocumentExtensio.PDF);
             metadadesDoc.setFormat(DocumentFormat.PDF);
 
@@ -580,7 +580,7 @@ public class ArxiuCaibUtils {
 
         metadades.setOrigen(ContingutOrigen.ADMINISTRACIO);
         metadades.setEstatElaboracio(DocumentEstatElaboracio.ORIGINAL);
-        metadades.setTipusDocumental(DocumentTipus.ALTRES); // TODO Revisar si sería más conveniente poner DocumentTipus.JUSTIFICANT_RECEPCIO
+        metadades.setTipusDocumental(DocumentTipus.JUSTIFICANT_RECEPCIO);
 
         metadades.setExtensio(DocumentExtensio.PDF);
         metadades.setFormat(DocumentFormat.PDF);
