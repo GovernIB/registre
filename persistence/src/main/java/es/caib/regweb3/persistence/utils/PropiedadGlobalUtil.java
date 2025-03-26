@@ -981,12 +981,12 @@ public class PropiedadGlobalUtil {
 
 	public static Long getCronTareaPeriodoActualizacionAnexosPendientesVerificacionFirma() {
 		final String partialPropertyName =  "cron.actualizacion.anexos.pendientes.verificacion.firma.periodo";
-    	return getLong(partialPropertyName);
+    	return partialPropertyName != null ? getLong(partialPropertyName) : 300000L;
 	}
 
 	public static Long getCronTareaRetardoActualizacionAnexosPendientesVerificacionFirma() {
 		final String partialPropertyName =  "cron.actualizacion.anexos.pendientes.verificacion.firma.retardo";
-    	return getLong(partialPropertyName);
+    	return partialPropertyName != null ? getLong(partialPropertyName) : 300000L;
 	}
 	
     public static Long getCronTareaPeriodoConsultaNotificacionesDehu() {

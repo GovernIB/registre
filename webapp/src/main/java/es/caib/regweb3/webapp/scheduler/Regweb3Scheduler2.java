@@ -5,8 +5,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.TimeZone;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -17,6 +15,8 @@ import javax.ejb.EJB;
 
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
+import org.springframework.beans.factory.DisposableBean;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.TaskScheduler;
@@ -45,7 +45,7 @@ import es.caib.regweb3.utils.Configuracio;
 @Service
 @Configuration
 @EnableScheduling
-public class Regweb3Scheduler implements SchedulingConfigurer {
+public class Regweb3Scheduler2 implements SchedulingConfigurer {
 
     protected final Logger log = Logger.getLogger(getClass());
 
@@ -55,13 +55,20 @@ public class Regweb3Scheduler implements SchedulingConfigurer {
     private PropiedadGlobalLocal propiedadGlobalEjb;
     
     @Autowired
-    private TaskScheduler taskScheduler;
+    TaskScheduler taskScheduler;
+
     @Autowired
-    private MonitorTareas monitorTareas;
+    MonitorTareas monitorTareas;
+    
+    private ScheduledExecutorService executorService;
+    
+    private ScheduledFuture<?> scheduledFuture;
     
     private Boolean primeraVez = Boolean.TRUE;
 
-    private Map<String, Runnable> taskMap = new HashMap<>();
+    public Regweb3Scheduler2() {
+        this.executorService = Executors.newSingleThreadScheduledExecutor();
+    }
     
     /**
      * Qué hace: Purga las sesiones ws
@@ -292,15 +299,88 @@ public class Regweb3Scheduler implements SchedulingConfigurer {
             e.printStackTrace();
         }
     }
-
+    
+    /**
+     * Qué hace: Actualiza el estado de los envíos SIR con el nuevo estaado de GEISER. Solo actualiza estado envíos con estado no final.
+     * Cuando lo hace: cada 15 minutos
+     */
+//    @Scheduled(cron = "0 0/10 * * * *")
+//    public void actualizarEstadoEnviosSir(){
+//        try {
+//            schedulerEjb.actualizarEnviosSIR();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        } catch (I18NException e) {
+//			e.printStackTrace();
+//		}
+//    }
+ 
+    /**
+     * Qué hace: Consulta a GEISER los registros SIR recibidos y los crea en Regweb.
+     * Cuando lo hace: cada 20 minutos
+     */
+//    @Scheduled(cron = "0 0/10 * * * *")
+//    public void consultarICrearRegistrosRecibidos(){
+//        try {
+//            schedulerEjb.consultarICrearRegistrosRecibidos();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        } catch (I18NException e) {
+//			e.printStackTrace();
+//		}
+//    }
+    
+    /**
+     * Qué hace: Consulta el identificador de intercambio de los registros recibidos.
+     * Cuando lo hace: cada 25 minutos
+     */
+//    @Scheduled(cron = "0 0/20 * * * *")
+//    public void actualizarIdEnviosSirRecibidos(){
+//        try {
+//            schedulerEjb.actualizarIdEnviosSirRecibidos();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        } catch (I18NException e) {
+//			e.printStackTrace();
+//		}
+//    }
+    
+//    @Override
+//    public void afterPropertiesSet() {
+//        // Configura el retardo inicial y el periodo de repetición en milisegundos
+//        Long initialDelay = schedulerEjb.getCronTareaRetardoActualizacionEnviosSir();
+//        Long period = schedulerEjb.getCronTareaPeriodoActualizacionEnviosSir();
+//
+//        scheduledFuture = executorService.scheduleAtFixedRate(new Runnable() {
+//            @Override
+//            public void run() {
+//                try {
+//                    schedulerEjb.actualizarEnviosSIR();
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                } catch (I18NException e) {
+//					e.printStackTrace();
+//				}
+//            }
+//        }, initialDelay, period, TimeUnit.MILLISECONDS);
+//    }
+//
+//    @Override
+//    public void destroy() {
+//        if (scheduledFuture != null && !scheduledFuture.isCancelled()) {
+//            scheduledFuture.cancel(true);
+//        }
+//        executorService.shutdown();
+//    }
+    
+    
 	@Override
 	public void configureTasks(ScheduledTaskRegistrar taskRegistrar) {
 		taskRegistrar.setScheduler(taskScheduler);
 		
 		// Actualiza el estado de los envíos SIR con el nuevo estaado de GEISER. Solo actualiza estado envíos con estado no final.
         ////////////////////////////////////////////////////////////////
-		
-		addScheduledTask(taskRegistrar, "tareaActualizarEnviosSir", 
+        taskRegistrar.addTriggerTask(
                 new Runnable() {
                     @Override
                     public void run() {
@@ -336,7 +416,7 @@ public class Regweb3Scheduler implements SchedulingConfigurer {
         );
         // Consulta a GEISER los registros SIR recibidos y los crea en Regweb.
         ////////////////////////////////////////////////////////////////
-		addScheduledTask(taskRegistrar, "tareaConsultarRegistrosRecibidos", 
+        taskRegistrar.addTriggerTask(
                 new Runnable() {
                     @Override
                     public void run() {
@@ -372,7 +452,7 @@ public class Regweb3Scheduler implements SchedulingConfigurer {
         );
         // Consulta el identificador de intercambio de los registros recibidos.
         ////////////////////////////////////////////////////////////////
-		addScheduledTask(taskRegistrar, "tareaActualizarIdEnviosSir", 
+        taskRegistrar.addTriggerTask(
                 new Runnable() {
                     @Override
                     public void run() {
@@ -409,7 +489,7 @@ public class Regweb3Scheduler implements SchedulingConfigurer {
         
         // Consulta anexos pendientes verificación firma electrónica
         ////////////////////////////////////////////////////////////////
-		addScheduledTask(taskRegistrar, "tareaActualizarAnexosPendientes", 
+        taskRegistrar.addTriggerTask(
                 new Runnable() {
                     @Override
                     public void run() {
@@ -455,7 +535,7 @@ public class Regweb3Scheduler implements SchedulingConfigurer {
         
         // Localiza notificaciones y comunicacione pendientes
         ////////////////////////////////////////////////////////////////
-		addScheduledTask(taskRegistrar, "tareaLocalizarNotificaciones",
+        taskRegistrar.addTriggerTask(
                 new Runnable() {
                     @Override
                     public void run() {
@@ -490,7 +570,7 @@ public class Regweb3Scheduler implements SchedulingConfigurer {
                 }
         );
         
-		addScheduledTask(taskRegistrar, "tareaEnvioCorreoPendientes", 
+        taskRegistrar.addTriggerTask(
                 new Runnable() {
                     @Override
                     public void run() {
@@ -531,25 +611,7 @@ public class Regweb3Scheduler implements SchedulingConfigurer {
                         return cronTrigger.nextExecutionTime(triggerContext);
                     }
                 }
-		);
-
+        );
+        
 	}
-	
-    // Método para agregar una tarea programada al map
-    private void addScheduledTask(ScheduledTaskRegistrar taskRegistrar, String taskName, Runnable task, Trigger trigger) {
-        taskRegistrar.addTriggerTask(task, trigger);
-        taskMap.put(taskName, task); // Guardamos la tarea con su nombre en el map
-    }
-
-    // Método para reiniciar una tarea usando su nombre
-    public void reiniciarTarea(String taskName) {
-        if (taskMap.containsKey(taskName)) {
-            Runnable task = taskMap.get(taskName);
-            taskScheduler.schedule(task, new Date());  // Reinicia la tarea
-            log.info("Tarea " + taskName + " reiniciada.");
-        } else {
-            log.warn("No se encontró la tarea con el nombre: " + taskName);
-        }
-    }
-    
 }

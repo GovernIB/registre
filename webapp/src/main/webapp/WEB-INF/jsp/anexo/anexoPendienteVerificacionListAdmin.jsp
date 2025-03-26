@@ -99,7 +99,14 @@
 					</div>
 				</div>
 			</div>
-	        <c:import url="../modulos/mensajes.jsp"/>
+			<div class="row">
+				<div style="margin: 10px 15px 0 0; float: right;">
+					<a
+						href="<c:url value="/scheduler/restart?task=tareaActualizarAnexosPendientes"/>"
+						class="btn btn-default btn-sm"><spring:message code="regweb.schduler.restart"/></a>
+				</div>
+			</div>
+			<c:import url="../modulos/mensajes.jsp"/>
 	    </div>
 	</div> <!-- /container -->
 	<c:import url="../modulos/pie.jsp"/>
