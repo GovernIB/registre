@@ -264,7 +264,7 @@
                                                                     <spring:message code="regweb.acciones"/> <span class="caret"></span>
                                                                 </button>
                                                                 <ul class="dropdown-menu dropdown">
-                                                                    <li><a href="<c:url value="/sir/${oficioRemision.id}/detalle"/>" target="_blank"><spring:message code="idIntercambio.detalle"/></a></li>
+                                                                    <li><a href="<c:url value="/sir/${oficioRemision.identificadorIntercambio}/detalle"/>" target="_blank"><spring:message code="idIntercambio.detalle"/></a></li>
                                                                     <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_SIR_ENVIADO ||  oficioRemision.estado == RegwebConstantes.OFICIO_SIR_REENVIADO}">
                                                                         <li class="divider"></li>
                                                                         <li><a href="javascript:void(0);" onclick="reencolarIntercambioModal('${oficioRemision.oficina.codigo}', '${oficioRemision.identificadorIntercambio}', confirmModal)"><spring:message code="intercambio.reenviar"/></a></li>
