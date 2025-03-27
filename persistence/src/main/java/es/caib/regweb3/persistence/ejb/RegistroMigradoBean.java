@@ -127,7 +127,7 @@ public class RegistroMigradoBean extends BaseEjbJPA<RegistroMigrado, Long> imple
             parametros.put("numeroRegistro", numeroRegistro);
         }
 
-        if (registroMigrado.getCodigoOficina() > 0) {
+        if (registroMigrado.getCodigoOficina() != null) {
             where.add(" registroMigrado.codigoOficina = :codigoOficina");
             parametros.put("codigoOficina", registroMigrado.getCodigoOficina());
         }

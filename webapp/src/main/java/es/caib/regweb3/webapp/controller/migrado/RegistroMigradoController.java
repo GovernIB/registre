@@ -27,7 +27,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 /**
  * Created by Fundació BIT.
@@ -72,6 +74,8 @@ public class RegistroMigradoController extends BaseController {
 
         RegistroMigradoBusqueda registroMigradoBusqueda = new RegistroMigradoBusqueda(new RegistroMigrado(),1);
         registroMigradoBusqueda.getRegistroMigrado().setTipoRegistro(true);
+        registroMigradoBusqueda.setFechaInicio(new GregorianCalendar(1991, Calendar.JANUARY, 1).getTime());
+        registroMigradoBusqueda.setFechaFin(new GregorianCalendar(1995, Calendar.DECEMBER, 31).getTime());
 
         model.addAttribute("oficinasMigrado", oficinasMigrado);
         model.addAttribute("registroMigradoBusqueda", registroMigradoBusqueda);
