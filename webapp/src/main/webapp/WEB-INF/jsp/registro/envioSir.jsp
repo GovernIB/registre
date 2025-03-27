@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html lang="ca">
 <head>
-    <title><spring:message code="regweb.titulo"/></title>
+    <title><spring:message code="regweb.titulo"/> - SIR: <spring:message code="regweb.enviar"/> ${registro.numeroRegistroFormateado}</title>
     <c:import url="../modulos/imports.jsp"/>
 </head>
 
@@ -65,7 +65,7 @@
                                 <div class="col-lg-6">
                                     <div class="panel panel-default">
                                         <div class="panel-heading">
-                                            <strong><spring:message code="oficina.origen"/>: ${registro.oficina.denominacion}</strong>
+                                            <strong><spring:message code="oficina.origen"/>:</strong> ${registro.oficina.denominacion}
                                         </div>
                                         <div class="panel-body">
                                             <p><strong><i class="fa fa-home"></i> <spring:message code="registroEntrada.numeroRegistro"/>:</strong> ${registro.numeroRegistroFormateado}</p>
@@ -77,7 +77,7 @@
                                 <div class="col-lg-6">
                                     <div class="panel panel-default">
                                         <div class="panel-heading">
-                                            <strong><spring:message code="oficina.destino"/></strong>
+                                            <strong><spring:message code="oficioRemision.destino"/></strong>
                                         </div>
                                         <div class="panel-body">
                                             <p><strong><i class="fa fa-institution"></i> <spring:message code="registroEntrada.organismoDestino"/>:</strong> ${destino.denominacion} <c:if test="${destino.codigoEstadoEntidad != RegwebConstantes.ESTADO_ENTIDAD_VIGENTE}"><span class="label label-danger"><spring:message code="unidad.estado.${destino.codigoEstadoEntidad}" /></span></c:if></p>

@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html lang="ca">
 <head>
-    <title><spring:message code="regweb.titulo"/></title>
+    <title><spring:message code="regweb.titulo"/> - <spring:message code="registroEntrada.buscador.oficiosRemision"/></title>
     <c:import url="../modulos/imports.jsp"/>
 </head>
 

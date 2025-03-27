@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html lang="ca">
 <head>
-    <title><spring:message code="regweb.titulo"/></title>
+    <title><spring:message code="regweb.titulo"/> - <spring:message code="informe.organismos"/></title>
     <c:import url="../modulos/imports.jsp"/>
     <script type="text/javascript" src="<c:url value="/js/busquedaorganismo.js"/>"></script>
 </head>

@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html lang="ca">
 <head>
-    <title><spring:message code="regweb.titulo"/></title>
+    <title><spring:message code="regweb.titulo"/> - <spring:message code="registroSalida.registroSalida"/> ${registro.numeroRegistroFormateado}</title>
     <c:import url="../modulos/imports.jsp"/>
 </head>
 

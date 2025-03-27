@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html lang="ca">
 <head>
-    <title><spring:message code="regweb.titulo"/></title>
+    <title><spring:message code="regweb.titulo"/> - <spring:message code="entidad.editar"/></title>
     <c:import url="../modulos/imports.jsp"/>
 </head>
 
@@ -21,7 +21,6 @@
             <div class="col-xs-12">
                 <ol class="breadcrumb">
                     <c:import url="../modulos/migadepan.jsp"/>
-                    <%--<li><a href="javascript:void(0);" ><i class="fa fa-globe"></i> <spring:message code="entidad.entidad"/></a></li>--%>
                     <li class="active"><i class="fa fa-pencil-square-o"></i>
                         <c:if test="${not empty entidadForm.entidad.id}"><spring:message code="entidad.editar"/> ${entidadForm.entidad.nombre}</c:if>
                         <c:if test="${empty entidadForm.entidad.id}"><spring:message code="entidad.nuevo"/></c:if>

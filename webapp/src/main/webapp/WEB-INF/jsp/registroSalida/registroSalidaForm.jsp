@@ -6,8 +6,8 @@
 <html lang="ca">
 <head>
     <title>
-        <c:if test="${not empty registroSalida.id}"><spring:message code="registroSalida.editar"/> ${registroSalida.numeroRegistroFormateado}</c:if>
-        <c:if test="${empty registroSalida.id}"><spring:message code="registroSalida.nuevo"/></c:if>
+        <c:if test="${not empty registroSalida.id}"><spring:message code="regweb.titulo"/> - <spring:message code="registroSalida.editar"/> ${registroSalida.numeroRegistroFormateado}</c:if>
+        <c:if test="${empty registroSalida.id}"><spring:message code="regweb.titulo"/> - <spring:message code="registroSalida.nuevo"/></c:if>
     </title>
     <c:import url="../modulos/imports.jsp"/>
 </head>

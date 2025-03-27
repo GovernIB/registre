@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html lang="ca">
 <head>
-    <title><spring:message code="regweb.titulo"/></title>
+    <title><spring:message code="regweb.titulo"/> - <spring:message code="registroSir.registrosSir"/> <spring:message code="registroSir.estado.${estado}"/></title>
     <c:import url="../modulos/imports.jsp"/>
 </head>
 
@@ -20,7 +20,7 @@
             <div class="col-xs-12">
                 <ol class="breadcrumb">
                     <c:import url="../modulos/migadepan.jsp"/>
-                    <li class="active"><i class="fa fa-list-ul"></i> <strong><spring:message code="registroSir.registrosSir"/> <spring:message code="registroSir.estado.${estado}" /></strong></li>
+                    <li class="active"><i class="fa fa-list-ul"></i> <strong><spring:message code="registroSir.registrosSir"/> <spring:message code="registroSir.estado.${estado}"/></strong></li>
                 </ol>
             </div>
         </div>
@@ -34,7 +34,7 @@
 
                     <div class="panel-heading">
                         <h3 class="panel-title"><i class="fa fa-search"></i>
-                            <strong><spring:message code="registroSir.listado"/> <spring:message code="registroSir.estado.${estado}" /></strong>
+                            <strong><spring:message code="registroSir.listado"/> <spring:message code="registroSir.estado.${estado}"/></strong>
                         </h3>
                     </div>
 
