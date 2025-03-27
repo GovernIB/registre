@@ -2108,12 +2108,12 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         }
 
         DocumentCustody dc = null;
-        if (anexoSir.getAnexo() != null) {
-            dc = new DocumentCustody();
-            dc.setData(libsirEjb.contenidoAnexoBean(oficina,idIntercambio,anexoSir.getIdentificadorFichero()));
-            dc.setMime(anexoSir.getTipoMIME());
-            dc.setName(anexoSir.getNombreFichero());
-        }
+
+        dc = new DocumentCustody();
+        dc.setData(libsirEjb.contenidoAnexoBean(oficina,idIntercambio,anexoSir.getIdentificadorFichero()));
+        dc.setMime(anexoSir.getTipoMIME());
+        dc.setName(anexoSir.getNombreFichero());
+
         return dc;
     }
 
