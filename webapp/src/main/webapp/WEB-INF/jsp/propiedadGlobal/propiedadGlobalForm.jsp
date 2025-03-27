@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html lang="ca">
 <head>
-    <title><spring:message code="regweb.titulo"/></title>
+    <title><spring:message code="regweb.titulo"/> - <spring:message code="propiedadGlobal.propiedadGlobal"/></title>
     <c:import url="../modulos/imports.jsp"/>
 </head>
 
@@ -21,8 +21,7 @@
             <div class="col-xs-12">
                 <ol class="breadcrumb">
                     <li><a href="<c:url value="/inici"/>"><i class="fa fa-institution"></i> ${loginInfo.entidadActiva.nombre}</a></li>
-                    <li><a href="<c:url value="/propiedadGlobal/list"/>"><i class="fa fa-list"></i> <spring:message
-                            code="propiedadGlobal.listado"/></a></li>
+                    <li><a href="<c:url value="/propiedadGlobal/list"/>"><i class="fa fa-list"></i> <spring:message code="propiedadGlobal.listado"/></a></li>
                     <li class="active"><i class="fa fa-pencil-square-o"></i>
                         <c:if test="${not empty propiedadGlobal.id}"><spring:message
                                 code="propiedadGlobal.editar"/> ${propiedadGlobal.clave}</c:if>
