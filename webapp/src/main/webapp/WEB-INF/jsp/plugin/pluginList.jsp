@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html lang="ca">
 <head>
-    <title><spring:message code="regweb.titulo"/></title>
+    <title><spring:message code="regweb.titulo"/> - <spring:message code="plugin.listado"/></title>
     <c:import url="../modulos/imports.jsp"/>
 </head>
 
@@ -20,7 +20,7 @@
             <div class="col-xs-12">
                 <ol class="breadcrumb">
                     <c:import url="../modulos/migadepan.jsp"/>
-                    <li class="active"><i class="fa fa-list-ul"></i> <spring:message code="plugin.plugins"/></li>
+                    <li class="active"><i class="fa fa-list-ul"></i> <spring:message code="plugin.listado"/></li>
                 </ol>
             </div>
         </div><!-- /.row -->

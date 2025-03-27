@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html lang="ca">
 <head>
-    <title><spring:message code="regweb.titulo"/></title>
+    <title><spring:message code="regweb.titulo"/> - <spring:message code="persona.buscador"/></title>
     <c:import url="../modulos/imports.jsp"/>
 </head>
 
@@ -33,7 +33,7 @@
 
                     <div class="panel-heading">
                         <a class="btn btn-warning btn-xs pull-right" href="<c:url value="/persona/new"/>" role="button"><span class="fa fa-plus"></span> <spring:message code="persona.nuevo"/></a>
-                        <h3 class="panel-title"><i class="fa fa-search"></i><strong><spring:message code="persona.buscador"/></strong> </h3>
+                        <h3 class="panel-title"><i class="fa fa-search"></i> <strong><spring:message code="persona.buscador"/></strong> </h3>
                     </div>
 
                     <div class="panel-body">
