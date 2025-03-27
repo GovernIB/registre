@@ -34,7 +34,7 @@ public class RegistroMigrado implements Serializable {
     private int numero;
     private boolean tipoRegistro;
     private Entidad entidad;
-    private int codigoOficina;
+    private Integer codigoOficina;
     private String denominacionOficina;
     private int codigoOficinaFisica;
     private String denominacionOficinaFisica;
@@ -129,11 +129,11 @@ public class RegistroMigrado implements Serializable {
     }
 
     @Column(name = "CODOFICINA", nullable = false)
-    public int getCodigoOficina() {
+    public Integer getCodigoOficina() {
         return codigoOficina;
     }
 
-    public void setCodigoOficina(int codigoOficina) {
+    public void setCodigoOficina(Integer codigoOficina) {
         this.codigoOficina = codigoOficina;
     }
 
@@ -227,7 +227,7 @@ public class RegistroMigrado implements Serializable {
         this.tipoDocumento = tipoDocumento;
     }
 
-    @Column(name = "DESCDOC", nullable = false, length = 60)
+    @Column(name = "DESCDOC", length = 60)
     public String getDescripcionDocumento() {
         return descripcionDocumento;
     }
@@ -245,7 +245,7 @@ public class RegistroMigrado implements Serializable {
         this.codigoIdiomaDocumento = codigoIdiomaDocumento;
     }
 
-    @Column(name = "DESIDIDOC", nullable = false, length = 15)
+    @Column(name = "DESIDIDOC", length = 15)
     public String getDescripcionIdiomaDocumento() {
         return descripcionIdiomaDocumento;
     }

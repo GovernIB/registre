@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html lang="ca">
 <head>
-    <title><spring:message code="regweb.titulo"/></title>
+    <title><spring:message code="regweb.titulo"/> - <spring:message code="registroMigrado.buscador"/></title>
     <c:import url="../modulos/imports.jsp"/>
 </head>
 
@@ -57,6 +57,7 @@
                         <div class="col-xs-4 etiqueta_regweb"><form:label path="registroMigrado.codigoOficina"><spring:message code="registroMigrado.oficina"/></form:label></div>
                         <div class="col-xs-8">
                             <form:select path="registroMigrado.codigoOficina" cssClass="chosen-select">
+                                <form:option value="">...</form:option>
                                 <c:forEach var="oficinaMigrado" items="${oficinasMigrado}" varStatus="status">
                                     <form:option value="${oficinaMigrado[0]}">${oficinaMigrado[1]}</form:option>
                                 </c:forEach>
@@ -143,7 +144,7 @@
                             </c:if>
 
                             <%--Select de "Ir a página"--%>
-                            <c:import url="../modulos/paginas.jsp"/>
+                            <%--<c:import url="../modulos/paginas.jsp"/>--%>
                         </div>
 
                         <div class="table-responsive">
