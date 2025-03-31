@@ -43,31 +43,31 @@ public class IndicadoresExcel extends AbstractExcelView {
         String fechaInicio = (String) model.get("fechaInicio");
         String fechaFin = (String) model.get("fechaFin");
         Long campoCalendario = (Long) model.get("campoCalendario");
-        Integer registrosEntrada = (Integer) model.get("registrosEntrada");
-        Integer registrosSalida = (Integer) model.get("registrosSalida");
-        ArrayList<String> entradaAnosValor = (ArrayList<String>) model.get("entradaAnosValor");
+        Long registrosEntrada = (Long) model.get("registrosEntrada");
+        Long registrosSalida = (Long) model.get("registrosSalida");
+        ArrayList<Long> entradaAnosValor = (ArrayList<Long>) model.get("entradaAnosValor");
         ArrayList<String> entradaAnosNombre = (ArrayList<String>) model.get("entradaAnosNombre");
-        ArrayList<String> salidaAnosValor = (ArrayList<String>) model.get("salidaAnosValor");
+        ArrayList<Long> salidaAnosValor = (ArrayList<Long>) model.get("salidaAnosValor");
         ArrayList<String> salidaAnosNombre = (ArrayList<String>) model.get("salidaAnosNombre");
-        ArrayList<String> entradaMesesValor = (ArrayList<String>) model.get("entradaMesesValor");
+        ArrayList<Long> entradaMesesValor = (ArrayList<Long>) model.get("entradaMesesValor");
         ArrayList<String> entradaMesesNombre = (ArrayList<String>) model.get("entradaMesesNombre");
-        ArrayList<String> salidaMesesValor = (ArrayList<String>) model.get("salidaMesesValor");
+        ArrayList<Long> salidaMesesValor = (ArrayList<Long>) model.get("salidaMesesValor");
         ArrayList<String> salidaMesesNombre = (ArrayList<String>) model.get("salidaMesesNombre");
-        ArrayList<String> entradaConselleriaValor = (ArrayList<String>) model.get("entradaConselleriaValor");
+        ArrayList<Long> entradaConselleriaValor = (ArrayList<Long>) model.get("entradaConselleriaValor");
         ArrayList<String> entradaConselleriaNombre = (ArrayList<String>) model.get("entradaConselleriaNombre");
-        ArrayList<String> salidaConselleriaValor = (ArrayList<String>) model.get("salidaConselleriaValor");
+        ArrayList<Long> salidaConselleriaValor = (ArrayList<Long>) model.get("salidaConselleriaValor");
         ArrayList<String> salidaConselleriaNombre = (ArrayList<String>) model.get("salidaConselleriaNombre");
-        ArrayList<String> entradaLibroValor = (ArrayList<String>) model.get("entradaLibroValor");
+        ArrayList<Long> entradaLibroValor = (ArrayList<Long>) model.get("entradaLibroValor");
         ArrayList<String> entradaLibroNombre = (ArrayList<String>) model.get("entradaLibroNombre");
-        ArrayList<String> salidaLibroValor = (ArrayList<String>) model.get("salidaLibroValor");
+        ArrayList<Long> salidaLibroValor = (ArrayList<Long>) model.get("salidaLibroValor");
         ArrayList<String> salidaLibroNombre = (ArrayList<String>) model.get("salidaLibroNombre");
-        ArrayList<String> entradaOficinaValor = (ArrayList<String>) model.get("entradaOficinaValor");
+        ArrayList<Long> entradaOficinaValor = (ArrayList<Long>) model.get("entradaOficinaValor");
         ArrayList<String> entradaOficinaNombre = (ArrayList<String>) model.get("entradaOficinaNombre");
-        ArrayList<String> salidaOficinaValor = (ArrayList<String>) model.get("salidaOficinaValor");
+        ArrayList<Long> salidaOficinaValor = (ArrayList<Long>) model.get("salidaOficinaValor");
         ArrayList<String> salidaOficinaNombre = (ArrayList<String>) model.get("salidaOficinaNombre");
-        ArrayList<String> entradaIdiomaValor = (ArrayList<String>) model.get("entradaIdiomaValor");
+        ArrayList<Long> entradaIdiomaValor = (ArrayList<Long>) model.get("entradaIdiomaValor");
         ArrayList<String> entradaIdiomaNombre = (ArrayList<String>) model.get("entradaIdiomaNombre");
-        ArrayList<String> salidaIdiomaValor = (ArrayList<String>) model.get("salidaIdiomaValor");
+        ArrayList<Long> salidaIdiomaValor = (ArrayList<Long>) model.get("salidaIdiomaValor");
         ArrayList<String> salidaIdiomaNombre = (ArrayList<String>) model.get("salidaIdiomaNombre");
 
         HSSFSheet sheet = workbook.createSheet("REGWEB3");
@@ -208,7 +208,7 @@ public class IndicadoresExcel extends AbstractExcelView {
             regEntrNomCol.setCellValue(getMessage("informe.registros"));
             regEntrNomCol.setCellStyle(cabecera);
             HSSFRow registreRow = sheet.createRow(rowNum++);
-            registreRow.createCell(0).setCellValue(registrosEntrada.toString());
+            registreRow.createCell(0).setCellValue(registrosEntrada);
             registreRow.getCell(0).setCellStyle(fila);
 
             //Espai buit
@@ -241,7 +241,7 @@ public class IndicadoresExcel extends AbstractExcelView {
                     anyValorCol.setCellStyle(fila);
                 }
                 HSSFCell anyValorCol = anyValor.createCell(entradaAnosValor.size());
-                anyValorCol.setCellValue(registrosEntrada.toString());
+                anyValorCol.setCellValue(registrosEntrada);
                 anyValorCol.setCellStyle(fila);
 
                 if(entradaAnosNombre.size() > tamanyMaxColum){
@@ -428,7 +428,7 @@ public class IndicadoresExcel extends AbstractExcelView {
             regSalNomCol.setCellValue(getMessage("informe.registros"));
             regSalNomCol.setCellStyle(cabecera);
             HSSFRow registreSalRow = sheet.createRow(rowNum++);
-            registreSalRow.createCell(0).setCellValue(registrosSalida.toString());
+            registreSalRow.createCell(0).setCellValue(registrosSalida);
             registreSalRow.getCell(0).setCellStyle(fila);
 
             //Espai buit
@@ -461,7 +461,7 @@ public class IndicadoresExcel extends AbstractExcelView {
                     anySalValorCol.setCellStyle(fila);
                 }
                 HSSFCell anySalValorCol = anySalValor.createCell(salidaAnosValor.size());
-                anySalValorCol.setCellValue(registrosSalida.toString());
+                anySalValorCol.setCellValue(registrosSalida);
                 anySalValorCol.setCellStyle(fila);
 
                 if(salidaAnosNombre.size() > tamanyMaxColum){
