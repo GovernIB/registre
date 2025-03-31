@@ -641,8 +641,8 @@ public class InformeController extends AbstractRegistroCommonFormController {
                 mav.addObject("tipo", RegwebConstantes.INFORME_TIPO_REGISTRO_ENTRADASALIDA);
 
                 // Busca los registros Totales de Entrada y Salida entre las fechas
-                mav.addObject("registrosEntrada", informeEjb.buscaIndicadoresEntradaTotal(dataInici, dataFi, entidadActiva.getId()).intValue());
-                mav.addObject("registrosSalida", informeEjb.buscaIndicadoresSalidaTotal(dataInici, dataFi, entidadActiva.getId()).intValue());
+                mav.addObject("registrosEntrada", informeEjb.buscaIndicadoresEntradaTotal(dataInici, dataFi, entidadActiva.getId()));
+                mav.addObject("registrosSalida", informeEjb.buscaIndicadoresSalidaTotal(dataInici, dataFi, entidadActiva.getId()));
 
                 // Busca los registros totales según el calendario seleccionado de Entrada y Salida entre las fechas
                 if(calendario.equals((long) 0)){ // Años y meses
@@ -685,7 +685,7 @@ public class InformeController extends AbstractRegistroCommonFormController {
                 mav.addObject("tipo", RegwebConstantes.INFORME_TIPO_REGISTRO_ENTRADA);
 
                 // Busca los registros Totales de Entrada entre las fechas
-                mav.addObject("registrosEntrada", informeEjb.buscaIndicadoresEntradaTotal(dataInici, dataFi, entidadActiva.getId()).intValue());
+                mav.addObject("registrosEntrada", informeEjb.buscaIndicadoresEntradaTotal(dataInici, dataFi, entidadActiva.getId()));
 
                 // Busca los registros totales según el calendario seleccionado de Entrada entre las fechas
                 if(calendario.equals((long) 0)){ // Años y meses
@@ -721,7 +721,7 @@ public class InformeController extends AbstractRegistroCommonFormController {
                 mav.addObject("tipo", RegwebConstantes.INFORME_TIPO_REGISTRO_SALIDA);
 
                 // Busca los registros Totales de Salida entre las fechas
-                mav.addObject("registrosSalida", informeEjb.buscaIndicadoresSalidaTotal(dataInici, dataFi, entidadActiva.getId()).intValue());
+                mav.addObject("registrosSalida", informeEjb.buscaIndicadoresSalidaTotal(dataInici, dataFi, entidadActiva.getId()));
 
                 // Busca los registros totales según el calendario seleccionado de Salida entre las fechas
                 if(calendario.equals((long) 0)){ // Años y meses
@@ -1267,8 +1267,8 @@ public class InformeController extends AbstractRegistroCommonFormController {
         Date dataInici = informeIndicadoresOficinaBusquedaForm.getFechaInicio();
 
         // Busca los registros Totales de Entrada y Salida entre las fechas
-        mav.addObject("registrosEntrada", informeEjb.buscaIndicadoresOficinaTotalEntrada(dataInici, dataFi, oficina.getId()).intValue());
-        mav.addObject("registrosSalida", informeEjb.buscaIndicadoresOficinaTotalSalida(dataInici, dataFi, oficina.getId()).intValue());
+        mav.addObject("registrosEntrada", informeEjb.buscaIndicadoresOficinaTotalEntrada(dataInici, dataFi, oficina.getId()));
+        mav.addObject("registrosSalida", informeEjb.buscaIndicadoresOficinaTotalSalida(dataInici, dataFi, oficina.getId()));
 
         // Busca los registros totales según el calendario seleccionado de Entrada y Salida entre las fechas
         // Años y meses
@@ -1426,7 +1426,7 @@ public class InformeController extends AbstractRegistroCommonFormController {
      */
     private void totalRegistresEntradaAny(ModelAndView mav, Date dataInici, Date dataFi, Long idEntidad, Long idOficina) throws Exception{
 
-        List<String> entradaAnosValor = new ArrayList<String>();
+        List<Long> entradaAnosValor = new ArrayList<Long>();
         List<String> entradaAnosNombre = new ArrayList<String>();
 
         while (dataInici.compareTo(dataFi) < 0) {
@@ -1442,17 +1442,17 @@ public class InformeController extends AbstractRegistroCommonFormController {
             cal.set(Calendar.SECOND, 59);
             if((idEntidad!=null)&&(idOficina==null)) {
                 if (cal.getTime().compareTo(dataFi) < 0) {
-                    entradaAnosValor.add(String.valueOf(informeEjb.buscaIndicadoresEntradaTotal(dataInici, cal.getTime(), idEntidad)));
+                    entradaAnosValor.add(informeEjb.buscaIndicadoresEntradaTotal(dataInici, cal.getTime(), idEntidad));
                 } else {
-                    entradaAnosValor.add(String.valueOf(informeEjb.buscaIndicadoresEntradaTotal(dataInici, dataFi, idEntidad)));
+                    entradaAnosValor.add(informeEjb.buscaIndicadoresEntradaTotal(dataInici, dataFi, idEntidad));
                     break;
                 }
             }
             if((idEntidad==null)&&(idOficina!=null)) {
                 if (cal.getTime().compareTo(dataFi) < 0) {
-                    entradaAnosValor.add(String.valueOf(informeEjb.buscaIndicadoresOficinaTotalEntrada(dataInici, cal.getTime(), idOficina)));
+                    entradaAnosValor.add(informeEjb.buscaIndicadoresOficinaTotalEntrada(dataInici, cal.getTime(), idOficina));
                 } else {
-                    entradaAnosValor.add(String.valueOf(informeEjb.buscaIndicadoresOficinaTotalEntrada(dataInici, dataFi, idOficina)));
+                    entradaAnosValor.add(informeEjb.buscaIndicadoresOficinaTotalEntrada(dataInici, dataFi, idOficina));
                     break;
                 }
             }
@@ -1475,7 +1475,7 @@ public class InformeController extends AbstractRegistroCommonFormController {
      */
     private void totalRegistresSalidaAny(ModelAndView mav, Date dataInici, Date dataFi, Long idEntidad, Long idOficina) throws Exception{
 
-        List<String> salidaAnosValor = new ArrayList<String>();
+        List<Long> salidaAnosValor = new ArrayList<Long>();
         List<String> salidaAnosNombre = new ArrayList<String>();
 
         while (dataInici.compareTo(dataFi) < 0) {
@@ -1491,17 +1491,17 @@ public class InformeController extends AbstractRegistroCommonFormController {
             cal.set(Calendar.SECOND, 59);
             if((idEntidad!=null)&&(idOficina==null)) {
                 if (cal.getTime().compareTo(dataFi) < 0) {
-                    salidaAnosValor.add(String.valueOf(informeEjb.buscaIndicadoresSalidaTotal(dataInici, cal.getTime(), idEntidad)));
+                    salidaAnosValor.add(informeEjb.buscaIndicadoresSalidaTotal(dataInici, cal.getTime(), idEntidad));
                 } else {
-                    salidaAnosValor.add(String.valueOf(informeEjb.buscaIndicadoresSalidaTotal(dataInici, dataFi, idEntidad)));
+                    salidaAnosValor.add(informeEjb.buscaIndicadoresSalidaTotal(dataInici, dataFi, idEntidad));
                     break;
                 }
             }
             if((idEntidad==null)&&(idOficina!=null)) {
                 if (cal.getTime().compareTo(dataFi) < 0) {
-                    salidaAnosValor.add(String.valueOf(informeEjb.buscaIndicadoresOficinaTotalSalida(dataInici, cal.getTime(), idOficina)));
+                    salidaAnosValor.add(informeEjb.buscaIndicadoresOficinaTotalSalida(dataInici, cal.getTime(), idOficina));
                 } else {
-                    salidaAnosValor.add(String.valueOf(informeEjb.buscaIndicadoresOficinaTotalSalida(dataInici, dataFi, idOficina)));
+                    salidaAnosValor.add(informeEjb.buscaIndicadoresOficinaTotalSalida(dataInici, dataFi, idOficina));
                     break;
                 }
             }
@@ -1525,7 +1525,7 @@ public class InformeController extends AbstractRegistroCommonFormController {
      */
     private void totalRegistresEntradaMes(ModelAndView mav, Date dataInici, Date dataFi, Long idEntidad, Long idOficina) throws Exception{
 
-        List<String> entradaMesesValor = new ArrayList<String>();
+        List<Long> entradaMesesValor = new ArrayList<Long>();
         List<String> entradaMesesNombre = new ArrayList<String>();
 
         // Mientras no hemos llegado a la fecha final
@@ -1568,10 +1568,10 @@ public class InformeController extends AbstractRegistroCommonFormController {
                 // Es informe por entidad
                 if (cal.getTime().compareTo(dataFi) < 0) {
                     // Si no estamos en el último mes de la búsqueda, coje la fecha montada como fechaFin
-                    entradaMesesValor.add(String.valueOf(informeEjb.buscaIndicadoresEntradaTotal(dataInici, cal.getTime(), idEntidad)));
+                    entradaMesesValor.add(informeEjb.buscaIndicadoresEntradaTotal(dataInici, cal.getTime(), idEntidad));
                 } else {
                     // Si estamos en el último mes de la búsqueda, utiliza la dataFi
-                    entradaMesesValor.add(String.valueOf(informeEjb.buscaIndicadoresEntradaTotal(dataInici, dataFi, idEntidad)));
+                    entradaMesesValor.add(informeEjb.buscaIndicadoresEntradaTotal(dataInici, dataFi, idEntidad));
                     break;
                 }
             }
@@ -1580,10 +1580,10 @@ public class InformeController extends AbstractRegistroCommonFormController {
                 // Es informe por oficina
                 if (cal.getTime().compareTo(dataFi) < 0) {
                     // Si no estamos en el último mes de la búsqueda, coje la fecha montada como fechaFin
-                    entradaMesesValor.add(String.valueOf(informeEjb.buscaIndicadoresOficinaTotalEntrada(dataInici, cal.getTime(), idOficina)));
+                    entradaMesesValor.add(informeEjb.buscaIndicadoresOficinaTotalEntrada(dataInici, cal.getTime(), idOficina));
                 } else {
                     // Si estamos en el último mes de la búsqueda, utiliza la dataFi
-                    entradaMesesValor.add(String.valueOf(informeEjb.buscaIndicadoresOficinaTotalEntrada(dataInici, dataFi, idOficina)));
+                    entradaMesesValor.add(informeEjb.buscaIndicadoresOficinaTotalEntrada(dataInici, dataFi, idOficina));
                     break;
                 }
             }
@@ -1610,7 +1610,7 @@ public class InformeController extends AbstractRegistroCommonFormController {
      */
     private void totalRegistresSalidaMes(ModelAndView mav, Date dataInici, Date dataFi, Long idEntidad, Long idOficina) throws Exception{
 
-        List<String> salidaMesesValor = new ArrayList<String>();
+        List<Long> salidaMesesValor = new ArrayList<Long>();
         List<String> salidaMesesNombre = new ArrayList<String>();
 
         // Mientras no hemos llegado a la fecha final
@@ -1653,10 +1653,10 @@ public class InformeController extends AbstractRegistroCommonFormController {
                 // Es informe por entidad
                 if (cal.getTime().compareTo(dataFi) < 0) {
                     // Si no estamos en el último mes de la búsqueda, coje la fecha montada como fechaFin
-                    salidaMesesValor.add(String.valueOf(informeEjb.buscaIndicadoresSalidaTotal(dataInici, cal.getTime(), idEntidad)));
+                    salidaMesesValor.add(informeEjb.buscaIndicadoresSalidaTotal(dataInici, cal.getTime(), idEntidad));
                 } else {
                     // Si estamos en el último mes de la búsqueda, utiliza la dataFi
-                    salidaMesesValor.add(String.valueOf(informeEjb.buscaIndicadoresSalidaTotal(dataInici, dataFi, idEntidad)));
+                    salidaMesesValor.add(informeEjb.buscaIndicadoresSalidaTotal(dataInici, dataFi, idEntidad));
                     break;
                 }
             }
@@ -1665,10 +1665,10 @@ public class InformeController extends AbstractRegistroCommonFormController {
                 // Es informe por oficina
                 if (cal.getTime().compareTo(dataFi) < 0) {
                     // Si no estamos en el último mes de la búsqueda, coje la fecha montada como fechaFin
-                    salidaMesesValor.add(String.valueOf(informeEjb.buscaIndicadoresOficinaTotalSalida(dataInici, cal.getTime(), idOficina)));
+                    salidaMesesValor.add(informeEjb.buscaIndicadoresOficinaTotalSalida(dataInici, cal.getTime(), idOficina));
                 } else {
                     // Si estamos en el último mes de la búsqueda, utiliza la dataFi
-                    salidaMesesValor.add(String.valueOf(informeEjb.buscaIndicadoresOficinaTotalSalida(dataInici, dataFi, idOficina)));
+                    salidaMesesValor.add(informeEjb.buscaIndicadoresOficinaTotalSalida(dataInici, dataFi, idOficina));
                     break;
                 }
             }
@@ -1695,14 +1695,14 @@ public class InformeController extends AbstractRegistroCommonFormController {
      */
     private void totalRegistresEntradaOrganismo(ModelAndView mav,Date dataInici, Date dataFi, List<Organismo> organismos) throws Exception{
 
-        List<String> entradaConselleriaValor = new ArrayList<String>();
+        List<Long> entradaConselleriaValor = new ArrayList<Long>();
         List<String> entradaConselleriaNombre = new ArrayList<String>();
 
         for (Organismo organismo : organismos) {
             Long total = informeEjb.buscaEntradaPorConselleria(dataInici, dataFi, organismo.getId());
             if (total > 0) { // Solo lo añadimos al informe si tiene algún registro
                 entradaConselleriaNombre.add(organismo.getDenominacion());
-                entradaConselleriaValor.add(String.valueOf(total));
+                entradaConselleriaValor.add(total);
             }
 
         }
@@ -1721,14 +1721,14 @@ public class InformeController extends AbstractRegistroCommonFormController {
      */
     private void totalRegistresSalidaOrganismo(ModelAndView mav,Date dataInici, Date dataFi, List<Organismo> organismos) throws Exception{
 
-        List<String> salidaConselleriaValor = new ArrayList<String>();
+        List<Long> salidaConselleriaValor = new ArrayList<Long>();
         List<String> salidaConselleriaNombre = new ArrayList<String>();
 
         for (Organismo organismo : organismos) {
             Long total = informeEjb.buscaSalidaPorConselleria(dataInici, dataFi, organismo.getId());
             if (total > 0) { // Solo lo añadimos al informe si tiene algún registro
                 salidaConselleriaNombre.add(organismo.getDenominacion());
-                salidaConselleriaValor.add(String.valueOf(total));
+                salidaConselleriaValor.add(total);
             }
 
         }
@@ -1796,7 +1796,7 @@ public class InformeController extends AbstractRegistroCommonFormController {
      */
     private void totalRegistresEntradaLibro(ModelAndView mav,Date dataInici, Date dataFi,List<Organismo> organismos) throws Exception{
 
-        List<String> entradaLibroValor = new ArrayList<String>();
+        List<Long> entradaLibroValor = new ArrayList<Long>();
         List<String> entradaLibroNombre = new ArrayList<String>();
 
         for (Organismo organismo : organismos) {
@@ -1805,7 +1805,7 @@ public class InformeController extends AbstractRegistroCommonFormController {
                 Long total = informeEjb.buscaEntradaPorLibro(dataInici, dataFi, libro.getId());
                 if (total > 0) { // Solo lo añadimos al informe si tiene algún registro
                     entradaLibroNombre.add(libro.getNombre());
-                    entradaLibroValor.add(String.valueOf(total));
+                    entradaLibroValor.add(total);
                 }
 
             }
@@ -1824,7 +1824,7 @@ public class InformeController extends AbstractRegistroCommonFormController {
      */
     private void totalRegistresSalidaLibro(ModelAndView mav,Date dataInici, Date dataFi,List<Organismo> organismos) throws Exception{
 
-        List<String> salidaLibroValor = new ArrayList<String>();
+        List<Long> salidaLibroValor = new ArrayList<Long>();
         List<String> salidaLibroNombre = new ArrayList<String>();
 
         for (Organismo organismo : organismos) {
@@ -1833,7 +1833,7 @@ public class InformeController extends AbstractRegistroCommonFormController {
                 Long total = informeEjb.buscaSalidaPorLibro(dataInici, dataFi, libro.getId());
                 if (total > 0) { // Solo lo añadimos al informe si tiene algún registro
                     salidaLibroNombre.add(libro.getNombre());
-                    salidaLibroValor.add(String.valueOf(total));
+                    salidaLibroValor.add(total);
                 }
 
             }
@@ -1851,14 +1851,14 @@ public class InformeController extends AbstractRegistroCommonFormController {
      * @throws Exception
      */
     private void totalRegistresEntradaOficina(ModelAndView mav,Date dataInici, Date dataFi,List<Oficina> oficinas) throws Exception{
-        List<String> entradaOficinaValor = new ArrayList<String>();
+        List<Long> entradaOficinaValor = new ArrayList<Long>();
         List<String> entradaOficinaNombre = new ArrayList<String>();
 
         for (Oficina oficina : oficinas) {
             Long total = informeEjb.buscaEntradaPorOficina(dataInici, dataFi, oficina.getId());
             if (total > 0) { // Solo lo añadimos al informe si tiene algún registro
                 entradaOficinaNombre.add(oficina.getDenominacion());
-                entradaOficinaValor.add(String.valueOf(total));
+                entradaOficinaValor.add(total);
             }
 
         }
@@ -1876,7 +1876,7 @@ public class InformeController extends AbstractRegistroCommonFormController {
      */
     private void totalRegistresSalidaOficina(ModelAndView mav,Date dataInici, Date dataFi,List<Oficina> oficinas) throws Exception{
 
-        List<String> salidaOficinaValor = new ArrayList<String>();
+        List<Long> salidaOficinaValor = new ArrayList<Long>();
         List<String> salidaOficinaNombre = new ArrayList<String>();
 
 
@@ -1884,7 +1884,7 @@ public class InformeController extends AbstractRegistroCommonFormController {
             Long total = informeEjb.buscaSalidaPorOficina(dataInici, dataFi, oficina.getId());
             if (total > 0) { // Solo lo añadimos al informe si tiene algún registro
                 salidaOficinaNombre.add(oficina.getDenominacion());
-                salidaOficinaValor.add(String.valueOf(total));
+                salidaOficinaValor.add(total);
             }
 
         }
@@ -1903,17 +1903,17 @@ public class InformeController extends AbstractRegistroCommonFormController {
      */
     private void totalRegistresEntradaIdioma(ModelAndView mav,Date dataInici, Date dataFi, Long idEntidad, Long idOficina) throws Exception{
 
-        List<String> entradaIdiomaValor = new ArrayList<String>();
+        List<Long> entradaIdiomaValor = new ArrayList<Long>();
         List<String> entradaIdiomaNombre = new ArrayList<String>();
 
         for(Long idioma : RegwebConstantes.IDIOMAS_REGISTRO){
             final String nombre = I18NUtils.tradueix("idioma." + idioma);
             entradaIdiomaNombre.add(nombre);
             if((idEntidad!=null)&&(idOficina==null)) {
-                entradaIdiomaValor.add(String.valueOf(informeEjb.buscaEntradaPorIdioma(dataInici, dataFi, idioma, idEntidad)));
+                entradaIdiomaValor.add(informeEjb.buscaEntradaPorIdioma(dataInici, dataFi, idioma, idEntidad));
             }
             if((idEntidad==null)&&(idOficina!=null)) {
-                entradaIdiomaValor.add(String.valueOf(informeEjb.buscaEntradaPorIdiomaOficina(dataInici, dataFi, idioma, idOficina)));
+                entradaIdiomaValor.add(informeEjb.buscaEntradaPorIdiomaOficina(dataInici, dataFi, idioma, idOficina));
             }
         }
         mav.addObject("entradaIdiomaValor", entradaIdiomaValor);
@@ -1931,17 +1931,17 @@ public class InformeController extends AbstractRegistroCommonFormController {
      */
     private void totalRegistresSalidaIdioma(ModelAndView mav,Date dataInici, Date dataFi, Long idEntidad, Long idOficina) throws Exception{
 
-        List<String> salidaIdiomaValor = new ArrayList<String>();
+        List<Long> salidaIdiomaValor = new ArrayList<Long>();
         List<String> salidaIdiomaNombre = new ArrayList<String>();
 
         for(Long idioma : RegwebConstantes.IDIOMAS_REGISTRO){
             final String nombre = I18NUtils.tradueix("idioma." + idioma);
             salidaIdiomaNombre.add(nombre);
             if((idEntidad!=null)&&(idOficina==null)) {
-                salidaIdiomaValor.add(String.valueOf(informeEjb.buscaSalidaPorIdioma(dataInici, dataFi, idioma, idEntidad)));
+                salidaIdiomaValor.add(informeEjb.buscaSalidaPorIdioma(dataInici, dataFi, idioma, idEntidad));
             }
             if((idEntidad==null)&&(idOficina!=null)) {
-                salidaIdiomaValor.add(String.valueOf(informeEjb.buscaSalidaPorIdiomaOficina(dataInici, dataFi, idioma, idOficina)));
+                salidaIdiomaValor.add(informeEjb.buscaSalidaPorIdiomaOficina(dataInici, dataFi, idioma, idOficina));
             }
         }
 

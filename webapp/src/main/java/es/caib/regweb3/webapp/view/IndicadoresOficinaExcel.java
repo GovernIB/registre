@@ -40,21 +40,21 @@ public class IndicadoresOficinaExcel extends AbstractExcelView {
         //Obtenemos mapas y arraays de valores
         String fechaInicio = (String) model.get("fechaInicio");
         String fechaFin = (String) model.get("fechaFin");
-        Integer registrosEntrada = (Integer) model.get("registrosEntrada");
-        Integer registrosSalida = (Integer) model.get("registrosSalida");
+        Long registrosEntrada = (Long) model.get("registrosEntrada");
+        Long registrosSalida = (Long) model.get("registrosSalida");
         String nombreOficina = (String) model.get("nombreOficina");
         String codigoOficina = (String) model.get("codigoOficina");
-        ArrayList<String> entradaAnosValor = (ArrayList<String>) model.get("entradaAnosValor");
+        ArrayList<Long> entradaAnosValor = (ArrayList<Long>) model.get("entradaAnosValor");
         ArrayList<String> entradaAnosNombre = (ArrayList<String>) model.get("entradaAnosNombre");
-        ArrayList<String> salidaAnosValor = (ArrayList<String>) model.get("salidaAnosValor");
+        ArrayList<Long> salidaAnosValor = (ArrayList<Long>) model.get("salidaAnosValor");
         ArrayList<String> salidaAnosNombre = (ArrayList<String>) model.get("salidaAnosNombre");
-        ArrayList<String> entradaMesesValor = (ArrayList<String>) model.get("entradaMesesValor");
+        ArrayList<Long> entradaMesesValor = (ArrayList<Long>) model.get("entradaMesesValor");
         ArrayList<String> entradaMesesNombre = (ArrayList<String>) model.get("entradaMesesNombre");
-        ArrayList<String> salidaMesesValor = (ArrayList<String>) model.get("salidaMesesValor");
+        ArrayList<Long> salidaMesesValor = (ArrayList<Long>) model.get("salidaMesesValor");
         ArrayList<String> salidaMesesNombre = (ArrayList<String>) model.get("salidaMesesNombre");
-        ArrayList<String> entradaIdiomaValor = (ArrayList<String>) model.get("entradaIdiomaValor");
+        ArrayList<Long> entradaIdiomaValor = (ArrayList<Long>) model.get("entradaIdiomaValor");
         ArrayList<String> entradaIdiomaNombre = (ArrayList<String>) model.get("entradaIdiomaNombre");
-        ArrayList<String> salidaIdiomaValor = (ArrayList<String>) model.get("salidaIdiomaValor");
+        ArrayList<Long> salidaIdiomaValor = (ArrayList<Long>) model.get("salidaIdiomaValor");
         ArrayList<String> salidaIdiomaNombre = (ArrayList<String>) model.get("salidaIdiomaNombre");
 
         HSSFSheet sheet = workbook.createSheet("REGWEB3");
@@ -79,7 +79,6 @@ public class IndicadoresOficinaExcel extends AbstractExcelView {
         paramCerca.setAlignment(CellStyle.ALIGN_CENTER);
         paramCerca.setVerticalAlignment(CellStyle.VERTICAL_CENTER);
         paramCerca.setFont(paramCercaFuente);
-
 
         //Estilo cabecera
         HSSFCellStyle cabecera;
@@ -178,7 +177,7 @@ public class IndicadoresOficinaExcel extends AbstractExcelView {
         regEntrNomCol.setCellValue(getMessage("informe.registros"));
         regEntrNomCol.setCellStyle(cabecera);
         HSSFRow registreRow = sheet.createRow(rowNum++);
-        registreRow.createCell(0).setCellValue(registrosEntrada.toString());
+        registreRow.createCell(0).setCellValue(registrosEntrada);
         registreRow.getCell(0).setCellStyle(fila);
 
         //Espai buit
@@ -210,7 +209,7 @@ public class IndicadoresOficinaExcel extends AbstractExcelView {
             anyValorCol.setCellStyle(fila);
         }
         HSSFCell anyValorCol = anyValor.createCell(entradaAnosValor.size());
-        anyValorCol.setCellValue(registrosEntrada.toString());
+        anyValorCol.setCellValue(registrosEntrada);
         anyValorCol.setCellStyle(fila);
 
         if(entradaAnosNombre.size() > tamanyMaxColum){
@@ -300,7 +299,7 @@ public class IndicadoresOficinaExcel extends AbstractExcelView {
         regSalNomCol.setCellValue(getMessage("informe.registros"));
         regSalNomCol.setCellStyle(cabecera);
         HSSFRow registreSalRow = sheet.createRow(rowNum++);
-        registreSalRow.createCell(0).setCellValue(registrosSalida.toString());
+        registreSalRow.createCell(0).setCellValue(registrosSalida);
         registreSalRow.getCell(0).setCellStyle(fila);
 
         //Espai buit
@@ -332,7 +331,7 @@ public class IndicadoresOficinaExcel extends AbstractExcelView {
             anySalValorCol.setCellStyle(fila);
         }
         HSSFCell anySalValorCol = anySalValor.createCell(salidaAnosValor.size());
-        anySalValorCol.setCellValue(registrosSalida.toString());
+        anySalValorCol.setCellValue(registrosSalida);
         anySalValorCol.setCellStyle(fila);
 
         if(salidaAnosNombre.size() > tamanyMaxColum){

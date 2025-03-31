@@ -24,29 +24,29 @@ public class IndicadoresPdf extends AbstractIText5PdfView{
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
-    private ArrayList<String> entradaAnosValor = new ArrayList<String>();
+    private ArrayList<Long> entradaAnosValor = new ArrayList<Long>();
     private ArrayList<String> entradaAnosNombre = new ArrayList<String>();
-    private ArrayList<String> salidaAnosValor = new ArrayList<String>();
+    private ArrayList<Long> salidaAnosValor = new ArrayList<Long>();
     private ArrayList<String> salidaAnosNombre = new ArrayList<String>();
-    private ArrayList<String> entradaMesesValor = new ArrayList<String>();
+    private ArrayList<Long> entradaMesesValor = new ArrayList<Long>();
     private ArrayList<String> entradaMesesNombre = new ArrayList<String>();
-    private ArrayList<String> salidaMesesValor = new ArrayList<String>();
+    private ArrayList<Long> salidaMesesValor = new ArrayList<Long>();
     private ArrayList<String> salidaMesesNombre = new ArrayList<String>();
-    private ArrayList<String> entradaConselleriaValor = new ArrayList<String>();
+    private ArrayList<Long> entradaConselleriaValor = new ArrayList<Long>();
     private ArrayList<String> entradaConselleriaNombre = new ArrayList<String>();
-    private ArrayList<String> salidaConselleriaValor = new ArrayList<String>();
+    private ArrayList<Long> salidaConselleriaValor = new ArrayList<Long>();
     private ArrayList<String> salidaConselleriaNombre = new ArrayList<String>();
-    private ArrayList<String> entradaLibroValor = new ArrayList<String>();
+    private ArrayList<Long> entradaLibroValor = new ArrayList<Long>();
     private ArrayList<String> entradaLibroNombre = new ArrayList<String>();
-    private ArrayList<String> salidaLibroValor = new ArrayList<String>();
+    private ArrayList<Long> salidaLibroValor = new ArrayList<Long>();
     private ArrayList<String> salidaLibroNombre = new ArrayList<String>();
-    private ArrayList<String> entradaOficinaValor = new ArrayList<String>();
+    private ArrayList<Long> entradaOficinaValor = new ArrayList<Long>();
     private ArrayList<String> entradaOficinaNombre = new ArrayList<String>();
-    private ArrayList<String> salidaOficinaValor = new ArrayList<String>();
+    private ArrayList<Long> salidaOficinaValor = new ArrayList<Long>();
     private ArrayList<String> salidaOficinaNombre = new ArrayList<String>();
-    private ArrayList<String> entradaIdiomaValor = new ArrayList<String>();
+    private ArrayList<Long> entradaIdiomaValor = new ArrayList<Long>();
     private ArrayList<String> entradaIdiomaNombre = new ArrayList<String>();
-    private ArrayList<String> salidaIdiomaValor = new ArrayList<String>();
+    private ArrayList<Long> salidaIdiomaValor = new ArrayList<Long>();
     private ArrayList<String> salidaIdiomaNombre = new ArrayList<String>();
     /**
      * Retorna el mensaje traducido según el idioma del usuario
@@ -70,15 +70,15 @@ public class IndicadoresPdf extends AbstractIText5PdfView{
         String fechaFin = (String) model.get("fechaFin");
         Long campoCalendario = (Long) model.get("campoCalendario");
 
-        Integer registrosEntrada = 0;
-        Integer registrosSalida = 0;
+        Long registrosEntrada = 0L;
+        Long registrosSalida = 0L;
 
         if(tipo.equals(RegwebConstantes.INFORME_TIPO_REGISTRO_ENTRADASALIDA)){ // Entrada y Salida
 
             tipoInforme = getMessage("informe.ambosTipos");
 
-            registrosEntrada = (Integer) model.get("registrosEntrada");
-            registrosSalida = (Integer) model.get("registrosSalida");
+            registrosEntrada = (Long) model.get("registrosEntrada");
+            registrosSalida = (Long) model.get("registrosSalida");
 
             obtenerValoresEntrada(model);
             obtenerValoresSalida(model);
@@ -86,19 +86,18 @@ public class IndicadoresPdf extends AbstractIText5PdfView{
         }else if(tipo.equals(RegwebConstantes.INFORME_TIPO_REGISTRO_ENTRADA)){ // Entrada
 
             tipoInforme = getMessage("informe.entrada");
-            registrosEntrada = (Integer) model.get("registrosEntrada");
+            registrosEntrada = (Long) model.get("registrosEntrada");
 
             obtenerValoresEntrada(model);
 
         }else if(tipo.equals(RegwebConstantes.INFORME_TIPO_REGISTRO_SALIDA)){ // Salida
 
             tipoInforme = getMessage("informe.salida");
-            registrosSalida = (Integer) model.get("registrosSalida");
+            registrosSalida = (Long) model.get("registrosSalida");
 
             obtenerValoresSalida(model);
 
         }
-
 
         //Configuraciones generales formato pdf
         document.setPageSize(PageSize.A4);
@@ -158,7 +157,7 @@ public class IndicadoresPdf extends AbstractIText5PdfView{
             table.addCell(cell1);
             table.getDefaultCell().setBackgroundColor(BaseColor.WHITE);
             table.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
-            table.addCell(new Paragraph(registrosEntrada.toString(),font10));
+            table.addCell(new Paragraph(String.valueOf(registrosEntrada),font10));
             document.add(table);
             document.add(new Paragraph(" "));
 
@@ -183,8 +182,8 @@ public class IndicadoresPdf extends AbstractIText5PdfView{
                     tableAnysEntrada.addCell(new Paragraph(numAny,font10));
                     tableAnysEntrada.getDefaultCell().setBackgroundColor(BaseColor.WHITE);
                     tableAnysEntrada.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
-                    String valorAny = entradaAnosValor.get(i);
-                    tableAnysEntrada.addCell(new Paragraph(valorAny,font10));
+                    Long valorAny = entradaAnosValor.get(i);
+                    tableAnysEntrada.addCell(new Paragraph(String.valueOf(valorAny),font10));
                     document.add(tableAnysEntrada);
                     tableAnysEntrada.deleteBodyRows();
                 }
@@ -194,7 +193,7 @@ public class IndicadoresPdf extends AbstractIText5PdfView{
                 tableAnysEntrada.addCell(new Paragraph(getMessage("informe.total"),font10));
                 tableAnysEntrada.getDefaultCell().setBackgroundColor(BaseColor.WHITE);
                 tableAnysEntrada.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
-                tableAnysEntrada.addCell(new Paragraph(registrosEntrada.toString(),font10));
+                tableAnysEntrada.addCell(new Paragraph(String.valueOf(registrosEntrada),font10));
                 document.add(tableAnysEntrada);
                 document.add(new Paragraph(" "));
             }
@@ -220,8 +219,8 @@ public class IndicadoresPdf extends AbstractIText5PdfView{
                     tableMesesEntrada.addCell(new Paragraph(nomMes,font10));
                     tableMesesEntrada.getDefaultCell().setBackgroundColor(BaseColor.WHITE);
                     tableMesesEntrada.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
-                    String valorMes = entradaMesesValor.get(i);
-                    tableMesesEntrada.addCell(new Paragraph(valorMes,font10));
+                    Long valorMes = entradaMesesValor.get(i);
+                    tableMesesEntrada.addCell(new Paragraph(String.valueOf(valorMes),font10));
                     document.add(tableMesesEntrada);
                     tableMesesEntrada.deleteBodyRows();
                 }
@@ -231,7 +230,7 @@ public class IndicadoresPdf extends AbstractIText5PdfView{
                 tableMesesEntrada.addCell(new Paragraph(getMessage("informe.total"),font10));
                 tableMesesEntrada.getDefaultCell().setBackgroundColor(BaseColor.WHITE);
                 tableMesesEntrada.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
-                tableMesesEntrada.addCell(new Paragraph(registrosEntrada.toString(),font10));
+                tableMesesEntrada.addCell(new Paragraph(String.valueOf(registrosEntrada),font10));
                 document.add(tableMesesEntrada);
                 document.add(new Paragraph(" "));
             }
@@ -257,8 +256,8 @@ public class IndicadoresPdf extends AbstractIText5PdfView{
                     tableConselleriesEntrada.addCell(new Paragraph(nomConsell,font10));
                     tableConselleriesEntrada.getDefaultCell().setBackgroundColor(BaseColor.WHITE);
                     tableConselleriesEntrada.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
-                    String valorConsell = entradaConselleriaValor.get(i);
-                    tableConselleriesEntrada.addCell(new Paragraph(valorConsell,font10));
+                    Long valorConsell = entradaConselleriaValor.get(i);
+                    tableConselleriesEntrada.addCell(new Paragraph(String.valueOf(valorConsell),font10));
                     document.add(tableConselleriesEntrada);
                     tableConselleriesEntrada.deleteBodyRows();
                 }
@@ -268,7 +267,7 @@ public class IndicadoresPdf extends AbstractIText5PdfView{
                 tableConselleriesEntrada.addCell(new Paragraph(getMessage("informe.total"),font10));
                 tableConselleriesEntrada.getDefaultCell().setBackgroundColor(BaseColor.WHITE);
                 tableConselleriesEntrada.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
-                tableConselleriesEntrada.addCell(new Paragraph(registrosEntrada.toString(),font10));
+                tableConselleriesEntrada.addCell(new Paragraph(String.valueOf(registrosEntrada),font10));
                 document.add(tableConselleriesEntrada);
                 document.add(new Paragraph(" "));
             }
@@ -294,8 +293,8 @@ public class IndicadoresPdf extends AbstractIText5PdfView{
                     tableLlibresEntrada.addCell(new Paragraph(nomLibro,font10));
                     tableLlibresEntrada.getDefaultCell().setBackgroundColor(BaseColor.WHITE);
                     tableLlibresEntrada.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
-                    String valorLibro = entradaLibroValor.get(i);
-                    tableLlibresEntrada.addCell(new Paragraph(valorLibro,font10));
+                    Long valorLibro = entradaLibroValor.get(i);
+                    tableLlibresEntrada.addCell(new Paragraph(String.valueOf(valorLibro),font10));
                     document.add(tableLlibresEntrada);
                     tableLlibresEntrada.deleteBodyRows();
                 }
@@ -323,8 +322,8 @@ public class IndicadoresPdf extends AbstractIText5PdfView{
                     tableOficinesEntrada.addCell(new Paragraph(nomOficina,font10));
                     tableOficinesEntrada.getDefaultCell().setBackgroundColor(BaseColor.WHITE);
                     tableOficinesEntrada.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
-                    String valorOficina = entradaOficinaValor.get(i);
-                    tableOficinesEntrada.addCell(new Paragraph(valorOficina,font10));
+                    Long valorOficina = entradaOficinaValor.get(i);
+                    tableOficinesEntrada.addCell(new Paragraph(String.valueOf(valorOficina),font10));
                     document.add(tableOficinesEntrada);
                     tableOficinesEntrada.deleteBodyRows();
                 }
@@ -354,8 +353,8 @@ public class IndicadoresPdf extends AbstractIText5PdfView{
                 tableIdiomesEntrada.deleteBodyRows();
                 tableIdiomesEntrada.getDefaultCell().setBackgroundColor(BaseColor.WHITE);
                 tableIdiomesEntrada.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
-                for (String valorIdioma : entradaIdiomaValor) {
-                    tableIdiomesEntrada.addCell(new Paragraph(valorIdioma, font10));
+                for (Long valorIdioma : entradaIdiomaValor) {
+                    tableIdiomesEntrada.addCell(new Paragraph(String.valueOf(valorIdioma), font10));
                 }
                 document.add(tableIdiomesEntrada);
                 document.add(new Paragraph(" "));
@@ -398,7 +397,7 @@ public class IndicadoresPdf extends AbstractIText5PdfView{
             table2.addCell(cell2);
             table2.getDefaultCell().setBackgroundColor(BaseColor.WHITE);
             table2.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
-            table2.addCell(new Paragraph(registrosSalida.toString(),font10));
+            table2.addCell(new Paragraph(String.valueOf(registrosSalida),font10));
             document.add(table2);
             document.add(new Paragraph(" "));
 
@@ -423,8 +422,8 @@ public class IndicadoresPdf extends AbstractIText5PdfView{
                     tableAnysSortida.addCell(new Paragraph(numAny,font10));
                     tableAnysSortida.getDefaultCell().setBackgroundColor(BaseColor.WHITE);
                     tableAnysSortida.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
-                    String valorAny = salidaAnosValor.get(i);
-                    tableAnysSortida.addCell(new Paragraph(valorAny,font10));
+                    Long valorAny = salidaAnosValor.get(i);
+                    tableAnysSortida.addCell(new Paragraph(String.valueOf(valorAny),font10));
                     document.add(tableAnysSortida);
                     tableAnysSortida.deleteBodyRows();
                 }
@@ -434,7 +433,7 @@ public class IndicadoresPdf extends AbstractIText5PdfView{
                 tableAnysSortida.addCell(new Paragraph(getMessage("informe.total"),font10));
                 tableAnysSortida.getDefaultCell().setBackgroundColor(BaseColor.WHITE);
                 tableAnysSortida.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
-                tableAnysSortida.addCell(new Paragraph(registrosSalida.toString(),font10));
+                tableAnysSortida.addCell(new Paragraph(String.valueOf(registrosSalida),font10));
                 document.add(tableAnysSortida);
                 document.add(new Paragraph(" "));
             }
@@ -460,8 +459,8 @@ public class IndicadoresPdf extends AbstractIText5PdfView{
                     tableMesesSalida.addCell(new Paragraph(nomMes,font10));
                     tableMesesSalida.getDefaultCell().setBackgroundColor(BaseColor.WHITE);
                     tableMesesSalida.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
-                    String valorMes = salidaMesesValor.get(i);
-                    tableMesesSalida.addCell(new Paragraph(valorMes,font10));
+                    Long valorMes = salidaMesesValor.get(i);
+                    tableMesesSalida.addCell(new Paragraph(String.valueOf(valorMes),font10));
                     document.add(tableMesesSalida);
                     tableMesesSalida.deleteBodyRows();
                 }
@@ -471,7 +470,7 @@ public class IndicadoresPdf extends AbstractIText5PdfView{
                 tableMesesSalida.addCell(new Paragraph(getMessage("informe.total"),font10));
                 tableMesesSalida.getDefaultCell().setBackgroundColor(BaseColor.WHITE);
                 tableMesesSalida.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
-                tableMesesSalida.addCell(new Paragraph(registrosSalida.toString(),font10));
+                tableMesesSalida.addCell(new Paragraph(String.valueOf(registrosSalida),font10));
                 document.add(tableMesesSalida);
                 document.add(new Paragraph(" "));
             }
@@ -497,8 +496,8 @@ public class IndicadoresPdf extends AbstractIText5PdfView{
                     tableConselleriesSortida.addCell(new Paragraph(nomConsell,font10));
                     tableConselleriesSortida.getDefaultCell().setBackgroundColor(BaseColor.WHITE);
                     tableConselleriesSortida.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
-                    String valorConsell = salidaConselleriaValor.get(i);
-                    tableConselleriesSortida.addCell(new Paragraph(valorConsell,font10));
+                    Long valorConsell = salidaConselleriaValor.get(i);
+                    tableConselleriesSortida.addCell(new Paragraph(String.valueOf(valorConsell),font10));
                     document.add(tableConselleriesSortida);
                     tableConselleriesSortida.deleteBodyRows();
                 }
@@ -508,7 +507,7 @@ public class IndicadoresPdf extends AbstractIText5PdfView{
                 tableConselleriesSortida.addCell(new Paragraph(getMessage("informe.total"),font10));
                 tableConselleriesSortida.getDefaultCell().setBackgroundColor(BaseColor.WHITE);
                 tableConselleriesSortida.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
-                tableConselleriesSortida.addCell(new Paragraph(registrosSalida.toString(),font10));
+                tableConselleriesSortida.addCell(new Paragraph(String.valueOf(registrosSalida),font10));
                 document.add(tableConselleriesSortida);
                 document.add(new Paragraph(" "));
             }
@@ -534,8 +533,8 @@ public class IndicadoresPdf extends AbstractIText5PdfView{
                     tableLlibresSalida.addCell(new Paragraph(nomLibro,font10));
                     tableLlibresSalida.getDefaultCell().setBackgroundColor(BaseColor.WHITE);
                     tableLlibresSalida.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
-                    String valorLibro = salidaLibroValor.get(i);
-                    tableLlibresSalida.addCell(new Paragraph(valorLibro,font10));
+                    Long valorLibro = salidaLibroValor.get(i);
+                    tableLlibresSalida.addCell(new Paragraph(String.valueOf(valorLibro),font10));
                     document.add(tableLlibresSalida);
                     tableLlibresSalida.deleteBodyRows();
                 }
@@ -563,8 +562,8 @@ public class IndicadoresPdf extends AbstractIText5PdfView{
                     tableOficinesSalida.addCell(new Paragraph(nomOficina,font10));
                     tableOficinesSalida.getDefaultCell().setBackgroundColor(BaseColor.WHITE);
                     tableOficinesSalida.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
-                    String valorOficina = salidaOficinaValor.get(i);
-                    tableOficinesSalida.addCell(new Paragraph(valorOficina,font10));
+                    Long valorOficina = salidaOficinaValor.get(i);
+                    tableOficinesSalida.addCell(new Paragraph(String.valueOf(valorOficina),font10));
                     document.add(tableOficinesSalida);
                     tableOficinesSalida.deleteBodyRows();
                 }
@@ -594,8 +593,8 @@ public class IndicadoresPdf extends AbstractIText5PdfView{
                 tableIdiomesSalida.deleteBodyRows();
                 tableIdiomesSalida.getDefaultCell().setBackgroundColor(BaseColor.WHITE);
                 tableIdiomesSalida.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
-                for (String valorIdioma : salidaIdiomaValor) {
-                    tableIdiomesSalida.addCell(new Paragraph(valorIdioma, font10));
+                for (Long valorIdioma : salidaIdiomaValor) {
+                    tableIdiomesSalida.addCell(new Paragraph(String.valueOf(valorIdioma), font10));
                 }
                 document.add(tableIdiomesSalida);
                 document.add(new Paragraph(" "));
@@ -631,17 +630,17 @@ public class IndicadoresPdf extends AbstractIText5PdfView{
      */
     @SuppressWarnings("unchecked")
     private void obtenerValoresEntrada(Map<String, Object> model) throws Exception{
-        entradaAnosValor = (ArrayList<String>) model.get("entradaAnosValor");
+        entradaAnosValor = (ArrayList<Long>) model.get("entradaAnosValor");
         entradaAnosNombre = (ArrayList<String>) model.get("entradaAnosNombre");
-        entradaMesesValor = (ArrayList<String>) model.get("entradaMesesValor");
+        entradaMesesValor = (ArrayList<Long>) model.get("entradaMesesValor");
         entradaMesesNombre = (ArrayList<String>) model.get("entradaMesesNombre");
-        entradaConselleriaValor = (ArrayList<String>) model.get("entradaConselleriaValor");
+        entradaConselleriaValor = (ArrayList<Long>) model.get("entradaConselleriaValor");
         entradaConselleriaNombre = (ArrayList<String>) model.get("entradaConselleriaNombre");
-        entradaLibroValor = (ArrayList<String>) model.get("entradaLibroValor");
+        entradaLibroValor = (ArrayList<Long>) model.get("entradaLibroValor");
         entradaLibroNombre = (ArrayList<String>) model.get("entradaLibroNombre");
-        entradaOficinaValor = (ArrayList<String>) model.get("entradaOficinaValor");
+        entradaOficinaValor = (ArrayList<Long>) model.get("entradaOficinaValor");
         entradaOficinaNombre = (ArrayList<String>) model.get("entradaOficinaNombre");
-        entradaIdiomaValor = (ArrayList<String>) model.get("entradaIdiomaValor");
+        entradaIdiomaValor = (ArrayList<Long>) model.get("entradaIdiomaValor");
         entradaIdiomaNombre = (ArrayList<String>) model.get("entradaIdiomaNombre");
     }
 
@@ -652,17 +651,17 @@ public class IndicadoresPdf extends AbstractIText5PdfView{
      */
     @SuppressWarnings("unchecked")
     private void obtenerValoresSalida(Map<String, Object> model) throws Exception{
-        salidaAnosValor = (ArrayList<String>) model.get("salidaAnosValor");
+        salidaAnosValor = (ArrayList<Long>) model.get("salidaAnosValor");
         salidaAnosNombre = (ArrayList<String>) model.get("salidaAnosNombre");
-        salidaMesesValor = (ArrayList<String>) model.get("salidaMesesValor");
+        salidaMesesValor = (ArrayList<Long>) model.get("salidaMesesValor");
         salidaMesesNombre = (ArrayList<String>) model.get("salidaMesesNombre");
-        salidaConselleriaValor = (ArrayList<String>) model.get("salidaConselleriaValor");
+        salidaConselleriaValor = (ArrayList<Long>) model.get("salidaConselleriaValor");
         salidaConselleriaNombre = (ArrayList<String>) model.get("salidaConselleriaNombre");
-        salidaLibroValor = (ArrayList<String>) model.get("salidaLibroValor");
+        salidaLibroValor = (ArrayList<Long>) model.get("salidaLibroValor");
         salidaLibroNombre = (ArrayList<String>) model.get("salidaLibroNombre");
-        salidaOficinaValor = (ArrayList<String>) model.get("salidaOficinaValor");
+        salidaOficinaValor = (ArrayList<Long>) model.get("salidaOficinaValor");
         salidaOficinaNombre = (ArrayList<String>) model.get("salidaOficinaNombre");
-        salidaIdiomaValor = (ArrayList<String>) model.get("salidaIdiomaValor");
+        salidaIdiomaValor = (ArrayList<Long>) model.get("salidaIdiomaValor");
         salidaIdiomaNombre = (ArrayList<String>) model.get("salidaIdiomaNombre");
     }
 
