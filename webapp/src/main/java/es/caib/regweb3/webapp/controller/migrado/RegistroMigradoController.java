@@ -75,7 +75,7 @@ public class RegistroMigradoController extends BaseController {
         RegistroMigradoBusqueda registroMigradoBusqueda = new RegistroMigradoBusqueda(new RegistroMigrado(),1);
         registroMigradoBusqueda.getRegistroMigrado().setTipoRegistro(true);
         registroMigradoBusqueda.setFechaInicio(new GregorianCalendar(1991, Calendar.JANUARY, 1).getTime());
-        registroMigradoBusqueda.setFechaFin(new GregorianCalendar(1995, Calendar.DECEMBER, 31).getTime());
+        registroMigradoBusqueda.setFechaFin(new GregorianCalendar(1994, Calendar.DECEMBER, 31).getTime());
 
         model.addAttribute("oficinasMigrado", oficinasMigrado);
         model.addAttribute("registroMigradoBusqueda", registroMigradoBusqueda);
