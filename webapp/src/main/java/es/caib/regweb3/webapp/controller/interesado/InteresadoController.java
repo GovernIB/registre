@@ -151,9 +151,9 @@ public class InteresadoController extends BaseController{
      * @param request
      * @return
      */
-    @RequestMapping(value = "/{tipoRegistro}/addPersona", method = RequestMethod.GET)
+    @RequestMapping(value = "/{tipoRegistro}/addPersonaSesion", method = RequestMethod.GET)
     @ResponseBody
-    public Integer addPersonaInteresado(@PathVariable Long tipoRegistro,@RequestParam Long id,@RequestParam String idRegistroDetalle, HttpServletRequest request) {
+    public Integer addPersonaSesion(@PathVariable Long tipoRegistro,@RequestParam Long id, HttpServletRequest request) {
 
         String variableSesion = (tipoRegistro.equals(REGISTRO_ENTRADA) ? RegwebConstantes.SESSION_INTERESADOS_ENTRADA:RegwebConstantes.SESSION_INTERESADOS_SALIDA);
 
@@ -166,20 +166,44 @@ public class InteresadoController extends BaseController{
             if(persona != null) { // Si existe la persona en la bbdd
                 interesado = new Interesado(persona);
 
-                if(StringUtils.isEmpty(idRegistroDetalle)) { // Se trata de un nuevo Registro, utilizamos la sesion.
+                addInteresadoSesion(interesado, session, variableSesion);
+            }
 
-                    addInteresadoSesion(interesado,session, variableSesion);
+        } catch(I18NException i18ne) {
+            log.error(I18NUtils.getMessage(i18ne), i18ne);
+            return null;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
 
-                }else{ // Edición de un registro, lo añadimos a la bbdd
-                    interesado.setId(null);
-                    interesado.setRegistroDetalle(registroDetalleEjb.getReference(Long.valueOf(idRegistroDetalle)));
-                    interesado = interesadoEjb.guardarInteresado(interesado);
-                    Entidad entidadActiva = getEntidadActiva(request);
+        return 0;
+    }
 
-                    // Plug-in Post-Proceso
-                    interesadoEjb.postProcesoNuevoInteresado(interesado, Long.valueOf(idRegistroDetalle), tipoRegistro,entidadActiva.getId());
-                    return interesado.getId().intValue();
-                }
+    /**
+     *  Añade una Persona existente a la bbdd de Interesados del Registro en cuestión
+     * @param id
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/{tipoRegistro}/addPersonaBbdd", method = RequestMethod.GET)
+    @ResponseBody
+    public Integer addPersonaBbdd(@PathVariable Long tipoRegistro,@RequestParam Long id,@RequestParam String idRegistroDetalle, HttpServletRequest request) {
+
+        try {
+            Persona persona = personaEjb.findById(id);
+
+            if(persona != null) { // Si existe la persona en la bbdd
+                Interesado interesado = new Interesado(persona);
+
+                interesado.setId(null);
+                interesado.setRegistroDetalle(registroDetalleEjb.getReference(Long.valueOf(idRegistroDetalle)));
+                interesado = interesadoEjb.guardarInteresado(interesado);
+
+                // Plug-in Post-Proceso
+                interesadoEjb.postProcesoNuevoInteresado(interesado, Long.valueOf(idRegistroDetalle), tipoRegistro,getEntidadActiva(request).getId());
+
+                return interesado.getId().intValue();
             }
 
         } catch(I18NException i18ne) {
@@ -189,7 +213,6 @@ public class InteresadoController extends BaseController{
             e.printStackTrace();
             return null;
         }
-
         return 0;
     }
 
@@ -637,7 +660,7 @@ public class InteresadoController extends BaseController{
 
             }else{// Edición de un registro, lo eliminanos de la bbdd
                 RegistroDetalle registroDetalle = registroDetalleEjb.findByIdConInteresados(Long.valueOf(idRegistroDetalle));
-                if(registroDetalle != null && registroDetalle.getInteresados().size()>1 ) { // Si solo hay un Interesado, no permitimos eliminarlo.
+                if(registroDetalle != null && registroDetalle.getTotalInteresados()>1 ) { // Si solo hay un Interesado, no permitimos eliminarlo.
                     Boolean hayNotificaciones = false;
                     for(Interesado inter: registroDetalle.getInteresados()) {
                         if (inter.getReceptorNotificaciones() && !inter.getId().equals(id)) {
@@ -656,7 +679,6 @@ public class InteresadoController extends BaseController{
                     }
 
                 }
-
             }
         } catch(I18NException i18ne) {
           log.error(I18NUtils.getMessage(i18ne), i18ne);
@@ -930,6 +952,24 @@ public class InteresadoController extends BaseController{
         }
 
         return interesado;
+    }
+
+    /**
+     * Obtiene la {@link es.caib.regweb3.model.Persona} según su identificador.
+     */
+    @RequestMapping(value = "/obtenerPersona", method = RequestMethod.GET)
+    @ResponseBody
+    public Interesado obtenerPersona(@RequestParam Long id) throws Exception {
+
+        Persona persona = personaEjb.findById(id);
+
+        if(persona != null) {
+            return new Interesado(persona);
+
+        }else {
+            return null;
+        }
+
     }
 
     /**

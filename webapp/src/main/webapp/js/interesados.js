@@ -180,6 +180,23 @@ function eliminarInteresados(){
 
 }
 
+/**
+ *
+ * @param id
+ * @param nombre
+ * @param tipo
+ * @param representante
+ * @param modal
+ * @param idRegistroDetalle
+ */
+function addPersonaInteresado(id, nombre,tipo,representante, modal, idRegistroDetalle){
+
+    if(idRegistroDetalle == ''){ // Es un nuevo Registro
+        addPersonaSesion(id, nombre,tipo,representante, modal);
+    }else{ // Registro existente
+        addPersonaBbdd(id, nombre,tipo,representante, modal, idRegistroDetalle)
+    }
+}
 
 /**
  * Añade la Persona seleccionada a la Sesion, y la muestra en la tabla de interesados.
@@ -188,13 +205,46 @@ function eliminarInteresados(){
  * @param tipo
  * @param representante
  * @param modal
+ */
+function addPersonaSesion(id, nombre,tipo,representante, modal){
+
+    $.ajax({
+        url: urlAddPersonaSesion,
+        type: 'GET',
+        dataType: 'json',
+        data: { id: id },
+        contentType: 'application/json',
+
+        success: function(result) {
+            if(result != null){
+                addInteresadoHtml(id,nombre,tipo,representante,'', urlObtenerPersona);
+
+            }else{
+                mensajeError("#mensajes", tradsinteresado['interesado.añadir.error']);
+            }
+        }
+    });
+
+    if(modal != null){ // Ocultamos el modal
+        $(modal).modal('hide');
+    }
+}
+
+
+/**
+ * Añade la Persona seleccionada como un nuevo Interesado a la BBDD, y la muestra en la tabla de interesados.
+ * @param id
+ * @param nombre
+ * @param tipo
+ * @param representante
+ * @param modal
  * @param idRegistroDetalle
  */
-function addPersonaInteresado(id, nombre,tipo,representante, modal,idRegistroDetalle){
+function addPersonaBbdd(id, nombre,tipo,representante, modal, idRegistroDetalle){
 
     if(id != '-1'){
         $.ajax({
-            url: urlAddPersonaInteresado,
+            url: urlAddPersonaBbdd,
             type: 'GET',
             dataType: 'json',
             data: { id: id , idRegistroDetalle:idRegistroDetalle},
@@ -202,16 +252,11 @@ function addPersonaInteresado(id, nombre,tipo,representante, modal,idRegistroDet
 
             success: function(result) {
                 if(result != null){
+                    addInteresadoHtml(result,nombre,tipo,representante,idRegistroDetalle, urlObtenerInteresado);
 
-                    if (result == 0) {//Sesion
-                        addInteresadoHtml(id,nombre,tipo,representante,idRegistroDetalle);
-                    } else { //bbdd
-                        addInteresadoHtml(result,nombre,tipo,representante,idRegistroDetalle);
-                    }
                 }else{
                     mensajeError("#mensajes", tradsinteresado['interesado.añadir.error']);
                 }
-
 
             }
         });
@@ -266,7 +311,7 @@ function eliminarPersonaInteresado(idPersona,idRegistroDetalle){
  * @param idRegistroDetalle
  * @param mensaje true o false para mostrar un mensaje aviso
  */
-function addInteresadoHtml(idPersona, nombre,tipo,representante,idRegistroDetalle){
+function addInteresadoHtml(idPersona, nombre,tipo,representante,idRegistroDetalle, url){
     var vacio = "";
     var representanteButton = "<div class=\"btn-group\">"+
         "<button type=\"button\" class=\"btn btn-danger btn-xs dropdown-toggle\" data-toggle=\"dropdown\">"+representante+"<span class=\"caret\"></span></button>"+
@@ -276,7 +321,7 @@ function addInteresadoHtml(idPersona, nombre,tipo,representante,idRegistroDetall
 
     var fila = "<tr id=\"persona"+idPersona+"\"><td>"+nombre+"</td><td>"+tipo+"</td><td>"+representanteButton+"</td>"+
         "<td class=\"center\">"+
-        "<a class=\"btn btn-warning btn-default btn-sm\" data-toggle=\"modal\" role=\"button\" href=\"#modalInteresado\" onclick=\"editarInteresado('"+idPersona+"')\" title=\"Editar\"><span class=\"fa fa-pencil\"></span></a> "+
+        "<a class=\"btn btn-warning btn-default btn-sm\" data-toggle=\"modal\" role=\"button\" href=\"#modalInteresado\" onclick=\"editarInteresado('"+idPersona+"','"+url+"')\" title=\"Editar\"><span class=\"fa fa-pencil\"></span></a> "+
         "<a class=\"btn btn-danger btn-default btn-sm\" onclick=\"eliminarPersonaInteresado('"+idPersona+"','"+idRegistroDetalle+"')\" href=\"javascript:void(0);\" title=\"Eliminar\"><span class=\"fa fa-eraser\"></span></a></td></tr>";
 
     $('#interesados').append(fila);
@@ -309,7 +354,7 @@ function mostrarOcultarTabla(){
  * @param idInteresado
  * @param idRegistroDetalle
  */
-function addInteresadoRepresentanteHtml(idInteresado,nombreInteresado,tipo,idRepresentante,nombreRepresentante,idRegistroDetalle){
+function addInteresadoRepresentanteHtml(idInteresado,nombreInteresado,tipo,idRepresentante,nombreRepresentante,idRegistroDetalle, url){
 
     var vacio = "";
     if(idRepresentante != null && idRepresentante.length > 0){ // Si hay representate
@@ -331,7 +376,7 @@ function addInteresadoRepresentanteHtml(idInteresado,nombreInteresado,tipo,idRep
     // Fila con el interesado y su representante
     var fila = "<tr id=\"persona"+idInteresado+"\"><td>"+nombreInteresado+"</td><td>"+tipo+"</td><td>"+representanteButton+"</td>"+
         "<td class=\"center\">"+
-        "<a class=\"btn btn-warning btn-default btn-sm\" data-toggle=\"modal\" role=\"button\" href=\"#modalInteresado\" onclick=\"editarInteresado('"+idInteresado+"')\" title=\"Editar\"><span class=\"fa fa-pencil\"></span></a> "+
+        "<a class=\"btn btn-warning btn-default btn-sm\" data-toggle=\"modal\" role=\"button\" href=\"#modalInteresado\" onclick=\"editarInteresado('"+idInteresado+"', '"+url+"')\" title=\"Editar\"><span class=\"fa fa-pencil\"></span></a> "+
         "<a class=\"btn btn-danger btn-default btn-sm\" onclick=\"eliminarPersonaInteresado('"+idInteresado+"','"+idRegistroDetalle+"')\" href=\"javascript:void(0);\" title=\"Eliminar\"><span class=\"fa fa-eraser\"></span></a></td></tr>";
 
     // Añadimos a la celda la nueva información
@@ -347,7 +392,7 @@ function addInteresadoRepresentanteHtml(idInteresado,nombreInteresado,tipo,idRep
  * @param id
  * @param url
  */
-function editarInteresado(id){
+function editarInteresado(id, url){
 
     // Eliminamos el contenido del formulario y los mensajes de error
     limpiarInteresado();
@@ -357,7 +402,7 @@ function editarInteresado(id){
 
     //Obtenemos los datos de la Persona a editar
     $.ajax({
-        url: urlObtenerInteresado,
+        url: url,
         data: { id: id },
         type: "GET",
         dataType: 'json',
@@ -547,9 +592,9 @@ function procesarInteresado() {
                     if(accion == 'nuevo'){ //Si es una persona nueva
 
                         if($('#tipo').val() == 2){
-                            addInteresadoHtml(respuesta.result.id,respuesta.result.nombre,'Persona física','No',idRegistroDetalle);
+                            addInteresadoHtml(respuesta.result.id,respuesta.result.nombre, tradsinteresado['persona.fisica'],'No',idRegistroDetalle, urlObtenerPersona);
                         }else if($('#tipo').val() == 3){
-                            addInteresadoHtml(respuesta.result.id,respuesta.result.nombre,'Persona juridica','No',idRegistroDetalle);
+                            addInteresadoHtml(respuesta.result.id,respuesta.result.nombre, tradsinteresado['persona.juridica'],'No',idRegistroDetalle, urlObtenerPersona);
                         }
 
                     }else if(accion == 'editar'){ // Si estamos editando una existente
@@ -725,12 +770,12 @@ function buscarPersonas(tipoPersonas, idRegistroDetalle) {
 
                             if (tipoPersonas == 'Fisicas') {
                                 var nombrePersonaFisica = normalizarTexto(result[i].nombrePersonaFisica);
-                                var linea = "<tr><td style=\"text-align:left;\">" + result[i].nombrePersonaFisica + "</td><td style=\"text-align:left;\">" + documento + "</td><td style=\"text-align:left;\">" + tradsinteresado['persona.fisica'] + "</td><td class=\"center\"><input type=\"button\" class=\"btn btn-warning btn-sm\" value=" + tradsinteresado['regweb3.anadir'] + " onclick=\"addPersonaInteresado('" + result[i].id + "','" + nombrePersonaFisica + "','Persona Física','No','#modalBuscadorPersonasFisicas','" + idRegistroDetalle + "')\"/></td></tr>";
+                                var linea = "<tr><td style=\"text-align:left;\">" + result[i].nombrePersonaFisica + "</td><td style=\"text-align:left;\">" + documento + "</td><td style=\"text-align:left;\">" + tradsinteresado['persona.fisica'] + "</td><td class=\"center\"><input type=\"button\" class=\"btn btn-warning btn-sm\" value=" + tradsinteresado['regweb3.anadir'] + " onclick=\"addPersonaInteresado('" + result[i].id + "','" + nombrePersonaFisica + "','" + tradsinteresado['persona.fisica'] + "','No','#modalBuscadorPersonasFisicas','" + idRegistroDetalle + "')\"/></td></tr>";
                                 tabla.append(linea);
 
                             } else if (tipoPersonas == 'Juridicas') {
                                 var nombrePersonaJuridica = normalizarTexto(result[i].nombrePersonaJuridica);
-                                var linea = "<tr><td style=\"text-align:left;\">" + result[i].nombrePersonaJuridica + "</td><td style=\"text-align:left;\">" + documento + "</td><td style=\"text-align:left;\">" + tradsinteresado['persona.juridica'] + "</td><td class=\"center\"><input type=\"button\" class=\"btn btn-warning btn-sm\" value=" + tradsinteresado['regweb3.anadir'] + " onclick=\"addPersonaInteresado('" + result[i].id + "','" + nombrePersonaJuridica + "','Persona Juridica','No','#modalBuscadorPersonasJuridicas','" + idRegistroDetalle + "')\"/></td></tr>";
+                                var linea = "<tr><td style=\"text-align:left;\">" + result[i].nombrePersonaJuridica + "</td><td style=\"text-align:left;\">" + documento + "</td><td style=\"text-align:left;\">" + tradsinteresado['persona.juridica'] + "</td><td class=\"center\"><input type=\"button\" class=\"btn btn-warning btn-sm\" value=" + tradsinteresado['regweb3.anadir'] + " onclick=\"addPersonaInteresado('" + result[i].id + "','" + nombrePersonaJuridica + "','" + tradsinteresado['persona.juridica'] + "','No','#modalBuscadorPersonasJuridicas','" + idRegistroDetalle + "')\"/></td></tr>";
                                 tabla.append(linea);
 
                             } else if (tipoPersonas == 'Todas') {
