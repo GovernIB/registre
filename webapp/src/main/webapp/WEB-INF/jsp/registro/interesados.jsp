@@ -213,11 +213,13 @@ Mediante el archivo "busquedaorganismo.js" se implementa dicha búsqueda -->
     var urlAddOrganismoInteresado = '<c:url value="/interesado/${param.tipoRegistro}/addOrganismo"/>';
     var urlEliminarOrganismoInteresado = '<c:url value="/interesado/${param.tipoRegistro}/eliminarOrganismo"/>';
     var urlEliminarInteresados = '<c:url value="/interesado/${param.tipoRegistro}/eliminarInteresados"/>';
-    var urlAddPersonaInteresado = '<c:url value="/interesado/${param.tipoRegistro}/addPersona"/>';
+    var urlAddPersonaSesion = '<c:url value="/interesado/${param.tipoRegistro}/addPersonaSesion"/>';
+    var urlAddPersonaBbdd = '<c:url value="/interesado/${param.tipoRegistro}/addPersonaBbdd"/>';
     var urlEliminarPersonaInteresado = '<c:url value="/interesado/${param.tipoRegistro}/eliminarPersona"/>';
     var urlAddRepresentante = '<c:url value="/interesado/${param.tipoRegistro}/addRepresentante"/>';
     var urlEliminarRepresentante = '<c:url value="/interesado/${param.tipoRegistro}/eliminarRepresentante"/>';
     var urlObtenerInteresado = '<c:url value="/interesado/${param.tipoRegistro}/obtenerInteresado"/>';
+    var urlObtenerPersona = '<c:url value="/interesado/obtenerPersona"/>';
     var urlBusquedaPersonasFisicas = '<c:url value="/rest/busquedaPersonas/2"/>';
     var urlBusquedaPersonasJuridicas = '<c:url value="/rest/busquedaPersonas/3"/>';
     var urlActualizarEventoRegistroSalida = '<c:url value="/registroSalida/actualizarEvento"/>';
@@ -292,7 +294,15 @@ Mediante el archivo "busquedaorganismo.js" se implementa dicha búsqueda -->
         },
         onSelect: function(item) {
             if(item.value != -1){
-                addPersonaInteresado(item.value,item.text,'<spring:message code="persona.fisica"/>','No',null,'${param.idRegistroDetalle}')
+
+                <c:if test="${param.idRegistroDetalle == null}"> // Nuevo registro
+                    addPersonaSesion(item.value,item.text,'<spring:message code="persona.fisica"/>','No',null)
+                </c:if>
+
+                <c:if test="${param.idRegistroDetalle != null}"> // Editar registro
+                    addPersonaBbdd(item.value,item.text,'<spring:message code="persona.fisica"/>','No',null,'${param.idRegistroDetalle}')
+                </c:if>
+
             }
         }
     });
@@ -314,7 +324,14 @@ Mediante el archivo "busquedaorganismo.js" se implementa dicha búsqueda -->
         },
         onSelect: function(item) {
             if(item.value != -1){
-                addPersonaInteresado(item.value,item.text,'<spring:message code="persona.juridica"/>','No',null,'${param.idRegistroDetalle}')
+
+                <c:if test="${param.idRegistroDetalle == null}"> // Nuevo registro
+                    addPersonaSesion(item.value,item.text,'<spring:message code="persona.juridica"/>','No',null)
+                </c:if>
+
+                <c:if test="${param.idRegistroDetalle != null}"> // Editar registro
+                    addPersonaBbdd(item.value,item.text,'<spring:message code="persona.juridica"/>','No',null,'${param.idRegistroDetalle}')
+                </c:if>
             }
         }
     });
