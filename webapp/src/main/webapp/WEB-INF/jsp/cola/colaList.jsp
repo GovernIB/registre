@@ -27,6 +27,19 @@
 
             <c:import url="../modulos/mensajes.jsp"/>
 
+            <c:if test="${segundoHiloCustodia}">
+                <div class="alert alert-warning alert-dismissable">
+                    <div class="row vertical-align">
+                        <div class="col-xs-1 text-center">
+                            <i class="fa fa-exclamation-triangle fa-2x"></i>
+                        </div>
+                        <div class="col-xs-11">
+                            <strong><spring:message code="cola.segundoHilo.custodia"/></strong>
+                        </div>
+                    </div>
+                </div>
+            </c:if>
+
             <div class="row">
                 <div class="col-xs-12">
 
