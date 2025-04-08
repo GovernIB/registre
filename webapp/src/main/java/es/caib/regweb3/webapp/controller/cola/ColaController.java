@@ -65,6 +65,7 @@ public class ColaController extends BaseController {
         model.addAttribute("paginacion", paginacion);
         model.addAttribute("colaBusqueda", cola);
         model.addAttribute("tipo", tipo);
+        model.addAttribute("segundoHiloCustodia", PropiedadGlobalUtil.segundoHiloCustodia(entidadActiva.getId()));
 
         return "cola/colaList";
     }
@@ -85,7 +86,7 @@ public class ColaController extends BaseController {
         mav.addObject("paginacion", paginacion);
         mav.addObject("colaBusqueda", busqueda);
         mav.addObject("tipo", busqueda.getTipo());
-
+        mav.addObject("segundoHiloCustodia", PropiedadGlobalUtil.segundoHiloCustodia(entidadActiva.getId()));
 
         return mav;
     }
