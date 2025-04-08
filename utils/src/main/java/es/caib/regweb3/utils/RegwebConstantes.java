@@ -464,7 +464,7 @@ public interface RegwebConstantes {
     long TIPO_PROPIEDAD_SCANNER = 5L;
     long TIPO_PROPIEDAD_COLA = 6L;
     long TIPO_PROPIEDAD_SIR = 7L;
-    long TIPO_PROPIEDAD_SCAN = 8L;
+    long TIPO_PROPIEDAD_INTEGRACIONES = 8L;
 
     long[] TIPOS_PROPIEDAD_GLOBAL = {
             TIPO_PROPIEDAD_GENERAL,
@@ -474,7 +474,7 @@ public interface RegwebConstantes {
             TIPO_PROPIEDAD_SCANNER,
             TIPO_PROPIEDAD_COLA,
             TIPO_PROPIEDAD_SIR,
-            TIPO_PROPIEDAD_SCAN
+            TIPO_PROPIEDAD_INTEGRACIONES
     };
 
 

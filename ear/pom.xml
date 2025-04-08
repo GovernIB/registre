@@ -369,6 +369,12 @@
             <groupId>org.fundaciobit.pluginsib.scanweb</groupId>
             <artifactId>pluginsib-scanweb-api</artifactId>
             <version>${pluginsib.scanweb.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-fileupload</groupId>
+                    <artifactId>commons-fileupload</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
@@ -593,8 +599,18 @@
         </dependency>
 
         <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>es.caib.regweb3</groupId>
             <artifactId>regweb3-utils</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>es.caib.regweb3</groupId>
+            <artifactId>regweb3-integraciones</artifactId>
         </dependency>
 
         <dependency>

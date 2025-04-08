@@ -62,6 +62,7 @@
         <module>sir</module>
         <module>webapp</module>
         <module>ear</module>
+        <module>integraciones</module>
     </modules>
 
     <dependencyManagement>
@@ -75,6 +76,11 @@
             <dependency>
                 <groupId>es.caib.regweb3</groupId>
                 <artifactId>regweb3-utils</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>es.caib.regweb3</groupId>
+                <artifactId>regweb3-integraciones</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -263,6 +269,18 @@
             </dependency>
 
             <dependency>
+                <groupId>org.apache.geronimo.specs</groupId>
+                <artifactId>geronimo-activation_1.1_spec</artifactId>
+                <version>1.1</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.jvnet.staxex</groupId>
+                <artifactId>stax-ex</artifactId>
+                <version>1.8.3</version>
+            </dependency>
+
+            <dependency>
                 <groupId>com.github.joschi.jackson</groupId>
                 <artifactId>jackson-datatype-threetenbp</artifactId>
                 <version>2.9.10</version>
@@ -289,6 +307,12 @@
 
             <dependency>
                 <groupId>org.springframework</groupId>
+                <artifactId>spring-web</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework</groupId>
                 <artifactId>spring-context</artifactId>
                 <version>${spring.version}</version>
             </dependency>
@@ -298,12 +322,6 @@
                 <artifactId>spring-beans</artifactId>
                 <version>${spring.version}</version>
             </dependency>
-
-            <!--<dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-web</artifactId>
-                <version>${spring.version}</version>
-            </dependency>-->
 
             <dependency>
                 <groupId>org.springframework.security</groupId>

@@ -751,7 +751,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
     public OficioRemision getByIdentificadorIntercambio(String identificadorIntercambio, String codigoEntidadRegistralDestino) throws I18NException{
 
         Query q = em.createQuery("Select oficioRemision from OficioRemision as oficioRemision where oficioRemision.identificadorIntercambio = :identificadorIntercambio and" +
-                " oficioRemision.oficina.codigo = :codigoEntidadRegistralDestino and oficioRemision.estado != :devuelto and oficioRemision.estado != :rechazado");
+                " oficioRemision.oficina.codigo = :codigoEntidadRegistralDestino and oficioRemision.estado != :devuelto and oficioRemision.estado != :rechazado and oficioRemision.sir = true");
 
         q.setParameter("identificadorIntercambio", identificadorIntercambio);
         q.setParameter("codigoEntidadRegistralDestino", codigoEntidadRegistralDestino);
