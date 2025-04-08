@@ -934,133 +934,137 @@ create index RWE_REGMIG_REMDES_I on RWE_REGISTRO_MIGRADO (DESREMDES) TABLESPACE 
 create index RWE_REGMIG_NUM_I on RWE_REGISTRO_MIGRADO (NUMERO) TABLESPACE REGWEB_HIST;
 create index RWE_REGMIG_CODOF_I on RWE_REGISTRO_MIGRADO (CODOFICINA) TABLESPACE REGWEB_HIST;
 create index RWE_REGMIG_FECREG_I on RWE_REGISTRO_MIGRADO (FECHAREG) TABLESPACE REGWEB_HIST;
+-- Indices Foreign Keys
+create index I_FK_RWE_ANEXOSIR_ANEXO_FK on RWE_ANEXO_SIR (ANEXO) tablespace REGWEB_INDEX;
+create index I_FK_RWE_ANEXOSIR_ENTIDAD_FK on RWE_ANEXO_SIR (ENTIDAD) tablespace REGWEB_INDEX;
+create index I_FK_RWE_ANEXOSIR_REGSIR_FK on RWE_ANEXO_SIR (REGISTRO_SIR) tablespace REGWEB_INDEX;
+create index I_FK_RWE_ANEXO_ENTIDAD_FK on RWE_ANEXO (ENTIDAD) tablespace REGWEB_INDEX;
+create index I_FK_RWE_COLA_USUENTI_FK on RWE_COLA (USUARIOENTIDAD) tablespace REGWEB_INDEX;
+create index I_FK_RWE_ENTIDAD_CONT_SIR_FK on RWE_ENTIDAD (CONTADOR_SIR) tablespace REGWEB_INDEX;
+create index I_FK_RWE_ENTIDAD_LIBRO_FK on RWE_ENTIDAD (LIBRO) tablespace REGWEB_INDEX;
+create index I_FK_RWE_ENTIDAD_LOGOMENU_FK on RWE_ENTIDAD (LOGOMENU) tablespace REGWEB_INDEX;
+create index I_FK_RWE_ENTIDAD_LOGOPIE_FK on RWE_ENTIDAD (LOGOPIE) tablespace REGWEB_INDEX;
+create index I_FK_RWE_ENTIDAD_USU_ADM_FK on RWE_ENTIDAD_USUENT (IDUSUENT) tablespace REGWEB_INDEX;
+create index I_FK_RWE_HISTORICO_USUARIO_RS_FK on RWE_HISTORICO_REGISTRO_SALIDA (USUARIO) tablespace REGWEB_INDEX;
+create index I_FK_RWE_HITORICO_RS_FK on RWE_HISTORICO_REGISTRO_SALIDA (REGISTRO_SALIDA) tablespace REGWEB_INDEX;
+create index I_FK_RWE_INTERESADO_PROVINCIA_FK on RWE_INTERESADO (PROVINCIA) tablespace REGWEB_INDEX;
+create index I_FK_RWE_LIBRO_CONT_SIR_FK on RWE_LIBRO (CONTADOR_SIR) tablespace REGWEB_INDEX;
+create index I_FK_RWE_MC_ENTIDAD_FK on RWE_MENSAJE_CONTROL (ENTIDAD) tablespace REGWEB_INDEX;
+create index I_FK_RWE_MODLOPDMIG_REGMIG_FK on RWE_MODIFICACIONLOPD_MIGRADO (REGMIG) tablespace REGWEB_INDEX;
+create index I_FK_RWE_OFICINA_ENTIDAD_FK on RWE_OFICINA (ENTIDAD) tablespace REGWEB_INDEX;
+create index I_FK_RWE_OFICINA_RELORGOFI_FK on RWE_RELORGOFI (IDOFICINA) tablespace REGWEB_INDEX;
+create index I_FK_RWE_OFICINA_SERVICIO_FK on RWE_OFICINA_SERVICIO (IDSERVICIO) tablespace REGWEB_INDEX;
+create index I_FK_RWE_OFIREM_ENTIDAD_FK on RWE_OFICIO_REMISION (ENTIDAD) tablespace REGWEB_INDEX;
+create index I_FK_RWE_OFIREM_REGENT_FK on RWE_OFIREM_REGENT (IDREGENT) tablespace REGWEB_INDEX;
+create index I_FK_RWE_OFIREM_REGSAL_FK on RWE_OFIREM_REGSAL (IDREGSAL) tablespace REGWEB_INDEX;
+create index I_FK_RWE_ORGANISMO_CATNIVELADMIN_FK on RWE_ORGANISMO (NIVELADMINISTRACION) tablespace REGWEB_INDEX;
+create index I_FK_RWE_ORG_ORG_HISTULTI_FK on RWE_HISTORICOUO (CODULTIMA) tablespace REGWEB_INDEX;
+create index I_FK_RWE_PENDIE_ENTIDAD_FK on RWE_PENDIENTE (ENTIDAD) tablespace REGWEB_INDEX;
+create index I_FK_RWE_PERSONA_LOCALIDAD_FK on RWE_PERSONA (LOCALIDAD) tablespace REGWEB_INDEX;
+create index I_FK_RWE_PERSONA_PAIS_FK on RWE_PERSONA (PAIS) tablespace REGWEB_INDEX;
+create index I_FK_RWE_PERSONA_PROVINCIA_FK on RWE_PERSONA (PROVINCIA) tablespace REGWEB_INDEX;
+create index I_FK_RWE_REGDET_CODASUNTO_FK on RWE_REGISTRO_DETALLE (CODASUNTO) tablespace REGWEB_INDEX;
+create index I_FK_RWE_REGDET_OFICINAORIG_FK on RWE_REGISTRO_DETALLE (OFICINAORIG) tablespace REGWEB_INDEX;
+create index I_FK_RWE_REGDET_TIPOASUNTO_FK on RWE_REGISTRO_DETALLE (TIPOASUNTO) tablespace REGWEB_INDEX;
+create index I_FK_RWE_REGENT_DESTINO_FK on RWE_REGISTRO_ENTRADA (DESTINO) tablespace REGWEB_INDEX;
+create index I_FK_RWE_REGENT_ENTIDAD_FK on RWE_REGISTRO_ENTRADA (ENTIDAD) tablespace REGWEB_INDEX;
+create index I_FK_RWE_REGENT_LIBRO_FK on RWE_REGISTRO_ENTRADA (LIBRO) tablespace REGWEB_INDEX;
+create index I_FK_RWE_REGENT_OFICINA_FK on RWE_REGISTRO_ENTRADA (OFICINA) tablespace REGWEB_INDEX;
+create index I_FK_RWE_REGENT_OFIREM_FK on RWE_OFIREM_REGENT (IDOFIREM) tablespace REGWEB_INDEX;
+create index I_FK_RWE_REGENT_USUENT_FK on RWE_REGISTRO_ENTRADA (USUARIO) tablespace REGWEB_INDEX;
+create index I_FK_RWE_REGLOPDMIG_REGMIG_FK on RWE_REGISTROLOPD_MIGRADO (REGMIG) tablespace REGWEB_INDEX;
+create index I_FK_RWE_REGMIG_ENTIDAD_FK on RWE_REGISTRO_MIGRADO (IDENTIDAD) tablespace REGWEB_INDEX;
+create index I_FK_RWE_REGSAL_ENTIDAD_FK on RWE_REGISTRO_SALIDA (ENTIDAD) tablespace REGWEB_INDEX;
+create index I_FK_RWE_REGSAL_LIBRO_FK on RWE_REGISTRO_SALIDA (LIBRO) tablespace REGWEB_INDEX;
+create index I_FK_RWE_REGSAL_OFICINA_FK on RWE_REGISTRO_SALIDA (OFICINA) tablespace REGWEB_INDEX;
+create index I_FK_RWE_REGSAL_OFIREM_FK on RWE_OFIREM_REGSAL (IDOFIREM) tablespace REGWEB_INDEX;
+create index I_FK_RWE_REGSAL_ORIGEN_FK on RWE_REGISTRO_SALIDA (ORIGEN) tablespace REGWEB_INDEX;
+create index I_FK_RWE_REGSAL_REGDET_FK on RWE_REGISTRO_SALIDA (REGISTRO_DETALLE) tablespace REGWEB_INDEX;
+create index I_FK_RWE_REGSAL_USUSAL_FK on RWE_REGISTRO_SALIDA (USUARIO) tablespace REGWEB_INDEX;
+create index I_FK_RWE_RELORGANOFI_CATESTENT_FK on RWE_RELORGOFI (ESTADO) tablespace REGWEB_INDEX;
+create index I_FK_RWE_RELSIROFI_CATESTENTI_FK on RWE_RELSIROFI (ESTADO) tablespace REGWEB_INDEX;
+create index I_FK_RWE_RELSIROFI_OFICINA_FK on RWE_RELSIROFI (IDOFICINA) tablespace REGWEB_INDEX;
+create index I_FK_RWE_REPRO_USUARIO_FK on RWE_REPRO (USUARIOENTIDAD) tablespace REGWEB_INDEX;
+create index I_FK_RWE_RES_ENTIDAD_FK on RWE_REGISTRO_SIR (ENTIDAD) tablespace REGWEB_INDEX;
+create index I_FK_RWE_TIPOASUNTO_ENTIDAD_FK on RWE_TIPOASUNTO (ENTIDAD) tablespace REGWEB_INDEX;
+create index I_FK_RWE_TIPODOCUMENTAL_ENTIDAD_FK on RWE_TIPODOCUMENTAL (ENTIDAD) tablespace REGWEB_INDEX;
+create index I_FK_RWE_TRASIR_REGENT_FK on RWE_TRAZABILIDAD_SIR (REGISTRO_ENTRADA) tablespace REGWEB_INDEX;
+create index I_FK_RWE_TRASIR_REGSIR_FK on RWE_TRAZABILIDAD_SIR (REGISTRO_SIR) tablespace REGWEB_INDEX;
+create index I_FK_RWE_TRAZAB_OFIREM_FK on RWE_TRAZABILIDAD (OFICIO_REMISION) tablespace REGWEB_INDEX;
+create index I_FK_RWE_TRAZAB_REGENTD_FK on RWE_TRAZABILIDAD (REGENT_DESTINO) tablespace REGWEB_INDEX;
+create index I_FK_RWE_TRAZAB_REGENTO_FK on RWE_TRAZABILIDAD (REGENT_ORIGEN) tablespace REGWEB_INDEX;
+create index I_FK_RWE_TRAZAB_REGSAL_FK on RWE_TRAZABILIDAD (REGISTRO_SALIDA) tablespace REGWEB_INDEX;
+create index I_FK_RWE_TRAZAB_REGSIR_FK on RWE_TRAZABILIDAD (REGISTRO_SIR) tablespace REGWEB_INDEX;
+create index I_FK_RWE_TRAZAB_RGSRCT_FK on RWE_TRAZABILIDAD (REGISTRO_SALIDA_RECT) tablespace REGWEB_INDEX;
+create index I_FK_RWE_USUENT_CERTIFICADO_FK on RWE_USUARIO_ENTIDAD (CERTIFICADO) tablespace REGWEB_INDEX;
+create index I_FK_RWE_USUENT_ENTIDAD_FK on RWE_USUARIO_ENTIDAD (ENTIDAD) tablespace REGWEB_INDEX;
+create index I_FK_RWE_USUENT_OFICINA_FK on RWE_USUARIO_ENTIDAD (OFICINA_SOLICITADA) tablespace REGWEB_INDEX;
+create index I_FK_RWE_USUENT_USUARIO_FK on RWE_USUARIO_ENTIDAD (USUARIO) tablespace REGWEB_INDEX;
 
 
 -- INICI PKs
     alter table RWE_ANEXO add constraint RWE_ANEXO_pk primary key (ID);
-
     alter table RWE_ANEXO_SIR add constraint RWE_ANEXO_SIR_pk primary key (ID);
-
     alter table RWE_ARCHIVO add constraint RWE_ARCHIVO_pk primary key (ID);
-
     alter table RWE_CATCOMUNIDADAUTONOMA add constraint RWE_CATCOMUNIDADAUTONOMA_pk primary key (ID);
-
     alter table RWE_CATENTIDADGEOGRAFICA add constraint RWE_CATENTIDADGEOGRAFICA_pk primary key (ID);
-
     alter table RWE_CATESTADOENTIDAD add constraint RWE_CATESTADOENTIDAD_pk primary key (ID);
-
     alter table RWE_CATISLA add constraint RWE_CATISLA_pk primary key (ID);
-
     alter table RWE_CATLOCALIDAD add constraint RWE_CATLOCALIDAD_pk primary key (ID);
-
     alter table RWE_CATNIVELADMINISTRACION add constraint RWE_CATNIVELADMINISTRACION_pk primary key (ID);
-
     alter table RWE_CATPAIS add constraint RWE_CATPAIS_pk primary key (ID);
-
     alter table RWE_CATPROVINCIA add constraint RWE_CATPROVINCIA_pk primary key (ID);
-
     alter table RWE_CATSERVICIO add constraint RWE_CATSERVICIO_pk primary key (ID);
-
     alter table RWE_CATTIPOVIA add constraint RWE_CATTIPOVIA_pk primary key (ID);
-
     alter table RWE_CODIGOASUNTO add constraint RWE_CODIGOASUNTO_pk primary key (ID);
-
     alter table RWE_COLA add constraint RWE_COLA_pk primary key (ID);
-
     alter table RWE_CONFIGURACION add constraint RWE_CONFIGURACION_pk primary key (ID);
-
     alter table RWE_CONTADOR add constraint RWE_CONTADOR_pk primary key (ID);
-
     alter table RWE_DESCARGA add constraint RWE_DESCARGA_pk primary key (ID);
-
     alter table RWE_ENTIDAD add constraint RWE_ENTIDAD_pk primary key (ID);
-
     alter table RWE_ENTIDAD_USUENT add constraint RWE_ENTIDAD_USUENT_pk primary key (IDENTIDAD, IDUSUENT);
-
     alter table RWE_HISTORICO_REGISTRO_ENTRADA add constraint RWE_HIST_REGISTRO_ENTRADA_PK primary key (ID);
-
     alter table RWE_HISTORICO_REGISTRO_SALIDA add constraint RWE_HIST_REGISTRO_SALIDA_PK primary key (ID);
-
     alter table RWE_HISTORICOUO add constraint RWE_HISTORICOUO_pk primary key (CODANTERIOR, CODULTIMA);
-
     alter table RWE_INTEGRACION add constraint RWE_INTEGRACION_pk primary key (ID);
-
     alter table RWE_INTERESADO add constraint RWE_INTERESADO_pk primary key (ID);
-
     alter table RWE_INTERESADO_SIR add constraint RWE_INTERESADO_SIR_pk primary key (ID);
-
     alter table RWE_LIBRO add constraint RWE_LIBRO_pk primary key (ID);
-
     alter table RWE_LOPD add constraint RWE_LOPD_pk primary key (ID);
-
     alter table RWE_MENSAJE_CONTROL add constraint RWE_MENSAJE_CONTROL_pk primary key (ID);
-
     alter table RWE_MODELO_OFICIO_REMISION add constraint RWE_MODELO_OFICIO_REMISION_pk primary key (ID);
-
     alter table RWE_MODELO_RECIBO add constraint RWE_MODELO_RECIBO_pk primary key (ID);
-
     alter table RWE_MODIFICACIONLOPD_MIGRADO add constraint RWE_MODIFLOPD_MIGRADO_PK primary key (ID);
-
     alter table RWE_NOTIFICACION add constraint RWE_NOTIFICACION_pk primary key (ID);
-
     alter table RWE_OFICINA add constraint RWE_OFICINA_pk primary key (ID);
-
     alter table RWE_OFICINA_SERVICIO add constraint RWE_OFICINA_SERVICIO_pk primary key (IDOFICINA, IDSERVICIO);
-
     alter table RWE_OFICIO_REMISION add constraint RWE_OFICIO_REMISION_pk primary key (ID);
-
     alter table RWE_ORGANISMO add constraint RWE_ORGANISMO_pk primary key (ID);
-
     alter table RWE_PENDIENTE add constraint RWE_PENDIENTE_pk primary key (ID);
-
     alter table RWE_PERMLIBUSU add constraint RWE_PERMLIBUSU_pk primary key (ID);
-
     alter table RWE_PERMORGUSU add constraint RWE_PERMORGUSU_pk primary key (ID);
-
     alter table RWE_PERSONA add constraint RWE_PERSONA_pk primary key (ID);
-
     alter table RWE_PLUGIN add constraint RWE_PLUGIN_pk primary key (ID);
-
     alter table RWE_PROPIEDADGLOBAL add constraint RWE_PROPIEDADGLOBAL_pk primary key (ID);
-
     alter table RWE_REGISTRO_DETALLE add constraint RWE_REGISTRO_DETALLE_pk primary key (ID);
-
     alter table RWE_REGISTRO_ENTRADA add constraint RWE_REGISTRO_ENTRADA_pk primary key (ID);
-
     alter table RWE_REGISTRO_MIGRADO add constraint RWE_REGISTRO_MIGRADO_pk primary key (ID);
-
     alter table RWE_REGISTRO_SALIDA add constraint RWE_REGISTRO_SALIDA_pk primary key (ID);
-
     alter table RWE_REGISTRO_SIR add constraint RWE_REGISTRO_SIR_pk primary key (ID);
-
     alter table RWE_REGISTROLOPD_MIGRADO add constraint RWE_REGISTROLOPD_MIGRADO_pk primary key (ID);
-
     alter table RWE_RELORGOFI add constraint RWE_RELORGOFI_pk primary key (IDORGANISMO, IDOFICINA);
-
     alter table RWE_RELSIROFI add constraint RWE_RELSIROFI_pk primary key (IDORGANISMO, IDOFICINA);
-
     alter table RWE_REPRO add constraint RWE_REPRO_pk primary key (ID);
-
     alter table RWE_ROL add constraint RWE_ROL_pk primary key (ID);
-
     alter table RWE_SESION add constraint RWE_SESION_pk primary key (ID);
-
     alter table RWE_TIPOASUNTO add constraint RWE_TIPOASUNTO_pk primary key (ID);
-
     alter table RWE_TIPODOCUMENTAL add constraint RWE_TIPODOCUMENTAL_pk primary key (ID);
-
     alter table RWE_TRA_CODIGOASUNTO add constraint RWE_TRA_CODIGOASUNTO_pk primary key (IDCODIGOASUNTO, LANG);
-
     alter table RWE_TRA_TDOCUMENTAL add constraint RWE_TRA_TDOCUMENTAL_pk primary key (IDTDOCUMENTAL, LANG);
-
     alter table RWE_TRA_TIPOASUNTO add constraint RWE_TRA_TIPOASUNTO_pk primary key (IDTIPOASUNTO, LANG);
-
     alter table RWE_TRAZABILIDAD add constraint RWE_TRAZABILIDAD_pk primary key (ID);
-
     alter table RWE_TRAZABILIDAD_SIR add constraint RWE_TRAZABILIDAD_SIR_pk primary key (ID);
-
     alter table RWE_USUARIO add constraint RWE_USUARIO_pk primary key (ID);
-
     alter table RWE_USUARIO_ENTIDAD add constraint RWE_USUARIO_ENTIDAD_pk primary key (ID);
 
  -- FINAL PKs
