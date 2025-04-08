@@ -1,9 +1,7 @@
 package es.caib.regweb3.persistence.ejb;
 
-import es.caib.regweb3.model.Entidad;
-import es.caib.regweb3.model.Oficina;
-import es.caib.regweb3.model.OficioRemision;
-import es.caib.regweb3.model.RegistroSir;
+import es.caib.regweb3.integraciones.notib.NotibService;
+import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.sir.Errores;
 import es.caib.regweb3.model.sir.MensajeControl;
 import es.caib.regweb3.model.sir.TipoMensaje;
@@ -18,12 +16,15 @@ import es.caib.regweb3.utils.StringUtils;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
+import javax.interceptor.Interceptors;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
@@ -39,6 +40,7 @@ import java.util.*;
 @Stateless(name = "MensajeControlEJB")
 @RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI"})
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+@Interceptors(SpringBeanAutowiringInterceptor.class)
 public class MensajeControlBean extends BaseEjbJPA<MensajeControl, Long> implements MensajeControlLocal {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
@@ -46,13 +48,14 @@ public class MensajeControlBean extends BaseEjbJPA<MensajeControl, Long> impleme
     @PersistenceContext(unitName = "regweb3")
     private EntityManager em;
 
+    @Autowired
+    private NotibService notibService;
+
     @EJB private RegistroSirLocal registroSirEjb;
     @EJB private OficioRemisionLocal oficioRemisionEjb;
     @EJB private IntegracionLocal integracionEjb;
-    @EJB private RegistroEntradaLocal registroEntradaEjb;
-    @EJB private RegistroSalidaLocal registroSalidaEjb;
     @EJB private OficinaLocal oficinaEjb;
-
+    @EJB private RegistroSalidaLocal registroSalidaEjb;
 
     @Override
     public MensajeControl getReference(Long id) throws I18NException {
@@ -371,7 +374,8 @@ public class MensajeControlBean extends BaseEjbJPA<MensajeControl, Long> impleme
                 String decodificacionEntidadRegistralOrigen = Dir3CaibUtils.denominacion(PropiedadGlobalUtil.getDir3CaibServer(oficio.getUsuarioResponsable().getEntidad().getId()), mensaje.getCodigoEntidadRegistralOrigen(), RegwebConstantes.OFICINA);
 
                 oficioRemisionEjb.aceptarOficioSir(oficio, mensaje.getCodigoEntidadRegistralOrigen(), decodificacionEntidadRegistralOrigen, mensaje.getNumeroRegistroEntradaDestino(), mensaje.getFechaEntradaDestino());
-
+                //CallBack a NOTIB
+                callbackNotib(oficio);
             break;
 
             case (RegwebConstantes.OFICIO_ACEPTADO):
@@ -511,6 +515,36 @@ public class MensajeControlBean extends BaseEjbJPA<MensajeControl, Long> impleme
             em.createQuery("delete from MensajeControl where id in (:mensajes)").setParameter("mensajes", mensajes).executeUpdate();
         }
         return total;
+
+    }
+
+    /**
+     * Función para realizar el callback de una Comunicación SIR emitida por NOTIB
+     * @param oficioRemision
+     */
+    private void callbackNotib(OficioRemision oficioRemision){
+
+        if(PropiedadGlobalUtil.getNotibCallback(oficioRemision.getEntidad().getId())){
+
+            try {
+
+                if (oficioRemision.getTipoOficioRemision().equals(RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA)){
+
+                    RegistroSalida registroSalida = registroSalidaEjb.findById(oficioRemision.getRegistrosSalida().get(0).getId());
+                    String urlNotib = PropiedadGlobalUtil.getNotibCallbackUrl(oficioRemision.getEntidad().getId());
+
+                    // Si es un salida hecha por NOTIB, hacemos el callback
+                    if(!registroSalida.getRegistroDetalle().getPresencial() && registroSalida.getRegistroDetalle().getAplicacionTelematica().contains("NOTIB")
+                            && urlNotib != null) {
+
+                        notibService.callbackComunicacionSir(registroSalida, urlNotib);
+                    }
+                }
+            } catch (I18NException e) {
+                e.printStackTrace();
+                log.info("Error en el callback a NOTIB: " + oficioRemision.getIdentificadorIntercambio());
+            }
+        }
 
     }
 

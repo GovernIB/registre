@@ -444,6 +444,31 @@ public class PropiedadGlobalUtil {
     }
 
     /**
+     * Retorna el valor de la propiedad NotibCallback de la entidad indicada.
+     * Propiedad: es.caib.regweb3.notib.callback.activo
+     * @param idEntidad
+     * @return
+     */
+    public static Boolean getNotibCallback(Long idEntidad) {
+        final String partialPropertyName = "notib.callback.activo";
+
+        return getBooleanByEntidad(idEntidad, partialPropertyName);
+
+    }
+
+    /**
+     * Retorna el valor de la propiedad notib.callback.url de la entidad indicada.
+     * Propiedad: es.caib.regweb3.notib.callback.url
+     * @param idEntidad
+     * @return
+     */
+    public static String getNotibCallbackUrl(Long idEntidad) {
+        final String partialPropertyName = "notib.callback.url";
+
+        return getStringByEntidad(idEntidad, partialPropertyName);
+    }
+
+    /**
      * Retorna el valor de la propiedad SirServerBase de la entidad indicada.
      * Propiedad: es.caib.regweb3.sir.serverbase
      * @param idEntidad

@@ -69,9 +69,16 @@
             <artifactId>regweb3-model</artifactId>
             <scope>provided</scope>
         </dependency>
+
         <dependency>
             <groupId>es.caib.regweb3</groupId>
             <artifactId>regweb3-utils</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>es.caib.regweb3</groupId>
+            <artifactId>regweb3-integraciones</artifactId>
             <scope>provided</scope>
         </dependency>
 
