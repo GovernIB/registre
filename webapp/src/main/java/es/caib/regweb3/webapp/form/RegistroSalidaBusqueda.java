@@ -25,6 +25,7 @@ public class RegistroSalidaBusqueda implements Serializable {
     private String organOrigenNom;
     private String observaciones;
     private Long idUsuario;
+    private Boolean exportarRegistros = false;
 
     public RegistroSalidaBusqueda() {}
 
@@ -131,5 +132,13 @@ public class RegistroSalidaBusqueda implements Serializable {
 
     public void setIdUsuario(Long idUsuario) {
         this.idUsuario = idUsuario;
+    }
+
+    public Boolean getExportarRegistros() {
+        return exportarRegistros;
+    }
+
+    public void setExportarRegistros(Boolean exportarRegistros) {
+        this.exportarRegistros = exportarRegistros;
     }
 }

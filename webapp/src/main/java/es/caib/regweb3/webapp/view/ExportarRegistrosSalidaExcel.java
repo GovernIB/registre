@@ -1,8 +1,7 @@
 package es.caib.regweb3.webapp.view;
 
-import es.caib.regweb3.model.RegistroEntrada;
+import es.caib.regweb3.model.RegistroSalida;
 import es.caib.regweb3.persistence.utils.Paginacion;
-import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 import es.caib.regweb3.utils.TimeUtils;
 import org.apache.poi.hssf.usermodel.*;
@@ -25,7 +24,7 @@ import java.util.Map;
  * Date: 15/05/2024
  */
 
-public class ExportarRegistrosExcel extends AbstractExcelView {
+public class ExportarRegistrosSalidaExcel extends AbstractExcelView {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -113,8 +112,8 @@ public class ExportarRegistrosExcel extends AbstractExcelView {
             mostrarRow.setHeightInPoints(15);
 
             //Título
-            sheet.addMergedRegion(CellRangeAddress.valueOf("$A$1:$H$1"));
-            tittleCell.setCellValue(getMessage("registro.registros"));
+            sheet.addMergedRegion(CellRangeAddress.valueOf("$A$1:$I$1"));
+            tittleCell.setCellValue(getMessage("registroSalida.registroSalidas"));
             tittleCell.setCellStyle(titulo);
             sheet.addMergedRegion(CellRangeAddress.valueOf("$A$2:$H$2"));
 
@@ -124,7 +123,7 @@ public class ExportarRegistrosExcel extends AbstractExcelView {
             header.setHeightInPoints(15);
 
             // Dades que se mostren d'una oficina
-            String[] capsalera = new String[]{"regweb.numero", "registroEntrada.fecha", "registroEntrada.oficina", "organismo.destino.corto","registroEntrada.estado","registroEntrada.extracto", "registro.presencial", "interesado.interesado", "usuario.usuario"};
+            String[] capsalera = new String[]{"regweb.numero", "registroEntrada.fecha", "registroEntrada.oficina", "registroSalida.destinatario","registroEntrada.estado","registroEntrada.extracto", "registro.presencial", "usuario.usuario", "registroEntrada.aplicacion"};
 
             // DADES A MOSTRAR
             // Capçalera
@@ -147,27 +146,21 @@ public class ExportarRegistrosExcel extends AbstractExcelView {
             for (int i = inici; i < fi; i++) {
 
                 HSSFRow row = sheet.createRow(rowNum++);
-                RegistroEntrada registroEntrada = (RegistroEntrada) resultados.getListado().get(i);
+                RegistroSalida registroSalida = (RegistroSalida) resultados.getListado().get(i);
 
-                row.createCell(0).setCellValue(registroEntrada.getNumeroRegistroFormateado());
-                row.createCell(1).setCellValue(TimeUtils.imprimeFecha(registroEntrada.getFecha(), "dd-MM-yyyy HH:mm"));
-                row.createCell(2).setCellValue(registroEntrada.getOficina().getDenominacion());
-                if(registroEntrada.getDestino() != null){
-                    row.createCell(3).setCellValue(registroEntrada.getDestino().getDenominacion());
+                row.createCell(0).setCellValue(registroSalida.getNumeroRegistroFormateado());
+                row.createCell(1).setCellValue(TimeUtils.imprimeFecha(registroSalida.getFecha(), "dd-MM-yyyy HH:mm"));
+                row.createCell(2).setCellValue(registroSalida.getOficina().getDenominacion());
+                row.createCell(3).setCellValue(registroSalida.getRegistroDetalle().getInteresados().get(0).getNombreCompleto());
+                row.createCell(4).setCellValue(getMessage("registro.estado."+registroSalida.getEstado()));
+                row.createCell(5).setCellValue(registroSalida.getRegistroDetalle().getExtracto());
+                row.createCell(6).setCellValue(StringUtils.toStringSiNo(registroSalida.getRegistroDetalle().getPresencial()));
+                row.createCell(7).setCellValue(registroSalida.getUsuario().getNombreCompleto());
+                if(StringUtils.isNotEmpty(registroSalida.getRegistroDetalle().getAplicacionTelematica())){
+                    row.createCell(8).setCellValue(registroSalida.getRegistroDetalle().getAplicacionTelematica());
                 }else{
-                    row.createCell(3).setCellValue(registroEntrada.getDestinoExternoDenominacion());
+                    row.createCell(8).setCellValue("");
                 }
-
-                row.createCell(4).setCellValue(getMessage("registro.estado."+registroEntrada.getEstado()));
-
-                row.createCell(5).setCellValue(registroEntrada.getRegistroDetalle().getExtracto());
-                row.createCell(6).setCellValue(StringUtils.toStringSiNo(registroEntrada.getRegistroDetalle().getPresencial()));
-                if(!registroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_RESERVA)){
-                    row.createCell(7).setCellValue(registroEntrada.getRegistroDetalle().getInteresados().get(0).getNombreCompleto());
-                }else{
-                    row.createCell(7).setCellValue("");
-                }
-                row.createCell(8).setCellValue(registroEntrada.getUsuario().getNombreCompleto());
 
                 // Aplicam estils a les cel·les
                 for (int g = 0; g < capsalera.length; g++) {
@@ -180,8 +173,7 @@ public class ExportarRegistrosExcel extends AbstractExcelView {
                 sheet.autoSizeColumn(i);
             }
 
-
-            String nombreFichero = getMessage("registro.registros") + "_"+ TimeUtils.imprimeFecha(new Date(), "dd-MM-yyyy") +".xls";
+            String nombreFichero = getMessage("registroSalida.registroSalidas") + "_"+ TimeUtils.imprimeFecha(new Date(), "dd-MM-yyyy") +".xls";
 
             // Cabeceras Response
             response.setHeader("Content-Disposition", "attachment; filename=" + nombreFichero);

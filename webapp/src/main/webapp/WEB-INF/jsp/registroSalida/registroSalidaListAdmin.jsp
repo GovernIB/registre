@@ -46,6 +46,7 @@
             <c:url value="/adminEntidad/registroSalida/busqueda" var="urlBusqueda"/>
             <form:form modelAttribute="registroSalidaBusqueda" action="${urlBusqueda}" method="get" cssClass="form-horizontal">
             <form:hidden path="pageNumber"/>
+            <form:hidden path="exportarRegistros"/>
 
                 <div class="panel-body">
 
@@ -148,14 +149,14 @@
                         empty registroSalidaBusqueda.interessatDoc && empty registroSalidaBusqueda.interessatNom &&
                         empty registroSalidaBusqueda.interessatLli1 && empty registroSalidaBusqueda.interessatLli2 &&
                         empty registroSalidaBusqueda.observaciones && empty registroSalidaBusqueda.idUsuario &&
-                        !registroSalidaBusqueda.registroSalida.registroDetalle.presencial}">
+                        !registroSalidaBusqueda.registroSalida.registroDetalle.presencial && empty registroSalidaBusqueda.registroSalida.registroDetalle.aplicacionTelematica}">
                     <div id="demo" class="collapse">
                         </c:if>
                     <c:if test="${not empty registroSalidaBusqueda.registroSalida.registroDetalle.tipoDocumentacionFisica ||
                         not empty registroSalidaBusqueda.interessatDoc || not empty registroSalidaBusqueda.interessatNom ||
                         not empty registroSalidaBusqueda.interessatLli1 || not empty registroSalidaBusqueda.interessatLli2 ||
                         not empty registroSalidaBusqueda.observaciones || not empty registroSalidaBusqueda.idUsuario ||
-                        registroSalidaBusqueda.registroSalida.registroDetalle.presencial}">
+                        registroSalidaBusqueda.registroSalida.registroDetalle.presencial || not empty registroSalidaBusqueda.registroSalida.registroDetalle.aplicacionTelematica}">
                         <div id="demo" class="collapse in">
                     </c:if>
 
@@ -244,7 +245,14 @@
                                     </form:select>
                                 </div>
                             </div>
-                            <div class="col-xs-6 espaiLinies"><div class="col-xs-12">&nbsp;</div></div>
+                            <div class="col-xs-6 espaiLinies">
+                                <div class="col-xs-4 pull-left etiqueta_regweb">
+                                    <label for="registroSalida.registroDetalle.aplicacionTelematica" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.aplicacion.busqueda"/>" data-toggle="popover"><spring:message code="registroEntrada.aplicacion"/></label>
+                                </div>
+                                <div class="col-xs-8">
+                                    <form:input path="registroSalida.registroDetalle.aplicacionTelematica" cssClass="form-control"/> <form:errors path="registroSalida.registroDetalle.aplicacionTelematica" cssClass="help-block" element="span"/>
+                                </div>
+                            </div>
                         </div>
 
                     </div>
@@ -263,16 +271,17 @@
                     </a>
                 </div>
 
-                <div class="row">
+                <div class="form-group col-xs-12">
+                    <input type="submit" value="<spring:message code="regweb.buscar"/>" class="btn btn-warning btn-sm"/>
+                    <input type="reset" value="<spring:message code="regweb.restablecer"/>" class="btn btn-sm"/>
 
-                    <div class="form-group col-xs-12">
-                        <div class="col-xs-1 boto-panel center">
-                            <button type="submit" class="btn btn-warning btn-sm" style="margin-left: 15px;">
-                                <spring:message code="regweb.buscar"/>
+                    <c:if test="${not empty paginacion.listado}">
+                        <div class="btn-group pull-right text12">
+                            <button type="button" onclick="exportarRegistrosSalida()" class="btn btn-success btn-sm">
+                                <spring:message code="registro.exportar"/>
                             </button>
                         </div>
-                    </div>
-
+                    </c:if>
                 </div>
                 
 			</form:form>
@@ -409,6 +418,12 @@
         function actualizarOficinas(){
             <c:url var="obtenerOficinasSalida" value="/adminEntidad/obtenerOficinas" />
             actualizarSelect('${obtenerOficinasSalida}','#registroSalida\\.oficina\\.id',$('#idOrganismo option:selected').val(),'${registroSalidaBusqueda.registroSalida.oficina.id}',true,true);
+        }
+
+        function exportarRegistrosSalida(){
+            $('#exportarRegistros').val(true);
+            $('#registroSalidaBusqueda').submit();
+            $('#exportarRegistros').val(false);
         }
 
         <!-- Cambia la imagen de la búsqueda avanzada-->

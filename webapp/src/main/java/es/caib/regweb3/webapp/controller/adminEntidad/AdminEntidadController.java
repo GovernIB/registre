@@ -99,15 +99,13 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
 
         model.addAttribute("registroEntradaBusqueda", registroEntradaBusqueda);
         model.addAttribute("organosOrigen", organismoEjb.getPermitirUsuarios(entidadActiva.getId()));
+        model.addAttribute("oficinasRegistro",  oficinaEjb.findByEntidadLigero(entidadActiva.getId()));
+        model.addAttribute("usuariosEntidad", usuarioEntidadEjb.findByEntidad(entidadActiva.getId()));
         if(multiEntidadEjb.isMultiEntidadSir()) {
             model.addAttribute("organosDestino", organismoEjb.getAllByEntidadMultiEntidad(entidadActiva.getId()));
         }else{
             model.addAttribute("organosDestino", organismoEjb.getAllByEntidad(entidadActiva.getId()));
         }
-        model.addAttribute("oficinasRegistro",  oficinaEjb.findByEntidadLigero(entidadActiva.getId()));
-
-        // Obtenemos los usuarios de la Entidad
-        model.addAttribute("usuariosEntidad", usuarioEntidadEjb.findByEntidad(entidadActiva.getId()));
 
         return "registroEntrada/registroEntradaListAdmin";
     }
@@ -191,7 +189,7 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
                 //Búsqueda de registros
                 Paginacion paginacion = registroEntradaConsultaEjb.busqueda(null, organismos,busqueda.getFechaInicio(), fechaFin, busqueda.getRegistroEntrada(), busqueda.getInteressatNom(), busqueda.getInteressatLli1(), busqueda.getInteressatLli2(), busqueda.getInteressatDoc(), busqueda.getOrganDestinatari(), busqueda.getIdUsuario(), entidadActiva.getId());
 
-                mav = new ModelAndView("exportarRegistrosExcel");
+                mav = new ModelAndView("exportarRegistrosEntradaExcel");
                 mav.addObject("resultados", paginacion);
 
             }
@@ -451,20 +449,32 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
                 organismos.add(busqueda.getIdOrganismo());
             }
 
-            //Búsqueda de registros
-            Paginacion paginacion = registroSalidaConsultaEjb.busqueda(busqueda.getPageNumber(),organismos, busqueda.getFechaInicio(), fechaFin, registroSalida, busqueda.getInteressatNom(), busqueda.getInteressatLli1(), busqueda.getInteressatLli2(), busqueda.getInteressatDoc(),null, busqueda.getIdUsuario(), entidadActiva.getId());
+            if(!busqueda.getExportarRegistros()) { // Búsqueda normal
 
-            busqueda.setPageNumber(1);
-            mav.addObject("paginacion", paginacion);
+                //Búsqueda de registros
+                Paginacion paginacion = registroSalidaConsultaEjb.busqueda(busqueda.getPageNumber(),organismos, busqueda.getFechaInicio(), fechaFin, registroSalida, busqueda.getInteressatNom(), busqueda.getInteressatLli1(), busqueda.getInteressatLli2(), busqueda.getInteressatDoc(),null, busqueda.getIdUsuario(), entidadActiva.getId());
 
-            // Alta en tabla LOPD
-            lopdEjb.insertarRegistros(paginacion, usuarioEntidad, entidadActiva.getLibro(), RegwebConstantes.REGISTRO_SALIDA, RegwebConstantes.LOPD_LISTADO);
+                // Alta en tabla LOPD
+                lopdEjb.insertarRegistros(paginacion, usuarioEntidad, entidadActiva.getLibro(), RegwebConstantes.REGISTRO_SALIDA, RegwebConstantes.LOPD_LISTADO);
+
+                busqueda.setPageNumber(1);
+                mav.addObject("paginacion", paginacion);
+                mav.addObject("organosOrigen",  organosOrigen);
+                mav.addObject("usuariosEntidad",usuariosEntidad);
+                mav.addObject("oficinasRegistro", oficinasRegistro);
+                mav.addObject("registroEntradaBusqueda", busqueda);
+
+            }else{ // Creamos un excel con los resultados
+
+                //Búsqueda de registros
+                Paginacion paginacion = registroSalidaConsultaEjb.busqueda(null,organismos, busqueda.getFechaInicio(), fechaFin, registroSalida, busqueda.getInteressatNom(), busqueda.getInteressatLli1(), busqueda.getInteressatLli2(), busqueda.getInteressatDoc(),null, busqueda.getIdUsuario(), entidadActiva.getId());
+
+                mav = new ModelAndView("exportarRegistrosSalidaExcel");
+                mav.addObject("resultados", paginacion);
+
+            }
+
         }
-
-        mav.addObject("organosOrigen",  organosOrigen);
-        mav.addObject("usuariosEntidad",usuariosEntidad);
-        mav.addObject("oficinasRegistro", oficinasRegistro);
-        mav.addObject("registroEntradaBusqueda", busqueda);
 
         return mav;
     }
