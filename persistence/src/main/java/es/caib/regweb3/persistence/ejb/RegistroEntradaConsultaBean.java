@@ -212,6 +212,11 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
             parametros.put("codigoSia",  re.getRegistroDetalle().getCodigoSia());
         }
 
+        // Aplicación telemática
+        if (StringUtils.isNotEmpty(re.getRegistroDetalle().getAplicacionTelematica())) {
+            where.add(DataBaseUtils.like("re.registroDetalle.aplicacionTelematica", "aplicacionTelematica", parametros, re.getRegistroDetalle().getAplicacionTelematica()));
+        }
+
         // Intervalo fechas
         where.add(" (re.fecha >= :fechaInicio  ");
         parametros.put("fechaInicio", fechaInicio);

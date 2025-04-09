@@ -169,14 +169,14 @@
                                     empty registroEntradaBusqueda.interessatDoc && empty registroEntradaBusqueda.interessatNom &&
                                     empty registroEntradaBusqueda.interessatLli1 && empty registroEntradaBusqueda.interessatLli2 &&
                                     empty registroEntradaBusqueda.organDestinatari && empty registroEntradaBusqueda.registroEntrada.registroDetalle.codigoSia &&
-                                    empty registroEntradaBusqueda.idUsuario && !registroEntradaBusqueda.registroEntrada.registroDetalle.presencial}">
+                                    empty registroEntradaBusqueda.idUsuario && !registroEntradaBusqueda.registroEntrada.registroDetalle.presencial && empty registroEntradaBusqueda.registroEntrada.registroDetalle.aplicacionTelematica}">
                                     <div id="demo" class="collapse">
                                         </c:if>
                                 <c:if test="${not empty registroEntradaBusqueda.registroEntrada.oficina.id || not empty registroEntradaBusqueda.registroEntrada.registroDetalle.tipoDocumentacionFisica ||
                                     not empty registroEntradaBusqueda.interessatDoc || not empty registroEntradaBusqueda.interessatNom ||
                                     not empty registroEntradaBusqueda.interessatLli1 || not empty registroEntradaBusqueda.interessatLli2 ||
                                     not empty registroEntradaBusqueda.organDestinatari || not empty registroEntradaBusqueda.registroEntrada.registroDetalle.codigoSia ||
-                                    not empty registroEntradaBusqueda.idUsuario || registroEntradaBusqueda.registroEntrada.registroDetalle.presencial}">
+                                    not empty registroEntradaBusqueda.idUsuario || registroEntradaBusqueda.registroEntrada.registroDetalle.presencial || not empty registroEntradaBusqueda.registroEntrada.registroDetalle.aplicacionTelematica}">
                                     <div id="demo" class="collapse in">
                                 </c:if>
 
@@ -284,6 +284,15 @@
                                         <form:input path="registroEntrada.registroDetalle.codigoSia" cssClass="form-control"/> <form:errors path="registroEntrada.registroDetalle.codigoSia" cssClass="help-block" element="span"/>
                                     </div>
                                 </div>
+
+                                <div class="col-xs-6 espaiLinies">
+                                    <div class="col-xs-4 pull-left etiqueta_regweb">
+                                        <label for="registroEntrada.registroDetalle.aplicacionTelematica" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.aplicacion.busqueda"/>" data-toggle="popover"><spring:message code="registroEntrada.aplicacion"/></label>
+                                    </div>
+                                    <div class="col-xs-8">
+                                        <form:input path="registroEntrada.registroDetalle.aplicacionTelematica" cssClass="form-control"/> <form:errors path="registroEntrada.registroDetalle.aplicacionTelematica" cssClass="help-block" element="span"/>
+                                    </div>
+                                </div>
                             </div>
                             </div>
                             <div class="col-xs-12 pad-bottom15 mesOpcions">
@@ -303,7 +312,6 @@
                                 <input type="reset" value="<spring:message code="regweb.restablecer"/>" class="btn btn-sm"/>
 
                                 <c:if test="${not empty paginacion.listado}">
-
                                     <div class="btn-group pull-right text12">
                                         <button type="button" onclick="exportarRegistrosEntrada()" class="btn btn-success btn-sm">
                                             <spring:message code="registro.exportar"/>

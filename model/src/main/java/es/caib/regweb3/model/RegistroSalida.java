@@ -285,6 +285,12 @@ public class RegistroSalida implements IRegistro {
         return null;
     }
 
+    @Transient
+    public String getDestinatario() throws I18NException {
+
+        return this.getRegistroDetalle().getInteresados().get(0).getNombreCompleto();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
