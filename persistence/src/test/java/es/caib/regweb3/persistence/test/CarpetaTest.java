@@ -7,7 +7,6 @@ import es.caib.carpeta.apiinterna.client.services.ApiException;
 import es.caib.carpeta.apiinterna.client.services.Configuration;
 import es.caib.carpeta.apiinterna.client.services.auth.HttpBasicAuth;
 import es.caib.regweb3.utils.RegwebConstantes;
-import org.fundaciobit.pluginsib.core.utils.XTrustProvider;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -59,7 +58,7 @@ public class CarpetaTest {
     }
 
     private NotificacionsApi getApiInstance() throws Exception{
-        XTrustProvider.install();
+        //XTrustProvider.install();
         ApiClient defaultClient = Configuration.getDefaultApiClient();
         defaultClient.setBasePath("https://se.caib.es/carpetaapi/interna");
         // Configure HTTP basic authorization: BasicAuth
