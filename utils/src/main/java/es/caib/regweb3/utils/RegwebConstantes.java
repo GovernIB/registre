@@ -841,7 +841,7 @@ public interface RegwebConstantes {
     Long INTEGRACION_JUSTIFICANTE = 5L;
     Long INTEGRACION_CERRAR_EXPEDIENTE = 6L;
     Long INTEGRACION_SCHEDULERS = 7L;
-    Long INTEGRACION_CARPETA = 8L;
+    Long INTEGRACION_DRASSANA = 8L;
     Long INTEGRACION_ESCANER = 9L;
 
     Long[] INTEGRACION_TIPOS = {
@@ -861,10 +861,10 @@ public interface RegwebConstantes {
             INTEGRACION_FIRMA,
             INTEGRACION_DISTRIBUCION,
             INTEGRACION_WS,
-            INTEGRACION_CERRAR_EXPEDIENTE,
+            /*INTEGRACION_CERRAR_EXPEDIENTE,*/
             INTEGRACION_SIR,
             INTEGRACION_SCHEDULERS,
-            /*INTEGRACION_CARPETA,*/
+            INTEGRACION_DRASSANA,
             INTEGRACION_ESCANER
     };
 
