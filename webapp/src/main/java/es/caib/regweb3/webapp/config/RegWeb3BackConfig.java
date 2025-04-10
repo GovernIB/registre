@@ -301,6 +301,8 @@ public class RegWeb3BackConfig extends WebMvcConfigurerAdapter {
     @Bean
     ExportarOficinasExcel exportarOficinasExcel() {return new ExportarOficinasExcel();}
     @Bean
-    ExportarRegistrosExcel exportarRegistrosExcel() {return new ExportarRegistrosExcel();}
+    ExportarRegistrosEntradaExcel exportarRegistrosEntradaExcel() {return new ExportarRegistrosEntradaExcel();}
+    @Bean
+    ExportarRegistrosSalidaExcel exportarRegistrosSalidaExcel() {return new ExportarRegistrosSalidaExcel();}
 
 }
