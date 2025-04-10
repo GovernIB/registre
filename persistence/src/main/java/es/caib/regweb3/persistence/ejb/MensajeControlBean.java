@@ -513,29 +513,41 @@ public class MensajeControlBean extends BaseEjbJPA<MensajeControl, Long> impleme
      * Función para realizar el callback de una Comunicación SIR emitida por NOTIB
      * @param oficioRemision
      */
-    private void callbackNotib(OficioRemision oficioRemision){
+    private void callbackNotib(OficioRemision oficioRemision) throws I18NException{
 
         if(PropiedadGlobalUtil.getNotibCallback(oficioRemision.getEntidad().getId())){
+
+            StringBuilder peticion = new StringBuilder();
+            Date inicio = new Date();
+            String descripcion = "Callback a NOTIB";
+            RegistroSalida registroSalida = null;
 
             try {
 
                 if (oficioRemision.getTipoOficioRemision().equals(RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA)){
 
-                    RegistroSalida registroSalida = registroSalidaEjb.findById(oficioRemision.getRegistrosSalida().get(0).getId());
+                    registroSalida = registroSalidaEjb.findById(oficioRemision.getRegistrosSalida().get(0).getId());
                     String urlNotib = PropiedadGlobalUtil.getNotibCallbackUrl(oficioRemision.getEntidad().getId());
 
                     // Si es un salida hecha por NOTIB, hacemos el callback
                     if(!registroSalida.getRegistroDetalle().getPresencial() && registroSalida.getRegistroDetalle().getAplicacionTelematica().contains("NOTIB")
                             && urlNotib != null) {
 
-                        notibService.callbackComunicacionSir(registroSalida, urlNotib);
+                        String respuesta = notibService.callbackComunicacionSir(registroSalida, urlNotib);
+
+                        // Integracion
+                        peticion.append("registro: ").append(registroSalida.getNumeroRegistroFormateado()).append(System.getProperty("line.separator"));
+                        peticion.append("respuesta: ").append(respuesta).append(System.getProperty("line.separator"));
+
+                        integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_DRASSANA, descripcion, peticion.toString(), System.currentTimeMillis() - inicio.getTime() , oficioRemision.getEntidad().getId(), registroSalida.getNumeroRegistroFormateado());
+
                     }
                 }
             } catch (I18NException e) {
                 e.printStackTrace();
+                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_DRASSANA, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - inicio.getTime(), oficioRemision.getEntidad().getId(), registroSalida.getNumeroRegistroFormateado());
                 log.info("Error en el callback a NOTIB: " + oficioRemision.getIdentificadorIntercambio());
             }
         }
-
     }
 }

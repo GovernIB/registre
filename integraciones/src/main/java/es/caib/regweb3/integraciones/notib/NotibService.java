@@ -25,7 +25,7 @@ public class NotibService {
      * @param urlNotib
      * @throws I18NException
      */
-    public void callbackComunicacionSir(RegistroSalida registroSalida, String urlNotib) throws I18NException {
+    public String callbackComunicacionSir(RegistroSalida registroSalida, String urlNotib) throws I18NException {
 
         try {
 
@@ -35,9 +35,7 @@ public class NotibService {
             requestBody.put("entitatDir3Codi", registroSalida.getEntidad().getCodigoDir3());
 
             // Llamar al cliente REST genérico
-            String respuesta = restClient.postRequest(urlNotib, requestBody, String.class);
-            log.info("Respuesta NOTIB: " + respuesta);
-
+            return restClient.postRequest(urlNotib, requestBody, String.class);
 
         } catch (Exception e) {
             throw new I18NException(e, "notib.callback.error", registroSalida.getNumeroRegistroFormateado());

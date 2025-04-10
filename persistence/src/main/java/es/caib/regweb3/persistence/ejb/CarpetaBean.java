@@ -37,7 +37,9 @@ import java.util.List;
 @RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI"})
 @Interceptors(SpringBeanAutowiringInterceptor.class)
 public class CarpetaBean implements CarpetaLocal {
+
     protected final Logger log = LoggerFactory.getLogger(getClass());
+
     @EJB private IntegracionLocal integracionEjb;
 
 
@@ -77,13 +79,13 @@ public class CarpetaBean implements CarpetaLocal {
                     peticion.append("ResultMessage: ").append(result.getMessage()).append(System.getProperty("line.separator"));
                 }
 
-                integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_CARPETA, descripcion, peticion.toString(), System.currentTimeMillis() - inicio.getTime(), idEntidad, registro.getNumeroRegistroFormateado());
+                integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_DRASSANA, descripcion, peticion.toString(), System.currentTimeMillis() - inicio.getTime(), idEntidad, registro.getNumeroRegistroFormateado());
             }
 
         } catch (ApiException e) {
             log.info("Exception when calling NotificacionsApi#help");
             e.printStackTrace();
-            integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_CARPETA, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - inicio.getTime(), idEntidad, registro.getNumeroRegistroFormateado());
+            integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_DRASSANA, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - inicio.getTime(), idEntidad, registro.getNumeroRegistroFormateado());
         }
     }
 
