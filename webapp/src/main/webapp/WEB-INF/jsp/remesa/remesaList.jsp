@@ -131,7 +131,7 @@
                                         <c:if test="${empty paginacion.listado}">
                                             <div class="alert alert-grey alert-dismissable">
                                                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                                                <spring:message code="regweb.busqueda.vacio"/> <strong><spring:message code="registroEntrada.registroEntrada"/></strong>
+                                                <spring:message code="regweb.busqueda.vacio"/> <strong><spring:message code="remesa.remesa"/></strong>
                                             </div>
                                         </c:if>
 

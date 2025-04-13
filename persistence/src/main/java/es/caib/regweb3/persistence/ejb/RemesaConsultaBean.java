@@ -280,16 +280,11 @@ public class RemesaConsultaBean extends BaseEjbJPA<Remesa, Long> implements Reme
 
 				if (notificacionesError == 0)
 					updateFechaInicioProximaLocalizacion(entidad.getId(), LemaUtils.convertDateToString(fechaHasta));
-
-//				if (isEnvioEmailResultadoLemaEnabled() && envios.size() > 0) {
-//					enviarEmailResumen(
-//							envios.size(), 
-//							notificacionesError, 
-//							LemaUtils.getEmailFormat(fechaDesde), 
-//							LemaUtils.getEmailFormat(fechaHasta), 
-//							entidad);
-//				}
+				
+			} else if (response != null) {
+				throw new LemaPluginException(response.getCodigoRespuesta() + " " + response.getDescripcionRespuesta());
 			}
+			
 		} catch (LemaPluginException | I18NException i18ne) {
 			log.error("Ha habido un error lozalizando las notificaciones en DEHú");
 			i18ne.printStackTrace();
