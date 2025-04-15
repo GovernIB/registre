@@ -322,7 +322,7 @@ public class RegWebInfoWsImpl extends AbstractRegistroWsImpl implements RegWebIn
 
             //Libro único
             List<LibroWs> listLibroWs = new ArrayList<LibroWs>();
-            listLibroWs.add(CommonConverter.getLibroWs(entidad.getLibro()));
+            listLibroWs.add(CommonConverter.getLibroWs(entidad));
 
             return listLibroWs;
 
@@ -362,7 +362,7 @@ public class RegWebInfoWsImpl extends AbstractRegistroWsImpl implements RegWebIn
 
         // Retornamos el Libro de la entidad
         if (entidad.getLibro() != null) {
-            return CommonConverter.getLibroWs(entidad.getLibro());
+            return CommonConverter.getLibroWs(entidad);
         }
 
         throw new I18NException("organismo.no.libroRegistro", organismoActivo.getNombreCompleto());
@@ -415,7 +415,7 @@ public class RegWebInfoWsImpl extends AbstractRegistroWsImpl implements RegWebIn
         List<LibroOficinaWs> librosOficinas = new ArrayList<LibroOficinaWs>();
 
         for (Organismo organismo : organismos) {
-            LibroWs libroWs = new LibroWs(libroUnico.getCodigo(), libroUnico.getNombre(), libroUnico.getNombreCompleto(), null);
+            LibroWs libroWs = new LibroWs(libroUnico.getCodigo(), libroUnico.getNombre(), libroUnico.getNombre(), null);
 
             // Obtenemos las Oficinas cuyo Organismo responsable es al que pertenece el Libro
             for (Oficina oficina : oficinaEjb.findByOrganismoResponsable(organismo.getId())) {
