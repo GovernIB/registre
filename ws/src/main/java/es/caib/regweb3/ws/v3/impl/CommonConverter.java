@@ -124,16 +124,16 @@ public class CommonConverter {
     }
 
 
-    public static LibroWs getLibroWs(Libro libro) {
-        if (libro == null) {
+    public static LibroWs getLibroWs(Entidad entidad) {
+        if (entidad.getLibro() == null) {
             return null;
         }
         LibroWs libroWs = new LibroWs();
 
-        libroWs.setCodigoLibro(libro.getCodigo());
-        libroWs.setCodigoOrganismo(libro.getOrganismo().getCodigo());
-        libroWs.setNombreCorto(libro.getNombre());
-        libroWs.setNombreLargo(libro.getNombreCompleto());
+        libroWs.setCodigoLibro(entidad.getLibro().getCodigo());
+        libroWs.setCodigoOrganismo(entidad.getLibro().getCodigo());
+        libroWs.setNombreCorto(entidad.getLibro().getNombre());
+        libroWs.setNombreLargo(entidad.getLibro().getNombre());
 
         return libroWs;
 
