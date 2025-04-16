@@ -197,10 +197,10 @@ public class RemesaListController extends AbstractRegistroCommonFormController {
         	
         	if (remesa.getReintentosLectura() == 0)
         		throw new RuntimeException("Superado el número de reintentos de lectura, consulte el administrador");
-        	Usuario usuarioActual = getUsuarioAutenticado(request);
+        	UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
         	remesaEjb.lecturaNotificacion(
         		identificador, 
-        		usuarioActual,
+        		usuarioEntidad,
         		entidad);
         	
         	List<File> documentos = documentManager.getDocuments(identificador);
@@ -500,20 +500,28 @@ public class RemesaListController extends AbstractRegistroCommonFormController {
     private List<Interesado> cargarInteresados(Remesa remesa) {
         List<Interesado> interesados = new ArrayList<Interesado>();
         Interesado interesado = new Interesado();
+        
         if (remesa.getEntidadCodigo() != null) {
+        	// Administració
             interesado.setTipo(1L); // 1- Adm 2- P.Fisica 3- Juridica
-            interesado.setTipoDocumentoIdentificacion(2L); // 1-NIF 2-CIF
-            interesado.setDocumento(remesa.getTitularNif());
-            interesado.setCodigoDir3(remesa.getEntidadCodigo());
-            interesado.setRazonSocial(remesa.getTitularNombre());
-            interesados.add(interesado);
-        } else {
+            interesado.setCodigoDir3(remesa.getOrganoEmisorCodigo());
+            interesado.setRazonSocial(remesa.getOrganoEmisorNombre());
+        } else { 
+        	// Persona jurídica
             interesado.setTipo(3L); // 1- Adm 2- P.Fisica 3- Juridica
-            interesado.setTipoDocumentoIdentificacion(2L); // 1-NIF 2-CIF
+            interesado.setTipoDocumentoIdentificacion(2L);
             interesado.setDocumento(remesa.getTitularNif());
             interesado.setRazonSocial(remesa.getTitularNombre());
-            interesados.add(interesado);
         }
+        
+        // Si ve informat el NIF de l'òrgan emisor s'ha de guardar aquest com a interessat
+        if (remesa.getOrganoEmisorNif() != null) {
+            interesado.setTipoDocumentoIdentificacion(2L); // 1-NIF 2-CIF 3-CODIGO ORIGEN
+            interesado.setDocumento(remesa.getOrganoEmisorNif());
+            interesado.setRazonSocial(remesa.getOrganoEmisorNombre());
+        }
+        
+        interesados.add(interesado);
         
         return interesados;
     }
@@ -593,6 +601,8 @@ public class RemesaListController extends AbstractRegistroCommonFormController {
 			anexoFull.getAnexo().setFirmaverificada(false);
 			
 			signatureServerEjb.checkDocument(anexoFull, entidad.getId(), new Locale("es"), false, true, true);
+			
+			anexoFull.getAnexo().setFirmaverificada(true);
 		} catch (Exception e) {
 			anexoFull.getAnexo().setFirmaverificada(false);
 			log.error("Ha habido un error verificando la firma de un documento de notificación: " + e.getMessage());

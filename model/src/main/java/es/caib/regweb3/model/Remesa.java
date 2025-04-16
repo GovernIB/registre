@@ -52,6 +52,7 @@ public class Remesa implements Serializable {
     private Integer codigoOrigen;
     private Integer tipo;
     private String organoEmisorCodigo;
+    private String organoEmisorNif;
     private String organoEmisorNombre;
     private Date fechaPuestaDisposicion;
     private String titularNif;
@@ -68,16 +69,16 @@ public class Remesa implements Serializable {
     
     private Entidad entidad;
 
-    private Usuario usuario;
+    private UsuarioEntidad usuario;
     
     private List<DocumentoNotificacion> documentosRecibidos = new ArrayList<DocumentoNotificacion>();
     
     public Remesa() { }
 
 
-	public Remesa(String concepto, String descripcion, String identificador, Integer codigoOrigen, Integer tipo, String organoEmisorCodigo,
+	public Remesa(String concepto, String descripcion, String identificador, Integer codigoOrigen, Integer tipo, String organoEmisorCodigo, String organoEmisorNif,
 			String organoEmisorNombre, Date fechaPuestaDisposicion, String titularNif, String titularNombre, String entidadCodigo, String entidadNombre, 
-			String estado, String estadoNotifica, String codigoProcedimiento, Integer reintentosLectura, Entidad entidad, Usuario usuario) {
+			String estado, String estadoNotifica, String codigoProcedimiento, Integer reintentosLectura, Entidad entidad, UsuarioEntidad usuario) {
 		super();
 		this.concepto = concepto;
 		this.descripcion = descripcion;
@@ -85,6 +86,7 @@ public class Remesa implements Serializable {
 		this.codigoOrigen = codigoOrigen;
 		this.tipo = tipo;
 		this.organoEmisorCodigo = organoEmisorCodigo;
+		this.organoEmisorNif = organoEmisorNif;
 		this.organoEmisorNombre = organoEmisorNombre;
 		this.fechaPuestaDisposicion = fechaPuestaDisposicion;
 		this.titularNif = titularNif;
@@ -162,10 +164,19 @@ public class Remesa implements Serializable {
 		return organoEmisorCodigo;
 	}
 
+	public void setOrganoEmisorNif(String organoEmisorNif) {
+		this.organoEmisorNif = organoEmisorNif;
+	}
+
+	@Column(name = "ORGANO_EMISOR_NIF", nullable = true)
+	public String getOrganoEmisorNif() {
+		return organoEmisorNif;
+	}
+
 	public void setOrganoEmisorCodigo(String organoEmisorCodigo) {
 		this.organoEmisorCodigo = organoEmisorCodigo;
 	}
-
+	
 	@Column(name = "ORGANO_EMISOR_NOMBRE", nullable = false)
 	public String getOrganoEmisorNombre() {
 		return organoEmisorNombre;
@@ -286,13 +297,13 @@ public class Remesa implements Serializable {
 
 	@ManyToOne(optional = true)
     @JoinColumn(name = "USUARIO")
-    @ForeignKey(name = "RWE_REMESA_Usuario_FK")
+    @ForeignKey(name = "RWE_REMESA_USUARIO_ENTIDAD_FK")
     @JsonIgnore
-    public Usuario getUsuario() {
+    public UsuarioEntidad getUsuario() {
         return usuario;
     }
 
-    public void setUsuario(Usuario usuario) {
+    public void setUsuario(UsuarioEntidad usuario) {
         this.usuario = usuario;
     }
     

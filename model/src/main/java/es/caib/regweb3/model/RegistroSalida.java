@@ -50,6 +50,7 @@ public class RegistroSalida implements IRegistro {
     private RegistroDetalle registroDetalle;
 
 
+    private boolean anexosPendientes = false;
 
     /**
      * 
@@ -246,6 +247,15 @@ public class RegistroSalida implements IRegistro {
 
 
     @Transient
+    public boolean isAnexosPendientes() {
+		return anexosPendientes;
+	}
+
+	public void setAnexosPendientes(boolean anexosPendientes) {
+		this.anexosPendientes = anexosPendientes;
+	}
+
+	@Transient
     public String interesadoDestinoCodigo() throws Exception{
 
         List<Interesado> interesados = this.getRegistroDetalle().getInteresados();

@@ -11,6 +11,7 @@ import org.plugin.lema.api.PeticionAccesoResponse;
 import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.model.Remesa;
 import es.caib.regweb3.model.Usuario;
+import es.caib.regweb3.model.UsuarioEntidad;
 
 /**
  * Created by Limit Tecnologies S.L.
@@ -24,7 +25,7 @@ public interface RemesaLocal extends BaseEjb<Remesa, Long> {
 	
 	public void guardaNotificacion(Envio envio, Entidad entidad) throws I18NException, Exception;
 
-	public PeticionAccesoResponse lecturaNotificacion(String identificador, Usuario usuarioActual, Entidad entidad) throws I18NException, Exception;
+	public PeticionAccesoResponse lecturaNotificacion(String identificador, UsuarioEntidad usuarioEntidad, Entidad entidad) throws I18NException, Exception;
 
 //	public Remesa findByIdentificadorWithDocumentos(String identificador, Entidad entidad) throws I18NException, Exception;
 

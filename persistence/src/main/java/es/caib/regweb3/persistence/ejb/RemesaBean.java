@@ -45,6 +45,7 @@ import es.caib.regweb3.model.RegistroEntrada;
 import es.caib.regweb3.model.Remesa;
 import es.caib.regweb3.model.RemesaAcuse;
 import es.caib.regweb3.model.Usuario;
+import es.caib.regweb3.model.UsuarioEntidad;
 import es.caib.regweb3.persistence.utils.DehuDocumentManager;
 import es.caib.regweb3.persistence.utils.LemaPluginHelper;
 import es.caib.regweb3.persistence.utils.LemaUtils;
@@ -130,6 +131,7 @@ public class RemesaBean extends BaseEjbJPA<Remesa, Long> implements RemesaLocal 
 					envio.getCodigoOrigen().intValue(),
 					envio.getTipoEnvio().intValue(), 
 					envio.getOrganismoEmisor().getCodigoOrganismo(), 
+					envio.getOrganismoEmisor().getNifOrganismo(),
 					envio.getOrganismoEmisor().getNombreOrganismo(), 
 					LemaUtils.xmlGregorianCalendarToDate(envio.getFechaPuestaDisposicion()), 
 					envio.getTitular().getNifTitular(), 
@@ -300,7 +302,7 @@ public class RemesaBean extends BaseEjbJPA<Remesa, Long> implements RemesaLocal 
 	}
 	
 	@Override
-	public PeticionAccesoResponse lecturaNotificacion(String identificador, Usuario usuarioActual, Entidad entidad) throws I18NException, Exception {
+	public PeticionAccesoResponse lecturaNotificacion(String identificador, UsuarioEntidad usuarioEntidad, Entidad entidad) throws I18NException, Exception {
 		PeticionAccesoRequest request = new PeticionAccesoRequest();
 		PeticionAccesoResponse response = new PeticionAccesoResponse();
 		try {
@@ -355,7 +357,7 @@ public class RemesaBean extends BaseEjbJPA<Remesa, Long> implements RemesaLocal 
 				
 				actualizarReintentosLectura(remesa.getId());
 				
-				remesa.setUsuario(usuarioActual);
+				actualizarUsuario(usuarioEntidad, remesa.getId());
 				
 				em.flush();
 			} 
@@ -447,6 +449,14 @@ public class RemesaBean extends BaseEjbJPA<Remesa, Long> implements RemesaLocal 
 	@TransactionTimeout(value = 1200) // 20 minutos
     public void actualizarReintentosLectura(Long idRemesa) throws Exception {
         Query q = em.createQuery("update Remesa set reintentosLectura = reintentosLectura-1 where id = :idRemesa");
+        q.setParameter("idRemesa", idRemesa);
+        q.executeUpdate();
+    }
+	
+	@TransactionTimeout(value = 1200) // 20 minutos
+    public void actualizarUsuario(UsuarioEntidad usuario, Long idRemesa) throws Exception {
+        Query q = em.createQuery("update Remesa set usuario = :usuario where id = :idRemesa");
+        q.setParameter("usuario", usuario);
         q.setParameter("idRemesa", idRemesa);
         q.executeUpdate();
     }
