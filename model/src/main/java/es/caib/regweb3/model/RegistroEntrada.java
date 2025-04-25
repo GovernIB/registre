@@ -49,6 +49,8 @@ public class RegistroEntrada implements IRegistro {
     @XmlElement
     private boolean anexosPendientes;
     
+    private String identificadorRemesa;
+    
     /**
      * 
      */
@@ -252,9 +254,16 @@ public class RegistroEntrada implements IRegistro {
         this.registroDetalle = registroDetalle;
     }
 
+    @Transient
+    public String getIdentificadorRemesa() {
+		return identificadorRemesa;
+	}
 
+	public void setIdentificadorRemesa(String identificadorRemesa) {
+		this.identificadorRemesa = identificadorRemesa;
+	}
 
-    @Override
+	@Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;

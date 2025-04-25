@@ -108,6 +108,15 @@
 		                                    </form:select>
 		                                </div>
 		                            </div>
+		                            
+		                            <div class="col-xs-6 espaiLinies">
+		                                <div class="col-xs-4 pull-left etiqueta_regweb">
+		                                    <label for="remesa.identificador" rel="popupAbajo" data-content="<spring:message code="remesa.identificador"/>" data-toggle="popover"><spring:message code="remesa.identificador"/></label>
+		                                </div>
+		                                <div class="col-xs-8">
+		                                    <form:input path="remesa.identificador" cssClass="form-control"/>
+		                                </div>
+		                            </div>
 		                        </div>
 	                        
 						 	<div class="row">
@@ -161,22 +170,23 @@
                                                     </colgroup>
                                                     <thead>
                                                         <tr>
-                                                            <th class="center" width="8%"><spring:message code="remesa.list.tipo"/></th>
+                                                            <th class="center" style="width: 100px;"><spring:message code="remesa.list.tipo"/></th>
+                                                            <th class="center" style="width: 160px;"><spring:message code="remesa.list.identificador"/></th>
                                                             <th class="center"><spring:message code="remesa.list.extracto"/></th>
-                                                            <th class="center" width="17%"><spring:message code="remesa.list.fecha.disposicion"/></th>
-                                                            <th class="center" width="15%"><spring:message code="remesa.list.emisor"/></th>
-                                                            <th class="center" width="10%"><spring:message code="remesa.list.estado"/></th>
-                                                            <th class="center" width="10%"><spring:message code="remesa.list.usuario"/></th>
-                                                            <th class="center" width="12%"><spring:message code="remesa.list.estado.notifica"/></th>
-                                                            <th class="center" width="5%"><spring:message code="regweb.acciones"/></th>
+                                                            <th class="center" style="width: 130px;"><spring:message code="remesa.list.fecha.disposicion"/></th>
+                                                            <th class="center" style="width: 215px;"><spring:message code="remesa.list.emisor"/></th>
+                                                            <th class="center" style="width: 85px;"><spring:message code="remesa.list.estado"/></th>
+                                                            <th class="center" style="width: 100px;"><spring:message code="remesa.list.usuario"/></th>
+                                                            <th class="center" style="width: 110px;"><spring:message code="remesa.list.estado.notifica"/></th>
+                                                            <th class="center" style="width: 85px;"><spring:message code="regweb.acciones"/></th>
                                                         </tr>
                                                     </thead>
 
                                                     <tbody>
                                                         <c:forEach var="remesa" items="${paginacion.listado}" varStatus="status">
                                                             <tr>
-                                                            	<td class="hidden">${remesa.identificador}</td>
                                                                 <td class="center"><spring:message code="remesa.list.tipo.${remesa.tipo}"/></td>
+                                                            	<td class="center">${remesa.identificador}</td>
                                                                 <td class="center">${remesa.concepto}</td>
                                                                 <td class="center">
                                                                 	<fmt:formatDate value="${remesa.fechaPuestaDisposicion}" pattern="dd/MM/yyyy"/>
@@ -368,6 +378,10 @@
             	
             	// Mostrar detalle y documentos remesa
             	$('#remesa-resumen').show();
+            	
+            	if (totalDocumentos == -1)
+            		$('#remesa-carousel-container').hide();
+            	
             	$('#remesa-btn-registrar').show();
             	$('#modalTitle').text(tradRemesas['remesa.resumen']);	
             } else {

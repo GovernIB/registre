@@ -34,6 +34,7 @@ import org.plugin.lema.api.EnlaceDocumento;
 import org.plugin.lema.api.Envio;
 import org.plugin.lema.api.IdentificadorAcuseRecibo;
 import org.plugin.lema.api.LemaPluginException;
+import org.plugin.lema.api.Organismo;
 import org.plugin.lema.api.PeticionAccesoRequest;
 import org.plugin.lema.api.PeticionAccesoResponse;
 import org.plugin.lema.api.ReferenciaDocumento;
@@ -154,114 +155,7 @@ public class RemesaBean extends BaseEjbJPA<Remesa, Long> implements RemesaLocal 
             ejbContext.setRollbackOnly();
             throw ex;
 		}
-		
-//		try {
-//			LocalizaRealizadasRequest requestRealizadas = new LocalizaRealizadasRequest();
-//			requestRealizadas.setFechaDesde(LemaUtils.convertStringToDate(fechaDesde));
-//			
-//			// localizaRealizadas no permite hora: 4207 La fecha actual enviada se encuentra fuera del margen permitido
-//			Calendar calendar = Calendar.getInstance();
-//			calendar.setTime(fechaHasta);
-//			calendar.set(Calendar.HOUR_OF_DAY, 0);
-//			calendar.set(Calendar.MINUTE, 0);
-//			calendar.set(Calendar.SECOND, 0);
-//			calendar.set(Calendar.MILLISECOND, 0);
-//			requestRealizadas.setFechaHasta(calendar.getTime());
-//			
-//			responseRealizadas = pluginHelper.localizaRealizadas(requestRealizadas, entidad);
-//			if (responseRealizadas != null && RegwebConstantes.LEMA_RESPUESTA_OK.equals(responseRealizadas.getCodigoRespuesta())) {
-//				for (EnvioRealizada envio : responseRealizadas.getEnvios()) {
-//					
-//					boolean existeEnvio = findByIdentificador(envio.getIdentificador()) != null;
-//					
-//					if (! existeEnvio) {
-//						Remesa remesa = new Remesa(
-//								envio.getConcepto(), 
-//								envio.getDescripcion(), 
-//								envio.getIdentificador(), 
-//								envio.getCodigoOrigen().intValue(),
-//								Integer.valueOf(envio.getTipoEnvio()), 
-//								envio.getOrganismoEmisor().getCodigoOrganismo(), 
-//								envio.getOrganismoEmisor().getNombreOrganismo(), 
-//								LemaUtils.xmlGregorianCalendarToDate(envio.getFechaPuestaDisposicion()), 
-//								envio.getTitular().getNifTitular(), 
-//								envio.getTitular().getNombreTitular(), 
-//								envio.getTitular().getCodigoDIR3(),
-//								envio.getTitular().getDescripcionEntidad(),
-//								RegwebConstantes.REMESA_ESTADO_REG_LEIDA, 
-//								envio.getEstado().name(),
-//								envio.getCodigoProcedimiento().getCodigo(),
-//								3,
-//								entidad);
-//	
-//						persist(remesa);
-//						
-//						em.flush();
-//					}
-//				}
-//				
-//			}
-//			
-//		} catch (LemaPluginException | I18NException i18ne) {
-//			log.error("Ha habido un error lozalizando las notificaciones en DEHú");
-//			i18ne.printStackTrace();
-////            ejbContext.setRollbackOnly();
-////            throw i18ne;
-//		} catch (Exception ex) {
-//			log.error("Ha habido un error lozalizando las notificaciones en DEHú");
-//			ex.printStackTrace();
-////            ejbContext.setRollbackOnly();
-////            throw ex;
-//		}
-		
 	}
-	
-//	@Override
-//	public Remesa findByIdentificadorWithDocumentos(String identificador, Entidad entidad) throws I18NException, Exception {
-//		try {
-//			Remesa remesa = findByIdentificador(identificador);
-//			
-////			request.setIdentificador(identificador);
-////			request.setCodigoOrigen(remesa.getCodigoOrigen().intValue());
-////			request.setConcepto(remesa.getConcepto());
-////			request.setNifPeticion(remesa.getTitularNif());
-////			request.setNombrePeticion(remesa.getTitularNombre());
-////			
-////			response = pluginHelper.consultaRealizada(request, entidad);
-//
-//			// Guardar anexos notificación
-//	    	RemesaAnexo remesaAnexo = remesaAnexoEjb.findByRemesa(remesa.getId());
-//	    	
-//	    	// Consulta anexo referenciado
-//			ConsultaAnexoRequest request = new ConsultaAnexoRequest();
-//			request.setIdentificador(remesa.getIdentificador());
-//			request.setCodigoOrigen(remesa.getCodigoOrigen());
-//			request.setReferenciaAnexo(remesaAnexo.getReferencia());
-//			
-//			ConsultaAnexoResponse response = pluginHelper.consultaAnexo(request, entidad);
-//			
-//			DocumentoAnexo anexo = response.getDocumentoAnexo();
-//			if (anexo != null) {
-//				guardarDocumento(
-//						remesa.getIdentificador(), 
-//						anexo.getNombre(), 
-//						anexo.getContenido());
-//			}
-//			
-//		} catch (LemaPluginException | I18NException i18ne) {
-//			log.error("Error consulta de la notificación con identificador: " + identificador);
-//			i18ne.printStackTrace();
-//            ejbContext.setRollbackOnly();
-//            throw i18ne;
-//		} catch (Exception ex) {
-//			log.error("Error consulta de la notificación con identificador: " + identificador);
-//			ex.printStackTrace();
-//            ejbContext.setRollbackOnly();
-//            throw ex;
-//		}
-//		
-//		return response;
-//	}
 	
 	@Override
 	public ConsultaAcuseReciboResponse consultaGuardaAcuseRecibo(String identificador, Entidad entidad) throws I18NException, Exception {
@@ -306,6 +200,8 @@ public class RemesaBean extends BaseEjbJPA<Remesa, Long> implements RemesaLocal 
 		PeticionAccesoRequest request = new PeticionAccesoRequest();
 		PeticionAccesoResponse response = new PeticionAccesoResponse();
 		try {
+			boolean leida = false;
+			
 			Remesa remesa = findByIdentificador(identificador);
 			
 			request.setIdentificador(identificador);
@@ -314,15 +210,21 @@ public class RemesaBean extends BaseEjbJPA<Remesa, Long> implements RemesaLocal 
 			request.setNifReceptor(remesa.getTitularNif());
 			request.setNombreReceptor(remesa.getTitularNombre());
 			
-			response = pluginHelper.peticionAcceso(request, entidad);
+			try {
+				response = pluginHelper.peticionAcceso(request, entidad);
+			} catch (Exception e) {
+				if (e.getMessage() != null && (e.getMessage().contains("4210") || e.getMessage().contains("4209"))) {
+					leida = true;
+				}
+			}
 			
-			if (response != null && RegwebConstantes.LEMA_RESPUESTA_OK.equals(response.getCodigoRespuesta())) {
+			if ((response != null && RegwebConstantes.LEMA_RESPUESTA_OK.equals(response.getCodigoRespuesta())) || leida) {
 				actualizarEstadoNotifica(
 						identificador, 
 						RegwebConstantes.REMESA_ESTADO_REG_LEIDA, 
 						RegwebConstantes.REMESA_ENV_ESTADO_ACEPTADA);
 				
-				if (response.getDocumento() != null) {
+				if (response != null && response.getDocumento() != null) {
 					DetalleDocumento detalle = response.getDocumento();
 					
 					// Guardar datos acceso obtención certificación remesa
@@ -341,11 +243,13 @@ public class RemesaBean extends BaseEjbJPA<Remesa, Long> implements RemesaLocal 
 					}
 				}
 				
-				// Guardar anexos remesa
-				try {
-					consultaGuardaAnexos(entidad, response.getAnexos(), remesa);
-				} catch (Exception e) {
-					log.error("Ha habido un error guardando los anexos de la notificación con identificador: " + identificador);
+				if (response != null) {
+					// Guardar anexos remesa
+					try {
+						consultaGuardaAnexos(entidad, response.getAnexos(), remesa);
+					} catch (Exception e) {
+						log.error("Ha habido un error guardando los anexos de la notificación con identificador: " + identificador);
+					}
 				}
 				
 				// Guardar acuse recibo remesa

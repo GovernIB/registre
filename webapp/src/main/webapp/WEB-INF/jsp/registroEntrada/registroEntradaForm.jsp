@@ -312,7 +312,7 @@
                    </div>
                </div>
                
-               <c:if test="${esRemesa}">
+               <c:if test="${esRemesa && fn:length(registroEntrada.registroDetalle.anexos) > 0}">
 	               <!-- Anexos -->
 	               <div class="col-xs-12">
 	               		<div class="panel panel-info">

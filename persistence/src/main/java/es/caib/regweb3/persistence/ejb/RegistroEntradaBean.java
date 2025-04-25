@@ -94,7 +94,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
         Hibernate.initialize(registroEntrada.getRegistroDetalle().getAnexos());
         Hibernate.initialize(registroEntrada.getRegistroDetalle().getInteresados());
-
+        
         return registroEntrada;
     }
     

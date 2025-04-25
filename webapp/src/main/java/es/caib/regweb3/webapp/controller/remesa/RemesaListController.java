@@ -501,7 +501,15 @@ public class RemesaListController extends AbstractRegistroCommonFormController {
         List<Interesado> interesados = new ArrayList<Interesado>();
         Interesado interesado = new Interesado();
         
-        if (remesa.getEntidadCodigo() != null) {
+        log.debug("Cargando interesados remesa con identificador {" + remesa.getIdentificador() + "}");
+        log.debug("[" + remesa.getIdentificador() + "] " + "- Entidad código: " + remesa.getEntidadCodigo());
+        log.debug("[" + remesa.getIdentificador() + "] " + "- Emisor NIF: " + remesa.getOrganoEmisorNif());
+        log.debug("[" + remesa.getIdentificador() + "] " + "- Emisor código: " + remesa.getOrganoEmisorCodigo());
+        log.debug("[" + remesa.getIdentificador() + "] " + "- Emisor nombre: " + remesa.getOrganoEmisorNombre());
+        log.debug("[" + remesa.getIdentificador() + "] " + "- Titular NIF: " + remesa.getTitularNif());
+        log.debug("[" + remesa.getIdentificador() + "] " + "- Titular Nombre: " + remesa.getTitularNombre());
+        
+        if (remesa.getOrganoEmisorCodigo() != null) {
         	// Administració
             interesado.setTipo(1L); // 1- Adm 2- P.Fisica 3- Juridica
             interesado.setCodigoDir3(remesa.getOrganoEmisorCodigo());
@@ -518,7 +526,6 @@ public class RemesaListController extends AbstractRegistroCommonFormController {
         if (remesa.getOrganoEmisorNif() != null) {
             interesado.setTipoDocumentoIdentificacion(2L); // 1-NIF 2-CIF 3-CODIGO ORIGEN
             interesado.setDocumento(remesa.getOrganoEmisorNif());
-            interesado.setRazonSocial(remesa.getOrganoEmisorNombre());
         }
         
         interesados.add(interesado);

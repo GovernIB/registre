@@ -115,3 +115,7 @@
         <c:param name="decodificacionTipoAnotacion" value="${registro.registroDetalle.decodificacionTipoAnotacion}"/>
     </c:import>
 </dd>
+<c:if test="${not empty registro.identificadorRemesa}">
+<hr class="${divider}">
+<dt><i class="fa fa-file-o"></i> <spring:message code="registroEntrada.identificador"/>: </dt> <dd> ${registro.identificadorRemesa}</dd>
+</c:if>

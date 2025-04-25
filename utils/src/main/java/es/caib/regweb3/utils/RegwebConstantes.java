@@ -21,7 +21,7 @@ public interface RegwebConstantes {
     /*-------------------GENERAL-------------------*/
     String CODIGO_APLICACION = "RWE3";
     String APLICACION_NOMBRE = "REGWEB3";
-    String APLICACION_EMAIL = "no_responder@regweb3.com";
+    String APLICACION_EMAIL = "no-reply@portsdebalears.com";
     int REGISTROS_PANTALLA_INICIO = 5;
 
     /*-------------- VARIABLES DE SESION --------------*/

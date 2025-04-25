@@ -14,7 +14,6 @@ import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 import es.caib.regweb3.webapp.form.AnularForm;
 import es.caib.regweb3.webapp.form.EnvioSirForm;
-import es.caib.regweb3.webapp.form.ReenviarForm;
 import es.caib.regweb3.webapp.form.RegistrarForm;
 import es.caib.regweb3.webapp.form.RegistroEntradaBusqueda;
 import es.caib.regweb3.webapp.utils.AnexoUtils;
@@ -76,6 +75,8 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
     @EJB(mappedName = "regweb3/PluginEJB/local")
     private PluginLocal pluginEjb;
 
+    @EJB(mappedName = "regweb3/RemesaEJB/local")
+    public RemesaLocal remesaEjb;
 
     /**
      * Listado de todos los Registros de Entrada
@@ -229,6 +230,10 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
 
         RegistroEntrada registro = registroEntradaEjb.findByIdCompleto(idRegistro);
 
+        Remesa remesa = remesaEjb.findByRegistroEntrada(idRegistro);
+        if (remesa != null)
+        	registro.setIdentificadorRemesa(remesa.getIdentificador());
+        
         Entidad entidadActiva = getEntidadActiva(request);
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
         Oficina oficinaActiva = getOficinaActiva(request);

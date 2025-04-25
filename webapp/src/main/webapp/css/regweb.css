@@ -75,6 +75,11 @@ textarea{
 	min-width:960px !important;
 	padding-top: 130px;
 }
+@media (min-width: 1600px) {
+  .container {
+    width: 1550px;
+  }
+}
 .govern-logo {
 	margin: 10px 10px 0px 20px;
 	padding-right: 20px;
@@ -362,7 +367,7 @@ textarea{
 	padding: 3px;
 }
 .table>tbody>tr>td {
-    padding: 2px 2px 2px 10px;
+    padding: 2px 5px 2px 5px;
     height: 20px;
 	vertical-align: middle;
 	font-size: 13px;
@@ -405,6 +410,7 @@ textarea{
     text-align: right;
     text-overflow: ellipsis;
     white-space: nowrap;
+    margin-right: 3px;
 }
 .detalle_registro dd {
     margin-bottom:3px;
