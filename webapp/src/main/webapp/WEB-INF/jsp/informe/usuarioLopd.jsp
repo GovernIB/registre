@@ -74,7 +74,7 @@
                                         <label for="libro" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.libro.usuarioLopd"/>" data-toggle="popover"><spring:message code="libro.libro"/></label>
                                     </div>
                                     <div class="col-xs-8">
-                                        <form:select path="libro" items="${libros}" itemValue="id" itemLabel="libroOrganismo" cssClass="chosen-select"/>
+                                        <form:select path="libro" items="${libros}" itemValue="id" itemLabel="nombre" cssClass="chosen-select"/>
                                     </div>
                                 </div>
                                 <div class="form-group col-xs-6 espaiLinies senseMargeLat">

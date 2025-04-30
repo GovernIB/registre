@@ -1135,7 +1135,7 @@ public class InformeController extends AbstractRegistroCommonFormController {
             ArrayList<String> valorRegistro = new ArrayList<String>();
             valorRegistro.add(formatYear.format(registro.getFecha()) + " / " + registro.getNumeroRegistro().toString());
             valorRegistro.add(formatDateLong.format(registro.getFecha()));
-            valorRegistro.add(registro.getLibro().getNombreCompleto());
+            valorRegistro.add(registro.getLibro().getNombre());
             valorRegistro.add(registro.getUsuario().getUsuario().getIdentificador());
             valorRegistro.add(registro.getOficina().getDenominacion());
 
@@ -1209,7 +1209,7 @@ public class InformeController extends AbstractRegistroCommonFormController {
             ArrayList<String> valorRegistro = new ArrayList<String>();
             valorRegistro.add(registro.getNumeroRegistro().toString());
             valorRegistro.add(formatDateLong.format(registro.getFecha()));
-            valorRegistro.add(registro.getLibro().getNombreCompleto());
+            valorRegistro.add(registro.getLibro().getNombre());
             valorRegistro.add(registro.getOficina().getDenominacion());
 
             mav.addObject("valorRegistro", valorRegistro);
