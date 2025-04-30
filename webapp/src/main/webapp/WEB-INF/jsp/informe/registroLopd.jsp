@@ -76,7 +76,7 @@
                                         <label for="libro" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.libro.registroLopd"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="libro.libro"/></label>
                                     </div>
                                     <div class="col-xs-8" id="libro">
-                                        <form:select path="libro" items="${libros}" itemValue="id" itemLabel="libroOrganismo" cssClass="chosen-select"/>
+                                        <form:select path="libro" items="${libros}" itemValue="id" itemLabel="nombre" cssClass="chosen-select"/>
                                         <span class="errors"></span>
                                     </div>
                                 </div>
@@ -174,7 +174,7 @@
                                                             <tr>
                                                                 <td>${entrada.numeroRegistro}</td>
                                                                 <td><fmt:formatDate value="${entrada.fecha}" pattern="yyyy"/></td>
-                                                                <td>${entrada.libro.nombreCompleto}</td>
+                                                                <td>${entrada.libro.nombre}</td>
                                                                 <td><fmt:formatDate value="${entrada.fecha}" pattern="dd/MM/yyyy"/></td>
                                                                 <td>${entrada.oficina.denominacion}</td>
                                                                 <td><a class="btn btn-info btn-sm" href="<c:url value="/informe/${entrada.id}/${idTipoRegistro}/informeRegistroLopd"/>" title="<spring:message code="regweb.ver"/>"><span class="fa fa-check"></span></a></td>
@@ -244,7 +244,7 @@
                                                             <tr>
                                                                 <td>${salida.numeroRegistro}</td>
                                                                 <td><fmt:formatDate value="${salida.fecha}" pattern="yyyy"/></td>
-                                                                <td>${salida.libro.nombreCompleto}</td>
+                                                                <td>${salida.libro.nombre}</td>
                                                                 <td><fmt:formatDate value="${salida.fecha}" pattern="dd/MM/yyyy"/></td>
                                                                 <td>${salida.oficina.denominacion}</td>
                                                                 <td><a class="btn btn-danger btn-sm" href="<c:url value="/informe/${salida.id}/${idTipoRegistro}/informeRegistroLopd"/>" title="<spring:message code="regweb.seleccionar"/>"><span class="fa fa-check"></span></a></td>

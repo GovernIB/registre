@@ -97,7 +97,6 @@ public class RegWeb3BackConfig extends WebMvcConfigurerAdapter {
         registry.addInterceptor(registroSalidaInterceptor()).addPathPatterns("/registroSalida/**");
         registry.addInterceptor(oficioRemisionInterceptor()).addPathPatterns("/oficioRemision/**");
         registry.addInterceptor(personaInterceptor()).addPathPatterns("/persona/**");
-        registry.addInterceptor(libroInterceptor()).addPathPatterns("/libro/**");
         registry.addInterceptor(usuarioInterceptor()).addPathPatterns("/usuario/**");
         registry.addInterceptor(usuarioEntidadInterceptor()).addPathPatterns("/usuarioEntidad/**");
         registry.addInterceptor(entidadInterceptor()).addPathPatterns("/entidad/**");
@@ -191,9 +190,6 @@ public class RegWeb3BackConfig extends WebMvcConfigurerAdapter {
 
     @Bean
     PersonaInterceptor personaInterceptor() {return new PersonaInterceptor();}
-
-    @Bean
-    LibroInterceptor libroInterceptor() {return new LibroInterceptor();}
 
     @Bean
     UsuarioInterceptor usuarioInterceptor() {return new UsuarioInterceptor();}

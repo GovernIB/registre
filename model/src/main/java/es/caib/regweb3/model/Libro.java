@@ -169,11 +169,6 @@ public class Libro implements Serializable {
     }
 
     @Transient
-    public String getLibroOrganismo() {
-        return getNombre() + " - " + getOrganismo().getDenominacion();
-    }
-
-    @Transient
     public String getNombreCompleto() {
         if (getOrganismo() != null) {
             return getOrganismo().getDenominacion() + " - " + getNombre();

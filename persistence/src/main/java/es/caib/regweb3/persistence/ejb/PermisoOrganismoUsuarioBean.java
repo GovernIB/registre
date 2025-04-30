@@ -7,7 +7,6 @@ import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.hibernate.Hibernate;
-import org.jboss.ejb3.annotation.TransactionTimeout;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -691,38 +690,6 @@ public class PermisoOrganismoUsuarioBean extends BaseEjbJPA<PermisoOrganismoUsua
         }
 
         return total;
-    }
-
-    @Override
-    @TransactionTimeout(value = 1800)  // 30 minutos
-    public Integer migrarPermisos(Libro libro) throws I18NException {
-
-        // Activamos que el organismo pueda tener usuarios
-        Organismo organismo = libro.getOrganismo();
-        organismo.setPermiteUsuarios(true);
-        organismoEjb.merge(organismo);
-
-        // Obtenemos los permisos del libro
-        List<PermisoLibroUsuario> permisos = permisoLibroUsuarioEjb.findByLibro(libro.getId());
-
-        for (PermisoLibroUsuario plu : permisos) {
-
-            PermisoOrganismoUsuario pou = new PermisoOrganismoUsuario();
-            pou.setOrganismo(organismo);
-            pou.setPermiso(plu.getPermiso());
-            pou.setUsuario(plu.getUsuario());
-            pou.setActivo(plu.getActivo());
-
-            persist(pou);
-
-        }
-
-        // Inactivamos el libro
-        libro.setActivo(false);
-        libroEjb.merge(libro);
-
-        return permisos.size();
-
     }
 
     @Override

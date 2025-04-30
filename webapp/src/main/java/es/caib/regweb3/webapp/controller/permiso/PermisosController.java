@@ -238,25 +238,6 @@ public class PermisosController extends BaseController {
         return "redirect:/usuarioEntidad/list";
     }
 
-    /**
-     * Migrar permisos existentes
-     */
-    @RequestMapping(value = "/migrarPermisos/{idLibro}", method = RequestMethod.GET)
-    public String migrarPermisos(@PathVariable Long idLibro, HttpServletRequest request) throws Exception {
-
-        Libro libro = libroEjb.findById(idLibro);
-
-        if(libro != null && libro.getActivo()){
-
-            Integer permisos = permisoOrganismoUsuarioEjb.migrarPermisos(libro);
-
-            Mensaje.saveMessageInfo(request,"Se han creado " + permisos + " permisos");
-        }
-
-
-        return "redirect:/libro/list";
-    }
-
 
     @InitBinder({"permisoOrganismoUsuarioForm"})
     public void initBinder2(WebDataBinder binder) {

@@ -1,6 +1,9 @@
 package es.caib.regweb3.persistence.ejb;
 
-import es.caib.regweb3.model.*;
+import es.caib.regweb3.model.Oficina;
+import es.caib.regweb3.model.Organismo;
+import es.caib.regweb3.model.PermisoOrganismoUsuario;
+import es.caib.regweb3.model.UsuarioEntidad;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 
@@ -360,13 +363,6 @@ public interface PermisoOrganismoUsuarioLocal extends BaseEjb<PermisoOrganismoUs
      */
     Integer eliminarByEntidad(Long idEntidad) throws I18NException;
 
-    /**
-     * Migra los Permisos existentes en la nueva tabla PermiloOrganismoUsuario
-     *
-     * @param libro
-     * @return
-     */
-    Integer migrarPermisos(Libro libro) throws I18NException;
 
     /**
      *
