@@ -147,24 +147,24 @@
 
     <div id="detalleAnexoSir${anexoSir.documento.id}" class="modal fade detalleAnexo">
 
-        <div class="modal-dialog modal-lg" id="formularioAnexo">
+        <div class="modal-dialog modal-lg" id="formularioAnexo${anexoSir.documento.id}">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
                     <h3>${anexoSir.documento.nombreFichero}</h3>
                 </div>
 
-                <ul class="nav nav-tabs" id="tabAnexoSir">
-                    <li class="active"><a href="#tabDetalleAnexoSir" data-toggle="tab"><h4 id="detalleAnexoSirTitulo"><spring:message code="anexo.detalle"/></h4></a></li>
+                <ul class="nav nav-tabs" id="tabAnexoSir${anexoSir.documento.id}">
+                    <li class="active"><a href="#tabDetalleAnexoSir${anexoSir.documento.id}" data-toggle="tab"><h4 id="detalleAnexoSirTitulo${anexoSir.documento.id}"><spring:message code="anexo.detalle"/></h4></a></li>
 
-                    <li><a href="#tabMetadatosSir" data-toggle="tab"><h4><spring:message code="regweb.metadades"/></h4></a></li>
+                    <li><a href="#tabMetadatosSir${anexoSir.documento.id}" data-toggle="tab"><h4><spring:message code="regweb.metadades"/></h4></a></li>
 
                 </ul>
 
 
 
                 <div class="tab-content" id='content'>
-                    <div class="tab-pane active" id="tabDetalleAnexoSir">
+                    <div class="tab-pane active" id="tabDetalleAnexoSir${anexoSir.documento.id}">
                         <div class="modal-body">
                             <div class="form-group col-xs-6">
                                 <div class="col-xs-5 pull-left etiqueta_regweb control-label">
@@ -219,7 +219,7 @@
                        <%-- <div class="clearfix"></div>--%>
                         </div>
                     </div>
-                    <div class="tab-pane" id="tabMetadatosSir">
+                    <div class="tab-pane" id="tabMetadatosSir${anexoSir.documento.id}">
                         <div class="modal-body">
                             <!-- Metadatos se monta dinamicamente por javascript-->
                             <c:forEach items="${anexoSir.documento.metadatosAnexos}" var="metadatoSir">
