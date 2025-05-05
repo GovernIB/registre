@@ -330,8 +330,12 @@ public class LibSirUtils {
         //URL repositorio Referencia Única
         anexoBean.setUrlRepositorio(anexo.getEndpointRFU());
 
+
+
         //METADATOS SICRES4
+        Set<OtrosMetadatos> totalMetadatosAnexGeneral = new HashSet<>(); // Guardamos todos los metadatos generales
         if (anexo.getMetadatosAnexos() != null) { //Si tiene metadatos
+
             Set<MetadatoAnexo> metadatoAnexoGeneral = anexo.getMetadatosAnexos().stream().filter(metadato -> metadato.getTipo().equals(METADATO_GENERAL)).collect(Collectors.toSet());
             Set<MetadatoAnexo> metadatoAnexoParticular = anexo.getMetadatosAnexos().stream().filter(metadato -> metadato.getTipo().equals(METADATO_PARTICULAR)).collect(Collectors.toSet());
             Set<OtrosMetadatos> otrosMetadatosAnexGeneral = metadatoAnexoGeneral.stream()
@@ -350,7 +354,7 @@ public class LibSirUtils {
                         return otroMetadato;
                     }).collect(Collectors.toSet());
 
-            anexoBean.setOtrosMetadatosGenerales(otrosMetadatosAnexGeneral);
+            totalMetadatosAnexGeneral.addAll(otrosMetadatosAnexGeneral);
             anexoBean.setOtrosMetadatosParticulares(otrosMetadatosAnexParticular);
         }
 
@@ -369,7 +373,9 @@ public class LibSirUtils {
         otrosMetadatos.setValor("SHA256");
         metadatoAnexoGeneral.add(otrosMetadatos);
 
-        anexoBean.setOtrosMetadatosGenerales(metadatoAnexoGeneral);
+
+        totalMetadatosAnexGeneral.addAll(metadatoAnexoGeneral);
+        anexoBean.setOtrosMetadatosGenerales(totalMetadatosAnexGeneral);
 
         return anexoBean;
     }
@@ -1112,8 +1118,10 @@ log.info("REFERENCIA UNICA: XXXXXXXXXXX" + asientoBean.isReferenciaUnica());
                 if (firmaBean.getContenidoFirma() != null && firmaBean.getContenidoFirma().getFirmaConCertificadoBean() != null) {
                     anexo.setFirmaBase64(firmaBean.getContenidoFirma().getFirmaConCertificadoBean() != null ? firmaBean.getContenidoFirma().getFirmaConCertificadoBean().getFirmaBase64() : null);
                     //Incidencia 1900484
-                    anexo.setReferenciaFirma(firmaBean.getContenidoFirma().getFirmaConCertificadoBean()!=null?(String)firmaBean.getContenidoFirma().getFirmaConCertificadoBean().getReferenciaFirma():"");
+                    anexo.setReferenciaFirma(firmaBean.getContenidoFirma().getFirmaConCertificadoBean() != null ? (String) firmaBean.getContenidoFirma().getFirmaConCertificadoBean().getReferenciaFirma() : "");
                 }
+
+                //anexo.getFirmasSir().add(convertirAFirmaSir(firmaBean));
             }
         }
 
@@ -1139,6 +1147,19 @@ log.info("REFERENCIA UNICA: XXXXXXXXXXX" + asientoBean.isReferenciaUnica());
 
         anexo.setMetadatosAnexos(metadatosAnexos);
         return anexo;
+    }
+
+
+
+    private static FirmaSir convertirAFirmaSir(FirmaBean firmaBean) {
+        FirmaSir firmaSir = new FirmaSir();
+        firmaSir.setTipoFirma(firmaBean.getTipoFirma().value());
+        firmaSir.setValorCSV(firmaBean.getContenidoFirma().getCsv().getValorCSV());
+        firmaSir.setRegulacionGeneracionCSV(firmaBean.getContenidoFirma().getCsv().getRegulacionGeneracionCSV());
+        firmaSir.setFirmaBase64(firmaBean.getContenidoFirma().getFirmaConCertificadoBean().getFirmaBase64());
+        firmaSir.setReferenciaFirma((String)firmaBean.getContenidoFirma().getFirmaConCertificadoBean().getReferenciaFirma());
+        return firmaSir;
+
     }
 
 
