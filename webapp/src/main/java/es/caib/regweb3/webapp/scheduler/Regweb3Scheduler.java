@@ -316,7 +316,13 @@ public class Regweb3Scheduler implements SchedulingConfigurer {
                 new Trigger() {
                     @Override
                     public Date nextExecutionTime(TriggerContext triggerContext) {
-						Long periodo = schedulerEjb.getCronTareaPeriodoActualizacionEnviosSir();
+                    	Long periodo = 600000L;
+                    	try {
+                    		periodo = schedulerEjb.getCronTareaPeriodoActualizacionEnviosSir();
+                    	} catch (Exception e) {
+                    		log.warn("Hi ha hagut un error recuperant el periode getCronTareaPeriodoActualizacionEnviosSir. Agafam valor per defecte 600000L.");
+                    	}
+                    	
 						if (periodo != null) {
 							PeriodicTrigger trigger = new PeriodicTrigger(periodo, TimeUnit.MILLISECONDS);
 							trigger.setFixedRate(true);
@@ -352,7 +358,12 @@ public class Regweb3Scheduler implements SchedulingConfigurer {
                 new Trigger() {
                     @Override
                     public Date nextExecutionTime(TriggerContext triggerContext) {
-						Long periodo = schedulerEjb.getCronTareaPeriodoActualizacionEnviosRecibidosSir();
+                    	Long periodo = 600000L;
+                    	try {
+                    		periodo = schedulerEjb.getCronTareaPeriodoActualizacionEnviosRecibidosSir();
+                    	} catch (Exception e) {
+                    		log.warn("Hi ha hagut un error recuperant el periode getCronTareaPeriodoActualizacionEnviosRecibidosSir. Agafam valor per defecte 600000L.");
+                    	}
 						if (periodo != null) {
 							PeriodicTrigger trigger = new PeriodicTrigger(periodo, TimeUnit.MILLISECONDS);
 							trigger.setFixedRate(true);
@@ -388,7 +399,12 @@ public class Regweb3Scheduler implements SchedulingConfigurer {
                 new Trigger() {
                     @Override
                     public Date nextExecutionTime(TriggerContext triggerContext) {
-						Long periodo = schedulerEjb.getCronTareaPeriodoActualizacionIdEnviosRecibidosSir();
+                    	Long periodo = 900000L;
+                    	try {
+                    		periodo = schedulerEjb.getCronTareaPeriodoActualizacionIdEnviosRecibidosSir();
+                    	} catch (Exception e) {
+                    		log.warn("Hi ha hagut un error recuperant el periode getCronTareaPeriodoActualizacionEnviosRecibidosSir. Agafam valor per defecte 900000L.");
+                    	}
 						if (periodo != null) {
 							PeriodicTrigger trigger = new PeriodicTrigger(periodo, TimeUnit.MILLISECONDS);
 							trigger.setFixedRate(true);
@@ -434,7 +450,12 @@ public class Regweb3Scheduler implements SchedulingConfigurer {
                 new Trigger() {
                     @Override
                     public Date nextExecutionTime(TriggerContext triggerContext) {
-						Long periodo = schedulerEjb.getCronTareaPeriodoActualizacionAnexosPendientesVerificacionFirma();
+                    	Long periodo = 300000L;
+                    	try {
+                    		periodo = schedulerEjb.getCronTareaPeriodoActualizacionAnexosPendientesVerificacionFirma();
+                    	} catch (Exception e) {
+                    		log.warn("Hi ha hagut un error recuperant el periode getCronTareaPeriodoActualizacionAnexosPendientesVerificacionFirma. Agafam valor per defecte 300000L.");
+                    	}
 						if (periodo != null) {
 							PeriodicTrigger trigger = new PeriodicTrigger(periodo, TimeUnit.MILLISECONDS);
 							trigger.setFixedRate(true);
@@ -471,7 +492,12 @@ public class Regweb3Scheduler implements SchedulingConfigurer {
                 new Trigger() {
                     @Override
                     public Date nextExecutionTime(TriggerContext triggerContext) {
-						Long periodo = schedulerEjb.getCronTareaPeriodoConsultaNotificacionesDehu();
+                    	Long periodo = 1800000L;
+                    	try {
+                    		periodo = schedulerEjb.getCronTareaPeriodoConsultaNotificacionesDehu();
+                    	} catch (Exception e) {
+                    		log.warn("Hi ha hagut un error recuperant el periode getCronTareaPeriodoActualizacionAnexosPendientesVerificacionFirma. Agafam valor per defecte 1800000L.");
+                    	}
 						if (periodo != null) {
 							PeriodicTrigger trigger = new PeriodicTrigger(periodo, TimeUnit.MILLISECONDS);
 							trigger.setFixedRate(true);
@@ -508,14 +534,19 @@ public class Regweb3Scheduler implements SchedulingConfigurer {
                 new Trigger() {
                     @Override
                     public Date nextExecutionTime(TriggerContext triggerContext) {
-                    	String horaEjecucionStr = schedulerEjb.getHoraEnvioCorreoNotificacionesDehu();
+                    	String horaEjecucionStr = "14:00";
+                    	try {
+                    		horaEjecucionStr = schedulerEjb.getHoraEnvioCorreoNotificacionesDehu();
+                    	} catch (Exception e) {
+                    		log.warn("Hi ha hagut un error recuperant el periode getHoraEnvioCorreoNotificacionesDehu. Agafam valor per defecte 14:00.");
+                    	}
                         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
                         Calendar calendar = Calendar.getInstance();
                         try {
                         	if (horaEjecucionStr != null)
                         		calendar.setTime(sdf.parse(horaEjecucionStr));
                         	else
-                        		calendar.setTime(sdf.parse("12:00"));
+                        		calendar.setTime(sdf.parse("14:00"));
 						} catch (ParseException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
