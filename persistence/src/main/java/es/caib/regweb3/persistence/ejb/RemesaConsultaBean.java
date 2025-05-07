@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 
@@ -16,8 +15,6 @@ import javax.annotation.Resource;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.interceptor.Interceptors;
-import javax.mail.Message;
-import javax.mail.internet.InternetAddress;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
@@ -35,12 +32,9 @@ import org.springframework.util.DefaultPropertiesPersister;
 
 import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.model.Remesa;
-import es.caib.regweb3.model.Usuario;
-import es.caib.regweb3.model.UsuarioEntidad;
-import es.caib.regweb3.persistence.utils.I18NLogicUtils;
+import es.caib.regweb3.model.Remesa.TipoRemesa;
 import es.caib.regweb3.persistence.utils.LemaPluginHelper;
 import es.caib.regweb3.persistence.utils.LemaUtils;
-import es.caib.regweb3.persistence.utils.MailUtils;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.utils.RegwebConstantes;
@@ -57,15 +51,15 @@ import es.caib.regweb3.utils.StringUtils;
 public class RemesaConsultaBean extends BaseEjbJPA<Remesa, Long> implements RemesaConsultaLocal {
 
 	protected final Logger log = Logger.getLogger(getClass());
-
+	
+	@PersistenceContext(unitName = "regweb3")
+	private EntityManager em;
+	
 	@EJB
 	private RemesaLocal remesaEjb;
 
 	@Resource
 	private javax.ejb.SessionContext ejbContext;
-
-	@PersistenceContext(unitName = "regweb3")
-	private EntityManager em;
 
 	@Autowired
 	private LemaPluginHelper pluginHelper;
@@ -86,14 +80,19 @@ public class RemesaConsultaBean extends BaseEjbJPA<Remesa, Long> implements Reme
 	@SuppressWarnings(value = "unchecked")
 	public List<Remesa> getAll() throws Exception {
 
-		return em.createQuery("Select remesa from Remesa as remesa order by remesa.id").getResultList();
+		Query q = em.createQuery("Select remesa from Remesa as remesa where remesa.tipoRemesa = :tipoRemesa order by remesa.id");
+		
+		q.setParameter("tipoRemesa", TipoRemesa.RECIBIDA);
+		
+		return q.getResultList();
 	}
 
 	@Override
 	public Long getTotal() throws Exception {
 
-		Query q = em.createQuery("Select count(remesa.id) from Remesa as remesa");
+		Query q = em.createQuery("Select count(remesa.id) from Remesa as remesa where remesa.tipoRemesa = :tipoRemesa ");
 		q.setHint("org.hibernate.readOnly", true);
+		q.setParameter("tipoRemesa", TipoRemesa.RECIBIDA);
 
 		return (Long) q.getSingleResult();
 	}
@@ -102,9 +101,10 @@ public class RemesaConsultaBean extends BaseEjbJPA<Remesa, Long> implements Reme
 	@SuppressWarnings(value = "unchecked")
 	public List<Remesa> getPagination(int inicio) throws Exception {
 
-		Query q = em.createQuery("Select remesa from Remesa as remesa order by remesa.id");
+		Query q = em.createQuery("Select remesa from Remesa as remesa where remesa.tipoRemesa = :tipoRemesa order by remesa.id");
 		q.setFirstResult(inicio);
 		q.setMaxResults(RESULTADOS_PAGINACION);
+		q.setParameter("tipoRemesa", TipoRemesa.RECIBIDA);
 		q.setHint("org.hibernate.readOnly", true);
 
 		return q.getResultList();
@@ -115,8 +115,9 @@ public class RemesaConsultaBean extends BaseEjbJPA<Remesa, Long> implements Reme
 	public List<Remesa> getByEntidad(Long idEntidad) throws Exception {
 
 		Query q = em.createQuery(
-				"Select remesa from Remesa as remesa where remesa.destinatario.entidad.id = :idEntidad order by remesa.id");
+				"Select remesa from Remesa as remesa where remesa.destinatario.entidad.id = :idEntidad and remesa.tipoRemesa = :tipoRemesa order by remesa.id");
 		q.setParameter("idEntidad", idEntidad);
+		q.setParameter("tipoRemesa", TipoRemesa.RECIBIDA);
 		q.setHint("org.hibernate.readOnly", true);
 
 		return q.getResultList();
@@ -125,11 +126,12 @@ public class RemesaConsultaBean extends BaseEjbJPA<Remesa, Long> implements Reme
 	
 	@Override
 	@SuppressWarnings(value = "unchecked")
-	public List<Remesa> getByEntidadAndEstado(Long idEntidad, String estado) throws Exception {
+	public List<Remesa> findByEntidadAndEstado(Long idEntidad, String estado) throws Exception {
 
 		Query q = em.createQuery(
-				"Select remesa from Remesa as remesa where remesa.entidad.id = :idEntidad and remesa.estado = :estado order by remesa.id");
+				"Select remesa from Remesa as remesa where remesa.entidad.id = :idEntidad and remesa.estado = :estado and remesa.tipoRemesa = :tipoRemesa order by remesa.id");
 		q.setParameter("idEntidad", idEntidad);
+		q.setParameter("tipoRemesa", TipoRemesa.RECIBIDA);
 		q.setParameter("estado", estado);
 		q.setHint("org.hibernate.readOnly", true);
 
@@ -186,6 +188,9 @@ public class RemesaConsultaBean extends BaseEjbJPA<Remesa, Long> implements Reme
 			where.add(" remesa.fechaPuestaDisposicion <= :fechaPuestaDisposicionHasta ");
 			parametros.put("fechaPuestaDisposicionHasta", fechaPuestaDisposicionHasta);
 		}
+		
+		where.add(" remesa.tipoRemesa = :tipoRemesa  ");
+		parametros.put("tipoRemesa", TipoRemesa.RECIBIDA);
 
 		// Añadimos los parámetros a la query
 		if (parametros.size() != 0) {
@@ -238,10 +243,11 @@ public class RemesaConsultaBean extends BaseEjbJPA<Remesa, Long> implements Reme
 	@Override
 	public Long remesasPendientes(Long idUsuarioEntidad) throws Exception {
 
-		Query q = em.createQuery("Select count(n.id) from Remesa as n where n.destinatario.id = :idUsuarioEntidad "
+		Query q = em.createQuery("Select count(n.id) from Remesa as n where n.destinatario.id = :idUsuarioEntidad and remesa.tipoRemesa = :tipoRemesa  "
 				+ "and n.estado = :nueva");
 
 		q.setParameter("idUsuarioEntidad", idUsuarioEntidad);
+		q.setParameter("tipoRemesa", TipoRemesa.RECIBIDA);
 		q.setParameter("nueva", RegwebConstantes.NOTIFICACION_ESTADO_NUEVA);
 		q.setHint("org.hibernate.readOnly", true);
 
@@ -267,11 +273,11 @@ public class RemesaConsultaBean extends BaseEjbJPA<Remesa, Long> implements Reme
 				
 				for (Envio envio : envios) {
 
-					boolean existeEnvio = remesaEjb.findByIdentificador(envio.getIdentificador()) != null;
+					boolean existeEnvio = getByIdentificador(envio.getIdentificador()) != null;
 
 					if (!existeEnvio) {
 						try {
-							remesaEjb.guardaNotificacion(envio, entidad);
+							remesaEjb.guardarNotificacionRecibida(envio, entidad);
 						} catch (Exception e) {
 							notificacionesError++;
 						}
@@ -298,7 +304,65 @@ public class RemesaConsultaBean extends BaseEjbJPA<Remesa, Long> implements Reme
 		}
 
 	}
+	
+	// Estaba en remesabean
+	@SuppressWarnings("unchecked")
+	@Override
+	public Remesa getByIdentificador(String identificador) {
+		Query q = em.createQuery("Select remesa from Remesa as remesa where remesa.identificador = :identificador");
 
+        q.setParameter("identificador", identificador);
+        q.setHint("org.hibernate.readOnly", true);
+
+        List<Remesa> remesa = q.getResultList();
+
+        if (remesa.size() > 0) {
+            return remesa.get(0);
+        } else {
+            return null;
+        }
+	}
+
+	@Override
+	public Remesa getByIdentificadorAndReferencia(String identificadorNotib, String referencia) {
+		Query q = em.createQuery("Select remesa from Remesa as remesa where remesa.identificadorIntern = :identificadorIntern and remesa.referencia = :referencia");
+
+        q.setParameter("identificadorIntern", identificadorNotib);
+        q.setParameter("referencia", referencia);
+        q.setHint("org.hibernate.readOnly", true);
+
+        List<Remesa> remesa = q.getResultList();
+
+        if (remesa.size() > 0) {
+            return remesa.get(0);
+        } else {
+            return null;
+        }
+	}   
+
+	// Estaba en remesabean
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Remesa> findByRegistroEntrada(Long registroId) {
+		Query q = em.createQuery("Select remesa from Remesa as remesa where remesa.registro.id = :registroId");
+
+        q.setParameter("registroId", registroId);
+        q.setHint("org.hibernate.readOnly", true);
+
+        List<Remesa> remesas = q.getResultList();
+
+        if (remesas.size() > 0) {
+            return remesas;
+        } else {
+            return null;
+        }
+	}
+
+	@Override
+	public Remesa getById(Long remesaId) throws Exception {
+		return findById(remesaId);
+	}
+	
 	private String getFechaInicioProximaLocalizacion(Long idEntidad) {
 		String path = PropiedadGlobalUtil.getFechaInicioBusquedaNotificacionesPath(idEntidad);
 		Properties properties = new Properties();
@@ -405,6 +469,5 @@ public class RemesaConsultaBean extends BaseEjbJPA<Remesa, Long> implements Reme
     	Long periodoConsultaNotificaciones = PropiedadGlobalUtil.getCronTareaPeriodoConsultaNotificacionesDehu();
     	
     	return String.valueOf(periodoConsultaNotificaciones != null ? (periodoConsultaNotificaciones / (1000 * 60)) : "");
-    }   
-	
+    }
 }

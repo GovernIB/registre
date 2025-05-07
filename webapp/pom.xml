@@ -543,6 +543,13 @@
       <scope>test</scope>
     </dependency>
 
+	<dependency>
+		<groupId>es.caib.notib</groupId>
+		<artifactId>notib-client</artifactId>
+		<version>${notib.version}</version>
+		<scope>provided</scope>
+	</dependency>
+
   </dependencies>
 
 

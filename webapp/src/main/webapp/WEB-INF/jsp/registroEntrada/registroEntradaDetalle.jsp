@@ -114,7 +114,14 @@
 
                         <%--ES UNA DISTRIBUCIÓN--%>
                             <div class="panel-footer center">
-
+                            	<c:set var="idFormulario"/>
+								<c:if test="${fn:length(registro.registroDetalle.anexos) > 0 && isInstanciaGenerica}">
+									<c:forEach items="${registro.registroDetalle.anexos}" var="anexo">
+										<c:if test="${anexo.tipoDocumento == 01}">
+											<c:set var="idFormulario" value="${anexo.id}"/>
+										</c:if>
+									</c:forEach>
+								</c:if>
 		                        <c:choose>
 		                        <c:when test="${(registro.evento == RegwebConstantes.EVENTO_DISTRIBUIR && puedeDistribuir && not empty registro.registroDetalle.interesados && anexosVerificados && !registro.anexosPendientes)}">
 		                        
@@ -126,9 +133,17 @@
 	                                                class="btn btn-success btn-sm btn-block"><spring:message code="regweb.distribuir"/></button>
 	                                    </c:if>
 	
-	                                    <c:if test="${registro.registroDetalle.tipoDocumentacionFisica == RegwebConstantes.TIPO_DOCFISICA_ACOMPANYA_DOC_REQUERIDA || fn:length(registro.registroDetalle.anexos) > 0}">
+	                                    <c:if test="${(registro.registroDetalle.tipoDocumentacionFisica == RegwebConstantes.TIPO_DOCFISICA_ACOMPANYA_DOC_REQUERIDA || fn:length(registro.registroDetalle.anexos) > 0) && ! isInstanciaGenerica}">
 	                                        <button type="button" onclick='confirmDistribuir("<spring:message code="regweb.confirmar.distribuir" htmlEscape="true"/>")'
 	                                                class="btn btn-success btn-sm btn-block"><spring:message code="regweb.distribuir"/></button>
+	                                    </c:if>
+	                                    
+	                                    <c:if test="${(registro.registroDetalle.tipoDocumentacionFisica == RegwebConstantes.TIPO_DOCFISICA_ACOMPANYA_DOC_REQUERIDA || fn:length(registro.registroDetalle.anexos) > 0) && isInstanciaGenerica}">
+	                                   		<a data-toggle="modal" role="button" href="#modalClasificarRegistro"
+	                                   				onclick="mostrarFormulario('<c:url value="/registroEntrada/clasificar/${idFormulario}"/>')"
+		                                      		class="btn btn-success btn-sm btn-block">
+		                                      	<spring:message code="regweb.distribuir"/>
+		                                    </a>
 	                                    </c:if>
 	
 	                                </c:if>
@@ -144,7 +159,7 @@
 		                        </c:when>
 		                        </c:choose>
                             </div>
-
+						<c:import url="../registroEntrada/modalClasificarRegistro.jsp"/>
                         <%--ES UN OFICIO DE REMISIÓN--%>
                         <c:if test="${registro.evento != RegwebConstantes.EVENTO_DISTRIBUIR}">
 
@@ -358,7 +373,9 @@
                         <c:if test="${not empty historicos && registro.estado != RegwebConstantes.REGISTRO_RESERVA}">
                             <li><a href="#modificaciones" data-toggle="tab"><i class="fa fa-pencil-square-o"></i> <spring:message code="regweb.modificaciones"/></a></li>
                         </c:if>
-
+						<c:if test="${not empty notificaciones}">
+                            <li><a href="#notificaciones" data-toggle="tab"><i class="fa fa-send-o"></i> <spring:message code="regweb.notificaciones"/></a></li>
+                        </c:if>
                     </ul>
 
                     <div id="contenido" class="tab-content contentInfo">
@@ -427,6 +444,12 @@
                                 </c:import>
                             </div>
                         </c:if>
+                        
+                        <c:if test="${not empty notificaciones}">
+                            <div class="tab-pane" id="notificaciones">
+                                <c:import url="../registro/notificaciones.jsp"/>
+                            </div>
+                        </c:if>
 
                     </div>
                 </div>
@@ -463,7 +486,8 @@
     traddistribuir['distribuir.noenviado'] = "<spring:message code='registroEntrada.distribuir.error.noEnviado' javaScriptEscape='true' />";
     traddistribuir['distribuir.error.plugin'] = "<spring:message code='registroEntrada.distribuir.error.plugin' javaScriptEscape='true' />";
     traddistribuir['distribuir.distribuyendo'] ="<spring:message code="registroEntrada.distribuyendo" javaScriptEscape="true"/>";
-
+    traddistribuir['classificar.formulario.nombre'] ="<spring:message code="clasificar.modal.formulario.nombre" javaScriptEscape="true"/>";
+    traddistribuir['classificar.formulario.mimetype'] ="<spring:message code="clasificar.modal.formulario.mimetype" javaScriptEscape="true"/>";
 
     var tradestado = new Array();
     tradestado['estado.E'] = "<spring:message code="unidad.estado.E" javaScriptEscape='true' />";

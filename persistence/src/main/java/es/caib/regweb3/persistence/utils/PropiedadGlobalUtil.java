@@ -903,6 +903,17 @@ public class PropiedadGlobalUtil {
     }
     
     /**
+     * Retorna el valor de la propiedad DefaultLanguage de la entidad indicada.
+     * Propiedad: es.caib.regweb3.defaultlanguage
+     * @return
+     */
+    public static String getIdTramitesExcluir() {
+        final String partialPropertyName = "classificar.tramite.telematico.excluir.ids";
+
+        return getString( partialPropertyName);
+    }
+    
+    /**
      * Retorna el valor de la propiedad fecha.inicio.busqueda.path global.
      * Propiedad: es.caib.regweb3.fecha.inicio.busqueda.path
      * @param idEntidad
@@ -981,12 +992,12 @@ public class PropiedadGlobalUtil {
 
 	public static Long getCronTareaPeriodoActualizacionAnexosPendientesVerificacionFirma() {
 		final String partialPropertyName =  "cron.actualizacion.anexos.pendientes.verificacion.firma.periodo";
-    	return partialPropertyName != null ? getLong(partialPropertyName) : 300000L;
+    	return getLong(partialPropertyName) != null ? getLong(partialPropertyName) : 300000L;
 	}
 
 	public static Long getCronTareaRetardoActualizacionAnexosPendientesVerificacionFirma() {
 		final String partialPropertyName =  "cron.actualizacion.anexos.pendientes.verificacion.firma.retardo";
-    	return partialPropertyName != null ? getLong(partialPropertyName) : 300000L;
+    	return getLong(partialPropertyName) != null ? getLong(partialPropertyName) : 300000L;
 	}
 	
     public static Long getCronTareaPeriodoConsultaNotificacionesDehu() {
@@ -1003,4 +1014,30 @@ public class PropiedadGlobalUtil {
 		final String partialPropertyName =  "notificaciones.pendientes.aviso.hora";
     	return getString(partialPropertyName);
 	}
+
+	public static Long getCodigoSiaInstanciaGenerica() {
+		final String partialPropertyName =  "codigo.instancia.generica";
+    	return getLong(partialPropertyName) != null ? getLong(partialPropertyName) : 000000L;
+	}
+
+	public static String getJdbcRolsacUrl() {
+		final String partialPropertyName =  "rolsac.jdbc.connection.url";
+    	return getString(partialPropertyName);
+	}
+	
+	public static String getJdbcRolsacUsername() {
+		final String partialPropertyName =  "rolsac.jdbc.connection.username";
+    	return getString(partialPropertyName);
+	}
+	
+	public static String getJdbcRolsacPassword() {
+		final String partialPropertyName =  "rolsac.jdbc.connection.password";
+    	return getString(partialPropertyName);
+	}
+
+	public static String getUrlBaseSede() {
+		final String partialPropertyName =  "sede.procedimiento.url";
+    	return getString(partialPropertyName);
+	}
+	
 }

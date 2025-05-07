@@ -4,6 +4,8 @@ import es.caib.dir3caib.ws.api.oficina.OficinaTF;
 import es.caib.dir3caib.ws.api.unidad.UnidadTF;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.AnexoFull;
+import es.caib.regweb3.model.utils.ClasificacionDto;
+import es.caib.regweb3.model.utils.TramiteDto;
 import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
@@ -75,8 +77,11 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
     @EJB(mappedName = "regweb3/PluginEJB/local")
     private PluginLocal pluginEjb;
 
-    @EJB(mappedName = "regweb3/RemesaEJB/local")
-    public RemesaLocal remesaEjb;
+    @EJB(mappedName = "regweb3/RemesaConsultaEJB/local")
+    public RemesaConsultaLocal remesaConsultaEjb;
+    
+    @EJB(mappedName = "regweb3/TramiteEJB/local")
+    private TramiteLocal tramiteEjb;
 
     /**
      * Listado de todos los Registros de Entrada
@@ -230,9 +235,9 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
 
         RegistroEntrada registro = registroEntradaEjb.findByIdCompleto(idRegistro);
 
-        Remesa remesa = remesaEjb.findByRegistroEntrada(idRegistro);
-        if (remesa != null)
-        	registro.setIdentificadorRemesa(remesa.getIdentificador());
+        List<Remesa> remesas = remesaConsultaEjb.findByRegistroEntrada(idRegistro);
+        if (remesas != null)
+        	registro.setIdentificadorRemesa(remesas.get(0).getIdentificador());
         
         Entidad entidadActiva = getEntidadActiva(request);
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
@@ -373,6 +378,27 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         if (registro.getNumeroRegistro() == null && !registro.getEstado().equals(RegwebConstantes.REGISTRO_RECTIFICADO))
         	Mensaje.saveMessageAviso(request, getMessage("aviso.registro.sir.pendiente"));
 
+    	ClasificacionDto clasificacion = new ClasificacionDto();
+        Long codigoSia = registroDetalle.getCodigoSia();
+        Long codiInstanciaGenerica = PropiedadGlobalUtil.getCodigoSiaInstanciaGenerica();
+        
+        if (registro.getEstado() != RegwebConstantes.REGISTRO_DISTRIBUIDO 
+        		&& codigoSia != null && codigoSia.equals(codiInstanciaGenerica)) {
+        	model.addAttribute("isInstanciaGenerica", true);
+        	clasificacion.setRegistroId(registro.getId());
+        	
+        	Long idiomaUsuari = usuarioEntidad.getUsuario().getIdioma();
+        	String idioma = idiomaUsuari.equals(1L) ? "ca" : "es";
+        	
+            // Obtener tramites de Rolsac
+            List<TramiteDto> tramites = tramiteEjb.getTramitesRolsac(idioma);
+        	model.addAttribute("tramites", tramites);
+        	
+        	List<Remesa> notificaciones = remesaConsultaEjb.findByRegistroEntrada(idRegistro);
+        	model.addAttribute("notificaciones", notificaciones);
+        }
+    	model.addAttribute("clasificacionDto", clasificacion);
+        
         // Alta en tabla LOPD
         lopdEjb.altaLopd(registro.getNumeroRegistro(), registro.getFecha(), registro.getLibro().getId(), usuarioEntidad.getId(), RegwebConstantes.REGISTRO_ENTRADA, RegwebConstantes.LOPD_CONSULTA);
 

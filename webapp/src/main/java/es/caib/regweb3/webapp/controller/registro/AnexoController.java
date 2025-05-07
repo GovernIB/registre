@@ -1,5 +1,42 @@
 package es.caib.regweb3.webapp.controller.registro;
 
+import static es.caib.regweb3.utils.RegwebConstantes.REGISTRO_ENTRADA;
+
+import java.io.IOException;
+import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+
+import javax.ejb.EJB;
+import javax.naming.InitialContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.apache.commons.lang.StringUtils;
+import org.fundaciobit.genapp.common.i18n.I18NArgumentCode;
+import org.fundaciobit.genapp.common.i18n.I18NException;
+import org.fundaciobit.genapp.common.i18n.I18NTranslation;
+import org.fundaciobit.genapp.common.i18n.I18NValidationException;
+import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
+import org.fundaciobit.plugins.documentcustody.api.DocumentCustody;
+import org.fundaciobit.plugins.documentcustody.api.SignatureCustody;
+import org.fundaciobit.pluginsib.scanweb.api.ScanWebPlainFile;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.SessionAttributes;
+
 import es.caib.plugins.arxiu.api.Document;
 import es.caib.plugins.arxiu.api.IArxiuPlugin;
 import es.caib.regweb3.model.Anexo;
@@ -23,41 +60,6 @@ import es.caib.regweb3.webapp.controller.BaseController;
 import es.caib.regweb3.webapp.utils.AnexoUtils;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import es.caib.regweb3.webapp.validator.AnexoWebValidator;
-import org.apache.commons.lang.StringUtils;
-import org.fundaciobit.genapp.common.i18n.I18NArgumentCode;
-import org.fundaciobit.genapp.common.i18n.I18NException;
-import org.fundaciobit.genapp.common.i18n.I18NTranslation;
-import org.fundaciobit.genapp.common.i18n.I18NValidationException;
-import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
-import org.fundaciobit.plugins.documentcustody.api.DocumentCustody;
-import org.fundaciobit.plugins.documentcustody.api.SignatureCustody;
-import org.fundaciobit.pluginsib.scanweb.api.ScanWebPlainFile;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.propertyeditors.CustomDateEditor;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.SessionAttributes;
-
-import javax.ejb.EJB;
-import javax.naming.InitialContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-
-import static es.caib.regweb3.utils.RegwebConstantes.REGISTRO_ENTRADA;
 
 /**
  * Created 3/06/14 14:22
@@ -88,7 +90,7 @@ public class AnexoController extends BaseController {
 
     @EJB(mappedName = "regweb3/SignatureServerEJB/local")
     private SignatureServerLocal signatureServerEjb;
-
+    
     @Autowired
     ArxiuCaibUtils arxiuCaibUtils;
 
@@ -417,7 +419,6 @@ public class AnexoController extends BaseController {
         }
 
     }
-
 
     /**
      * Función que nos permite mostrar el contenido del separador de digitalizacionMasiva

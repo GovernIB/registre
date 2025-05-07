@@ -106,14 +106,11 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
         Query q2;
         Map<String, Object> parametros = new HashMap<String, Object>();
         List<String> where = new ArrayList<String>();
-        boolean busquedaInteresados = busquedaInteresados(interesadoNom, interesadoLli1, interesadoLli2, interesadoDoc);
+//        boolean busquedaInteresados = busquedaInteresados(interesadoNom, interesadoLli1, interesadoLli2, interesadoDoc);
 
         StringBuilder queryBase = new StringBuilder("Select DISTINCT registroEntrada from RegistroEntrada as registroEntrada ");
 
-        // Si la búsqueda incluye referencias al interesado, hacemos la left outer join
-        if(busquedaInteresados){
-            queryBase.append("left outer join registroEntrada.registroDetalle.interesados interessat ");
-        }
+        queryBase.append("left outer join registroEntrada.registroDetalle.interesados interessat ");
 
         StringBuilder query = new StringBuilder(queryBase);
 
@@ -236,9 +233,9 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
 
         // Duplicamos la query solo para obtener los resultados totales
         StringBuilder queryCount = new StringBuilder("Select count(DISTINCT registroEntrada.id) from RegistroEntrada as registroEntrada ");
-        if(busquedaInteresados){
-            queryCount.append("left outer join registroEntrada.registroDetalle.interesados interessat ");
-        }
+        
+        queryCount.append("left outer join registroEntrada.registroDetalle.interesados interessat ");
+        
         q2 = em.createQuery(query.toString().replaceAll(queryBase.toString(), queryCount.toString()));
 
         // añadimos el order by

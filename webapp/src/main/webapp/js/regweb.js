@@ -869,6 +869,25 @@ $(function() {
     });
 });
 
+$(function() {
+    $('#caducidad').datetimepicker({
+        language: 'ca',
+        format: 'DD/MM/YYYY HH:mm:ss',
+        pickTime: true,
+        useMinutes: true,
+        useSeconds: true,
+        useCurrent: false,
+        use24hours: true,
+        icons: {
+            time: 'fa fa-clock-o',
+            date: 'fa fa-calendar',
+            up: 'fa fa-chevron-up',
+            down: 'fa fa-chevron-down'
+        }
+    });
+});
+
+
 /**
  * Elimina la etiqueta de Error al campo pasado por parámetro
  * @param campo

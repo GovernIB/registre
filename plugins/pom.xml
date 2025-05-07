@@ -21,7 +21,8 @@
         <module>plugin-postproceso</module>
     	<module>plugin-geiser</module>
     <module>plugin-lema</module>
-  </modules>
+    <module>plugin-notib</module>
+    </modules>
     <repositories>
         <repository>
             <id>maven-nuxeo</id>

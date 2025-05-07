@@ -1590,3 +1590,37 @@ a.href-disabled {
     color: black;
   }
 }
+
+.clasificar_loader {
+	background-image: url("/regweb3/img/loader.gif");
+	background-repeat: no-repeat;
+	background-position: center top;
+	height: 50px;
+}
+
+.formulario_container_loading {
+	height: 150px;
+}
+
+.formulario_container_loaded {
+	height: 860px;
+}
+
+.formulario_container_loaded .resumen-documento {
+	padding-top: 10px;
+}
+
+.comentario {
+	font-size: 10px;
+	margin: 2px 0 0 10px;
+}
+
+.datos-notificacion {
+	min-width: fit-content;
+}
+
+.datos-notificacion legend {
+	font-size: 15px;
+	margin: 10px 0 0 0;
+	color: #666;
+}

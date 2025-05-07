@@ -436,7 +436,7 @@ public class RegistroDetalle implements Serializable {
     }
 
     @OneToMany(cascade= CascadeType.ALL,targetEntity=Interesado.class, mappedBy="registroDetalle")
-    @LazyCollection(value= LazyCollectionOption.TRUE)
+    @LazyCollection(value= LazyCollectionOption.FALSE)
     @OrderBy("id")
     public List<Interesado> getInteresados() {
         return interesados;

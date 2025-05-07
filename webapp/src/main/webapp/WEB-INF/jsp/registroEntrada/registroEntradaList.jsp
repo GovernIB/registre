@@ -375,6 +375,7 @@
                                                             <c:if test="${registroEntradaBusqueda.registroEntrada.estado != 2}">
                                                                 <th class="center"><spring:message code="registroEntrada.extracto"/></th>
                                                             </c:if>
+                                                            <th class="center"><spring:message code="registroEntrada.interesados"/></th>
                                                             <th class="center"><spring:message code="registroEntrada.estado"/></th>
                                                             <th class="center">Doc.</th>
                                                             <th class="center"><spring:message code="registro.presencial"/></th>
@@ -420,6 +421,9 @@
                                                                         </c:if>
                                                                     </td>
                                                                 </c:if>
+                                                                <td>
+                                                                	${registro.registroDetalle.nombreInteresadosHtml}
+                                                                </td>
                                                                 <td class="center">
                                                                     <c:import url="../registro/estadosRegistro.jsp">
                                                                         <c:param name="estado" value="${registro.estado}"/>

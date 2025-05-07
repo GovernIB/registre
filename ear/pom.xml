@@ -565,7 +565,7 @@
       <version>${project.version}</version>
     </dependency>
     
-    	<!-- ============================================ -->
+    <!-- ============================================ -->
     <!-- ======== PLUGINS LEMA =========== -->
     <!-- ============================================ -->
 
@@ -581,6 +581,22 @@
 		<version>${project.version}</version>
 	</dependency>
 
+    <!-- ============================================ -->
+    <!-- ======== PLUGINS NOTIB =========== -->
+    <!-- ============================================ -->
+
+	<dependency>
+		<groupId>es.caib.regweb3</groupId>
+		<artifactId>plugin-notib-api</artifactId>
+		<version>${project.version}</version>
+	</dependency>
+
+	<dependency>
+		<groupId>es.caib.regweb3</groupId>
+		<artifactId>plugin-notib-apb</artifactId>
+		<version>${project.version}</version>
+	</dependency>
+	
   </dependencies>
 
 

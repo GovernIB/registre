@@ -1,41 +1,80 @@
 package es.caib.regweb3.webapp.controller.registro;
 
-import es.caib.dir3caib.ws.api.oficina.Dir3CaibObtenerOficinasWs;
-import es.caib.dir3caib.ws.api.oficina.OficinaTF;
-import es.caib.dir3caib.ws.api.unidad.Dir3CaibObtenerUnidadesWs;
-import es.caib.dir3caib.ws.api.unidad.UnidadTF;
-import es.caib.regweb3.model.*;
-import es.caib.regweb3.model.utils.PlantillaJson;
-import es.caib.regweb3.persistence.ejb.CodigoAsuntoLocal;
-import es.caib.regweb3.persistence.ejb.InteresadoLocal;
-import es.caib.regweb3.persistence.ejb.MultiEntidadLocal;
-import es.caib.regweb3.persistence.ejb.PlantillaLocal;
-import es.caib.regweb3.persistence.ejb.RegistroSirHelperLocal;
-import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
-import es.caib.regweb3.persistence.utils.RegistroUtils;
-import es.caib.regweb3.utils.Dir3CaibUtils;
-import es.caib.regweb3.utils.RegwebConstantes;
-import es.caib.regweb3.utils.StringUtils;
-import es.caib.regweb3.webapp.form.RegistrarForm;
-import es.caib.regweb3.webapp.utils.Mensaje;
-import es.caib.regweb3.webapp.validator.RegistroEntradaWebValidator;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
+
+import javax.ejb.EJB;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.apache.commons.codec.binary.Base64;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
+import org.fundaciobit.plugins.documentcustody.api.DocumentCustody;
+import org.fundaciobit.plugins.documentcustody.api.SignatureCustody;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 
-import javax.ejb.EJB;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import es.caib.dir3caib.ws.api.oficina.Dir3CaibObtenerOficinasWs;
+import es.caib.dir3caib.ws.api.oficina.OficinaTF;
+import es.caib.dir3caib.ws.api.unidad.Dir3CaibObtenerUnidadesWs;
+import es.caib.dir3caib.ws.api.unidad.UnidadTF;
+import es.caib.regweb3.model.Anexo;
+import es.caib.regweb3.model.CodigoAsunto;
+import es.caib.regweb3.model.Entidad;
+import es.caib.regweb3.model.Interesado;
+import es.caib.regweb3.model.Oficina;
+import es.caib.regweb3.model.Organismo;
+import es.caib.regweb3.model.Plantilla;
+import es.caib.regweb3.model.RegistroEntrada;
+import es.caib.regweb3.model.Remesa;
+import es.caib.regweb3.model.Usuario;
+import es.caib.regweb3.model.UsuarioEntidad;
+import es.caib.regweb3.model.utils.AnexoFull;
+import es.caib.regweb3.model.utils.ClasificacionDto;
+import es.caib.regweb3.model.utils.DocumentoVisor;
+import es.caib.regweb3.model.utils.PlantillaJson;
+import es.caib.regweb3.persistence.ejb.AnexoLocal;
+import es.caib.regweb3.persistence.ejb.CodigoAsuntoLocal;
+import es.caib.regweb3.persistence.ejb.InteresadoLocal;
+import es.caib.regweb3.persistence.ejb.MultiEntidadLocal;
+import es.caib.regweb3.persistence.ejb.PlantillaLocal;
+import es.caib.regweb3.persistence.ejb.RegistroSirHelperLocal;
+import es.caib.regweb3.persistence.ejb.RemesaConsultaLocal;
+import es.caib.regweb3.persistence.ejb.RemesaLocal;
+import es.caib.regweb3.persistence.ejb.TramiteLocal;
+import es.caib.regweb3.persistence.utils.DocumentoDto;
+import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
+import es.caib.regweb3.persistence.utils.RegistroUtils;
+import es.caib.regweb3.utils.Dir3CaibUtils;
+import es.caib.regweb3.utils.RegwebConstantes;
+import es.caib.regweb3.utils.StringUtils;
+import es.caib.regweb3.webapp.form.RegistrarForm;
+import es.caib.regweb3.webapp.utils.AnexoUtils;
+import es.caib.regweb3.webapp.utils.Mensaje;
+import es.caib.regweb3.webapp.validator.RegistroEntradaWebValidator;
 
 /**
  * Created by Fundació BIT.
@@ -66,6 +105,18 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
     @EJB(mappedName = "regweb3/RegistroSirHelperEJB/local")
     private RegistroSirHelperLocal registroSirHelperEjb;
 
+    @EJB(mappedName = "regweb3/AnexoEJB/local")
+    private AnexoLocal anexoEjb;
+    
+    @EJB(mappedName = "regweb3/TramiteEJB/local")
+    private TramiteLocal tramiteEjb;
+
+    @EJB(mappedName = "regweb3/RemesaConsultaEJB/local")
+    private RemesaConsultaLocal remesaConsultaEjb;
+    
+    @EJB(mappedName = "regweb3/RemesaEJB/local")
+    private RemesaLocal remesaEjb;
+    
     /**
      * Carga el formulario para un nuevo {@link es.caib.regweb3.model.RegistroEntrada} a partir de una {@link Plantilla}
      */
@@ -599,6 +650,108 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
         return "redirect:/registroEntrada/"+ idRegistro + "/detalle";
     }
 
+    @RequestMapping(value = "/clasificar/{anexoId}", method = RequestMethod.GET)
+    @ResponseBody
+    public ClasificacionDto clasificar(
+    		@PathVariable("anexoId") Long anexoId, 
+    		HttpServletRequest request,
+    		HttpServletResponse response) throws Exception, I18NException {
+
+        AnexoFull anexoFull = anexoEjb.getAnexoFullLigero(anexoId, getEntidadActiva(request).getId());
+        String filename, mimeType; byte[] data;
+        Anexo anexo = anexoFull.getAnexo();
+        Long idEntidad = getEntidadActiva(request).getId();
+        
+        DocumentCustody dc = anexoEjb.getArchivo(anexo, idEntidad);
+        
+        if (dc != null) {
+        	filename = dc.getName();
+        	mimeType = dc.getMime();
+        	data = dc.getData();
+    	} else {
+    		SignatureCustody sc = anexoEjb.getFirma(anexo, idEntidad);
+            filename = sc.getName();
+            mimeType = sc.getMime();
+            data = sc.getData();
+    	}
+//        filename = "formulario.pdf";
+//        mimeType = "application/pdf";
+//        Path path = Paths.get("/home/jamal/Documentos/docs_prova/dummy.pdf");
+//        data = Files.readAllBytes(path);
+        
+        DocumentoVisor documentoRecibido = new DocumentoVisor(
+        		filename, 
+				mimeType, 
+				Base64.encodeBase64String(data));
+        
+        ClasificacionDto clasificacion = new ClasificacionDto();
+        clasificacion.setDocumento(documentoRecibido);
+        
+        return clasificacion;
+    }
+    
+    @RequestMapping(value = "/{idRegistro}/clasificar", method = RequestMethod.POST)
+    public String clasificar(
+    		@PathVariable Long idRegistro, 
+    		@ModelAttribute("clasificacionDto") ClasificacionDto clasificacionForm, 
+    		HttpServletRequest request) throws Exception {
+    	RegistroEntrada registroEntrada = registroEntradaEjb.findByIdCompleto(idRegistro);
+        UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);        
+        Entidad entidadActiva = getEntidadActiva(request);
+        
+        try {
+        	
+            tramiteEjb.clasificarRegistro(registroEntrada, usuarioEntidad, clasificacionForm, entidadActiva);
+            
+            Mensaje.saveMessageInfo(request, getMessage("registroEntrada.clasificar.ok"));
+		} catch (Exception e) {
+			// TODO: handle exception
+	        Mensaje.saveMessageError(request, getMessage("rregistroEntrada.clasificar.ko") + ": " + e.getMessage());
+			e.printStackTrace();
+		} catch (I18NException e) {
+			// TODO Auto-generated catch block
+	        Mensaje.saveMessageError(request, getMessage("registroEntrada.clasificar.ko"));
+			e.printStackTrace();
+		}
+        
+        return "redirect:/registroEntrada/"+ idRegistro + "/detalle";
+    }
+    
+    @RequestMapping(value = "/descargarCertificacion/{remesaId}", method = RequestMethod.GET)
+    public void descargarCertificacion(
+    		@PathVariable("remesaId") Long remesaId, 
+    		HttpServletRequest request,
+    		HttpServletResponse response) throws Exception, I18NException {
+    	Remesa remesa = remesaConsultaEjb.getById(remesaId);
+    	Entidad entidadActiva = getEntidadActiva(request);
+    	
+        DocumentoDto certificacion = tramiteEjb.descargarCertificacion(
+        		remesa.getIdentificadorIntern(), 
+        		remesa.getReferencia(), 
+        		entidadActiva);
+        
+        download(
+        		response, 
+        		certificacion.getMimeType(), 
+        		certificacion.getFilename(), 
+        		certificacion.getContenido());
+    }
+
+    @RequestMapping(value = "/actualizarEstado/{remesaId}", method = RequestMethod.GET)
+    public String actualizarEstadoNotificacion(
+    		@PathVariable("remesaId") Long remesaId, 
+    		HttpServletRequest request,
+    		HttpServletResponse response) throws Exception, I18NException {
+    	Remesa remesa = remesaConsultaEjb.getById(remesaId);
+    	Entidad entidadActiva = getEntidadActiva(request);
+    	
+    	remesaEjb.notificacionActualitzarEstado(
+    			remesa.getIdentificadorIntern(), 
+    			remesa.getReferencia(), 
+    			entidadActiva);
+    	
+    	return "redirect:/registroEntrada/"+ remesa.getRegistro().getId() + "/detalle#notificaciones";
+    }
 
     /**
      * Procesa las opciones de comunes de un RegistroEntrada, lo utilizamos en la creación y modificación.
@@ -821,6 +974,24 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
 
         return registroEntrada;
     }
+    
+    private void download(HttpServletResponse response, String contentType, String filename, byte[] data) throws IOException, Exception {
+        OutputStream output;
+
+        // Obtenemos el ContentType si el que nos indican es null
+        if (StringUtils.isEmpty(contentType)) {
+            contentType = AnexoUtils.getContentType(filename, data);
+        }
+
+        response.setContentType(contentType);
+        response.setHeader("Content-Disposition", AnexoUtils.getContentDispositionHeader(true, filename));
+        response.setContentLength(data.length);
+
+        output = response.getOutputStream();
+        output.write(data);
+
+        output.flush();
+    }
 
 
     @InitBinder("registroEntrada")
@@ -834,6 +1005,13 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
         binder.registerCustomEditor(java.util.Date.class, dateEditor);
 
         binder.setValidator(this.registroEntradaValidator);
+    }
+    
+    @InitBinder("clasificacionDto")
+    public void initBinderClasificacion(WebDataBinder binder) {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        CustomDateEditor dateEditor = new CustomDateEditor(sdf, true);
+        binder.registerCustomEditor(java.util.Date.class, dateEditor);
     }
 
 

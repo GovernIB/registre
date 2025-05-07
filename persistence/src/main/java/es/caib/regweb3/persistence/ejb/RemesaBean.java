@@ -4,6 +4,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.activation.DataHandler;
@@ -34,22 +36,31 @@ import org.plugin.lema.api.EnlaceDocumento;
 import org.plugin.lema.api.Envio;
 import org.plugin.lema.api.IdentificadorAcuseRecibo;
 import org.plugin.lema.api.LemaPluginException;
-import org.plugin.lema.api.Organismo;
 import org.plugin.lema.api.PeticionAccesoRequest;
 import org.plugin.lema.api.PeticionAccesoResponse;
 import org.plugin.lema.api.ReferenciaDocumento;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
 
+import es.caib.notib.client.domini.EnviamentEstat;
+import es.caib.notib.client.domini.EnviamentReferencia;
+import es.caib.notib.client.domini.EnviamentTipus;
+import es.caib.notib.client.domini.EnviamentV2;
+import es.caib.notib.client.domini.NotificacioEstatEnum;
+import es.caib.notib.client.domini.NotificacioV2;
+import es.caib.notib.client.domini.RespostaAlta;
+import es.caib.notib.client.domini.RespostaConsultaEstatEnviamentV2;
+import es.caib.notib.client.domini.RespostaConsultaEstatNotificacioV2;
 import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.model.RegistroEntrada;
 import es.caib.regweb3.model.Remesa;
+import es.caib.regweb3.model.Remesa.TipoRemesa;
 import es.caib.regweb3.model.RemesaAcuse;
-import es.caib.regweb3.model.Usuario;
 import es.caib.regweb3.model.UsuarioEntidad;
 import es.caib.regweb3.persistence.utils.DehuDocumentManager;
 import es.caib.regweb3.persistence.utils.LemaPluginHelper;
 import es.caib.regweb3.persistence.utils.LemaUtils;
+import es.caib.regweb3.persistence.utils.NotibPluginHelper;
 import es.caib.regweb3.utils.MimeTypeUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 
@@ -74,9 +85,13 @@ public class RemesaBean extends BaseEjbJPA<Remesa, Long> implements RemesaLocal 
 	@EJB private RemesaAcuseLocal remesaAcuseEjb;
 	@EJB private RemesaAnexoLocal remesaAnexoEjb;
 	@EJB private RegistroEntradaLocal registroEntradaEjb;
+	@EJB private EntidadLocal entidadEjb;
 	
 	@Autowired 
 	private LemaPluginHelper pluginHelper;
+	
+	@Autowired
+	private NotibPluginHelper notibPluginHelper;
 
 	@Autowired
 	private DehuDocumentManager documentManager;
@@ -123,12 +138,13 @@ public class RemesaBean extends BaseEjbJPA<Remesa, Long> implements RemesaLocal 
 
 	@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 	@Override
-	public void guardaNotificacion(Envio envio, Entidad entidad) throws I18NException, Exception {
+	public void guardarNotificacionRecibida(Envio envio, Entidad entidad) throws I18NException, Exception {
 		try {
 			Remesa remesa = new Remesa(
 					envio.getConcepto(), 
 					envio.getDescripcion(), 
 					envio.getIdentificador(), 
+					null,
 					envio.getCodigoOrigen().intValue(),
 					envio.getTipoEnvio().intValue(), 
 					envio.getOrganismoEmisor().getCodigoOrganismo(), 
@@ -137,14 +153,16 @@ public class RemesaBean extends BaseEjbJPA<Remesa, Long> implements RemesaLocal 
 					LemaUtils.xmlGregorianCalendarToDate(envio.getFechaPuestaDisposicion()), 
 					envio.getTitular().getNifTitular(), 
 					envio.getTitular().getNombreTitular(),
+					null,
 					envio.getTitular().getCodigoDIR3(),
 					envio.getTitular().getDescripcionEntidad(),
 					RegwebConstantes.REMESA_ESTADO_REG_PENDIENTE, 
-					RegwebConstantes.REMESA_ENV_ESTADO_PENDIENTE,
+					RegwebConstantes.REMESA_ENV_ESTADO_PENDIENTE_SEDE,
 					null,
 					3,
 					entidad,
-					null);
+					null,
+					TipoRemesa.RECIBIDA);
 
 			persist(remesa);
 			
@@ -156,13 +174,102 @@ public class RemesaBean extends BaseEjbJPA<Remesa, Long> implements RemesaLocal 
             throw ex;
 		}
 	}
+
+//	@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+	@Override
+	public List<Remesa> guardarNotificacion(
+			NotificacioV2 notificacio, 
+			Entidad entidad, 
+			RegistroEntrada registroEntrada,
+			UsuarioEntidad usuario) throws I18NException, Exception {
+		try {
+			List<Remesa> remesas = new ArrayList<Remesa>();
+			List<EnviamentV2> enviaments = notificacio.getEnviaments();
+			Remesa remesa = null;
+			
+			for (EnviamentV2 enviament : enviaments) {		
+				EnviamentTipus tipo = notificacio.getEnviamentTipus();
+				
+				remesa = new Remesa(
+						notificacio.getConcepte(), 
+						notificacio.getDescripcio(), 
+						null,
+						null,
+						null,
+						EnviamentTipus.NOTIFICACIO.equals(tipo) ? 2 : 1, 
+						entidad.getCodigoDir3(), 
+						null,
+						entidad.getNombre(), 
+						null, 
+						enviament.getTitular().getNif(), 
+						enviament.getTitular().getNom() != null ? enviament.getTitular().getNom() : enviament.getTitular().getRaoSocial(),
+						enviament.getTitular().getDir3Codi(),
+						null,
+						null,
+						RegwebConstantes.REMESA_ESTADO_REG_PENDIENTE, 
+						null,
+						notificacio.getProcedimentCodi(),
+						3,
+						entidad,
+						usuario,
+						TipoRemesa.ENVIADA);
+
+				persist(remesa);
+				
+				actualizarRegistroEntrada(remesa.getId(), registroEntrada.getId());
+								
+				remesas.add(remesa);
+			}
+			
+			return remesas;
+		} catch (Exception ex) {
+			log.error("Ha habido un error guardando la notificación (concepte=" + notificacio.getConcepte() + ")");
+			ex.printStackTrace();
+            ejbContext.setRollbackOnly();
+            throw ex;
+		}
+	}
+	
+//	@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+	@Override
+	public void actualizarNotificacionEnviada(
+			List<Remesa> remesas, 
+			RespostaAlta respuesta) throws I18NException, Exception {
+		try {
+			if (! respuesta.isError()) {
+				for (Remesa remesa : remesas) {
+					actualizarIdentificadorIntern(remesa.getId(), respuesta.getIdentificador());
+					
+					for (EnviamentReferencia enviamentReferencia : respuesta.getReferencies()) {
+						if (remesa.getTitularNif() != null && remesa.getTitularNif().equals(enviamentReferencia.getTitularNif())
+								|| remesa.getTitularDir3codi() != null && remesa.getTitularDir3codi().equals(enviamentReferencia.getTitularNif())) {
+							actualizarReferencia(remesa.getId(), enviamentReferencia.getReferencia());
+						}
+					}
+				}
+				
+				
+			} else if (NotificacioEstatEnum.PENDENT.equals(respuesta.getEstat())) {
+				for (Remesa remesa : remesas) {
+					actualizarMensajeError(remesa.getId(), respuesta.getErrorDescripcio());
+				}
+			}
+			
+			em.flush();
+		} catch (Exception ex) {
+			log.error("Ha habido un error actualizando las remesas (identificador=" + respuesta.getIdentificador() + ")");
+			ex.printStackTrace();
+            ejbContext.setRollbackOnly();
+            throw ex;
+		}
+	}
 	
 	@Override
 	public ConsultaAcuseReciboResponse consultaGuardaAcuseRecibo(String identificador, Entidad entidad) throws I18NException, Exception {
 		ConsultaAcuseReciboRequest request = new ConsultaAcuseReciboRequest();
 		ConsultaAcuseReciboResponse response = new ConsultaAcuseReciboResponse();
 		try {
-			Remesa remesa = findByIdentificador(identificador);
+			Remesa remesa = getByIdentificador(identificador);
 			RemesaAcuse acuseInfo = remesaAcuseEjb.findByRemesa(remesa.getId());
 					
 			if (acuseInfo != null) {
@@ -195,6 +302,23 @@ public class RemesaBean extends BaseEjbJPA<Remesa, Long> implements RemesaLocal 
 		return response;
 	}
 	
+	@SuppressWarnings("unchecked")
+	private Remesa getByIdentificador(String identificador) {
+		Query q = em.createQuery("Select remesa from Remesa as remesa where remesa.identificador = :identificador");
+
+        q.setParameter("identificador", identificador);
+        q.setHint("org.hibernate.readOnly", true);
+
+        List<Remesa> remesa = q.getResultList();
+
+        if (remesa.size() > 0) {
+            return remesa.get(0);
+        } else {
+            return null;
+        }
+	}
+
+	
 	@Override
 	public PeticionAccesoResponse lecturaNotificacion(String identificador, UsuarioEntidad usuarioEntidad, Entidad entidad) throws I18NException, Exception {
 		PeticionAccesoRequest request = new PeticionAccesoRequest();
@@ -202,7 +326,7 @@ public class RemesaBean extends BaseEjbJPA<Remesa, Long> implements RemesaLocal 
 		try {
 			boolean leida = false;
 			
-			Remesa remesa = findByIdentificador(identificador);
+			Remesa remesa = getByIdentificador(identificador);
 			
 			request.setIdentificador(identificador);
 			request.setCodigoOrigen(remesa.getCodigoOrigen());
@@ -215,14 +339,21 @@ public class RemesaBean extends BaseEjbJPA<Remesa, Long> implements RemesaLocal 
 			} catch (Exception e) {
 				if (e.getMessage() != null && (e.getMessage().contains("4210") || e.getMessage().contains("4209"))) {
 					leida = true;
+				} else {
+					throw e;
 				}
 			}
 			
 			if ((response != null && RegwebConstantes.LEMA_RESPUESTA_OK.equals(response.getCodigoRespuesta())) || leida) {
 				actualizarEstadoNotifica(
 						identificador, 
+						null,
 						RegwebConstantes.REMESA_ESTADO_REG_LEIDA, 
-						RegwebConstantes.REMESA_ENV_ESTADO_ACEPTADA);
+						null,
+						RegwebConstantes.REMESA_ENV_ESTADO_LEIDA,
+						null,
+						null,
+						null);
 				
 				if (response != null && response.getDocumento() != null) {
 					DetalleDocumento detalle = response.getDocumento();
@@ -279,39 +410,145 @@ public class RemesaBean extends BaseEjbJPA<Remesa, Long> implements RemesaLocal 
 		
 		return response;
 	}
-	
-	@SuppressWarnings("unchecked")
+
 	@Override
-	public Remesa findByIdentificador(String identificador) {
-		Query q = em.createQuery("Select remesa from Remesa as remesa where remesa.identificador = :identificador");
+	public void notificacionActualitzarEstado(String identificadorNotib, String referenciaEnviament, Entidad entidad) {
+		// Consultar notificació per identificador i referencia i si existeix actualitzar estat, sino, no fer res
+		try {
+			RespostaConsultaEstatEnviamentV2 resposta = notibPluginHelper.consultarEnvio(
+					referenciaEnviament, 
+					entidad.getId());
+			
+			RespostaConsultaEstatNotificacioV2 respostaNotificioEstat = notibPluginHelper.consultarNotificacion(
+					identificadorNotib, 
+					entidad.getId());
 
-        q.setParameter("identificador", identificador);
-        q.setHint("org.hibernate.readOnly", true);
-
-        List<Remesa> remesa = q.getResultList();
-
-        if (remesa.size() > 0) {
-            return remesa.get(0);
-        } else {
-            return null;
-        }
+			String estadoNotificacion = obtenerEstadoNotificacion(respostaNotificioEstat.getEstat());
+			String  estadoNotifica = obtenerEstadoEnvio(resposta.getEstat());
+			Date estadoData = resposta.getEstatData();
+			Date fechaCreacion = respostaNotificioEstat.getDataCreada();
+			Date fechaEnviada = respostaNotificioEstat.getDataEnviada();
+			Date fechaFinalizada = respostaNotificioEstat.getDataFinalitzada();
+			
+			actualizarEstadoNotifica(
+					identificadorNotib, 
+					referenciaEnviament, 
+					estadoNotificacion, 
+					estadoData,
+					estadoNotifica,
+					fechaCreacion,
+					fechaEnviada,
+					fechaFinalizada);
+			
+			em.flush();
+		} catch (I18NException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	
+	private String obtenerEstadoEnvio(EnviamentEstat estat) {
+		String estado = null;
+		
+		switch (estat) {
+		case ABSENT:
+			estado = RegwebConstantes.REMESA_ENV_ESTADO_AUSENTE;
+			break;
+		case DESCONEGUT:
+			estado = RegwebConstantes.REMESA_ENV_ESTADO_DESCONOCIDO;
+			break;
+		case ADRESA_INCORRECTA:
+			estado = RegwebConstantes.REMESA_ENV_ESTADO_DIRECCION_INCO;
+			break;
+		case ENVIADA_DEH:
+			estado = RegwebConstantes.REMESA_ENV_ESTADO_ENVIADO_DEH;
+			break;
+		case ENVIADA_CI:
+			estado = RegwebConstantes.REMESA_ENV_ESTADO_ENVIADO_CI;
+			break;
+		case ENTREGADA_OP:
+			estado = RegwebConstantes.REMESA_ENV_ESTADO_ENTREGADO_OP;
+			break;
+		case LLEGIDA:
+			estado = RegwebConstantes.REMESA_ENV_ESTADO_LEIDA;
+			break;
+		case ERROR_ENTREGA:
+			estado = RegwebConstantes.REMESA_ENV_ESTADO_ERROR;
+			break;
+		case EXTRAVIADA:
+			estado = RegwebConstantes.REMESA_ENV_ESTADO_EXTRAVIADA;
+			break;
+		case MORT:
+			estado = RegwebConstantes.REMESA_ENV_ESTADO_FALLECIDO;
+			break;
+		case NOTIFICADA:
+			estado = RegwebConstantes.REMESA_ENV_ESTADO_NOTIFICADA;
+			break;
+		case PENDENT_ENVIAMENT:
+			estado = RegwebConstantes.REMESA_ENV_ESTADO_PENDIENTE_ENVIO;
+			break;
+		case PENDENT_CIE:
+			estado = RegwebConstantes.REMESA_ENV_ESTADO_PENDIENTE_CIE;
+			break;
+		case PENDENT_DEH:
+			estado = RegwebConstantes.REMESA_ENV_ESTADO_PENDIENTE_DEH;
+			break;
+		case PENDENT_SEU:
+			estado = RegwebConstantes.REMESA_ENV_ESTADO_PENDIENTE_SEDE;
+			break;
+		case REBUTJADA:
+			estado = RegwebConstantes.REMESA_ENV_ESTADO_REHUSADA;
+			break;
+		case EXPIRADA:
+			estado = RegwebConstantes.REMESA_ENV_ESTADO_EXPIRADA;
+			break;
+		case ENVIAMENT_PROGRAMAT:
+			estado = RegwebConstantes.REMESA_ENV_ESTADO_ENVIO_PROGRAM;
+			break;
+		case SENSE_INFORMACIO:
+			estado = RegwebConstantes.REMESA_ENV_ESTADO_SIN_INFO;
+			break;
+		case ANULADA:
+			estado = RegwebConstantes.REMESA_ENV_ESTADO_ANULADA;
+			break;
+		default:
+			break;
+		}
+		
+		return estado;
 	}
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public Remesa findByRegistroEntrada(Long registroId) {
-		Query q = em.createQuery("Select remesa from Remesa as remesa where remesa.registro.id = :registroId");
-
-        q.setParameter("registroId", registroId);
-        q.setHint("org.hibernate.readOnly", true);
-
-        List<Remesa> remesa = q.getResultList();
-
-        if (remesa.size() > 0) {
-            return remesa.get(0);
-        } else {
-            return null;
-        }
+	private String obtenerEstadoNotificacion(NotificacioEstatEnum estat) {
+		String estado = null;
+		
+		switch (estat) {
+		case PENDENT:
+			estado = RegwebConstantes.REMESA_ESTADO_REG_PENDIENTE;
+			break;
+		case REGISTRADA:
+			estado = RegwebConstantes.REMESA_ESTADO_REG_REGISTRADA;
+			break;
+		case ENVIADA:
+			estado = RegwebConstantes.REMESA_ESTADO_REG_ENVIADA;
+			break;
+		case ENVIADA_AMB_ERRORS:
+			estado = RegwebConstantes.REMESA_ESTADO_REG_ENVIADA;
+			break;
+		case FINALITZADA:
+			estado = RegwebConstantes.REMESA_ESTADO_REG_FINALIZADA;
+			break;
+		case FINALITZADA_AMB_ERRORS:
+			estado = RegwebConstantes.REMESA_ESTADO_REG_FINALIZADA;
+			break;
+		case PROCESSADA:
+			estado = RegwebConstantes.REMESA_ESTADO_REG_PROCESADA;
+			break;
+		default:
+			break;
+		}
+		
+		return estado;
 	}
 	
 	@Override
@@ -339,14 +576,79 @@ public class RemesaBean extends BaseEjbJPA<Remesa, Long> implements RemesaLocal 
 		
 	}
 
+	@Override
 	@TransactionTimeout(value = 1200) // 20 minutos
-	public void actualizarEstadoNotifica(String identificador, String estado, String estadoNotifica) {
+	public void actualizarEstadoNotifica(
+			String identificadorIntern, 
+			String referencia, 
+			String estado, 
+			Date fechaEstado,
+			String estadoNotifica, 
+			Date fechaCreacion,
+			Date fechaEnvio, 
+			Date fechaFinalizacion) {
 
-		Query q = em.createQuery(
-				"update Remesa set estado=:estado, estadoNotifica=:estadoNotifica where identificador = :identificador");
+		Query q = null;
+		
+		if (referencia != null) {
+			q = em.createQuery(
+					"update Remesa " + 
+					"set estado=:estado, " + 
+					"mensajeError=null, " +
+					"estadoNotifica=:estadoNotifica, " +
+					"fechaEstado=:fechaEstado, " +
+					"fechaCreacion=:fechaCreacion, " +
+					"fechaEnvio=:fechaEnvio, " +
+					"fechaFinalizacion=:fechaFinalizacion " +
+				"where identificadorIntern = :identificadorIntern and referencia = :referencia");
+			q.setParameter("fechaEstado", fechaEstado);
+			q.setParameter("fechaCreacion", fechaCreacion);
+			q.setParameter("fechaEnvio", fechaEnvio);
+			q.setParameter("fechaFinalizacion", fechaFinalizacion);
+		} else {
+			q = em.createQuery(
+					"update Remesa set estado=:estado, estadoNotifica=:estadoNotifica where identificador = :identificador");
+		}
+		
 		q.setParameter("estado", estado);
 		q.setParameter("estadoNotifica", estadoNotifica);
-		q.setParameter("identificador", identificador);
+		q.setParameter("identificadorIntern", identificadorIntern);
+		if (referencia != null)
+			q.setParameter("referencia", referencia);
+		q.executeUpdate();
+	}
+	
+	@TransactionTimeout(value = 1200) // 20 minutos
+	public void actualizarRegistroEntrada(Long remesaId, Long registroId) throws Exception {
+
+		RegistroEntrada registro = registroEntradaEjb.findById(registroId);
+		
+		Query q = em.createQuery(
+				"update Remesa set registro = :registro where id = :remesaId");
+		q.setParameter("remesaId", remesaId);
+		q.setParameter("registro", registro);
+		q.executeUpdate();
+	}
+	
+	@TransactionTimeout(value = 1200) // 20 minutos
+	public void actualizarEnviada(Long remesaId, Date enviadaDate) throws Exception {
+		
+		Query q = em.createQuery(
+				"update Remesa set enviadaDate = :enviadaDate, estado = :estado where id = :remesaId");
+		q.setParameter("remesaId", remesaId);
+		q.setParameter("estado", RegwebConstantes.REMESA_ESTADO_REG_ENVIADA);
+		q.setParameter("enviadaDate", enviadaDate);
+		q.executeUpdate();
+	}
+	
+	@TransactionTimeout(value = 1200) // 20 minutos
+	public void actualizarProcesada(Long remesaId, Date procesadaDate) throws Exception {
+
+		Query q = em.createQuery(
+				"update Remesa set procesadaDate = :procesadaDate, estado = :estado where id = :remesaId");
+		q.setParameter("remesaId", remesaId);
+		q.setParameter("estado", RegwebConstantes.REMESA_ESTADO_REG_PROCESADA);
+		q.setParameter("procesadaDate", procesadaDate);
 		q.executeUpdate();
 	}
     
@@ -364,7 +666,31 @@ public class RemesaBean extends BaseEjbJPA<Remesa, Long> implements RemesaLocal 
         q.setParameter("idRemesa", idRemesa);
         q.executeUpdate();
     }
+	
+	@TransactionTimeout(value = 1200) // 20 minutos
+    public void actualizarIdentificadorIntern(Long idRemesa, String identificadorIntern) throws Exception {
+        Query q = em.createQuery("update Remesa set identificadorIntern = :identificadorIntern where id = :idRemesa");
+        q.setParameter("identificadorIntern", identificadorIntern);
+        q.setParameter("idRemesa", idRemesa);
+        q.executeUpdate();
+    }
+	
+	@TransactionTimeout(value = 1200) // 20 minutos
+    public void actualizarReferencia(Long idRemesa, String referencia) throws Exception {
+        Query q = em.createQuery("update Remesa set referencia = :referencia where id = :idRemesa");
+        q.setParameter("referencia", referencia);
+        q.setParameter("idRemesa", idRemesa);
+        q.executeUpdate();
+    }
     
+	@TransactionTimeout(value = 1200) // 20 minutos
+    public void actualizarMensajeError(Long idRemesa, String mensajeError) throws Exception {
+        Query q = em.createQuery("update Remesa set mensajeError = :mensajeError where id = :idRemesa");
+        q.setParameter("mensajeError", mensajeError);
+        q.setParameter("idRemesa", idRemesa);
+        q.executeUpdate();
+    }
+	
     private void guardarDocumento(String identificador, String nombre, Contenido contenido) {
     	byte[] contenidoBytes = null;
     	boolean documentExists = documentManager.documentExists(identificador, nombre);

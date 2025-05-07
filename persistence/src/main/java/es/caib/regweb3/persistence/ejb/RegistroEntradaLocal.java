@@ -276,10 +276,8 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
 			String numeroRegistroFormateado, 
 			Date fechaRegistro) throws Exception, I18NException;
 
-
 	void actualizarDestinoExterno(Long idRegistroEntrada, String codDestinoExterno, String descDestinoExterno)
 			throws Exception;
-
 
 	void marcarRectificado(Long idRegistro);
 

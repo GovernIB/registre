@@ -7,6 +7,8 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -21,7 +23,7 @@ import org.hibernate.annotations.Index;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import es.caib.regweb3.model.utils.DocumentoNotificacion;
+import es.caib.regweb3.model.utils.DocumentoVisor;
 
 /**
  * Created by Limit Tecnologies S.L.
@@ -49,6 +51,8 @@ public class Remesa implements Serializable {
     private String concepto;
     private String descripcion;
     private String identificador;
+    private String identificadorIntern;
+    private String referencia;
     private Integer codigoOrigen;
     private Integer tipo;
     private String organoEmisorCodigo;
@@ -57,11 +61,17 @@ public class Remesa implements Serializable {
     private Date fechaPuestaDisposicion;
     private String titularNif;
     private String titularNombre;
+    private String titularDir3codi;
     private String entidadCodigo;
     private String entidadNombre;
     private String estado;
     private String estadoNotifica;
     private String codigoProcedimiento;
+    private Date fechaEstado;
+    private Date fechaCreacion;
+    private Date fechaEnvio;
+    private Date fechaFinalizacion;
+    
     // Reintentos lectura notificación
     private Integer reintentosLectura;
     
@@ -71,18 +81,28 @@ public class Remesa implements Serializable {
 
     private UsuarioEntidad usuario;
     
-    private List<DocumentoNotificacion> documentosRecibidos = new ArrayList<DocumentoNotificacion>();
+    private List<DocumentoVisor> documentosRecibidos = new ArrayList<DocumentoVisor>();
+    
+    private TipoRemesa tipoRemesa;
+    
+    private String mensajeError;
+    
+    public enum TipoRemesa {
+    	ENVIADA,
+    	RECIBIDA
+    }
     
     public Remesa() { }
 
 
-	public Remesa(String concepto, String descripcion, String identificador, Integer codigoOrigen, Integer tipo, String organoEmisorCodigo, String organoEmisorNif,
-			String organoEmisorNombre, Date fechaPuestaDisposicion, String titularNif, String titularNombre, String entidadCodigo, String entidadNombre, 
-			String estado, String estadoNotifica, String codigoProcedimiento, Integer reintentosLectura, Entidad entidad, UsuarioEntidad usuario) {
+	public Remesa(String concepto, String descripcion, String identificador, String identificadorIntern, Integer codigoOrigen, Integer tipo, String organoEmisorCodigo, String organoEmisorNif,
+			String organoEmisorNombre, Date fechaPuestaDisposicion, String titularNif, String titularNombre, String titularDir3codi, String entidadCodigo, String entidadNombre, 
+			String estado, String estadoNotifica, String codigoProcedimiento, Integer reintentosLectura, Entidad entidad, UsuarioEntidad usuario, TipoRemesa tipoRemesa) {
 		super();
 		this.concepto = concepto;
 		this.descripcion = descripcion;
 		this.identificador = identificador;
+		this.identificadorIntern = identificadorIntern;
 		this.codigoOrigen = codigoOrigen;
 		this.tipo = tipo;
 		this.organoEmisorCodigo = organoEmisorCodigo;
@@ -91,6 +111,7 @@ public class Remesa implements Serializable {
 		this.fechaPuestaDisposicion = fechaPuestaDisposicion;
 		this.titularNif = titularNif;
 		this.titularNombre = titularNombre;
+		this.titularDir3codi = titularDir3codi;
 		this.entidadCodigo = entidadCodigo;
 		this.entidadNombre = entidadNombre;
 		this.estado = estado;
@@ -99,6 +120,7 @@ public class Remesa implements Serializable {
 		this.reintentosLectura = reintentosLectura;
 		this.entidad = entidad;
 		this.usuario = usuario;
+		this.tipoRemesa = tipoRemesa;
 	}
 
 	@Id
@@ -130,7 +152,7 @@ public class Remesa implements Serializable {
 		this.descripcion = descripcion;
 	}
 
-	@Column(name = "IDENTIFICADOR", nullable = false)
+	@Column(name = "IDENTIFICADOR")
 	public String getIdentificador() {
 		return identificador;
 	}
@@ -138,8 +160,26 @@ public class Remesa implements Serializable {
 	public void setIdentificador(String identificador) {
 		this.identificador = identificador;
 	}
+	
+	@Column(name = "IDENTIFICADOR_INTERN")
+	public String getIdentificadorIntern() {
+		return identificadorIntern;
+	}
 
-	@Column(name = "CODIGO_ORIGEN", nullable = false)
+	public void setIdentificadorIntern(String identificadorIntern) {
+		this.identificadorIntern = identificadorIntern;
+	}
+	
+	@Column(name = "REFERENCIA")
+	public String getReferencia() {
+		return referencia;
+	}
+
+	public void setReferencia(String referencia) {
+		this.referencia = referencia;
+	}
+
+	@Column(name = "CODIGO_ORIGEN")
 	public Integer getCodigoOrigen() {
 		return codigoOrigen;
 	}
@@ -186,7 +226,7 @@ public class Remesa implements Serializable {
 		this.organoEmisorNombre = organoEmisorNombre;
 	}
 
-	@Column(name = "FECHA_PUESTA_DISPOSICION", nullable = false)
+	@Column(name = "FECHA_PUESTA_DISPOSICION")
 	public Date getFechaPuestaDisposicion() {
 		return fechaPuestaDisposicion;
 	}
@@ -212,6 +252,16 @@ public class Remesa implements Serializable {
 	public void setTitularNombre(String titularNombre) {
 		this.titularNombre = titularNombre;
 	}
+	
+	@Column(name = "TITULAR_DIR3CODI")
+	public String getTitularDir3codi() {
+		return titularDir3codi;
+	}
+
+	public void setTitularDir3codi(String titularDir3codi) {
+		this.titularDir3codi = titularDir3codi;
+	}
+
 
 	@Column(name = "ENTIDAD_CODIGO")
 	public String getEntidadCodigo() {
@@ -243,7 +293,7 @@ public class Remesa implements Serializable {
 		this.estado = estado;
 	}
 
-	@Column(name = "ESTADO_NOTIFICA", nullable = false)
+	@Column(name = "ESTADO_NOTIFICA")
 	public String getEstadoNotifica() {
 		return estadoNotifica;
 	}
@@ -306,13 +356,70 @@ public class Remesa implements Serializable {
     public void setUsuario(UsuarioEntidad usuario) {
         this.usuario = usuario;
     }
-    
-    @Transient
-	public List<DocumentoNotificacion> getDocumentosRecibidos() {
+
+	@Column(name = "TIPO_REMESA", nullable = true)
+	@Enumerated(EnumType.STRING)
+	public TipoRemesa getTipoRemesa() {
+		return tipoRemesa;
+	}
+
+	public void setTipoRemesa(TipoRemesa tipoRemesa) {
+		this.tipoRemesa = tipoRemesa;
+	}
+
+	@Column(name = "FECHA_ESTADO")
+	public Date getFechaEstado() {
+		return fechaEstado;
+	}
+
+	public void setFechaEstado(Date fechaEstado) {
+		this.fechaEstado = fechaEstado;
+	}
+
+	@Column(name = "FECHA_CREACION")
+	public Date getFechaCreacion() {
+		return fechaCreacion;
+	}
+
+	public void setFechaCreacion(Date fechaCreacion) {
+		this.fechaCreacion = fechaCreacion;
+	}
+
+	@Column(name = "FECHA_ENVIO")
+	public Date getFechaEnvio() {
+		return fechaEnvio;
+	}
+
+	public void setFechaEnvio(Date fechaEnvio) {
+		this.fechaEnvio = fechaEnvio;
+	}
+
+	@Column(name = "FECHA_FINALIZACION")
+	public Date getFechaFinalizacion() {
+		return fechaFinalizacion;
+	}
+
+	public void setFechaFinalizacion(Date fechaFinalizacion) {
+		this.fechaFinalizacion = fechaFinalizacion;
+	}
+
+	@Column(name = "MENSAJE_ERROR")
+	public String getMensajeError() {
+		return mensajeError;
+	}
+
+
+	public void setMensajeError(String mensajeError) {
+		this.mensajeError = mensajeError;
+	}
+
+
+	@Transient
+	public List<DocumentoVisor> getDocumentosRecibidos() {
 		return documentosRecibidos;
 	}
 
-	public void setDocumentosRecibidos(List<DocumentoNotificacion> documentosRecibidos) {
+	public void setDocumentosRecibidos(List<DocumentoVisor> documentosRecibidos) {
 		this.documentosRecibidos = documentosRecibidos;
 	}
 

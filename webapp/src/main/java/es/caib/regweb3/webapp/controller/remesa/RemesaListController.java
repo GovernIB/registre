@@ -50,7 +50,7 @@ import es.caib.regweb3.model.TipoDocumental;
 import es.caib.regweb3.model.Usuario;
 import es.caib.regweb3.model.UsuarioEntidad;
 import es.caib.regweb3.model.utils.AnexoFull;
-import es.caib.regweb3.model.utils.DocumentoNotificacion;
+import es.caib.regweb3.model.utils.DocumentoVisor;
 import es.caib.regweb3.persistence.ejb.AnexoLocal;
 import es.caib.regweb3.persistence.ejb.MultiEntidadLocal;
 import es.caib.regweb3.persistence.ejb.RegistroEntradaLocal;
@@ -125,7 +125,7 @@ public class RemesaListController extends AbstractRegistroCommonFormController {
         calendar.add(Calendar.DAY_OF_MONTH, -30); // Restar 30 días
         Date fechaDesde = calendar.getTime();
         
-        remesa.setEstado(RegwebConstantes.REMESA_ENV_ESTADO_PENDIENTE);
+        remesa.setEstado(RegwebConstantes.REMESA_ENV_ESTADO_PENDIENTE_SEDE);
         
         RemesaBusqueda remesaBusqueda = new RemesaBusqueda(remesa, null, null, null, 1);
         remesaBusqueda.setFechaPuestaDisposicionDesde(fechaDesde);
@@ -193,7 +193,7 @@ public class RemesaListController extends AbstractRegistroCommonFormController {
     		Model model, HttpServletRequest request) throws Exception, I18NException {
     	Entidad entidad = getEntidadActiva(request);
         try {
-        	Remesa remesa = remesaEjb.findByIdentificador(identificador);
+        	Remesa remesa = remesaConsultaEjb.getByIdentificador(identificador);
         	
         	if (remesa.getReintentosLectura() == 0)
         		throw new RuntimeException("Superado el número de reintentos de lectura, consulte el administrador");
@@ -207,13 +207,13 @@ public class RemesaListController extends AbstractRegistroCommonFormController {
         	
         	if (documentos != null) {
         		for (File documento : documentos) {
-					DocumentoNotificacion documentoRecibido = new DocumentoNotificacion();
 					String mimeType = Files.probeContentType(documento.toPath());
 					byte[] contenido = Files.readAllBytes(documento.toPath());
-					
-					documentoRecibido.setNombre(documento.getName());
-					documentoRecibido.setMimeType(mimeType);
-					documentoRecibido.setContenido(Base64.encodeBase64String(contenido));
+
+        			DocumentoVisor documentoRecibido = new DocumentoVisor(
+        					documento.getName(), 
+        					mimeType, 
+        					Base64.encodeBase64String(contenido));
 					
 					remesa.getDocumentosRecibidos().add(documentoRecibido);
 				}
@@ -239,19 +239,19 @@ public class RemesaListController extends AbstractRegistroCommonFormController {
 //        		identificador, 
 //        		entidad);
         	
-        	Remesa remesa = remesaEjb.findByIdentificador(identificador);
+        	Remesa remesa = remesaConsultaEjb.getByIdentificador(identificador);
         	
         	List<File> documentos = documentManager.getDocuments(identificador);
         	
         	if (documentos != null) {
         		for (File documento : documentos) {
-					DocumentoNotificacion documentoRecibido = new DocumentoNotificacion();
 					String mimeType = Files.probeContentType(documento.toPath());
 					byte[] contenido = Files.readAllBytes(documento.toPath());
 					
-					documentoRecibido.setNombre(documento.getName());
-					documentoRecibido.setMimeType(mimeType);
-					documentoRecibido.setContenido(Base64.encodeBase64String(contenido));
+					DocumentoVisor documentoRecibido = new DocumentoVisor(
+        					documento.getName(), 
+        					mimeType, 
+        					Base64.encodeBase64String(contenido));
 					
 					remesa.getDocumentosRecibidos().add(documentoRecibido);
 				}
@@ -389,7 +389,7 @@ public class RemesaListController extends AbstractRegistroCommonFormController {
                 
                 registroEntrada = procesarRegistroEntrada(registroEntrada, entidad);
 
-                Remesa remesa = remesaEjb.findByIdentificador(identificador);
+                Remesa remesa = remesaConsultaEjb.getByIdentificador(identificador);
 
                 // Crear anexos i interesados relacionados con el registro de entrada
                 List<Interesado> interesados = cargarInteresados(remesa);
@@ -446,7 +446,7 @@ public class RemesaListController extends AbstractRegistroCommonFormController {
     }
     
     private void cargarFormularioRegistro(Model model, RegistroEntrada registroEntrada, HttpServletRequest request, String identificador) throws Exception {
-    	Remesa remesa = remesaEjb.findByIdentificador(identificador);
+    	Remesa remesa = remesaConsultaEjb.getByIdentificador(identificador);
         registroEntrada.getRegistroDetalle().setExtracto(remesa.getConcepto());
         registroEntrada.getRegistroDetalle().setTipoDocumentacionFisica(3L);
         if (remesa.getCodigoProcedimiento() != null)
@@ -541,8 +541,8 @@ public class RemesaListController extends AbstractRegistroCommonFormController {
     	List<AnexoFull> anexosFull = new ArrayList<AnexoFull>();
     	
     	if (identificador == null) {
-    		Remesa remesa = remesaEjb.findByRegistroEntrada(registroEntrada.getId());
-    		identificador = remesa != null ? remesa.getIdentificador() : null;
+    		List<Remesa> remesas = remesaConsultaEjb.findByRegistroEntrada(registroEntrada.getId());
+    		identificador = remesas != null ? remesas.get(0).getIdentificador() : null;
     	}
     	
 	    if (identificador != null) {

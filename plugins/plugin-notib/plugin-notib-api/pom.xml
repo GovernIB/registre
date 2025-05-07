@@ -1,0 +1,33 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>es.caib.regweb3</groupId>
+		<artifactId>plugin-notib</artifactId>
+		<version>3.2.4</version>
+	</parent>
+	<artifactId>plugin-notib-api</artifactId>
+
+	<dependencies>
+		<dependency>
+			<groupId>es.caib.notib</groupId>
+			<artifactId>notib-client</artifactId>
+			<version>${notib.version}</version>
+		</dependency>
+		
+		<dependency>
+            <groupId>org.fundaciobit.pluginsib.core</groupId>
+            <artifactId>pluginsib-core</artifactId>
+            <version>2.0.0</version>
+        </dependency>
+	</dependencies>
+
+	<repositories>
+		<repository>
+			<id>github-governib-maven-repo</id>
+			<name>GitHub GovernIB Maven Repository</name>
+			<url>http://GovernIB.github.io/maven/maven/</url>
+		</repository>
+	</repositories>
+</project>

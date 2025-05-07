@@ -72,9 +72,7 @@ public class LemaPluginHelper {
     	PeticionAccesoResponse respuesta = null;
     	ILemaPlugin lemaPlugin = getILemaPlugin(entidad.getId());
         if (lemaPlugin != null) {
-        	synchronized (Semaforo.class) {
-	        	respuesta = lemaPlugin.peticionAcceso(request);
-    		}
+	        respuesta = lemaPlugin.peticionAcceso(request);
         }
 		return respuesta;
     }
@@ -83,9 +81,7 @@ public class LemaPluginHelper {
 		ConsultaAcuseReciboResponse respuesta = null;
     	ILemaPlugin lemaPlugin = getILemaPlugin(entidad.getId());
         if (lemaPlugin != null) {
-        	synchronized (Semaforo.class) {
-	        	respuesta = lemaPlugin.consultaAcuseRecibo(request);
-    		}
+	        respuesta = lemaPlugin.consultaAcuseRecibo(request);
         }
 		return respuesta;
 	}
@@ -94,9 +90,7 @@ public class LemaPluginHelper {
 		ConsultaAnexoResponse respuesta = null;
     	ILemaPlugin lemaPlugin = getILemaPlugin(entidad.getId());
         if (lemaPlugin != null) {
-        	synchronized (Semaforo.class) {
-	        	respuesta = lemaPlugin.consultaAnexo(request);
-    		}
+	        respuesta = lemaPlugin.consultaAnexo(request);
         }
 		return respuesta;
 	}
@@ -105,9 +99,7 @@ public class LemaPluginHelper {
 		String respuesta = null;
     	ILemaPlugin lemaPlugin = getILemaPlugin(entidad.getId());
         if (lemaPlugin != null) {
-        	synchronized (Semaforo.class) {
-	        	respuesta = lemaPlugin.consultaPropietat(propietat);
-    		}
+	        respuesta = lemaPlugin.consultaPropietat(propietat);
         }
 		return respuesta;
 	}

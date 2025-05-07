@@ -764,7 +764,7 @@ public class SchedulerBean implements SchedulerLocal{
 	private StringBuilder construirCuerpoMensaje(Entidad entidad, Locale locale) throws Exception {
 		StringBuilder cuerpo = new StringBuilder();
 		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-		List<Remesa> remesasPendientes = remesaConsultaEjb.getByEntidadAndEstado(
+		List<Remesa> remesasPendientes = remesaConsultaEjb.findByEntidadAndEstado(
 				entidad.getId(), 
 				RegwebConstantes.REMESA_ESTADO_REG_PENDIENTE);
 		

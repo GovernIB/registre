@@ -19,7 +19,7 @@ import es.caib.regweb3.persistence.utils.Paginacion;
  */
 @Local
 @RolesAllowed({ "RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI" })
-public interface RemesaConsultaLocal {
+public interface RemesaConsultaLocal extends BaseEjb<Remesa, Long> {
 
 	public List<Remesa> getByEntidad(Long idEntidad) throws Exception;
 
@@ -30,6 +30,14 @@ public interface RemesaConsultaLocal {
 
 	public void localizaGuardaNotificaciones(Entidad entidad) throws I18NException, Exception;
 
-	public List<Remesa> getByEntidadAndEstado(Long idEntidad, String estado) throws Exception;
+	public List<Remesa> findByEntidadAndEstado(Long idEntidad, String estado) throws Exception;
+
+	public List<Remesa> findByRegistroEntrada(Long registroId);
+	
+	public Remesa getByIdentificador(String identificador);
+
+	public Remesa getByIdentificadorAndReferencia(String identificador, String referencia);
+
+	public Remesa getById(Long remesaId) throws Exception;
 	
 }
