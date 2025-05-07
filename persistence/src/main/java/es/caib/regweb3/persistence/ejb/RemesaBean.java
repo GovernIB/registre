@@ -42,15 +42,11 @@ import org.plugin.lema.api.ReferenciaDocumento;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
 
-import es.caib.notib.client.domini.EnviamentEstat;
 import es.caib.notib.client.domini.EnviamentReferencia;
 import es.caib.notib.client.domini.EnviamentTipus;
 import es.caib.notib.client.domini.EnviamentV2;
-import es.caib.notib.client.domini.NotificacioEstatEnum;
 import es.caib.notib.client.domini.NotificacioV2;
 import es.caib.notib.client.domini.RespostaAlta;
-import es.caib.notib.client.domini.RespostaConsultaEstatEnviamentV2;
-import es.caib.notib.client.domini.RespostaConsultaEstatNotificacioV2;
 import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.model.RegistroEntrada;
 import es.caib.regweb3.model.Remesa;
@@ -60,7 +56,6 @@ import es.caib.regweb3.model.UsuarioEntidad;
 import es.caib.regweb3.persistence.utils.DehuDocumentManager;
 import es.caib.regweb3.persistence.utils.LemaPluginHelper;
 import es.caib.regweb3.persistence.utils.LemaUtils;
-import es.caib.regweb3.persistence.utils.NotibPluginHelper;
 import es.caib.regweb3.utils.MimeTypeUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 
@@ -89,9 +84,6 @@ public class RemesaBean extends BaseEjbJPA<Remesa, Long> implements RemesaLocal 
 	
 	@Autowired 
 	private LemaPluginHelper pluginHelper;
-	
-	@Autowired
-	private NotibPluginHelper notibPluginHelper;
 
 	@Autowired
 	private DehuDocumentManager documentManager;
@@ -249,7 +241,7 @@ public class RemesaBean extends BaseEjbJPA<Remesa, Long> implements RemesaLocal 
 				}
 				
 				
-			} else if (NotificacioEstatEnum.PENDENT.equals(respuesta.getEstat())) {
+			} else {
 				for (Remesa remesa : remesas) {
 					actualizarMensajeError(remesa.getId(), respuesta.getErrorDescripcio());
 				}
@@ -347,6 +339,7 @@ public class RemesaBean extends BaseEjbJPA<Remesa, Long> implements RemesaLocal 
 			if ((response != null && RegwebConstantes.LEMA_RESPUESTA_OK.equals(response.getCodigoRespuesta())) || leida) {
 				actualizarEstadoNotifica(
 						identificador, 
+						null, 
 						null,
 						RegwebConstantes.REMESA_ESTADO_REG_LEIDA, 
 						null,
@@ -412,146 +405,6 @@ public class RemesaBean extends BaseEjbJPA<Remesa, Long> implements RemesaLocal 
 	}
 
 	@Override
-	public void notificacionActualitzarEstado(String identificadorNotib, String referenciaEnviament, Entidad entidad) {
-		// Consultar notificació per identificador i referencia i si existeix actualitzar estat, sino, no fer res
-		try {
-			RespostaConsultaEstatEnviamentV2 resposta = notibPluginHelper.consultarEnvio(
-					referenciaEnviament, 
-					entidad.getId());
-			
-			RespostaConsultaEstatNotificacioV2 respostaNotificioEstat = notibPluginHelper.consultarNotificacion(
-					identificadorNotib, 
-					entidad.getId());
-
-			String estadoNotificacion = obtenerEstadoNotificacion(respostaNotificioEstat.getEstat());
-			String  estadoNotifica = obtenerEstadoEnvio(resposta.getEstat());
-			Date estadoData = resposta.getEstatData();
-			Date fechaCreacion = respostaNotificioEstat.getDataCreada();
-			Date fechaEnviada = respostaNotificioEstat.getDataEnviada();
-			Date fechaFinalizada = respostaNotificioEstat.getDataFinalitzada();
-			
-			actualizarEstadoNotifica(
-					identificadorNotib, 
-					referenciaEnviament, 
-					estadoNotificacion, 
-					estadoData,
-					estadoNotifica,
-					fechaCreacion,
-					fechaEnviada,
-					fechaFinalizada);
-			
-			em.flush();
-		} catch (I18NException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-	}
-	
-	private String obtenerEstadoEnvio(EnviamentEstat estat) {
-		String estado = null;
-		
-		switch (estat) {
-		case ABSENT:
-			estado = RegwebConstantes.REMESA_ENV_ESTADO_AUSENTE;
-			break;
-		case DESCONEGUT:
-			estado = RegwebConstantes.REMESA_ENV_ESTADO_DESCONOCIDO;
-			break;
-		case ADRESA_INCORRECTA:
-			estado = RegwebConstantes.REMESA_ENV_ESTADO_DIRECCION_INCO;
-			break;
-		case ENVIADA_DEH:
-			estado = RegwebConstantes.REMESA_ENV_ESTADO_ENVIADO_DEH;
-			break;
-		case ENVIADA_CI:
-			estado = RegwebConstantes.REMESA_ENV_ESTADO_ENVIADO_CI;
-			break;
-		case ENTREGADA_OP:
-			estado = RegwebConstantes.REMESA_ENV_ESTADO_ENTREGADO_OP;
-			break;
-		case LLEGIDA:
-			estado = RegwebConstantes.REMESA_ENV_ESTADO_LEIDA;
-			break;
-		case ERROR_ENTREGA:
-			estado = RegwebConstantes.REMESA_ENV_ESTADO_ERROR;
-			break;
-		case EXTRAVIADA:
-			estado = RegwebConstantes.REMESA_ENV_ESTADO_EXTRAVIADA;
-			break;
-		case MORT:
-			estado = RegwebConstantes.REMESA_ENV_ESTADO_FALLECIDO;
-			break;
-		case NOTIFICADA:
-			estado = RegwebConstantes.REMESA_ENV_ESTADO_NOTIFICADA;
-			break;
-		case PENDENT_ENVIAMENT:
-			estado = RegwebConstantes.REMESA_ENV_ESTADO_PENDIENTE_ENVIO;
-			break;
-		case PENDENT_CIE:
-			estado = RegwebConstantes.REMESA_ENV_ESTADO_PENDIENTE_CIE;
-			break;
-		case PENDENT_DEH:
-			estado = RegwebConstantes.REMESA_ENV_ESTADO_PENDIENTE_DEH;
-			break;
-		case PENDENT_SEU:
-			estado = RegwebConstantes.REMESA_ENV_ESTADO_PENDIENTE_SEDE;
-			break;
-		case REBUTJADA:
-			estado = RegwebConstantes.REMESA_ENV_ESTADO_REHUSADA;
-			break;
-		case EXPIRADA:
-			estado = RegwebConstantes.REMESA_ENV_ESTADO_EXPIRADA;
-			break;
-		case ENVIAMENT_PROGRAMAT:
-			estado = RegwebConstantes.REMESA_ENV_ESTADO_ENVIO_PROGRAM;
-			break;
-		case SENSE_INFORMACIO:
-			estado = RegwebConstantes.REMESA_ENV_ESTADO_SIN_INFO;
-			break;
-		case ANULADA:
-			estado = RegwebConstantes.REMESA_ENV_ESTADO_ANULADA;
-			break;
-		default:
-			break;
-		}
-		
-		return estado;
-	}
-
-	private String obtenerEstadoNotificacion(NotificacioEstatEnum estat) {
-		String estado = null;
-		
-		switch (estat) {
-		case PENDENT:
-			estado = RegwebConstantes.REMESA_ESTADO_REG_PENDIENTE;
-			break;
-		case REGISTRADA:
-			estado = RegwebConstantes.REMESA_ESTADO_REG_REGISTRADA;
-			break;
-		case ENVIADA:
-			estado = RegwebConstantes.REMESA_ESTADO_REG_ENVIADA;
-			break;
-		case ENVIADA_AMB_ERRORS:
-			estado = RegwebConstantes.REMESA_ESTADO_REG_ENVIADA;
-			break;
-		case FINALITZADA:
-			estado = RegwebConstantes.REMESA_ESTADO_REG_FINALIZADA;
-			break;
-		case FINALITZADA_AMB_ERRORS:
-			estado = RegwebConstantes.REMESA_ESTADO_REG_FINALIZADA;
-			break;
-		case PROCESSADA:
-			estado = RegwebConstantes.REMESA_ESTADO_REG_PROCESADA;
-			break;
-		default:
-			break;
-		}
-		
-		return estado;
-	}
-	
-	@Override
 	@TransactionTimeout(value = 1200) // 20 minutos
 	public void actualizarEstado(String identificador, String estado) throws Exception {
 
@@ -579,6 +432,7 @@ public class RemesaBean extends BaseEjbJPA<Remesa, Long> implements RemesaLocal 
 	@Override
 	@TransactionTimeout(value = 1200) // 20 minutos
 	public void actualizarEstadoNotifica(
+			String identificador, 
 			String identificadorIntern, 
 			String referencia, 
 			String estado, 
@@ -605,14 +459,16 @@ public class RemesaBean extends BaseEjbJPA<Remesa, Long> implements RemesaLocal 
 			q.setParameter("fechaCreacion", fechaCreacion);
 			q.setParameter("fechaEnvio", fechaEnvio);
 			q.setParameter("fechaFinalizacion", fechaFinalizacion);
+			q.setParameter("identificadorIntern", identificadorIntern);
 		} else {
 			q = em.createQuery(
 					"update Remesa set estado=:estado, estadoNotifica=:estadoNotifica where identificador = :identificador");
+			q.setParameter("identificador", identificador);
 		}
 		
 		q.setParameter("estado", estado);
 		q.setParameter("estadoNotifica", estadoNotifica);
-		q.setParameter("identificadorIntern", identificadorIntern);
+		
 		if (referencia != null)
 			q.setParameter("referencia", referencia);
 		q.executeUpdate();
@@ -684,6 +540,7 @@ public class RemesaBean extends BaseEjbJPA<Remesa, Long> implements RemesaLocal 
     }
     
 	@TransactionTimeout(value = 1200) // 20 minutos
+	@Override
     public void actualizarMensajeError(Long idRemesa, String mensajeError) throws Exception {
         Query q = em.createQuery("update Remesa set mensajeError = :mensajeError where id = :idRemesa");
         q.setParameter("mensajeError", mensajeError);

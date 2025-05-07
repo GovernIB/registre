@@ -197,7 +197,7 @@
                                                                 <td class="center"><spring:message code="remesa.list.estado.notifica.${remesa.estadoNotifica}"/></td>
                                                                 <td class="center">
                                                                 	<c:choose>
-                                                                		<c:when test="${remesa.estado == 'PENDIENTE'}">
+                                                                		<c:when test="${remesa.estado == 'PENDENT'}">
                                                                 			<span class="fa ${remesa.reintentosLectura == 1 ? 'fa-warning text-danger' : 'fa-envelope text-warning'}"
 																					title="<spring:message code="${remesa.reintentosLectura > 0 ? 'remesa.list.reintentos.comentario' : 'remesa.list.reintentos.agotados.comentario'}"/>"> ${remesa.reintentosLectura}
 																			</span>

@@ -23,7 +23,7 @@ public class PdfGenerator {
 //        	String cuerpo = "Existe un trámite a medida '" + codigoSia + "' para realizar el registro";
         	String url = PropiedadGlobalUtil.getUrlBaseSede() + codigoSia;
 //        	String titulo = I18NLogicUtils.tradueix(locale, "clasificar.registro.documento.titulo", new String[] {registroEntrada.getNumeroRegistro()});
-        	String cuerpo = I18NLogicUtils.tradueix(locale, "clasificar.registro.documento.cuerpo", new String[] {String.valueOf(codigoSia)});
+        	String cuerpo = I18NLogicUtils.tradueix(locale, "clasificar.registro.documento.cuerpo", new String[] {registroEntrada.getNumeroRegistro()});
         	String botonEnlace = I18NLogicUtils.tradueix(locale, "clasificar.registro.documento.enlace");
         	
         	PdfWriter.getInstance(document, baos);

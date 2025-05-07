@@ -1,20 +1,19 @@
 INSERT INTO RWE_PLUGIN (ID, ACTIVO, CLASE, DESCRIPCION, ENTIDAD, NOMBRE, PROPIEDADES_ADMIN, PROPIEDADES_ENTIDAD, TIPO) VALUES (
 	RWE_ALL_SEQ.nextVal,
-	true,
-	'org.plugin.lema.apb.NotibApbPlugin',
+	1,
+	'org.plugin.notib.apb.NotibApbPlugin',
 	'Integració Notib',
-	16,
+	ID_ENTIDAD,
 	'Integració Notib',
 	NULL,
-	'es.caib.regweb3.plugins.notib.apb.endpoint=https://notib-proves.portsdebalears.com/notibapi
-	es.caib.regweb3.plugins.notib.apb.autenticacioBasic=true
-	es.caib.regweb3.plugins.notib.apb.username=notib-proves
+	'es.caib.regweb3.plugins.notib.apb.endpoint=https://notib-proves.portsdebalears.com/notibapi/interna
+	es.caib.regweb3.plugins.notib.apb.username=regweb-notib
 	es.caib.regweb3.plugins.notib.apb.password=
 	es.caib.regweb3.plugins.notib.apb.retard.num.dies=0
 	es.caib.regweb3.plugins.notib.apb.enviament.deh.activa=false
 	es.caib.regweb3.plugins.notib.apb.forsar.entitat=
 	es.caib.regweb3.plugins.notib.apb.caducitat.num.dies=15',
-	12);
+	13);
 		
 ALTER TABLE RWE_REMESA MODIFY IDENTIFICADOR NULL;
 ALTER TABLE RWE_REMESA MODIFY CODIGO_ORIGEN NULL;

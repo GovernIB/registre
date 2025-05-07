@@ -44,8 +44,8 @@ public interface RemesaLocal extends BaseEjb<Remesa, Long> {
 
 	public void actualizarEstado(String identificador, String estado) throws Exception;
 
-	public void actualizarEstadoNotifica(String identificador, String referencia, String estado, Date fechaEstado, String estadoNotifica, Date fechaCreacion, Date fechaEnviada, Date fechaFinalizada);
+	public void actualizarEstadoNotifica(String identificador, String identificadorIntern, String referencia, String estado, Date fechaEstado, String estadoNotifica, Date fechaCreacion, Date fechaEnviada, Date fechaFinalizada);
 
-	public void notificacionActualitzarEstado(String identificadorNotib, String referenciaEnviament, Entidad entidad);
+	public void actualizarMensajeError(Long id, String errorDescripcio) throws Exception;
 
 }

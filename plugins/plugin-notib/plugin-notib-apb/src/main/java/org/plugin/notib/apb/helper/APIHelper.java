@@ -37,13 +37,13 @@ public class APIHelper {
 		if (body != null) {
 			String jsonBody = mapper.writeValueAsString(body);
 			
-			response = getJerseyRolsacClient()
+			response = getJerseyNotibClient()
 				.resource(url)
 				.accept(MediaType.APPLICATION_JSON)
 				.type(MediaType.APPLICATION_JSON)
 				.post(ClientResponse.class, jsonBody);
 		} else {
-			response = getJerseyRolsacClient()
+			response = getJerseyNotibClient()
 					.resource(url)
 					.accept(MediaType.APPLICATION_JSON)
 					.post(ClientResponse.class);
@@ -57,13 +57,13 @@ public class APIHelper {
 			Class<R> reference) throws IOException {
 		ClientResponse response = null;
 		if (parameter != null) {			
-			response = getJerseyRolsacClient()
+			response = getJerseyNotibClient()
 				.resource(url + "/" + parameter)
 				.accept(MediaType.APPLICATION_JSON)
 				.type(MediaType.APPLICATION_JSON)
 				.get(ClientResponse.class);
 		} else {
-			response = getJerseyRolsacClient()
+			response = getJerseyNotibClient()
 					.resource(url)
 					.accept(MediaType.APPLICATION_JSON)
 					.post(ClientResponse.class);
@@ -72,7 +72,7 @@ public class APIHelper {
 		return mapper.readValue(json, reference);
 	}
 
-	private Client getJerseyRolsacClient() {
+	private Client getJerseyNotibClient() {
 
 		if (jerseyProxyClient == null) {
 			jerseyProxyClient = new Client();
@@ -89,6 +89,8 @@ public class APIHelper {
 			mapper.setSerializationInclusion(Include.NON_NULL);
 			// No falla si hi ha propietats que no estan definides a l'objecte destí
 			mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+		} else {
+			jerseyProxyClient.addFilter(new HTTPBasicAuthFilter(username, password));
 		}
 		return jerseyProxyClient;
 	}
