@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by Fundació BIT.
@@ -219,6 +220,10 @@ public class LoginService {
         // Las guardamos
         loginInfo.getEntidades().addAll(entidadesAdministradas);
         loginInfo.getEntidades().addAll(entidadesPropietario);
+
+        //Eliminam duplicats
+        List<Entidad> listaEntidadesSinDuplicados = loginInfo.getEntidades().stream().distinct().collect(Collectors.toList());
+        loginInfo.setEntidades(listaEntidadesSinDuplicados);
 
         // Definimos la Entidad Activa
         if (!loginInfo.getEntidades().isEmpty()) {
