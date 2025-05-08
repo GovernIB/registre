@@ -4,6 +4,7 @@ import javax.persistence.*;
 import javax.xml.bind.annotation.*;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 
@@ -392,16 +393,17 @@ public class Entidad implements Serializable {
         this.regSalidasPersonas = regSalidasPersonas;
     }
 
+
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         Entidad entidad = (Entidad) o;
+        return Objects.equals(id, entidad.id);
+    }
 
-        if (id != null ? !id.equals(entidad.id) : entidad.id != null) return false;
-
-        return true;
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
     }
 
     @Override
