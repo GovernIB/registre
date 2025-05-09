@@ -19,6 +19,7 @@
         <module>api</module>
         <module>justificante-caib</module>
         <module>justificante-mock</module>
+        <module>justificante-apb</module>
     </modules>
 
 </project>
