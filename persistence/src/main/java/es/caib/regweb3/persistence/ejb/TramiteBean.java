@@ -30,13 +30,16 @@ import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
 import es.caib.notib.client.domini.Certificacio;
 import es.caib.notib.client.domini.DocumentV2;
 import es.caib.notib.client.domini.EntregaDeh;
+import es.caib.notib.client.domini.EnviamentEstat;
 import es.caib.notib.client.domini.EnviamentTipus;
 import es.caib.notib.client.domini.EnviamentV2;
 import es.caib.notib.client.domini.InteressatTipus;
+import es.caib.notib.client.domini.NotificacioEstatEnum;
 import es.caib.notib.client.domini.NotificacioV2;
 import es.caib.notib.client.domini.PersonaV2;
 import es.caib.notib.client.domini.RespostaAlta;
 import es.caib.notib.client.domini.RespostaConsultaEstatEnviamentV2;
+import es.caib.notib.client.domini.RespostaConsultaEstatNotificacioV2;
 import es.caib.notib.client.domini.ServeiTipus;
 import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.model.Interesado;
@@ -136,17 +139,17 @@ public class TramiteBean implements TramiteLocal {
 				registroEntrada, 
 				clasificacionForm.getCodigoSia());
 
-		// 2.- Enviar correo interesados
-		enviaMailInteresados(
-				registroEntrada, 
-				documento);
-
-		// 3.- Notificar interesados
+		// 2.- Notificar interesados
 		enviarNotificacion(
 				entidad, 
 				registroEntrada, 
 				usuarioEntidad, 
 				clasificacionForm, 
+				documento);
+
+		// 3.- Enviar correo interesados
+		enviaMailInteresados(
+				registroEntrada, 
 				documento);
 		
 		// 4.- Anular registro entrada
@@ -154,41 +157,7 @@ public class TramiteBean implements TramiteLocal {
 				registroEntrada, 
 				usuarioEntidad, 
 				"Clasificación registro de instáncia genérica");
-	}
-	
-	@Override
-	public DocumentoDto descargarCertificacion(String identificadorNotib, String referenciaEnviament, Entidad entidad) throws I18NException, Exception {
-		DocumentoDto certificado = new DocumentoDto();
-		try {
-			Remesa remesa = remesaConsultaEjb.getByIdentificadorAndReferencia(identificadorNotib, referenciaEnviament);
-			
-			RespostaConsultaEstatEnviamentV2 resposta = pluginHelper.consultarEnvio(referenciaEnviament, entidad.getId());
-			Certificacio certificacioNotib = resposta.getCertificacio();
-			
-			if (certificacioNotib != null) {
-				byte[] contenido = Base64.decodeBase64(certificacioNotib.getContingutBase64());
-				
-				certificado.setContenido(contenido);
-				certificado.setFilename("Certificació_" + remesa.getRegistro().getNumeroRegistro() + ".pdf");
-				certificado.setMimeType(certificacioNotib.getTipusMime());
-				
-				RemesaAcuse remesaAcuse = remesaAcuseEjb.findByRemesa(remesa.getId());
-				
-				if (remesaAcuse == null) {
-					remesaAcuseEjb.crearReferenciaAcuse(
-							null, 
-							certificacioNotib.getHash(), 
-							remesa);
-				}
-			}
-		} catch (I18NException e) {
-			throw e;
-		} catch (Exception e) {
-			throw e;
-		}
-		
-		return certificado;
-	}
+	}	
 
 	private void enviarNotificacion(
 			Entidad entidad,
@@ -215,7 +184,11 @@ public class TramiteBean implements TramiteLocal {
 					request, 
 					entidad);
 			
-			remesaEjb.actualizarNotificacionEnviada(remesas, respuesta);
+			if (respuesta != null && ! respuesta.isError()) {
+				remesaEjb.actualizarNotificacionEnviada(remesas, respuesta);
+			} else {
+				throw new NotibPluginException(respuesta.getErrorDescripcio());
+			}
 		} catch (NotibPluginException e) {
 			for (Remesa remesa : remesas) {
 				remesaEjb.remove(remesa);
@@ -229,6 +202,88 @@ public class TramiteBean implements TramiteLocal {
 //					resposta.getIdentificador(), 
 //					notificacion.getDocument().getArxiuNom(), 
 //					getBytesFromInputStream(documento));
+	}
+	
+	@Override
+	public void notificacionActualitzarEstado(String identificadorNotib, String referenciaEnviament, Remesa remesa) throws Exception, I18NException {
+		// Consultar notificació per identificador i referencia i si existeix actualitzar estat, sino, no fer res
+		try {
+			Entidad entidad = remesa.getEntidad();
+			RespostaConsultaEstatEnviamentV2 resposta = pluginHelper.consultarEnvio(
+					referenciaEnviament, 
+					entidad.getId());
+			
+			RespostaConsultaEstatNotificacioV2 respostaNotificioEstat = pluginHelper.consultarNotificacion(
+					identificadorNotib, 
+					entidad.getId());
+
+			if (resposta != null && respostaNotificioEstat != null && ! respostaNotificioEstat.isError() && ! resposta.isError()) {
+				String estadoNotificacion = obtenerEstadoNotificacion(respostaNotificioEstat.getEstat());
+				String  estadoNotifica = obtenerEstadoEnvio(resposta.getEstat());
+				Date estadoData = resposta.getEstatData();
+				Date fechaCreacion = respostaNotificioEstat.getDataCreada();
+				Date fechaEnviada = respostaNotificioEstat.getDataEnviada();
+				Date fechaFinalizada = respostaNotificioEstat.getDataFinalitzada();
+				
+				remesaEjb.actualizarEstadoNotifica(
+						null,
+						identificadorNotib, 
+						referenciaEnviament, 
+						estadoNotificacion, 
+						estadoData,
+						estadoNotifica,
+						fechaCreacion,
+						fechaEnviada,
+						fechaFinalizada);
+			
+			} else {
+				remesaEjb.actualizarMensajeError(remesa.getId(), respostaNotificioEstat.getErrorDescripcio());
+			}
+			em.flush();
+		} catch (NotibPluginException e) {
+			throw e;
+		}
+		
+	}
+
+	@Override
+	public DocumentoDto descargarCertificacion(String identificadorNotib, String referenciaEnviament, Entidad entidad) throws I18NException, Exception {
+		DocumentoDto certificado = new DocumentoDto();
+		try {
+			Remesa remesa = remesaConsultaEjb.getByIdentificadorAndReferencia(identificadorNotib, referenciaEnviament);
+			
+			RespostaConsultaEstatEnviamentV2 resposta = pluginHelper.consultarEnvio(referenciaEnviament, entidad.getId());
+			
+			if (resposta != null && ! resposta.isError()) {
+				Certificacio certificacioNotib = resposta.getCertificacio();
+				
+				if (certificacioNotib != null) {
+					byte[] contenido = Base64.decodeBase64(certificacioNotib.getContingutBase64());
+					
+					certificado.setContenido(contenido);
+					certificado.setFilename("Certificació_" + remesa.getRegistro().getNumeroRegistro() + ".pdf");
+					certificado.setMimeType(certificacioNotib.getTipusMime());
+					
+					RemesaAcuse remesaAcuse = remesaAcuseEjb.findByRemesa(remesa.getId());
+					
+					if (remesaAcuse == null) {
+						remesaAcuseEjb.crearReferenciaAcuse(
+								null, 
+								certificacioNotib.getHash(), 
+								remesa);
+					}
+				}
+			} else {
+				remesaEjb.actualizarMensajeError(remesa.getId(), resposta.getErrorDescripcio());
+			}
+			
+		} catch (I18NException e) {
+			throw e;
+		} catch (Exception e) {
+			throw e;
+		}
+		
+		return certificado;
 	}
 	
 	private NotificacioV2 generarDtoNotificacion(
@@ -336,6 +391,109 @@ public class TramiteBean implements TramiteLocal {
 			notificacio.getEnviaments().add(enviament);
 		}
 		return notificacio;
+	}
+	
+	private String obtenerEstadoEnvio(EnviamentEstat estat) {
+		String estado = null;
+		
+		switch (estat) {
+		case ABSENT:
+			estado = RegwebConstantes.REMESA_ENV_ESTADO_AUSENTE;
+			break;
+		case DESCONEGUT:
+			estado = RegwebConstantes.REMESA_ENV_ESTADO_DESCONOCIDO;
+			break;
+		case ADRESA_INCORRECTA:
+			estado = RegwebConstantes.REMESA_ENV_ESTADO_DIRECCION_INCO;
+			break;
+		case ENVIADA_DEH:
+			estado = RegwebConstantes.REMESA_ENV_ESTADO_ENVIADO_DEH;
+			break;
+		case ENVIADA_CI:
+			estado = RegwebConstantes.REMESA_ENV_ESTADO_ENVIADO_CI;
+			break;
+		case ENTREGADA_OP:
+			estado = RegwebConstantes.REMESA_ENV_ESTADO_ENTREGADO_OP;
+			break;
+		case LLEGIDA:
+			estado = RegwebConstantes.REMESA_ENV_ESTADO_LEIDA;
+			break;
+		case ERROR_ENTREGA:
+			estado = RegwebConstantes.REMESA_ENV_ESTADO_ERROR;
+			break;
+		case EXTRAVIADA:
+			estado = RegwebConstantes.REMESA_ENV_ESTADO_EXTRAVIADA;
+			break;
+		case MORT:
+			estado = RegwebConstantes.REMESA_ENV_ESTADO_FALLECIDO;
+			break;
+		case NOTIFICADA:
+			estado = RegwebConstantes.REMESA_ENV_ESTADO_NOTIFICADA;
+			break;
+		case PENDENT_ENVIAMENT:
+			estado = RegwebConstantes.REMESA_ENV_ESTADO_PENDIENTE_ENVIO;
+			break;
+		case PENDENT_CIE:
+			estado = RegwebConstantes.REMESA_ENV_ESTADO_PENDIENTE_CIE;
+			break;
+		case PENDENT_DEH:
+			estado = RegwebConstantes.REMESA_ENV_ESTADO_PENDIENTE_DEH;
+			break;
+		case PENDENT_SEU:
+			estado = RegwebConstantes.REMESA_ENV_ESTADO_PENDIENTE_SEDE;
+			break;
+		case REBUTJADA:
+			estado = RegwebConstantes.REMESA_ENV_ESTADO_REHUSADA;
+			break;
+		case EXPIRADA:
+			estado = RegwebConstantes.REMESA_ENV_ESTADO_EXPIRADA;
+			break;
+		case ENVIAMENT_PROGRAMAT:
+			estado = RegwebConstantes.REMESA_ENV_ESTADO_ENVIO_PROGRAM;
+			break;
+		case SENSE_INFORMACIO:
+			estado = RegwebConstantes.REMESA_ENV_ESTADO_SIN_INFO;
+			break;
+		case ANULADA:
+			estado = RegwebConstantes.REMESA_ENV_ESTADO_ANULADA;
+			break;
+		default:
+			break;
+		}
+		
+		return estado;
+	}
+
+	private String obtenerEstadoNotificacion(NotificacioEstatEnum estat) {
+		String estado = null;
+		
+		switch (estat) {
+		case PENDENT:
+			estado = RegwebConstantes.REMESA_ESTADO_REG_PENDIENTE;
+			break;
+		case REGISTRADA:
+			estado = RegwebConstantes.REMESA_ESTADO_REG_REGISTRADA;
+			break;
+		case ENVIADA:
+			estado = RegwebConstantes.REMESA_ESTADO_REG_ENVIADA;
+			break;
+		case ENVIADA_AMB_ERRORS:
+			estado = RegwebConstantes.REMESA_ESTADO_REG_ENVIADA;
+			break;
+		case FINALITZADA:
+			estado = RegwebConstantes.REMESA_ESTADO_REG_FINALIZADA;
+			break;
+		case FINALITZADA_AMB_ERRORS:
+			estado = RegwebConstantes.REMESA_ESTADO_REG_FINALIZADA;
+			break;
+		case PROCESSADA:
+			estado = RegwebConstantes.REMESA_ESTADO_REG_PROCESADA;
+			break;
+		default:
+			break;
+		}
+		
+		return estado;
 	}
 	
 	private void enviaMailInteresados(RegistroEntrada registroEntrada, byte[] documento) throws Exception {

@@ -125,7 +125,7 @@ public class RemesaListController extends AbstractRegistroCommonFormController {
         calendar.add(Calendar.DAY_OF_MONTH, -30); // Restar 30 días
         Date fechaDesde = calendar.getTime();
         
-        remesa.setEstado(RegwebConstantes.REMESA_ENV_ESTADO_PENDIENTE_SEDE);
+        remesa.setEstado(RegwebConstantes.REMESA_ESTADO_REG_PENDIENTE);
         
         RemesaBusqueda remesaBusqueda = new RemesaBusqueda(remesa, null, null, null, 1);
         remesaBusqueda.setFechaPuestaDisposicionDesde(fechaDesde);

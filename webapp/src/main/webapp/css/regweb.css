@@ -1599,11 +1599,11 @@ a.href-disabled {
 }
 
 .formulario_container_loading {
-	height: 150px;
+	height: 180px;
 }
 
 .formulario_container_loaded {
-	height: 860px;
+	height: 890px;
 }
 
 .formulario_container_loaded .resumen-documento {

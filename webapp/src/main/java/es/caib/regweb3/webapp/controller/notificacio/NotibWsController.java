@@ -2,6 +2,8 @@ package es.caib.regweb3.webapp.controller.notificacio;
 
 import javax.ejb.EJB;
 
+import org.apache.log4j.Logger;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -12,17 +14,16 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import es.caib.notib.client.domini.NotificacioCanviClient;
 import es.caib.regweb3.model.Remesa;
-import es.caib.regweb3.persistence.ejb.RemesaConsultaLocal;
-import es.caib.regweb3.persistence.ejb.RemesaLocal;
+import es.caib.regweb3.persistence.ejb.PublicLocal;
 
 @Controller
-@RequestMapping("/rest/notib")
+@RequestMapping("/public/rest/notib")
 public class NotibWsController {
 
-	@EJB(mappedName = "regweb3/RemesaConsultaEJB/local")
-    public RemesaConsultaLocal remesaConsultaEjb;
-    @EJB(mappedName = "regweb3/RemesaEJB/local")
-    private RemesaLocal remesaEjb;
+	protected final Logger log = Logger.getLogger(getClass());
+	
+	@EJB(mappedName = "regweb3/PublicEJB/local")
+    public PublicLocal publicEjb;
     
 	@RequestMapping(method = RequestMethod.GET)
 	@ResponseBody
@@ -38,13 +39,19 @@ public class NotibWsController {
 		String referencia = notificacioCanvi.getReferenciaEnviament();
 		
 		if (identificador != null && referencia != null) {
-			Remesa remesa = remesaConsultaEjb.getByIdentificadorAndReferencia(identificador, referencia);
+			Remesa remesa = publicEjb.getByIdentificadorAndReferencia(identificador, referencia);
 			
 			if (remesa != null) {
-				remesaEjb.notificacionActualitzarEstado(
-						identificador, 
-						referencia,
-						remesa.getEntidad());
+				try {
+					publicEjb.notificacionActualitzarEstado(
+							identificador, 
+							referencia,
+							remesa);
+				} catch (I18NException e) {
+					log.error("Ha habido un error consultando la notificación (identificador=" + identificador + ")");
+				} catch (Exception e) {
+					log.error("Ha habido un error consultando la notificación (identificador=" + identificador + ")");
+				}
 			}
 		
 		}

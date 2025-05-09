@@ -69,8 +69,8 @@ public class NotibApbPlugin extends AbstractPluginProperties implements INotibPl
 					request, 
 					RespostaAlta.class);
 			
-			if (respuesta.isError())
-				throw new NotibPluginException(respuesta.getErrorDescripcio());
+//			if (respuesta.isError())
+//				throw new NotibPluginException(respuesta.getErrorDescripcio());
 			
 		} catch (Exception ex) {
 			throw new NotibPluginException("[NOTIB] Ha habido un problema realizando el proceso de alta. " + ex.getMessage(), ex.getCause());
@@ -96,8 +96,8 @@ public class NotibApbPlugin extends AbstractPluginProperties implements INotibPl
 					identificador, 
 					RespostaConsultaEstatNotificacioV2.class);
 			
-			if (respuesta.isError())
-				throw new NotibPluginException(respuesta.getErrorDescripcio());
+//			if (respuesta.isError())
+//				throw new NotibPluginException(respuesta.getErrorDescripcio());
 			
 		} catch (Exception ex) {
 			throw new NotibPluginException("[NOTIB] Ha habido un problema consultando la notificación + " + identificador + ". " + ex.getMessage(), ex.getCause());
@@ -123,8 +123,8 @@ public class NotibApbPlugin extends AbstractPluginProperties implements INotibPl
 					referenciaEnviament, 
 					RespostaConsultaEstatEnviamentV2.class);
 			
-			if (respuesta.isError())
-				throw new NotibPluginException(respuesta.getErrorDescripcio());
+//			if (respuesta.isError())
+//				throw new NotibPluginException(respuesta.getErrorDescripcio());
 			
 		} catch (Exception ex) {
 			throw new NotibPluginException("[NOTIB] Ha habido un problema consultando el envío + " + referenciaEnviament + ". " + ex.getMessage(), ex.getCause());

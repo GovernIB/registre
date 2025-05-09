@@ -705,11 +705,9 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
             
             Mensaje.saveMessageInfo(request, getMessage("registroEntrada.clasificar.ok"));
 		} catch (Exception e) {
-			// TODO: handle exception
-	        Mensaje.saveMessageError(request, getMessage("rregistroEntrada.clasificar.ko") + ": " + e.getMessage());
+	        Mensaje.saveMessageError(request, getMessage("registroEntrada.clasificar.ko") + ": " + e.getMessage());
 			e.printStackTrace();
 		} catch (I18NException e) {
-			// TODO Auto-generated catch block
 	        Mensaje.saveMessageError(request, getMessage("registroEntrada.clasificar.ko"));
 			e.printStackTrace();
 		}
@@ -743,12 +741,11 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
     		HttpServletRequest request,
     		HttpServletResponse response) throws Exception, I18NException {
     	Remesa remesa = remesaConsultaEjb.getById(remesaId);
-    	Entidad entidadActiva = getEntidadActiva(request);
     	
-    	remesaEjb.notificacionActualitzarEstado(
+    	tramiteEjb.notificacionActualitzarEstado(
     			remesa.getIdentificadorIntern(), 
     			remesa.getReferencia(), 
-    			entidadActiva);
+    			remesa);
     	
     	return "redirect:/registroEntrada/"+ remesa.getRegistro().getId() + "/detalle#notificaciones";
     }
