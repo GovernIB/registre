@@ -14,5 +14,5 @@ public class ConsultaRealizadaRequest {
 	    protected String nombrePeticion;
 	    protected String concepto;
 	    protected List<Opcion> opcionesConsultaRealizadas;
-	    
+	    private AuthenticationDto authentication;
 }

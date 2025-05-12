@@ -11,13 +11,13 @@ public interface ILemaPlugin extends IPlugin {
 //	public LocalizaRealizadaResponse localizaRealizadas(LocalizaRealizadasRequest request);
 	
 	public PeticionAccesoResponse peticionAcceso(PeticionAccesoRequest request) throws LemaPluginException;
-
-//	public ConsultaRealizadaResponse consultaRealizadas(ConsultaRealizadaRequest request);
 	
 	public ConsultaAcuseReciboResponse consultaAcuseRecibo(ConsultaAcuseReciboRequest request);
 
 	public ConsultaAnexoResponse consultaAnexo(ConsultaAnexoRequest request);
 
 	public String consultaPropietat(String propietat);
+
+	public ConsultaRealizadaResponse consultaRealizada(ConsultaRealizadaRequest request);
 	
 }

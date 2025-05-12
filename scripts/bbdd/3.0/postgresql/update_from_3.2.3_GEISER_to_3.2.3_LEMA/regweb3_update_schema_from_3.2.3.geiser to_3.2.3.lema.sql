@@ -119,6 +119,9 @@ INSERT INTO RWE_PROPIEDADGLOBAL (ID, CLAVE, DESCRIPCION, ENTIDAD, TIPO, VALOR) V
 
 INSERT INTO RWE_PROPIEDADGLOBAL (ID, CLAVE, DESCRIPCION, ENTIDAD, TIPO, VALOR) VALUES (nextval('RWE_ALL_SEQ'),'es.caib.regweb3.notificaciones.pendientes.aviso.hora','Hora enviament correu informació remeses pendents',null,1,'08:40');
 
+INSERT INTO RWE_PROPIEDADGLOBAL (ID, CLAVE, DESCRIPCION, ENTIDAD, TIPO, VALOR) VALUES (nextval('RWE_ALL_SEQ'),'es.caib.regweb3.documents.dehu.path','Ubicación de los documentos temporales de DEHú fins que es guarden a Alfresco',null,1,'/home/jamal/servers/files/lema_files');
+
+
 INSERT INTO RWE_PLUGIN (ID, ACTIVO, CLASE, DESCRIPCION, ENTIDAD, NOMBRE, PROPIEDADES_ADMIN, PROPIEDADES_ENTIDAD, TIPO) VALUES (
 	nextval('RWE_ALL_SEQ'),
 	true,

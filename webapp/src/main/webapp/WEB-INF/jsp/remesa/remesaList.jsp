@@ -286,10 +286,19 @@
 		            	
 		            	cargarDetalleNotificacion(response);
 		            },
-		            error: function(XMLHttpRequest, textStatus, errorThrown) {
-		            	$('#loading').hide();
-		            	$('#remesa-btn-lectura').show();
-		                $('#errorNotificacion').text('Ocurrió un error al intentar leer la notificación.').show();
+		            error: function(xhr, textStatus, errorThrown) {
+		                $('#loading').hide();
+		                $('#remesa-btn-lectura').show();
+
+		                let mensajeError = 'Ocurrió un error al intentar leer la notificación.';
+
+		                if (xhr.responseJSON && xhr.responseJSON.error) {
+		                    mensajeError = xhr.responseJSON.error;
+		                } else if (xhr.responseText) {
+		                    mensajeError += ' ' + xhr.responseText;
+		                }
+
+		                $('#errorNotificacion').text(mensajeError).show();
 		            },
 		            complete: function() {
 		            	localStorage.removeItem("isLoadingRemesa");
