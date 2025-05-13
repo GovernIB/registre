@@ -195,17 +195,22 @@
                             <div class="tab-pane" id="justificante">
                                 <div class="col-xs-12">
                                     <dl class="detalle_registro">
-                                        <c:if test="${not registro.registroDetalle.justificante.custodiado}">
-                                            <dt><i class="fa fa-home"></i> Custodiado: </dt> <dd> ${registro.registroDetalle.justificante.custodiado}</dd>
-                                            <dt><i class="fa fa-home"></i> Perfil custodia: </dt> <dd> <spring:message code="perfilCustodia.${registro.registroDetalle.justificante.perfilCustodia}"/></dd>
-                                            <dt><i class="fa fa-home"></i> CustodyId: </dt> <dd> ${registro.registroDetalle.justificante.custodiaID}</dd>
+                                        <c:if test="${not registro.registroDetalle.justificanteGeiser}">
+                                            <c:if test="${not registro.registroDetalle.justificante.custodiado}">
+                                                <dt><i class="fa fa-home"></i> Custodiado: </dt> <dd> ${registro.registroDetalle.justificante.custodiado}</dd>
+                                                <dt><i class="fa fa-home"></i> Perfil custodia: </dt> <dd> <spring:message code="perfilCustodia.${registro.registroDetalle.justificante.perfilCustodia}"/></dd>
+                                                <dt><i class="fa fa-home"></i> CustodyId: </dt> <dd> ${registro.registroDetalle.justificante.custodiaID}</dd>
+                                            </c:if>
+                                            <c:if test="${registro.registroDetalle.justificante.custodiado}">
+                                                <dt><i class="fa fa-home"></i> Custodiado: </dt> <dd> ${registro.registroDetalle.justificante.custodiado}</dd>
+                                                <dt><i class="fa fa-home"></i> Perfil custodia: </dt> <dd> <spring:message code="perfilCustodia.${registro.registroDetalle.justificante.perfilCustodia}"/></dd>
+                                                <dt><i class="fa fa-home"></i> Csv: </dt> <dd> ${registro.registroDetalle.justificante.csv}</dd>
+                                                <dt><i class="fa fa-home"></i> CustodyId: </dt> <dd> ${registro.registroDetalle.justificante.custodiaID}</dd>
+                                                <dt><i class="fa fa-home"></i> Expediente: </dt> <dd> ${registro.registroDetalle.justificante.expedienteID}</dd>
+                                            </c:if>
                                         </c:if>
-                                        <c:if test="${registro.registroDetalle.justificante.custodiado}">
-                                            <dt><i class="fa fa-home"></i> Custodiado: </dt> <dd> ${registro.registroDetalle.justificante.custodiado}</dd>
-                                            <dt><i class="fa fa-home"></i> Perfil custodia: </dt> <dd> <spring:message code="perfilCustodia.${registro.registroDetalle.justificante.perfilCustodia}"/></dd>
-                                            <dt><i class="fa fa-home"></i> Csv: </dt> <dd> ${registro.registroDetalle.justificante.csv}</dd>
-                                            <dt><i class="fa fa-home"></i> CustodyId: </dt> <dd> ${registro.registroDetalle.justificante.custodiaID}</dd>
-                                            <dt><i class="fa fa-home"></i> Expediente: </dt> <dd> ${registro.registroDetalle.justificante.expedienteID}</dd>
+                                        <c:if test="${registro.registroDetalle.justificanteGeiser}">
+                                            <dt><i class="fa fa-home"></i> Custodiado: </dt> <dd> GEISER</dd>
                                         </c:if>
                                     </dl>
                                 </div>
