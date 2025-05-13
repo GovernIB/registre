@@ -82,6 +82,6 @@
 
     </div>
 </div> <!-- /container -->
-
+<c:import url="../modulos/pie.jsp"/>
 </body>
 </html>
