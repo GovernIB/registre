@@ -29,6 +29,8 @@ import org.plugin.lema.api.ConsultaAcuseReciboRequest;
 import org.plugin.lema.api.ConsultaAcuseReciboResponse;
 import org.plugin.lema.api.ConsultaAnexoRequest;
 import org.plugin.lema.api.ConsultaAnexoResponse;
+import org.plugin.lema.api.ConsultaRealizadaRequest;
+import org.plugin.lema.api.ConsultaRealizadaResponse;
 import org.plugin.lema.api.Contenido;
 import org.plugin.lema.api.DetalleDocumento;
 import org.plugin.lema.api.DocumentoAnexo;
@@ -316,8 +318,7 @@ public class RemesaBean extends BaseEjbJPA<Remesa, Long> implements RemesaLocal 
 		PeticionAccesoRequest request = new PeticionAccesoRequest();
 		PeticionAccesoResponse response = new PeticionAccesoResponse();
 		try {
-			boolean leida = false;
-			
+			boolean documentoRecuperado = false;
 			Remesa remesa = getByIdentificador(identificador);
 			
 			request.setIdentificador(identificador);
@@ -328,52 +329,25 @@ public class RemesaBean extends BaseEjbJPA<Remesa, Long> implements RemesaLocal 
 			
 			try {
 				response = pluginHelper.peticionAcceso(request, entidad);
-			} catch (Exception e) {
-				if (e.getMessage() != null && (e.getMessage().contains("4210") || e.getMessage().contains("4209"))) {
-					leida = true;
-				} else {
-					throw e;
-				}
+			} catch (Exception ex) {
+				documentoRecuperado = intentarRecuperarDocumento(
+						remesa, 
+						entidad, 
+						usuarioEntidad);
 			}
 			
-			if ((response != null && RegwebConstantes.LEMA_RESPUESTA_OK.equals(response.getCodigoRespuesta())) || leida) {
-				actualizarEstadoNotifica(
-						identificador, 
-						null, 
-						null,
-						RegwebConstantes.REMESA_ESTADO_REG_LEIDA, 
-						null,
-						RegwebConstantes.REMESA_ENV_ESTADO_LEIDA,
-						null,
-						null,
+			if (response != null && RegwebConstantes.LEMA_RESPUESTA_OK.equals(response.getCodigoRespuesta()) && ! documentoRecuperado) {
+				actualizarEstadoYGuardaDocumentoLegal(
+						remesa, 
+						entidad, 
+						response.getDocumento(), 
 						null);
 				
-				if (response != null && response.getDocumento() != null) {
-					DetalleDocumento detalle = response.getDocumento();
-					
-					// Guardar datos acceso obtención certificación remesa
-					if (detalle.getCsvResguardo() != null || detalle.getReferenciaPdfAcuse() != null)
-						remesaAcuseEjb.crearReferenciaAcuse(
-								detalle.getReferenciaPdfAcuse(), 
-								detalle.getCsvResguardo(), 
-								remesa);
-					// Guardar documento remesa
-					Contenido contenido = detalle.getContenido();
-					if (contenido != null) {
-						String nombreDocumento = "Notificación_" + identificador + "." + MimeTypeUtils.getExtensionFileName(detalle.getNombre());
-						guardarDocumento(identificador, nombreDocumento, contenido);
-						
-						response.getDocumento().setContenido(null);
-					}
-				}
-				
-				if (response != null) {
-					// Guardar anexos remesa
-					try {
-						consultaGuardaAnexos(entidad, response.getAnexos(), remesa);
-					} catch (Exception e) {
-						log.error("Ha habido un error guardando los anexos de la notificación con identificador: " + identificador);
-					}
+				// Guardar anexos remesa
+				try {
+					consultaGuardaAnexos(entidad, response.getAnexos(), remesa);
+				} catch (Exception e) {
+					log.error("Ha habido un error guardando los anexos de la notificación con identificador: " + identificador);
 				}
 				
 				// Guardar acuse recibo remesa
@@ -383,12 +357,10 @@ public class RemesaBean extends BaseEjbJPA<Remesa, Long> implements RemesaLocal 
 					log.error("Ha habido un error consultando el acuse de recibo de la notificación con identificador: " + identificador);
 				}
 				
-				actualizarReintentosLectura(remesa.getId());
-				
 				actualizarUsuario(usuarioEntidad, remesa.getId());
-				
-				em.flush();
 			} 
+			
+			em.flush();
 		} catch (LemaPluginException | I18NException i18ne) {
 			log.error("Error en la lectura de la notificación con identificador: " + identificador);
 			i18ne.printStackTrace();
@@ -509,8 +481,13 @@ public class RemesaBean extends BaseEjbJPA<Remesa, Long> implements RemesaLocal 
 	}
     
 	@TransactionTimeout(value = 1200) // 20 minutos
-    public void actualizarReintentosLectura(Long idRemesa) throws Exception {
+    public void actualizarReintentosLectura(Long idRemesa, Integer reintentos) throws Exception {
         Query q = em.createQuery("update Remesa set reintentosLectura = reintentosLectura-1 where id = :idRemesa");
+        
+        if (reintentos != null) {
+        	q = em.createQuery("update Remesa set reintentosLectura = :reintentos where id = :idRemesa");
+        	q.setParameter("reintentos", reintentos);
+        }
         q.setParameter("idRemesa", idRemesa);
         q.executeUpdate();
     }
@@ -548,7 +525,7 @@ public class RemesaBean extends BaseEjbJPA<Remesa, Long> implements RemesaLocal 
         q.executeUpdate();
     }
 	
-    private void guardarDocumento(String identificador, String nombre, Contenido contenido) {
+    private void guardarDocumento(String identificador, String nombre, Contenido contenido) throws IOException {
     	byte[] contenidoBytes = null;
     	boolean documentExists = documentManager.documentExists(identificador, nombre);
 		
@@ -562,6 +539,93 @@ public class RemesaBean extends BaseEjbJPA<Remesa, Long> implements RemesaLocal 
 					identificador, 
 					nombre, 
 					contenidoBytes);
+		}
+    }
+    
+    private boolean intentarRecuperarDocumento(Remesa remesa, Entidad entidad, UsuarioEntidad usuarioEntidad) throws I18NException, Exception {
+    	// Si falla la lectura, intenta obtenir el document en una segona crida
+    	boolean documentoRecuperado = false;
+    	String identificador = remesa.getIdentificador();
+		ConsultaRealizadaRequest requestRealizada = new ConsultaRealizadaRequest();
+		requestRealizada.setIdentificador(identificador);
+		requestRealizada.setCodigoOrigen(remesa.getCodigoOrigen());
+		requestRealizada.setConcepto(remesa.getConcepto());
+		requestRealizada.setNifPeticion(remesa.getTitularNif());
+		requestRealizada.setNombrePeticion(remesa.getTitularNombre());
+		
+		try {
+			ConsultaRealizadaResponse responseRealizada = pluginHelper.consultaRealizada(requestRealizada, entidad);
+		
+			if (responseRealizada != null && RegwebConstantes.LEMA_RESPUESTA_OK.equals(responseRealizada.getCodigoRespuesta()) && responseRealizada.getDocumento() != null) {
+				actualizarEstadoYGuardaDocumentoLegal(
+						remesa, 
+						entidad, 
+						responseRealizada.getDocumento(),
+						null);
+				
+				responseRealizada.getDocumento().setContenido(null);
+				
+				documentoRecuperado = true;
+			}
+			
+			actualizarUsuario(usuarioEntidad, remesa.getId());
+		} catch (Exception ex) {
+			if (ex.getMessage() != null && ex.getMessage().contains("4225")) { //HA arribat al màxim de reintents (3)
+				actualizarEstadoYGuardaDocumentoLegal(
+						remesa, 
+						entidad, 
+						null, 
+						0);
+				
+				actualizarMensajeError(remesa.getId(), ex.getMessage());
+				em.flush();
+			} else {
+				throw ex;
+			}
+		} catch (I18NException ex) {
+			throw ex;
+		}
+		
+		return documentoRecuperado;
+    }
+    
+    private void actualizarEstadoYGuardaDocumentoLegal(
+    		Remesa remesa, 
+    		Entidad entidad, 
+    		DetalleDocumento documento, 
+    		Integer reintentos) throws Exception, I18NException {
+    	actualizarReintentosLectura(remesa.getId(), reintentos);
+    	
+    	actualizarEstadoNotifica(
+    			remesa.getIdentificador(), 
+				null, 
+				null,
+				RegwebConstantes.REMESA_ESTADO_REG_LEIDA, 
+				null,
+				RegwebConstantes.REMESA_ENV_ESTADO_LEIDA,
+				null,
+				null,
+				null);
+    	
+    	if (documento != null) {
+    		guardaDocumentoRemesa(entidad, documento, remesa);
+    	}
+    }
+    
+    private void guardaDocumentoRemesa(Entidad entidad, DetalleDocumento detalle, Remesa remesa) throws Exception, I18NException {
+    	String identificador = remesa.getIdentificador();
+    	
+		// Guardar datos acceso obtención certificación remesa
+		if (detalle.getCsvResguardo() != null || detalle.getReferenciaPdfAcuse() != null)
+			remesaAcuseEjb.crearReferenciaAcuse(
+					detalle.getReferenciaPdfAcuse(), 
+					detalle.getCsvResguardo(), 
+					remesa);
+		// Guardar documento remesa
+		Contenido contenido = detalle.getContenido();
+		if (contenido != null) {
+			String nombreDocumento = "Notificación_" + identificador + "." + MimeTypeUtils.getExtensionFileName(detalle.getNombre());
+			guardarDocumento(identificador, nombreDocumento, contenido);
 		}
     }
     

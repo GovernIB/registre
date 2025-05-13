@@ -24,18 +24,19 @@ import org.plugin.geiser.api.RespuestaBusquedaGeiser;
 import org.plugin.geiser.api.RespuestaBusquedaTramitGeiser;
 import org.plugin.geiser.api.RespuestaConsultaGeiser;
 import org.plugin.geiser.api.RespuestaRegistroGeiser;
-import org.plugin.geiser.api.ws.ApunteRegistroType;
-import org.plugin.geiser.api.ws.EstadoAsientoEnum;
-import org.plugin.geiser.api.ws.EstadoTramitacionRegistroType;
-import org.plugin.geiser.api.ws.RespuestaType;
-import org.plugin.geiser.api.ws.ResultadoBusquedaEstadoTramitacionType;
-import org.plugin.geiser.api.ws.ResultadoBusquedaType;
-import org.plugin.geiser.api.ws.ResultadoConsultaType;
-import org.plugin.geiser.api.ws.ResultadoRegistroType;
-import org.plugin.geiser.api.ws.TipoRespuestaEnum;
 import org.plugin.geiser.mock.helper.ConversionPluginHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import es.gob.minhap.geiser.rgeco.ws.client.registro.types.EstadoAsientoEnum;
+import es.gob.minhap.geiser.rgeco.ws.client.registro.types.v2.ApunteRegistroType;
+import es.gob.minhap.geiser.rgeco.ws.client.registro.types.v2.EstadoTramitacionRegistroType;
+import es.gob.minhap.geiser.rgeco.ws.client.registro.types.v2.ResultadoBusquedaEstadoTramitacionType;
+import es.gob.minhap.geiser.rgeco.ws.client.registro.types.v2.ResultadoBusquedaType;
+import es.gob.minhap.geiser.rgeco.ws.client.registro.types.v2.ResultadoConsultaType;
+import es.gob.minhap.geiser.rgeco.ws.client.registro.types.v2.ResultadoRegistroType;
+import es.gob.minhap.geiser.rgeco.ws.client.types.RespuestaType;
+import es.gob.minhap.geiser.rgeco.ws.client.types.TipoRespuestaEnum;
 
 public class GeiserMockPlugin extends AbstractPluginProperties implements IGeiserPlugin {
     

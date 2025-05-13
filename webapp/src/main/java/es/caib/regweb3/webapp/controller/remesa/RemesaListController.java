@@ -25,6 +25,8 @@ import org.fundaciobit.plugins.documentcustody.api.DocumentCustody;
 import org.fundaciobit.plugins.documentcustody.api.SignatureCustody;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -47,7 +49,6 @@ import es.caib.regweb3.model.Organismo;
 import es.caib.regweb3.model.RegistroEntrada;
 import es.caib.regweb3.model.Remesa;
 import es.caib.regweb3.model.TipoDocumental;
-import es.caib.regweb3.model.Usuario;
 import es.caib.regweb3.model.UsuarioEntidad;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.model.utils.DocumentoVisor;
@@ -188,7 +189,7 @@ public class RemesaListController extends AbstractRegistroCommonFormController {
 	
     @RequestMapping(value = "/{identificador}/lectura", method = RequestMethod.POST)
     @ResponseBody
-    public Remesa lecturaNotificacion(
+    public ResponseEntity<?> lecturaNotificacion(
     		@PathVariable String identificador,
     		Model model, HttpServletRequest request) throws Exception, I18NException {
     	Entidad entidad = getEntidadActiva(request);
@@ -219,13 +220,13 @@ public class RemesaListController extends AbstractRegistroCommonFormController {
 				}
         	}
         	
-        	return remesa;
+        	return new ResponseEntity<Remesa>(remesa, HttpStatus.OK);
 		} catch (Exception ex) {
 			ex.printStackTrace();
-			return null;
+			return new ResponseEntity<String>(ex.getMessage(), HttpStatus.BAD_REQUEST);
 		} catch (I18NException i18ne) {
 			i18ne.printStackTrace();
-			return null;
+			return new ResponseEntity<String>(i18ne.getMessage(), HttpStatus.BAD_REQUEST);
 		}
     }
     

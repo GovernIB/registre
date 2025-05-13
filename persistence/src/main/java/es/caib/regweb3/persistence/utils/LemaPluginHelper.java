@@ -9,6 +9,8 @@ import org.plugin.lema.api.ConsultaAcuseReciboRequest;
 import org.plugin.lema.api.ConsultaAcuseReciboResponse;
 import org.plugin.lema.api.ConsultaAnexoRequest;
 import org.plugin.lema.api.ConsultaAnexoResponse;
+import org.plugin.lema.api.ConsultaRealizadaRequest;
+import org.plugin.lema.api.ConsultaRealizadaResponse;
 import org.plugin.lema.api.ILemaPlugin;
 import org.plugin.lema.api.LemaPluginException;
 import org.plugin.lema.api.LocalizaRequest;
@@ -55,17 +57,15 @@ public class LemaPluginHelper {
 //        }
 //		return respuesta;
 //    }
-//    
-//    public ConsultaRealizadaResponse consultaRealizada(ConsultaRealizadaRequest request, Entidad entidad) throws LemaPluginException, I18NException {
-//    	ConsultaRealizadaResponse respuesta = null;
-//    	ILemaPlugin lemaPlugin = getILemaPlugin(entidad.getId());
-//        if (lemaPlugin != null) {
-//        	synchronized (Semaforo.class) {
-//	        	respuesta = lemaPlugin.consultaRealizadas(request);
-//    		}
-//        }
-//		return respuesta;
-//    }
+    
+    public ConsultaRealizadaResponse consultaRealizada(ConsultaRealizadaRequest request, Entidad entidad) throws LemaPluginException, I18NException {
+    	ConsultaRealizadaResponse respuesta = null;
+    	ILemaPlugin lemaPlugin = getILemaPlugin(entidad.getId());
+        if (lemaPlugin != null) {
+	        respuesta = lemaPlugin.consultaRealizada(request);
+        }
+		return respuesta;
+    }
     
     
     public PeticionAccesoResponse peticionAcceso(PeticionAccesoRequest request, Entidad entidad) throws LemaPluginException, I18NException {

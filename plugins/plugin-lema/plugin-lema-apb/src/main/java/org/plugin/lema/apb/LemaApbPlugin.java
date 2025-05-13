@@ -11,6 +11,8 @@ import org.plugin.lema.api.ConsultaAcuseReciboRequest;
 import org.plugin.lema.api.ConsultaAcuseReciboResponse;
 import org.plugin.lema.api.ConsultaAnexoRequest;
 import org.plugin.lema.api.ConsultaAnexoResponse;
+import org.plugin.lema.api.ConsultaRealizadaRequest;
+import org.plugin.lema.api.ConsultaRealizadaResponse;
 import org.plugin.lema.api.ILemaPlugin;
 import org.plugin.lema.api.LemaPluginException;
 import org.plugin.lema.api.LocalizaRequest;
@@ -28,6 +30,7 @@ public class LemaApbPlugin extends AbstractPluginProperties implements ILemaPlug
 	private static final String basePluginLemaApb = LEMA_BASE_PROPERTY + "apb.";
 	private static final String PROPERTY_PROXY_URL = basePluginLemaApb + "proxy.endpoint";
 	private static final String PROPERTY_LOCALIZA_ENDPOINT = basePluginLemaApb + "service.localiza.endpoint";
+	private static final String PROPERTY_LOCALIZA_REALIZADAS_ENDPOINT = basePluginLemaApb + "service.localiza.realizadas.endpoint";
 
 	private static final String KEYSTORE_FILE = basePluginLemaApb + "keystore.file";
 	private static final String KEYSTORE_TYPE = basePluginLemaApb + "keystore.type";
@@ -55,10 +58,11 @@ public class LemaApbPlugin extends AbstractPluginProperties implements ILemaPlug
 
 		try {
 			String proxyUrl = getPropertyRequired(PROPERTY_PROXY_URL);
+			String endpoint = getPropertyRequired(PROPERTY_LOCALIZA_ENDPOINT);
 			String localizaCall = proxyUrl + "/localiza";
 			
 			request.setNifTitular((String) getPropertyAsunto(TITULAR_NIF));
-			request.setAuthentication(getAuthentication());
+			request.setAuthentication(getAuthentication(endpoint));
 			
 			respuesta = APIHelper.proxyLemaPost(
 					localizaCall, 
@@ -67,11 +71,11 @@ public class LemaApbPlugin extends AbstractPluginProperties implements ILemaPlug
 		
 		} catch (SOAPFaultException ex) {
 			throw new LemaPluginException(
-					"[LEMA] Ha habido un problema localizando los envíos pendientes. " + ex.getMessage(),
+					"[LEMA] Ha habido un problema localizando las remesas pendientes. " + ex.getMessage(),
 					ex.getCause());
 		} catch (Exception ex) {
 			throw new LemaPluginException(
-					"[LEMA] Ha habido un problema localizando los envíos pendientes. " + ex.getMessage(),
+					"[LEMA] Ha habido un problema localizando las remesas pendientes. " + ex.getMessage(),
 					ex.getCause());
 		}
 		return respuesta;
@@ -84,10 +88,11 @@ public class LemaApbPlugin extends AbstractPluginProperties implements ILemaPlug
 
 		try {
 			String proxyUrl = getPropertyRequired(PROPERTY_PROXY_URL);
+			String endpoint = getPropertyRequired(PROPERTY_LOCALIZA_ENDPOINT);
 			String peticionAccesoCall = proxyUrl + "/peticionAcceso";
 			
 			request.setNifReceptor((String) getPropertyAsunto(RECEPTOR_NIF));
-			request.setAuthentication(getAuthentication());
+			request.setAuthentication(getAuthentication(endpoint));
 			
 			respuesta = APIHelper.proxyLemaPost(
 					peticionAccesoCall, 
@@ -95,10 +100,37 @@ public class LemaApbPlugin extends AbstractPluginProperties implements ILemaPlug
 					PeticionAccesoResponse.class);	
 
 		} catch (SOAPFaultException ex) {
-			throw new LemaPluginException("[LEMA] Ha habido un problema accediento al envío pendiente [identificador="
+			throw new LemaPluginException("[LEMA] Ha habido un problema accediento a la remesa pendiente [identificador="
 					+ request.getIdentificador() + "] - " + ex.getMessage(), ex.getCause());
 		} catch (Exception ex) {
-			throw new LemaPluginException("[LEMA] Ha habido un problema accediento al envío pendiente [identificador="
+			throw new LemaPluginException("[LEMA] Ha habido un problema accediento a la remesa pendiente [identificador="
+					+ request.getIdentificador() + "]" + ex.getMessage(), ex.getCause());
+		}
+		
+		return respuesta;
+	}
+
+	@Override
+	public ConsultaRealizadaResponse consultaRealizada(ConsultaRealizadaRequest request) {
+		ConsultaRealizadaResponse respuesta = null;
+
+		try {
+			String proxyUrl = getPropertyRequired(PROPERTY_PROXY_URL);
+			String endpoint = getPropertyRequired(PROPERTY_LOCALIZA_REALIZADAS_ENDPOINT);
+			String peticionAccesoCall = proxyUrl + "/consultaRealizada";
+			
+			request.setAuthentication(getAuthentication(endpoint));
+			
+			respuesta = APIHelper.proxyLemaPost(
+					peticionAccesoCall, 
+					request, 
+					ConsultaRealizadaResponse.class);	
+
+		} catch (SOAPFaultException ex) {
+			throw new LemaPluginException("[LEMA] Ha habido un problema accediento a la remesa leída [identificador="
+					+ request.getIdentificador() + "] - " + ex.getMessage(), ex.getCause());
+		} catch (Exception ex) {
+			throw new LemaPluginException("[LEMA] Ha habido un problema accediento a la remesa leída [identificador="
 					+ request.getIdentificador() + "]" + ex.getMessage(), ex.getCause());
 		}
 		
@@ -110,10 +142,11 @@ public class LemaApbPlugin extends AbstractPluginProperties implements ILemaPlug
 		ConsultaAcuseReciboResponse respuesta = null;
 		try {
 			String proxyUrl = getPropertyRequired(PROPERTY_PROXY_URL);
+			String endpoint = getPropertyRequired(PROPERTY_LOCALIZA_ENDPOINT);
 			String consultaAcuseCall = proxyUrl + "/consultaAcuse";
 			
 			request.setNifReceptor((String) getPropertyAsunto(RECEPTOR_NIF));
-			request.setAuthentication(getAuthentication());
+			request.setAuthentication(getAuthentication(endpoint));
 			
 			respuesta = APIHelper.proxyLemaPost(
 					consultaAcuseCall, 
@@ -122,11 +155,11 @@ public class LemaApbPlugin extends AbstractPluginProperties implements ILemaPlug
 
 		} catch (SOAPFaultException ex) {
 			throw new LemaPluginException(
-					"[LEMA] Ha habido un problema localizando el acuse de recibo del envío [identificador="
+					"[LEMA] Ha habido un problema localizando el acuse de recibo de la remesa [identificador="
 							+ request.getIdentificador() + "]" + ex.getMessage(), ex.getCause());
 		} catch (Exception ex) {
 			throw new LemaPluginException(
-					"[LEMA] Ha habido un problema localizando el acuse de recibo del envío [identificador="
+					"[LEMA] Ha habido un problema localizando el acuse de recibo de la remesa [identificador="
 							+ request.getIdentificador() + "]" + ex.getMessage(), ex.getCause());
 		}
 
@@ -138,10 +171,11 @@ public class LemaApbPlugin extends AbstractPluginProperties implements ILemaPlug
 		ConsultaAnexoResponse respuesta = null;
 		try {
 			String proxyUrl = getPropertyRequired(PROPERTY_PROXY_URL);
+			String endpoint = getPropertyRequired(PROPERTY_LOCALIZA_ENDPOINT);
 			String consultaAnexoCall = proxyUrl + "/consultaAnexo";
 			
 			request.setNifReceptor((String) getPropertyAsunto(RECEPTOR_NIF));
-			request.setAuthentication(getAuthentication());
+			request.setAuthentication(getAuthentication(endpoint));
 			
 			respuesta = APIHelper.proxyLemaPost(
 					consultaAnexoCall, 
@@ -150,18 +184,18 @@ public class LemaApbPlugin extends AbstractPluginProperties implements ILemaPlug
 			
 		} catch (SOAPFaultException ex) {
 			throw new LemaPluginException("[LEMA] Ha habido un problema localizando el anexo [referencia="
-					+ request.getReferenciaAnexo() + "] del envío [identificador=" + request.getIdentificador() + "]" + ex.getMessage(), ex.getCause());
+					+ request.getReferenciaAnexo() + "] de la remesa [identificador=" + request.getIdentificador() + "]" + ex.getMessage(), ex.getCause());
 		} catch (Exception ex) {
 			throw new LemaPluginException("[LEMA] Ha habido un problema localizando el anexo [referencia="
-					+ request.getReferenciaAnexo() + "] del envío [identificador=" + request.getIdentificador() + "]" + ex.getMessage(), ex.getCause());
+					+ request.getReferenciaAnexo() + "] de la remesa [identificador=" + request.getIdentificador() + "]" + ex.getMessage(), ex.getCause());
 		}
 
 		return respuesta;
 	}
 
-	private AuthenticationDto getAuthentication() throws Exception {
+	private AuthenticationDto getAuthentication(String endpoint) throws Exception {
 		AuthenticationDto auth = new AuthenticationDto();
-		auth.setEndpointLocation(getPropertyRequired(PROPERTY_LOCALIZA_ENDPOINT));
+		auth.setEndpointLocation(endpoint);
 		auth.setKeystoreFile(getPropertyRequired(KEYSTORE_FILE));
 		auth.setKeystoreAlias(getPropertyRequired(KEYSTORE_ALIAS));
 		auth.setKeystorePass(getPropertyRequired(KEYSTORE_PASS));

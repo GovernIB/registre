@@ -1,6 +1,5 @@
 package org.plugin.lema.api;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.datatype.XMLGregorianCalendar;
@@ -21,6 +20,4 @@ public class ConsultaRealizadaResponse {
 	private DetalleDocumento documento;
 	private List<Opcion> opcionesRespuestaConsultaRealizadas;
 	private Anexos anexos;
-	
-	private List<DocumentoLegal> documentosLegales = new ArrayList<DocumentoLegal>();
 }

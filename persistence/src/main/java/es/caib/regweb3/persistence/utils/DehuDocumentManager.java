@@ -11,6 +11,7 @@ import java.util.List;
 
 import javax.interceptor.Interceptors;
 
+import org.apache.log4j.Logger;
 import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
 import org.springframework.stereotype.Component;
 
@@ -23,8 +24,10 @@ import org.springframework.stereotype.Component;
 @Interceptors(SpringBeanAutowiringInterceptor.class)
 public class DehuDocumentManager {
 
+	protected final Logger log = Logger.getLogger(getClass());
+	
 	// Método para guardar un documento
-	public boolean saveDocument(String identificadorCarpeta, String fileName, byte[] content) {
+	public boolean saveDocument(String identificadorCarpeta, String fileName, byte[] content) throws IOException {
 		Path dirPath = Paths.get(getBaseDirectory(), identificadorCarpeta);
 		try {
 			Files.createDirectories(dirPath);
@@ -36,8 +39,8 @@ public class DehuDocumentManager {
 			}
 			return true;
 		} catch (IOException e) {
-			System.err.println("Error al guardar el documento: " + e.getMessage());
-			return false;
+			log.error("Error al guardar el documento: " + e.getMessage());
+			throw e;
 		}
 	}
 
@@ -59,7 +62,7 @@ public class DehuDocumentManager {
 	}
 
 	// Método para borrar todos los documentos de un identificador
-	public boolean deleteDocuments(String identificadorCarpeta) {
+	public boolean deleteDocuments(String identificadorCarpeta) throws IOException {
 		Path dirPath = Paths.get(getBaseDirectory(), identificadorCarpeta);
 		try {
 			if (Files.exists(dirPath) && Files.isDirectory(dirPath)) {
@@ -73,18 +76,18 @@ public class DehuDocumentManager {
 			}
 			return true;
 		} catch (IOException e) {
-			System.err.println("Error al borrar documentos: " + e.getMessage());
-			return false;
+			log.error("Error al borrar documentos: " + e.getMessage());
+			throw e;
 		}
 	}
 	
-	public boolean deleteDocument(String identifier, String fileName) {
+	public boolean deleteDocument(String identifier, String fileName) throws IOException {
         Path filePath = Paths.get(getBaseDirectory(), identifier, fileName);
         try {
             return Files.deleteIfExists(filePath);
         } catch (IOException e) {
-            System.err.println("Error al borrar el documento: " + e.getMessage());
-            return false;
+        	log.error("Error al borrar el documento: " + e.getMessage());
+            throw e;
         }
     }
 	
