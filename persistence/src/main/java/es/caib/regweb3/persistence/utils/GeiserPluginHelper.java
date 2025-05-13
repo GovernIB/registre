@@ -1,34 +1,18 @@
 package es.caib.regweb3.persistence.utils;
 
 
-import java.util.List;
-
-import javax.ejb.EJB;
-import javax.interceptor.Interceptors;
-
+import es.caib.regweb3.model.*;
+import es.caib.regweb3.persistence.ejb.PluginLocal;
+import es.caib.regweb3.utils.RegwebConstantes;
 import org.fundaciobit.genapp.common.i18n.I18NException;
-import org.plugin.geiser.api.AnexoGSample;
-import org.plugin.geiser.api.GeiserPluginException;
-import org.plugin.geiser.api.IGeiserPlugin;
-import org.plugin.geiser.api.PeticionBusquedaTramitGeiser;
-import org.plugin.geiser.api.PeticionConsultaGeiser;
-import org.plugin.geiser.api.PeticionRegistroEnvioGeiser;
-import org.plugin.geiser.api.PeticionRegistroGeiser;
-import org.plugin.geiser.api.RespuestaBusquedaGeiser;
-import org.plugin.geiser.api.RespuestaBusquedaTramitGeiser;
-import org.plugin.geiser.api.RespuestaConsultaGeiser;
-import org.plugin.geiser.api.RespuestaRegistroGeiser;
+import org.plugin.geiser.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
 import org.springframework.stereotype.Component;
 
-import es.caib.regweb3.model.IRegistro;
-import es.caib.regweb3.model.RegistroEntrada;
-import es.caib.regweb3.model.RegistroSalida;
-import es.caib.regweb3.model.RegistroSir;
-import es.caib.regweb3.model.UsuarioEntidad;
-import es.caib.regweb3.persistence.ejb.PluginLocal;
-import es.caib.regweb3.utils.RegwebConstantes;
+import javax.ejb.EJB;
+import javax.interceptor.Interceptors;
+import java.util.List;
 
 @Component
 @Interceptors(SpringBeanAutowiringInterceptor.class)
@@ -68,12 +52,13 @@ public class GeiserPluginHelper {
     	RespuestaRegistroGeiser respuesta = null;
     	IGeiserPlugin geiserPlugin = getIGeiserPlugin(entidadId);
         if (geiserPlugin != null) {
-        	synchronized (Semaforo.class) {
+			// Comentado para evitar posibles bloqueos al registrar dede NOTIB
+        	//synchronized (Semaforo.class) {
             	respuesta = geiserPlugin.registrarEnviar(
             			conversioHelper.convertir(
             					rsir, 
             					PeticionRegistroEnvioGeiser.class));
-			}
+			//}
         }
 		return respuesta;
     }

@@ -4,37 +4,11 @@ import es.caib.dir3caib.ws.api.oficina.Dir3CaibObtenerOficinasWs;
 import es.caib.dir3caib.ws.api.oficina.OficinaTF;
 import es.caib.dir3caib.ws.api.unidad.Dir3CaibObtenerUnidadesWs;
 import es.caib.dir3caib.ws.api.unidad.UnidadTF;
-import es.caib.regweb3.model.Entidad;
-import es.caib.regweb3.model.Interesado;
-import es.caib.regweb3.model.Libro;
-import es.caib.regweb3.model.ModeloOficioRemision;
-import es.caib.regweb3.model.Oficina;
-import es.caib.regweb3.model.OficioRemision;
-import es.caib.regweb3.model.Organismo;
-import es.caib.regweb3.model.RegistroEntrada;
-import es.caib.regweb3.model.RegistroSalida;
-import es.caib.regweb3.model.RegistroSir;
-import es.caib.regweb3.model.Sesion;
-import es.caib.regweb3.model.Usuario;
-import es.caib.regweb3.model.UsuarioEntidad;
+import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.model.utils.AnexoSimple;
-import es.caib.regweb3.persistence.ejb.AsientoRegistralLocal;
-import es.caib.regweb3.persistence.ejb.DistribucionLocal;
-import es.caib.regweb3.persistence.ejb.ModeloOficioRemisionLocal;
-import es.caib.regweb3.persistence.ejb.MultiEntidadLocal;
-import es.caib.regweb3.persistence.ejb.OficioRemisionLocal;
-import es.caib.regweb3.persistence.ejb.RegistroEntradaConsultaLocal;
-import es.caib.regweb3.persistence.ejb.RegistroSalidaConsultaLocal;
-import es.caib.regweb3.persistence.ejb.SesionLocal;
-import es.caib.regweb3.persistence.ejb.SirEnvioLocal;
-import es.caib.regweb3.persistence.utils.I18NLogicUtils;
-import es.caib.regweb3.persistence.utils.JustificanteReferencia;
-import es.caib.regweb3.persistence.utils.MailUtils;
-import es.caib.regweb3.persistence.utils.Paginacion;
-import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
-import es.caib.regweb3.persistence.utils.RegistroUtils;
-import es.caib.regweb3.persistence.utils.RespuestaDistribucion;
+import es.caib.regweb3.persistence.ejb.*;
+import es.caib.regweb3.persistence.utils.*;
 import es.caib.regweb3.persistence.validator.RegistroEntradaBeanValidator;
 import es.caib.regweb3.persistence.validator.RegistroEntradaValidator;
 import es.caib.regweb3.persistence.validator.RegistroSalidaBeanValidator;
@@ -45,19 +19,9 @@ import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 import es.caib.regweb3.ws.converter.AsientoConverter;
 import es.caib.regweb3.ws.converter.AsientoRegistralConverter;
-import es.caib.regweb3.ws.model.AsientoRegistralSesionWs;
-import es.caib.regweb3.ws.model.AsientoRegistralWs;
-import es.caib.regweb3.ws.model.AsientoWs;
-import es.caib.regweb3.ws.model.FileContentWs;
-import es.caib.regweb3.ws.model.InteresadoWs;
-import es.caib.regweb3.ws.model.JustificanteReferenciaWs;
-import es.caib.regweb3.ws.model.JustificanteWs;
-import es.caib.regweb3.ws.model.OficioWs;
-import es.caib.regweb3.ws.model.ResultadoBusquedaWs;
+import es.caib.regweb3.ws.model.*;
 import es.caib.regweb3.ws.utils.UsuarioAplicacionCache;
 import es.caib.regweb3.ws.utils.Utils;
-
-import org.apache.bcel.generic.AASTORE;
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
@@ -75,17 +39,12 @@ import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
-import javax.mail.Message;
-import javax.mail.internet.InternetAddress;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
+import java.util.Locale;
 
-import static es.caib.regweb3.utils.RegwebConstantes.RWE_WS_CIUDADANO;
-import static es.caib.regweb3.utils.RegwebConstantes.RWE_WS_ENTRADA;
-import static es.caib.regweb3.utils.RegwebConstantes.RWE_WS_SALIDA;
+import static es.caib.regweb3.utils.RegwebConstantes.*;
 
 /**
  *
@@ -349,7 +308,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
                     // Envío directo GEISER si el destinatario está integrado con SIR y además viene
         			// de WS (hay que devolver el numero de registro a la aplicación origen)
                     RegistroSir registroSir = null;
-        			if (registroEntrada.getEvento() == RegwebConstantes.EVENTO_OFICIO_SIR) {
+        			if (registroEntrada.getEvento().equals(RegwebConstantes.EVENTO_OFICIO_SIR)) {
         				registroSir = sirEnvioEjb.enviarIntercambio(
         						REGISTRO_ENTRADA, 
         						registroEntrada, 
@@ -403,7 +362,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
 
                 peticion.append("tipoRegistro: ").append(REGISTRO_SALIDA_ESCRITO).append(System.getProperty("line.separator"));
                 if(tipoOperacion != null){
-                    peticion.append("tipoOperacion: ").append(tipoOperacion).append(System.getProperty("line.separator"));
+                    peticion.append("tipoOperacion: ").append(I18NLogicUtils.tradueix(new Locale(Configuracio.getDefaultLanguage()), "registroSalida.tipoOperacion." + tipoOperacion)).append(System.getProperty("line.separator"));
                 }
 
                 // Comprobar ROL RWE_WS_SALIDA

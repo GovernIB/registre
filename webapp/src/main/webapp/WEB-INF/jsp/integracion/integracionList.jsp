@@ -126,12 +126,12 @@
                                         <thead>
                                         <tr>
                                             <th><spring:message code="integracion.fecha"/></th>
-                                            <c:if test="${tipo != RegwebConstantes.INTEGRACION_SIR}">
+                                            <%--<c:if test="${tipo != RegwebConstantes.INTEGRACION_SIR}">--%>
                                                 <th><spring:message code="registroEntrada.numeroRegistro"/></th>
-                                            </c:if>
-                                            <c:if test="${tipo == RegwebConstantes.INTEGRACION_SIR}">
+                                            <%--</c:if>--%>
+                                            <%--<c:if test="${tipo == RegwebConstantes.INTEGRACION_SIR}">
                                                 <th><spring:message code="registroSir.identificadorIntercambio"/></th>
-                                            </c:if>
+                                            </c:if>--%>
                                             <th><spring:message code="integracion.descripcion"/></th>
                                             <th><spring:message code="integracion.tiempo"/></th>
                                             <th><spring:message code="integracion.estado"/></th>

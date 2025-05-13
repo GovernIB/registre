@@ -14,25 +14,14 @@ import es.caib.regweb3.persistence.utils.GeiserPluginHelper;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.sir.ejb.EmisionLocal;
 import es.caib.regweb3.sir.ejb.MensajeLocal;
-import es.caib.regweb3.utils.Dir3CaibUtils;
-import es.caib.regweb3.utils.EstadoUtils;
-import es.caib.regweb3.utils.RegwebConstantes;
-import es.caib.regweb3.utils.RegwebUtils;
-import es.caib.regweb3.utils.StringUtils;
+import es.caib.regweb3.utils.*;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NArgumentCode;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.jboss.ejb3.annotation.SecurityDomain;
 import org.jboss.ejb3.annotation.TransactionTimeout;
-import org.plugin.geiser.api.AnexoG;
-import org.plugin.geiser.api.ApunteRegistro;
-import org.plugin.geiser.api.EstadoTramitacion;
-import org.plugin.geiser.api.GeiserPluginException;
-import org.plugin.geiser.api.RespuestaBusquedaTramitGeiser;
-import org.plugin.geiser.api.RespuestaConsultaGeiser;
-import org.plugin.geiser.api.RespuestaRegistroGeiser;
-import org.plugin.geiser.api.TipoAsiento;
+import org.plugin.geiser.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
 
@@ -49,7 +38,11 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import static es.caib.regweb3.utils.RegwebConstantes.REGISTRO_ENTRADA;
 
 /**
  * Created by Fundació BIT.
@@ -232,7 +225,7 @@ public class SirEnvioBean implements SirEnvioLocal {
             peticion.append("Origen: ").append(oficioRemision.getOficina().getDenominacion()).append(System.getProperty("line.separator"));
             peticion.append("Destino: ").append(oficioRemision.getDecodificacionEntidadRegistralDestino()).append(System.getProperty("line.separator"));
 
-            integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_SIR, descripcion, peticion.toString(), System.currentTimeMillis() - tiempo, usuario.getEntidad().getId(), oficioRemision.getIdentificadorIntercambio());
+            //integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_SIR, descripcion, peticion.toString(), System.currentTimeMillis() - tiempo, usuario.getEntidad().getId(), oficioRemision.getIdentificadorIntercambio());
 
         } catch (I18NValidationException | I18NException | Exception s) {
             s.printStackTrace();
@@ -263,11 +256,15 @@ public class SirEnvioBean implements SirEnvioLocal {
         Date inicio = new Date();
         StringBuilder peticion = new StringBuilder();
         long tiempo = System.currentTimeMillis();
-        String descripcion = "Envío intercambio a " + codigoOficinaSir;
+        String descripcion = "Registro en GEISER y envío intercambio a " + codigoOficinaSir;
+        String numRegistro = null;
         peticion.append("TipoAnotación: ").append(TipoAnotacion.ENVIO.getName()).append(System.getProperty("line.separator"));
         peticion.append("Usuario: ").append(usuario.getNombreCompleto()).append(System.getProperty("line.separator"));
-        peticion.append("Número registro: ").append(registro.getNumeroRegistroFormateado()).append(System.getProperty("line.separator"));
-
+        if (tipoRegistro.equals(REGISTRO_ENTRADA)) {
+            peticion.append("tipoRegistro: ").append(RegwebConstantes.REGISTRO_ENTRADA_ESCRITO).append(System.getProperty("line.separator"));
+        } else {
+            peticion.append("tipoRegistro: ").append(RegwebConstantes.REGISTRO_SALIDA_ESCRITO).append(System.getProperty("line.separator"));
+        }
         try {
 
             // OficinaSir destino
@@ -349,22 +346,28 @@ public class SirEnvioBean implements SirEnvioLocal {
 							}
         	        	}
     	        		registroEntradaEjb.merge(registroEntrada);
+                        numRegistro = registroEntrada.getNumeroRegistro();
+                        peticion.append("Número registro: ").append(numRegistro).append(System.getProperty("line.separator"));
     	        	}
-    	        	if (registroSalida != null)
-    	        		registroSalidaEjb.merge(registroSalida);
-    	        	
+    	        	if (registroSalida != null){
+                        registroSalidaEjb.merge(registroSalida);
+                        numRegistro = registroSalida.getNumeroRegistro();
+                        peticion.append("Número registro: ").append(numRegistro).append(System.getProperty("line.separator"));
+                    }
+
     	        	actualizarEnvioSirRealizado(registroSir, usuario);
      	        } catch (GeiserPluginException gpe) {
     	        	log.error("Ha habido un error realizando el registro en GEISER");
-    				gpe.printStackTrace();
+                    integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_SIR, descripcion, peticion.toString(), gpe, null, System.currentTimeMillis() - tiempo, usuario.getEntidad().getId(), numRegistro);
+                    gpe.printStackTrace();
     				throw gpe;
     	        }
                 // Integración
-                integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_SIR, descripcion, peticion.toString(), System.currentTimeMillis() - tiempo, registroSir.getEntidad().getId(), registroSir.getIdentificadorIntercambio());
+                integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_SIR, descripcion, peticion.toString(), System.currentTimeMillis() - tiempo, registroSir.getEntidad().getId(), numRegistro);
 
             }catch (Exception e){
                 e.printStackTrace();
-                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_SIR, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - tiempo, usuario.getEntidad().getId(), registroSir.getIdentificadorIntercambio());
+                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_SIR, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - tiempo, usuario.getEntidad().getId(), numRegistro);
 				ejbContext.setRollbackOnly();
 				throw e;
             }
@@ -582,7 +585,8 @@ public class SirEnvioBean implements SirEnvioLocal {
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     @Override
     public void actualizarEnvioSirRealizado(RegistroSir registroSir, UsuarioEntidad usuario) throws Exception, I18NException {
-    	StringBuilder peticion = new StringBuilder();
+        Date inicio = new Date();
+        StringBuilder peticion = new StringBuilder();
     	long tiempo = System.currentTimeMillis();
     	Long entidadId = usuario.getEntidad().getId();
     	OficioRemision oficioRemision = null;
@@ -607,7 +611,9 @@ public class SirEnvioBean implements SirEnvioLocal {
 						anexoSirEjb.merge(anexoSir);
 					}
 				}
-			} catch (Exception e) {
+                integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_SIR, descripcion, peticion.toString(), System.currentTimeMillis() - tiempo, registroSir.getEntidad().getId(), registroSir.getNumeroRegistro());
+
+            } catch (Exception e) {
 				peticion.append("Número registro: ").append(registroSir.getNumeroRegistro()).append(System.getProperty("line.separator"));
 				if (oficioRemision != null)
 					peticion.append("ID Oficio remisión: ").append(oficioRemision.getId()).append(System.getProperty("line.separator"));
