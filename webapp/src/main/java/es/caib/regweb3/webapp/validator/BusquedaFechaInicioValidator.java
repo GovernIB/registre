@@ -14,7 +14,7 @@ import es.caib.regweb3.webapp.form.RangoFechasBusqueda;
  * Date: 11/02/14
  */
 @Component
-public class BusquedaRegistrosSirValidator implements Validator {
+public class BusquedaFechaInicioValidator implements Validator {
 
 
     protected final Logger log = Logger.getLogger(getClass());

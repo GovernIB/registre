@@ -140,8 +140,23 @@
                 <li class="divider"></li>
                 <li class="submenu-complet"><a href="<c:url value="/sir/recuperarRegistrosSirRecibidos/form"/>"><i class="fa fa-cloud-download"></i> <spring:message code="menu.recuperarRegistros"/></a></li>
             </ul>
-
         </div>
     </c:if>
+
+	<div class="btn-group">
+		<button type="button" class="btn btn-warning btn-sm dropdown-toggle"
+			data-toggle="dropdown">
+			<i class="fa fa-envelope-o"></i>
+			<spring:message code="menu.dehu" />
+			<span class="caret"></span>
+		</button>
+		<ul class="dropdown-menu">
+			<li class="submenu-complet"><a
+				href="<c:url value="/remesa/dehu/sync"/>"><i
+					class="fa fa-cloud-download"></i> <spring:message
+						code="menu.dehu.sync" /></a>
+			</li>
+		</ul>
+	</div>
 
 </c:if>

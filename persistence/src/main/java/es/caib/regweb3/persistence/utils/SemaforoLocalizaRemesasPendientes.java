@@ -6,7 +6,7 @@ package es.caib.regweb3.persistence.utils;
  * @author Limit Tecnologies <limit@limit.es>
  *
  */
-public class SemaforoSchedulerLocalizaPendientes {
+public class SemaforoLocalizaRemesasPendientes {
 	
 	public static Object lock = new Object();
 	

@@ -11,6 +11,7 @@ import org.fundaciobit.genapp.common.i18n.I18NException;
 import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.model.Remesa;
 import es.caib.regweb3.persistence.utils.Paginacion;
+import es.caib.regweb3.persistence.utils.RemesasProgress;
 
 /**
  * Created by Limit Tecnologies S.L.
@@ -28,7 +29,7 @@ public interface RemesaConsultaLocal extends BaseEjb<Remesa, Long> {
 
 	public Long remesasPendientes(Long idEntidad) throws Exception;
 
-	public void localizaGuardaNotificaciones(Entidad entidad) throws I18NException, Exception;
+	public RemesasProgress localizaGuardaNotificaciones(Entidad entidad, Date fechaDesde, Date fechaHasta) throws I18NException, Exception;
 
 	public List<Remesa> findByEntidadAndEstado(Long idEntidad, String estado) throws Exception;
 

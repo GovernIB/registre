@@ -37,6 +37,7 @@ import es.caib.regweb3.persistence.utils.LemaPluginHelper;
 import es.caib.regweb3.persistence.utils.LemaUtils;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
+import es.caib.regweb3.persistence.utils.RemesasProgress;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 
@@ -255,12 +256,19 @@ public class RemesaConsultaBean extends BaseEjbJPA<Remesa, Long> implements Reme
 	}
 
 	@Override
-	public void localizaGuardaNotificaciones(Entidad entidad) throws I18NException, Exception {
+	public RemesasProgress localizaGuardaNotificaciones(Entidad entidad, Date fechaDesde, Date fechaHasta) throws I18NException, Exception {
+		RemesasProgress progreso = null;
 		try {
 			LocalizaResponse response = null;
-			String fechaDesdeStr = getFechaInicioProximaLocalizacion(entidad.getId());
-			Date fechaDesde = LemaUtils.convertStringToDate(fechaDesdeStr);
-			Date fechaHasta = new Date();
+			
+			if (fechaDesde == null) {
+				String fechaDesdeStr = getFechaInicioProximaLocalizacion(entidad.getId());
+				fechaDesde = LemaUtils.convertStringToDate(fechaDesdeStr);
+			}
+			
+			if (fechaHasta == null)
+				fechaHasta = new Date();
+			
 			LocalizaRequest request = new LocalizaRequest();
 			Integer notificacionesError = 0;
 			request.setFechaDesde(fechaDesde);
@@ -270,6 +278,7 @@ public class RemesaConsultaBean extends BaseEjbJPA<Remesa, Long> implements Reme
 
 			if (response != null && RegwebConstantes.LEMA_RESPUESTA_OK.equals(response.getCodigoRespuesta())) {
 				List<Envio> envios = response.getEnvios();
+				progreso = new RemesasProgress(envios.size());
 				
 				for (Envio envio : envios) {
 
@@ -278,9 +287,12 @@ public class RemesaConsultaBean extends BaseEjbJPA<Remesa, Long> implements Reme
 					if (!existeEnvio) {
 						try {
 							remesaEjb.guardarNotificacionRecibida(envio, entidad);
+							progreso.incrementarProcesadas();
 						} catch (Exception e) {
 							notificacionesError++;
 						}
+					} else {
+						progreso.incrementarDuplicadas();
 					}
 				}
 
@@ -302,7 +314,8 @@ public class RemesaConsultaBean extends BaseEjbJPA<Remesa, Long> implements Reme
 			ejbContext.setRollbackOnly();
 			throw ex;
 		}
-
+		
+		return progreso;
 	}
 	
 	// Estaba en remesabean

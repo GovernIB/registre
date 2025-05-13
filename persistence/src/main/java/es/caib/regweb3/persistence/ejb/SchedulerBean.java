@@ -1,13 +1,10 @@
 package es.caib.regweb3.persistence.ejb;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.Properties;
 
 import javax.annotation.security.RunAs;
 import javax.ejb.EJB;
@@ -31,10 +28,10 @@ import es.caib.regweb3.persistence.utils.I18NLogicUtils;
 import es.caib.regweb3.persistence.utils.LemaPluginHelper;
 import es.caib.regweb3.persistence.utils.MailUtils;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
+import es.caib.regweb3.persistence.utils.SemaforoLocalizaRemesasPendientes;
 import es.caib.regweb3.persistence.utils.SemaforoSchedulerConsultaEstado;
 import es.caib.regweb3.persistence.utils.SemaforoSchedulerConsultaIdRecibidos;
 import es.caib.regweb3.persistence.utils.SemaforoSchedulerConsultaRecibidos;
-import es.caib.regweb3.persistence.utils.SemaforoSchedulerLocalizaPendientes;
 import es.caib.regweb3.persistence.utils.SemaforoSchedulerVerificacionFirmaAnexos;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
@@ -602,8 +599,8 @@ public class SchedulerBean implements SchedulerLocal{
                 log.info(" ");
                 log.info("------------- LEMA: Consultando notificaciones/comunicaciones pendientes de " + entidad.getNombre() + " -------------");
                 log.info(" ");
-                synchronized (SemaforoSchedulerLocalizaPendientes.class) {
-                	remesaConsultaEjb.localizaGuardaNotificaciones(entidad);
+                synchronized (SemaforoLocalizaRemesasPendientes.class) {
+                	remesaConsultaEjb.localizaGuardaNotificaciones(entidad, null, null);
                 }
 			}
 			log.info("------------- LEMA: Las notificaciones y comunicaciones pendientes han sido localizadas y guardadas " + " -------------");

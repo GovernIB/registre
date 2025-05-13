@@ -21,7 +21,7 @@ import es.caib.regweb3.utils.RegwebUtils;
 import es.caib.regweb3.webapp.controller.BaseController;
 import es.caib.regweb3.webapp.form.*;
 import es.caib.regweb3.webapp.utils.Mensaje;
-import es.caib.regweb3.webapp.validator.BusquedaRegistrosSirValidator;
+import es.caib.regweb3.webapp.validator.BusquedaFechaInicioValidator;
 
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,7 +71,7 @@ public class SirController extends BaseController {
     private MensajeLocal mensajeEjb;
 
     @Autowired
-    private BusquedaRegistrosSirValidator busquedaRegistrosSirValidator;
+    private BusquedaFechaInicioValidator busquedaFechaInicioValidator;
     
 
 	StringBuilder mensajesSb;
@@ -852,7 +852,7 @@ public class SirController extends BaseController {
     	entidad = entidadEjb.findById(entidad.getId());; // con administradores
     	HttpSession session = request.getSession();
     	Integer total;
-    	busquedaRegistrosSirValidator.validate(busqueda, result);
+    	busquedaFechaInicioValidator.validate(busqueda, result);
     	if (result.hasErrors()) {
             return "sir/busquedaRegistrosSirList";
         }
@@ -898,6 +898,6 @@ public class SirController extends BaseController {
         CustomDateEditor dateEditor = new CustomDateEditor(sdf, true);
         binder.registerCustomEditor(java.util.Date.class, dateEditor);
 
-        binder.setValidator(this.busquedaRegistrosSirValidator);
+        binder.setValidator(this.busquedaFechaInicioValidator);
     }
 }

@@ -33,7 +33,7 @@ public class RemesaInterceptor extends HandlerInterceptorAdapter {
         Entidad entidadActiva = loginInfo.getEntidadActiva();
 
         // Comprobamos que el usuario dispone del Rol RWE_USUARI
-        if(!rolActivo.getNombre().equals(RegwebConstantes.RWE_USUARI)){
+        if(!rolActivo.getNombre().equals(RegwebConstantes.RWE_USUARI) && !rolActivo.getNombre().equals(RegwebConstantes.RWE_ADMIN)){
             log.info("Error de rol");
             Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.rol"));
             response.sendRedirect("/regweb3/aviso");
@@ -48,13 +48,13 @@ public class RemesaInterceptor extends HandlerInterceptorAdapter {
             return false;
         }
 
-        // Comprobamos que el usuario dispone de una OficinaActiva
-        if(oficinaActiva == null){
-            log.info("No existe una OficinaActiva");
-            Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.oficinaActiva"));
-            response.sendRedirect("/regweb3/aviso");
-            return false;
-        }
+//        // Comprobamos que el usuario dispone de una OficinaActiva
+//        if(oficinaActiva == null){
+//            log.info("No existe una OficinaActiva");
+//            Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.oficinaActiva"));
+//            response.sendRedirect("/regweb3/aviso");
+//            return false;
+//        }
 
         return true;
     }

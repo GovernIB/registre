@@ -63,10 +63,14 @@ import es.caib.regweb3.persistence.utils.DocumentoNotificacionException;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.persistence.utils.RegistroUtils;
+import es.caib.regweb3.persistence.utils.RemesasProgress;
+import es.caib.regweb3.persistence.utils.SemaforoLocalizaRemesasPendientes;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.controller.registro.AbstractRegistroCommonFormController;
+import es.caib.regweb3.webapp.form.RangoFechasBusqueda;
 import es.caib.regweb3.webapp.form.RemesaBusqueda;
 import es.caib.regweb3.webapp.utils.Mensaje;
+import es.caib.regweb3.webapp.validator.BusquedaFechaInicioValidator;
 import es.caib.regweb3.webapp.validator.RegistroEntradaWebValidator;
 
 /**
@@ -102,6 +106,9 @@ public class RemesaListController extends AbstractRegistroCommonFormController {
 	@Autowired
 	private DehuDocumentManager documentManager;
 	
+	 @Autowired
+	 private BusquedaFechaInicioValidator busquedaFechaInicioValidator;
+	 
     /**
      * Listado de todas las {@link Notificacion}
      */
@@ -446,6 +453,59 @@ public class RemesaListController extends AbstractRegistroCommonFormController {
         }
     }
     
+    @RequestMapping(value = "/dehu/sync", method = RequestMethod.GET)
+    public String recuperarRegistrosSirRecibidos(Model model, HttpServletRequest request) throws Exception {
+    	model.addAttribute("rangoFechasBusqueda", new RangoFechasBusqueda());
+        return "remesa/busquedaRemesasDehuForm";
+    }
+    
+    @RequestMapping(value = "/dehu/sync", method = RequestMethod.POST)
+    public String recuperacionRegistrosProgresPost(
+    		@ModelAttribute("rangoFechasBusqueda") RangoFechasBusqueda busqueda,
+    		BindingResult result,
+    		HttpServletRequest request) throws Exception {
+    	Entidad entidad = getEntidadActiva(request);
+    	busquedaFechaInicioValidator.validate(busqueda, result);
+    	if (result.hasErrors()) {
+            return "remesa/busquedaRemesasDehuForm";
+        }
+    	
+    	try {
+    		synchronized (SemaforoLocalizaRemesasPendientes.class) {
+    			Date fechaDesde = busqueda.getFechaInicioImportacion();
+    			Date fechaHasta = busqueda.getFechaFinImportacion();
+    			
+    			RemesasProgress resultado = remesaConsultaEjb.localizaGuardaNotificaciones(entidad, fechaDesde, fechaHasta);
+    			
+    			
+    			if (resultado.getTotal() == 0)
+    				Mensaje.saveMessageAviso(request, getMessage("remesa.sincronizar.dehu.controller.sinresultado"));
+    			
+    			if (resultado.getTotal() > 0) {
+	    			Mensaje.saveMessageInfo(request, getMessage(
+	    						"remesa.sincronizar.dehu.controller.ok", 
+	    						String.valueOf(resultado.getProcesadas()), 
+	    						String.valueOf(resultado.getTotal())
+	    					));
+    			}
+    			
+    			if (resultado.getDuplicadas() > 0)
+	    			Mensaje.saveMessageAviso(request, getMessage("remesa.sincronizar.dehu.controller.ko", String.valueOf(resultado.getDuplicadas())));
+    			
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+	        Mensaje.saveMessageError(request, "Ha habido un error recuperando las remesas: " + e.getMessage());
+	        return "redirect:/remesa/dehu/sync";
+		} catch (I18NException e) {
+			e.printStackTrace();
+	        Mensaje.saveMessageError(request, "Ha habido un error recuperando las remesas: " + e.getMessage());
+	        return "redirect:/remesa/dehu/sync";
+		}
+    	
+		return "redirect:/remesa/dehu/sync";
+    }
+    
     private void cargarFormularioRegistro(Model model, RegistroEntrada registroEntrada, HttpServletRequest request, String identificador) throws Exception {
     	Remesa remesa = remesaConsultaEjb.getByIdentificador(identificador);
         registroEntrada.getRegistroDetalle().setExtracto(remesa.getConcepto());
@@ -751,8 +811,17 @@ public class RemesaListController extends AbstractRegistroCommonFormController {
 
     }
     
+    @InitBinder("rangoFechasBusqueda")
+    public void initBinderRangoFechasBusqueda(WebDataBinder binder) {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        CustomDateEditor dateEditor = new CustomDateEditor(sdf, true);
+        binder.registerCustomEditor(java.util.Date.class, dateEditor);
+
+        binder.setValidator(this.busquedaFechaInicioValidator);
+    }
+    
 	@InitBinder("remesaBusqueda")
-    public void registroEntradaBusqueda(WebDataBinder binder) {
+    public void initBinderRegistroEntradaBusqueda(WebDataBinder binder) {
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         CustomDateEditor dateEditor = new CustomDateEditor(sdf, true);
         binder.registerCustomEditor(java.util.Date.class, dateEditor);
