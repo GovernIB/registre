@@ -32,7 +32,10 @@
 		
 			<div class="row">
 	               <div class="col-xs-12">
-	                   <div class="tab-content">
+					   <div class="panel panel-warning">
+						   <div class="panel-heading">
+							   <h3 class="panel-title"><i class="fa fa-list"></i> <strong><spring:message code="anexos.buscador"/></strong></h3>
+						   </div>
 	                       <div class="panel-body">
 	                           <div class="row">
 	                               <div class="form-group col-xs-12">
@@ -50,50 +53,50 @@
 							
 								<c:if test="${not empty paginacion.listado}">
 									
-										 <div class="alert-grey">
-		                                    <c:if test="${paginacion.totalResults == 1}">
-		                                        <spring:message code="regweb.resultado"/>
-		                                        <strong>${paginacion.totalResults}</strong> <spring:message code="regweb.elemento"/>
-		                                    </c:if>
-		                                    <c:if test="${paginacion.totalResults > 1}">
-		                                        <spring:message code="regweb.resultados"/>
-		                                        <strong>${paginacion.totalResults}</strong> <spring:message code="regweb.elementos"/>
-		                                    </c:if>
-		
-		                                    <%--Select de "Ir a página"--%>
-		                                    <c:import url="../modulos/paginas.jsp"/>
-		                                </div>
-										<div class="table-responsive">
-		                                    <table class="table table-bordered table-hover table-striped">
-		                                        <thead>
-		                                            <tr>
-		                                            	<th><spring:message code="anexos.tiporegistro"/></th>
-		                                                <th><spring:message code="anexos.numeroregistro"/></th>
-		                                                <th><spring:message code="anexos.id"/></th>
-		                                                <th><spring:message code="anexos.estado"/></th>
-		                                                <th><spring:message code="anexos.registodetalle"/></th>
-		                                                <th></th>
-		                                            </tr>
-		                                        </thead>
-		
-		                                        <tbody>
-		                                        	<c:forEach items="${paginacion.listado}" var="resultado">
-		                                        		<tr>
-		                                            	   <td class="center"><spring:message code="anexos.tiporegistro.0"/></td>
-		                                            	   <td class="center">${resultado[0]}</td>
-		                                            	   <td class="center">${resultado[1].id}</td>
-		                                            	   <td class="center"><img src="<c:url value="/img/712.GIF"/>" width="15" height="15" title="<spring:message code="anexos.estado.pendiente"/>"/></td>
-		                                            	   <td class="center"><a href="<c:url value="/adminEntidad/registroEntrada/${resultado[2]}/detalle"/>">${resultado[2]}</a></td>
-		                                            	   <td class="center"><a class="btn btn-success btn-sm" onclick='confirm("<c:url value="/adminEntidad/anexosfirma/${resultado[1].id}"/>","<spring:message code="anexos.verificar.confirm" htmlEscape="true"/>")' href="javascript:void(0);" title="<spring:message code="anexos.verificar"/>"><span class="fa fa-refresh"></span></a>
-		                                            	</tr>
-													</c:forEach>
-		                                        </tbody>
-											</table>
-											<!-- Paginacion -->
-											<c:import url="../modulos/paginacionBusqueda.jsp">
-									        	<c:param name="entidad" value="anexo"/>
-											</c:import>              
-										</div>
+									 <div class="alert-grey">
+										<c:if test="${paginacion.totalResults == 1}">
+											<spring:message code="regweb.resultado"/>
+											<strong>${paginacion.totalResults}</strong> <spring:message code="regweb.elemento"/>
+										</c:if>
+										<c:if test="${paginacion.totalResults > 1}">
+											<spring:message code="regweb.resultados"/>
+											<strong>${paginacion.totalResults}</strong> <spring:message code="regweb.elementos"/>
+										</c:if>
+
+										<%--Select de "Ir a página"--%>
+										<c:import url="../modulos/paginas.jsp"/>
+									</div>
+									<div class="table-responsive">
+										<table class="table table-bordered table-hover table-striped">
+											<thead>
+												<tr>
+													<th><spring:message code="anexos.tiporegistro"/></th>
+													<th><spring:message code="anexos.numeroregistro"/></th>
+													<th><spring:message code="anexos.id"/></th>
+													<th><spring:message code="anexos.estado"/></th>
+													<th><spring:message code="anexos.registodetalle"/></th>
+													<th></th>
+												</tr>
+											</thead>
+
+											<tbody>
+												<c:forEach items="${paginacion.listado}" var="resultado">
+													<tr>
+													   <td class="center"><spring:message code="anexos.tiporegistro.0"/></td>
+													   <td class="center">${resultado[0]}</td>
+													   <td class="center">${resultado[1].id}</td>
+													   <td class="center"><img src="<c:url value="/img/712.GIF"/>" width="15" height="15" title="<spring:message code="anexos.estado.pendiente"/>"/></td>
+													   <td class="center"><a href="<c:url value="/adminEntidad/registroEntrada/${resultado[2]}/detalle"/>">${resultado[2]}</a></td>
+													   <td class="center"><a class="btn btn-success btn-sm" onclick='confirm("<c:url value="/adminEntidad/anexosfirma/${resultado[1].id}"/>","<spring:message code="anexos.verificar.confirm" htmlEscape="true"/>")' href="javascript:void(0);" title="<spring:message code="anexos.verificar"/>"><span class="fa fa-refresh"></span></a>
+													</tr>
+												</c:forEach>
+											</tbody>
+										</table>
+										<!-- Paginacion -->
+										<c:import url="../modulos/paginacionBusqueda.jsp">
+											<c:param name="entidad" value="anexo"/>
+										</c:import>
+									</div>
 								</c:if>               
 							</div>
 					</div>
