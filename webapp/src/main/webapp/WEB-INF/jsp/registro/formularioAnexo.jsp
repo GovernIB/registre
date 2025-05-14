@@ -247,7 +247,7 @@
                                             <a href="<c:url value="/anexo/descargarDocumentoCustody" />" target="_blank">${anexoForm.documentTituloCorto}</a>
                                         </c:if>
                                         <c:if test="${not empty anexoForm.anexo.id}">
-                                            <a href="<c:url value="/anexo/descargarDocumento/${anexoForm.anexo.id}" />" target="_blank">${anexoForm.documentTituloCorto}</a>
+                                            <a href="<c:url value="/anexo/descargar/${anexoForm.anexo.id}"/>" target="_blank">${anexoForm.documentTituloCorto}</a>
                                         </c:if>
                                     </div>
                                 </div>
@@ -274,7 +274,7 @@
                                         <a href="<c:url value="/anexo/descargarSignatureCustody" />" target="_blank">${anexoForm.signaturaTituloCorto}</a>
                                     </c:if>
                                     <c:if test="${not empty anexoForm.anexo.id}">
-                                        <a href="<c:url value="/anexo/descargarFirma/${anexoForm.anexo.id}/true" />" target="_blank">${anexoForm.signaturaTituloCorto}</a>
+                                        <a href="<c:url value="/anexo/descargar/${anexoForm.anexo.id}" />" target="_blank">${anexoForm.signaturaTituloCorto}</a>
                                     </c:if>
                                     </div>
                                 </div>

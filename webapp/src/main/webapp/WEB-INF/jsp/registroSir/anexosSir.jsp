@@ -142,6 +142,28 @@
 									<%-- --%>
                                     <c:if test="${not anexo.documento.purgado}">
                                         <td class="center ajustTamanySir">
+                                                <%--Visor Anexo--%>
+                                            <c:if test="${anexo.documento.tipoMIME == RegwebConstantes.MIME_PDF}">
+
+                                                <a data-toggle="modal" class="btn btn-info btn-default btn-sm" href="#visorAnexo${anexo.documento.anexo.id}"
+                                                   title="<spring:message code="anexo.visualizar"/>"><span class="fa fa-search"></span></a>
+
+                                                <div id="visorAnexo${anexo.documento.anexo.id}" class="modal fade" role="dialog">
+                                                    <div class="modal-dialog modal-lg">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                                                                <h3 class="modal-title"><spring:message code="anexo.visualizar"/>: ${anexo.documento.nombreFichero}</h3>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <object type="${anexo.documento.tipoMIME}" data="<c:url value="/archivo/${anexo.documento.anexo.id}/false"/>" width="100%" height="700"></object>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </c:if>
+
                                             <a class="btn btn-success btn-sm"
                                                      href="<c:url value="/archivo/${anexo.documento.anexo.id}"/>"
                                                      target="_blank" title="<spring:message code="anexo.descargar"/>"><span

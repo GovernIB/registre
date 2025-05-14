@@ -181,13 +181,14 @@
                                 <c:if test="${anexoFull.anexo.modoFirma == RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED && !anexoFull.anexo.confidencial}">
                                     <td class="center"> <%--ANEXO--%>
                                         <c:if test="${!anexoFull.anexo.purgado}">
+                                            <%@ include file="/WEB-INF/jsp/registro/visorAnexo.jsp" %>
                                             <a class="btn btn-success btn-default btn-sm"
-                                               href="<c:url value="/anexo/descargarDocumento/${anexoFull.anexo.id}"/>"
+                                               href="<c:url value="/anexo/descargar/${anexoFull.anexo.id}"/>"
                                                target="_blank" title="<spring:message code="anexo.descargar"/>"><span class="fa fa-download"></span></a>
                                         </c:if>
                                         <c:if test="${anexoFull.anexo.purgado}">
                                             <a class="btn btn-success btn-default btn-sm disabled"
-                                               href="<c:url value="/anexo/descargarDocumento/${anexoFull.anexo.id}"/>"
+                                               href=""
                                                target="_blank" title="<spring:message code="anexo.descargar"/>"><span class="fa fa-window-close"></span></a>
                                         </c:if>
                                     </td>
@@ -208,12 +209,12 @@
                                         </c:if>
                                         <c:if test="${!anexoFull.anexo.purgado}">
                                             <a class="${clase}"
-                                               href="<c:url value="/anexo/descargarFirma/${anexoFull.anexo.id}/true"/>"
+                                               href="<c:url value="/anexo/descargar/${anexoFull.anexo.id}/true"/>"
                                                target="_blank" title="<spring:message code="${etiqueta}"/>"><span class="fa fa-key"></span></a>
                                         </c:if>
                                         <c:if test="${anexoFull.anexo.purgado}"> <%--Si esta purgado se deshabilita--%>
                                             <a class="${clase} disabled"
-                                               href="<c:url value="/anexo/descargarFirma/${anexoFull.anexo.id}/true"/>"
+                                               href=""
                                                target="_blank" title="<spring:message code="${etiqueta}"/>"><span class="fa fa-window-close"></span></a>
                                         </c:if>
                                     </td>
@@ -222,13 +223,14 @@
                                 <c:if test="${anexoFull.anexo.modoFirma == RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA && !anexoFull.anexo.confidencial}">
                                     <td class="center">
                                         <c:if test="${!anexoFull.anexo.purgado}">
+                                            <%@ include file="/WEB-INF/jsp/registro/visorAnexo.jsp" %>
                                             <a class="btn btn-success btn-default btn-sm"
-                                               href="<c:url value="/anexo/descargarDocumento/${anexoFull.anexo.id}"/>"
+                                               href="<c:url value="/anexo/descargar/${anexoFull.anexo.id}"/>"
                                                target="_blank" title="<spring:message code="anexo.descargar"/>"><span class="fa fa-download"></span></a>
                                         </c:if>
                                         <c:if test="${anexoFull.anexo.purgado}">
                                             <a class="btn btn-success btn-default btn-sm disabled"
-                                               href="<c:url value="/anexo/descargarDocumento/${anexoFull.anexo.id}"/>"
+                                               href=""
                                                target="_blank" title="<spring:message code="anexo.descargar"/>"><span class="fa fa-window-close"></span></a>
                                         </c:if>
                                     </td>
@@ -238,13 +240,14 @@
                                 <c:if test="${anexoFull.anexo.modoFirma == RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED && !anexoFull.anexo.confidencial}">
                                     <td class="center">
                                         <c:if test="${!anexoFull.anexo.purgado}">
+                                            <%@ include file="/WEB-INF/jsp/registro/visorAnexo.jsp" %>
                                             <a class="btn btn-success btn-default btn-sm"
-                                               href="<c:url value="/anexo/descargarFirma/${anexoFull.anexo.id}/true"/>"
+                                               href="<c:url value="/anexo/descargar/${anexoFull.anexo.id}/true"/>"
                                                target="_blank" title="<spring:message code="anexo.descargar"/>"><span class="fa fa-download"></span></a>
                                         </c:if>
                                         <c:if test="${anexoFull.anexo.purgado}">
                                             <a class="btn btn-success btn-default btn-sm disabled"
-                                               href="<c:url value="/anexo/descargarFirma/${anexoFull.anexo.id}/true"/>"
+                                               href=""
                                                target="_blank" title="<spring:message code="anexo.descargar"/>"><span class="fa fa-window-close"></span></a>
                                         </c:if>
                                     </td>
