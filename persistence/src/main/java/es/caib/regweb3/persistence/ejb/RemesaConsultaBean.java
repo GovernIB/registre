@@ -141,7 +141,7 @@ public class RemesaConsultaBean extends BaseEjbJPA<Remesa, Long> implements Reme
 	}
 
 	@Override
-	public Paginacion busqueda(Integer pageNumber, Remesa remesa, String emisor, Date fechaPuestaDisposicionDesde,
+	public Paginacion busqueda(Integer pageNumber, List<String> estados, Remesa remesa, String emisor, Date fechaPuestaDisposicionDesde,
 			Date fechaPuestaDisposicionHasta, Long idEntidad) throws Exception {
 
 		Query q;
@@ -173,9 +173,9 @@ public class RemesaConsultaBean extends BaseEjbJPA<Remesa, Long> implements Reme
 		}
 
 		// Estado
-		if (StringUtils.isNotEmpty(remesa.getEstado())) {
-			where.add("remesa.estado = :estado ");
-			parametros.put("estado", remesa.getEstado());
+		if (estados != null && ! estados.isEmpty()) {
+			where.add("remesa.estado in (:estados) ");
+			parametros.put("estados", estados);
 		}
 
 		// Fecha puesta disposición desde

@@ -24,7 +24,7 @@ public interface RemesaConsultaLocal extends BaseEjb<Remesa, Long> {
 
 	public List<Remesa> getByEntidad(Long idEntidad) throws Exception;
 
-	public Paginacion busqueda(Integer pageNumber, Remesa remesa, String emisor, Date fechaPuestaDisposicionDesde,
+	public Paginacion busqueda(Integer pageNumber, List<String> estados, Remesa remesa, String emisor, Date fechaPuestaDisposicionDesde,
 			Date fechaPuestaDisposicionHasta, Long idEntidad) throws Exception;
 
 	public Long remesasPendientes(Long idEntidad) throws Exception;

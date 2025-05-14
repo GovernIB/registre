@@ -6,6 +6,7 @@ import java.io.File;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedHashSet;
@@ -132,22 +133,26 @@ public class RemesaListController extends AbstractRegistroCommonFormController {
         
         calendar.add(Calendar.DAY_OF_MONTH, -30); // Restar 30 días
         Date fechaDesde = calendar.getTime();
-        
-        remesa.setEstado(RegwebConstantes.REMESA_ESTADO_REG_PENDIENTE);
-        
+                
         RemesaBusqueda remesaBusqueda = new RemesaBusqueda(remesa, null, null, null, 1);
         remesaBusqueda.setFechaPuestaDisposicionDesde(fechaDesde);
         remesaBusqueda.setFechaPuestaDisposicionHasta(fechaHasta);
+
+        List<String> estados = Arrays.asList(
+        	    RegwebConstantes.REMESA_ESTADO_REG_PENDIENTE,
+        	    RegwebConstantes.REMESA_ESTADO_REG_LEIDA
+        );
+        
+        remesaBusqueda.setEstados(estados);
         
         Date fechaPuestaDisposicionHasta = null;
         if (remesaBusqueda.getFechaPuestaDisposicionHasta() != null)
 			fechaPuestaDisposicionHasta = RegistroUtils.ajustarHoraBusqueda(remesaBusqueda.getFechaPuestaDisposicionHasta());
         
-
-        
         // Búsqueda de remesas
      	Paginacion paginacion = remesaConsultaEjb.busqueda(
      			remesaBusqueda.getPageNumber(), 
+     			remesaBusqueda.getEstados(),
      			remesa,
      			null,
      			remesaBusqueda.getFechaPuestaDisposicionDesde(),
@@ -182,6 +187,7 @@ public class RemesaListController extends AbstractRegistroCommonFormController {
 		// Búsqueda de remesas
 		Paginacion paginacion = remesaConsultaEjb.busqueda(
 				busqueda.getPageNumber(), 
+				busqueda.getEstados(),
 				busqueda.getRemesa(),
 				busqueda.getEmisor(),
 				busqueda.getFechaPuestaDisposicionDesde(),

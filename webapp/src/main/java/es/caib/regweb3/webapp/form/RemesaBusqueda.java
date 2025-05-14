@@ -2,6 +2,7 @@ package es.caib.regweb3.webapp.form;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 import es.caib.regweb3.model.Remesa;
 
@@ -16,7 +17,7 @@ public class RemesaBusqueda implements Serializable {
 	private String emisor;
 	private Date fechaPuestaDisposicionDesde;
 	private Date fechaPuestaDisposicionHasta;
-
+	private List<String> estados;
 	private Integer pageNumber;
 
 	public RemesaBusqueda() {
@@ -60,6 +61,14 @@ public class RemesaBusqueda implements Serializable {
 
 	public void setFechaPuestaDisposicionHasta(Date fechaPuestaDisposicionHasta) {
 		this.fechaPuestaDisposicionHasta = fechaPuestaDisposicionHasta;
+	}
+
+	public List<String> getEstados() {
+		return estados;
+	}
+
+	public void setEstados(List<String> estados) {
+		this.estados = estados;
 	}
 
 	public Integer getPageNumber() {

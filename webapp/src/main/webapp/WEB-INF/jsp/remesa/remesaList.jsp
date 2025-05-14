@@ -95,10 +95,10 @@
 		                         <div class="col-xs-12">
 			                         <div class="col-xs-6 espaiLinies">
 		                                <div class="col-xs-4 pull-left etiqueta_regweb">
-		                                    <label for="remesa.estado" rel="popupAbajo" data-content="<spring:message code="remesa.estado"/>" data-toggle="popover"><spring:message code="remesa.estado"/></label>
+		                                    <label for="estados" rel="popupAbajo" data-content="<spring:message code="remesa.estado"/>" data-toggle="popover"><spring:message code="remesa.estado"/></label>
 		                                </div>
 		                                <div class="col-xs-8">
-		                                    <form:select path="remesa.estado" cssClass="chosen-select">
+		                                    <form:select multiple="true" path="estados" cssClass="chosen-select">
 		                                        <form:option value="" label="..."/>
 		                                        <c:forEach var="estado" items="${estados}">
 		                                            <form:option value="${estado}">
@@ -198,9 +198,11 @@
                                                                 <td class="center">
                                                                 	<c:choose>
                                                                 		<c:when test="${remesa.estado == 'PENDENT'}">
-                                                                			<span class="fa ${remesa.reintentosLectura == 1 ? 'fa-warning text-danger' : 'fa-envelope text-warning'}"
-																					title="<spring:message code="${remesa.reintentosLectura > 0 ? 'remesa.list.reintentos.comentario' : 'remesa.list.reintentos.agotados.comentario'}"/>"> ${remesa.reintentosLectura}
-																			</span>
+                                                                			<c:if test="${remesa.reintentosLectura < 3}"> <!-- Si ja s'ha fet el primer reintent, mostrar restants -->
+	                                                                			<span class="fa ${remesa.reintentosLectura == 1 ? 'fa-warning text-danger' : 'fa-envelope text-warning'}"
+																						title="<spring:message code="${remesa.reintentosLectura > 0 ? 'remesa.list.reintentos.comentario' : 'remesa.list.reintentos.agotados.comentario'}"/>"> ${remesa.reintentosLectura}
+																				</span>
+																			</c:if>
 		                                                                	 <a data-toggle="modal" role="button" href="#modalConfirmacionNotificacion"
 		                                      									onclick="inicializarModalNotificacion('${remesa.identificador}', false);"
 		                                      									class="btn btn-warning btn-sm ${remesa.reintentosLectura == 0 ? 'href-disabled' : ''}"
