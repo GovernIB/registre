@@ -392,6 +392,8 @@
             	
             	if (totalDocumentos == -1)
             		$('#remesa-carousel-container').hide();
+            	else
+            		$('#remesa-carousel-container').show();
             	
             	$('#remesa-btn-registrar').show();
             	$('#modalTitle').text(tradRemesas['remesa.resumen']);	
