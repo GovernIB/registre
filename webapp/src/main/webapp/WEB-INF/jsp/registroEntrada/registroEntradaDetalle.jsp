@@ -139,10 +139,17 @@
 	                                    </c:if>
 	                                    
 	                                    <c:if test="${(registro.registroDetalle.tipoDocumentacionFisica == RegwebConstantes.TIPO_DOCFISICA_ACOMPANYA_DOC_REQUERIDA || fn:length(registro.registroDetalle.anexos) > 0) && isInstanciaGenerica}">
-	                                   		<a data-toggle="modal" role="button" href="#modalClasificarRegistro"
-	                                   				onclick="mostrarFormulario('<c:url value="/registroEntrada/clasificar/${idFormulario}"/>')"
-		                                      		class="btn btn-success btn-sm btn-block">
+	                                   		<a data-toggle="modal" role="button" href="#modalRevocarRegistro"
+	                                   				onclick="mostrarFormulario('<c:url value="/registroEntrada/revocar/${idFormulario}"/>')"
+		                                      		class="btn btn-success btn-sm"
+		                                      		style="width: 70%;">
 		                                      	<spring:message code="regweb.distribuir"/>
+		                                    </a>
+		                                    <a data-toggle="modal" role="button" href="#modalRevocarRegistroConfirmacion"
+	                                   				onclick="mostrarFormulario('<c:url value="/registroEntrada/revocar/${idFormulario}"/>')"
+		                                      		class="btn btn-warning btn-sm"
+		                                      		style="width: 25%; margin-left: 5px;">
+		                                      	<spring:message code="revocar.modal.accion"/>
 		                                    </a>
 	                                    </c:if>
 	
@@ -159,7 +166,7 @@
 		                        </c:when>
 		                        </c:choose>
                             </div>
-						<c:import url="../registroEntrada/modalClasificarRegistro.jsp"/>
+						<c:import url="../registroEntrada/modalRevocarRegistro.jsp"/>
                         <%--ES UN OFICIO DE REMISIÓN--%>
                         <c:if test="${registro.evento != RegwebConstantes.EVENTO_DISTRIBUIR}">
 
@@ -486,8 +493,6 @@
     traddistribuir['distribuir.noenviado'] = "<spring:message code='registroEntrada.distribuir.error.noEnviado' javaScriptEscape='true' />";
     traddistribuir['distribuir.error.plugin'] = "<spring:message code='registroEntrada.distribuir.error.plugin' javaScriptEscape='true' />";
     traddistribuir['distribuir.distribuyendo'] ="<spring:message code="registroEntrada.distribuyendo" javaScriptEscape="true"/>";
-    traddistribuir['classificar.formulario.nombre'] ="<spring:message code="clasificar.modal.formulario.nombre" javaScriptEscape="true"/>";
-    traddistribuir['classificar.formulario.mimetype'] ="<spring:message code="clasificar.modal.formulario.mimetype" javaScriptEscape="true"/>";
 
     var tradestado = new Array();
     tradestado['estado.E'] = "<spring:message code="unidad.estado.E" javaScriptEscape='true' />";

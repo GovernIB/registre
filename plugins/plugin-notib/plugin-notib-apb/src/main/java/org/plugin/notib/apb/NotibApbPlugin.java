@@ -58,7 +58,7 @@ public class NotibApbPlugin extends AbstractPluginProperties implements INotibPl
 			if ((request.getRetard() == null || request.getRetard() == 0) && retardo != null)
 				request.setRetard(Integer.valueOf(retardo));
 			
-			if (caducidad != null && ! caducidad.isEmpty() && request.getCaducitatDiesNaturals() == null) 
+			if (request.getCaducitatDiesNaturals() == null && request.getCaducitat() == null && caducidad != null && ! caducidad.isEmpty()) 
 				request.setCaducitatDiesNaturals(Integer.valueOf(caducidad));
 			
 			if (forzarEntidad != null && ! forzarEntidad.isEmpty()) {

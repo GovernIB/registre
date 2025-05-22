@@ -39,10 +39,10 @@ public class MailUtils {
      * @throws Exception
      */
 	public static void enviaMail(String asunto, String mensajeTexto, InternetAddress addressFrom, Message.RecipientType type, String mailPara) throws Exception {
-		enviaMail(asunto, mensajeTexto, addressFrom, type, mailPara, null);
+		enviaMail(asunto, mensajeTexto, addressFrom, type, mailPara, false);
 	}
 	
-    public static void enviaMail(String asunto, String mensajeTexto, InternetAddress addressFrom, Message.RecipientType type, String mailPara, byte[] documento) throws Exception {
+    public static void enviaMail(String asunto, String mensajeTexto, InternetAddress addressFrom, Message.RecipientType type, String mailPara, boolean html) throws Exception {
 
         Context ctx = new InitialContext();
 
@@ -64,19 +64,13 @@ public class MailUtils {
 
 
         MimeBodyPart mbp1 = new MimeBodyPart();
-        mbp1.setText(mensajeTexto, "UTF-8");
-
-
+        if (html)
+        	mbp1.setContent(mensajeTexto, "text/html; charset=UTF-8");
+        else
+        	mbp1.setContent(mensajeTexto, "UTF-8");
+        
         Multipart mp = new MimeMultipart();
         mp.addBodyPart(mbp1);
-
-        if (documento != null) {
-        	MimeBodyPart attachmentPart = new MimeBodyPart();
-            ByteArrayDataSource source = new ByteArrayDataSource(documento, "application/pdf");
-            attachmentPart.setDataHandler(new DataHandler(source));
-            attachmentPart.setFileName("documento.pdf");
-            mp.addBodyPart(attachmentPart);
-        }
 
         //Añade el contenido al correo
         msg.setContent(mp);

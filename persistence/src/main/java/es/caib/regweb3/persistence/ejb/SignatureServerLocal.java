@@ -91,5 +91,17 @@ public interface SignatureServerLocal {
      * @throws I18NException
      */
     List<AnexoFull> firmarAnexosEnvioSir(List<AnexoFull> anexosEnviarASir, Long idEntidad, Locale locale, boolean force, String numeroRegistro) throws I18NException;
+
+	/**
+	 * Método que genera la Firma de un File para una Entidad en concreto
+	 *
+	 * @param pdfsource
+	 * @param languageUI
+	 * @param idEntidadActiva
+	 * @return
+	 * @throws Exception
+	 */
+	SignatureCustody signDocument(byte[] pdfsource, String languageUI, Long idEntidadActiva, StringBuilder peticion,
+			String numeroRegistro, String fileName, String reason) throws Exception, I18NException;
     
 }

@@ -34,6 +34,15 @@ public class DocumentoVisor {
 	public void setContenido(String contenido) {
 		this.contenido = contenido;
 	}
+	
+	public String getArxiuExtensio() {
+		int index = nombre.lastIndexOf(".");
+		if (index != -1) {
+			return nombre.substring(index + 1);
+		} else {
+			return "";
+		}
+	}
 }
 
 

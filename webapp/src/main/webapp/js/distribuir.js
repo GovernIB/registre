@@ -92,11 +92,10 @@ function mostrarFormulario(urlDescarga) {
 	        dataType: 'json',
 	        contentType: 'application/json',
 			beforeSend: function(objeto){
-				$formularioContainer.addClass('clasificar_loader');
+				$formularioContainer.addClass('revocar_loader');
 	        },
-	        success:function(clasificacion) {
-				var documento = clasificacion.documento;
-				var tramites = clasificacion.tramites;
+	        success:function(revocacionDto) {
+				var documento = revocacionDto.documento;
 				var base64 = documento.contenido;
 	                		
 	    	    // Convierte el contenido base64 a un objeto Blob
@@ -118,15 +117,11 @@ function mostrarFormulario(urlDescarga) {
 	    	    iframe.src = url;
 	    	                
 	    	    let resumenDocumento = $('<div>', { class: 'resumen-documento' });
-	    	                
-	    	    resumenDocumento.append('\
-	    	        		<p><strong>' + traddistribuir['classificar.formulario.nombre'] + ':</strong> ' + documento.nombre + '</p>\
-	            			<p><strong>' + traddistribuir['classificar.formulario.mimetype'] + ':</strong> ' + documento.mimeType + '</p>');
 				resumenDocumento.append(iframe);
 	    	                
 				$('.wrapper').append(resumenDocumento);
 	
-				$formularioContainer.removeClass('clasificar_loader');
+				$formularioContainer.removeClass('revocar_loader');
 				
 				$formularioContainer.parent().removeClass('formulario_container_loading');
 				$formularioContainer.parent().addClass('formulario_container_loaded');

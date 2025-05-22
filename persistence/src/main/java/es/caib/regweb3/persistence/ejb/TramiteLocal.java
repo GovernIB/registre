@@ -6,12 +6,13 @@ import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
 
 import org.fundaciobit.genapp.common.i18n.I18NException;
+import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 
 import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.model.RegistroEntrada;
 import es.caib.regweb3.model.Remesa;
 import es.caib.regweb3.model.UsuarioEntidad;
-import es.caib.regweb3.model.utils.ClasificacionDto;
+import es.caib.regweb3.model.utils.RevocacionDto;
 import es.caib.regweb3.model.utils.TramiteDto;
 import es.caib.regweb3.persistence.utils.DocumentoDto;
 
@@ -21,8 +22,8 @@ public interface TramiteLocal {
 
 	public List<TramiteDto> getTramitesRolsac(String lang) throws Exception;
 
-	public void clasificarRegistro(RegistroEntrada registroEntrada, UsuarioEntidad usuarioEntidad,
-			ClasificacionDto clasificacionForm, Entidad entidad) throws Exception, I18NException;
+	public void revocarRegistro(RegistroEntrada registroEntrada, UsuarioEntidad usuarioEntidad,
+			RevocacionDto revocacionForm, Entidad entidad) throws Exception, I18NException, I18NValidationException;
 
 	public DocumentoDto descargarCertificacion(String identificadorNotib, String referenciaEnviament, Entidad entidad)
 			throws I18NException, Exception;
