@@ -12,13 +12,13 @@
             </div>
 
             <div class="modal-body modal_revocar_registro_confirmacion">            
-				<div class="procedimiento_container col-xs-12">
+				<div class="procedimiento_container col-xs-12 alert alert-warning">
 					<c:url value="/registroEntrada/${registro.id}/revocar" var="urlRevertirRegistro" />
 					<form:form modelAttribute="revocacionDto" method="post" action="${urlRevertirRegistro}">
 						<form:hidden path="registroId" />
 						
 						<fieldset class="datos-notificacion">
-							<legend><spring:message code="revocar.modal.datos"/></legend>
+							<legend><strong><spring:message code="revocar.modal.datos"/></strong></legend>
 							<div class="col-xs-12">
 								<div class="col-xs-4 pull-left etiqueta_regweb margin-top20 control-label">
 									<label for="codigoSia" rel="popupAbajo"><span class="text-danger">* </span><spring:message code="revocar.modal.campo.procedimiento"/> </label>
@@ -33,8 +33,8 @@
 								</div>
 							</div>
 						</fieldset>
-						<fieldset class="datos-notificacion">
-							<legend><spring:message code="revocar.modal.datos.notificacion"/></legend>
+						<fieldset class="datos-notificacion margin-top20">
+							<legend><strong><spring:message code="revocar.modal.datos.notificacion"/></strong></legend>
 	
 							<div class="col-xs-12">
 								<div class="col-xs-4 pull-left etiqueta_regweb margin-top20 control-label">
