@@ -50,6 +50,8 @@ public class RegistroSalida implements IRegistro {
     private RegistroDetalle registroDetalle;
 
     private String identificadorRemesa;
+    
+    private String identificadorInternRemesa;
 
     private boolean anexosPendientes = false;
 
@@ -293,6 +295,15 @@ public class RegistroSalida implements IRegistro {
 
 	public void setIdentificadorRemesa(String identificadorRemesa) {
 		this.identificadorRemesa = identificadorRemesa;
+	}
+	
+	@Transient
+	public String getIdentificadorInternRemesa() {
+		return identificadorInternRemesa;
+	}
+	
+	public void setIdentificadorInternRemesa(String identificadorInternRemesa) {
+		this.identificadorInternRemesa = identificadorInternRemesa;
 	}
 
     @Override

@@ -21,6 +21,8 @@ import javax.persistence.PersistenceContext;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
+import org.fundaciobit.genapp.common.i18n.I18NValidationException;
+import org.fundaciobit.plugins.documentcustody.api.SignatureCustody;
 import org.jboss.ejb3.annotation.SecurityDomain;
 import org.jboss.ejb3.annotation.TransactionTimeout;
 import org.plugin.notib.api.NotibPluginException;
@@ -41,21 +43,25 @@ import es.caib.notib.client.domini.RespostaAlta;
 import es.caib.notib.client.domini.RespostaConsultaEstatEnviamentV2;
 import es.caib.notib.client.domini.RespostaConsultaEstatNotificacioV2;
 import es.caib.notib.client.domini.ServeiTipus;
+import es.caib.regweb3.model.Anexo;
 import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.model.Interesado;
 import es.caib.regweb3.model.RegistroEntrada;
 import es.caib.regweb3.model.Remesa;
 import es.caib.regweb3.model.RemesaAcuse;
+import es.caib.regweb3.model.TipoDocumental;
 import es.caib.regweb3.model.UsuarioEntidad;
-import es.caib.regweb3.model.utils.ClasificacionDto;
+import es.caib.regweb3.model.utils.AnexoFull;
+import es.caib.regweb3.model.utils.RevocacionDto;
 import es.caib.regweb3.model.utils.TramiteDto;
 import es.caib.regweb3.persistence.utils.DatabaseConnection;
 import es.caib.regweb3.persistence.utils.DocumentoDto;
 import es.caib.regweb3.persistence.utils.MailUtils;
 import es.caib.regweb3.persistence.utils.NotibPluginHelper;
-import es.caib.regweb3.persistence.utils.PdfGenerator;
+import es.caib.regweb3.persistence.utils.DocumentHelper;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.persistence.utils.TramiteRowMapper;
+import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
 
 /**
@@ -81,6 +87,12 @@ public class TramiteBean implements TramiteLocal {
 	private RemesaConsultaLocal remesaConsultaEjb;
 	@EJB
 	private RemesaAcuseLocal remesaAcuseEjb;
+	@EJB
+	private SignatureServerLocal signatureServerEjb;
+	@EJB
+	private AnexoLocal anexoEjb;
+	@EJB
+	private TipoDocumentalLocal tipoDocumentalEjb;
 	
 	@Autowired
 	private NotibPluginHelper pluginHelper;
@@ -129,49 +141,123 @@ public class TramiteBean implements TramiteLocal {
 
 	@TransactionTimeout(value = 1200)
 	@Override
-	public void clasificarRegistro(
+	public void revocarRegistro(
 			RegistroEntrada registroEntrada, 
 			UsuarioEntidad usuarioEntidad, 
-			ClasificacionDto clasificacionForm,
-			Entidad entidad) throws Exception, I18NException {
-		// 1.- Generar pdf
-		byte[] documento = PdfGenerator.generarPdf(
+			RevocacionDto revocacionForm,
+			Entidad entidad) throws Exception, I18NException, I18NValidationException {
+		// 1.- Generar pdf i guardarlo en Arxiu
+		AnexoFull anexoFull = generarGuardarDocumento(
+				entidad,
 				registroEntrada, 
-				clasificacionForm.getCodigoSia());
+				usuarioEntidad,
+				revocacionForm);
 
 		// 2.- Notificar interesados
 		enviarNotificacion(
 				entidad, 
 				registroEntrada, 
 				usuarioEntidad, 
-				clasificacionForm, 
-				documento);
+				revocacionForm, 
+				anexoFull);
 
 		// 3.- Enviar correo interesados
 		enviaMailInteresados(
 				registroEntrada, 
-				documento);
+				revocacionForm);
 		
 		// 4.- Anular registro entrada
 		registroEntradaEjb.anularRegistroEntrada(
 				registroEntrada, 
 				usuarioEntidad, 
-				"Clasificación registro de instáncia genérica");
+				"Registro revocado");
 	}	
 
+	private AnexoFull generarGuardarDocumento(
+			Entidad entidad,
+			RegistroEntrada registroEntrada,
+			UsuarioEntidad usuarioEntidad,
+			RevocacionDto revocacionForm) throws Exception, I18NException, I18NValidationException {
+		StringBuilder peticion = new StringBuilder();
+		Long tipoRegistro = RegwebConstantes.REGISTRO_ENTRADA;
+		Long registroId = registroEntrada.getId();
+		
+		peticion.append("usuario: ").append(usuarioEntidad.getUsuario().getNombreIdentificador()).append(System.getProperty("line.separator"));
+        peticion.append("registro: ").append(registroEntrada.getNumeroRegistroFormateado()).append(System.getProperty("line.separator"));
+        peticion.append("tipoRegistro: ").append(tipoRegistro).append(System.getProperty("line.separator"));
+        peticion.append("idioma: ").append(Configuracio.getDefaultLanguage()).append(System.getProperty("line.separator"));
+        peticion.append("oficina: ").append(registroEntrada.getOficina().getDenominacion()).append(System.getProperty("line.separator"));
+        peticion.append("clase: ").append(getClass().getName()).append(System.getProperty("line.separator"));
+        
+		byte[] documento = DocumentHelper.generarPdf(
+				registroEntrada, 
+				revocacionForm.getCodigoSia());
+
+		SignatureCustody signatureCustody = signatureServerEjb.signDocument(
+				documento, 
+				Configuracio.getDefaultLanguage(), 
+				entidad.getId(), 
+				peticion, 
+				registroEntrada.getNumeroRegistro(), 
+				"Documento.pdf", 
+				"Revocación del registro de entrada " + registroEntrada.getNumeroRegistro());
+
+		AnexoFull anexoForm = generarAnexoFull(
+				entidad.getId(), 
+				signatureCustody);
+		
+		AnexoFull anexoFull = anexoEjb.crearAnexo(
+				anexoForm, 
+				usuarioEntidad, 
+				registroId, 
+				tipoRegistro, 
+				null, 
+				true);
+		
+		return anexoFull;
+	}
+	
+	private AnexoFull generarAnexoFull(Long entidadId, SignatureCustody signatureCustody) throws Exception {
+		AnexoFull anexoFull = new AnexoFull();
+		Anexo anexo = new Anexo();
+		
+		anexoFull.setSignatureCustody(signatureCustody);
+		
+		anexo.setTitulo("Documento revocación");
+		anexo.setTipoDocumento(RegwebConstantes.TIPO_DOCUMENTO_DOC_ADJUNTO);
+		anexo.setOrigenCiudadanoAdmin(RegwebConstantes.ANEXO_ORIGEN_ADMINISTRACION);
+		anexo.setValidezDocumento(RegwebConstantes.TIPOVALIDEZDOCUMENTO_ORIGINAL);
+		anexo.setPerfilCustodia(RegwebConstantes.PERFIL_CUSTODIA_DOCUMENT_CUSTODY);
+		anexo.setNombreFichero("Documento.pdf");
+		anexo.setModoFirma(RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED);
+		
+		TipoDocumental tipoDocumental = tipoDocumentalEjb.findByCodigoEntidad("TD07", entidadId); // Notificació
+		anexo.setTipoDocumental(tipoDocumental);
+		
+		anexoFull.setAnexo(anexo);
+		
+		return anexoFull;
+	}
+	
 	private void enviarNotificacion(
 			Entidad entidad,
 			RegistroEntrada registroEntrada, 
 			UsuarioEntidad usuarioEntidad, 
-			ClasificacionDto clasificacionForm, 
-			byte[] documento) throws I18NException, Exception {
+			RevocacionDto revocacionForm, 
+			AnexoFull anexoFull) throws I18NException, Exception {
+		String nombreFichero = anexoFull.getAnexo().getNombreFichero();
+		String uuidDocumento = anexoFull.getAnexo().getCustodiaID();
+		if (uuidDocumento.contains("#")) {
+			uuidDocumento = uuidDocumento.substring(0, uuidDocumento.indexOf("#"));      	
+        }
 		
 		NotificacioV2 request = generarDtoNotificacion(
 				entidad, 
 				registroEntrada, 
 				usuarioEntidad, 
-				clasificacionForm, 
-				documento);
+				revocacionForm,
+				nombreFichero,
+				uuidDocumento);
 
 		List<Remesa> remesas = remesaEjb.guardarNotificacion(
 				request, 
@@ -196,12 +282,6 @@ public class TramiteBean implements TramiteLocal {
 			em.flush();
 			throw e;
 		}
-	
-		//TODO: guardar document notificació a sgd?
-//			guardarDocumento(
-//					resposta.getIdentificador(), 
-//					notificacion.getDocument().getArxiuNom(), 
-//					getBytesFromInputStream(documento));
 	}
 	
 	@Override
@@ -290,10 +370,11 @@ public class TramiteBean implements TramiteLocal {
 			Entidad entidad,
 			RegistroEntrada registroEntrada, 
 			UsuarioEntidad usuarioEntidad, 
-			ClasificacionDto clasificacionForm, 
-			byte[] documento) throws IOException, I18NException {
+			RevocacionDto revocacionForm, 
+			String nombreFichero,
+			String uuidDocumento) throws IOException, I18NException {
 		String usuarioIntegracion = pluginHelper.getUsuarioIntegracionNotib(entidad.getId());
-		String procedimentCodi = clasificacionForm.getCodigoSia().toString();
+		String procedimentCodi = String.valueOf(PropiedadGlobalUtil.getCodigoSiaInstanciaGenerica());
 		List<Interesado> interesados = registroEntrada.getRegistroDetalle().getInteresados();
 		
 		NotificacioV2 notificacio = new NotificacioV2();
@@ -302,19 +383,18 @@ public class TramiteBean implements TramiteLocal {
 		notificacio.setEnviamentTipus(EnviamentTipus.NOTIFICACIO);
 		notificacio.setUsuariCodi(usuarioIntegracion);
 		// notificacio.setComunicacioTipus(ComunicacioTipusEnum.ASINCRON);
-		notificacio.setConcepte("Clasificación del registro " + registroEntrada.getNumeroRegistro());
-		notificacio.setDescripcio("Clasificación del registro " + registroEntrada.getNumeroRegistro());
+		notificacio.setConcepte("Revocación del registro " + registroEntrada.getNumeroRegistro());
+		notificacio.setDescripcio("Revocación del registro " + registroEntrada.getNumeroRegistro());
 		notificacio.setEnviamentDataProgramada(null);
-		notificacio.setCaducitat(clasificacionForm.getCaducidad());
+		notificacio.setCaducitat(revocacionForm.getCaducidad());
 		
-		String retardo = clasificacionForm.getRetardo();
+		String retardo = revocacionForm.getRetardo();
 		if (retardo != null && ! retardo.isEmpty())
 			notificacio.setRetard(Integer.valueOf(retardo));
 		
 		DocumentV2 document = new DocumentV2();
-		document.setArxiuNom("Notificación_" + System.currentTimeMillis() + ".pdf");
-		String arxiuB64 = Base64.encodeBase64String(documento);
-		document.setContingutBase64(arxiuB64);
+		document.setArxiuNom(nombreFichero);
+		document.setUuid(uuidDocumento);
 		document.setNormalitzat(false);
 		// document.setGenerarCsv(false);
 		notificacio.setDocument(document);
@@ -496,19 +576,21 @@ public class TramiteBean implements TramiteLocal {
 		return estado;
 	}
 	
-	private void enviaMailInteresados(RegistroEntrada registroEntrada, byte[] documento) throws Exception {
+	private void enviaMailInteresados(RegistroEntrada registroEntrada, RevocacionDto revocacionForm) throws Exception {
 		List<Interesado> interesados = registroEntrada.getRegistroDetalle().getInteresados();
-		String asunto = "Revertido registro " + registroEntrada.getNumeroRegistro();
-		String mensajeTexto = "Revertido registro " + registroEntrada.getNumeroRegistro();
-
+		String asunto = "Revocación del registro de entrada " + registroEntrada.getNumeroRegistro();
+		String mensajeTexto = DocumentHelper.generarHtml(
+				registroEntrada, 
+				revocacionForm.getCodigoSia());
+		
 		InternetAddress addressFrom = new InternetAddress(RegwebConstantes.APLICACION_EMAIL,
 				RegwebConstantes.APLICACION_NOMBRE);
 
 		for (Interesado interesado : interesados) {
 			String emailInteresado = interesado.getEmail();
 			
-			if (emailInteresado != null)
-				MailUtils.enviaMail(asunto, mensajeTexto, addressFrom, Message.RecipientType.TO, emailInteresado, documento);
+			if (emailInteresado != null && ! emailInteresado.isEmpty())
+				MailUtils.enviaMail(asunto, mensajeTexto, addressFrom, Message.RecipientType.TO, emailInteresado, true);
 			else
 				log.error("Hi ha hagut un error enviant l'email de la classficació del registre " + registroEntrada.getNumeroRegistro() + " a l'interessat " + interesado.getNombre());
 			
@@ -518,8 +600,7 @@ public class TramiteBean implements TramiteLocal {
 				String emailRepresentante = representante.getEmail();
 				
 				if (emailRepresentante != null)
-					MailUtils.enviaMail(asunto, mensajeTexto, addressFrom, Message.RecipientType.TO, emailRepresentante,
-							documento);
+					MailUtils.enviaMail(asunto, mensajeTexto, addressFrom, Message.RecipientType.TO, emailRepresentante, true);
 				else
 					log.error("Hi ha hagut un error enviant l'email de la classficació del registre " + registroEntrada.getNumeroRegistro() + " al representant " + interesado.getNombre());
 			}

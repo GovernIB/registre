@@ -77,6 +77,41 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
     }
 
     /**
+     * Método que genera la Firma de un File para una Entidad en concreto
+     *
+     * @param pdfsource
+     * @param languageUI
+     * @param idEntidadActiva
+     * @return
+     * @throws Exception
+     */
+    @Override
+    public SignatureCustody signDocument(byte[] pdfsource, String languageUI,
+                                             Long idEntidadActiva, StringBuilder peticion, String numeroRegistro, String fileName, String reason) throws Exception, I18NException {
+
+        // Cerca el Plugin de Justificant definit a les Propietats Globals
+        ISignatureServerPlugin signaturePlugin = (ISignatureServerPlugin) pluginEjb.getPlugin(idEntidadActiva, RegwebConstantes.PLUGIN_FIRMA_SERVIDOR);
+
+        // Comprova que existegix el plugin de justificant
+        if (signaturePlugin == null) {
+            // No s´ha definit cap plugin de Firma. Consulti amb el seu Administrador.
+            throw new I18NException("error.plugin.nodefinit", new I18NArgumentCode("plugin.tipo.4"));
+        }
+
+        final String signType = FileInfoSignature.SIGN_TYPE_PADES;
+        final int signMode = FileInfoSignature.SIGN_MODE_EXPLICIT;
+        final boolean epes = true;
+
+        // Firmamos el Documento
+        byte[]firma = signFile(fileName, pdfsource, FileInfoSignature.PDF_MIME_TYPE, signType, signMode, epes, signaturePlugin, new Locale(languageUI),
+                reason, idEntidadActiva, new Date(), peticion, numeroRegistro);
+
+        // Creamos el SignatureCustody
+        return crearSignatureCustody(signType, signMode, firma);
+
+    }
+    
+    /**
      * Método que genera la Firma de un Justificante
      *
      * @param pdfsource

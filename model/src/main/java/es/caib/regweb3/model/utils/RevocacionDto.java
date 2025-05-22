@@ -7,7 +7,7 @@ import java.util.Date;
  * @author Limit Tecnolgoies S.L
  *
  */
-public class ClasificacionDto {
+public class RevocacionDto {
 
 	private Long registroId;
 	

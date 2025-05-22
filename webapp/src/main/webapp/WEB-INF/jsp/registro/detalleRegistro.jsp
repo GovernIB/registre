@@ -114,8 +114,17 @@
         <c:param name="estado" value="${registro.estado}"/>
         <c:param name="decodificacionTipoAnotacion" value="${registro.registroDetalle.decodificacionTipoAnotacion}"/>
     </c:import>
+    <c:if test="${not empty registro.identificadorInternRemesa && registro.estado == RegwebConstantes.REGISTRO_ANULADO}"> <%-- Remesa Notib --%>
+    	<c:set var="found" value="false" scope="page" />
+    	<c:forEach var="historico" items="${historicos}">
+    		<c:if test="${!found && historico.estado == RegwebConstantes.REGISTRO_ANULADO}">
+    			<span class="label label-warning">${historico.modificacion}</span>
+    			<c:set var="found" value="true" scope="page" />
+    		</c:if>
+    	</c:forEach>
+    </c:if>
 </dd>
-<c:if test="${not empty registro.identificadorRemesa}">
+<c:if test="${not empty registro.identificadorRemesa}"> <%-- Remesa LEMA --%>
 <hr class="${divider}">
 <dt><i class="fa fa-file-o"></i> <spring:message code="registroEntrada.identificador"/>: </dt> <dd> ${registro.identificadorRemesa}</dd>
 </c:if>

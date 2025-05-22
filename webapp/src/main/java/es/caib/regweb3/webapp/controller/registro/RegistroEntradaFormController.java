@@ -53,9 +53,9 @@ import es.caib.regweb3.model.Remesa;
 import es.caib.regweb3.model.Usuario;
 import es.caib.regweb3.model.UsuarioEntidad;
 import es.caib.regweb3.model.utils.AnexoFull;
-import es.caib.regweb3.model.utils.ClasificacionDto;
 import es.caib.regweb3.model.utils.DocumentoVisor;
 import es.caib.regweb3.model.utils.PlantillaJson;
+import es.caib.regweb3.model.utils.RevocacionDto;
 import es.caib.regweb3.persistence.ejb.AnexoLocal;
 import es.caib.regweb3.persistence.ejb.CodigoAsuntoLocal;
 import es.caib.regweb3.persistence.ejb.InteresadoLocal;
@@ -650,9 +650,9 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
         return "redirect:/registroEntrada/"+ idRegistro + "/detalle";
     }
 
-    @RequestMapping(value = "/clasificar/{anexoId}", method = RequestMethod.GET)
+    @RequestMapping(value = "/revocar/{anexoId}", method = RequestMethod.GET)
     @ResponseBody
-    public ClasificacionDto clasificar(
+    public RevocacionDto revocar(
     		@PathVariable("anexoId") Long anexoId, 
     		HttpServletRequest request,
     		HttpServletResponse response) throws Exception, I18NException {
@@ -684,16 +684,16 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
 				mimeType, 
 				Base64.encodeBase64String(data));
         
-        ClasificacionDto clasificacion = new ClasificacionDto();
-        clasificacion.setDocumento(documentoRecibido);
+        RevocacionDto revocacionDto = new RevocacionDto();
+        revocacionDto.setDocumento(documentoRecibido);
         
-        return clasificacion;
+        return revocacionDto;
     }
     
-    @RequestMapping(value = "/{idRegistro}/clasificar", method = RequestMethod.POST)
-    public String clasificar(
+    @RequestMapping(value = "/{idRegistro}/revocar", method = RequestMethod.POST)
+    public String revocar(
     		@PathVariable Long idRegistro, 
-    		@ModelAttribute("clasificacionDto") ClasificacionDto clasificacionForm, 
+    		@ModelAttribute("revocacionDto") RevocacionDto revocacionForm, 
     		HttpServletRequest request) throws Exception {
     	RegistroEntrada registroEntrada = registroEntradaEjb.findByIdCompleto(idRegistro);
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);        
@@ -701,14 +701,17 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
         
         try {
         	
-            tramiteEjb.clasificarRegistro(registroEntrada, usuarioEntidad, clasificacionForm, entidadActiva);
+            tramiteEjb.revocarRegistro(registroEntrada, usuarioEntidad, revocacionForm, entidadActiva);
             
-            Mensaje.saveMessageInfo(request, getMessage("registroEntrada.clasificar.ok"));
+            Mensaje.saveMessageInfo(request, getMessage("registroEntrada.revocar.ok"));
 		} catch (Exception e) {
-	        Mensaje.saveMessageError(request, getMessage("registroEntrada.clasificar.ko") + ": " + e.getMessage());
+	        Mensaje.saveMessageError(request, getMessage("registroEntrada.revocar.ko") + ": " + e.getMessage());
 			e.printStackTrace();
 		} catch (I18NException e) {
-	        Mensaje.saveMessageError(request, getMessage("registroEntrada.clasificar.ko"));
+	        Mensaje.saveMessageError(request, getMessage("registroEntrada.revocar.ko"));
+			e.printStackTrace();
+		} catch (I18NValidationException e) {
+			Mensaje.saveMessageError(request, getMessage("registroEntrada.revocar.ko"));
 			e.printStackTrace();
 		}
         
@@ -1004,8 +1007,8 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
         binder.setValidator(this.registroEntradaValidator);
     }
     
-    @InitBinder("clasificacionDto")
-    public void initBinderClasificacion(WebDataBinder binder) {
+    @InitBinder("revocacionDto")
+    public void initBinderRevocacion(WebDataBinder binder) {
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         CustomDateEditor dateEditor = new CustomDateEditor(sdf, true);
         binder.registerCustomEditor(java.util.Date.class, dateEditor);
