@@ -5,13 +5,7 @@ import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.model.utils.AnexoSimple;
 import es.caib.regweb3.persistence.integracion.ArxiuCaibUtils;
-import es.caib.regweb3.persistence.utils.AnexoHelper;
-import es.caib.regweb3.persistence.utils.GeiserPluginHelper;
-import es.caib.regweb3.persistence.utils.I18NLogicUtils;
-import es.caib.regweb3.persistence.utils.Paginacion;
-import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
-import es.caib.regweb3.persistence.utils.RegistroUtils;
-import es.caib.regweb3.persistence.utils.SemaforoSchedulerVerificacionFirmaAnexos;
+import es.caib.regweb3.persistence.utils.*;
 import es.caib.regweb3.persistence.validator.AnexoBeanValidator;
 import es.caib.regweb3.persistence.validator.AnexoValidator;
 import es.caib.regweb3.utils.*;
@@ -20,15 +14,12 @@ import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NArgumentString;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
-import org.fundaciobit.plugins.documentcustody.api.CustodyException;
-import org.fundaciobit.plugins.documentcustody.api.DocumentCustody;
-import org.fundaciobit.plugins.documentcustody.api.IDocumentCustodyPlugin;
-import org.fundaciobit.plugins.documentcustody.api.NotSupportedCustodyException;
-import org.fundaciobit.plugins.documentcustody.api.SignatureCustody;
+import org.fundaciobit.plugins.documentcustody.api.*;
 import org.fundaciobit.pluginsib.core.utils.ISO8601;
 import org.fundaciobit.pluginsib.core.utils.Metadata;
 import org.fundaciobit.pluginsib.core.utils.MetadataConstants;
 import org.fundaciobit.pluginsib.core.utils.MetadataFormatException;
+import org.hibernate.Hibernate;
 import org.jboss.ejb3.annotation.SecurityDomain;
 import org.jboss.ejb3.annotation.TransactionTimeout;
 import org.plugin.geiser.api.AnexoGSample;
@@ -104,117 +95,12 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
     @Override
     public AnexoFull getAnexoFullLigero(Long anexoID, Long idEntidad) throws I18NException {
 
-        Date inicio = new Date();
-        StringBuilder peticion = new StringBuilder();
-        long tiempo = System.currentTimeMillis();
-        String descripcion = "Descarga anexo";
-        AnexoFull anexoFull = null;
-
-        try {
-
-            //Obtenemos el anexo de la tabla de anexos de regweb
-            Anexo anexo = em.find(Anexo.class, anexoID);
-
-            if(anexo == null){
-                return null;
-            }
-
-            //Montamos un AnexoFull( Anexo + toda la parte de custodia)
-            anexoFull = new AnexoFull(anexo);
-
-            //Obtenemos el identificador de custodia
-            String custodyID = anexo.getCustodiaID();
-
-            if (anexo.getPerfilCustodia().equals(RegwebConstantes.PERFIL_CUSTODIA_DOCUMENT_CUSTODY)) {
-
-                // Los justificantes y los anexos se guardan en plugins diferentes,
-                // por eso se carga el plugin en función de si es justificante o no
-                IDocumentCustodyPlugin custody;
-                if (anexo.isJustificante()) { // Si es justificante cargamos el plugin de custodia del justificante
-
-                    if(PropiedadGlobalUtil.getCustodiaDiferida(idEntidad) && !anexo.getCustodiado()){ // Si no está custodiado, está guardado en FileSystem
-                        custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA_FS_JUSTIFICANTE);
-                    }else{
-                        custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE);
-                    }
-                    descripcion = "Descarga justificante";
-                } else { //si no, cargamos el plugin de anexos que no son justificantes
-                    custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA_ANEXOS);
-                }
-
-                // Integracion
-                peticion.append("clase: ").append(custody.getClass().getName()).append(System.getProperty("line.separator"));
-                peticion.append("custodyID: ").append(custodyID).append(System.getProperty("line.separator"));
-                peticion.append("anexoID: ").append(anexoID).append(System.getProperty("line.separator"));
-                peticion.append("justificante: ").append(anexo.isJustificante()).append(System.getProperty("line.separator"));
-
-                //Obtenemos la información(sin el contenido físico en bytes[]) del anexo guardados en custodia
-                anexoFull.setDocumentoCustody(custody.getDocumentInfoOnly(custodyID)); //Documento asociado al anexo
-                anexoFull.setDocumentoFileDelete(false);
-                anexoFull.setSignatureCustody(custody.getSignatureInfoOnly(custodyID)); //Firma asociada al anexo
-                anexoFull.setSignatureFileDelete(false);
-
-                //Obtenemos las metadatas de escaneo del anexo si no es justificante
-                if(anexo.getScan()) {
-                    List<Metadata> metadataList = new ArrayList<>();
-                    //Profundidad color
-                    Metadata profundidadColor = custody.getOnlyOneMetadata(custodyID, MetadataConstants.EEMGDE_PROFUNDIDAD_COLOR);
-                    if (profundidadColor != null) {
-                        metadataList.add(profundidadColor);
-                    }
-
-                    //Resolución
-                    Metadata resolucion = custody.getOnlyOneMetadata(custodyID, MetadataConstants.EEMGDE_RESOLUCION);
-                    if (resolucion != null) {
-                        metadataList.add(resolucion);
-                    }
-
-                    anexoFull.setMetadatas(metadataList);
-                }
-
-            if (log.isDebugEnabled()) {
-                log.debug("SIGNATURE " + custody.getSignatureInfoOnly(custodyID));
-                log.debug("DOCUMENT " + custody.getDocumentInfoOnly(custodyID));
-                log.debug("modoFirma " + anexo.getModoFirma());
-            }
-
-            }else if(anexo.getPerfilCustodia().equals(RegwebConstantes.PERFIL_CUSTODIA_ARXIU)){
-
-                // Cargamos el plugin de Arxiu
-                arxiuCaibUtils.cargarPlugin(idEntidad);
-
-                Document document = arxiuCaibUtils.getDocumento(custodyID, RegwebConstantes.ARXIU_VERSION_DOC,false,false);
-
-                anexoFull.setDocument(document);
-                anexoFull.setDocumentoFileDelete(false);
-                anexoFull.setSignatureFileDelete(false);
-
-            }
-
-            // Integracion
-            integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_CUSTODIA, descripcion, peticion.toString(), System.currentTimeMillis() - tiempo, idEntidad, "");
-
-            return anexoFull;
-
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
-
-            try {
-                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_CUSTODIA, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - tiempo, idEntidad, "");
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-
-            throw new I18NException(e, "anexo.error.obteniendo",
-                    new I18NArgumentString(String.valueOf(anexoID)),
-                    new I18NArgumentString(e.getMessage()));
-
-        }
+        return getAnexoFull(anexoID, idEntidad, true);
     }
 
 
     @Override
-    public AnexoFull getAnexoFull(Long anexoID, Long idEntidad) throws I18NException {
+    public AnexoFull getAnexoFull(Long anexoID, Long idEntidad, boolean ligero) throws I18NException {
 
         try {
             //Obtenemos el anexo de la tabla de anexos de regweb
@@ -244,11 +130,16 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
                     custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA_ANEXOS);
                 }
 
-                //Obtenemos la información(con el contenido físico en bytes[]) del anexo guardados en custodia
-                anexoFull.setDocumentoCustody(custody.getDocumentInfo(custodyID)); //Documento asociado al anexo
-                anexoFull.setDocumentoFileDelete(false);
+                //Obtenemos solo la información o también el contenido físico en bytes[] del anexo guardado en custodia
+                if(ligero){
+                    anexoFull.setDocumentoCustody(custody.getDocumentInfoOnly(custodyID)); //Documento asociado al anexo
+                    anexoFull.setSignatureCustody(custody.getSignatureInfoOnly(custodyID));//Firma asociada al anexo
+                }else{
+                    anexoFull.setDocumentoCustody(custody.getDocumentInfo(custodyID)); //Documento asociado al anexo
+                    anexoFull.setSignatureCustody(custody.getSignatureInfo(custodyID));//Firma asociada al anexo
+                }
 
-                anexoFull.setSignatureCustody(custody.getSignatureInfo(custodyID));//Firma asociada al anexo
+                anexoFull.setDocumentoFileDelete(false);
                 anexoFull.setSignatureFileDelete(false);
 
                 //cargamos los metadatos de escaneo
@@ -634,7 +525,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
         //Cargamos el tipo asunto y los interesados
         //Hibernate.initialize(registro.getRegistroDetalle().getTipoAsunto());
-        //Hibernate.initialize(registro.getRegistroDetalle().getInteresados());
+        Hibernate.initialize(registro.getRegistroDetalle().getInteresados());
 
         //Creamos un registro a partir del cargado previamente
         if (tipoRegistro.equals(REGISTRO_ENTRADA)) {

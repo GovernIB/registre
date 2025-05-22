@@ -1,15 +1,10 @@
 package es.caib.regweb3.persistence.ejb;
 
 
-import es.caib.regweb3.model.Anexo;
-import es.caib.regweb3.model.IRegistro;
-import es.caib.regweb3.model.RegistroEntrada;
-import es.caib.regweb3.model.RegistroSalida;
-import es.caib.regweb3.model.UsuarioEntidad;
+import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.model.utils.AnexoSimple;
 import es.caib.regweb3.persistence.utils.Paginacion;
-
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.fundaciobit.plugins.documentcustody.api.CustodyException;
@@ -69,7 +64,7 @@ public interface AnexoLocal extends BaseEjb<Anexo, Long> {
      * @return
      * @throws I18NException
      */
-    AnexoFull getAnexoFull(Long anexoID, Long idEntidad) throws I18NException;
+    AnexoFull getAnexoFull(Long anexoID, Long idEntidad, boolean ligero) throws I18NException;
 
 
     AnexoFull actualizarAnexo(AnexoFull anexoFull, UsuarioEntidad usuarioEntidad,

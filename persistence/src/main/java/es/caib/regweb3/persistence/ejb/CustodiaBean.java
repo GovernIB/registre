@@ -138,7 +138,7 @@ public class CustodiaBean implements CustodiaLocal {
         }
 
         // Obtenemos el justificante a custodiar
-        AnexoFull justificante = anexoEjb.getAnexoFull(registro.getRegistroDetalle().getJustificante().getId(), idEntidad);
+        AnexoFull justificante = anexoEjb.getAnexoFull(registro.getRegistroDetalle().getJustificante().getId(), idEntidad, false);
         custodyIdFileSystem = justificante.getAnexo().getCustodiaID();
 
         // Cargamos los plugins de Arxiu

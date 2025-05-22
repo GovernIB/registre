@@ -7,11 +7,7 @@ import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.model.utils.DocumentacionFisica;
 import es.caib.regweb3.model.utils.RegistroBasico;
-import es.caib.regweb3.persistence.utils.ConversionHelper;
-import es.caib.regweb3.persistence.utils.GeiserPluginHelper;
-import es.caib.regweb3.persistence.utils.I18NLogicUtils;
-import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
-import es.caib.regweb3.persistence.utils.RegistroUtils;
+import es.caib.regweb3.persistence.utils.*;
 import es.caib.regweb3.plugins.postproceso.IPostProcesoPlugin;
 import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.Dir3CaibUtils;
@@ -835,7 +831,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
         List<Anexo> anexos = registroSalida.getRegistroDetalle().getAnexos();
         List<AnexoFull> anexosFull = new ArrayList<AnexoFull>();
         for (Anexo anexo : anexos) {
-            AnexoFull anexoFull = anexoEjb.getAnexoFull(anexo.getId(), idEntidad);
+            AnexoFull anexoFull = anexoEjb.getAnexoFull(anexo.getId(), idEntidad, false);
             anexosFull.add(anexoFull);
         }
         //Asignamos los documentos recuperados de custodia al registro de salida.

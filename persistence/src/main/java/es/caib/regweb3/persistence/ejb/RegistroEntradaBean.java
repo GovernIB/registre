@@ -1,24 +1,18 @@
 package es.caib.regweb3.persistence.ejb;
 
 
-import static es.caib.regweb3.utils.RegwebConstantes.REGISTRO_ENTRADA;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
-
-import javax.annotation.Resource;
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
-import javax.interceptor.Interceptors;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
-
+import es.caib.dir3caib.ws.api.oficina.Dir3CaibObtenerOficinasWs;
+import es.caib.dir3caib.ws.api.oficina.OficinaTF;
+import es.caib.dir3caib.ws.api.unidad.UnidadTF;
+import es.caib.regweb3.model.*;
+import es.caib.regweb3.model.utils.AnexoFull;
+import es.caib.regweb3.model.utils.DocumentacionFisica;
+import es.caib.regweb3.persistence.utils.*;
+import es.caib.regweb3.plugins.postproceso.IPostProcesoPlugin;
+import es.caib.regweb3.utils.Configuracio;
+import es.caib.regweb3.utils.Dir3CaibUtils;
+import es.caib.regweb3.utils.RegwebConstantes;
+import es.caib.regweb3.utils.StringUtils;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NArgumentCode;
 import org.fundaciobit.genapp.common.i18n.I18NException;
@@ -33,32 +27,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
 
-import es.caib.dir3caib.ws.api.oficina.Dir3CaibObtenerOficinasWs;
-import es.caib.dir3caib.ws.api.oficina.OficinaTF;
-import es.caib.dir3caib.ws.api.unidad.UnidadTF;
-import es.caib.regweb3.model.Anexo;
-import es.caib.regweb3.model.CatTipoVia;
-import es.caib.regweb3.model.Entidad;
-import es.caib.regweb3.model.IRegistro;
-import es.caib.regweb3.model.Interesado;
-import es.caib.regweb3.model.Oficina;
-import es.caib.regweb3.model.Organismo;
-import es.caib.regweb3.model.RegistroDetalle;
-import es.caib.regweb3.model.RegistroEntrada;
-import es.caib.regweb3.model.Trazabilidad;
-import es.caib.regweb3.model.UsuarioEntidad;
-import es.caib.regweb3.model.utils.AnexoFull;
-import es.caib.regweb3.model.utils.DocumentacionFisica;
-import es.caib.regweb3.persistence.utils.ConversionHelper;
-import es.caib.regweb3.persistence.utils.DehuDocumentManager;
-import es.caib.regweb3.persistence.utils.GeiserPluginHelper;
-import es.caib.regweb3.persistence.utils.I18NLogicUtils;
-import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
-import es.caib.regweb3.plugins.postproceso.IPostProcesoPlugin;
-import es.caib.regweb3.utils.Configuracio;
-import es.caib.regweb3.utils.Dir3CaibUtils;
-import es.caib.regweb3.utils.RegwebConstantes;
-import es.caib.regweb3.utils.StringUtils;
+import javax.annotation.Resource;
+import javax.ejb.EJB;
+import javax.ejb.Stateless;
+import javax.interceptor.Interceptors;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+import java.util.*;
+
+import static es.caib.regweb3.utils.RegwebConstantes.REGISTRO_ENTRADA;
 
 
 /**
@@ -869,9 +847,9 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         List<AnexoFull> anexosFull = new ArrayList<AnexoFull>();
         for (Anexo anexo : anexos) {
             if(!anexo.isJustificante()){ // si no es Justificante, cargamos el AnexoFull
-                anexosFull.add(anexoEjb.getAnexoFull(anexo.getId(), idEntidad));
+                anexosFull.add(anexoEjb.getAnexoFull(anexo.getId(), idEntidad, false));
             }else if(justificante){
-                anexosFull.add(anexoEjb.getAnexoFull(anexo.getId(), idEntidad));
+                anexosFull.add(anexoEjb.getAnexoFull(anexo.getId(), idEntidad, false));
             }else {
                 anexosFull.add(new AnexoFull(anexo));
             }
