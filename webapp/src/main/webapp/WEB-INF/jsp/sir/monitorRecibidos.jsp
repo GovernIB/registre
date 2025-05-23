@@ -224,7 +224,14 @@
                                                             <span class="label label-danger"><spring:message code="registroSir.salida"/></span>
                                                         </c:if>
                                                     </td>
-                                                    <td><label class="no-bold" rel="popupAbajo" data-content="${registroSir.codigoEntidadRegistralOrigen}" data-toggle="popover">${registroSir.decodificacionEntidadRegistralInicio}</label></td>
+                                                    <td> <%--Intentamos mostrar la información de la Unidad de tramitación, sino mostramos la Oficina--%>
+                                                        <c:if test="${not empty registroSir.codigoUnidadTramitacionOrigen && not empty registroSir.decodificacionUnidadTramitacionOrigen}">
+                                                            <label class="no-bold" rel="popupAbajo" data-content="${registroSir.codigoUnidadTramitacionOrigen}" data-toggle="popover">${registroSir.decodificacionUnidadTramitacionOrigen}</label>
+                                                        </c:if>
+                                                        <c:if test="${not registroSir.codigoUnidadTramitacionOrigen }">
+                                                            <label class="no-bold" rel="popupAbajo" data-content="${registroSir.codigoEntidadRegistralOrigen}" data-toggle="popover">${registroSir.decodificacionEntidadRegistralOrigen}</label>
+                                                        </c:if>
+                                                    </td>
                                                     <td><label class="no-bold" rel="popupAbajo" data-content="${registroSir.codigoEntidadRegistralDestino}" data-toggle="popover">${registroSir.decodificacionEntidadRegistralDestino}</label></td>
                                                     <td>${registroSir.aplicacion}</td>
                                                     <td class="center">
