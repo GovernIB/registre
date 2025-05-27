@@ -228,7 +228,7 @@
                                                         <c:if test="${not empty registroSir.codigoUnidadTramitacionOrigen && not empty registroSir.decodificacionUnidadTramitacionOrigen}">
                                                             <label class="no-bold" rel="popupAbajo" data-content="${registroSir.codigoUnidadTramitacionOrigen}" data-toggle="popover">${registroSir.decodificacionUnidadTramitacionOrigen}</label>
                                                         </c:if>
-                                                        <c:if test="${not registroSir.codigoUnidadTramitacionOrigen }">
+                                                        <c:if test="${empty registroSir.codigoUnidadTramitacionOrigen }">
                                                             <label class="no-bold" rel="popupAbajo" data-content="${registroSir.codigoEntidadRegistralOrigen}" data-toggle="popover">${registroSir.decodificacionEntidadRegistralOrigen}</label>
                                                         </c:if>
                                                     </td>
