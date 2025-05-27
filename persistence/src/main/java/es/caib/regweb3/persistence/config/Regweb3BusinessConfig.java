@@ -23,7 +23,7 @@ import java.util.Properties;
 @EnableTransactionManagement
 @EnableAsync
 @EnableScheduling
-@ComponentScan(value = {"es.caib.regweb3.persistence","es.gob.ad.registros.sir"})
+@ComponentScan(value = {"es.caib.regweb3.persistence","es.caib.regweb3.integraciones","es.gob.ad.registros.sir"})
 public class Regweb3BusinessConfig {
 
     protected static final Logger log = LoggerFactory.getLogger(Regweb3BusinessConfig.class);
