@@ -258,4 +258,9 @@ public interface RegistroSirLocal extends BaseEjb<RegistroSir, Long> {
 
 	RegistroSir transformarRegistroSalidaAndCrearRegistroSir(RegistroSalida registroSalida, UsuarioEntidad usuario)
 			throws Exception, I18NException;
+	
+	public void actualizarEstadoComunicacionAdviser(Long idRegistroSir, boolean estadoComunicacion) throws Exception;
+
+	public List<Long> getSalidasSirFinalizadasPendientesAdviser(Long idEntidad) throws Exception;
+	
 }

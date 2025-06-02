@@ -1425,6 +1425,53 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
 
     }
 	
+	@Override
+    public void actualizarEstadoComunicacionAdviser(Long idRegistroSir, boolean estadoComunicacion) throws Exception {
+        Query q = em.createQuery("update RegistroSir set cambioEstadoComunicado = :estadoComunicacion where id = :idRegistroSir");
+        q.setParameter("idRegistroSir", idRegistroSir);
+        q.setParameter("estadoComunicacion", estadoComunicacion);
+        q.executeUpdate();
+    }
+	
+	@Override
+	@SuppressWarnings(value = "unchecked")
+	public List<Long> getSalidasSirFinalizadasPendientesAdviser(Long idEntidad) throws Exception {
+		//Obtiene los registros de salida finalizados
+		List<String> salidaSirFinalizados = registroSalidaConsultaEjb.obtenerRegistrosSirFinalizados(idEntidad);
+		
+		if (!salidaSirFinalizados.isEmpty()) {
+			//Obtiene registros sir finalizados
+			Query q = em.createQuery("Select registroSir.id from RegistroSir as registroSir "
+					+ "where registroSir.entidad.id = :idEntidad "
+					+ "and registroSir.cambioEstadoComunicado = false "
+					+ "and registroSir.numeroRegistro in (:salidaSirFinalizados) "
+					+ "order by id");
+			
+			q.setParameter("idEntidad", idEntidad);
+			
+			int batchSize = 500; // Número de elementos por lote
+
+			List<Long> finalResults = new ArrayList<>();
+
+			int totalBatches = (int) Math.ceil((double) salidaSirFinalizados.size() / batchSize);
+			
+			for (int i = 0; i < totalBatches; i++) {
+			    int fromIndex = i * batchSize;
+			    int toIndexSalida = Math.min(fromIndex + batchSize, salidaSirFinalizados.size());
+			    
+			    if (fromIndex < toIndexSalida || fromIndex == toIndexSalida) {
+			    	List<String> salidaBatch = salidaSirFinalizados.subList(fromIndex, toIndexSalida);
+			    	q.setParameter("salidaSirFinalizados", salidaBatch);
+			    }
+
+				finalResults.addAll(q.getResultList());
+			}
+			
+			return finalResults; 
+		}
+		return new ArrayList<Long>();
+	}
+	
     /**
      * Transforma una Lista de {@link InteresadoSir} en una Lista de {@link Interesado}
      * @param interesados

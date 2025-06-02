@@ -496,7 +496,7 @@ public class Regweb3Scheduler implements SchedulingConfigurer {
                     	try {
                     		periodo = schedulerEjb.getCronTareaPeriodoConsultaNotificacionesDehu();
                     	} catch (Exception e) {
-                    		log.warn("Hi ha hagut un error recuperant el periode getCronTareaPeriodoActualizacionAnexosPendientesVerificacionFirma. Agafam valor per defecte 1800000L.");
+                    		log.warn("Hi ha hagut un error recuperant el periode getCronTareaPeriodoConsultaNotificacionesDehu. Agafam valor per defecte 1800000L.");
                     	}
 						if (periodo != null) {
 							PeriodicTrigger trigger = new PeriodicTrigger(periodo, TimeUnit.MILLISECONDS);
@@ -560,6 +560,48 @@ public class Regweb3Scheduler implements SchedulingConfigurer {
                         
                     	CronTrigger cronTrigger = new CronTrigger(horaExecucio, TimeZone.getTimeZone("Europe/Madrid"));
                         return cronTrigger.nextExecutionTime(triggerContext);
+                    }
+                }
+		);
+		
+		addScheduledTask(taskRegistrar, "tareaComunicacionEstadoEnviosSir", 
+                new Runnable() {
+                    @Override
+                    public void run() {
+                    	try {
+                    		log.info("------------- SIR: Comunicación cambio estado salidas SIR -------------");
+                    		
+                    		schedulerEjb.comunicarCambioEstadoSir();
+                    		
+                    		log.info("------------- SIR: Comunicación cambio estado salidas SIR finalizado -------------");
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+                    }
+                },
+                new Trigger() {
+                    @Override
+                    public Date nextExecutionTime(TriggerContext triggerContext) {
+                    	Long periodo = 14400000L;
+                    	try {
+                    		periodo = schedulerEjb.getCronTareaPeriodoComunicacionCambioEstadoSirPendientes();
+                    	} catch (Exception e) {
+                    		log.warn("Hi ha hagut un error recuperant el periode getCronTareaPeriodoComunicacionCambioEstadoSirPendientes. Agafam valor per defecte 14400000L.");
+                    	}
+						if (periodo != null) {
+							PeriodicTrigger trigger = new PeriodicTrigger(periodo, TimeUnit.MILLISECONDS);
+							trigger.setFixedRate(true);
+							// Només la primera vegada que s'executa
+							Long comunicarCambioEstadoSirPendientesInitialDelayLong = 0L;
+							if (primeraVez) {
+								comunicarCambioEstadoSirPendientesInitialDelayLong = schedulerEjb.getCronTareaRetardoComunicacionCambioEstadoSirPendientes();
+								primeraVez = false;
+							}
+							trigger.setInitialDelay(comunicarCambioEstadoSirPendientesInitialDelayLong);
+							Date nextExecution = trigger.nextExecutionTime(triggerContext);
+							return nextExecution;
+						}
+						return null;
                     }
                 }
 		);

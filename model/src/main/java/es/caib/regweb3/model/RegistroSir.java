@@ -236,6 +236,8 @@ public class RegistroSir implements Serializable {
     
     private boolean incluirContenidoAnexo = false;
     
+    private boolean cambioEstadoComunicado = false;
+    
     public RegistroSir() {
     }
 
@@ -691,7 +693,16 @@ public class RegistroSir implements Serializable {
         this.descripcionError = descripcionError;
     }
 
-    @Override
+    @Column(name="CAMBIO_ESTADO_COMUNICADO", nullable=false)
+    public boolean isCambioEstadoComunicado() {
+		return cambioEstadoComunicado;
+	}
+
+	public void setCambioEstadoComunicado(boolean cambioEstadoComunicado) {
+		this.cambioEstadoComunicado = cambioEstadoComunicado;
+	}
+
+	@Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;

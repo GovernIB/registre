@@ -162,5 +162,11 @@ public interface SchedulerLocal {
 	String getHoraEnvioCorreoNotificacionesDehu();
 
 	void enviarCorreoInformandoPendientes() throws Exception;
+
+	void comunicarCambioEstadoSir() throws Exception;
+
+	Long getCronTareaPeriodoComunicacionCambioEstadoSirPendientes();
+
+	Long getCronTareaRetardoComunicacionCambioEstadoSirPendientes();
 }
 

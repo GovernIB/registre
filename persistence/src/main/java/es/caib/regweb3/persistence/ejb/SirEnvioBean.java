@@ -1,38 +1,7 @@
 package es.caib.regweb3.persistence.ejb;
 
-import es.caib.dir3caib.ws.api.oficina.Dir3CaibObtenerOficinasWs;
-import es.caib.dir3caib.ws.api.oficina.OficinaTF;
-import es.caib.regweb3.model.*;
-import es.caib.regweb3.model.sir.TipoAnotacion;
-import es.caib.regweb3.model.utils.AnexoFull;
-import es.caib.regweb3.model.utils.EstadoRegistroSir;
-import es.caib.regweb3.model.utils.IndicadorPrueba;
-import es.caib.regweb3.persistence.integracion.ArxiuCaibUtils;
-import es.caib.regweb3.persistence.utils.ConversionHelper;
-import es.caib.regweb3.persistence.utils.FileSystemManager;
-import es.caib.regweb3.persistence.utils.GeiserPluginHelper;
-import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
-import es.caib.regweb3.sir.ejb.EmisionLocal;
-import es.caib.regweb3.sir.ejb.MensajeLocal;
-import es.caib.regweb3.utils.*;
-import org.apache.log4j.Logger;
-import org.fundaciobit.genapp.common.i18n.I18NArgumentCode;
-import org.fundaciobit.genapp.common.i18n.I18NException;
-import org.fundaciobit.genapp.common.i18n.I18NValidationException;
-import org.jboss.ejb3.annotation.SecurityDomain;
-import org.jboss.ejb3.annotation.TransactionTimeout;
-import org.plugin.geiser.api.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
+import static es.caib.regweb3.utils.RegwebConstantes.REGISTRO_ENTRADA;
 
-import javax.annotation.Resource;
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
-import javax.interceptor.Interceptors;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -42,7 +11,66 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import static es.caib.regweb3.utils.RegwebConstantes.REGISTRO_ENTRADA;
+import javax.annotation.Resource;
+import javax.ejb.EJB;
+import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
+import javax.interceptor.Interceptors;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
+import org.apache.log4j.Logger;
+import org.fundaciobit.genapp.common.i18n.I18NArgumentCode;
+import org.fundaciobit.genapp.common.i18n.I18NException;
+import org.fundaciobit.genapp.common.i18n.I18NValidationException;
+import org.jboss.ejb3.annotation.SecurityDomain;
+import org.jboss.ejb3.annotation.TransactionTimeout;
+import org.plugin.geiser.api.AnexoG;
+import org.plugin.geiser.api.ApunteRegistro;
+import org.plugin.geiser.api.EstadoTramitacion;
+import org.plugin.geiser.api.GeiserPluginException;
+import org.plugin.geiser.api.RespuestaBusquedaTramitGeiser;
+import org.plugin.geiser.api.RespuestaConsultaGeiser;
+import org.plugin.geiser.api.RespuestaRegistroGeiser;
+import org.plugin.geiser.api.TipoAsiento;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
+
+import es.caib.dir3caib.ws.api.oficina.Dir3CaibObtenerOficinasWs;
+import es.caib.dir3caib.ws.api.oficina.OficinaTF;
+import es.caib.regweb3.model.AnexoSir;
+import es.caib.regweb3.model.Archivo;
+import es.caib.regweb3.model.Entidad;
+import es.caib.regweb3.model.IRegistro;
+import es.caib.regweb3.model.InteresadoSir;
+import es.caib.regweb3.model.Oficina;
+import es.caib.regweb3.model.OficioRemision;
+import es.caib.regweb3.model.RegistroDetalle;
+import es.caib.regweb3.model.RegistroEntrada;
+import es.caib.regweb3.model.RegistroSalida;
+import es.caib.regweb3.model.RegistroSir;
+import es.caib.regweb3.model.Trazabilidad;
+import es.caib.regweb3.model.TrazabilidadSir;
+import es.caib.regweb3.model.UsuarioEntidad;
+import es.caib.regweb3.model.sir.TipoAnotacion;
+import es.caib.regweb3.model.utils.AnexoFull;
+import es.caib.regweb3.model.utils.EstadoRegistroSir;
+import es.caib.regweb3.model.utils.IndicadorPrueba;
+import es.caib.regweb3.model.utils.TipoRegistro;
+import es.caib.regweb3.persistence.integracion.ArxiuCaibUtils;
+import es.caib.regweb3.persistence.utils.ConversionHelper;
+import es.caib.regweb3.persistence.utils.FileSystemManager;
+import es.caib.regweb3.persistence.utils.GeiserPluginHelper;
+import es.caib.regweb3.persistence.utils.NotibHelper;
+import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
+import es.caib.regweb3.sir.ejb.EmisionLocal;
+import es.caib.regweb3.sir.ejb.MensajeLocal;
+import es.caib.regweb3.utils.Dir3CaibUtils;
+import es.caib.regweb3.utils.EstadoUtils;
+import es.caib.regweb3.utils.RegwebConstantes;
+import es.caib.regweb3.utils.RegwebUtils;
+import es.caib.regweb3.utils.StringUtils;
 
 /**
  * Created by Fundació BIT.
@@ -87,6 +115,7 @@ public class SirEnvioBean implements SirEnvioLocal {
     @Autowired ArxiuCaibUtils arxiuCaibUtils;
     @Autowired ConversionHelper conversioHelper;
     @Autowired GeiserPluginHelper pluginHelper;
+    @Autowired NotibHelper notibHelper;
     
     @Resource
     private javax.ejb.SessionContext ejbContext;
@@ -880,6 +909,16 @@ public class SirEnvioBean implements SirEnvioLocal {
 						registroSalidaEjb.cambiarEstado(registroSalida.getId(), RegwebConstantes.REGISTRO_RECHAZADO);
 					}
 		          }
+	        	}
+				
+	        	if ((RegwebUtils.contains(RegwebConstantes.ESTADOS_OFICIO_REMISION_SIR_ENVIADOS_FINALES, estadoOficioSirActual) 
+	        			|| RegwebUtils.contains(RegwebConstantes.ESTADOS_OFICIO_REMISION_SIR_RECTIFICAR, estadoOficioSirActual))
+	        			&& registroSir.getTipoRegistro().equals(TipoRegistro.SALIDA)) {
+	        		try {
+	        			notibHelper.comunicarCambioEstadoSir(registroSir);	        			
+	        		} catch (Exception e) {
+						e.printStackTrace();
+					}
 	        	}
 	        }
     	}	

@@ -1010,6 +1010,16 @@ public class PropiedadGlobalUtil {
     	return getLong(partialPropertyName);
     }
 
+	public static Long getCronTareaPeriodoComunicacionCambioEstadoSirPendientes() {
+		final String partialPropertyName =  "cron.adviser.comunicacion.estado.envios.sir.periodo";
+    	return getLong(partialPropertyName);
+	}
+
+	public static Long getCronTareaRetardoComunicacionCambioEstadoSirPendientes() {
+		final String partialPropertyName =  "cron.adviser.comunicacion.estado.envios.sir.retardo";
+    	return getLong(partialPropertyName);
+	}
+
 	public static String getHoraEnvioCorreoNotificacionesDehu() {
 		final String partialPropertyName =  "notificaciones.pendientes.aviso.hora";
     	return getString(partialPropertyName);
@@ -1039,5 +1049,14 @@ public class PropiedadGlobalUtil {
 		final String partialPropertyName =  "sede.procedimiento.url";
     	return getString(partialPropertyName);
 	}
-	
+
+	public static String getNotibCallbackUrl(Long id) {
+		final String partialPropertyName =  "notib.sir.callback.url";
+    	return getString(partialPropertyName);
+	}
+
+	public static String getEmisorForzadoNotib() {
+		final String partialPropertyName =  "notib.codigo.emisor.forzado";
+    	return getString(partialPropertyName);
+	}
 }

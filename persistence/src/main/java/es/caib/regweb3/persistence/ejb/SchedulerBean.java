@@ -21,12 +21,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
 
 import es.caib.regweb3.model.Entidad;
+import es.caib.regweb3.model.RegistroSir;
 import es.caib.regweb3.model.Remesa;
 import es.caib.regweb3.model.Usuario;
 import es.caib.regweb3.model.UsuarioEntidad;
 import es.caib.regweb3.persistence.utils.I18NLogicUtils;
 import es.caib.regweb3.persistence.utils.LemaPluginHelper;
 import es.caib.regweb3.persistence.utils.MailUtils;
+import es.caib.regweb3.persistence.utils.NotibHelper;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.persistence.utils.SemaforoLocalizaRemesasPendientes;
 import es.caib.regweb3.persistence.utils.SemaforoSchedulerConsultaEstado;
@@ -68,6 +70,8 @@ public class SchedulerBean implements SchedulerLocal{
 
     @Autowired
     private LemaPluginHelper lemaPluginHelper;
+    @Autowired 
+    private NotibHelper notibHelper;
     
 	@Override
     public void purgarIntegraciones() throws Exception{
@@ -795,5 +799,64 @@ public class SchedulerBean implements SchedulerLocal{
     private boolean isEnvioEmailResultadoLemaEnabled() {
     	return PropiedadGlobalUtil.getEnvioEmailResultadoLema();
     }
+
+
+	@Override
+	public Long getCronTareaPeriodoComunicacionCambioEstadoSirPendientes() {
+		return PropiedadGlobalUtil.getCronTareaPeriodoComunicacionCambioEstadoSirPendientes();
+	}
+
+	@Override
+	public Long getCronTareaRetardoComunicacionCambioEstadoSirPendientes() {
+		return PropiedadGlobalUtil.getCronTareaRetardoComunicacionCambioEstadoSirPendientes();
+	}
+	
+	@Override
+	public void comunicarCambioEstadoSir() throws Exception {
+		
+		List<Entidad> entidades = entidadEjb.getEntidadesSir();
+
+        for(Entidad entidad: entidades) {
+            log.info(" ");
+            log.info("------------- SIR: Comunicando cambio estado salidas SIR de la entidad: " + entidad.getNombre() + " -------------");
+            log.info(" ");
+            long tiempo = System.currentTimeMillis();
+        	List<Long> registrosSirIds = new ArrayList<Long>();
+        	String descripcionPar = "";
+        	try {
+    			descripcionPar = "Recuperando salidas SIR con estado final pendientes de comunicar via Adviser...";
+        		registrosSirIds = registroSirEjb.getSalidasSirFinalizadasPendientesAdviser(entidad.getId());
+        	} catch (Exception e) {
+    			integracionEjb.addIntegracionError(
+    					RegwebConstantes.INTEGRACION_SIR, 
+    					descripcionPar, 
+    					"Ha habido un error recuperando las salidas SIR finales", 
+    					e, 
+    					null, 
+    					System.currentTimeMillis() - tiempo, 
+    					entidad.getId(), 
+    					null);
+			}
+        	
+        	log.info("------------- SIR: Se han encontrado " + registrosSirIds.size() + " salidas SIR finalizadas pendientes de Adviser -------------");
+			for (Long registroSirId : registrosSirIds) {
+				log.debug("------------- SIR: Comunicando cambio estado via Adviser del registro SIR: " + registroSirId + " -------------");
+				
+				try {
+					RegistroSir registroSir = registroSirEjb.findById(registroSirId);
+					
+					notibHelper.comunicarCambioEstadoSir(registroSir);
+					
+					log.debug("------------- SIR: Se ha realizado la comunicación del cambio de estado de la salida SIR " + registroSirId + " con éxito -------------");
+				} catch (Exception e) {
+					e.printStackTrace();
+					log.debug("------------- SIR: Ha habido un error realizando la comunicación del cambio de estado de la salida SIR " + registroSirId + " -------------");
+				}
+				
+				
+			}
+        }
+        
+	}
 	
 }
