@@ -498,34 +498,32 @@ public class SchedulerBean implements SchedulerLocal{
             log.info(" ");
             log.info("------------- SIR: Actualizando estado envios SIR de " + entidad.getNombre() + " -------------");
             log.info(" ");
-            synchronized (SemaforoSchedulerConsultaEstado.class) {
-  	            // RegistrosSir con estado no final
-            	long tiempo = System.currentTimeMillis();
-            	List<Long> registrosSirIds = new ArrayList<Long>();
-            	String descripcionPar = "";
-            	try {
-        			descripcionPar = "Recuperando envíos SIR con estado no final...";
-            		registrosSirIds = registroSirEjb.getRegistrosSirPendientes(entidad.getId(), PropiedadGlobalUtil.getMaxReintentActualizacionEnviosSir());
-            	} catch (Exception e) {
-        			integracionEjb.addIntegracionError(
-        					RegwebConstantes.INTEGRACION_SIR, 
-        					descripcionPar, 
-        					"Ha habido un error recuperando los registros SIR pendientes", 
-        					e, 
-        					null, 
-        					System.currentTimeMillis() - tiempo, 
-        					entidad.getId(), 
-        					null);
-				}
-            	log.info("------------- SIR: Se han encontrado " + registrosSirIds.size() + " envíos SIR pendientes -------------");
-    			for (Long registroSirId : registrosSirIds) {
-    				log.debug("------------- SIR: Actualizando envío SIR " + registroSirId + " -------------");
-    				
-    				sirEnvioEjb.actualizarEnvioSir(entidad, registroSirId);
-    				
-    				log.debug("------------- SIR: Envío SIR " + registroSirId + " actualizado con éxito -------------");
-    			}
-            }
+            // RegistrosSir con estado no final
+        	long tiempo = System.currentTimeMillis();
+        	List<Long> registrosSirIds = new ArrayList<Long>();
+        	String descripcionPar = "";
+        	try {
+    			descripcionPar = "Recuperando envíos SIR con estado no final...";
+        		registrosSirIds = registroSirEjb.getRegistrosSirPendientes(entidad.getId(), PropiedadGlobalUtil.getMaxReintentActualizacionEnviosSir());
+        	} catch (Exception e) {
+    			integracionEjb.addIntegracionError(
+    					RegwebConstantes.INTEGRACION_SIR, 
+    					descripcionPar, 
+    					"Ha habido un error recuperando los registros SIR pendientes", 
+    					e, 
+    					null, 
+    					System.currentTimeMillis() - tiempo, 
+    					entidad.getId(), 
+    					null);
+			}
+        	log.info("------------- SIR: Se han encontrado " + registrosSirIds.size() + " envíos SIR pendientes -------------");
+			for (Long registroSirId : registrosSirIds) {
+				log.debug("------------- SIR: Actualizando envío SIR " + registroSirId + " -------------");
+				
+				sirEnvioEjb.actualizarEnvioSir(entidad, registroSirId);
+				
+				log.debug("------------- SIR: Envío SIR " + registroSirId + " actualizado con éxito -------------");
+			}
         }
         log.info("------------- SIR: Registros SIR enviados actualizados " + " -------------");
     }
@@ -565,9 +563,7 @@ public class SchedulerBean implements SchedulerLocal{
 			log.info(" ");
 			log.info("------------- SIR: Actualizando identificadores intercambio envios SIR de " + entidad.getNombre() + " -------------");
 			log.info(" ");
-			synchronized (SemaforoSchedulerConsultaIdRecibidos.class) {
-				sirEnvioEjb.actualizarIdEnviosSirRecibidos(entidad);
-			}
+			sirEnvioEjb.actualizarIdEnviosSirRecibidos(entidad);
 		}
 		log.info("------------- SIR: Identificadores intercambio registros SIR recibidos actualizados " + " -------------");
 	}

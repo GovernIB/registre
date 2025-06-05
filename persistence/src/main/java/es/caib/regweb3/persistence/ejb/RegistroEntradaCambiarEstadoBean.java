@@ -37,6 +37,8 @@ public class RegistroEntradaCambiarEstadoBean extends BaseEjbJPA<RegistroEntrada
         q.setParameter("idEstado", idEstado);
         q.setParameter("idRegistro", idRegistro);
         q.executeUpdate();
+        
+        em.flush();
     }
 
     @Override

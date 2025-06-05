@@ -696,7 +696,9 @@ public class SirController extends BaseController {
 			
 			if (! RegwebUtils.contains(RegwebConstantes.ESTADOS_REGISTRO_SIR_FINALES, registroSir.getEstado()) && registroSir.getFechaRecepcion() != null) {
     			synchronized(Semaforo.getCreacionSemaforo()) {
-    				sirEnvioEjb.actualizarEnvioSirRealizado(registroSir, usuarioEntidad);
+    				sirEnvioEjb.actualizarEnvioSirRecibidoGeiser(
+    						registroSir, 
+    						usuarioEntidad);
     			}
 				Mensaje.saveMessageInfo(request, "Se ha actualizado el intercambio");
 

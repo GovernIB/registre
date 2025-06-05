@@ -1,14 +1,16 @@
 package es.caib.regweb3.persistence.ejb;
 
-import es.caib.regweb3.model.RegistroSalida;
-import org.apache.log4j.Logger;
-import org.jboss.ejb3.annotation.SecurityDomain;
+import java.util.List;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import java.util.List;
+
+import org.apache.log4j.Logger;
+import org.jboss.ejb3.annotation.SecurityDomain;
+
+import es.caib.regweb3.model.RegistroSalida;
 
 /**
  * Created by Fundació BIT.
@@ -77,6 +79,8 @@ public class RegistroSalidaCambiarEstadoBean extends BaseEjbJPA<RegistroSalida, 
         q.setParameter("idEstado", idEstado);
         q.setParameter("idRegistro", idRegistro);
         q.executeUpdate();
+        
+        em.flush();
     }
 
    

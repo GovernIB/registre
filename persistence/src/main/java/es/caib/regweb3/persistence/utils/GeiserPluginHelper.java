@@ -23,26 +23,27 @@ public class GeiserPluginHelper {
     @Autowired ConversionHelper conversioHelper;
     
 
-    public RespuestaRegistroGeiser postProcesoNuevoRegistroGeiser(IRegistro r, UsuarioEntidad usuarioEntidad, boolean forzarExcepcion) throws GeiserPluginException, I18NException {
+    public RespuestaRegistroGeiser postProcesoNuevoRegistroGeiser(IRegistro r, Long entidadId, boolean forzarExcepcion) throws GeiserPluginException, I18NException {
     	RespuestaRegistroGeiser respuesta = null;
-    	IGeiserPlugin geiserPlugin = (IGeiserPlugin) pluginEjb.getPlugin(usuarioEntidad.getEntidad().getId(), RegwebConstantes.PLUGIN_GEISER);
+    	IGeiserPlugin geiserPlugin = (IGeiserPlugin) pluginEjb.getPlugin(entidadId, RegwebConstantes.PLUGIN_GEISER);
         if (geiserPlugin != null) {
         	if (r instanceof RegistroEntrada) {
-        		synchronized (Semaforo.class) {
+        		// Comentado para evitar posibles bloqueos al registrar dede NOTIB
+        		//synchronized (Semaforo.class) {
 		        	respuesta = geiserPlugin.registrar(
 		        			conversioHelper.convertir(
 		        					(RegistroEntrada)r, 
 		        					PeticionRegistroGeiser.class),
 		        			forzarExcepcion);
-        		}
+        		//}
         	} else {
-        		synchronized (Semaforo.class) {
+        		//synchronized (Semaforo.class) {
 	        		respuesta = geiserPlugin.registrar(
 	            			conversioHelper.convertir(
 	            					(RegistroSalida)r, 
 	            					PeticionRegistroGeiser.class),
 	            			forzarExcepcion);
-        		}
+        		//}
         	}
         }
 		return respuesta;

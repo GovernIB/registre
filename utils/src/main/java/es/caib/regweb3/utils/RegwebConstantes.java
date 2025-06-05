@@ -238,6 +238,7 @@ public interface RegwebConstantes {
 	
     Integer ENVIADO_CONFIRMADO = 6;
     Integer RECIBIDO_CONFIRMADO = 7;
+    Integer ENVIADO_RECHAZADO = 8;
     Integer FINALIZADO = 14;
     
     /* -------------- ESTADO REGISTRO --------------*/
@@ -364,6 +365,7 @@ public interface RegwebConstantes {
     Integer[] ESTADOS_REGISTRO_SIR_FINALES = {
     		ENVIADO_CONFIRMADO,
     		RECIBIDO_CONFIRMADO,
+    		ENVIADO_RECHAZADO,
     		FINALIZADO
     };
     

@@ -1,31 +1,15 @@
 package es.caib.regweb3.persistence.ejb;
 
 
-import es.caib.dir3caib.ws.api.oficina.Dir3CaibObtenerOficinasWs;
-import es.caib.dir3caib.ws.api.oficina.OficinaTF;
-import es.caib.dir3caib.ws.api.unidad.UnidadTF;
-import es.caib.regweb3.model.*;
-import es.caib.regweb3.model.utils.AnexoFull;
-import es.caib.regweb3.model.utils.DocumentacionFisica;
-import es.caib.regweb3.persistence.utils.*;
-import es.caib.regweb3.plugins.postproceso.IPostProcesoPlugin;
-import es.caib.regweb3.utils.Configuracio;
-import es.caib.regweb3.utils.Dir3CaibUtils;
-import es.caib.regweb3.utils.RegwebConstantes;
-import es.caib.regweb3.utils.StringUtils;
-import org.apache.log4j.Logger;
-import org.fundaciobit.genapp.common.i18n.I18NArgumentCode;
-import org.fundaciobit.genapp.common.i18n.I18NException;
-import org.fundaciobit.genapp.common.i18n.I18NValidationException;
-import org.hibernate.Hibernate;
-import org.hibernate.Session;
-import org.jboss.ejb3.annotation.SecurityDomain;
-import org.jboss.ejb3.annotation.TransactionTimeout;
-import org.plugin.geiser.api.GeiserPluginException;
-import org.plugin.geiser.api.RespuestaRegistroGeiser;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.i18n.LocaleContextHolder;
-import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
+import static es.caib.regweb3.utils.RegwebConstantes.REGISTRO_ENTRADA;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
 
 import javax.annotation.Resource;
 import javax.ejb.EJB;
@@ -34,9 +18,43 @@ import javax.interceptor.Interceptors;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import java.util.*;
 
-import static es.caib.regweb3.utils.RegwebConstantes.REGISTRO_ENTRADA;
+import org.apache.log4j.Logger;
+import org.fundaciobit.genapp.common.i18n.I18NException;
+import org.fundaciobit.genapp.common.i18n.I18NValidationException;
+import org.hibernate.Hibernate;
+import org.hibernate.Session;
+import org.jboss.ejb3.annotation.SecurityDomain;
+import org.jboss.ejb3.annotation.TransactionTimeout;
+import org.plugin.geiser.api.GeiserPluginException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
+
+import es.caib.dir3caib.ws.api.oficina.Dir3CaibObtenerOficinasWs;
+import es.caib.dir3caib.ws.api.oficina.OficinaTF;
+import es.caib.dir3caib.ws.api.unidad.UnidadTF;
+import es.caib.regweb3.model.Anexo;
+import es.caib.regweb3.model.CatTipoVia;
+import es.caib.regweb3.model.Entidad;
+import es.caib.regweb3.model.Interesado;
+import es.caib.regweb3.model.Oficina;
+import es.caib.regweb3.model.Organismo;
+import es.caib.regweb3.model.RegistroDetalle;
+import es.caib.regweb3.model.RegistroEntrada;
+import es.caib.regweb3.model.Trazabilidad;
+import es.caib.regweb3.model.UsuarioEntidad;
+import es.caib.regweb3.model.utils.AnexoFull;
+import es.caib.regweb3.model.utils.DocumentacionFisica;
+import es.caib.regweb3.persistence.utils.ConversionHelper;
+import es.caib.regweb3.persistence.utils.DehuDocumentManager;
+import es.caib.regweb3.persistence.utils.I18NLogicUtils;
+import es.caib.regweb3.persistence.utils.IntegracionGeiserHelper;
+import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
+import es.caib.regweb3.plugins.postproceso.IPostProcesoPlugin;
+import es.caib.regweb3.utils.Configuracio;
+import es.caib.regweb3.utils.Dir3CaibUtils;
+import es.caib.regweb3.utils.RegwebConstantes;
 
 
 /**
@@ -63,7 +81,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
     @Autowired ConversionHelper conversioHelper;
     @Autowired
-    private GeiserPluginHelper geiserPluginHelper;
+    private IntegracionGeiserHelper integracionGeiserHelper;
 
     @EJB private LibroLocal libroEjb;
     @EJB private ContadorLocal contadorEjb;
@@ -157,32 +175,8 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
             //Envío directo GEISER si el destinatario no está integrado con SIR
             if (registroEntrada.getEvento() != RegwebConstantes.EVENTO_OFICIO_SIR && enviarGeiser) {
 	            try {
-		            //Registro interno en GEISER
-		            RespuestaRegistroGeiser respuesta = geiserPluginHelper.postProcesoNuevoRegistroGeiser(registroEntrada, usuarioEntidad, false);
-		            if (respuesta != null) {
-		            	registroEntrada.setNumeroRegistro(respuesta.getNuRegistro());
-		            	registroEntrada.setNumeroRegistroFormateado(respuesta.getNuRegistro());
-		            	registroEntrada.setFecha(respuesta.getFechaRegistro());
-		            	
-		                // Si no ha introducido ninguna fecha de Origen
-		                if (registroEntrada.getRegistroDetalle().getFechaOrigen() == null)
-		                    registroEntrada.getRegistroDetalle().setFechaOrigen(registroEntrada.getFecha());
-		                
-		                //Si no se ha espeficicado un NumeroRegistroOrigen, le asignamos el propio
-		                if (StringUtils.isEmpty(registroEntrada.getRegistroDetalle().getNumeroRegistroOrigen()))
-		                    registroEntrada.getRegistroDetalle().setNumeroRegistroOrigen(registroEntrada.getNumeroRegistroFormateado());
-
-	                	// Si es un registro a una adm externa recuperar justifcante de GEISER
-		                if (registroEntrada.getDestino() == null) {
-		                    registroEntrada.getRegistroDetalle().setJustificanteGeiser(true);
-		                }
-		                
-		                //Actualizar metadatos registro en caso de proceder de una aplicación externa (Notib...)
-		                actualizarMetadatosAnexosArxiu(registroEntrada, usuarioEntidad);
-		            } else {
-		                // No s´ha definit cap plugin de Justificant. Consulti amb el seu Administrador.
-		                throw new I18NException("error.plugin.nodefinit", new I18NArgumentCode("plugin.tipo.11"));
-		            }
+//		            //Registro interno en GEISER
+	            	integracionGeiserHelper.realizarRegistro(registroEntrada, usuarioEntidad);
 	            } catch (GeiserPluginException gpe) {
 					log.error("Ha habido un error realizando el registro en GEISER");
 					gpe.printStackTrace();
@@ -783,20 +777,20 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         return cargarAnexosFull(re, false);
     }
 
-    private void actualizarMetadatosAnexosArxiu(IRegistro registro, UsuarioEntidad usuario) throws I18NException {	
-    	// Actualizar información anexos SGD
-    	try {
-    		for (AnexoFull anexoFull: registro.getRegistroDetalle().getAnexosFull()) {
-        		anexoEjb.actualizarMetadatosAnexo(registro, anexoFull, usuario);
-			}
-    	} catch (I18NException i18n) {
-    		log.error("Ha habido un error actualizando los metadatos de registro del anexo.");
-    		i18n.printStackTrace();
-		} catch (Exception e) {
-			log.error("Ha habido un error actualizando los metadatos de registro del anexo.");
-			e.printStackTrace();
-		}
-    }
+//    private void actualizarMetadatosAnexosArxiu(IRegistro registro, UsuarioEntidad usuario) throws I18NException {	
+//    	// Actualizar información anexos SGD
+//    	try {
+//    		for (AnexoFull anexoFull: registro.getRegistroDetalle().getAnexosFull()) {
+//        		anexoEjb.actualizarMetadatosAnexo(registro, anexoFull, usuario);
+//			}
+//    	} catch (I18NException i18n) {
+//    		log.error("Ha habido un error actualizando los metadatos de registro del anexo.");
+//    		i18n.printStackTrace();
+//		} catch (Exception e) {
+//			log.error("Ha habido un error actualizando los metadatos de registro del anexo.");
+//			e.printStackTrace();
+//		}
+//    }
     
     private void actualizarDireccionDestino(RegistroEntrada registroEntrada) {
     	RegistroDetalle registroDetalle = registroEntrada.getRegistroDetalle();

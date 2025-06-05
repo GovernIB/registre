@@ -55,46 +55,7 @@ public interface SirEnvioLocal {
      */
     RegistroSir enviarIntercambio(Long tipoRegistro, IRegistro registro, Oficina oficinaActiva, UsuarioEntidad usuario, String codigoOficinaSir)
             throws Exception, I18NException, I18NValidationException;
-
-//    /**
-//     * Renintenta los envíos con ERROR a SIR que pendientes de llegar a destino.
-//     *
-//     * @param entidad
-//     * @throws Exception
-//     */
-//    void reintentarEnviosConError(Entidad entidad) throws Exception;
-
-    Integer copiarDocumentacionERTE(List<Long> registros, Long idEntidad) throws Exception;
-
-//    /**
-//     * Realiza un nuevo envío SIR a GEISEr
-//     * 
-//     * @param rsir
-//     * @param entidadId
-//     * @return
-//     * @throws I18NException
-//     */
-//	RespuestaRegistroGeiser postProcesoNuevoRegistroSirGeiser(RegistroSir rsir, Long entidadId) throws I18NException;
-//
-//	/**
-//	 * Realiza una búsqueda del estado de tramitación de un registro SIR en GEISER
-//	 * @param rsir
-//	 * @param entidadId
-//	 * @return
-//	 * @throws I18NException
-//	 */
-//	RespuestaBusquedaTramitGeiser postProcesoBuscarEstadoTRegistroSirGeiser(RegistroSir rsir, Long entidadId) throws I18NException;
-//
-//	/**
-//	 * Realiza la búsqueda de un registro SIR en GEISER
-//	 * 
-//	 * @param rsir
-//	 * @param entidadId
-//	 * @return
-//	 * @throws I18NException
-//	 */
-//	RespuestaConsultaGeiser postProcesoConsultarRegistroSirGeiser(RegistroSir rsir, Long entidadId) throws I18NException;
-
+    
 	/**
 	 * Actualiza el estado de todos los envíos SIR pendientes
 	 * 
@@ -123,7 +84,7 @@ public interface SirEnvioLocal {
 	 * @throws I18NException 
 	 * @throws Exception 
 	 */
-	void actualizarEnvioSirRealizado(RegistroSir registroSir, UsuarioEntidad usuarioEntidad) throws Exception, I18NException;
+	void actualizarEnvioSirRecibidoGeiser(RegistroSir registroSir, UsuarioEntidad usuarioEntidad) throws Exception, I18NException;
 	
 	
 	/**
