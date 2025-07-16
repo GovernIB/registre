@@ -1,20 +1,35 @@
 package es.caib.regweb3.persistence.ejb;
 
-import es.caib.plugins.arxiu.api.Document;
-import es.caib.regweb3.model.*;
-import es.caib.regweb3.model.utils.AnexoFull;
-import es.caib.regweb3.model.utils.AnexoSimple;
-import es.caib.regweb3.persistence.integracion.ArxiuCaibUtils;
-import es.caib.regweb3.persistence.utils.*;
-import es.caib.regweb3.persistence.validator.AnexoBeanValidator;
-import es.caib.regweb3.persistence.validator.AnexoValidator;
-import es.caib.regweb3.utils.*;
+import static es.caib.regweb3.utils.RegwebConstantes.REGISTRO_ENTRADA;
+
+import java.beans.Encoder;
+import java.beans.Expression;
+import java.beans.PersistenceDelegate;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.ejb.EJB;
+import javax.ejb.Stateless;
+import javax.interceptor.Interceptors;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NArgumentString;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
-import org.fundaciobit.plugins.documentcustody.api.*;
+import org.fundaciobit.plugins.documentcustody.api.CustodyException;
+import org.fundaciobit.plugins.documentcustody.api.DocumentCustody;
+import org.fundaciobit.plugins.documentcustody.api.IDocumentCustodyPlugin;
+import org.fundaciobit.plugins.documentcustody.api.NotSupportedCustodyException;
+import org.fundaciobit.plugins.documentcustody.api.SignatureCustody;
 import org.fundaciobit.pluginsib.core.utils.ISO8601;
 import org.fundaciobit.pluginsib.core.utils.Metadata;
 import org.fundaciobit.pluginsib.core.utils.MetadataConstants;
@@ -27,19 +42,34 @@ import org.plugin.geiser.api.PeticionConsultaGeiser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
 
-import javax.annotation.Resource;
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
-import javax.interceptor.Interceptors;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
-import java.beans.Encoder;
-import java.beans.Expression;
-import java.beans.PersistenceDelegate;
-import java.util.*;
-
-import static es.caib.regweb3.utils.RegwebConstantes.REGISTRO_ENTRADA;
+import es.caib.plugins.arxiu.api.Document;
+import es.caib.regweb3.model.Anexo;
+import es.caib.regweb3.model.Cola;
+import es.caib.regweb3.model.Entidad;
+import es.caib.regweb3.model.IRegistro;
+import es.caib.regweb3.model.Interesado;
+import es.caib.regweb3.model.RegistroEntrada;
+import es.caib.regweb3.model.RegistroSalida;
+import es.caib.regweb3.model.TipoDocumental;
+import es.caib.regweb3.model.TraduccionTipoDocumental;
+import es.caib.regweb3.model.UsuarioEntidad;
+import es.caib.regweb3.model.utils.AnexoFull;
+import es.caib.regweb3.model.utils.AnexoSimple;
+import es.caib.regweb3.persistence.integracion.ArxiuCaibUtils;
+import es.caib.regweb3.persistence.utils.AnexoHelper;
+import es.caib.regweb3.persistence.utils.GeiserPluginHelper;
+import es.caib.regweb3.persistence.utils.I18NLogicUtils;
+import es.caib.regweb3.persistence.utils.Paginacion;
+import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
+import es.caib.regweb3.persistence.utils.RegistroUtils;
+import es.caib.regweb3.persistence.utils.SemaforoSchedulerVerificacionFirmaAnexos;
+import es.caib.regweb3.persistence.validator.AnexoBeanValidator;
+import es.caib.regweb3.persistence.validator.AnexoValidator;
+import es.caib.regweb3.utils.ClientUtils;
+import es.caib.regweb3.utils.Configuracio;
+import es.caib.regweb3.utils.RegwebConstantes;
+import es.caib.regweb3.utils.RegwebUtils;
+import es.caib.regweb3.utils.StringUtils;
 
 
 /**
@@ -70,17 +100,17 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
     @EJB private SignatureServerLocal signatureServerEjb;
     @EJB private PluginLocal pluginEjb;
     @EJB private IntegracionLocal integracionEjb;
-    
+     
     @Autowired
     private GeiserPluginHelper pluginHelper;
     @Autowired
     private AnexoHelper anexoHelper;
     
     @EJB(mappedName = "regweb3/RegistroEntradaCambiarEstadoEJB/local")
-    private RegistroEntradaCambiarEstadoLocal registroEntradaEjb;
+    private RegistroEntradaCambiarEstadoLocal registroEntradaCambiarEstadoEjb;
 
     @EJB(mappedName = "regweb3/RegistroSalidaCambiarEstadoEJB/local")
-    private RegistroSalidaCambiarEstadoLocal registroSalidaEjb;
+    private RegistroSalidaCambiarEstadoLocal registroSalidaCambiarEstadoEjb;
 
     @Autowired
     ArxiuCaibUtils arxiuCaibUtils;
@@ -517,9 +547,9 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
         IRegistro cloneRegistro;
         //Recuperamos el registro de la BD
         if (tipoRegistro.equals(REGISTRO_ENTRADA)) {
-            registro = registroEntradaEjb.findById(registroID);
+            registro = registroEntradaCambiarEstadoEjb.findById(registroID);
         } else {
-            registro = registroSalidaEjb.findById(registroID);
+            registro = registroSalidaCambiarEstadoEjb.findById(registroID);
 
         }
 
@@ -556,7 +586,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
                                   Long registroID, Long tipoRegistro, boolean isNew) throws Exception, I18NException {
 
         if (tipoRegistro.equals(REGISTRO_ENTRADA)) {
-            RegistroEntrada registroEntrada = registroEntradaEjb.findById(registroID);
+            RegistroEntrada registroEntrada = registroEntradaCambiarEstadoEjb.findById(registroID);
             Entidad entidadActiva = registroEntrada.getOficina().getOrganismoResponsable().getEntidad();
             // Dias que han pasado desde que se creó el registroEntrada
             if (registroEntrada.getFecha() != null) { // Pendiente envío GEISER (aún no se considera registrado)
@@ -566,7 +596,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 	                // Si han pasado más de los dias de visado de la entidad se crearan historicos de todos los
 	                // cambios y se cambia el estado del registroEntrada a pendiente visar
 	                if (dias >= entidadActiva.getDiasVisado()) {
-	                    registroEntradaEjb.cambiarEstado(registroID, RegwebConstantes.REGISTRO_PENDIENTE_VISAR);
+	                	registroEntradaCambiarEstadoEjb.cambiarEstado(registroID, RegwebConstantes.REGISTRO_PENDIENTE_VISAR);
 	
 	                    // Creamos el historico de registro de entrada
 	                    historicoRegistroEntradaEjb.crearHistoricoRegistroEntrada(registroEntrada, usuarioEntidad, I18NLogicUtils.tradueix(new Locale(Configuracio.getDefaultLanguage()), "registro.modificacion.anexos"), true);
@@ -575,7 +605,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 	            } else {// MODIFICACION DE ANEXO
 	
 	                if (dias >= entidadActiva.getDiasVisado()) { // Si han pasado más de los dias de visado cambiamos estado registro
-	                    registroEntradaEjb.cambiarEstado(registroID, RegwebConstantes.REGISTRO_PENDIENTE_VISAR);
+	                	registroEntradaCambiarEstadoEjb.cambiarEstado(registroID, RegwebConstantes.REGISTRO_PENDIENTE_VISAR);
 	                }
 	
 	                // Creamos el historico de registro de entrada, siempre creamos histórico independiente de los dias.
@@ -588,7 +618,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             anexoFull.getAnexo().setRegistroDetalle(registroEntrada.getRegistroDetalle());
 
         } else {
-            RegistroSalida registroSalida = registroSalidaEjb.findById(registroID);
+            RegistroSalida registroSalida = registroSalidaCambiarEstadoEjb.findById(registroID);
             Entidad entidadActiva = registroSalida.getOficina().getOrganismoResponsable().getEntidad();
             // Dias que han pasado desde que se creó el registroEntrada
             if (registroSalida.getFecha() != null) { // Pendiente envío GEISER (aún no se considera registrado)
@@ -598,7 +628,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 	                // Si han pasado más de los dias de visado de la entidad se crearan historicos de todos los
 	                // cambios y se cambia el estado del registroEntrada a pendiente visar
 	                if (dias >= entidadActiva.getDiasVisado()) {
-	                    registroSalidaEjb.cambiarEstado(registroID, RegwebConstantes.REGISTRO_PENDIENTE_VISAR);
+	                	registroSalidaCambiarEstadoEjb.cambiarEstado(registroID, RegwebConstantes.REGISTRO_PENDIENTE_VISAR);
 	
 	                    // Creamos el historico de registro de entrada
 	                    historicoRegistroSalidaEjb.crearHistoricoRegistroSalida(registroSalida, usuarioEntidad, I18NLogicUtils.tradueix(new Locale(Configuracio.getDefaultLanguage()), "registro.modificacion.anexos"), true);
@@ -607,7 +637,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 	            } else {// MODIFICACION DE ANEXO
 	
 	                if (dias >= entidadActiva.getDiasVisado()) { // Si han pasado más de los dias de visado cambiamos estado registro
-	                    registroSalidaEjb.cambiarEstado(registroID, RegwebConstantes.REGISTRO_PENDIENTE_VISAR);
+	                	registroSalidaCambiarEstadoEjb.cambiarEstado(registroID, RegwebConstantes.REGISTRO_PENDIENTE_VISAR);
 	                }
 	                // Creamos el historico de registro de entrada, siempre creamos histórico independiente de los dias.
 	                historicoRegistroSalidaEjb.crearHistoricoRegistroSalida(registroSalida, usuarioEntidad, I18NLogicUtils.tradueix(new Locale(Configuracio.getDefaultLanguage()), "registro.modificacion.anexos"), true);
@@ -1690,21 +1720,30 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 		Query qs = em.createQuery("Select anexo from Anexo as anexo where anexo.firmaverificada = false and modoFirma = :modofirma order by anexo.id");
         qs.setParameter("modofirma", RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA);
 		List<Anexo> anexos = qs.getResultList();
+		boolean anexosVerificados = true;
 		
-		log.info("------------------------------------------------------------");
-		for (Anexo anexo : anexos) {
-			log.info("=====Verificación automática de la firma del anexo " + anexo.getId() + " iniciada");
-			try {
-				anexoHelper.actualizarAnexoSistraPendienteVerificacionFirma(anexo, idEntidad);
-			} catch (Exception e) {
-				log.error("=====Ha habido un error en la verificación automática de la firma del anexo " + anexo.getId());
-				e.printStackTrace();
+		if (anexos != null && !anexos.isEmpty()) {
+			log.info("------------------------------------------------------------");
+			for (Anexo anexo : anexos) {
+				log.info("===== Verificación automática de la firma del anexo " + anexo.getId() + " iniciada");
+				try {
+					anexoHelper.actualizarAnexoSistraPendienteVerificacionFirma(anexo, idEntidad);
+				} catch (Exception e) {
+					log.error("===== Ha habido un error en la verificación automática de la firma del anexo " + anexo.getId());
+					anexosVerificados = false;
+					e.printStackTrace();
+				}
+				log.info("===== Ha finalizado la verificación automática de la firma del anexo " + anexo.getId());
 			}
-			log.info("=====Ha finalizado la verificación automática de la firma del anexo " + anexo.getId());
+			
+			anexoHelper.actualizarAnexosVerificadosCola(
+					idEntidad, 
+					anexos.get(0).getRegistroDetalle().getId(), 
+					anexosVerificados);
+			
+			log.info("------------------------------------------------------------");
+			log.info("");
 		}
-		log.info("------------------------------------------------------------");
-		log.info("");
-		
 	}
 
 	@Override
@@ -1713,7 +1752,19 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 		log.info("------------------------------------------------------------");
 		synchronized (SemaforoSchedulerVerificacionFirmaAnexos.class) {
 			log.info("=====Verificación manual de la firma del anexo con id=" + idAnexo + " iniciada");
-			anexoHelper.actualizarAnexoSistraPendienteVerificacionFirma(anexo, idEntidad);
+			boolean anexoVerificado = true;
+			try {
+				anexoHelper.actualizarAnexoSistraPendienteVerificacionFirma(anexo, idEntidad);
+			} catch (Exception e) {
+				log.error("===== Ha habido un error en la verificación automática de la firma del anexo " + anexo.getId());
+				anexoVerificado = false;
+				e.printStackTrace();
+			}
+			
+			anexoHelper.actualizarAnexosVerificadosCola(
+					idEntidad, 
+					anexo.getRegistroDetalle().getId(), 
+					anexoVerificado);
 			log.info("=====Ha finalizado la verificación manual de la firma del anexo " + idAnexo);
 		}
 		log.info("------------------------------------------------------------");

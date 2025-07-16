@@ -105,27 +105,40 @@ public class AnexoHelper {
 		}
 		anexo.setFirmaverificada(true);
 		
-		
+//		
+//		try {
+//			// Actualiza estado cola
+//			Long idRegistroEntrada = registroEntradaConsultaEjb.findIdByRegistroDetalle(anexo.getRegistroDetalle().getId());
+//			Cola cola = colaEjb.findByIdObjeto(idRegistroEntrada, idEntidad);
+//			boolean anexosVerificados = true;
+//			
+//			if (cola != null) {
+//				List<Anexo> anexosRegistroActual = anexo.getRegistroDetalle().getAnexos();
+//				for (Anexo anexoR: anexosRegistroActual) {
+//					if (!anexoR.getFirmaverificada()) {
+//						anexosVerificados = false;
+//						break;
+//					}
+//				}
+//				if (anexosVerificados) {
+//					colaEjb.actualizarAnexosVerificados(cola.getId());
+//				}
+//			}
+//		} catch (Exception e) {
+//			log.error("No se ha podido actualizar el campo anexos_verificados de Cola");
+//		}
+	}
+	
+	public void actualizarAnexosVerificadosCola(Long idEntidad, Long idRegistroDetalle, boolean anexosVerificados) {
+		Long idRegistroEntrada = null;
 		try {
-			// Actualiza estado cola
-			Long idRegistroEntrada = registroEntradaConsultaEjb.findIdByRegistroDetalle(anexo.getRegistroDetalle().getId());
-			Cola cola = colaEjb.findByIdObjeto(idRegistroEntrada, idEntidad);
-			boolean anexosVerificados = true;
-			
-			if (cola != null) {
-				List<Anexo> anexosRegistroActual = anexo.getRegistroDetalle().getAnexos();
-				for (Anexo anexoR: anexosRegistroActual) {
-					if (!anexoR.getFirmaverificada()) {
-						anexosVerificados = false;
-						break;
-					}
-				}
-				if (anexosVerificados) {
-					colaEjb.actualizarAnexosVerificados(cola.getId());
-				}
+			if (anexosVerificados) {
+				idRegistroEntrada = registroEntradaConsultaEjb.findIdByRegistroDetalle(idRegistroDetalle);
+				Cola cola = colaEjb.findByIdObjeto(idRegistroEntrada, idEntidad);
+				colaEjb.actualizarAnexosVerificados(cola.getId());
 			}
 		} catch (Exception e) {
-			log.error("No se ha podido actualizar el campo anexos_verificados de Cola");
+			log.info("===== Ha habido un error actualizando el campo anexosVerificados de la cola (idRegistro=" + idRegistroEntrada);
 		}
 	}
 
