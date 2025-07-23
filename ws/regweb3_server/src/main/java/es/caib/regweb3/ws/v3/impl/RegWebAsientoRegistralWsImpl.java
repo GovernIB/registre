@@ -39,6 +39,9 @@ import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -303,20 +306,27 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
                         }
                     }
 
-                    registroEntrada = asientoRegistralEjb.registrarEntrada(registroEntrada, usuario, interesados, anexosFull, true, true);
-
-                    // Envío directo GEISER si el destinatario está integrado con SIR y además viene
-        			// de WS (hay que devolver el numero de registro a la aplicación origen)
-                    RegistroSir registroSir = null;
-        			if (registroEntrada.getEvento().equals(RegwebConstantes.EVENTO_OFICIO_SIR)) {
-        				registroSir = sirEnvioEjb.enviarIntercambio(
-        						REGISTRO_ENTRADA, 
-        						registroEntrada, 
-        						registroEntrada.getOficina(),
-        						usuario, 
-        						registroEntrada.getOficina().getCodigo());
-        				sirEnvioEjb.forzarGuardado();
-        			}
+                    registroEntrada = asientoRegistralEjb.registrarEntradaYEnviarIntercambio(
+                    		registroEntrada, 
+                    		usuario, 
+                    		interesados, 
+                    		anexosFull, 
+                    		true, 
+                    		true);
+//                    registroEntrada = asientoRegistralEjb.registrarEntrada(registroEntrada, usuario, interesados, anexosFull, true, true);
+//
+//                    // Envío directo GEISER si el destinatario está integrado con SIR y además viene
+//        			// de WS (hay que devolver el numero de registro a la aplicación origen)
+//                    RegistroSir registroSir = null;
+//        			if (registroEntrada.getEvento().equals(RegwebConstantes.EVENTO_OFICIO_SIR)) {
+//        				registroSir = sirEnvioEjb.enviarIntercambio(
+//        						REGISTRO_ENTRADA, 
+//        						registroEntrada, 
+//        						registroEntrada.getOficina(),
+//        						usuario, 
+//        						registroEntrada.getOficina().getCodigo());
+//        				sirEnvioEjb.forzarGuardado();
+//        			}
         			
         			if (registroEntrada.getNumeroRegistroFormateado() != null) {
 	                    numRegFormat = registroEntrada.getNumeroRegistroFormateado();
@@ -324,13 +334,14 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
 	                    asiento.setNumeroRegistro(Utils.formatNumeroRegistro(registroEntrada.getNumeroRegistro()));
 	                    asiento.setNumeroRegistroFormateado(registroEntrada.getNumeroRegistroFormateado());
 	                    asiento.setFechaRegistro(registroEntrada.getFecha());
-        			} else if (registroSir != null) {
-        				numRegFormat = registroSir.getNumeroRegistro();
-	        			
-	                    asiento.setNumeroRegistro(Utils.formatNumeroRegistro(registroSir.getNumeroRegistro()));
-	                    asiento.setNumeroRegistroFormateado(registroSir.getNumeroRegistro());
-	                    asiento.setFechaRegistro(registroSir.getFechaRegistro());
         			}
+//        			else if (registroSir != null) {
+//        				numRegFormat = registroSir.getNumeroRegistro();
+//	        			
+//	                    asiento.setNumeroRegistro(Utils.formatNumeroRegistro(registroSir.getNumeroRegistro()));
+//	                    asiento.setNumeroRegistroFormateado(registroSir.getNumeroRegistro());
+//	                    asiento.setFechaRegistro(registroSir.getFechaRegistro());
+//        			}
                 	Boolean isJustificanteGEISER = registroEntrada.getRegistroDetalle().getJustificanteGeiser();
                     // Distribuir / Generar justificante
                     if(justificante && distribuir){
@@ -407,10 +418,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
                     }
 
                     // Registrar la salida
-                    registroSalida = asientoRegistralEjb.registrarSalida(registroSalida, usuario, interesados, anexosFull, true, true);
-        			
-                    // Procesar el Registro de Salida según el Tipo Operación
-                    registroSalida = asientoRegistralEjb.procesarRegistroSalida(tipoOperacion, registroSalida);
+                    registroSalida = asientoRegistralEjb.registrarSalidaYProcessar(registroSalida, usuario, interesados, anexosFull, true, true, tipoOperacion);        	
                     
                     if (registroSalida.getNumeroRegistroFormateado() != null) {
 	                    numRegFormat = registroSalida.getNumeroRegistroFormateado();
@@ -446,7 +454,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
             }
 
         }catch (I18NException | Exception e){
-
+            
             if(entidadActiva != null){
                 integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, null, System.currentTimeMillis() - tiempo, entidadActiva.getId(), numRegFormat);
             }

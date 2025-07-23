@@ -125,15 +125,18 @@ public class RegWebAsientoRegistralTest extends RegWebTestUtils {
 		}
     }
     
-	public String crearAsientoEntrada() throws Exception {
+    @Test
+	public void crearAsientoEntrada() throws Exception {
 		String numeroRegistroFormateado = null;
 		try {
-			AsientoRegistralWs asientoRegistralWs = getAsiento_to_PersonaFisica(REGISTRO_ENTRADA, true, true);
+			AsientoRegistralWs asientoRegistralWs = getAsiento_to_PersonaFisica(REGISTRO_ENTRADA, false, true);
 
-			asientoRegistralWs = asientoRegistralApi.crearAsientoRegistral(null, getTestEntidadCodigoDir3(), asientoRegistralWs, null, false, false);
+			asientoRegistralWs = asientoRegistralApi.crearAsientoRegistral(null, getTestEntidadCodigoDir3(), asientoRegistralWs, null, false, true);
 
 			printAsientoBasico(asientoRegistralWs);
 			numeroRegistroFormateado = asientoRegistralWs.getNumeroRegistroFormateado();
+			
+			System.out.println(numeroRegistroFormateado);
 		} catch (WsI18NException e) {
 			String msg = WsClientUtils.toString(e);
 			System.out.println("Error WsI18NException: " + msg);
@@ -147,7 +150,7 @@ public class RegWebAsientoRegistralTest extends RegWebTestUtils {
 			throw e;
 		}
 
-		return numeroRegistroFormateado;
+//		return numeroRegistroFormateado;
 	}
 
     @Test
@@ -175,8 +178,8 @@ public class RegWebAsientoRegistralTest extends RegWebTestUtils {
     }
 
 
-//    @Test
-    public String crearAsientoSalida() throws Exception {
+    @Test
+    public void crearAsientoSalida() throws Exception {
     	String numeroRegistroFormateado = null;
 //        for (int i = 0; i < 1; i++) {
 
@@ -197,7 +200,6 @@ public class RegWebAsientoRegistralTest extends RegWebTestUtils {
                 throw e;
             }
 //        }
-            return numeroRegistroFormateado;
     }
 
 

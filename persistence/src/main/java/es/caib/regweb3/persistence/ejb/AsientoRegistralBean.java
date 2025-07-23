@@ -1,7 +1,48 @@
 package es.caib.regweb3.persistence.ejb;
 
+import static es.caib.regweb3.utils.RegwebConstantes.REGISTRO_ENTRADA;
+import static es.caib.regweb3.utils.RegwebConstantes.REGISTRO_ENVIADO_NOTIFICAR;
+import static es.caib.regweb3.utils.RegwebConstantes.REGISTRO_OFICIO_EXTERNO;
+import static es.caib.regweb3.utils.RegwebConstantes.REGISTRO_OFICIO_SIR;
+import static es.caib.regweb3.utils.RegwebConstantes.REGISTRO_SALIDA;
+import static es.caib.regweb3.utils.RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION;
+import static es.caib.regweb3.utils.RegwebConstantes.TIPO_INTERESADO_PERSONA_FISICA;
+import static es.caib.regweb3.utils.RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA;
+import static es.caib.regweb3.utils.RegwebConstantes.TIPO_OPERACION_COMUNICACION;
+import static es.caib.regweb3.utils.RegwebConstantes.TIPO_OPERACION_NOTIFICACION;
+
+import java.io.UnsupportedEncodingException;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
+
+import javax.annotation.Resource;
+import javax.ejb.Asynchronous;
+import javax.ejb.EJB;
+import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
+import javax.mail.Message;
+import javax.mail.internet.InternetAddress;
+
+import org.apache.log4j.Logger;
+import org.fundaciobit.genapp.common.i18n.I18NException;
+import org.fundaciobit.genapp.common.i18n.I18NValidationException;
+import org.jboss.ejb3.annotation.SecurityDomain;
+import org.jboss.ejb3.common.proxy.plugins.async.AsyncUtils;
+
 import es.caib.dir3caib.ws.api.oficina.OficinaTF;
-import es.caib.regweb3.model.*;
+import es.caib.regweb3.model.Anexo;
+import es.caib.regweb3.model.Entidad;
+import es.caib.regweb3.model.IRegistro;
+import es.caib.regweb3.model.Interesado;
+import es.caib.regweb3.model.Organismo;
+import es.caib.regweb3.model.RegistroEntrada;
+import es.caib.regweb3.model.RegistroSalida;
+import es.caib.regweb3.model.RegistroSir;
+import es.caib.regweb3.model.Usuario;
+import es.caib.regweb3.model.UsuarioEntidad;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.persistence.utils.I18NLogicUtils;
 import es.caib.regweb3.persistence.utils.JustificanteReferencia;
@@ -10,24 +51,6 @@ import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.persistence.utils.RegistroUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
-
-import org.apache.log4j.Logger;
-import org.fundaciobit.genapp.common.i18n.I18NException;
-import org.fundaciobit.genapp.common.i18n.I18NValidationException;
-import org.jboss.ejb3.annotation.SecurityDomain;
-import org.jboss.ejb3.common.proxy.plugins.async.AsyncUtils;
-
-import javax.ejb.*;
-import javax.mail.Message;
-import javax.mail.internet.InternetAddress;
-
-import java.io.UnsupportedEncodingException;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
-
-import static es.caib.regweb3.utils.RegwebConstantes.*;
 
 /**
  * Created by mgonzalez on 06/03/2019.
@@ -41,6 +64,9 @@ public class AsientoRegistralBean implements AsientoRegistralLocal {
 
     protected final Logger log = Logger.getLogger(getClass());
 
+    @Resource
+    private javax.ejb.SessionContext ejbContext;
+    
     @EJB private RegistroSalidaLocal registroSalidaEjb;
     @EJB private RegistroEntradaLocal registroEntradaEjb;
     @EJB private UsuarioEntidadLocal usuarioEntidadEjb;
@@ -67,6 +93,28 @@ public class AsientoRegistralBean implements AsientoRegistralLocal {
         return registroSalidaEjb.registrarSalida(registroSalida, usuarioEntidad, interesados, anexos, validarAnexos, enviarGeiser);
     }
 
+	@Override
+	public RegistroSalida registrarSalidaYProcessar(RegistroSalida registroSalida,
+			UsuarioEntidad usuarioEntidad, List<Interesado> interesados, List<AnexoFull> anexos, Boolean validarAnexos,
+			Boolean enviarGeiser, Long tipoOperacion) throws Exception, I18NException, I18NValidationException {
+
+		// Registrar la salida
+        registroSalida = registrarSalida(registroSalida, usuarioEntidad, interesados, anexos, true, true);
+		
+        // Procesar el Registro de Salida según el Tipo Operación
+        try {
+        	registroSalida = procesarRegistroSalida(tipoOperacion, registroSalida);
+        } catch (I18NException | Exception i18n) {
+            log.info("Error registrando la salida");
+            i18n.printStackTrace();
+            ejbContext.setRollbackOnly();
+            throw i18n;
+
+        }
+        
+        return registroSalida;
+    }
+    
     @Override
     public RegistroEntrada registrarEntrada(RegistroEntrada registroEntrada,
                                             UsuarioEntidad usuarioEntidad, List<Interesado> interesados, List<AnexoFull> anexos, Boolean validarAnexos, Boolean enviarGeiser)
@@ -75,7 +123,35 @@ public class AsientoRegistralBean implements AsientoRegistralLocal {
         return registroEntradaEjb.registrarEntrada(registroEntrada, usuarioEntidad, interesados, anexos, validarAnexos, enviarGeiser);
 
     }
+    
+	@Override
+	public RegistroEntrada registrarEntradaYEnviarIntercambio(RegistroEntrada registroEntrada,
+			UsuarioEntidad usuarioEntidad, List<Interesado> interesados, List<AnexoFull> anexos, Boolean validarAnexos,
+			Boolean enviarGeiser) throws Exception, I18NException, I18NValidationException {
 
+		registroEntrada = registrarEntrada(registroEntrada, usuarioEntidad, interesados, anexos, validarAnexos, enviarGeiser);
+        
+		if (registroEntrada.getEvento().equals(RegwebConstantes.EVENTO_OFICIO_SIR)) {
+			try {
+				sirEnvioEjb.enviarIntercambio(
+						REGISTRO_ENTRADA, 
+						registroEntrada, 
+						registroEntrada.getOficina(),
+						usuarioEntidad, 
+						registroEntrada.getOficina().getCodigo());
+				sirEnvioEjb.forzarGuardado();
+			} catch (I18NException | Exception i18n) {
+	            log.info("Error registrando la entrada");
+	            i18n.printStackTrace();
+	            ejbContext.setRollbackOnly();
+	            throw i18n;
+
+	        }
+		}
+		
+		return registroEntrada;
+    }
+   
     @Override
     public JustificanteReferencia obtenerReferenciaJustificante(String numeroRegistroformateado, Entidad entidad) throws Exception, I18NException {
 

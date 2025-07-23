@@ -38,6 +38,7 @@ public interface AsientoRegistralLocal {
      * @param usuarioEntidad
      * @param interesados
      * @param anexos
+     * @param tipoOperacion 
      * @return
      * @throws Exception
      * @throws I18NException
@@ -47,6 +48,10 @@ public interface AsientoRegistralLocal {
                                    UsuarioEntidad usuarioEntidad, List<Interesado> interesados, List<AnexoFull> anexos, Boolean validarAnexos, Boolean enviarGeiser)
             throws Exception, I18NException, I18NValidationException;
 
+	RegistroSalida registrarSalidaYProcessar(RegistroSalida registroSalida, UsuarioEntidad usuarioEntidad,
+			List<Interesado> interesados, List<AnexoFull> anexos, Boolean validarAnexos, Boolean enviarGeiser,
+			Long tipoOperacion) throws Exception, I18NException, I18NValidationException;
+    
     /**
      * Registra una entrada haciendo uso de @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
      *
@@ -62,7 +67,11 @@ public interface AsientoRegistralLocal {
     RegistroEntrada registrarEntrada(RegistroEntrada registroEntrada,
                                      UsuarioEntidad usuarioEntidad, List<Interesado> interesados, List<AnexoFull> anexos, Boolean validarAnexos, Boolean enviarGeiser)
             throws Exception, I18NException, I18NValidationException;
-
+    
+	RegistroEntrada registrarEntradaYEnviarIntercambio(RegistroEntrada registroEntrada, UsuarioEntidad usuarioEntidad,
+			List<Interesado> interesados, List<AnexoFull> anexos, Boolean validarAnexos, Boolean enviarGeiser)
+			throws Exception, I18NException, I18NValidationException;
+    
     /**
      * Se crea el Justificante del Registro de manera Asincrona
      * @param usuarioEntidad
@@ -119,5 +128,6 @@ public interface AsientoRegistralLocal {
      * @throws I18NValidationException
      */
     void notificarAdministradores(Entidad entidad, String codigoDir3, String interesadoDoc);
+
 }
 
