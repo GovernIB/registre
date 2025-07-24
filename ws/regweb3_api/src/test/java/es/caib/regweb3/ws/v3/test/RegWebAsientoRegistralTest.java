@@ -8,6 +8,8 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.plugin.geiser.api.GeiserPluginException;
 
+import static org.junit.Assert.assertFalse;
+
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -152,6 +154,30 @@ public class RegWebAsientoRegistralTest extends RegWebTestUtils {
 
 //		return numeroRegistroFormateado;
 	}
+    
+    @Test
+	public void enviarJustificantePorEmail() throws Exception {
+		try {
+			Boolean enviado = asientoRegistralApi.enviarJustificantePorEmail(
+					getTestEntidadCodigoDir3(), 
+					"105/2021_APB_E", 
+					RegwebConstantes.REGISTRO_ENTRADA);
+
+			Assert.assertFalse(enviado);
+			
+		} catch (WsI18NException e) {
+			String msg = WsClientUtils.toString(e);
+			System.out.println("Error WsI18NException: " + msg);
+			throw e;
+		} catch (WsValidationException e) {
+			String msg = WsClientUtils.toString(e);
+			System.out.println("Error WsValidationException: " + msg);
+			throw e;
+		} catch (GeiserPluginException e) {
+			System.out.println("Error GeiserPluginException: " + e.getMessage());
+			throw e;
+		}
+	}
 
     @Test
     public void crearAsientoEntradaConAnexos() throws Exception {
@@ -178,8 +204,8 @@ public class RegWebAsientoRegistralTest extends RegWebTestUtils {
     }
 
 
-    @Test
-    public void crearAsientoSalida() throws Exception {
+//    @Test
+    public String crearAsientoSalida() throws Exception {
     	String numeroRegistroFormateado = null;
 //        for (int i = 0; i < 1; i++) {
 
@@ -200,6 +226,7 @@ public class RegWebAsientoRegistralTest extends RegWebTestUtils {
                 throw e;
             }
 //        }
+            return numeroRegistroFormateado;
     }
 
 

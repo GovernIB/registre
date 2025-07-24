@@ -61,7 +61,19 @@ public interface RegWebAsientoRegistralWs {
             @WebParam(name = "justificante") Boolean justificante,
             @WebParam(name = "distribuir") Boolean distribuir)throws Throwable, WsI18NException, WsValidationException;
 
-
+    /**
+     * Crea un {@link es.caib.regweb3.ws.model.AsientoRegistralWs }
+     * @param entidad
+     * @param asientoRegistral
+     * @return
+     */
+    @WebMethod
+    Boolean enviarJustificantePorEmail(
+			@WebParam(name = "entidad") String entidad,
+		    @WebParam(name = "numeroRegistroFormateado") String numeroRegistroFormateado,
+		    @WebParam(name = "tipoRegistro") Long tipoRegistro)
+			throws Throwable, WsI18NException, WsValidationException;
+    
     /**
      * Obtiene un {@link es.caib.regweb3.ws.model.AsientoRegistralWs }
      * Se podrá obtener con los anexos o sin los anexos. conAnexos=true los devuelve, conAnexos=false no

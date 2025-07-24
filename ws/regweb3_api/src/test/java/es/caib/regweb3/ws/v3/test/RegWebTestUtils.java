@@ -1,5 +1,28 @@
 package es.caib.regweb3.ws.v3.test;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.net.URL;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Properties;
+
+import javax.xml.ws.BindingProvider;
+
+import org.apache.commons.io.IOUtils;
+import org.apache.cxf.endpoint.Client;
+import org.apache.cxf.frontend.ClientProxy;
+import org.apache.cxf.transport.http.HTTPConduit;
+import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
+import org.fundaciobit.genapp.common.utils.Utils;
+import org.fundaciobit.plugins.utils.XTrustProvider;
+
 import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.ws.api.v3.AnexoWs;
@@ -23,24 +46,6 @@ import es.caib.regweb3.ws.api.v3.RegWebRegistroSalidaWs;
 import es.caib.regweb3.ws.api.v3.RegWebRegistroSalidaWsService;
 import es.caib.regweb3.ws.api.v3.RegistroEntradaWs;
 import es.caib.regweb3.ws.api.v3.utils.I18NUtils;
-import org.apache.commons.io.IOUtils;
-import org.fundaciobit.genapp.common.utils.Utils;
-import org.fundaciobit.plugins.utils.XTrustProvider;
-
-import javax.xml.ws.BindingProvider;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.net.URL;
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Properties;
 
 /**
  * @author anadal
@@ -60,8 +65,8 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
     // TODO GEN APP ADD OTHERS
 
     private static Properties testProperties = new Properties();
-   // private static String entorno = "_localhost";
-    private static String entorno = "_proves";
+    private static String entorno = "_localhost";
+//    private static String entorno = "_proves";
 
     static {
         // Traduccions
@@ -144,6 +149,14 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
         reqContext.put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, endpoint);
         reqContext.put(BindingProvider.USERNAME_PROPERTY, usr);
         reqContext.put(BindingProvider.PASSWORD_PROPERTY, pwd);
+        
+     // Configurar timeouts
+        Client client = ClientProxy.getClient(api);
+        HTTPConduit conduit = (HTTPConduit) client.getConduit();
+        HTTPClientPolicy policy = new HTTPClientPolicy();
+        policy.setConnectionTimeout(30000);  // 30 segundos para conectar
+        policy.setReceiveTimeout(120000);     // 60 segundos para respuesta
+        conduit.setClient(policy);
     }
 
     public static Long getTestCodigoSia() {
@@ -277,11 +290,11 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
         asiento.setResumen("Registro de test " + System.currentTimeMillis());
         asiento.setUnidadTramitacionOrigenCodigo(getTestOrigenCodigoDir3());
         asiento.setUnidadTramitacionDestinoCodigo(getTestDestinoCodigoDir3());
-        asiento.setTipoDocumentacionFisicaCodigo(RegwebConstantes.TIPO_DOCFISICA_ACOMPANYA_DOC_REQUERIDA);
+        asiento.setTipoDocumentacionFisicaCodigo(RegwebConstantes.TIPO_DOCFISICA_NO_ACOMPANYA_DOC);
 
-        asiento.setReferenciaExterna("FE4567Y");
-        asiento.setNumeroExpediente("34567Y/2019");
-        asiento.setTipoTransporte("01");
+//        asiento.setReferenciaExterna("FE4567Y");
+//        asiento.setNumeroExpediente("34567Y/2019");
+//        asiento.setTipoTransporte("01");
         asiento.setObservaciones("Asiento registral realizado mediante el api WS");
 
         return asiento;
@@ -512,9 +525,9 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
         personaFisica.setTipoInteresado(TIPO_INTERESADO_PERSONA_FISICA);
         personaFisica.setTipoDocumentoIdentificacion("N");
         personaFisica.setDocumento("49031193T");
-        personaFisica.setEmail("limit@limit.es");
+        personaFisica.setEmail("jamalj@limit.es");
         personaFisica.setNombre("Jamal");
-        personaFisica.setApellido1("Jarradi");
+        personaFisica.setApellido1("Jarradi Tayebi");
 //        personaFisica.setCanal((long) 1);
         personaFisica.setDireccion("Calle Aragón, 24");
         personaFisica.setLocalidad((long) 407);
@@ -673,14 +686,14 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
             //anexoSinFirma.setTamanoFichero(2157);
 
             final String fichero = "pdf_sin_firma.pdf";
-            anexoSinFirma.setTitulo("Anexo Sin Firma");
+            anexoSinFirma.setTitulo("Anexo Sin Firma ");
             String copia = CODIGO_SICRES_BY_TIPOVALIDEZDOCUMENTO.get(TIPOVALIDEZDOCUMENTO_COPIA);
             anexoSinFirma.setValidezDocumento(copia);
             anexoSinFirma.setTipoDocumental(getTestAnexoTipoDocumental());
             String formulario = CODIGO_SICRES_BY_TIPO_DOCUMENTO.get(TIPO_DOCUMENTO_FORMULARIO);
             anexoSinFirma.setTipoDocumento(formulario);
             anexoSinFirma.setOrigenCiudadanoAdmin(ANEXO_ORIGEN_CIUDADANO);
-            anexoSinFirma.setObservaciones("Observacionesde anexo");
+            anexoSinFirma.setObservaciones("Observaciones de anexo");
 
             anexoSinFirma.setModoFirma(MODO_FIRMA_ANEXO_SINFIRMA); // == 0
             anexoSinFirma.setFechaCaptura(new Timestamp(new Date().getTime()));
@@ -692,7 +705,7 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
 
             anexos.add(anexoSinFirma);
         }
-
+        
         // Anexo con firma attached
 
         {
@@ -710,7 +723,7 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
             String formulario = CODIGO_SICRES_BY_TIPO_DOCUMENTO.get(TIPO_DOCUMENTO_FORMULARIO);
             anexoConFirmaAttached.setTipoDocumento(formulario);
             anexoConFirmaAttached.setOrigenCiudadanoAdmin(ANEXO_ORIGEN_CIUDADANO);
-            anexoConFirmaAttached.setObservaciones("Observaciones de Marilen");
+            anexoConFirmaAttached.setObservaciones("Observaciones de anexo");
 
             anexoConFirmaAttached.setModoFirma(MODO_FIRMA_ANEXO_ATTACHED); // == 1
             anexoConFirmaAttached.setFechaCaptura(new Timestamp(new Date().getTime()));
@@ -722,7 +735,7 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
 
             anexos.add(anexoConFirmaAttached);
         }
-
+        /*
         // Anexo con firma detached
         {
             AnexoWs anexoConFirmaDetached = new AnexoWs();
@@ -760,7 +773,7 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
         }
 
         //Anexo confidencial
-        /*{
+        {
 
             AnexoWs anexoConfidencial = new AnexoWs();
 

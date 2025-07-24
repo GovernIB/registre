@@ -1059,4 +1059,9 @@ public class PropiedadGlobalUtil {
 		final String partialPropertyName =  "notib.codigo.emisor.forzado";
     	return getString(partialPropertyName);
 	}
+
+	public static String getEnlaceDocumentacionAdicional() {
+		final String partialPropertyName =  "sede.documentacion.url";
+    	return getString(partialPropertyName);
+	}
 }

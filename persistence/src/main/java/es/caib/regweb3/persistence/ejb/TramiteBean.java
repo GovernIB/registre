@@ -1,5 +1,6 @@
 package es.caib.regweb3.persistence.ejb;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -8,7 +9,9 @@ import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -19,6 +22,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
@@ -188,10 +192,13 @@ public class TramiteBean implements TramiteLocal {
         peticion.append("idioma: ").append(Configuracio.getDefaultLanguage()).append(System.getProperty("line.separator"));
         peticion.append("oficina: ").append(registroEntrada.getOficina().getDenominacion()).append(System.getProperty("line.separator"));
         peticion.append("clase: ").append(getClass().getName()).append(System.getProperty("line.separator"));
-        
+
+        String nombrePlantilla = "Revocación.docx";
+		Map<String, Object> parametros = obtenerParametros(registroEntrada, revocacionForm.getCodigoSia());
+		
 		byte[] documento = DocumentHelper.generarPdf(
-				registroEntrada, 
-				revocacionForm.getCodigoSia());
+				nombrePlantilla, 
+				parametros);
 
 		SignatureCustody signatureCustody = signatureServerEjb.signDocument(
 				documento, 
@@ -578,10 +585,13 @@ public class TramiteBean implements TramiteLocal {
 	
 	private void enviaMailInteresados(RegistroEntrada registroEntrada, RevocacionDto revocacionForm) throws Exception {
 		List<Interesado> interesados = registroEntrada.getRegistroDetalle().getInteresados();
+		String nombrePlantilla = "Revocación.docx";
+		Map<String, Object> parametros = obtenerParametros(registroEntrada, revocacionForm.getCodigoSia());
 		String asunto = "Revocación del registro de entrada " + registroEntrada.getNumeroRegistro();
+		
 		String mensajeTexto = DocumentHelper.generarHtml(
-				registroEntrada, 
-				revocacionForm.getCodigoSia());
+				nombrePlantilla, 
+				parametros);
 		
 		InternetAddress addressFrom = new InternetAddress(RegwebConstantes.APLICACION_EMAIL,
 				RegwebConstantes.APLICACION_NOMBRE);
@@ -605,6 +615,24 @@ public class TramiteBean implements TramiteLocal {
 					log.error("Hi ha hagut un error enviant l'email de la classficació del registre " + registroEntrada.getNumeroRegistro() + " al representant " + interesado.getNombre());
 			}
 		}
+	}
+	
+	private Map<String, Object> obtenerParametros(RegistroEntrada registroEntrada, Long codigoSia) throws FileNotFoundException {
+		Map<String, Object> datos = new HashMap<String, Object>();
+		List<String> nombres = new ArrayList<String>();
+		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+		String fechaRegistro = formatter.format(registroEntrada.getFecha());
+    	String url = PropiedadGlobalUtil.getUrlBaseSede() + codigoSia;
+    	
+    	for (Interesado	interesado: registroEntrada.getRegistroDetalle().getInteresados()) {
+    		nombres.add(interesado.getNombreCompleto());
+		}
+    	
+		datos.put("interesados", StringUtils.join(nombres, ", "));
+		datos.put("fecha", fechaRegistro);
+		datos.put("enlace", url);
+		
+		return datos;
 	}
 
 }

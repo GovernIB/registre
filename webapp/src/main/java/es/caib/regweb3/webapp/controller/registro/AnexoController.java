@@ -1,22 +1,20 @@
 package es.caib.regweb3.webapp.controller.registro;
 
-import es.caib.plugins.arxiu.api.Document;
-import es.caib.plugins.arxiu.api.IArxiuPlugin;
-import es.caib.regweb3.model.*;
-import es.caib.regweb3.model.utils.AnexoFull;
-import es.caib.regweb3.model.utils.AnexoSimple;
-import es.caib.regweb3.persistence.ejb.AnexoLocal;
-import es.caib.regweb3.persistence.ejb.RegistroDetalleLocal;
-import es.caib.regweb3.persistence.ejb.ScanWebModuleLocal;
-import es.caib.regweb3.persistence.ejb.SignatureServerLocal;
-import es.caib.regweb3.persistence.integracion.ArxiuCaibUtils;
-import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
-import es.caib.regweb3.utils.Configuracio;
-import es.caib.regweb3.utils.RegwebConstantes;
-import es.caib.regweb3.webapp.controller.BaseController;
-import es.caib.regweb3.webapp.utils.AnexoUtils;
-import es.caib.regweb3.webapp.utils.Mensaje;
-import es.caib.regweb3.webapp.validator.AnexoWebValidator;
+import static es.caib.regweb3.utils.RegwebConstantes.REGISTRO_ENTRADA;
+
+import java.io.IOException;
+import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+
+import javax.ejb.EJB;
+import javax.naming.InitialContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
 import org.apache.commons.lang.StringUtils;
 import org.fundaciobit.genapp.common.i18n.I18NArgumentCode;
 import org.fundaciobit.genapp.common.i18n.I18NException;
@@ -32,21 +30,37 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.SessionAttributes;
 
-import javax.ejb.EJB;
-import javax.naming.InitialContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-
-import static es.caib.regweb3.utils.RegwebConstantes.REGISTRO_ENTRADA;
+import es.caib.plugins.arxiu.api.Document;
+import es.caib.plugins.arxiu.api.IArxiuPlugin;
+import es.caib.regweb3.model.Anexo;
+import es.caib.regweb3.model.Entidad;
+import es.caib.regweb3.model.IRegistro;
+import es.caib.regweb3.model.RegistroDetalle;
+import es.caib.regweb3.model.RegistroEntrada;
+import es.caib.regweb3.model.RegistroSalida;
+import es.caib.regweb3.model.UsuarioEntidad;
+import es.caib.regweb3.model.utils.AnexoFull;
+import es.caib.regweb3.model.utils.AnexoSimple;
+import es.caib.regweb3.persistence.ejb.AnexoLocal;
+import es.caib.regweb3.persistence.ejb.JustificanteLocal;
+import es.caib.regweb3.persistence.ejb.RegistroDetalleLocal;
+import es.caib.regweb3.persistence.ejb.ScanWebModuleLocal;
+import es.caib.regweb3.persistence.ejb.SignatureServerLocal;
+import es.caib.regweb3.persistence.integracion.ArxiuCaibUtils;
+import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
+import es.caib.regweb3.utils.Configuracio;
+import es.caib.regweb3.utils.RegwebConstantes;
+import es.caib.regweb3.webapp.controller.BaseController;
+import es.caib.regweb3.webapp.utils.AnexoUtils;
+import es.caib.regweb3.webapp.utils.Mensaje;
+import es.caib.regweb3.webapp.validator.AnexoWebValidator;
 
 /**
  * Created 3/06/14 14:22
@@ -77,6 +91,9 @@ public class AnexoController extends BaseController {
 
     @EJB(mappedName = "regweb3/SignatureServerEJB/local")
     private SignatureServerLocal signatureServerEjb;
+    
+    @EJB(mappedName = "regweb3/JustificanteEJB/local")
+    private JustificanteLocal justificanteEjb;
     
     @Autowired
     ArxiuCaibUtils arxiuCaibUtils;
@@ -587,6 +604,36 @@ public class AnexoController extends BaseController {
         download(contentType, response, filename, data, true);
     }
 
+    /**
+     * Función que nos permite descargar un anexo
+     *
+     * @param anexoId identificador del anexo
+     */
+    @RequestMapping(value = "/enviarJustificante/{tipoRegistro}/{idRegistro}", method = RequestMethod.GET)
+    public String enviarEmail(
+    		HttpServletRequest request, 
+    		HttpServletResponse response,
+    		@PathVariable("tipoRegistro") Long tipoRegistro,
+    		@PathVariable("idRegistro") Long idRegistro) {
+    	try {
+        	Entidad entidadActiva = getEntidadActiva(request);
+        	IRegistro registro = registroEntradaEjb.getConAnexosFull(idRegistro);
+        	
+			justificanteEjb.enviarJustificantePorEmail(entidadActiva, registro);
+			
+			Mensaje.saveMessageInfo(request, getMessage("justificante.enviando.success"));
+		} catch (I18NException e) {
+	    	Mensaje.saveMessageError(request, getMessage("justificante.enviando.error", I18NUtils.getMessage(e)));
+			e.printStackTrace();
+		}  catch (Exception e) {
+	    	Mensaje.saveMessageError(request, getMessage("justificante.enviando.error", e.getMessage()));
+			e.printStackTrace();
+		}
+	
+    	
+    	return getRedirectURL2(request, tipoRegistro, idRegistro);
+    }
+    
     /**
      * Guarda en sesión los datos asociados al ultimo anexo
      *

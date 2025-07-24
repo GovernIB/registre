@@ -14,6 +14,8 @@ import es.caib.regweb3.utils.StringUtils;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
+import org.hibernate.LockMode;
+import org.hibernate.Session;
 import org.jboss.ejb3.annotation.SecurityDomain;
 import org.jboss.ejb3.annotation.TransactionTimeout;
 
@@ -23,6 +25,9 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.mail.Message;
 import javax.mail.internet.InternetAddress;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -39,6 +44,9 @@ public class DistribucionBean implements DistribucionLocal {
 
     protected final Logger log = Logger.getLogger(getClass());
 
+    @PersistenceContext(unitName="regweb3")
+    private EntityManager em;
+    
     @EJB private RegistroEntradaLocal registroEntradaEjb;
     @EJB private JustificanteLocal justificanteEjb;
     @EJB private IntegracionLocal integracionEjb;
@@ -65,14 +73,28 @@ public class DistribucionBean implements DistribucionLocal {
             IDistribucionPlugin distribucionPlugin = (IDistribucionPlugin) pluginEjb.getPlugin(usuarioEntidad.getEntidad().getId(), RegwebConstantes.PLUGIN_DISTRIBUCION);
 
             if (distribucionPlugin != null) {
+            	// Bloquea cambios en BD hasta que finalice la transacción actual
+            	Session session = (Session) em.getDelegate();
+            	RegistroEntrada reBloqueado = (RegistroEntrada) session.get(RegistroEntrada.class, re.getId(), LockMode.UPGRADE); 
+            	           
+            	if (RegwebConstantes.REGISTRO_DISTRIBUYENDO.equals(reBloqueado.getEstado())) {
+                    respuestaDistribucion.setEnviadoCola(true);
+	                respuestaDistribucion.setHayPlugin(true);
 
-                // Enviamos el registro a la Cola de Distribución
-                Boolean encolado = colaEjb.enviarAColaDistribucion(re, usuarioEntidad);
+                    log.info("RegistroEntrada: " + re.getNumeroRegistroFormateado() + " ya estaba en DISTRIBUYENDO");
+	                return respuestaDistribucion;
+                } else {
+                	// Enviamos el registro a la Cola de Distribución
+        			Boolean encolado = colaEjb.enviarAColaDistribucion(re, usuarioEntidad);
 
-                respuestaDistribucion.setEnviadoCola(encolado);
-                respuestaDistribucion.setHayPlugin(true);
-
-                return respuestaDistribucion;
+                    log.info("RegistroEntrada: " + re.getNumeroRegistroFormateado() + " enviado a la Cola de Distribución");
+                    registroEntradaEjb.cambiarEstado(re.getId(),RegwebConstantes.REGISTRO_DISTRIBUYENDO);
+                    
+                    em.flush();
+                    
+	                respuestaDistribucion.setEnviadoCola(encolado);
+	                respuestaDistribucion.setHayPlugin(true);
+        		}
 
             }else{
                 respuestaDistribucion.setHayPlugin(false);

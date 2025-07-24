@@ -1,26 +1,35 @@
 package es.caib.regweb3.persistence.ejb;
 
 
-import es.caib.plugins.arxiu.api.Document;
-import es.caib.plugins.arxiu.api.DocumentContingut;
-import es.caib.plugins.arxiu.api.Firma;
-import es.caib.plugins.arxiu.api.IArxiuPlugin;
-import es.caib.regweb3.model.*;
-import es.caib.regweb3.model.utils.AnexoFull;
-import es.caib.regweb3.persistence.integracion.ArxiuCaibUtils;
-import es.caib.regweb3.persistence.integracion.JustificanteArxiu;
-import es.caib.regweb3.persistence.utils.I18NLogicUtils;
-import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
-import es.caib.regweb3.persistence.utils.RegistroUtils;
-import es.caib.regweb3.plugins.justificante.IJustificantePlugin;
-import es.caib.regweb3.utils.RegwebConstantes;
-import es.caib.regweb3.utils.RegwebUtils;
-import es.caib.regweb3.utils.TimeUtils;
+import java.io.UnsupportedEncodingException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+
+import javax.ejb.EJB;
+import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
+import javax.interceptor.Interceptors;
+import javax.mail.Message;
+import javax.mail.internet.InternetAddress;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NArgumentCode;
 import org.fundaciobit.genapp.common.i18n.I18NArgumentString;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
+import org.fundaciobit.plugins.documentcustody.api.DocumentCustody;
 import org.fundaciobit.plugins.documentcustody.api.IDocumentCustodyPlugin;
 import org.fundaciobit.plugins.documentcustody.api.SignatureCustody;
 import org.fundaciobit.plugins.signature.api.FileInfoSignature;
@@ -31,15 +40,31 @@ import org.jboss.ejb3.annotation.SecurityDomain;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
 
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
-import javax.interceptor.Interceptors;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
+import es.caib.plugins.arxiu.api.Document;
+import es.caib.plugins.arxiu.api.DocumentContingut;
+import es.caib.plugins.arxiu.api.Firma;
+import es.caib.plugins.arxiu.api.IArxiuPlugin;
+import es.caib.regweb3.model.Anexo;
+import es.caib.regweb3.model.Entidad;
+import es.caib.regweb3.model.IRegistro;
+import es.caib.regweb3.model.Interesado;
+import es.caib.regweb3.model.RegistroDetalle;
+import es.caib.regweb3.model.RegistroEntrada;
+import es.caib.regweb3.model.RegistroSalida;
+import es.caib.regweb3.model.UsuarioEntidad;
+import es.caib.regweb3.model.utils.AnexoFull;
+import es.caib.regweb3.persistence.integracion.ArxiuCaibUtils;
+import es.caib.regweb3.persistence.integracion.JustificanteArxiu;
+import es.caib.regweb3.persistence.utils.DocumentHelper;
+import es.caib.regweb3.persistence.utils.DocumentoDto;
+import es.caib.regweb3.persistence.utils.I18NLogicUtils;
+import es.caib.regweb3.persistence.utils.MailUtils;
+import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
+import es.caib.regweb3.persistence.utils.RegistroUtils;
+import es.caib.regweb3.plugins.justificante.IJustificantePlugin;
+import es.caib.regweb3.utils.RegwebConstantes;
+import es.caib.regweb3.utils.RegwebUtils;
+import es.caib.regweb3.utils.TimeUtils;
 
 
 /**
@@ -57,6 +82,9 @@ public class JustificanteBean implements JustificanteLocal {
 
     protected final Logger log = Logger.getLogger(getClass());
 
+    @PersistenceContext(unitName = "regweb3")
+    private EntityManager em;
+    
     @EJB private PluginLocal pluginEjb;
     @EJB private TipoDocumentalLocal tipoDocumentalEjb;
     @EJB private AnexoLocal anexoEjb;
@@ -104,8 +132,199 @@ public class JustificanteBean implements JustificanteLocal {
         }
 
     }
+    
+	@Override
+	public void enviarJustificantePorEmail(Entidad entidad, IRegistro registro) throws I18NException, Exception {
+		try {
+			validarRegistro(registro);
+			
+			AnexoFull justificante = registro.getRegistroDetalle().getJustificanteAnexoFull();
+			List<Interesado> interesados = registro.getRegistroDetalle().getInteresados();
+			InternetAddress remitente = new InternetAddress(RegwebConstantes.APLICACION_EMAIL, RegwebConstantes.APLICACION_NOMBRE);
+			
+			String asunto = "Justificante de presentación de su registro en la " + entidad.getNombre();			
+	        String nombrePlantilla = "Justificante.docx";
+			Map<String, Object> parametros = obtenerParametros(registro);
+			
+			String mensajeHtml = DocumentHelper.generarHtml(nombrePlantilla, parametros);
+			DocumentoDto adjunto = prepararAdjunto(justificante);
 
-    /**
+			for (Interesado interesado : interesados) {
+				Interesado representante = interesado.getRepresentante();
+				enviarEmail(
+						interesado.getEmail(), 
+						interesado.getDireccionElectronica(),
+						asunto, 
+						mensajeHtml, 
+						remitente, 
+						adjunto);
+				
+				if (representante != null && representante.getEmail() != null) {
+					enviarEmail(
+							representante.getEmail(), 
+							representante.getDireccionElectronica(),
+							asunto, 
+							mensajeHtml, 
+							remitente, 
+							adjunto);
+				}
+				
+			}
+
+		} catch (UnsupportedEncodingException e) {
+	        log.error("Error al construir el remitente del correo", e);
+	        throw e;
+	    } catch (Exception | I18NException e) {
+	        log.error("Error al enviar el justificante por correo", e);
+	        throw e;
+	    }
+	}
+
+	@SuppressWarnings(value = "unchecked")
+	private void validarRegistro(IRegistro registro) throws I18NException {
+		if (registro instanceof RegistroEntrada) {
+			// Comprobar si hay algun interesado/representante del registro que no sea administración
+			Query qe = em.createQuery("select re.id from RegistroEntrada as re join re.registroDetalle.interesados as interesado "
+					+ "where re.numeroRegistro = :numeroRegistro and interesado.tipo in (:tipos)");
+			qe.setParameter("numeroRegistro", registro.getNumeroRegistro());
+			qe.setParameter("tipos", Arrays.asList(new Object[]{RegwebConstantes.TIPO_INTERESADO_PERSONA_FISICA, RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA}));
+			
+			List<Long> resultado = qe.getResultList();
+			
+			if (resultado.size() == 0) {
+				throw new I18NException("justificante.enviando.interesado.no.admitido");
+			}
+			
+			// Comprobar si hay algun interesado/representante del registro con email informado
+			Query qe2 = em.createQuery("select re.id from RegistroEntrada as re join re.registroDetalle.interesados as interesado "
+					+ "where re.numeroRegistro = :numeroRegistro and (interesado.email is not null or interesado.direccionElectronica is not null)");
+			qe2.setParameter("numeroRegistro", registro.getNumeroRegistro());
+			
+			resultado = qe2.getResultList();
+			
+			if (resultado.size() == 0) {
+				throw new I18NException("justificante.enviando.email.no.informado");
+			}
+		} else {
+			// Comprobar si hay algun interesado/representante del registro que no sea administración
+			Query qs = em.createQuery("select rs.id from RegistroSalida as rs join rs.registroDetalle.interesados as interesado "
+					+ "where rs.numeroRegistro = :numeroRegistro and interesado.tipo in (:tipos)");
+			qs.setParameter("numeroRegistro", registro.getNumeroRegistro());
+			qs.setParameter("tipos", Arrays.asList(new Object[]{RegwebConstantes.TIPO_INTERESADO_PERSONA_FISICA, RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA}));
+
+			List<Long> resultado = qs.getResultList();
+			
+			if (resultado.size() == 0) {
+				throw new I18NException("justificante.enviando.interesado.no.admitido");
+			}
+
+			// Comprobar si hay algun interesado/representante del registro con email informado
+			Query qs2 = em.createQuery("select rs.id from RegistroSalida as rs join rs.registroDetalle.interesados as interesado "
+					+ "where rs.numeroRegistro = :numeroRegistro and (interesado.email is not null or interesado.direccionElectronica is not null)");
+			qs2.setParameter("numeroRegistro", registro.getNumeroRegistro());
+			
+			resultado = qs2.getResultList();
+			
+			if (resultado.size() == 0) {
+				throw new I18NException("justificante.enviando.email.no.informado");
+			}
+		}
+	}
+
+	private void enviarEmail(
+			String email, 
+			String direccionElectronica,
+			String asunto, 
+			String mensajeHtml, 
+			InternetAddress remitente,
+			DocumentoDto adjunto) throws I18NException {
+		boolean emailInformado = email != null && !email.trim().isEmpty();
+		boolean direccionElectronicaInformada = direccionElectronica != null && !direccionElectronica.trim().isEmpty();
+		
+		if (emailInformado || direccionElectronicaInformada) {
+			try {
+				String destino = emailInformado ? email : direccionElectronica;
+				MailUtils.enviaMail(
+						asunto, 
+						mensajeHtml, 
+						remitente, 
+						Message.RecipientType.TO, 
+						destino, 
+						true, 
+						adjunto);
+			} catch (Exception e) {
+				log.warn("No se pudo enviar el correo a: " + email, e);
+			}
+		} else {
+			log.warn("Algún interesado/representante no tiene el email informado");
+		}
+	}
+	
+	private Map<String, Object> obtenerParametros(IRegistro registro) {
+		Map<String, Object> parametros = new HashMap<String, Object>();
+		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+		String saludo = generarSaludo(registro.getRegistroDetalle().getInteresados());
+		String numeroRegistro = registro.getNumeroRegistro();
+		String fechaRegistro = formatter.format(registro.getFecha());
+		String oficinaRegistro = registro.getOficina().getNombre();
+		String enlaceTramite = PropiedadGlobalUtil.getEnlaceDocumentacionAdicional() + numeroRegistro;
+		
+		parametros.put("saludo", saludo);
+		parametros.put("numeroRegistro", numeroRegistro);
+		parametros.put("fechaRegistro", fechaRegistro);
+		parametros.put("oficinaRegistro", oficinaRegistro);
+		parametros.put("enlaceTramite", enlaceTramite);
+		
+		return parametros;
+	}
+	
+	private String generarSaludo(List<Interesado> interesados) {
+		List<String> nombres = new ArrayList<>();
+	    for (Interesado i : interesados) {
+	        if (i.getNombreCompleto() != null && !i.getNombreCompleto().trim().isEmpty()) {
+	            nombres.add(i.getNombreCompleto().trim());
+	        }
+	    }
+	    
+	    if (nombres.size() == 1) {
+	    	return "Estimado/a " + nombres.get(0) + ":";
+	    } else {
+	    	StringBuilder saludo = new StringBuilder("Estimados/as ");
+	        for (int i = 0; i < nombres.size(); i++) {
+	            saludo.append(nombres.get(i));
+	            if (i < nombres.size() - 2) {
+	                saludo.append(", ");
+	            } else if (i == nombres.size() - 2) {
+	                saludo.append(" y ");
+	            }
+	        }
+	        saludo.append(":");
+
+	        return saludo.toString();
+	    }
+	}
+	
+    private DocumentoDto prepararAdjunto(AnexoFull justificante) {
+		DocumentCustody dc = justificante.getDocumentoCustody();
+		SignatureCustody sc = justificante.getSignatureCustody();
+		DocumentoDto adjunto = new DocumentoDto();
+
+		// Parche para la api de custodia antigua que se guardan los documentos firmados
+		// (modofirma == 1 Attached) en DocumentCustody.
+		if (dc != null) {
+			adjunto.setFilename(dc.getName());
+			adjunto.setMimeType(dc.getMime());
+			adjunto.setContenido(dc.getData());
+		} else if (sc != null) {
+			adjunto.setFilename(sc.getName());
+			adjunto.setMimeType(sc.getMime());
+			adjunto.setContenido(sc.getData());
+		}
+		
+		return adjunto;
+	}
+
+	/**
      * Crear el Justificante del Registro utilizando el API {@link org.fundaciobit.plugins.documentcustody}
      * @param usuarioEntidad
      * @param registro

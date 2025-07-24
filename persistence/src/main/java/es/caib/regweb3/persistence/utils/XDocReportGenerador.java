@@ -28,18 +28,19 @@ import fr.opensagres.xdocreport.template.TemplateEngineKind;
  */
 public class XDocReportGenerador {
 
-	private static IXDocReport report;
-	private static IContext context;
 	private static ByteArrayOutputStream baos;
 
 	public static byte[] generarPdfDesdeDocx(InputStream is, Map<String, Object> datos) throws Exception {
 		// Cargar plantilla DOCX con motor Velocity
-		report = XDocReportRegistry.getRegistry().loadReport(is, TemplateEngineKind.Velocity);
-
+		IXDocReport report = XDocReportRegistry.getRegistry().loadReport(is, TemplateEngineKind.Velocity);
+		
 		// Crear contexto y sustituir los datos con etiqueta ${}
-		context = report.createContext();
-		for (Map.Entry<String, Object> entry : datos.entrySet()) {
-			context.put(entry.getKey(), entry.getValue());
+		IContext context = report.createContext();
+		
+		if (datos != null) {
+			for (Map.Entry<String, Object> entry : datos.entrySet()) {
+				context.put(entry.getKey(), entry.getValue());
+			}
 		}
 		
 		// Configurar conversión a PDF
@@ -56,8 +57,21 @@ public class XDocReportGenerador {
 
 	public static String generarHtmlDesdeDocx(InputStream is, Map<String, Object> datos) throws Exception {
 		// Configurar conversión a HTML
-		Options options = Options.getFrom(DocumentKind.DOCX).to(ConverterTypeTo.XHTML);
+		IXDocReport report = XDocReportRegistry.getRegistry().loadReport(is, TemplateEngineKind.Velocity);
+		
+		// Crear contexto y sustituir los datos con etiqueta ${}
+		IContext context = report.createContext();
+		
+		if (datos != null) {
+			context = report.createContext();
+			for (Map.Entry<String, Object> entry : datos.entrySet()) {
+				context.put(entry.getKey(), entry.getValue());
+			}
+		}
 
+		// Configurar conversión a XHTML
+		Options options = Options.getFrom(DocumentKind.DOCX).to(ConverterTypeTo.XHTML);
+		
 		// Generar HTML
 		baos = new ByteArrayOutputStream();
 		report.convert(context, options, baos);
@@ -66,7 +80,7 @@ public class XDocReportGenerador {
 		
 		// Eliminar margenes docx del correo
 		html = html.replaceAll("(?i)(margin-top|margin-left)\\s*:\\s*[^;\"']+;?", "");
-		
+
 		return html;
 	}
 	

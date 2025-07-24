@@ -138,7 +138,7 @@ public class AnexoHelper {
 				colaEjb.actualizarAnexosVerificados(cola.getId());
 			}
 		} catch (Exception e) {
-			log.info("===== Ha habido un error actualizando el campo anexosVerificados de la cola (idRegistro=" + idRegistroEntrada);
+			log.error("===== Ha habido un error actualizando el campo anexosVerificados de la cola (idRegistro=" + idRegistroEntrada);
 		}
 	}
 
