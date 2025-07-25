@@ -167,18 +167,18 @@
                             
                          </div>
 
-                                <%--Comprueba si debe mostrar las opciones desplegadas o no--%>
+                        <%--Comprueba si debe mostrar las opciones desplegadas o no--%>
                         <c:if test="${empty registroEntradaBusqueda.registroEntrada.registroDetalle.tipoDocumentacionFisica &&
                             empty registroEntradaBusqueda.interessatDoc && empty registroEntradaBusqueda.interessatNom &&
                             empty registroEntradaBusqueda.interessatLli1 && empty registroEntradaBusqueda.interessatLli2 &&
-                            empty registroEntradaBusqueda.organDestinatari && empty registroEntradaBusqueda.observaciones &&
+                            empty registroEntradaBusqueda.organDestinatari && empty registroEntradaBusqueda.registroEntrada.registroDetalle.codigoSia &&
                             empty registroEntradaBusqueda.usuario && !registroEntradaBusqueda.registroEntrada.registroDetalle.presencial}">
                             <div id="demo" class="collapse">
                                 </c:if>
                         <c:if test="${not empty registroEntradaBusqueda.registroEntrada.registroDetalle.tipoDocumentacionFisica ||
                             not empty registroEntradaBusqueda.interessatDoc || not empty registroEntradaBusqueda.interessatNom ||
                             not empty registroEntradaBusqueda.interessatLli1 || not empty registroEntradaBusqueda.interessatLli2 ||
-                            not empty registroEntradaBusqueda.organDestinatari || not empty registroEntradaBusqueda.observaciones ||
+                            not empty registroEntradaBusqueda.organDestinatari || not empty registroEntradaBusqueda.registroEntrada.registroDetalle.codigoSia ||
                             not empty registroEntradaBusqueda.usuario || registroEntradaBusqueda.registroEntrada.registroDetalle.presencial}">
                             <div id="demo" class="collapse in">
                         </c:if>
@@ -257,6 +257,16 @@
                             </div>
 
                             <div class="col-xs-12">
+
+                                <div class="col-xs-6 espaiLinies">
+                                    <div class="col-xs-4 pull-left etiqueta_regweb">
+                                        <label for="registroEntrada.registroDetalle.codigoSia" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.codigoSIA"/>" data-toggle="popover"><spring:message code="registroEntrada.codigoSIA"/></label>
+                                    </div>
+                                    <div class="col-xs-8">
+                                        <form:input path="registroEntrada.registroDetalle.codigoSia" cssClass="form-control"/> <form:errors path="registroEntrada.registroDetalle.codigoSia" cssClass="help-block" element="span"/>
+                                    </div>
+                                </div>
+
                                <div class="col-xs-6 espaiLinies">
                                     <div class="col-xs-4 pull-left etiqueta_regweb">
                                         <label for="registroEntrada.registroDetalle.presencial" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.presencial"/>" data-toggle="popover"><spring:message code="registro.presencial"/></label>

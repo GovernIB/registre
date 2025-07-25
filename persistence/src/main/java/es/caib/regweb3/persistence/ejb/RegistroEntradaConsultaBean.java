@@ -201,6 +201,12 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
             parametros.put("tipoDocumentacion", re.getRegistroDetalle().getTipoDocumentacionFisica());
         }
 
+        // CódigoSIA
+        if (re.getRegistroDetalle().getCodigoSia() != null) {
+            where.add(" registroEntrada.registroDetalle.codigoSia = :codigoSia ");
+            parametros.put("codigoSia",  re.getRegistroDetalle().getCodigoSia());
+        }
+
         // Intervalo fechas
         if (incluirPendientesGeiser) {
 	        where.add(" (registroEntrada.fecha is null or (registroEntrada.fecha >= :fechaInicio  ");
@@ -280,7 +286,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
             s = "re.registroDetalle.reserva ";
         }
 
-        q = em.createQuery("Select re.id, re.numeroRegistroFormateado, re.fecha, re.libro.nombre, re.usuario.usuario.identificador, " + s +
+        q = em.createQuery("Select re.id, re.numeroRegistroFormateado, re.fecha, re.usuario.usuario.identificador, " + s +
                 "from RegistroEntrada as re where re.oficina.id = :idOficinaActiva " +
                 "and re.estado = :idEstado order by re.fecha desc");
 
@@ -291,6 +297,29 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
 
         return getRegistroBasicoList(q.getResultList());
 
+    }
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public List<RegistroBasico> pendientesDistribuir(Long idOficinaActiva, Integer total) throws Exception{
+
+        Query q;
+
+        Calendar fechaInicio = Calendar.getInstance(); // Obtiene la fecha de hoy
+        fechaInicio.add(Calendar.YEAR,-1); // Le restamos 1 año
+
+        q = em.createQuery("Select re.id, re.numeroRegistroFormateado, re.fecha, re.usuario.usuario.identificador, re.registroDetalle.extracto " +
+                "from RegistroEntrada as re where re.oficina.id = :idOficinaActiva " +
+                "and re.estado = :idEstado and re.evento = :distribuir and re.fecha >= :fechaInicio and re.usuario.usuario.identificador != 'regweb-pixelware' order by re.fecha desc");
+
+        q.setHint("org.hibernate.readOnly", true);
+        q.setMaxResults(total);
+        q.setParameter("idOficinaActiva", idOficinaActiva);
+        q.setParameter("idEstado", RegwebConstantes.REGISTRO_VALIDO);
+        q.setParameter("distribuir", RegwebConstantes.EVENTO_DISTRIBUIR);
+        q.setParameter("fechaInicio", fechaInicio.getTime()); // Solo obtenemos los del último año
+
+        return getRegistroBasicoList(q.getResultList());
     }
 
     @Override
@@ -632,15 +661,10 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
             registroBasico.setId((Long) object[0]);
             registroBasico.setNumeroRegistroFormateado((String) object[1]);
             registroBasico.setFecha((Date) object[2]);
-            registroBasico.setLibro((String) object[3]);
-            registroBasico.setUsuario((String) object[4]);
-            if (StringUtils.isEmpty((String) object[5])) {
-                registroBasico.setExtracto((String) object[6]);
-            } else {
-                registroBasico.setExtracto((String) object[5]);
-            }
-            registros.add(registroBasico);
+            registroBasico.setUsuario((String) object[3]);
+            registroBasico.setExtracto((String) object[4]);
 
+            registros.add(registroBasico);
         }
 
         return registros;

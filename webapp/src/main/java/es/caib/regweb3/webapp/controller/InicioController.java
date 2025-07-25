@@ -65,8 +65,11 @@ public class InicioController extends BaseController{
             LinkedHashSet<Organismo> organismosOficinaActiva = new LinkedHashSet<Organismo>(getOrganismosOficinaActiva(request));
             UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
 
-            /* RESERVA DE NÚMERO */
+            /* RESERVA DE N&Uacute;MERO */
             mav.addObject("reservas", registroEntradaConsultaEjb.getByOficinaEstado(oficinaActiva.getId(), RegwebConstantes.REGISTRO_RESERVA, RegwebConstantes.REGISTROS_PANTALLA_INICIO));
+
+            /* PENDIENTES DE DISTRIBUIR */
+            mav.addObject("pendientesDistribuir", registroEntradaConsultaEjb.pendientesDistribuir(oficinaActiva.getId(), RegwebConstantes.REGISTROS_PANTALLA_INICIO));
 
             /* OFICIOS PENDIENTES DE REMISIÓN */
             if(entidadActiva.getOficioRemision()){
@@ -97,7 +100,7 @@ public class InicioController extends BaseController{
                 mav.addObject("pendientesProcesarSir", registroSirEjb.getUltimosPendientesProcesar(oficinaActiva.getCodigo(), RegwebConstantes.REGISTROS_PANTALLA_INICIO));
                 mav.addObject("entradasRechazadosReenviados", registroEntradaConsultaEjb.getSirRechazadosReenviados(oficinaActiva.getId(), RegwebConstantes.REGISTROS_PANTALLA_INICIO));
                 mav.addObject("salidasRechazadasReenviadas", registroSalidaConsultaEjb.getSirRechazadosReenviados(oficinaActiva.getId(), RegwebConstantes.REGISTROS_PANTALLA_INICIO));
-                mav.addObject("pendientesDistribuir", trazabilidadEjb.getPendientesDistribuirSir(oficinaActiva.getId(),entidadActiva.getId(),RegwebConstantes.REGISTROS_PANTALLA_INICIO));
+                mav.addObject("pendientesDistribuirSir", trazabilidadEjb.getPendientesDistribuirSir(oficinaActiva.getId(),entidadActiva.getId(),RegwebConstantes.REGISTROS_PANTALLA_INICIO));
             }
 
             // Notificaciones

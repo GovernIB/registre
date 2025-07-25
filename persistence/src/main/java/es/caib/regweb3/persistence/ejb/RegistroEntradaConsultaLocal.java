@@ -56,6 +56,15 @@ public interface RegistroEntradaConsultaLocal {
     List<RegistroBasico> getByOficinaEstado(Long idOficina, Long idEstado, Integer total) throws Exception;
 
     /**
+     * Obtiene los registros pendientes de distribuir, excepto los de la aplicación pixelware
+     * @param idOficinaActiva
+     * @param total
+     * @return
+     * @throws Exception
+     */
+    List<RegistroBasico> pendientesDistribuir(Long idOficinaActiva, Integer total) throws Exception;
+
+    /**
      *
      * @param pageNumber
      * @param idOficinaActiva
