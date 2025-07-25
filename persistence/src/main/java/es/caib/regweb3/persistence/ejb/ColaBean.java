@@ -274,9 +274,6 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
             cola.setAnexosVerificados(anexosVerificados);
             
             persist(cola);
-
-            log.info("RegistroEntrada: " + re.getNumeroRegistroFormateado() + " enviado a la Cola de Distribución");
-            registroEntradaEjb.cambiarEstado(re.getId(),RegwebConstantes.REGISTRO_DISTRIBUYENDO);
             return true;
 
         } catch (Exception e) {
