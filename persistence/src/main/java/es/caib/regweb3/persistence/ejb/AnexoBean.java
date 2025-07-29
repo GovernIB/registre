@@ -48,6 +48,7 @@ import es.caib.regweb3.model.Cola;
 import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.model.IRegistro;
 import es.caib.regweb3.model.Interesado;
+import es.caib.regweb3.model.RegistroDetalle;
 import es.caib.regweb3.model.RegistroEntrada;
 import es.caib.regweb3.model.RegistroSalida;
 import es.caib.regweb3.model.TipoDocumental;
@@ -1717,32 +1718,38 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 	@TransactionTimeout(value = 3000)  // 50 minutos
 	public void actualizarAnexosSistraPendientesVerificacionFirma(Long idEntidad) throws I18NException, CustodyException, NotSupportedCustodyException, MetadataFormatException {
 		// Recuperar anexos recibidos de Sistra y sin verificar si viene firmado (firmaverificada = false)	
-		Query qs = em.createQuery("Select anexo from Anexo as anexo where anexo.firmaverificada = false and modoFirma = :modofirma order by anexo.id");
+		Query qs = em.createQuery("select rd from RegistroDetalle as rd join rd.anexos anexo " + 
+				"where anexo.firmaverificada = false and anexo.modoFirma = :modofirma order by anexo.id");
+		
         qs.setParameter("modofirma", RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA);
-		List<Anexo> anexos = qs.getResultList();
+		List<RegistroDetalle> registrosDetalle = qs.getResultList();
 		boolean anexosVerificados = true;
 		
-		if (anexos != null && !anexos.isEmpty()) {
-			log.info("------------------------------------------------------------");
-			for (Anexo anexo : anexos) {
-				log.info("===== Verificación automática de la firma del anexo " + anexo.getId() + " iniciada");
-				try {
-					anexoHelper.actualizarAnexoSistraPendienteVerificacionFirma(anexo, idEntidad);
-				} catch (Exception e) {
-					log.error("===== Ha habido un error en la verificación automática de la firma del anexo " + anexo.getId());
-					anexosVerificados = false;
-					e.printStackTrace();
+		if (registrosDetalle != null && !registrosDetalle.isEmpty()) {
+			for (RegistroDetalle registroDetalle : registrosDetalle) {
+				
+				log.info("------------------------------------------------------------");
+				for (Anexo anexo : registroDetalle.getAnexos()) {
+					log.info("===== Verificación automática de la firma del anexo " + anexo.getId() + " iniciada");
+					try {
+						anexoHelper.actualizarAnexoSistraPendienteVerificacionFirma(anexo, idEntidad);
+					} catch (Exception e) {
+						log.error("===== Ha habido un error en la verificación automática de la firma del anexo " + anexo.getId());
+						anexosVerificados = false;
+						e.printStackTrace();
+					}
+					log.info("===== Ha finalizado la verificación automática de la firma del anexo " + anexo.getId());
 				}
-				log.info("===== Ha finalizado la verificación automática de la firma del anexo " + anexo.getId());
+				
+				anexoHelper.actualizarAnexosVerificadosCola(
+						idEntidad, 
+						registroDetalle.getId(),
+						anexosVerificados);
+				
+				log.info("------------------------------------------------------------");
+				log.info("");
+			
 			}
-			
-			anexoHelper.actualizarAnexosVerificadosCola(
-					idEntidad, 
-					anexos.get(0).getRegistroDetalle().getId(), 
-					anexosVerificados);
-			
-			log.info("------------------------------------------------------------");
-			log.info("");
 		}
 	}
 
