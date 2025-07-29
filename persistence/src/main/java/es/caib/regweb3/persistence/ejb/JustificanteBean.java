@@ -7,11 +7,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -55,6 +53,7 @@ import es.caib.regweb3.model.UsuarioEntidad;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.persistence.integracion.ArxiuCaibUtils;
 import es.caib.regweb3.persistence.integracion.JustificanteArxiu;
+import es.caib.regweb3.persistence.utils.ContenidoEmail;
 import es.caib.regweb3.persistence.utils.DocumentHelper;
 import es.caib.regweb3.persistence.utils.DocumentoDto;
 import es.caib.regweb3.persistence.utils.I18NLogicUtils;
@@ -159,7 +158,7 @@ public class JustificanteBean implements JustificanteLocal {
 	        String nombrePlantilla = "Justificante.docx";
 			Map<String, Object> parametros = obtenerParametros(registro);
 			
-			String mensajeHtml = DocumentHelper.generarHtml(nombrePlantilla, parametros);
+			ContenidoEmail contenido = DocumentHelper.generarHtml(nombrePlantilla, parametros);
 			DocumentoDto adjunto = prepararAdjunto(justificante);
 
 			for (Interesado interesado : interesados) {
@@ -169,7 +168,7 @@ public class JustificanteBean implements JustificanteLocal {
 						interesado.getEmail(), 
 						interesado.getDireccionElectronica(),
 						asunto, 
-						mensajeHtml, 
+						contenido, 
 						remitente, 
 						adjunto);
 				
@@ -179,7 +178,7 @@ public class JustificanteBean implements JustificanteLocal {
 							representante.getEmail(), 
 							representante.getDireccionElectronica(),
 							asunto, 
-							mensajeHtml, 
+							contenido, 
 							remitente, 
 							adjunto);
 				}
@@ -251,7 +250,7 @@ public class JustificanteBean implements JustificanteLocal {
 			String email, 
 			String direccionElectronica,
 			String asunto, 
-			String mensajeHtml, 
+			ContenidoEmail contenido, 
 			InternetAddress remitente,
 			DocumentoDto adjunto) throws I18NException {
 		boolean emailInformado = email != null && !email.trim().isEmpty();
@@ -262,12 +261,13 @@ public class JustificanteBean implements JustificanteLocal {
 				String destino = emailInformado ? email : direccionElectronica;
 				MailUtils.enviaMail(
 						asunto, 
-						mensajeHtml, 
+						contenido.getHtml(), 
 						remitente, 
 						Message.RecipientType.TO, 
 						destino, 
 						true, 
-						adjunto);
+						adjunto,
+						contenido.getImagenes());
 				
 				log.info("El justificante del registro " + numeroRegistro + " ha sido enviado por email al destinatario " + destino);
 			} catch (Exception e) {

@@ -438,7 +438,7 @@
                                                                         <c:out value="${registroEntrada.extracto}" escapeXml="true"/>
                                                                     </c:if>
                                                                     <c:if test="${fn:length(registroEntrada.extracto) > 40}">
-                                                                        <p rel="popupArriba" data-content="<c:out value="${registroEntrada.extracto}" escapeXml="true"/>" data-toggle="popover"><c:out value="${registroEntrada.registroDetalle.extractoCorto}" escapeXml="true"/></p>
+                                                                        <p rel="popupArriba" data-content="<c:out value="${registroEntrada.extracto}" escapeXml="true"/>" data-toggle="popover"><c:out value="${registroEntrada.extractoCorto}" escapeXml="true"/></p>
                                                                     </c:if>
                                                                 </td>
                                                                 <td class="center">

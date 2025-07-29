@@ -14,6 +14,7 @@ public class RegistroBasico implements Serializable{
     private String libro;
     private String usuario;
     private String extracto;
+    private String extractoCorto;
 
     private Long idOficina;
     private String oficina;
@@ -81,7 +82,15 @@ public class RegistroBasico implements Serializable{
         this.extracto = extracto;
     }
 
-    public Long getIdOficina() {
+    public String getExtractoCorto() {
+		return extractoCorto;
+	}
+
+	public void setExtractoCorto(String extractoCorto) {
+		this.extractoCorto = extractoCorto;
+	}
+
+	public Long getIdOficina() {
         return idOficina;
     }
 

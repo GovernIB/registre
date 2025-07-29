@@ -1,10 +1,12 @@
 package es.caib.regweb3.persistence.utils;
 
-import java.io.InputStream;
+import java.nio.file.Path;
 import java.util.Date;
+import java.util.Map;
 
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
+import javax.activation.FileDataSource;
 import javax.mail.Message;
 import javax.mail.Multipart;
 import javax.mail.Session;
@@ -41,16 +43,16 @@ public class MailUtils {
      */
 	public static void enviaMail(String asunto, String mensajeTexto, InternetAddress addressFrom,
 			Message.RecipientType type, String mailPara) throws Exception {
-		enviaMail(asunto, mensajeTexto, addressFrom, type, mailPara, false, null);
+		enviaMail(asunto, mensajeTexto, addressFrom, type, mailPara, false, null, null);
 	}
 	
 	public static void enviaMail(String asunto, String mensajeTexto, InternetAddress addressFrom,
 			Message.RecipientType type, String mailPara, boolean html) throws Exception {
-		enviaMail(asunto, mensajeTexto, addressFrom, type, mailPara, html, null);
+		enviaMail(asunto, mensajeTexto, addressFrom, type, mailPara, html, null, null);
 	}
 
 	public static void enviaMail(String asunto, String mensajeTexto, InternetAddress addressFrom,
-			Message.RecipientType type, String mailPara, boolean html, DocumentoDto adjunto) throws Exception {
+			Message.RecipientType type, String mailPara, boolean html, DocumentoDto adjunto, Map<String, Path> imagenesInline) throws Exception {
 
         Context ctx = new InitialContext();
 
@@ -79,8 +81,34 @@ public class MailUtils {
         	mbp1.setContent(mensajeTexto, "UTF-8");
         }
         
-        Multipart mp = new MimeMultipart();
-        mp.addBodyPart(mbp1);
+        Multipart mp;
+        if (imagenesInline != null && !imagenesInline.isEmpty()) {
+            // HTML + imágenes embebidas => multipart/related
+            Multipart related = new MimeMultipart("related");
+            related.addBodyPart(mbp1);
+
+            for (Map.Entry<String, Path> entry : imagenesInline.entrySet()) {
+                String cid = entry.getKey().replaceAll("[^a-zA-Z0-9]", ""); // limpiar ID
+                MimeBodyPart imagePart = new MimeBodyPart();
+                imagePart.setDataHandler(new DataHandler(new FileDataSource(entry.getValue().toFile())));
+                imagePart.setHeader("Content-ID", "<" + cid + ">");
+                imagePart.setDisposition(MimeBodyPart.INLINE);
+                related.addBodyPart(imagePart);
+            }
+
+            // metemos el "related" dentro de un bodypart
+            MimeBodyPart relatedBodyPart = new MimeBodyPart();
+            relatedBodyPart.setContent(related);
+
+            // multipart/mixed final
+            mp = new MimeMultipart("mixed");
+            mp.addBodyPart(relatedBodyPart);
+
+        } else {
+            // si no hay imágenes inline, hacemos como tenías antes
+        	mp = new MimeMultipart();
+            mp.addBodyPart(mbp1);
+        }
         
         if (adjunto != null) {
         	String mimeType = adjunto.getMimeType();

@@ -58,6 +58,7 @@ import es.caib.regweb3.model.UsuarioEntidad;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.model.utils.RevocacionDto;
 import es.caib.regweb3.model.utils.TramiteDto;
+import es.caib.regweb3.persistence.utils.ContenidoEmail;
 import es.caib.regweb3.persistence.utils.DatabaseConnection;
 import es.caib.regweb3.persistence.utils.DocumentoDto;
 import es.caib.regweb3.persistence.utils.MailUtils;
@@ -589,9 +590,10 @@ public class TramiteBean implements TramiteLocal {
 		Map<String, Object> parametros = obtenerParametros(registroEntrada, revocacionForm.getCodigoSia());
 		String asunto = "Revocación del registro de entrada " + registroEntrada.getNumeroRegistro();
 		
-		String mensajeTexto = DocumentHelper.generarHtml(
+		ContenidoEmail contenido = DocumentHelper.generarHtml(
 				nombrePlantilla, 
 				parametros);
+		String mensajeTexto = contenido.getHtml();
 		
 		InternetAddress addressFrom = new InternetAddress(RegwebConstantes.APLICACION_EMAIL,
 				RegwebConstantes.APLICACION_NOMBRE);

@@ -662,8 +662,11 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
             registroBasico.setNumeroRegistroFormateado((String) object[1]);
             registroBasico.setFecha((Date) object[2]);
             registroBasico.setUsuario((String) object[3]);
-            registroBasico.setExtracto((String) object[4]);
-
+            
+            String extracto = (String) object[4];
+            registroBasico.setExtracto(extracto);
+            registroBasico.setExtractoCorto(getExtractoCorto(extracto));
+            
             registros.add(registroBasico);
         }
 
@@ -813,6 +816,15 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
         q.setHint("org.hibernate.readOnly", true);
 
         return (Long) q.getSingleResult();
+    }
+    
+    private String getExtractoCorto(String extracto){
+
+        if (extracto != null && extracto.length() > 40) {
+        	extracto = extracto.substring(0, 40) + "...";
+        }
+
+        return extracto;
     }
 
     /**
