@@ -88,6 +88,7 @@ public class Regweb3Controller extends BaseController {
             if(oficinasAutenticado.contains(new Oficina(oficinaNueva.getId()))){
                 loginService.asignarOficinaActiva(oficinaNueva, getLoginInfo(request));
                 log.info("Cambio Oficina activa: " + oficinaNueva.getDenominacion() + " - " + oficinaNueva.getCodigo());
+                Mensaje.saveMessageAviso(request, getMessage("aviso.oficinaActiva.cambio", oficinaNueva.getDenominacion()));
             }else{
                 Mensaje.saveMessageError(request, getMessage("error.oficina.autorizacion"));
             }
