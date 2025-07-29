@@ -96,7 +96,8 @@ public class JustificanteBean implements JustificanteLocal {
 
     @Override
     public AnexoFull crearJustificante(UsuarioEntidad usuarioEntidad, IRegistro registro, Long tipoRegistro, String idioma) throws I18NException, I18NValidationException {
-
+    	AnexoFull anexoFull = null;
+    	
         // Comprobamos si ya se ha generado el Justificante
         if (registro.getRegistroDetalle().getTieneJustificante()) {
             throw new I18NException("aviso.justificante.existe");
@@ -104,15 +105,25 @@ public class JustificanteBean implements JustificanteLocal {
 
         if(usuarioEntidad.getEntidad().getPerfilCustodia().equals(RegwebConstantes.PERFIL_CUSTODIA_DOCUMENT_CUSTODY)){
 
-            return crearJustificanteDocumentCustody(usuarioEntidad, registro, tipoRegistro, idioma, false);
+        	anexoFull = crearJustificanteDocumentCustody(usuarioEntidad, registro, tipoRegistro, idioma, false);
 
         }else if(usuarioEntidad.getEntidad().getPerfilCustodia().equals(RegwebConstantes.PERFIL_CUSTODIA_ARXIU)){
 
-            return crearJustificanteApiArxiu(usuarioEntidad, registro, tipoRegistro, idioma);
+        	anexoFull = crearJustificanteApiArxiu(usuarioEntidad, registro, tipoRegistro, idioma);
 
         }
-
-        return null;
+        
+        if (anexoFull != null) {
+	        try {
+	        	registro.getRegistroDetalle().getAnexosFull().add(anexoFull);
+	        	
+				enviarJustificantePorEmail(usuarioEntidad.getEntidad(), registro);
+			} catch (I18NException | Exception e) {
+				log.error("Error al enviar el justificante por correo", e);
+			}
+        }
+        
+        return anexoFull;
     }
 
     @Override
@@ -136,6 +147,8 @@ public class JustificanteBean implements JustificanteLocal {
 	@Override
 	public void enviarJustificantePorEmail(Entidad entidad, IRegistro registro) throws I18NException, Exception {
 		try {
+			log.info("Enviando justificante del registro " + registro.getNumeroRegistro() + " por email");
+			
 			validarRegistro(registro);
 			
 			AnexoFull justificante = registro.getRegistroDetalle().getJustificanteAnexoFull();
@@ -152,6 +165,7 @@ public class JustificanteBean implements JustificanteLocal {
 			for (Interesado interesado : interesados) {
 				Interesado representante = interesado.getRepresentante();
 				enviarEmail(
+						registro.getNumeroRegistro(),
 						interesado.getEmail(), 
 						interesado.getDireccionElectronica(),
 						asunto, 
@@ -161,6 +175,7 @@ public class JustificanteBean implements JustificanteLocal {
 				
 				if (representante != null && representante.getEmail() != null) {
 					enviarEmail(
+							registro.getNumeroRegistro(),
 							representante.getEmail(), 
 							representante.getDireccionElectronica(),
 							asunto, 
@@ -232,6 +247,7 @@ public class JustificanteBean implements JustificanteLocal {
 	}
 
 	private void enviarEmail(
+			String numeroRegistro,
 			String email, 
 			String direccionElectronica,
 			String asunto, 
@@ -252,6 +268,8 @@ public class JustificanteBean implements JustificanteLocal {
 						destino, 
 						true, 
 						adjunto);
+				
+				log.info("El justificante del registro " + numeroRegistro + " ha sido enviado por email al destinatario " + destino);
 			} catch (Exception e) {
 				log.warn("No se pudo enviar el correo a: " + email, e);
 			}
