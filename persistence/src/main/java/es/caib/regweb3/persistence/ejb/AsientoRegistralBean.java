@@ -108,12 +108,12 @@ public class AsientoRegistralBean implements AsientoRegistralLocal {
     }
 
     @Override
-    public RegistroSalida procesarRegistroSalida(Long tipoOperacion, RegistroSalida registroSalida, Entidad entidad) throws I18NException, Exception, I18NValidationException {
+    public RegistroSalida procesarRegistroSalida(Long tipoOperacion, RegistroSalida registroSalida, Entidad entidad, Boolean generarJustificante) throws I18NException, Exception, I18NValidationException {
 
         // Es una Notificación
         if (tipoOperacion != null && tipoOperacion.equals(TIPO_OPERACION_NOTIFICACION)) {
             //Creamos el justificante del registroSalida y lo marcamos como REGISTRO_ENVIADO_NOTIFICAR
-            crearJustificanteCambioEstado(entidad, registroSalida, REGISTRO_ENVIADO_NOTIFICAR);
+            crearJustificanteCambioEstado(entidad, registroSalida, REGISTRO_ENVIADO_NOTIFICAR,generarJustificante);
             registroSalida.setEstado(REGISTRO_ENVIADO_NOTIFICAR);
 
             // Es una Comunicación
@@ -125,7 +125,7 @@ public class AsientoRegistralBean implements AsientoRegistralLocal {
                 //Interesado es una persona física o jurídica es como el caso de notificación
                 if (TIPO_INTERESADO_PERSONA_FISICA.equals(interesado.getTipo()) || TIPO_INTERESADO_PERSONA_JURIDICA.equals(interesado.getTipo())) {
                     //Creamos el justificante del registroSalida y lo marcamos como REGISTRO_VALIDO
-                    crearJustificanteCambioEstado(entidad, registroSalida, REGISTRO_ENVIADO_NOTIFICAR);
+                    crearJustificanteCambioEstado(entidad, registroSalida, REGISTRO_ENVIADO_NOTIFICAR,generarJustificante);
                     registroSalida.setEstado(REGISTRO_ENVIADO_NOTIFICAR);
 
                     // Interesado es una administración
@@ -145,7 +145,7 @@ public class AsientoRegistralBean implements AsientoRegistralLocal {
                     if (oficinasSIR.isEmpty()) {
                         //TODO hay que crear el oficio externo???
                         //Creamos el justificante del registroSalida y lo marcamos como REGISTRO_OFICIO_EXTERNO
-                        crearJustificanteCambioEstado(entidad, registroSalida, REGISTRO_OFICIO_EXTERNO);
+                        crearJustificanteCambioEstado(entidad, registroSalida, REGISTRO_OFICIO_EXTERNO,generarJustificante);
                         registroSalida.setEstado(REGISTRO_OFICIO_EXTERNO);
 
                     } else { //Tiene oficinas en SIR, se crear el intercambio
@@ -231,9 +231,11 @@ public class AsientoRegistralBean implements AsientoRegistralLocal {
     /**
      * Método que crea el justiifcante del registro de salida y actualiza su estado
      */
-    private void crearJustificanteCambioEstado(Entidad entidad, RegistroSalida registroSalida, Long estado) throws I18NException, I18NValidationException, I18NException {
+    private void crearJustificanteCambioEstado(Entidad entidad, RegistroSalida registroSalida, Long estado, Boolean generarJustificante) throws I18NException, I18NValidationException, I18NException {
         //Crear Justificante
-        crearJustificante(entidad, registroSalida.getUsuario(), registroSalida, RegwebConstantes.REGISTRO_SALIDA, RegistroUtils.getIdiomaJustificante(registroSalida));
+        if (generarJustificante == null || generarJustificante){
+            crearJustificante(entidad, registroSalida.getUsuario(), registroSalida, RegwebConstantes.REGISTRO_SALIDA, RegistroUtils.getIdiomaJustificante(registroSalida));
+        }
 
         //Cambiar estado
         registroSalidaEjb.cambiarEstado(registroSalida.getId(), estado);
