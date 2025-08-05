@@ -401,7 +401,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
                     asiento.setFechaRegistro(registroSalida.getFecha());
 
                     // Procesar el Registro de Salida según el Tipo Operación
-                    registroSalida = asientoRegistralEjb.procesarRegistroSalida(tipoOperacion, registroSalida, entidadActiva);
+                    registroSalida = asientoRegistralEjb.procesarRegistroSalida(tipoOperacion, registroSalida, entidadActiva,justificante);
 
                     //Actualizamos el AsientoRegistral
                     asiento.setEstado(registroSalida.getEstado());
