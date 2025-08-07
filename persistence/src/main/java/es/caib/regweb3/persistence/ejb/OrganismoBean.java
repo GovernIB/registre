@@ -127,12 +127,23 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Organismo> getAllByEntidad(Long entidad) throws I18NException {
+    public List<Organismo> getAllByEntidadByEstado(Long entidad, String estado) throws I18NException {
+
+        String estadoWhere = "";
+
+        if (!estado.isEmpty()) {
+            estadoWhere = " and organismo.estado.codigoEstadoEntidad=:estado";
+        }
+
+
 
         Query q = em.createQuery("Select organismo.id, organismo.codigo, organismo.denominacion, organismo.estado from Organismo as organismo where " +
-                "organismo.entidad.id = :entidad");
+                "organismo.entidad.id = :entidad" + estadoWhere);
 
         q.setParameter("entidad", entidad);
+        if (!estado.isEmpty()) {
+            q.setParameter("estado", estado);
+        }
         q.setHint("org.hibernate.readOnly", true);
 
         List<Organismo> organismos = new ArrayList<Organismo>();
@@ -412,7 +423,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
     @SuppressWarnings(value = "unchecked")
     public List<Organismo> getAllByEntidadMultiEntidad(Long idEntidad) throws I18NException{
 
-        List<Organismo> organismos= getAllByEntidad(idEntidad);
+        List<Organismo> organismos= getAllByEntidadByEstado(idEntidad, "");
         List<Organismo> organismosAEliminar = new ArrayList<>();
 
         for(Organismo organismo: organismos){

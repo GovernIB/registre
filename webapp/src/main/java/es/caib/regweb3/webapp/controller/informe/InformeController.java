@@ -74,7 +74,7 @@ public class InformeController extends AbstractRegistroCommonFormController {
             model.addAttribute("organosDestino", organismosOficinaActiva);
         }
         if(getRolActivo(request).getId().equals(RegwebConstantes.RWE_ADMIN_ID)) {
-            model.addAttribute("organosDestino", organismoEjb.getAllByEntidad(getEntidadActiva(request).getId()));
+            model.addAttribute("organosDestino", organismoEjb.getAllByEntidadByEstado(getEntidadActiva(request).getId(), ""));
         }
 
         model.addAttribute("usuariosEntidad", usuarioEntidadEjb.findByEntidad(getEntidadActiva(request).getId()));

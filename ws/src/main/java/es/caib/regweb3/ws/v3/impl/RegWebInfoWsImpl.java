@@ -379,7 +379,7 @@ public class RegWebInfoWsImpl extends AbstractRegistroWsImpl implements RegWebIn
         // 1.- Comprobaciones de parámetros obligatórios
         Entidad entidad = validarEntidad(entidadCodigoDir3);
 
-        List<Organismo> listOrganismo = organismoEjb.getAllByEntidad(entidad.getId());
+        List<Organismo> listOrganismo = organismoEjb.getAllByEntidadByEstado(entidad.getId(),"");
 
         List<OrganismoWs> listOrganismoWs = new ArrayList<OrganismoWs>(listOrganismo.size());
 

@@ -114,7 +114,13 @@
                                         <label for="idOrganismoDestino" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.destino"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="registroEntrada.organismoDestino"/></label>
                                     </div>
                                     <div class="col-xs-7">
-                                        <form:select path="idOrganismoDestino" cssClass="chosen-select" items="${organismosOficinaActiva}" itemValue="id" itemLabel="denominacion"/>
+                                        <form:select path="idOrganismoDestino" cssClass="chosen-select">
+                                            <form:option value="" label="..."/>
+                                            <c:forEach items="${organismosEntidad}" var="organismo">
+                                                <option value="${organismo.id}" <c:if test="${registroSir.codigoUnidadTramitacionDestino == organismo.codigo}">selected="selected"</c:if> >${organismo.denominacion} </option>
+                                            </c:forEach>
+                                        </form:select>
+                                        <form:errors path="idOrganismoDestino" cssClass="help-block" element="span"/>
                                     </div>
                                 </div>
 
