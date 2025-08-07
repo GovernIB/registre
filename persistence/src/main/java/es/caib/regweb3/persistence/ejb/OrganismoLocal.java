@@ -53,13 +53,14 @@ public interface OrganismoLocal extends BaseEjb<Organismo, Long> {
     Organismo findByIdLigero(Long idOrganismo) throws I18NException;
 
     /**
-     * Obtiene los organismos de una entidad
+     * Obtiene los organismos de una entidad en funcion del estado indicado, si no se indica estado, devuelve todos.
      *
      * @param entidad
+     * @param estado
      * @return
      * @throws I18NException
      */
-    List<Organismo> getAllByEntidad(Long entidad) throws I18NException;
+    List<Organismo> getAllByEntidadByEstado(Long entidad, String estado) throws I18NException;
 
 
     /**

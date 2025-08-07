@@ -127,12 +127,24 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Organismo> getAllByEntidad(Long entidad) throws I18NException {
+    public List<Organismo> getAllByEntidadByEstado(Long entidad, String estado) throws I18NException {
+
+
+        String estadoWhere = "";
+
+        if (!estado.isEmpty()) {
+            estadoWhere = " and organismo.estado.codigoEstadoEntidad=:estado";
+        }
+
+
 
         Query q = em.createQuery("Select organismo.id, organismo.codigo, organismo.denominacion, organismo.estado from Organismo as organismo where " +
-                "organismo.entidad.id = :entidad");
+                "organismo.entidad.id = :entidad " + estadoWhere);
 
         q.setParameter("entidad", entidad);
+        if (!estado.isEmpty()) {
+            q.setParameter("estado", estado);
+        }
         q.setHint("org.hibernate.readOnly", true);
 
         List<Organismo> organismos = new ArrayList<Organismo>();
@@ -142,6 +154,8 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
             Organismo organismo = new Organismo((Long) object[0], (String) object[1], (String) object[2], (CatEstadoEntidad) object[3]);
             organismos.add(organismo);
         }
+
+        log.info("ORGANISMOS ALL " +organismos.size());
 
         return organismos;
     }
@@ -412,7 +426,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
     @SuppressWarnings(value = "unchecked")
     public List<Organismo> getAllByEntidadMultiEntidad(Long idEntidad) throws I18NException{
 
-        List<Organismo> organismos= getAllByEntidad(idEntidad);
+        List<Organismo> organismos= getAllByEntidadByEstado(idEntidad, "");
         List<Organismo> organismosAEliminar = new ArrayList<>();
 
         for(Organismo organismo: organismos){
@@ -636,7 +650,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
 
 
     /**
-     * Método que obtiene los organismos vigentes y en los que puede registrar de la oficina
+     * Función que obtiene los organismos vigentes y en los que puede registrar de la oficina
      *
      * @param oficina
      * @return List
@@ -659,7 +673,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
 
 
     /**
-     * Metodo que recursivamente obtiene todos los hijos de una lista de organismos
+     * Función que recursivamente obtiene todos los hijos de una lista de organismos
      *
      * @param organismosPadres organismos de los que obtener sus hijos
      * @param totales          organismos totales obtenidos despues del proceso recursivo.

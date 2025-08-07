@@ -104,7 +104,7 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
         if(multiEntidadEjb.isMultiEntidadSir()) {
             model.addAttribute("organosDestino", organismoEjb.getAllByEntidadMultiEntidad(entidadActiva.getId()));
         }else{
-            model.addAttribute("organosDestino", organismoEjb.getAllByEntidad(entidadActiva.getId()));
+            model.addAttribute("organosDestino", organismoEjb.getAllByEntidadByEstado(entidadActiva.getId(),""));
         }
 
         return "registroEntrada/registroEntradaListAdmin";
@@ -126,7 +126,7 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
 
             organosDestino = organismoEjb.getAllByEntidadMultiEntidad(entidadActiva.getId());
         }else{
-            organosDestino = organismoEjb.getAllByEntidad(entidadActiva.getId());
+            organosDestino = organismoEjb.getAllByEntidadByEstado(entidadActiva.getId(),"");
         }
         List<Oficina> oficinasRegistro = oficinaEjb.findByEntidadLigero(entidadActiva.getId());
         List<UsuarioEntidad> usuariosEntidad = usuarioEntidadEjb.findByEntidad(entidadActiva.getId());

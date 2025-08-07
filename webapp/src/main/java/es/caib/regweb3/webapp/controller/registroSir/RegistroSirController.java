@@ -230,7 +230,8 @@ public class RegistroSirController extends BaseController {
             if(getOficinaActiva(request).getCodigo().equals(registroSir.getCodigoEntidadRegistral())){
 
                 model.addAttribute("libro",getLibroEntidad(request)); // Libro único
-                model.addAttribute("organismosOficinaActiva", getOrganismosOficinaActiva(request));
+             //   model.addAttribute("organismosOficinaActiva", getOrganismosOficinaActiva(request));
+                model.addAttribute("organismosEntidad", organismoEjb.getAllByEntidadByEstado(entidadActiva.getId(),RegwebConstantes.ESTADO_ENTIDAD_VIGENTE));
                 model.addAttribute("registrarForm", new RegistrarForm(registroSir.getResumen()));
 
                 Boolean pluginDistribucionEmail = distribucionEjb.isDistribucionPluginEmail(entidadActiva.getId());
@@ -589,7 +590,9 @@ public class RegistroSirController extends BaseController {
     @RequestMapping(value = "/consultarPendientes", method = RequestMethod.GET)
     public String consultarPendientes(HttpServletRequest request, HttpServletResponse response) throws Exception, InterException {
 
-        List<String> oficinas = Stream.of("O00001586", "O00033944", "O00006056").collect(Collectors.toList());
+       // List<String> oficinas = Stream.of("O00001586", "O00033944", "O00006056").collect(Collectors.toList());
+        List<String> oficinas = Stream.of("O00015973", "O00015977", "O00015974").collect(Collectors.toList());
+
         List<IntercambiosPendientesProcesar> intercambios = libSirEjb.consultarCambiosEstadoPendientesProcesar(300,oficinas);
         log.info("INTERCAMBIOS: "+ intercambios.size());
         intercambios.forEach(intercambio ->
