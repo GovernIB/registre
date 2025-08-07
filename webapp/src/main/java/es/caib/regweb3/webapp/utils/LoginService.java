@@ -325,9 +325,20 @@ public class LoginService {
 
             asignarOficinaActiva(oficinaEjb.findById(loginInfo.getUsuarioEntidadActivo().getOficinaSolicitada().getId()), loginInfo);
 
-        } else if (loginInfo.getOficinasAcceso().size() > 0) {
+        } else if (!loginInfo.getOficinasAcceso().isEmpty()) { //Si tiene de acceso, se muestran acceso.
 
             asignarOficinaActiva(oficinaEjb.findById(loginInfo.getOficinasAcceso().iterator().next().getId()), loginInfo);
+
+        } else if (loginInfo.getOficinasAcceso().isEmpty()){ // si no tiene de acceso, se muestra la primera que tiene de consulta de entrada
+            if(!oficinasConsultaEntrada.isEmpty()){
+
+                asignarOficinaActiva(oficinaEjb.findById(oficinasConsultaEntrada.iterator().next().getId()), loginInfo);
+
+            }else if(!oficinasConsultaSalida.isEmpty()){ // si no tiene de consulta de entrada se muestra la primera de consulta de salida
+
+                asignarOficinaActiva(oficinaEjb.findById(oficinasConsultaSalida.iterator().next().getId()), loginInfo);
+
+            }
         }
 
         //RegistrosMigrados
