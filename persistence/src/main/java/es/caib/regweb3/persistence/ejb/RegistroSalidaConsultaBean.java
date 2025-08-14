@@ -420,7 +420,7 @@ public class RegistroSalidaConsultaBean implements RegistroSalidaConsultaLocal {
         Query q2;
 
         q = em.createQuery("Select rs from RegistroSalida as rs where rs.entidad.id = :idEntidad and rs.oficina.id = :idOficina " +
-                "and (rs.estado = :rechazado or rs.estado = :reenviado) order by rs.fecha desc");
+                "and (rs.estado = :rechazado or rs.estado = :reenviado) and rs.registroDetalle.presencial is true order by rs.fecha desc");
 
         q.setParameter("idEntidad", idEntidad);
         q.setParameter("idOficina", idOficina);
@@ -428,7 +428,7 @@ public class RegistroSalidaConsultaBean implements RegistroSalidaConsultaLocal {
         q.setParameter("reenviado", RegwebConstantes.REGISTRO_REENVIADO);
 
         q2 = em.createQuery("Select count(rs.id) from RegistroSalida as rs where rs.entidad.id = :idEntidad and rs.oficina.id = :idOficina " +
-                "and (rs.estado = :rechazado or rs.estado = :reenviado)");
+                "and (rs.estado = :rechazado or rs.estado = :reenviado) and rs.registroDetalle.presencial is true ");
 
         q2.setParameter("idEntidad", idEntidad);
         q2.setParameter("idOficina", idOficina);
