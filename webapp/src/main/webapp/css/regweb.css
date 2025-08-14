@@ -1417,3 +1417,11 @@ pre {
 .detalleAnexo .modal-footer{
     border-top: none;
 }
+
+.amplecontenedor.form-group {
+    padding-right: 0px;
+    margin-right: 0px;
+    float: right;
+    margin-left: 0px;
+    padding-left: 0px;
+}

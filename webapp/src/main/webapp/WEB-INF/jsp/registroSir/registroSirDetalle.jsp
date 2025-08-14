@@ -76,11 +76,11 @@
                             <c:if test="${not empty libro}">
 
                                 <%--Idioma--%>
-                                <div class="form-group col-xs-12">
-                                    <div class="col-xs-5 pull-left etiqueta_regweb control-label textEsq">
+                                <div class="form-group col-xs-12 amplecontenedor">
+                                    <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
                                         <label for="idIdioma" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.idioma"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="registroEntrada.idioma"/></label>
                                     </div>
-                                    <div class="col-xs-7 no-pad-right" id="idioma">
+                                    <div class="col-xs-8 no-pad-right" id="idioma">
                                         <form:select path="idIdioma" cssClass="chosen-select">
                                             <c:forEach items="${idiomas}" var="idioma">
                                                 <c:if test="${idioma == RegwebConstantes.IDIOMA_CASTELLANO_ID}">
@@ -97,7 +97,7 @@
 
                                 <%--Si la unidad tramitación destino está extinguida, lo informamos--%>
                                 <c:if test="${extinguido}">
-                                    <div class="form-group col-xs-12 center">
+                                    <div class="form-group col-xs-12 center amplecontenedor">
                                         <span class="text-vermell">
                                             <strong>
                                                 <spring:message code="registroSir.organismo.destino.extinguido" arguments="${registroSir.decodificacionUnidadTramitacionDestino}"/>
@@ -107,11 +107,11 @@
                                 </c:if>
 
                                 <%--Organismo destino--%>
-                                <div class="form-group col-xs-12">
-                                    <div class="col-xs-5 pull-left etiqueta_regweb control-label textEsq">
+                                <div class="form-group col-xs-12 amplecontenedor">
+                                    <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
                                         <label for="idOrganismoDestino" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.destino"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="registroEntrada.organismoDestino"/></label>
                                     </div>
-                                    <div class="col-xs-7">
+                                    <div class="col-xs-8 no-pad-right" >
                                         <form:select path="idOrganismoDestino" cssClass="chosen-select">
                                             <form:option value="" label="..."/>
                                             <c:forEach items="${organismosEntidad}" var="organismo">
@@ -124,18 +124,18 @@
                                 </div>
 
                                 <%--Código SIA--%>
-                                    <div class="form-group col-xs-12">
-                                        <div class="col-xs-5 pull-left etiqueta_regweb control-label textEsq">
+                                    <div class="form-group col-xs-12 amplecontenedor">
+                                        <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
                                             <label for="codigoSia" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.codigoSIA"/>" data-toggle="popover"> <spring:message code="registroEntrada.codigoSIA"/></label>
                                         </div>
-                                        <div class="col-xs-7" id="codigoSiaDiv">
+                                        <div class="col-xs-8 no-pad-right" id="codigoSiaDiv">
                                             <form:input path="codigoSia" maxlength="20" cssClass="form-control" value="${registroSir.codigoSia}"/> <span class="errors"></span>
                                         </div>
 
                                     </div>
 
                                 <%--Extracto--%>
-                                <div class="form-group col-xs-12" id="extractoDiv">
+                                <div class="form-group col-xs-12 amplecontenedor" id="extractoDiv">
                                     <label for="extracto" class="pull-left etiqueta_regweb control-label textEsq" > <spring:message code="registroEntrada.extracto"/></label>
                                     <form:textarea path="extracto" rows="5" maxlength="240" cssClass="form-control"/> <span class="errors"></span>
                                 </div>
