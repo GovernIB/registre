@@ -1405,3 +1405,11 @@ pre {
 .mayusculas{
     text-transform: uppercase;
 }
+
+.amplecontenedor.form-group {
+    padding-right: 0px;
+    margin-right: 0px;
+    float: right;
+    margin-left: 0px;
+    padding-left: 0px;
+}
