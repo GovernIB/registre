@@ -131,7 +131,7 @@ public class JustificanteBean implements JustificanteLocal {
 			
 			AnexoFull justificante = registro.getRegistroDetalle().getJustificanteAnexoFull();
 			List<Interesado> interesados = registro.getRegistroDetalle().getInteresados();
-			InternetAddress remitente = new InternetAddress(RegwebConstantes.APLICACION_EMAIL, RegwebConstantes.APLICACION_NOMBRE);
+			InternetAddress remitente = new InternetAddress(RegwebConstantes.APLICACION_EMAIL, entidad.getNombre());
 			
 			String asunto = "Justificante de presentación de su registro en " + entidad.getNombre();
 	        String nombrePlantilla = "Justificante.docx";
