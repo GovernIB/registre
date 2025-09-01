@@ -1,27 +1,19 @@
 package es.caib.regweb3.persistence.ejb;
 
 
-import java.io.UnsupportedEncodingException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
-import javax.interceptor.Interceptors;
-import javax.mail.Message;
-import javax.mail.internet.InternetAddress;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
-
+import es.caib.plugins.arxiu.api.Document;
+import es.caib.plugins.arxiu.api.DocumentContingut;
+import es.caib.plugins.arxiu.api.Firma;
+import es.caib.plugins.arxiu.api.IArxiuPlugin;
+import es.caib.regweb3.model.*;
+import es.caib.regweb3.model.utils.AnexoFull;
+import es.caib.regweb3.persistence.integracion.ArxiuCaibUtils;
+import es.caib.regweb3.persistence.integracion.JustificanteArxiu;
+import es.caib.regweb3.persistence.utils.*;
+import es.caib.regweb3.plugins.justificante.IJustificantePlugin;
+import es.caib.regweb3.utils.RegwebConstantes;
+import es.caib.regweb3.utils.RegwebUtils;
+import es.caib.regweb3.utils.TimeUtils;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NArgumentCode;
 import org.fundaciobit.genapp.common.i18n.I18NArgumentString;
@@ -38,32 +30,19 @@ import org.jboss.ejb3.annotation.SecurityDomain;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
 
-import es.caib.plugins.arxiu.api.Document;
-import es.caib.plugins.arxiu.api.DocumentContingut;
-import es.caib.plugins.arxiu.api.Firma;
-import es.caib.plugins.arxiu.api.IArxiuPlugin;
-import es.caib.regweb3.model.Anexo;
-import es.caib.regweb3.model.Entidad;
-import es.caib.regweb3.model.IRegistro;
-import es.caib.regweb3.model.Interesado;
-import es.caib.regweb3.model.RegistroDetalle;
-import es.caib.regweb3.model.RegistroEntrada;
-import es.caib.regweb3.model.RegistroSalida;
-import es.caib.regweb3.model.UsuarioEntidad;
-import es.caib.regweb3.model.utils.AnexoFull;
-import es.caib.regweb3.persistence.integracion.ArxiuCaibUtils;
-import es.caib.regweb3.persistence.integracion.JustificanteArxiu;
-import es.caib.regweb3.persistence.utils.ContenidoEmail;
-import es.caib.regweb3.persistence.utils.DocumentHelper;
-import es.caib.regweb3.persistence.utils.DocumentoDto;
-import es.caib.regweb3.persistence.utils.I18NLogicUtils;
-import es.caib.regweb3.persistence.utils.MailUtils;
-import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
-import es.caib.regweb3.persistence.utils.RegistroUtils;
-import es.caib.regweb3.plugins.justificante.IJustificantePlugin;
-import es.caib.regweb3.utils.RegwebConstantes;
-import es.caib.regweb3.utils.RegwebUtils;
-import es.caib.regweb3.utils.TimeUtils;
+import javax.ejb.EJB;
+import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
+import javax.interceptor.Interceptors;
+import javax.mail.Message;
+import javax.mail.internet.InternetAddress;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+import java.io.UnsupportedEncodingException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 
 /**
@@ -154,7 +133,7 @@ public class JustificanteBean implements JustificanteLocal {
 			List<Interesado> interesados = registro.getRegistroDetalle().getInteresados();
 			InternetAddress remitente = new InternetAddress(RegwebConstantes.APLICACION_EMAIL, RegwebConstantes.APLICACION_NOMBRE);
 			
-			String asunto = "Justificante de presentación de su registro en la " + entidad.getNombre();			
+			String asunto = "Justificante de presentación de su registro en " + entidad.getNombre();
 	        String nombrePlantilla = "Justificante.docx";
 			Map<String, Object> parametros = obtenerParametros(registro);
 			
