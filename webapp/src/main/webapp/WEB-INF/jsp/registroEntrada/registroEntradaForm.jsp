@@ -485,7 +485,7 @@
 			   </c:if>
                <!-- Botonera -->
                <div class="col-xs-12">
-                   <button type="button" class="btn btn-warning btn-sm" onclick="doForm('#registroEntrada')">
+                   <button type="button" id="btnRegistrar" class="btn btn-warning btn-sm" onclick="doForm('#registroEntrada')">
                        <c:if test="${empty registroEntrada.id}">
                            <spring:message code="regweb.registrar"/>
                        </c:if>
@@ -529,6 +529,15 @@
 
 <script type="text/javascript" >
 
+	$(document).ready(function() {
+		var btn = document.getElementById("btnRegistrar");
+		
+		$("#registroEntrada").on("submit", function() {
+			btn.disabled = true;
+			btn.innerHTML = '<spring:message code="regweb.registrando"/>';
+	    });
+	});
+	
     // Posicionamos el ratón en el campo indicado al cargar el modal
     $('#registroDetalle\\.extracto').focus();
 

@@ -12,6 +12,8 @@ import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
@@ -107,9 +109,11 @@ public class RemesaListController extends AbstractRegistroCommonFormController {
 	@Autowired
 	private DehuDocumentManager documentManager;
 	
-	 @Autowired
-	 private BusquedaFechaInicioValidator busquedaFechaInicioValidator;
-	 
+	@Autowired
+	private BusquedaFechaInicioValidator busquedaFechaInicioValidator;
+	
+	private static Map<String, Object> locks = new ConcurrentHashMap<>();
+	
     /**
      * Listado de todas las {@link Notificacion}
      */
@@ -327,139 +331,150 @@ public class RemesaListController extends AbstractRegistroCommonFormController {
     		Model model, 
     		SessionStatus status,
     		HttpServletRequest request) throws Exception, I18NException, I18NValidationException {
-        Entidad entidad = getEntidadActiva(request);
-    	HttpSession session = request.getSession();
     	
-        registroEntrada.setLibro(getLibroEntidad(request));
-        registroEntrada.getRegistroDetalle().setPresencial(false);
-        
-        registroEntradaValidator.validate(registroEntrada, result);
-        
-        boolean destinoValido = verificarDestinoSeleccionado(registroEntrada.getDestino(), entidad);
-
-        if (result.hasErrors() || !destinoValido) { // Si hay errores volvemos a la vista del formulario
-
-        	cargarFormularioRegistro(model, registroEntrada, request, identificador);
-        	
-            if (!destinoValido) {
-            	 model.addAttribute("destinoNoValido", true);
-            }
-            
-            LinkedHashSet<Oficina> oficinasOrigen;
-            if(multiEntidadEjb.isMultiEntidad()){
-                oficinasOrigen = new LinkedHashSet<>(getOficinasOrigenMultiEntidad(request));
-            }else{
-                oficinasOrigen = new LinkedHashSet<>(getOficinasOrigen(request));
-            }
-
-            model.addAttribute(entidad);
-            model.addAttribute(getUsuarioAutenticado(request));
-            model.addAttribute(getOficinaActiva(request));
-            model.addAttribute("oficinasOrigen",  oficinasOrigen);
-            model.addAttribute("ultimosOrganismos",  registroEntradaConsultaEjb.ultimosOrganismosRegistro(getUsuarioEntidadActivo(request)));
-
-            // Organismo destino: Select
-            LinkedHashSet<Organismo> organismosOficinaActiva = new LinkedHashSet<Organismo>(getOrganismosOficinaActiva(request));
-
-            if (registroEntrada.getDestino() != null) { // Si se ha escogido un Organismo destino
-
-                Organismo organismo = organismoEjb.findByCodigoByEntidadMultiEntidad(registroEntrada.getDestino().getCodigo(), entidad.getId());
-
-                if (organismo == null) {// Si es externo, lo creamos nuevo y lo añadimos a la lista del select
-                    organismosOficinaActiva.add(new Organismo(null, registroEntrada.getDestino().getCodigo(), registroEntrada.getDestino().getDenominacion()));
-                } else { // si es interno o multientidad  lo añadimos
-                    organismosOficinaActiva.add(organismo);
-                }
-
-
-            }
-            model.addAttribute("organismosOficinaActiva", organismosOficinaActiva);
-
-            // Oficina Origen: Select
-           // Set<Oficina> oficinasOrigen = getOficinasOrigen(request);
-
-            if (!registroEntrada.getRegistroDetalle().getOficinaOrigen().getCodigo().equals("-1")) {// Han indicado oficina de origen
-
-                Oficina oficinaOrigen = oficinaEjb.findByCodigoByEntidadMultiEntidad(registroEntrada.getRegistroDetalle().getOficinaOrigen().getCodigo(),entidad.getId());
-                if (oficinaOrigen == null) { // Es externa
-                    oficinasOrigen.add(new Oficina(null, registroEntrada.getRegistroDetalle().getOficinaOrigen().getCodigo(), registroEntrada.getRegistroDetalle().getOficinaOrigen().getDenominacion()));
-                } else { // Es interna o multientidad, la añadimos a la lista por si acaso no está
-                    oficinasOrigen.add(oficinaOrigen);
-                }
-            }
-            model.addAttribute("oficinasOrigen", oficinasOrigen);
-            model.addAttribute("esRemesa", true);
-            
-            return "registroEntrada/registroEntradaForm";
-        } else { // Si no hay errores guardamos el registro
-
-            try {
-
-                UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
-
-                registroEntrada.setOficina(getOficinaActiva(request));
-                registroEntrada.setUsuario(usuarioEntidad);
-                registroEntrada.setEstado(RegwebConstantes.REGISTRO_VALIDO);
-                
-                registroEntrada = procesarRegistroEntrada(registroEntrada, entidad);
-
-                Remesa remesa = remesaConsultaEjb.getByIdentificador(identificador);
-
-                // Crear anexos i interesados relacionados con el registro de entrada
-                List<Interesado> interesados = cargarInteresados(remesa);
-                
-                // Crear lista anexosFull para guardar en archivo DocumentCustordy y SignatureCustody
-                List<AnexoFull> anexosFull = cargarAnexosFullRemesa(request, identificador, registroEntrada, entidad);
-                
-                // Vacias anexos registro entrada para crearlos después del registro de entrada
-                registroEntrada.getRegistroDetalle().setAnexos(null);
-                
-                // Guardamos el RegistroEntrada
-                registroEntrada = registroEntradaEjb.registrarEntrada(registroEntrada, usuarioEntidad, interesados, null, false, true);
-                
-                // Crear y guardar anexos
-                for (AnexoFull anexoFull : anexosFull) {
-                    anexoFull.getAnexo().setRegistroDetalle(registroEntrada.getRegistroDetalle());
-                    AnexoFull anexoFullCreado;
-                    if(!anexoFull.getAnexo().getConfidencial()){
-                        anexoFullCreado = anexoEjb.crearAnexo(anexoFull, usuarioEntidad, registroEntrada.getId(), REGISTRO_ENTRADA, null, true);
-                    }else{
-                        anexoFullCreado = anexoEjb.crearAnexoConfidencial(anexoFull, usuarioEntidad, registroEntrada.getId(), REGISTRO_ENTRADA);
-                    }
-                    registroEntrada.getRegistroDetalle().getAnexos().add(anexoFullCreado.getAnexo());
-                }
-
-
-                remesaEjb.actualizarEstadoRegistrada(identificador, registroEntrada.getId(), RegwebConstantes.REMESA_ESTADO_REG_REGISTRADA);      
-                
-                // Borrar documentos de filesystem
-				documentManager.deleteDocuments(identificador);
-				
-                session.removeAttribute("errorAnexos");
-            }catch (DocumentoNotificacionException e) {
-            	session.setAttribute("errorAnexos", true);
-            	return "redirect:/remesa/"+identificador+"/registrar";
-			} catch (Exception e) {
-            	String eMessage = (!e.getMessage().isEmpty() ? ": " + e.getMessage() : "");
-            	String eCause = (e.getCause() != null ? ": " + e.getCause().getMessage() : "");
-                Mensaje.saveMessageError(request, getMessage("regweb.error.registro") + (eMessage + (!eMessage.isEmpty() ? "" : eCause)));
-                e.printStackTrace();
-                return "redirect:/inici";
-            } finally {
-                status.setComplete();
-                //Eliminamos los posibles interesados de la Sesion
-                try {
-                    eliminarVariableSesion(request, RegwebConstantes.SESSION_INTERESADOS_ENTRADA);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-
-            return "redirect:/registroEntrada/"+registroEntrada.getId()+"/detalle";
-        }
+    	if (!locks.containsKey(identificador)) {
+			locks.put(identificador, new Object());
+    	}
+    	
+    	synchronized (locks.get(identificador)) {
+	        Entidad entidad = getEntidadActiva(request);
+	    	HttpSession session = request.getSession();
+	    	
+	        registroEntrada.setLibro(getLibroEntidad(request));
+	        registroEntrada.getRegistroDetalle().setPresencial(false);
+	        
+	        registroEntradaValidator.validate(registroEntrada, result);
+	        
+	        boolean destinoValido = verificarDestinoSeleccionado(registroEntrada.getDestino(), entidad);
+	
+	        if (result.hasErrors() || !destinoValido) { // Si hay errores volvemos a la vista del formulario
+	
+	        	cargarFormularioRegistro(model, registroEntrada, request, identificador);
+	        	
+	            if (!destinoValido) {
+	            	 model.addAttribute("destinoNoValido", true);
+	            }
+	            
+	            LinkedHashSet<Oficina> oficinasOrigen;
+	            if(multiEntidadEjb.isMultiEntidad()){
+	                oficinasOrigen = new LinkedHashSet<>(getOficinasOrigenMultiEntidad(request));
+	            }else{
+	                oficinasOrigen = new LinkedHashSet<>(getOficinasOrigen(request));
+	            }
+	
+	            model.addAttribute(entidad);
+	            model.addAttribute(getUsuarioAutenticado(request));
+	            model.addAttribute(getOficinaActiva(request));
+	            model.addAttribute("oficinasOrigen",  oficinasOrigen);
+	            model.addAttribute("ultimosOrganismos",  registroEntradaConsultaEjb.ultimosOrganismosRegistro(getUsuarioEntidadActivo(request)));
+	
+	            // Organismo destino: Select
+	            LinkedHashSet<Organismo> organismosOficinaActiva = new LinkedHashSet<Organismo>(getOrganismosOficinaActiva(request));
+	
+	            if (registroEntrada.getDestino() != null) { // Si se ha escogido un Organismo destino
+	
+	                Organismo organismo = organismoEjb.findByCodigoByEntidadMultiEntidad(registroEntrada.getDestino().getCodigo(), entidad.getId());
+	
+	                if (organismo == null) {// Si es externo, lo creamos nuevo y lo añadimos a la lista del select
+	                    organismosOficinaActiva.add(new Organismo(null, registroEntrada.getDestino().getCodigo(), registroEntrada.getDestino().getDenominacion()));
+	                } else { // si es interno o multientidad  lo añadimos
+	                    organismosOficinaActiva.add(organismo);
+	                }
+	
+	
+	            }
+	            model.addAttribute("organismosOficinaActiva", organismosOficinaActiva);
+	
+	            // Oficina Origen: Select
+	           // Set<Oficina> oficinasOrigen = getOficinasOrigen(request);
+	
+	            if (!registroEntrada.getRegistroDetalle().getOficinaOrigen().getCodigo().equals("-1")) {// Han indicado oficina de origen
+	
+	                Oficina oficinaOrigen = oficinaEjb.findByCodigoByEntidadMultiEntidad(registroEntrada.getRegistroDetalle().getOficinaOrigen().getCodigo(),entidad.getId());
+	                if (oficinaOrigen == null) { // Es externa
+	                    oficinasOrigen.add(new Oficina(null, registroEntrada.getRegistroDetalle().getOficinaOrigen().getCodigo(), registroEntrada.getRegistroDetalle().getOficinaOrigen().getDenominacion()));
+	                } else { // Es interna o multientidad, la añadimos a la lista por si acaso no está
+	                    oficinasOrigen.add(oficinaOrigen);
+	                }
+	            }
+	            model.addAttribute("oficinasOrigen", oficinasOrigen);
+	            model.addAttribute("esRemesa", true);
+	            
+	            locks.remove(identificador);
+	            return "registroEntrada/registroEntradaForm";
+	        } else { // Si no hay errores guardamos el registro
+	
+	            try {
+	
+	                UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
+	
+	                registroEntrada.setOficina(getOficinaActiva(request));
+	                registroEntrada.setUsuario(usuarioEntidad);
+	                registroEntrada.setEstado(RegwebConstantes.REGISTRO_VALIDO);
+	                
+	                registroEntrada = procesarRegistroEntrada(registroEntrada, entidad);
+	
+	                Remesa remesa = remesaConsultaEjb.getByIdentificador(identificador);
+	
+	                validarRemesa(remesa);
+	                
+	                // Crear anexos i interesados relacionados con el registro de entrada
+	                List<Interesado> interesados = cargarInteresados(remesa);
+	                
+	                // Crear lista anexosFull para guardar en archivo DocumentCustordy y SignatureCustody
+	                List<AnexoFull> anexosFull = cargarAnexosFullRemesa(request, identificador, registroEntrada, entidad);
+	                
+	                // Vacias anexos registro entrada para crearlos después del registro de entrada
+	                registroEntrada.getRegistroDetalle().setAnexos(null);
+	                
+	                // Guardamos el RegistroEntrada
+	                registroEntrada = registroEntradaEjb.registrarEntrada(registroEntrada, usuarioEntidad, interesados, null, false, true);
+	                
+	                // Crear y guardar anexos
+	                for (AnexoFull anexoFull : anexosFull) {
+	                    anexoFull.getAnexo().setRegistroDetalle(registroEntrada.getRegistroDetalle());
+	                    AnexoFull anexoFullCreado;
+	                    if(!anexoFull.getAnexo().getConfidencial()){
+	                        anexoFullCreado = anexoEjb.crearAnexo(anexoFull, usuarioEntidad, registroEntrada.getId(), REGISTRO_ENTRADA, null, true);
+	                    }else{
+	                        anexoFullCreado = anexoEjb.crearAnexoConfidencial(anexoFull, usuarioEntidad, registroEntrada.getId(), REGISTRO_ENTRADA);
+	                    }
+	                    registroEntrada.getRegistroDetalle().getAnexos().add(anexoFullCreado.getAnexo());
+	                }
+	
+	
+	                remesaEjb.actualizarEstadoRegistrada(identificador, registroEntrada.getId(), RegwebConstantes.REMESA_ESTADO_REG_REGISTRADA);      
+	                
+	                // Borrar documentos de filesystem
+					documentManager.deleteDocuments(identificador);
+					
+	                session.removeAttribute("errorAnexos");
+	            }catch (DocumentoNotificacionException e) {
+	            	session.setAttribute("errorAnexos", true);
+	            	return "redirect:/remesa/"+identificador+"/registrar";
+				} catch (Exception e) {
+	            	String eMessage = (!e.getMessage().isEmpty() ? ": " + e.getMessage() : "");
+	            	String eCause = (e.getCause() != null ? ": " + e.getCause().getMessage() : "");
+	                Mensaje.saveMessageError(request, getMessage("regweb.error.registro") + (eMessage + (!eMessage.isEmpty() ? "" : eCause)));
+	                e.printStackTrace();
+	                return "redirect:/inici";
+	            } finally {
+	                locks.remove(identificador);
+	                status.setComplete();
+	                //Eliminamos los posibles interesados de la Sesion
+	                try {
+	                    eliminarVariableSesion(request, RegwebConstantes.SESSION_INTERESADOS_ENTRADA);
+	                } catch (Exception e) {
+	                    e.printStackTrace();
+	                }
+	            }
+	
+	            return "redirect:/registroEntrada/"+registroEntrada.getId()+"/detalle";
+	        }
+    	}
     }
-    
-    @RequestMapping(value = "/dehu/sync", method = RequestMethod.GET)
+
+	@RequestMapping(value = "/dehu/sync", method = RequestMethod.GET)
     public String recuperarRegistrosSirRecibidos(Model model, HttpServletRequest request) throws Exception {
     	model.addAttribute("rangoFechasBusqueda", new RangoFechasBusqueda());
         return "remesa/busquedaRemesasDehuForm";
@@ -511,6 +526,16 @@ public class RemesaListController extends AbstractRegistroCommonFormController {
     	
 		return "redirect:/remesa/dehu/sync";
     }
+    
+    private void validarRemesa(Remesa remesa) {
+        if (RegwebConstantes.REMESA_ESTADO_REG_REGISTRADA.equals(remesa.getEstado())) {
+        	throw new RuntimeException("La remesa ya está registrada o en proceso de registro.");
+        }
+        
+        if (remesa.getRegistro() != null) {
+            throw new RuntimeException("Ya existe un registro asociado a esta remesa.");
+        }
+	}
     
     private void cargarFormularioRegistro(Model model, RegistroEntrada registroEntrada, HttpServletRequest request, String identificador) throws Exception {
     	Remesa remesa = remesaConsultaEjb.getByIdentificador(identificador);
