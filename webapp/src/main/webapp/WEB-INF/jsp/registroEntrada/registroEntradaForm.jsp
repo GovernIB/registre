@@ -315,8 +315,24 @@
                <c:if test="${esRemesa && fn:length(registroEntrada.registroDetalle.anexos) > 0}">
 	               <!-- Anexos -->
 	               <div class="col-xs-12">
-	               		<div class="panel panel-info">
 					
+						<c:if test="${documentoDescomprimido}">
+							<div class="alert alert-warning alert-dismissable">
+						        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+						        <div class="row vertical-align">
+						            <div class="col-xs-1 text-center">
+						                <i class="fa fa-exclamation-triangle fa-2x"></i>
+						            </div>
+						            <div class="col-xs-11">
+						                <strong><spring:message code="registro.ayuda.remesa.anexos.descomprimidos"/></strong>
+						                <c:remove var="aviso" scope="session"/>
+						            </div>
+						        </div>
+						    </div>
+						</c:if>
+						
+	               		<div class="panel panel-info">
+						
 					        <div class="panel-heading">
 					            <h3 class="panel-title">
 					                <i class="fa fa-user"></i>
@@ -333,7 +349,7 @@
 					                </div>
 					            </c:if>
 			               		<c:forEach items="${registroEntrada.registroDetalle.anexos}" var="anexo" varStatus="loop">
-			               			<div><strong>Anexo ${loop.index + 1}: </strong></div>
+			               			<div><strong><spring:message code="registro.ayuda.remesa.anexo"/> ${loop.index + 1}: </strong></div>
 				               		<div class="form-group col-xs-12">
 					               		<div class="col-xs-6">
 				                            <div class="col-xs-3 pull-left etiqueta_regweb12 control-label textEsq">
@@ -436,7 +452,7 @@
                
                <c:if test="${(empty registroEntrada.id || registroEntrada.estado == RegwebConstantes.REGISTRO_RESERVA) && esRemesa}">
 					<div class="col-xs-12">
-
+						
 					    <div class="panel panel-info">
 					
 					        <div class="panel-heading">

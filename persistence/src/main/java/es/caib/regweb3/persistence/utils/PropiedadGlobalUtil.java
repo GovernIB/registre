@@ -1061,7 +1061,12 @@ public class PropiedadGlobalUtil {
 	}
 
 	public static String getEnlaceDocumentacionAdicional() {
-		final String partialPropertyName =  "sede.documentacion.url";
+		final String partialPropertyName =  "notificaciones.pendientes.aviso.hora";
     	return getString(partialPropertyName);
+	}
+
+	public static String getForzarEmisorDehu() {
+		final String partialPropertyName = "notificaciones.dehu.forzar.emisor";
+		return getString(partialPropertyName);
 	}
 }

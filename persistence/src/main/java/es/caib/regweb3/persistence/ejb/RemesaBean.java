@@ -1,11 +1,14 @@
 package es.caib.regweb3.persistence.ejb;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.List;
 
 import javax.activation.DataHandler;
@@ -20,6 +23,8 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
+import org.apache.commons.compress.archivers.zip.ZipFile;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.jboss.ejb3.annotation.SecurityDomain;
@@ -58,6 +63,7 @@ import es.caib.regweb3.model.UsuarioEntidad;
 import es.caib.regweb3.persistence.utils.DehuDocumentManager;
 import es.caib.regweb3.persistence.utils.LemaPluginHelper;
 import es.caib.regweb3.persistence.utils.LemaUtils;
+import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.utils.MimeTypeUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 
@@ -134,6 +140,9 @@ public class RemesaBean extends BaseEjbJPA<Remesa, Long> implements RemesaLocal 
 	@Override
 	public void guardarNotificacionRecibida(Envio envio, Entidad entidad) throws I18NException, Exception {
 		try {
+			// Caso especial PRE (APB): Forzar emisor para poder registrar (EA0001301 caducado/anulado)
+			String codigoDir3 = PropiedadGlobalUtil.getForzarEmisorDehu();
+			
 			Remesa remesa = new Remesa(
 					envio.getConcepto(), 
 					envio.getDescripcion(), 
@@ -141,7 +150,7 @@ public class RemesaBean extends BaseEjbJPA<Remesa, Long> implements RemesaLocal 
 					null,
 					envio.getCodigoOrigen().intValue(),
 					envio.getTipoEnvio().intValue(), 
-					envio.getOrganismoEmisor().getCodigoOrganismo(), 
+					codigoDir3 != null ? codigoDir3 : envio.getOrganismoEmisor().getCodigoOrganismo(), 
 					envio.getOrganismoEmisor().getNifOrganismo(),
 					envio.getOrganismoEmisor().getNombreOrganismo(), 
 					LemaUtils.xmlGregorianCalendarToDate(envio.getFechaPuestaDisposicion()), 
@@ -524,23 +533,13 @@ public class RemesaBean extends BaseEjbJPA<Remesa, Long> implements RemesaLocal 
         q.setParameter("idRemesa", idRemesa);
         q.executeUpdate();
     }
-	
-    private void guardarDocumento(String identificador, String nombre, Contenido contenido) throws IOException {
-    	byte[] contenidoBytes = null;
-    	boolean documentExists = documentManager.documentExists(identificador, nombre);
-		
-		if (! documentExists) {
-			if (contenido.getBase64() != null)
-				contenidoBytes = Base64.decodeBase64(contenido.getBase64()); //getBytesFromDataHandler(contenido.getHref());
-			else
-				contenidoBytes = serializeToBase64(contenido.getContenido().getContent());
-			
-			documentManager.saveDocument(
-					identificador, 
-					nombre, 
-					contenidoBytes);
-		}
-    }
+    
+	@TransactionTimeout(value = 1200) // 20 minutos
+    private void actualizarDescomprimido(String identificador) {
+		Query q = em.createQuery("update Remesa set documentoDescomprimido = true where identificador = :identificador");
+		q.setParameter("identificador", identificador);
+		q.executeUpdate();
+	}
     
     private boolean intentarRecuperarDocumento(Remesa remesa, Entidad entidad, UsuarioEntidad usuarioEntidad) throws I18NException, Exception {
     	// Si falla la lectura, intenta obtenir el document en una segona crida
@@ -623,9 +622,16 @@ public class RemesaBean extends BaseEjbJPA<Remesa, Long> implements RemesaLocal 
 					remesa);
 		// Guardar documento remesa
 		Contenido contenido = detalle.getContenido();
+		String mimeType = detalle.getMimeType();
+		
 		if (contenido != null) {
 			String nombreDocumento = "Notificación_" + identificador + "." + MimeTypeUtils.getExtensionFileName(detalle.getNombre());
-			guardarDocumento(identificador, nombreDocumento, contenido);
+			
+			procesarDocumento(
+					remesa.getIdentificador(), 
+					contenido, 
+					nombreDocumento, 
+					mimeType);
 		}
     }
     
@@ -648,16 +654,172 @@ public class RemesaBean extends BaseEjbJPA<Remesa, Long> implements RemesaLocal 
 				
 				DocumentoAnexo anexo = response.getDocumentoAnexo();
 				if (anexo != null) {
-					guardarDocumento(
+					procesarDocumento(
 							remesa.getIdentificador(), 
+							anexo.getContenido(), 
 							anexo.getNombre(), 
-							anexo.getContenido());
+							anexo.getMimeType());
 				}
 			}
 		}
     }
+    
+    private void procesarDocumento(String identificador, Contenido contenido, String nombreOriginal, String mimeTypeOriginal) throws IOException {
+    	List<DocumentoAnexo> documentosZip = extraerDocumentosZip(contenido, mimeTypeOriginal);
+		
+		if (! documentosZip.isEmpty()) {
+			for (DocumentoAnexo documentoZip : documentosZip) {
+				guardarDocumento(
+						identificador, 
+						documentoZip.getNombre(), 
+						documentoZip.getContenido());
+			}
+			
+			actualizarDescomprimido(identificador);
+		} else {
+			guardarDocumento(
+					identificador, 
+					nombreOriginal, 
+					contenido);
+		}
+    }
+
+	private void guardarDocumento(String identificador, String nombre, Contenido contenido) throws IOException {
+    	byte[] contenidoBytes = null;
+    	boolean documentExists = documentManager.documentExists(identificador, nombre);
+		
+		if (! documentExists) {
+			if (contenido.getBase64() != null)
+				contenidoBytes = Base64.decodeBase64(contenido.getBase64()); //getBytesFromDataHandler(contenido.getHref());
+			else
+				contenidoBytes = serializeToBase64(contenido.getContenido().getContent());
+			
+			documentManager.saveDocument(
+					identificador, 
+					nombre, 
+					contenidoBytes);
+		}
+    }
 	
-    public static byte[] getBytesFromDataHandler(DataHandler dataHandler) {
+    private List<DocumentoAnexo> extraerDocumentosZip(Contenido contenido, String mimeType) throws IOException {
+    	List<DocumentoAnexo> documentos = new ArrayList<DocumentoAnexo>();
+    	
+    	if (mimeType != null && 
+                (mimeType.equalsIgnoreCase("application/zip") ||
+                 mimeType.equalsIgnoreCase("application/x-zip-compressed") ||
+                 mimeType.equalsIgnoreCase("multipart/x-zip"))) {
+    		byte[] contenidoBytes = null;
+    		
+    		if (contenido.getBase64() != null)
+				contenidoBytes = Base64.decodeBase64(contenido.getBase64());
+			else
+				contenidoBytes = serializeToBase64(contenido.getContenido().getContent());
+
+//			try (ByteArrayInputStream bais = new ByteArrayInputStream(contenidoBytes);
+//					ZipInputStream zis = new ZipInputStream(bais)) {
+//
+//				ZipEntry entry;
+//				while ((entry = zis.getNextEntry()) != null) {
+//					if (!entry.isDirectory()) {
+//						ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//						byte[] buffer = new byte[4096];
+//						int len;
+//						while ((len = zis.read(buffer)) > 0) {
+//							baos.write(buffer, 0, len);
+//						}
+//						baos.close();
+//
+//						// Crear DocumentoAnexo hijo
+//						String base64Extraido = Base64.encodeBase64String(baos.toByteArray());
+//	                    Contenido contenidoExtraido = new Contenido();
+//	                    contenidoExtraido.setBase64(base64Extraido);
+//	                    String mimeTypeZip = MimeTypeUtils.getExtensionFileName(entry.getName());
+//	                    
+//						DocumentoAnexo hijo = new DocumentoAnexo();
+//						hijo.setNombre(entry.getName());
+//						hijo.setContenido(contenidoExtraido);
+//						hijo.setMimeType(mimeTypeZip);
+//						documentos.add(hijo);
+//					}
+//					zis.closeEntry();
+//				}
+//			} catch (IOException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+			File tempZip = null;
+			try {
+				// Guardar el zip en un archivo temporal
+				tempZip = File.createTempFile("upload", ".zip");
+				try (FileOutputStream fos = new FileOutputStream(tempZip)) {
+					fos.write(contenidoBytes);
+				}
+
+				// Intentar con distintos charsets
+				String[] charsets = new String[]{"UTF-8", "Cp437", "ISO-8859-1", "Windows-1252"};
+				boolean success = false;
+
+				for (String cs : charsets) {
+					ZipFile zip = null;
+	                try {
+	                    zip = new ZipFile(tempZip, cs);
+	                    Enumeration<ZipArchiveEntry> entries = zip.getEntries();
+
+	                    while (entries.hasMoreElements()) {
+	                        ZipArchiveEntry entry = entries.nextElement();
+	                        if (!entry.isDirectory()) {
+	                            InputStream is = zip.getInputStream(entry);
+	                            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+	                            byte[] buffer = new byte[4096];
+	                            int len;
+	                            while ((len = is.read(buffer)) > 0) {
+	                                baos.write(buffer, 0, len);
+	                            }
+	                            is.close();
+	                            baos.close();
+
+	                            // Crear DocumentoAnexo hijo
+	                            String base64Extraido = Base64.encodeBase64String(baos.toByteArray());
+	                            Contenido contenidoExtraido = new Contenido();
+	                            contenidoExtraido.setBase64(base64Extraido);
+
+	                            String mimeTypeZip = MimeTypeUtils.getExtensionFileName(entry.getName());
+
+	                            DocumentoAnexo hijo = new DocumentoAnexo();
+	                            hijo.setNombre(entry.getName());
+	                            hijo.setContenido(contenidoExtraido);
+	                            hijo.setMimeType(mimeTypeZip);
+
+	                            documentos.add(hijo);
+	                        }
+	                    }
+
+	                    zip.close();
+	                    success = true;
+	                    break;
+	                } catch (IOException e) {
+	                    if (zip != null) try { zip.close(); } catch (IOException ignored) {}
+	                }
+				}
+
+				if (!success) {
+					throw new IOException("No se pudo leer el ZIP con ningún charset válido.");
+				}
+
+			} catch (IOException e) {
+				throw e;
+			} finally {
+				if (tempZip != null && tempZip.exists()) {
+					tempZip.delete();
+				}
+			}
+    	}
+    	
+		return documentos;
+	}
+
+	public static byte[] getBytesFromDataHandler(DataHandler dataHandler) {
         try (InputStream inputStream = dataHandler.getInputStream();
              ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
 

@@ -579,7 +579,7 @@ public class RemesaListController extends AbstractRegistroCommonFormController {
         model.addAttribute("interesados",interesados);
          
 
-         
+        model.addAttribute("documentoDescomprimido", remesa.getDocumentoDescomprimido());
         model.addAttribute("registroEntrada",registroEntrada);
         model.addAttribute("organismosOficinaActiva", getOrganismosOficinaActiva(request));
         model.addAttribute("ultimosOrganismos",  registroEntradaConsultaEjb.ultimosOrganismosRegistro(getUsuarioEntidadActivo(request)));

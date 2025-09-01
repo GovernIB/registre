@@ -87,6 +87,8 @@ public class Remesa implements Serializable {
     
     private String mensajeError;
     
+    private Boolean documentoDescomprimido = false; 
+    
     public enum TipoRemesa {
     	ENVIADA,
     	RECIBIDA
@@ -411,6 +413,16 @@ public class Remesa implements Serializable {
 
 	public void setMensajeError(String mensajeError) {
 		this.mensajeError = mensajeError;
+	}
+
+
+	@Column(name = "DOCUMENTO_DESCOMPRIMIDO")
+	public Boolean getDocumentoDescomprimido() {
+		return documentoDescomprimido;
+	}
+	
+	public void setDocumentoDescomprimido(Boolean documentoDescomprimido) {
+		this.documentoDescomprimido = documentoDescomprimido;
 	}
 
 

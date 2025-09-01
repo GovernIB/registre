@@ -397,6 +397,13 @@
 			<artifactId>fr.opensagres.xdocreport.template.velocity</artifactId>
 			<version>${xdocreport.version}</version>
 		</dependency>
+
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-compress</artifactId>
+			<version>1.20</version>
+		</dependency>
+		
 		
 		<!-- 
 		<dependency>
