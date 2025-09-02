@@ -257,7 +257,7 @@ public class InteresadoController extends BaseController{
             Entidad entidad = getEntidadActiva(request);
 
             try {
-                //Marcamos por defecto como receptor de notificicaciones si es el primer interesado.
+                //Marcamos por defecto como receptor de notificaciones si es el primer interesado.
                 List<Interesado> interesadosSesion = (List<Interesado>) session.getAttribute(variableSesion);
                 if (interesadosSesion == null) {
                     interesado.setReceptorNotificaciones(true);
@@ -661,23 +661,19 @@ public class InteresadoController extends BaseController{
             }else{// Edición de un registro, lo eliminanos de la bbdd
                 RegistroDetalle registroDetalle = registroDetalleEjb.findByIdConInteresados(Long.valueOf(idRegistroDetalle));
                 if(registroDetalle != null && registroDetalle.getTotalInteresados()>1 ) { // Si solo hay un Interesado, no permitimos eliminarlo.
-                    Boolean hayNotificaciones = false;
                     for(Interesado inter: registroDetalle.getInteresados()) {
-                        if (inter.getReceptorNotificaciones() && !inter.getId().equals(id)) {
-                            hayNotificaciones = true;
+                        if (!inter.getReceptorNotificaciones() && !inter.getId().equals(id)  ) {
+                            log.info("Entramos en set Notificaciones");
+                            inter.setReceptorNotificaciones(true);
+                            interesadoEjb.merge(inter);
                             break;
                         }
                     }
-                    if(hayNotificaciones) {
-                        interesadoEjb.eliminarInteresadoRegistroDetalle(id, Long.valueOf(idRegistroDetalle));
+                    interesadoEjb.eliminarInteresadoRegistroDetalle(id, Long.valueOf(idRegistroDetalle));
 
-                        // Plug-in de Post-Proceso
-                        interesadoEjb.postProcesoEliminarInteresado(id, Long.valueOf(idRegistroDetalle), tipoRegistro, getEntidadActiva(request).getId());
-                        return true;
-                    }else{
-                        return false;
-                    }
-
+                    // Plug-in de Post-Proceso
+                    interesadoEjb.postProcesoEliminarInteresado(id, Long.valueOf(idRegistroDetalle), tipoRegistro, getEntidadActiva(request).getId());
+                    return true;
                 }
             }
         } catch(I18NException i18ne) {
