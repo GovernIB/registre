@@ -91,7 +91,7 @@ public class JustificanteBean implements JustificanteLocal {
 
         }
         
-        if (anexoFull != null) {
+        if (anexoFull != null && registro instanceof RegistroEntrada) {
 	        try {
 	        	registro.getRegistroDetalle().getAnexosFull().add(anexoFull);
 	        	

@@ -83,15 +83,7 @@
                             <c:if test="${tieneJustificante}">
                                 <%-- Si no tiene urlValidación solo podrá descargar el original --%>
                                 <c:if test="${!tieneUrlValidacion}">
-                                	<div class="btn-group">
-                                    	<button type="button" class="btn btn-success btn-sm dropdown-toggle" data-toggle="dropdown">
-                                        	<spring:message code="justificante.boton"/> <span class="caret"></span>
-                                        </button>
-                                        <ul class="dropdown-menu">
-                                            <li class="submenu-complet"><a onclick="goTo('<c:url value="/anexo/descargarJustificante/${empty idJustificante ? registro.id : ''}/${idJustificante}/true"/>')" onmouseover="this.style.cursor='pointer';"><spring:message code="justificante.descargar"/></a></li>
-                                            <li class="submenu-complet"><a onclick="goTo('<c:url value="/anexo/enviarJustificante/${RegwebConstantes.REGISTRO_SALIDA}/${registro.id}"/>')" onmouseover="this.style.cursor='pointer';"><spring:message code="justificante.enviar"/></a></li>
-                                        </ul>
-                                   </div>
+                                    <div class="btn-group"><button type="button" class="btn btn-success btn-sm" onclick="goTo('<c:url value="/anexo/descargarJustificante/${empty idJustificante ? registro.id : ''}/${idJustificante}/true"/>')"><span class="fa fa-download"></span> <spring:message code="justificante.boton"/></button></div>
                                 </c:if>
 
                                 <%-- Si tiene urlValidación se podrá descargar el original o con el csv incrustado --%>
@@ -103,7 +95,6 @@
                                         <ul class="dropdown-menu">
                                             <li class="submenu-complet"><a onclick="goTo('<c:url value="/anexo/descargarJustificante/${empty idJustificante ? registro.id : ''}/${idJustificante}/true"/>')" onmouseover="this.style.cursor='pointer';"><spring:message code="justificante.original"/></a></li>
                                             <li class="submenu-complet"><a onclick="goTo('<c:url value="/anexo/descargarJustificante/${empty idJustificante ? registro.id : ''}/${idJustificante}/false"/>')" onmouseover="this.style.cursor='pointer';"><spring:message code="justificante.concsv"/></a></li>
-                                        	<li class="submenu-complet"><a onclick="goTo('<c:url value="/anexo/enviarJustificante/${RegwebConstantes.REGISTRO_SALIDA}/${registro.id}"/>')" onmouseover="this.style.cursor='pointer';"><spring:message code="justificante.enviar"/></a></li>
                                         </ul>
                                     </div>
                                 </c:if>

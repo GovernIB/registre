@@ -1061,7 +1061,7 @@ public class PropiedadGlobalUtil {
 	}
 
 	public static String getEnlaceDocumentacionAdicional() {
-		final String partialPropertyName =  "notificaciones.pendientes.aviso.hora";
+		final String partialPropertyName =  "sede.documentacion.url";
     	return getString(partialPropertyName);
 	}
 
