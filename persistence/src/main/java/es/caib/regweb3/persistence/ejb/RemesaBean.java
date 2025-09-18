@@ -715,38 +715,6 @@ public class RemesaBean extends BaseEjbJPA<Remesa, Long> implements RemesaLocal 
 			else
 				contenidoBytes = serializeToBase64(contenido.getContenido().getContent());
 
-//			try (ByteArrayInputStream bais = new ByteArrayInputStream(contenidoBytes);
-//					ZipInputStream zis = new ZipInputStream(bais)) {
-//
-//				ZipEntry entry;
-//				while ((entry = zis.getNextEntry()) != null) {
-//					if (!entry.isDirectory()) {
-//						ByteArrayOutputStream baos = new ByteArrayOutputStream();
-//						byte[] buffer = new byte[4096];
-//						int len;
-//						while ((len = zis.read(buffer)) > 0) {
-//							baos.write(buffer, 0, len);
-//						}
-//						baos.close();
-//
-//						// Crear DocumentoAnexo hijo
-//						String base64Extraido = Base64.encodeBase64String(baos.toByteArray());
-//	                    Contenido contenidoExtraido = new Contenido();
-//	                    contenidoExtraido.setBase64(base64Extraido);
-//	                    String mimeTypeZip = MimeTypeUtils.getExtensionFileName(entry.getName());
-//	                    
-//						DocumentoAnexo hijo = new DocumentoAnexo();
-//						hijo.setNombre(entry.getName());
-//						hijo.setContenido(contenidoExtraido);
-//						hijo.setMimeType(mimeTypeZip);
-//						documentos.add(hijo);
-//					}
-//					zis.closeEntry();
-//				}
-//			} catch (IOException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
 			File tempZip = null;
 			try {
 				// Guardar el zip en un archivo temporal
@@ -786,8 +754,19 @@ public class RemesaBean extends BaseEjbJPA<Remesa, Long> implements RemesaLocal 
 
 	                            String mimeTypeZip = MimeTypeUtils.getExtensionFileName(entry.getName());
 
+	                            byte[] rawName = entry.getRawName();
+		                        String nombre;
+		                        if (entry.getGeneralPurposeBit().usesUTF8ForNames()) {
+		                            nombre = new String(rawName, "UTF-8");
+		                        } else {
+		                            nombre = new String(rawName, "Cp437");
+		                        }
+		                        
+		                        // Assegurar que no contengui caracters no permesos
+		                        nombre = revisarCaractersArxiu(nombre);
+		                        
 	                            DocumentoAnexo hijo = new DocumentoAnexo();
-	                            hijo.setNombre(entry.getName());
+	                            hijo.setNombre(nombre);
 	                            hijo.setContenido(contenidoExtraido);
 	                            hijo.setMimeType(mimeTypeZip);
 
@@ -817,6 +796,23 @@ public class RemesaBean extends BaseEjbJPA<Remesa, Long> implements RemesaLocal 
     	}
     	
 		return documentos;
+	}
+
+	private String revisarCaractersArxiu(String nombre) {
+		StringBuilder sb = new StringBuilder(nombre.length());
+
+		outer:
+		for (char c : nombre.toCharArray()) {
+			for (char noPermitido : RegwebConstantes.CARACTERES_NO_PERMITIDOS_ARXIU) {
+				if (c == noPermitido) {
+					sb.append('_');
+					continue outer;
+				}
+			}
+			sb.append(c);
+		}
+		
+		return sb.toString();
 	}
 
 	public static byte[] getBytesFromDataHandler(DataHandler dataHandler) {
