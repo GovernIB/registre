@@ -474,7 +474,7 @@ public class IntegracionGeiserHelper {
     	// Actualizar información anexos SGD
     	try {
     		for (AnexoFull anexoFull: registro.getRegistroDetalle().getAnexosFull()) {
-        		anexoEjb.actualizarMetadatosAnexo(registro, anexoFull, usuario);
+        		anexoEjb.actualizarMetadatosAnexo(registro, anexoFull, usuario, false);
 			}
     	} catch (I18NException i18n) {
     		log.error("Ha habido un error actualizando los metadatos de registro del anexo.");

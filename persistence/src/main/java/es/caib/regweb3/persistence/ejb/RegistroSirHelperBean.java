@@ -307,7 +307,7 @@ public class RegistroSirHelperBean extends BaseEjbJPA<RegistroSir, Long> impleme
 				// Actualizar en custodia
 				AnexoFull anexoFull = new AnexoFull();
 				anexoFull.setAnexo(anexo);
-				anexoEjb.actualizarMetadatosAnexo(registro, anexoFull, usuario);
+				anexoEjb.actualizarMetadatosAnexo(registro, anexoFull, usuario, false);
 			}
 		} catch (Exception | I18NException e) {
 			log.error("Error actualizando el anexo:" + anexoId);

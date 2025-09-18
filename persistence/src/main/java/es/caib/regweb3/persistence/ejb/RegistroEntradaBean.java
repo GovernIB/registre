@@ -101,9 +101,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     @EJB private TrazabilidadSirLocal trazabilidadSirEjb;
     @EJB private UsuarioEntidadLocal usuarioEntidadEjb;
     @EJB private CatTipoViaLocal catTipoViaEjb;
-    
-    @Autowired
-	private DehuDocumentManager documentManager;
+    @EJB private RegistroDetalleLocal registroDetalleEjb; 
     
     @Override
     public RegistroEntrada findByIdCompleto(Long id) throws Exception {
@@ -178,6 +176,8 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 //		            //Registro interno en GEISER
 	            	integracionGeiserHelper.realizarRegistro(registroEntrada, usuarioEntidad);
 	            } catch (GeiserPluginException gpe) {
+	            	anexoEjb.eliminarAnexosRegistro(registroEntrada);
+	            	
 					log.error("Ha habido un error realizando el registro en GEISER");
 					gpe.printStackTrace();
 					ejbContext.setRollbackOnly();

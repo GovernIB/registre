@@ -5,6 +5,7 @@ import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.persistence.ejb.ColaLocal;
 import es.caib.regweb3.persistence.ejb.PluginLocal;
+import es.caib.regweb3.persistence.ejb.RegistroDetalleLocal;
 import es.caib.regweb3.persistence.ejb.RegistroEntradaConsultaLocal;
 import es.caib.regweb3.persistence.ejb.SignatureServerLocal;
 import es.caib.regweb3.utils.*;
@@ -43,6 +44,8 @@ public class AnexoHelper {
 	private RegistroEntradaConsultaLocal registroEntradaConsultaEjb;
 	@EJB(mappedName = "regweb3/ColaEJB/local")
 	private ColaLocal colaEjb;
+    @EJB(mappedName = "regweb3/RegistroDetalleEJB/local")
+    private RegistroDetalleLocal registroDetalleEjb; 
 	
 	@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 	public void actualizarAnexoSistraPendienteVerificacionFirma(Anexo anexo, Long idEntidad)
@@ -176,6 +179,30 @@ public class AnexoHelper {
 			}
 		} else {
 			return false;
+		}
+	}
+
+	public void eliminarAnexos(IRegistro registro) {
+		try {
+			RegistroDetalle registroDetalle = registro.getRegistroDetalle();
+	    	Entidad entidad = registro.getUsuario().getEntidad();
+	    	List<Anexo> anexos = new ArrayList<>(registroDetalle.getAnexos());
+	    	
+	    	for (Anexo anexo : anexos) {
+	        	registroDetalleEjb.eliminarAnexoRegistroDetalle(
+	        			anexo.getId(), 
+	        			registroDetalle.getId(), 
+	        			entidad.getId(), 
+	        			true);
+	        	
+	        	log.info("Anexo con id " + anexo.getId() + " eliminado correctamente");
+			}
+		} catch (I18NException e) {
+			log.error("Ha habido un error eliminando un anexo del registro " + registro.getId());
+			e.printStackTrace();
+		} catch (Exception e) {
+			log.error("Ha habido un error eliminando un anexo del registro " + registro.getId());
+			e.printStackTrace();
 		}
 	}
 

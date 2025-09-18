@@ -44,7 +44,6 @@ import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
 
 import es.caib.plugins.arxiu.api.Document;
 import es.caib.regweb3.model.Anexo;
-import es.caib.regweb3.model.Cola;
 import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.model.IRegistro;
 import es.caib.regweb3.model.Interesado;
@@ -112,7 +111,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
     @EJB(mappedName = "regweb3/RegistroSalidaCambiarEstadoEJB/local")
     private RegistroSalidaCambiarEstadoLocal registroSalidaCambiarEstadoEjb;
-
+    
     @Autowired
     ArxiuCaibUtils arxiuCaibUtils;
 
@@ -514,7 +513,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             }
             //Actualizamos solo metadatos nti
             if (!noWeb) {
-            	actualizarMetadatosAnexo(registro, anexoFull, usuarioEntidad);
+            	actualizarMetadatosAnexo(registro, anexoFull, usuarioEntidad, false);
             }
 
             //Actualizamos los datos de anexo en BBDD
@@ -932,7 +931,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
     }
 
     @Override
-    public AnexoFull actualizarMetadatosAnexo(IRegistro registro, AnexoFull anexoFull, UsuarioEntidad usuarioEntidad)throws I18NException {
+    public AnexoFull actualizarMetadatosAnexo(IRegistro registro, AnexoFull anexoFull, UsuarioEntidad usuarioEntidad, boolean updateOnlyEstado)throws I18NException {
 
         try {
         	Long tipoRegistro = (registro instanceof RegistroEntrada) ? 1L : 0L;
@@ -975,6 +974,9 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             } else {
             	anexo.setTipoDocumental(null);
             }
+            
+            custodyParameters.put("updateOnlyEstado", updateOnlyEstado);
+            
             // Guardamos los cambios en custodia
             custody.saveAll(custodyID, custodyParameters, null, null, metadades.toArray(new Metadata[metadades.size()]));
 
@@ -1800,5 +1802,10 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 		
 		paginacion.setListado(q.getResultList());
 		return paginacion;
+	}
+
+	@Override
+	public void eliminarAnexosRegistro(IRegistro registro) {
+		anexoHelper.eliminarAnexos(registro);
 	}	
 }

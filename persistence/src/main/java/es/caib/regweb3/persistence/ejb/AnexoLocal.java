@@ -273,7 +273,7 @@ public interface AnexoLocal extends BaseEjb<Anexo, Long> {
      * @throws I18NException
      * @throws I18NValidationException
      */
-	AnexoFull actualizarMetadatosAnexo(IRegistro registro, AnexoFull anexoFull, UsuarioEntidad usuarioEntidad) throws I18NException;
+	AnexoFull actualizarMetadatosAnexo(IRegistro registro, AnexoFull anexoFull, UsuarioEntidad usuarioEntidad, boolean comprobarEstado) throws I18NException;
 	
     /**
      * Descarga el justificante del registro de GEISER
@@ -316,4 +316,6 @@ public interface AnexoLocal extends BaseEjb<Anexo, Long> {
 	 */
 	void actualizarAnexoSistraPendienteVerificacionFirmaManual(Long idEntidad, Long idAnexo)
 			throws I18NException, CustodyException, NotSupportedCustodyException, MetadataFormatException;
+	
+	public void eliminarAnexosRegistro(IRegistro registro);
 }

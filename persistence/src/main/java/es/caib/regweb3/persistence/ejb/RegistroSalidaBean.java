@@ -160,6 +160,8 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
 //		            //Registro interno en GEISER
 	            	integracionGeiserHelper.realizarRegistro(registroSalida, usuarioEntidad);
 	            } catch (GeiserPluginException gpe) {
+	            	anexoEjb.eliminarAnexosRegistro(registroSalida);
+	            	
 					log.error("Ha habido un error realizando el registro en GEISER");
 					gpe.printStackTrace();
 					ejbContext.setRollbackOnly();

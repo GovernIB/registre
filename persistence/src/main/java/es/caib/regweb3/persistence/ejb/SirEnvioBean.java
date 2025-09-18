@@ -375,6 +375,12 @@ public class SirEnvioBean implements SirEnvioLocal {
 //    	        	actualizarEnvioSirRealizado(registroSir, usuario);
     	        	
      	        } catch (GeiserPluginException gpe) {
+     	        	// solo eliminar anexos si viene de ws (si es presencial, siempre habrá el registro creado, los SIR primero se guardan los anexos y depsues
+     	        	// se registra)
+     	        	if (! registro.getRegistroDetalle().getPresencial()) {
+     	        		anexoEjb.eliminarAnexosRegistro(registro);
+     	        	}
+     	        	
     	        	log.error("Ha habido un error realizando el registro en GEISER");
 					integracionEjb.addIntegracionError(
 							RegwebConstantes.INTEGRACION_SIR, 

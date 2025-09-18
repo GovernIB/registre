@@ -52,6 +52,7 @@ public class DistribucionBean implements DistribucionLocal {
     @EJB private IntegracionLocal integracionEjb;
     @EJB private PluginLocal pluginEjb;
     @EJB private ColaLocal colaEjb;
+    @EJB private AnexoLocal anexoEjb;
 
 
     /**
@@ -143,7 +144,14 @@ public class DistribucionBean implements DistribucionLocal {
         if (distribucionPlugin == null) {
             return true;
         }else{
-
+        	// Comprobar que los anexos son definitivos
+        	for (AnexoFull anexoFull : registroEntrada.getRegistroDetalle().getAnexosFull()) {
+        		anexoEjb.actualizarMetadatosAnexo(
+        				registroEntrada, 
+        				anexoFull, 
+        				registroEntrada.getUsuario(),
+        				true);
+			}
             distribuido = distribucionPlugin.distribuir(registroEntrada, new Locale(RegwebConstantes.IDIOMA_CATALAN_CODIGO));
         }
 

@@ -592,7 +592,7 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
       Define un interesado de tipo administración integrado en SIR
      */
     public DatosInteresadoWs getAdministracionSir(){
-        return getAdministracion("Ayuntamiento de Jun","L01181113");
+        return getAdministracion("Organo para Pruebas GEISER","E12345678");
     }
 
 
