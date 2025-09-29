@@ -19,17 +19,27 @@ INSERT INTO RWE_PROPIEDADGLOBAL (id,clave,valor,tipo,descripcion,entidad) VALUES
 INSERT INTO RWE_PROPIEDADGLOBAL (id,clave,valor,tipo,descripcion,entidad) VALUES (RWE_ALL_SEQ.nextVal,'es.caib.regweb3.ayuda.url',null,1,'Enlace de ayuda a los usuarios de las Oficinas de registro.',null);
 
 --PLUGINS
-INSERT INTO RWE_PLUGIN(id,activo,nombre,descripcion,clase,tipo,entidad,PROPIEDADES_ADMIN) values (RWE_ALL_SEQ.nextVal,1, 'User Information','Información de usuarios','org.fundaciobit.plugins.userinformation.database.DataBaseUserInformationPlugin',5,null,'es.caib.regweb3.plugins.userinformation.database.jndi=java:/es.caib.seycon.db.wl
-es.caib.regweb3.plugins.userinformation.database.users_table=SC_WL_USUARI
-es.caib.regweb3.plugins.userinformation.database.username_column=USU_CODI
-es.caib.regweb3.plugins.userinformation.database.administrationid_column=USU_NIF
-es.caib.regweb3.plugins.userinformation.database.name_column=USU_NOM
-es.caib.regweb3.plugins.userinformation.database.userroles_table=SC_WL_USUGRU
-es.caib.regweb3.plugins.userinformation.database.userroles_rolename_column=UGR_CODGRU
-es.caib.regweb3.plugins.userinformation.database.userroles_username_column=UGR_CODUSU');
+INSERT INTO RWE_PLUGIN(id,activo,nombre,descripcion,clase,tipo,entidad,PROPIEDADES_ADMIN) values (RWE_ALL_SEQ.nextVal,1, 'User Information','Información de usuarios','org.fundaciobit.pluginsib.userinformation.keycloak.KeyCloakUserInformationPlugin',5,null,'es.caib.regweb3.pluginsib.userinformation.keycloak.serverurl=https://governdigital.fundaciobit.org/auth/
+es.caib.regweb3.pluginsib.userinformation.keycloak.realm=GOIB
+es.caib.regweb3.pluginsib.userinformation.keycloak.client_id=goib-ws
+es.caib.regweb3.pluginsib.userinformation.keycloak.password_secret=e2e2e1dd-0abc-4926-9abd-90bfb3b3ee78
+es.caib.regweb3.pluginsib.userinformation.keycloak.client_id_for_user_autentication=goib-default
+es.caib.regweb3.pluginsib.userinformation.keycloak.mapping.administrationID=nif
+es.caib.regweb3.pluginsib.userinformation.keycloak.debug=true');
 
-INSERT INTO RWE_PLUGIN(id,activo,nombre,descripcion,clase,tipo,entidad, PROPIEDADES_ADMIN) values (RWE_ALL_SEQ.nextVal,1, 'Custodia','Custodia de documentos','org.fundaciobit.plugins.documentcustody.filesystem.FileSystemDocumentCustodyPlugin',0,null,'es.caib.regweb3.annex.plugins.documentcustody.filesystem.prefix=ANNEX_
-es.caib.regweb3.plugins.documentcustody.filesystem.basedir=C:/xxxx/Anexos/');
+--User Information Keycloak
+INSERT INTO RWE_PLUGIN(id,activo,nombre,descripcion,clase,tipo,entidad,PROPIEDADES_ADMIN) values (RWE_ALL_SEQ.nextVal,1, 'User Information','Información de usuarios','org.fundaciobit.pluginsib.userinformation.keycloak.KeyCloakUserInformationPlugin',5,null,'es.caib.regweb3.pluginsib.userinformation.keycloak.serverurl=https://governdigital.fundaciobit.org/auth/
+es.caib.regweb3.pluginsib.userinformation.keycloak.realm=GOIB
+es.caib.regweb3.pluginsib.userinformation.keycloak.client_id=goib-ws
+es.caib.regweb3.pluginsib.userinformation.keycloak.password_secret=e2e2e1dd-0abc-4926-9abd-90bfb3b3ee78
+es.caib.regweb3.pluginsib.userinformation.keycloak.client_id_for_user_autentication=goib-default
+es.caib.regweb3.pluginsib.userinformation.keycloak.mapping.administrationID=nif
+es.caib.regweb3.pluginsib.userinformation.keycloak.debug=true');
 
-INSERT INTO RWE_PLUGIN(id,activo,nombre,descripcion,clase,tipo,entidad, PROPIEDADES_ADMIN) values (RWE_ALL_SEQ.nextVal,1, 'Custodia-Justificante','Custodia de justificantes','org.fundaciobit.plugins.documentcustody.filesystem.FileSystemDocumentCustodyPlugin',7,null,'es.caib.regweb3.plugins.documentcustody.filesystem.prefix=JUST_
-es.caib.regweb3.plugins.documentcustody.filesystem.basedir=D:/xxxx/Justificantes/');
+
+
+INSERT INTO RWE_PLUGIN(id,activo,nombre,descripcion,clase,tipo,entidad, PROPIEDADES_ADMIN) values (RWE_ALL_SEQ.nextVal,1, 'Custodia','Custodia de documentos','org.fundaciobit.pluginsib.documentcustody.filesystem.FileSystemDocumentCustodyPlugin',0,null,'es.caib.regweb3.annex.pluginsib.documentcustody.filesystem.prefix=ANNEX_
+es.caib.regweb3.pluginsib.documentcustody.filesystem.basedir=C:/xxxx/Anexos/');
+
+INSERT INTO RWE_PLUGIN(id,activo,nombre,descripcion,clase,tipo,entidad, PROPIEDADES_ADMIN) values (RWE_ALL_SEQ.nextVal,1, 'Custodia-Justificante','Custodia de justificantes','org.fundaciobit.pluginsib.documentcustody.filesystem.FileSystemDocumentCustodyPlugin',7,null,'es.caib.regweb3.pluginsib.documentcustody.filesystem.prefix=JUST_
+es.caib.regweb3.pluginsib.documentcustody.filesystem.basedir=D:/xxxx/Justificantes/');

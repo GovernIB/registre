@@ -9,12 +9,15 @@ create sequence RWE_INT_SEQ start with 1 increment by  1;
 create sequence RWE_INTERESADO_SEQ start with 1 increment by  1;
 create sequence RWE_INTERESADOSIR_SEQ start with 1 increment by  1;
 create sequence RWE_LOPD_SEQ start with 1 increment by  1;
+create sequence RWE_MODIFICACION_LOPD_MIGRADO_SEQ start with 1 increment by  1;
 create sequence RWE_NOTIFICACION_SEQ start with 1 increment by  1;
 create sequence RWE_OFICINA_SEQ start with 1 increment by  1;
 create sequence RWE_OFICIOREMISION_SEQ start with 1 increment by  1;
 create sequence RWE_ORGANISMO_SEQ start with 1 increment by  1;
 create sequence RWE_PERSONA_SEQ start with 1 increment by  1;
 create sequence RWE_POU_SEQ start with 1 increment by  1;
+create sequence RWE_REGISTRO_LOPD_MIGRADO_SEQ start with 1 increment by  1;
+create sequence RWE_REGISTRO_MIGRADO_SEQ start with 1 increment by  1;
 create sequence RWE_REGISTRODETALLE_SEQ start with 1 increment by  1;
 create sequence RWE_REGISTROENTRADA_SEQ start with 1 increment by  1;
 create sequence RWE_REGISTROSALIDA_SEQ start with 1 increment by  1;
@@ -26,9 +29,8 @@ create sequence RWE_TRAZABILIDADSIR_SEQ start with 1 increment by  1;
 create sequence RWE_USUARIO_SEQ start with 1 increment by  1;
 create sequence RWE_USUARIOENTIDAD_SEQ start with 1 increment by  1;
 
-
---TABLAS
-create table RWE_ANEXO (
+-- TABLES
+ create table RWE_ANEXO (
        ID number(19,0) not null,
         CERTIFICADO raw(2000),
         CONFIDENCIAL number(1,0),
@@ -199,10 +201,9 @@ create table RWE_ANEXO (
 
     create table RWE_DESCARGA (
        ID number(19,0) not null,
-        FECHAFIN timestamp,
+        ELEMENTOS clob,
         FECHAIMPORTACION timestamp,
-        FECHAINICIO timestamp,
-        TIPO varchar2(255 char),
+        TIPO number(10,0),
         ENTIDAD number(19,0)
     );
 
@@ -287,7 +288,7 @@ create table RWE_ANEXO (
         CP varchar2(5 char),
         DIRECCION varchar2(160 char),
         DIRELECTRONICA varchar2(160 char),
-        DOCUMENTO varchar2(17 char),
+        DOCUMENTO varchar2(256 char),
         EMAIL varchar2(160 char),
         ISREPRESENTANTE number(1,0),
         NOMBRE varchar2(255 char),
@@ -490,6 +491,7 @@ create table RWE_ANEXO (
        ID number(19,0) not null,
         CODPOSTAL varchar2(14 char),
         CODIGO varchar2(9 char) not null,
+        CONFIDENCIAL number(1,0),
         DENOMINACION varchar2(300 char) not null,
         EDP number(1,0),
         EXTERNO number(1,0),
@@ -652,13 +654,13 @@ create table RWE_ANEXO (
         CODORGDESEMI number(10,0) not null,
         DENOFICINA varchar2(255 char) not null,
         DENOFIFIS varchar2(60 char) not null,
-        DESCDOC varchar2(60 char) not null,
-        DESIDIDOC varchar2(15 char) not null,
+        DESCDOC varchar2(60 char),
+        DESIDIDOC varchar2(15 char),
         DESORGDESEMI varchar2(60 char),
         DESREMDES varchar2(160 char) not null,
         MAILREMITENTE varchar2(50 char),
         EXTRACTO varchar2(2000 char) not null,
-        FECHADOC timestamp null,
+        FECHADOC timestamp,
         FECHAREG timestamp not null,
         FECHAVIS timestamp,
         infoAdicional varchar2(255 char),
@@ -668,7 +670,7 @@ create table RWE_ANEXO (
         NUMDISQUET number(10,0),
         NUMENTSAL number(10,0) not null,
         OTROS varchar2(255 char),
-        PRODESGEO varchar2(50 char) not null,
+        PRODESGEO varchar2(50 char),
         PRODESGEOBAL number(10,0) not null,
         PRODESGEOFUE varchar2(50 char),
         TIPODOC varchar2(2 char) not null,
@@ -825,6 +827,7 @@ create table RWE_ANEXO (
     create table RWE_TRAZABILIDAD (
        ID number(19,0) not null,
         FECHA timestamp not null,
+        OBSERVACIONES varchar2(2000 char),
         tipo number(19,0) not null,
         OFICIO_REMISION number(19,0),
         REGENT_DESTINO number(19,0),
@@ -883,188 +886,144 @@ create table RWE_ANEXO (
         CODIGOTRABAJO varchar2(255 char),
         EXTERNO number(1,0) not null,
         FECHAALTA timestamp,
+        FECHA_CERTIFICADO timestamp,
         FUNCION number(19,0),
         NOMBRETRABAJO varchar2(255 char),
         NOTIFICACION number(1,0),
         OBSERVACIONES varchar2(255 char),
         TELEFONO varchar2(25 char),
+        CERTIFICADO number(19,0),
         ENTIDAD number(19,0),
-        ULTIMAOFICINA number(19,0),
+        OFICINA_SOLICITADA number(19,0),
         USUARIO number(19,0)
     );
 
-
--- Indices
-create index RWE_ANEXO_TDOCAL_FK_I on RWE_ANEXO (TDOCUMENTAL) TABLESPACE REGWEB_INDEX;
-create index RWE_ANEXO_CUSTID_FK_I on RWE_ANEXO (CUSTODIAID) TABLESPACE REGWEB_INDEX;
-create index RWE_CATLOC_CATPRO_FK_I on RWE_CATLOCALIDAD (PROVINCIA) TABLESPACE REGWEB_INDEX;
-create index RWE_CATPRO_CATCAU_FK_I on RWE_CATPROVINCIA (COMUNIDADAUTONOMA) TABLESPACE REGWEB_INDEX;
-create index RWE_ENTIDA_PRO_FK_I on RWE_ENTIDAD (PROPIETARIO) TABLESPACE REGWEB_INDEX;
-create index RWE_HRE_USUENT_FK_I on RWE_HISTORICO_REGISTRO_ENTRADA (USUARIO) TABLESPACE REGWEB_INDEX;
-create index RWE_INTERES_CATPAI_FK_I on RWE_INTERESADO (PAIS) TABLESPACE REGWEB_INDEX;
-create index RWE_INTERES_REPADO_FK_I on RWE_INTERESADO (REPRESENTADO) TABLESPACE REGWEB_INDEX;
-create index RWE_INTERES_REGDET_FK_I on RWE_INTERESADO (REGISTRODETALLE) TABLESPACE REGWEB_INDEX;
-create index RWE_LIBRO_CONENT_FK_I on RWE_LIBRO (CONTADOR_ENTRADA) TABLESPACE REGWEB_INDEX;
-create index RWE_LIBRO_CONOFI_FK_I on RWE_LIBRO (CONTADOR_OFICIO_REMISION) TABLESPACE REGWEB_INDEX;
-create index RWE_LOPD_LIBRO_FK_I on RWE_LOPD (LIBRO) TABLESPACE REGWEB_INDEX;
-create index RWE_MODOFI_ENTIDA_FK_I on RWE_MODELO_OFICIO_REMISION (ENTIDAD) TABLESPACE REGWEB_INDEX;
-create index RWE_MODREB_ENTIDA_FK_I on RWE_MODELO_RECIBO (ENTIDAD) TABLESPACE REGWEB_INDEX;
-create index RWE_NOTIF_REMIT_FK_I on RWE_NOTIFICACION (REMITENTE) TABLESPACE REGWEB_INDEX;
-create index RWE_OFICIN_ESTENT_FK_I on RWE_OFICINA (ESTADO) TABLESPACE REGWEB_INDEX;
-create index RWE_OFICIN_ISLA_FK_I on RWE_OFICINA (ISLA) TABLESPACE REGWEB_INDEX;
-create index RWE_OFICIN_LOCALI_FK_I on RWE_OFICINA (LOCALIDAD) TABLESPACE REGWEB_INDEX;
-create index RWE_OFICIN_ORGANI_FK_I on RWE_OFICINA (ORGANISMORESPONSABLE) TABLESPACE REGWEB_INDEX;
-create index RWE_OFIREM_ORGANI_FK_I on RWE_OFICIO_REMISION (ORGANISMODEST) TABLESPACE REGWEB_INDEX;
-create index RWE_OFIREM_OFICIN_FK_I on RWE_OFICIO_REMISION (OFICINA) TABLESPACE REGWEB_INDEX;
-create index RWE_ORGANI_ENTIDA_FK_I on RWE_ORGANISMO (ENTIDAD) TABLESPACE REGWEB_INDEX;
-create index RWE_ORGANI_SUPERI_FK_I on RWE_ORGANISMO (ORGANISMOSUPERIOR) TABLESPACE REGWEB_INDEX;
-create index RWE_ORGANI_EDP_FK_I on RWE_ORGANISMO (EDPRINCIPAL) TABLESPACE REGWEB_INDEX;
-create index RWE_ORGANI_PAIS_FK_I on RWE_ORGANISMO (PAIS) TABLESPACE REGWEB_INDEX;
-create index RWE_ORGANI_ISLA_FK_I on RWE_ORGANISMO (ISLA) TABLESPACE REGWEB_INDEX;
-create index RWE_ORGANI_PROVIN_FK_I on RWE_ORGANISMO (CODAMBPROVINCIA) TABLESPACE REGWEB_INDEX;
-create index RWE_PELIUS_USUARI_FK_I on RWE_PERMLIBUSU (USUARIO) TABLESPACE REGWEB_INDEX;
-create index RWE_POU_USUARI_FK_I on RWE_PERMORGUSU (USUARIO) TABLESPACE REGWEB_INDEX;
-create index RWE_PERSONA_DOC_I on RWE_PERSONA (DOCUMENTO) TABLESPACE REGWEB_INDEX;
-create index RWE_PROPIE_ENTIDA_FK_I on RWE_PROPIEDADGLOBAL (ENTIDAD) TABLESPACE REGWEB_INDEX;
-create index RWE_REGISTRO_ESTADO_FK_I on RWE_REGISTRO_SIR (ESTADO) TABLESPACE REGWEB_INDEX;
-create index RWE_REGMIG_ANO_I on RWE_REGISTRO_MIGRADO (ANO) TABLESPACE REGWEB_HIST;
-create index RWE_REGMIG_TREG_I on RWE_REGISTRO_MIGRADO (TREGISTRO) TABLESPACE REGWEB_HIST;
-create index RWE_REGMIG_EXTR_I on RWE_REGISTRO_MIGRADO (EXTRACTO) TABLESPACE REGWEB_HIST;
-create index RWE_REGMIG_REMDES_I on RWE_REGISTRO_MIGRADO (DESREMDES) TABLESPACE REGWEB_HIST;
-create index RWE_REGMIG_NUM_I on RWE_REGISTRO_MIGRADO (NUMERO) TABLESPACE REGWEB_HIST;
-create index RWE_REGMIG_CODOF_I on RWE_REGISTRO_MIGRADO (CODOFICINA) TABLESPACE REGWEB_HIST;
-create index RWE_REGMIG_FECREG_I on RWE_REGISTRO_MIGRADO (FECHAREG) TABLESPACE REGWEB_HIST;
--- Indices Foreign Keys
-create index I_FK_RWE_ANEXOSIR_ANEXO_FK on RWE_ANEXO_SIR (ANEXO) tablespace REGWEB_INDEX;
-create index I_FK_RWE_ANEXOSIR_ENTIDAD_FK on RWE_ANEXO_SIR (ENTIDAD) tablespace REGWEB_INDEX;
-create index I_FK_RWE_ANEXOSIR_REGSIR_FK on RWE_ANEXO_SIR (REGISTRO_SIR) tablespace REGWEB_INDEX;
-create index I_FK_RWE_ANEXO_ENTIDAD_FK on RWE_ANEXO (ENTIDAD) tablespace REGWEB_INDEX;
-create index I_FK_RWE_COLA_USUENTI_FK on RWE_COLA (USUARIOENTIDAD) tablespace REGWEB_INDEX;
-create index I_FK_RWE_ENTIDAD_CONT_SIR_FK on RWE_ENTIDAD (CONTADOR_SIR) tablespace REGWEB_INDEX;
-create index I_FK_RWE_ENTIDAD_LIBRO_FK on RWE_ENTIDAD (LIBRO) tablespace REGWEB_INDEX;
-create index I_FK_RWE_ENTIDAD_LOGOMENU_FK on RWE_ENTIDAD (LOGOMENU) tablespace REGWEB_INDEX;
-create index I_FK_RWE_ENTIDAD_LOGOPIE_FK on RWE_ENTIDAD (LOGOPIE) tablespace REGWEB_INDEX;
-create index I_FK_RWE_ENTIDAD_USU_ADM_FK on RWE_ENTIDAD_USUENT (IDUSUENT) tablespace REGWEB_INDEX;
-create index I_FK_RWE_HISTORICO_USUARIO_RS_FK on RWE_HISTORICO_REGISTRO_SALIDA (USUARIO) tablespace REGWEB_INDEX;
-create index I_FK_RWE_HITORICO_RS_FK on RWE_HISTORICO_REGISTRO_SALIDA (REGISTRO_SALIDA) tablespace REGWEB_INDEX;
-create index I_FK_RWE_INTERESADO_PROVINCIA_FK on RWE_INTERESADO (PROVINCIA) tablespace REGWEB_INDEX;
-create index I_FK_RWE_LIBRO_CONT_SIR_FK on RWE_LIBRO (CONTADOR_SIR) tablespace REGWEB_INDEX;
-create index I_FK_RWE_MC_ENTIDAD_FK on RWE_MENSAJE_CONTROL (ENTIDAD) tablespace REGWEB_INDEX;
-create index I_FK_RWE_MODLOPDMIG_REGMIG_FK on RWE_MODIFICACIONLOPD_MIGRADO (REGMIG) tablespace REGWEB_INDEX;
-create index I_FK_RWE_OFICINA_ENTIDAD_FK on RWE_OFICINA (ENTIDAD) tablespace REGWEB_INDEX;
-create index I_FK_RWE_OFICINA_RELORGOFI_FK on RWE_RELORGOFI (IDOFICINA) tablespace REGWEB_INDEX;
-create index I_FK_RWE_OFICINA_SERVICIO_FK on RWE_OFICINA_SERVICIO (IDSERVICIO) tablespace REGWEB_INDEX;
-create index I_FK_RWE_OFIREM_ENTIDAD_FK on RWE_OFICIO_REMISION (ENTIDAD) tablespace REGWEB_INDEX;
-create index I_FK_RWE_OFIREM_REGENT_FK on RWE_OFIREM_REGENT (IDREGENT) tablespace REGWEB_INDEX;
-create index I_FK_RWE_OFIREM_REGSAL_FK on RWE_OFIREM_REGSAL (IDREGSAL) tablespace REGWEB_INDEX;
-create index I_FK_RWE_ORGANISMO_CATNIVELADMIN_FK on RWE_ORGANISMO (NIVELADMINISTRACION) tablespace REGWEB_INDEX;
-create index I_FK_RWE_ORG_ORG_HISTULTI_FK on RWE_HISTORICOUO (CODULTIMA) tablespace REGWEB_INDEX;
-create index I_FK_RWE_PENDIE_ENTIDAD_FK on RWE_PENDIENTE (ENTIDAD) tablespace REGWEB_INDEX;
-create index I_FK_RWE_PERSONA_LOCALIDAD_FK on RWE_PERSONA (LOCALIDAD) tablespace REGWEB_INDEX;
-create index I_FK_RWE_PERSONA_PAIS_FK on RWE_PERSONA (PAIS) tablespace REGWEB_INDEX;
-create index I_FK_RWE_PERSONA_PROVINCIA_FK on RWE_PERSONA (PROVINCIA) tablespace REGWEB_INDEX;
-create index I_FK_RWE_REGDET_CODASUNTO_FK on RWE_REGISTRO_DETALLE (CODASUNTO) tablespace REGWEB_INDEX;
-create index I_FK_RWE_REGDET_OFICINAORIG_FK on RWE_REGISTRO_DETALLE (OFICINAORIG) tablespace REGWEB_INDEX;
-create index I_FK_RWE_REGDET_TIPOASUNTO_FK on RWE_REGISTRO_DETALLE (TIPOASUNTO) tablespace REGWEB_INDEX;
-create index I_FK_RWE_REGENT_DESTINO_FK on RWE_REGISTRO_ENTRADA (DESTINO) tablespace REGWEB_INDEX;
-create index I_FK_RWE_REGENT_ENTIDAD_FK on RWE_REGISTRO_ENTRADA (ENTIDAD) tablespace REGWEB_INDEX;
-create index I_FK_RWE_REGENT_LIBRO_FK on RWE_REGISTRO_ENTRADA (LIBRO) tablespace REGWEB_INDEX;
-create index I_FK_RWE_REGENT_OFICINA_FK on RWE_REGISTRO_ENTRADA (OFICINA) tablespace REGWEB_INDEX;
-create index I_FK_RWE_REGENT_OFIREM_FK on RWE_OFIREM_REGENT (IDOFIREM) tablespace REGWEB_INDEX;
-create index I_FK_RWE_REGENT_USUENT_FK on RWE_REGISTRO_ENTRADA (USUARIO) tablespace REGWEB_INDEX;
-create index I_FK_RWE_REGLOPDMIG_REGMIG_FK on RWE_REGISTROLOPD_MIGRADO (REGMIG) tablespace REGWEB_INDEX;
-create index I_FK_RWE_REGMIG_ENTIDAD_FK on RWE_REGISTRO_MIGRADO (IDENTIDAD) tablespace REGWEB_INDEX;
-create index I_FK_RWE_REGSAL_ENTIDAD_FK on RWE_REGISTRO_SALIDA (ENTIDAD) tablespace REGWEB_INDEX;
-create index I_FK_RWE_REGSAL_LIBRO_FK on RWE_REGISTRO_SALIDA (LIBRO) tablespace REGWEB_INDEX;
-create index I_FK_RWE_REGSAL_OFICINA_FK on RWE_REGISTRO_SALIDA (OFICINA) tablespace REGWEB_INDEX;
-create index I_FK_RWE_REGSAL_OFIREM_FK on RWE_OFIREM_REGSAL (IDOFIREM) tablespace REGWEB_INDEX;
-create index I_FK_RWE_REGSAL_ORIGEN_FK on RWE_REGISTRO_SALIDA (ORIGEN) tablespace REGWEB_INDEX;
-create index I_FK_RWE_REGSAL_REGDET_FK on RWE_REGISTRO_SALIDA (REGISTRO_DETALLE) tablespace REGWEB_INDEX;
-create index I_FK_RWE_REGSAL_USUSAL_FK on RWE_REGISTRO_SALIDA (USUARIO) tablespace REGWEB_INDEX;
-create index I_FK_RWE_RELORGANOFI_CATESTENT_FK on RWE_RELORGOFI (ESTADO) tablespace REGWEB_INDEX;
-create index I_FK_RWE_RELSIROFI_CATESTENTI_FK on RWE_RELSIROFI (ESTADO) tablespace REGWEB_INDEX;
-create index I_FK_RWE_RELSIROFI_OFICINA_FK on RWE_RELSIROFI (IDOFICINA) tablespace REGWEB_INDEX;
-create index I_FK_RWE_REPRO_USUARIO_FK on RWE_REPRO (USUARIOENTIDAD) tablespace REGWEB_INDEX;
-create index I_FK_RWE_RES_ENTIDAD_FK on RWE_REGISTRO_SIR (ENTIDAD) tablespace REGWEB_INDEX;
-create index I_FK_RWE_TIPOASUNTO_ENTIDAD_FK on RWE_TIPOASUNTO (ENTIDAD) tablespace REGWEB_INDEX;
-create index I_FK_RWE_TIPODOCUMENTAL_ENTIDAD_FK on RWE_TIPODOCUMENTAL (ENTIDAD) tablespace REGWEB_INDEX;
-create index I_FK_RWE_TRASIR_REGENT_FK on RWE_TRAZABILIDAD_SIR (REGISTRO_ENTRADA) tablespace REGWEB_INDEX;
-create index I_FK_RWE_TRASIR_REGSIR_FK on RWE_TRAZABILIDAD_SIR (REGISTRO_SIR) tablespace REGWEB_INDEX;
-create index I_FK_RWE_TRAZAB_OFIREM_FK on RWE_TRAZABILIDAD (OFICIO_REMISION) tablespace REGWEB_INDEX;
-create index I_FK_RWE_TRAZAB_REGENTD_FK on RWE_TRAZABILIDAD (REGENT_DESTINO) tablespace REGWEB_INDEX;
-create index I_FK_RWE_TRAZAB_REGENTO_FK on RWE_TRAZABILIDAD (REGENT_ORIGEN) tablespace REGWEB_INDEX;
-create index I_FK_RWE_TRAZAB_REGSAL_FK on RWE_TRAZABILIDAD (REGISTRO_SALIDA) tablespace REGWEB_INDEX;
-create index I_FK_RWE_TRAZAB_REGSIR_FK on RWE_TRAZABILIDAD (REGISTRO_SIR) tablespace REGWEB_INDEX;
-create index I_FK_RWE_TRAZAB_RGSRCT_FK on RWE_TRAZABILIDAD (REGISTRO_SALIDA_RECT) tablespace REGWEB_INDEX;
-create index I_FK_RWE_USUENT_CERTIFICADO_FK on RWE_USUARIO_ENTIDAD (CERTIFICADO) tablespace REGWEB_INDEX;
-create index I_FK_RWE_USUENT_ENTIDAD_FK on RWE_USUARIO_ENTIDAD (ENTIDAD) tablespace REGWEB_INDEX;
-create index I_FK_RWE_USUENT_OFICINA_FK on RWE_USUARIO_ENTIDAD (OFICINA_SOLICITADA) tablespace REGWEB_INDEX;
-create index I_FK_RWE_USUENT_USUARIO_FK on RWE_USUARIO_ENTIDAD (USUARIO) tablespace REGWEB_INDEX;
-
-
--- INICI PKs
+    -- Constraints
+    -- INICI PKs
     alter table RWE_ANEXO add constraint RWE_ANEXO_pk primary key (ID);
+
     alter table RWE_ANEXO_SIR add constraint RWE_ANEXO_SIR_pk primary key (ID);
+
     alter table RWE_ARCHIVO add constraint RWE_ARCHIVO_pk primary key (ID);
+
     alter table RWE_CATCOMUNIDADAUTONOMA add constraint RWE_CATCOMUNIDADAUTONOMA_pk primary key (ID);
+
     alter table RWE_CATENTIDADGEOGRAFICA add constraint RWE_CATENTIDADGEOGRAFICA_pk primary key (ID);
+
     alter table RWE_CATESTADOENTIDAD add constraint RWE_CATESTADOENTIDAD_pk primary key (ID);
+
     alter table RWE_CATISLA add constraint RWE_CATISLA_pk primary key (ID);
+
     alter table RWE_CATLOCALIDAD add constraint RWE_CATLOCALIDAD_pk primary key (ID);
+
     alter table RWE_CATNIVELADMINISTRACION add constraint RWE_CATNIVELADMINISTRACION_pk primary key (ID);
+
     alter table RWE_CATPAIS add constraint RWE_CATPAIS_pk primary key (ID);
+
     alter table RWE_CATPROVINCIA add constraint RWE_CATPROVINCIA_pk primary key (ID);
+
     alter table RWE_CATSERVICIO add constraint RWE_CATSERVICIO_pk primary key (ID);
+
     alter table RWE_CATTIPOVIA add constraint RWE_CATTIPOVIA_pk primary key (ID);
+
     alter table RWE_CODIGOASUNTO add constraint RWE_CODIGOASUNTO_pk primary key (ID);
+
     alter table RWE_COLA add constraint RWE_COLA_pk primary key (ID);
+
     alter table RWE_CONFIGURACION add constraint RWE_CONFIGURACION_pk primary key (ID);
+
     alter table RWE_CONTADOR add constraint RWE_CONTADOR_pk primary key (ID);
+
     alter table RWE_DESCARGA add constraint RWE_DESCARGA_pk primary key (ID);
+
     alter table RWE_ENTIDAD add constraint RWE_ENTIDAD_pk primary key (ID);
+
     alter table RWE_ENTIDAD_USUENT add constraint RWE_ENTIDAD_USUENT_pk primary key (IDENTIDAD, IDUSUENT);
+
     alter table RWE_HISTORICO_REGISTRO_ENTRADA add constraint RWE_HIST_REGISTRO_ENTRADA_PK primary key (ID);
+
     alter table RWE_HISTORICO_REGISTRO_SALIDA add constraint RWE_HIST_REGISTRO_SALIDA_PK primary key (ID);
+
     alter table RWE_HISTORICOUO add constraint RWE_HISTORICOUO_pk primary key (CODANTERIOR, CODULTIMA);
+
     alter table RWE_INTEGRACION add constraint RWE_INTEGRACION_pk primary key (ID);
+
     alter table RWE_INTERESADO add constraint RWE_INTERESADO_pk primary key (ID);
+
     alter table RWE_INTERESADO_SIR add constraint RWE_INTERESADO_SIR_pk primary key (ID);
+
     alter table RWE_LIBRO add constraint RWE_LIBRO_pk primary key (ID);
+
     alter table RWE_LOPD add constraint RWE_LOPD_pk primary key (ID);
+
     alter table RWE_MENSAJE_CONTROL add constraint RWE_MENSAJE_CONTROL_pk primary key (ID);
+
     alter table RWE_MODELO_OFICIO_REMISION add constraint RWE_MODELO_OFICIO_REMISION_pk primary key (ID);
+
     alter table RWE_MODELO_RECIBO add constraint RWE_MODELO_RECIBO_pk primary key (ID);
+
     alter table RWE_MODIFICACIONLOPD_MIGRADO add constraint RWE_MODIFLOPD_MIGRADO_PK primary key (ID);
+
     alter table RWE_NOTIFICACION add constraint RWE_NOTIFICACION_pk primary key (ID);
+
     alter table RWE_OFICINA add constraint RWE_OFICINA_pk primary key (ID);
+
     alter table RWE_OFICINA_SERVICIO add constraint RWE_OFICINA_SERVICIO_pk primary key (IDOFICINA, IDSERVICIO);
+
     alter table RWE_OFICIO_REMISION add constraint RWE_OFICIO_REMISION_pk primary key (ID);
+
     alter table RWE_ORGANISMO add constraint RWE_ORGANISMO_pk primary key (ID);
+
     alter table RWE_PENDIENTE add constraint RWE_PENDIENTE_pk primary key (ID);
+
     alter table RWE_PERMLIBUSU add constraint RWE_PERMLIBUSU_pk primary key (ID);
+
     alter table RWE_PERMORGUSU add constraint RWE_PERMORGUSU_pk primary key (ID);
+
     alter table RWE_PERSONA add constraint RWE_PERSONA_pk primary key (ID);
+
     alter table RWE_PLUGIN add constraint RWE_PLUGIN_pk primary key (ID);
+
     alter table RWE_PROPIEDADGLOBAL add constraint RWE_PROPIEDADGLOBAL_pk primary key (ID);
+
     alter table RWE_REGISTRO_DETALLE add constraint RWE_REGISTRO_DETALLE_pk primary key (ID);
+
     alter table RWE_REGISTRO_ENTRADA add constraint RWE_REGISTRO_ENTRADA_pk primary key (ID);
+
     alter table RWE_REGISTRO_MIGRADO add constraint RWE_REGISTRO_MIGRADO_pk primary key (ID);
+
     alter table RWE_REGISTRO_SALIDA add constraint RWE_REGISTRO_SALIDA_pk primary key (ID);
+
     alter table RWE_REGISTRO_SIR add constraint RWE_REGISTRO_SIR_pk primary key (ID);
+
     alter table RWE_REGISTROLOPD_MIGRADO add constraint RWE_REGISTROLOPD_MIGRADO_pk primary key (ID);
+
     alter table RWE_RELORGOFI add constraint RWE_RELORGOFI_pk primary key (IDORGANISMO, IDOFICINA);
+
     alter table RWE_RELSIROFI add constraint RWE_RELSIROFI_pk primary key (IDORGANISMO, IDOFICINA);
+
     alter table RWE_REPRO add constraint RWE_REPRO_pk primary key (ID);
+
     alter table RWE_ROL add constraint RWE_ROL_pk primary key (ID);
+
     alter table RWE_SESION add constraint RWE_SESION_pk primary key (ID);
+
     alter table RWE_TIPOASUNTO add constraint RWE_TIPOASUNTO_pk primary key (ID);
+
     alter table RWE_TIPODOCUMENTAL add constraint RWE_TIPODOCUMENTAL_pk primary key (ID);
+
     alter table RWE_TRA_CODIGOASUNTO add constraint RWE_TRA_CODIGOASUNTO_pk primary key (IDCODIGOASUNTO, LANG);
+
     alter table RWE_TRA_TDOCUMENTAL add constraint RWE_TRA_TDOCUMENTAL_pk primary key (IDTDOCUMENTAL, LANG);
+
     alter table RWE_TRA_TIPOASUNTO add constraint RWE_TRA_TIPOASUNTO_pk primary key (IDTIPOASUNTO, LANG);
+
     alter table RWE_TRAZABILIDAD add constraint RWE_TRAZABILIDAD_pk primary key (ID);
+
     alter table RWE_TRAZABILIDAD_SIR add constraint RWE_TRAZABILIDAD_SIR_pk primary key (ID);
+
     alter table RWE_USUARIO add constraint RWE_USUARIO_pk primary key (ID);
+
     alter table RWE_USUARIO_ENTIDAD add constraint RWE_USUARIO_ENTIDAD_pk primary key (ID);
 
  -- FINAL PKs
@@ -1738,13 +1697,18 @@ create index I_FK_RWE_USUENT_USUARIO_FK on RWE_USUARIO_ENTIDAD (USUARIO) tablesp
        references RWE_REGISTRO_SIR;
 
     alter table RWE_USUARIO_ENTIDAD
+       add constraint RWE_USUENT_CERTIFICADO_FK
+       foreign key (CERTIFICADO)
+       references RWE_ARCHIVO;
+
+    alter table RWE_USUARIO_ENTIDAD
        add constraint RWE_USUENT_ENTIDAD_FK
        foreign key (ENTIDAD)
        references RWE_ENTIDAD;
 
     alter table RWE_USUARIO_ENTIDAD
        add constraint RWE_USUENT_OFICINA_FK
-       foreign key (ULTIMAOFICINA)
+       foreign key (OFICINA_SOLICITADA)
        references RWE_OFICINA;
 
     alter table RWE_USUARIO_ENTIDAD
@@ -1755,109 +1719,165 @@ create index I_FK_RWE_USUENT_USUARIO_FK on RWE_USUARIO_ENTIDAD (USUARIO) tablesp
 
 
  -- INICI UNIQUEs
-alter table RWE_CATESTADOENTIDAD add constraint RWE_CATESTADENT_CODESTADENT_UK unique (CODIGOESTADOENTIDAD);
-alter table RWE_CODIGOASUNTO add constraint RWE_CODASUNTO_CODIGO_UK unique (CODIGO);
-alter table RWE_ENTIDAD add constraint RWE_ENTIDAD_CODDIR3_UK unique (CODIGODIR3);
-alter table RWE_PERSONA add constraint RWE_PERSONA_DOCUMENTO_UK unique (DOCUMENTO);
-alter table RWE_PROPIEDADGLOBAL add constraint RWE_PROPIEDADGLOBAL_CLA_ENT_UK unique (CLAVE, ENTIDAD);
-alter table RWE_REGISTRO_MIGRADO add constraint RWE_REGISTRO_MIGRADO_UK unique (ANO, NUMERO, CODOFICINA, TREGISTRO, IDENTIDAD);
-alter table RWE_ROL add constraint RWE_ROL_NOMBRE_UK unique (NOMBRE);
-alter table RWE_USUARIO add constraint RWE_USUARIO_IDENTIF_UK unique (IDENTIFICADOR);
+
+    alter table RWE_CATESTADOENTIDAD
+       add constraint RWE_CATESTENT_CODESTENT_UK unique (CODIGOESTADOENTIDAD);
+
+    alter table RWE_CODIGOASUNTO
+       add constraint RWE_CODASUN_CODIGO_UK unique (CODIGO);
+
+    alter table RWE_ENTIDAD
+       add constraint RWE_ENTIDAD_CODIGODIR3_UK unique (CODIGODIR3);
+
+    alter table RWE_PERSONA
+       add constraint RWE_PERSONA_DOC_ENT_UK unique (DOCUMENTO, ENTIDAD);
+
+    alter table RWE_PROPIEDADGLOBAL
+       add constraint RWE_PROPIEDAD_CLAVE_ENTIDAD_UK unique (CLAVE, ENTIDAD);
+
+    alter table RWE_REGISTRO_MIGRADO
+       add constraint RWE_REGMIGRADO_AN_NUM_OF_UK unique (ANO, NUMERO, CODOFICINA, TREGISTRO, IDENTIDAD);
+
+    alter table RWE_ROL
+       add constraint RWE_ROL_NOMBRE_UK unique (NOMBRE);
+
+    alter table RWE_USUARIO
+       add constraint RWE_USUARIO_IDENTIFICADOR_UK unique (IDENTIFICADOR);
  -- FINAL UNIQUEs
 
- --GRANTS
-grant select on RWE_ALL_SEQ to www_regweb;
-grant select on RWE_ANEXO_SEQ to www_regweb;
-grant select on RWE_ANEXOSIR_SEQ to www_regweb;
-grant select on RWE_ARCHIVO_SEQ to www_regweb;
-grant select on RWE_COLA_SEQ to www_regweb;
-grant select on RWE_HRE_SEQ to www_regweb;
-grant select on RWE_HRS_SEQ to www_regweb;
-grant select on RWE_INT_SEQ to www_regweb;
-grant select on RWE_INTERESADO_SEQ to www_regweb;
-grant select on RWE_INTERESADOSIR_SEQ to www_regweb;
-grant select on RWE_LOPD_SEQ to www_regweb;
-grant select on RWE_NOTIFICACION_SEQ to www_regweb;
-grant select on RWE_OFICINA_SEQ to www_regweb;
-grant select on RWE_OFICIOREMISION_SEQ to www_regweb;
-grant select on RWE_ORGANISMO_SEQ to www_regweb;
-grant select on RWE_PERSONA_SEQ to www_regweb;
-grant select on RWE_POU_SEQ to www_regweb;
-grant select on RWE_REGISTRODETALLE_SEQ to www_regweb;
-grant select on RWE_REGISTROENTRADA_SEQ to www_regweb;
-grant select on RWE_REGISTROSALIDA_SEQ to www_regweb;
-grant select on RWE_REGISTROSIR_SEQ to www_regweb;
-grant select on RWE_SESION_SEQ to www_regweb;
-grant select on RWE_SIR_SEQ to www_regweb;
-grant select on RWE_TRAZABILIDAD_SEQ to www_regweb;
-grant select on RWE_TRAZABILIDADSIR_SEQ to www_regweb;
-grant select on RWE_USUARIO_SEQ to www_regweb;
-grant select on RWE_USUARIOENTIDAD_SEQ to www_regweb;
-grant select,insert,delete,update on RWE_ANEXO to www_regweb;
-grant select,insert,delete,update on RWE_ANEXO_SIR to www_regweb;
-grant select,insert,delete,update on RWE_ARCHIVO to www_regweb;
-grant select,insert,delete,update on RWE_CATCOMUNIDADAUTONOMA to www_regweb;
-grant select,insert,delete,update on RWE_CATENTIDADGEOGRAFICA to www_regweb;
-grant select,insert,delete,update on RWE_CATESTADOENTIDAD to www_regweb;
-grant select,insert,delete,update on RWE_CATISLA to www_regweb;
-grant select,insert,delete,update on RWE_CATLOCALIDAD to www_regweb;
-grant select,insert,delete,update on RWE_CATNIVELADMINISTRACION to www_regweb;
-grant select,insert,delete,update on RWE_CATPAIS to www_regweb;
-grant select,insert,delete,update on RWE_CATPROVINCIA to www_regweb;
-grant select,insert,delete,update on RWE_CATSERVICIO to www_regweb;
-grant select,insert,delete,update on RWE_CATTIPOVIA to www_regweb;
-grant select,insert,delete,update on RWE_CODIGOASUNTO to www_regweb;
-grant select,insert,delete,update on RWE_COLA to www_regweb;
-grant select,insert,delete,update on RWE_CONFIGURACION to www_regweb;
-grant select,insert,delete,update on RWE_CONTADOR to www_regweb;
-grant select,insert,delete,update on RWE_DESCARGA to www_regweb;
-grant select,insert,delete,update on RWE_ENTIDAD to www_regweb;
-grant select,insert,delete,update on RWE_ENTIDAD_USUENT to www_regweb;
-grant select,insert,delete,update on RWE_HISTORICO_REGISTRO_ENTRADA to www_regweb;
-grant select,insert,delete,update on RWE_HISTORICO_REGISTRO_SALIDA to www_regweb;
-grant select,insert,delete,update on RWE_HISTORICOUO to www_regweb;
-grant select,insert,delete,update on RWE_INTEGRACION to www_regweb;
-grant select,insert,delete,update on RWE_INTERESADO to www_regweb;
-grant select,insert,delete,update on RWE_INTERESADO_SIR to www_regweb;
-grant select,insert,delete,update on RWE_LIBRO to www_regweb;
-grant select,insert,delete,update on RWE_LOPD to www_regweb;
-grant select,insert,delete,update on RWE_MENSAJE_CONTROL to www_regweb;
-grant select,insert,delete,update on RWE_MODELO_OFICIO_REMISION to www_regweb;
-grant select,insert,delete,update on RWE_MODELO_RECIBO to www_regweb;
-grant select,insert,delete,update on RWE_MODIFICACIONLOPD_MIGRADO to www_regweb;
-grant select,insert,delete,update on RWE_NOTIFICACION to www_regweb;
-grant select,insert,delete,update on RWE_OFICINA to www_regweb;
-grant select,insert,delete,update on RWE_OFICINA_SERVICIO to www_regweb;
-grant select,insert,delete,update on RWE_OFICIO_REMISION to www_regweb;
-grant select,insert,delete,update on RWE_OFIREM_REGENT to www_regweb;
-grant select,insert,delete,update on RWE_OFIREM_REGSAL to www_regweb;
-grant select,insert,delete,update on RWE_ORGANISMO to www_regweb;
-grant select,insert,delete,update on RWE_PENDIENTE to www_regweb;
-grant select,insert,delete,update on RWE_PERMLIBUSU to www_regweb;
-grant select,insert,delete,update on RWE_PERMORGUSU to www_regweb;
-grant select,insert,delete,update on RWE_PERSONA to www_regweb;
-grant select,insert,delete,update on RWE_PLUGIN to www_regweb;
-grant select,insert,delete,update on RWE_PROPIEDADGLOBAL to www_regweb;
-grant select,insert,delete,update on RWE_REGISTRO_DETALLE to www_regweb;
-grant select,insert,delete,update on RWE_REGISTRO_ENTRADA to www_regweb;
-grant select,insert,delete,update on RWE_REGISTRO_MIGRADO to www_regweb;
-grant select,insert,delete,update on RWE_REGISTRO_SALIDA to www_regweb;
-grant select,insert,delete,update on RWE_REGISTRO_SIR to www_regweb;
-grant select,insert,delete,update on RWE_REGISTROLOPD_MIGRADO to www_regweb;
-grant select,insert,delete,update on RWE_RELORGOFI to www_regweb;
-grant select,insert,delete,update on RWE_RELSIROFI to www_regweb;
-grant select,insert,delete,update on RWE_REPRO to www_regweb;
-grant select,insert,delete,update on RWE_ROL to www_regweb;
-grant select,insert,delete,update on RWE_SESION to www_regweb;
-grant select,insert,delete,update on RWE_TIPOASUNTO to www_regweb;
-grant select,insert,delete,update on RWE_TIPODOCUMENTAL to www_regweb;
-grant select,insert,delete,update on RWE_TRA_CODIGOASUNTO to www_regweb;
-grant select,insert,delete,update on RWE_TRA_TDOCUMENTAL to www_regweb;
-grant select,insert,delete,update on RWE_TRA_TIPOASUNTO to www_regweb;
-grant select,insert,delete,update on RWE_TRAZABILIDAD to www_regweb;
-grant select,insert,delete,update on RWE_TRAZABILIDAD_SIR to www_regweb;
-grant select,insert,delete,update on RWE_USUARIO to www_regweb;
-grant select,insert,delete,update on RWE_USUARIO_ENTIDAD to www_regweb;
+--Indices
+create index RWE_ANEXO_TDOCAL_FK_I on RWE_ANEXO (TDOCUMENTAL) TABLESPACE REGWEB_INDEX;
+create index RWE_ANEXO_CUSTID_FK_I on RWE_ANEXO (CUSTODIAID) TABLESPACE REGWEB_INDEX;
+create index RWE_CATLOC_CATPRO_FK_I on RWE_CATLOCALIDAD (PROVINCIA) TABLESPACE REGWEB_INDEX;
+create index RWE_CATPRO_CATCAU_FK_I on RWE_CATPROVINCIA (COMUNIDADAUTONOMA) TABLESPACE REGWEB_INDEX;
+create index RWE_ENTIDA_PRO_FK_I on RWE_ENTIDAD (PROPIETARIO) TABLESPACE REGWEB_INDEX;
+create index RWE_HRE_USUENT_FK_I on RWE_HISTORICO_REGISTRO_ENTRADA (USUARIO) TABLESPACE REGWEB_INDEX;
+create index RWE_INTERES_CATPAI_FK_I on RWE_INTERESADO (PAIS) TABLESPACE REGWEB_INDEX;
+create index RWE_INTERES_REPADO_FK_I on RWE_INTERESADO (REPRESENTADO) TABLESPACE REGWEB_INDEX;
+create index RWE_INTERES_REGDET_FK_I on RWE_INTERESADO (REGISTRODETALLE) TABLESPACE REGWEB_INDEX;
+create index RWE_LIBRO_CONENT_FK_I on RWE_LIBRO (CONTADOR_ENTRADA) TABLESPACE REGWEB_INDEX;
+create index RWE_LIBRO_CONOFI_FK_I on RWE_LIBRO (CONTADOR_OFICIO_REMISION) TABLESPACE REGWEB_INDEX;
+create index RWE_LOPD_LIBRO_FK_I on RWE_LOPD (LIBRO) TABLESPACE REGWEB_INDEX;
+create index RWE_MODOFI_ENTIDA_FK_I on RWE_MODELO_OFICIO_REMISION (ENTIDAD) TABLESPACE REGWEB_INDEX;
+create index RWE_MODREB_ENTIDA_FK_I on RWE_MODELO_RECIBO (ENTIDAD) TABLESPACE REGWEB_INDEX;
+create index RWE_NOTIF_REMIT_FK_I on RWE_NOTIFICACION (REMITENTE) TABLESPACE REGWEB_INDEX;
+create index RWE_OFICIN_ESTENT_FK_I on RWE_OFICINA (ESTADO) TABLESPACE REGWEB_INDEX;
+create index RWE_OFICIN_ISLA_FK_I on RWE_OFICINA (ISLA) TABLESPACE REGWEB_INDEX;
+create index RWE_OFICIN_LOCALI_FK_I on RWE_OFICINA (LOCALIDAD) TABLESPACE REGWEB_INDEX;
+create index RWE_OFICIN_ORGANI_FK_I on RWE_OFICINA (ORGANISMORESPONSABLE) TABLESPACE REGWEB_INDEX;
+create index RWE_OFIREM_ORGANI_FK_I on RWE_OFICIO_REMISION (ORGANISMODEST) TABLESPACE REGWEB_INDEX;
+create index RWE_OFIREM_OFICIN_FK_I on RWE_OFICIO_REMISION (OFICINA) TABLESPACE REGWEB_INDEX;
+create index RWE_ORGANI_ENTIDA_FK_I on RWE_ORGANISMO (ENTIDAD) TABLESPACE REGWEB_INDEX;
+create index RWE_ORGANI_SUPERI_FK_I on RWE_ORGANISMO (ORGANISMOSUPERIOR) TABLESPACE REGWEB_INDEX;
+create index RWE_ORGANI_EDP_FK_I on RWE_ORGANISMO (EDPRINCIPAL) TABLESPACE REGWEB_INDEX;
+create index RWE_ORGANI_PAIS_FK_I on RWE_ORGANISMO (PAIS) TABLESPACE REGWEB_INDEX;
+create index RWE_ORGANI_ISLA_FK_I on RWE_ORGANISMO (ISLA) TABLESPACE REGWEB_INDEX;
+create index RWE_ORGANI_PROVIN_FK_I on RWE_ORGANISMO (CODAMBPROVINCIA) TABLESPACE REGWEB_INDEX;
+create index RWE_PELIUS_USUARI_FK_I on RWE_PERMLIBUSU (USUARIO) TABLESPACE REGWEB_INDEX;
+create index RWE_POU_USUARI_FK_I on RWE_PERMORGUSU (USUARIO) TABLESPACE REGWEB_INDEX;
+create index RWE_PERSONA_DOC_I on RWE_PERSONA (DOCUMENTO) TABLESPACE REGWEB_INDEX;
+create index RWE_PROPIE_ENTIDA_FK_I on RWE_PROPIEDADGLOBAL (ENTIDAD) TABLESPACE REGWEB_INDEX;
+create index RWE_REGMIG_NUM_I on RWE_REGISTRO_MIGRADO (NUMERO) TABLESPACE REGWEB_INDEX;
+create index RWE_REGMIG_CODOF_I on RWE_REGISTRO_MIGRADO (CODOFICINA) TABLESPACE REGWEB_INDEX;
+create index RWE_REGMIG_FECREG_I on RWE_REGISTRO_MIGRADO (FECHAREG) TABLESPACE REGWEB_INDEX;
+create index RWE_REGISTRO_ESTADO_FK_I on RWE_REGISTRO_SIR (ESTADO) TABLESPACE REGWEB_INDEX;
+
+--grants
+grant select on RWE_ALL_SEQ to www_regweb3;
+    grant select on RWE_ANEXO_SEQ to www_regweb3;
+    grant select on RWE_ANEXOSIR_SEQ to www_regweb3;
+    grant select on RWE_ARCHIVO_SEQ to www_regweb3;
+    grant select on RWE_COLA_SEQ to www_regweb3;
+    grant select on RWE_HRE_SEQ to www_regweb3;
+    grant select on RWE_HRS_SEQ to www_regweb3;
+    grant select on RWE_INT_SEQ to www_regweb3;
+    grant select on RWE_INTERESADO_SEQ to www_regweb3;
+    grant select on RWE_INTERESADOSIR_SEQ to www_regweb3;
+    grant select on RWE_LOPD_SEQ to www_regweb3;
+    grant select on RWE_MODIFICACION_LOPD_MIGRADO_SEQ to www_regweb3;
+    grant select on RWE_NOTIFICACION_SEQ to www_regweb3;
+    grant select on RWE_OFICINA_SEQ to www_regweb3;
+    grant select on RWE_OFICIOREMISION_SEQ to www_regweb3;
+    grant select on RWE_ORGANISMO_SEQ to www_regweb3;
+    grant select on RWE_PERSONA_SEQ to www_regweb3;
+    grant select on RWE_POU_SEQ to www_regweb3;
+    grant select on RWE_REGISTRO_LOPD_MIGRADO_SEQ to www_regweb3;
+    grant select on RWE_REGISTRO_MIGRADO_SEQ to www_regweb3;
+    grant select on RWE_REGISTRODETALLE_SEQ to www_regweb3;
+    grant select on RWE_REGISTROENTRADA_SEQ to www_regweb3;
+    grant select on RWE_REGISTROSALIDA_SEQ to www_regweb3;
+    grant select on RWE_REGISTROSIR_SEQ to www_regweb3;
+    grant select on RWE_SESION_SEQ to www_regweb3;
+    grant select on RWE_SIR_SEQ to www_regweb3;
+    grant select on RWE_TRAZABILIDAD_SEQ to www_regweb3;
+    grant select on RWE_TRAZABILIDADSIR_SEQ to www_regweb3;
+    grant select on RWE_USUARIO_SEQ to www_regweb3;
+    grant select on RWE_USUARIOENTIDAD_SEQ to www_regweb3;
+    grant select,insert,delete,update on RWE_ANEXO to www_regweb3;
+    grant select,insert,delete,update on RWE_ANEXO_SIR to www_regweb3;
+    grant select,insert,delete,update on RWE_ARCHIVO to www_regweb3;
+    grant select,insert,delete,update on RWE_CATCOMUNIDADAUTONOMA to www_regweb3;
+    grant select,insert,delete,update on RWE_CATENTIDADGEOGRAFICA to www_regweb3;
+    grant select,insert,delete,update on RWE_CATESTADOENTIDAD to www_regweb3;
+    grant select,insert,delete,update on RWE_CATISLA to www_regweb3;
+    grant select,insert,delete,update on RWE_CATLOCALIDAD to www_regweb3;
+    grant select,insert,delete,update on RWE_CATNIVELADMINISTRACION to www_regweb3;
+    grant select,insert,delete,update on RWE_CATPAIS to www_regweb3;
+    grant select,insert,delete,update on RWE_CATPROVINCIA to www_regweb3;
+    grant select,insert,delete,update on RWE_CATSERVICIO to www_regweb3;
+    grant select,insert,delete,update on RWE_CATTIPOVIA to www_regweb3;
+    grant select,insert,delete,update on RWE_CODIGOASUNTO to www_regweb3;
+    grant select,insert,delete,update on RWE_COLA to www_regweb3;
+    grant select,insert,delete,update on RWE_CONFIGURACION to www_regweb3;
+    grant select,insert,delete,update on RWE_CONTADOR to www_regweb3;
+    grant select,insert,delete,update on RWE_DESCARGA to www_regweb3;
+    grant select,insert,delete,update on RWE_ENTIDAD to www_regweb3;
+    grant select,insert,delete,update on RWE_ENTIDAD_USUENT to www_regweb3;
+    grant select,insert,delete,update on RWE_HISTORICO_REGISTRO_ENTRADA to www_regweb3;
+    grant select,insert,delete,update on RWE_HISTORICO_REGISTRO_SALIDA to www_regweb3;
+    grant select,insert,delete,update on RWE_HISTORICOUO to www_regweb3;
+    grant select,insert,delete,update on RWE_INTEGRACION to www_regweb3;
+    grant select,insert,delete,update on RWE_INTERESADO to www_regweb3;
+    grant select,insert,delete,update on RWE_INTERESADO_SIR to www_regweb3;
+    grant select,insert,delete,update on RWE_LIBRO to www_regweb3;
+    grant select,insert,delete,update on RWE_LOPD to www_regweb3;
+    grant select,insert,delete,update on RWE_MENSAJE_CONTROL to www_regweb3;
+    grant select,insert,delete,update on RWE_MODELO_OFICIO_REMISION to www_regweb3;
+    grant select,insert,delete,update on RWE_MODELO_RECIBO to www_regweb3;
+    grant select,insert,delete,update on RWE_MODIFICACIONLOPD_MIGRADO to www_regweb3;
+    grant select,insert,delete,update on RWE_NOTIFICACION to www_regweb3;
+    grant select,insert,delete,update on RWE_OFICINA to www_regweb3;
+    grant select,insert,delete,update on RWE_OFICINA_SERVICIO to www_regweb3;
+    grant select,insert,delete,update on RWE_OFICIO_REMISION to www_regweb3;
+    grant select,insert,delete,update on RWE_OFIREM_REGENT to www_regweb3;
+    grant select,insert,delete,update on RWE_OFIREM_REGSAL to www_regweb3;
+    grant select,insert,delete,update on RWE_ORGANISMO to www_regweb3;
+    grant select,insert,delete,update on RWE_PENDIENTE to www_regweb3;
+    grant select,insert,delete,update on RWE_PERMLIBUSU to www_regweb3;
+    grant select,insert,delete,update on RWE_PERMORGUSU to www_regweb3;
+    grant select,insert,delete,update on RWE_PERSONA to www_regweb3;
+    grant select,insert,delete,update on RWE_PLUGIN to www_regweb3;
+    grant select,insert,delete,update on RWE_PROPIEDADGLOBAL to www_regweb3;
+    grant select,insert,delete,update on RWE_REGISTRO_DETALLE to www_regweb3;
+    grant select,insert,delete,update on RWE_REGISTRO_ENTRADA to www_regweb3;
+    grant select,insert,delete,update on RWE_REGISTRO_MIGRADO to www_regweb3;
+    grant select,insert,delete,update on RWE_REGISTRO_SALIDA to www_regweb3;
+    grant select,insert,delete,update on RWE_REGISTRO_SIR to www_regweb3;
+    grant select,insert,delete,update on RWE_REGISTROLOPD_MIGRADO to www_regweb3;
+    grant select,insert,delete,update on RWE_RELORGOFI to www_regweb3;
+    grant select,insert,delete,update on RWE_RELSIROFI to www_regweb3;
+    grant select,insert,delete,update on RWE_REPRO to www_regweb3;
+    grant select,insert,delete,update on RWE_ROL to www_regweb3;
+    grant select,insert,delete,update on RWE_SESION to www_regweb3;
+    grant select,insert,delete,update on RWE_TIPOASUNTO to www_regweb3;
+    grant select,insert,delete,update on RWE_TIPODOCUMENTAL to www_regweb3;
+    grant select,insert,delete,update on RWE_TRA_CODIGOASUNTO to www_regweb3;
+    grant select,insert,delete,update on RWE_TRA_TDOCUMENTAL to www_regweb3;
+    grant select,insert,delete,update on RWE_TRA_TIPOASUNTO to www_regweb3;
+    grant select,insert,delete,update on RWE_TRAZABILIDAD to www_regweb3;
+    grant select,insert,delete,update on RWE_TRAZABILIDAD_SIR to www_regweb3;
+    grant select,insert,delete,update on RWE_USUARIO to www_regweb3;
+    grant select,insert,delete,update on RWE_USUARIO_ENTIDAD to www_regweb3;
 
 
 
