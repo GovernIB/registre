@@ -6,11 +6,11 @@
     <parent>
         <groupId>es.caib.regweb3</groupId>
         <artifactId>regweb3</artifactId>
-        <version>3.3.5</version>
+        <version>3.3.6</version>
     </parent>
 
     <artifactId>regweb3-integraciones</artifactId>
-    <version>3.3.5</version>
+    <version>3.3.6</version>
     <packaging>jar</packaging>
 
     <name>RegWeb3 - Integraciones</name>
