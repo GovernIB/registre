@@ -1171,7 +1171,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         }
 
         if (StringUtils.isNotEmpty(interesado.getDocumento())) {
-            interesadoSir.setDocumentoIdentificacionInteresado(interesado.getDocumento());
+            interesadoSir.setDocumentoIdentificacionInteresado(es.caib.regweb3.utils.StringUtils.recortarCadena(interesado.getDocumento(),DOCUMENTO_LONGITUD_MAX_SICRES3));
         }
 
         if (StringUtils.isNotEmpty(interesado.getRazonSocial())) {
@@ -1261,7 +1261,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
             }
 
             if (StringUtils.isNotEmpty(representante.getDocumento())) {
-                interesadoSir.setDocumentoIdentificacionRepresentante(representante.getDocumento());
+                interesadoSir.setDocumentoIdentificacionRepresentante(es.caib.regweb3.utils.StringUtils.recortarCadena(representante.getDocumento(),DOCUMENTO_LONGITUD_MAX_SICRES3));
             }
 
             if (StringUtils.isNotEmpty(representante.getRazonSocial())) {

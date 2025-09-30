@@ -348,7 +348,7 @@ public class Interesado implements Serializable {
         this.tipoDocumentoIdentificacion = tipoDocumentoIdentificacion;
     }
 
-    @Column(name = "DOCUMENTO", length = 17)
+    @Column(name = "DOCUMENTO", length = 256)
     public String getDocumento() {
         return documento;
     }
