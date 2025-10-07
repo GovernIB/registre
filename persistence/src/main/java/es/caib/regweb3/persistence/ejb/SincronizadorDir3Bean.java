@@ -99,6 +99,28 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
                 sincronizados.add((StringUtils.isNotEmpty(unidadWs.getDenomLenguaCooficial())) ? unidadWs.getDenomLenguaCooficial() : unidadWs.getDenominacion());
             }
 
+            //Actualizamos organismo raiz y superiores y EDP principal
+            for(UnidadWs unidadWs : unidadesWs) {
+                Organismo organismo = organismoEjb.findByCodigoEntidadSinEstado(unidadWs.getCodigo(), entidadId);
+                // Es necesario que el organismo esté creado previamente.
+                // Asignamos su Organismo Raíz
+                Organismo organismoRaiz = organismoEjb.findByCodigoEntidadSinEstado(unidadWs.getCodUnidadRaiz(), entidadId);
+                organismo.setOrganismoRaiz(organismoRaiz);
+
+
+                // Asignamos su Organismo Superior
+                Organismo organismoSuperior = organismoEjb.findByCodigoEntidadSinEstado(unidadWs.getCodUnidadSuperior(), entidadId);
+                organismo.setOrganismoSuperior(organismoSuperior);
+
+                // Asignamos su EDP Principal
+                if (StringUtils.isNotEmpty(unidadWs.getCodEdpPrincipal())) {
+                    Organismo edpPrincipal = organismoEjb.findByCodigoEntidadSinEstado(unidadWs.getCodEdpPrincipal(), entidadId);
+                    organismo.setEdpPrincipal(edpPrincipal);
+                }
+                organismo = organismoEjb.merge(organismo);
+                log.info("Asignado Organismo Raiz, Superior y EDP Principal a: " + organismo.getDenominacion());
+            }
+
             // Sincronizamos los históricos del arbol de organismos obtenido
             for (UnidadWs unidadWs : unidadesWs) {
                 if (unidadWs != null) {
@@ -208,7 +230,7 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
             organismo = organismoEjb.findByCodigoEntidadSinEstado(unidadWs.getCodigo(), idEntidad);
 
             if (organismo == null) {
-                log.info("Nuevo organismo: " + unidadWs.getCodigo()+ " - " + (StringUtils.isNotEmpty(unidadWs.getDenomLenguaCooficial()) ? unidadWs.getDenomLenguaCooficial() : unidadWs.getDenominacion()));
+                log.info("Nuevo organismo: " + unidadWs.getCodigo() + " - " + (StringUtils.isNotEmpty(unidadWs.getDenomLenguaCooficial()) ? unidadWs.getDenomLenguaCooficial() : unidadWs.getDenominacion()));
                 organismo = new Organismo();
                 procesarOrganismo(organismo, unidadWs, entidad);
 
@@ -218,27 +240,6 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
                 log.info("Actualizar organismo: " + (StringUtils.isNotEmpty(unidadWs.getDenomLenguaCooficial()) ? unidadWs.getDenomLenguaCooficial() : unidadWs.getDenominacion()));
                 procesarOrganismo(organismo, unidadWs, entidad);
             }
-
-            // Es necesario que el organismo esté creado previamente.
-            // Asignamos su Organismo Raíz
-            Organismo organismoRaiz = organismoEjb.findByCodigoEntidadSinEstado(unidadWs.getCodUnidadRaiz(), idEntidad);
-            organismo.setOrganismoRaiz(organismoRaiz);
-
-
-            // Asignamos su Organismo Superior
-            Organismo organismoSuperior = organismoEjb.findByCodigoEntidadSinEstado(unidadWs.getCodUnidadSuperior(), idEntidad);
-            organismo.setOrganismoSuperior(organismoSuperior);
-
-            // Asignamos su EDP Principal
-            if (StringUtils.isNotEmpty(unidadWs.getCodEdpPrincipal())) {
-                Organismo edpPrincipal = organismoEjb.findByCodigoEntidadSinEstado(unidadWs.getCodEdpPrincipal(), idEntidad);
-                organismo.setEdpPrincipal(edpPrincipal);
-            }
-
-            // Actualizamos el Organismo
-            organismo = organismoEjb.merge(organismo);
-            log.info("Fin sincronizar organismo: " + organismo.getDenominacion());
-            log.info("  ");
         }
 
         return organismo;
