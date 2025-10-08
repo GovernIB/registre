@@ -1,12 +1,12 @@
 package es.caib.regweb3.persistence.ejb;
 
 
-import es.caib.carpeta.apiinterna.client.api.NotificacionsApi;
-import es.caib.carpeta.apiinterna.client.model.SendMessageResult;
-import es.caib.carpeta.apiinterna.client.services.ApiClient;
-import es.caib.carpeta.apiinterna.client.services.ApiException;
-import es.caib.carpeta.apiinterna.client.services.Configuration;
-import es.caib.carpeta.apiinterna.client.services.auth.HttpBasicAuth;
+import es.caib.carpeta.api.interna.client.mobilenotification.v1.api.NotificacionsApi;
+import es.caib.carpeta.api.interna.client.mobilenotification.v1.model.SendMessageResult;
+import es.caib.carpeta.api.interna.client.mobilenotification.v1.services.ApiClient;
+import es.caib.carpeta.api.interna.client.mobilenotification.v1.services.ApiException;
+import es.caib.carpeta.api.interna.client.mobilenotification.v1.services.Configuration;
+import es.caib.carpeta.api.interna.client.mobilenotification.v1.services.auth.HttpBasicAuth;
 import es.caib.regweb3.model.IRegistro;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.utils.RegwebConstantes;

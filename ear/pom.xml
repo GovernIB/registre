@@ -678,7 +678,7 @@
         <!--Carpeta-->
         <dependency>
             <groupId>es.caib.carpeta</groupId>
-            <artifactId>carpeta-api-interna-client</artifactId>
+            <artifactId>carpeta-api-interna-client-mobilenotification-v1</artifactId>
         </dependency>
 
         <!-- iText -->
