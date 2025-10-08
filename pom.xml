@@ -41,7 +41,7 @@
         <pluginsib.scanweb.version>5.0.0-SNAPSHOT</pluginsib.scanweb.version>
         <pluginsib.utils.version>3.0.0-SNAPSHOT</pluginsib.utils.version>
         <dir3caib-ws-api.version>1.1.1</dir3caib-ws-api.version>
-        <carpeta-api-interna-client.version>1.1</carpeta-api-interna-client.version>
+        <carpeta-api-interna-client-mobilenotification-v1.version>1.0-SNAPSHOT</carpeta-api-interna-client-mobilenotification-v1.version>
         <cxf.version>3.3.3</cxf.version>
         <pluginsib-validatesignature-afirmacxf.version>2.1.0-SNAPSHOT</pluginsib-validatesignature-afirmacxf.version>
         <slf4j.version>1.7.22.redhat-2</slf4j.version>
@@ -52,7 +52,7 @@
         <!--<timestamp>${maven.build}</timestamp>-->
         <maven.build.timestamp.format>yyyy-MM-dd HH:mm</maven.build.timestamp.format>
         <!-- LIBSIR-->
-        <libsir.version>3.2.2</libsir.version>
+        <libsir.version>3.2.5</libsir.version>
         <libsir.groupId>es.gob.ad.registros.sir</libsir.groupId>
     </properties>
 

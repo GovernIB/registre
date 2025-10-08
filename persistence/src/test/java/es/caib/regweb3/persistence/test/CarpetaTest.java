@@ -1,11 +1,12 @@
 package es.caib.regweb3.persistence.test;
 
-import es.caib.carpeta.apiinterna.client.api.NotificacionsApi;
-import es.caib.carpeta.apiinterna.client.model.SendMessageResult;
-import es.caib.carpeta.apiinterna.client.services.ApiClient;
-import es.caib.carpeta.apiinterna.client.services.ApiException;
-import es.caib.carpeta.apiinterna.client.services.Configuration;
-import es.caib.carpeta.apiinterna.client.services.auth.HttpBasicAuth;
+
+import es.caib.carpeta.api.interna.client.mobilenotification.v1.api.NotificacionsApi;
+import es.caib.carpeta.api.interna.client.mobilenotification.v1.model.SendMessageResult;
+import es.caib.carpeta.api.interna.client.mobilenotification.v1.services.ApiClient;
+import es.caib.carpeta.api.interna.client.mobilenotification.v1.services.ApiException;
+import es.caib.carpeta.api.interna.client.mobilenotification.v1.services.Configuration;
+import es.caib.carpeta.api.interna.client.mobilenotification.v1.services.auth.HttpBasicAuth;
 import es.caib.regweb3.utils.RegwebConstantes;
 import org.junit.Test;
 
@@ -43,9 +44,9 @@ public class CarpetaTest {
 
         NotificacionsApi apiInstance = getApiInstance();
 
-        String nif = "43201388M";
+        String nif = "demanardniciutada";
         String notificationCode = "REGISTREENTRADA"; // String | Codi de la notificació. Demanar a l'administrador de Carpeta.
-        List<String> notificationParameters = Arrays.asList("GOIBE002/2023"); // List<String> | Paràmetres associats al Codi de la notificació
+        List<String> notificationParameters = Arrays.asList("numeroregistreciutada"); // List<String> | Paràmetres associats al Codi de la notificació
         String notificationLang = RegwebConstantes.IDIOMA_CATALAN_CODIGO; // String | Idioma en que s'enviaran les notificacions
         String langError = RegwebConstantes.IDIOMA_CATALAN_CODIGO; // String | Idioma en que s'enviaran els missatges d'error
         try {
