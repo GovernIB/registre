@@ -675,12 +675,6 @@
             <type>ejb</type>
         </dependency>
 
-        <!--Carpeta-->
-        <dependency>
-            <groupId>es.caib.carpeta</groupId>
-            <artifactId>carpeta-api-interna-client-mobilenotification-v1</artifactId>
-        </dependency>
-
         <!-- iText -->
         <dependency>
             <groupId>com.itextpdf</groupId>
