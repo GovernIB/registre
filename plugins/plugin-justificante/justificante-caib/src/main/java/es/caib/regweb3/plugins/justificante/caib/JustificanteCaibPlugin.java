@@ -928,6 +928,13 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
             taulaInformacio.addCell(new Paragraph(tradueixMissatge(locale, "justificante.codigoSIA"), lletraGovern9bold));
             taulaInformacio.addCell(new Paragraph(String.valueOf(registro.getRegistroDetalle().getCodigoSia()), lletraGovern8));
         }
+        // Funcionari habilitat
+        if(registro.getRegistroDetalle().getCodigoFuncionarioHabilitado() != null ) {
+            i += 1;
+            taulaInformacio.addCell(new Paragraph(tradueixMissatge(locale, "justificante.funcHabilitado"), lletraGovern9bold));
+            taulaInformacio.addCell(new Paragraph(registro.getRegistroDetalle().getCodigoFuncionarioHabilitado(), lletraGovern8));
+        }
+
         if(!esPar(i)) {
             // Completa la cel·la buida
             taulaInformacio.addCell("");

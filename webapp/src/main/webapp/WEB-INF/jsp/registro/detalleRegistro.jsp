@@ -82,6 +82,8 @@
 <c:if test="${not empty registro.registroDetalle.fechaOrigen}"> <dt><i class="fa fa-clock-o"></i> <spring:message code="registroEntrada.fechaOrigen"/>: </dt> <dd> <fmt:formatDate value="${registro.registroDetalle.fechaOrigen}" pattern="dd/MM/yyyy HH:mm:ss"/></dd></c:if>
 <c:if test="${not empty registro.registroDetalle.codigoSia}"> <dt><i class="fa fa-barcode"></i> <spring:message code="registroEntrada.codigoSIA"/>: </dt> <dd> ${registro.registroDetalle.codigoSia}</dd></c:if>
 <c:if test="${not empty registro.registroDetalle.observaciones}"> <dt><i class="fa fa-file-text-o"></i> <spring:message code="registroEntrada.observaciones"/>: </dt> <dd> ${registro.registroDetalle.observaciones}</dd></c:if>
+<c:if test="${not empty registro.registroDetalle.codigoFuncionarioHabilitado}"> <dt><i class="fa fa-user-circle"></i> <spring:message code="registroEntrada.funcionarioHabilitado"/>: </dt> <dd> ${registro.registroDetalle.nombreFuncionarioHabilitado} (${registro.registroDetalle.codigoFuncionarioHabilitado})</dd></c:if>
+<c:if test="${not empty registro.registroDetalle.nifFuncionarioHabilitado}"> <dt><i class="fa fa-id-card"></i> NIF: </dt> <dd> ${registro.registroDetalle.nifFuncionarioHabilitado}</dd></c:if>
 <hr class="${divider}">
 <c:if test="${loginInfo.rolActivo.nombre == 'RWE_ADMIN'}">
     <c:if test="${not empty registro.usuario}">

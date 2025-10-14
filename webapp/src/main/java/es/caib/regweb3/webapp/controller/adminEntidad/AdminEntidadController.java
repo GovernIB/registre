@@ -245,6 +245,10 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
             model.addAttribute("integraciones", integracionEjb.getByEntidadNumReg(entidadActiva.getId(), registro.getNumeroRegistroFormateado()));
 
         }
+        if(registro.getRegistroDetalle().getAplicacionTelematica()!=null){
+            model.addAttribute("isSistra", registro.getRegistroDetalle().getAplicacionTelematica().contains("SISTRA"));
+        }
+
 
         // Alta en tabla LOPD
         lopdEjb.altaLopd(registro.getNumeroRegistro(), registro.getFecha(), registro.getLibro().getId(), usuarioEntidad.getId(), RegwebConstantes.REGISTRO_ENTRADA, RegwebConstantes.LOPD_CONSULTA);

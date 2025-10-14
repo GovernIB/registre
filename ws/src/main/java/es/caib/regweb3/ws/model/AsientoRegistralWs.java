@@ -74,6 +74,11 @@ public class AsientoRegistralWs implements Serializable {
     //SICRES4
     private Set<MetadatoWs> metadatos;
 
+    //Funcionario Habilitado
+    private String codigoFuncionarioHabilitado;
+    private String nombreFuncionarioHabilitado;
+    private String nifFuncionarioHabilitado;
+
 
     public AsientoRegistralWs() {
     }
@@ -480,5 +485,29 @@ public class AsientoRegistralWs implements Serializable {
 
     public void setMetadatos(Set<MetadatoWs> metadatos) {
         this.metadatos = metadatos;
+    }
+
+    public String getCodigoFuncionarioHabilitado() {
+        return codigoFuncionarioHabilitado;
+    }
+
+    public void setCodigoFuncionarioHabilitado(String codigoFuncionarioHabilitado) {
+        this.codigoFuncionarioHabilitado = codigoFuncionarioHabilitado;
+    }
+
+    public String getNombreFuncionarioHabilitado() {
+        return nombreFuncionarioHabilitado;
+    }
+
+    public void setNombreFuncionarioHabilitado(String nombreFuncionarioHabilitado) {
+        this.nombreFuncionarioHabilitado = nombreFuncionarioHabilitado;
+    }
+
+    public String getNifFuncionarioHabilitado() {
+        return nifFuncionarioHabilitado;
+    }
+
+    public void setNifFuncionarioHabilitado(String nifFuncionarioHabilitado) {
+        this.nifFuncionarioHabilitado = nifFuncionarioHabilitado;
     }
 }

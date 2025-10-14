@@ -25,6 +25,7 @@ import java.util.List;
  *         &lt;element name="codigoAsuntoDenominacion" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/&gt;
  *         &lt;element name="codigoEntidadRegistralProcesado" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/&gt;
  *         &lt;element name="codigoError" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/&gt;
+ *         &lt;element name="codigoFuncionarioHabilitado" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/&gt;
  *         &lt;element name="codigoSia" type="{http://www.w3.org/2001/XMLSchema}long" minOccurs="0"/&gt;
  *         &lt;element name="codigoUsuario" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/&gt;
  *         &lt;element name="decodificacionEntidadRegistralProcesado" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/&gt;
@@ -49,6 +50,8 @@ import java.util.List;
  *         &lt;element name="libroCodigo" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/&gt;
  *         &lt;element name="metadatos" type="{http://impl.v3.ws.regweb3.caib.es/}metadatoWs" maxOccurs="unbounded" minOccurs="0"/&gt;
  *         &lt;element name="motivo" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/&gt;
+ *         &lt;element name="nifFuncionarioHabilitado" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/&gt;
+ *         &lt;element name="nombreFuncionarioHabilitado" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/&gt;
  *         &lt;element name="numeroExpediente" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/&gt;
  *         &lt;element name="numeroRegistro" type="{http://www.w3.org/2001/XMLSchema}int"/&gt;
  *         &lt;element name="numeroRegistroDestino" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/&gt;
@@ -85,6 +88,7 @@ import java.util.List;
     "codigoAsuntoDenominacion",
     "codigoEntidadRegistralProcesado",
     "codigoError",
+    "codigoFuncionarioHabilitado",
     "codigoSia",
     "codigoUsuario",
     "decodificacionEntidadRegistralProcesado",
@@ -109,6 +113,8 @@ import java.util.List;
     "libroCodigo",
     "metadatos",
     "motivo",
+    "nifFuncionarioHabilitado",
+    "nombreFuncionarioHabilitado",
     "numeroExpediente",
     "numeroRegistro",
     "numeroRegistroDestino",
@@ -139,6 +145,7 @@ public class AsientoRegistralWs {
     protected String codigoAsuntoDenominacion;
     protected String codigoEntidadRegistralProcesado;
     protected String codigoError;
+    protected String codigoFuncionarioHabilitado;
     protected Long codigoSia;
     protected String codigoUsuario;
     protected String decodificacionEntidadRegistralProcesado;
@@ -174,6 +181,8 @@ public class AsientoRegistralWs {
     @XmlElement(nillable = true)
     protected List<MetadatoWs> metadatos;
     protected String motivo;
+    protected String nifFuncionarioHabilitado;
+    protected String nombreFuncionarioHabilitado;
     protected String numeroExpediente;
     protected int numeroRegistro;
     protected String numeroRegistroDestino;
@@ -365,6 +374,30 @@ public class AsientoRegistralWs {
      */
     public void setCodigoError(String value) {
         this.codigoError = value;
+    }
+
+    /**
+     * Obtiene el valor de la propiedad codigoFuncionarioHabilitado.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getCodigoFuncionarioHabilitado() {
+        return codigoFuncionarioHabilitado;
+    }
+
+    /**
+     * Define el valor de la propiedad codigoFuncionarioHabilitado.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setCodigoFuncionarioHabilitado(String value) {
+        this.codigoFuncionarioHabilitado = value;
     }
 
     /**
@@ -951,6 +984,54 @@ public class AsientoRegistralWs {
      */
     public void setMotivo(String value) {
         this.motivo = value;
+    }
+
+    /**
+     * Obtiene el valor de la propiedad nifFuncionarioHabilitado.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getNifFuncionarioHabilitado() {
+        return nifFuncionarioHabilitado;
+    }
+
+    /**
+     * Define el valor de la propiedad nifFuncionarioHabilitado.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setNifFuncionarioHabilitado(String value) {
+        this.nifFuncionarioHabilitado = value;
+    }
+
+    /**
+     * Obtiene el valor de la propiedad nombreFuncionarioHabilitado.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getNombreFuncionarioHabilitado() {
+        return nombreFuncionarioHabilitado;
+    }
+
+    /**
+     * Define el valor de la propiedad nombreFuncionarioHabilitado.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setNombreFuncionarioHabilitado(String value) {
+        this.nombreFuncionarioHabilitado = value;
     }
 
     /**
