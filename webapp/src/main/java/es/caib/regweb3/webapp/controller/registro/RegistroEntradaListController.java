@@ -291,6 +291,11 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
             model.addAttribute("posYsello", entidadActiva.getPosYsello());
         }
 
+        //Parche para mostrar la información de funcionario habilitado cuando el registro viene de SISTRA.
+        if(registro.getRegistroDetalle().getAplicacionTelematica()!=null){
+            model.addAttribute("isSistra", registro.getRegistroDetalle().getAplicacionTelematica().contains("SISTRA"));
+        }
+
         // Alta en tabla LOPD
         lopdEjb.altaLopd(registro.getNumeroRegistro(), registro.getFecha(), registro.getLibro().getId(), usuarioEntidad.getId(), RegwebConstantes.REGISTRO_ENTRADA, RegwebConstantes.LOPD_CONSULTA);
 

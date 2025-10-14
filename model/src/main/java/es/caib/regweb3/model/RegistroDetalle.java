@@ -109,6 +109,14 @@ public class RegistroDetalle implements Serializable {
     @XmlTransient
     private Boolean recibidoSir = false;
 
+    //Funcionarios habilitados
+    @XmlElement
+    String codigoFuncionarioHabilitado;
+    @XmlElement
+    String nombreFuncionarioHabilitado;
+    @XmlElement
+    String nifFuncionarioHabilitado;
+
 
     public RegistroDetalle() {
     }
@@ -518,6 +526,31 @@ public class RegistroDetalle implements Serializable {
 
     public void setRecibidoSir(Boolean sir) {
         this.recibidoSir = sir;
+    }
+
+    @Column(name = "CODIGO_FUNC_HAB")
+    public String getCodigoFuncionarioHabilitado() {
+        return codigoFuncionarioHabilitado;
+    }
+
+    public void setCodigoFuncionarioHabilitado(String codigoFuncionarioHabilitado) {
+        this.codigoFuncionarioHabilitado = codigoFuncionarioHabilitado;
+    }
+    @Column(name = "NOMBRE_FUNC_HAB")
+    public String getNombreFuncionarioHabilitado() {
+        return nombreFuncionarioHabilitado;
+    }
+
+    public void setNombreFuncionarioHabilitado(String nombreFuncionarioHabilitado) {
+        this.nombreFuncionarioHabilitado = nombreFuncionarioHabilitado;
+    }
+    @Column(name = "NIF_FUNC_HAB", length = 256)
+    public String getNifFuncionarioHabilitado() {
+        return nifFuncionarioHabilitado;
+    }
+
+    public void setNifFuncionarioHabilitado(String nifFuncionarioHabilitado) {
+        this.nifFuncionarioHabilitado = nifFuncionarioHabilitado;
     }
 
     @Transient

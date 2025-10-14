@@ -874,12 +874,7 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
             taulaInformacio.addCell(new Paragraph(tradueixMissatge(locale,"justificante.docFisica"), lletraGovern9bold));
             taulaInformacio.addCell(new Paragraph(tradueixMissatge(locale,"tipoDocumentacionFisica." + registro.getRegistroDetalle().getTipoDocumentacionFisica()), lletraGovern8));
         }
-        // Referència externa
-        if(StringUtils.isNotEmpty(registro.getRegistroDetalle().getReferenciaExterna())) {
-            i += 1;
-            taulaInformacio.addCell(new Paragraph(tradueixMissatge(locale, "justificante.refExterna"), lletraGovern9bold));
-            taulaInformacio.addCell(new Paragraph(registro.getRegistroDetalle().getReferenciaExterna(), lletraGovern8));
-        }
+
         // Expedient
         if(StringUtils.isNotEmpty(registro.getRegistroDetalle().getExpediente())) {
             i += 1;
@@ -919,12 +914,26 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
             }
         }
 
-        // Observacions
-        if(StringUtils.isNotEmpty(registro.getRegistroDetalle().getObservaciones())) {
+        if(StringUtils.isNotEmpty(registro.getRegistroDetalle().getCodigoFuncionarioHabilitado()) && registro.getRegistroDetalle().getAplicacionTelematica().contains("SISTRA")){
             i += 1;
-            taulaInformacio.addCell(new Paragraph(tradueixMissatge(locale, "justificante.observacions"), lletraGovern9bold));
-            taulaInformacio.addCell(new Paragraph(registro.getRegistroDetalle().getObservaciones(), lletraGovern8));
+            taulaInformacio.addCell(new Paragraph(tradueixMissatge(locale, "justificante.funcHabilitado"), lletraGovern9bold));
+            taulaInformacio.addCell(new Paragraph( registro.getRegistroDetalle().getCodigoFuncionarioHabilitado(), lletraGovern8)); // Mostramos solo el código de funcionario habilitado que está en referencia externa
+        }else{
+            // Referència externa
+            if(StringUtils.isNotEmpty(registro.getRegistroDetalle().getReferenciaExterna())) {
+                i += 1;
+                taulaInformacio.addCell(new Paragraph(tradueixMissatge(locale, "justificante.refExterna"), lletraGovern9bold));
+                taulaInformacio.addCell(new Paragraph(registro.getRegistroDetalle().getReferenciaExterna(), lletraGovern8));
+            }
+
+            // Observacions
+            if(StringUtils.isNotEmpty(registro.getRegistroDetalle().getObservaciones())) {
+                i += 1;
+                taulaInformacio.addCell(new Paragraph(tradueixMissatge(locale, "justificante.observacions"), lletraGovern9bold));
+                taulaInformacio.addCell(new Paragraph(registro.getRegistroDetalle().getObservaciones(), lletraGovern8));
+            }
         }
+
         // Código SIA
         if(registro.getRegistroDetalle().getCodigoSia() != null) {
             i += 1;

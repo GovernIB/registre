@@ -75,16 +75,25 @@
 </dd>
 </c:if>
 <c:if test="${not empty registro.registroDetalle.idioma}"><dt><i class="fa fa-bullhorn"></i> <spring:message code="registroEntrada.idioma"/>:</dt> <dd> <spring:message code="idioma.${registro.registroDetalle.idioma}"/></dd></c:if>
-<c:if test="${not empty registro.registroDetalle.codigoAsunto}"> <dt><i class="fa fa-thumb-tack"></i> <spring:message code="codigoAsunto.codigoAsunto"/>: </dt> <dd> ${registro.registroDetalle.codigoAsunto.traducciones[pageContext.response.locale.language].nombre}</dd></c:if>
-<c:if test="${not empty registro.registroDetalle.referenciaExterna}"> <dt><i class="fa fa-thumb-tack"></i> <spring:message code="registroEntrada.referenciaExterna"/>: </dt> <dd> ${registro.registroDetalle.referenciaExterna}</dd></c:if>
-<c:if test="${not empty registro.registroDetalle.expediente}"> <dt><i class="fa fa-newspaper-o"></i> <spring:message code="registroEntrada.expediente"/>: </dt> <dd> ${registro.registroDetalle.expediente}</dd></c:if>
+
 <c:if test="${not empty registro.registroDetalle.transporte || not empty registro.registroDetalle.numeroTransporte}"> <dt><i class="fa fa-bus"></i> <spring:message code="registroEntrada.transporte"/>: </dt></c:if>  <c:if test="${not empty registro.registroDetalle.transporte}"><dd> <spring:message code="transporte.0${registro.registroDetalle.transporte}"/></c:if>  <c:if test="${not empty registro.registroDetalle.numeroTransporte}">${registro.registroDetalle.numeroTransporte}</dd></c:if>
 <c:if test="${not empty registro.registroDetalle.oficinaOrigen}"> <dt><i class="fa fa-home"></i> <spring:message code="registroEntrada.oficinaOrigen"/>: </dt> <dd> ${registro.registroDetalle.oficinaOrigen.denominacion} </dd></c:if>
 <c:if test="${not empty registro.registroDetalle.oficinaOrigenExternoCodigo}"> <dt><i class="fa fa-home"></i> <spring:message code="registroEntrada.oficinaOrigen"/>: </dt> <dd> ${registro.registroDetalle.oficinaOrigenExternoDenominacion}</dd></c:if>
 <c:if test="${not empty registro.registroDetalle.numeroRegistroOrigen}"> <dt><i class="fa fa-barcode"></i> <spring:message code="registroEntrada.numeroRegistroOrigen"/>: </dt> <dd> ${registro.registroDetalle.numeroRegistroOrigen}</dd></c:if>
 <c:if test="${not empty registro.registroDetalle.fechaOrigen}"> <dt><i class="fa fa-clock-o"></i> <spring:message code="registroEntrada.fechaOrigen"/>: </dt> <dd> <fmt:formatDate value="${registro.registroDetalle.fechaOrigen}" pattern="dd/MM/yyyy HH:mm:ss"/></dd></c:if>
 <c:if test="${not empty registro.registroDetalle.codigoSia}"> <dt><i class="fa fa-barcode"></i> <spring:message code="registroEntrada.codigoSIA"/>: </dt> <dd> ${registro.registroDetalle.codigoSia}</dd></c:if>
-<c:if test="${not empty registro.registroDetalle.observaciones}"> <dt><i class="fa fa-file-text-o"></i> <spring:message code="registroEntrada.observaciones"/>: </dt> <dd> ${registro.registroDetalle.observaciones}</dd></c:if>
+<c:if test="${!param.esSistra}">
+    NO SISTRA
+    <c:if test="${not empty registro.registroDetalle.referenciaExterna}"> <dt><i class="fa fa-thumb-tack"></i> <spring:message code="registroEntrada.referenciaExterna"/>: </dt> <dd> ${registro.registroDetalle.referenciaExterna}</dd></c:if>
+    <c:if test="${not empty registro.registroDetalle.expediente}"> <dt><i class="fa fa-newspaper-o"></i> <spring:message code="registroEntrada.expediente"/>: </dt> <dd> ${registro.registroDetalle.expediente}</dd></c:if>
+    <c:if test="${not empty registro.registroDetalle.observaciones}"> <dt><i class="fa fa-file-text-o"></i> <spring:message code="registroEntrada.observaciones"/>: </dt> <dd> ${registro.registroDetalle.observaciones}</dd></c:if>
+</c:if>
+<c:if test="${param.esSistra}">
+
+    <c:if test="${not empty registro.registroDetalle.codigoFuncionarioHabilitado}"> <dt><i class="fa fa-user-circle"></i> <spring:message code="registroEntrada.funcionarioHabilitado"/>: </dt> <dd> ${registro.registroDetalle.nombreFuncionarioHabilitado} (${registro.registroDetalle.codigoFuncionarioHabilitado})</dd></c:if>
+    <c:if test="${not empty registro.registroDetalle.nifFuncionarioHabilitado}"> <dt><i class="fa fa-id-card"></i> NIF: </dt> <dd> ${registro.registroDetalle.nifFuncionarioHabilitado}</dd></c:if>
+</c:if>
+
 <hr class="${divider}">
 <c:if test="${loginInfo.rolActivo.nombre == 'RWE_ADMIN'}">
     <c:if test="${not empty registro.usuario}">

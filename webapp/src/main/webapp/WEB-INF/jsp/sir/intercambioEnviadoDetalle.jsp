@@ -60,6 +60,7 @@
                                     <%--Detalle registro--%>
                                     <c:import url="../registro/detalleRegistro.jsp">
                                         <c:param name="tipoRegistro" value="intercambio"/>
+                                        <c:param name="esSistra" value="${isSistra}"/>
                                     </c:import>
 
                                     <%--Reintentos--%>
@@ -111,6 +112,7 @@
                                     <%--Detalle registro--%>
                                     <c:import url="../registro/detalleRegistro.jsp">
                                         <c:param name="tipoRegistro" value="intercambio"/>
+                                        <c:param name="esSistra" value="${isSistra}"/>
                                     </c:import>
 
                                     <%--Reintentos--%>

@@ -346,6 +346,14 @@ public class SirController extends BaseController {
         model.addAttribute("oficioRemision", oficioRemision);
         model.addAttribute("integracion", new BasicForm());
 
+        //Parche para mostrar la información de funcionario habilitado cuando el registro viene de SISTRA.
+        if(!oficioRemision.getRegistrosEntrada().isEmpty() && oficioRemision.getRegistrosEntrada().get(0).getRegistroDetalle().getAplicacionTelematica()!=null){
+            model.addAttribute("isSistra", oficioRemision.getRegistrosEntrada().get(0).getRegistroDetalle().getAplicacionTelematica().contains("SISTRA"));
+        }
+        if(!oficioRemision.getRegistrosSalida().isEmpty() && oficioRemision.getRegistrosSalida().get(0).getRegistroDetalle().getAplicacionTelematica()!=null){
+            model.addAttribute("isSistra", oficioRemision.getRegistrosSalida().get(0).getRegistroDetalle().getAplicacionTelematica().contains("SISTRA"));
+        }
+
         return "sir/intercambioEnviadoDetalle";
     }
 

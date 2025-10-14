@@ -49,6 +49,7 @@
                         <dl class="detalle_registro">
                             <c:import url="../registro/detalleRegistro.jsp">
                                 <c:param name="tipoRegistro" value="${RegwebConstantes.REGISTRO_SALIDA}"/>
+                                <c:param name="esSistra" value="${isSistra}"/>
                             </c:import>
                         </dl>
 

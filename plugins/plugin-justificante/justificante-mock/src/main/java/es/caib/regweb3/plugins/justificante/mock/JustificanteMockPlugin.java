@@ -230,7 +230,7 @@ public class JustificanteMockPlugin extends AbstractPluginProperties implements 
 
             // Información adicional del Registro
             adicionalRegistre(locale, document, extracte, nomDesti, expedient, tipoAsunto, codigoAsunto, nomIdioma, refExterna, transport,
-                    numTransport, oficinaOrigen, numRegOrigen, dataOrigen, observacions);
+                    numTransport, oficinaOrigen, numRegOrigen, dataOrigen, observacions, registroEntrada.getRegistroDetalle().getCodigoFuncionarioHabilitado());
 
             // Anexos
             List<AnexoFull> anexos = registroEntrada.getRegistroDetalle().getAnexosFull();
@@ -351,9 +351,10 @@ public class JustificanteMockPlugin extends AbstractPluginProperties implements 
             List<Interesado> interesados = registroSalida.getRegistroDetalle().getInteresados();
             llistarInteressats(interesados, locale, document, true);
 
+
             // Información adicional del Registro
-            adicionalRegistre(locale, document, extracte, nomOrigen, expedient, tipoAsunto, codigoAsunto, nomIdioma, refExterna, transport,
-                    numTransport, oficinaOrigen, numRegOrigen, dataOrigen, observacions);
+           adicionalRegistre(locale, document, extracte, nomOrigen, expedient, tipoAsunto, codigoAsunto, nomIdioma, refExterna, transport,
+                    numTransport, oficinaOrigen, numRegOrigen, dataOrigen, observacions,registroSalida.getRegistroDetalle().getNombreFuncionarioHabilitado());
 
             // Anexos
             List<AnexoFull> anexos = registroSalida.getRegistroDetalle().getAnexosFull();
@@ -839,7 +840,7 @@ public class JustificanteMockPlugin extends AbstractPluginProperties implements 
     protected void adicionalRegistre(Locale locale, Document document, String extracte, String nomDesti, String expedient,
                                      String tipoAsunto, String codigoAsunto, String idioma, String refExterna, String transport,
                                      String numTransport, String oficinaOrigen, String numRegOrigen, String dataOrigen,
-                                     String observacions) throws I18NException, DocumentException {
+                                     String observacions, String funcionariHabilitat) throws I18NException, DocumentException {
 
         // Creamos estilo para el título Información
         PdfPTable titolInformacio = new PdfPTable(1);
@@ -939,6 +940,12 @@ public class JustificanteMockPlugin extends AbstractPluginProperties implements 
             i += 1;
             taulaInformacio.addCell(new Paragraph(tradueixMissatge(locale, "justificante.observacions"), font8Bold));
             taulaInformacio.addCell(new Paragraph(observacions, font8));
+        }
+
+        if(StringUtils.isNotEmpty(funcionariHabilitat) ) {
+            i += 1;
+            taulaInformacio.addCell(new Paragraph(tradueixMissatge(locale, "justificante.funcHabilitado"), font8Bold));
+            taulaInformacio.addCell(new Paragraph(funcionariHabilitat, font8));
         }
         if(!esPar(i)) {
             // Completa la cel·la buida
