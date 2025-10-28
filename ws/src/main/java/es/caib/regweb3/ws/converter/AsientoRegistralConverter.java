@@ -23,7 +23,7 @@ public class AsientoRegistralConverter extends CommonConverter {
 
 
    /**
-    * Convierte un {@link es.caib.regweb3.ws.model.RegistroEntradaWs} en un {@link es.caib.regweb3.model.RegistroEntrada}
+    * Convierte un {@link es.caib.regweb3.ws.model.AsientoRegistralWs} en un {@link es.caib.regweb3.model.RegistroEntrada}
     * @param asientoRegistral
     * @return
     * @throws Exception
@@ -124,6 +124,9 @@ public class AsientoRegistralConverter extends CommonConverter {
        registroDetalle.setIdioma(getIdioma(asientoRegistral.getIdioma()));
        registroDetalle.setCodigoSia(String.valueOf(asientoRegistral.getCodigoSia()));
 
+      if(StringUtils.isNotEmpty(asientoRegistral.getCodigoFuncionarioHabilitado())){registroDetalle.setCodigoFuncionarioHabilitado(asientoRegistral.getCodigoFuncionarioHabilitado());}
+      if(StringUtils.isNotEmpty(asientoRegistral.getNombreFuncionarioHabilitado())){registroDetalle.setNombreFuncionarioHabilitado(asientoRegistral.getNombreFuncionarioHabilitado());}
+      if(StringUtils.isNotEmpty(asientoRegistral.getNifFuncionarioHabilitado())){registroDetalle.setNifFuncionarioHabilitado(asientoRegistral.getNifFuncionarioHabilitado());}
       if (StringUtils.isNotEmpty(asientoRegistral.getCodigoAsunto())) {registroDetalle.setCodigoAsunto(getCodigoAsunto(asientoRegistral.getCodigoAsunto(), codigoAsuntoEjb));}
       if (StringUtils.isNotEmpty(asientoRegistral.getReferenciaExterna())) {registroDetalle.setReferenciaExterna(asientoRegistral.getReferenciaExterna());}
       if (StringUtils.isNotEmpty(asientoRegistral.getNumeroExpediente())) {registroDetalle.setExpediente(asientoRegistral.getNumeroExpediente());}
