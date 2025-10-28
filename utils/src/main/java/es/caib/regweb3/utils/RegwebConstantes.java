@@ -589,6 +589,7 @@ public interface RegwebConstantes {
 
     Map<Character, Long> TIPODOCUMENTOID_BY_CODIGO_NTI = RegwebUtils.invert(CODIGO_NTI_BY_TIPODOCUMENTOID);
 
+    int DOCUMENTO_LONGITUD_MAX_SICRES3 = 17;
 
     /* -------------- CANAL NOTIFICACION --------------*/
     long CANALNOTIFICACION_DIRECCION_POSTAL = 1;
