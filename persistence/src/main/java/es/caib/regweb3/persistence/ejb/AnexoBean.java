@@ -115,6 +115,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
     @Autowired
     ArxiuCaibUtils arxiuCaibUtils;
 
+    private static List<String> uuids = new ArrayList<String>();
 
     @Override
     public Anexo getReference(Long id) throws Exception {
@@ -315,6 +316,9 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             if (custodyID == null) {
                 custodyID = custody.reserveCustodyID(custodyParameters);
             }
+            
+            uuids.add(custodyID);
+            
             anexo.setCustodiaID(custodyID);
 
             //Integración
@@ -374,6 +378,10 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
                 }
             }
         }
+    }
+    
+    public List<String> getCurrentUuids() {
+    	return uuids;
     }
 
     /**
@@ -878,6 +886,10 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             if (anexo.getTipoDocumento() != null) {
                 metadades.add(new Metadata("anexo.tipoDocumento", I18NLogicUtils.tradueix(loc, "tipoDocumento.0" + anexo.getTipoDocumento())));
             }
+            
+            if (anexo.getTipoDocumento() != null) {
+                metadades.add(new Metadata("anexo.tipoDocumento.codigo", "tipoDocumento.0" + anexo.getTipoDocumento()));
+            }
 
             // Oficina
             if (registro.getOficina() != null && registro.getOficina().getNombreCompleto() != null) {
@@ -1333,7 +1345,8 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
     }
 
 
-    @Override
+    @SuppressWarnings("unchecked")
+	@Override
     public List<String> obtenerCustodyIdAnexosDistribuidos(Integer meses, Integer numElementos) throws Exception {
             Date fechaPurgo = DateUtils.addMonths(new Date(), -meses);
 
@@ -1563,6 +1576,29 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
         }
 
     }
+    
+    @Override
+    public boolean eliminarCustodiaAnexo(String custodiaID, Long idEntidad) throws Exception, I18NException {
+
+        if (custodiaID == null) {
+            log.warn("eliminarCustodia :: CustodiaID vale null !!!!!", new Exception());
+            return false;
+        } else {
+            IDocumentCustodyPlugin custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA_ANEXOS);
+
+            custody.deleteCustody(custodiaID);
+            return true;
+
+        }
+
+    }
+    
+    @Override
+    public void actualizarFirmaVerificada(Long idAnexo) {
+        Query q = em.createQuery("update Anexo set firmaverificada = true where id = :idAnexo");
+        q.setParameter("idAnexo", idAnexo);
+        q.executeUpdate();
+    }
 
     /**
      * Obtiene la url de validacion del documento. Si no soporta url, devuelve null
@@ -1715,44 +1751,77 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
         return descargarFirmaDesdeUrlValidacion(anexo, idEntidad);
     }
 
-	@SuppressWarnings("unchecked")
 	@Override
 	@TransactionTimeout(value = 3000)  // 50 minutos
 	public void actualizarAnexosSistraPendientesVerificacionFirma(Long idEntidad) throws I18NException, CustodyException, NotSupportedCustodyException, MetadataFormatException {
 		// Recuperar anexos recibidos de Sistra y sin verificar si viene firmado (firmaverificada = false)	
-		Query qs = em.createQuery("select rd from RegistroDetalle as rd join rd.anexos anexo " + 
-				"where anexo.firmaverificada = false and anexo.modoFirma = :modofirma order by anexo.id");
+		List<RegistroDetalle> registrosDetalle = obtenerRegistrosPendienteVerificacion();
 		
-        qs.setParameter("modofirma", RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA);
-		List<RegistroDetalle> registrosDetalle = qs.getResultList();
 		boolean anexosVerificados = true;
+
+		log.info("start: actualizarAnexosSistraPendientesVerificacionFirma");
+		
+		log.info("------------------------------------------------------------");
 		
 		if (registrosDetalle != null && !registrosDetalle.isEmpty()) {
 			for (RegistroDetalle registroDetalle : registrosDetalle) {
+				log.debug("===== verificación anexos del registroDetalle: " + registroDetalle.getId());
 				
-				log.info("------------------------------------------------------------");
-				for (Anexo anexo : registroDetalle.getAnexos()) {
-					log.info("===== Verificación automática de la firma del anexo " + anexo.getId() + " iniciada");
+				List<Anexo> anexos = obtenerAnexosRegistroDetalle(registroDetalle.getId());
+				
+				for (Anexo anexo : anexos) {
+					log.debug("===== Verificación automática de la firma del anexo " + anexo.getId() + " iniciada");
 					try {
-						anexoHelper.actualizarAnexoSistraPendienteVerificacionFirma(anexo, idEntidad);
+						anexoHelper.actualizarAnexoSistraPendienteVerificacionFirma(anexo.getId(), idEntidad);
 					} catch (Exception e) {
 						log.error("===== Ha habido un error en la verificación automática de la firma del anexo " + anexo.getId());
 						anexosVerificados = false;
 						e.printStackTrace();
 					}
-					log.info("===== Ha finalizado la verificación automática de la firma del anexo " + anexo.getId());
+					log.debug("===== Ha finalizado la verificación automática de la firma del anexo " + anexo.getId());
 				}
+				
+				log.debug("===== Actualización del campo anexosVerificados de la cola");
 				
 				anexoHelper.actualizarAnexosVerificadosCola(
 						idEntidad, 
 						registroDetalle.getId(),
 						anexosVerificados);
 				
-				log.info("------------------------------------------------------------");
-				log.info("");
+				log.debug("===== verificación anexos del registroDetalle: " + registroDetalle.getId() + " finalizada");
 			
 			}
 		}
+		
+		log.info("------------------------------------------------------------");
+		
+		log.info("finish: actualizarAnexosSistraPendientesVerificacionFirma");
+	}
+
+	@SuppressWarnings("unchecked")
+	private List<RegistroDetalle> obtenerRegistrosPendienteVerificacion() {
+		Query qs = em.createQuery("select rd from RegistroDetalle as rd join rd.anexos anexo " + 
+				"where anexo.firmaverificada = false and anexo.modoFirma = :modofirma order by anexo.id");
+		
+        qs.setParameter("modofirma", RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA);
+		List<RegistroDetalle> registrosDetalle = qs.getResultList();
+		
+		return registrosDetalle;
+	}
+
+	@SuppressWarnings("unchecked")
+	private List<Anexo> obtenerAnexosRegistroDetalle(Long registroDetalleId) {
+		Query qs = em.createQuery("select anexo from Anexo as anexo "
+				+ "where anexo.firmaverificada = false "
+				+ "and anexo.modoFirma = :modofirma "
+				+ "and anexo.registroDetalle.id = :registroDetalle "
+				+ "order by anexo.id");
+		
+		qs.setParameter("modofirma", RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA);
+		qs.setParameter("registroDetalle", registroDetalleId);
+		List<Anexo> anexos = qs.getResultList();
+		
+		return anexos;
 	}
 
 	@Override
@@ -1763,7 +1832,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 			log.info("=====Verificación manual de la firma del anexo con id=" + idAnexo + " iniciada");
 			boolean anexoVerificado = true;
 			try {
-				anexoHelper.actualizarAnexoSistraPendienteVerificacionFirma(anexo, idEntidad);
+				anexoHelper.actualizarAnexoSistraPendienteVerificacionFirma(anexo.getId(), idEntidad);
 			} catch (Exception e) {
 				log.error("===== Ha habido un error en la verificación automática de la firma del anexo " + anexo.getId());
 				anexoVerificado = false;

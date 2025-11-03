@@ -118,7 +118,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     public RegistroEntrada registrarEntrada(RegistroEntrada registroEntrada,
                                             UsuarioEntidad usuarioEntidad, List<Interesado> interesados, List<AnexoFull> anexosFull, Boolean validarAnexos, boolean enviarGeiser)
             throws Exception, I18NException, I18NValidationException {
-
+    	boolean error = false;
         try {
             // Guardar RegistroEntrada
             registroEntrada = persist(registroEntrada);
@@ -184,21 +184,46 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 					throw gpe;
 				}
             }
+            
+            if (! enviarGeiser) {
+            	for (AnexoFull anexoFull : registroEntrada.getRegistroDetalle().getAnexosFull()) {
+            		// Els fitxers tècnics no es modifiquen després manualment, els feim defintius en aquest punt
+            		if (anexoFull.getAnexo().getTipoDocumento().equals(RegwebConstantes.TIPO_DOCUMENTO_FICHERO_TECNICO)) {
+	            		anexoEjb.actualizarMetadatosAnexo(
+	            				registroEntrada, 
+	            				anexoFull, 
+	            				registroEntrada.getUsuario(),
+	            				true);
+            		}
+    			}
+            }
+            
             return registroEntrada;
 
         } catch (I18NException | Exception i18n) {
+        	error = true;
             log.info("Error registrando la entrada");
             i18n.printStackTrace();
             ejbContext.setRollbackOnly();
             throw i18n;
-
         } catch (I18NValidationException i18nv) {
+        	error = true;
             log.info("Error de validación registrando la entrada");
             i18nv.printStackTrace();
             ejbContext.setRollbackOnly();
             throw i18nv;
-
-        }
+        } finally {
+        	if (error) {
+	        	// Eliminar anexos si hay error
+		        for (String uuid: anexoEjb.getCurrentUuids()) {
+		           	try {
+		           		anexoEjb.eliminarCustodiaAnexo(uuid, usuarioEntidad.getEntidad().getId());
+			        } catch (Exception e) {
+						log.error("Ha habido un error eliminando un anexo de Alfresco [ " + uuid + "]", e);
+					}
+				}
+        	}
+		}
 
     }
 

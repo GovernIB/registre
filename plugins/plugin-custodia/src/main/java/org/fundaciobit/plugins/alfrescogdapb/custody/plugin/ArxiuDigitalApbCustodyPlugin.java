@@ -18,9 +18,14 @@ import javax.xml.bind.DatatypeConverter;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
+import org.fundaciobit.plugins.alfrescogdapb.custody.helper.APIHelper;
 import org.fundaciobit.plugins.alfrescogdapb.custody.helper.ArxiuConstants;
+import org.fundaciobit.plugins.alfrescogdapb.custody.helper.ArxiuFirmaDetallDto;
+import org.fundaciobit.plugins.alfrescogdapb.custody.helper.AutenticacioDto;
 import org.fundaciobit.plugins.alfrescogdapb.custody.helper.SignatureConstants;
 import org.fundaciobit.plugins.alfrescogdapb.custody.helper.Utils;
+import org.fundaciobit.plugins.alfrescogdapb.custody.helper.ValidaSignaturaPeticio;
+import org.fundaciobit.plugins.alfrescogdapb.custody.helper.ValidaSignaturaResposta;
 import org.fundaciobit.plugins.alfrescogdapb.custody.plugin.api.ArxiuDigitalApi;
 import org.fundaciobit.plugins.alfrescogdapb.custody.plugin.cmis.OpenCmisAlfrescoHelper;
 import org.fundaciobit.plugins.certificate.InformacioCertificat;
@@ -322,6 +327,9 @@ public class ArxiuDigitalApbCustodyPlugin extends AbstractPluginProperties imple
 			}
 			Object tipoDocumentalNti = metadades.get("anexo.tipoDocumental.codigo");
 			Object origenNti = metadades.get("eni:origen");
+			
+			boolean isFicheroTecnico = isFicheroTecnico(metadades);
+			
 			String registreTipus = registre.getClass().getName().toLowerCase();
 			if(tipoarchivo.equals("justificante")) {
 				upadatContingutAndMetadadesJustificant(
@@ -386,7 +394,8 @@ public class ArxiuDigitalApbCustodyPlugin extends AbstractPluginProperties imple
 //				deleteDocument(custodyID);
 				throw new CustodyException("No s'ha pogut guardar el document amb custodyID " + custodyID);
 			}
-			if (tipoDocumentalNti != null && origenNti != null && isBorrador(metadadesDocument) && numeroRegistro != null) // Si ve de GEISER (s'ha de poder esborrar el justificant)
+			
+			if (!isFicheroTecnico && tipoDocumentalNti != null && origenNti != null && isBorrador(metadadesDocument) && numeroRegistro != null)
 				api.makeFinal(custodyID);
 			long t1 = System.currentTimeMillis();
 			logger.debug("L'actualització del document ha tardat " + (t1 - t0) + "ms");
@@ -394,6 +403,13 @@ public class ArxiuDigitalApbCustodyPlugin extends AbstractPluginProperties imple
 //			deleteDocument(custodyID);
 			throw new CustodyException("No s'ha pogut actualizar el contingut del document.", ex);
 		}
+	}
+	
+	private boolean isFicheroTecnico(Map<String, Object> metadades) {
+		Object tipoDocumento = metadades.get("anexo.tipoDocumento.codigo");
+		if (tipoDocumento != null && tipoDocumento instanceof String && tipoDocumento.equals("tipoDocumento.03")) return true;
+	
+		return false;
 	}
 	
 	public void deleteDocument(String custodyID) throws CustodyException, NotSupportedCustodyException {
@@ -812,47 +828,51 @@ public class ArxiuDigitalApbCustodyPlugin extends AbstractPluginProperties imple
 		} catch (Exception ex) {
 			logger.error("S'ha produit un error validant la firma del document", ex);
 		}
-	
-//		try {
-//			logger.info("Validant la firma del document per recuperar la informació detallada...");
-//			long t1 = System.currentTimeMillis();
-//			org.w3c.dom.Document respostaValidarFirma = getAfirmaClient().validarFirma(
-//					null,
-//					org.apache.axis.encoding.Base64.encode(document),
-//					null);
-//			long t2 = System.currentTimeMillis();
-//			logger.info("La validació per recuperar la informació detallada ha tardat: " + (t2 - t1) +"ms");
-//			
-//			NodeList certificatNodes = AfirmaUtil.findNodeList( respostaValidarFirma, 
-//					"/Respuesta/descripcion/validacionFirmaElectronica/informacionAdicional/firmante/certificado",
-//					AfirmaUtil.NS_PREFIX_FIRMA);
-//			
-//			for (int i = 0; i < certificatNodes.getLength(); i++) {
-//				Node certificatNode = certificatNodes.item(i);
-//				String certificado = certificatNode.getTextContent();
-//				String nombreCompleto = "";
-//				
-//				org.w3c.dom.Document respostaInfoCertificado = getAfirmaClient().obtenerInfoCertificado(
-//						certificado);
-//				Map<String, String> campos = AfirmaUtil.getCamposCertificado(respostaInfoCertificado);
-//				for (String clau: campos.keySet()) {
-//					nombreCompleto = campos.get("NombreApellidosResponsable");
-//					if (nombreCompleto == null) {
-//						nombreCompleto = campos.get("entidadSuscriptora");
-//					}
-//				}
-//				((ArrayList) firmes.get("apbNTI:nombreFirmante")).add(nombreCompleto);
-//		    	
-//		    	if (campos.get("NIFResponsable") == null) {
-//		    		((ArrayList) firmes.get("apbNTI:idFirmante")).add(campos.get("NIFEntidadSuscriptora"));
-//				} else {
-//					((ArrayList) firmes.get("apbNTI:idFirmante")).add(campos.get("NIFResponsable"));
-//				} 
-//			}
-//		} catch (Exception ex) {
-//			logger.error("Error obtenint les firmes del document: " + ex.getMessage());
-//		}
+		
+	    // A més de firmes de certificat, recuperar firma àgil
+    	try {
+	    	logger.info("Validació firma àgil del document...");
+    		String proxyUrl = getSignaturaAgilProxyEndpointURL();
+    		String validaSignaturaUrl = proxyUrl + "/valida";
+    		
+    		ValidaSignaturaPeticio peticio = new ValidaSignaturaPeticio();
+    		
+    		peticio.setContingut(document);
+    		peticio.setAutenticacio(getAutenticacio());
+    		
+		    ValidaSignaturaResposta respotaFirmaAgil = APIHelper.proxyValidacioPost(
+		    		validaSignaturaUrl, 
+		    		peticio, 
+					ValidaSignaturaResposta.class);
+			
+		    List<ArxiuFirmaDetallDto> detalls = respotaFirmaAgil.getFirmaDetalls();
+		    
+		    if (respotaFirmaAgil.isValida() && detalls != null && ! detalls.isEmpty()) {
+
+		    	logger.info("S'han trobat " + detalls.size() + " signatures àgils");
+		    	
+		    	for (ArxiuFirmaDetallDto firma : respotaFirmaAgil.getFirmaDetalls()) {
+		    		if (firma.getResponsableNif() != null)
+						((ArrayList) firmes.get("apbNTI:idFirmante")).add(firma.getResponsableNif());
+					if (firma.getResponsableNom() != null)
+						((ArrayList) firmes.get("apbNTI:nombreFirmante")).add(firma.getResponsableNom());
+				}
+		    	
+		    }
+    	} catch (Exception ex) {
+    		logger.error("S'ha produit un error validant la firma àgil del document", ex);
+		}
+    	
+    	
 	    return firmes;
+	}
+	
+	private AutenticacioDto getAutenticacio() {
+		AutenticacioDto autenticacio = new AutenticacioDto();
+		autenticacio.setEndpoint(getSignaturaAgilEndpointURL());
+		autenticacio.setUsuari(getSignaturaAgilUsername());
+		autenticacio.setContrasenya(getSignaturaAgilPassword());
+		return autenticacio;
 	}
 
 	private byte [] generarVersioImprimible(String identificador) throws CustodyException {
@@ -1376,6 +1396,23 @@ public class ArxiuDigitalApbCustodyPlugin extends AbstractPluginProperties imple
 	private String getOrganoEni() {
 		return getPropertyString(ARXIUDIGITALCAIB_PROPERTY_BASE + "eni.organo");
 	}
+
+	public String getSignaturaAgilProxyEndpointURL() {
+		return getPropertyString(ARXIUDIGITALCAIB_PROPERTY_BASE + "firmaagil.proxy.endpoint");
+	}
+	
+	public String getSignaturaAgilEndpointURL() {
+		return getPropertyString(ARXIUDIGITALCAIB_PROPERTY_BASE + "firmaagil.endpoint");
+	}
+    
+    private String getSignaturaAgilUsername() {
+		return getPropertyString(ARXIUDIGITALCAIB_PROPERTY_BASE + "firmaagil.username");
+	}
+    
+    private String getSignaturaAgilPassword() {
+		return getPropertyString(ARXIUDIGITALCAIB_PROPERTY_BASE + "firmaagil.password");
+	}
+    
 	private boolean getControlColisions() throws Exception {
 		String controlarColisionsStr = getPropertyString(ARXIUDIGITALCAIB_PROPERTY_BASE + "controlar.colisions");
 		return !controlarColisionsStr.isEmpty() ? Boolean.valueOf(controlarColisionsStr) : true;

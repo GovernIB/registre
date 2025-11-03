@@ -318,4 +318,10 @@ public interface AnexoLocal extends BaseEjb<Anexo, Long> {
 			throws I18NException, CustodyException, NotSupportedCustodyException, MetadataFormatException;
 	
 	public void eliminarAnexosRegistro(IRegistro registro);
+
+	public List<String> getCurrentUuids();
+
+	boolean eliminarCustodiaAnexo(String custodiaID, Long idEntidad) throws Exception, I18NException;
+
+	void actualizarFirmaVerificada(Long anexoId);
 }

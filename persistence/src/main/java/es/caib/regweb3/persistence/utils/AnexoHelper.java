@@ -1,14 +1,15 @@
 package es.caib.regweb3.persistence.utils;
 
-import es.caib.plugins.arxiu.api.Document;
-import es.caib.regweb3.model.*;
-import es.caib.regweb3.model.utils.AnexoFull;
-import es.caib.regweb3.persistence.ejb.ColaLocal;
-import es.caib.regweb3.persistence.ejb.PluginLocal;
-import es.caib.regweb3.persistence.ejb.RegistroDetalleLocal;
-import es.caib.regweb3.persistence.ejb.RegistroEntradaConsultaLocal;
-import es.caib.regweb3.persistence.ejb.SignatureServerLocal;
-import es.caib.regweb3.utils.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+
+import javax.ejb.EJB;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
+
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.plugins.documentcustody.api.CustodyException;
@@ -22,10 +23,19 @@ import org.springframework.stereotype.Component;
 import com.itextpdf.text.pdf.AcroFields;
 import com.itextpdf.text.pdf.PdfReader;
 
-import javax.ejb.EJB;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
-import java.util.*;
+import es.caib.regweb3.model.Anexo;
+import es.caib.regweb3.model.Cola;
+import es.caib.regweb3.model.Entidad;
+import es.caib.regweb3.model.IRegistro;
+import es.caib.regweb3.model.RegistroDetalle;
+import es.caib.regweb3.model.utils.AnexoFull;
+import es.caib.regweb3.persistence.ejb.AnexoLocal;
+import es.caib.regweb3.persistence.ejb.ColaLocal;
+import es.caib.regweb3.persistence.ejb.PluginLocal;
+import es.caib.regweb3.persistence.ejb.RegistroDetalleLocal;
+import es.caib.regweb3.persistence.ejb.RegistroEntradaConsultaLocal;
+import es.caib.regweb3.persistence.ejb.SignatureServerLocal;
+import es.caib.regweb3.utils.RegwebConstantes;
 
 /**
  * @author Limit Tecnologies S.A.
@@ -44,28 +54,27 @@ public class AnexoHelper {
 	private RegistroEntradaConsultaLocal registroEntradaConsultaEjb;
 	@EJB(mappedName = "regweb3/ColaEJB/local")
 	private ColaLocal colaEjb;
+	@EJB(mappedName = "regweb3/AnexoEJB/local")
+	private AnexoLocal anexoEjb;
     @EJB(mappedName = "regweb3/RegistroDetalleEJB/local")
     private RegistroDetalleLocal registroDetalleEjb; 
 	
 	@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-	public void actualizarAnexoSistraPendienteVerificacionFirma(Anexo anexo, Long idEntidad)
-			throws I18NException, CustodyException, NotSupportedCustodyException, MetadataFormatException {
+	public void actualizarAnexoSistraPendienteVerificacionFirma(Long anexoId, Long idEntidad)
+			throws I18NException, Exception {
+		Anexo anexo = anexoEjb.findById(anexoId);
 		String custodyID = anexo.getCustodiaID();
-		DocumentCustody documentCustody = null;// PluginCustodia
-		SignatureCustody signatureCustody = null;// PluginCustodia
-		Document document = null; // PluginArxiu
+		DocumentCustody documentCustody = null;
+		SignatureCustody signatureCustody = null;
 		IDocumentCustodyPlugin custody = null;
 		try {
 			if (anexo.getPerfilCustodia().equals(RegwebConstantes.PERFIL_CUSTODIA_DOCUMENT_CUSTODY)) {
 				// Cargamos el plugin de Custodia
 				custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA_ANEXOS);
 				documentCustody = custody.getDocumentInfo(custodyID);
-				if (documentCustody == null)
+				if (documentCustody == null) {
 					signatureCustody = custody.getSignatureInfo(custodyID);
-			} else if (anexo.getPerfilCustodia().equals(RegwebConstantes.PERFIL_CUSTODIA_ARXIU)) {
-				// Cargamos el plugin de Arxiu
-//				arxiuCaibUtils.cargarPlugin(idEntidad);
-//				document = arxiuCaibUtils.getDocumento(custodyID, RegwebConstantes.ARXIU_VERSION_DOC, true, false);
+				}
 			}
 		} catch (Exception ex) {
 			log.error("Ha habido un error recuperando el documento con uuid " + custodyID + " para la verificación de firma", ex.getCause());
@@ -73,63 +82,18 @@ public class AnexoHelper {
 			log.error("Ha habido un error recuperando el documento con uuid " + custodyID + " para la verificación de firma", ex.getCause());
 		}
 
-		// Firmado en SGD per sin información de firma en Regweb
-		if (documentCustody == null && signatureCustody != null) {
-			arreglarFirmaAnexo(anexo, null, signatureCustody, idEntidad, true);
-		} else if (documentCustody != null || document != null) {
-			// Firmado per sin información en Regweb ni en SGD
-			byte[] contenido = documentCustody != null ? documentCustody.getData()
-					: (document != null ? document.getContingut().getContingut() : null);
-			String contentType = documentCustody != null ? documentCustody.getMime()
-					: (document != null ? document.getContingut().getTipusMime() : null);
-			
-			boolean signed = false;
-			try {
-				log.info("=====Comprobando si el anexo " + anexo.getId() + " contiene firmas");
-				boolean force = false;
-				signed = isAnexoSigned(contenido, contentType, anexo.getId(), force);
-				log.info("=====Anexo con id " + anexo.getId() + " signed: " + signed);
-			} catch (Exception e) {
-				arreglarFirmaAnexo(anexo, documentCustody, null, idEntidad, signed);
-			}
-			
-			if (signed) {
-				log.info("=====Arreglando la firma del anexo " + anexo.getId());
-				arreglarFirmaAnexo(anexo, documentCustody, null, idEntidad, signed);
-
-				// Actualizar datos documento en SGD
-				Map<String, Object> custodyParameters = new HashMap<String, Object>();
-				custodyParameters.put("updateOnlySignature", true);
-				SignatureCustody signature = new SignatureCustody(null, documentCustody.getData(), null);
-				custody.saveAll(custodyID, custodyParameters, null, signature, null);
-				log.info("=====La firma del anexo " + anexo.getId() + " se ha solucionado correctamente");
-			}
-
-		}
-		anexo.setFirmaverificada(true);
+		// Verifica la firma en Alresco y Regweb para no dejar información inconsistente
+		verificarFirmaAnexo(
+				custody,
+				idEntidad,
+				custodyID, 
+				documentCustody, 
+				signatureCustody, 
+				anexo);
 		
-//		
-//		try {
-//			// Actualiza estado cola
-//			Long idRegistroEntrada = registroEntradaConsultaEjb.findIdByRegistroDetalle(anexo.getRegistroDetalle().getId());
-//			Cola cola = colaEjb.findByIdObjeto(idRegistroEntrada, idEntidad);
-//			boolean anexosVerificados = true;
-//			
-//			if (cola != null) {
-//				List<Anexo> anexosRegistroActual = anexo.getRegistroDetalle().getAnexos();
-//				for (Anexo anexoR: anexosRegistroActual) {
-//					if (!anexoR.getFirmaverificada()) {
-//						anexosVerificados = false;
-//						break;
-//					}
-//				}
-//				if (anexosVerificados) {
-//					colaEjb.actualizarAnexosVerificados(cola.getId());
-//				}
-//			}
-//		} catch (Exception e) {
-//			log.error("No se ha podido actualizar el campo anexos_verificados de Cola");
-//		}
+		anexoEjb.actualizarFirmaVerificada(anexoId);
+		
+		log.info("finish: actualizarAnexoSistraPendienteVerificacionFirma [anexoId=" + anexoId + "]");
 	}
 	
 	public void actualizarAnexosVerificadosCola(Long idEntidad, Long idRegistroDetalle, boolean anexosVerificados) {
@@ -145,6 +109,46 @@ public class AnexoHelper {
 		}
 	}
 
+	private void verificarFirmaAnexo (
+			IDocumentCustodyPlugin custody,
+			Long idEntidad,
+			String custodyID, 
+			DocumentCustody documentCustody, 
+			SignatureCustody signatureCustody, 
+			Anexo anexo) throws I18NException, CustodyException, NotSupportedCustodyException, MetadataFormatException {
+		if (documentCustody == null && signatureCustody != null) {
+			// Firmado en SGD per sin información de firma en Regweb?
+			arreglarFirmaAnexo(anexo, null, signatureCustody, idEntidad, true);
+		} else if (documentCustody != null) {
+			// Firmado per sin información en Regweb ni en SGD
+			byte[] contenido = documentCustody.getData();
+			String contentType = documentCustody.getMime();
+			
+			boolean signed = false;
+			try {
+				log.debug("=====Comprobando si el anexo " + anexo.getId() + " contiene firmas");
+				boolean force = false;
+				signed = isAnexoSigned(contenido, contentType, anexo.getId(), force);
+				log.debug("=====Anexo con id " + anexo.getId() + " signed: " + signed);
+			} catch (Exception e) {
+				arreglarFirmaAnexo(anexo, documentCustody, null, idEntidad, signed);
+			}
+			
+			if (signed) {
+				log.debug("=====Arreglando la firma del anexo " + anexo.getId());
+				arreglarFirmaAnexo(anexo, documentCustody, null, idEntidad, signed);
+
+				// Actualizar datos documento en SGD
+				Map<String, Object> custodyParameters = new HashMap<String, Object>();
+				custodyParameters.put("updateOnlySignature", true);
+				SignatureCustody signature = new SignatureCustody(null, documentCustody.getData(), null);
+				custody.saveAll(custodyID, custodyParameters, null, signature, null);
+				log.debug("=====La firma del anexo " + anexo.getId() + " se ha solucionado correctamente");
+			}
+
+		}
+	}
+	
 	private void arreglarFirmaAnexo(Anexo anexo, DocumentCustody documentCustody, SignatureCustody signatureCustody,
 			Long idEntidad, boolean signed) throws I18NException {
 		// Validar firma
@@ -156,8 +160,9 @@ public class AnexoHelper {
 		
 		int estadoFirma = anexoFull.getAnexo().getEstadoFirma();
 		if (RegwebConstantes.ANEXO_FIRMA_NOINFO != estadoFirma ||
-				(RegwebConstantes.ANEXO_FIRMA_NOINFO == estadoFirma && signed))
+				(RegwebConstantes.ANEXO_FIRMA_NOINFO == estadoFirma && signed)) {
 			anexo.setModoFirma(RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED);
+		}
 	}
 
 	private boolean isAnexoSigned(byte[] contingut, String contentType, Long anexoId, boolean force) {
