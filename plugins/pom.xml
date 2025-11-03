@@ -16,12 +16,13 @@
     <name>RegWeb3 - PLUGINS</name>
 
     <modules>
+    	<module>plugin-custodia</module>
         <module>plugin-distribucion</module>
         <module>plugin-justificante</module>
         <module>plugin-postproceso</module>
     	<module>plugin-geiser</module>
-    <module>plugin-lema</module>
-    <module>plugin-notib</module>
+    	<module>plugin-lema</module>
+    	<module>plugin-notib</module>
     </modules>
     <repositories>
         <repository>

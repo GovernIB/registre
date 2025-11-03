@@ -1,0 +1,5 @@
+target/*
+/target/
+/target/*
+/.classpath
+/src/main/java/org/fundaciobit/plugins/alfrescogdapb/custody/plugin/mlevisor/*

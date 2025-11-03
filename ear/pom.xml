@@ -536,11 +536,11 @@
       </exclusions>
     </dependency>
 
- <!-- APB-->
+ 	<!-- APB-->
 	<dependency>
-		<groupId>org.fundaciobit.plugins</groupId>
-		<artifactId>plugin-documentcustody-arxiudigitalapb</artifactId>
-		<version>1.0.4</version>
+		<groupId>es.caib.regweb3</groupId>
+		<artifactId>plugin-custodia</artifactId>
+		<version>${project.version}</version>
 	</dependency>
 	
 	<!-- ============================================ -->
