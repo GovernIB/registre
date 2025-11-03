@@ -304,7 +304,6 @@ public class JustificanteBean implements JustificanteLocal {
                     destinatarios.append(" y ");
                 }
             }
-            destinatarios.append(":");
 
             return destinatarios.toString();
         }
