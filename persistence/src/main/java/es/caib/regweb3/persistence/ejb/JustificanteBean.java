@@ -134,10 +134,9 @@ public class JustificanteBean implements JustificanteLocal {
 			InternetAddress remitente = new InternetAddress(RegwebConstantes.APLICACION_EMAIL, entidad.getNombre());
 			
 			String asunto = "Justificante de presentación de su registro en " + entidad.getNombre();
-	        String nombrePlantilla = "Justificante.docx";
 			Map<String, Object> parametros = obtenerParametros(registro);
 			
-			ContenidoEmail contenido = DocumentHelper.generarHtml(nombrePlantilla, parametros);
+			String contenido = DocumentHelper.generarHtmlCorreoJustificante(parametros);
 			DocumentoDto adjunto = prepararAdjunto(justificante);
 
 			for (Interesado interesado : interesados) {
@@ -229,7 +228,7 @@ public class JustificanteBean implements JustificanteLocal {
 			String email, 
 			String direccionElectronica,
 			String asunto, 
-			ContenidoEmail contenido, 
+			String contenido,
 			InternetAddress remitente,
 			DocumentoDto adjunto) throws I18NException {
 		boolean emailInformado = email != null && !email.trim().isEmpty();
@@ -240,13 +239,12 @@ public class JustificanteBean implements JustificanteLocal {
 				String destino = emailInformado ? email : direccionElectronica;
 				MailUtils.enviaMail(
 						asunto, 
-						contenido.getHtml(), 
+						contenido,
 						remitente, 
 						Message.RecipientType.TO, 
 						destino, 
 						true, 
-						adjunto,
-						contenido.getImagenes());
+						adjunto);
 				
 				log.info("El justificante del registro " + numeroRegistro + " ha sido enviado por email al destinatario " + destino);
 			} catch (Exception e) {
@@ -261,12 +259,14 @@ public class JustificanteBean implements JustificanteLocal {
 		Map<String, Object> parametros = new HashMap<String, Object>();
 		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 		String saludo = generarSaludo(registro.getRegistroDetalle().getInteresados());
+		String destinatarios = obtenerDestinatarios(registro.getRegistroDetalle().getInteresados());
 		String numeroRegistro = registro.getNumeroRegistro();
 		String fechaRegistro = formatter.format(registro.getFecha());
 		String oficinaRegistro = registro.getOficina().getNombre();
 		String enlaceTramite = PropiedadGlobalUtil.getEnlaceDocumentacionAdicional() + numeroRegistro;
 		
 		parametros.put("saludo", saludo);
+		parametros.put("destinatarios", destinatarios);
 		parametros.put("numeroRegistro", numeroRegistro);
 		parametros.put("fechaRegistro", fechaRegistro);
 		parametros.put("oficinaRegistro", oficinaRegistro);
@@ -276,30 +276,39 @@ public class JustificanteBean implements JustificanteLocal {
 	}
 	
 	private String generarSaludo(List<Interesado> interesados) {
-		List<String> nombres = new ArrayList<>();
-	    for (Interesado i : interesados) {
-	        if (i.getNombreCompleto() != null && !i.getNombreCompleto().trim().isEmpty()) {
-	            nombres.add(i.getNombreCompleto().trim());
-	        }
-	    }
-	    
-	    if (nombres.size() == 1) {
-	    	return "Estimado/a " + nombres.get(0) + ":";
-	    } else {
-	    	StringBuilder saludo = new StringBuilder("Estimados/as ");
-	        for (int i = 0; i < nombres.size(); i++) {
-	            saludo.append(nombres.get(i));
-	            if (i < nombres.size() - 2) {
-	                saludo.append(", ");
-	            } else if (i == nombres.size() - 2) {
-	                saludo.append(" y ");
-	            }
-	        }
-	        saludo.append(":");
 
-	        return saludo.toString();
+	    if (interesados.size() == 1) {
+	    	return "Estimado/a";
+	    } else {
+            return ("Estimados/as");
 	    }
 	}
+
+    private String obtenerDestinatarios(List<Interesado> interesados) {
+        List<String> nombres = new ArrayList<>();
+        for (Interesado i : interesados) {
+            if (i.getNombreCompleto() != null && !i.getNombreCompleto().trim().isEmpty()) {
+                nombres.add(i.getNombreCompleto().trim());
+            }
+        }
+
+        if (nombres.size() == 1) {
+            return nombres.get(0);
+        } else {
+            StringBuilder destinatarios = new StringBuilder();
+            for (int i = 0; i < nombres.size(); i++) {
+                destinatarios.append(nombres.get(i));
+                if (i < nombres.size() - 2) {
+                    destinatarios.append(", ");
+                } else if (i == nombres.size() - 2) {
+                    destinatarios.append(" y ");
+                }
+            }
+            destinatarios.append(":");
+
+            return destinatarios.toString();
+        }
+    }
 	
     private DocumentoDto prepararAdjunto(AnexoFull justificante) {
 		DocumentCustody dc = justificante.getDocumentoCustody();
