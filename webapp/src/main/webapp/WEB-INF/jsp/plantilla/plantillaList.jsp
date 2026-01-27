@@ -235,7 +235,7 @@
                 xhr.setRequestHeader("Accept", "application/json");
                 xhr.setRequestHeader("Content-Type", "application/json");
             },
-            success: function(result) {
+            success: function(resultError) {
             mensajeSuccess("#mensajes","S´ha realitzat correctament l'enviament de la plantilla.");
             }
 
@@ -263,9 +263,9 @@
                 xhr.setRequestHeader("Accept", "application/json");
                 xhr.setRequestHeader("Content-Type", "application/json");
             },
-            success: function(result) {
+            success: function(resultError) {
 
-                if(result == true) {
+                if(resultError == true) {
 
                     var botoActiu = "<button type=\"button\" class=\"label label-success\" onclick=\"canviarEstatPlantilla(" + idPlantilla + ",true)\" title=\"Si\"><spring:message code="regweb.si"/></button>";
                     var botoNoActiu = "<button type=\"button\" class=\"label label-danger\" onclick=\"canviarEstatPlantilla(" + idPlantilla + ",false)\" title=\"No\"><spring:message code="regweb.no"/></button>";
@@ -278,7 +278,7 @@
                     $("#mensajes").empty();
                     mensajeSuccess("#mensajes", "<spring:message code="aviso.plantilla.canviEstatOk"/>");
 
-                } else if (result == false){
+                } else if (resultError == false){
                     $("#mensajes").empty();
                     mensajeError("#mensajes", "<spring:message code="aviso.plantilla.canviEstatNok"/>");
                 }
@@ -314,9 +314,9 @@
                 xhr.setRequestHeader("Accept", "application/json");
                 xhr.setRequestHeader("Content-Type", "application/json");
             },
-            success: function(result) {
+            success: function(resultError) {
 
-                if(result == true) { // Si la acción retorna éxito
+                if(resultError == true) { // Si la acción retorna éxito
 
                     if (accion == 1) {  // Sube orden
                         // Guardamos la fila que bajará y cambiamos los valores de sus javascript
@@ -380,7 +380,7 @@
                     $("#mensajes").empty();
                     mensajeSuccess("#mensajes", "<spring:message code="aviso.plantilla.canviOrdreOk"/>");
 
-                } else if (result == false){ // Si la acción retorna error
+                } else if (resultError == false){ // Si la acción retorna error
                     $("#mensajes").empty();
                     mensajeError("#mensajes", "<spring:message code="aviso.plantilla.canviOrdreNok"/>");
                 }

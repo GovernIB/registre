@@ -115,7 +115,7 @@
             success:function(respuesta){
 
                 if(respuesta.status == 'SUCCESS'){
-                    goTo('<c:url value="/dir3/datosCatalogo?result=ok"/>');
+                    goTo('<c:url value="/dir3/datosCatalogo?resultError=ok"/>');
 
                 }else if(respuesta.status == 'FAIL') {
                     mensajeError('#mensajes', respuesta.error);
