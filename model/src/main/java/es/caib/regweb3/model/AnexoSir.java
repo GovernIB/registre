@@ -95,6 +95,8 @@ public class AnexoSir implements Serializable {
     private byte[] firmaBase64;
     private String  referenciaFirma;   //Indica el identificador donde se encuentra el bloque de contenido.
 
+  //  private Set<FirmaSir> firmasSir;
+
 
     public AnexoSir() {
     }
@@ -357,6 +359,21 @@ public class AnexoSir implements Serializable {
     public void setReferenciaFirma(String referenciaFirma) {
         this.referenciaFirma = referenciaFirma;
     }
+
+/*
+    @OneToMany(
+            fetch = FetchType.EAGER,
+            mappedBy = "anexoSir",
+            cascade = {CascadeType.ALL},
+            targetEntity = FirmaSir.class
+    )
+    public Set<FirmaSir> getFirmasSir() {
+        return firmasSir;
+    }
+
+    public void setFirmasSir(Set<FirmaSir> firmasSir) {
+        this.firmasSir = firmasSir;
+    }*/
 
     @Transient
     public byte[] getAnexoData() {
