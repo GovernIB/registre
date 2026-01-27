@@ -50,6 +50,7 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
     private Font lletraGovern10bold;
     private Font lletraGovern9bold;
     private Font lletraGovern14bold;
+    private Boolean entidadExterna = false;
 
     private static final BaseColor GOIB_VERDE = new BaseColor(51, 132, 79);
 
@@ -185,25 +186,33 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
         lletraGovern14bold.setColor(BaseColor.WHITE);
         lletraGovern14bold.setStyle(Font.BOLD);
 
-        // Obtenemos el texto legal correspondiente para cada tipo de Registro
-        if(registro.getRegistroDetalle().getRecibidoSir()){ // Recibido por SIR
-            textoLegalDocElectronica = tradueixMissatge(locale,"justificante.texto.documentosElectronicos.sir");
-        }else if(registro.getRegistroDetalle().getPresencial()){ // Presencial
-            textoLegalDocElectronica = tradueixMissatge(locale,"justificante.texto.documentosElectronicos.presencial");
-        }else{ // Telemático
-            textoLegalDocElectronica = tradueixMissatge(locale,"justificante.texto.documentosElectronicos.telematico");
-        }
+        //Obtenemos si es una entidad externa(no CAIB)
+        String prop = this.getProperty(PROPERTY_CAIB_BASE + "entidad.externa");
+        entidadExterna = "true".equals(prop);
+        if(entidadExterna){
+            textoLegalValidez = this.getProperty(PROPERTY_CAIB_BASE + "validez." + locale);
+        }else {
 
-        // Obtenemos el texto legal correspondiente para cada tipo de Registro
-        if(RegwebConstantes.REGISTRO_SALIDA.equals(tipoRegistro)){ // Registro Salida
-            textoLegalValidez = tradueixMissatge(locale,"justificante.texto.validez.salida");
-        }
-        if(registro.getRegistroDetalle().getRecibidoSir()){ // Recibido por SIR
-            textoLegalValidez = tradueixMissatge(locale,"justificante.texto.validez.sir");
-        }else if(registro.getRegistroDetalle().getPresencial()){ // Presencial
-            textoLegalValidez = tradueixMissatge(locale,"justificante.texto.validez.presencial");
-        }else{ // Telemático
-            textoLegalValidez = tradueixMissatge(locale,"justificante.texto.validez.telematico");
+            // Obtenemos el texto legal correspondiente para cada tipo de Registro
+            if (registro.getRegistroDetalle().getRecibidoSir()) { // Recibido por SIR
+                textoLegalDocElectronica = tradueixMissatge(locale, "justificante.texto.documentosElectronicos.sir");
+            } else if (registro.getRegistroDetalle().getPresencial()) { // Presencial
+                textoLegalDocElectronica = tradueixMissatge(locale, "justificante.texto.documentosElectronicos.presencial");
+            } else { // Telemático
+                textoLegalDocElectronica = tradueixMissatge(locale, "justificante.texto.documentosElectronicos.telematico");
+            }
+
+            // Obtenemos el texto legal correspondiente para cada tipo de Registro
+            if (RegwebConstantes.REGISTRO_SALIDA.equals(tipoRegistro)) { // Registro Salida
+                textoLegalValidez = tradueixMissatge(locale, "justificante.texto.validez.salida");
+            }
+            if (registro.getRegistroDetalle().getRecibidoSir()) { // Recibido por SIR
+                textoLegalValidez = tradueixMissatge(locale, "justificante.texto.validez.sir");
+            } else if (registro.getRegistroDetalle().getPresencial()) { // Presencial
+                textoLegalValidez = tradueixMissatge(locale, "justificante.texto.validez.presencial");
+            } else { // Telemático
+                textoLegalValidez = tradueixMissatge(locale, "justificante.texto.validez.telematico");
+            }
         }
 
     }
@@ -462,7 +471,7 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
             document.add(taulaAnnexe);
 
             // Texto legal documentos electrónicos
-            if(RegwebConstantes.REGISTRO_ENTRADA.equals(tipoRegistro)){
+            if(RegwebConstantes.REGISTRO_ENTRADA.equals(tipoRegistro) && !entidadExterna){
 
                 Paragraph textoLegal = new Paragraph(tradueixMissatge(locale,"justificante.la") + " " + registro.getOficina().getDenominacion() + " " + textoLegalDocElectronica, lletraGovern8);
                 document.add(textoLegal);
