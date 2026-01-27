@@ -477,17 +477,17 @@ function actualizarOrganismos(tipo){
                 dataType: 'json',
                 data: { id: seleccion },
                 contentType: 'application/json',
-                success: function(result) {
+                success: function(resultError) {
                     if(todos){html = '';}
-                    var len = result.length;
+                    var len = resultError.length;
                     var selected='';
                     for ( var i = 0; i < len; i++) {
                         selected='';
-                        if(result.length == 1){
+                        if(resultError.length == 1){
                             selected = 'selected="selected"';
                         }
-                        html += '<option '+selected+' value="' + result[i].id + '">'
-                        + result[i].denominacion + '</option>';
+                        html += '<option '+selected+' value="' + resultError[i].id + '">'
+                        + resultError[i].denominacion + '</option>';
                     }
                     html += '</option>';
 
