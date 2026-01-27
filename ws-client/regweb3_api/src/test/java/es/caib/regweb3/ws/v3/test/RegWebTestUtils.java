@@ -235,7 +235,7 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
         AsientoRegistralWs asiento = new AsientoRegistralWs();
         asiento.setTipoRegistro(tipoRegistro);
 
-        asiento.setAplicacionTelematica("LOCAL-APP");
+       asiento.setAplicacionTelematica("SISTRA");
         asiento.setCodigoAsunto(null);
         asiento.setCodigoSia(getTestCodigoSia());
         asiento.setCodigoUsuario(getTestUserName());
@@ -252,10 +252,11 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
         asiento.setUnidadTramitacionDestinoCodigo(getTestDestinoCodigoDir3());
         asiento.setTipoDocumentacionFisicaCodigo(RegwebConstantes.TIPO_DOCFISICA_NO_ACOMPANYA_DOC);
 
-        asiento.setReferenciaExterna("FE4567Y");
-        asiento.setNumeroExpediente("34567Y/2019");
+        // PARCHE SISTRA FUNCIONARI HAB
+        asiento.setReferenciaExterna("e44328254d");//Codi funcionari HAB
+        asiento.setNumeroExpediente("44328254D"); //NIF Funcionari HAB
         asiento.setTipoTransporte("01");
-        asiento.setObservaciones("Asiento registral realizado mediante el api WS");
+        asiento.setObservaciones("Maria de la O Goméz"); //Nombre funcionari HAB
 
         return asiento;
     }

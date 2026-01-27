@@ -821,10 +821,17 @@ public interface RegwebConstantes {
     /* -------------- ESTADO INTEGRACION --------------*/
     Long INTEGRACION_ESTADO_OK = 0L;
     Long INTEGRACION_ESTADO_ERROR = 1L;
+    Long INTEGRACION_ESTADO_PENDIENTE = 2L;
 
     Long[] INTEGRACION_ESTADOS = {
             INTEGRACION_ESTADO_OK,
             INTEGRACION_ESTADO_ERROR
+    };
+
+    Long[] INTEGRACION_ESTADOS_ESCANER = {
+            INTEGRACION_ESTADO_OK,
+            INTEGRACION_ESTADO_ERROR,
+            INTEGRACION_ESTADO_PENDIENTE
     };
 
     /* -------------- NOTIFICACIONES --------------*/
