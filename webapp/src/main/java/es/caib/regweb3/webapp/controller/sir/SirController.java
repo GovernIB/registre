@@ -358,6 +358,7 @@ public class SirController extends BaseController {
         model.addAttribute("tiposOficioRemision", RegwebConstantes.TIPOS_OFICIO_REMISION);
         model.addAttribute("organismos", organismos);
         model.addAttribute("oficioRemisionBusqueda", oficioRemisionBusqueda);
+        model.addAttribute("marcarErrorTecnicoForm", new MarcarErrorTecnicoForm());
 
         return mav;
     }
@@ -519,10 +520,18 @@ public class SirController extends BaseController {
         try{
             AsientoBean asiento =libSirEjb.consultaAsiento(oficina,idIntercambio);
             if(asiento!=null) { //Existe AsientoBean en LIBSIR
-                if (TipoEstadoEnum.PRAE.getCodigo().equals(asiento.getCdEstado()) || TipoEstadoEnum.PRARE.getCodigo().equals(asiento.getCdEstado())) {
-                    libSirEjb.reencolarAsiento(oficina, idIntercambio);
-                    return true;
+                //Segun manual integracion se pueden reencolar asientos en los estados
+                //PE, PRAE, PERCH, PRAERCH, PRE, PRARE
+                if (TipoEstadoEnum.PE.getCodigo().equals(asiento.getCdEstado()) ||
+                    TipoEstadoEnum.PRAE.getCodigo().equals(asiento.getCdEstado()) ||
+                    TipoEstadoEnum.PERCH.getCodigo().equals(asiento.getCdEstado()) ||
+                    TipoEstadoEnum.PRAERCH.getCodigo().equals(asiento.getCdEstado()) ||
+                    TipoEstadoEnum.PRE.getCodigo().equals(asiento.getCdEstado()) ||
+                    TipoEstadoEnum.PRARE.getCodigo().equals(asiento.getCdEstado())) {
+                        libSirEjb.reencolarAsiento(oficina, idIntercambio);
+                        return true;
                 }
+
             }else{ //No se ha creado el asientoBean en LIBSIR
 
                 List<Long> registros = oficioRemisionEjb.getEntradasByOficioRemisionIntercambio(idIntercambio);
@@ -560,7 +569,7 @@ public class SirController extends BaseController {
             AsientoBean asiento =libSirEjb.consultaAsiento(oficina,idIntercambio);//TODO OJO ESTO DESCARGA LOS ANEXOS; NO ES MUY OPTIMO.
             if(TipoEstadoEnum.PRAE.getCodigo().equals(asiento.getCdEstado()) || TipoEstadoEnum.PRARE.getCodigo().equals(asiento.getCdEstado()) ||
                TipoEstadoEnum.PRAC.getCodigo().equals(asiento.getCdEstado()) || TipoEstadoEnum.PRAERCH.getCodigo().equals(asiento.getCdEstado())) {
-                libSirEjb.marcarErrorTecnicoAsiento(oficina, idIntercambio);
+                libSirEjb.marcarErrorTecnicoAsiento(oficina, idIntercambio,"Error Técnico");
             }
 
             return true;

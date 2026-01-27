@@ -229,7 +229,7 @@ function desmarcarErrorTecnicoIntercambioModal(oficina, idIntercambio, confirmMo
 
     confirmModal.find("#okButton").click(function (event) {
         confirmModal.modal("hide");
-        reencolarIntercambio(oficina,idIntercambio);
+        desmarcarErrorTecnicoIntercambio(oficina,idIntercambio);
 
     });
 }
