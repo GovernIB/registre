@@ -19,7 +19,8 @@ INSERT INTO RWE_PROPIEDADGLOBAL (id,clave,valor,tipo,descripcion,entidad) VALUES
 INSERT INTO RWE_PROPIEDADGLOBAL (id,clave,valor,tipo,descripcion,entidad) VALUES (RWE_ALL_SEQ.nextVal,'es.caib.regweb3.ayuda.url',null,1,'Enlace de ayuda a los usuarios de las Oficinas de registro.',null);
 
 --PLUGINS
-INSERT INTO RWE_PLUGIN(id,activo,nombre,descripcion,clase,tipo,entidad,PROPIEDADES_ADMIN) values (RWE_ALL_SEQ.nextVal,1, 'User Information','Información de usuarios','org.fundaciobit.pluginsib.userinformation.database.DataBaseUserInformationPlugin',5,null,'es.caib.regweb3.pluginsib.userinformation.database.jndi=java:/es.caib.seycon.db.wl
+INSERT INTO RWE_PLUGIN(id,activo,nombre,descripcion,clase,tipo,entidad,PROPIEDADES_ADMIN) values (RWE_ALL_SEQ.nextVal,1, 'User Information','Información de usuarios','org.fundaciobit.pluginsib.userinformation.database.DataBaseUserInformationPlugin',5,null,
+'es.caib.regweb3.pluginsib.userinformation.database.jndi=java:/es.caib.seycon.db.wl
 es.caib.regweb3.pluginsib.userinformation.database.users_table=SC_WL_USUARI
 es.caib.regweb3.pluginsib.userinformation.database.username_column=USU_CODI
 es.caib.regweb3.pluginsib.userinformation.database.administrationid_column=USU_NIF
