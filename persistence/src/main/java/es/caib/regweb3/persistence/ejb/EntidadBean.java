@@ -222,11 +222,11 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
         propiedadGlobalEjb.persist(new PropiedadGlobal(RegwebConstantes.REGWEB3_PROPERTY_BASE + "cola.parar.distribucion", "false", "Indica si queremos detener la cola de distribución", entidad.getId(), RegwebConstantes.TIPO_PROPIEDAD_COLA));
 
         // Creamos los Plugins
-        pluginEjb.persist(new Plugin("Custodia", "Custodia de anexos", "org.fundaciobit.plugins.documentcustody.filesystem.FileSystemDocumentCustodyPlugin", true, entidad.getId(), RegwebConstantes.PLUGIN_CUSTODIA_ANEXOS, null, "es.caib.regweb3.plugins.documentcustody.filesystem.prefix=ANNEX_\n" +
-                "es.caib.regweb3.plugins.documentcustody.filesystem.basedir=C:/xxxx/Anexos/"));
+        pluginEjb.persist(new Plugin("Custodia", "Custodia de anexos", "org.fundaciobit.pluginsib.documentcustody.filesystem.FileSystemDocumentCustodyPlugin", true, entidad.getId(), RegwebConstantes.PLUGIN_CUSTODIA_ANEXOS, null, "es.caib.regweb3.pluginsib.documentcustody.filesystem.prefix=ANNEX_\n" +
+                "es.caib.regweb3.pluginsib.documentcustody.filesystem.basedir=C:/xxxx/Anexos/"));
 
-        pluginEjb.persist(new Plugin("Custodia-Justificante", "Custodia de justificantes", "org.fundaciobit.plugins.documentcustody.filesystem.FileSystemDocumentCustodyPlugin", true, entidad.getId(), RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE, null, "es.caib.regweb3.plugins.documentcustody.filesystem.prefix=JUST_\n" +
-                "es.caib.regweb3.plugins.documentcustody.filesystem.basedir=C:/xxxx/Justificantes/"));
+        pluginEjb.persist(new Plugin("Custodia-Justificante", "Custodia de justificantes", "org.fundaciobit.pluginsib.documentcustody.filesystem.FileSystemDocumentCustodyPlugin", true, entidad.getId(), RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE, null, "es.caib.regweb3.pluginsib.documentcustody.filesystem.prefix=JUST_\n" +
+                "es.caib.regweb3.pluginsib.documentcustody.filesystem.basedir=C:/xxxx/Justificantes/"));
 
         pluginEjb.persist(new Plugin("Justificante", "Genera el justificante de los registros", "es.caib.regweb3.plugins.justificante.mock.JustificanteMockPlugin", true, entidad.getId(), RegwebConstantes.PLUGIN_JUSTIFICANTE, null, "" +
                 "# Mensaje para la declaración en el justificante\n" +
