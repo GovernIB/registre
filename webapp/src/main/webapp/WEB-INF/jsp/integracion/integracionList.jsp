@@ -54,9 +54,18 @@
                                             <div class="col-xs-8">
                                                 <form:select path="estado" cssClass="chosen-select" onchange="doForm('#integracionBusqueda')">
                                                     <form:option value="" label="..."/>
-                                                    <c:forEach var="estado" items="${estados}">
-                                                        <form:option value="${estado}"><spring:message code="integracion.estado.${estado}"/></form:option>
-                                                    </c:forEach>
+                                                    <c:choose>
+                                                        <c:when test="${tipo != RegwebConstantes.INTEGRACION_ESCANER}">
+                                                            <c:forEach var="estado" items="${estados}">
+                                                                <form:option value="${estado}"><spring:message code="integracion.estado.${estado}"/></form:option>
+                                                            </c:forEach>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <c:forEach var="estadoEscaner" items="${estadosEscaner}">
+                                                                <form:option value="${estadoEscaner}"><spring:message code="integracion.estado.${estadoEscaner}"/></form:option>
+                                                            </c:forEach>
+                                                        </c:otherwise>
+                                                    </c:choose>
                                                 </form:select>
                                             </div>
                                         </div>

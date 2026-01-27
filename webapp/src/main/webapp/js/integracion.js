@@ -25,6 +25,8 @@ function infoIntegracion(idIntegracion){
                 $('#estadoIntegracion').html('<span class="label label-success"><span class="fa fa-check"></span>  Ok</span>');
             }else if(result.estado === 1){
                 $('#estadoIntegracion').html('<span class="label label-danger"><span class="fa fa-warning"></span> Error</span>');
+            }else if(result.estado === 2){
+                $('#estadoIntegracion').html('<span class="label label-warning"><span class="fa fa-warning"></span> '+ tradsIntegracion['integracion.estado.'+result.estado]+'</span>');
             }
 
             var peticion = result.peticion;

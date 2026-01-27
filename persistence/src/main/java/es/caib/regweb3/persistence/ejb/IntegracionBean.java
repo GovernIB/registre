@@ -234,34 +234,48 @@ public class IntegracionBean extends BaseEjbJPA<Integracion, Long> implements In
     }
 
     @Override
+    public Long addIntegracion(Date inicio, Long tipo, String descripcion, String peticion, Long tiempo, Long idEntidad, String numRegFormat,Long estado) throws I18NException {
+
+        Integracion integracion =persist(new Integracion(inicio, tipo, estado, descripcion, peticion, tiempo, idEntidad, numRegFormat));
+        return integracion.getId();
+    }
+
+
+    @Override
     public void addIntegracionError(Long tipo, String descripcion, String peticion, Throwable th, String error, Long tiempo, Long idEntidad, String numRegFormat) throws I18NException {
 
-        String exception = null;
+        ResultError resultError = getResultError(th, error);
 
-        // Obtenemos el mensaje de la Excepción
-        if(th != null){
-
-            if(th instanceof I18NValidationException){
-                error = getErrorFromValidationException((I18NValidationException) th);
-            }
-
-            if (th instanceof I18NException) {
-                I18NException i18n = (I18NException) th;
-                error = I18NLogicUtils.getMessage(i18n, new Locale(Configuracio.getDefaultLanguage()));
-            }
-
-            StringWriter sw = new StringWriter();
-            PrintWriter pw = new PrintWriter(sw, true);
-            th.printStackTrace(pw);
-            exception = sw.getBuffer().toString();
-
-            if (StringUtils.isEmpty(error)){
-                error = th.getMessage();
-            }
-        }
-
-        persist(new Integracion(tipo, RegwebConstantes.INTEGRACION_ESTADO_ERROR, descripcion, peticion, error, exception, tiempo, idEntidad, numRegFormat));
+        persist(new Integracion(tipo, RegwebConstantes.INTEGRACION_ESTADO_ERROR, descripcion, peticion, resultError.error, resultError.exception, tiempo, idEntidad, numRegFormat));
     }
+
+
+    @Override
+    public void actualizarIntegracionOk(Long integracionID, String numRegFormat, String peticion) throws I18NException {
+
+        Integracion integracion = findById(integracionID);
+        integracion.setEstado(RegwebConstantes.INTEGRACION_ESTADO_OK);
+        integracion.setNumRegFormat(numRegFormat);
+        integracion.setPeticion(peticion);
+        merge(integracion);
+
+    }
+
+    @Override
+    public void actualizarIntegracionError(Long integracionID, Throwable th, String error, String numRegFormat, String peticion ) throws I18NException {
+
+        ResultError resultError = getResultError(th, error);
+
+        Integracion integracion = findById(integracionID);
+        integracion.setNumRegFormat(numRegFormat);
+        integracion.setEstado(RegwebConstantes.INTEGRACION_ESTADO_ERROR);
+        integracion.setError(resultError.error);
+        integracion.setExcepcion(resultError.exception);
+        integracion.setPeticion(peticion);
+        merge(integracion);
+
+    }
+
 
     @Override
     public Integer purgarIntegraciones(Long idEntidad) throws I18NException {
@@ -331,6 +345,44 @@ public class IntegracionBean extends BaseEjbJPA<Integracion, Long> implements In
         }
 
         return null;
+    }
+
+    private ResultError getResultError(Throwable th, String error) {
+        String exception = null;
+
+        // Obtenemos el mensaje de la Excepción
+        if(th != null){
+
+            if(th instanceof I18NValidationException){
+                error = getErrorFromValidationException((I18NValidationException) th);
+            }
+
+            if (th instanceof I18NException) {
+                I18NException i18n = (I18NException) th;
+                error = I18NLogicUtils.getMessage(i18n, new Locale(Configuracio.getDefaultLanguage()));
+            }
+
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw, true);
+            th.printStackTrace(pw);
+            exception = sw.getBuffer().toString();
+
+            if (StringUtils.isEmpty(error)){
+                error = th.getMessage();
+            }
+        }
+        ResultError resultError = new ResultError(error, exception);
+        return resultError;
+    }
+
+    private static class ResultError {
+        public final String error;
+        public final String exception;
+
+        public ResultError(String error, String exception) {
+            this.error = error;
+            this.exception = exception;
+        }
     }
 
 }

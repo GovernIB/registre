@@ -413,11 +413,12 @@ public interface RegwebConstantes {
     Long TRANSPORTE_EN_MANO = 5L;
     Long TRANSPORTE_FAX = 6L;
     Long TRANSPORTE_OTROS = 7L;
+    Long TRANSPORTE_OTROS_MEDIOS_ELECTRONICOS= 8L;
 
     Long[] TRANSPORTES = {
             TRANSPORTE_SERVICIO_MENSAJEROS, TRANSPORTE_CORREO_POSTAL,
             TRANSPORTE_CORREO_POSTAL_CERTIFICADO, TRANSPORTE_BUROFAX,
-            TRANSPORTE_EN_MANO, TRANSPORTE_FAX, TRANSPORTE_OTROS
+            TRANSPORTE_EN_MANO, TRANSPORTE_FAX, TRANSPORTE_OTROS, TRANSPORTE_OTROS_MEDIOS_ELECTRONICOS
     };
 
     Map<Long, String> CODIGO_SICRES_BY_TRANSPORTE = new HashMap<Long, String>() {{
@@ -428,6 +429,7 @@ public interface RegwebConstantes {
         put(TRANSPORTE_EN_MANO, "0".concat(TRANSPORTE_EN_MANO.toString()));
         put(TRANSPORTE_FAX, "0".concat(TRANSPORTE_FAX.toString()));
         put(TRANSPORTE_OTROS, "0".concat(TRANSPORTE_OTROS.toString()));
+        put(TRANSPORTE_OTROS_MEDIOS_ELECTRONICOS, "0".concat(TRANSPORTE_OTROS_MEDIOS_ELECTRONICOS.toString()));
     }};
 
     Map<String, Long> TRANSPORTE_BY_CODIGO_SICRES = RegwebUtils.invert(CODIGO_SICRES_BY_TRANSPORTE);
@@ -871,10 +873,17 @@ public interface RegwebConstantes {
     /* -------------- ESTADO INTEGRACION --------------*/
     Long INTEGRACION_ESTADO_OK = 0L;
     Long INTEGRACION_ESTADO_ERROR = 1L;
+    Long INTEGRACION_ESTADO_PENDIENTE = 2L;
 
     Long[] INTEGRACION_ESTADOS = {
             INTEGRACION_ESTADO_OK,
             INTEGRACION_ESTADO_ERROR
+    };
+
+    Long[] INTEGRACION_ESTADOS_ESCANER = {
+            INTEGRACION_ESTADO_OK,
+            INTEGRACION_ESTADO_ERROR,
+            INTEGRACION_ESTADO_PENDIENTE
     };
 
     /* -------------- NOTIFICACIONES --------------*/
