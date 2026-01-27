@@ -64,15 +64,8 @@ public class AsientoRegistralConverter extends CommonConverter {
       registroDetalle.setIdioma(getIdioma(asientoRegistral.getIdioma()));
       registroDetalle.setCodigoSia(asientoRegistral.getCodigoSia());
 
-      if(asientoRegistral.getAplicacionTelematica().contains("SISTRA")){ //Se reutilizan los siguientes campos para informar los datos de Funcionario Habilitado en los registros de entrada Sistra
-         if(StringUtils.isNotEmpty(asientoRegistral.getReferenciaExterna())){registroDetalle.setCodigoFuncionarioHabilitado(asientoRegistral.getReferenciaExterna());}
-         if(StringUtils.isNotEmpty(asientoRegistral.getNumeroExpediente())){registroDetalle.setNifFuncionarioHabilitado(asientoRegistral.getNumeroExpediente());}
-         if(StringUtils.isNotEmpty(asientoRegistral.getObservaciones())){registroDetalle.setNombreFuncionarioHabilitado(asientoRegistral.getObservaciones());}
-      }else{
-         if(StringUtils.isNotEmpty(asientoRegistral.getReferenciaExterna())){registroDetalle.setReferenciaExterna(asientoRegistral.getReferenciaExterna());}
-         if(StringUtils.isNotEmpty(asientoRegistral.getNumeroExpediente())){registroDetalle.setExpediente(asientoRegistral.getNumeroExpediente());}
-         if(StringUtils.isNotEmpty(asientoRegistral.getObservaciones())){registroDetalle.setObservaciones(asientoRegistral.getObservaciones());}
-      }
+      asignarFuncionarioHabilitado(asientoRegistral, registroDetalle);
+
       if(StringUtils.isNotEmpty(asientoRegistral.getCodigoAsunto())){registroDetalle.setCodigoAsunto(getCodigoAsunto(asientoRegistral.getCodigoAsunto(), codigoAsuntoEjb));}
       if(StringUtils.isNotEmpty(asientoRegistral.getTipoTransporte())){registroDetalle.setTransporte(RegwebConstantes.TRANSPORTE_BY_CODIGO_SICRES.get(asientoRegistral.getTipoTransporte()));}
       if(StringUtils.isNotEmpty(asientoRegistral.getNumeroTransporte())){registroDetalle.setNumeroTransporte(asientoRegistral.getNumeroTransporte());}
@@ -122,17 +115,7 @@ public class AsientoRegistralConverter extends CommonConverter {
       registroDetalle.setIdioma(getIdioma(asientoRegistral.getIdioma()));
       registroDetalle.setCodigoSia(asientoRegistral.getCodigoSia());
 
-      if(asientoRegistral.getAplicacionTelematica().contains("SISTRA")){ //Se reutilizan los siguientes campos para informar los datos de Funcionario Habilitado en los registros de entrada Sistra
-         System.out.println("Entro en SISTRA");
-         if(StringUtils.isNotEmpty(asientoRegistral.getReferenciaExterna())){registroDetalle.setCodigoFuncionarioHabilitado(asientoRegistral.getReferenciaExterna());}
-         if(StringUtils.isNotEmpty(asientoRegistral.getNumeroExpediente())){registroDetalle.setNifFuncionarioHabilitado(asientoRegistral.getNumeroExpediente());}
-         if(StringUtils.isNotEmpty(asientoRegistral.getObservaciones())){registroDetalle.setNombreFuncionarioHabilitado(asientoRegistral.getObservaciones());}
-      }else{
-         System.out.println("No Entro en SISTRA");
-         if(StringUtils.isNotEmpty(asientoRegistral.getReferenciaExterna())){registroDetalle.setReferenciaExterna(asientoRegistral.getReferenciaExterna());}
-         if(StringUtils.isNotEmpty(asientoRegistral.getNumeroExpediente())){registroDetalle.setExpediente(asientoRegistral.getNumeroExpediente());}
-         if(StringUtils.isNotEmpty(asientoRegistral.getObservaciones())){registroDetalle.setObservaciones(asientoRegistral.getObservaciones());}
-      }
+      asignarFuncionarioHabilitado(asientoRegistral, registroDetalle);
 
       if (StringUtils.isNotEmpty(asientoRegistral.getCodigoAsunto())) {registroDetalle.setCodigoAsunto(getCodigoAsunto(asientoRegistral.getCodigoAsunto(), codigoAsuntoEjb));}
       if (StringUtils.isNotEmpty(asientoRegistral.getTipoTransporte())) {registroDetalle.setTransporte(RegwebConstantes.TRANSPORTE_BY_CODIGO_SICRES.get(asientoRegistral.getTipoTransporte()));}
@@ -146,6 +129,37 @@ public class AsientoRegistralConverter extends CommonConverter {
       registroSalida.setRegistroDetalle(registroDetalle);
 
       return registroSalida;
+   }
+
+   private static void asignarFuncionarioHabilitado(AsientoRegistralWs asientoRegistral, RegistroDetalle registroDetalle) {
+      String aplicacion = asientoRegistral.getAplicacionTelematica();
+      boolean esSistra = aplicacion != null && aplicacion.contains("SISTRA");
+
+      String referencia = asientoRegistral.getReferenciaExterna();
+      String expediente = asientoRegistral.getNumeroExpediente();
+      String observaciones = asientoRegistral.getObservaciones();
+
+      if (esSistra) {
+         if (StringUtils.isNotEmpty(referencia)) {
+            registroDetalle.setCodigoFuncionarioHabilitado(referencia);
+         }
+         if (StringUtils.isNotEmpty(expediente)) {
+            registroDetalle.setNifFuncionarioHabilitado(expediente);
+         }
+         if (StringUtils.isNotEmpty(observaciones)) {
+            registroDetalle.setNombreFuncionarioHabilitado(observaciones);
+         }
+      } else {
+         if (StringUtils.isNotEmpty(referencia)) {
+            registroDetalle.setReferenciaExterna(referencia);
+         }
+         if (StringUtils.isNotEmpty(expediente)) {
+            registroDetalle.setExpediente(expediente);
+         }
+         if (StringUtils.isNotEmpty(observaciones)) {
+            registroDetalle.setObservaciones(observaciones);
+         }
+      }
    }
 
    /**
