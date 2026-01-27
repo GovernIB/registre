@@ -36,10 +36,10 @@
                     url: url,
                     data: { codigo: codigo },
                     type: 'GET',
-                    success: function(result) {
+                    success: function(resultError) {
                         var html;
-                        if(result != 'V') {
-                            html ='<c:out value="${registro.destinoExternoDenominacion}" escapeXml="true"/>' +' - '+ '${registro.destinoExternoCodigo}' + ' - <span class="label label-danger">' + tradestado['estado.' + result] + '</span>';
+                        if(resultError != 'V') {
+                            html ='<c:out value="${registro.destinoExternoDenominacion}" escapeXml="true"/>' +' - '+ '${registro.destinoExternoCodigo}' + ' - <span class="label label-danger">' + tradestado['estado.' + resultError] + '</span>';
                         }
                         $('#'+elemento).html(html);
                     }
@@ -83,13 +83,11 @@
 <c:if test="${not empty registro.registroDetalle.fechaOrigen}"> <dt><i class="fa fa-clock-o"></i> <spring:message code="registroEntrada.fechaOrigen"/>: </dt> <dd> <fmt:formatDate value="${registro.registroDetalle.fechaOrigen}" pattern="dd/MM/yyyy HH:mm:ss"/></dd></c:if>
 <c:if test="${not empty registro.registroDetalle.codigoSia}"> <dt><i class="fa fa-barcode"></i> <spring:message code="registroEntrada.codigoSIA"/>: </dt> <dd> ${registro.registroDetalle.codigoSia}</dd></c:if>
 <c:if test="${!param.esSistra}">
-    NO SISTRA
     <c:if test="${not empty registro.registroDetalle.referenciaExterna}"> <dt><i class="fa fa-thumb-tack"></i> <spring:message code="registroEntrada.referenciaExterna"/>: </dt> <dd> ${registro.registroDetalle.referenciaExterna}</dd></c:if>
     <c:if test="${not empty registro.registroDetalle.expediente}"> <dt><i class="fa fa-newspaper-o"></i> <spring:message code="registroEntrada.expediente"/>: </dt> <dd> ${registro.registroDetalle.expediente}</dd></c:if>
     <c:if test="${not empty registro.registroDetalle.observaciones}"> <dt><i class="fa fa-file-text-o"></i> <spring:message code="registroEntrada.observaciones"/>: </dt> <dd> ${registro.registroDetalle.observaciones}</dd></c:if>
 </c:if>
 <c:if test="${param.esSistra}">
-
     <c:if test="${not empty registro.registroDetalle.codigoFuncionarioHabilitado}"> <dt><i class="fa fa-user-circle"></i> <spring:message code="registroEntrada.funcionarioHabilitado"/>: </dt> <dd> ${registro.registroDetalle.nombreFuncionarioHabilitado} (${registro.registroDetalle.codigoFuncionarioHabilitado})</dd></c:if>
     <c:if test="${not empty registro.registroDetalle.nifFuncionarioHabilitado}"> <dt><i class="fa fa-id-card"></i> NIF: </dt> <dd> ${registro.registroDetalle.nifFuncionarioHabilitado}</dd></c:if>
 </c:if>
