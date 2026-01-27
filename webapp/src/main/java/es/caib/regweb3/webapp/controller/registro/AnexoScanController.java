@@ -9,6 +9,7 @@ import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.persistence.utils.ScanWebConfigRegWeb;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.RegwebUtils;
+import es.caib.regweb3.webapp.scheduler.Regweb3Scheduler;
 import es.caib.regweb3.webapp.utils.AnexoUtils;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import org.fundaciobit.genapp.common.i18n.I18NArgumentString;
@@ -34,6 +35,7 @@ import java.util.Date;
 import java.util.List;
 
 import static es.caib.regweb3.utils.RegwebConstantes.REGISTRO_ENTRADA;
+import static es.caib.regweb3.utils.RegwebConstantes.SESSION_LOGIN_INFO;
 import static es.caib.regweb3.utils.StringUtils.eliminarCaracteresProhibidosArxiu;
 
 /**
@@ -45,11 +47,17 @@ import static es.caib.regweb3.utils.StringUtils.eliminarCaracteresProhibidosArxi
 public class AnexoScanController extends AnexoController {
 
 
+    private final Regweb3Scheduler regweb3Scheduler;
     @EJB(mappedName = ScanWebModuleLocal.JNDI_NAME)
     private ScanWebModuleLocal scanWebModuleEjb;
 
     @EJB(mappedName = IntegracionLocal.JNDI_NAME)
     private IntegracionLocal integracionEjb;
+
+    public AnexoScanController(Regweb3Scheduler regweb3Scheduler) {
+        super();
+        this.regweb3Scheduler = regweb3Scheduler;
+    }
 
 
     // Prepara el anexo Form para escaneo simple
@@ -67,6 +75,25 @@ public class AnexoScanController extends AnexoController {
         log.info("scanwebAbsoluteurlBase: " + scanwebAbsoluteurlBase);
         //La guardamos en sessión para que la use ScanRequestServlet
         request.getSession().setAttribute("scanwebAbsoluteurlBase", scanwebAbsoluteurlBase);
+
+        //Obtenemos el numero de registro formateado
+        String numRegFormat= request.getParameter("numRegFormat");
+
+
+        Date inicio = new Date();
+        long tiempo = System.currentTimeMillis();
+        StringBuilder peticion = new StringBuilder();
+        String descripcion = "Escanear anexos ";
+
+        peticion.append("entidad: ").append(getEntidadActiva(request).getNombre()).append(System.lineSeparator());
+        peticion.append("usuario: ").append(getUsuarioEntidadActivo(request).getUsuario().getNombreIdentificador()).append(System.lineSeparator());
+        peticion.append("idRegistro: ").append(registroID).append(System.lineSeparator());
+
+        Entidad entidad = getEntidadActiva(request);
+
+        //Creamos integración en estado pendiente
+        Long idIntegracion = integracionEjb.addIntegracion(inicio, RegwebConstantes.INTEGRACION_ESCANER, descripcion, peticion.toString(), System.currentTimeMillis() - tiempo, entidad.getId(), numRegFormat,RegwebConstantes.INTEGRACION_ESTADO_PENDIENTE);
+        request.getSession().setAttribute("idIntegracion", idIntegracion);
 
        //Actualiza las variables con la ultima acción y prepara el anexoForm
         AnexoForm anexoForm = prepararAnexoForm(request, registroDetalleID, tipoRegistro, registroID, isOficioRemisionSir, true);
@@ -86,6 +113,7 @@ public class AnexoScanController extends AnexoController {
                                 HttpServletResponse response, @PathVariable Long registroDetalleID,
                                 @PathVariable Long tipoRegistro, @PathVariable Long registroID, @PathVariable Boolean isOficioRemisionSir,
                                 Model model) throws I18NException, Exception {
+
 
         //Obtenemos la url que nos pasa el jsp por parámetro.
         // Esto sustituye a la propiedad global es.caib.regweb3.scanweb.absoluteurl
@@ -215,13 +243,8 @@ public class AnexoScanController extends AnexoController {
         String numRegFormat = "";
 
         //Integración
-        Date inicio = new Date();
-        long tiempo = System.currentTimeMillis();
         StringBuilder peticion = new StringBuilder();
-        String descripcion = "Escanear anexos";
-        peticion.append("entidad: ").append(entidad.getNombre()).append(System.lineSeparator());
-        peticion.append("usuario: ").append(getUsuarioEntidadActivo(request).getUsuario().getNombreIdentificador()).append(System.lineSeparator());
-        peticion.append("idRegistro: ").append(anexoForm.getRegistroID()).append(System.lineSeparator());
+
         if (anexoForm.getTipoRegistro().equals(REGISTRO_ENTRADA)) {
             peticion.append("tipoRegistro: ").append(RegwebConstantes.REGISTRO_ENTRADA_ESCRITO).append(System.lineSeparator());
             numRegFormat = registroEntradaConsultaEjb.getNumeroRegistroFormateado(anexoForm.getRegistroID());
@@ -229,6 +252,9 @@ public class AnexoScanController extends AnexoController {
             peticion.append("tipoRegistro: ").append(RegwebConstantes.REGISTRO_SALIDA_ESCRITO).append(System.lineSeparator());
             numRegFormat = registroSalidaConsultaEjb.getNumeroRegistroFormateado(anexoForm.getRegistroID());
         }
+
+        // recuperamos la integración que queremos actualizar su estado
+        Long idIntegracion = Long.valueOf(request.getSession().getAttribute("integracionId").toString());
 
         try {
 
@@ -245,22 +271,23 @@ public class AnexoScanController extends AnexoController {
 
             request.getSession().setAttribute("documentosEscaneados", documentosEscaneados);
 
-            integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_ESCANER, descripcion, peticion.toString(), System.currentTimeMillis() - tiempo, entidad.getId(), numRegFormat);
+
+            integracionEjb.actualizarIntegracionOk(idIntegracion, numRegFormat, peticion.toString());
 
             return "redirect:/anexoScan/transforma";
 
 
         } catch (I18NException i18n) {
-            integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_ESCANER, descripcion, peticion.toString(), i18n, null, System.currentTimeMillis() - tiempo, entidad.getId(), numRegFormat);
+            integracionEjb.actualizarIntegracionError(idIntegracion,i18n,null, numRegFormat, peticion.toString());
             String msg = I18NUtils.tradueix(i18n.getTraduccio());
             log.error(msg, i18n);
             Mensaje.saveMessageError(request, msg);
-            return "redirect:/anexoScan/new/" + anexoForm.getIdRegistroDetalle() + "/" + anexoForm.getTipoRegistro() + "/" + anexoForm.getRegistroID() + "/" + isSIR+"?scanweb_absoluteurl="+request.getSession().getAttribute("scanwebAbsoluteurlBase");
+            return "redirect:/anexoScan/new/" + anexoForm.getIdRegistroDetalle() + "/" + anexoForm.getTipoRegistro() + "/" + anexoForm.getRegistroID() + "/" + isSIR  + "?scanweb_absoluteurl="+request.getSession().getAttribute("scanwebAbsoluteurlBase")+"&numRegFormat=" + numRegFormat;
         } catch (Exception e) {
-            integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_ESCANER, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - tiempo, entidad.getId(), numRegFormat);
+            integracionEjb.actualizarIntegracionError(idIntegracion,e,null, numRegFormat, peticion.toString());
             log.error(e.getMessage(), e);
             Mensaje.saveMessageError(request, e.getMessage());
-            return "redirect:/anexoScan/new/" + anexoForm.getIdRegistroDetalle() + "/" + anexoForm.getTipoRegistro() + "/" + anexoForm.getRegistroID() + "/" + isSIR+"?scanweb_absoluteurl="+request.getSession().getAttribute("scanwebAbsoluteurlBase");
+            return "redirect:/anexoScan/new/" + anexoForm.getIdRegistroDetalle() + "/" + anexoForm.getTipoRegistro() + "/" + anexoForm.getRegistroID() + "/" + isSIR +"?scanweb_absoluteurl="+request.getSession().getAttribute("scanwebAbsoluteurlBase")+"&numRegFormat=" + numRegFormat;
         }
 
     }

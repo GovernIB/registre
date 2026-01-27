@@ -110,5 +110,10 @@ public class IntegracionController extends BaseController {
     public Long[] estados() {
         return RegwebConstantes.INTEGRACION_ESTADOS;
     }
+
+    @ModelAttribute("estadosEscaner")
+    public Long[] estadosEscaner() {
+        return RegwebConstantes.INTEGRACION_ESTADOS_ESCANER;
+    }
     
 }

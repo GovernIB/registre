@@ -54,10 +54,21 @@
                                             <div class="col-xs-8">
                                                 <form:select path="estado" cssClass="chosen-select" onchange="doForm('#integracionBusqueda')">
                                                     <form:option value="" label="..."/>
-                                                    <c:forEach var="estado" items="${estados}">
-                                                        <form:option value="${estado}"><spring:message code="integracion.estado.${estado}"/></form:option>
-                                                    </c:forEach>
+                                                    <c:choose>
+                                                        <c:when test="${tipo != RegwebConstantes.INTEGRACION_ESCANER}">
+                                                            <c:forEach var="estado" items="${estados}">
+                                                                <form:option value="${estado}"><spring:message code="integracion.estado.${estado}"/></form:option>
+                                                            </c:forEach>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <c:forEach var="estadoEscaner" items="${estadosEscaner}">
+                                                                <form:option value="${estadoEscaner}"><spring:message code="integracion.estado.${estadoEscaner}"/></form:option>
+                                                            </c:forEach>
+                                                        </c:otherwise>
+                                                    </c:choose>
                                                 </form:select>
+                                            </div>
+
                                             </div>
                                         </div>
 
@@ -150,6 +161,7 @@
                                                 <td>
                                                     <c:if test="${integracion.estado == 0}"><span class="label label-success"><span class="fa fa-check"></span>  Ok</span></c:if>
                                                     <c:if test="${integracion.estado == 1}"><span class="label label-danger"><span class="fa fa-warning"></span> Error</span></c:if>
+                                                    <c:if test="${integracion.estado == 2}"><span class="label label-warning"><span class="fa fa-warning"></span> <spring:message code="integracion.estado.${integracion.estado}"/></span></c:if>
                                                 </td>
                                                 <td>
                                                     <c:if test="${fn:length(integracion.error) <= 50}">
@@ -292,6 +304,7 @@
     tradsIntegracion['integracion.tipo.7'] = "<spring:message code='integracion.tipo.7' javaScriptEscape='true' />";
     tradsIntegracion['integracion.tipo.8'] = "<spring:message code='integracion.tipo.8' javaScriptEscape='true' />";
     tradsIntegracion['integracion.tipo.9'] = "<spring:message code='integracion.tipo.9' javaScriptEscape='true' />";
+    tradsIntegracion['integracion.estado.2'] = "<spring:message code='integracion.estado.2' javaScriptEscape='true' />";
 
 </script>
 

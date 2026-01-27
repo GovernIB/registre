@@ -440,7 +440,7 @@
         // Posa el títol al modal
         $('#anexoTitulo').html('<spring:message code="anexo.nuevo"/>');
         // Afegeix el contingut de formularioAnexoFichero.jsp al modal
-        url = "?scanweb_absoluteurl=" + encodeURIComponent(window.location.href);
+        url = "?scanweb_absoluteurl=" + encodeURIComponent(window.location.href)+ "&numRegFormat=" + encodeURIComponent("${registro.numeroRegistroFormateado}");
         loadiframe("<c:url value="/anexoScan/new/${registro.registroDetalle.id}/${param.tipoRegistro}/${registro.id}/${registro.evento == RegwebConstantes.EVENTO_OFICIO_SIR}" />" +url);
     }
 
