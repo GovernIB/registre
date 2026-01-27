@@ -1084,17 +1084,17 @@
                 dataType: 'json',
                 data: { id: seleccion },
                 contentType: 'application/json',
-                success: function(result) {
+                success: function(resultError) {
                     if(todos){html = '<option value="-1">...</option>';}
-                    var len = result.length;
+                    var len = resultError.length;
                     var selected='';
                     for ( var i = 0; i < len; i++) {
                         selected='';
-                        if(valorSelected != null && result[i].id == valorSelected){
+                        if(valorSelected != null && resultError[i].id == valorSelected){
                             selected = 'selected="selected"';
                         }
-                        html += '<option '+selected+' value="' + result[i].id + '">'
-                            + result[i].nombreCompleto + '</option>';
+                        html += '<option '+selected+' value="' + resultError[i].id + '">'
+                            + resultError[i].nombreCompleto + '</option>';
                     }
                     html += '</option>';
 
@@ -1118,11 +1118,11 @@
                 dataType: 'json',
                 data: { id: seleccion },
                 contentType: 'application/json',
-                success: function(result) {
+                success: function(resultError) {
                     html = '<option value="-1">...</option>';
-                    var len = result.length;
+                    var len = resultError.length;
                     for ( var i = 0; i < len; i++) {
-                        html += '<option value="' + result[i].id + '">' + result[i].nombreCompleto + '</option>';
+                        html += '<option value="' + resultError[i].id + '">' + resultError[i].nombreCompleto + '</option>';
                     }
 
                     if(len != 0){
