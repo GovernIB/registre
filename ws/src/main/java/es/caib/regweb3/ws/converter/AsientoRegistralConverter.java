@@ -119,10 +119,10 @@ public class AsientoRegistralConverter extends CommonConverter {
       registroSalida.setUsuario(usuario);
       registroSalida.setEstado(RegwebConstantes.REGISTRO_VALIDO);
       registroSalida.setLibro(libro);
-       registroDetalle.setExtracto(asientoRegistral.getResumen());
-       registroDetalle.setTipoDocumentacionFisica(asientoRegistral.getTipoDocumentacionFisicaCodigo());
-       registroDetalle.setIdioma(getIdioma(asientoRegistral.getIdioma()));
-       registroDetalle.setCodigoSia(String.valueOf(asientoRegistral.getCodigoSia()));
+      registroDetalle.setExtracto(asientoRegistral.getResumen());
+      registroDetalle.setTipoDocumentacionFisica(asientoRegistral.getTipoDocumentacionFisicaCodigo());
+      registroDetalle.setIdioma(getIdioma(asientoRegistral.getIdioma()));
+      registroDetalle.setCodigoSia(String.valueOf(asientoRegistral.getCodigoSia()));
 
       if(StringUtils.isNotEmpty(asientoRegistral.getCodigoFuncionarioHabilitado())){registroDetalle.setCodigoFuncionarioHabilitado(asientoRegistral.getCodigoFuncionarioHabilitado());}
       if(StringUtils.isNotEmpty(asientoRegistral.getNombreFuncionarioHabilitado())){registroDetalle.setNombreFuncionarioHabilitado(asientoRegistral.getNombreFuncionarioHabilitado());}
