@@ -11,7 +11,6 @@ import es.caib.regweb3.persistence.utils.RegistroUtils;
 import es.caib.regweb3.persistence.utils.RespuestaDistribucion;
 import es.caib.regweb3.plugins.distribucion.IDistribucionPlugin;
 import es.caib.regweb3.plugins.distribucion.email.DistribucionEmailPlugin;
-import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 import es.caib.regweb3.webapp.form.*;
@@ -390,7 +389,8 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
             if (!registroEntrada.getRegistroDetalle().getTieneJustificante()) {
 
                 // Creamos el anexo del justificante y se lo añadimos al registro
-                AnexoFull anexoFull = justificanteEjb.crearJustificante(entidad, usuarioEntidad, registroEntrada, RegwebConstantes.REGISTRO_ENTRADA, Configuracio.getDefaultLanguage());
+                //TEMPORAL SI el envio es SIR, el justificante se genera en Castellano. TODO hacerlo con los dos idiomas cooficiales
+                AnexoFull anexoFull = justificanteEjb.crearJustificante(entidad, usuarioEntidad, registroEntrada, RegwebConstantes.REGISTRO_ENTRADA, RegwebConstantes.IDIOMA_CASTELLANO_CODIGO);
                 registroEntrada.getRegistroDetalle().getAnexosFull().add(anexoFull);
             }
 
