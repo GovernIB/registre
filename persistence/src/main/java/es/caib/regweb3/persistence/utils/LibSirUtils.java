@@ -332,6 +332,7 @@ public class LibSirUtils {
 
 
 
+
         //METADATOS SICRES4
         Set<OtrosMetadatos> totalMetadatosAnexGeneral = new HashSet<>(); // Guardamos todos los metadatos generales
         if (anexo.getMetadatosAnexos() != null) { //Si tiene metadatos
@@ -429,8 +430,9 @@ public class LibSirUtils {
         Long tipoDocumento = interesado.getTipoDocumentoIdentificacion();
         if (tipoDocumento != null) {
             interesadoBean.setTipoDocumentoIdentificacionInteresado(String.valueOf(CODIGO_NTI_BY_TIPODOCUMENTOID.get(tipoDocumento)));
+        }else{
+            interesadoBean.setTipoDocumentoIdentificacionInteresado("X");
         }
-        interesadoBean.setTipoDocumentoIdentificacionInteresado("X");
         interesadoBean.setDocumentoIdentificacionInteresado(interesado.getDocumento());
         interesadoBean.setRazonSocialInteresado(interesado.getRazonSocial());
         interesadoBean.setNombreInteresado(interesado.getNombre());
@@ -443,7 +445,7 @@ public class LibSirUtils {
             interesadoBean.setProvinciaInteresado(Long.toString(interesado.getProvincia().getCodigoProvincia()));
         }
         if (interesado.getLocalidad() != null) {
-            interesadoBean.setMunicipioInteresado(Long.toString(interesado.getLocalidad().getCodigoLocalidad()));
+            interesadoBean.setMunicipioInteresado("0"+ interesado.getLocalidad().getCodigoLocalidad());
         }
         interesadoBean.setDireccionInteresado(interesado.getDireccion());
         interesadoBean.setCodPostalInteresado(interesado.getCp());
@@ -536,15 +538,16 @@ public class LibSirUtils {
 
 
         asientoBean.setDsResumen(registroDetalle.getExtracto());
-        //Destino
-        if (organismo != null) {
+
+        //Se informará siempre que venga informado.
+        if(registroDetalle.getCodigoAsunto()!= null) {
             TraduccionCodigoAsunto tra = (TraduccionCodigoAsunto) registroDetalle.getCodigoAsunto().getTraduccion(RegwebConstantes.IDIOMA_CASTELLANO_CODIGO);
             asientoBean.setCdAsunto(tra.getNombre());
         }
         asientoBean.setRfExterna(registroDetalle.getReferenciaExterna());
         asientoBean.setNuExpediente(registroDetalle.getExpediente());
         asientoBean.setCdTpTransporte(CODIGO_SICRES_BY_TRANSPORTE.get(registroDetalle.getTransporte()));
-        asientoBean.setNuTransporte(registroDetalle.getTransporte() != null ? registroDetalle.getTransporte().toString() : "");
+        asientoBean.setNuTransporte(registroDetalle.getTransporte() != null ? registroDetalle.getNumeroTransporte() : "");
         asientoBean.setCdIntercambio(registroDetalle.getIdentificadorIntercambio());
         asientoBean.setApVersion(registroDetalle.getAplicacion());
         asientoBean.setCdTpAnotacion(registroDetalle.getTipoAnotacion());
