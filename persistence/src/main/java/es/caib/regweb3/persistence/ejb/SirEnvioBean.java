@@ -71,6 +71,7 @@ public class SirEnvioBean implements SirEnvioLocal {
     @EJB private DistribucionLocal distribucionEjb;
     @EJB private OrganismoLocal organismoEjb;
     @EJB private EntidadLocal entidadEjb;
+    @EJB private OficinaLocal oficinaEjb;
     @Autowired ArxiuCaibUtils arxiuCaibUtils;
 
 
@@ -113,7 +114,7 @@ public class SirEnvioBean implements SirEnvioLocal {
             registroDetalle.setDecodificacionTipoAnotacion(TipoAnotacion.ENVIO.getName());
 
             // Nos aseguramos que los campos origen sean los del registro, sobreescribiendo los posibles valores de un oficio interno
-            registroDetalle.setOficinaOrigen(registroEntrada.getOficina());
+            registroDetalle.setOficinaOrigen(oficinaEjb.findById(registroEntrada.getOficina().getId()));
             registroDetalle.setOficinaOrigenExternoCodigo(null);
             registroDetalle.setOficinaOrigenExternoDenominacion(null);
             registroDetalle.setNumeroRegistroOrigen(registroEntrada.getNumeroRegistroFormateado());
