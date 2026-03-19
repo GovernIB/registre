@@ -251,7 +251,7 @@ public class AnexoScanController extends AnexoController {
         }
 
         // recuperamos la integración que queremos actualizar su estado
-        Long idIntegracion = Long.valueOf(request.getSession().getAttribute("integracionId").toString());
+        Long idIntegracion = Long.valueOf(request.getSession().getAttribute("idIntegracion").toString());
 
         try {
 
