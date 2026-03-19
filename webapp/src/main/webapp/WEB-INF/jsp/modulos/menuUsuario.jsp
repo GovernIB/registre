@@ -151,8 +151,12 @@
             </li>
         </c:if>
 
-        <c:if test="${loginInfo.enlaceDir3}">
+        <c:if test="${not empty loginInfo.miDNIUrl}">
             <li class="divider"></li>
+            <li class="submenu-complet"><a href="<c:url value="${loginInfo.miDNIUrl}"/>" target="_blank"><i class="fa fa-address-card"></i> <spring:message code="menu.midniUrl"/></a></li>
+        </c:if>
+
+        <c:if test="${loginInfo.enlaceDir3}">
             <li class="submenu-complet"><a href="<c:url value="${loginInfo.dir3Caib.server}"/>" target="_blank"><i class="fa fa-institution"></i> <spring:message code="menu.dir3caib"/></a></li>
         </c:if>
 

@@ -48,6 +48,7 @@ public class LoginInfo {
     private Boolean enlaceDir3 = false;
     private String ayudaUrl = "";
     private Dir3Caib dir3Caib;
+    private String miDNIUrl = "";
 
     final User springSecurityUser;
     final Collection<GrantedAuthority> springRoles;
@@ -335,6 +336,10 @@ public class LoginInfo {
         this.dir3Caib = dir3Caib;
     }
 
+    public String getMiDNIUrl() { return miDNIUrl; }
+
+    public void setMiDNIUrl(String miDNIUrl) { this.miDNIUrl = miDNIUrl; }
+
     public static LoginInfo getInstance() throws LoginException {
         Object obj;
         try {
@@ -384,6 +389,7 @@ public class LoginInfo {
         this.configuracion = null;
         this.enlaceDir3 = false;
         this.ayudaUrl = "";
+        this.miDNIUrl = "";
     }
 
     /**
@@ -405,6 +411,7 @@ public class LoginInfo {
         this.organismosOficinaActiva = null;
         this.enlaceDir3 = false;
         this.ayudaUrl = "";
+        this.miDNIUrl = "";
     }
 
     @Override
