@@ -92,6 +92,7 @@ public class SirEnvioBean implements SirEnvioLocal {
     @EJB private AnexoLocal anexoEjb;
     @EJB private EntidadLocal entidadEjb;
     @EJB private JustificanteLocal justificanteEjb;
+    @EJB private OficinaLocal oficinaEjb;
 
 
     @Autowired ArxiuCaibUtils arxiuCaibUtils;
@@ -140,7 +141,7 @@ public class SirEnvioBean implements SirEnvioLocal {
             registroDetalle.setDecodificacionTipoAnotacion(TipoAnotacion.ENVIO.getName());
 
             // Nos aseguramos que los campos origen sean los del registro, sobreescribiendo los posibles valores de un oficio interno
-            registroDetalle.setOficinaOrigen(registroEntrada.getOficina());
+            registroDetalle.setOficinaOrigen(oficinaEjb.findById(registroEntrada.getOficina().getId()));
             registroDetalle.setOficinaOrigenExternoCodigo(null);
             registroDetalle.setOficinaOrigenExternoDenominacion(null);
             registroDetalle.setFechaOrigen(registroEntrada.getFecha());
@@ -177,7 +178,7 @@ public class SirEnvioBean implements SirEnvioLocal {
             log.info("Fin enviando FicheroIntercambio del registro: " + registroEntrada.getNumeroRegistroFormateado());
             log.info("----------------------------------------------------------------------------------------------");
 
-        } catch (I18NException | InterException  s) {
+        } catch (I18NException | InterException s) {
             s.printStackTrace();
             integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_SIR, descripcion, peticion.toString(), s, null, System.currentTimeMillis() - inicio.getTime(), entidad.getId(), registroEntrada.getNumeroRegistroFormateado());
             ejbContext.setRollbackOnly();
