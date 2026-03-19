@@ -856,6 +856,26 @@ public class PropiedadGlobalUtil {
     }
 
     /**
+     * Retorna el valor de la url de verificador de QR de DNI
+     * Propiedad: es.caib.regweb3.midni.url
+     * @param idEntidad
+     * @return
+     */
+    public static String getMiDNIUrl(Long idEntidad) {
+        final String partialPropertyName = "midni.url";
+        String valor = getStringByEntidad(idEntidad, partialPropertyName);
+
+        // Valor global si no existeix el de per entitat
+        if (valor == null) {
+            valor = getString(partialPropertyName);
+        }
+        return valor;
+    }
+
+
+
+
+    /**
      * Retorna la base del plugin de SignatureServer de la entidad
      * Propiedad: es.caib.regweb3.signatureserver.plugin.base
      * @param idEntidad

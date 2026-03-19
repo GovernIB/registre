@@ -546,6 +546,7 @@ public class LoginService {
 
         loginInfo.setEnlaceDir3(PropiedadGlobalUtil.getEnlaceDir3(entidad.getId()));
         loginInfo.setAyudaUrl(PropiedadGlobalUtil.getAyudaUrl(entidad.getId()));
+        loginInfo.setMiDNIUrl(PropiedadGlobalUtil.getMiDNIUrl(entidad.getId()));
         loginInfo.setDir3Caib(new Dir3Caib(PropiedadGlobalUtil.getDir3CaibServer(entidad.getId()), PropiedadGlobalUtil.getDir3CaibUsername(entidad.getId()), PropiedadGlobalUtil.getDir3CaibPassword(entidad.getId())));
 
         log.info("Entidad activa usuario: " + entidad.getNombre() + " - " + loginInfo.getUsuarioAutenticado().getNombreCompleto());
