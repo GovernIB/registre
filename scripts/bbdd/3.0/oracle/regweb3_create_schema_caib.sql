@@ -586,6 +586,7 @@ create sequence RWE_USUARIOENTIDAD_SEQ start with 1 increment by  1;
         APLICACION varchar2(255 char),
         APLICACION_TELEMATICA varchar2(255 char),
         COD_ENT_REG_DEST varchar2(21 char),
+        CODIGO_FUNC_HAB varchar2(255 char),
         CODIGOSIA number(19,0),
         DEC_ENT_REG_DEST varchar2(80 char),
         DEC_T_ANOTACION varchar2(80 char),
@@ -597,6 +598,8 @@ create sequence RWE_USUARIOENTIDAD_SEQ start with 1 increment by  1;
         ID_INTERCAMBIO varchar2(33 char),
         IDIOMA number(19,0),
         INDICADOR_PRUEBA number(10,0),
+        NIF_FUNC_HAB varchar2(256 char),
+        NOMBRE_FUNC_HAB varchar2(255 char),
         NUMREG_ORIGEN varchar2(20 char),
         NUMTRANSPORTE varchar2(20 char),
         OBSERVACIONES varchar2(50 char),
@@ -1878,6 +1881,7 @@ grant select on RWE_ALL_SEQ to www_regweb3;
     grant select,insert,delete,update on RWE_TRAZABILIDAD_SIR to www_regweb3;
     grant select,insert,delete,update on RWE_USUARIO to www_regweb3;
     grant select,insert,delete,update on RWE_USUARIO_ENTIDAD to www_regweb3;
+
 
 
 
