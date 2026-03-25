@@ -703,27 +703,25 @@ public class SirController extends BaseController {
                 registroSir = registroSirEjb.transformarRegistroSalida(registroSalida);
             }
 
-            if(registroSir != null){
+            if (registroSir != null) {
                 Document doc = sicres3XML.crearXMLFicheroIntercambioSICRES3(registroSir);
 
                 try {
                     String ficheroIntercambio = prettyPrint(doc);
-                    String filename = registroSir.getIdentificadorIntercambio()+".xml";
-                    response.setContentType("text/xml");
+                    String filename = registroSir.getIdentificadorIntercambio() + ".xml";
+                    response.setContentType("application/xml; charset=UTF-8");
                     response.setHeader("Content-Disposition", "attachment; filename=\"" + filename + "\"");
-                    response.setContentLength(ficheroIntercambio.length());
+                    byte[] xmlBytes = ficheroIntercambio.getBytes(StandardCharsets.UTF_8);
+                    response.setContentLength(xmlBytes.length);
 
-                    OutputStream output = response.getOutputStream();
-                    InputStream input = new ByteArrayInputStream(ficheroIntercambio.getBytes(StandardCharsets.UTF_8));
-
-                    IOUtils.copy(input, output);
-
-                    input.close();
-                    output.close();
-
+                    try (OutputStream output = response.getOutputStream();
+                         InputStream input = new ByteArrayInputStream(xmlBytes)) {
+                        IOUtils.copy(input, output);
+                        output.flush();
+                    }
                 } catch (NumberFormatException e) {
                     log.info(e.getMessage());
-                }  catch (Exception e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
