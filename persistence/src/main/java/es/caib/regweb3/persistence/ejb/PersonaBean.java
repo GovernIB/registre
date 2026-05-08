@@ -420,14 +420,18 @@ public class PersonaBean extends BaseEjbJPA<Persona, Long> implements PersonaLoc
 
         if (tipoPersona.equals(RegwebConstantes.TIPO_PERSONA_FISICA)) {
             queryBase = "Select persona.id, persona.nombre, persona.apellido1, persona.apellido2, persona.documento from Persona as persona ";
-            where.add(DataBaseUtils.like("persona.documento", "text", parametros, text));
+          //  where.add(DataBaseUtils.like("persona.documento", "text", parametros, text));
+            where.add(" persona.documento like upper(:text) ");
+            parametros.put("text","%" + text +"%");
             //where.add(DataBaseUtils.like("CONCAT(persona.nombre,' ',persona.apellido1,' ',persona.apellido2,' - ', persona.documento)", "text", parametros, text));
             where.add(" persona.tipo = :tipoPersona ");
             parametros.put("tipoPersona", RegwebConstantes.TIPO_PERSONA_FISICA);
 
         } else if (tipoPersona.equals(RegwebConstantes.TIPO_PERSONA_JURIDICA)) {
             queryBase = "Select persona.id, persona.razonSocial, persona.documento from Persona as persona ";
-            where.add(DataBaseUtils.like("persona.documento", "text", parametros, text));
+         //   where.add(DataBaseUtils.like("persona.documento", "text", parametros, text));
+            where.add(" persona.documento like upper(:text) ");
+            parametros.put("text","%" + text +"%");
 
             //where.add(DataBaseUtils.like("CONCAT(persona.razonSocial,' - ', persona.documento)", "text", parametros, text));
             where.add(" persona.tipo = :tipoPersona ");
@@ -459,6 +463,8 @@ public class PersonaBean extends BaseEjbJPA<Persona, Long> implements PersonaLoc
         }
 
         q.setHint("org.hibernate.readOnly", true);
+
+        log.info("QUERY XXXXXX " + q);
 
         List<Object[]> result = q.getResultList();
         List<Persona> personas = new ArrayList<Persona>();
