@@ -115,7 +115,6 @@
                                     </div>
                                     <div class="col-xs-8 no-pad-right">
                                         <form:select path="idOrganismoDestino" cssClass="chosen-select">
-                                            <form:option value="" label="..."/>
                                             <c:forEach items="${organismosEntidad}" var="organismo">
                                                 <option value="${organismo.id}" <c:if test="${registroSir.codigoUnidadTramitacionDestino == organismo.codigo}">selected="selected"</c:if> >${organismo.denominacion} </option>
                                             </c:forEach>
