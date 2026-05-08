@@ -1582,7 +1582,11 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         // Obtenemos el Organismo destino indicado
         Organismo organismoDestino = organismoEjb.findByIdLigero(idOrganismoDestino);
 
-        registroEntrada.setDestino(organismoDestino);
+        if(organismoDestino == null){
+            registroEntrada.setDestino(oficinaActiva.getOrganismoResponsable());
+        }else {
+            registroEntrada.setDestino(organismoDestino);
+        }
         registroEntrada.setDestinoExternoCodigo(null);
         registroEntrada.setDestinoExternoDenominacion(null);
 
