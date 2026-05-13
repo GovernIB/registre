@@ -14,7 +14,6 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.TimeZone;
 
-import javax.xml.bind.DatatypeConverter;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
@@ -48,7 +47,12 @@ import org.fundaciobit.pluginsib.core.utils.MetadataFormatException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.alfresco.client.AlfrescoClient;
+import org.apache.chemistry.opencmis.client.api.Repository;
+import org.apache.chemistry.opencmis.client.api.Session;
+import org.apache.chemistry.opencmis.client.runtime.SessionFactoryImpl;
+import org.apache.chemistry.opencmis.commons.SessionParameter;
+import org.apache.chemistry.opencmis.commons.enums.BindingType;
+
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.filter.HTTPBasicAuthFilter;
@@ -87,7 +91,22 @@ public class ArxiuDigitalApbCustodyPlugin extends AbstractPluginProperties imple
 	private String repositori;
 	private IValidateSignaturePlugin validaSignaturaPlugin;
 	private OpenCmisAlfrescoHelper openCmisAlfrescoHelper;
-	private AlfrescoClient alfrescoClient;
+	private Session session;
+
+	private static final String CMIS_BROWSER_URL_SUFFIX = "/api/-default-/public/cmis/versions/1.1/browser";
+
+	private Session getSession() {
+		if (session != null) return session;
+		Map<String, String> sessionParams = new HashMap<String, String>();
+		sessionParams.put(SessionParameter.USER, user);
+		sessionParams.put(SessionParameter.PASSWORD, password);
+		sessionParams.put(SessionParameter.BINDING_TYPE, BindingType.BROWSER.value());
+		sessionParams.put(SessionParameter.BROWSER_URL, cmisUrl + (cmisUrl.endsWith(CMIS_BROWSER_URL_SUFFIX) ? "" : CMIS_BROWSER_URL_SUFFIX));
+		SessionFactoryImpl factory = SessionFactoryImpl.newInstance();
+		List<Repository> repos = factory.getRepositories(sessionParams);
+		session = repos.get(0).createSession();
+		return session;
+	}
 	
 	//pluginsib-core-2.0.0
 	public ArxiuDigitalApbCustodyPlugin() throws CustodyException {
@@ -246,8 +265,17 @@ public class ArxiuDigitalApbCustodyPlugin extends AbstractPluginProperties imple
 
 				parameters.put("generarCSV", "true");
 				urlParams.put("isDraft", "true");
-				
+								
 				response = api.insertDocument(jsonBody, urlParams);
+				
+				if (response != null && !response.isEmpty()) {
+					String uuid = (String) response.get("uid");
+				
+					String fechaRegistroStr = fechaRegistro != null ? Utils.getFormatData().format(fechaRegistro) : null;
+					
+					logger.debug("Metadades creació annex amb uuid={} [fechaAsiento={}, numeroAsiento={}]", new Object[] {uuid, fechaRegistroStr, numeroRegistro});
+				}
+				
 				long t10 = System.currentTimeMillis();
 				logger.debug("La creació del document sense contingut ha tardat " + (t10 - t01) + "ms");
 			}
@@ -419,15 +447,17 @@ public class ArxiuDigitalApbCustodyPlugin extends AbstractPluginProperties imple
 		}
 		logger.debug("Esborrant el document [custodyID=" + custodyID + "]");
 		try {
+			DocumentCustody documentEliminat = null;
 			//Cmis
-			alfrescoClient = new AlfrescoClient.Builder()
-					.connect(cmisUrl, 
-							 user, 
-							 password).build();
-			DocumentCustody documentEliminat = openCmisAlfrescoHelper.getDocumentById(
-					alfrescoClient, 
-					custodyID, 
-					true);
+			try {
+				session = getSession();
+				documentEliminat = openCmisAlfrescoHelper.getDocumentById(
+						session, 
+						custodyID, 
+						true);
+			} catch (Exception e) {
+				logger.error("Ha habido un error de comunicación con el CMIS (openCmis) antiguo, procedemos a eliminar con la nueva API: " + e.getMessage());
+			}
 			//Zona provisional
 			if (documentEliminat == null) {
 				api.deleteDocument(custodyID);
@@ -492,19 +522,20 @@ public class ArxiuDigitalApbCustodyPlugin extends AbstractPluginProperties imple
 		}		
 		logger.debug("Recuperant les metadades" + (retrieveContent ? " i el contingut del document " : " del document ") + "[custodyID=" + custodyID + "]");
 		
-		DocumentCustody doc = new DocumentCustody();
+		DocumentCustody doc = null;
 		List<String> uuidFirmas = null;
 		try {
-			//Site
-			alfrescoClient = new AlfrescoClient.Builder()
-					.connect(cmisUrl, 
-							 user, 
-							 password).build();
-			
-			doc = openCmisAlfrescoHelper.getDocumentById(
-					alfrescoClient, 
-					custodyID, 
-					false);
+			//cmis
+			try {
+				session = getSession();
+				
+				doc = openCmisAlfrescoHelper.getDocumentById(
+						session, 
+						custodyID, 
+						false);
+			} catch (Exception e) {
+				logger.error("Ha habido un error de comunicación con el CMIS (openCmis) antiguo, procedemos a recuperar datos de nueva API (zona provisional): " + e.getMessage());
+			}
 			if (doc == null) {
 				//Zona provisional
 				doc = new DocumentCustody();
@@ -539,7 +570,7 @@ public class ArxiuDigitalApbCustodyPlugin extends AbstractPluginProperties imple
 			}
 			long t1 = System.currentTimeMillis();
 			logger.debug("Les metadades del document [custodyID=" + custodyID + "] s'han recuperat en " + (t1 - t0) + "ms");
-		} catch (IOException ex) {
+		} catch (Exception ex) {
 			throw new CustodyException("No s'ha pogut recuperar la informació del document amb custodyID " + custodyID, ex);
 			
 		}
@@ -550,15 +581,17 @@ public class ArxiuDigitalApbCustodyPlugin extends AbstractPluginProperties imple
 		long t0 = System.currentTimeMillis();
 		logger.debug("Recuperant el contingut del document [custodyID=" + custodyID + "]");
 		try {
+			DocumentCustody document = null;
 			byte [] contingut;
-			alfrescoClient = new AlfrescoClient.Builder()
-					.connect(cmisUrl, 
-							 user, 
-							 password).build();
-			DocumentCustody document = openCmisAlfrescoHelper.getDocumentById(
-					alfrescoClient, 
-					custodyID, 
-					true);
+			try {
+				session = getSession();
+				document = openCmisAlfrescoHelper.getDocumentById(
+						session, 
+						custodyID, 
+						true);
+			} catch (Exception e) {
+				logger.error("Ha habido un error de comunicación con el CMIS (openCmis) antiguo, procedemos a recuperar datos de nueva API (zona provisional): " + e.getMessage());
+			}
 			if (document == null) {
 				contingut = api.getDocument(custodyID);
 			} else {
@@ -583,7 +616,7 @@ public class ArxiuDigitalApbCustodyPlugin extends AbstractPluginProperties imple
 		Map<String, Object> docInfo, docInfoFirma, contentFirma, propertiesFirma;
 		String report;
 		SignatureCustody signature = new SignatureCustody();
-		DocumentCustody doc = new DocumentCustody();
+		DocumentCustody doc = null;
 		String mimeFirma = null, nomFirma = null;
 		String lengthFirma = "0";
 		byte[] dataFirma = null;
@@ -594,15 +627,17 @@ public class ArxiuDigitalApbCustodyPlugin extends AbstractPluginProperties imple
 		HashMap content = null;
 		HashMap properties = null;
 		try {
-			alfrescoClient = new AlfrescoClient.Builder().connect(
-					cmisUrl, 
-					user, 
-					password).build();
-
-			doc = openCmisAlfrescoHelper.getDocumentById(
-					alfrescoClient, 
-					custodyID, 
-					false);
+			try {
+				// cmis
+				session = getSession();
+	
+				doc = openCmisAlfrescoHelper.getDocumentById(
+						session, 
+						custodyID, 
+						false);
+			} catch (Exception e) {
+				logger.error("Ha habido un error de comunicación con el CMIS (openCmis) antiguo, procedemos a recuperar datos de nueva API (zona provisional): " + e.getMessage());
+			}
 			//Zona provisional
 			if (doc != null) {
 				if (retrieveContent)
@@ -679,21 +714,21 @@ public class ArxiuDigitalApbCustodyPlugin extends AbstractPluginProperties imple
 		logger.debug("Recuperant les metadades del document [custodyID=" + custodyID + "]");
 		Map<String, Object> docInfo;
 		Map<String, List<Metadata>> properties;
-		DocumentCustody doc = new DocumentCustody();
+		DocumentCustody doc = null;
 		try {
 			if(custodyID.contains("#")) {
 				custodyID = custodyID.substring(0, custodyID.indexOf("#"));
 			}
-			
-			alfrescoClient = new AlfrescoClient.Builder().connect(
-					cmisUrl, 
-					user, 
-					password).build();
-
-			doc = openCmisAlfrescoHelper.getDocumentById(
-					alfrescoClient, 
-					custodyID, 
-					false);
+			try {
+				session = getSession();
+	
+				doc = openCmisAlfrescoHelper.getDocumentById(
+						session, 
+						custodyID, 
+						false);
+			} catch (Exception e) {
+				logger.error("Ha habido un error de comunicación con el CMIS (openCmis) antiguo, procedemos a recuperar datos de nueva API (zona provisional): " + e.getMessage());
+			}
 			//Zona provisional
 			if (doc != null) {
 				return null;
@@ -714,19 +749,19 @@ public class ArxiuDigitalApbCustodyPlugin extends AbstractPluginProperties imple
 		long t0 = System.currentTimeMillis();
 		logger.debug("Recuperant la metadada [metadada=" + key + "] del document [custodyID=" + custodyID + "]");
 		String[] keys = key.split(":");
-		DocumentCustody doc = new DocumentCustody();
+		DocumentCustody doc = null;
 		Metadata metadata = null;
 		try {
-			alfrescoClient = new AlfrescoClient.Builder().connect(
-					cmisUrl, 
-					user, 
-					password).build();
-
-			doc = openCmisAlfrescoHelper.getDocumentById(
-					alfrescoClient, 
-					custodyID, 
-					false);
-			
+			try {
+				session = getSession();
+	
+				doc = openCmisAlfrescoHelper.getDocumentById(
+						session, 
+						custodyID, 
+						false);
+			} catch (Exception e) {
+				logger.error("Ha habido un error de comunicación con el CMIS (openCmis) antiguo, procedemos a recuperar datos de nueva API (zona provisional): " + e.getMessage());
+			}
 			//Zona provisional
 			if (doc != null) {
 				return metadata;
@@ -740,7 +775,7 @@ public class ArxiuDigitalApbCustodyPlugin extends AbstractPluginProperties imple
 			logger.debug("La metadada del document [custodyID=" + custodyID + "] s'ha recuperat en " + (t1 - t0) + "ms");
 			return metadata;
 		} catch (Exception e) {
-			throw new RuntimeException("No s'han pogut recuperar les metadades del document amb ID: " + custodyID);
+			throw new RuntimeException("No s'han pogut recuperar les metadades del document amb ID: " + custodyID, e);
 		}
 	}
 
@@ -974,6 +1009,8 @@ public class ArxiuDigitalApbCustodyPlugin extends AbstractPluginProperties imple
 		try {
 			String registreTipus = registre.getClass().getName().toLowerCase();
 			if(registreTipus.endsWith("salida")) {
+				logger.debug("Actualitzant metadades annex amb csv={}", csv);
+				
 				Object oficina = Utils.invokeMethod(registre, "getOficina");
 				String codigoOficinaReg = (String) Utils.invokeMethod(oficina, "getCodigo");
 				String numRegistroFormatReg = (String) Utils.invokeMethod(registre, "getNumeroRegistroFormateado");
@@ -987,6 +1024,8 @@ public class ArxiuDigitalApbCustodyPlugin extends AbstractPluginProperties imple
 				bodyUpdate.put("apbNTI:fechaAsiento", fechaAsientoReg);
 				bodyUpdate.put("apbNTI:numeroRegistro", numRegistroFormatReg);
 				bodyUpdate.put("apbNTI:oficinaRegistro", codigoOficinaReg);
+				
+				logger.debug("Metadades actualització annex amb csv={} [fechaAsiento={}, numeroAsiento={}, oficinaAsiento={}]", new Object[] {csv, fechaAsientoReg, numRegistroFormatReg, codigoOficinaReg});
 				
 				bodySearchValue.put("value", csv);
 				bodySearch.put("apbNTI:csv", bodySearchValue);
@@ -1006,6 +1045,8 @@ public class ArxiuDigitalApbCustodyPlugin extends AbstractPluginProperties imple
 							uuid, 
 							bodyUpdate, 
 							params);
+					
+					logger.debug("Metadades de l'annex amb csv={} actualitzades èxit", csv);
 				}
 			}
 			
@@ -1024,7 +1065,7 @@ public class ArxiuDigitalApbCustodyPlugin extends AbstractPluginProperties imple
 				"[custodyID=" + custodyID + "]");
 		try {
 			jsonBody.put("cm:name", Utils.getJustificantNom(signatureCustody.getName(), registreTipus.endsWith("entrada") ? true : false));
-			jsonBody.put("cm:content", DatatypeConverter.printBase64Binary(signatureCustody.getData()));
+			jsonBody.put("cm:content", Base64.encodeBase64String(signatureCustody.getData()));
 			jsonBody.put("apbNTI:origen_EniDoc", getJustificantOrigenDocument());
 			jsonBody.put("apbNTI:estadoElaboracion_EniDoc", getJustificantEstadoElaboracion());
 			jsonBody.put("apbNTI:tipoDocumental_EniDoc", getJustificantTipusDocumental());
@@ -1057,7 +1098,7 @@ public class ArxiuDigitalApbCustodyPlugin extends AbstractPluginProperties imple
 			if (document != null || signatureCustody != null) {
 				//Sense firma o firma attached
 				if (document != null){
-					jsonBody.put("cm:content", DatatypeConverter.printBase64Binary(document.getData()));
+					jsonBody.put("cm:content", Base64.encodeBase64String(document.getData()));
 					jsonBody.put("cm:name", 
 							Utils.getDocumentName(
 									(String) metadades.get("anexo.titulo"), 
@@ -1066,7 +1107,7 @@ public class ArxiuDigitalApbCustodyPlugin extends AbstractPluginProperties imple
 									getControlColisions()));
 	//				jsonBody.put("cm:name", Utils.getNewName(custodyID, document.getName()));
 				} else if (signatureCustody != null && Arrays.asList(attached).contains(signatureCustody.getSignatureType())) {
-					jsonBody.put("cm:content", DatatypeConverter.printBase64Binary(signatureCustody.getData()));
+					jsonBody.put("cm:content", Base64.encodeBase64String(signatureCustody.getData()));
 					jsonBody.put("cm:name", 
 							Utils.getDocumentName(
 									(String) metadades.get("anexo.titulo"), 
@@ -1077,7 +1118,7 @@ public class ArxiuDigitalApbCustodyPlugin extends AbstractPluginProperties imple
 				} 
 				//Firma dettached
 				if (signatureCustody != null && Arrays.asList(dettached).contains(signatureCustody.getSignatureType())) {
-					firmaSeparada.add(DatatypeConverter.printBase64Binary(signatureCustody.getData()));
+					firmaSeparada.add(Base64.encodeBase64String(signatureCustody.getData()));
 					jsonBody.put("apbNTI:firma", firmaSeparada);
 					urlParams.put("signed", "true");
 				} 

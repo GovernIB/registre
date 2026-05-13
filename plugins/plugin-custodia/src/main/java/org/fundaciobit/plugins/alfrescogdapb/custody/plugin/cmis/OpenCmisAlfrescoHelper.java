@@ -2,48 +2,26 @@ package org.fundaciobit.plugins.alfrescogdapb.custody.plugin.cmis;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.chemistry.opencmis.client.api.CmisObject;
+import org.apache.chemistry.opencmis.client.api.Document;
+import org.apache.chemistry.opencmis.client.api.Folder;
+import org.apache.chemistry.opencmis.client.api.ItemIterable;
+import org.apache.chemistry.opencmis.client.api.QueryResult;
+import org.apache.chemistry.opencmis.client.api.Session;
+import org.apache.chemistry.opencmis.commons.PropertyIds;
+import org.apache.chemistry.opencmis.commons.data.ContentStream;
+import org.apache.chemistry.opencmis.commons.enums.VersioningState;
+import org.apache.chemistry.opencmis.commons.exceptions.CmisObjectNotFoundException;
+import org.apache.chemistry.opencmis.commons.impl.dataobjects.ContentStreamImpl;
 
-import com.alfresco.client.AlfrescoClient;
-import com.alfresco.client.api.core.NodesAPI;
-import com.alfresco.client.api.core.SitesAPI;
-import com.alfresco.client.api.core.model.body.NodeBodyCreate;
-import com.alfresco.client.api.core.model.body.NodeBodyUpdate;
-import com.alfresco.client.api.core.model.representation.NodeRepresentation;
-import com.alfresco.client.api.core.model.representation.SiteContainerRepresentation;
-import com.alfresco.client.api.search.SearchAPI;
-import com.alfresco.client.api.search.body.QueryBody;
-import com.alfresco.client.api.search.body.RequestQuery;
-import com.alfresco.client.api.search.model.ResultNodeRepresentation;
-import com.alfresco.client.api.search.model.ResultSetRepresentation;
-import com.google.api.client.http.HttpTransport;
-import com.google.api.client.http.javanet.NetHttpTransport;
-import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.jackson.JacksonFactory;
-import com.google.gson.internal.LinkedTreeMap;
-
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
-import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Response;
-
-/**
- * Limit Tecnologies
- * 
- * @author andreus
- * 
- */
 public class OpenCmisAlfrescoHelper {
-
-	public final HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
-	public final JsonFactory JSON_FACTORY = new JacksonFactory();
 
 	public String SIGLES_ENTITAT;
 	
@@ -65,57 +43,50 @@ public class OpenCmisAlfrescoHelper {
 		this.CMIS_FOLDER_ASPECT = siglesEntitat + "Registro:c_registro";
 	}
 
-	/**
-	 * Crea recursivament una ruta de carpetes partint de la carpeta principal
-	 * de documents del registre. El path es dividirá en carpetes que s´anirán
-	 * creant de forma anidada. Les carpetes creades serán del tipus cmis:folder
-	 * excepte la darrera, que sera de tipus Registro:registro
-	 * Retorna la ultima carpeta creada.
-	 */
-	public String crearRutaDeCarpetes(AlfrescoClient client, String site, String rutaCarpetes, Map<String, Object> folderProperties) {
+	public String crearRutaDeCarpetes(Session session, String site, String rutaCarpetes, Map<String, Object> folderProperties) {
 		
-		String idCarpetaAnterior  = null;
+		String idCarpetaAnterior = null;
 		
 		try {
-
-			// Retrieve Site
-			SitesAPI sitesAPI = client.getSitesAPI();
-			Response<SiteContainerRepresentation> doclibContainerResponse = sitesAPI
-					.getSiteContainerCall(site, "documentLibrary").execute();
-			SiteContainerRepresentation doclibContainer = doclibContainerResponse.body();
-			idCarpetaAnterior  = doclibContainer.getId();
+			String basePath = "/Sites/" + site + "/documentLibrary";
+			Folder doclib = (Folder) session.getObjectByPath(basePath);
+			idCarpetaAnterior = doclib.getId();
 			
 			if (rutaCarpetes!=null && !"".equals(rutaCarpetes)) {
-
 				String[] carpetes = rutaCarpetes.split("/");
-				NodesAPI nodesAPI = client.getNodesAPI();
+				String currentPath = basePath;
 				
 				for (int c=0; c<carpetes.length; c++) {		
 					if (carpetes[c]!=null && !"".equals(carpetes[c])) {
 						String nomCarpeta = carpetes[c];
-						NodeRepresentation node = nodesAPI.getNodeCall(idCarpetaAnterior, null, nomCarpeta, null).execute().body();
-						if (node!=null) {
-							idCarpetaAnterior = node.getId();
-						}else{
+						currentPath = currentPath + "/" + nomCarpeta;
+						
+						try {
+							CmisObject child = session.getObjectByPath(currentPath);
+							idCarpetaAnterior = child.getId();
+						} catch (CmisObjectNotFoundException e) {
+							List<String> secondaryTypes = null;
+							Map<String, Object> properties = new HashMap<String, Object>();
+							String tipusCarpeta = "cmis:folder";
 							
-							List<String> aspectes = null;
-							Map<String, Object> properties = null;
-							String tipusCarpeta = "cm:folder";
-							
-							if (c==carpetes.length-1) {
-								aspectes = new ArrayList<String>();
-								aspectes.add(CMIS_FOLDER_ASPECT);
+							if (c == carpetes.length - 1) {
+								secondaryTypes = new ArrayList<String>();
+								secondaryTypes.add("P:" + CMIS_FOLDER_ASPECT);
 								
-								properties = folderProperties;
+								properties = folderProperties != null ? new HashMap<String, Object>(folderProperties) : new HashMap<String, Object>();
 								
 								tipusCarpeta = CMIS_FOLDER_TYPE;
 							}
 							
-							NodeBodyCreate nodeBodyCreate = new NodeBodyCreate(nomCarpeta, tipusCarpeta, properties, aspectes);
-							//NodeBodyCreate nodeBodyCreate = new NodeBodyCreate(nomCarpeta, "cm:folder");
-							Response<NodeRepresentation> nodeResponse = nodesAPI.createNodeCall(idCarpetaAnterior, nodeBodyCreate).execute();
-							NodeRepresentation folder = nodeResponse.body();
-							idCarpetaAnterior = folder.getId();
+							properties.put(PropertyIds.NAME, nomCarpeta);
+							properties.put(PropertyIds.OBJECT_TYPE_ID, tipusCarpeta);
+							if (secondaryTypes != null) {
+								properties.put(PropertyIds.SECONDARY_OBJECT_TYPE_IDS, secondaryTypes);
+							}
+							
+							Folder parentFolder = (Folder) session.getObject(idCarpetaAnterior);
+							Folder newFolder = parentFolder.createFolder(properties);
+							idCarpetaAnterior = newFolder.getId();
 						}
 					}
 				}
@@ -128,23 +99,8 @@ public class OpenCmisAlfrescoHelper {
 		return idCarpetaAnterior;
 	}
 
-	/**
-	 * Crea un document dins la ruta indicada, amb data de l'annex i amb les
-	 * propietats indicades
-	 * 
-	 * @param document
-	 *            Conte el array de bites del fitxer final.
-	 * @param fileName
-	 *            Nom del fitxer
-	 * @param path
-	 *            Ruta a on es creará el document
-	 * @param fileProperties
-	 *            Metadades del document
-	 * @return El document creat o null si no s´ha pogut crear.
-	 * @throws IOException 
-	 */
 	public String crearDocument(
-			AlfrescoClient client, 
+			Session session, 
 			String site,
 			org.fundaciobit.plugins.documentcustody.api.AnnexCustody document, 
 			String fileName, 
@@ -155,114 +111,84 @@ public class OpenCmisAlfrescoHelper {
 		String parentFolder = null;
 		String documentCreat = null;
 
-		// Si la carpeta proposada no existeix, es creará la ruta necessaria
-		parentFolder = crearRutaDeCarpetes(client, site, path, folderProperties);
+		parentFolder = crearRutaDeCarpetes(session, site, path, folderProperties);
 
 		if (parentFolder != null && !"".equals(parentFolder)) {
 			document.setName(fileName);
-			documentCreat = crearDocument(client, parentFolder, document);
+			documentCreat = crearDocument(session, parentFolder, document);
 		}
-		
-		//No podem actualitzar les propietats amb el mateix client utilitzat per pujar l´arxiu o dona un BadRequest
-		//if (documentCreat != null && !"".equals(documentCreat))
-			//setPropietatsNode(client, documentCreat, toLinkedTreeMap(fileProperties));
 		
 		return documentCreat;
 	}
-
-	public LinkedTreeMap<String,Object> toLinkedTreeMap(Map<String, Object> properties) {
-		LinkedTreeMap<String, Object> props = new LinkedTreeMap<String,Object>();
-		
-		if (properties!=null && properties.size()>0)
-			for (Map.Entry<String, Object> entry : properties.entrySet())
-				props.put(entry.getKey(), entry.getValue());
-		
-		return props;
-	}
 	
 	private String crearDocument (
-			AlfrescoClient client, 
+			Session session, 
 			String idNodePare, 
 			org.fundaciobit.plugins.documentcustody.api.AnnexCustody document) throws IOException {
 
-		RequestBody requestBody = RequestBody.create (MediaType.parse(document.getMime()), document.getData());
-		MultipartBody.Builder multipartBuilder = new MultipartBody.Builder();
-		multipartBuilder.addFormDataPart("filedata", document.getName(), requestBody);
-
-		RequestBody fileRequestBody = multipartBuilder.build();
-		HashMap<String, RequestBody> map = new HashMap<String, RequestBody>();
-		map.put("filedata", fileRequestBody);
-		map.put("name", RequestBody.create(MediaType.parse("multipart/form-data"), document.getName()));
+		Folder parent = (Folder) session.getObject(idNodePare);
 		
-		// Create Content
-		NodesAPI nodesAPI = client.getNodesAPI();
-		Response<NodeRepresentation> createdNodeResponse = nodesAPI.createNodeCall(idNodePare, map).execute();
-		return createdNodeResponse.body().getId();
+		Map<String, Object> properties = new HashMap<String, Object>();
+		properties.put(PropertyIds.OBJECT_TYPE_ID, "cmis:document");
+		properties.put(PropertyIds.NAME, document.getName());
+		
+		ContentStream contentStream = new ContentStreamImpl(
+				document.getName(),
+				BigInteger.valueOf(document.getData().length),
+				document.getMime(),
+				new java.io.ByteArrayInputStream(document.getData()));
+		
+		Document doc = parent.createDocument(properties, contentStream, VersioningState.NONE);
+		return doc.getId();
 	}
 
-	public String setPropietatsNode(AlfrescoClient client, String idNode, Map<String, Object> props, boolean updateAspects) throws IOException {
+	public String setPropietatsNode(Session session, String idNode, Map<String, Object> props, boolean updateAspects) throws IOException {
 
-		NodesAPI nodesAPI = client.getNodesAPI();
-	
-		NodeBodyUpdate nodeBodyUpdate = new NodeBodyUpdate(toLinkedTreeMap(props));
-		
-		if (updateAspects) {
-			
-			List<String> aspectes = new ArrayList<String>();
-			aspectes.add(CMIS_DOCUMENT_ASPECT_BASE);
-			aspectes.add(CMIS_DOCUMENT_ASPECT_CUSTOM);
-			
-			nodeBodyUpdate = new NodeBodyUpdate(null, CMIS_DOCUMENT_TYPE, toLinkedTreeMap(props), aspectes);
+		Map<String, Object> properties = new HashMap<String, Object>();
+		if (props != null) {
+			properties.putAll(props);
 		}
 		
-		NodeRepresentation updatedNode = nodesAPI.updateNodeCall(idNode, nodeBodyUpdate).execute().body();
-		return updatedNode.getId();
+		if (updateAspects) {
+			List<String> secondaryTypes = new ArrayList<String>();
+			secondaryTypes.add("P:" + CMIS_DOCUMENT_ASPECT_BASE);
+			secondaryTypes.add("P:" + CMIS_DOCUMENT_ASPECT_CUSTOM);
+			properties.put(PropertyIds.SECONDARY_OBJECT_TYPE_IDS, secondaryTypes);
+			properties.put(PropertyIds.OBJECT_TYPE_ID, CMIS_DOCUMENT_TYPE);
+		}
+		
+		Document doc = (Document) session.getObject(idNode);
+		doc.updateProperties(properties);
+		return doc.getId();
 	}
 
-	/**
-	 * Recupera tots els documents de una custodia si se li passa nomes el
-	 * custodyID Si se li afegeix el sufixe "D" o "S", recuperará nomes el
-	 * document o la firma respectivament
-	 * 
-	 * @throws IOException
-	 */
 	public org.fundaciobit.plugins.documentcustody.api.DocumentCustody getDocumentById(
-			AlfrescoClient client,
+			Session session,
 			String custodyID,
 			boolean delete) throws IOException {
 
 		org.fundaciobit.plugins.documentcustody.api.DocumentCustody out = null;
 
-		SearchAPI searchAPI = client.getSearchAPI();
-
-		String queryString = "select * " + "FROM " + SIGLES_ENTITAT + "Registro:d_anexo " + "WHERE " + SIGLES_ENTITAT
+		String queryString = "SELECT * FROM " + SIGLES_ENTITAT + "Registro:d_anexo WHERE " + SIGLES_ENTITAT
 				+ "Registro:dr_custodyID = '" + custodyID + "' ";
-				//+ "AND " + SIGLES_ENTITAT + "Registro:dr_tipoArchivo='"+tipo+"'";
 
-		RequestQuery cmisQuery = new RequestQuery().query(queryString).language(RequestQuery.LanguageEnum.CMIS);
-		QueryBody cmisbody = new QueryBody().query(cmisQuery);
-		ResultSetRepresentation<ResultNodeRepresentation> cmisResult = searchAPI.searchCall(cmisbody).execute().body();
+		ItemIterable<QueryResult> results = session.query(queryString, false);
 
-		if (cmisResult != null) {
+		for (QueryResult result : results) {
+			String nodeId = result.getPropertyValueByQueryName("cmis:objectId");
 
-			for (ResultNodeRepresentation node : cmisResult.getList()) {
+			if (delete) {
+				CmisObject obj = session.getObject(nodeId);
+				obj.delete(true);
+			} else {
+				Document doc = (Document) session.getObject(nodeId);
+				ContentStream contentStream = doc.getContentStream();
+				InputStream inputStream = contentStream.getStream();
 
-				NodesAPI nodesAPI = client.getNodesAPI();
-				
-				if (delete) {
-					
-					nodesAPI.deleteNodeCall(node.getId()).execute();
-					
-				}else{
-				
-					Call<ResponseBody> downloadCall = nodesAPI.getNodeContentCall(node.getId());
-					InputStream inputStream = downloadCall.execute().body().byteStream();
-	
-					out = new org.fundaciobit.plugins.documentcustody.api.DocumentCustody();
-					out.setData(IOUtils.toByteArray(inputStream));
-					out.setName(node.getName());
-					out.setMime(node.getContent().getMimeType());
-				}
+				out = new org.fundaciobit.plugins.documentcustody.api.DocumentCustody();
+				out.setData(IOUtils.toByteArray(inputStream));
+				out.setName(doc.getName());
+				out.setMime(contentStream.getMimeType());
 			}
 		}
 
@@ -270,37 +196,28 @@ public class OpenCmisAlfrescoHelper {
 	}
 
 	public String getDocumentAttributeById(
-			AlfrescoClient client, 
+			Session session, 
 			String custodyID,
 			String tipo,
 			String attribute) throws IOException {
 
 		String out = null;
 
-		SearchAPI searchAPI = client.getSearchAPI();
-
-		String queryString = "select cmis:name " + "FROM " + SIGLES_ENTITAT + "Registro:d_anexo " + "WHERE " + SIGLES_ENTITAT
-				+ "Registro:dr_custodyID = '" + custodyID + "' " + "AND " + SIGLES_ENTITAT
+		String queryString = "SELECT cmis:name FROM " + SIGLES_ENTITAT + "Registro:d_anexo WHERE " + SIGLES_ENTITAT
+				+ "Registro:dr_custodyID = '" + custodyID + "' AND " + SIGLES_ENTITAT
 				+ "Registro:dr_tipoArchivo='"+tipo+"'";
 
-		RequestQuery cmisQuery = new RequestQuery().query(queryString).language(RequestQuery.LanguageEnum.CMIS);
-		QueryBody cmisbody = new QueryBody().query(cmisQuery);
-		ResultSetRepresentation<ResultNodeRepresentation> cmisResult = searchAPI.searchCall(cmisbody).execute().body();
+		ItemIterable<QueryResult> results = session.query(queryString, false);
 
-		if (cmisResult != null) {
-
-			for (ResultNodeRepresentation node : cmisResult.getList()) {
-				if (attribute!=null && !"name".equalsIgnoreCase(attribute))
-					return node.getName();
-				else
-					return node.getId();
-			}
+		for (QueryResult result : results) {
+			if (attribute != null && !"name".equalsIgnoreCase(attribute))
+				return result.getPropertyValueByQueryName("cmis:name");
+			else
+				return result.getPropertyValueByQueryName("cmis:objectId");
 		}
 
 		return out;
 	}
-
-
 
 	public String getAlfrescoUrl() {
 		return System.getProperty("es.caib.regweb.annex.plugins.documentcustody.alfresco.url");

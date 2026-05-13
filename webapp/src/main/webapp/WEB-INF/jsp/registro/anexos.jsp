@@ -96,7 +96,9 @@
                         <thead>
                             <tr>
                                 <th><spring:message code="anexo.titulo"/></th>
-                                <th><spring:message code="anexo.sir.validezDocumento"/></th>
+                                <c:if test="${not empty anexoFull.anexo.validezDocumento}">
+                                	<th><spring:message code="anexo.sir.validezDocumento"/></th>
+                                </c:if>
                                 <th><spring:message code="anexo.tipoDocumento.corto"/></th>
                                 <th class="center"><spring:message code="anexo.tamano"/></th>
                                 <th class="center"><spring:message code="anexo.anexo"/></th>
@@ -133,8 +135,9 @@
                                 </td>
 
                                 <%--VALIDEZ DOCUMENTO--%>
-                                <td><spring:message code="tipoValidezDocumento.${anexoFull.anexo.validezDocumento}"/></td>
-
+                                <c:if test="${not empty anexoFull.anexo.validezDocumento}">
+                                	<td><spring:message code="tipoValidezDocumento.${anexoFull.anexo.validezDocumento}"/></td>
+								</c:if>
                                 <%--TIPO DOCUMENTO--%>
                                 <td><spring:message code="tipoDocumento.0${anexoFull.anexo.tipoDocumento}"/></td>
 								<%--

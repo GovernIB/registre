@@ -166,42 +166,10 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.alfresco.cmis.client</groupId>
-			<artifactId>alfresco-opencmis-extension</artifactId>
-			<version>1.0</version>
+			<groupId>org.apache.chemistry.opencmis</groupId>
+			<artifactId>chemistry-opencmis-client-impl</artifactId>
+			<version>1.1.0</version>
 		</dependency>
-		<dependency>
-			<groupId>com.google.oauth-client</groupId>
-			<artifactId>google-oauth-client</artifactId>
-			<version>1.16.0-rc</version>
-			<exclusions>
-				<exclusion>
-					<artifactId>xpp3</artifactId>
-					<groupId>xpp3</groupId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>com.google.http-client</groupId>
-			<artifactId>google-http-client-jackson</artifactId>
-			<version>1.16.0-rc</version>
-		</dependency>
-		<dependency>
-		 	<groupId>org.alfresco.client</groupId> 
-		 	<artifactId>alfresco-java-client</artifactId> 
-		 	<version>1.0.0-beta1</version> 
-		 	<exclusions>
-		 		<exclusion>
-		 			<groupId>com.squareup.okhttp3</groupId>
-    				<artifactId>okhttp</artifactId>
-		 		</exclusion>
-		 	</exclusions>
-		</dependency>
-		<dependency>
-		    <groupId>com.squareup.okhttp3</groupId>
-		    <artifactId>okhttp</artifactId>
-		    <version>3.0.1</version>
-		</dependency>	
 		<dependency>
 		    <groupId>com.sun.jersey</groupId>
 		    <artifactId>jersey-client</artifactId>

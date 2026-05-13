@@ -1,6 +1,11 @@
 package es.caib.regweb3.plugins.justificante.apb;
 
-import com.alfresco.client.AlfrescoClient;
+import org.apache.chemistry.opencmis.client.api.Repository;
+import org.apache.chemistry.opencmis.client.api.Session;
+import org.apache.chemistry.opencmis.client.runtime.SessionFactoryImpl;
+import org.apache.chemistry.opencmis.commons.SessionParameter;
+import org.apache.chemistry.opencmis.commons.enums.BindingType;
+
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.*;
 import es.caib.regweb3.model.*;
@@ -54,7 +59,23 @@ public class JustificanteApbPlugin extends AbstractPluginProperties implements I
 	private String consultaCSV;
 	private String cmisUrl;
 	private OpenCmisAlfrescoHelper openCmisAlfrescoHelper;
-	private AlfrescoClient alfrescoClient;
+	private Session session;
+
+	private static final String CMIS_BROWSER_URL_SUFFIX = "/api/-default-/public/cmis/versions/1.1/browser";
+
+	private Session getSession() {
+		if (session != null) return session;
+		Map<String, String> sessionParams = new HashMap<String, String>();
+		sessionParams.put(SessionParameter.USER, user);
+		sessionParams.put(SessionParameter.PASSWORD, password);
+		sessionParams.put(SessionParameter.BINDING_TYPE, BindingType.BROWSER.value());
+		sessionParams.put(SessionParameter.BROWSER_URL, cmisUrl + (cmisUrl.endsWith(CMIS_BROWSER_URL_SUFFIX) ? "" : CMIS_BROWSER_URL_SUFFIX));
+		SessionFactoryImpl factory = SessionFactoryImpl.newInstance();
+		List<Repository> repos = factory.getRepositories(sessionParams);
+		session = repos.get(0).createSession();
+		return session;
+	}
+
     /**
      *  Crea l'event d'Estampació dels logos per a que es faci a totes les pàgines que va creant el pdf
      */
@@ -516,15 +537,17 @@ public class JustificanteApbPlugin extends AbstractPluginProperties implements I
 				}
                 DocumentCustody doc = new DocumentCustody();
               //Site
-    			alfrescoClient = new AlfrescoClient.Builder()
-    					.connect(cmisUrl, 
-    							 user, 
-    							 password).build();
-    			
-    			doc = openCmisAlfrescoHelper.getDocumentById(
-    					alfrescoClient, 
-    					custodyID, 
-    					false);
+                try {
+	    			session = getSession();
+	    			
+	    			doc = openCmisAlfrescoHelper.getDocumentById(
+	    					session, 
+	    					custodyID, 
+	    					false);
+	            } catch (Exception e) {
+					log.error("Ha habido un error de comunicación con el CMIS (openCmis) antiguo, procedemos a obtener datos con la nueva API: " + e.getMessage());
+				}
+                
     			if (doc == null) {
 	                docInfo = api.getMetadataDocument(custodyID);
 	                if (docInfo != null) {

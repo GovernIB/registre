@@ -271,7 +271,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
             // Oficio Remision
             if (entidadActiva.getOficioRemision() && (registro.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO) || registro.getEstado().equals(RegwebConstantes.REGISTRO_PENDIENTE_VISAR))) {
 
-                if (registro.getEvento().equals(RegwebConstantes.EVENTO_OFICIO_SIR)) { // Mensajes de limitaciones anexos si es oficio de remisión sir
+                if (registro.getEvento() != null && registro.getEvento().equals(RegwebConstantes.EVENTO_OFICIO_SIR)) { // Mensajes de limitaciones anexos si es oficio de remisión sir
                     initMensajeNotaInformativaAnexos(entidadActiva, model);
                 }
             }
@@ -312,7 +312,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
                 initScanAnexos(entidadActiva, model, request, registro.getId()); // Inicializa los atributos para escanear anexos
 
                 // Si es SIR, se validan los tamaños y tipos de anexos
-                if (registro.getEvento().equals(RegwebConstantes.EVENTO_OFICIO_SIR)) {
+                if (registro.getEvento() != null && registro.getEvento().equals(RegwebConstantes.EVENTO_OFICIO_SIR)) {
 
                     model.addAttribute("erroresAnexosSir", AnexoUtils.validarAnexosSir(anexos));
                 }

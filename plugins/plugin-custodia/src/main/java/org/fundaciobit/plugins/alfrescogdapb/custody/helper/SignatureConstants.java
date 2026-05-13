@@ -1,7 +1,7 @@
 package org.fundaciobit.plugins.alfrescogdapb.custody.helper;
 
 /**
- * Constants del plugin de validació de firmes
+ * Constants del plugin de validaciÃ³ de firmes
  *
  * @author Limit Tecnologies <limit@limit.es>
  */
