@@ -424,9 +424,9 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Organismo> getAllByEntidadMultiEntidad(Long idEntidad) throws I18NException{
+    public List<Organismo> getAllByEntidadByEstadoMultiEntidad(Long idEntidad, String estado) throws I18NException{
 
-        List<Organismo> organismos= getAllByEntidadByEstado(idEntidad, "");
+        List<Organismo> organismos= getAllByEntidadByEstado(idEntidad, estado);
         List<Organismo> organismosAEliminar = new ArrayList<>();
 
         for(Organismo organismo: organismos){

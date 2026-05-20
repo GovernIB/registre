@@ -102,7 +102,7 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
         model.addAttribute("oficinasRegistro",  oficinaEjb.findByEntidadLigero(entidadActiva.getId()));
         model.addAttribute("usuariosEntidad", usuarioEntidadEjb.findByEntidad(entidadActiva.getId()));
         if(multiEntidadEjb.isMultiEntidadSir()) {
-            model.addAttribute("organosDestino", organismoEjb.getAllByEntidadMultiEntidad(entidadActiva.getId()));
+            model.addAttribute("organosDestino", organismoEjb.getAllByEntidadByEstadoMultiEntidad(entidadActiva.getId(),""));
         }else{
             model.addAttribute("organosDestino", organismoEjb.getAllByEntidadByEstado(entidadActiva.getId(),""));
         }
@@ -124,7 +124,7 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
         List<Organismo> organosDestino;
         if(multiEntidadEjb.isMultiEntidadSir()) {
 
-            organosDestino = organismoEjb.getAllByEntidadMultiEntidad(entidadActiva.getId());
+            organosDestino = organismoEjb.getAllByEntidadByEstadoMultiEntidad(entidadActiva.getId(),"");
         }else{
             organosDestino = organismoEjb.getAllByEntidadByEstado(entidadActiva.getId(),"");
         }
