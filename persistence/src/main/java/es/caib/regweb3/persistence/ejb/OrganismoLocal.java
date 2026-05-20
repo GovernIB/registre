@@ -174,7 +174,7 @@ public interface OrganismoLocal extends BaseEjb<Organismo, Long> {
      * @return
      * @throws I18NException
      */
-    List<Organismo> getAllByEntidadMultiEntidad(Long idEntidad) throws I18NException;
+    List<Organismo> getAllByEntidadByEstadoMultiEntidad(Long idEntidad,String estado) throws I18NException;
 
     /**
      * Obtiene un organismo distinguiendo que mètodo usar en función de si la instancia es multientidad o no.

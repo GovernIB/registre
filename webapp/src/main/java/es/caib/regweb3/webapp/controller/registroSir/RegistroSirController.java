@@ -214,7 +214,7 @@ public class RegistroSirController extends BaseController {
 
                 model.addAttribute("libro",getLibroEntidad(request)); // Libro único
                // model.addAttribute("organismosOficinaActiva", getOrganismosOficinaActiva(request));
-                model.addAttribute("organismosEntidad", organismoEjb.getAllByEntidadByEstado(entidadActiva.getId(),RegwebConstantes.ESTADO_ENTIDAD_VIGENTE));
+                model.addAttribute("organismosEntidad", organismoEjb.getAllByEntidadByEstadoMultiEntidad(entidadActiva.getId(),RegwebConstantes.ESTADO_ENTIDAD_VIGENTE));
                 model.addAttribute("registrarForm", new RegistrarForm(registroSir.getResumen()));
 
                 Boolean pluginDistribucionEmail = distribucionEjb.isDistribucionPluginEmail(entidadActiva.getId());
