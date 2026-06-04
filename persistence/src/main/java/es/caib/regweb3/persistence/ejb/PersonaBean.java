@@ -461,8 +461,6 @@ public class PersonaBean extends BaseEjbJPA<Persona, Long> implements PersonaLoc
 
         q.setHint("org.hibernate.readOnly", true);
 
-        log.info("QUERY XXXXXX " + q);
-
         List<Object[]> result = q.getResultList();
         List<Persona> personas = new ArrayList<Persona>();
         if (tipoPersona.equals(RegwebConstantes.TIPO_PERSONA_FISICA)) {
