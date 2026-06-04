@@ -276,17 +276,26 @@ public class PlantillaController extends BaseController {
 
     /**
      * Cambia estado de una {@link Plantilla}
-     * @param idPlantilla
+     * @param plantillaId
      * @return
      * @throws Exception
      */
-    @RequestMapping(value = "/{idPlantilla}/cambiarEstado", method = RequestMethod.GET)
-    public
-    @ResponseBody
-    Boolean cambiarEstadoPlantilla(@PathVariable Long idPlantilla)throws Exception {
+    @RequestMapping(value = "/{plantillaId}/cambiarEstado")
+    public String cambiarEstadoPlantilla(@PathVariable Long plantillaId, HttpServletRequest request) {
 
-        return plantillaEjb.cambiarEstado(idPlantilla);
+        try {
 
+            plantillaEjb.cambiarEstado(plantillaId);
+            loginService.asignarPlantillas(getLoginInfo(request));
+
+            Mensaje.saveMessageInfo(request, getMessage("aviso.plantilla.canviEstatOk"));
+
+        } catch (Exception e) {
+            Mensaje.saveMessageError(request, getMessage("aviso.plantilla.canviEstatNok"));
+            e.printStackTrace();
+        }
+
+        return "redirect:/plantilla/list";
     }
 
 

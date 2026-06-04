@@ -87,10 +87,10 @@
                                                 <input id="canviarEstat" type="hidden" value="${pageContext.request.contextPath}/plantilla"/>
                                                 <div id="actiu${plantilla.id}">
                                                     <c:if test="${plantilla.activo}">
-                                                        <button type="button" class="label label-success" onclick="canviarEstatPlantilla(${plantilla.id},${plantilla.activo})" title="<spring:message code="plantilla.cambiar.estado"/>"><spring:message code="regweb.si"/></button>
+                                                        <button type="button" class="label label-success" onclick='document.location.href="<c:url value="/plantilla/${plantilla.id}/cambiarEstado"/>"' title="<spring:message code="plantilla.cambiar.estado"/>"><spring:message code="regweb.si"/></button>
                                                     </c:if>
                                                     <c:if test="${!plantilla.activo}">
-                                                        <button type="button" class="label label-danger" onclick="canviarEstatPlantilla(${plantilla.id},${plantilla.activo})" title="<spring:message code="plantilla.cambiar.estado"/>"><spring:message code="regweb.no"/></button>
+                                                        <button type="button" class="label label-danger" onclick='document.location.href="<c:url value="/plantilla/${plantilla.id}/cambiarEstado"/>"' title="<spring:message code="plantilla.cambiar.estado"/>"><spring:message code="regweb.no"/></button>
                                                     </c:if>
                                                 </div>
                                             </td>
