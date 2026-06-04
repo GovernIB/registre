@@ -87,10 +87,10 @@
                                                 <input id="canviarEstat" type="hidden" value="${pageContext.request.contextPath}/plantilla"/>
                                                 <div id="actiu${plantilla.id}">
                                                     <c:if test="${plantilla.activo}">
-                                                        <button type="button" class="label label-success" onclick="canviarEstatPlantilla(${plantilla.id},${plantilla.activo})" title="<spring:message code="plantilla.cambiar.estado"/>"><spring:message code="regweb.si"/></button>
+                                                        <button type="button" class="label label-success" onclick='document.location.href="<c:url value="/plantilla/${plantilla.id}/cambiarEstado"/>"' title="<spring:message code="plantilla.cambiar.estado"/>"><spring:message code="regweb.si"/></button>
                                                     </c:if>
                                                     <c:if test="${!plantilla.activo}">
-                                                        <button type="button" class="label label-danger" onclick="canviarEstatPlantilla(${plantilla.id},${plantilla.activo})" title="<spring:message code="plantilla.cambiar.estado"/>"><spring:message code="regweb.no"/></button>
+                                                        <button type="button" class="label label-danger" onclick='document.location.href="<c:url value="/plantilla/${plantilla.id}/cambiarEstado"/>"' title="<spring:message code="plantilla.cambiar.estado"/>"><spring:message code="regweb.no"/></button>
                                                     </c:if>
                                                 </div>
                                             </td>
@@ -247,48 +247,6 @@
     }
 </script>
 
-<script type="text/javascript">
-    /**
-     * Canvia l'estat de la Plantilla
-     */
-    function canviarEstatPlantilla(idPlantilla,actiu) {
-
-        var url = $("#canviarEstat").val().concat('/'+idPlantilla+'/cambiarEstado');
-
-        $.ajax({
-            url: url,
-            type: "GET",
-
-            beforeSend: function(xhr) {
-                xhr.setRequestHeader("Accept", "application/json");
-                xhr.setRequestHeader("Content-Type", "application/json");
-            },
-            success: function(resultError) {
-
-                if(resultError == true) {
-
-                    var botoActiu = "<button type=\"button\" class=\"label label-success\" onclick=\"canviarEstatPlantilla(" + idPlantilla + ",true)\" title=\"Si\"><spring:message code="regweb.si"/></button>";
-                    var botoNoActiu = "<button type=\"button\" class=\"label label-danger\" onclick=\"canviarEstatPlantilla(" + idPlantilla + ",false)\" title=\"No\"><spring:message code="regweb.no"/></button>";
-
-                    if (actiu) {
-                        $("#actiu" + idPlantilla).html(botoNoActiu);
-                    } else {
-                        $("#actiu" + idPlantilla).html(botoActiu);
-                    }
-                    $("#mensajes").empty();
-                    mensajeSuccess("#mensajes", "<spring:message code="aviso.plantilla.canviEstatOk"/>");
-
-                } else if (resultError == false){
-                    $("#mensajes").empty();
-                    mensajeError("#mensajes", "<spring:message code="aviso.plantilla.canviEstatNok"/>");
-                }
-
-            }
-
-        });
-
-    }
-</script>
 
 <script type="text/javascript">
     /**
