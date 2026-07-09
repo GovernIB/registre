@@ -11,6 +11,7 @@ import es.caib.regweb3.persistence.utils.RegistroUtils;
 import es.caib.regweb3.persistence.utils.RespuestaDistribucion;
 import es.caib.regweb3.plugins.distribucion.IDistribucionPlugin;
 import es.caib.regweb3.plugins.distribucion.email.DistribucionEmailPlugin;
+import es.caib.regweb3.sir.core.excepcion.SIRException;
 import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
@@ -392,10 +393,21 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
             Mensaje.saveMessageInfo(request, getMessage("registroEntrada.envioSir.ok"));
             jsonResponse.setStatus("SUCCESS");
 
+        } catch (SIRException e) {
+            log.info(getMessage("registroSir.error.envio"));
+            jsonResponse.setStatus("FAIL");
+            jsonResponse.setError(getMessage("registroSir.error.envio") + ": " + e.getMessage());
+            e.printStackTrace();
         } catch (I18NException e) {
             log.info(getMessage("registroSir.error.envio"));
             jsonResponse.setStatus("FAIL");
             jsonResponse.setError(getMessage("registroSir.error.envio") + ": " + I18NUtils.getMessage(e));
+            e.printStackTrace();
+        }
+        catch (Exception e) {
+            log.info(getMessage("registroSir.error.envio"));
+            jsonResponse.setStatus("FAIL");
+            jsonResponse.setError(getMessage("registroSir.error.envio") + ": " + e.getMessage());
             e.printStackTrace();
         }
 

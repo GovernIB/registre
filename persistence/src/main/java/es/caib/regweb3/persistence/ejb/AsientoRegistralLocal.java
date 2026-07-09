@@ -104,5 +104,17 @@ public interface AsientoRegistralLocal {
      * @throws I18NValidationException
      */
     RegistroSalida procesarRegistroSalida(Long tipoOperacion, RegistroSalida registroSalida, Entidad entidad, Boolean justificante) throws I18NException, Exception, I18NValidationException;
+
+    /**
+     * Procesa el Registro de Entrada
+     *
+     * @param registroEntrada
+     * @param justificante
+     * @return
+     * @throws I18NException
+     * @throws I18NException
+     * @throws I18NValidationException
+     */
+    RegistroEntrada procesarRegistroEntrada(RegistroEntrada registroEntrada,UsuarioEntidad usuario, UsuarioEntidad usuarioAplicacion, Entidad entidad, Boolean justificante, Boolean distribuir) throws I18NException, Exception, I18NValidationException;
 }
 

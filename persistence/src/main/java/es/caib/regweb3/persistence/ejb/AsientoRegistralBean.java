@@ -5,6 +5,7 @@ import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.persistence.utils.I18NLogicUtils;
 import es.caib.regweb3.persistence.utils.JustificanteReferencia;
+import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.persistence.utils.RegistroUtils;
 import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
@@ -15,10 +16,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.*;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
+import java.util.*;
 
 import static es.caib.regweb3.utils.RegwebConstantes.*;
 
@@ -171,6 +169,66 @@ public class AsientoRegistralBean implements AsientoRegistralLocal {
         }
 
         return registroSalida;
+    }
+
+    @Override
+    public RegistroEntrada procesarRegistroEntrada(RegistroEntrada registroEntrada,UsuarioEntidad usuario, UsuarioEntidad usuarioAplicacion, Entidad entidad, Boolean justificante, Boolean distribuir) throws I18NException, Exception, I18NValidationException {
+
+
+        if(registroEntrada.getEvento().equals(RegwebConstantes.EVENTO_OFICIO_SIR)) {
+            //Obtenemos las oficinas SIR a las que va dirigido el registro de Salida
+            List<OficinaTF> oficinasSIR = new ArrayList<>();
+            if (multiEntidadEjb.isMultiEntidadSir()) {
+                oficinasSIR = registroEntradaEjb.isOficioRemisionSirMultiEntidad(registroEntrada.getId(), entidad.getId());
+            } else {
+                oficinasSIR = registroEntradaEjb.isOficioRemisionSir(registroEntrada.getId(), registroEntrada.getUsuario().getEntidad().getId());
+            }
+
+            if (oficinasSIR != null && !oficinasSIR.isEmpty()) {
+                try {
+                    // Crear Justificante
+                    crearJustificante(entidad, registroEntrada.getUsuario(), registroEntrada, RegwebConstantes.REGISTRO_ENTRADA, RegistroUtils.getIdiomaJustificante(registroEntrada));
+
+                    // Crear el intercambio, posteriormente se enviará
+                    registroEntrada = sirEnvioEjb.crearIntercambioEntrada(registroEntrada, entidad, registroEntrada.getOficina(),
+                            registroEntrada.getUsuario(), new Oficina(null, oficinasSIR.get(0).getCodigo(), oficinasSIR.get(0).getDenominacion()));
+
+                    registroEntrada.setEstado(REGISTRO_OFICIO_SIR);
+                    registroEntrada.getRegistroDetalle().setIdentificadorIntercambio(registroEntrada.getRegistroDetalle().getIdentificadorIntercambio());
+
+
+                } catch (Exception e) {
+                    throw new I18NException("registroSir.error.envio");
+                }
+            }else {
+                throw new I18NException("registroSir.error.envio");
+            }
+        }
+
+
+        if (registroEntrada.getEvento().equals(EVENTO_OFICIO_EXTERNO)) {
+            crearJustificante(entidad, usuario, registroEntrada, REGISTRO_ENTRADA, RegistroUtils.getIdiomaJustificante(registroEntrada));
+        }
+
+        if (registroEntrada.getEvento().equals(EVENTO_DISTRIBUIR)) {
+            // Distribuir / Generar justificante
+            if (justificante && distribuir) {
+
+                if (PropiedadGlobalUtil.getCustodiaDiferida(entidad.getId())) { // Si la Custodia en diferido está activa, generamos el  justificante
+                    crearJustificante(entidad, usuario, registroEntrada, REGISTRO_ENTRADA, RegistroUtils.getIdiomaJustificante(registroEntrada));
+                }
+
+                // Distribuimos, si la Custodia en diferido no está activa, se generará el justificante antes de Distribuir
+                distribuirRegistroEntrada(registroEntrada, usuarioAplicacion);
+
+            } else if (justificante) {
+                crearJustificante(entidad, usuario, registroEntrada, REGISTRO_ENTRADA, RegistroUtils.getIdiomaJustificante(registroEntrada));
+            } else if (distribuir) {
+                distribuirRegistroEntrada(registroEntrada, usuarioAplicacion);
+            }
+        }
+
+        return registroEntrada;
     }
 
     @Asynchronous

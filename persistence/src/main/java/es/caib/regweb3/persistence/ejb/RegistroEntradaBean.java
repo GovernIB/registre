@@ -261,7 +261,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean implem
             return oficinasService.obtenerOficinasSIRUnidad(codigoDir3);
         }
 
-        return null;
+        return Collections.emptyList();
     }
 
 
@@ -297,7 +297,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean implem
 
             return oficinasService.obtenerOficinasSIRUnidad(codigoDir3);
         }else{
-            return null;
+            return Collections.emptyList();
         }
     }
 
