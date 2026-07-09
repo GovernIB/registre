@@ -26,6 +26,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
 
+import javax.annotation.Resource;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -55,6 +56,9 @@ public class SirEnvioBean implements SirEnvioLocal {
 
     @PersistenceContext(unitName = "regweb3")
     private EntityManager em;
+
+    @Resource
+    private javax.ejb.SessionContext ejbContext;
 
     @EJB private RegistroEntradaLocal registroEntradaEjb;
     @EJB private RegistroSalidaLocal registroSalidaEjb;
@@ -137,6 +141,7 @@ public class SirEnvioBean implements SirEnvioLocal {
             s.printStackTrace();
             if (oficioRemision != null) {
                 integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_SIR, descripcion, peticion.toString(), s, null, System.currentTimeMillis() - inicio.getTime(), entidad.getId(), oficioRemision.getIdentificadorIntercambio());
+                ejbContext.setRollbackOnly();
             }
             throw s;
         }
@@ -203,6 +208,7 @@ public class SirEnvioBean implements SirEnvioLocal {
             s.printStackTrace();
             if (oficioRemision != null) {
                 integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_SIR, descripcion, peticion.toString(), s, null, System.currentTimeMillis() - inicio.getTime(), entidad.getId(), oficioRemision.getIdentificadorIntercambio());
+                ejbContext.setRollbackOnly();
             }
             throw s;
         }
@@ -282,6 +288,8 @@ public class SirEnvioBean implements SirEnvioLocal {
             }catch (Exception e){
                 e.printStackTrace();
                 integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_SIR, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - inicio.getTime(), entidad.getId(), registroSir.getIdentificadorIntercambio());
+                ejbContext.setRollbackOnly();
+                throw e;
             }
 
             log.debug("");
@@ -293,6 +301,7 @@ public class SirEnvioBean implements SirEnvioLocal {
             if (registroSir != null) {
                 integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_SIR, descripcion, peticion.toString(), s, null, System.currentTimeMillis() - inicio.getTime(), entidad.getId(), registroSir.getIdentificadorIntercambio());
             }
+            ejbContext.setRollbackOnly();
             throw s;
         }
 
@@ -422,6 +431,7 @@ public class SirEnvioBean implements SirEnvioLocal {
         } catch (I18NException | I18NValidationException e) {
             e.printStackTrace();
             integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_SIR, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - inicio.getTime(), usuario.getEntidad().getId(), registroSir.getIdentificadorIntercambio());
+            ejbContext.setRollbackOnly();
             throw e;
 
         }
