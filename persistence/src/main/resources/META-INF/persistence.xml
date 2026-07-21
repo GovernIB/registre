@@ -73,9 +73,9 @@ http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd">
         <class>es.caib.regweb3.model.AnexoSir</class>
         <class>es.caib.regweb3.model.TrazabilidadSir</class>
 
-
         <properties>
             <!--<property name="jboss.as.jpa.providerModule"  value="${jboss.as.jpa.providerModule}" />-->
+            <property name="hibernate.dialect" value="org.hibernate.dialect.Oracle10gDialect"/>
             <property name="hibernate.show_sql" value="false"/>
         </properties>
 
