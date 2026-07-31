@@ -156,7 +156,7 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
                 Boolean tieneOficinas = oficinaEjb.tieneOficinasServicio(organismo.getId(), RegwebConstantes.OFICINA_VIRTUAL_SI);
                 if (!tieneOficinas) {//si no tiene se debe guardar en la tabla de pendientes para que los procese el usuario manualmente
                     //guardar pendiente
-                    pendienteEjb.persist(new Pendiente(organismo.getId(), false, organismo.getEstado().getCodigoEstadoEntidad()));
+                    pendienteEjb.persist(new Pendiente(organismo.getId(), false, RegwebConstantes.ESTADO_ENTIDAD_VIGENTE));
                 }
 
             }
