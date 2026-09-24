@@ -91,7 +91,7 @@ public class JustificanteBean implements JustificanteLocal {
     }
 
     @Override
-    public AnexoFull crearJustificanteWS(Entidad entidad, UsuarioEntidad usuarioEntidad, IRegistro registro, Long tipoRegistro, String idioma) throws I18NException, I18NValidationException{
+    public AnexoFull crearJustificanteWS(Entidad entidad, UsuarioEntidad usuarioEntidad, IRegistro registro, Long tipoRegistro, String idioma, boolean sir) throws I18NException, I18NValidationException{
 
         // Comprobamos si ya se ha generado el Justificante
         if (registro.getRegistroDetalle().getTieneJustificante()) {
@@ -99,7 +99,7 @@ public class JustificanteBean implements JustificanteLocal {
         }
 
         // Si la custodia en diferido está activa generamos el justificante en Filesystem y enviamos a la Cola de custodia
-        if(PropiedadGlobalUtil.getCustodiaDiferida(entidad.getId())){
+        if(PropiedadGlobalUtil.getCustodiaDiferida(entidad.getId()) && !sir){
             return crearJustificanteDocumentCustody(entidad, usuarioEntidad, registro, tipoRegistro, idioma, true);
         }else{
             return crearJustificante(entidad, usuarioEntidad, registro, tipoRegistro, idioma);

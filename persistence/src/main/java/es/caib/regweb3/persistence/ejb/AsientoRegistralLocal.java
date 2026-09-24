@@ -70,7 +70,20 @@ public interface AsientoRegistralLocal {
      * @throws I18NValidationException
      * @throws I18NException
      */
-    void crearJustificante(Entidad entidad, UsuarioEntidad usuarioEntidad, IRegistro registro, Long tipoRegistro, String idioma) throws I18NValidationException, I18NException;
+    void crearJustificante(Entidad entidad, UsuarioEntidad usuarioEntidad, IRegistro registro, Long tipoRegistro, String idioma, boolean sir) throws I18NValidationException, I18NException;
+
+    /**
+     *
+     * @param entidad
+     * @param usuarioEntidad
+     * @param registro
+     * @param tipoRegistro
+     * @param idioma
+     * @return
+     * @throws I18NValidationException
+     * @throws I18NException
+     */
+    AnexoFull crearJustificanteSincrono(Entidad entidad, UsuarioEntidad usuarioEntidad, IRegistro registro, Long tipoRegistro, String idioma, boolean sir) throws I18NValidationException, I18NException;
 
     /**
      * Distribuye un registro de entrada de manera Asincrona
@@ -104,5 +117,17 @@ public interface AsientoRegistralLocal {
      * @throws I18NValidationException
      */
     RegistroSalida procesarRegistroSalida(Long tipoOperacion, RegistroSalida registroSalida, Entidad entidad, Boolean justificante) throws I18NException, Exception, I18NValidationException;
+
+    /**
+     * Procesa el Registro de Entrada
+     *
+     * @param registroEntrada
+     * @param justificante
+     * @return
+     * @throws I18NException
+     * @throws I18NException
+     * @throws I18NValidationException
+     */
+    RegistroEntrada procesarRegistroEntrada(RegistroEntrada registroEntrada,UsuarioEntidad usuario, UsuarioEntidad usuarioAplicacion, Entidad entidad, Boolean justificante, Boolean distribuir, List<AnexoFull> anexosFull) throws I18NException, Exception, I18NValidationException;
 }
 

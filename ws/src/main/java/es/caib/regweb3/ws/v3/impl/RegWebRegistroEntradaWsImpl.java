@@ -283,7 +283,7 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl implemen
             if(registroEntrada.getEstado().equals(REGISTRO_VALIDO)){
 
                 try{
-                    justificante = justificanteEjb.crearJustificanteWS(entidadActiva, usuario,registroEntrada,RegwebConstantes.REGISTRO_ENTRADA,Configuracio.getDefaultLanguage());
+                    justificante = justificanteEjb.crearJustificanteWS(entidadActiva, usuario,registroEntrada,RegwebConstantes.REGISTRO_ENTRADA,Configuracio.getDefaultLanguage(),false);
                 }catch (I18NException e){
                     log.info("----------------Error generado justificante via WS------------------");
                     integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, null,System.currentTimeMillis() - inicio.getTime(), entidadActiva.getId(), numeroRegistroFormateado);

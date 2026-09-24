@@ -42,6 +42,6 @@ public interface JustificanteLocal {
      * @throws I18NException
      * @throws I18NValidationException
      */
-    AnexoFull crearJustificanteWS(Entidad entidad, UsuarioEntidad usuarioEntidad, IRegistro registro, Long tipoRegistro, String idioma) throws I18NException, I18NValidationException;
+    AnexoFull crearJustificanteWS(Entidad entidad, UsuarioEntidad usuarioEntidad, IRegistro registro, Long tipoRegistro, String idioma, boolean sir) throws I18NException, I18NValidationException;
 }
 
