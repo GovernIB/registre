@@ -804,7 +804,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
         Query q;
         q = em.createQuery("Select DISTINCT re.id, re.numeroRegistroFormateado, re.fecha, re.registroDetalle.extracto, re.destino, re.destinoExternoCodigo, re.destinoExternoDenominacion " +
                 "from RegistroEntrada as re left outer join re.registroDetalle.interesados interessat LEFT JOIN re.destino destino " +
-                "where (UPPER(interessat.documento) LIKE UPPER(:documento)) and re.entidad.id = :idEntidad and re.estado != :anulado order by re.fecha desc");
+                "where (UPPER(interessat.documento) LIKE UPPER(:documento)) and interessat.isRepresentante = false and re.entidad.id = :idEntidad and re.estado != :anulado order by re.fecha desc");
 
         q.setParameter("idEntidad", idEntidad);
         q.setParameter("documento", documento.trim());
@@ -887,6 +887,9 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
             where.add(" re.registroDetalle.extracto LIKE :extracto ");
             parametros.put("extracto", "%" + extracto + "%");
         }
+
+        //No sea representante
+        where.add(" (interessat.isRepresentante = false) ");
 
 
         //Estados (hacemos una or con todos los estados que nos envian)
