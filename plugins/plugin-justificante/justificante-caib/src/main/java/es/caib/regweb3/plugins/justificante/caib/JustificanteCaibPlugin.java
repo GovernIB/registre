@@ -20,9 +20,11 @@ import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
 import java.text.MessageFormat;
-import java.text.SimpleDateFormat;
-import java.util.List;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.List;
 
 
 /**
@@ -37,7 +39,7 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
-    private final SimpleDateFormat formatDate = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+    private final DateTimeFormatter formatDate = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss VV");
 
     private String textoLegalValidez;
     private String textoLegalDocElectronica;
@@ -808,7 +810,8 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
         taulaRegistre.addCell(new Paragraph(tradueixMissatge(locale,"justificante.oficina"), lletraGovern9bold));
         taulaRegistre.addCell(new Paragraph(registro.getOficina().getDenominacion() + " - " + registro.getOficina().getCodigo(), lletraGovern8));
         taulaRegistre.addCell(new Paragraph(tradueixMissatge(locale,"justificante.fechaPresentacion"), lletraGovern9bold));
-        taulaRegistre.addCell(new Paragraph(formatDate.format(registro.getFecha()), lletraGovern8));
+        ZonedDateTime fechaRegistro = registro.getFecha().toInstant().atZone(ZoneId.systemDefault());
+        taulaRegistre.addCell(new Paragraph(formatDate.format(fechaRegistro), lletraGovern8));
         taulaRegistre.addCell(new Paragraph(tradueixMissatge(locale,"justificante.numRegistro"), lletraGovern9bold));
         taulaRegistre.addCell(new Paragraph(registro.getNumeroRegistroFormateado(), lletraGovern8));
         taulaRegistre.addCell(new Paragraph(tradueixMissatge(locale, "justificante.unidad"), lletraGovern9bold));
@@ -920,8 +923,9 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
             // Data Registre origen
             if(registro.getRegistroDetalle().getFechaOrigen() != null) {
                 i += 1;
+                ZonedDateTime fechaRegistroOrigen = registro.getRegistroDetalle().getFechaOrigen().toInstant().atZone(ZoneId.systemDefault());
                 taulaInformacio.addCell(new Paragraph(tradueixMissatge(locale, "justificante.dataOrigen"), lletraGovern9bold));
-                taulaInformacio.addCell(new Paragraph(formatDate.format(registro.getRegistroDetalle().getFechaOrigen()), lletraGovern8));
+                taulaInformacio.addCell(new Paragraph(formatDate.format(fechaRegistroOrigen), lletraGovern8));
             }
         }
 
