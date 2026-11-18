@@ -86,10 +86,10 @@ public class UsuarioEntidadValidator implements Validator {
                     try {
 
                         if (usuarioEntidad.getUsuario().getId() != null) { // Se trata de una modificación
-                            existe = usuarioEjb.existeDocumentoEdit(documento, usuarioEntidad.getUsuario().getId());
+                            existe = usuarioEjb.existeDocumentoEdit(documento.toUpperCase(), usuarioEntidad.getUsuario().getId());
 
                         } else {
-                            existe = usuarioEjb.existeDocumentoNew(documento);
+                            existe = usuarioEjb.existeDocumentoNew(documento.toUpperCase());
                         }
                     }catch (Exception e){
                         log.error("Error comprobando si usuario entidad ya existe: ", e);
